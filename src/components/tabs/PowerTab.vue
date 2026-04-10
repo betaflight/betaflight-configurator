@@ -106,15 +106,14 @@
 
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             id="mincellvoltage"
-                                                            type="number"
                                                             name="mincellvoltage"
-                                                            step="0.01"
-                                                            min="1"
-                                                            max="5"
+                                                            :step="0.01"
+                                                            :min="1"
+                                                            :max="5"
                                                             :aria-label="$t('powerBatteryMinimum')"
-                                                            v-model.number="batteryConfig.vbatmincellvoltage"
+                                                            v-model="batteryConfig.vbatmincellvoltage"
                                                         />
                                                         <span v-html="$t('powerBatteryMinimum')"></span>
                                                     </label>
@@ -125,15 +124,14 @@
                                                 </div>
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             id="maxcellvoltage"
-                                                            type="number"
                                                             name="maxcellvoltage"
-                                                            step="0.01"
-                                                            min="1"
-                                                            max="5"
+                                                            :step="0.01"
+                                                            :min="1"
+                                                            :max="5"
                                                             :aria-label="$t('powerBatteryMaximum')"
-                                                            v-model.number="batteryConfig.vbatmaxcellvoltage"
+                                                            v-model="batteryConfig.vbatmaxcellvoltage"
                                                         />
                                                         <span v-html="$t('powerBatteryMaximum')"></span>
                                                     </label>
@@ -144,15 +142,14 @@
                                                 </div>
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             id="warningcellvoltage"
-                                                            type="number"
                                                             name="warningcellvoltage"
-                                                            step="0.01"
-                                                            min="1"
-                                                            max="5"
+                                                            :step="0.01"
+                                                            :min="1"
+                                                            :max="5"
                                                             :aria-label="$t('powerBatteryWarning')"
-                                                            v-model.number="batteryConfig.vbatwarningcellvoltage"
+                                                            v-model="batteryConfig.vbatwarningcellvoltage"
                                                         />
                                                         <span v-html="$t('powerBatteryWarning')"></span>
                                                     </label>
@@ -163,15 +160,14 @@
                                                 </div>
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             id="capacity"
-                                                            type="number"
                                                             name="capacity"
-                                                            step="1"
-                                                            min="0"
-                                                            max="20000"
+                                                            :step="1"
+                                                            :min="0"
+                                                            :max="20000"
                                                             :aria-label="$t('powerBatteryCapacity')"
-                                                            v-model.number="batteryConfig.capacity"
+                                                            v-model="batteryConfig.capacity"
                                                         />
                                                         <span v-html="$t('powerBatteryCapacity')"></span>
                                                     </label>
@@ -218,51 +214,43 @@
                                             <div class="voltage-configuration">
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             :id="`vbatscale-${index}`"
-                                                            type="number"
                                                             :name="`vbatscale-${index}`"
-                                                            step="1"
-                                                            min="10"
-                                                            max="255"
+                                                            :step="1"
+                                                            :min="10"
+                                                            :max="255"
                                                             :aria-label="$t('powerVoltageScale')"
-                                                            v-model.number="voltageConfigs[index].vbatscale"
-                                                            @change="
-                                                                onVoltageScaleChange(
-                                                                    index,
-                                                                    voltageConfigs[index].vbatscale,
-                                                                )
-                                                            "
+                                                            v-model="voltageConfigs[index].vbatscale"
+                                                            @update:model-value="onVoltageScaleChange(index, $event)"
                                                         />
                                                         <span v-html="$t('powerVoltageScale')"></span>
                                                     </label>
                                                 </div>
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             :id="`vbatresdivval-${index}`"
-                                                            type="number"
                                                             :name="`vbatresdivval-${index}`"
-                                                            step="1"
-                                                            min="1"
-                                                            max="255"
+                                                            :step="1"
+                                                            :min="1"
+                                                            :max="255"
                                                             :aria-label="$t('powerVoltageDivider')"
-                                                            v-model.number="voltageConfigs[index].vbatresdivval"
+                                                            v-model="voltageConfigs[index].vbatresdivval"
                                                         />
                                                         <span v-html="$t('powerVoltageDivider')"></span>
                                                     </label>
                                                 </div>
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             :id="`vbatresdivmultiplier-${index}`"
-                                                            type="number"
                                                             :name="`vbatresdivmultiplier-${index}`"
-                                                            step="1"
-                                                            min="1"
-                                                            max="255"
+                                                            :step="1"
+                                                            :min="1"
+                                                            :max="255"
                                                             :aria-label="$t('powerVoltageMultiplier')"
-                                                            v-model.number="voltageConfigs[index].vbatresdivmultiplier"
+                                                            v-model="voltageConfigs[index].vbatresdivmultiplier"
                                                         />
                                                         <span v-html="$t('powerVoltageMultiplier')"></span>
                                                     </label>
@@ -357,36 +345,29 @@
                                             <div class="amperage-configuration">
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             :id="`amperagescale-${index}`"
-                                                            type="number"
                                                             :name="`amperagescale-${index}`"
-                                                            step="1"
-                                                            min="-16000"
-                                                            max="16000"
+                                                            :step="1"
+                                                            :min="-16000"
+                                                            :max="16000"
                                                             :aria-label="$t('powerAmperageScale')"
-                                                            v-model.number="currentConfigs[index].scale"
-                                                            @change="
-                                                                onAmperageScaleChange(
-                                                                    index,
-                                                                    currentConfigs[index].scale,
-                                                                )
-                                                            "
+                                                            v-model="currentConfigs[index].scale"
+                                                            @update:model-value="onAmperageScaleChange(index, $event)"
                                                         />
                                                         <span v-html="$t('powerAmperageScale')"></span>
                                                     </label>
                                                 </div>
                                                 <div class="number">
                                                     <label>
-                                                        <input
+                                                        <UInputNumber
                                                             :id="`amperageoffset-${index}`"
-                                                            type="number"
                                                             :name="`amperageoffset-${index}`"
-                                                            step="1"
-                                                            min="-32000"
-                                                            max="32000"
+                                                            :step="1"
+                                                            :min="-32000"
+                                                            :max="32000"
                                                             :aria-label="$t('powerAmperageOffset')"
-                                                            v-model.number="currentConfigs[index].offset"
+                                                            v-model="currentConfigs[index].offset"
                                                         />
                                                         <span v-html="$t('powerAmperageOffset')"></span>
                                                     </label>
@@ -444,15 +425,14 @@
                     <label for="vbatcalibration">
                         <span v-html="$t('powerVoltageCalibration')"></span>
                     </label>
-                    <input
+                    <UInputNumber
                         id="vbatcalibration"
-                        type="number"
                         name="vbatcalibration"
-                        step="0.01"
-                        min="0"
-                        max="255"
+                        :step="0.01"
+                        :min="0"
+                        :max="255"
                         :aria-label="$t('powerVoltageCalibration')"
-                        v-model.number="vbatcalibrationValue"
+                        v-model="vbatcalibrationValue"
                     />
                 </div>
             </div>
@@ -461,15 +441,14 @@
                     <label for="amperagecalibration">
                         <span v-html="$t('powerAmperageCalibration')"></span>
                     </label>
-                    <input
+                    <UInputNumber
                         id="amperagecalibration"
-                        type="number"
                         name="amperagecalibration"
-                        step="0.01"
-                        min="0"
-                        max="255"
+                        :step="0.01"
+                        :min="0"
+                        :max="255"
                         :aria-label="$t('powerAmperageCalibration')"
-                        v-model.number="amperagecalibrationValue"
+                        v-model="amperagecalibrationValue"
                     />
                 </div>
             </div>
