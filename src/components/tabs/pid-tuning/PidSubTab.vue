@@ -80,52 +80,47 @@
                         <tr class="ROLL">
                             <td class="pid_roll" style="background-color: #e24761">ROLL</td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidRollP"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="pidRollP"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidRollI"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="pidRollI"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidRollD"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="pidRollD"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.dMaxRoll"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="advancedTuning.dMaxRoll"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.feedforwardRoll"
-                                    step="1"
-                                    min="0"
-                                    max="2000"
+                                <UInputNumber
+                                    v-model="advancedTuning.feedforwardRoll"
+                                    :step="1"
+                                    :min="0"
+                                    :max="2000"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
@@ -135,52 +130,47 @@
                         <tr class="PITCH">
                             <td class="pid_pitch" style="background-color: #49c747">PITCH</td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidPitchP"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="pidPitchP"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidPitchI"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="pidPitchI"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidPitchD"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="pidPitchD"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.dMaxPitch"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber
+                                    v-model="advancedTuning.dMaxPitch"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.feedforwardPitch"
-                                    step="1"
-                                    min="0"
-                                    max="2000"
+                                <UInputNumber
+                                    v-model="advancedTuning.feedforwardPitch"
+                                    :step="1"
+                                    :min="0"
+                                    :max="2000"
                                     :disabled="rollPitchDisabled"
                                 />
                             </td>
@@ -190,52 +180,29 @@
                         <tr class="YAW">
                             <td class="pid_yaw" style="background-color: #477ac7">YAW</td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidYawP"
-                                    step="1"
-                                    min="0"
-                                    max="250"
+                                <UInputNumber v-model="pidYawP" :step="1" :min="0" :max="250" :disabled="yawDisabled" />
+                            </td>
+                            <td class="pid_data">
+                                <UInputNumber v-model="pidYawI" :step="1" :min="0" :max="250" :disabled="yawDisabled" />
+                            </td>
+                            <td class="pid_data">
+                                <UInputNumber v-model="pidYawD" :step="1" :min="0" :max="250" :disabled="yawDisabled" />
+                            </td>
+                            <td class="pid_data">
+                                <UInputNumber
+                                    v-model="advancedTuning.dMaxYaw"
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
                                     :disabled="yawDisabled"
                                 />
                             </td>
                             <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidYawI"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidYawD"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.dMaxYaw"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.feedforwardYaw"
-                                    step="1"
-                                    min="0"
-                                    max="2000"
+                                <UInputNumber
+                                    v-model="advancedTuning.feedforwardYaw"
+                                    :step="1"
+                                    :min="0"
+                                    :max="2000"
                                     :disabled="yawDisabled"
                                 />
                             </td>
@@ -493,15 +460,15 @@
                             </tr>
                             <tr v-if="hasPidName('ALT')" class="ALT">
                                 <td></td>
-                                <td><input type="number" v-model.number="pidAltP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidAltI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidAltD" step="1" min="0" max="255" /></td>
+                                <td><UInputNumber v-model="pidAltP" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidAltI" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidAltD" :step="1" :min="0" :max="255" /></td>
                             </tr>
                             <tr v-if="hasPidName('VEL')" class="VEL">
                                 <td></td>
-                                <td><input type="number" v-model.number="pidVelP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidVelI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidVelD" step="1" min="0" max="255" /></td>
+                                <td><UInputNumber v-model="pidVelP" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidVelI" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidVelD" :step="1" :min="0" :max="255" /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -518,7 +485,7 @@
                             </tr>
                             <tr class="MAG">
                                 <td></td>
-                                <td><input type="number" v-model.number="pidMagP" step="1" min="0" max="255" /></td>
+                                <td><UInputNumber v-model="pidMagP" :step="1" :min="0" :max="255" /></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -537,21 +504,21 @@
                             </tr>
                             <tr v-if="hasPidName('Pos')" class="Pos">
                                 <td></td>
-                                <td><input type="number" v-model.number="pidPosP" step="1" min="0" max="255" /></td>
+                                <td><UInputNumber v-model="pidPosP" :step="1" :min="0" :max="255" /></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr v-if="hasPidName('PosR')" class="PosR">
                                 <td></td>
-                                <td><input type="number" v-model.number="pidPosRP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidPosRI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidPosRD" step="1" min="0" max="255" /></td>
+                                <td><UInputNumber v-model="pidPosRP" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidPosRI" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidPosRD" :step="1" :min="0" :max="255" /></td>
                             </tr>
                             <tr v-if="hasPidName('NavR')" class="NavR">
                                 <td></td>
-                                <td><input type="number" v-model.number="pidNavRP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidNavRI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidNavRD" step="1" min="0" max="255" /></td>
+                                <td><UInputNumber v-model="pidNavRP" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidNavRI" :step="1" :min="0" :max="255" /></td>
+                                <td><UInputNumber v-model="pidNavRD" :step="1" :min="0" :max="255" /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -574,17 +541,17 @@
                         <tr>
                             <td class="third">{{ $t("pidTuningAngle") }}</td>
                             <td class="third">
-                                <input type="number" v-model.number="pidLevelAngle" step="1" min="0" max="255" />
+                                <UInputNumber v-model="pidLevelAngle" :step="1" :min="0" :max="255" />
                             </td>
                             <td class="third"></td>
                         </tr>
                         <tr>
                             <td class="third">{{ $t("pidTuningHorizon") }}</td>
                             <td class="third">
-                                <input type="number" v-model.number="pidLevelHorizon" step="1" min="0" max="255" />
+                                <UInputNumber v-model="pidLevelHorizon" :step="1" :min="0" :max="255" />
                             </td>
                             <td class="third">
-                                <input type="number" v-model.number="pidLevelTransition" step="1" min="0" max="255" />
+                                <UInputNumber v-model="pidLevelTransition" :step="1" :min="0" :max="255" />
                             </td>
                         </tr>
                     </tbody>
@@ -603,13 +570,7 @@
                         <tr>
                             <td class="third"></td>
                             <td class="third">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.levelAngleLimit"
-                                    step="1"
-                                    min="10"
-                                    max="200"
-                                />
+                                <UInputNumber v-model="advancedTuning.levelAngleLimit" :step="1" :min="10" :max="200" />
                             </td>
                             <td class="third"></td>
                         </tr>
@@ -637,13 +598,12 @@
                             <td><span v-html="$t('pidTuningFeedforwardGroup')"></span></td>
                             <td colspan="2">
                                 <span class="feedforwardOption feedforwardJitterFactor suboption">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="feedforwardJitterFactor"
-                                        v-model.number="advancedTuning.feedforward_jitter_factor"
-                                        step="1"
-                                        min="0"
-                                        max="20"
+                                        v-model="advancedTuning.feedforward_jitter_factor"
+                                        :step="1"
+                                        :min="0"
+                                        :max="20"
                                     />
                                     <label>
                                         <span v-html="$t('pidTuningFeedforwardJitter')"></span>
@@ -652,13 +612,12 @@
                                 </span>
 
                                 <span class="feedforwardOption feedforwardSmoothFactor suboption">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="feedforwardSmoothFactor"
-                                        v-model.number="advancedTuning.feedforward_smooth_factor"
-                                        step="1"
-                                        min="0"
-                                        max="95"
+                                        v-model="advancedTuning.feedforward_smooth_factor"
+                                        :step="1"
+                                        :min="0"
+                                        :max="95"
                                     />
                                     <label for="feedforwardSmoothFactor">
                                         <span v-html="$t('pidTuningFeedforwardSmoothFactor')"></span>
@@ -692,13 +651,12 @@
                                 </span>
 
                                 <span class="feedforwardOption feedforwardBoost suboption">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="feedforwardBoost"
-                                        v-model.number="advancedTuning.feedforward_boost"
-                                        step="1"
-                                        min="0"
-                                        max="50"
+                                        v-model="advancedTuning.feedforward_boost"
+                                        :step="1"
+                                        :min="0"
+                                        :max="50"
                                     />
                                     <label for="feedforwardBoost">
                                         <span v-html="$t('pidTuningFeedforwardBoost')"></span>
@@ -707,13 +665,12 @@
                                 </span>
 
                                 <span class="feedforwardOption feedforwardMaxRateLimit suboption">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="feedforwardMaxRateLimit"
-                                        v-model.number="advancedTuning.feedforward_max_rate_limit"
-                                        step="1"
-                                        min="0"
-                                        max="150"
+                                        v-model="advancedTuning.feedforward_max_rate_limit"
+                                        :step="1"
+                                        :min="0"
+                                        :max="150"
                                     />
                                     <label>
                                         <span v-html="$t('pidTuningFeedforwardMaxRateLimit')"></span>
@@ -725,13 +682,12 @@
                                 </span>
 
                                 <span class="feedforwardTransition suboption">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="feedforwardTransition-number"
-                                        v-model.number="feedforwardTransitionValue"
-                                        step="0.01"
-                                        min="0.00"
-                                        max="1.00"
+                                        v-model="feedforwardTransitionValue"
+                                        :step="0.01"
+                                        :min="0"
+                                        :max="1"
                                     />
                                     <label>
                                         <span v-html="$t('pidTuningFeedforwardTransition')"></span>
@@ -776,13 +732,12 @@
                                 </span>
 
                                 <span class="itermRelaxCutoff suboption" v-if="itermRelaxEnabled">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="itermRelaxCutoff"
-                                        v-model.number="advancedTuning.itermRelaxCutoff"
-                                        step="1"
-                                        min="1"
-                                        max="50"
+                                        v-model="advancedTuning.itermRelaxCutoff"
+                                        :step="1"
+                                        :min="1"
+                                        :max="50"
                                     />
                                     <label for="itermRelaxCutoff">
                                         <span v-html="$t('pidTuningItermRelaxCutoff')"></span>
@@ -817,13 +772,12 @@
                                 </span>
 
                                 <span class="suboption" v-if="antiGravityEnabled">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="itermAcceleratorGain"
-                                        v-model.number="antiGravityGainValue"
-                                        step="0.1"
-                                        min="0.1"
-                                        max="30"
+                                        v-model="antiGravityGainValue"
+                                        :step="0.1"
+                                        :min="0.1"
+                                        :max="30"
                                     />
                                     <label for="antiGravityGain">
                                         <span v-html="$t('pidTuningAntiGravityGain')"></span>
@@ -832,13 +786,12 @@
                                 </span>
 
                                 <span class="suboption antiGravityThres" v-if="antiGravityEnabled">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="itermThrottleThreshold"
-                                        v-model.number="advancedTuning.itermThrottleThreshold"
-                                        step="10"
-                                        min="20"
-                                        max="1000"
+                                        v-model="advancedTuning.itermThrottleThreshold"
+                                        :step="10"
+                                        :min="20"
+                                        :max="1000"
                                     />
                                     <label for="antiGravityThres">
                                         <span v-html="$t('pidTuningAntiGravityThres')"></span>
@@ -870,13 +823,12 @@
                             </td>
                             <td colspan="3">
                                 <span class="suboption">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="dMaxGain"
-                                        v-model.number="advancedTuning.dMaxGain"
-                                        step="1"
-                                        min="0"
-                                        max="100"
+                                        v-model="advancedTuning.dMaxGain"
+                                        :step="1"
+                                        :min="0"
+                                        :max="100"
                                     />
                                     <label for="dMaxGain">
                                         <span v-html="$t('pidTuningDMaxGain')"></span>
@@ -884,13 +836,12 @@
                                     <div class="helpicon cf_tip" :title="$t('pidTuningDMaxGainHelp')"></div>
                                 </span>
                                 <span class="suboption">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="dMaxAdvance"
-                                        v-model.number="advancedTuning.dMaxAdvance"
-                                        step="1"
-                                        min="0"
-                                        max="200"
+                                        v-model="advancedTuning.dMaxAdvance"
+                                        :step="1"
+                                        :min="0"
+                                        :max="200"
                                     />
                                     <label for="dMaxAdvance">
                                         <span v-html="$t('pidTuningDMaxAdvance')"></span>
@@ -917,13 +868,12 @@
                         <!-- Throttle Boost -->
                         <tr class="throttleBoost">
                             <td>
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="throttleBoost-number"
-                                    v-model.number="advancedTuning.throttleBoost"
-                                    step="1"
-                                    min="0"
-                                    max="100"
+                                    v-model="advancedTuning.throttleBoost"
+                                    :step="1"
+                                    :min="0"
+                                    :max="100"
                                 />
                             </td>
                             <td colspan="2">
@@ -939,13 +889,12 @@
                         <!-- Motor Output Limit -->
                         <tr class="motorOutputLimit">
                             <td>
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="motorLimit"
-                                    v-model.number="advancedTuning.motorOutputLimit"
-                                    step="1"
-                                    min="1"
-                                    max="100"
+                                    v-model="advancedTuning.motorOutputLimit"
+                                    :step="1"
+                                    :min="1"
+                                    :max="100"
                                 />
                             </td>
                             <td colspan="2">
@@ -961,12 +910,11 @@
                         <!-- Dynamic Idle Min RPM -->
                         <tr class="idleMinRpm">
                             <td>
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="idleMinRpm-number"
-                                    v-model.number="advancedTuning.idleMinRpm"
-                                    step="1"
-                                    min="0"
+                                    v-model="advancedTuning.idleMinRpm"
+                                    :step="1"
+                                    :min="0"
                                     :max="idleMinRpmMax"
                                     :disabled="!dshotTelemetryEnabled"
                                 />
@@ -997,13 +945,12 @@
                                 <div class="helpicon cf_tip" :title="$t('pidTuningVbatSagCompensationHelp')"></div>
 
                                 <span class="vbatSagValue suboption" v-if="vbatSagEnabled">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="vbatSagValue"
-                                        v-model.number="advancedTuning.vbat_sag_compensation"
-                                        step="1"
-                                        min="1"
-                                        max="150"
+                                        v-model="advancedTuning.vbat_sag_compensation"
+                                        :step="1"
+                                        :min="1"
+                                        :max="150"
                                     />
                                     <label for="vbatSagValue">
                                         <span v-html="$t('pidTuningVbatSagValue')"></span>
@@ -1027,13 +974,12 @@
                                 <div class="helpicon cf_tip" :title="$t('pidTuningThrustLinearizationHelp')"></div>
 
                                 <span class="thrustLinearValue suboption" v-if="thrustLinearEnabled">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="thrustLinearValue"
-                                        v-model.number="advancedTuning.thrustLinearization"
-                                        step="1"
-                                        min="1"
-                                        max="150"
+                                        v-model="advancedTuning.thrustLinearization"
+                                        :step="1"
+                                        :min="1"
+                                        :max="150"
                                     />
                                     <label for="thrustLinearValue">
                                         <span v-html="$t('pidTuningThrustLinearValue')"></span>
@@ -1066,16 +1012,15 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="number" id="tpaRate" v-model.number="tpaRate" step="1" min="0" max="100" />
+                                <UInputNumber id="tpaRate" v-model="tpaRate" :step="1" :min="0" :max="100" />
                             </td>
                             <td class="tpa-breakpoint">
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     id="tpaBreakpoint"
-                                    v-model.number="tpaBreakpoint"
-                                    step="10"
-                                    min="750"
-                                    max="2250"
+                                    v-model="tpaBreakpoint"
+                                    :step="10"
+                                    :min="750"
+                                    :max="2250"
                                 />
                             </td>
                         </tr>
@@ -1123,13 +1068,12 @@
                         <!-- Acro Trainer Angle Limit -->
                         <tr class="acroTrainerAngleLimit">
                             <td>
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="acroTrainerAngleLimit-number"
-                                    v-model.number="advancedTuning.acroTrainerAngleLimit"
-                                    step="1"
-                                    min="10"
-                                    max="80"
+                                    v-model="advancedTuning.acroTrainerAngleLimit"
+                                    :step="1"
+                                    :min="10"
+                                    :max="80"
                                 />
                             </td>
                             <td colspan="2">
@@ -1165,13 +1109,12 @@
                         <!-- Absolute Control -->
                         <tr class="absoluteControlGain">
                             <td>
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="absoluteControlGain-number"
-                                    v-model.number="advancedTuning.absoluteControlGain"
-                                    step="1"
-                                    min="0"
-                                    max="20"
+                                    v-model="advancedTuning.absoluteControlGain"
+                                    :step="1"
+                                    :min="0"
+                                    :max="20"
                                 />
                             </td>
                             <td colspan="2">

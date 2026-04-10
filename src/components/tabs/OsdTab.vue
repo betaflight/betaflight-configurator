@@ -382,12 +382,12 @@
                                             </div>
                                             <div class="timer-row osd_tip" :title="$t('osdTimerAlarmTooltip')">
                                                 <label :for="'osd-timer-alarm-' + idx">{{ $t("osdTimerAlarm") }}</label>
-                                                <input
-                                                    type="number"
+                                                <UInputNumber
                                                     :id="'osd-timer-alarm-' + idx"
-                                                    v-model.number="timer.alarm"
-                                                    min="0"
-                                                    max="600"
+                                                    v-model="timer.alarm"
+                                                    :min="0"
+                                                    :max="600"
+                                                    :step="1"
                                                     @change="onTimerChange(timer)"
                                                 />
                                             </div>
@@ -409,12 +409,12 @@
                                 <div class="alarms">
                                     <div v-for="entry in alarmEntries" :key="entry.key" class="alarm-config">
                                         <label :for="'osd-alarm-' + entry.key">
-                                            <input
-                                                type="number"
+                                            <UInputNumber
                                                 :id="'osd-alarm-' + entry.key"
-                                                v-model.number="entry.alarm.value"
+                                                v-model="entry.alarm.value"
                                                 :min="entry.alarm.min || 0"
                                                 :max="entry.alarm.max || 9999"
+                                                :step="1"
                                                 @change="onAlarmChange"
                                             />
                                             <span>{{ entry.alarm.display_name }}</span>

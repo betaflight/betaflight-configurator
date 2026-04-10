@@ -27,29 +27,29 @@
                                 <tr v-for="(servo, index) in servoConfigs" :key="index">
                                     <td style="text-align: center">Servo {{ index + 1 }}</td>
                                     <td class="min">
-                                        <input
-                                            type="number"
-                                            min="500"
-                                            max="2500"
-                                            v-model.number="servo.min"
+                                        <UInputNumber
+                                            :min="500"
+                                            :max="2500"
+                                            :step="1"
+                                            v-model="servo.min"
                                             @change="onServoChange"
                                         />
                                     </td>
                                     <td class="middle">
-                                        <input
-                                            type="number"
-                                            min="500"
-                                            max="2500"
-                                            v-model.number="servo.middle"
+                                        <UInputNumber
+                                            :min="500"
+                                            :max="2500"
+                                            :step="1"
+                                            v-model="servo.middle"
                                             @change="onServoChange"
                                         />
                                     </td>
                                     <td class="max">
-                                        <input
-                                            type="number"
-                                            min="500"
-                                            max="2500"
-                                            v-model.number="servo.max"
+                                        <UInputNumber
+                                            :min="500"
+                                            :max="2500"
+                                            :step="1"
+                                            v-model="servo.max"
                                             @change="onServoChange"
                                         />
                                     </td>

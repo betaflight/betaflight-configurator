@@ -118,24 +118,24 @@
                         </div>
 
                         <div class="adjustment-center" :data-label="$t('adjustmentsColumnAdjustmentCenter')">
-                            <input
-                                type="number"
-                                v-model.number="adjustment.adjustmentCenter"
+                            <UInputNumber
+                                v-model="adjustment.adjustmentCenter"
                                 class="center-input"
                                 :disabled="!adjustment.enabled"
-                                min="0"
-                                max="2000"
+                                :min="0"
+                                :max="2000"
+                                :step="1"
                             />
                         </div>
 
                         <div class="adjustment-scale" :data-label="$t('adjustmentsColumnAdjustmentScale')">
-                            <input
-                                type="number"
-                                v-model.number="adjustment.adjustmentScale"
+                            <UInputNumber
+                                v-model="adjustment.adjustmentScale"
                                 class="scale-input"
                                 :disabled="!adjustment.enabled"
-                                min="0"
-                                max="2000"
+                                :min="0"
+                                :max="2000"
+                                :step="1"
                             />
                         </div>
                     </div>
