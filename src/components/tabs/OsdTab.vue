@@ -2205,13 +2205,9 @@ onUnmounted(() => {
 }
 
 .alarms :deep(input) {
-    width: 55px;
-    padding-left: 3px;
     height: 18px;
     line-height: 20px;
-    text-align: left;
     border-radius: 3px;
-    margin-right: 0;
     font-size: 11px;
     font-weight: normal;
 }

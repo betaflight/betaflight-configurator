@@ -100,6 +100,10 @@
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: rcRatePrecision,
+                                        maximumFractionDigits: rcRatePrecision,
+                                    }"
                                 />
                             </td>
                             <td class="roll_rate">
@@ -109,6 +113,10 @@
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: ratePrecision,
+                                        maximumFractionDigits: ratePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
@@ -118,6 +126,10 @@
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: expoPrecision,
+                                        maximumFractionDigits: expoPrecision,
+                                    }"
                                 />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityRoll">
@@ -138,6 +150,10 @@
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: rcRatePrecision,
+                                        maximumFractionDigits: rcRatePrecision,
+                                    }"
                                 />
                             </td>
                             <td class="pitch_rate">
@@ -147,6 +163,10 @@
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: ratePrecision,
+                                        maximumFractionDigits: ratePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
@@ -156,6 +176,10 @@
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: expoPrecision,
+                                        maximumFractionDigits: expoPrecision,
+                                    }"
                                 />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityPitch">
@@ -176,6 +200,10 @@
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: rcRatePrecision,
+                                        maximumFractionDigits: rcRatePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
@@ -185,6 +213,10 @@
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: ratePrecision,
+                                        maximumFractionDigits: ratePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
@@ -194,6 +226,10 @@
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: expoPrecision,
+                                        maximumFractionDigits: expoPrecision,
+                                    }"
                                 />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityYaw">
@@ -546,6 +582,32 @@ const fourthColumnLabel = computed(() => {
         return i18n.getMessage("pidTuningRcRateActual");
     } else {
         return i18n.getMessage("pidTuningMaxVel");
+    }
+});
+
+// Precision for expo inputs based on rates type
+const expoPrecision = computed(() => (ratesType.value === RatesType.RACEFLIGHT ? 0 : 2));
+
+// Precision for rate inputs based on rates type
+const ratePrecision = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.BETAFLIGHT:
+        case RatesType.KISS:
+            return 2;
+        default:
+            return 0;
+    }
+});
+
+// Precision for RC rate inputs based on rates type
+const rcRatePrecision = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.BETAFLIGHT:
+        case RatesType.KISS:
+        case RatesType.QUICKRATES:
+            return 2;
+        default:
+            return 0;
     }
 });
 
