@@ -9,257 +9,262 @@
             </div>
             <div class="grid-box-spacer"></div>
             <div class="grid-box col2">
-                <div class="options gui_box col-span-1">
-                    <div class="darkgrey_box gui_box_titlebar">
-                        <div class="spacer_box_title">
-                            {{ $t("firmwareFlasherBoardSelectionHead") || $t("firmwareFlasherTargetSelectionHead") }}
-                        </div>
-                    </div>
-                    <div class="spacer">
-                        <div class="board-selection-grid">
-                            <div class="grid-row">
-                                <div
-                                    v-if="state.targetQualificationVisible"
-                                    :class="['note', state.targetQualificationClass]"
-                                >
-                                    <span class="target-qualification-label">{{ state.targetQualificationText }}</span>
-                                </div>
-                            </div>
-                            <div class="grid-row expert_mode option">
-                                <label class="vue-switch-label">
-                                    <input
-                                        v-model="state.expertMode"
-                                        class="expert_mode vue-switch-input"
-                                        type="checkbox"
-                                        @change="handleExpertModeChange"
-                                    />
-                                    <span class="vue-switch-slider" aria-hidden="true"></span>
-                                    <span class="vue-switch-text">{{ $t("expertMode") }}</span>
-                                    <span class="helpicon cf_tip_wide" :title="$t('expertModeDescription')"></span>
-                                </label>
-                            </div>
-                            <div class="grid-row option">
-                                <label class="vue-switch-label">
-                                    <input
-                                        v-model="state.showDevelopmentReleases"
-                                        class="show_development_releases vue-switch-input"
-                                        type="checkbox"
-                                        @change="handleShowDevelopmentReleasesChange"
-                                    />
-                                    <span class="vue-switch-slider" aria-hidden="true"></span>
-                                    <span class="vue-switch-text">{{
-                                        $t("firmwareFlasherShowDevelopmentReleases")
-                                    }}</span>
-                                    <span
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherShowDevelopmentReleasesDescription')"
-                                    ></span>
-                                </label>
-                            </div>
-                            <div v-if="state.buildTypeRowVisible" class="grid-row select-row">
-                                <div class="build-select">
-                                    <div class="select-wrapper-simple">
-                                        <select
-                                            id="buildTypeSelect"
-                                            v-model.number="state.selectedBuildType"
-                                            @change="onBuildTypeChange"
-                                        >
-                                            <option
-                                                v-for="option in state.buildTypeOptions"
-                                                :key="option.value"
-                                                :value="option.value"
-                                            >
-                                                {{ option.label }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="help-icon-cell">
-                                    <div
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherOnlineSelectBuildType')"
-                                    ></div>
-                                </div>
-                            </div>
-                            <div class="grid-row select-row">
-                                <div class="board-select">
-                                    <div class="select-wrapper-simple">
-                                        <Multiselect
-                                            v-model="boardSelection.state.selectedBoard"
-                                            :options="boardSelection.getGroupedBoardOptions()"
-                                            :searchable="true"
-                                            :show-labels="false"
-                                            :internal-search="true"
-                                            :clear-on-select="true"
-                                            group-values="boards"
-                                            group-label="name"
-                                            placeholder="Search for a board..."
-                                            label="target"
-                                            track-by="target"
-                                            @select="onBoardChange"
-                                            class="standard-select"
-                                            :key="
-                                                boardSelection.state.boardOptions.length +
-                                                '-' +
-                                                (boardSelection.state.selectedBoard || '')
-                                            "
-                                        />
-                                    </div>
-                                </div>
-                                <div class="help-icon-cell">
-                                    <span
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherOnlineSelectBoardHint')"
-                                    ></span>
-                                </div>
-                                <div class="action-button-cell">
-                                    <a
-                                        ref="detectBoardButton"
-                                        href="#"
-                                        class="detect-board cf_tip_wide"
-                                        :title="$t('firmwareFlasherOnlineSelectBoardDescription')"
-                                        @click.prevent="handleDetectBoard"
-                                    >
-                                        <span>{{ $t("firmwareFlasherDetectBoardButton") }}</span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="grid-row select-row">
-                                <div class="firmware-version">
-                                    <div
-                                        class="select-wrapper-simple"
-                                        :class="{ 'no-board-selected': !boardSelection.state.selectedBoard }"
-                                    >
-                                        <Multiselect
-                                            v-model="boardSelection.state.selectedFirmwareVersion"
-                                            :options="boardSelection.state.firmwareVersionOptions"
-                                            :searchable="true"
-                                            :show-labels="false"
-                                            :internal-search="true"
-                                            :clear-on-select="true"
-                                            placeholder="Select Version..."
-                                            label="label"
-                                            track-by="release"
-                                            @select="onFirmwareVersionChange"
-                                            class="standard-select"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="help-icon-cell">
-                                    <span
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherOnlineSelectFirmwareVersionDescription')"
-                                    ></span>
-                                </div>
-                                <div></div>
-                            </div>
-                            <div v-show="state.expertOptionsVisible" class="grid-row expertOptions option">
-                                <label class="vue-switch-label">
-                                    <input
-                                        v-model="state.noRebootSequence"
-                                        class="updating vue-switch-input"
-                                        type="checkbox"
-                                        @change="handleNoRebootChange"
-                                    />
-                                    <span class="vue-switch-slider" aria-hidden="true"></span>
-                                    <span class="vue-switch-text">{{ $t("firmwareFlasherNoReboot") }}</span>
-                                    <span
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherNoRebootDescription')"
-                                    ></span>
-                                </label>
-                            </div>
+                <UiBox
+                    :title="$t('firmwareFlasherBoardSelectionHead') || $t('firmwareFlasherTargetSelectionHead')"
+                    type="neutral"
+                >
+                    <div class="board-selection-grid">
+                        <div class="grid-row">
                             <div
-                                v-show="state.flashOnConnectWrapperVisible"
-                                class="grid-row expertOptions option flash_on_connect_wrapper"
+                                v-if="state.targetQualificationVisible"
+                                :class="['note', state.targetQualificationClass]"
                             >
-                                <label class="vue-switch-label">
-                                    <input
-                                        v-model="state.flashOnConnect"
-                                        class="flash_on_connect vue-switch-input"
-                                        type="checkbox"
-                                    />
-                                    <span class="vue-switch-slider" aria-hidden="true"></span>
-                                    <span class="vue-switch-text">{{ $t("firmwareFlasherFlashOnConnect") }}</span>
-                                    <span
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherFlashOnConnectDescription')"
-                                    ></span>
-                                </label>
-                            </div>
-                            <div v-show="state.expertOptionsVisible" class="grid-row expertOptions option">
-                                <label class="vue-switch-label">
-                                    <input
-                                        v-model="state.eraseChip"
-                                        class="erase_chip vue-switch-input"
-                                        type="checkbox"
-                                        @change="handleEraseChipChange"
-                                    />
-                                    <span class="vue-switch-slider" aria-hidden="true"></span>
-                                    <span class="vue-switch-text">{{ $t("firmwareFlasherFullChipErase") }}</span>
-                                    <span
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherFullChipEraseDescription')"
-                                    ></span>
-                                </label>
-                            </div>
-                            <div
-                                v-show="state.expertOptionsVisible"
-                                class="grid-row expertOptions option manual_baud_rate noboarder"
-                            >
-                                <label class="vue-switch-label">
-                                    <input
-                                        v-model="state.flashManualBaud"
-                                        class="flash_manual_baud vue-switch-input"
-                                        type="checkbox"
-                                        @change="handleFlashManualBaudChange"
-                                    />
-                                    <span class="vue-switch-slider" aria-hidden="true"></span>
-                                    <span class="vue-switch-text">{{ $t("firmwareFlasherManualBaud") }}</span>
-                                    <select
-                                        v-model="state.flashManualBaudRate"
-                                        id="flash_manual_baud_rate"
-                                        :title="$t('firmwareFlasherBaudRate')"
-                                        @change="handleFlashManualBaudRateChange"
-                                    >
-                                        <option value="921600">921600</option>
-                                        <option value="460800">460800</option>
-                                        <option value="256000">256000</option>
-                                        <option value="230400">230400</option>
-                                        <option value="115200">115200</option>
-                                        <option value="57600">57600</option>
-                                        <option value="38400">38400</option>
-                                        <option value="28800">28800</option>
-                                        <option value="19200">19200</option>
-                                    </select>
-                                    <span
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherManualBaudDescription')"
-                                    ></span>
-                                </label>
+                                <span class="target-qualification-label">{{ state.targetQualificationText }}</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div v-if="state.buildConfigVisible" class="build_configuration gui_box col-span-1">
-                    <div class="darkgrey_box gui_box_titlebar">
-                        <div class="build_configuration_toggle_wrapper">
-                            <label id="build_configuration_toggle_label" class="vue-switch-label">
+                        <div class="grid-row expert_mode option">
+                            <label class="vue-switch-label">
                                 <input
-                                    v-model="state.coreBuildMode"
-                                    ref="corebuildModeCheckbox"
-                                    class="corebuild_mode vue-switch-input"
+                                    v-model="state.expertMode"
+                                    class="expert_mode vue-switch-input"
+                                    type="checkbox"
+                                    @change="handleExpertModeChange"
+                                />
+                                <span class="vue-switch-slider" aria-hidden="true"></span>
+                                <span class="vue-switch-text">{{ $t("expertMode") }}</span>
+                                <span class="helpicon cf_tip_wide" :title="$t('expertModeDescription')"></span>
+                            </label>
+                        </div>
+                        <div class="grid-row option">
+                            <label class="vue-switch-label">
+                                <input
+                                    v-model="state.showDevelopmentReleases"
+                                    class="show_development_releases vue-switch-input"
+                                    type="checkbox"
+                                    @change="handleShowDevelopmentReleasesChange"
+                                />
+                                <span class="vue-switch-slider" aria-hidden="true"></span>
+                                <span class="vue-switch-text">{{ $t("firmwareFlasherShowDevelopmentReleases") }}</span>
+                                <span
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherShowDevelopmentReleasesDescription')"
+                                ></span>
+                            </label>
+                        </div>
+                        <div v-if="state.buildTypeRowVisible" class="grid-row select-row">
+                            <div class="build-select">
+                                <div class="select-wrapper-simple">
+                                    <select
+                                        id="buildTypeSelect"
+                                        v-model.number="state.selectedBuildType"
+                                        @change="onBuildTypeChange"
+                                    >
+                                        <option
+                                            v-for="option in state.buildTypeOptions"
+                                            :key="option.value"
+                                            :value="option.value"
+                                        >
+                                            {{ option.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="help-icon-cell">
+                                <div
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherOnlineSelectBuildType')"
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="grid-row select-row">
+                            <div class="board-select">
+                                <div class="select-wrapper-simple">
+                                    <Multiselect
+                                        v-model="boardSelection.state.selectedBoard"
+                                        :options="boardSelection.getGroupedBoardOptions()"
+                                        :searchable="true"
+                                        :show-labels="false"
+                                        :internal-search="true"
+                                        :clear-on-select="true"
+                                        group-values="boards"
+                                        group-label="name"
+                                        placeholder="Search for a board..."
+                                        label="target"
+                                        track-by="target"
+                                        @select="onBoardChange"
+                                        class="standard-select"
+                                        :key="
+                                            boardSelection.state.boardOptions.length +
+                                            '-' +
+                                            (boardSelection.state.selectedBoard || '')
+                                        "
+                                    />
+                                </div>
+                            </div>
+                            <div class="help-icon-cell">
+                                <span
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherOnlineSelectBoardHint')"
+                                ></span>
+                            </div>
+                            <div class="action-button-cell">
+                                <a
+                                    ref="detectBoardButton"
+                                    href="#"
+                                    class="detect-board cf_tip_wide"
+                                    :title="$t('firmwareFlasherOnlineSelectBoardDescription')"
+                                    @click.prevent="handleDetectBoard"
+                                >
+                                    <span>{{ $t("firmwareFlasherDetectBoardButton") }}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="grid-row select-row">
+                            <div class="firmware-version">
+                                <div
+                                    class="select-wrapper-simple"
+                                    :class="{ 'no-board-selected': !boardSelection.state.selectedBoard }"
+                                >
+                                    <Multiselect
+                                        v-model="boardSelection.state.selectedFirmwareVersion"
+                                        :options="boardSelection.state.firmwareVersionOptions"
+                                        :searchable="true"
+                                        :show-labels="false"
+                                        :internal-search="true"
+                                        :clear-on-select="true"
+                                        placeholder="Select Version..."
+                                        label="label"
+                                        track-by="release"
+                                        @select="onFirmwareVersionChange"
+                                        class="standard-select"
+                                    />
+                                </div>
+                            </div>
+                            <div class="help-icon-cell">
+                                <span
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherOnlineSelectFirmwareVersionDescription')"
+                                ></span>
+                            </div>
+                            <div></div>
+                        </div>
+                        <div v-show="state.expertOptionsVisible" class="grid-row expertOptions option">
+                            <label class="vue-switch-label">
+                                <input
+                                    v-model="state.noRebootSequence"
+                                    class="updating vue-switch-input"
+                                    type="checkbox"
+                                    @change="handleNoRebootChange"
+                                />
+                                <span class="vue-switch-slider" aria-hidden="true"></span>
+                                <span class="vue-switch-text">{{ $t("firmwareFlasherNoReboot") }}</span>
+                                <span
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherNoRebootDescription')"
+                                ></span>
+                            </label>
+                        </div>
+                        <div
+                            v-show="state.flashOnConnectWrapperVisible"
+                            class="grid-row expertOptions option flash_on_connect_wrapper"
+                        >
+                            <label class="vue-switch-label">
+                                <input
+                                    v-model="state.flashOnConnect"
+                                    class="flash_on_connect vue-switch-input"
                                     type="checkbox"
                                 />
                                 <span class="vue-switch-slider" aria-hidden="true"></span>
-                                <span id="build_configuration_toggle_label_text" class="vue-switch-text">{{
-                                    $t("coreBuild")
-                                }}</span>
+                                <span class="vue-switch-text">{{ $t("firmwareFlasherFlashOnConnect") }}</span>
+                                <span
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherFlashOnConnectDescription')"
+                                ></span>
                             </label>
-                            <div class="helpicon cf_tip_wide" :title="$t('coreBuildModeDescription')"></div>
                         </div>
-                        <div class="spacer_box_title" v-html="$t('firmwareFlasherBuildConfigurationHead')"></div>
+                        <div v-show="state.expertOptionsVisible" class="grid-row expertOptions option">
+                            <label class="vue-switch-label">
+                                <input
+                                    v-model="state.eraseChip"
+                                    class="erase_chip vue-switch-input"
+                                    type="checkbox"
+                                    @change="handleEraseChipChange"
+                                />
+                                <span class="vue-switch-slider" aria-hidden="true"></span>
+                                <span class="vue-switch-text">{{ $t("firmwareFlasherFullChipErase") }}</span>
+                                <span
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherFullChipEraseDescription')"
+                                ></span>
+                            </label>
+                        </div>
+                        <div
+                            v-show="state.expertOptionsVisible"
+                            class="grid-row expertOptions option manual_baud_rate noboarder"
+                        >
+                            <label class="vue-switch-label">
+                                <input
+                                    v-model="state.flashManualBaud"
+                                    class="flash_manual_baud vue-switch-input"
+                                    type="checkbox"
+                                    @change="handleFlashManualBaudChange"
+                                />
+                                <span class="vue-switch-slider" aria-hidden="true"></span>
+                                <span class="vue-switch-text">{{ $t("firmwareFlasherManualBaud") }}</span>
+                                <select
+                                    v-model="state.flashManualBaudRate"
+                                    id="flash_manual_baud_rate"
+                                    :title="$t('firmwareFlasherBaudRate')"
+                                    @change="handleFlashManualBaudRateChange"
+                                >
+                                    <option value="921600">921600</option>
+                                    <option value="460800">460800</option>
+                                    <option value="256000">256000</option>
+                                    <option value="230400">230400</option>
+                                    <option value="115200">115200</option>
+                                    <option value="57600">57600</option>
+                                    <option value="38400">38400</option>
+                                    <option value="28800">28800</option>
+                                    <option value="19200">19200</option>
+                                </select>
+                                <span
+                                    class="helpicon cf_tip_wide"
+                                    :title="$t('firmwareFlasherManualBaudDescription')"
+                                ></span>
+                            </label>
+                        </div>
                     </div>
+                </UiBox>
+
+                <UiBox
+                    :title="$t('firmwareFlasherBuildConfigurationHead')"
+                    v-if="state.buildConfigVisible"
+                    class="build_configuration col-span-1"
+                    type="neutral"
+                >
+                    <!--                     <div class="darkgrey_box gui_box_titlebar">
+                    <div class="build_configuration_toggle_wrapper">
+                        <label id="build_configuration_toggle_label" class="vue-switch-label">
+                            <input
+                                v-model="state.coreBuildMode"
+                                ref="corebuildModeCheckbox"
+                                class="corebuild_mode vue-switch-input"
+                                type="checkbox"
+                            />
+                            <span class="vue-switch-slider" aria-hidden="true"></span>
+                            <span id="build_configuration_toggle_label_text" class="vue-switch-text">{{
+                                $t("coreBuild")
+                            }}</span>
+                        </label>
+                        <div class="helpicon cf_tip_wide" :title="$t('coreBuildModeDescription')"></div>
+                    </div>
+                    <div class="spacer_box_title" v-html="$t('firmwareFlasherBuildConfigurationHead')"></div>
+                </div> -->
+                    <template v-slot:title>
+                        <SettingRow :label="$t('coreBuild')" :help="$t('coreBuildModeDescription')">
+                            <USwitch v-model="state.coreBuildMode"
+                        /></SettingRow>
+                    </template>
                     <div class="grid-box col1">
                         <div v-show="!state.coreBuildMode" class="spacer">
                             <div class="grid-box col2">
@@ -415,138 +420,123 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div v-if="state.releaseInfoVisible" ref="releaseInfoContainer" class="release_info gui_box col-span-1">
-                    <div class="darkgrey_box gui_box_titlebar">
-                        <div class="spacer_box_title" v-html="$t('firmwareFlasherReleaseSummaryHead')"></div>
-                    </div>
-                    <div class="spacer">
-                        <div class="release_info_grid">
-                            <!-- Target Row -->
-                            <div class="info_row">
-                                <strong>{{ $t("firmwareFlasherReleaseTarget") }}</strong>
-                                <span ref="targetSpan" class="target">{{ state.targetSpanText }}</span>
-                                <div class="board_support">
-                                    <a id="targetSupportInfoUrl" :href="state.targetSupportUrl" target="_blank">{{
-                                        $t("betaflightSupportButton")
-                                    }}</a>
-                                    <div
-                                        class="helpicon cf_tip_wide"
-                                        :title="$t('firmwareFlasherTargetWikiUrlInfo')"
-                                    ></div>
-                                </div>
-                            </div>
+                </UiBox>
 
-                            <!-- Manufacturer Row (conditional) -->
-                            <div v-if="state.manufacturerInfoVisible" ref="manufacturerInfoDiv" class="info_row">
-                                <strong>{{ $t("firmwareFlasherReleaseManufacturer") }}</strong>
-                                <span ref="manufacturerSpan" id="manufacturer">{{ state.manufacturerSpanText }}</span>
-                                <div></div>
+                <UiBox
+                    :title="$t('firmwareFlasherReleaseSummaryHead')"
+                    v-if="state.releaseInfoVisible"
+                    class="release_info col-span-1"
+                >
+                    <div class="release_info_grid">
+                        <!-- Target Row -->
+                        <div class="info_row">
+                            <strong>{{ $t("firmwareFlasherReleaseTarget") }}</strong>
+                            <span ref="targetSpan" class="target">{{ state.targetSpanText }}</span>
+                            <div class="board_support">
+                                <a id="targetSupportInfoUrl" :href="state.targetSupportUrl" target="_blank">{{
+                                    $t("betaflightSupportButton")
+                                }}</a>
+                                <div class="helpicon cf_tip_wide" :title="$t('firmwareFlasherTargetWikiUrlInfo')"></div>
                             </div>
+                        </div>
 
-                            <!-- Version Row -->
-                            <div class="info_row">
-                                <strong>{{ $t("firmwareFlasherReleaseVersion") }}</strong>
-                                <a
-                                    ref="releaseNameLink"
-                                    :title="$t('firmwareFlasherReleaseVersionUrl')"
-                                    class="name"
-                                    :href="state.releaseNameLink"
-                                    target="_blank"
-                                    >{{ state.releaseNameText }}</a
+                        <!-- Manufacturer Row (conditional) -->
+                        <div v-if="state.manufacturerInfoVisible" ref="manufacturerInfoDiv" class="info_row">
+                            <strong>{{ $t("firmwareFlasherReleaseManufacturer") }}</strong>
+                            <span ref="manufacturerSpan" id="manufacturer">{{ state.manufacturerSpanText }}</span>
+                            <div></div>
+                        </div>
+
+                        <!-- Version Row -->
+                        <div class="info_row">
+                            <strong>{{ $t("firmwareFlasherReleaseVersion") }}</strong>
+                            <a
+                                ref="releaseNameLink"
+                                :title="$t('firmwareFlasherReleaseVersionUrl')"
+                                class="name"
+                                :href="state.releaseNameLink"
+                                target="_blank"
+                                >{{ state.releaseNameText }}</a
+                            >
+                            <div></div>
+                        </div>
+
+                        <!-- MCU Row -->
+                        <div class="info_row">
+                            <strong>{{ $t("firmwareFlasherReleaseMCU") }}</strong>
+                            <span ref="targetMCUSpan" id="targetMCU">{{ state.targetMCUText }}</span>
+                            <div></div>
+                        </div>
+
+                        <!-- Date Row -->
+                        <div class="info_row">
+                            <strong>{{ $t("firmwareFlasherReleaseDate") }}</strong>
+                            <span ref="releaseDateSpan" class="date">{{ state.releaseDateText }}</span>
+                            <div></div>
+                        </div>
+
+                        <!-- Configuration File Row -->
+                        <div class="info_row">
+                            <strong>{{ $t("firmwareFlasherConfigurationFile") }}</strong>
+                            <span ref="configFilenameSpan" class="configFilename">{{ state.configFilenameText }}</span>
+                            <div></div>
+                        </div>
+
+                        <!-- Cloud Details Row -->
+                        <div class="info_row">
+                            <strong>{{ $t("firmwareFlasherCloudBuildDetails") }}</strong>
+                            <a
+                                ref="cloudTargetLogLink"
+                                :title="$t('firmwareFlasherCloudBuildLogUrl')"
+                                id="cloudTargetLog"
+                                :href="cloudBuild.state.cloudTargetLogUrl"
+                                target="_blank"
+                                >{{ cloudBuild.state.cloudTargetLogText }}</a
+                            >
+                            <div></div>
+                        </div>
+
+                        <!-- Cloud Status Row -->
+                        <div class="info_row">
+                            <strong>{{ $t("firmwareFlasherCloudBuildStatus") }}</strong>
+                            <div class="status_wrapper">
+                                <progress
+                                    :ref="cloudBuild.buildProgressBar"
+                                    class="buildProgress"
+                                    value="0"
+                                    min="0"
+                                    max="100"
+                                ></progress>
+                                <span ref="cloudTargetStatusSpan" id="cloudTargetStatus">
+                                    {{ cloudBuild.state.cloudTargetStatusText }}</span
                                 >
-                                <div></div>
                             </div>
-
-                            <!-- MCU Row -->
-                            <div class="info_row">
-                                <strong>{{ $t("firmwareFlasherReleaseMCU") }}</strong>
-                                <span ref="targetMCUSpan" id="targetMCU">{{ state.targetMCUText }}</span>
-                                <div></div>
-                            </div>
-
-                            <!-- Date Row -->
-                            <div class="info_row">
-                                <strong>{{ $t("firmwareFlasherReleaseDate") }}</strong>
-                                <span ref="releaseDateSpan" class="date">{{ state.releaseDateText }}</span>
-                                <div></div>
-                            </div>
-
-                            <!-- Configuration File Row -->
-                            <div class="info_row">
-                                <strong>{{ $t("firmwareFlasherConfigurationFile") }}</strong>
-                                <span ref="configFilenameSpan" class="configFilename">{{
-                                    state.configFilenameText
-                                }}</span>
-                                <div></div>
-                            </div>
-
-                            <!-- Cloud Details Row -->
-                            <div class="info_row">
-                                <strong>{{ $t("firmwareFlasherCloudBuildDetails") }}</strong>
+                            <div class="btn default_btn">
                                 <a
-                                    ref="cloudTargetLogLink"
-                                    :title="$t('firmwareFlasherCloudBuildLogUrl')"
-                                    id="cloudTargetLog"
-                                    :href="cloudBuild.state.cloudTargetLogUrl"
-                                    target="_blank"
-                                    >{{ cloudBuild.state.cloudTargetLogText }}</a
+                                    ref="cloudBuildCancelButton"
+                                    :class="[
+                                        'cloud_build_cancel',
+                                        { disabled: cloudBuild.state.cancelBuildButtonDisabled },
+                                    ]"
+                                    href="#"
+                                    @click.prevent="cloudBuild.handleCancelBuild"
+                                    >{{ $t("cancel") }}</a
                                 >
-                                <div></div>
-                            </div>
-
-                            <!-- Cloud Status Row -->
-                            <div class="info_row">
-                                <strong>{{ $t("firmwareFlasherCloudBuildStatus") }}</strong>
-                                <div class="status_wrapper">
-                                    <progress
-                                        :ref="cloudBuild.buildProgressBar"
-                                        class="buildProgress"
-                                        value="0"
-                                        min="0"
-                                        max="100"
-                                    ></progress>
-                                    <span ref="cloudTargetStatusSpan" id="cloudTargetStatus">
-                                        {{ cloudBuild.state.cloudTargetStatusText }}</span
-                                    >
-                                </div>
-                                <div class="btn default_btn">
-                                    <a
-                                        ref="cloudBuildCancelButton"
-                                        :class="[
-                                            'cloud_build_cancel',
-                                            { disabled: cloudBuild.state.cancelBuildButtonDisabled },
-                                        ]"
-                                        href="#"
-                                        @click.prevent="cloudBuild.handleCancelBuild"
-                                        >{{ $t("cancel") }}</a
-                                    >
-                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </UiBox>
             </div>
             <div class="grid-box-spacer"></div>
             <div class="grid-box col2">
-                <div class="gui_box gui_warning">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" v-html="$t('warningTitle')"></div>
-                    </div>
-                    <div class="spacer">
-                        <p v-html="$t('firmwareFlasherWarningText')"></p>
-                        <br />
-                        <p v-html="$t('firmwareFlasherTargetWarning')"></p>
-                    </div>
-                </div>
-                <div class="gui_box gui_note">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" v-html="$t('firmwareFlasherRecoveryHead')"></div>
-                    </div>
-                    <div class="spacer">
-                        <p v-html="$t('firmwareFlasherRecoveryText')"></p>
-                    </div>
-                </div>
+                <UiBox :title="$t('warningTitle')" type="error" highlight class="note-text-format">
+                    <p v-html="$t('firmwareFlasherWarningText')"></p>
+                    <br />
+                    <p v-html="$t('firmwareFlasherTargetWarning')"></p>
+                </UiBox>
+                <UiBox :title="$t('firmwareFlasherRecoveryHead')" highlight class="note-text-format">
+                    <p v-html="$t('firmwareFlasherRecoveryText')"></p>
+                </UiBox>
             </div>
         </div>
 
@@ -701,6 +691,8 @@ import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
+import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
 
 export default defineComponent({
     name: "FirmwareFlasherTab",
@@ -709,6 +701,8 @@ export default defineComponent({
         WikiButton,
         Multiselect,
         SponsorTile,
+        UiBox,
+        SettingRow,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
@@ -3302,8 +3296,7 @@ export default defineComponent({
 }
 
 /* List styling for recovery and warning text - using :deep to pierce scoped styles */
-:deep(.gui_note .spacer ul),
-:deep(.gui_warning .spacer ul) {
+:deep(.note-text-format ul) {
     list-style: none !important;
     margin-left: 0.5rem !important;
     margin-top: 0.5rem !important;
@@ -3311,8 +3304,7 @@ export default defineComponent({
     padding-left: 0 !important;
 }
 
-:deep(.gui_note .spacer li),
-:deep(.gui_warning .spacer li) {
+:deep(.note-text-format li) {
     margin-bottom: 0.25rem !important;
     margin-left: 0 !important;
     padding-left: 1.5em !important; /* space for dash */
@@ -3320,8 +3312,7 @@ export default defineComponent({
     position: relative;
 }
 
-:deep(.gui_note .spacer li::before),
-:deep(.gui_warning .spacer li::before) {
+:deep(.note-text-format li::before) {
     content: "– " !important;
     margin-right: 0.5rem !important;
     color: var(--text) !important;
