@@ -1,12 +1,9 @@
 <template>
     <BaseTab tab-name="help">
-        <div class="content_wrapper grid-row">
-            <div class="grid-col col8">
-                <div class="gui_box">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" v-html="$t('defaultDocumentationHead')"></div>
-                    </div>
-                    <div class="spacer">
+        <div class="content_wrapper">
+            <div class="grid-row grid-box col5">
+                <div class="col-span-3">
+                    <UiBox :title="$t('defaultDocumentationHead')" class="sm:h-full">
                         <p v-html="$t('defaultDocumentation')"></p>
                         <ul>
                             <li>
@@ -16,19 +13,11 @@
                                 <span v-html="$t('defaultDocumentation2')"></span>
                             </li>
                         </ul>
-                    </div>
+                    </UiBox>
                 </div>
-            </div>
-            <div class="grid-col col4">
-                <div class="gui_box">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" v-html="$t('defaultSupportHead')"></div>
-                    </div>
-                    <div class="spacer">
+                <div class="col-span-2">
+                    <UiBox :title="$t('defaultSupportHead')" class="sm:h-full">
                         <p v-html="$t('defaultSupport')"></p>
-                        <div class="subline">
-                            <strong v-html="$t('defaultSupportSubline1')"></strong>
-                        </div>
                         <ul>
                             <li>
                                 <span v-html="$t('defaultSupport1')"></span>
@@ -51,7 +40,7 @@
                                 <span v-html="$t('defaultSupport5')"></span>
                             </li>
                         </ul>
-                    </div>
+                    </UiBox>
                 </div>
             </div>
         </div>
@@ -62,11 +51,13 @@
 import { defineComponent } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
+import UiBox from "../elements/UiBox.vue";
 
 export default defineComponent({
     name: "HelpTab",
     components: {
         BaseTab,
+        UiBox,
     },
     setup() {
         // Called after tab is ready - equivalent to old content_ready callback
@@ -88,9 +79,11 @@ export default defineComponent({
         min-height: 500px;
         margin-bottom: 0;
     }
+
     ul {
         margin-bottom: 15px;
     }
+
     li {
         border-top: 1px dotted var(--surface-500);
         padding-top: 5px;
@@ -99,18 +92,22 @@ export default defineComponent({
         background-repeat: no-repeat;
         background-position: 0 8px;
         background-size: 12px;
+
         span {
             margin-left: 17px;
             display: block;
+
             a {
                 color: var(--primary-500);
             }
         }
     }
+
     .subline {
         margin-bottom: 5px;
     }
 }
+
 /** (phones) **/
 @media all and (max-width: 575px) {
     .tab-help {
