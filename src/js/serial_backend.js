@@ -263,16 +263,11 @@ function finishClose(finishedCallback) {
     sensor_status();
 
     if (wasConnected) {
-        // Ensure any mounted Vue tab is unmounted before we remove DOM to avoid Vue runtime errors
+        // Clear the active root-mounted tab before navigation selects the next one.
         try {
             unmountVueTab();
         } catch (e) {
             console.warn("unmountVueTab failed:", e);
-        }
-
-        const content = document.getElementById("content");
-        if (content) {
-            content.innerHTML = "";
         }
 
         // close cliPanel if left open

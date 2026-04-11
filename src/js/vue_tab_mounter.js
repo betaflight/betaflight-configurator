@@ -1,27 +1,25 @@
-/**
- * Vue Tab Mounting Utility
- *
- * Provides a helper function to mount Vue tab components into the #content area.
- * This bridges the existing jQuery-based tab switching with Vue components.
- */
-import { createApp, effectScope, h } from "vue";
-import { pinia } from "./pinia_instance.js";
-import i18next from "i18next";
-import I18NextVue from "i18next-vue";
-import { VueTabComponents } from "./vue_components.js";
+import { reactive } from "vue";
+import { VueTabComponents } from "./vue_tab_registry.js";
 import GUI, { TABS } from "./gui.js";
 import { useNavigationStore } from "../stores/navigation";
-import { getNuxtUiRouter } from "./nuxt_ui_router.js";
-import ui from "@nuxt/ui/vue-plugin";
-
-// Store the current mounted Vue app instance for cleanup
-let currentTabApp = null;
-let currentTabScope = null;
 export const TAB_ADAPTER_REGISTRATION_KEY = "tabAdapterRegistration";
+export const vueTabState = reactive({
+    activeTabName: null,
+    activeTabKey: 0,
+});
+export const tabAdapterRegistration = reactive({ current: null });
+let pendingContentReadyCallback = null;
+
+function clearTabAdapter(tabName) {
+    if (tabName && TABS[tabName]) {
+        delete TABS[tabName];
+    }
+    tabAdapterRegistration.current = null;
+}
 
 export function buildTabAdapter(tabName, componentInstance, existingAdapter = TABS[tabName]) {
     const fallbackCleanup = (callback) => {
-        if (componentInstance.cleanup) {
+        if (typeof componentInstance?.cleanup === "function") {
             componentInstance.cleanup(callback);
         } else if (callback) {
             callback();
@@ -55,110 +53,54 @@ export function hasVueTab(tabName) {
 }
 
 /**
- * Mount a Vue tab component into the #content container
+ * Select the active Vue tab inside the root app tree.
  * @param {string} tabName - The tab name to mount
  * @param {Function} contentReadyCallback - Callback when tab is ready (for compatibility)
- * @returns {boolean} True if mounted successfully
+ * @returns {boolean} True if the tab exists and was scheduled
  */
 export function mountVueTab(tabName, contentReadyCallback) {
-    const TabComponent = VueTabComponents[tabName];
-    if (!TabComponent) {
+    if (!hasVueTab(tabName)) {
         console.warn(`[Vue Tab] No Vue component found for tab: ${tabName}`);
         return false;
     }
 
-    // Clear any previous content
-    const contentEl = document.getElementById("content");
-    if (!contentEl) {
-        console.error("[Vue Tab] #content element not found");
-        return false;
-    }
+    const previousTab = vueTabState.activeTabName ?? GUI.active_tab;
+    clearTabAdapter(previousTab);
 
-    // Unmount previous Vue tab app if exists
-    unmountVueTab();
-
-    // Clear content
-    contentEl.innerHTML = "";
-
-    // Create new Vue app for this tab
-    currentTabApp = createApp({
-        render() {
-            return h(TabComponent);
-        },
-    });
-
-    // Use i18n plugin
-    currentTabApp.use(I18NextVue, { i18next });
-    currentTabApp.use(pinia);
-    currentTabApp.use(getNuxtUiRouter());
-
-    // Install Nuxt UI inside a dedicated EffectScope so that watchers
-    // created during plugin install (useDark, useMediaQuery, etc.) are
-    // captured and can be stopped when the tab is unmounted.  Without
-    // this, each tab switch leaks orphaned watchers/event-listeners
-    // because plugin install() runs outside the app's component scope.
-    currentTabScope = effectScope();
-    currentTabScope.run(() => currentTabApp.use(ui));
-
-    currentTabApp.provide("gui", GUI);
-    const tabAdapterRegistration = { current: null };
-    currentTabApp.provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
-
-    // Provide the global betaflight model
-    if (globalThis.vm) {
-        currentTabApp.provide("betaflightModel", globalThis.vm);
-    }
-
-    // Set active tab for legacy compatibility
+    pendingContentReadyCallback = contentReadyCallback ?? null;
     GUI.active_tab = tabName;
-
-    // Mount to content
-    const componentInstance = currentTabApp.mount(contentEl);
-
-    console.log(`[Vue Tab] Mounted: ${tabName}`);
-    // Preserve any adapter the tab explicitly registered during setup, then add the generic hooks
-    const tabAdapter = buildTabAdapter(tabName, componentInstance, tabAdapterRegistration.current);
-
-    // Merge the adapter into TABS. The adapter provides default handlers
-    // (cleanup, expertModeChanged, etc.). We intentionally spread the
-    // adapter first so that any properties the component itself sets on
-    // `TABS[tabName]` during its mount will override the adapter defaults.
-    //
-    // Note: this ordering is subtle — a component that writes `TABS[tabName].cleanup`
-    // synchronously during its mount will replace the adapter's cleanup. This
-    // is expected: adapter supplies defaults, components supply concrete
-    // implementations. If a component needs to preserve adapter behavior it
-    // should explicitly call or compose with the adapter's methods instead of
-    // relying on the merge ordering.
-    TABS[tabName] = { ...tabAdapter, ...TABS[tabName] };
-
-    // Reset tab switch flag and call content ready callback after next tick
-    setTimeout(() => {
-        GUI.tab_switch_in_progress = false;
-        if (contentReadyCallback) {
-            contentReadyCallback();
-        }
-    }, 0);
-
+    vueTabState.activeTabName = tabName;
+    vueTabState.activeTabKey += 1;
     return true;
 }
 
 /**
- * Unmount the current Vue tab app (cleanup)
+ * Finalize tab registration after the root app renders the selected component.
+ */
+export function completeVueTabMount(componentInstance) {
+    const tabName = vueTabState.activeTabName;
+    if (!tabName) {
+        return;
+    }
+
+    const tabAdapter = buildTabAdapter(tabName, componentInstance, tabAdapterRegistration.current);
+
+    // Spread the generic adapter first so component-defined handlers win.
+    TABS[tabName] = { ...tabAdapter, ...TABS[tabName] };
+
+    GUI.content_ready(() => {
+        GUI.tab_switch_in_progress = false;
+        pendingContentReadyCallback?.();
+        pendingContentReadyCallback = null;
+    });
+}
+
+/**
+ * Clear the active Vue tab so the root app can unmount it naturally.
  */
 export function unmountVueTab() {
-    if (currentTabApp) {
-        currentTabApp.unmount();
-        currentTabApp = null;
-
-        if (currentTabScope) {
-            currentTabScope.stop();
-            currentTabScope = null;
-        }
-
-        // Clean up TABS registry
-        if (GUI.active_tab && TABS[GUI.active_tab]) {
-            delete TABS[GUI.active_tab];
-        }
-    }
+    pendingContentReadyCallback = null;
+    clearTabAdapter(vueTabState.activeTabName ?? GUI.active_tab);
+    vueTabState.activeTabName = null;
+    vueTabState.activeTabKey += 1;
 }

@@ -307,7 +307,14 @@
                     <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
-                <div id="content"></div>
+                <div id="content">
+                    <component
+                        :is="activeTabComponent"
+                        v-if="activeTabComponent"
+                        :key="vueTabState.activeTabKey"
+                        ref="activeTabInstance"
+                    />
+                </div>
             </div>
             <status-bar
                 :port-usage-down="PortUsage.port_usage_down"
@@ -333,7 +340,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, shallowRef } from "vue";
+import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
 import { useConnectionStore } from "./stores/connection";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import FCModule from "./js/fc.js";
@@ -341,6 +348,14 @@ import MSPModule from "./js/msp.js";
 import PortHandlerModule from "./js/port_handler.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
+import GUI from "./js/gui.js";
+import {
+    completeVueTabMount,
+    tabAdapterRegistration,
+    TAB_ADAPTER_REGISTRATION_KEY,
+    vueTabState,
+} from "./js/vue_tab_mounter.js";
+import { VueTabComponents } from "./js/vue_tab_registry.js";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
@@ -378,6 +393,7 @@ const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
 const connectionStore = useConnectionStore();
+const activeTabInstance = ref(null);
 
 // Read/write current vm via currentVm() so we track the same vm as the globals after window.vm is reassigned.
 const expertMode = computed({
@@ -391,6 +407,27 @@ const expertMode = computed({
 });
 
 const firmwareFlasherActive = computed(() => Boolean(currentVm()?.firmwareFlasherActive));
+const activeTabComponent = computed(() => {
+    const tabName = vueTabState.activeTabName;
+    return tabName ? (VueTabComponents[tabName] ?? null) : null;
+});
+
+provide("betaflightModel", currentVm());
+provide("gui", GUI);
+provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
+
+watch(
+    () => vueTabState.activeTabKey,
+    async () => {
+        if (!vueTabState.activeTabName) {
+            return;
+        }
+
+        await nextTick();
+        completeVueTabMount(activeTabInstance.value);
+    },
+    { flush: "post" },
+);
 </script>
 
 <style scoped>
