@@ -6,6 +6,7 @@
 
 @import "tailwindcss";
 @import "@nuxt/ui";
+@source "../../vite.config.js";
 
 @theme static {
     /* Extending Tailwind colors with Betaflight primary colors */
@@ -102,6 +103,7 @@ html {
     /* The default ui bg is neutral-900, it will stand out for the duration of the conversion to Nuxt UI */
     /* When the conversion is complete, the color will be matched to the existing theme colors */
     /* --ui-bg: var(--ui-color-neutral-800); */
+    --ui-primary: var(--primary-500);
     --ui-error: var(--ui-color-error-500);
     --ui-radius: 0.35rem;
 

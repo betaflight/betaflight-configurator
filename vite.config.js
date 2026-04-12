@@ -155,10 +155,17 @@ export default defineConfig({
                         },
                     },
                 },
+                tooltip: {
+                    slots: {
+                        content: "ring-2 ring-primary",
+                        arrow: "fill-primary",
+                    },
+                },
                 colors: {
                     primary: "primary",
                     neutral: "neutral",
                     success: "lime",
+                    warning: "orange",
                 },
             },
         }),
