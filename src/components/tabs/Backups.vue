@@ -20,6 +20,9 @@
                             >Backup</a
                         >
                     </div>
+                    <div v-if="backupMessage" class="backup-message">
+                        <p>{{ backupMessage }}</p>
+                    </div>
                     <div class="backup-list">
                         <table class="backup-table">
                             <thead>
@@ -119,6 +122,7 @@ const connectionStore = useConnectionStore();
 
 const isLoading = ref(true);
 const backups = ref([]);
+const backupMessage = ref(null);
 const isEditing = ref(false);
 const editForm = ref({ id: null, name: "", description: "", created: null });
 let userApi = null;
@@ -146,12 +150,15 @@ async function loadBackups() {
         const loggedIn = await loginManager.isUserLoggedIn();
         if (!loggedIn) {
             backups.value = [];
+            backupMessage.value = null;
             isLoading.value = false;
             return;
         }
 
         userApi = loginManager.getUserApi();
-        backups.value = await userApi.getBackups();
+        const response = await userApi.getBackups();
+        backups.value = response.backups ?? [];
+        backupMessage.value = response.message ?? null;
     } catch (error) {
         gui_log(`${t("userBackupsLoadFailed")}: ${error}`);
     }
@@ -298,6 +305,14 @@ onUnmounted(() => {
         text-align: center;
         margin-top: 100px;
     }
+}
+
+.backup-message {
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    background-color: var(--surface-500);
+    border-left: 4px solid var(--primary-500);
+    border-radius: 4px;
 }
 
 .backup-controls {
