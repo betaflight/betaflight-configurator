@@ -15,10 +15,11 @@ import { i18n } from "./localization";
 import { pinia } from "./pinia_instance";
 import { useDialogStore } from "../stores/dialog";
 import { registerSW } from "virtual:pwa-register";
-import { isAndroid } from "./utils/checkCompatibility.js";
+import { isAndroid, isEmbeddedDeployment } from "./utils/checkCompatibility.js";
 
-// Skip PWA update/offline prompts on Android native builds where they are unnecessary
-if (!isAndroid()) {
+// Skip PWA/service-worker on embedded deployments (WebSocket-only host, plain HTTP)
+// and Android native builds where they are unnecessary
+if (!isAndroid() && !isEmbeddedDeployment()) {
     const dialogStore = useDialogStore(pinia);
     const updateSW = registerSW({
         onNeedRefresh() {
