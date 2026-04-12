@@ -110,12 +110,12 @@
                                     <span class="elrsUid">{{ elrsUidDisplay }}</span>
                                 </div>
                                 <div class="number" v-if="showElrsModelId">
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="elrsModelId-number"
-                                        min="0"
-                                        max="255"
-                                        v-model.number="rxConfig.elrsModelId"
+                                        :min="0"
+                                        :max="255"
+                                        :step="1"
+                                        v-model="rxConfig.elrsModelId"
                                     />
                                     <span v-html="$t('receiverModelId')"></span>
                                     <div class="helpicon cf_tip" :title="$t('receiverHelpModelId')"></div>
@@ -218,12 +218,12 @@
                                 <div class="spacer_box_title" v-html="$t('receiverStickMin')"></div>
                             </div>
                             <div class="input-helpicon-flex">
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="stick_min"
-                                    min="1000"
-                                    max="1200"
-                                    v-model.number="rxConfig.stick_min"
+                                    :min="1000"
+                                    :max="1200"
+                                    :step="1"
+                                    v-model="rxConfig.stick_min"
                                 />
                                 <div class="helpicon cf_tip" :title="$t('receiverHelpStickMin')"></div>
                             </div>
@@ -233,12 +233,12 @@
                                 <div class="spacer_box_title" v-html="$t('receiverStickCenter')"></div>
                             </div>
                             <div class="input-helpicon-flex">
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="stick_center"
-                                    min="1401"
-                                    max="1599"
-                                    v-model.number="rxConfig.stick_center"
+                                    :min="1401"
+                                    :max="1599"
+                                    :step="1"
+                                    v-model="rxConfig.stick_center"
                                 />
                                 <div class="helpicon cf_tip" :title="$t('receiverHelpStickCenter')"></div>
                             </div>
@@ -248,12 +248,12 @@
                                 <div class="spacer_box_title" v-html="$t('receiverStickMax')"></div>
                             </div>
                             <div class="input-helpicon-flex">
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="stick_max"
-                                    min="1800"
-                                    max="2000"
-                                    v-model.number="rxConfig.stick_max"
+                                    :min="1800"
+                                    :max="2000"
+                                    :step="1"
+                                    v-model="rxConfig.stick_max"
                                 />
                                 <div class="helpicon cf_tip" :title="$t('receiverHelpStickMax')"></div>
                             </div>
@@ -265,12 +265,12 @@
                                 <div class="spacer_box_title" v-html="$t('receiverDeadband')"></div>
                             </div>
                             <div class="input-helpicon-flex">
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="deadband"
-                                    min="0"
-                                    max="32"
-                                    v-model.number="rcDeadbandConfig.deadband"
+                                    :min="0"
+                                    :max="32"
+                                    :step="1"
+                                    v-model="rcDeadbandConfig.deadband"
                                 />
                                 <div class="helpicon cf_tip" :title="$t('receiverHelpDeadband')"></div>
                             </div>
@@ -280,12 +280,12 @@
                                 <div class="spacer_box_title" v-html="$t('receiverYawDeadband')"></div>
                             </div>
                             <div class="input-helpicon-flex">
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="yaw_deadband"
-                                    min="0"
-                                    max="100"
-                                    v-model.number="rcDeadbandConfig.yaw_deadband"
+                                    :min="0"
+                                    :max="100"
+                                    :step="1"
+                                    v-model="rcDeadbandConfig.yaw_deadband"
                                 />
                                 <div class="helpicon cf_tip" :title="$t('receiverHelpYawDeadband')"></div>
                             </div>
@@ -295,12 +295,12 @@
                                 <div class="spacer_box_title" v-html="$t('recevier3dDeadbandThrottle')"></div>
                             </div>
                             <div class="input-helpicon-flex">
-                                <input
-                                    type="number"
+                                <UInputNumber
                                     name="3ddeadbandthrottle"
-                                    min="0"
-                                    max="100"
-                                    v-model.number="rcDeadbandConfig.deadband3d_throttle"
+                                    :min="0"
+                                    :max="100"
+                                    :step="1"
+                                    v-model="rcDeadbandConfig.deadband3d_throttle"
                                 />
                                 <div class="helpicon cf_tip" :title="$t('receiverHelp3dDeadbandThrottle')"></div>
                             </div>
@@ -353,13 +353,12 @@
                                     </tr>
                                     <tr class="rcSmoothing-setpoint-manual" v-if="setpointManualMode === '1'">
                                         <td class="rcSmoothing-setpoint-cutoff">
-                                            <input
-                                                type="number"
+                                            <UInputNumber
                                                 name="rcSmoothingSetpointHz-number"
-                                                step="1"
-                                                min="0"
-                                                max="255"
-                                                v-model.number="rxConfig.rcSmoothingSetpointCutoff"
+                                                :step="1"
+                                                :min="0"
+                                                :max="255"
+                                                v-model="rxConfig.rcSmoothingSetpointCutoff"
                                             />
                                         </td>
                                         <td class="rcSmoothing-setpoint-cutoff" colspan="2">
@@ -376,13 +375,12 @@
                                     <!-- Auto Factor -->
                                     <tr class="rcSmoothing-auto-factor" v-if="showAutoFactor">
                                         <td>
-                                            <input
-                                                type="number"
+                                            <UInputNumber
                                                 name="rcSmoothingAutoFactor-number"
-                                                step="1"
-                                                min="0"
-                                                max="250"
-                                                v-model.number="rxConfig.rcSmoothingAutoFactor"
+                                                :step="1"
+                                                :min="0"
+                                                :max="250"
+                                                v-model="rxConfig.rcSmoothingAutoFactor"
                                             />
                                         </td>
                                         <td>
@@ -424,13 +422,12 @@
                                         </tr>
                                         <tr class="rcSmoothing-throttle-manual" v-if="throttleManualMode === '1'">
                                             <td class="rcSmoothing-throttle-cutoff">
-                                                <input
-                                                    type="number"
+                                                <UInputNumber
                                                     name="rcSmoothingThrottleCutoffHz-number"
-                                                    step="1"
-                                                    min="0"
-                                                    max="255"
-                                                    v-model.number="rxConfig.rcSmoothingThrottleCutoff"
+                                                    :step="1"
+                                                    :min="0"
+                                                    :max="255"
+                                                    v-model="rxConfig.rcSmoothingThrottleCutoff"
                                                 />
                                             </td>
                                             <td class="rcSmoothing-throttle-cutoff" colspan="2">
@@ -445,13 +442,12 @@
                                         </tr>
                                         <tr class="rcSmoothing-auto-factor-throttle" v-if="showThrottleAutoFactor">
                                             <td>
-                                                <input
-                                                    type="number"
+                                                <UInputNumber
                                                     name="rcSmoothingAutoFactorThrottle-number"
-                                                    step="1"
-                                                    min="0"
-                                                    max="250"
-                                                    v-model.number="rxConfig.rcSmoothingAutoFactorThrottle"
+                                                    :step="1"
+                                                    :min="0"
+                                                    :max="250"
+                                                    v-model="rxConfig.rcSmoothingAutoFactorThrottle"
                                                 />
                                             </td>
                                             <td>
@@ -494,13 +490,12 @@
                                         </tr>
                                         <tr class="rcSmoothing-feedforward-manual" v-if="feedforwardManualMode === '1'">
                                             <td class="rcSmoothing-feedforward-cutoff">
-                                                <input
-                                                    type="number"
+                                                <UInputNumber
                                                     name="rcSmoothingFeedforwardCutoff-number"
-                                                    step="1"
-                                                    min="1"
-                                                    max="255"
-                                                    v-model.number="rxConfig.rcSmoothingFeedforwardCutoff"
+                                                    :step="1"
+                                                    :min="1"
+                                                    :max="255"
+                                                    v-model="rxConfig.rcSmoothingFeedforwardCutoff"
                                                 />
                                             </td>
                                             <td colspan="2" class="rcSmoothing-feedforward-cutoff">
@@ -1475,7 +1470,7 @@ onUnmounted(() => {
         select {
             width: 90%;
         }
-        input {
+        :deep(input) {
             width: 90%;
         }
         .helpicon {

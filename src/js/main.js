@@ -358,69 +358,6 @@ async function startProcess() {
         }
     });
 
-    // listen to all input change events and adjust the value within limits if necessary
-    // Using event delegation on #content for dynamically added number inputs
-    const contentEl = document.getElementById("content");
-
-    contentEl?.addEventListener(
-        "focus",
-        function (e) {
-            if (e.target.matches('input[type="number"]')) {
-                const val = e.target.value;
-                if (!isNaN(val)) {
-                    e.target.dataset.previousValue = Number.parseFloat(val);
-                }
-            }
-        },
-        true,
-    );
-
-    contentEl?.addEventListener("change", function (e) {
-        if (!e.target.matches('input[type="number"]')) {
-            return;
-        }
-
-        const element = e.target;
-        const min = Number.parseFloat(element.min);
-        const max = Number.parseFloat(element.max);
-        const step = Number.parseFloat(element.step);
-
-        let val = Number.parseFloat(element.value);
-
-        // only adjust minimal end if bound is set
-        if (element.min && val < min) {
-            element.value = min;
-            val = min;
-        }
-
-        // only adjust maximal end if bound is set
-        if (element.max && val > max) {
-            element.value = max;
-            val = max;
-        }
-
-        // if entered value is illegal use previous value instead
-        if (isNaN(val)) {
-            element.value = element.dataset.previousValue;
-            val = Number.parseFloat(element.dataset.previousValue);
-        }
-
-        // if step is not set or step is int and value is float use previous value instead
-        if ((isNaN(step) || step % 1 === 0) && val % 1 !== 0) {
-            element.value = element.dataset.previousValue;
-            val = Number.parseFloat(element.dataset.previousValue);
-        }
-
-        // if step is set and is float and value is int, convert to float, keep decimal places in float according to step *experimental*
-        if (!isNaN(step) && step % 1 !== 0) {
-            const decimal_places = String(step).split(".")[1].length;
-
-            if (val % 1 === 0 || String(val).split(".")[1].length !== decimal_places) {
-                element.value = val.toFixed(decimal_places);
-            }
-        }
-    });
-
     const showlogBtn = document.getElementById("showlog");
     let logState = false;
     showlogBtn?.addEventListener("click", function () {

@@ -19,13 +19,13 @@
                         <div class="spacer_box">
                             <div class="number">
                                 <label>
-                                    <input type="number" v-model.number="rxConfig.rx_min_usec" min="750" max="2250" />
+                                    <UInputNumber v-model="rxConfig.rx_min_usec" :min="750" :max="2250" :step="1" />
                                     <span v-html="$t('failsafeRxMinUsecItem')"></span>
                                 </label>
                             </div>
                             <div class="number">
                                 <label>
-                                    <input type="number" v-model.number="rxConfig.rx_max_usec" min="750" max="2250" />
+                                    <UInputNumber v-model="rxConfig.rx_max_usec" :min="750" :max="2250" :step="1" />
                                     <span v-html="$t('failsafeRxMaxUsecItem')"></span>
                                 </label>
                             </div>
@@ -76,12 +76,11 @@
                                         </select>
                                     </div>
                                     <div class="auxiliary">
-                                        <input
-                                            type="number"
-                                            v-model.number="rxFailConfig[index].value"
-                                            min="750"
-                                            max="2250"
-                                            step="25"
+                                        <UInputNumber
+                                            v-model="rxFailConfig[index].value"
+                                            :min="750"
+                                            :max="2250"
+                                            :step="25"
                                             :disabled="rxFailConfig[index].mode !== 2"
                                             v-show="rxFailConfig[index].mode === 2"
                                         />
@@ -133,7 +132,7 @@
 
                             <div class="number stage2">
                                 <label>
-                                    <input type="number" v-model.number="failsafeDelay" min="1" max="20" step="0.1" />
+                                    <UInputNumber v-model="failsafeDelay" :min="1" :max="20" :step="0.1" />
                                     <span v-html="$t('failsafeDelayItem')"></span>
                                 </label>
                                 <div class="helpicon cf_tip" :title="$t('failsafeDelayHelp')"></div>
@@ -141,13 +140,7 @@
 
                             <div class="number stage2">
                                 <label>
-                                    <input
-                                        type="number"
-                                        v-model.number="failsafeThrottleLowDelay"
-                                        min="0"
-                                        max="30"
-                                        step="0.1"
-                                    />
+                                    <UInputNumber v-model="failsafeThrottleLowDelay" :min="0" :max="30" :step="0.1" />
                                     <span v-html="$t('failsafeThrottleLowItem')"></span>
                                 </label>
                                 <div class="helpicon cf_tip" :title="$t('failsafeThrottleLowHelp')"></div>
@@ -186,11 +179,11 @@
                                 >
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="failsafeConfig.failsafe_throttle"
-                                                min="0"
-                                                max="2000"
+                                            <UInputNumber
+                                                v-model="failsafeConfig.failsafe_throttle"
+                                                :min="0"
+                                                :max="2000"
+                                                :step="1"
                                                 :disabled="failsafeConfig.failsafe_procedure !== 0"
                                             />
                                             <span v-html="$t('failsafeThrottleItem')"></span>
@@ -198,12 +191,11 @@
                                     </div>
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="failsafeOffDelay"
-                                                min="0"
-                                                max="250"
-                                                step="0.1"
+                                            <UInputNumber
+                                                v-model="failsafeOffDelay"
+                                                :min="0"
+                                                :max="250"
+                                                :step="0.1"
                                                 :disabled="failsafeConfig.failsafe_procedure !== 0"
                                             />
                                             <span v-html="$t('failsafeOffDelayItem')"></span>
@@ -259,11 +251,11 @@
                                     <div class="number" v-if="gpsRescue.altitudeMode === 1">
                                         <!-- showReturnAlt logic -->
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.returnAltitudeM"
-                                                min="20"
-                                                max="100"
+                                            <UInputNumber
+                                                v-model="gpsRescue.returnAltitudeM"
+                                                :min="20"
+                                                :max="100"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemReturnAltitude')"></span>
@@ -272,11 +264,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.initialClimbM"
-                                                min="0"
-                                                max="100"
+                                            <UInputNumber
+                                                v-model="gpsRescue.initialClimbM"
+                                                :min="0"
+                                                :max="100"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueInitialClimb')"></span>
@@ -289,12 +281,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescueAscendRate"
-                                                min="1.00"
-                                                max="25.00"
-                                                step="0.1"
+                                            <UInputNumber
+                                                v-model="gpsRescueAscendRate"
+                                                :min="1"
+                                                :max="25"
+                                                :step="0.1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemAscendRate')"></span>
@@ -303,12 +294,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescueGroundSpeed"
-                                                min="3.00"
-                                                max="30.00"
-                                                step="0.1"
+                                            <UInputNumber
+                                                v-model="gpsRescueGroundSpeed"
+                                                :min="3"
+                                                :max="30"
+                                                :step="0.1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemGroundSpeed')"></span>
@@ -317,11 +307,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.angle"
-                                                min="0"
-                                                max="200"
+                                            <UInputNumber
+                                                v-model="gpsRescue.angle"
+                                                :min="0"
+                                                :max="200"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemAngle')"></span>
@@ -334,11 +324,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.descentDistanceM"
-                                                min="30"
-                                                max="500"
+                                            <UInputNumber
+                                                v-model="gpsRescue.descentDistanceM"
+                                                :min="30"
+                                                :max="500"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemDescentDistance')"></span>
@@ -347,12 +337,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescueDescendRate"
-                                                min="1.00"
-                                                max="5.00"
-                                                step="0.1"
+                                            <UInputNumber
+                                                v-model="gpsRescueDescendRate"
+                                                :min="1"
+                                                :max="5"
+                                                :step="0.1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemDescendRate')"></span>
@@ -365,11 +354,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.throttleMin"
-                                                min="1000"
-                                                max="2000"
+                                            <UInputNumber
+                                                v-model="gpsRescue.throttleMin"
+                                                :min="1000"
+                                                :max="2000"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemThrottleMin')"></span>
@@ -378,11 +367,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.throttleMax"
-                                                min="1000"
-                                                max="2000"
+                                            <UInputNumber
+                                                v-model="gpsRescue.throttleMax"
+                                                :min="1000"
+                                                :max="2000"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemThrottleMax')"></span>
@@ -395,11 +384,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.throttleHover"
-                                                min="1000"
-                                                max="2000"
+                                            <UInputNumber
+                                                v-model="gpsRescue.throttleHover"
+                                                :min="1000"
+                                                :max="2000"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemThrottleHover')"></span>
@@ -412,11 +401,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.minStartDistM"
-                                                min="50"
-                                                max="1000"
+                                            <UInputNumber
+                                                v-model="gpsRescue.minStartDistM"
+                                                :min="50"
+                                                :max="1000"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemMinDth')"></span>
@@ -429,11 +418,11 @@
 
                                     <div class="number">
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="gpsRescue.minSats"
-                                                min="5"
-                                                max="50"
+                                            <UInputNumber
+                                                v-model="gpsRescue.minSats"
+                                                :min="5"
+                                                :max="50"
+                                                :step="1"
                                                 :disabled="isGpsSettingsDisabled"
                                             />
                                             <span v-html="$t('failsafeGpsRescueItemMinSats')"></span>
@@ -638,34 +627,34 @@ const isGpsSettingsDisabled = computed(() => {
 
 // Computed properties for conversions (values stored as x10 or x100 in config)
 const failsafeDelay = computed({
-    get: () => (failsafeConfig.value.failsafe_delay / 10.0).toFixed(1),
-    set: (val) => (failsafeConfig.value.failsafe_delay = Math.round(parseFloat(val) * 10.0)),
+    get: () => failsafeConfig.value.failsafe_delay / 10,
+    set: (val) => (failsafeConfig.value.failsafe_delay = Math.round(Number(val) * 10)),
 });
 
 const failsafeThrottleLowDelay = computed({
-    get: () => (failsafeConfig.value.failsafe_throttle_low_delay / 10.0).toFixed(1),
-    set: (val) => (failsafeConfig.value.failsafe_throttle_low_delay = Math.round(parseFloat(val) * 10.0)),
+    get: () => failsafeConfig.value.failsafe_throttle_low_delay / 10,
+    set: (val) => (failsafeConfig.value.failsafe_throttle_low_delay = Math.round(Number(val) * 10)),
 });
 
 const failsafeOffDelay = computed({
-    get: () => (failsafeConfig.value.failsafe_off_delay / 10.0).toFixed(1),
-    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(parseFloat(val) * 10.0)),
+    get: () => failsafeConfig.value.failsafe_off_delay / 10,
+    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(Number(val) * 10)),
 });
 
 // GPS Rescue Conversions
 const gpsRescueGroundSpeed = computed({
-    get: () => (gpsRescue.value.groundSpeed / 100).toFixed(1),
-    set: (val) => (gpsRescue.value.groundSpeed = Math.round(parseFloat(val) * 100)),
+    get: () => gpsRescue.value.groundSpeed / 100,
+    set: (val) => (gpsRescue.value.groundSpeed = Math.round(Number(val) * 100)),
 });
 
 const gpsRescueAscendRate = computed({
-    get: () => (gpsRescue.value.ascendRate / 100).toFixed(1),
-    set: (val) => (gpsRescue.value.ascendRate = Math.round(parseFloat(val) * 100)),
+    get: () => gpsRescue.value.ascendRate / 100,
+    set: (val) => (gpsRescue.value.ascendRate = Math.round(Number(val) * 100)),
 });
 
 const gpsRescueDescendRate = computed({
-    get: () => (gpsRescue.value.descendRate / 100).toFixed(1),
-    set: (val) => (gpsRescue.value.descendRate = Math.round(parseFloat(val) * 100)),
+    get: () => gpsRescue.value.descendRate / 100,
+    set: (val) => (gpsRescue.value.descendRate = Math.round(Number(val) * 100)),
 });
 
 const gpsRescueAllowArmingWithoutFix = computed({

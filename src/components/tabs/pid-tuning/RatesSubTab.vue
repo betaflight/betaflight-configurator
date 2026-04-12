@@ -94,33 +94,42 @@
                         <tr class="ROLL">
                             <td class="pid_roll" v-text="$t('controlAxisRoll')"></td>
                             <td class="rc_rate">
-                                <input
-                                    type="number"
-                                    :value="rcRate.toFixed(rcRatePrecision)"
-                                    @change="rcRate = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="rcRate"
+                                    @update:model-value="rcRate = $event"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: rcRatePrecision,
+                                        maximumFractionDigits: rcRatePrecision,
+                                    }"
                                 />
                             </td>
                             <td class="roll_rate">
-                                <input
-                                    type="number"
-                                    :value="rollRate.toFixed(ratePrecision)"
-                                    @change="rollRate = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="rollRate"
+                                    @update:model-value="rollRate = $event"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: ratePrecision,
+                                        maximumFractionDigits: ratePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="rcExpo.toFixed(expoPrecision)"
-                                    @change="rcExpo = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="rcExpo"
+                                    @update:model-value="rcExpo = $event"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: expoPrecision,
+                                        maximumFractionDigits: expoPrecision,
+                                    }"
                                 />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityRoll">
@@ -135,33 +144,42 @@
                         <tr class="PITCH">
                             <td class="pid_pitch" v-text="$t('controlAxisPitch')"></td>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="rcRatePitch.toFixed(rcRatePrecision)"
-                                    @change="rcRatePitch = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="rcRatePitch"
+                                    @update:model-value="rcRatePitch = $event"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: rcRatePrecision,
+                                        maximumFractionDigits: rcRatePrecision,
+                                    }"
                                 />
                             </td>
                             <td class="pitch_rate">
-                                <input
-                                    type="number"
-                                    :value="pitchRate.toFixed(ratePrecision)"
-                                    @change="pitchRate = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="pitchRate"
+                                    @update:model-value="pitchRate = $event"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: ratePrecision,
+                                        maximumFractionDigits: ratePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="rcPitchExpo.toFixed(expoPrecision)"
-                                    @change="rcPitchExpo = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="rcPitchExpo"
+                                    @update:model-value="rcPitchExpo = $event"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: expoPrecision,
+                                        maximumFractionDigits: expoPrecision,
+                                    }"
                                 />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityPitch">
@@ -176,33 +194,42 @@
                         <tr class="YAW">
                             <td class="pid_yaw" v-text="$t('controlAxisYaw')"></td>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="rcRateYaw.toFixed(rcRatePrecision)"
-                                    @change="rcRateYaw = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="rcRateYaw"
+                                    @update:model-value="rcRateYaw = $event"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: rcRatePrecision,
+                                        maximumFractionDigits: rcRatePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="yawRate.toFixed(ratePrecision)"
-                                    @change="yawRate = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="yawRate"
+                                    @update:model-value="yawRate = $event"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: ratePrecision,
+                                        maximumFractionDigits: ratePrecision,
+                                    }"
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="rcYawExpo.toFixed(expoPrecision)"
-                                    @change="rcYawExpo = parseFloat($event.target.value)"
+                                <UInputNumber
+                                    :model-value="rcYawExpo"
+                                    @update:model-value="rcYawExpo = $event"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
+                                    :format-options="{
+                                        minimumFractionDigits: expoPrecision,
+                                        maximumFractionDigits: expoPrecision,
+                                    }"
                                 />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityYaw">
@@ -296,13 +323,7 @@
                                 </select>
                             </td>
                             <td>
-                                <input
-                                    type="number"
-                                    v-model.number="throttleLimitPercent"
-                                    step="1"
-                                    min="25"
-                                    max="100"
-                                />
+                                <UInputNumber v-model="throttleLimitPercent" :step="1" :min="25" :max="100" />
                             </td>
                         </tr>
                     </tbody>
@@ -322,33 +343,30 @@
                     <tbody>
                         <tr>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="(throttleMid ?? 0).toFixed(2)"
-                                    @input="throttleMid = $event.target.value"
-                                    step="0.01"
-                                    min="0"
-                                    max="1"
+                                <UInputNumber
+                                    :model-value="throttleMid ?? 0"
+                                    @update:model-value="throttleMid = $event"
+                                    :step="0.01"
+                                    :min="0"
+                                    :max="1"
                                 />
                             </td>
                             <td v-if="hasThrottleHover">
-                                <input
-                                    type="number"
-                                    :value="(throttleHover ?? 0.5).toFixed(2)"
-                                    @input="throttleHover = $event.target.value"
-                                    step="0.01"
-                                    min="0"
-                                    max="1"
+                                <UInputNumber
+                                    :model-value="throttleHover ?? 0.5"
+                                    @update:model-value="throttleHover = $event"
+                                    :step="0.01"
+                                    :min="0"
+                                    :max="1"
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="number"
-                                    :value="(throttleExpo ?? 0).toFixed(2)"
-                                    @input="throttleExpo = $event.target.value"
-                                    step="0.01"
-                                    min="0"
-                                    max="1"
+                                <UInputNumber
+                                    :model-value="throttleExpo ?? 0"
+                                    @update:model-value="throttleExpo = $event"
+                                    :step="0.01"
+                                    :min="0"
+                                    :max="1"
                                 />
                             </td>
                         </tr>

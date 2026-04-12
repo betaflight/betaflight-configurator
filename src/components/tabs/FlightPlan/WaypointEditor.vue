@@ -4,12 +4,11 @@
             <!-- Latitude -->
             <div class="form-row">
                 <div class="input-column">
-                    <input
-                        type="number"
-                        v-model.number="form.latitude"
-                        step="0.000001"
-                        min="-90"
-                        max="90"
+                    <UInputNumber
+                        v-model="form.latitude"
+                        :step="0.000001"
+                        :min="-90"
+                        :max="90"
                         required
                         :aria-label="$t('flightPlanLatitude')"
                     />
@@ -23,12 +22,11 @@
             <!-- Longitude -->
             <div class="form-row">
                 <div class="input-column">
-                    <input
-                        type="number"
-                        v-model.number="form.longitude"
-                        step="0.000001"
-                        min="-180"
-                        max="180"
+                    <UInputNumber
+                        v-model="form.longitude"
+                        :step="0.000001"
+                        :min="-180"
+                        :max="180"
                         required
                         :aria-label="$t('flightPlanLongitude')"
                     />
@@ -42,12 +40,11 @@
             <!-- Altitude -->
             <div class="form-row">
                 <div class="input-column">
-                    <input
-                        type="number"
-                        v-model.number="form.altitude"
-                        step="1"
-                        min="0"
-                        max="50000"
+                    <UInputNumber
+                        v-model="form.altitude"
+                        :step="1"
+                        :min="0"
+                        :max="50000"
                         required
                         :aria-label="$t('flightPlanAltitude')"
                     />
@@ -61,12 +58,11 @@
             <!-- Speed -->
             <div class="form-row">
                 <div class="input-column">
-                    <input
-                        type="number"
-                        v-model.number="form.speed"
-                        step="0.1"
-                        min="0"
-                        max="500"
+                    <UInputNumber
+                        v-model="form.speed"
+                        :step="0.1"
+                        :min="0"
+                        :max="500"
                         required
                         :aria-label="$t('flightPlanSpeed')"
                     />
@@ -96,12 +92,11 @@
             <!-- Duration (conditional - only for hold) -->
             <div v-if="form.type === 'hold'" class="form-row">
                 <div class="input-column">
-                    <input
-                        type="number"
-                        v-model.number="form.duration"
-                        step="0.1"
-                        min="0"
-                        max="60"
+                    <UInputNumber
+                        v-model="form.duration"
+                        :step="0.1"
+                        :min="0"
+                        :max="60"
                         :aria-label="$t('flightPlanDuration')"
                     />
                 </div>

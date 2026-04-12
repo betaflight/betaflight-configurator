@@ -125,14 +125,13 @@
                                     <div class="number unsyncedpwmfreq" v-if="showAnalogSettings && useUnsyncedPwm">
                                         <label for="unsyncedpwmfreq">
                                             <div class="numberspacer">
-                                                <input
+                                                <UInputNumber
                                                     id="unsyncedpwmfreq"
-                                                    type="number"
                                                     name="unsyncedpwmfreq"
-                                                    min="200"
-                                                    max="32000"
-                                                    step="100"
-                                                    v-model.number="fcStore.pidAdvancedConfig.motor_pwm_rate"
+                                                    :min="200"
+                                                    :max="32000"
+                                                    :step="100"
+                                                    v-model="fcStore.pidAdvancedConfig.motor_pwm_rate"
                                                 />
                                             </div>
                                             <span v-html="$t('configurationUnsyncedPWMFreq')"></span>
@@ -205,14 +204,13 @@
                                     <div class="number motorPoles" v-if="protocolConfigured && rpmFeaturesVisible">
                                         <label for="motorPoles">
                                             <div class="numberspacer">
-                                                <input
+                                                <UInputNumber
                                                     id="motorPoles"
-                                                    type="number"
                                                     name="motorPoles"
-                                                    min="4"
-                                                    max="255"
-                                                    step="1"
-                                                    v-model.number="fcStore.motorConfig.motor_poles"
+                                                    :min="4"
+                                                    :max="255"
+                                                    :step="1"
+                                                    v-model="fcStore.motorConfig.motor_poles"
                                                 />
                                             </div>
                                             <span v-html="$t('configurationMotorPolesLong')"></span>
@@ -225,14 +223,13 @@
                                     <div class="number motorIdle" v-if="showMotorIdle">
                                         <label for="motorIdle">
                                             <div class="numberspacer">
-                                                <input
+                                                <UInputNumber
                                                     id="motorIdle"
-                                                    type="number"
                                                     name="motorIdle"
-                                                    min="0.0"
-                                                    max="20.0"
-                                                    step="0.1"
-                                                    v-model.number="fcStore.pidAdvancedConfig.motorIdle"
+                                                    :min="0"
+                                                    :max="20"
+                                                    :step="0.1"
+                                                    v-model="fcStore.pidAdvancedConfig.motorIdle"
                                                 />
                                             </div>
                                             <span v-html="$t('configurationMotorIdle')"></span>
@@ -245,15 +242,14 @@
                                     <div class="number idleMinRpm" v-if="showIdleMinRpm">
                                         <label for="idleMinRpm">
                                             <div class="numberspacer noarrows">
-                                                <input
+                                                <UInputNumber
                                                     id="idleMinRpm"
-                                                    type="number"
                                                     name="idleMinRpm"
-                                                    min="0"
-                                                    max="100"
-                                                    step="1"
-                                                    readonly
-                                                    v-model.number="fcStore.advancedTuning.idleMinRpm"
+                                                    :min="0"
+                                                    :max="100"
+                                                    :step="1"
+                                                    :readonly="true"
+                                                    v-model="fcStore.advancedTuning.idleMinRpm"
                                                 />
                                             </div>
                                             <span v-html="$t('pidTuningIdleMinRpm')"></span>
@@ -266,13 +262,13 @@
                                     <div class="number mincommand" v-if="showAnalogSettings">
                                         <label for="mincommand">
                                             <div class="numberspacer">
-                                                <input
+                                                <UInputNumber
                                                     id="mincommand"
-                                                    type="number"
                                                     name="mincommand"
-                                                    min="0"
-                                                    max="2000"
-                                                    v-model.number="fcStore.motorConfig.mincommand"
+                                                    :min="0"
+                                                    :max="2000"
+                                                    :step="1"
+                                                    v-model="fcStore.motorConfig.mincommand"
                                                 />
                                             </div>
                                             <span v-html="$t('configurationThrottleMinimumCommand')"></span>
@@ -285,13 +281,13 @@
                                     <div class="number minthrottle" v-if="showMinThrottle">
                                         <label for="minthrottle">
                                             <div class="numberspacer">
-                                                <input
+                                                <UInputNumber
                                                     id="minthrottle"
-                                                    type="number"
                                                     name="minthrottle"
-                                                    min="0"
-                                                    max="2000"
-                                                    v-model.number="fcStore.motorConfig.minthrottle"
+                                                    :min="0"
+                                                    :max="2000"
+                                                    :step="1"
+                                                    v-model="fcStore.motorConfig.minthrottle"
                                                 />
                                             </div>
                                             <span v-html="$t('configurationThrottleMinimum')"></span>
@@ -304,13 +300,13 @@
                                     <div class="number maxthrottle" v-if="showAnalogSettings">
                                         <label for="maxthrottle">
                                             <div class="numberspacer">
-                                                <input
+                                                <UInputNumber
                                                     id="maxthrottle"
-                                                    type="number"
                                                     name="maxthrottle"
-                                                    min="0"
-                                                    max="2000"
-                                                    v-model.number="fcStore.motorConfig.maxthrottle"
+                                                    :min="0"
+                                                    :max="2000"
+                                                    :step="1"
+                                                    v-model="fcStore.motorConfig.maxthrottle"
                                                 />
                                             </div>
                                             <span v-html="$t('configurationThrottleMaximum')"></span>
@@ -358,42 +354,39 @@
                                     <div class="_3dSettings" v-if="isFeatureEnabled('3D')">
                                         <div class="number">
                                             <label for="_3ddeadbandlow">
-                                                <input
+                                                <UInputNumber
                                                     id="_3ddeadbandlow"
-                                                    type="number"
                                                     name="_3ddeadbandlow"
-                                                    step="1"
-                                                    min="1250"
-                                                    max="1600"
-                                                    v-model.number="fcStore.motor3dConfig.deadband3d_low"
+                                                    :step="1"
+                                                    :min="1250"
+                                                    :max="1600"
+                                                    v-model="fcStore.motor3dConfig.deadband3d_low"
                                                 />
                                                 <span v-html="$t('configuration3dDeadbandLow')"></span>
                                             </label>
                                         </div>
                                         <div class="number">
                                             <label for="_3ddeadbandhigh">
-                                                <input
+                                                <UInputNumber
                                                     id="_3ddeadbandhigh"
-                                                    type="number"
                                                     name="_3ddeadbandhigh"
-                                                    step="1"
-                                                    min="1400"
-                                                    max="1750"
-                                                    v-model.number="fcStore.motor3dConfig.deadband3d_high"
+                                                    :step="1"
+                                                    :min="1400"
+                                                    :max="1750"
+                                                    v-model="fcStore.motor3dConfig.deadband3d_high"
                                                 />
                                                 <span v-html="$t('configuration3dDeadbandHigh')"></span>
                                             </label>
                                         </div>
                                         <div class="number">
                                             <label for="_3dneutral">
-                                                <input
+                                                <UInputNumber
                                                     id="_3dneutral"
-                                                    type="number"
                                                     name="_3dneutral"
-                                                    step="1"
-                                                    min="1400"
-                                                    max="1600"
-                                                    v-model.number="fcStore.motor3dConfig.neutral"
+                                                    :step="1"
+                                                    :min="1400"
+                                                    :max="1600"
+                                                    v-model="fcStore.motor3dConfig.neutral"
                                                 />
                                                 <span v-html="$t('configuration3dNeutral')"></span>
                                             </label>
@@ -1830,13 +1823,9 @@ onUnmounted(() => {
     }
     .number {
         input {
-            width: 55px;
-            padding-left: 3px;
             height: 20px;
             line-height: 20px;
-            text-align: left;
             border-radius: 3px;
-            margin-right: 11px;
             font-size: 12px;
             font-weight: normal;
         }
