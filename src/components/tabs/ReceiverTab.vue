@@ -1414,6 +1414,7 @@ onUnmounted(() => {
     }
     .meter-bar {
         position: relative;
+        container-type: inline-size;
         width: 100%;
         height: 1rem;
         border: 1px solid var(--surface-500);
@@ -1423,6 +1424,7 @@ onUnmounted(() => {
             position: absolute;
             width: 50px;
             text-align: center;
+            left: calc(50cqi - 25px);
             color: var(--text);
         }
         .fill {
