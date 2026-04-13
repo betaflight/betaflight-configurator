@@ -75,11 +75,6 @@ export default defineComponent({
 
 <style lang="less">
 .tab-help {
-    .gui_box {
-        min-height: 500px;
-        margin-bottom: 0;
-    }
-
     ul {
         margin-bottom: 15px;
     }
@@ -106,14 +101,18 @@ export default defineComponent({
     .subline {
         margin-bottom: 5px;
     }
-}
 
-/** (phones) **/
-@media all and (max-width: 575px) {
-    .tab-help {
-        .gui_box {
-            min-height: auto;
-            margin-bottom: 15px;
+    @media all and (max-width: 575px) {
+        .grid-box {
+            &.col5 {
+                grid-template-columns: 1fr !important;
+            }
+            .col-span-2 {
+                grid-column: span 1;
+            }
+            .col-span-3 {
+                grid-column: span 1;
+            }
         }
     }
 }
