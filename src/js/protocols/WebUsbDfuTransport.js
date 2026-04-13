@@ -124,6 +124,8 @@ class WebUsbDfuTransport extends EventTarget {
             await this.usbDevice.close();
             console.log(`${this.logHead} DFU Device closed`);
             this.usbDevice = null;
+            this._langId = undefined;
+            this._configDescriptor = undefined;
         }
     }
 
@@ -171,17 +173,50 @@ class WebUsbDfuTransport extends EventTarget {
 
     // ===== Descriptor Reading =====
 
+    /**
+     * Fetch the first supported LANGID from string descriptor 0.
+     * Cached after the first successful read.
+     * Falls back to 0x0409 (English US) on failure.
+     */
+    async getLangId() {
+        if (this._langId !== undefined) {
+            return this._langId;
+        }
+
+        try {
+            const setup = {
+                requestType: "standard",
+                recipient: "device",
+                request: 6,
+                value: 0x300,
+                index: 0,
+            };
+
+            const result = await this.usbDevice.controlTransferIn(setup, 255);
+            if (result.status === "ok" && result.data.byteLength >= 4) {
+                this._langId = result.data.getUint16(2, true);
+                return this._langId;
+            }
+        } catch (error) {
+            console.warn(`${this.logHead} Failed to read LANGID, falling back to 0x0409:`, error);
+        }
+
+        this._langId = 0x0409;
+        return this._langId;
+    }
+
     async getString(index) {
         if (index === 0) {
             return "";
         }
 
+        const langId = await this.getLangId();
         const setup = {
             requestType: "standard",
             recipient: "device",
             request: 6,
             value: 0x300 | index,
-            index: 0,
+            index: langId,
         };
 
         const result = await this.usbDevice.controlTransferIn(setup, 255);
@@ -197,7 +232,15 @@ class WebUsbDfuTransport extends EventTarget {
         throw new Error(`USB getString failed: ${result.status}`);
     }
 
-    async getInterfaceDescriptor(interfaceIndex) {
+    /**
+     * Fetch the full configuration descriptor blob.
+     * Cached for the lifetime of the current device connection.
+     */
+    async getConfigDescriptor() {
+        if (this._configDescriptor) {
+            return this._configDescriptor;
+        }
+
         const setup = {
             requestType: "standard",
             recipient: "device",
@@ -206,22 +249,56 @@ class WebUsbDfuTransport extends EventTarget {
             index: 0,
         };
 
-        const result = await this.usbDevice.controlTransferIn(setup, 18 + interfaceIndex * 9);
-        if (result.status === "ok") {
-            const buf = new Uint8Array(result.data.buffer, 9 + interfaceIndex * 9);
-            return {
-                bLength: buf[0],
-                bDescriptorType: buf[1],
-                bInterfaceNumber: buf[2],
-                bAlternateSetting: buf[3],
-                bNumEndpoints: buf[4],
-                bInterfaceClass: buf[5],
-                bInterfaceSubclass: buf[6],
-                bInterfaceProtocol: buf[7],
-                iInterface: buf[8],
-            };
+        // First read the 9-byte config header to learn the total length
+        const header = await this.usbDevice.controlTransferIn(setup, 9);
+        if (header.status !== "ok") {
+            throw new Error(`USB getConfigDescriptor failed: ${header.status}`);
         }
-        throw new Error(`USB getInterfaceDescriptor failed: ${result.status}`);
+
+        const totalLength = header.data.getUint16(2, true);
+
+        // Now fetch the entire configuration descriptor blob
+        const result = await this.usbDevice.controlTransferIn(setup, totalLength);
+        if (result.status !== "ok") {
+            throw new Error(`USB getConfigDescriptor failed: ${result.status}`);
+        }
+
+        this._configDescriptor = new Uint8Array(result.data.buffer, result.data.byteOffset, result.data.byteLength);
+        return this._configDescriptor;
+    }
+
+    async getInterfaceDescriptor(interfaceIndex) {
+        const buf = await this.getConfigDescriptor();
+
+        // Walk the descriptor chain looking for the Nth interface descriptor (type 4)
+        let offset = 9; // skip the 9-byte configuration descriptor header
+        let seenInterfaces = 0;
+
+        while (offset + 1 < buf.length) {
+            const bLength = buf[offset];
+            const bDescriptorType = buf[offset + 1];
+
+            if (bDescriptorType === 4) {
+                if (seenInterfaces === interfaceIndex) {
+                    return {
+                        bLength: buf[offset],
+                        bDescriptorType: buf[offset + 1],
+                        bInterfaceNumber: buf[offset + 2],
+                        bAlternateSetting: buf[offset + 3],
+                        bNumEndpoints: buf[offset + 4],
+                        bInterfaceClass: buf[offset + 5],
+                        bInterfaceSubclass: buf[offset + 6],
+                        bInterfaceProtocol: buf[offset + 7],
+                        iInterface: buf[offset + 8],
+                    };
+                }
+                seenInterfaces++;
+            }
+
+            offset += bLength || 1; // guard against zero-length descriptors
+        }
+
+        throw new Error(`USB interface descriptor ${interfaceIndex} not found`);
     }
 
     /**
