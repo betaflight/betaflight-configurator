@@ -531,6 +531,9 @@ public class BetaflightDfuPlugin extends Plugin {
         int interfaceIndex = call.getInt("interfaceIndex", 0);
 
         try {
+            // Note: assumes interface descriptors are contiguous at fixed 9-byte intervals
+            // starting at offset 9 (after the config descriptor). This matches the original
+            // webusbdfu.js implementation and is reliable for simple DFU-only configurations.
             int requestType = UsbConstants.USB_DIR_IN | UsbConstants.USB_TYPE_STANDARD | USB_RECIP_DEVICE;
             int requestedLength = 18 + (interfaceIndex + 1) * 9;
             byte[] buffer = new byte[requestedLength];
@@ -658,28 +661,15 @@ public class BetaflightDfuPlugin extends Plugin {
         }
 
         try {
-            int requestType = UsbConstants.USB_DIR_IN | UsbConstants.USB_TYPE_STANDARD | USB_RECIP_INTERFACE;
-            byte[] buffer = new byte[255];
-            int result = connection.controlTransfer(
-                requestType,
-                0x06,    // GET_DESCRIPTOR
-                0x2100,  // DFU_FUNCTIONAL descriptor type
-                0,
-                buffer, 255, DEFAULT_TIMEOUT_MS
-            );
+            JSObject descriptor = parseFunctionalDescriptorFromConfig();
+
+            // Fallback: direct GET_DESCRIPTOR request (works on STM32)
+            if (descriptor == null) {
+                descriptor = requestFunctionalDescriptorDirect();
+            }
 
             JSObject response = new JSObject();
-            if (result >= 7) {
-                JSObject descriptor = new JSObject();
-                descriptor.put("bLength", buffer[0] & 0xFF);
-                descriptor.put("bDescriptorType", buffer[1] & 0xFF);
-                descriptor.put("bmAttributes", buffer[2] & 0xFF);
-                descriptor.put("wDetachTimeOut", (buffer[3] & 0xFF) | ((buffer[4] & 0xFF) << 8));
-                descriptor.put("wTransferSize", (buffer[5] & 0xFF) | ((buffer[6] & 0xFF) << 8));
-                if (result >= 9) {
-                    descriptor.put("bcdDFUVersion", (buffer[7] & 0xFF) | ((buffer[8] & 0xFF) << 8));
-                }
-
+            if (descriptor != null) {
                 response.put("status", "ok");
                 response.put("descriptor", descriptor);
             } else {
@@ -690,6 +680,90 @@ public class BetaflightDfuPlugin extends Plugin {
             Log.e(TAG, "getFunctionalDescriptor failed", e);
             call.reject("Failed to read functional descriptor: " + e.getMessage());
         }
+    }
+
+    /**
+     * Parse DFU functional descriptor (type 0x21) from the configuration descriptor.
+     * Per USB DFU spec, the functional descriptor follows the DFU interface descriptor
+     * within the configuration descriptor. This works on all DFU-compliant devices.
+     */
+    private JSObject parseFunctionalDescriptorFromConfig() {
+        try {
+            int requestType = UsbConstants.USB_DIR_IN | UsbConstants.USB_TYPE_STANDARD | USB_RECIP_DEVICE;
+
+            // Read header to get wTotalLength
+            byte[] header = new byte[4];
+            int headerResult = connection.controlTransfer(
+                requestType, 0x06, 0x0200, 0,
+                header, 4, DEFAULT_TIMEOUT_MS
+            );
+            if (headerResult < 4) return null;
+
+            int totalLength = (header[2] & 0xFF) | ((header[3] & 0xFF) << 8);
+            byte[] configDesc = new byte[totalLength];
+            int result = connection.controlTransfer(
+                requestType, 0x06, 0x0200, 0,
+                configDesc, totalLength, DEFAULT_TIMEOUT_MS
+            );
+
+            // Walk the descriptor chain looking for type 0x21 (DFU_FUNCTIONAL)
+            int pos = 0;
+            while (pos < result) {
+                int bLength = configDesc[pos] & 0xFF;
+                if (bLength == 0) break;
+                if (pos + bLength > result) break;
+
+                int bDescriptorType = configDesc[pos + 1] & 0xFF;
+                if (bDescriptorType == 0x21 && bLength >= 7) {
+                    JSObject descriptor = new JSObject();
+                    descriptor.put("bLength", bLength);
+                    descriptor.put("bDescriptorType", bDescriptorType);
+                    descriptor.put("bmAttributes", configDesc[pos + 2] & 0xFF);
+                    descriptor.put("wDetachTimeOut", (configDesc[pos + 3] & 0xFF) | ((configDesc[pos + 4] & 0xFF) << 8));
+                    descriptor.put("wTransferSize", (configDesc[pos + 5] & 0xFF) | ((configDesc[pos + 6] & 0xFF) << 8));
+                    if (bLength >= 9) {
+                        descriptor.put("bcdDFUVersion", (configDesc[pos + 7] & 0xFF) | ((configDesc[pos + 8] & 0xFF) << 8));
+                    }
+                    return descriptor;
+                }
+
+                pos += bLength;
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Config descriptor parse failed, will try direct request", e);
+        }
+        return null;
+    }
+
+    /**
+     * Fallback: request DFU functional descriptor directly via GET_DESCRIPTOR.
+     * Works on STM32 but may not work on all DFU implementations.
+     */
+    private JSObject requestFunctionalDescriptorDirect() {
+        try {
+            int requestType = UsbConstants.USB_DIR_IN | UsbConstants.USB_TYPE_STANDARD | USB_RECIP_INTERFACE;
+            byte[] buffer = new byte[255];
+            int result = connection.controlTransfer(
+                requestType, 0x06, 0x2100, 0,
+                buffer, 255, DEFAULT_TIMEOUT_MS
+            );
+
+            if (result >= 7) {
+                JSObject descriptor = new JSObject();
+                descriptor.put("bLength", buffer[0] & 0xFF);
+                descriptor.put("bDescriptorType", buffer[1] & 0xFF);
+                descriptor.put("bmAttributes", buffer[2] & 0xFF);
+                descriptor.put("wDetachTimeOut", (buffer[3] & 0xFF) | ((buffer[4] & 0xFF) << 8));
+                descriptor.put("wTransferSize", (buffer[5] & 0xFF) | ((buffer[6] & 0xFF) << 8));
+                if (result >= 9) {
+                    descriptor.put("bcdDFUVersion", (buffer[7] & 0xFF) | ((buffer[8] & 0xFF) << 8));
+                }
+                return descriptor;
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Direct functional descriptor request failed", e);
+        }
+        return null;
     }
 
     // ===== Permission Handling =====

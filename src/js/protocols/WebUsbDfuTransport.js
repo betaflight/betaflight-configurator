@@ -42,8 +42,9 @@ class WebUsbDfuTransport extends EventTarget {
     }
 
     createPort(device) {
+        const identifier = device.serialNumber ?? `${device.vendorId}_${device.productId}`;
         return {
-            path: `usb_${device.serialNumber}`,
+            path: `usb_${identifier}`,
             displayName: `Betaflight ${device.productName}`,
             vendorId: device.vendorId,
             productId: device.productId,
