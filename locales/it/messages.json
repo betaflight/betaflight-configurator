@@ -125,6 +125,21 @@
     "submit": {
         "message": "Invia"
     },
+    "delete": {
+        "message": "Cancella"
+    },
+    "edit": {
+        "message": "Modifica"
+    },
+    "add": {
+        "message": "Aggiungi"
+    },
+    "update": {
+        "message": "Aggiorna"
+    },
+    "save": {
+        "message": "Salva"
+    },
     "autoConnectEnabled": {
         "message": "Connessione automatica: Abilitata - Il configuratore si connette automaticamente quando rileva una nuova porta"
     },
@@ -341,6 +356,9 @@
     },
     "tabGPS": {
         "message": "GPS"
+    },
+    "tabFlightPlan": {
+        "message": "Piano di volo"
     },
     "tabMotorTesting": {
         "message": "Motori"
@@ -2565,6 +2583,10 @@
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> regola l'altitudine dell'aeromobile utilizzando sensori esterni combinati con la Modalità Angolo (Modalità Stabile).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "La modalità «Autopilota» consente il comando autonomo del volo, combinando la posizione di altitudine e posizione per mantenere un passaggio stabile o seguire una traiettoria di volo pianificata.",
+        "description": "Help text for AUTOPILOT mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Abilita beep - utile per localizzare un aeromobile perso",
         "description": "Help text to BEEPER mode"
@@ -3133,6 +3155,165 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "cattivo"
+    },
+    "flightPlanWaypointList": {
+        "message": "Lista Waypoint"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "Nessun waypoint definito. Fare clic sulla mappa o utilizzare il modulo per aggiungere waypoint."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Aggiungi Waypoint"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Modifica Waypoint"
+    },
+    "flightPlanLatitude": {
+        "message": "Latitudine <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Longitudine <span class=\"units\">°<\/span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Altitudine <span class=\"units\">ft AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Velocità <span class=\"units\">nodi<\/span>"
+    },
+    "flightPlanType": {
+        "message": "Tipo di Waypoint"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Vola Sopra"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Vola Da"
+    },
+    "flightPlanTypeHold": {
+        "message": "Tieni il Volo"
+    },
+    "flightPlanTypeLand": {
+        "message": "Atterra"
+    },
+    "flightPlanDuration": {
+        "message": "Durata Attesa <span class=\"units\">min<\/span>"
+    },
+    "flightPlanPattern": {
+        "message": "Tipo Attesa"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Cerchio"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Figure-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Orbita"
+    },
+    "flightPlanMap": {
+        "message": "Piano di volo"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Fare clic per aggiungere waypoint. Trascinare i waypoint per spostarli."
+    },
+    "flightPlanLoading": {
+        "message": "Attendi..."
+    },
+    "flightPlanClear": {
+        "message": "Cancella Piano"
+    },
+    "flightPlanLoaded": {
+        "message": "Piano di volo caricato con successo"
+    },
+    "flightPlanSaved": {
+        "message": "Piano di volo salvato con successo"
+    },
+    "flightPlanCleared": {
+        "message": "Piano di volo cancellato"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Carica da FC"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Piano di volo caricato dal controllore di volo"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Piano di volo salvato nel controllore di volo"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Impossibile caricare il piano di volo dal controllore di volo"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Impossibile salvare il piano di volo al controllore di volo"
+    },
+    "flightPlanFCEmpty": {
+        "message": "Nessun waypoint trovato sul controllore di volo"
+    },
+    "flightPlanClearedFC": {
+        "message": "Piano di volo cancellato dal controllore di volo"
+    },
+    "flightPlanLoadError": {
+        "message": "Impossibile caricare il piano di volo"
+    },
+    "flightPlanSaveError": {
+        "message": "Impossibile salvare il piano di volo"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Latitudine invalida (deve essere compresa tra -90 e 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Longitudine invalida (deve essere compresa tra -180 e 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Sei sicuro di voler cancellare questi waypoint?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Elimina Waypoint"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Sei sicuro di voler eliminare questo waypoint? Questa azione non può essere annullata."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Sei sicuro di voler cancellare tutti i waypoint? Questa azione non può essere annullata."
+    },
+    "flightPlanClearTitle": {
+        "message": "Cancella Piano Di Volo"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Profilo Di Elevazione"
+    },
+    "flightPlanDistance": {
+        "message": "Distanza totale"
+    },
+    "flightPlanFlightTime": {
+        "message": "Tempo Di Volo"
+    },
+    "flightPlanMinAlt": {
+        "message": "Altitudine min"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Altitudine max"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Aggiungi waypoint per vedere il profilo di elevazione"
+    },
+    "flightPlanGroundElev": {
+        "message": "Elev. Suolo"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Max Elev. Suolo"
+    },
+    "flightPlanAvgGround": {
+        "message": "Media Suolo"
+    },
+    "flightPlanMaxGround": {
+        "message": "Max Suolo"
+    },
+    "flightPlanAlt": {
+        "message": "Alt"
+    },
+    "flightPlanDist": {
+        "message": "Dist"
     },
     "motorsVoltage": {
         "message": "Tensione:"

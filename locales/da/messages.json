@@ -125,6 +125,21 @@
     "submit": {
         "message": "Indsend"
     },
+    "delete": {
+        "message": "Slet"
+    },
+    "edit": {
+        "message": "Rediger"
+    },
+    "add": {
+        "message": "Tilføj"
+    },
+    "update": {
+        "message": "Opdater"
+    },
+    "save": {
+        "message": "Gem"
+    },
     "autoConnectEnabled": {
         "message": "Autotilslut er aktiv - tilslutning forsøges automatisk, når ny port registreres"
     },
@@ -7338,7 +7353,7 @@
         "message": "Opret en sikkerhedskopi, før du brænder fc"
     },
     "darkTheme": {
-        "message": "Brug mørkt tema for Configuration"
+        "message": "Brug mørkt tema"
     },
     "colorTheme": {
         "message": "Farve tema",
@@ -7597,6 +7612,10 @@
         "message": "Vent venligst...",
         "description": "Second label in the progress dialog when applying presets"
     },
+    "presetsCliErrorsWarning": {
+        "message": "<span class='message-negative'>ADVARSEL!<\/span><br\/>Konfiguration er gemt, men indeholder CLI fejl.",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
+    },
     "presetsSaveAnyway": {
         "message": "Gem alligevel",
         "description": "Save anyway button on the CLI errors presets dialog"
@@ -7613,6 +7632,14 @@
         "message": "Fortryd",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Tilføj farvorit forudindstilling",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Fjern farvorit forudindstilling",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Opsætnings Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7624,6 +7651,10 @@
     "presetsBackupLoad": {
         "message": "Indlæs sikkerhedskopi",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Brug af forudindstilling og sikkerhedskopi skal ske i CLI, og ikke i virtual tilstand.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "presetsLoadingDumpAll": {
         "message": "Indlæser nuværende opsætning fra FC",
@@ -7829,6 +7860,20 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Brugerdefineret seriel tekst",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Viser brugerdefineret tekst modtaget fra en seriel port"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profil: Batteri profilnavn",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Viser profilnavn eller -indeks for aktiv batteri"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Lineal",
@@ -8064,6 +8109,12 @@
         "message": "Vælg position",
         "description": "Title for the preset position grid popup in the OSD elements list"
     },
+    "tabPreflight": {
+        "message": "Checkliste"
+    },
+    "preflightTitle": {
+        "message": "Checkliste vejr og omgivelser"
+    },
     "preflightLocation": {
         "message": "Fartøj position"
     },
@@ -8076,8 +8127,17 @@
     "preflightOr": {
         "message": "eller indtast koordinater:"
     },
+    "preflightLatitude": {
+        "message": "Breddegrad"
+    },
+    "preflightLongitude": {
+        "message": "Længdegrad"
+    },
     "preflightApply": {
         "message": "Anvend"
+    },
+    "preflightLaunchStatus": {
+        "message": "Start status"
     },
     "preflightStatusGo": {
         "message": "KØR"
@@ -8100,6 +8160,12 @@
     "preflightCheckVisibility": {
         "message": "Sigtbarhed"
     },
+    "preflightCheckPrecipitation": {
+        "message": "Nedbør"
+    },
+    "preflightCheckSolar": {
+        "message": "Sol"
+    },
     "preflightLevelUnknown": {
         "message": "Ukendt"
     },
@@ -8111,6 +8177,9 @@
     },
     "preflightWmoPartlyCloudy": {
         "message": "Delvist overskyet"
+    },
+    "preflightWmoOvercast": {
+        "message": "Overskyet"
     },
     "preflightWmoFog": {
         "message": "Tåge"
@@ -8213,6 +8282,12 @@
     },
     "preflightDewLowRisk": {
         "message": "Lav risiko"
+    },
+    "preflightDewFogLikely": {
+        "message": "Tåge\/forvent dråber på linser"
+    },
+    "preflightDewFogExpected": {
+        "message": "Tåge\/forvent duggede linser"
     },
     "preflightUvLow": {
         "message": "Lav"
@@ -8331,6 +8406,9 @@
     "preflightNighttime": {
         "message": "Nattetimer"
     },
+    "preflightWindForecast": {
+        "message": "Prognose for vind ved forventet højde"
+    },
     "preflightWind10m": {
         "message": "10m"
     },
@@ -8375,6 +8453,12 @@
     },
     "preflightGPSRescue": {
         "message": "GPS fejlsikring status"
+    },
+    "preflightMagDeclination": {
+        "message": "Magnetisk deklination (horisontal vinkel)"
+    },
+    "preflightMagInclination": {
+        "message": "Magnetisk inklination (vertikal vinkel)"
     },
     "preflightGNSSPlanner": {
         "message": "GNSS satellit planlægningsværktøj"
