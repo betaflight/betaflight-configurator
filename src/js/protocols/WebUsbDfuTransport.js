@@ -35,6 +35,8 @@ class WebUsbDfuTransport extends EventTarget {
             const port = this.createPort(e.device);
             if (this.getConnectedPort() === port.path) {
                 this.usbDevice = null;
+                this._langId = undefined;
+                this._configDescriptor = undefined;
             }
             this.dispatchEvent(new CustomEvent("removedDevice", { detail: port }));
         });
@@ -105,6 +107,8 @@ class WebUsbDfuTransport extends EventTarget {
         if (device.configuration === null) {
             await device.selectConfiguration(1);
         }
+        this._langId = undefined;
+        this._configDescriptor = undefined;
         this.usbDevice = device;
         console.log(`${this.logHead} USB Device opened: ${this.usbDevice.productName}`);
     }
@@ -307,16 +311,13 @@ class WebUsbDfuTransport extends EventTarget {
      */
     async getInterfaceDescriptors(interfaceNum) {
         const descriptorStringArray = [];
-        const interfaceCount = this.usbDevice.configuration.interfaces.length;
-        let descriptorCount = 0;
+        const interfaces = this.usbDevice.configuration.interfaces;
 
-        if (interfaceCount === 0) {
+        if (interfaces.length === 0) {
             return [];
-        } else if (interfaceCount === 1) {
-            descriptorCount = this.usbDevice.configuration.interfaces[0].alternates.length;
-        } else {
-            descriptorCount = interfaceCount;
         }
+
+        const descriptorCount = interfaces.reduce((count, iface) => count + iface.alternates.length, 0);
 
         for (let i = 0; i < descriptorCount; i++) {
             try {
