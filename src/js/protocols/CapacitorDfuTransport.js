@@ -33,12 +33,12 @@ class CapacitorDfuTransport extends EventTarget {
         return this.adapter.createPort(device);
     }
 
-    async getDevices() {
-        return await this.adapter.getDevices();
+    getDevices() {
+        return this.adapter.getDevices();
     }
 
-    async requestPermission() {
-        return await this.adapter.requestPermission();
+    requestPermission() {
+        return this.adapter.requestPermission();
     }
 
     async waitForDfuDevice(timeout = 10000, interval = 500) {
@@ -146,20 +146,20 @@ class CapacitorDfuTransport extends EventTarget {
 
     // ===== Descriptor Reading =====
 
-    async getString(index) {
-        return await this.adapter.getStringDescriptor(index);
+    getString(index) {
+        return this.adapter.getStringDescriptor(index);
     }
 
-    async getInterfaceDescriptor(interfaceIndex) {
-        return await this.adapter.getInterfaceDescriptor(interfaceIndex);
+    getInterfaceDescriptor(interfaceIndex) {
+        return this.adapter.getInterfaceDescriptor(interfaceIndex);
     }
 
-    async getInterfaceDescriptors(interfaceNum) {
-        return await this.adapter.getInterfaceDescriptors(interfaceNum);
+    getInterfaceDescriptors(interfaceNum) {
+        return this.adapter.getInterfaceDescriptors(interfaceNum);
     }
 
-    async getFunctionalDescriptor() {
-        return await this.adapter.getFunctionalDescriptor();
+    getFunctionalDescriptor() {
+        return this.adapter.getFunctionalDescriptor();
     }
 }
 

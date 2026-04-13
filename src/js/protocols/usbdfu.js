@@ -115,8 +115,8 @@ export class UsbDfuProtocol extends EventTarget {
         return this.transport.getConnectedPort() ? true : null;
     }
 
-    async getDevices() {
-        return await this.transport.getDevices();
+    getDevices() {
+        return this.transport.getDevices();
     }
 
     async requestPermission() {
@@ -401,7 +401,7 @@ export class UsbDfuProtocol extends EventTarget {
                 }
 
                 const type = tmp1[0].trim().replace("@", "");
-                const start_address = parseInt(tmp1[1]);
+                const start_address = Number.parseInt(tmp1[1]);
 
                 // split sectors into array
                 const sectors = [];
@@ -419,8 +419,8 @@ export class UsbDfuProtocol extends EventTarget {
                         return null;
                     }
 
-                    const num_pages = parseInt(tmp3[0]);
-                    let page_size = parseInt(tmp3[1]);
+                    const num_pages = Number.parseInt(tmp3[0]);
+                    let page_size = Number.parseInt(tmp3[1]);
 
                     if (!page_size) {
                         return null;
@@ -558,7 +558,7 @@ export class UsbDfuProtocol extends EventTarget {
                                     callback(data);
                                 } else {
                                     console.log(`${this.logHead} Failed to execute address load`);
-                                    if (typeof abort === "undefined" || abort) {
+                                    if (abort === undefined || abort) {
                                         this.cleanup();
                                     } else {
                                         callback(data);

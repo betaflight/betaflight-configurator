@@ -42,8 +42,8 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Parse HEX string into structured firmware data
      */
-    const parseHex = async (hexString) => {
-        return await read_hex_file(hexString);
+    const parseHex = (hexString) => {
+        return read_hex_file(hexString);
     };
 
     /**

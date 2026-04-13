@@ -254,7 +254,7 @@ class WebUsbDfuTransport extends EventTarget {
                 bmAttributes: buf[2],
                 wDetachTimeOut: (buf[4] << 8) | buf[3],
                 wTransferSize: (buf[6] << 8) | buf[5],
-                bcdDFUVersion: buf[7],
+                bcdDFUVersion: (buf[8] << 8) | buf[7],
             };
         }
         throw new Error(`USB getFunctionalDescriptor failed: ${result.status}`);

@@ -107,24 +107,24 @@ class CapacitorDfu extends EventTarget {
 
     // ===== Native USB operations (called by transport layer) =====
 
-    async openDevice(deviceId) {
-        return await BetaflightDfu.openDevice({ deviceId });
+    openDevice(deviceId) {
+        return BetaflightDfu.openDevice({ deviceId });
     }
 
-    async claimInterface(interfaceNumber) {
-        return await BetaflightDfu.claimInterface({ interfaceNumber });
+    claimInterface(interfaceNumber) {
+        return BetaflightDfu.claimInterface({ interfaceNumber });
     }
 
-    async releaseInterface(interfaceNumber) {
-        return await BetaflightDfu.releaseInterface({ interfaceNumber });
+    releaseInterface(interfaceNumber) {
+        return BetaflightDfu.releaseInterface({ interfaceNumber });
     }
 
-    async closeDevice() {
-        return await BetaflightDfu.closeDevice();
+    closeDevice() {
+        return BetaflightDfu.closeDevice();
     }
 
-    async resetDevice() {
-        return await BetaflightDfu.resetDevice();
+    resetDevice() {
+        return BetaflightDfu.resetDevice();
     }
 
     async controlTransferIn(request, value, index, length, timeout) {
@@ -147,7 +147,7 @@ class CapacitorDfu extends EventTarget {
 
     async controlTransferOut(request, value, index, data, timeout) {
         const hexData = data ? this.uint8ArrayToHexString(new Uint8Array(data)) : "";
-        return await BetaflightDfu.controlTransferOut({
+        return BetaflightDfu.controlTransferOut({
             request,
             value,
             index,
