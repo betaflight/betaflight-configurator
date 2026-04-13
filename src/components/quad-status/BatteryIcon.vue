@@ -124,6 +124,7 @@ export default defineComponent({
 
 .battery-status {
     height: 11px;
+    max-width: 100%;
 }
 
 @keyframes error-blinker {

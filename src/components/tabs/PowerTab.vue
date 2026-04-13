@@ -111,7 +111,7 @@
                                                             name="mincellvoltage"
                                                             :step="0.01"
                                                             :min="1"
-                                                            :max="5"
+                                                            :max="batteryConfig.vbatwarningcellvoltage"
                                                             :aria-label="$t('powerBatteryMinimum')"
                                                             v-model="batteryConfig.vbatmincellvoltage"
                                                         />
@@ -128,7 +128,7 @@
                                                             id="maxcellvoltage"
                                                             name="maxcellvoltage"
                                                             :step="0.01"
-                                                            :min="1"
+                                                            :min="batteryConfig.vbatwarningcellvoltage"
                                                             :max="5"
                                                             :aria-label="$t('powerBatteryMaximum')"
                                                             v-model="batteryConfig.vbatmaxcellvoltage"
@@ -146,8 +146,8 @@
                                                             id="warningcellvoltage"
                                                             name="warningcellvoltage"
                                                             :step="0.01"
-                                                            :min="1"
-                                                            :max="5"
+                                                            :min="batteryConfig.vbatmincellvoltage"
+                                                            :max="batteryConfig.vbatmaxcellvoltage"
                                                             :aria-label="$t('powerBatteryWarning')"
                                                             v-model="batteryConfig.vbatwarningcellvoltage"
                                                         />
