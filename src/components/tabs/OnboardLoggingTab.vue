@@ -64,14 +64,12 @@
                         >
                             <div class="blackboxDebugFieldsTable">
                                 <div v-for="(field, index) in debugFields" :key="index" class="debug-field-row">
-                                    <input
-                                        :id="`blackboxDebugField${index}`"
-                                        :checked="debugFieldsEnabled[index]"
-                                        type="checkbox"
-                                        class="toggle"
-                                        @change="updateDebugField(index, $event)"
+                                    <USwitch
+                                        :model-value="debugFieldsEnabled[index]"
+                                        size="sm"
+                                        @update:model-value="updateDebugField(index, $event)"
                                     />
-                                    <label :for="`blackboxDebugField${index}`">{{ field }}</label>
+                                    <span>{{ field }}</span>
                                 </div>
                             </div>
                         </UiBox>
@@ -534,9 +532,9 @@ export default defineComponent({
             );
         });
 
-        function updateDebugField(index, event) {
+        function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
-            debugFieldsEnabled.value.splice(index, 1, event.target.checked);
+            debugFieldsEnabled.value.splice(index, 1, value);
         }
 
         async function saveSettings() {
@@ -858,26 +856,6 @@ export default defineComponent({
                     debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
                         return (disabledMask & (1 << index)) === 0;
                     });
-
-                    // Destroy existing Switchery instances and recreate with loaded state
-                    nextTick(() => {
-                        debugFieldsEnabled.value.forEach((_, index) => {
-                            const checkbox = document.getElementById(`blackboxDebugField${index}`);
-                            if (checkbox) {
-                                // Remove existing Switchery element
-                                const switcheryElement = checkbox.nextElementSibling;
-                                if (switcheryElement && switcheryElement.classList.contains("switchery")) {
-                                    switcheryElement.remove();
-                                }
-                                // Add the toggle class back so GUI.switchery() will reinitialize
-                                if (!checkbox.classList.contains("toggle")) {
-                                    checkbox.classList.add("toggle");
-                                }
-                            }
-                        });
-                        // Reinitialize Switchery with correct state
-                        GUI.switchery();
-                    });
                 }
 
                 updateVirtualGyro();
@@ -957,14 +935,7 @@ export default defineComponent({
             margin-bottom: 8px;
             display: flex;
             align-items: center;
-
-            .switchery {
-                margin-right: 15px;
-            }
-
-            label {
-                margin-left: 0;
-            }
+            gap: 8px;
         }
     }
 
