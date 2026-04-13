@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Betaflight Configurator currently supports DFU flashing on desktop browsers via the **WebUSB API** (`webusbdfu.js`). On Android, WebUSB is not available inside a Capacitor WebView. This document describes how to implement a native Android Capacitor plugin (`BetaflightDfuPlugin`) that replicates the same DFU protocol used by `webusbdfu.js`, but using Android's native `UsbManager` APIs.
+The Betaflight Configurator currently supports DFU flashing on desktop browsers via the **WebUSB API** (`usbdfu.js`). On Android, WebUSB is not available inside a Capacitor WebView. This document describes how to implement a native Android Capacitor plugin (`BetaflightDfuPlugin`) that replicates the same DFU protocol used by `usbdfu.js`, but using Android's native `UsbManager` APIs.
 
 **Key decision: We are NOT using the Nordic DFU library.** The Nordic library implements the Nordic-specific BLE DFU protocol, which is designed for Nordic nRF chips. Betaflight flight controllers use **STM32 USB DFU** (a USB control transfer protocol defined by ST Microelectronics), along with GD32, AT32, APM32, and RP2040 DFU bootloaders. These are all **USB-based** DFU protocols, not BLE-based. The implementation must use Android's `UsbManager` and `UsbDeviceConnection` to perform USB control transfers directly, mirroring what `webusbdfu.js` does via WebUSB.
 
@@ -14,8 +14,9 @@ The Betaflight Configurator currently supports DFU flashing on desktop browsers 
 ```
 FirmwareFlasherTab.vue
   -> useFirmwareFlashing.js (composable)
-    -> webusbdfu.js (WebUSB API - navigator.usb)
-      -> USB control transfers to STM32 DFU bootloader
+    -> usbdfu.js (UsbDfuProtocol + pluggable transport)
+      -> WebUsbDfuTransport.js (desktop) or CapacitorDfuTransport.js (Android)
+        -> USB control transfers to STM32 DFU bootloader
 ```
 
 ### Existing Android Plugins (pattern to follow)
@@ -41,7 +42,7 @@ Each plugin follows this pattern:
 - `isAndroid()` - detects Capacitor Android platform
 - `checkUsbSupport()` - currently returns `false` for Android (marked "Not implemented yet")
 
-### Current DFU Protocol (`webusbdfu.js`)
+### Current DFU Protocol (`usbdfu.js`)
 
 The existing implementation is a 1,377-line state machine that:
 1. **Discovers** DFU devices via `navigator.usb.getDevices()` with vendor/product ID filters
@@ -91,7 +92,7 @@ public class BetaflightDfuPlugin extends Plugin {
 }
 ```
 
-**Plugin Methods** (matching `webusbdfu.js` interface):
+**Plugin Methods** (matching `usbdfu.js` interface):
 
 | Method | Parameters | Description |
 |--------|-----------|-------------|
@@ -114,7 +115,7 @@ The existing `webusbdfu.js` implements a complex state machine with:
 - Multi-block erase/write/verify with progress
 - Flash layout parsing from descriptors
 
-Rather than reimplementing this entire state machine in Java (duplicating 1,377 lines of battle-tested logic), the plugin exposes **low-level USB control transfers**. The existing JavaScript state machine (`webusbdfu.js`) orchestrates the DFU protocol and simply calls into the native plugin for USB I/O. This approach:
+Rather than reimplementing this entire state machine in Java (duplicating 1,377 lines of battle-tested logic), the plugin exposes **low-level USB control transfers**. The existing JavaScript state machine (`usbdfu.js`) orchestrates the DFU protocol and simply calls into the native plugin for USB I/O. This approach:
 - Avoids duplicating protocol logic across two languages
 - Keeps the single source of truth in JS (easier to maintain, test, and debug)
 - Matches how WebUSB works (JS controls the protocol, browser provides USB I/O)
@@ -207,7 +208,7 @@ int result = connection.controlTransfer(
 
 **Location**: `src/js/protocols/CapacitorDfu.js`
 
-This adapter mirrors the `WEBUSBDFU_protocol` interface but routes USB operations through the native plugin:
+This adapter mirrors the `UsbDfuProtocol` interface but routes USB operations through the native plugin:
 
 ```javascript
 import { Capacitor } from "@capacitor/core";
@@ -218,14 +219,14 @@ class CapacitorDfu extends EventTarget {
     constructor() {
         super();
         this.logHead = "[CAPACITOR DFU]";
-        // ... same state as WEBUSBDFU_protocol ...
+        // ... same state as UsbDfuProtocol ...
 
         // Listen for device events from native
         BetaflightDfu.addListener("deviceAttached", (device) => { ... });
         BetaflightDfu.addListener("deviceDetached", (device) => { ... });
     }
 
-    // Mirror the WEBUSBDFU_protocol public API
+    // Mirror the UsbDfuProtocol public API
     async getDevices() { ... }
     async requestPermission() { ... }
     async connect(devicePath, hex, options, callback) { ... }
@@ -233,18 +234,18 @@ class CapacitorDfu extends EventTarget {
 }
 ```
 
-**Critical**: The adapter should reuse as much of `webusbdfu.js`'s logic as possible. Two approaches:
+**Critical**: The adapter reuses `usbdfu.js`'s DFU state machine via a pluggable transport backend.
 
-**Option A (Recommended): Refactor `webusbdfu.js` to accept a transport backend**
+**Shipped approach: `usbdfu.js` accepts a transport backend**
 
-Extract the USB I/O into an interface, with two implementations:
+The USB I/O is extracted into a transport interface with two implementations:
 ```javascript
-// WebUsbTransport.js - uses navigator.usb (desktop)
-// CapacitorUsbTransport.js - uses BetaflightDfu plugin (Android)
+// WebUsbDfuTransport.js - uses navigator.usb (desktop)
+// CapacitorDfuTransport.js - uses BetaflightDfu plugin (Android)
 
-class DfuProtocol extends EventTarget {
+class UsbDfuProtocol extends EventTarget {
     constructor(transport) {
-        this.transport = transport;  // WebUsbTransport or CapacitorUsbTransport
+        this.transport = transport;  // WebUsbDfuTransport or CapacitorDfuTransport
     }
 
     controlTransfer(direction, request, value, iface, length, data, callback) {
@@ -253,25 +254,21 @@ class DfuProtocol extends EventTarget {
 }
 ```
 
-**Option B: Full parallel implementation**
-
-Create `CapacitorDfu.js` as a standalone class that duplicates the `WEBUSBDFU_protocol` state machine but uses native plugin calls instead of WebUSB. This is simpler initially but means maintaining protocol logic in two places.
-
-#### 2.2 Transport Interface (Option A detail)
+#### 2.2 Transport Interface
 
 The transport must support these operations:
 
 ```javascript
-class UsbTransport extends EventTarget {
+class DfuTransport extends EventTarget {
     // Device discovery
-    async getDevices(filters) -> [{ path, displayName, vendorId, productId, device }]
-    async requestPermission(filters) -> device | null
+    async getDevices() -> [{ path, displayName, vendorId, productId, port }]
+    async requestPermission() -> device | null
+    async waitForDfuDevice(timeout, interval) -> device | null
 
     // Device lifecycle
-    async open(device) -> void
+    async open(devicePort) -> void
     async close() -> void
     async reset() -> void
-    async selectConfiguration(configId) -> void
     async claimInterface(interfaceNum) -> void
     async releaseInterface(interfaceNum) -> void
 
@@ -280,11 +277,12 @@ class UsbTransport extends EventTarget {
     async controlTransferOut(setup, data) -> { status }
 
     // Descriptors (used for chip info)
-    async getStringDescriptor(index) -> string
+    async getString(index) -> string
+    async getInterfaceDescriptor(interfaceIndex) -> descriptor
     async getInterfaceDescriptors(interfaceNum) -> [string]
-    async getFunctionalDescriptor(interfaceNum) -> { bLength, bmAttributes, wDetachTimeOut, wTransferSize, bcdDFUVersion }
+    async getFunctionalDescriptor() -> { bLength, bmAttributes, wDetachTimeOut, wTransferSize, bcdDFUVersion }
 
-    // Events: "connect", "disconnect"
+    // Events: "addedDevice", "removedDevice"
 }
 ```
 
@@ -323,30 +321,34 @@ export function checkUsbSupport() {
 
 #### 3.3 Update `port_handler.js`
 
-The port handler needs to listen to the Capacitor DFU adapter for device events on Android:
+The port handler creates a platform-appropriate DFU protocol instance at module scope:
 
 ```javascript
-import CapacitorDfu from "./protocols/CapacitorDfu";
+import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
+import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
 import { isAndroid } from "./utils/checkCompatibility";
 
+function createDfuProtocol() {
+    if (isAndroid()) {
+        return new UsbDfuProtocol(new CapacitorDfuTransport());
+    }
+    return defaultDfu;  // default instance with WebUsbDfuTransport
+}
+const dfuProtocol = createDfuProtocol();
+
 // In initialize():
-const dfuProtocol = isAndroid() ? new CapacitorDfu() : WEBUSBDFU;
 dfuProtocol.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
 dfuProtocol.addEventListener("removedDevice", (event) => this.removedUsbDevice(event.detail));
 ```
 
 #### 3.4 Update `useFirmwareFlashing.js`
 
-The flashing composable selects DFU protocol based on port prefix:
+The flashing composable uses `PortHandler.dfuProtocol` (already platform-aware):
 
 ```javascript
-import { isAndroid } from "../js/utils/checkCompatibility";
-
 // In flashHexFirmware():
-const dfu = isAndroid() ? CapacitorDfu : DFU;
-
 if (isDFU) {
-    dfu.connect(port, firmware, flashing_options);
+    PortHandler.dfuProtocol.connect(port, firmware, flashing_options);
 }
 ```
 
@@ -354,7 +356,7 @@ if (isDFU) {
 
 Maintain consistency with existing patterns:
 - Serial ports: `capacitor-<deviceId>` (existing)
-- DFU ports: `usb_<vendorId>:<productId>:<deviceId>` (new, matches `webusbdfu.js` style)
+- DFU ports: `usb_<serialNumber|deviceId>` (new, matches `usbdfu.js` style)
 
 The `isDFU` check in `useFirmwareFlashing.js` (`port.startsWith("usb")`) will work without changes.
 
@@ -379,16 +381,16 @@ The DFU plugin will reuse the existing `UsbPermissionReceiver` pattern for permi
 
 ### Step 2: JavaScript Adapter
 - [ ] Create `src/js/protocols/CapacitorDfu.js`
-- [ ] Implement device discovery and events matching `WEBUSBDFU_protocol` interface
+- [ ] Implement device discovery and events matching `UsbDfuProtocol` interface
 - [ ] Implement `controlTransfer()` routing through native plugin
 - [ ] Implement USB descriptor reading through native plugin
 - [ ] Implement `connect()`, `openDevice()`, `claimInterface()` lifecycle
 
-### Step 3: Protocol Integration (Option A - recommended)
-- [ ] Extract transport interface from `webusbdfu.js`
-- [ ] Create `WebUsbTransport.js` wrapping `navigator.usb`
-- [ ] Create `CapacitorUsbTransport.js` wrapping `BetaflightDfu` plugin
-- [ ] Refactor `webusbdfu.js` to use transport interface
+### Step 3: Protocol Integration
+- [ ] Extract transport interface from `usbdfu.js`
+- [ ] Create `WebUsbDfuTransport.js` wrapping `navigator.usb`
+- [ ] Create `CapacitorDfuTransport.js` wrapping `BetaflightDfu` plugin
+- [ ] Refactor `usbdfu.js` (`UsbDfuProtocol`) to use transport interface
 - [ ] Verify desktop WebUSB still works after refactor
 
 ### Step 4: System Integration
@@ -432,17 +434,22 @@ When a flight controller reboots from application mode to DFU mode:
 The existing `device_filter.xml` already handles both VCP and DFU VID/PIDs. The two plugins operate independently since they filter for different product IDs.
 
 ### 6. Reboot-to-DFU Flow on Android
-The existing serial -> DFU reboot flow works as follows:
+The serial -> DFU reboot flow works as follows:
 1. App is connected via `CapacitorSerial` (serial VCP)
 2. User triggers flash, MSP sends reboot-to-bootloader command
 3. FC reboots, VCP device detaches, DFU device attaches
-4. `port_handler.js` detects new DFU device
-5. `useFirmwareFlashing.js` triggers DFU flash
+4. `webstm32.js` calls `PortHandler.dfuProtocol.waitForDfu()` which polls for the device
+5. On Android, `CapacitorDfuTransport.waitForDfuDevice()` dispatches `addedDevice` when found
+6. `port_handler.js` detects new DFU device via event chain
+7. `useFirmwareFlashing.js` `detectedUsbDevice` handler triggers DFU flash
 
-For Android, step 4 requires the DFU plugin to emit `deviceAttached` events. The JS layer logic for handling the reboot flow is already in place in `useFirmwareFlashing.js`.
+Note: On Android, the native `USB_DEVICE_ATTACHED` broadcast may be consumed before permission is auto-granted. The `waitForDfuDevice` method compensates by dispatching `addedDevice` when it discovers a permitted device via polling.
 
 ### 7. Descriptor String Encoding
 USB string descriptors use UTF-16LE encoding. The native plugin must decode these correctly. Android's `UsbDeviceConnection.getRawDescriptors()` provides the raw bytes, but for string descriptors the control transfer approach is more reliable.
+
+### 8. Activity Restart on USB Re-enumeration
+After DFU flash, the FC reboots and re-enumerates as a serial device. The `USB_DEVICE_ATTACHED` intent can cause Android to destroy and recreate the activity (even with `singleTask` launch mode). `MainActivity.java` guards against this by replacing USB intents with a plain launcher intent in both `onCreate` and `onNewIntent`.
 
 ---
 
@@ -452,18 +459,23 @@ USB string descriptors use UTF-16LE encoding. The native plugin must decode thes
 | File | Purpose |
 |------|---------|
 | `android/.../protocols/dfu/BetaflightDfuPlugin.java` | Native Capacitor plugin for USB DFU |
+| `android/.../protocols/dfu/DfuUsbPermissionReceiver.java` | Android 14+ explicit broadcast receiver |
 | `src/js/protocols/CapacitorDfu.js` | JS adapter for native DFU plugin |
-| `src/js/protocols/CapacitorUsbTransport.js` | Transport backend for Capacitor (Option A) |
-| `src/js/protocols/WebUsbTransport.js` | Transport backend for WebUSB (Option A) |
+| `src/js/protocols/CapacitorDfuTransport.js` | Transport backend for Android (Capacitor) |
+| `src/js/protocols/WebUsbDfuTransport.js` | Transport backend for desktop (WebUSB) |
 
 ### Modified Files
 | File | Change |
 |------|--------|
-| `android/.../MainActivity.java` | Register `BetaflightDfuPlugin` |
+| `android/.../MainActivity.java` | Register `BetaflightDfuPlugin`, absorb USB re-enumeration intents |
+| `android/.../AndroidManifest.xml` | Register `DfuUsbPermissionReceiver` |
 | `src/js/utils/checkCompatibility.js` | Enable `checkUsbSupport()` for Android |
-| `src/js/port_handler.js` | Use platform-appropriate DFU protocol |
-| `src/js/protocols/webusbdfu.js` | Refactor to accept transport backend (Option A) |
-| `src/composables/useFirmwareFlashing.js` | Route to correct DFU implementation |
+| `src/js/port_handler.js` | Create platform-appropriate `UsbDfuProtocol` instance |
+| `src/js/protocols/usbdfu.js` | Refactored from `webusbdfu.js` to accept pluggable transport |
+| `src/composables/useFirmwareFlashing.js` | Use `PortHandler.dfuProtocol` instead of DFU singleton |
+| `src/js/protocols/webstm32.js` | Use `PortHandler.dfuProtocol` for DFU wait/permission |
+| `src/components/tabs/FirmwareFlasherTab.vue` | Use `PortHandler.dfuProtocol` for DFU permission |
+| `src/js/utils/AutoBackup.js` | Handle `capacitor-*` serial port prefix |
 
 ### No Changes Needed
 | File | Reason |
