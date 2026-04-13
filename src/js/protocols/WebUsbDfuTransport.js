@@ -33,6 +33,9 @@ class WebUsbDfuTransport extends EventTarget {
                 return;
             }
             const port = this.createPort(e.device);
+            if (this.getConnectedPort() === port.path) {
+                this.usbDevice = null;
+            }
             this.dispatchEvent(new CustomEvent("removedDevice", { detail: port }));
         });
     }
@@ -169,6 +172,10 @@ class WebUsbDfuTransport extends EventTarget {
     // ===== Descriptor Reading =====
 
     async getString(index) {
+        if (index === 0) {
+            return "";
+        }
+
         const setup = {
             requestType: "standard",
             recipient: "device",
