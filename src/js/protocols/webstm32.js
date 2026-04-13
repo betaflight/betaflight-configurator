@@ -135,7 +135,11 @@ class STM32Protocol {
 
                 const device = await PortHandler.dfuProtocol.requestPermission();
                 if (device) {
-                    // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
+                    // WebUSB requestDevice doesn't fire a "connect" event for
+                    // already-plugged devices — it only grants permission.
+                    // Dispatch addedDevice manually so the port-handler →
+                    // detectedUsbDevice → startFlashing chain fires.
+                    PortHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
                     return;
                 }
 
