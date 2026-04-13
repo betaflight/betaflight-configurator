@@ -17,12 +17,21 @@ class WebUsbDfuTransport extends EventTarget {
             return;
         }
 
+        const isDfuDevice = (device) =>
+            (usbDevices?.filters || []).some((f) => device.vendorId === f.vendorId && device.productId === f.productId);
+
         navigator.usb.addEventListener("connect", (e) => {
+            if (!isDfuDevice(e.device)) {
+                return;
+            }
             const port = this.createPort(e.device);
             this.dispatchEvent(new CustomEvent("addedDevice", { detail: port }));
         });
 
         navigator.usb.addEventListener("disconnect", (e) => {
+            if (!isDfuDevice(e.device)) {
+                return;
+            }
             const port = this.createPort(e.device);
             this.dispatchEvent(new CustomEvent("removedDevice", { detail: port }));
         });

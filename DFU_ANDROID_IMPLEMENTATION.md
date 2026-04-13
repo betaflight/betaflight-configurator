@@ -204,11 +204,11 @@ int result = connection.controlTransfer(
 
 ### Phase 2: JavaScript Adapter
 
-#### 2.1 Create `CapacitorDfu.js`
+#### 2.1 Create `CapacitorDfu.js` (Native Plugin Adapter)
 
 **Location**: `src/js/protocols/CapacitorDfu.js`
 
-This adapter mirrors the `UsbDfuProtocol` interface but routes USB operations through the native plugin:
+This is a thin adapter that wraps the native `BetaflightDfu` Capacitor plugin. It handles device discovery, events, permission, and raw USB operations (open/close/control transfers/descriptors). It does **not** contain any DFU protocol logic.
 
 ```javascript
 import { Capacitor } from "@capacitor/core";
@@ -218,23 +218,23 @@ const BetaflightDfu = Capacitor?.Plugins?.BetaflightDfu;
 class CapacitorDfu extends EventTarget {
     constructor() {
         super();
-        this.logHead = "[CAPACITOR DFU]";
-        // ... same state as UsbDfuProtocol ...
-
         // Listen for device events from native
         BetaflightDfu.addListener("deviceAttached", (device) => { ... });
         BetaflightDfu.addListener("deviceDetached", (device) => { ... });
     }
 
-    // Mirror the UsbDfuProtocol public API
+    // Native plugin wrappers (no DFU protocol logic)
     async getDevices() { ... }
     async requestPermission() { ... }
-    async connect(devicePath, hex, options, callback) { ... }
-    // ... etc
+    openDevice(deviceId) { ... }
+    closeDevice() { ... }
+    controlTransferIn(request, value, index, length) { ... }
+    controlTransferOut(request, value, index, data) { ... }
+    // ... descriptor methods
 }
 ```
 
-**Critical**: The adapter reuses `usbdfu.js`'s DFU state machine via a pluggable transport backend.
+**Critical**: The DFU protocol/state machine lives in `usbdfu.js` (`UsbDfuProtocol`). `CapacitorDfu.js` is only the native-plugin adapter, wrapped by `CapacitorDfuTransport.js` to provide the transport interface.
 
 **Shipped approach: `usbdfu.js` accepts a transport backend**
 
@@ -379,12 +379,11 @@ The DFU plugin will reuse the existing `UsbPermissionReceiver` pattern for permi
 - [ ] Register in `MainActivity.java`
 - [ ] Test: verify DFU device appears when plugged in via USB OTG
 
-### Step 2: JavaScript Adapter
-- [ ] Create `src/js/protocols/CapacitorDfu.js`
-- [ ] Implement device discovery and events matching `UsbDfuProtocol` interface
-- [ ] Implement `controlTransfer()` routing through native plugin
-- [ ] Implement USB descriptor reading through native plugin
-- [ ] Implement `connect()`, `openDevice()`, `claimInterface()` lifecycle
+### Step 2: Native Plugin Adapter
+- [ ] Create `src/js/protocols/CapacitorDfu.js` (thin wrapper around `BetaflightDfu` native plugin)
+- [ ] Implement device discovery and events (getDevices, deviceAttached/Detached)
+- [ ] Implement raw USB operations (openDevice, closeDevice, controlTransferIn/Out)
+- [ ] Implement USB descriptor reading (getStringDescriptor, getInterfaceDescriptors, getFunctionalDescriptor)
 
 ### Step 3: Protocol Integration
 - [ ] Extract transport interface from `usbdfu.js`
