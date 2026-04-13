@@ -231,7 +231,9 @@ export function useBoardSelection(params) {
      * Handle detect board button click
      */
     const handleDetectBoard = async () => {
-        if (state.detectingBoard) return;
+        if (state.detectingBoard) {
+            return;
+        }
 
         state.detectingBoard = true;
 
