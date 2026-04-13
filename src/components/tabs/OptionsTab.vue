@@ -1,209 +1,119 @@
 <template>
     <BaseTab tab-name="options">
         <div class="content_wrapper grid-box col1">
-            <!-- Main Options Box -->
-            <div class="gui_box">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" v-html="$t('tabOptions')"></div>
-                </div>
-                <div class="spacer">
-                    <!-- Expert Mode -->
-                    <div class="expertMode margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.expertMode" />
-                        </div>
-                        <span class="freelabel" v-html="$t('expertMode')"></span>
-                    </div>
+            <UiBox :title="$t('tabOptions')">
+                <SettingRow :label="$t('expertMode')">
+                    <USwitch v-model="settings.expertMode" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('rememberLastTab')">
+                    <USwitch v-model="settings.rememberLastTab" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('meteredConnection')">
+                    <USwitch v-model="settings.meteredConnection" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('analyticsOptOut')">
+                    <USwitch v-model="settings.analyticsOptOut" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('cliAutoComplete')">
+                    <USwitch v-model="settings.cliAutoComplete" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('showManualMode')">
+                    <USwitch v-model="settings.showManualMode" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('showVirtualMode')">
+                    <USwitch v-model="settings.showVirtualMode" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('showDevToolsOnStartup')">
+                    <USwitch v-model="settings.showDevToolsOnStartup" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('showNotifications')">
+                    <USwitch v-model="settings.showNotifications" @change="handleNotificationsChange" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('firmwareBackupOnFlash')">
+                    <USelect
+                        :items="[
+                            { label: $t('firmwareBackupDisabled'), value: 0 },
+                            { label: $t('firmwareBackupEnabled'), value: 1 },
+                            { label: $t('firmwareBackupAsk'), value: 2 },
+                        ]"
+                        size="sm"
+                        v-model="settings.backupOnFlash"
+                        class="min-w-40"
+                    />
+                </SettingRow>
+            </UiBox>
 
-                    <!-- Remember Last Tab -->
-                    <div class="rememberLastTab margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.rememberLastTab" />
-                        </div>
-                        <span class="freelabel" v-html="$t('rememberLastTab')"></span>
-                    </div>
+            <UiBox :title="$t('languageAndAppearanceSettings')">
+                <SettingRow :label="$t('useLegacyRenderingModel')">
+                    <USwitch v-model="settings.useLegacyRenderingModel" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('darkTheme')">
+                    <USelect
+                        :items="[
+                            { label: $t('on'), value: 0 },
+                            { label: $t('off'), value: 1 },
+                            { label: $t('auto'), value: 2 },
+                        ]"
+                        size="sm"
+                        v-model="settings.darkTheme"
+                        class="min-w-40"
+                    />
+                </SettingRow>
+                <SettingRow :label="$t('colorTheme')">
+                    <USelect
+                        :items="[
+                            { label: $t('colorThemeYellow'), value: 'yellow' },
+                            { label: $t('colorThemeAmber'), value: 'amber' },
+                            { label: $t('colorThemeContrast'), value: 'contrast' },
+                        ]"
+                        size="sm"
+                        v-model="settings.colorTheme"
+                        class="min-w-40"
+                    />
+                </SettingRow>
+                <!-- Includes "languages" icon to be noticeable even if the language is set incorrectly for the user -->
+                <!-- Other input elements are unlikely to need an icon -->
+                <SettingRow :label="$t('userLanguageSelect')">
+                    <USelectMenu
+                        v-model="settings.userLanguage"
+                        value-key="value"
+                        :items="[
+                            { label: $t('language_default'), value: 'DEFAULT' },
+                            { type: 'separator' },
+                            ...availableLanguages.map((lang) => ({
+                                label: $t(`language_${lang}`),
+                                value: lang,
+                            })),
+                        ]"
+                        size="sm"
+                        leading-icon="i-lucide-languages"
+                        :search-input="{
+                            placeholder: $t('search'),
+                            icon: 'i-lucide-search',
+                        }"
+                        class="min-w-48"
+                        :ui="{ content: 'max-h-72' }"
+                    />
+                </SettingRow>
+            </UiBox>
 
-                    <!-- Metered Connection -->
-                    <div class="meteredConnection margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.meteredConnection" />
-                        </div>
-                        <span class="freelabel" v-html="$t('meteredConnection')"></span>
-                    </div>
+            <UiBox :title="$t('developmentSettings')">
+                <SettingRow :label="$t('showAllSerialDevices')">
+                    <USwitch v-model="settings.showAllSerialDevices" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('cliOnlyMode')">
+                    <USwitch v-model="settings.cliOnlyMode" size="sm" />
+                </SettingRow>
+                <SettingRow :label="$t('automaticDevOptions')">
+                    <USwitch v-model="settings.automaticDevOptions" size="sm" />
+                </SettingRow>
+            </UiBox>
 
-                    <!-- Analytics Opt Out -->
-                    <div class="analyticsOptOut margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.analyticsOptOut" />
-                        </div>
-                        <span class="freelabel" v-html="$t('analyticsOptOut')"></span>
-                    </div>
-
-                    <!-- CLI Auto Complete -->
-                    <div class="cliAutoComplete margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.cliAutoComplete" />
-                        </div>
-                        <span class="freelabel" v-html="$t('cliAutoComplete')"></span>
-                    </div>
-
-                    <!-- Show Manual Mode -->
-                    <div class="showManualMode margin-bottom">
-                        <div>
-                            <input
-                                type="checkbox"
-                                class="toggle"
-                                v-model="settings.showManualMode"
-                                data-setting="showManualMode"
-                            />
-                        </div>
-                        <span class="freelabel" v-html="$t('showManualMode')"></span>
-                    </div>
-
-                    <!-- Show Virtual Mode -->
-                    <div class="showVirtualMode margin-bottom">
-                        <div>
-                            <input
-                                type="checkbox"
-                                class="toggle"
-                                v-model="settings.showVirtualMode"
-                                data-setting="showVirtualMode"
-                            />
-                        </div>
-                        <span class="freelabel" v-html="$t('showVirtualMode')"></span>
-                    </div>
-
-                    <!-- Show Dev Tools On Startup -->
-                    <div class="showDevToolsOnStartup margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.showDevToolsOnStartup" />
-                        </div>
-                        <span class="freelabel" v-html="$t('showDevToolsOnStartup')"></span>
-                    </div>
-
-                    <!-- Show Notifications -->
-                    <div class="showNotifications margin-bottom">
-                        <div>
-                            <input
-                                type="checkbox"
-                                class="toggle"
-                                v-model="settings.showNotifications"
-                                @change="handleNotificationsChange"
-                            />
-                        </div>
-                        <span class="freelabel" v-html="$t('showNotifications')"></span>
-                    </div>
-
-                    <!-- Backup On Flash -->
-                    <div class="backupOnFlash margin-bottom">
-                        <select id="backupOnFlashSelect" v-model.number="settings.backupOnFlash">
-                            <option value="0">{{ $t("firmwareBackupDisabled") }}</option>
-                            <option value="1">{{ $t("firmwareBackupEnabled") }}</option>
-                            <option value="2">{{ $t("firmwareBackupAsk") }}</option>
-                        </select>
-                        <span class="freelabel" v-html="$t('firmwareBackupOnFlash')"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Language and Appearance Box -->
-            <div class="gui_box">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" v-html="$t('languageAndAppearanceSettings')"></div>
-                </div>
-                <div class="spacer">
-                    <!-- Use Legacy Rendering Model -->
-                    <div class="useLegacyRenderingModel margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.useLegacyRenderingModel" />
-                        </div>
-                        <span class="freelabel" v-html="$t('useLegacyRenderingModel')"></span>
-                    </div>
-
-                    <!-- Dark Theme -->
-                    <div class="darkTheme margin-bottom">
-                        <select id="darkThemeSelect" v-model.number="settings.darkTheme">
-                            <option value="0">{{ $t("on") }}</option>
-                            <option value="1">{{ $t("off") }}</option>
-                            <option value="2">{{ $t("auto") }}</option>
-                        </select>
-                        <span class="freelabel" v-html="$t('darkTheme')"></span>
-                    </div>
-
-                    <!-- Color Theme -->
-                    <div class="colorTheme margin-bottom">
-                        <select id="colorThemeSelect" v-model="settings.colorTheme">
-                            <option value="yellow">{{ $t("colorThemeYellow") }}</option>
-                            <option value="amber">{{ $t("colorThemeAmber") }}</option>
-                            <option value="contrast">{{ $t("colorThemeContrast") }}</option>
-                        </select>
-                        <span class="freelabel" v-html="$t('colorTheme')"></span>
-                    </div>
-
-                    <!-- User Language -->
-                    <div class="userLanguage">
-                        <span class="dropdown">
-                            <select class="dropdown-select" id="userLanguage" v-model="settings.userLanguage">
-                                <option value="DEFAULT">{{ $t("language_default") }}</option>
-                                <option disabled>------</option>
-                                <option v-for="lang in availableLanguages" :key="lang" :value="lang">
-                                    {{ $t(`language_${lang}`) }}
-                                </option>
-                            </select>
-                        </span>
-                        <span v-html="$t('userLanguageSelect')" class="freelabel"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Development Settings Box -->
-            <div class="gui_box">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" v-html="$t('developmentSettings')"></div>
-                </div>
-                <div class="spacer">
-                    <div class="showAllSerialDevices margin-bottom">
-                        <div>
-                            <input
-                                type="checkbox"
-                                class="toggle"
-                                v-model="settings.showAllSerialDevices"
-                                data-setting="showAllSerialDevices"
-                            />
-                        </div>
-                        <span class="freelabel" v-html="$t('showAllSerialDevices')"></span>
-                    </div>
-
-                    <div class="cliOnlyMode margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.cliOnlyMode" />
-                        </div>
-                        <span class="freelabel" v-html="$t('cliOnlyMode')"></span>
-                    </div>
-
-                    <div class="automaticDevOptions margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.automaticDevOptions" />
-                        </div>
-                        <span class="freelabel" v-html="$t('automaticDevOptions')"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Warning Settings Box -->
-            <div class="gui_box">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" v-html="$t('warningSettings')"></div>
-                </div>
-                <div class="spacer">
-                    <div class="presetsWarningBackup margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.showPresetsWarningBackup" />
-                        </div>
-                        <span class="freelabel" v-html="$t('presetsWarningBackup')"></span>
-                    </div>
-                </div>
-            </div>
+            <UiBox :title="$t('warningSettings')">
+                <SettingRow :label="$t('presetsWarningBackup')">
+                    <USwitch v-model="settings.showPresetsWarningBackup" size="sm" />
+                </SettingRow>
+            </UiBox>
         </div>
     </BaseTab>
 </template>
@@ -222,11 +132,15 @@ import { checkSetupAnalytics } from "../../js/Analytics";
 import NotificationManager from "../../js/utils/notifications";
 import { ispConnected } from "../../js/utils/connection";
 import { DEFAULT_DEVELOPMENT_OPTIONS, resetDevelopmentOptions } from "../../js/utils/developmentOptions";
+import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
 
 export default defineComponent({
     name: "OptionsTab",
     components: {
         BaseTab,
+        UiBox,
+        SettingRow,
     },
     setup() {
         const dialog = useDialog();
@@ -478,26 +392,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style lang="less">
-.tab-options {
-    .freelabel {
-        margin-left: 10px;
-        position: relative;
-    }
-    .switchery {
-        float: left;
-    }
-    .margin-bottom {
-        margin-bottom: 10px;
-        grid-template-columns: fit-content(300px) 1fr;
-    }
-    select {
-        background: var(--surface-200);
-        color: var(--text);
-        border: 1px solid var(--surface-500);
-        border-radius: 3px;
-        width: fit-content;
-    }
-}
-</style>

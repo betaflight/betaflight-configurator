@@ -41,7 +41,12 @@
                             @change="onCheckboxChange"
                         />
                         <span v-html="$t('sensorsSonarSelect')"></span>
-                        <input type="checkbox" v-model="checkboxes[5]" @change="onCheckboxChange" />
+                        <input
+                            type="checkbox"
+                            v-model="checkboxes[5]"
+                            :disabled="!hasDebug"
+                            @change="onCheckboxChange"
+                        />
                         <span v-html="$t('sensorsDebugSelect')"></span>
                     </div>
                 </div>
@@ -246,6 +251,10 @@ const hasSonar = computed(() => {
     );
 });
 
+const hasDebug = computed(() => {
+    return fcStore.pidAdvancedConfig.debugMode !== 0;
+});
+
 // Debug titles
 const debugTitles = ref(new Array(8).fill("").map((_, i) => `Debug ${i}`));
 
@@ -420,19 +429,22 @@ onMounted(async () => {
         sensorsStore.debugColumns = 4;
     }
 
-    // If no saved checkbox states, set defaults based on available sensors
+    // Disable checkboxes for unavailable sensors; if none remain, enable all available as defaults
+    const sensorAvailability = [
+        hasGyro.value,
+        hasAccel.value,
+        hasMag.value,
+        hasAltitude.value,
+        hasSonar.value,
+        hasDebug.value,
+    ];
+    for (let i = 0; i < sensorAvailability.length; i++) {
+        checkboxes.value[i] = Boolean(checkboxes.value[i]) && sensorAvailability[i];
+    }
+
     if (!checkboxes.value.some(Boolean)) {
-        if (hasGyro.value) {
-            checkboxes.value[0] = true;
-        }
-        if (hasAccel.value) {
-            checkboxes.value[1] = true;
-        }
-        if (hasMag.value) {
-            checkboxes.value[2] = true;
-        }
-        if (hasAltitude.value) {
-            checkboxes.value[3] = true;
+        for (let i = 0; i < sensorAvailability.length; i++) {
+            checkboxes.value[i] = sensorAvailability[i];
         }
     }
 

@@ -941,6 +941,15 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[6]": "Roll angle command * 100",
                 "debug[7]": "Pitch angle command * 100",
             };
+
+            result.GYRO_SAMPLE = {
+                "debug[all]": "Gyro Sample",
+                "debug[0]": "Gyro before downsampling [dbg-axis]",
+                "debug[1]": "Gyro after downsampling [dbg-axis]",
+                "debug[2]": "Gyro after RPM [dbg-axis]",
+                "debug[3]": "Gyro after all filtering [dbg-axis]",
+                "debug[4]": "CPU Load at Sample",
+            };
         }
 
         return result;

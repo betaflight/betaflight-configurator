@@ -119,13 +119,12 @@
                         <div class="spacer_box">
                             <div class="number fpvCamAngleDegrees">
                                 <label>
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="fpvCamAngleDegrees"
-                                        v-model.number="fpvCamAngleDegrees"
-                                        step="1"
-                                        min="0"
-                                        max="90"
+                                        v-model="fpvCamAngleDegrees"
+                                        :step="1"
+                                        :min="0"
+                                        :max="90"
                                     />
                                     <span>{{ $t("configurationFpvCamAngleDegrees") }}</span>
                                 </label>
@@ -142,12 +141,12 @@
                         <div class="spacer_box">
                             <div class="number">
                                 <label>
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="small_angle"
-                                        v-model.number="armingConfig.small_angle"
-                                        min="0"
-                                        max="180"
+                                        v-model="armingConfig.small_angle"
+                                        :step="1"
+                                        :min="0"
+                                        :max="180"
                                     />
                                     <span>{{ $t("configurationSmallAngle") }}</span>
                                 </label>
@@ -169,12 +168,12 @@
 
                             <div class="number" v-if="showAutoDisarmDelay">
                                 <label>
-                                    <input
-                                        type="number"
+                                    <UInputNumber
                                         name="auto_disarm_delay"
-                                        v-model.number="armingConfig.auto_disarm_delay"
-                                        min="0"
-                                        max="60"
+                                        v-model="armingConfig.auto_disarm_delay"
+                                        :step="1"
+                                        :min="0"
+                                        :max="60"
                                     />
                                     <span>{{ $t("configurationAutoDisarmDelay") }}</span>
                                 </label>
@@ -244,12 +243,11 @@
                                     <div class="sensor_align_inputs">
                                         <div class="alignicon roll"></div>
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="boardAlignment.roll"
-                                                step="1"
-                                                min="-180"
-                                                max="360"
+                                            <UInputNumber
+                                                v-model="boardAlignment.roll"
+                                                :step="1"
+                                                :min="-180"
+                                                :max="360"
                                                 :aria-label="$t('configurationBoardAlignmentRoll')"
                                             />
                                             <span>{{ $t("configurationBoardAlignmentRoll") }}</span>
@@ -258,12 +256,11 @@
                                     <div class="sensor_align_inputs">
                                         <div class="alignicon pitch"></div>
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="boardAlignment.pitch"
-                                                step="1"
-                                                min="-180"
-                                                max="360"
+                                            <UInputNumber
+                                                v-model="boardAlignment.pitch"
+                                                :step="1"
+                                                :min="-180"
+                                                :max="360"
                                                 :aria-label="$t('configurationBoardAlignmentPitch')"
                                             />
                                             <span>{{ $t("configurationBoardAlignmentPitch") }}</span>
@@ -272,12 +269,11 @@
                                     <div class="sensor_align_inputs">
                                         <div class="alignicon yaw"></div>
                                         <label>
-                                            <input
-                                                type="number"
-                                                v-model.number="boardAlignment.yaw"
-                                                step="1"
-                                                min="-180"
-                                                max="360"
+                                            <UInputNumber
+                                                v-model="boardAlignment.yaw"
+                                                :step="1"
+                                                :min="-180"
+                                                :max="360"
                                                 :aria-label="$t('configurationBoardAlignmentYaw')"
                                             />
                                             <span>{{ $t("configurationBoardAlignmentYaw") }}</span>
@@ -369,12 +365,11 @@
                                         <div class="sensor_align_inputs">
                                             <div class="alignicon roll"></div>
                                             <label>
-                                                <input
-                                                    type="number"
-                                                    v-model.number="sensorAlignment.gyro_1_align_roll"
-                                                    step="0.1"
-                                                    min="-180"
-                                                    max="360"
+                                                <UInputNumber
+                                                    v-model="sensorAlignment.gyro_1_align_roll"
+                                                    :step="0.1"
+                                                    :min="-180"
+                                                    :max="360"
                                                     :aria-label="$t('configurationGyro1AlignmentRoll')"
                                                 />
                                                 <span>{{ $t("configurationGyro1AlignmentRoll") }}</span>
@@ -383,12 +378,11 @@
                                         <div class="sensor_align_inputs">
                                             <div class="alignicon pitch"></div>
                                             <label>
-                                                <input
-                                                    type="number"
-                                                    v-model.number="sensorAlignment.gyro_1_align_pitch"
-                                                    step="0.1"
-                                                    min="-180"
-                                                    max="360"
+                                                <UInputNumber
+                                                    v-model="sensorAlignment.gyro_1_align_pitch"
+                                                    :step="0.1"
+                                                    :min="-180"
+                                                    :max="360"
                                                     :aria-label="$t('configurationGyro1AlignmentPitch')"
                                                 />
                                                 <span>{{ $t("configurationGyro1AlignmentPitch") }}</span>
@@ -397,12 +391,11 @@
                                         <div class="sensor_align_inputs">
                                             <div class="alignicon yaw"></div>
                                             <label>
-                                                <input
-                                                    type="number"
-                                                    v-model.number="sensorAlignment.gyro_1_align_yaw"
-                                                    step="0.1"
-                                                    min="-180"
-                                                    max="360"
+                                                <UInputNumber
+                                                    v-model="sensorAlignment.gyro_1_align_yaw"
+                                                    :step="0.1"
+                                                    :min="-180"
+                                                    :max="360"
                                                     :aria-label="$t('configurationGyro1AlignmentYaw')"
                                                 />
                                                 <span>{{ $t("configurationGyro1AlignmentYaw") }}</span>
@@ -430,12 +423,11 @@
                                         <div class="sensor_align_inputs">
                                             <div class="alignicon roll"></div>
                                             <label>
-                                                <input
-                                                    type="number"
-                                                    v-model.number="sensorAlignment.gyro_2_align_roll"
-                                                    step="0.1"
-                                                    min="-180"
-                                                    max="360"
+                                                <UInputNumber
+                                                    v-model="sensorAlignment.gyro_2_align_roll"
+                                                    :step="0.1"
+                                                    :min="-180"
+                                                    :max="360"
                                                     :aria-label="$t('configurationGyro2AlignmentRoll')"
                                                 />
                                                 <span>{{ $t("configurationGyro2AlignmentRoll") }}</span>
@@ -444,12 +436,11 @@
                                         <div class="sensor_align_inputs">
                                             <div class="alignicon pitch"></div>
                                             <label>
-                                                <input
-                                                    type="number"
-                                                    v-model.number="sensorAlignment.gyro_2_align_pitch"
-                                                    step="0.1"
-                                                    min="-180"
-                                                    max="360"
+                                                <UInputNumber
+                                                    v-model="sensorAlignment.gyro_2_align_pitch"
+                                                    :step="0.1"
+                                                    :min="-180"
+                                                    :max="360"
                                                     :aria-label="$t('configurationGyro2AlignmentPitch')"
                                                 />
                                                 <span>{{ $t("configurationGyro2AlignmentPitch") }}</span>
@@ -458,12 +449,11 @@
                                         <div class="sensor_align_inputs">
                                             <div class="alignicon yaw"></div>
                                             <label>
-                                                <input
-                                                    type="number"
-                                                    v-model.number="sensorAlignment.gyro_2_align_yaw"
-                                                    step="0.1"
-                                                    min="-180"
-                                                    max="360"
+                                                <UInputNumber
+                                                    v-model="sensorAlignment.gyro_2_align_yaw"
+                                                    :step="0.1"
+                                                    :min="-180"
+                                                    :max="360"
                                                     :aria-label="$t('configurationGyro2AlignmentYaw')"
                                                 />
                                                 <span>{{ $t("configurationGyro2AlignmentYaw") }}</span>
@@ -497,12 +487,11 @@
                                 <div class="sensor_align_inputs">
                                     <div class="alignicon roll"></div>
                                     <label>
-                                        <input
-                                            type="number"
-                                            v-model.number="sensorAlignment.mag_align_roll"
-                                            step="0.1"
-                                            min="-180"
-                                            max="360"
+                                        <UInputNumber
+                                            v-model="sensorAlignment.mag_align_roll"
+                                            :step="0.1"
+                                            :min="-180"
+                                            :max="360"
                                             :aria-label="$t('configurationMagAlignmentRoll')"
                                         />
                                         <span>{{ $t("configurationMagAlignmentRoll") }}</span>
@@ -511,12 +500,11 @@
                                 <div class="sensor_align_inputs">
                                     <div class="alignicon pitch"></div>
                                     <label>
-                                        <input
-                                            type="number"
-                                            v-model.number="sensorAlignment.mag_align_pitch"
-                                            step="0.1"
-                                            min="-180"
-                                            max="360"
+                                        <UInputNumber
+                                            v-model="sensorAlignment.mag_align_pitch"
+                                            :step="0.1"
+                                            :min="-180"
+                                            :max="360"
                                             :aria-label="$t('configurationMagAlignmentPitch')"
                                         />
                                         <span>{{ $t("configurationMagAlignmentPitch") }}</span>
@@ -525,12 +513,11 @@
                                 <div class="sensor_align_inputs">
                                     <div class="alignicon yaw"></div>
                                     <label>
-                                        <input
-                                            type="number"
-                                            v-model.number="sensorAlignment.mag_align_yaw"
-                                            step="0.1"
-                                            min="-180"
-                                            max="360"
+                                        <UInputNumber
+                                            v-model="sensorAlignment.mag_align_yaw"
+                                            :step="0.1"
+                                            :min="-180"
+                                            :max="360"
                                             :aria-label="$t('configurationMagAlignmentYaw')"
                                         />
                                         <span>{{ $t("configurationMagAlignmentYaw") }}</span>
@@ -550,7 +537,7 @@
                             <!-- MAG DECLINATION -->
                             <div class="number" v-if="showMagDeclination">
                                 <label>
-                                    <input type="number" step="0.1" v-model.number="magDeclination" />
+                                    <UInputNumber :step="0.1" :min="-180" :max="180" v-model="magDeclination" />
                                     <span>{{ $t("configurationMagDeclination") }}</span>
                                 </label>
                             </div>
@@ -585,13 +572,25 @@
                         <div class="spacer_box">
                             <div class="number">
                                 <label>
-                                    <input type="number" name="acc_trim_roll" v-model.number="accelTrims.roll" />
+                                    <UInputNumber
+                                        name="acc_trim_roll"
+                                        :step="1"
+                                        :min="-300"
+                                        :max="300"
+                                        v-model="accelTrims.roll"
+                                    />
                                     <span>{{ $t("configurationAccelTrimRoll") }}</span>
                                 </label>
                             </div>
                             <div class="number">
                                 <label>
-                                    <input type="number" name="acc_trim_pitch" v-model.number="accelTrims.pitch" />
+                                    <UInputNumber
+                                        name="acc_trim_pitch"
+                                        :step="1"
+                                        :min="-300"
+                                        :max="300"
+                                        v-model="accelTrims.pitch"
+                                    />
                                     <span>{{ $t("configurationAccelTrimPitch") }}</span>
                                 </label>
                             </div>

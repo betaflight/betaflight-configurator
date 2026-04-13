@@ -45,6 +45,9 @@ const betaflightModel = reactive({
     expertMode: !!getConfig("expertMode").expertMode,
 });
 
+// Keep the legacy global model available while the app finishes moving away from imperative globals.
+globalThis.vm = betaflightModel;
+
 tippy.setDefaultProps({
     allowHTML: true,
     appendTo: () => document.body,

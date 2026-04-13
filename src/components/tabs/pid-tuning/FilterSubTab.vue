@@ -22,6 +22,7 @@
                     <tr class="xs sliderHeaders">
                         <td colspan="5">
                             <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
+                            <div class="helpicon cf_tip" :title="$t('pidTuningGyroFilterSliderHelp')"></div>
                         </td>
                     </tr>
                     <tr class="sliderGyroFilter" :class="{ disabledSliders: gyroSliderDisabled }">
@@ -47,6 +48,7 @@
                     <tr class="xs sliderHeaders">
                         <td colspan="5">
                             <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
+                            <div class="helpicon cf_tip" :title="$t('pidTuningDTermFilterSliderHelp')"></div>
                         </td>
                     </tr>
                     <tr class="sliderDTermFilter" :class="{ disabledSliders: dtermSliderDisabled }">
@@ -119,7 +121,8 @@
                         <tr>
                             <th colspan="2">
                                 <div class="pid_mode">
-                                    <div>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</div>
+                                    <div class="float-left" v-text="$t('pidTuningGyroLowpassFiltersGroup')"></div>
+                                    <div class="helpicon cf_tip" :title="$t('pidTuningGyroLowpassFilterHelp')"></div>
                                 </div>
                             </th>
                         </tr>
@@ -138,6 +141,7 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningGyroLowpass") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningGyroLowpassHelp')"></div>
 
                                 <span v-if="gyroLowpassEnabled" class="suboption gyroLowpassFilterModeGroup">
                                     <span class="inputValue">
@@ -152,12 +156,11 @@
                                 </span>
 
                                 <span v-if="gyroLowpassEnabled && gyroLowpassMode === 0" class="suboption static">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
+                                    <UInputNumber
+                                        v-model="gyro_lowpass_hz"
+                                        :step="1"
+                                        :min="1"
+                                        :max="1000"
                                         :disabled="gyroInputsDisabled"
                                     />
                                     <label>
@@ -166,12 +169,11 @@
                                 </span>
 
                                 <span v-if="gyroLowpassEnabled && gyroLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass_dyn_min_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
+                                    <UInputNumber
+                                        v-model="gyro_lowpass_dyn_min_hz"
+                                        :step="1"
+                                        :min="1"
+                                        :max="1000"
                                         :disabled="gyroInputsDisabled"
                                     />
                                     <label>
@@ -180,12 +182,11 @@
                                 </span>
 
                                 <span v-if="gyroLowpassEnabled && gyroLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass_dyn_max_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
+                                    <UInputNumber
+                                        v-model="gyro_lowpass_dyn_max_hz"
+                                        :step="1"
+                                        :min="1"
+                                        :max="1000"
                                         :disabled="gyroInputsDisabled"
                                     />
                                     <label>
@@ -221,14 +222,14 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningGyroLowpass2") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningGyroLowpass2Help')"></div>
 
                                 <span v-if="gyroLowpass2Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass2_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
+                                    <UInputNumber
+                                        v-model="gyro_lowpass2_hz"
+                                        :step="1"
+                                        :min="1"
+                                        :max="1000"
                                         :disabled="gyroInputsDisabled"
                                     />
                                     <label>
@@ -254,7 +255,8 @@
                         <tr>
                             <th colspan="2">
                                 <div class="pid_mode">
-                                    <div>{{ $t("pidTuningGyroNotchFiltersGroup") }}</div>
+                                    <div class="float-left" v-text="$t('pidTuningGyroNotchFiltersGroup')"></div>
+                                    <div class="helpicon cf_tip" :title="$t('pidTuningNotchFilterHelp')"></div>
                                 </div>
                             </th>
                         </tr>
@@ -273,22 +275,17 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningGyroNotchFilter") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningGyroNotchFilterHelp')"></div>
 
                                 <span v-if="gyroNotch1Enabled" class="suboption">
-                                    <input type="number" v-model.number="gyro_notch_hz" step="1" min="1" max="16000" />
+                                    <UInputNumber v-model="gyro_notch_hz" :step="1" :min="1" :max="16000" />
                                     <label>
                                         <span>{{ $t("pidTuningCenterFrequency") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="gyroNotch1Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_notch_cutoff"
-                                        step="1"
-                                        min="0"
-                                        max="16000"
-                                    />
+                                    <UInputNumber v-model="gyro_notch_cutoff" :step="1" :min="0" :max="16000" />
                                     <label>
                                         <span>{{ $t("pidTuningCutoffFrequency") }}</span>
                                     </label>
@@ -310,22 +307,17 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningGyroNotchFilter2") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningGyroNotchFilter2Help')"></div>
 
                                 <span v-if="gyroNotch2Enabled" class="suboption">
-                                    <input type="number" v-model.number="gyro_notch2_hz" step="1" min="1" max="16000" />
+                                    <UInputNumber v-model="gyro_notch2_hz" :step="1" :min="1" :max="16000" />
                                     <label>
                                         <span>{{ $t("pidTuningCenterFrequency") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="gyroNotch2Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_notch2_cutoff"
-                                        step="1"
-                                        min="0"
-                                        max="16000"
-                                    />
+                                    <UInputNumber v-model="gyro_notch2_cutoff" :step="1" :min="0" :max="16000" />
                                     <label>
                                         <span>{{ $t("pidTuningCutoffFrequency") }}</span>
                                     </label>
@@ -337,7 +329,8 @@
                         <tr v-if="dshotTelemetryEnabled" class="newFilter rpmFilter">
                             <th class="rpmFilter" colspan="2">
                                 <div class="pid_mode rpmFilter">
-                                    <div>{{ $t("pidTuningRpmFilterGroup") }}</div>
+                                    <div class="float-left" v-text="$t('pidTuningRpmFilterGroup')"></div>
+                                    <div class="helpicon cf_tip" :title="$t('pidTuningRpmFilterHelp')"></div>
                                 </div>
                             </th>
                         </tr>
@@ -356,28 +349,17 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningRpmFilterGroup") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningRpmFilterHelp')"></div>
 
                                 <span v-if="rpmFilterEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_rpm_notch_harmonics"
-                                        step="1"
-                                        min="1"
-                                        max="3"
-                                    />
+                                    <UInputNumber v-model="gyro_rpm_notch_harmonics" :step="1" :min="1" :max="3" />
                                     <label>
                                         <span>{{ $t("pidTuningRpmHarmonics") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="rpmFilterEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_rpm_notch_min_hz"
-                                        step="1"
-                                        min="50"
-                                        max="200"
-                                    />
+                                    <UInputNumber v-model="gyro_rpm_notch_min_hz" :step="1" :min="50" :max="200" />
                                     <label>
                                         <span>{{ $t("pidTuningRpmMinHz") }}</span>
                                     </label>
@@ -389,7 +371,8 @@
                         <tr class="newFilter dynamicNotch">
                             <th class="dynamicNotch" colspan="2">
                                 <div class="pid_mode dynamicNotch">
-                                    <div>{{ $t("pidTuningDynamicNotchFilterGroup") }}</div>
+                                    <div class="float-left" v-text="$t('pidTuningDynamicNotchFilterGroup')"></div>
+                                    <div class="helpicon cf_tip" :title="$t('pidTuningDynamicNotchFilterHelp')"></div>
                                 </div>
                             </th>
                         </tr>
@@ -408,42 +391,31 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningDynamicNotchFilterGroup") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningDynamicNotchFilterHelp')"></div>
 
                                 <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input type="number" v-model.number="dyn_notch_count" step="1" min="1" max="5" />
+                                    <UInputNumber v-model="dyn_notch_count" :step="1" :min="1" :max="5" />
                                     <label>
                                         <span>{{ $t("pidTuningDynamicNotchCount") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input type="number" v-model.number="dyn_notch_q" step="1" min="1" max="1000" />
+                                    <UInputNumber v-model="dyn_notch_q" :step="1" :min="1" :max="1000" />
                                     <label>
                                         <span>{{ $t("pidTuningDynamicNotchQ") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dyn_notch_min_hz"
-                                        step="1"
-                                        min="60"
-                                        max="250"
-                                    />
+                                    <UInputNumber v-model="dyn_notch_min_hz" :step="1" :min="60" :max="250" />
                                     <label>
                                         <span>{{ $t("pidTuningDynamicNotchMinHz") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dyn_notch_max_hz"
-                                        step="1"
-                                        min="200"
-                                        max="1000"
-                                    />
+                                    <UInputNumber v-model="dyn_notch_max_hz" :step="1" :min="200" :max="1000" />
                                     <label>
                                         <span>{{ $t("pidTuningDynamicNotchMaxHz") }}</span>
                                     </label>
@@ -477,7 +449,8 @@
                         <tr>
                             <th colspan="2">
                                 <div class="pid_mode">
-                                    <div>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</div>
+                                    <div class="float-left" v-text="$t('pidTuningDTermLowpassFiltersGroup')"></div>
+                                    <div class="helpicon cf_tip" :title="$t('pidTuningDTermLowpassFilterHelp')"></div>
                                 </div>
                             </th>
                         </tr>
@@ -496,6 +469,7 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningDTermLowpass") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningDTermLowpassHelp')"></div>
 
                                 <span v-if="dtermLowpassEnabled" class="suboption dtermLowpassFilterModeGroup">
                                     <span class="inputValue">
@@ -510,12 +484,11 @@
                                 </span>
 
                                 <span v-if="dtermLowpassEnabled && dtermLowpassMode === 0" class="suboption static">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
+                                    <UInputNumber
+                                        v-model="dterm_lowpass_hz"
+                                        :step="1"
+                                        :min="1"
+                                        :max="1000"
                                         :disabled="dtermInputsDisabled"
                                     />
                                     <label>
@@ -524,12 +497,11 @@
                                 </span>
 
                                 <span v-if="dtermLowpassEnabled && dtermLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass_dyn_min_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
+                                    <UInputNumber
+                                        v-model="dterm_lowpass_dyn_min_hz"
+                                        :step="1"
+                                        :min="1"
+                                        :max="1000"
                                         :disabled="dtermInputsDisabled"
                                     />
                                     <label>
@@ -538,12 +510,11 @@
                                 </span>
 
                                 <span v-if="dtermLowpassEnabled && dtermLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass_dyn_max_hz"
-                                        step="10"
-                                        min="200"
-                                        max="2000"
+                                    <UInputNumber
+                                        v-model="dterm_lowpass_dyn_max_hz"
+                                        :step="10"
+                                        :min="200"
+                                        :max="2000"
                                         :disabled="dtermInputsDisabled"
                                     />
                                     <label>
@@ -552,13 +523,7 @@
                                 </span>
 
                                 <span v-if="dtermLowpassEnabled && dtermLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="dyn_lpf_curve_expo"
-                                        step="1"
-                                        min="0"
-                                        max="10"
-                                    />
+                                    <UInputNumber v-model="dyn_lpf_curve_expo" :step="1" :min="0" :max="10" />
                                     <label>
                                         <span>{{ $t("pidTuningDTermLowpassDynExpo") }}</span>
                                     </label>
@@ -592,14 +557,14 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningDTermLowpass2") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningDTermLowpass2Help')"></div>
 
                                 <span v-if="dtermLowpass2Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass2_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
+                                    <UInputNumber
+                                        v-model="dterm_lowpass2_hz"
+                                        :step="1"
+                                        :min="1"
+                                        :max="1000"
                                         :disabled="dtermInputsDisabled"
                                     />
                                     <label>
@@ -625,7 +590,11 @@
                         <tr>
                             <th colspan="2">
                                 <div class="pid_mode">
-                                    <div>{{ $t("pidTuningDTermNotchFiltersGroup") }}</div>
+                                    <div class="float-left" v-text="$t('pidTuningDTermNotchFiltersGroup')"></div>
+                                    <div
+                                        class="helpicon cf_tip"
+                                        :title="$t('pidTuningDTermNotchFiltersGroupHelp')"
+                                    ></div>
                                 </div>
                             </th>
                         </tr>
@@ -644,22 +613,17 @@
                             </td>
                             <td colspan="2">
                                 <span>{{ $t("pidTuningDTermNotchFiltersGroup") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningDTermNotchFiltersGroupHelp')"></div>
 
                                 <span v-if="dtermNotchEnabled" class="suboption">
-                                    <input type="number" v-model.number="dterm_notch_hz" step="1" min="1" max="16000" />
+                                    <UInputNumber v-model="dterm_notch_hz" :step="1" :min="1" :max="16000" />
                                     <label>
                                         <span>{{ $t("pidTuningCenterFrequency") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="dtermNotchEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_notch_cutoff"
-                                        step="1"
-                                        min="0"
-                                        max="16000"
-                                    />
+                                    <UInputNumber v-model="dterm_notch_cutoff" :step="1" :min="0" :max="16000" />
                                     <label>
                                         <span>{{ $t("pidTuningCutoffFrequency") }}</span>
                                     </label>
@@ -671,7 +635,11 @@
                         <tr>
                             <th colspan="2">
                                 <div class="pid_mode">
-                                    <div>{{ $t("pidTuningYawLowpassFiltersGroup") }}</div>
+                                    <div class="float-left" v-text="$t('pidTuningYawLowpassFiltersGroup')"></div>
+                                    <div
+                                        class="helpicon cf_tip"
+                                        :title="$t('pidTuningYawLowpassFiltersGroupHelp')"
+                                    ></div>
                                 </div>
                             </th>
                         </tr>
@@ -680,9 +648,10 @@
                         <tr class="yawLowpass">
                             <td colspan="3">
                                 <span>{{ $t("pidTuningYawLowpassFiltersGroup") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('pidTuningYawLowpassFiltersGroupHelp')"></div>
 
                                 <span class="suboption">
-                                    <input type="number" v-model.number="yaw_lowpass_hz" step="1" min="0" max="500" />
+                                    <UInputNumber v-model="yaw_lowpass_hz" :step="1" :min="0" :max="500" />
                                     <label>
                                         <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
                                     </label>
@@ -1346,7 +1315,7 @@ defineExpose({
     margin-top: 8px;
 }
 
-.suboption input[type="number"],
+.suboption :deep(input),
 .suboption select {
     padding: 6px 10px;
     border: 1px solid var(--surface-300);

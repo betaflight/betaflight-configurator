@@ -118,24 +118,24 @@
                         </div>
 
                         <div class="adjustment-center" :data-label="$t('adjustmentsColumnAdjustmentCenter')">
-                            <input
-                                type="number"
-                                v-model.number="adjustment.adjustmentCenter"
+                            <UInputNumber
+                                v-model="adjustment.adjustmentCenter"
                                 class="center-input"
                                 :disabled="!adjustment.enabled"
-                                min="0"
-                                max="2000"
+                                :min="0"
+                                :max="2000"
+                                :step="1"
                             />
                         </div>
 
                         <div class="adjustment-scale" :data-label="$t('adjustmentsColumnAdjustmentScale')">
-                            <input
-                                type="number"
-                                v-model.number="adjustment.adjustmentScale"
+                            <UInputNumber
+                                v-model="adjustment.adjustmentScale"
                                 class="scale-input"
                                 :disabled="!adjustment.enabled"
-                                min="0"
-                                max="2000"
+                                :min="0"
+                                :max="2000"
+                                :step="1"
                             />
                         </div>
                     </div>
@@ -562,7 +562,7 @@ export default defineComponent({
 
 .adjustments-header {
     display: grid;
-    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 120px 120px;
     gap: 16px;
     padding: 12px 16px;
     background: var(--surface-700);
@@ -584,7 +584,7 @@ export default defineComponent({
 
 .adjustment {
     display: grid;
-    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 120px 120px;
     gap: 16px;
     padding: 16px;
     background: var(--surface-200);
@@ -638,8 +638,8 @@ export default defineComponent({
     gap: 8px;
 }
 
-.adjustment-center input,
-.adjustment-scale input {
+.adjustment-center :deep(input),
+.adjustment-scale :deep(input) {
     width: 100%;
     background: var(--surface-700);
     border: 1px solid var(--surface-600);
@@ -648,8 +648,8 @@ export default defineComponent({
     border-radius: 4px;
 }
 
-.adjustment-center input:disabled,
-.adjustment-scale input:disabled {
+.adjustment-center :deep(input:disabled),
+.adjustment-scale :deep(input:disabled) {
     opacity: 0.5;
     cursor: not-allowed;
 }

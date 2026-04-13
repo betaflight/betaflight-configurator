@@ -54,6 +54,28 @@ function getCliCommand(command, cliBuffer) {
     return commandWithBackSpaces(command, buffer, noOfCharsToDelete);
 }
 
+// History management — module scope so it survives tab switches
+const history = reactive({
+    items: [],
+    index: 0,
+    add(str) {
+        this.items.push(str);
+        this.index = this.items.length;
+    },
+    prev() {
+        if (this.index > 0) {
+            this.index -= 1;
+        }
+        return this.items[this.index];
+    },
+    next() {
+        if (this.index < this.items.length) {
+            this.index += 1;
+        }
+        return this.items[this.index - 1];
+    },
+});
+
 function onCopyFailed(ex) {
     console.warn(ex);
 }
@@ -115,28 +137,6 @@ export function useCli() {
 
     // Support dialog callback
     let supportDialogCallback = null;
-
-    // History management
-    const history = reactive({
-        items: [],
-        index: 0,
-        add(str) {
-            this.items.push(str);
-            this.index = this.items.length;
-        },
-        prev() {
-            if (this.index > 0) {
-                this.index -= 1;
-            }
-            return this.items[this.index];
-        },
-        next() {
-            if (this.index < this.items.length) {
-                this.index += 1;
-            }
-            return this.items[this.index - 1];
-        },
-    });
 
     let outputBuffer = "";
     let outputFlushRaf = null;

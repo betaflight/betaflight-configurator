@@ -170,11 +170,9 @@ select,
 input[type="checkbox"] {
     cursor: pointer;
 }
-input[type="number"] {
-    &::-webkit-inner-spin-button {
-        opacity: 1;
-        margin-left: 5px;
-    }
+/* UInputNumber: fill table cells */
+td [role="group"] {
+    display: flex;
 }
 .noarrows {
     input::-webkit-outer-spin-button,

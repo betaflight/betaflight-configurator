@@ -382,12 +382,12 @@
                                             </div>
                                             <div class="timer-row osd_tip" :title="$t('osdTimerAlarmTooltip')">
                                                 <label :for="'osd-timer-alarm-' + idx">{{ $t("osdTimerAlarm") }}</label>
-                                                <input
-                                                    type="number"
+                                                <UInputNumber
                                                     :id="'osd-timer-alarm-' + idx"
-                                                    v-model.number="timer.alarm"
-                                                    min="0"
-                                                    max="600"
+                                                    v-model="timer.alarm"
+                                                    :min="0"
+                                                    :max="600"
+                                                    :step="1"
                                                     @change="onTimerChange(timer)"
                                                 />
                                             </div>
@@ -409,12 +409,12 @@
                                 <div class="alarms">
                                     <div v-for="entry in alarmEntries" :key="entry.key" class="alarm-config">
                                         <label :for="'osd-alarm-' + entry.key">
-                                            <input
-                                                type="number"
+                                            <UInputNumber
                                                 :id="'osd-alarm-' + entry.key"
-                                                v-model.number="entry.alarm.value"
+                                                v-model="entry.alarm.value"
                                                 :min="entry.alarm.min || 0"
                                                 :max="entry.alarm.max || 9999"
+                                                :step="1"
                                                 @change="onAlarmChange"
                                             />
                                             <span>{{ entry.alarm.display_name }}</span>
@@ -2184,7 +2184,7 @@ onUnmounted(() => {
 }
 
 .timer-row select,
-.timer-row input {
+.timer-row :deep(input) {
     width: 140px;
 }
 
@@ -2204,14 +2204,10 @@ onUnmounted(() => {
     padding-bottom: 0;
 }
 
-.alarms input {
-    width: 55px;
-    padding-left: 3px;
+.alarms :deep(input) {
     height: 18px;
     line-height: 20px;
-    text-align: left;
     border-radius: 3px;
-    margin-right: 0;
     font-size: 11px;
     font-weight: normal;
 }

@@ -27,29 +27,29 @@
                                 <tr v-for="(servo, index) in servoConfigs" :key="index">
                                     <td style="text-align: center">Servo {{ index + 1 }}</td>
                                     <td class="min">
-                                        <input
-                                            type="number"
-                                            min="500"
-                                            max="2500"
-                                            v-model.number="servo.min"
+                                        <UInputNumber
+                                            :min="500"
+                                            :max="2500"
+                                            :step="1"
+                                            v-model="servo.min"
                                             @change="onServoChange"
                                         />
                                     </td>
                                     <td class="middle">
-                                        <input
-                                            type="number"
-                                            min="500"
-                                            max="2500"
-                                            v-model.number="servo.middle"
+                                        <UInputNumber
+                                            :min="500"
+                                            :max="2500"
+                                            :step="1"
+                                            v-model="servo.middle"
                                             @change="onServoChange"
                                         />
                                     </td>
                                     <td class="max">
-                                        <input
-                                            type="number"
-                                            min="500"
-                                            max="2500"
-                                            v-model.number="servo.max"
+                                        <UInputNumber
+                                            :min="500"
+                                            :max="2500"
+                                            :step="1"
+                                            v-model="servo.max"
                                             @change="onServoChange"
                                         />
                                     </td>
@@ -417,7 +417,7 @@ export default defineComponent({
             border: 1px solid var(--surface-500);
             border-radius: 3px;
         }
-        input[type="number"] {
+        :deep(input:not([type="checkbox"])) {
             display: block;
             width: 100%;
             height: 20px;
@@ -427,11 +427,6 @@ export default defineComponent({
         input[type="checkbox"] {
             width: 16px;
             height: 16px;
-        }
-    }
-    input[type="number"] {
-        &::-webkit-inner-spin-button {
-            border: 0;
         }
     }
     .directions {

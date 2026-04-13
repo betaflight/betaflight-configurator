@@ -125,6 +125,21 @@
     "submit": {
         "message": "Submeter"
     },
+    "delete": {
+        "message": "Apagar"
+    },
+    "edit": {
+        "message": "Editar"
+    },
+    "add": {
+        "message": "Adicionar"
+    },
+    "update": {
+        "message": "Atualizar"
+    },
+    "save": {
+        "message": "Gravar"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Conectar: Ativado - App tenta se conectar automaticamente quando uma nova porta é detectada"
     },
@@ -345,6 +360,9 @@
     },
     "tabGPS": {
         "message": "GPS"
+    },
+    "tabFlightPlan": {
+        "message": "Plano de Voo"
     },
     "tabMotorTesting": {
         "message": "Motores"
@@ -2569,6 +2587,10 @@
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Manter Altitude<\/a> regula ativamente a altitude da aeronave combinando o uso de sensores externos com o Modo Ângulo (Modo Estabilizado).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "O modo piloto automático permite o controle de voo autónomo, combinando os modos de fixar altitude e fixar posição para manter um pairar estável ou seguir um caminho de voo planeado.",
+        "description": "Help text for AUTOPILOT mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Ativar o beeper - útil para localizar uma aeronave caída",
         "description": "Help text to BEEPER mode"
@@ -3137,6 +3159,165 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "não saudável"
+    },
+    "flightPlanWaypointList": {
+        "message": "Lista de Pontos de Referência"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "Nenhuns pontos de referência definidos. Clique no mapa ou use o formulário para adicionar pontos de referência."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Adicionar ponto de referência"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Editar Ponto de Referência"
+    },
+    "flightPlanLatitude": {
+        "message": "Latitude <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Longitude <span class=\"units\">°<\/span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Altitude <span class=\"units\">ft AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Velocidade <span class=\"units\">nós<\/span>"
+    },
+    "flightPlanType": {
+        "message": "Tipo de ponto de referência"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Fly Over"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Fly By"
+    },
+    "flightPlanTypeHold": {
+        "message": "Fly Hold"
+    },
+    "flightPlanTypeLand": {
+        "message": "Land"
+    },
+    "flightPlanDuration": {
+        "message": "Duração do Hold <span class=\"units\">min<\/span>"
+    },
+    "flightPlanPattern": {
+        "message": "Padrão de Hold"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Círculo"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Figura-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Órbita"
+    },
+    "flightPlanMap": {
+        "message": "Mapa de Plano de Voo"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Clique para adicionar pontos de referência. Arraste os marcadores de pontos de referência para movê-los."
+    },
+    "flightPlanLoading": {
+        "message": "Por favor aguarde..."
+    },
+    "flightPlanClear": {
+        "message": "Limpar Plano"
+    },
+    "flightPlanLoaded": {
+        "message": "Plano de voo carregado com sucesso"
+    },
+    "flightPlanSaved": {
+        "message": "Plano de voo guardado com sucesso"
+    },
+    "flightPlanCleared": {
+        "message": "Plano de voo limpo"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Carregar da FC"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Plano de voo carregado da controladora de voo"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Plano de voo guardado na controladora de voo"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Falha ao carregar o plano de voo da controladora de voo"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Falha a gravar o plano de voo para a controladora de voo"
+    },
+    "flightPlanFCEmpty": {
+        "message": "Nenhuns pontos de referência encontrados na controladora de voo"
+    },
+    "flightPlanClearedFC": {
+        "message": "Plano de voo limpo na controladora de voo"
+    },
+    "flightPlanLoadError": {
+        "message": "Falha ao carregar o plano de voo"
+    },
+    "flightPlanSaveError": {
+        "message": "Falha ao guardar o plano de voo"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Latitude inválida (deve ser entre -90 e 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Latitude inválida (deve ser entre -180 e 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Tem certeza que deseja excluir este ponto de referência?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Apagar Ponto de Referência"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Tem a certeza que pretende eliminar este ponto de referência? Esta ação não pode ser revertida."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Tem certeza que deseja limpar todos os pontos da referência? Esta ação não pode ser revertida."
+    },
+    "flightPlanClearTitle": {
+        "message": "Limpar Plano de Voo"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Perfil de Elevação"
+    },
+    "flightPlanDistance": {
+        "message": "Distância Total"
+    },
+    "flightPlanFlightTime": {
+        "message": "Tempo de Voo"
+    },
+    "flightPlanMinAlt": {
+        "message": "Altitude Min"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Altitude Max"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Adicionar pontos de referência para ver o perfil de elevação"
+    },
+    "flightPlanGroundElev": {
+        "message": "Elevação do solo"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Elevação do solo máx"
+    },
+    "flightPlanAvgGround": {
+        "message": "Média do Solo"
+    },
+    "flightPlanMaxGround": {
+        "message": "Máx do solo"
+    },
+    "flightPlanAlt": {
+        "message": "Alt"
+    },
+    "flightPlanDist": {
+        "message": "Dist"
     },
     "motorsVoltage": {
         "message": "Voltagem:"

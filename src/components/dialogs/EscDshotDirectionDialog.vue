@@ -217,6 +217,7 @@ import { getMixerImageSrc } from "@/js/utils/common";
 import EscDshotDirectionMotorDriver from "@/components/EscDshotDirection/EscDshotDirectionMotorDriver";
 import DshotCommand from "@/js/utils/DshotCommand";
 import GUI from "@/js/gui";
+import { i18n } from "@/js/localization";
 
 const props = defineProps({
     motorConfig: {
@@ -249,7 +250,7 @@ const wizardMotorDirections = ref([]);
 
 // Translation helper
 const i18nMessage = (key) => {
-    return globalThis.i18n.getMessage(key);
+    return i18n.getMessage(key);
 };
 
 // Motor driver
@@ -291,20 +292,20 @@ const wizardMotorButtons = computed(() => {
 // Text states
 const actionHintText = computed(() => {
     if (motorIsSpinning.value) {
-        return globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
+        return i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
     }
-    return globalThis.i18n.getMessage("escDshotDirectionDialog-SelectMotor");
+    return i18n.getMessage("escDshotDirectionDialog-SelectMotor");
 });
 
 const secondHintText = computed(() => {
     if (motorIsSpinning.value) {
-        return globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
+        return i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
     }
-    return globalThis.i18n.getMessage("escDshotDirectionDialog-SetDirectionHint");
+    return i18n.getMessage("escDshotDirectionDialog-SetDirectionHint");
 });
 
-const normalButtonText = ref(globalThis.i18n.getMessage("escDshotDirectionDialog-CommandNormal"));
-const reverseButtonText = ref(globalThis.i18n.getMessage("escDshotDirectionDialog-CommandReverse"));
+const normalButtonText = ref(i18n.getMessage("escDshotDirectionDialog-CommandNormal"));
+const reverseButtonText = ref(i18n.getMessage("escDshotDirectionDialog-CommandReverse"));
 
 // Motor button handlers
 const onMotorButtonDown = (index) => {
@@ -333,7 +334,7 @@ const onMotorButtonUp = (index) => {
 
 // Direction button handlers
 const onDirectionButtonDown = (direction) => {
-    if (!motorIsSpinning.value) {
+    if (selectedMotor.value === -1) {
         return;
     }
 
@@ -347,9 +348,9 @@ const onDirectionButtonDown = (direction) => {
     motorDriver.spinMotor(selectedMotor.value);
 
     if (direction === "normal") {
-        normalButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
+        normalButtonText.value = i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
     } else {
-        reverseButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
+        reverseButtonText.value = i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
     }
 };
 
@@ -358,8 +359,8 @@ const onDirectionButtonUp = () => {
         motorDriver.stopAllMotors();
         spinningDirection.value = null;
 
-        normalButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-CommandNormal");
-        reverseButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-CommandReverse");
+        normalButtonText.value = i18n.getMessage("escDshotDirectionDialog-CommandNormal");
+        reverseButtonText.value = i18n.getMessage("escDshotDirectionDialog-CommandReverse");
 
         deactivateDirectionButtons();
         activateDirectionButtons(BUTTON_TIMEOUT_MS);
