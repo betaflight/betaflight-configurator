@@ -13,6 +13,7 @@ class CapacitorDfuTransport extends EventTarget {
         this.logHead = "[Capacitor DFU Transport]";
         this.adapter = new CapacitorDfu();
         this.currentDeviceId = null;
+        this.currentPortPath = null;
 
         // Forward device events from the adapter
         this.adapter.addEventListener("addedDevice", (e) => {
@@ -70,6 +71,7 @@ class CapacitorDfuTransport extends EventTarget {
         // devicePort.port contains the native device info
         const nativeDevice = devicePort.port;
         this.currentDeviceId = nativeDevice.deviceId;
+        this.currentPortPath = devicePort.path;
         const result = await this.adapter.openDevice(this.currentDeviceId);
 
         if (!result.success) {
@@ -104,6 +106,7 @@ class CapacitorDfuTransport extends EventTarget {
             console.warn(`${this.logHead} Error closing device:`, error);
         }
         this.currentDeviceId = null;
+        this.currentPortPath = null;
     }
 
     async reset() {
@@ -116,7 +119,7 @@ class CapacitorDfuTransport extends EventTarget {
     }
 
     getConnectedPort() {
-        return this.currentDeviceId ? `usb_${this.currentDeviceId}` : null;
+        return this.currentPortPath;
     }
 
     // ===== Control Transfers =====

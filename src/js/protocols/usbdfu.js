@@ -510,6 +510,9 @@ export class UsbDfuProtocol extends EventTarget {
                 })
                 .catch((error) => {
                     console.log(`${this.logHead} USB controlTransfer OUT failed for request: ${request} (${error})`);
+                    if (this._connecting) {
+                        this.cleanup();
+                    }
                 });
         }
     }

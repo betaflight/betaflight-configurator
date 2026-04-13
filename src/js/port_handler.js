@@ -237,7 +237,8 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
 
     // Return the same that is connected to DFU
     if (dfuProtocol.usbDevice) {
-        selectedPort = this.currentUsbPorts.find((device) => device === dfuProtocol.getConnectedPort());
+        const connectedPortPath = dfuProtocol.getConnectedPort();
+        selectedPort = this.currentUsbPorts.find((device) => device.path === connectedPortPath);
     }
 
     // If there is a connection, return it

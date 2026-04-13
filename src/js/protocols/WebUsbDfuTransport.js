@@ -36,15 +36,20 @@ class WebUsbDfuTransport extends EventTarget {
         return {
             path: `usb_${device.serialNumber}`,
             displayName: `Betaflight ${device.productName}`,
-            vendorId: device.manufacturerName,
-            productId: device.productName,
+            vendorId: device.vendorId,
+            productId: device.productId,
+            manufacturerName: device.manufacturerName,
+            productName: device.productName,
             port: device,
         };
     }
 
     async getDevices() {
-        const ports = await navigator.usb.getDevices(usbDevices);
-        return ports.map((port) => this.createPort(port));
+        const filters = usbDevices?.filters || [];
+        const ports = await navigator.usb.getDevices();
+        return ports
+            .filter((port) => filters.some((f) => port.vendorId === f.vendorId && port.productId === f.productId))
+            .map((port) => this.createPort(port));
     }
 
     async requestPermission() {

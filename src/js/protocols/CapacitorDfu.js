@@ -92,7 +92,11 @@ class CapacitorDfu extends EventTarget {
                 return null;
             }
 
-            newPermissionPort = this.handleDeviceAttached(result.devices[0]);
+            const requestedPort = this.createPort(result.devices[0]);
+            newPermissionPort =
+                this.handleDeviceAttached(result.devices[0]) ??
+                this.ports.find((port) => port.path === requestedPort.path) ??
+                requestedPort;
             console.log(`${logHead} DFU permission granted for ${newPermissionPort?.path}`);
         } catch (error) {
             console.error(`${logHead} Error requesting DFU permission:`, error);
