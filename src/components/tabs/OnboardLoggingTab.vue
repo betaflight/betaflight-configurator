@@ -212,10 +212,6 @@
                             </div>
 
                             <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
-                            <p
-                                class="require-dataflash-unsupported"
-                                v-html="$t('dataflashFirmwareUpgradeRequired')"
-                            ></p>
                         </UiBox>
 
                         <UiBox :title="$t('onboardLoggingOnboardSDCard')" class="require-sdcard-supported">

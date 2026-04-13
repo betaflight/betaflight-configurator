@@ -3828,9 +3828,6 @@
     "dataflashNotPresentNote": {
         "message": "Your flight controller does not have a compatible dataflash chip available."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflash requires firmware &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Save flash to file..."
     },
