@@ -26,7 +26,7 @@ class CapacitorDfuTransport extends EventTarget {
     }
 
     get available() {
-        return true;
+        return !!this.adapter;
     }
 
     createPort(device) {

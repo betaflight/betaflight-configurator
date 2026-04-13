@@ -58,8 +58,10 @@ class CapacitorDfu extends EventTarget {
         return {
             path: `usb_${serialNumber}`,
             displayName: `Betaflight ${device.productName || "DFU Device"}`,
-            vendorId: device.manufacturerName || String(device.vendorId),
-            productId: device.productName || String(device.productId),
+            vendorId: device.vendorId,
+            productId: device.productId,
+            manufacturerName: device.manufacturerName,
+            productName: device.productName,
             port: device,
         };
     }
