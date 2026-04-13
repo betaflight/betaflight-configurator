@@ -78,7 +78,7 @@
                             <p>{{ $t("serialLoggingSupportedNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingFlashLogger')" class="require-dataflash-supported">
+                        <UiBox :title="$t('onboardLoggingFlashLogger')">
                             <div class="require-dataflash-supported">
                                 <p>{{ $t("dataflashNote") }}</p>
 
