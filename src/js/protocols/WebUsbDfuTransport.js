@@ -132,7 +132,11 @@ class WebUsbDfuTransport extends EventTarget {
     }
 
     getConnectedPort() {
-        return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
+        if (!this.usbDevice) {
+            return null;
+        }
+        const identifier = this.usbDevice.serialNumber ?? `${this.usbDevice.vendorId}_${this.usbDevice.productId}`;
+        return `usb_${identifier}`;
     }
 
     // ===== Control Transfers =====
