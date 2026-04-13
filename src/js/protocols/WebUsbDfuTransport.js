@@ -100,13 +100,13 @@ class WebUsbDfuTransport extends EventTarget {
     // ===== Device Lifecycle =====
 
     async open(devicePort) {
-        this.usbDevice = devicePort.port;
-        await this.usbDevice.open();
-        console.log(`${this.logHead} USB Device opened: ${this.usbDevice.productName}`);
-
-        if (this.usbDevice.configuration === null) {
-            await this.usbDevice.selectConfiguration(1);
+        const device = devicePort.port;
+        await device.open();
+        if (device.configuration === null) {
+            await device.selectConfiguration(1);
         }
+        this.usbDevice = device;
+        console.log(`${this.logHead} USB Device opened: ${this.usbDevice.productName}`);
     }
 
     async claimInterface(interfaceNumber) {
