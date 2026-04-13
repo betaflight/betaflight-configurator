@@ -242,7 +242,7 @@ class AutoBackup {
         const port = PortHandler.portPicker.selectedPort;
         const baud = PortHandler.portPicker.selectedBauds;
 
-        if (port.startsWith("serial")) {
+        if (port.startsWith("serial") || port.startsWith("capacitor-")) {
             this.boundHandleConnect = this.handleConnect.bind(this);
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.connect(port, { baudRate: baud });
