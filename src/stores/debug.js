@@ -129,6 +129,10 @@ export const useDebugStore = defineStore("debug", () => {
             replaceArrayElement(result, "DUAL_GYRO_SCALED", "MULTI_GYRO_SCALED");
         }
 
+        if (semver.gte(apiVersion, API_VERSION_1_48)) {
+            addArrayElement(result, "AUTOPILOT_PID");
+        }
+
         return result;
     });
 
@@ -926,6 +930,18 @@ export const useDebugStore = defineStore("debug", () => {
         }
 
         if (semver.gte(apiVersion, API_VERSION_1_48)) {
+            result.AUTOPILOT_PID = {
+                "debug[all]": "Autopilot PID",
+                "debug[0]": "P term (East) * 100",
+                "debug[1]": "P term (North) * 100",
+                "debug[2]": "I term (East) * 100",
+                "debug[3]": "I term (North) * 100",
+                "debug[4]": "D term (East) * 100",
+                "debug[5]": "D term (North) * 100",
+                "debug[6]": "Roll angle command * 100",
+                "debug[7]": "Pitch angle command * 100",
+            };
+
             result.GYRO_SAMPLE = {
                 "debug[all]": "Gyro Sample",
                 "debug[0]": "Gyro before downsampling [dbg-axis]",
