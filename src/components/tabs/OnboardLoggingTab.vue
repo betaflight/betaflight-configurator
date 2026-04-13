@@ -207,10 +207,7 @@
                                         @click.prevent="flashSaveBegin(false)"
                                     >
                                         <span>{{ $t("dataflashButtonSaveFile") }}</span>
-                                        <span
-                                            class="helpicon cf_tip"
-                                            :title="$t('dataflashSaveFileDepreciationHint')"
-                                        ></span>
+                                        <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
                                     </a>
                                     <p v-html="$t('dataflashSavetoFileNote')"></p>
                                 </div>
@@ -292,6 +289,7 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import HelpIcon from "../elements/HelpIcon.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -357,6 +355,7 @@ export default defineComponent({
         WikiButton,
         UiBox,
         SettingRow,
+        HelpIcon,
     },
     setup() {
         const fcStore = useFlightControllerStore();
@@ -1117,12 +1116,6 @@ export default defineComponent({
         }
         h3 {
             margin-bottom: 0.5em;
-        }
-    }
-    .save-flash {
-        .helpicon {
-            margin: 4px 0 0 7px;
-            display: inline-block;
         }
     }
     .require-msc-supported {
