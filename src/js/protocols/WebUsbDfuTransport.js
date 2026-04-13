@@ -124,12 +124,20 @@ class WebUsbDfuTransport extends EventTarget {
     }
 
     async close() {
-        if (this.usbDevice) {
-            await this.usbDevice.close();
+        if (!this.usbDevice) {
+            return;
+        }
+
+        const device = this.usbDevice;
+        try {
+            await device.close();
             console.log(`${this.logHead} DFU Device closed`);
-            this.usbDevice = null;
-            this._langId = undefined;
-            this._configDescriptor = undefined;
+        } finally {
+            if (this.usbDevice === device) {
+                this.usbDevice = null;
+                this._langId = undefined;
+                this._configDescriptor = undefined;
+            }
         }
     }
 
