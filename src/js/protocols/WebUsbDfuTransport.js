@@ -157,7 +157,10 @@ class WebUsbDfuTransport extends EventTarget {
     async controlTransferIn(setup, length) {
         const result = await this.usbDevice.controlTransferIn(setup, length);
         if (result.status === "ok") {
-            return { status: "ok", data: new Uint8Array(result.data.buffer) };
+            return {
+                status: "ok",
+                data: new Uint8Array(result.data.buffer, result.data.byteOffset, result.data.byteLength),
+            };
         }
         throw new Error(`USB controlTransferIn failed: ${result.status}`);
     }
@@ -346,7 +349,7 @@ class WebUsbDfuTransport extends EventTarget {
 
         const result = await this.usbDevice.controlTransferIn(setup, 255);
         if (result.status === "ok") {
-            const buf = new Uint8Array(result.data.buffer);
+            const buf = new Uint8Array(result.data.buffer, result.data.byteOffset, result.data.byteLength);
             return {
                 bLength: buf[0],
                 bDescriptorType: buf[1],
