@@ -461,7 +461,7 @@ export class UsbDfuProtocol extends EventTarget {
         });
     }
 
-    controlTransfer(direction, request, value, _interface, length, data, callback, _timeout = 0) {
+    controlTransfer(direction, request, value, _interface, length, data, callback) {
         if (direction === "in") {
             // data is ignored
             const setup = {

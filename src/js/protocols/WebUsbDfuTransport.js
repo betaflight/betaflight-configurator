@@ -129,7 +129,7 @@ class WebUsbDfuTransport extends EventTarget {
 
     /**
      * Perform a USB control transfer IN (device -> host).
-     * @returns {Promise<{status: string, data: DataView}>}
+     * @returns {Promise<{status: string, data: Uint8Array}>}
      */
     async controlTransferIn(setup, length) {
         const result = await this.usbDevice.controlTransferIn(setup, length);
