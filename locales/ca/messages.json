@@ -125,6 +125,21 @@
     "submit": {
         "message": "Envia"
     },
+    "delete": {
+        "message": "Esborra"
+    },
+    "edit": {
+        "message": "Edita"
+    },
+    "add": {
+        "message": "Afegir"
+    },
+    "update": {
+        "message": "Actualitza"
+    },
+    "save": {
+        "message": "Desa"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connectar: Habilitat - L'App provarà de connectar-se automàticament quan el nou port sigui detectat"
     },
@@ -353,6 +368,9 @@
     },
     "tabGPS": {
         "message": "GPS"
+    },
+    "tabFlightPlan": {
+        "message": "Pla de vol"
     },
     "tabMotorTesting": {
         "message": "Motors"
@@ -2577,6 +2595,10 @@
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> regula activamente la altitud de la aeronave utilizando sensores externos combinados con el modo de ángulo (modo estable).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "El mode de pilot automàtic permet el control de vol autònom, combinant el manteniment de l'altitud i el manteniment de la posició per mantenir una posició estacionària estable o seguir una trajectòria de vol planificada.",
+        "description": "Help text for AUTOPILOT mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Habilita el bip: útil per localitzar un multicopter estavellat",
         "description": "Help text to BEEPER mode"
@@ -3145,6 +3167,165 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "poc saludable"
+    },
+    "flightPlanWaypointList": {
+        "message": "Llista de punts de referència"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "No s'han definit punts de referència. Feu clic al mapa o utilitzeu el formulari per afegir punts de referència."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Afegeix un punt de referència"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Editar punt de pas"
+    },
+    "flightPlanLatitude": {
+        "message": "Latitud <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Longitud <span class=\"units\">°<\/span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Altitud <span class=\"units\">ft AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Velocitat <span class=\"units\">nusos<\/span>"
+    },
+    "flightPlanType": {
+        "message": "Tipus de punt de pas"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Vola per sobre"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Vola per"
+    },
+    "flightPlanTypeHold": {
+        "message": "Manté vol"
+    },
+    "flightPlanTypeLand": {
+        "message": "Aterra"
+    },
+    "flightPlanDuration": {
+        "message": "Durada del manteniment <span class=\"units\">min<\/span>"
+    },
+    "flightPlanPattern": {
+        "message": "Patró de manteniment"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Cercle"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Figura-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Òrbita"
+    },
+    "flightPlanMap": {
+        "message": "Mapa del pla de vol"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Feu clic per afegir punts de referència. Arrossegueu els marcadors de punts de referència per moure'ls."
+    },
+    "flightPlanLoading": {
+        "message": "Espereu, si us plau..."
+    },
+    "flightPlanClear": {
+        "message": "Esborrar pla"
+    },
+    "flightPlanLoaded": {
+        "message": "El pla de vol s'ha carregat correctament"
+    },
+    "flightPlanSaved": {
+        "message": "El pla de vol s'ha desat correctament"
+    },
+    "flightPlanCleared": {
+        "message": "Pla de vol esborrat"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Carrega des de la controladora"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Carrega des de la controladora de vol"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Pla de vol desat a la controladora de vol"
+    },
+    "flightPlanFCLoadError": {
+        "message": "No s'ha pogut carregar el pla de vol des de la controladora de vol"
+    },
+    "flightPlanFCSaveError": {
+        "message": "No s'ha pogut desar el pla de vol a la controladora de vol"
+    },
+    "flightPlanFCEmpty": {
+        "message": "No s'han trobat punts de pas a la controladora de vol"
+    },
+    "flightPlanClearedFC": {
+        "message": "Pla de vol esborrat a la controladora de vol"
+    },
+    "flightPlanLoadError": {
+        "message": "No s'ha pogut carregar el pla de vol"
+    },
+    "flightPlanSaveError": {
+        "message": "No s'ha pogut desar el pla de vol"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Latitud no vàlida (ha d'estar entre -90 i 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Longitud no vàlida (ha d'estar entre -180 i 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Està segur que vols esborrar aquest punt de pas?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Esborrar el punt de pas"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Segur que voleu eliminar aquest punt de pas? Aquesta acció no es pot desfer."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Segur que voleu eliminar tots els punts de pas? Aquesta acció no es pot desfer."
+    },
+    "flightPlanClearTitle": {
+        "message": "Esborrar pla de vol"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Perfil d'elevació"
+    },
+    "flightPlanDistance": {
+        "message": "Distància Total"
+    },
+    "flightPlanFlightTime": {
+        "message": "Temps de vol"
+    },
+    "flightPlanMinAlt": {
+        "message": "Altitud mínima"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Altitud màxima"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Afegeix punts de vol per veure el perfil d'elevació"
+    },
+    "flightPlanGroundElev": {
+        "message": "Elevació de terra"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Elevació màxima a terra"
+    },
+    "flightPlanAvgGround": {
+        "message": "Elevació mitjana a terra"
+    },
+    "flightPlanMaxGround": {
+        "message": "Terra màxima"
+    },
+    "flightPlanAlt": {
+        "message": "Alt"
+    },
+    "flightPlanDist": {
+        "message": "Dist"
     },
     "motorsVoltage": {
         "message": "Voltatge:"
