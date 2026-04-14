@@ -30,7 +30,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Left Column -->
-                <div class="flex flex-col">
+                <div class="flex flex-col gap-4">
                     <!-- Battery Configuration -->
                     <UiBox :title="$t('powerBatteryHead')">
                         <SettingRow :label="$t('powerBatteryVoltageMeterSource')">
@@ -146,7 +146,7 @@
                 </div>
 
                 <!-- Right Column -->
-                <div class="flex flex-col">
+                <div class="flex flex-col gap-4">
                     <!-- Battery State -->
                     <UiBox :title="$t('powerStateHead')">
                         <div class="flex justify-between items-center">
