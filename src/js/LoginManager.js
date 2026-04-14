@@ -94,6 +94,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Create passkey error:", error);
+            throw error;
         }
     }
 
@@ -120,6 +121,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Verify and create passkey error:", error);
+            throw error;
         }
     }
 
@@ -198,6 +200,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userLoginFailed")}: ${error}`);
             console.error("Login error:", error);
+            throw error;
         }
     }
 
