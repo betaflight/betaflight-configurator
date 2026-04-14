@@ -44,16 +44,26 @@ export function useBoardSelection(params) {
         firmwareVersionOptions: [],
         selectedFirmwareVersion: undefined,
         cloudBuildOptions: [],
+        detectingBoard: false,
+        /** Bound to USelectMenu search; used with ignore-filter to omit empty category headers */
+        boardSelectSearchTerm: "",
     });
 
     /**
-     * Get grouped and sorted board options for multiselect dropdown
+     * Get board options formatted for Nuxt UI SelectMenu with labeled group separations.
+     * Returns a flat array with `type: 'label'` and `type: 'separator'` entries between groups.
+     * When `state.boardSelectSearchTerm` is set, only boards matching the search are included
+     * and labels/separators appear only for groups that still have matches.
      */
-    const getGroupedBoardOptions = () => {
+    const getSelectMenuItems = () => {
         const grouped = {};
         const groupOrder = { supported: 0, unsupported: 1, legacy: 2 };
+        const q = (state.boardSelectSearchTerm || "").trim().toLowerCase();
 
         state.boardOptions.forEach((board) => {
+            if (q && !board.target.toLowerCase().includes(q)) {
+                return;
+            }
             const groupLabel = board.group || "Other";
             const groupKey = board.groupKey || "other";
             if (!grouped[groupKey]) {
@@ -62,17 +72,31 @@ export function useBoardSelection(params) {
             grouped[groupKey].boards.push(board);
         });
 
-        // Sort groups by order and return as array
-        return Object.entries(grouped)
+        const sortedGroups = Object.entries(grouped)
+            .filter(([_key, data]) => data.boards.length > 0)
             .sort(([a], [b]) => {
                 const orderA = groupOrder[a] ?? 999;
                 const orderB = groupOrder[b] ?? 999;
                 return orderA - orderB;
-            })
-            .map(([_key, data]) => ({
-                name: data.label,
-                boards: data.boards.sort((a, b) => a.target.localeCompare(b.target)),
-            }));
+            });
+
+        const items = [];
+        sortedGroups.forEach(([_key, data], index) => {
+            if (index > 0) {
+                items.push({ type: "separator" });
+            }
+            items.push({ type: "label", label: data.label });
+
+            const sortedBoards = [...data.boards].sort((a, b) => a.target.localeCompare(b.target));
+            sortedBoards.forEach((board) => {
+                items.push({
+                    label: board.target,
+                    value: board.target,
+                });
+            });
+        });
+
+        return items;
     };
 
     /**
@@ -141,9 +165,7 @@ export function useBoardSelection(params) {
         const build_type = getSelectedBuildType();
 
         enableLoadRemoteFileButton(false);
-        const currentlySelectedBoard = state.selectedBoard;
-        const selectedBoardTarget =
-            typeof currentlySelectedBoard === "string" ? currentlySelectedBoard : currentlySelectedBoard?.target;
+        const selectedBoardTarget = state.selectedBoard;
 
         state.boardOptions = [];
         state.firmwareVersionOptions = [];
@@ -155,8 +177,8 @@ export function useBoardSelection(params) {
                 const targets = await buildApi.loadTargets();
                 await populateTargetList(targets);
 
-                if (currentlySelectedBoard && state.boardOptions.some((b) => b.target === selectedBoardTarget)) {
-                    state.selectedBoard = currentlySelectedBoard;
+                if (selectedBoardTarget && state.boardOptions.some((b) => b.target === selectedBoardTarget)) {
+                    state.selectedBoard = selectedBoardTarget;
                 }
             } catch (error) {
                 console.error(`${logHead} Failed to load targets:`, error);
@@ -180,8 +202,7 @@ export function useBoardSelection(params) {
      * Handle board selection change event
      */
     const onBoardChange = async () => {
-        // Extract target string from board object
-        const value = typeof state.selectedBoard === "string" ? state.selectedBoard : state.selectedBoard?.target;
+        const value = state.selectedBoard;
         const targetSupportUrl = getSupportUrlForTarget(value);
         enableLoadRemoteFileButton(false);
 
@@ -209,40 +230,42 @@ export function useBoardSelection(params) {
     /**
      * Handle detect board button click
      */
-    const handleDetectBoard = async (detectBoardButtonRef) => {
-        const detectBoardElement = detectBoardButtonRef.value;
-        if (!detectBoardElement?.classList.contains("disabled")) {
-            detectBoardElement?.classList.add("disabled");
-
-            if (GUI.connect_lock) {
-                setTimeout(() => detectBoardElement?.classList.remove("disabled"), 2000);
-                return;
-            }
-
-            // Pass a callback to AutoDetect that sets the selected board if found
-            AutoDetect.verifyBoard(async (detectedBoardName) => {
-                let found = state.boardOptions.find((b) => b.target === detectedBoardName);
-                if (!found) {
-                    // Try to find a match ignoring case and whitespace
-                    found = state.boardOptions.find(
-                        (b) => b.target.trim().toLowerCase() === String(detectedBoardName).trim().toLowerCase(),
-                    );
-                }
-                if (found) {
-                    state.selectedBoard = null;
-                    await nextTick();
-                    state.selectedBoard = found;
-                    // Always sync from AutoDetect
-                    state.cloudBuildOptions = AutoDetect.cloudBuildOptions || [];
-                    await nextTick();
-                    await onBoardChange();
-                    return true;
-                }
-                return false;
-            });
-
-            setTimeout(() => detectBoardElement?.classList.remove("disabled"), 2000);
+    const handleDetectBoard = async () => {
+        if (state.detectingBoard) {
+            return;
         }
+
+        state.detectingBoard = true;
+
+        if (GUI.connect_lock) {
+            setTimeout(() => {
+                state.detectingBoard = false;
+            }, 2000);
+            return;
+        }
+
+        AutoDetect.verifyBoard(async (detectedBoardName) => {
+            let found = state.boardOptions.find((b) => b.target === detectedBoardName);
+            if (!found) {
+                found = state.boardOptions.find(
+                    (b) => b.target.trim().toLowerCase() === String(detectedBoardName).trim().toLowerCase(),
+                );
+            }
+            if (found) {
+                state.selectedBoard = null;
+                await nextTick();
+                state.selectedBoard = found.target;
+                state.cloudBuildOptions = AutoDetect.cloudBuildOptions || [];
+                await nextTick();
+                await onBoardChange();
+                return true;
+            }
+            return false;
+        });
+
+        setTimeout(() => {
+            state.detectingBoard = false;
+        }, 2000);
     };
 
     /**
@@ -253,6 +276,7 @@ export function useBoardSelection(params) {
         state.boardOptions = [];
         state.firmwareVersionOptions = [];
         state.cloudBuildOptions = [];
+        state.boardSelectSearchTerm = "";
     };
 
     return {
@@ -260,7 +284,7 @@ export function useBoardSelection(params) {
         state,
 
         // Methods
-        getGroupedBoardOptions,
+        getSelectMenuItems,
         populateTargetList,
         onBuildTypeChange,
         onBoardChange,

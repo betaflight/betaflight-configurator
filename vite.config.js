@@ -154,11 +154,43 @@ export default defineConfig({
                             },
                         },
                     },
+                    defaultVariants: {
+                        size: "sm",
+                    },
                 },
                 tooltip: {
                     slots: {
-                        content: "ring-2 ring-primary",
+                        content: "ring-2 ring-primary max-w-lg h-fit z-99999", // not good, temporary z-index override to fix other extremely high values interfering
                         arrow: "fill-primary",
+                        text: "whitespace-normal",
+                    },
+                },
+                switch: {
+                    slots: {
+                        base: "cursor-pointer",
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                select: {
+                    slots: {
+                        base: "cursor-pointer",
+                        item: "cursor-pointer",
+                        content: "z-99999",
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                selectMenu: {
+                    slots: {
+                        base: "cursor-pointer",
+                        item: "cursor-pointer",
+                        content: "z-99999",
+                    },
+                    defaultVariants: {
+                        size: "sm",
                     },
                 },
                 colors: {

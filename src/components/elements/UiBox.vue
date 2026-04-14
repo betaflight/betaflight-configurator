@@ -1,13 +1,14 @@
 <template>
     <div
-        class="relative border-2 rounded-lg mt-3"
-        :class="highlight ? [typeClass.border, typeClass.borderColor, typeClass.softBg] : 'border-neutral-500/30'"
+        class="relative border-2 rounded-lg"
+        :class="[highlight ? typeClass.box : 'border-neutral-500/30', title ? 'mt-3' : '']"
     >
         <div
             v-if="title"
-            :class="`flex gap-2 items-center absolute top-0 left-4 translate-y-[-50%] p-1 px-3 rounded-full text-black text-[13px] font-semibold ${typeClass.bg}`"
+            :class="`flex gap-2 items-center absolute top-0 left-4 translate-y-[-50%] p-1 px-3 rounded-full text-black text-[13px] font-semibold ${typeClass.pill}`"
         >
-            {{ title }}
+            <div v-html="title"></div>
+            <slot name="title"></slot>
             <HelpIcon v-if="help" :text="help" />
         </div>
         <div :class="`flex flex-col p-3 gap-2 ${title ? 'pt-6' : ''}`">
@@ -23,7 +24,7 @@ import HelpIcon from "./HelpIcon.vue";
 const props = defineProps({
     title: {
         type: String,
-        required: true,
+        required: false,
     },
     help: {
         type: String,
@@ -35,7 +36,7 @@ const props = defineProps({
         default: "default",
         required: false,
         validator: (value) => {
-            return ["default", "info", "warning", "error"].includes(value);
+            return ["default", "success", "warning", "error", "neutral"].includes(value);
         },
     },
     highlight: {
@@ -49,34 +50,28 @@ const typeClass = computed(() => {
     return (
         {
             default: {
-                bg: "bg-primary",
-                border: "border-primary",
-                softBg: "bg-primary/15",
-                borderColor: "border-primary",
+                box: "border-primary bg-primary/15",
+                pill: "bg-primary",
             },
-            info: {
-                bg: "bg-success",
-                border: "border-success",
-                softBg: "bg-success/15",
-                borderColor: "border-success",
+            success: {
+                box: "border-success bg-success/15",
+                pill: "bg-success",
             },
             warning: {
-                bg: "bg-warning",
-                border: "border-warning",
-                softBg: "bg-warning/15",
-                borderColor: "border-warning",
+                box: "border-warning bg-warning/15",
+                pill: "bg-warning",
             },
             error: {
-                bg: "bg-error",
-                border: "border-error",
-                softBg: "bg-error/15",
-                borderColor: "border-error",
+                box: "border-error bg-error/15",
+                pill: "bg-error",
+            },
+            neutral: {
+                box: "border-default bg-default/15",
+                pill: "bg-elevated text-highlighted",
             },
         }[props.type] || {
-            bg: "bg-primary",
-            border: "border-primary",
-            softBg: "bg-primary/15",
-            borderColor: "border-primary",
+            box: "border-primary bg-primary/15",
+            pill: "bg-primary",
         }
     );
 });
