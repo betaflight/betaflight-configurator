@@ -135,11 +135,12 @@ class STM32Protocol {
 
                 const device = await PortHandler.dfuProtocol.requestPermission();
                 if (device) {
-                    // WebUSB requestDevice doesn't fire a "connect" event for
-                    // already-plugged devices — it only grants permission.
-                    // Dispatch addedDevice manually so the port-handler →
-                    // detectedUsbDevice → startFlashing chain fires.
-                    PortHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
+                    // Only WebUSB needs a manual dispatch here. The Android
+                    // Capacitor adapter already emits addedDevice from
+                    // requestPermission().
+                    if (!PortHandler.dfuProtocol.transport?.emitsAddedDeviceOnPermissionGrant) {
+                        PortHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
+                    }
                     return;
                 }
 

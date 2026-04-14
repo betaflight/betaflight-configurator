@@ -29,6 +29,12 @@ class CapacitorDfuTransport extends EventTarget {
         return !!this.adapter;
     }
 
+    // CapacitorDfu.requestPermission() dispatches addedDevice internally
+    // via handleDeviceAttached(), so callers must not dispatch again.
+    get emitsAddedDeviceOnPermissionGrant() {
+        return true;
+    }
+
     createPort(device) {
         return this.adapter.createPort(device);
     }

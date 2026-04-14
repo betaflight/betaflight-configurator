@@ -33,7 +33,7 @@ class WebUsbDfuTransport extends EventTarget {
                 return;
             }
             const port = this.createPort(e.device);
-            if (this.getConnectedPort() === port.path) {
+            if (this.usbDevice === e.device) {
                 this.usbDevice = null;
                 this._langId = undefined;
                 this._configDescriptor = undefined;
@@ -78,13 +78,17 @@ class WebUsbDfuTransport extends EventTarget {
     async waitForDfuDevice(timeout = 10000, interval = 500) {
         const start = Date.now();
         const filters = usbDevices?.filters || [];
+        const isDfuDevice = (device) =>
+            filters.some((f) => device.vendorId === f.vendorId && device.productId === f.productId);
+        const getIdentifier = (device) => device.serialNumber ?? `${device.vendorId}_${device.productId}`;
+
+        // Snapshot already-connected DFU devices so we only match newly appeared ones.
+        const knownDevices = new Set((await navigator.usb.getDevices()).filter(isDfuDevice).map(getIdentifier));
 
         while (Date.now() - start < timeout) {
             try {
                 const ports = await navigator.usb.getDevices();
-                const dfuPort = ports.find((p) =>
-                    filters.some((f) => p.vendorId === f.vendorId && p.productId === f.productId),
-                );
+                const dfuPort = ports.find((p) => isDfuDevice(p) && !knownDevices.has(getIdentifier(p)));
 
                 if (dfuPort) {
                     return this.createPort(dfuPort);
