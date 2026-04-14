@@ -148,7 +148,7 @@ export function useUserSession() {
 
     const focusCodeInput = () => {
         nextTick(() => {
-            loginCodeInputRef.value?.focus();
+            loginCodeInputRef.value?.inputRef?.focus();
         });
     };
 
@@ -165,7 +165,7 @@ export function useUserSession() {
         if (dialogVerificationRef.value) {
             dialogVerificationRef.value.showModal();
             nextTick(() => {
-                verificationInputRef.value?.focus();
+                verificationInputRef.value?.inputRef?.focus();
             });
         }
     };
