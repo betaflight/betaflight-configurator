@@ -1,6 +1,6 @@
 <template>
     <BaseTab tab-name="power" :extra-class="supported ? 'supported' : ''">
-        <div class="content_wrapper">
+        <div class="content_wrapper grid-box col1">
             <!-- Title and Documentation -->
             <div class="cf_column">
                 <div class="tab_title" v-html="$t('tabPower')"></div>
