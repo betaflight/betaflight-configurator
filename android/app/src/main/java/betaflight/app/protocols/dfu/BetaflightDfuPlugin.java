@@ -500,7 +500,7 @@ public class BetaflightDfuPlugin extends Plugin {
             if (result > 2) {
                 int length = buffer[0] & 0xFF;
                 StringBuilder sb = new StringBuilder();
-                for (int i = 2; i < length && i < result; i += 2) {
+                for (int i = 2; i + 1 < length && i + 1 < result; i += 2) {
                     int charCode = (buffer[i] & 0xFF) | ((buffer[i + 1] & 0xFF) << 8);
                     sb.append((char) charCode);
                 }
@@ -622,8 +622,10 @@ public class BetaflightDfuPlugin extends Plugin {
             JSArray descriptorStrings = new JSArray();
             int pos = 0;
             while (pos < result) {
+                if (pos + 1 >= result) break;
                 int bLength = configDesc[pos] & 0xFF;
-                if (bLength == 0) break;
+                if (bLength < 2) break;
+                if (pos + bLength > result) break;
 
                 int bDescriptorType = configDesc[pos + 1] & 0xFF;
 
@@ -711,15 +713,22 @@ public class BetaflightDfuPlugin extends Plugin {
                 configDesc, totalLength, DEFAULT_TIMEOUT_MS
             );
 
-            // Walk the descriptor chain looking for type 0x21 (DFU_FUNCTIONAL)
+            // Walk the descriptor chain looking for DFU functional descriptor (0x21)
+            // scoped to a DFU interface (class 0xFE, subclass 0x01).
             int pos = 0;
+            boolean inDfuInterface = false;
             while (pos < result) {
+                if (pos + 1 >= result) break;
                 int bLength = configDesc[pos] & 0xFF;
-                if (bLength == 0) break;
+                if (bLength < 2) break;
                 if (pos + bLength > result) break;
 
                 int bDescriptorType = configDesc[pos + 1] & 0xFF;
-                if (bDescriptorType == 0x21 && bLength >= 7) {
+                if (bDescriptorType == 0x04 && bLength >= 9) {
+                    int bInterfaceClass = configDesc[pos + 5] & 0xFF;
+                    int bInterfaceSubClass = configDesc[pos + 6] & 0xFF;
+                    inDfuInterface = (bInterfaceClass == 0xFE && bInterfaceSubClass == 0x01);
+                } else if (inDfuInterface && bDescriptorType == 0x21 && bLength >= 7) {
                     JSObject descriptor = new JSObject();
                     descriptor.put("bLength", bLength);
                     descriptor.put("bDescriptorType", bDescriptorType);
@@ -932,7 +941,7 @@ public class BetaflightDfuPlugin extends Plugin {
         if (result > 2) {
             int length = buffer[0] & 0xFF;
             StringBuilder sb = new StringBuilder();
-            for (int i = 2; i < length && i < result; i += 2) {
+            for (int i = 2; i + 1 < length && i + 1 < result; i += 2) {
                 int charCode = (buffer[i] & 0xFF) | ((buffer[i + 1] & 0xFF) << 8);
                 sb.append((char) charCode);
             }
