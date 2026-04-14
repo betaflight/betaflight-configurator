@@ -13,6 +13,7 @@
                         "
                         :disabled="state.disabledAccel"
                         :loading="state.calibratingAccel"
+                        class="min-w-48 justify-center"
                         @click="onCalibrateAccel"
                     />
                 </SettingRow>
@@ -25,16 +26,23 @@
                         "
                         :disabled="state.disabledMag"
                         :loading="state.calibratingMag"
+                        class="min-w-48 justify-center"
                         @click="onCalibrateMag"
                     />
                 </SettingRow>
                 <SettingRow v-show="isExpert" :label="$t('initialSetupResetText')">
-                    <UButton :label="$t('initialSetupButtonReset')" color="error" @click="showConfirmReset" />
+                    <UButton
+                        :label="$t('initialSetupButtonReset')"
+                        color="error"
+                        class="min-w-48 justify-center"
+                        @click="showConfirmReset"
+                    />
                 </SettingRow>
                 <SettingRow v-show="isExpert" :label="$t('initialSetupRebootBootloaderText')">
                     <UButton
                         :label="$t('initialSetupButtonRebootBootloader')"
                         color="error"
+                        class="min-w-48 justify-center"
                         @click="onRebootBootloader"
                     />
                 </SettingRow>
@@ -802,6 +810,8 @@ function process_html() {
                     : have_sensor(fcStore.config.activeSensors, "opticalflow")
                         ? types.opticalflow.elements[o]
                         : t("initialSetupNotDetected");
+        } else {
+            state.sensorOpticalflow = t("initialSetupNotInBuild");
         }
     };
 
