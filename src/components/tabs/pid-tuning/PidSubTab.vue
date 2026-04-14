@@ -688,6 +688,7 @@
                                         :step="0.01"
                                         :min="0"
                                         :max="1"
+                                        :format-options="{ minimumFractionDigits: 2, maximumFractionDigits: 2 }"
                                     />
                                     <label>
                                         <span v-html="$t('pidTuningFeedforwardTransition')"></span>
@@ -778,6 +779,7 @@
                                         :step="0.1"
                                         :min="0.1"
                                         :max="30"
+                                        :format-options="{ minimumFractionDigits: 1, maximumFractionDigits: 1 }"
                                     />
                                     <label for="antiGravityGain">
                                         <span v-html="$t('pidTuningAntiGravityGain')"></span>
@@ -1399,7 +1401,7 @@ const tpaBreakpoint = computed({
 
 // Feedforward transition display value (divided by 100 for display)
 const feedforwardTransitionValue = computed({
-    get: () => (FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2),
+    get: () => FC.ADVANCED_TUNING.feedforwardTransition / 100,
     set: (val) => (FC.ADVANCED_TUNING.feedforwardTransition = Math.round(Number.parseFloat(val) * 100)),
 });
 
@@ -1416,7 +1418,7 @@ const antiGravityEnabled = computed({
 
 // Anti-gravity gain display value (divided by 10 for display)
 const antiGravityGainValue = computed({
-    get: () => (FC.ADVANCED_TUNING.antiGravityGain / 10).toFixed(1),
+    get: () => FC.ADVANCED_TUNING.antiGravityGain / 10,
     set: (val) => (FC.ADVANCED_TUNING.antiGravityGain = Math.round(Number.parseFloat(val) * 10)),
 });
 
@@ -1685,6 +1687,12 @@ watch(
         }
     },
     { deep: true },
+);
+
+// Watch for changes to mark tab dirty state in parent component
+watch(
+    () => JSON.stringify(FC.PIDS),
+    () => emit("change"),
 );
 
 // Expose method to parent component to force slider update after save

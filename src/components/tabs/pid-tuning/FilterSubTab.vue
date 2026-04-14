@@ -1255,6 +1255,11 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
         });
 });
 
+watch(
+    () => JSON.stringify(FC.FILTER_CONFIG),
+    () => emit("change"),
+);
+
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {
     isUpdatingSliders = true;

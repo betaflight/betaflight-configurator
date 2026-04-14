@@ -1787,6 +1787,11 @@ watch(
     { immediate: true },
 );
 
+watch(
+    () => JSON.stringify(FC.RC_TUNING),
+    () => emit("change"),
+);
+
 onMounted(() => {
     // Initialize 3D Model for rates preview
     // Wait for MIXER_CONFIG to be available before initializing model
