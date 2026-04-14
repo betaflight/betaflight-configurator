@@ -1689,7 +1689,11 @@ watch(
     { deep: true },
 );
 
-watch([() => JSON.stringify(FC.PIDS), () => JSON.stringify(FC.ADVANCED_TUNING)], () => emit("change"));
+// Watch for changes to mark tab dirty state in parent component
+watch(
+    () => JSON.stringify(FC.PIDS),
+    () => emit("change"),
+);
 
 // Expose method to parent component to force slider update after save
 function forceUpdateSliders() {
