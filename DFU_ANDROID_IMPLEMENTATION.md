@@ -11,7 +11,7 @@ The Betaflight Configurator currently supports DFU flashing on desktop browsers 
 ## Current Architecture
 
 ### Desktop/Web Flow
-```
+```text
 FirmwareFlasherTab.vue
   -> useFirmwareFlashing.js (composable)
     -> usbdfu.js (UsbDfuProtocol + pluggable transport)
@@ -20,7 +20,7 @@ FirmwareFlasherTab.vue
 ```
 
 ### Existing Android Plugins (pattern to follow)
-```
+```text
 android/app/src/main/java/betaflight/app/protocols/
 ├── serial/
 │   ├── BetaflightSerialPlugin.java    # @CapacitorPlugin, USB serial via usb-serial-for-android
@@ -58,6 +58,7 @@ All communication uses USB control transfers:
 - **DFU requests**: DETACH(0x00), DNLOAD(0x01), UPLOAD(0x02), GETSTATUS(0x03), CLRSTATUS(0x04), GETSTATE(0x05), ABORT(0x06)
 
 ### Supported DFU Devices (from `devices.js`)
+
 | Vendor ID | Product ID | Device |
 |-----------|-----------|--------|
 | 1155 (0x0483) | 57105 (0xDF11) | STM32 DFU Mode |
@@ -455,6 +456,7 @@ After DFU flash, the FC reboots and re-enumerates as a serial device. The `USB_D
 ## File Changes Summary
 
 ### New Files
+
 | File | Purpose |
 |------|---------|
 | `android/.../protocols/dfu/BetaflightDfuPlugin.java` | Native Capacitor plugin for USB DFU |
@@ -464,6 +466,7 @@ After DFU flash, the FC reboots and re-enumerates as a serial device. The `USB_D
 | `src/js/protocols/WebUsbDfuTransport.js` | Transport backend for desktop (WebUSB) |
 
 ### Modified Files
+
 | File | Change |
 |------|--------|
 | `android/.../MainActivity.java` | Register `BetaflightDfuPlugin`, absorb USB re-enumeration intents |
@@ -477,6 +480,7 @@ After DFU flash, the FC reboots and re-enumerates as a serial device. The `USB_D
 | `src/js/utils/AutoBackup.js` | Handle `capacitor-*` serial port prefix |
 
 ### No Changes Needed
+
 | File | Reason |
 |------|--------|
 | `android/app/build.gradle` | No new dependencies (uses Android SDK USB APIs) |

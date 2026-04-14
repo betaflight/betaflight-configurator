@@ -82,13 +82,27 @@ class WebUsbDfuTransport extends EventTarget {
             filters.some((f) => device.vendorId === f.vendorId && device.productId === f.productId);
         const getIdentifier = (device) => device.serialNumber ?? `${device.vendorId}_${device.productId}`;
 
-        // Snapshot already-connected DFU devices so we only match newly appeared ones.
-        const knownDevices = new Set((await navigator.usb.getDevices()).filter(isDfuDevice).map(getIdentifier));
+        // Snapshot already-connected DFU devices by count so we detect newly appeared
+        // ones even when identical VID/PID boards lack serial numbers.
+        const knownDevices = new Map();
+        for (const device of (await navigator.usb.getDevices()).filter(isDfuDevice)) {
+            const id = getIdentifier(device);
+            knownDevices.set(id, (knownDevices.get(id) ?? 0) + 1);
+        }
 
         while (Date.now() - start < timeout) {
             try {
                 const ports = await navigator.usb.getDevices();
-                const dfuPort = ports.find((p) => isDfuDevice(p) && !knownDevices.has(getIdentifier(p)));
+                const seenNow = new Map();
+                const dfuPort = ports.find((p) => {
+                    if (!isDfuDevice(p)) {
+                        return false;
+                    }
+                    const id = getIdentifier(p);
+                    const countNow = (seenNow.get(id) ?? 0) + 1;
+                    seenNow.set(id, countNow);
+                    return countNow > (knownDevices.get(id) ?? 0);
+                });
 
                 if (dfuPort) {
                     return this.createPort(dfuPort);
@@ -240,11 +254,11 @@ class WebUsbDfuTransport extends EventTarget {
 
         const result = await this.usbDevice.controlTransferIn(setup, 255);
         if (result.status === "ok") {
-            const _length = result.data.getUint8(0);
+            const length = Math.min(result.data.getUint8(0), result.data.byteLength);
             let descriptor = "";
-            for (let i = 2; i < _length; i += 2) {
+            for (let i = 2; i + 1 < length; i += 2) {
                 const charCode = result.data.getUint16(i, true);
-                descriptor += String.fromCharCode(charCode);
+                descriptor += String.fromCodePoint(charCode);
             }
             return descriptor;
         }

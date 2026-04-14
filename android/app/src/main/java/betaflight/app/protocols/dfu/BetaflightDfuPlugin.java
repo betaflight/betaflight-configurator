@@ -299,7 +299,7 @@ public class BetaflightDfuPlugin extends Plugin {
         int interfaceNum = call.getInt("interfaceNumber", 0);
 
         try {
-            if (interfaceNum >= currentDevice.getInterfaceCount()) {
+            if (interfaceNum < 0 || interfaceNum >= currentDevice.getInterfaceCount()) {
                 call.reject("Interface number out of range: " + interfaceNum);
                 return;
             }
@@ -531,6 +531,11 @@ public class BetaflightDfuPlugin extends Plugin {
         int interfaceIndex = call.getInt("interfaceIndex", 0);
 
         try {
+            if (interfaceIndex < 0) {
+                call.reject("Interface index out of range: " + interfaceIndex);
+                return;
+            }
+
             // Note: assumes interface descriptors are contiguous at fixed 9-byte intervals
             // starting at offset 9 (after the config descriptor). This matches the original
             // webusbdfu.js implementation and is reliable for simple DFU-only configurations.
