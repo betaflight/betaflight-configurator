@@ -952,11 +952,21 @@ public class BetaflightDfuPlugin extends Plugin {
     }
 
     private byte[] hexStringToByteArray(String hexString) {
+        if (hexString == null || hexString.isEmpty()) {
+            return new byte[0];
+        }
         int len = hexString.length();
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("Hex string must have even length");
+        }
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
-                    + Character.digit(hexString.charAt(i + 1), 16));
+            int high = Character.digit(hexString.charAt(i), 16);
+            int low = Character.digit(hexString.charAt(i + 1), 16);
+            if (high == -1 || low == -1) {
+                throw new IllegalArgumentException("Invalid hex character at position " + i);
+            }
+            data[i / 2] = (byte) ((high << 4) + low);
         }
         return data;
     }
