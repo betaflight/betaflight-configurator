@@ -8301,6 +8301,9 @@
     "userCreatingPasskey": {
         "message": "Creating passkey..."
     },
+    "userCodeRequired": {
+        "message": "Verification code is required"
+    },
     "userSendingCode": {
         "message": "Sending verification code..."
     },

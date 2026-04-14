@@ -53,7 +53,7 @@
                                     id="login-email"
                                     :placeholder="$t('placeholderEmailAddress')"
                                     class="dialog-input"
-                                    @keypress.enter="handleUsePasskey"
+                                    @keyup.enter="handleUsePasskey"
                                 />
                             </div>
                             <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
@@ -95,7 +95,7 @@
                                     id="login-email-code"
                                     :placeholder="$t('placeholderEmailAddress')"
                                     class="dialog-input"
-                                    @keypress.enter="handleRequestCode"
+                                    @keyup.enter="handleRequestCode"
                                 />
                             </div>
                             <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
@@ -131,7 +131,7 @@
                                     id="login-code-input"
                                     maxlength="8"
                                     class="dialog-input dialog-input-code"
-                                    @keypress.enter="handleVerifyCode"
+                                    @keyup.enter="handleVerifyCode"
                                 />
                             </div>
                             <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
@@ -179,7 +179,7 @@
                                 id="verification-code-input"
                                 placeholder=""
                                 class="dialog-input"
-                                @keypress.enter="handleVerificationSubmit"
+                                @keyup.enter="handleVerificationSubmit"
                             />
                         </div>
                         <p v-if="verificationError" class="dialog-error">{{ verificationError }}</p>

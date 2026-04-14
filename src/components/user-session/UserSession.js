@@ -20,6 +20,7 @@ export function useUserSession() {
     const loginError = ref(null);
     const loginSubmitting = ref(false);
     const loginCodeInputRef = ref(null);
+    const codeEmail = ref("");
 
     const dialogLoginRef = ref(null);
     const dialogWaitingRef = ref(null);
@@ -51,7 +52,7 @@ export function useUserSession() {
             return i18n.getMessage("descriptionCodeRequest");
         }
         if (loginMode.value === MODE_CODE_VERIFY) {
-            return i18n.getMessage("descriptionCodeEntered", [loginEmail.value]);
+            return i18n.getMessage("descriptionCodeEntered", [codeEmail.value]);
         }
         return i18n.getMessage("descriptionPasskeyLogin");
     });
@@ -113,13 +114,18 @@ export function useUserSession() {
         loginCode.value = "";
         loginError.value = null;
         loginSubmitting.value = false;
+        codeEmail.value = "";
+    };
+
+    const showLoginDialog = () => {
+        if (dialogLoginRef.value && !dialogLoginRef.value.open) {
+            dialogLoginRef.value.showModal();
+        }
     };
 
     const openLoginDialog = () => {
         resetLoginDialog();
-        if (dialogLoginRef.value) {
-            dialogLoginRef.value.showModal();
-        }
+        showLoginDialog();
     };
 
     const closeLoginDialog = () => {
@@ -190,13 +196,19 @@ export function useUserSession() {
 
     const handleUsePasskey = async () => {
         const email = loginEmail.value.trim();
+
+        if (!email) {
+            loginError.value = i18n.getMessage("userEmailRequired");
+            return;
+        }
+
         loginError.value = null;
 
         try {
             closeLoginDialog();
             await loginManager.loginWithPasskey(email);
         } catch (error) {
-            openLoginDialog();
+            showLoginDialog();
             loginError.value = i18n.getMessage("userLoginFailed");
             console.error("Login with passkey error:", error);
         }
@@ -215,13 +227,17 @@ export function useUserSession() {
             await loginManager.createPasskey(email);
             openVerificationDialog(email);
         } catch (error) {
-            openLoginDialog();
+            showLoginDialog();
             loginError.value = i18n.getMessage("userCreatePasskeyFailed");
             console.error("Create passkey error:", error);
         }
     };
 
     const handleRequestCode = async () => {
+        if (loginSubmitting.value) {
+            return;
+        }
+
         const email = loginEmail.value.trim();
 
         if (!email) {
@@ -234,6 +250,7 @@ export function useUserSession() {
 
         try {
             await loginManager.requestVerificationCode(email);
+            codeEmail.value = email;
             loginMode.value = MODE_CODE_VERIFY;
             loginCode.value = "";
             focusCodeInput();
@@ -245,11 +262,14 @@ export function useUserSession() {
     };
 
     const handleVerifyCode = async () => {
+        if (loginSubmitting.value) {
+            return;
+        }
+
         const code = loginCode.value.trim();
-        const email = loginEmail.value.trim();
 
         if (!code) {
-            loginError.value = i18n.getMessage("userEmailRequired");
+            loginError.value = i18n.getMessage("userCodeRequired");
             return;
         }
 
@@ -257,7 +277,7 @@ export function useUserSession() {
         loginSubmitting.value = true;
 
         try {
-            await loginManager.loginWithEmailCode(email, code);
+            await loginManager.loginWithEmailCode(codeEmail.value, code);
             closeLoginDialog();
         } catch (error) {
             loginError.value = error?.message || i18n.getMessage("userLoginFailed");
