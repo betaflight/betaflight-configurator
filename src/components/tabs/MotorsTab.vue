@@ -94,7 +94,7 @@
                                 :help="$t('configurationDshotBidirHelp')"
                                 full-width
                             >
-                                <USwitch v-model="fcStore.motorConfig.use_dshot_telemetry" />
+                                <USwitch v-model="useDshotTelemetry" />
                             </SettingRow>
                             <SettingRow
                                 v-if="protocolConfigured && rpmFeaturesVisible"
@@ -628,6 +628,13 @@ const buttonStates = computed(() => ({
     saveDisabled: !configHasChanged.value,
     stopDisabled: !motorsTestingEnabled.value,
 }));
+
+const useDshotTelemetry = computed({
+    get: () => fcStore.motorConfig.use_dshot_telemetry !== 0,
+    set: (val) => {
+        fcStore.motorConfig.use_dshot_telemetry = val ? 1 : 0;
+    },
+});
 
 // Watch for bidirectional DShot changes
 watch(
