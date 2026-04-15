@@ -3159,6 +3159,9 @@
     "gpsMapToggleFullscreen": {
         "message": "Toggle fullscreen"
     },
+    "gpsMapRetry": {
+        "message": "Retry"
+    },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
     },

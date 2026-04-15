@@ -166,7 +166,9 @@
                     <UiBox :title="$t('gpsMapHead')">
                         <div v-show="showConnect" class="flex flex-col items-center justify-center h-[433px] gap-2">
                             <div>{{ $t("gpsMapMessage1") }}</div>
-                            <a class="font-bold cursor-pointer" @click.prevent="checkConnectivity">retry</a>
+                            <UButton variant="subtle" @click="checkConnectivity">
+                                {{ $t("gpsMapRetry") }}
+                            </UButton>
                         </div>
                         <div
                             v-show="showWaiting"
