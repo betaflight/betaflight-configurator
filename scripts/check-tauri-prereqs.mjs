@@ -10,23 +10,33 @@
  * cleanly by rustup / Xcode CLT / VS Build Tools, so this script is
  * effectively a no-op there.
  */
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { platform } from "node:os";
 
-const missing = [];
+// Invoke pkg-config via spawnSync with explicit argv (no shell) and a
+// pinned PATH so the tool is resolved from a fixed system location.
+const PINNED_PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+const spawnOpts = { stdio: "pipe", env: { ...process.env, PATH: PINNED_PATH } };
 
+function pkgConfigExists(pkg) {
+    const result = spawnSync("pkg-config", ["--exists", pkg], spawnOpts);
+    return result.status === 0;
+}
+
+function pkgConfigAvailable() {
+    const result = spawnSync("pkg-config", ["--version"], spawnOpts);
+    return result.status === 0;
+}
+
+const missing = [];
 function requirePkgConfig(pkg, aptPkg, note = "") {
-    try {
-        execSync(`pkg-config --exists ${pkg}`, { stdio: "pipe" });
-    } catch {
+    if (!pkgConfigExists(pkg)) {
         missing.push({ lib: pkg, apt: aptPkg, note });
     }
 }
 
 if (platform() === "linux") {
-    try {
-        execSync("pkg-config --version", { stdio: "pipe" });
-    } catch {
+    if (!pkgConfigAvailable()) {
         console.error("Tauri prereq check: `pkg-config` is not installed.");
         console.error("  sudo apt install -y pkg-config build-essential");
         process.exit(1);

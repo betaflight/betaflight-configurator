@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { serialDevices, vendorIdNames } from "./devices";
+import GUI from "../gui";
 
 const logHead = "[TAURI SERIAL]";
 
@@ -182,7 +183,7 @@ class TauriSerial extends EventTarget {
         return path;
     }
 
-    async connect(path, options) {
+    async connect(path, options = { baudRate: 115200 }) {
         if (this.openRequested) {
             console.log(`${logHead} Connection already requested`);
             return false;
@@ -193,8 +194,22 @@ class TauriSerial extends EventTarget {
         try {
             const openOptions = {
                 path,
-                baudRate: options.baudRate || 115200,
+                baudRate: options.baudRate ?? 115200,
             };
+            // Forward optional serial settings when callers supply them (e.g.
+            // the flasher uses parity / stopBits for STM32 bootloader comms).
+            if (options.dataBits != null) {
+                openOptions.dataBits = options.dataBits;
+            }
+            if (options.parityBit != null || options.parity != null) {
+                openOptions.parity = options.parityBit ?? options.parity;
+            }
+            if (options.stopBits != null) {
+                openOptions.stopBits = options.stopBits;
+            }
+            if (options.flowControl != null) {
+                openOptions.flowControl = options.flowControl;
+            }
 
             console.log(`${logHead} Opening port ${path} at ${openOptions.baudRate} baud`);
 
@@ -210,6 +225,7 @@ class TauriSerial extends EventTarget {
                 console.debug(`${logHead} Could not set timeout:`, e);
             }
 
+            const activePort = this.ports.find((p) => p.path === path);
             this.connected = true;
             this.connectionId = path;
             this.bitrate = openOptions.baudRate;
@@ -218,7 +234,14 @@ class TauriSerial extends EventTarget {
             this.connectionInfo = {
                 connectionId: path,
                 bitrate: this.bitrate,
+                vendorId: activePort?.vendorId,
+                productId: activePort?.productId,
             };
+
+            this.isNeedBatchWrite = this.checkIsNeedBatchWrite();
+            if (this.isNeedBatchWrite) {
+                console.log(`${logHead} Enabling batch write mode for AT32 on macOS`);
+            }
 
             this.addEventListener("receive", this.handleReceiveBytes);
 
@@ -234,6 +257,27 @@ class TauriSerial extends EventTarget {
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
             return false;
         }
+    }
+
+    checkIsNeedBatchWrite() {
+        const isMac = GUI.operating_system === "MacOS";
+        const vendorId = this.connectionInfo?.vendorId;
+        return isMac && vendorId != null && vendorIdNames[vendorId] === "AT32";
+    }
+
+    /**
+     * Tauri doesn't surface a browser-style permission prompt — the plugin
+     * enumerates ports directly. Behave as a manual refresh for parity with
+     * WebSerial.requestPermissionDevice: re-scan and return the first known
+     * port (or null if none).
+     */
+    async requestPermissionDevice() {
+        await this.loadDevices();
+        const port = this.ports[0] ?? null;
+        if (port) {
+            console.info(`${logHead} Selected port from refresh:`, port.path);
+        }
+        return port;
     }
 
     async readLoop() {
@@ -338,15 +382,16 @@ class TauriSerial extends EventTarget {
             return true;
         }
 
-        this.connected = false;
-        this.transmitting = false;
-        this.reading = false;
-
+        // Guard against a concurrent disconnect before mutating state, so
+        // the second caller doesn't see half-applied teardown.
         if (this.closeRequested) {
             return true;
         }
 
         this.closeRequested = true;
+        this.connected = false;
+        this.transmitting = false;
+        this.reading = false;
 
         try {
             this.removeEventListener("receive", this.handleReceiveBytes);

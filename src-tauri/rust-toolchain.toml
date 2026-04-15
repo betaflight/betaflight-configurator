@@ -1,0 +1,7 @@
+[toolchain]
+# Rust 1.85 is the first release that stabilised the 2024 edition used by
+# Cargo.toml. Pinning keeps CI runners and contributors on a compatible
+# channel without forcing an exact patch version.
+channel = "1.85"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

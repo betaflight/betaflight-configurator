@@ -17,7 +17,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
 
 const pkg = JSON.parse(readFileSync(resolve(projectRoot, "package.json"), "utf8"));
-const version = pkg.version.replace(/-.*$/, "");
+const version = pkg.version.split("-", 1)[0];
 
 if (!/^\d+\.\d+\.\d+$/.test(version)) {
     console.error(`sync-tauri-version: package.json version "${pkg.version}" did not produce a valid SemVer after stripping pre-release tag (got "${version}").`);
