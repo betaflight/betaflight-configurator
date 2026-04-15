@@ -48,6 +48,7 @@
                                 <USelect
                                     v-model="selectedEscProtocol"
                                     :items="escProtocolItems"
+                                    class="min-w-32"
                                     @update:model-value="onProtocolChange"
                                 />
                             </SettingRow>
@@ -357,7 +358,7 @@
             <!-- Warning Dialog -->
             <dialog id="dialog-settings-changed" ref="dialogSettingsChanged">
                 <div class="p-4">
-                    <div class="mb-4">{{ warningMessage }}</div>
+                    <div class="mb-4" v-html="warningMessage"></div>
                     <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
                 </div>
             </dialog>
@@ -392,7 +393,7 @@
                     :label="$t('escDshotDirectionDialog-StopWizard')"
                     :disabled="buttonStates.stopDisabled"
                     @click="stopMotors()"
-                    color="red"
+                    :color="motorsTestingEnabled ? 'error' : 'neutral'"
                 />
             </div>
         </div>
@@ -1588,7 +1589,7 @@ onUnmounted(() => {
     }
 
     // Graph SVG
-    svg {
+    svg#graph {
         width: 100%;
         height: 100%;
     }
