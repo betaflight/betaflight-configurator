@@ -7050,7 +7050,21 @@
         "message": "Warns if the CPU LOAD of the flight controller is too high",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
-
+    "osdTextElementPosHoldFailed": {
+        "message": "Position hold failed",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Shows a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Position hold failed",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Position hold failed",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
     },
