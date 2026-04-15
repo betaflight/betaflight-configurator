@@ -71,7 +71,7 @@
                                     <td class="p-1">{{ row.gnss }}</td>
                                     <td class="text-center p-1">
                                         <span
-                                            v-if="row.satId !== null"
+                                            v-if="typeof row.satId === 'number'"
                                             class="inline-block w-8 text-center px-1 py-0.5 rounded text-xs text-white"
                                             :class="row.satUsed ? 'bg-[var(--success-500)]' : 'bg-[var(--error-500)]'"
                                             :title="row.satUsed ? $t('gnssUsedUsed') : $t('gnssUsedUnused')"
@@ -86,7 +86,7 @@
                                     <td class="text-left pl-2.5 p-1">
                                         <span
                                             v-if="row.quality"
-                                            class="px-1.5 py-0.5 rounded text-xs text-white"
+                                            class="px-1.5 py-0.5 rounded text-xs"
                                             :class="row.qualityClass"
                                         >
                                             {{ row.quality }}
@@ -182,40 +182,48 @@
                             <div
                                 class="map-controls flex justify-end items-center gap-1 h-[33px] rounded-b px-1 bg-[#FAFAFA] dark:bg-transparent"
                             >
-                                <UButton
-                                    size="xs"
-                                    :variant="activeLayer === 'satellite' ? 'solid' : 'subtle'"
-                                    aria-label="Satellite view"
-                                    @click="setLayer('satellite')"
-                                >
-                                    S
-                                </UButton>
-                                <UButton
-                                    size="xs"
-                                    :variant="activeLayer === 'hybrid' ? 'solid' : 'subtle'"
-                                    aria-label="Hybrid satellite and street view"
-                                    @click="setLayer('hybrid')"
-                                >
-                                    H
-                                </UButton>
-                                <UButton
-                                    size="xs"
-                                    :variant="activeLayer === 'street' ? 'solid' : 'subtle'"
-                                    aria-label="Street map view"
-                                    @click="setLayer('street')"
-                                >
-                                    R
-                                </UButton>
-                                <UButton size="xs" variant="subtle" aria-label="Zoom in" @click="zoomIn"> + </UButton>
-                                <UButton size="xs" variant="subtle" aria-label="Zoom out" @click="zoomOut"> – </UButton>
-                                <UButton
-                                    size="xs"
-                                    :variant="isFullscreen ? 'solid' : 'subtle'"
-                                    aria-label="Toggle fullscreen"
-                                    @click="toggleFullscreen"
-                                >
-                                    ⛶
-                                </UButton>
+                                <UTooltip :text="$t('gpsMapSatelliteView')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="activeLayer === 'satellite' ? 'solid' : 'subtle'"
+                                        @click="setLayer('satellite')"
+                                    >
+                                        S
+                                    </UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapHybridView')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="activeLayer === 'hybrid' ? 'solid' : 'subtle'"
+                                        @click="setLayer('hybrid')"
+                                    >
+                                        H
+                                    </UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapStreetView')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="activeLayer === 'street' ? 'solid' : 'subtle'"
+                                        @click="setLayer('street')"
+                                    >
+                                        R
+                                    </UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapZoomIn')">
+                                    <UButton size="xs" variant="subtle" @click="zoomIn">+</UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapZoomOut')">
+                                    <UButton size="xs" variant="subtle" @click="zoomOut">–</UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapToggleFullscreen')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="isFullscreen ? 'solid' : 'subtle'"
+                                        @click="toggleFullscreen"
+                                    >
+                                        ⛶
+                                    </UButton>
+                                </UTooltip>
                             </div>
                         </div>
                     </UiBox>
@@ -519,10 +527,10 @@ export default defineComponent({
                     const quality = i18n.getMessage(qualityArray[qualityValue]);
                     const qualityColor =
                         qualityValue >= 5
-                            ? "bg-[var(--success-500)]"
+                            ? "bg-[var(--success-500)] text-white"
                             : qualityValue === 4
-                                ? "bg-[var(--warning-500)]"
-                                : "bg-[var(--surface-500)]";
+                                ? "bg-[var(--warning-500)] text-black"
+                                : "bg-[var(--surface-500)] text-white";
 
                     rows.push({
                         gnss: gnssArray[gnssId],
