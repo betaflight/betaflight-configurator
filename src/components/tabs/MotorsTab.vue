@@ -307,30 +307,35 @@
                                 </li>
                             </ul>
 
-                            <div class="sliders">
+                            <div class="sliders mb-2">
                                 <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
-                                    <li v-for="i in numberOfValidOutputs" :key="i">
-                                        <input
-                                            type="range"
-                                            class="motor-slider"
+                                    <li
+                                        v-for="i in numberOfValidOutputs"
+                                        :key="i"
+                                        @wheel.prevent="onSliderWheel(i - 1, $event)"
+                                    >
+                                        <USlider
+                                            orientation="vertical"
                                             :min="minSliderValue"
                                             :max="maxSliderValue"
-                                            v-model.number="motorValues[i - 1]"
+                                            :model-value="motorValues[i - 1]"
                                             :disabled="slidersDisabled"
-                                            @input="onMotorSliderChange(i - 1)"
-                                            @wheel.prevent="onSliderWheel(i - 1, $event)"
+                                            tooltip
+                                            class="h-24"
+                                            @update:model-value="onMotorValueUpdate(i - 1, $event)"
                                         />
                                     </li>
-                                    <li>
-                                        <input
-                                            type="range"
-                                            class="master-slider master"
+                                    <li @wheel.prevent="onSliderWheel(-1, $event)">
+                                        <USlider
+                                            orientation="vertical"
                                             :min="minSliderValue"
                                             :max="maxSliderValue"
-                                            v-model.number="masterValue"
+                                            :model-value="masterValue"
                                             :disabled="slidersDisabled"
-                                            @input="onMasterSliderChange"
-                                            @wheel.prevent="onSliderWheel(-1, $event)"
+                                            color="warning"
+                                            tooltip
+                                            class="h-24"
+                                            @update:model-value="onMasterValueUpdate($event)"
                                         />
                                     </li>
                                 </ul>
@@ -1396,6 +1401,16 @@ const onMasterSliderChange = () => {
     }
 };
 
+const onMotorValueUpdate = (index, val) => {
+    motorValues.value[index] = val;
+    onMotorSliderChange();
+};
+
+const onMasterValueUpdate = (val) => {
+    masterValue.value = val;
+    onMasterSliderChange();
+};
+
 const onSliderWheel = (index, event) => {
     if (!motorsTestingEnabled.value) {
         return;
@@ -1684,13 +1699,6 @@ onUnmounted(() => {
                 display: flex;
                 align-items: flex-end;
                 justify-content: center;
-            }
-            input {
-                cursor: ns-resize;
-                writing-mode: vertical-lr;
-                direction: rtl;
-                height: 6rem !important;
-                padding: 0 !important;
             }
         }
         .values {
