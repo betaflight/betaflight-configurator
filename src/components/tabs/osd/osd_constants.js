@@ -267,6 +267,11 @@ export const OSD_CONSTANTS = {
             text: "osdWarningTextLoad",
             desc: "osdWarningLoad",
         },
+        POSHOLD_FAILED: {
+            name: "POSHOLD_FAILED",
+            text: "osdWarningTextPosHoldFailed",
+            desc: "osdWarningPosHoldFailed",
+        },
     },
     FONT_TYPES: [
         { file: "default", name: "osdSetupFontTypeDefault" },
