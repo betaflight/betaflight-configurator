@@ -454,6 +454,7 @@ const closeWarningDialog = () => {
 // Dynamic notch filter dialog
 const dialogDynFilters = ref(null);
 const previousDshotBidir = ref(false);
+const dshotBidirInitialized = ref(false);
 const previousFilterDynQ = ref(null);
 const previousFilterDynCount = ref(null);
 
@@ -635,9 +636,9 @@ const buttonStates = computed(() => ({
 }));
 
 const useDshotTelemetry = computed({
-    get: () => fcStore.motorConfig.use_dshot_telemetry !== 0,
+    get: () => !!fcStore.motorConfig.use_dshot_telemetry,
     set: (val) => {
-        fcStore.motorConfig.use_dshot_telemetry = val ? 1 : 0;
+        fcStore.motorConfig.use_dshot_telemetry = !!val;
     },
 });
 
@@ -645,9 +646,9 @@ const useDshotTelemetry = computed({
 watch(
     () => fcStore.motorConfig.use_dshot_telemetry,
     (newValue, oldValue) => {
-        if (oldValue === undefined) {
+        if (!dshotBidirInitialized.value) {
             return;
-        } // Skip initial load
+        } // Skip until MSP data is loaded
 
         const rpmFilterIsDisabled = fcStore.filterConfig.gyro_rpm_notch_harmonics === 0;
 
@@ -658,6 +659,8 @@ watch(
         // Show dialog when dshotBidir differs from original firmware value and RPM filter is enabled
         if (newValue !== previousDshotBidir.value && !rpmFilterIsDisabled) {
             showDynFiltersDialog();
+        } else {
+            closeDynFiltersDialog();
         }
     },
 );
@@ -683,10 +686,11 @@ onMounted(async () => {
     // Setup configuration change watchers (CRITICAL: tracks all config changes)
     setupConfigWatchers();
 
-    // Store initial dshotBidir value for comparison
+    // Store initial dshotBidir value for comparison (MUST be set before enabling watcher)
     previousDshotBidir.value = fcStore.motorConfig.use_dshot_telemetry;
     previousFilterDynQ.value = fcStore.filterConfig.dyn_notch_q;
     previousFilterDynCount.value = fcStore.filterConfig.dyn_notch_count;
+    dshotBidirInitialized.value = true;
 
     updateMixerPreview();
 
