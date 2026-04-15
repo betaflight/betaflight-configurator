@@ -220,41 +220,56 @@
                                     <g class="axis x" transform="translate(40, 120)"></g>
                                     <g class="axis y" transform="translate(40, 10)"></g>
                                 </svg>
-                                <div class="plot_control">
+                                <div class="plot_control text-[10px] flex flex-col gap-1">
                                     <div class="flex items-center gap-2 mb-2">
                                         <UButton
                                             :label="$t('motorsResetMaximumButton')"
                                             :title="$t('motorsResetMaximum')"
                                             @click="resetMaxValues"
-                                            size="sm"
+                                            size="xs"
                                         />
-                                        <USelect v-model="sensorType" :items="sensorTypeItems" />
+                                        <USelect
+                                            v-model="sensorType"
+                                            :items="sensorTypeItems"
+                                            class="min-w-24"
+                                            size="xs"
+                                        />
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="flex-1 text-sm" v-html="$t('sensorsRefresh')"></span>
-                                        <USelect v-model.number="sensorRate" :items="rateItems" />
+                                        <span class="flex-1" v-html="$t('sensorsRefresh')"></span>
+                                        <USelect
+                                            v-model.number="sensorRate"
+                                            :items="rateItems"
+                                            class="min-w-24"
+                                            size="xs"
+                                        />
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="flex-1 text-sm" v-html="$t('sensorsScale')"></span>
-                                        <USelect v-model.number="sensorScale" :items="scaleItems" />
+                                        <span class="flex-1" v-html="$t('sensorsScale')"></span>
+                                        <USelect
+                                            v-model.number="sensorScale"
+                                            :items="scaleItems"
+                                            class="min-w-24"
+                                            size="xs"
+                                        />
                                     </div>
                                     <div
                                         v-for="axis in ['x', 'y', 'z']"
                                         :key="axis"
-                                        class="flex justify-between text-sm py-0.5"
+                                        class="flex justify-between py-0.5"
                                     >
                                         <span>{{ axis.toUpperCase() }}:</span>
                                         <span class="value w-24 text-right" :class="axis">{{
                                             rawDataDisplay[axis]
                                         }}</span>
                                     </div>
-                                    <div class="flex justify-between text-sm py-0.5">
+                                    <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span class="rms value w-24 text-right">{{ rawDataDisplay.rms }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="power_info">
+                            <div class="power_info text-[10px] flex flex-wrap items-center gap-x-2">
                                 <span class="power_text" v-html="$t('motorsVoltage')"></span>
                                 <span class="power_value">{{ powerValues.voltage }}</span>
 
@@ -763,8 +778,8 @@ const currentScaleOptions = computed(() => {
 });
 
 const sensorTypeItems = [
-    { label: "Gyroscope", value: "gyro" },
-    { label: "Accelerometer", value: "accel" },
+    { label: "Gyro", value: "gyro" },
+    { label: "Accel", value: "accel" },
 ];
 
 const rateItems = availableRates.map((r) => ({ label: `${r} ms`, value: r }));
@@ -1590,8 +1605,13 @@ onUnmounted(() => {
     .plot_control {
         margin: 0;
         background-color: transparent;
+        button,
+        select,
+        [data-slot="base"] {
+            font-size: 10px !important;
+        }
         .value {
-            padding: 3px;
+            padding: 2px 3px;
             color: black;
             border-radius: 3px;
         }
@@ -1601,14 +1621,10 @@ onUnmounted(() => {
     }
 
     .power_info {
-        margin-left: 1em;
         .power_text {
             font-weight: bold;
         }
         .power_value {
-            margin-right: 2em;
-            margin-left: 1em;
-            display: inline-block;
             text-align: left;
             width: 50px;
         }
