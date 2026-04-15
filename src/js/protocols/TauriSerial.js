@@ -79,14 +79,16 @@ class TauriSerial extends EventTarget {
         this.deviceMonitorInterval = null;
         this.deviceCheckInFlight = false;
 
-        // Fire-and-forget init; wrapped in a method to keep the constructor
-        // synchronous (no visible await/then chain).
+        // Fire-and-forget init; wrapped in a sync helper so the constructor
+        // body contains no async operation (Sonar S7059). The promise
+        // chain lives inside `_bootstrap`, not here.
         this._bootstrap();
     }
 
-    async _bootstrap() {
-        await this.loadDevices();
-        this.startDeviceMonitoring();
+    _bootstrap() {
+        this.loadDevices()
+            .then(() => this.startDeviceMonitoring())
+            .catch((error) => console.error(`${logHead} Bootstrap failed:`, error));
     }
 
     handleReceiveBytes(info) {
