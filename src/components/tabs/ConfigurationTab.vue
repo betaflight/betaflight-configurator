@@ -43,7 +43,11 @@
                         <SettingRow :label="$t('craftName')" :help="$t('configurationCraftNameHelp')">
                             <UInput v-model="craftName" maxlength="16" class="min-w-40" />
                         </SettingRow>
-                        <SettingRow :label="$t('configurationPilotName')" :help="$t('configurationPilotNameHelp')">
+                        <SettingRow
+                            :label="$t('configurationPilotName')"
+                            :help="$t('configurationPilotNameHelp')"
+                            v-if="showPilotName"
+                        >
                             <UInput v-model="pilotName" maxlength="16" class="min-w-40" />
                         </SettingRow>
                     </UiBox>
@@ -138,7 +142,10 @@
                         v-if="showMultiGyro"
                     >
                         <SettingRow v-for="gyro in gyroList" :key="gyro.index" fullWidth :label="gyro.name">
-                            <USwitch v-model="gyro.enabled" />
+                            <USwitch
+                                :model-value="gyro.enabled"
+                                @update:model-value="(checked) => toggleGyro(gyro.index, checked)"
+                            />
                         </SettingRow>
                     </UiBox>
 
@@ -599,8 +606,7 @@ export default defineComponent({
                     semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)
                 ) {
                     gui_log(i18n.getMessage("configurationGyroRequired"));
-                    // Reset checkbox state visually (since v-model isn't used here directly, we rely on re-rendering or manual intervention,
-                    // but since the mask isn't updated, the computed property 'gyroList' will re-evaluate to 'enabled: true')
+                    // Mask unchanged; gyroList still reports enabled, so the switch stays on.
                     return;
                 }
 
