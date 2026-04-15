@@ -1,6 +1,6 @@
 <template>
     <BaseTab tab-name="power" :extra-class="supported ? 'supported' : ''">
-        <div class="content_wrapper">
+        <div class="content_wrapper grid-box col1">
             <!-- Title and Documentation -->
             <div class="cf_column">
                 <div class="tab_title" v-html="$t('tabPower')"></div>
@@ -8,384 +8,215 @@
             </div>
 
             <!-- Battery Profile Selector -->
-            <div class="gui_box grey" v-if="hasBatteryProfiles">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" v-html="$t('powerBatteryProfile')"></div>
-                </div>
-                <div class="spacer_box battery-profile-selector">
-                    <div class="select">
-                        <label>
-                            <select
-                                id="batteryProfileSelect"
-                                :aria-label="$t('powerBatteryProfile')"
-                                :value="activeBatteryProfile"
-                                @change="onBatteryProfileChange($event.target.value)"
-                            >
-                                <option v-for="index in numberOfBatteryProfiles" :key="index - 1" :value="index - 1">
-                                    {{ $t("powerBatteryProfileOption", { 1: index }) }}
-                                </option>
-                            </select>
-                            <span v-html="$t('powerBatteryProfile')"></span>
-                        </label>
-                    </div>
-                    <div class="number">
-                        <label>
-                            <input
-                                id="batteryProfileName"
-                                type="text"
-                                maxlength="8"
-                                :placeholder="$t('powerBatteryProfileNamePlaceholder')"
-                                :aria-label="$t('powerBatteryProfileNamePlaceholder')"
-                                v-model="batteryProfileName"
-                            />
-                            <span v-html="$t('powerBatteryProfileNameLabel')"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <UiBox v-if="hasBatteryProfiles" :title="$t('powerBatteryProfile')">
+                <SettingRow :label="$t('powerBatteryProfile')">
+                    <USelect
+                        :items="batteryProfileItems"
+                        :model-value="activeBatteryProfile"
+                        @update:model-value="onBatteryProfileChange"
+                        size="sm"
+                        class="min-w-40"
+                    />
+                </SettingRow>
+                <SettingRow :label="$t('powerBatteryProfileNameLabel')">
+                    <UInput
+                        v-model="batteryProfileName"
+                        maxlength="8"
+                        :placeholder="$t('powerBatteryProfileNamePlaceholder')"
+                        size="sm"
+                    />
+                </SettingRow>
+            </UiBox>
 
-            <div class="grid-row grid-box col2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Left Column -->
-                <div class="col-span-1">
+                <div class="flex flex-col gap-4">
                     <!-- Battery Configuration -->
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('powerBatteryHead')"></div>
-                        </div>
-                        <div class="spacer_box battery">
-                            <table class="cf_table no-border">
-                                <thead class="visually-hidden">
-                                    <tr>
-                                        <th>Configuration</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="battery-config">
-                                    <tr>
-                                        <td class="configuration">
-                                            <div class="battery-configuration">
-                                                <div class="select vbatmonitoring">
-                                                    <label>
-                                                        <select
-                                                            id="batterymetersourceSelect"
-                                                            class="batterymetersource"
-                                                            :aria-label="$t('powerBatteryVoltageMeterSource')"
-                                                            v-model="batteryConfig.voltageMeterSource"
-                                                            @change="onVoltageMeterSourceChange($event.target.value)"
-                                                        >
-                                                            <option
-                                                                v-for="(type, index) in batteryMeterTypes"
-                                                                :key="index"
-                                                                :value="index"
-                                                            >
-                                                                {{ type }}
-                                                            </option>
-                                                        </select>
-                                                        <span v-html="$t('powerBatteryVoltageMeterSource')"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="select currentMonitoring">
-                                                    <label>
-                                                        <select
-                                                            id="currentmetersourceSelect"
-                                                            class="currentmetersource"
-                                                            :aria-label="$t('powerBatteryCurrentMeterSource')"
-                                                            v-model="batteryConfig.currentMeterSource"
-                                                            @change="onCurrentMeterSourceChange($event.target.value)"
-                                                        >
-                                                            <option
-                                                                v-for="(type, index) in currentMeterTypes"
-                                                                :key="index"
-                                                                :value="index"
-                                                            >
-                                                                {{ type }}
-                                                            </option>
-                                                        </select>
-                                                        <span v-html="$t('powerBatteryCurrentMeterSource')"></span>
-                                                    </label>
-                                                </div>
-
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            id="mincellvoltage"
-                                                            name="mincellvoltage"
-                                                            :step="0.01"
-                                                            :min="1"
-                                                            :max="5"
-                                                            :aria-label="$t('powerBatteryMinimum')"
-                                                            v-model="batteryConfig.vbatmincellvoltage"
-                                                        />
-                                                        <span v-html="$t('powerBatteryMinimum')"></span>
-                                                    </label>
-                                                    <span
-                                                        class="helpicon cf_tip"
-                                                        :title="$t('powerBatteryMinimumHelp')"
-                                                    ></span>
-                                                </div>
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            id="maxcellvoltage"
-                                                            name="maxcellvoltage"
-                                                            :step="0.01"
-                                                            :min="1"
-                                                            :max="5"
-                                                            :aria-label="$t('powerBatteryMaximum')"
-                                                            v-model="batteryConfig.vbatmaxcellvoltage"
-                                                        />
-                                                        <span v-html="$t('powerBatteryMaximum')"></span>
-                                                    </label>
-                                                    <span
-                                                        class="helpicon cf_tip"
-                                                        :title="$t('powerBatteryMaximumHelp')"
-                                                    ></span>
-                                                </div>
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            id="warningcellvoltage"
-                                                            name="warningcellvoltage"
-                                                            :step="0.01"
-                                                            :min="1"
-                                                            :max="5"
-                                                            :aria-label="$t('powerBatteryWarning')"
-                                                            v-model="batteryConfig.vbatwarningcellvoltage"
-                                                        />
-                                                        <span v-html="$t('powerBatteryWarning')"></span>
-                                                    </label>
-                                                    <span
-                                                        class="helpicon cf_tip"
-                                                        :title="$t('powerBatteryWarningHelp')"
-                                                    ></span>
-                                                </div>
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            id="capacity"
-                                                            name="capacity"
-                                                            :step="1"
-                                                            :min="0"
-                                                            :max="20000"
-                                                            :aria-label="$t('powerBatteryCapacity')"
-                                                            v-model="batteryConfig.capacity"
-                                                        />
-                                                        <span v-html="$t('powerBatteryCapacity')"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <UiBox :title="$t('powerBatteryHead')">
+                        <SettingRow :label="$t('powerBatteryVoltageMeterSource')">
+                            <USelect
+                                :items="batteryMeterTypeItems"
+                                v-model="batteryConfig.voltageMeterSource"
+                                @update:model-value="onVoltageMeterSourceChange"
+                                size="sm"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('powerBatteryCurrentMeterSource')">
+                            <USelect
+                                :items="currentMeterTypeItems"
+                                v-model="batteryConfig.currentMeterSource"
+                                @update:model-value="onCurrentMeterSourceChange"
+                                size="sm"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('powerBatteryMinimum')" :help="$t('powerBatteryMinimumHelp')">
+                            <UInputNumber
+                                id="mincellvoltage"
+                                name="mincellvoltage"
+                                :step="0.01"
+                                :min="1"
+                                :max="batteryConfig.vbatwarningcellvoltage"
+                                v-model="batteryConfig.vbatmincellvoltage"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('powerBatteryMaximum')" :help="$t('powerBatteryMaximumHelp')">
+                            <UInputNumber
+                                id="maxcellvoltage"
+                                name="maxcellvoltage"
+                                :step="0.01"
+                                :min="batteryConfig.vbatwarningcellvoltage"
+                                :max="5"
+                                v-model="batteryConfig.vbatmaxcellvoltage"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('powerBatteryWarning')" :help="$t('powerBatteryWarningHelp')">
+                            <UInputNumber
+                                id="warningcellvoltage"
+                                name="warningcellvoltage"
+                                :step="0.01"
+                                :min="batteryConfig.vbatmincellvoltage"
+                                :max="batteryConfig.vbatmaxcellvoltage"
+                                v-model="batteryConfig.vbatwarningcellvoltage"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('powerBatteryCapacity')">
+                            <UInputNumber
+                                id="capacity"
+                                name="capacity"
+                                :step="1"
+                                :min="0"
+                                :max="20000"
+                                v-model="batteryConfig.capacity"
+                            />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- Voltage Configuration -->
-                    <div class="gui_box grey boxVoltageConfiguration" v-show="showVoltageConfiguration">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('powerVoltageHead')"></div>
-                        </div>
+                    <UiBox v-show="showVoltageConfiguration" :title="$t('powerVoltageHead')">
                         <div class="note">
                             <div v-html="$t('powerVoltageWarning')"></div>
                         </div>
-
-                        <div class="spacer_box">
-                            <table class="cf_table no-border full-width">
-                                <thead class="visually-hidden">
-                                    <tr>
-                                        <th>Meter</th>
-                                        <th>Value</th>
-                                        <th>Configuration</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="voltage-meters">
-                                    <tr
-                                        v-for="(meter, index) in voltageMeters"
-                                        :key="`voltage-${index}`"
-                                        :id="`voltage-meter-${index}`"
-                                        class="voltage-meter"
-                                        v-show="isVoltageMeterVisible(meter)"
-                                    >
-                                        <td class="label">{{ getVoltageMeterLabel(meter.id) }}</td>
-                                        <td class="value">
-                                            {{ $t("powerVoltageValue", { 1: meter.voltage.toFixed(2) }) }}
-                                        </td>
-                                        <td class="configuration" v-if="voltageConfigs[index]">
-                                            <div class="voltage-configuration">
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            :id="`vbatscale-${index}`"
-                                                            :name="`vbatscale-${index}`"
-                                                            :step="1"
-                                                            :min="10"
-                                                            :max="255"
-                                                            :aria-label="$t('powerVoltageScale')"
-                                                            v-model="voltageConfigs[index].vbatscale"
-                                                            @update:model-value="onVoltageScaleChange(index, $event)"
-                                                        />
-                                                        <span v-html="$t('powerVoltageScale')"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            :id="`vbatresdivval-${index}`"
-                                                            :name="`vbatresdivval-${index}`"
-                                                            :step="1"
-                                                            :min="1"
-                                                            :max="255"
-                                                            :aria-label="$t('powerVoltageDivider')"
-                                                            v-model="voltageConfigs[index].vbatresdivval"
-                                                        />
-                                                        <span v-html="$t('powerVoltageDivider')"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            :id="`vbatresdivmultiplier-${index}`"
-                                                            :name="`vbatresdivmultiplier-${index}`"
-                                                            :step="1"
-                                                            :min="1"
-                                                            :max="255"
-                                                            :aria-label="$t('powerVoltageMultiplier')"
-                                                            v-model="voltageConfigs[index].vbatresdivmultiplier"
-                                                        />
-                                                        <span v-html="$t('powerVoltageMultiplier')"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div
+                            v-for="(meter, index) in voltageMeters"
+                            :key="`voltage-${index}`"
+                            v-show="isVoltageMeterVisible(meter)"
+                            class="flex flex-col gap-2"
+                        >
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">{{ getVoltageMeterLabel(meter.id) }}</span>
+                                <span>{{ $t("powerVoltageValue", { 1: meter.voltage.toFixed(2) }) }}</span>
+                            </div>
+                            <div v-if="voltageConfigs[index]" class="flex flex-col gap-2">
+                                <SettingRow :label="$t('powerVoltageScale')">
+                                    <UInputNumber
+                                        :id="`vbatscale-${index}`"
+                                        :name="`vbatscale-${index}`"
+                                        :step="1"
+                                        :min="10"
+                                        :max="255"
+                                        v-model="voltageConfigs[index].vbatscale"
+                                        @update:model-value="onVoltageScaleChange(index, $event)"
+                                    />
+                                </SettingRow>
+                                <SettingRow :label="$t('powerVoltageDivider')">
+                                    <UInputNumber
+                                        :id="`vbatresdivval-${index}`"
+                                        :name="`vbatresdivval-${index}`"
+                                        :step="1"
+                                        :min="1"
+                                        :max="255"
+                                        v-model="voltageConfigs[index].vbatresdivval"
+                                    />
+                                </SettingRow>
+                                <SettingRow :label="$t('powerVoltageMultiplier')">
+                                    <UInputNumber
+                                        :id="`vbatresdivmultiplier-${index}`"
+                                        :name="`vbatresdivmultiplier-${index}`"
+                                        :step="1"
+                                        :min="1"
+                                        :max="255"
+                                        v-model="voltageConfigs[index].vbatresdivmultiplier"
+                                    />
+                                </SettingRow>
+                            </div>
                         </div>
-                    </div>
+                    </UiBox>
                 </div>
 
                 <!-- Right Column -->
-                <div class="col-span-1">
+                <div class="flex flex-col gap-4">
                     <!-- Battery State -->
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('powerStateHead')"></div>
+                    <UiBox :title="$t('powerStateHead')">
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('powerBatteryConnected')"></span>
+                            <span>
+                                {{
+                                    batteryState.cellCount > 0
+                                        ? $t("powerBatteryConnectedValueYes", { 1: batteryState.cellCount })
+                                        : $t("powerBatteryConnectedValueNo")
+                                }}
+                            </span>
                         </div>
-                        <div class="spacer_box battery">
-                            <table class="cf_table no-border">
-                                <thead class="visually-hidden">
-                                    <tr>
-                                        <th>Property</th>
-                                        <th>Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="battery-state">
-                                    <tr class="connection-state" id="battery-connection-state">
-                                        <td v-html="$t('powerBatteryConnected')"></td>
-                                        <td class="value">
-                                            {{
-                                                batteryState.cellCount > 0
-                                                    ? $t("powerBatteryConnectedValueYes", { 1: batteryState.cellCount })
-                                                    : $t("powerBatteryConnectedValueNo")
-                                            }}
-                                        </td>
-                                    </tr>
-                                    <tr class="voltage" id="battery-voltage">
-                                        <td v-html="$t('powerBatteryVoltage')"></td>
-                                        <td class="value">
-                                            {{ $t("powerVoltageValue", { 1: batteryState.voltage.toFixed(2) }) }}
-                                        </td>
-                                    </tr>
-                                    <tr class="mah-drawn" id="battery-mah-drawn">
-                                        <td v-html="$t('powerBatteryCurrentDrawn')"></td>
-                                        <td class="value">{{ $t("powerMahValue", { 1: batteryState.mAhDrawn }) }}</td>
-                                    </tr>
-                                    <tr class="amperage" id="battery-amperage">
-                                        <td v-html="$t('powerBatteryAmperage')"></td>
-                                        <td class="value">
-                                            {{ $t("powerAmperageValue", { 1: batteryState.amperage.toFixed(2) }) }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('powerBatteryVoltage')"></span>
+                            <span>{{ $t("powerVoltageValue", { 1: batteryState.voltage.toFixed(2) }) }}</span>
                         </div>
-                    </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('powerBatteryCurrentDrawn')"></span>
+                            <span>{{ $t("powerMahValue", { 1: batteryState.mAhDrawn }) }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('powerBatteryAmperage')"></span>
+                            <span>{{ $t("powerAmperageValue", { 1: batteryState.amperage.toFixed(2) }) }}</span>
+                        </div>
+                    </UiBox>
 
                     <!-- Amperage Configuration -->
-                    <div class="gui_box grey boxAmperageConfiguration" v-show="showAmperageConfiguration">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('powerAmperageHead')"></div>
-                        </div>
+                    <UiBox v-show="showAmperageConfiguration" :title="$t('powerAmperageHead')">
                         <div class="note">
                             <div v-html="$t('powerAmperageWarning')"></div>
                         </div>
-
-                        <div class="spacer_box">
-                            <table class="cf_table no-border full-width">
-                                <thead class="visually-hidden">
-                                    <tr>
-                                        <th>Meter</th>
-                                        <th>Value</th>
-                                        <th>Configuration</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="amperage-meters">
-                                    <tr
-                                        v-for="(meter, index) in currentMeters"
-                                        :key="`amperage-${index}`"
-                                        :id="`amperage-meter-${index}`"
-                                        class="amperage-meter"
-                                        v-show="isCurrentMeterVisible(meter)"
-                                    >
-                                        <td class="label">{{ getAmperageMeterLabel(meter.id) }}</td>
-                                        <td class="value">
-                                            {{ $t("powerAmperageValue", { 1: meter.amperage.toFixed(2) }) }}
-                                        </td>
-                                        <td class="configuration" v-if="currentConfigs[index]">
-                                            <div class="amperage-configuration">
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            :id="`amperagescale-${index}`"
-                                                            :name="`amperagescale-${index}`"
-                                                            :step="1"
-                                                            :min="-16000"
-                                                            :max="16000"
-                                                            :aria-label="$t('powerAmperageScale')"
-                                                            v-model="currentConfigs[index].scale"
-                                                            @update:model-value="onAmperageScaleChange(index, $event)"
-                                                        />
-                                                        <span v-html="$t('powerAmperageScale')"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="number">
-                                                    <label>
-                                                        <UInputNumber
-                                                            :id="`amperageoffset-${index}`"
-                                                            :name="`amperageoffset-${index}`"
-                                                            :step="1"
-                                                            :min="-32000"
-                                                            :max="32000"
-                                                            :aria-label="$t('powerAmperageOffset')"
-                                                            v-model="currentConfigs[index].offset"
-                                                        />
-                                                        <span v-html="$t('powerAmperageOffset')"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div
+                            v-for="(meter, index) in currentMeters"
+                            :key="`amperage-${index}`"
+                            v-show="isCurrentMeterVisible(meter)"
+                            class="flex flex-col gap-2"
+                        >
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">{{ getAmperageMeterLabel(meter.id) }}</span>
+                                <span>{{ $t("powerAmperageValue", { 1: meter.amperage.toFixed(2) }) }}</span>
+                            </div>
+                            <div v-if="currentConfigs[index]" class="flex flex-col gap-2">
+                                <SettingRow :label="$t('powerAmperageScale')">
+                                    <UInputNumber
+                                        :id="`amperagescale-${index}`"
+                                        :name="`amperagescale-${index}`"
+                                        :step="1"
+                                        :min="-16000"
+                                        :max="16000"
+                                        v-model="currentConfigs[index].scale"
+                                        @update:model-value="onAmperageScaleChange(index, $event)"
+                                    />
+                                </SettingRow>
+                                <SettingRow :label="$t('powerAmperageOffset')">
+                                    <UInputNumber
+                                        :id="`amperageoffset-${index}`"
+                                        :name="`amperageoffset-${index}`"
+                                        :step="1"
+                                        :min="-32000"
+                                        :max="32000"
+                                        v-model="currentConfigs[index].offset"
+                                    />
+                                </SettingRow>
+                            </div>
                         </div>
-                    </div>
+                    </UiBox>
                 </div>
             </div>
 
-            <div class="note require-support">
-                <p v-html="$t('powerFirmwareUpgradeRequired')"></p>
-            </div>
-            <div class="note require-upgrade">
+            <div class="note hidden">
                 <p v-html="$t('powerFirmwareUpgradeRequired')"></p>
             </div>
         </div>
@@ -420,37 +251,29 @@
             <div class="note srcchange" v-show="calibrationVisibility.showSrcChange">
                 <p v-html="$t('powerCalibrationManagerSourceNote')"></p>
             </div>
-            <div class="vbatcalibration" v-show="calibrationVisibility.showVbat">
-                <div class="number">
-                    <label for="vbatcalibration">
-                        <span v-html="$t('powerVoltageCalibration')"></span>
-                    </label>
+            <div v-show="calibrationVisibility.showVbat">
+                <SettingRow :label="$t('powerVoltageCalibration')">
                     <UInputNumber
                         id="vbatcalibration"
                         name="vbatcalibration"
                         :step="0.01"
                         :min="0"
                         :max="255"
-                        :aria-label="$t('powerVoltageCalibration')"
                         v-model="vbatcalibrationValue"
                     />
-                </div>
+                </SettingRow>
             </div>
-            <div class="amperagecalibration" v-show="calibrationVisibility.showAmperage">
-                <div class="number">
-                    <label for="amperagecalibration">
-                        <span v-html="$t('powerAmperageCalibration')"></span>
-                    </label>
+            <div v-show="calibrationVisibility.showAmperage">
+                <SettingRow :label="$t('powerAmperageCalibration')">
                     <UInputNumber
                         id="amperagecalibration"
                         name="amperagecalibration"
                         :step="0.01"
                         :min="0"
                         :max="255"
-                        :aria-label="$t('powerAmperageCalibration')"
                         v-model="amperagecalibrationValue"
                     />
-                </div>
+                </SettingRow>
             </div>
             <div class="default_btn margin-top5" v-show="calibrationVisibility.showCalibrate">
                 <a
@@ -472,21 +295,13 @@
             <div class="note">
                 <p v-html="$t('powerCalibrationConfirmHelp')"></p>
             </div>
-            <div class="vbatcalibration" v-show="vbatscalechanged">
-                <div class="number tab_title">
-                    <label>
-                        <span v-html="$t('powerVoltageCalibratedScale')"></span>
-                        <output name="vbatnewscale">{{ vbatnewscale }}</output>
-                    </label>
-                </div>
+            <div v-show="vbatscalechanged" class="flex justify-between items-center font-semibold">
+                <span v-html="$t('powerVoltageCalibratedScale')"></span>
+                <span>{{ vbatnewscale }}</span>
             </div>
-            <div class="amperagecalibration" v-show="amperagescalechanged">
-                <div class="number tab_title">
-                    <label>
-                        <span v-html="$t('powerAmperageCalibratedScale')"></span>
-                        <output name="amperagenewscale">{{ amperagenewscale }}</output>
-                    </label>
-                </div>
+            <div v-show="amperagescalechanged" class="flex justify-between items-center font-semibold">
+                <span v-html="$t('powerAmperageCalibratedScale')"></span>
+                <span>{{ amperagenewscale }}</span>
             </div>
 
             <div class="default_btn margin-top5">
@@ -516,6 +331,8 @@ import { defineComponent, onMounted, computed, nextTick, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import Dialog from "../elements/Dialog.vue";
+import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import { i18n } from "../../js/localization";
@@ -528,6 +345,8 @@ export default defineComponent({
         BaseTab,
         WikiButton,
         Dialog,
+        UiBox,
+        SettingRow,
     },
     setup() {
         const {
@@ -574,8 +393,23 @@ export default defineComponent({
         const calibrationVisibility = computed(() => getCalibrationVisibility());
         const numberOfBatteryProfiles = computed(() => FC.CONFIG.numberOfBatteryProfiles || 0);
 
+        const batteryProfileItems = computed(() =>
+            Array.from({ length: numberOfBatteryProfiles.value }, (_, i) => ({
+                label: i18n.getMessage("powerBatteryProfileOption", { 1: i + 1 }),
+                value: i,
+            })),
+        );
+
+        const batteryMeterTypeItems = computed(() =>
+            batteryMeterTypes.value.map((type, index) => ({ label: type, value: index })),
+        );
+
+        const currentMeterTypeItems = computed(() =>
+            currentMeterTypes.value.map((type, index) => ({ label: type, value: index })),
+        );
+
         const onBatteryProfileChange = async (value) => {
-            const profileIndex = Number.parseInt(value, 10);
+            const profileIndex = Number(value);
             if (!Number.isInteger(profileIndex) || profileIndex < 0 || profileIndex >= numberOfBatteryProfiles.value) {
                 return;
             }
@@ -648,6 +482,9 @@ export default defineComponent({
             activeBatteryProfile,
             batteryProfileName,
             numberOfBatteryProfiles,
+            batteryProfileItems,
+            batteryMeterTypeItems,
+            currentMeterTypeItems,
             onBatteryProfileChange,
             batteryState,
             voltageMeters,
@@ -658,8 +495,6 @@ export default defineComponent({
             showVoltageConfiguration,
             showAmperageConfiguration,
             showCalibration,
-            batteryMeterTypes,
-            currentMeterTypes,
             getVoltageMeterLabel,
             getAmperageMeterLabel,
             isVoltageMeterVisible,
@@ -687,71 +522,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped>
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-}
-
-table.no-border {
-    border: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-table.no-border td,
-table.no-border th {
-    padding: 0;
-}
-
-table.full-width {
-    width: 100%;
-}
-
-.battery-state .configuration {
-    border-bottom: 0;
-}
-
-.label {
-    width: 25%;
-}
-
-.select {
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--surface-500);
-    width: 100%;
-}
-
-.select:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
-
-.select label span {
-    padding-left: 1rem;
-}
-
-.require-support {
-    display: none;
-}
-
-.require-upgrade {
-    display: none;
-}
-
-@media all and (max-width: 575px) {
-    .grid-box.col2 {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>
