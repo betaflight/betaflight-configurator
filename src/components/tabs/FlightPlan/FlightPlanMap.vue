@@ -487,8 +487,20 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.flight-plan-map {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.flight-plan-map :deep(> div:last-child) {
+    flex: 1;
+    min-height: 0;
+}
+
 .map-container {
-    height: 480px;
+    flex: 1;
+    min-height: 480px;
     border-radius: 4px;
     overflow: hidden;
     border: 1px solid var(--surface-500);
@@ -536,7 +548,7 @@ onUnmounted(() => {
 
 @media (max-width: 1055px) {
     .map-container {
-        height: 320px;
+        min-height: 320px;
     }
 }
 </style>

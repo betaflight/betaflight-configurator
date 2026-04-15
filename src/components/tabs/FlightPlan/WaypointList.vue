@@ -191,24 +191,11 @@ const handleDragEnd = (event) => {
 </script>
 
 <style scoped>
-.waypoint-list {
-    display: flex;
-    flex-direction: column;
-    min-height: 50%;
-}
-
 .note {
     padding: 1rem;
     text-align: center;
     color: var(--surface-700);
     font-style: italic;
-}
-
-.waypoints {
-    flex: 1;
-    min-height: 0;
-    max-height: 60dvh;
-    overflow-y: auto;
 }
 
 .waypoint-item {

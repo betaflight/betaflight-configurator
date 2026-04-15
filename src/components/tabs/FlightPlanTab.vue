@@ -7,18 +7,15 @@
                 <WikiButton docUrl="flight-plan" />
             </div>
 
-            <!-- Two-column layout -->
-            <div class="grid grid-cols-1 xl:grid-cols-[1.15fr_1fr] gap-4">
-                <!-- Left Column: Map Display and Elevation Profile -->
-                <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4">
+                <!-- Top row: Map and Waypoint List (stretch to matching heights) -->
+                <div class="grid grid-cols-1 xl:grid-cols-[1.15fr_1fr] gap-4">
                     <FlightPlanMap />
-                    <ElevationProfile />
-                </div>
-
-                <!-- Right Column: Flight Plan List -->
-                <div class="flex flex-col">
                     <WaypointList />
                 </div>
+
+                <!-- Full-width Elevation Profile -->
+                <ElevationProfile />
             </div>
         </div>
 

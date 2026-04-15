@@ -89,11 +89,12 @@
 
 <script setup>
 import { reactive, computed, watch, ref } from "vue";
+import { useTranslation } from "i18next-vue";
 import Dialog from "@/components/elements/Dialog.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
-import { i18n } from "@/js/localization";
 
+const { t } = useTranslation();
 const { editingWaypointUid, editingWaypoint, showEditorDialog, addWaypoint, updateWaypoint, cancelEdit } =
     useFlightPlan();
 
@@ -118,16 +119,16 @@ const form = reactive({
 const editMode = computed(() => editingWaypointUid.value !== null);
 
 const typeItems = computed(() => [
-    { label: i18n.getMessage("flightPlanTypeFlyover"), value: "flyover" },
-    { label: i18n.getMessage("flightPlanTypeFlyby"), value: "flyby" },
-    { label: i18n.getMessage("flightPlanTypeHold"), value: "hold" },
-    { label: i18n.getMessage("flightPlanTypeLand"), value: "land" },
+    { label: t("flightPlanTypeFlyover"), value: "flyover" },
+    { label: t("flightPlanTypeFlyby"), value: "flyby" },
+    { label: t("flightPlanTypeHold"), value: "hold" },
+    { label: t("flightPlanTypeLand"), value: "land" },
 ]);
 
 const patternItems = computed(() => [
-    { label: i18n.getMessage("flightPlanPatternCircle"), value: "circle" },
-    { label: i18n.getMessage("flightPlanPatternFigure8"), value: "figure8" },
-    { label: i18n.getMessage("flightPlanPatternOrbit"), value: "orbit" },
+    { label: t("flightPlanPatternCircle"), value: "circle" },
+    { label: t("flightPlanPatternFigure8"), value: "figure8" },
+    { label: t("flightPlanPatternOrbit"), value: "orbit" },
 ]);
 
 // Watch for editing waypoint changes and populate form
