@@ -8232,6 +8232,36 @@
     "labelUsePasskey": {
         "message": "Use Passkey"
     },
+    "labelSignInWithPasskey": {
+        "message": "Sign in with Passkey"
+    },
+    "labelSendVerificationCode": {
+        "message": "Send Verification Code"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Sign in with email code instead"
+    },
+    "labelBackToPasskey": {
+        "message": "Back to passkey sign in"
+    },
+    "labelBack": {
+        "message": "Back"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Don't have a passkey?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Set one up"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Use your passkey to sign in"
+    },
+    "descriptionCodeRequest": {
+        "message": "We'll email you a verification code"
+    },
+    "descriptionCodeEntered": {
+        "message": "Enter the code we sent to $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Enter Verification Code"
     },
@@ -8267,6 +8297,15 @@
     },
     "userCreatingPasskey": {
         "message": "Creating passkey..."
+    },
+    "userCodeRequired": {
+        "message": "Verification code is required"
+    },
+    "userSendingCode": {
+        "message": "Sending verification code..."
+    },
+    "userSendCodeFailed": {
+        "message": "Failed to send verification code"
     },
     "dataWaitingForData": {
         "message": "Waiting for data ..."

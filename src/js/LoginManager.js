@@ -94,6 +94,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Create passkey error:", error);
+            throw error;
         }
     }
 
@@ -120,6 +121,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Verify and create passkey error:", error);
+            throw error;
         }
     }
 
@@ -130,6 +132,48 @@ class LoginManager {
         const el = document.querySelector("#tabs ul.mode-loggedin");
         if (el) {
             el.style.display = (await this.isUserLoggedIn()) ? "block" : "none";
+        }
+    }
+
+    /**
+     * Request a verification code to be emailed to the user.
+     * Throws on failure so the caller can present a specific error.
+     */
+    async requestVerificationCode(email) {
+        try {
+            this.showWaitingDialog(i18n.getMessage("userSendingCode"));
+            await this._loginApi.requestTemporaryPassword(email);
+            this.hideWaitingDialog();
+        } catch (error) {
+            this.hideWaitingDialog();
+            gui_log(`${i18n.getMessage("userSendCodeFailed")}: ${error}`);
+            console.error("Request verification code error:", error);
+            throw error;
+        }
+    }
+
+    /**
+     * Login with an emailed verification code (no passkey).
+     * Used for browsers (e.g. Safari) where passkeys are unreliable.
+     * Throws on failure so the caller can present a specific error.
+     */
+    async loginWithEmailCode(email, code) {
+        try {
+            this.showWaitingDialog(i18n.getMessage("userVerifyingCode"));
+
+            await this._loginApi.verifyLogin(email, code);
+
+            await this.fetchUserProfile();
+            await this.updateTabVisibility();
+            this.notifyLoginCallbacks();
+
+            this.hideWaitingDialog();
+            gui_log(i18n.getMessage("userLoginSuccess"));
+        } catch (error) {
+            this.hideWaitingDialog();
+            gui_log(`${i18n.getMessage("userLoginFailed")}: ${error}`);
+            console.error("Email code login error:", error);
+            throw error;
         }
     }
 
@@ -156,6 +200,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userLoginFailed")}: ${error}`);
             console.error("Login error:", error);
+            throw error;
         }
     }
 

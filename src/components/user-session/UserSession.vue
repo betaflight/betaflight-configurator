@@ -35,31 +35,121 @@
             <!-- Login Dialog -->
             <dialog ref="dialogLoginRef" class="login-dialog">
                 <div class="dialog-container">
-                    <button class="dialog-close-button" aria-label="Close" @click.prevent="closeLoginDialog">
-                        &times;
-                    </button>
-                    <h3 class="dialog-title">{{ $t("titleLogin") }}</h3>
+                    <UButton
+                        variant="ghost"
+                        icon="i-lucide-x"
+                        size="sm"
+                        class="dialog-close-button"
+                        aria-label="Close"
+                        @click="closeLoginDialog"
+                    />
+                    <div class="dialog-logo" aria-hidden="true"></div>
+                    <h3 class="dialog-title">{{ loginTitle }}</h3>
+                    <p class="dialog-description">{{ loginDescription }}</p>
+
                     <div class="dialog-content">
-                        <div class="dialog-input-group">
-                            <label for="login-email" class="dialog-label">{{ $t("labelEmail") }}</label>
-                            <input
-                                v-model="loginEmail"
-                                type="email"
-                                id="login-email"
-                                :placeholder="$t('placeholderEmailAddress')"
-                                class="dialog-input"
+                        <!-- Passkey mode -->
+                        <template v-if="loginMode === 'passkey'">
+                            <div class="dialog-field">
+                                <label for="login-email" class="dialog-label">{{ $t("labelEmail") }}</label>
+                                <UInput
+                                    v-model="loginEmail"
+                                    type="email"
+                                    id="login-email"
+                                    :placeholder="$t('placeholderEmailAddress')"
+                                    @keyup.enter="handleUsePasskey"
+                                />
+                            </div>
+                            <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
+
+                            <UButton
+                                block
+                                icon="i-lucide-key-round"
+                                :label="$t('labelSignInWithPasskey')"
+                                @click="handleUsePasskey"
                             />
-                        </div>
-                        <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
-                    </div>
-                    <div class="dialog-buttons dialog-buttons-split">
-                        <a href="#" class="regular-button dialog-passkey-button" @click.prevent="handleCreatePasskey">{{
-                            $t("labelCreatePasskey")
-                        }}</a>
-                        <span class="dialog-separator">OR</span>
-                        <a href="#" class="regular-button dialog-passkey-button" @click.prevent="handleUsePasskey">{{
-                            $t("labelUsePasskey")
-                        }}</a>
+
+                            <div class="dialog-footer">
+                                <p class="dialog-hint">
+                                    {{ $t("labelNoPasskeyPrompt") }}
+                                    <UButton
+                                        variant="link"
+                                        size="xs"
+                                        :label="$t('labelSetOnePasskeyUp')"
+                                        @click="handleCreatePasskey"
+                                    />
+                                </p>
+                                <UButton
+                                    variant="link"
+                                    size="xs"
+                                    color="neutral"
+                                    :label="$t('labelSignInWithEmailCode')"
+                                    @click="switchToCodeRequest"
+                                />
+                            </div>
+                        </template>
+
+                        <!-- Email-code request mode -->
+                        <template v-else-if="loginMode === 'code-request'">
+                            <div class="dialog-field">
+                                <label for="login-email-code" class="dialog-label">{{ $t("labelEmail") }}</label>
+                                <UInput
+                                    v-model="loginEmail"
+                                    type="email"
+                                    id="login-email-code"
+                                    :placeholder="$t('placeholderEmailAddress')"
+                                    @keyup.enter="handleRequestCode"
+                                />
+                            </div>
+                            <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
+
+                            <UButton
+                                block
+                                :label="$t('labelSendVerificationCode')"
+                                :loading="loginSubmitting"
+                                @click="handleRequestCode"
+                            />
+
+                            <div class="dialog-footer">
+                                <UButton
+                                    variant="link"
+                                    size="xs"
+                                    color="neutral"
+                                    :label="$t('labelBackToPasskey')"
+                                    @click="switchToPasskey"
+                                />
+                            </div>
+                        </template>
+
+                        <!-- Email-code verify mode -->
+                        <template v-else-if="loginMode === 'code-verify'">
+                            <div class="dialog-field">
+                                <label for="login-code-input" class="dialog-label">{{
+                                    $t("labelVerificationCode")
+                                }}</label>
+                                <UInput
+                                    v-model="loginCode"
+                                    ref="loginCodeInputRef"
+                                    id="login-code-input"
+                                    maxlength="8"
+                                    class="dialog-input-code"
+                                    @keyup.enter="handleVerifyCode"
+                                />
+                            </div>
+                            <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
+
+                            <UButton block :label="$t('submit')" :loading="loginSubmitting" @click="handleVerifyCode" />
+
+                            <div class="dialog-footer">
+                                <UButton
+                                    variant="link"
+                                    size="xs"
+                                    color="neutral"
+                                    :label="$t('labelBack')"
+                                    @click="switchToCodeRequest"
+                                />
+                            </div>
+                        </template>
                     </div>
                 </div>
             </dialog>
@@ -67,35 +157,30 @@
             <!-- Verification Code Dialog -->
             <dialog ref="dialogVerificationRef" class="login-dialog">
                 <div class="dialog-container">
-                    <button class="dialog-close-button" aria-label="Close" @click.prevent="closeVerificationDialog">
-                        &times;
-                    </button>
+                    <UButton
+                        variant="ghost"
+                        icon="i-lucide-x"
+                        size="sm"
+                        class="dialog-close-button"
+                        aria-label="Close"
+                        @click="closeVerificationDialog"
+                    />
                     <h3 class="dialog-title">{{ $t("titleEnterVerificationCode") }}</h3>
                     <div class="dialog-content">
-                        <div class="dialog-input-group">
+                        <div class="dialog-field">
                             <label for="verification-code-input" class="dialog-label">{{
                                 $t("labelVerificationCode")
                             }}</label>
-                            <input
+                            <UInput
                                 v-model="verificationCode"
                                 ref="verificationInputRef"
-                                type="text"
                                 id="verification-code-input"
-                                placeholder=""
-                                class="dialog-input"
-                                @keypress.enter="handleVerificationSubmit"
+                                @keyup.enter="handleVerificationSubmit"
                             />
                         </div>
                         <p v-if="verificationError" class="dialog-error">{{ verificationError }}</p>
                     </div>
-                    <div class="dialog-buttons">
-                        <a
-                            href="#"
-                            class="regular-button dialog-submit-button"
-                            @click.prevent="handleVerificationSubmit"
-                            >{{ $t("submit") }}</a
-                        >
-                    </div>
+                    <UButton block :label="$t('submit')" @click="handleVerificationSubmit" />
                 </div>
             </dialog>
 
@@ -258,33 +343,45 @@ export default defineComponent({
 /* Login dialogs */
 .login-dialog {
     width: 360px;
-    aspect-ratio: 16 / 9;
-    padding: 20px;
+    padding: 24px;
     border: 1px solid var(--surface-600);
     border-radius: 8px;
+    background-color: var(--surface-100);
+    color: var(--text);
 }
 
 .dialog-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    gap: 4px;
+}
+
+.dialog-logo {
+    width: 180px;
+    height: 36px;
+    margin: 0 auto 12px;
+    background-image: url(../../images/dark-wide-2.svg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+
+.dark .dialog-logo {
+    background-image: url(../../images/light-wide-2.svg);
+}
+
+.dialog-description {
+    margin: 0 0 16px 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.7;
 }
 
 .dialog-close-button {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text);
 }
 
 .dialog-title {
@@ -299,8 +396,8 @@ export default defineComponent({
     justify-content: center;
 }
 
-.dialog-input-group {
-    margin-bottom: 15px;
+.dialog-field {
+    margin-bottom: 12px;
 }
 
 .dialog-error {
@@ -315,47 +412,25 @@ export default defineComponent({
     font-size: 12px;
 }
 
-.dialog-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid var(--surface-500);
-    border-radius: 4px;
-    background-color: var(--surface-100);
-    color: var(--text);
-    box-sizing: border-box;
-}
-
-.dialog-buttons {
+.dialog-footer {
     display: flex;
-    justify-content: center;
-}
-
-.dialog-buttons-split {
-    flex-direction: row;
-    gap: 10px;
+    flex-direction: column;
     align-items: center;
+    gap: 4px;
+    margin-top: 12px;
     text-align: center;
 }
 
-.dialog-passkey-button {
-    padding: 6px 12px;
-    text-decoration: none;
+.dialog-hint {
+    margin: 0;
     font-size: 12px;
-    width: 120px;
-    margin-left: 10px;
+    color: var(--text);
+    opacity: 0.75;
 }
 
-.dialog-separator {
-    font-size: 12px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.dialog-submit-button {
-    padding: 8px 24px;
-    text-decoration: none;
+.dialog-input-code :deep(input) {
+    text-align: center;
+    letter-spacing: 0.15em;
 }
 </style>
 

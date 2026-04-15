@@ -2,20 +2,35 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import loginManager from "../../js/LoginManager";
 import { i18n } from "../../js/localization";
 
+// Login dialog modes
+const MODE_PASSKEY = "passkey";
+const MODE_CODE_REQUEST = "code-request";
+const MODE_CODE_VERIFY = "code-verify";
+
 export function useUserSession() {
     const isLoggedIn = ref(false);
     const profile = ref(null);
     const menuOpen = ref(false);
     const menuStyle = ref({});
+
+    // Unified login dialog state
+    const loginMode = ref(MODE_PASSKEY);
     const loginEmail = ref("");
+    const loginCode = ref("");
     const loginError = ref(null);
+    const loginSubmitting = ref(false);
+    const loginCodeInputRef = ref(null);
+    const codeEmail = ref("");
+
+    const dialogLoginRef = ref(null);
+    const dialogWaitingRef = ref(null);
+    const waitingMessage = ref("");
+
+    // Legacy passkey-creation verification dialog
     const verificationError = ref(null);
     const verificationCode = ref("");
     const verificationInputRef = ref(null);
-    const dialogLoginRef = ref(null);
     const dialogVerificationRef = ref(null);
-    const dialogWaitingRef = ref(null);
-    const waitingMessage = ref("");
     const currentVerificationEmail = ref("");
 
     const displayName = computed(() => {
@@ -24,6 +39,22 @@ export function useUserSession() {
 
     const avatarUrl = computed(() => {
         return profile.value?.avatar || null;
+    });
+
+    const loginTitle = computed(() => {
+        return loginMode.value === MODE_CODE_VERIFY
+            ? i18n.getMessage("titleEnterVerificationCode")
+            : i18n.getMessage("titleLogin");
+    });
+
+    const loginDescription = computed(() => {
+        if (loginMode.value === MODE_CODE_REQUEST) {
+            return i18n.getMessage("descriptionCodeRequest");
+        }
+        if (loginMode.value === MODE_CODE_VERIFY) {
+            return i18n.getMessage("descriptionCodeEntered", [codeEmail.value]);
+        }
+        return i18n.getMessage("descriptionPasskeyLogin");
     });
 
     const handleLoginClick = () => {
@@ -77,18 +108,48 @@ export function useUserSession() {
         }
     };
 
-    const openLoginDialog = () => {
+    const resetLoginDialog = () => {
+        loginMode.value = MODE_PASSKEY;
         loginEmail.value = "";
+        loginCode.value = "";
         loginError.value = null;
-        if (dialogLoginRef.value) {
+        loginSubmitting.value = false;
+        codeEmail.value = "";
+    };
+
+    const showLoginDialog = () => {
+        if (dialogLoginRef.value && !dialogLoginRef.value.open) {
             dialogLoginRef.value.showModal();
         }
+    };
+
+    const openLoginDialog = () => {
+        resetLoginDialog();
+        showLoginDialog();
     };
 
     const closeLoginDialog = () => {
         if (dialogLoginRef.value?.open) {
             dialogLoginRef.value.close();
         }
+    };
+
+    const switchToCodeRequest = () => {
+        loginMode.value = MODE_CODE_REQUEST;
+        loginError.value = null;
+        loginCode.value = "";
+    };
+
+    const switchToPasskey = () => {
+        loginMode.value = MODE_PASSKEY;
+        loginError.value = null;
+        loginCode.value = "";
+    };
+
+    const focusCodeInput = () => {
+        nextTick(() => {
+            loginCodeInputRef.value?.inputRef?.focus();
+        });
     };
 
     const closeVerificationDialog = () => {
@@ -103,11 +164,8 @@ export function useUserSession() {
         verificationError.value = null;
         if (dialogVerificationRef.value) {
             dialogVerificationRef.value.showModal();
-            // Focus input after dialog opens
             nextTick(() => {
-                if (verificationInputRef.value) {
-                    verificationInputRef.value.focus();
-                }
+                verificationInputRef.value?.inputRef?.focus();
             });
         }
     };
@@ -136,6 +194,26 @@ export function useUserSession() {
         dlg.removeAttribute("inert");
     };
 
+    const handleUsePasskey = async () => {
+        const email = loginEmail.value.trim();
+
+        if (!email) {
+            loginError.value = i18n.getMessage("userEmailRequired");
+            return;
+        }
+
+        loginError.value = null;
+
+        try {
+            closeLoginDialog();
+            await loginManager.loginWithPasskey(email);
+        } catch (error) {
+            showLoginDialog();
+            loginError.value = i18n.getMessage("userLoginFailed");
+            console.error("Login with passkey error:", error);
+        }
+    };
+
     const handleCreatePasskey = async () => {
         const email = loginEmail.value.trim();
 
@@ -149,22 +227,62 @@ export function useUserSession() {
             await loginManager.createPasskey(email);
             openVerificationDialog(email);
         } catch (error) {
-            openLoginDialog();
+            showLoginDialog();
             loginError.value = i18n.getMessage("userCreatePasskeyFailed");
             console.error("Create passkey error:", error);
         }
     };
 
-    const handleUsePasskey = async () => {
+    const handleRequestCode = async () => {
+        if (loginSubmitting.value) {
+            return;
+        }
+
         const email = loginEmail.value.trim();
 
+        if (!email) {
+            loginError.value = i18n.getMessage("userEmailRequired");
+            return;
+        }
+
+        loginError.value = null;
+        loginSubmitting.value = true;
+
         try {
-            closeLoginDialog();
-            await loginManager.loginWithPasskey(email);
+            await loginManager.requestVerificationCode(email);
+            codeEmail.value = email;
+            loginMode.value = MODE_CODE_VERIFY;
+            loginCode.value = "";
+            focusCodeInput();
         } catch (error) {
-            openLoginDialog();
-            loginError.value = i18n.getMessage("userLoginFailed");
-            console.error("Login with passkey error:", error);
+            loginError.value = error?.message || i18n.getMessage("userSendCodeFailed");
+        } finally {
+            loginSubmitting.value = false;
+        }
+    };
+
+    const handleVerifyCode = async () => {
+        if (loginSubmitting.value) {
+            return;
+        }
+
+        const code = loginCode.value.trim();
+
+        if (!code) {
+            loginError.value = i18n.getMessage("userCodeRequired");
+            return;
+        }
+
+        loginError.value = null;
+        loginSubmitting.value = true;
+
+        try {
+            await loginManager.loginWithEmailCode(codeEmail.value, code);
+            closeLoginDialog();
+        } catch (error) {
+            loginError.value = error?.message || i18n.getMessage("userLoginFailed");
+        } finally {
+            loginSubmitting.value = false;
         }
     };
 
@@ -203,20 +321,16 @@ export function useUserSession() {
     });
 
     onUnmounted(() => {
-        // Cleanup callbacks
         if (unsubscribeLogin) {
             unsubscribeLogin();
         }
-
         if (unsubscribeLogout) {
             unsubscribeLogout();
         }
 
-        // Clear dialog opener
         loginManager.setDialogOpener(null);
         loginManager.setWaitingDialogController(null);
 
-        // Remove click outside listener
         document.removeEventListener("click", handleClickOutside);
     });
 
@@ -227,24 +341,34 @@ export function useUserSession() {
         avatarUrl,
         menuOpen,
         menuStyle,
+        loginMode,
         loginEmail,
+        loginCode,
         loginError,
+        loginSubmitting,
+        loginTitle,
+        loginDescription,
+        loginCodeInputRef,
+        dialogLoginRef,
+        dialogWaitingRef,
+        waitingMessage,
         verificationError,
         verificationCode,
         verificationInputRef,
-        dialogLoginRef,
         dialogVerificationRef,
-        dialogWaitingRef,
-        waitingMessage,
         handleLoginClick,
         toggleMenu,
         handleSignOut,
         showWaitingDialog,
         hideWaitingDialog,
         closeLoginDialog,
-        closeVerificationDialog,
-        handleCreatePasskey,
+        switchToCodeRequest,
+        switchToPasskey,
         handleUsePasskey,
+        handleCreatePasskey,
+        handleRequestCode,
+        handleVerifyCode,
+        closeVerificationDialog,
         handleVerificationSubmit,
     };
 }
