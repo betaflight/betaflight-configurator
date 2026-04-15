@@ -59,42 +59,44 @@
                     <!-- GPS Signal Strength -->
                     <UiBox :title="$t('gpsSignalStrHead')" :help="$t('gpsSignalStrHeadHelp')">
                         <div v-if="!hasGpsSensor" class="text-center p-2 text-sm" v-html="$t('gpsSignalLost')"></div>
-                        <table v-if="hasGpsSensor" class="w-full text-xs">
-                            <tbody>
-                                <tr class="font-bold">
-                                    <td class="text-left w-[12%] p-1" v-html="$t('gpsSignalGnssId')"></td>
-                                    <td class="text-center w-[14%] p-1" v-html="$t('gpsSignalSatId')"></td>
-                                    <td class="text-center w-[30%] p-1" v-html="$t('gpsSignalStr')"></td>
-                                    <td class="text-left w-[44%] pl-2.5 p-1" v-html="$t('gpsSignalQuality')"></td>
-                                </tr>
-                                <tr v-for="(row, index) in signalRows" :key="index">
-                                    <td class="p-1">{{ row.gnss }}</td>
-                                    <td class="text-center p-1">
-                                        <span
-                                            v-if="typeof row.satId === 'number'"
-                                            class="inline-block w-8 text-center px-1 py-0.5 rounded text-xs text-white"
-                                            :class="row.satUsed ? 'bg-[var(--success-500)]' : 'bg-[var(--error-500)]'"
-                                            :title="row.satUsed ? $t('gnssUsedUsed') : $t('gnssUsedUnused')"
-                                        >
-                                            {{ row.satId }}
-                                        </span>
-                                        <span v-else>-</span>
-                                    </td>
-                                    <td class="text-center p-1">
-                                        <UProgress :model-value="row.cno" :max="55" size="xs" color="success" />
-                                    </td>
-                                    <td class="text-left pl-2.5 p-1">
-                                        <span
-                                            v-if="row.quality"
-                                            class="px-1.5 py-0.5 rounded text-xs"
-                                            :class="row.qualityClass"
-                                        >
-                                            {{ row.quality }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div v-if="hasGpsSensor" class="text-xs">
+                            <div class="grid grid-cols-[12%_14%_30%_1fr] font-bold">
+                                <div class="p-1" v-html="$t('gpsSignalGnssId')"></div>
+                                <div class="p-1 text-center" v-html="$t('gpsSignalSatId')"></div>
+                                <div class="p-1 text-center" v-html="$t('gpsSignalStr')"></div>
+                                <div class="p-1 pl-2.5" v-html="$t('gpsSignalQuality')"></div>
+                            </div>
+                            <div
+                                v-for="(row, index) in signalRows"
+                                :key="index"
+                                class="grid grid-cols-[12%_14%_30%_1fr] items-center"
+                            >
+                                <div class="p-1">{{ row.gnss }}</div>
+                                <div class="p-1 text-center">
+                                    <span
+                                        v-if="typeof row.satId === 'number'"
+                                        class="inline-block w-8 text-center px-1 py-0.5 rounded text-xs text-white"
+                                        :class="row.satUsed ? 'bg-[var(--success-500)]' : 'bg-[var(--error-500)]'"
+                                        :title="row.satUsed ? $t('gnssUsedUsed') : $t('gnssUsedUnused')"
+                                    >
+                                        {{ row.satId }}
+                                    </span>
+                                    <span v-else>-</span>
+                                </div>
+                                <div class="p-1">
+                                    <UProgress :model-value="row.cno" :max="55" size="xs" color="success" />
+                                </div>
+                                <div class="p-1 pl-2.5">
+                                    <span
+                                        v-if="row.quality"
+                                        class="px-1.5 py-0.5 rounded text-xs"
+                                        :class="row.qualityClass"
+                                    >
+                                        {{ row.quality }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </UiBox>
                 </div>
 
