@@ -33,10 +33,17 @@ if (conf.version !== version) {
     console.log(`sync-tauri-version: tauri.conf.json → ${version}`);
 }
 
-// Cargo.toml — line-level edit to avoid pulling in a TOML dep
+// Cargo.toml — line-level edit to avoid pulling in a TOML dep.
+// Scope the replacement to the `[package]` section so a dependency named
+// `version` (or any other section's version line) can never be touched.
 const cargoPath = resolve(projectRoot, "src-tauri/Cargo.toml");
 const cargo = readFileSync(cargoPath, "utf8");
-const updated = cargo.replace(/^version\s*=\s*".*"\s*$/m, `version = "${version}"`);
+const packageVersionRe = /(^\[package\][\s\S]*?^version\s*=\s*")([^"]+)(")/m;
+if (!packageVersionRe.test(cargo)) {
+    console.error(`sync-tauri-version: could not locate [package].version in ${cargoPath}`);
+    process.exit(1);
+}
+const updated = cargo.replace(packageVersionRe, `$1${version}$3`);
 if (updated !== cargo) {
     writeFileSync(cargoPath, updated);
     console.log(`sync-tauri-version: Cargo.toml → ${version}`);

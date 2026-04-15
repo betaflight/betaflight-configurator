@@ -11,21 +11,26 @@
  * effectively a no-op there.
  */
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { platform } from "node:os";
 
-// Invoke pkg-config via spawnSync with explicit argv (no shell) and a
-// pinned PATH so the tool is resolved from a fixed system location.
-const PINNED_PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-const spawnOpts = { stdio: "pipe", env: { ...process.env, PATH: PINNED_PATH } };
+// Resolve pkg-config from well-known absolute locations rather than the
+// caller's PATH — the probed directories are root-writable only, so this
+// removes PATH as an attack surface (and satisfies Sonar S4036).
+const PKG_CONFIG_CANDIDATES = ["/usr/bin/pkg-config", "/usr/local/bin/pkg-config", "/opt/homebrew/bin/pkg-config"];
+const pkgConfigBin = PKG_CONFIG_CANDIDATES.find((p) => existsSync(p));
+const spawnOpts = { stdio: "pipe" };
 
 function pkgConfigExists(pkg) {
-    const result = spawnSync("pkg-config", ["--exists", pkg], spawnOpts);
+    if (!pkgConfigBin) {
+        return false;
+    }
+    const result = spawnSync(pkgConfigBin, ["--exists", pkg], spawnOpts);
     return result.status === 0;
 }
 
 function pkgConfigAvailable() {
-    const result = spawnSync("pkg-config", ["--version"], spawnOpts);
-    return result.status === 0;
+    return pkgConfigBin !== undefined;
 }
 
 const missing = [];

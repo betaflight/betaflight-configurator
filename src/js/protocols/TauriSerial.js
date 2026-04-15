@@ -5,11 +5,39 @@ import GUI from "../gui";
 const logHead = "[TAURI SERIAL]";
 
 /**
+ * Extract a best-effort message string from an error value of unknown shape
+ * (string | Error | plugin-returned object). Flattened from a nested ternary
+ * so the sequence is easier to follow.
+ */
+function extractErrorMessage(error) {
+    if (typeof error === "string") {
+        return error;
+    }
+    if (error?.message) {
+        return error.message;
+    }
+    if (error?.toString) {
+        return error.toString();
+    }
+    return "";
+}
+
+/**
  * Detects Broken pipe/EPIPE errors across platforms.
  */
 function isBrokenPipeError(error) {
-    const s = typeof error === "string" ? error : error?.message || (error?.toString ? error.toString() : "") || "";
-    return /broken pipe|EPIPE|os error 32|code:\s*32/i.test(s);
+    return /broken pipe|EPIPE|os error 32|code:\s*32/i.test(extractErrorMessage(error));
+}
+
+/**
+ * Parse a vendor/product ID from the plugin response (may arrive as number or
+ * string depending on OS backend).
+ */
+function parseId(value) {
+    if (value === undefined || value === null) {
+        return undefined;
+    }
+    return typeof value === "number" ? value : Number.parseInt(value, 10);
 }
 
 /**
@@ -49,8 +77,16 @@ class TauriSerial extends EventTarget {
         // expose a native event stream.
         this.monitoringDevices = false;
         this.deviceMonitorInterval = null;
+        this.deviceCheckInFlight = false;
 
-        this.loadDevices().then(() => this.startDeviceMonitoring());
+        // Fire-and-forget init; wrapped in a method to keep the constructor
+        // synchronous (no visible await/then chain).
+        this._bootstrap();
+    }
+
+    async _bootstrap() {
+        await this.loadDevices();
+        this.startDeviceMonitoring();
     }
 
     handleReceiveBytes(info) {
@@ -75,8 +111,19 @@ class TauriSerial extends EventTarget {
         }
 
         this.monitoringDevices = true;
+        // Reentrancy-guarded poll: skip the tick if the previous check hasn't
+        // returned yet, so overlapping runs can't race on `this.ports` and
+        // emit duplicate/missed hotplug events.
         this.deviceMonitorInterval = setInterval(async () => {
-            await this.checkDeviceChanges();
+            if (this.deviceCheckInFlight) {
+                return;
+            }
+            this.deviceCheckInFlight = true;
+            try {
+                await this.checkDeviceChanges();
+            } finally {
+                this.deviceCheckInFlight = false;
+            }
         }, 1000);
 
         console.log(`${logHead} Device monitoring started`);
@@ -98,16 +145,8 @@ class TauriSerial extends EventTarget {
      */
     _convertPortsMapToArray(portsMap) {
         return Object.entries(portsMap).map(([path, info]) => {
-            const vendorId = info.vid
-                ? typeof info.vid === "number"
-                    ? info.vid
-                    : Number.parseInt(info.vid, 10)
-                : undefined;
-            const productId = info.pid
-                ? typeof info.pid === "number"
-                    ? info.pid
-                    : Number.parseInt(info.pid, 10)
-                : undefined;
+            const vendorId = parseId(info.vid);
+            const productId = parseId(info.pid);
 
             return {
                 path,
@@ -183,38 +222,42 @@ class TauriSerial extends EventTarget {
         return path;
     }
 
-    async connect(path, options = { baudRate: 115200 }) {
+    async connect(path, { baudRate = 115200, dataBits, parityBit, parity, stopBits, flowControl } = {}) {
         if (this.openRequested) {
             console.log(`${logHead} Connection already requested`);
             return false;
         }
 
         this.openRequested = true;
+        this.openCanceled = false;
 
         try {
-            const openOptions = {
-                path,
-                baudRate: options.baudRate ?? 115200,
-            };
+            const openOptions = { path, baudRate };
             // Forward optional serial settings when callers supply them (e.g.
             // the flasher uses parity / stopBits for STM32 bootloader comms).
-            if (options.dataBits != null) {
-                openOptions.dataBits = options.dataBits;
+            if (dataBits != null) {
+                openOptions.dataBits = dataBits;
             }
-            if (options.parityBit != null || options.parity != null) {
-                openOptions.parity = options.parityBit ?? options.parity;
+            if (parityBit != null || parity != null) {
+                openOptions.parity = parityBit ?? parity;
             }
-            if (options.stopBits != null) {
-                openOptions.stopBits = options.stopBits;
+            if (stopBits != null) {
+                openOptions.stopBits = stopBits;
             }
-            if (options.flowControl != null) {
-                openOptions.flowControl = options.flowControl;
+            if (flowControl != null) {
+                openOptions.flowControl = flowControl;
             }
 
-            console.log(`${logHead} Opening port ${path} at ${openOptions.baudRate} baud`);
+            console.log(`${logHead} Opening port ${path} at ${baudRate} baud`);
 
             const openResult = await invoke("plugin:serialplugin|open", openOptions);
             console.log(`${logHead} Open result:`, openResult);
+
+            // If disconnect() fired during the open await, abandon now and
+            // close the port we just opened so it doesn't linger.
+            if (this.openCanceled) {
+                return await this._abortOpen(path);
+            }
 
             try {
                 await invoke("plugin:serialplugin|set_timeout", {
@@ -225,10 +268,14 @@ class TauriSerial extends EventTarget {
                 console.debug(`${logHead} Could not set timeout:`, e);
             }
 
+            if (this.openCanceled) {
+                return await this._abortOpen(path);
+            }
+
             const activePort = this.ports.find((p) => p.path === path);
             this.connected = true;
             this.connectionId = path;
-            this.bitrate = openOptions.baudRate;
+            this.bitrate = baudRate;
             this.openRequested = false;
 
             this.connectionInfo = {
@@ -254,9 +301,28 @@ class TauriSerial extends EventTarget {
         } catch (error) {
             console.error(`${logHead} Error connecting:`, error);
             this.openRequested = false;
+            this.openCanceled = false;
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
             return false;
         }
+    }
+
+    /**
+     * Abandon an open that was cancelled mid-flight by a concurrent
+     * disconnect(). Closes the port we just opened and clears pending flags.
+     * @private
+     */
+    async _abortOpen(path) {
+        console.log(`${logHead} Open cancelled for ${path}, closing`);
+        try {
+            await invoke("plugin:serialplugin|close", { path });
+        } catch (e) {
+            console.debug(`${logHead} Close after cancel failed:`, e);
+        }
+        this.openRequested = false;
+        this.openCanceled = false;
+        this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+        return false;
     }
 
     checkIsNeedBatchWrite() {
@@ -280,6 +346,25 @@ class TauriSerial extends EventTarget {
         return port;
     }
 
+    /**
+     * Classify a read error as fatal (rethrow and tear the loop down) or
+     * transient (log + continue). Extracted from readLoop to keep its
+     * cognitive complexity under the Sonar limit.
+     * @private
+     */
+    _classifyReadError(error) {
+        const msg = extractErrorMessage(error).toLowerCase();
+        if (msg.includes("no data received")) {
+            return "continue";
+        }
+        if (isBrokenPipeError(error)) {
+            console.error(`${logHead} Fatal poll error (broken pipe) on ${this.connectionId}:`, error);
+            return "fatal";
+        }
+        console.warn(`${logHead} Poll error:`, error);
+        return "continue";
+    }
+
     async readLoop() {
         try {
             while (this.reading) {
@@ -296,16 +381,9 @@ class TauriSerial extends EventTarget {
 
                     await new Promise((resolve) => setTimeout(resolve, 5));
                 } catch (error) {
-                    const msg = error?.message || (error?.toString ? error.toString() : "");
-                    if (msg?.toLowerCase().includes("no data received")) {
-                        await new Promise((resolve) => setTimeout(resolve, 5));
-                        continue;
-                    }
-                    if (isBrokenPipeError(msg)) {
-                        console.error(`${logHead} Fatal poll error (broken pipe) on ${this.connectionId}:`, error);
+                    if (this._classifyReadError(error) === "fatal") {
                         throw error;
                     }
-                    console.warn(`${logHead} Poll error:`, error);
                     await new Promise((resolve) => setTimeout(resolve, 5));
                 }
             }
@@ -378,6 +456,15 @@ class TauriSerial extends EventTarget {
     }
 
     async disconnect() {
+        // If an open is in flight (still awaiting the plugin), signal
+        // cancellation so the connect() coroutine aborts after its current
+        // await and closes the port it just opened — rather than letting it
+        // race past us and leave a stale connection behind.
+        if (this.openRequested && !this.connected) {
+            this.openCanceled = true;
+            return true;
+        }
+
         if (!this.connected) {
             return true;
         }
