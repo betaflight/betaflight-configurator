@@ -234,7 +234,6 @@ const getSegmentKey = (fromUid, toUid) => `${fromUid}-${toUid}`;
 // Conversion constants
 const METERS_TO_FEET = 3.28084;
 const METERS_TO_NAUTICAL_MILES = 1 / 1852;
-const NAUTICAL_MILES_TO_METERS = 1852;
 
 // Calculate distance between two points using Haversine formula
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -540,7 +539,7 @@ const handleMarkerHover = (point, index) => {
     };
 };
 
-const handleMouseMove = (event) => {
+const handleMouseMove = () => {
     // Keep current hover if over a marker
 };
 
