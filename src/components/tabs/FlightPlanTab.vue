@@ -8,15 +8,15 @@
             </div>
 
             <!-- Two-column layout -->
-            <div class="grid-row grid-box col2">
+            <div class="grid grid-cols-1 xl:grid-cols-[1.15fr_1fr] gap-4">
                 <!-- Left Column: Map Display and Elevation Profile -->
-                <div class="col-span-1">
+                <div class="flex flex-col gap-4">
                     <FlightPlanMap />
                     <ElevationProfile />
                 </div>
 
                 <!-- Right Column: Flight Plan List -->
-                <div class="col-span-1">
+                <div class="flex flex-col">
                     <WaypointList />
                 </div>
             </div>
@@ -30,28 +30,28 @@
             <p v-html="$t('flightPlanConfirmClear')"></p>
 
             <template #footer>
-                <div class="dialog-buttons">
-                    <button @click="showClearDialog = false" class="cancel-btn">
+                <div class="flex gap-2 justify-end">
+                    <UButton variant="soft" color="neutral" @click="showClearDialog = false">
                         {{ $t("cancel") }}
-                    </button>
-                    <button @click="confirmClear" class="clear-btn primary">
+                    </UButton>
+                    <UButton color="error" @click="confirmClear">
                         {{ $t("flightPlanClear") }}
-                    </button>
+                    </UButton>
                 </div>
             </template>
         </Dialog>
 
         <!-- Bottom toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn clear-button">
-                <button @click="handleClear" v-html="$t('flightPlanClear')"></button>
-            </div>
-            <div class="btn load-button">
-                <button @click="handleLoad" v-html="$t('flightPlanLoadFromFC')"></button>
-            </div>
-            <div class="btn save-button">
-                <button @click="handleSave" v-html="$t('save')"></button>
-            </div>
+        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+            <UButton variant="soft" color="error" @click="handleClear">
+                {{ $t("flightPlanClear") }}
+            </UButton>
+            <UButton variant="soft" @click="handleLoad">
+                {{ $t("flightPlanLoadFromFC") }}
+            </UButton>
+            <UButton @click="handleSave">
+                {{ $t("save") }}
+            </UButton>
         </div>
     </BaseTab>
 </template>
@@ -103,63 +103,9 @@ const confirmClear = async () => {
 </script>
 
 <style scoped>
-.grid-row.grid-box.col2 {
-    display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    gap: 1rem;
-}
-
 /* Bottom toolbar (CRITICAL: must be exactly 2rem) */
 .content_toolbar.toolbar_fixed_bottom {
     position: fixed;
     bottom: 2rem;
-}
-
-.content_toolbar.toolbar_fixed_bottom .btn a {
-    min-width: 125px;
-    text-align: center;
-}
-
-/* Dialog buttons */
-.dialog-buttons {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.dialog-buttons button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: 1px solid var(--surface-500);
-    background: var(--surface-200);
-    color: var(--text);
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.dialog-buttons button:hover {
-    background: var(--surface-300);
-}
-
-.dialog-buttons .clear-btn.primary {
-    background: var(--error-500);
-    color: var(--surface-50);
-    border-color: var(--error-500);
-}
-
-.dialog-buttons .clear-btn.primary:hover {
-    background: var(--error-600);
-    border-color: var(--error-600);
-}
-
-.dialog-buttons .cancel-btn:hover {
-    background: var(--surface-400);
-}
-
-/* Responsive */
-@media (max-width: 1055px) {
-    .grid-row.grid-box.col2 {
-        grid-template-columns: 1fr;
-    }
 }
 </style>

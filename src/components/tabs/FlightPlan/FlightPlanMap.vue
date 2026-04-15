@@ -1,26 +1,22 @@
 <template>
-    <div class="gui_box grey flight-plan-map">
-        <div class="gui_box_titlebar">
-            <div class="spacer_box_title" v-html="$t('flightPlanMap')"></div>
-        </div>
-        <div class="spacer_box">
-            <div class="map-container">
-                <div ref="mapRef" class="map"></div>
-                <div v-if="isLoading" class="map-loading">
-                    <div class="loading-message">
-                        {{ $t("flightPlanLoading") }}
-                    </div>
+    <UiBox :title="$t('flightPlanMap')" type="neutral" class="flight-plan-map">
+        <div class="map-container">
+            <div ref="mapRef" class="map"></div>
+            <div v-if="isLoading" class="map-loading">
+                <div class="loading-message">
+                    {{ $t("flightPlanLoading") }}
                 </div>
             </div>
-            <div class="map-instructions">
-                <p v-html="$t('flightPlanMapInstructions')"></p>
-            </div>
         </div>
-    </div>
+        <div class="map-instructions">
+            <p v-html="$t('flightPlanMapInstructions')"></p>
+        </div>
+    </UiBox>
 </template>
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from "vue";
+import UiBox from "@/components/elements/UiBox.vue";
 import { initMap } from "@/js/utils/map";
 import { fromLonLat, toLonLat } from "ol/proj";
 import { Feature } from "ol";
@@ -491,10 +487,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.flight-plan-map {
-    /* Inherits standard gui_box styling */
-}
-
 .map-container {
     height: 480px;
     border-radius: 4px;
