@@ -331,24 +331,35 @@
                                 </li>
                                 <li></li>
                             </ul>
-                            <div :class="`bar-wrapper grid-box col${numberOfValidOutputs + 1}`">
-                                <div v-for="i in numberOfValidOutputs" :key="i" :class="'m-block motor-' + (i - 1)">
-                                    <div class="meter-bar">
-                                        <div class="label">{{ getMotorValue(i - 1) }}</div>
-                                        <div
-                                            class="indicator"
-                                            :style="{
-                                                marginTop: `${100 - getMotorBarHeight(i - 1)}px`,
-                                                height: `${getMotorBarHeight(i - 1)}px`,
-                                                backgroundColor: `rgba(255,187,0,${(getMotorBarHeight(i - 1) * 0.009).toFixed(2)})`,
-                                            }"
-                                        >
-                                            <div class="label"></div>
-                                        </div>
+                            <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
+                                <li
+                                    v-for="i in numberOfValidOutputs"
+                                    :key="i"
+                                    class="relative h-[100px]"
+                                    :style="{ '--bar-opacity': (getMotorBarHeight(i - 1) * 0.009 + 0.1).toFixed(2) }"
+                                >
+                                    <div
+                                        class="absolute inset-x-0 bottom-[45px] z-10 text-center text-[10px] font-bold"
+                                    >
+                                        {{ getMotorValue(i - 1) }}
                                     </div>
-                                </div>
-                                <div class="m-block"></div>
-                            </div>
+                                    <UProgress
+                                        orientation="vertical"
+                                        inverted
+                                        :model-value="getMotorBarHeight(i - 1)"
+                                        :max="100"
+                                        color="warning"
+                                        size="2xl"
+                                        :ui="{
+                                            root: '!w-full',
+                                            base: '!w-full !rounded-md border border-(--ui-border)',
+                                            indicator: '!rounded-none opacity-(--bar-opacity)',
+                                        }"
+                                        class="h-full"
+                                    />
+                                </li>
+                                <li></li>
+                            </ul>
                         </div>
 
                         <div class="motor_testing">
@@ -1709,45 +1720,6 @@ onUnmounted(() => {
         .active {
             color: green;
         }
-    }
-    .m-block {
-        height: 100px;
-        width: 100%;
-        text-align: center;
-        background-color: var(--surface-300);
-        border-radius: 0.5rem;
-        .meter-bar {
-            position: relative;
-            width: 100%;
-            height: 100px;
-            background-color: var(--surface-300);
-            border-radius: 0.5rem;
-            border: 1px solid var(--surface-500);
-        }
-        .label {
-            position: absolute;
-            width: 100%;
-            bottom: 45px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 10px;
-            color: var(--surface-950);
-        }
-        .label.rpm_info {
-            bottom: 28px;
-        }
-        .indicator {
-            .label {
-                color: white;
-            }
-        }
-    }
-    .indicator {
-        position: absolute;
-        overflow: hidden;
-        width: 100%;
-        text-align: center;
-        border-radius: 2px;
     }
 
     // Motor testing sliders
