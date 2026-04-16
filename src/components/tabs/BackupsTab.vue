@@ -3,7 +3,7 @@
         <div class="content_wrapper grid-box col1">
             <!-- Loading State -->
             <div v-if="isLoading" class="flex items-center justify-center py-16">
-                <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin text-[var(--color-primary)]" />
+                <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin text-[var(--color-primary-500)]" />
                 <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
             </div>
 
@@ -160,6 +160,7 @@ async function loadBackups() {
     try {
         const loggedIn = await loginManager.isUserLoggedIn();
         if (!loggedIn) {
+            userApi = null;
             backups.value = [];
             backupMessage.value = null;
             isLoading.value = false;
@@ -211,7 +212,7 @@ async function downloadBackup(backup) {
         const response = await userApi.downloadBackupFile(backup.id);
         const fileContent = response.file;
         if (!fileContent?.length) {
-            throw new Error("Backup file is empty");
+            throw new Error(t("userBackupFileEmpty"));
         }
 
         const filename = response.name || backup.name || "backup.txt";
