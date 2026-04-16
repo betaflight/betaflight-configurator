@@ -25,7 +25,7 @@
             <!-- Logged In State -->
             <div v-else class="profile grid-box col3">
                 <div class="options col-span-3"></div>
-                <UiBox class="options col-span-3">
+                <UiBox v-if="profile" class="options col-span-3">
                     <div class="profile-content">
                         <img :src="profilePhoto" alt="Profile" class="profile-photo" />
                         <div class="profile-info">
@@ -118,9 +118,9 @@
                                     <td>{{ formatDate(token.expiry) }}</td>
                                     <td>{{ token.details || token.client?.address || "-" }}</td>
                                     <td>
-                                        <a href="#" @click.prevent="deleteToken(token.id)" class="delete-token">
+                                        <button type="button" class="link-button" @click="deleteToken(token.id)">
                                             {{ $t("actionDelete") }}
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -151,9 +151,9 @@
                                     <td>{{ formatDate(passkey.updatedAtUtc) }}</td>
                                     <td>{{ passkey.client?.address || "-" }}</td>
                                     <td>
-                                        <a href="#" @click.prevent="deletePasskey(passkey.id)" class="delete-passkey">
+                                        <button type="button" class="link-button" @click="deletePasskey(passkey.id)">
                                             {{ $t("actionDelete") }}
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -387,10 +387,14 @@ onUnmounted(() => {
             background-color: var(--surface-600);
         }
 
-        a {
+        .link-button {
+            background: none;
+            border: none;
+            padding: 0;
             margin-right: 10px;
-            text-decoration: none;
             color: var(--primary-500);
+            cursor: pointer;
+            font: inherit;
 
             &:hover {
                 text-decoration: underline;
