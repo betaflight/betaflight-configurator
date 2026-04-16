@@ -1,14 +1,14 @@
 <template>
     <BaseTab tab-name="motors">
         <div class="content_wrapper">
-            <div class="tab_title" v-html="$t('tabMotorTesting')"></div>
+            <div class="tab_title !text-xl !mb-2.5" v-html="$t('tabMotorTesting')"></div>
             <div class="cf_doc_version_bt">
                 <WikiButton docUrl="motors" />
             </div>
 
-            <div class="grid-row grid-box col2">
+            <div class="grid-row grid-box col2 max-[1055px]:!grid-cols-1">
                 <div class="col-span-1">
-                    <div class="configuration">
+                    <div class="flex flex-col gap-4">
                         <!-- MIXER -->
                         <UiBox :title="$t('configurationMixer')" type="neutral">
                             <USelect v-model="fcStore.mixerConfig.mixer" :items="sortedMixerListItems" />
@@ -19,7 +19,10 @@
                             >
                                 <USwitch v-model="reverseMotorDir" size="sm" />
                             </SettingRow>
-                            <div class="mixerPreview" v-html="mixerPreviewSvg"></div>
+                            <div
+                                class="flex justify-center p-2.5 [&_svg]:w-[150px] [&_svg]:h-[150px] [&_svg]:ml-[15px]"
+                                v-html="mixerPreviewSvg"
+                            ></div>
                             <div class="flex gap-2">
                                 <UButton
                                     v-if="isMotorReorderingAvailable"
@@ -256,14 +259,16 @@
                         <!-- SENSOR GRAPH SECTION -->
                         <UiBox type="neutral">
                             <div class="graph-grid">
-                                <svg ref="graphSvg" id="graph">
+                                <svg ref="graphSvg" id="graph" class="w-full h-full">
                                     <g class="grid x" transform="translate(40, 120)"></g>
                                     <g class="grid y" transform="translate(40, 10)"></g>
                                     <g class="data" transform="translate(41, 10)"></g>
                                     <g class="axis x" transform="translate(40, 120)"></g>
                                     <g class="axis y" transform="translate(40, 10)"></g>
                                 </svg>
-                                <div class="plot_control text-[10px] flex flex-col gap-1">
+                                <div
+                                    class="text-[10px] flex flex-col gap-1 [&_button]:!text-[10px] [&_[data-slot=base]]:!text-[10px]"
+                                >
                                     <div class="flex items-center gap-2 mb-2">
                                         <UButton
                                             :label="$t('motorsResetMaximumButton')"
@@ -302,31 +307,45 @@
                                         class="flex justify-between py-0.5"
                                     >
                                         <span>{{ axis.toUpperCase() }}:</span>
-                                        <span class="value w-24 text-right" :class="axis">{{
-                                            rawDataDisplay[axis]
-                                        }}</span>
+                                        <span
+                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
+                                            :class="{
+                                                'bg-[#1fb1f0]': axis === 'x',
+                                                'bg-[#97d800]': axis === 'y',
+                                                'bg-[#e24761]': axis === 'z',
+                                            }"
+                                            >{{ rawDataDisplay[axis] }}</span
+                                        >
                                     </div>
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
-                                        <span class="rms value w-24 text-right">{{ rawDataDisplay.rms }}</span>
+                                        <span
+                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#00d800]"
+                                            >{{ rawDataDisplay.rms }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
-                            <div class="power_info text-[10px] flex flex-wrap items-center gap-x-2">
-                                <span class="power_text" v-html="$t('motorsVoltage')"></span>
-                                <span class="power_value">{{ powerValues.voltage }}</span>
+                            <div class="text-[10px] flex flex-wrap items-center gap-x-2">
+                                <span class="font-bold" v-html="$t('motorsVoltage')"></span>
+                                <span class="text-left w-[50px]">{{ powerValues.voltage }}</span>
 
-                                <span class="power_text" v-html="$t('motorsADrawing')"></span>
-                                <span class="power_value">{{ powerValues.amperage }}</span>
+                                <span class="font-bold" v-html="$t('motorsADrawing')"></span>
+                                <span class="text-left w-[50px]">{{ powerValues.amperage }}</span>
 
-                                <span class="power_text" v-html="$t('motorsmAhDrawn')"></span>
-                                <span class="power_value">{{ powerValues.mAhDrawn }}</span>
+                                <span class="font-bold" v-html="$t('motorsmAhDrawn')"></span>
+                                <span class="text-left w-[50px]">{{ powerValues.mAhDrawn }}</span>
                             </div>
                         </UiBox>
 
                         <div class="motors">
-                            <ul :class="`grid-box col${numberOfValidOutputs + 1} titles`">
-                                <li v-for="i in numberOfValidOutputs" :key="i" :title="$t('motorNumber' + i)">
+                            <ul :class="`grid-box col${numberOfValidOutputs + 1} h-5`">
+                                <li
+                                    v-for="i in numberOfValidOutputs"
+                                    :key="i"
+                                    class="text-center"
+                                    :title="$t('motorNumber' + i)"
+                                >
                                     {{ i }}
                                 </li>
                                 <li></li>
@@ -362,25 +381,30 @@
                             </ul>
                         </div>
 
-                        <div class="motor_testing">
-                            <ul :class="`grid-box col${numberOfValidOutputs + 1} telemetry`">
-                                <li v-for="i in numberOfValidOutputs" :key="i">
+                        <div class="m-0 p-0 border-0 list-none outline-none">
+                            <ul :class="`grid-box col${numberOfValidOutputs + 1} mb-2`">
+                                <li
+                                    v-for="i in numberOfValidOutputs"
+                                    :key="i"
+                                    class="text-center text-[10px] whitespace-nowrap overflow-hidden"
+                                >
                                     <span
                                         :class="`motor-${i - 1}`"
                                         :title="$t('motorsTelemetryHelp')"
                                         v-html="getTelemetryHtml(i - 1)"
                                     ></span>
                                 </li>
-                                <li>
+                                <li class="text-center text-[10px] whitespace-nowrap overflow-hidden">
                                     <span class="motor-master" :title="$t('motorsTelemetryHelp')">&nbsp;</span>
                                 </li>
                             </ul>
 
-                            <div class="sliders mb-2">
+                            <div class="mb-2">
                                 <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
                                     <li
                                         v-for="i in numberOfValidOutputs"
                                         :key="i"
+                                        class="flex items-end justify-center"
                                         @wheel.prevent="onSliderWheel(i - 1, $event)"
                                     >
                                         <USlider
@@ -394,7 +418,10 @@
                                             @update:model-value="onMotorValueUpdate(i - 1, $event)"
                                         />
                                     </li>
-                                    <li @wheel.prevent="onSliderWheel(-1, $event)">
+                                    <li
+                                        class="flex items-end justify-center"
+                                        @wheel.prevent="onSliderWheel(-1, $event)"
+                                    >
                                         <USlider
                                             orientation="vertical"
                                             :min="minSliderValue"
@@ -410,10 +437,12 @@
                                 </ul>
                             </div>
 
-                            <div class="values">
+                            <div>
                                 <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
-                                    <li v-for="i in numberOfValidOutputs" :key="i">{{ motorValues[i - 1] }}</li>
-                                    <li style="font-weight: bold" v-html="$t('motorsMaster')"></li>
+                                    <li v-for="i in numberOfValidOutputs" :key="i" class="text-center text-[10px]">
+                                        {{ motorValues[i - 1] }}
+                                    </li>
+                                    <li class="text-center text-[10px] font-bold" v-html="$t('motorsMaster')"></li>
                                 </ul>
                             </div>
                         </div>
@@ -430,7 +459,7 @@
             </div>
 
             <!-- Warning Dialog -->
-            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged">
+            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged" class="w-[400px] h-fit">
                 <div class="p-4">
                     <div class="mb-4" v-html="warningMessage"></div>
                     <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
@@ -438,7 +467,7 @@
             </dialog>
 
             <!-- Dynamic Notch Filters Dialog -->
-            <dialog id="dialog-dyn-filters" ref="dialogDynFilters">
+            <dialog id="dialog-dyn-filters" ref="dialogDynFilters" class="w-[400px] h-fit">
                 <div class="p-4">
                     <div class="font-semibold mb-2" v-html="$t('dialogDynFiltersChangeTitle')"></div>
                     <div class="mb-4" v-html="$t('dialogDynFiltersChangeNote')"></div>
@@ -1593,175 +1622,27 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="less">
-.tab-motors {
-    position: relative;
-
-    .tab_title {
-        margin-bottom: 10px;
-        font-size: 20px;
-    }
-
-    .configuration {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .mixerPreview {
-        display: flex;
-        justify-content: center;
-        padding: 10px;
-        svg {
-            width: 150px;
-            height: 150px;
-            margin-left: 15px;
-        }
-    }
-
-    // Dialog styles
-    dialog {
-        width: 400px;
-        height: fit-content;
-    }
-    #dialogMotorOutputReorder-closebtn {
-        margin-right: 0;
-        margin-bottom: 0;
-    }
-    #dialogMotorOutputReorderContentWrapper {
-        display: flex;
-        flex-flow: column;
-        width: 100%;
-        height: 100%;
-    }
-    #dialogMotorOutputReorderContent {
-        flex-grow: 1;
-    }
-    #escDshotDirectionDialog-closebtn {
-        margin-right: 0;
-        margin-bottom: 0;
-        position: absolute;
-        right: 0;
-        bottom: 0;
-    }
-    #escDshotDirectionDialog-ContentWrapper {
-        display: flex;
-        flex-flow: column;
-        width: 100%;
-        height: 100%;
-        position: relative;
-    }
-    #escDshotDirectionDialog-Content {
-        flex-grow: 1;
-    }
-
-    // Sensor graph
-    .plot_control {
-        margin: 0;
-        background-color: transparent;
-        button,
-        select,
-        [data-slot="base"] {
-            font-size: 10px !important;
-        }
-        .value {
-            padding: 2px 3px;
-            color: black;
-            border-radius: 3px;
-        }
-        .rms {
-            background-color: #00d800;
-        }
-    }
-
-    .power_info {
-        .power_text {
-            font-weight: bold;
-        }
-        .power_value {
-            text-align: left;
-            width: 50px;
-        }
-    }
-
-    // Graph SVG
-    svg#graph {
-        width: 100%;
-        height: 100%;
-    }
-    .grid {
-        .tick {
-            stroke: silver;
-            stroke-width: 1px;
-            shape-rendering: crispEdges;
-        }
-        path {
-            stroke-width: 0;
-        }
-    }
-    .data {
-        .line {
-            stroke-width: 2px;
-            fill: none;
-        }
-    }
-    text {
-        stroke: none;
-        fill: var(--text);
-        font-size: 10px;
-    }
-
-    // Motor bars
-    .titles {
-        height: 20px;
-        li {
-            text-align: center;
-        }
-        .active {
-            color: green;
-        }
-    }
-
-    // Motor testing sliders
-    .motor_testing {
-        margin-bottom: 0;
-        padding: 0;
-        border: 0;
-        list-style: none;
-        outline: none;
-        .sliders {
-            ul li {
-                display: flex;
-                align-items: flex-end;
-                justify-content: center;
-            }
-        }
-        .values {
-            li {
-                text-align: center;
-                font-size: 10px;
-            }
-        }
-        .telemetry {
-            margin-bottom: 0.5rem;
-            .warning {
-                color: var(--error-500);
-            }
-            li {
-                text-align: center;
-                font-size: 10px;
-                white-space: nowrap;
-                overflow: hidden;
-            }
-        }
-    }
-
-    @media all and (max-width: 1055px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr !important;
-            }
-        }
-    }
+<!-- D3/SVG graph styles — cannot be expressed as Tailwind (generated by D3 at runtime) -->
+<style>
+.tab-motors .grid .tick {
+    stroke: silver;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+.tab-motors .grid path {
+    stroke-width: 0;
+}
+.tab-motors .data .line {
+    stroke-width: 2px;
+    fill: none;
+}
+.tab-motors svg text {
+    stroke: none;
+    fill: var(--text);
+    font-size: 10px;
+}
+/* Telemetry warning — class generated in getTelemetryHtml() */
+.tab-motors .warning {
+    color: var(--error-500);
 }
 </style>
