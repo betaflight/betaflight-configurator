@@ -17,7 +17,7 @@
                                 :help="$t('configurationReverseMotorSwitchHelp')"
                                 full-width
                             >
-                                <USwitch v-model="reverseMotorDir" />
+                                <USwitch v-model="reverseMotorDir" size="sm" />
                             </SettingRow>
                             <div class="mixerPreview" v-html="mixerPreviewSvg"></div>
                             <div class="flex gap-2">
@@ -53,7 +53,7 @@
                                 />
                             </SettingRow>
                             <SettingRow v-if="showAnalogSettings" :label="$t('configurationunsyndePwm')" full-width>
-                                <USwitch v-model="useUnsyncedPwm" />
+                                <USwitch v-model="useUnsyncedPwm" size="sm" />
                             </SettingRow>
                             <SettingRow
                                 v-if="showAnalogSettings && useUnsyncedPwm"
@@ -65,6 +65,9 @@
                                     :min="200"
                                     :max="32000"
                                     :step="100"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
                                 />
                             </SettingRow>
                             <SettingRow v-if="protocolConfigured" full-width>
@@ -72,6 +75,7 @@
                                     :model-value="isFeatureEnabled('MOTOR_STOP')"
                                     @update:model-value="toggleFeature('MOTOR_STOP', $event)"
                                     :disabled="isFeatureEnabled('AIRMODE')"
+                                    size="sm"
                                 />
                                 <template #label>
                                     <span class="font-semibold">MOTOR_STOP</span>
@@ -82,6 +86,7 @@
                                 <USwitch
                                     :model-value="isFeatureEnabled('ESC_SENSOR')"
                                     @update:model-value="toggleFeature('ESC_SENSOR', $event)"
+                                    size="sm"
                                 />
                                 <template #label>
                                     <span class="font-semibold">ESC_SENSOR</span>
@@ -94,7 +99,7 @@
                                 :help="$t('configurationDshotBidirHelp')"
                                 full-width
                             >
-                                <USwitch v-model="useDshotTelemetry" />
+                                <USwitch v-model="useDshotTelemetry" size="sm" />
                             </SettingRow>
                             <SettingRow
                                 v-if="protocolConfigured && rpmFeaturesVisible"
@@ -102,7 +107,15 @@
                                 :help="$t('configurationMotorPolesHelp')"
                                 full-width
                             >
-                                <UInputNumber v-model="fcStore.motorConfig.motor_poles" :min="4" :max="255" :step="1" />
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.motor_poles"
+                                    :min="4"
+                                    :max="255"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
                             </SettingRow>
                             <SettingRow
                                 v-if="showMotorIdle"
@@ -115,6 +128,9 @@
                                     :min="0"
                                     :max="20"
                                     :step="0.1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
                                 />
                             </SettingRow>
                             <SettingRow
@@ -129,6 +145,9 @@
                                     :max="100"
                                     :step="1"
                                     :readonly="true"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
                                 />
                             </SettingRow>
                             <SettingRow
@@ -137,7 +156,15 @@
                                 :help="$t('configurationThrottleMinimumCommandHelp')"
                                 full-width
                             >
-                                <UInputNumber v-model="fcStore.motorConfig.mincommand" :min="0" :max="2000" :step="1" />
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.mincommand"
+                                    :min="0"
+                                    :max="2000"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
                             </SettingRow>
                             <SettingRow
                                 v-if="showMinThrottle"
@@ -150,6 +177,9 @@
                                     :min="0"
                                     :max="2000"
                                     :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
                                 />
                             </SettingRow>
                             <SettingRow
@@ -162,6 +192,9 @@
                                     :min="0"
                                     :max="2000"
                                     :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
                                 />
                             </SettingRow>
                         </UiBox>
@@ -171,6 +204,7 @@
                                 <USwitch
                                     :model-value="isFeatureEnabled('3D')"
                                     @update:model-value="toggleFeature('3D', $event)"
+                                    size="sm"
                                 />
                                 <template #label>
                                     <span v-html="$t('feature3D')"></span>
@@ -184,6 +218,9 @@
                                         :min="1250"
                                         :max="1600"
                                         :step="1"
+                                        size="xs"
+                                        orientation="vertical"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('configuration3dDeadbandHigh')" full-width>
@@ -192,6 +229,9 @@
                                         :min="1400"
                                         :max="1750"
                                         :step="1"
+                                        size="xs"
+                                        orientation="vertical"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('configuration3dNeutral')" full-width>
@@ -200,6 +240,9 @@
                                         :min="1400"
                                         :max="1600"
                                         :step="1"
+                                        size="xs"
+                                        orientation="vertical"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                             </template>
@@ -312,13 +355,13 @@
                             <ul :class="`grid-box col${numberOfValidOutputs + 1} telemetry`">
                                 <li v-for="i in numberOfValidOutputs" :key="i">
                                     <span
-                                        :class="`motor-${i - 1} cf_tip`"
+                                        :class="`motor-${i - 1}`"
                                         :title="$t('motorsTelemetryHelp')"
                                         v-html="getTelemetryHtml(i - 1)"
                                     ></span>
                                 </li>
                                 <li>
-                                    <span class="motor-master cf_tip" :title="$t('motorsTelemetryHelp')">&nbsp;</span>
+                                    <span class="motor-master" :title="$t('motorsTelemetryHelp')">&nbsp;</span>
                                 </li>
                             </ul>
 
@@ -367,7 +410,7 @@
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
                             <SettingRow :label="$t('motorsEnableControl')" full-width>
-                                <USwitch v-model="motorsTestingEnabled" />
+                                <USwitch v-model="motorsTestingEnabled" size="sm" />
                             </SettingRow>
                         </div>
                     </div>
@@ -660,7 +703,7 @@ const useDshotTelemetry = computed({
 // Watch for bidirectional DShot changes
 watch(
     () => fcStore.motorConfig.use_dshot_telemetry,
-    (newValue, oldValue) => {
+    (newValue) => {
         if (!dshotBidirInitialized.value) {
             return;
         } // Skip until MSP data is loaded
