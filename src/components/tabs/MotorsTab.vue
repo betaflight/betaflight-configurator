@@ -372,7 +372,7 @@
                                         :ui="{
                                             root: '!w-full',
                                             base: '!w-full !rounded-md border border-(--ui-border)',
-                                            indicator: '!rounded-none opacity-(--bar-opacity)',
+                                            indicator: '!rounded-none !transition-none opacity-(--bar-opacity)',
                                         }"
                                         class="h-full"
                                     />
