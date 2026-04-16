@@ -547,7 +547,6 @@ export default defineComponent({
 
         const magDeclination = ref(0);
         const showGyroCalOnFirstArm = ref(false);
-        const showAutoDisarmDelay = ref(false);
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
         const showMultiGyro = ref(false); // API 1.47+ multi-gyro UI
@@ -684,6 +683,11 @@ export default defineComponent({
             });
         });
 
+        const MOTOR_STOP_FEATURE_BIT = 4;
+        const motorStopFeatureBit = computed(() => {
+            return featuresList.value.find((feature) => feature.name === "MOTOR_STOP")?.bit ?? MOTOR_STOP_FEATURE_BIT;
+        });
+
         const beepersList = computed(() => {
             if (!fcStore.beepers?.beepers?._beepers) {
                 return [];
@@ -725,6 +729,13 @@ export default defineComponent({
                 return 0;
             }
             return fcStore.features.features._featureMask;
+        });
+
+        const showAutoDisarmDelay = computed(() => {
+            if (!fcStore.config?.apiVersion || semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
+                return false;
+            }
+            return bit_check(featureMask.value, motorStopFeatureBit.value);
         });
 
         // Methods for toggling bits
@@ -976,11 +987,6 @@ export default defineComponent({
                 showGyroCalOnFirstArm.value = true;
                 armingConfig.gyro_cal_on_first_arm_bool = fcStore.armingConfig.gyro_cal_on_first_arm === 1;
                 armingConfig.auto_disarm_delay = fcStore.armingConfig.auto_disarm_delay;
-
-                if (isFeatureEnabled({ name: "MOTOR_STOP", bit: 4 })) {
-                    // Check manually or reuse logic
-                    showAutoDisarmDelay.value = true;
-                }
             }
 
             // Accel Trims
