@@ -193,6 +193,20 @@ export default defineConfig({
                         size: "sm",
                     },
                 },
+                input: {
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                inputNumber: {
+                    slots: {
+                        root: "min-w-12 w-28",
+                        base: "appearance-none",
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
                 colors: {
                     primary: "primary",
                     neutral: "neutral",
