@@ -56,7 +56,7 @@
                 </UiBox>
 
                 <!-- Edit Profile Dialog -->
-                <dialog ref="editDialogRef" class="profile-edit-dialog" @cancel.prevent="cancelEdit">
+                <dialog ref="editDialogRef" class="profile-edit-dialog" @cancel="cancelEdit">
                     <h3>{{ $t("titleEditProfile") }}</h3>
                     <div class="profile-edit-form">
                         <p>
@@ -415,7 +415,6 @@ onUnmounted(() => {
     }
 
     .profile-edit-dialog {
-        display: block;
         z-index: 1000;
         position: fixed;
         top: 50%;
@@ -429,10 +428,6 @@ onUnmounted(() => {
         border: 1px solid var(--surface-400);
         border-radius: 8px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-
-        &:not([open]) {
-            display: none;
-        }
 
         &::backdrop {
             background: rgba(0, 0, 0, 0.5);
