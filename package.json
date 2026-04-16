@@ -94,7 +94,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-unused-imports": "^4.1.4",
     "eslint-plugin-vue": "^9.32.0",
-    "follow-redirects": "^1.15.9",
+    "follow-redirects": "^1.16.0",
     "glob": "^11.0.1",
     "husky": "^9.1.7",
     "inquirer": "^12.4.2",
