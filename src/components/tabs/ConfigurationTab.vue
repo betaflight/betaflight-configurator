@@ -54,10 +54,7 @@
 
                     <!-- CAMERA -->
                     <UiBox :title="$t('configurationCamera')" v-if="accHardwareEnabled">
-                        <SettingRow
-                            :label="$t('configurationFpvCamAngleDegrees')"
-                            :help="$t('configurationFpvCamAngleDegreesHelp')"
-                        >
+                        <SettingRow :label="$t('configurationFpvCamAngleDegrees')">
                             <UInputNumber v-model="fpvCamAngleDegrees" :step="1" :min="0" :max="90" />
                         </SettingRow>
                     </UiBox>
@@ -362,7 +359,7 @@
                     </UiBox>
 
                     <!-- ACCELEROMETER TRIM -->
-                    <UiBox :title="$t('configurationAccelTrims')" :help="$t('configurationAccelTrimsHelp')">
+                    <UiBox :title="$t('configurationAccelTrims')">
                         <SettingRow :label="$t('configurationAccelTrimRoll')">
                             <UInputNumber v-model="accelTrims.roll" :step="1" :min="-300" :max="300" />
                         </SettingRow>
