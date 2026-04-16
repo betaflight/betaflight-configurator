@@ -31,27 +31,31 @@
                     </SettingRow>
                 </div>
 
-                <!-- Header Buttons -->
+                <!-- Header Buttons (scoped per subtab) -->
                 <div class="flex gap-2 flex-wrap ml-auto">
                     <UButton
+                        v-if="activeSubtab === 'pid'"
                         :label="$t('pidTuningCopyProfile')"
                         color="neutral"
                         variant="outline"
                         @click="copyProfile"
                     />
                     <UButton
+                        v-if="activeSubtab === 'rates'"
                         :label="$t('pidTuningCopyRateProfile')"
                         color="neutral"
                         variant="outline"
                         @click="copyRateProfile"
                     />
                     <UButton
+                        v-if="activeSubtab === 'pid'"
                         :label="$t('pidTuningResetPidProfile')"
                         color="neutral"
                         variant="outline"
                         @click="resetProfile"
                     />
                     <UButton
+                        v-if="activeSubtab === 'pid'"
                         :label="showAllPids ? $t('pidTuningHideUnusedPids') : $t('pidTuningShowAllPids')"
                         color="neutral"
                         variant="outline"
@@ -61,14 +65,16 @@
             </div>
 
             <!-- Sub-tab Navigation -->
-            <UTabs
-                :items="subtabItems"
-                :model-value="activeSubtab"
-                :content="false"
-                color="primary"
-                variant="pill"
-                @update:model-value="activeSubtab = $event"
-            />
+            <div class="subtab-nav">
+                <UTabs
+                    :items="subtabItems"
+                    :model-value="activeSubtab"
+                    :content="false"
+                    color="primary"
+                    variant="pill"
+                    @update:model-value="activeSubtab = $event"
+                />
+            </div>
 
             <!-- Tab Content -->
             <div class="tabarea">
@@ -111,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -510,6 +516,12 @@ watch(
         onFormChanged();
     },
 );
+
+// Re-initialize Switchery when switching subtabs (subtabs use v-if so checkboxes re-mount)
+watch(activeSubtab, async () => {
+    await nextTick();
+    GUI.switchery();
+});
 
 // Cleanup callback - called from gui.js tab_switch_cleanup when switching away from this tab
 function cleanup(callback) {
@@ -1269,6 +1281,11 @@ onUnmounted(() => {
 .subtab-filter .two_columns .two_columns_second {
     margin-left: 10px;
     height: fit-content;
+}
+
+/* ── Sub-tab navigation ───────────────────────────────────────────── */
+.subtab-nav {
+    width: calc(100% - 22px);
 }
 
 /* ── Tab area ─────────────────────────────────────────────────────── */
