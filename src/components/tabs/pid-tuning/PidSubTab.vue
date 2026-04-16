@@ -9,7 +9,7 @@
 
             <!-- PID Table -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-[3.5rem_repeat(5,1fr)] gap-x-1 gap-y-1 items-center">
+                <div class="grid grid-cols-[3rem_repeat(5,1fr)] gap-x-1 gap-y-1 items-center min-w-0">
                     <!-- Header -->
                     <div></div>
                     <div class="flex items-center justify-center gap-0.5 text-xs">
@@ -45,6 +45,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="pidRollI"
@@ -53,6 +55,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="pidRollD"
@@ -61,6 +65,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="advancedTuning.dMaxRoll"
@@ -69,6 +75,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="advancedTuning.feedforwardRoll"
@@ -77,6 +85,8 @@
                         :max="2000"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
 
                     <!-- PITCH -->
@@ -88,6 +98,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="pidPitchI"
@@ -96,6 +108,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="pidPitchD"
@@ -104,6 +118,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="advancedTuning.dMaxPitch"
@@ -112,6 +128,8 @@
                         :max="250"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="advancedTuning.feedforwardPitch"
@@ -120,13 +138,42 @@
                         :max="2000"
                         :disabled="rollPitchDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
 
                     <!-- YAW -->
                     <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">YAW</div>
-                    <UInputNumber v-model="pidYawP" :step="1" :min="0" :max="250" :disabled="yawDisabled" size="xs" />
-                    <UInputNumber v-model="pidYawI" :step="1" :min="0" :max="250" :disabled="yawDisabled" size="xs" />
-                    <UInputNumber v-model="pidYawD" :step="1" :min="0" :max="250" :disabled="yawDisabled" size="xs" />
+                    <UInputNumber
+                        v-model="pidYawP"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidYawI"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidYawD"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
                     <UInputNumber
                         v-model="advancedTuning.dMaxYaw"
                         :step="1"
@@ -134,6 +181,8 @@
                         :max="250"
                         :disabled="yawDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                     <UInputNumber
                         v-model="advancedTuning.feedforwardYaw"
@@ -142,6 +191,8 @@
                         :max="2000"
                         :disabled="yawDisabled"
                         size="xs"
+                        orientation="vertical"
+                        class="w-full"
                     />
                 </div>
             </UiBox>
@@ -343,7 +394,7 @@
 
             <!-- BARO, MAG, GPS Optional PIDs -->
             <UiBox v-if="showAllLocal && hasBaroMagGpsPids" type="neutral">
-                <div class="grid grid-cols-[3.5rem_repeat(3,1fr)] gap-x-1 gap-y-1 items-center">
+                <div class="grid grid-cols-[3rem_repeat(3,1fr)] gap-x-1 gap-y-1 items-center min-w-0">
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center" v-html="$t('pidTuningProportional')"></div>
@@ -355,15 +406,63 @@
                         <div class="col-span-4 text-xs text-dimmed">{{ $t("pidTuningAltitude") }}</div>
                         <template v-if="hasPidName('ALT')">
                             <div></div>
-                            <UInputNumber v-model="pidAltP" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidAltI" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidAltD" :step="1" :min="0" :max="255" size="xs" />
+                            <UInputNumber
+                                v-model="pidAltP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidAltI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidAltD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
                         </template>
                         <template v-if="hasPidName('VEL')">
                             <div></div>
-                            <UInputNumber v-model="pidVelP" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidVelI" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidVelD" :step="1" :min="0" :max="255" size="xs" />
+                            <UInputNumber
+                                v-model="pidVelP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidVelI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidVelD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
                         </template>
                     </template>
 
@@ -371,7 +470,15 @@
                     <template v-if="hasPidName('MAG')">
                         <div class="col-span-4 text-xs text-dimmed">{{ $t("pidTuningMag") }}</div>
                         <div></div>
-                        <UInputNumber v-model="pidMagP" :step="1" :min="0" :max="255" size="xs" />
+                        <UInputNumber
+                            v-model="pidMagP"
+                            :step="1"
+                            :min="0"
+                            :max="255"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                        />
                         <div></div>
                         <div></div>
                     </template>
@@ -381,21 +488,77 @@
                         <div class="col-span-4 text-xs text-dimmed">{{ $t("pidTuningGps") }}</div>
                         <template v-if="hasPidName('Pos')">
                             <div></div>
-                            <UInputNumber v-model="pidPosP" :step="1" :min="0" :max="255" size="xs" />
+                            <UInputNumber
+                                v-model="pidPosP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
                             <div></div>
                             <div></div>
                         </template>
                         <template v-if="hasPidName('PosR')">
                             <div></div>
-                            <UInputNumber v-model="pidPosRP" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidPosRI" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidPosRD" :step="1" :min="0" :max="255" size="xs" />
+                            <UInputNumber
+                                v-model="pidPosRP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidPosRI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidPosRD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
                         </template>
                         <template v-if="hasPidName('NavR')">
                             <div></div>
-                            <UInputNumber v-model="pidNavRP" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidNavRI" :step="1" :min="0" :max="255" size="xs" />
-                            <UInputNumber v-model="pidNavRD" :step="1" :min="0" :max="255" size="xs" />
+                            <UInputNumber
+                                v-model="pidNavRP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidNavRI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidNavRD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
                         </template>
                     </template>
                 </div>
@@ -403,7 +566,7 @@
 
             <!-- Angle/Horizon Section -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-3 gap-x-1 gap-y-1 items-center">
+                <div class="grid grid-cols-3 gap-x-1 gap-y-1 items-center min-w-0">
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center">{{ $t("pidTuningStrength") }}</div>
@@ -411,13 +574,37 @@
 
                     <!-- Angle -->
                     <div class="text-xs">{{ $t("pidTuningAngle") }}</div>
-                    <UInputNumber v-model="pidLevelAngle" :step="1" :min="0" :max="255" size="xs" />
+                    <UInputNumber
+                        v-model="pidLevelAngle"
+                        :step="1"
+                        :min="0"
+                        :max="255"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
                     <div></div>
 
                     <!-- Horizon -->
                     <div class="text-xs">{{ $t("pidTuningHorizon") }}</div>
-                    <UInputNumber v-model="pidLevelHorizon" :step="1" :min="0" :max="255" size="xs" />
-                    <UInputNumber v-model="pidLevelTransition" :step="1" :min="0" :max="255" size="xs" />
+                    <UInputNumber
+                        v-model="pidLevelHorizon"
+                        :step="1"
+                        :min="0"
+                        :max="255"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidLevelTransition"
+                        :step="1"
+                        :min="0"
+                        :max="255"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
 
                     <!-- Level Angle Limit -->
                     <div></div>
@@ -425,7 +612,15 @@
                     <div></div>
 
                     <div></div>
-                    <UInputNumber v-model="advancedTuning.levelAngleLimit" :step="1" :min="10" :max="200" size="xs" />
+                    <UInputNumber
+                        v-model="advancedTuning.levelAngleLimit"
+                        :step="1"
+                        :min="10"
+                        :max="200"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
                     <div></div>
                 </div>
             </UiBox>
