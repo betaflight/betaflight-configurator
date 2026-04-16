@@ -57,7 +57,12 @@
                     </UiBox>
 
                     <!-- GPS Signal Strength -->
-                    <UiBox :title="$t('gpsSignalStrHead')" :help="$t('gpsSignalStrHeadHelp')">
+                    <UiBox
+                        :title="$t('gpsSignalStrHead')"
+                        :help="$t('gpsSignalStrHeadHelp')"
+                        :type="hasGpsSensor ? 'default' : 'warning'"
+                        :highlight="!hasGpsSensor"
+                    >
                         <div v-if="!hasGpsSensor" class="text-center p-2 text-sm" v-html="$t('gpsSignalLost')"></div>
                         <div v-if="hasGpsSensor" class="text-xs">
                             <div class="grid grid-cols-[12%_14%_30%_1fr] font-bold">
@@ -164,7 +169,10 @@
 
                     <!-- GPS Map -->
                     <UiBox :title="$t('gpsMapHead')">
-                        <div v-show="showConnect" class="flex flex-col items-center justify-center h-[433px] gap-2">
+                        <div
+                            v-show="showConnect"
+                            class="flex flex-col items-center justify-center h-[433px] gap-2 text-center"
+                        >
                             <div>{{ $t("gpsMapMessage1") }}</div>
                             <UButton variant="subtle" @click="checkConnectivity">
                                 {{ $t("gpsMapRetry") }}
