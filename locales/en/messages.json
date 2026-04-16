@@ -3141,6 +3141,27 @@
     "gpsMapHead": {
         "message": "Current location"
     },
+    "gpsMapSatelliteView": {
+        "message": "Satellite view"
+    },
+    "gpsMapHybridView": {
+        "message": "Hybrid view"
+    },
+    "gpsMapStreetView": {
+        "message": "Street view"
+    },
+    "gpsMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "gpsMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Toggle fullscreen"
+    },
+    "gpsMapRetry": {
+        "message": "Retry"
+    },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
     },
