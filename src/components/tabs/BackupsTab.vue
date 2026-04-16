@@ -21,7 +21,7 @@
 
                     <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                         <div class="mb-4">
-                            <div class="text-sm font-bold text-[var(--primary-500)] mb-1">{{ craft }}</div>
+                            <div class="text-sm font-bold text-[var(--color-primary-500)] mb-1">{{ craft }}</div>
                             <table class="w-full text-sm">
                                 <thead>
                                     <tr class="border-b border-[var(--surface-300)]">
