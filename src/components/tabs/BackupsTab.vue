@@ -22,62 +22,60 @@
                     <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                         <div class="mb-4">
                             <div class="text-sm font-bold text-[var(--color-primary-500)] mb-1">{{ craft }}</div>
-                            <table class="w-full text-sm">
-                                <thead>
-                                    <tr class="border-b border-[var(--surface-300)]">
-                                        <th class="text-left py-1.5 px-2 text-dimmed font-semibold">
-                                            {{ $t("labelDate") }}
-                                        </th>
-                                        <th class="text-left py-1.5 px-2 text-dimmed font-semibold">
-                                            {{ $t("labelName") }}
-                                        </th>
-                                        <th class="text-left py-1.5 px-2 text-dimmed font-semibold">
-                                            {{ $t("labelDescription") }}
-                                        </th>
-                                        <th class="text-left py-1.5 px-2 text-dimmed font-semibold">
-                                            {{ $t("labelActions") }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="backup in groupBackups"
-                                        :key="backup.id"
-                                        class="border-b border-[var(--surface-200)] hover:bg-[var(--surface-100)]"
-                                    >
-                                        <td class="py-1.5 px-2">{{ formatDate(backup.created) }}</td>
-                                        <td class="py-1.5 px-2">{{ backup.name }}</td>
-                                        <td class="py-1.5 px-2 text-dimmed">{{ backup.description || "" }}</td>
-                                        <td class="py-1.5 px-2 flex gap-2">
-                                            <UButton
-                                                size="xs"
-                                                variant="soft"
-                                                icon="i-lucide-download"
-                                                @click="downloadBackup(backup)"
-                                            >
-                                                {{ $t("actionDownload") }}
-                                            </UButton>
-                                            <UButton
-                                                size="xs"
-                                                variant="soft"
-                                                icon="i-lucide-pencil"
-                                                @click="startEdit(backup)"
-                                            >
-                                                {{ $t("actionEdit") }}
-                                            </UButton>
-                                            <UButton
-                                                size="xs"
-                                                variant="soft"
-                                                color="error"
-                                                icon="i-lucide-trash-2"
-                                                @click="deleteBackup(backup.id)"
-                                            >
-                                                {{ $t("actionDelete") }}
-                                            </UButton>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="grid grid-cols-[auto_auto_1fr_auto] text-sm">
+                                <div class="col-span-4 grid grid-cols-subgrid border-b border-[var(--surface-300)]">
+                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
+                                        {{ $t("labelDate") }}
+                                    </div>
+                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
+                                        {{ $t("labelName") }}
+                                    </div>
+                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
+                                        {{ $t("labelDescription") }}
+                                    </div>
+                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
+                                        {{ $t("labelActions") }}
+                                    </div>
+                                </div>
+                                <div
+                                    v-for="backup in groupBackups"
+                                    :key="backup.id"
+                                    class="col-span-4 grid grid-cols-subgrid items-center border-b border-[var(--surface-200)] hover:bg-[var(--surface-100)]"
+                                >
+                                    <div class="py-1.5 px-2">{{ formatDate(backup.created) }}</div>
+                                    <div class="py-1.5 px-2">{{ backup.name }}</div>
+                                    <div class="py-1.5 px-2 text-dimmed">
+                                        {{ backup.description || "" }}
+                                    </div>
+                                    <div class="py-1.5 px-2 flex gap-2">
+                                        <UButton
+                                            size="xs"
+                                            variant="soft"
+                                            icon="i-lucide-download"
+                                            @click="downloadBackup(backup)"
+                                        >
+                                            {{ $t("actionDownload") }}
+                                        </UButton>
+                                        <UButton
+                                            size="xs"
+                                            variant="soft"
+                                            icon="i-lucide-pencil"
+                                            @click="startEdit(backup)"
+                                        >
+                                            {{ $t("actionEdit") }}
+                                        </UButton>
+                                        <UButton
+                                            size="xs"
+                                            variant="soft"
+                                            color="error"
+                                            icon="i-lucide-trash-2"
+                                            @click="deleteBackup(backup.id)"
+                                        >
+                                            {{ $t("actionDelete") }}
+                                        </UButton>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </template>
                 </UiBox>
@@ -261,7 +259,12 @@ async function saveBackupChanges() {
 
 async function deleteBackup(backupId) {
     const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemBackup") }));
-    if (!confirmed || !userApi) {
+    if (!confirmed) {
+        return;
+    }
+
+    if (!userApi) {
+        gui_log(t("notLoggedIn"));
         return;
     }
 
