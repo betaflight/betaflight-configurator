@@ -14,6 +14,14 @@
                         <USelect v-model="ratesType" :items="ratesTypeItems" class="w-32" />
                     </SettingRow>
                     <img :src="ratesLogoSrc" class="h-8" alt="Rates logo" />
+                    <a
+                        href="https://rates.metamarc.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-xs text-primary hover:underline"
+                    >
+                        rates.metamarc.com
+                    </a>
                 </div>
             </UiBox>
 
