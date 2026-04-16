@@ -13,7 +13,7 @@
                         "
                         :disabled="state.disabledAccel"
                         :loading="state.calibratingAccel"
-                        class="min-w-48 justify-center"
+                        class="w-48 shrink-0 justify-center"
                         @click="onCalibrateAccel"
                     />
                 </SettingRow>
@@ -26,7 +26,7 @@
                         "
                         :disabled="state.disabledMag"
                         :loading="state.calibratingMag"
-                        class="min-w-48 justify-center"
+                        class="w-48 shrink-0 justify-center"
                         @click="onCalibrateMag"
                     />
                 </SettingRow>
@@ -34,7 +34,7 @@
                     <UButton
                         :label="$t('initialSetupButtonReset')"
                         color="error"
-                        class="min-w-48 justify-center"
+                        class="w-48 shrink-0 justify-center"
                         @click="showConfirmReset"
                     />
                 </SettingRow>
@@ -42,7 +42,7 @@
                     <UButton
                         :label="$t('initialSetupButtonRebootBootloader')"
                         color="error"
-                        class="min-w-48 justify-center"
+                        class="w-48 shrink-0 justify-center"
                         @click="onRebootBootloader"
                     />
                 </SettingRow>
