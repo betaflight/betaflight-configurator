@@ -97,67 +97,77 @@
 
                 <!-- Token Section -->
                 <UiBox class="options col-span-3" :title="$t('sectionUserTokens')">
-                    <div class="token-list">
-                        <table class="profile-table">
-                            <thead>
-                                <tr>
-                                    <th>{{ $t("labelId") }}</th>
-                                    <th>{{ $t("labelCreated") }}</th>
-                                    <th>{{ $t("labelExpiry") }}</th>
-                                    <th>{{ $t("labelDetails") }}</th>
-                                    <th>{{ $t("labelActions") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-if="tokens.length === 0">
-                                    <td colspan="5">{{ $t("userTokenNoTokens") }}</td>
-                                </tr>
-                                <tr v-for="token in tokens" :key="token.id">
-                                    <td>{{ token.id }}</td>
-                                    <td>{{ formatDate(token.created) }}</td>
-                                    <td>{{ formatDate(token.expiry) }}</td>
-                                    <td>{{ token.details || token.client?.address || "-" }}</td>
-                                    <td>
-                                        <button type="button" class="link-button" @click="deleteToken(token.id)">
-                                            {{ $t("actionDelete") }}
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="grid grid-cols-[auto_auto_auto_1fr_auto] text-sm">
+                        <div class="col-span-5 grid grid-cols-subgrid border-b border-[var(--surface-300)]">
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelId") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelCreated") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelExpiry") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelDetails") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelActions") }}</div>
+                        </div>
+                        <div v-if="tokens.length === 0" class="col-span-5 py-1.5 px-2 text-dimmed">
+                            {{ $t("userTokenNoTokens") }}
+                        </div>
+                        <div
+                            v-for="token in tokens"
+                            :key="token.id"
+                            class="col-span-5 grid grid-cols-subgrid items-center border-b border-[var(--surface-200)] hover:bg-[var(--surface-100)]"
+                        >
+                            <div class="py-1.5 px-2">{{ token.id }}</div>
+                            <div class="py-1.5 px-2">{{ formatDate(token.created) }}</div>
+                            <div class="py-1.5 px-2">{{ formatDate(token.expiry) }}</div>
+                            <div class="py-1.5 px-2 text-dimmed">
+                                {{ token.details || token.client?.address || "-" }}
+                            </div>
+                            <div class="py-1.5 px-2">
+                                <UButton
+                                    size="xs"
+                                    variant="soft"
+                                    color="error"
+                                    icon="i-lucide-trash-2"
+                                    @click="deleteToken(token.id)"
+                                >
+                                    {{ $t("actionDelete") }}
+                                </UButton>
+                            </div>
+                        </div>
                     </div>
                 </UiBox>
 
                 <!-- Passkeys Section -->
                 <UiBox class="options col-span-3" :title="$t('sectionUserPasskeys')">
-                    <div class="passkey-list">
-                        <table class="profile-table">
-                            <thead>
-                                <tr>
-                                    <th>{{ $t("labelId") }}</th>
-                                    <th>{{ $t("labelCreated") }}</th>
-                                    <th>{{ $t("labelLastUsed") }}</th>
-                                    <th>{{ $t("labelDetails") }}</th>
-                                    <th>{{ $t("labelActions") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-if="passkeys.length === 0">
-                                    <td colspan="5">{{ $t("userPasskeyNoPasskeys") }}</td>
-                                </tr>
-                                <tr v-for="passkey in passkeys" :key="passkey.id">
-                                    <td>{{ passkey.id }}</td>
-                                    <td>{{ formatDate(passkey.createdAtUtc) }}</td>
-                                    <td>{{ formatDate(passkey.updatedAtUtc) }}</td>
-                                    <td>{{ passkey.client?.address || "-" }}</td>
-                                    <td>
-                                        <button type="button" class="link-button" @click="deletePasskey(passkey.id)">
-                                            {{ $t("actionDelete") }}
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="grid grid-cols-[auto_auto_auto_1fr_auto] text-sm">
+                        <div class="col-span-5 grid grid-cols-subgrid border-b border-[var(--surface-300)]">
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelId") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelCreated") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelLastUsed") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelDetails") }}</div>
+                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelActions") }}</div>
+                        </div>
+                        <div v-if="passkeys.length === 0" class="col-span-5 py-1.5 px-2 text-dimmed">
+                            {{ $t("userPasskeyNoPasskeys") }}
+                        </div>
+                        <div
+                            v-for="passkey in passkeys"
+                            :key="passkey.id"
+                            class="col-span-5 grid grid-cols-subgrid items-center border-b border-[var(--surface-200)] hover:bg-[var(--surface-100)]"
+                        >
+                            <div class="py-1.5 px-2">{{ passkey.id }}</div>
+                            <div class="py-1.5 px-2">{{ formatDate(passkey.createdAtUtc) }}</div>
+                            <div class="py-1.5 px-2">{{ formatDate(passkey.updatedAtUtc) }}</div>
+                            <div class="py-1.5 px-2 text-dimmed">{{ passkey.client?.address || "-" }}</div>
+                            <div class="py-1.5 px-2">
+                                <UButton
+                                    size="xs"
+                                    variant="soft"
+                                    color="error"
+                                    icon="i-lucide-trash-2"
+                                    @click="deletePasskey(passkey.id)"
+                                >
+                                    {{ $t("actionDelete") }}
+                                </UButton>
+                            </div>
+                        </div>
                     </div>
                 </UiBox>
             </div>
@@ -202,7 +212,9 @@ async function loadProfile() {
     try {
         const loggedIn = await loginManager.isUserLoggedIn();
         if (!loggedIn) {
+            userApi = null;
             isLoggedIn.value = false;
+            profile.value = null;
             tokens.value = [];
             passkeys.value = [];
             isLoading.value = false;
@@ -215,6 +227,7 @@ async function loadProfile() {
         try {
             profile.value = await userApi.profile();
         } catch (error) {
+            profile.value = null;
             gui_log(`${t("userProfileLoadFailed")}: ${error}`);
         }
 
@@ -225,7 +238,9 @@ async function loadProfile() {
         }
     } catch (error) {
         console.error("Error checking login state:", error);
+        userApi = null;
         isLoggedIn.value = false;
+        profile.value = null;
         tokens.value = [];
         passkeys.value = [];
         isLoading.value = false;
@@ -289,7 +304,12 @@ async function saveProfileChanges() {
 
 async function deleteToken(tokenId) {
     const confirmed = await dialog.showYesNo(t("actionDelete"), t("confirmDelete", { item: t("itemToken") }));
-    if (!confirmed || !userApi) {
+    if (!confirmed) {
+        return;
+    }
+
+    if (!userApi) {
+        gui_log(t("notLoggedIn"));
         return;
     }
 
@@ -304,7 +324,12 @@ async function deleteToken(tokenId) {
 
 async function deletePasskey(passkeyId) {
     const confirmed = await dialog.showYesNo(t("actionDelete"), t("confirmDelete", { item: t("itemPasskey") }));
-    if (!confirmed || !userApi) {
+    if (!confirmed) {
+        return;
+    }
+
+    if (!userApi) {
+        gui_log(t("notLoggedIn"));
         return;
     }
 
@@ -358,50 +383,6 @@ onUnmounted(() => {
         margin-top: 20px;
     }
 
-    .profile-table {
-        width: 100%;
-        border-collapse: collapse;
-        border-spacing: 0;
-
-        th {
-            padding: 8px;
-            text-align: left;
-            background-color: var(--surface-500);
-            font-weight: bold;
-            border-color: var(--surface-500);
-
-            &:first-child {
-                border-top-left-radius: 5px;
-            }
-            &:last-child {
-                border-top-right-radius: 5px;
-            }
-        }
-
-        td {
-            padding: 8px;
-            text-align: left;
-        }
-
-        tr:hover {
-            background-color: var(--surface-600);
-        }
-
-        .link-button {
-            background: none;
-            border: none;
-            padding: 0;
-            margin-right: 10px;
-            color: var(--primary-500);
-            cursor: pointer;
-            font: inherit;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-
     .profile-content {
         display: flex;
         align-items: flex-start;
@@ -425,7 +406,7 @@ onUnmounted(() => {
         }
 
         .title {
-            color: var(--primary-500);
+            color: var(--color-primary-500);
             font-weight: 600;
             margin-right: 5px;
             min-width: 60px;
