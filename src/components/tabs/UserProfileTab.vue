@@ -89,7 +89,7 @@
                                 {{ $t("actionSave") }}
                             </button>
                             <button type="button" class="regular-button" @click="cancelEdit">
-                                {{ $t("actionCancel") }}
+                                {{ $t("cancel") }}
                             </button>
                         </div>
                     </div>
