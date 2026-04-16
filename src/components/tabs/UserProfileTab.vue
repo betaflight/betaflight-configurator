@@ -234,6 +234,7 @@ async function loadProfile() {
         try {
             tokens.value = await userApi.getTokens();
         } catch (error) {
+            tokens.value = [];
             gui_log(`${t("userTokenLoadFailed")}: ${error}`);
         }
     } catch (error) {
@@ -250,6 +251,7 @@ async function loadProfile() {
     try {
         passkeys.value = await userApi.getPasskeys();
     } catch (error) {
+        passkeys.value = [];
         gui_log(`${t("userPasskeyLoadFailed")}: ${error}`);
     }
 
