@@ -9,7 +9,7 @@
 
             <!-- PID Table -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-[3rem_repeat(5,1fr)] gap-x-1 gap-y-1 items-center min-w-0">
+                <div class="grid grid-cols-[3rem_repeat(5,minmax(4rem,auto))] gap-x-3 gap-y-1 items-center min-w-0">
                     <!-- Header -->
                     <div></div>
                     <div class="flex items-center justify-center gap-0.5 text-xs">
@@ -394,7 +394,7 @@
 
             <!-- BARO, MAG, GPS Optional PIDs -->
             <UiBox v-if="showAllLocal && hasBaroMagGpsPids" type="neutral">
-                <div class="grid grid-cols-[3rem_repeat(3,1fr)] gap-x-1 gap-y-1 items-center min-w-0">
+                <div class="grid grid-cols-[3rem_repeat(3,4rem)] gap-x-2 gap-y-1 items-center min-w-0">
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center" v-html="$t('pidTuningProportional')"></div>
@@ -566,7 +566,7 @@
 
             <!-- Angle/Horizon Section -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-3 gap-x-1 gap-y-1 items-center min-w-0">
+                <div class="grid grid-cols-[4rem_repeat(2,4rem)] gap-x-2 gap-y-1 items-center min-w-0">
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center">{{ $t("pidTuningStrength") }}</div>
@@ -644,6 +644,9 @@
                                 :step="1"
                                 :min="0"
                                 :max="20"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
                             />
                         </div>
                         <div class="flex flex-col gap-1">
@@ -659,6 +662,9 @@
                                 :step="1"
                                 :min="0"
                                 :max="95"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
                             />
                         </div>
                         <div class="flex flex-col gap-1">
@@ -677,7 +683,15 @@
                                 <span class="text-xs text-dimmed" v-html="$t('pidTuningFeedforwardBoost')"></span>
                                 <HelpIcon :text="$t('pidTuningFeedforwardBoostHelp')" />
                             </div>
-                            <UInputNumber v-model="advancedTuning.feedforward_boost" :step="1" :min="0" :max="50" />
+                            <UInputNumber
+                                v-model="advancedTuning.feedforward_boost"
+                                :step="1"
+                                :min="0"
+                                :max="50"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-1">
@@ -692,6 +706,9 @@
                                 :step="1"
                                 :min="0"
                                 :max="150"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
                             />
                         </div>
                         <div class="flex flex-col gap-1">
@@ -705,6 +722,9 @@
                                 :min="0"
                                 :max="1"
                                 :format-options="{ minimumFractionDigits: 2, maximumFractionDigits: 2 }"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
                             />
                         </div>
                     </div>
@@ -733,7 +753,15 @@
                                 <span class="text-xs text-dimmed" v-html="$t('pidTuningItermRelaxCutoff')"></span>
                                 <HelpIcon :text="$t('pidTuningItermRelaxCutoffHelp')" />
                             </div>
-                            <UInputNumber v-model="advancedTuning.itermRelaxCutoff" :step="1" :min="1" :max="50" />
+                            <UInputNumber
+                                v-model="advancedTuning.itermRelaxCutoff"
+                                :step="1"
+                                :min="1"
+                                :max="50"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
                         </div>
                     </div>
                 </div>
@@ -763,6 +791,9 @@
                                 :min="0.1"
                                 :max="30"
                                 :format-options="{ minimumFractionDigits: 1, maximumFractionDigits: 1 }"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
                             />
                         </div>
                         <div class="flex flex-col gap-1">
@@ -772,6 +803,9 @@
                                 :step="10"
                                 :min="20"
                                 :max="1000"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
                             />
                         </div>
                     </div>
@@ -791,14 +825,30 @@
                                 <span class="text-xs text-dimmed" v-html="$t('pidTuningDMaxGain')"></span>
                                 <HelpIcon :text="$t('pidTuningDMaxGainHelp')" />
                             </div>
-                            <UInputNumber v-model="advancedTuning.dMaxGain" :step="1" :min="0" :max="100" />
+                            <UInputNumber
+                                v-model="advancedTuning.dMaxGain"
+                                :step="1"
+                                :min="0"
+                                :max="100"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-1">
                                 <span class="text-xs text-dimmed" v-html="$t('pidTuningDMaxAdvance')"></span>
                                 <HelpIcon :text="$t('pidTuningDMaxAdvanceHelp')" />
                             </div>
-                            <UInputNumber v-model="advancedTuning.dMaxAdvance" :step="1" :min="0" :max="200" />
+                            <UInputNumber
+                                v-model="advancedTuning.dMaxAdvance"
+                                :step="1"
+                                :min="0"
+                                :max="200"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
                         </div>
                     </div>
                 </div>
@@ -807,11 +857,27 @@
             <!-- Motor Settings -->
             <UiBox :title="$t('pidTuningMotorSettings')" type="neutral">
                 <SettingRow :label="$t('pidTuningThrottleBoost')" :help="$t('pidTuningThrottleBoostHelp')">
-                    <UInputNumber v-model="advancedTuning.throttleBoost" :step="1" :min="0" :max="100" />
+                    <UInputNumber
+                        v-model="advancedTuning.throttleBoost"
+                        :step="1"
+                        :min="0"
+                        :max="100"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
                 </SettingRow>
 
                 <SettingRow :label="$t('pidTuningMotorOutputLimit')" :help="$t('pidTuningMotorLimitHelp')">
-                    <UInputNumber v-model="advancedTuning.motorOutputLimit" :step="1" :min="1" :max="100" />
+                    <UInputNumber
+                        v-model="advancedTuning.motorOutputLimit"
+                        :step="1"
+                        :min="1"
+                        :max="100"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
                 </SettingRow>
 
                 <SettingRow
@@ -824,6 +890,9 @@
                         :min="0"
                         :max="idleMinRpmMax"
                         :disabled="!dshotTelemetryEnabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
                     />
                 </SettingRow>
 
@@ -843,6 +912,9 @@
                                 :step="1"
                                 :min="1"
                                 :max="150"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
                             />
                         </div>
                     </div>
@@ -859,7 +931,15 @@
                     <div v-if="thrustLinearEnabled" class="flex flex-wrap items-end gap-3 pl-8">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed" v-html="$t('pidTuningThrustLinearValue')"></span>
-                            <UInputNumber v-model="advancedTuning.thrustLinearization" :step="1" :min="1" :max="150" />
+                            <UInputNumber
+                                v-model="advancedTuning.thrustLinearization"
+                                :step="1"
+                                :min="1"
+                                :max="150"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
                         </div>
                     </div>
                 </div>
@@ -874,11 +954,27 @@
                     </div>
                     <div class="flex flex-col gap-1">
                         <span class="text-xs text-dimmed">{{ $t("pidTuningTPARate") }}</span>
-                        <UInputNumber v-model="tpaRate" :step="1" :min="0" :max="100" />
+                        <UInputNumber
+                            v-model="tpaRate"
+                            :step="1"
+                            :min="0"
+                            :max="100"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-16"
+                        />
                     </div>
                     <div class="flex flex-col gap-1">
                         <span class="text-xs text-dimmed">{{ $t("pidTuningTPABreakPoint") }}</span>
-                        <UInputNumber v-model="tpaBreakpoint" :step="10" :min="750" :max="2250" />
+                        <UInputNumber
+                            v-model="tpaBreakpoint"
+                            :step="10"
+                            :min="750"
+                            :max="2250"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-16"
+                        />
                     </div>
                 </div>
             </UiBox>
@@ -893,7 +989,15 @@
                     :label="$t('pidTuningAcroTrainerAngleLimit')"
                     :help="$t('pidTuningAcroTrainerAngleLimitHelp')"
                 >
-                    <UInputNumber v-model="advancedTuning.acroTrainerAngleLimit" :step="1" :min="10" :max="80" />
+                    <UInputNumber
+                        v-model="advancedTuning.acroTrainerAngleLimit"
+                        :step="1"
+                        :min="10"
+                        :max="80"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
                 </SettingRow>
 
                 <div class="flex flex-col gap-1">
@@ -908,7 +1012,15 @@
                 </div>
 
                 <SettingRow :label="$t('pidTuningAbsoluteControlGain')" :help="$t('pidTuningAbsoluteControlGainHelp')">
-                    <UInputNumber v-model="advancedTuning.absoluteControlGain" :step="1" :min="0" :max="20" />
+                    <UInputNumber
+                        v-model="advancedTuning.absoluteControlGain"
+                        :step="1"
+                        :min="0"
+                        :max="20"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
                 </SettingRow>
             </UiBox>
         </div>

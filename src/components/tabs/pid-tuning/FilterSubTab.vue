@@ -87,6 +87,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="gyro_lowpass_hz"
                                 :step="1"
                                 :min="1"
@@ -98,6 +100,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningMinCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="gyro_lowpass_dyn_min_hz"
                                 :step="1"
                                 :min="1"
@@ -109,6 +113,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningMaxCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="gyro_lowpass_dyn_max_hz"
                                 :step="1"
                                 :min="1"
@@ -133,6 +139,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="gyro_lowpass2_hz"
                                 :step="1"
                                 :min="1"
@@ -161,11 +169,27 @@
                     <div v-if="gyroNotch1Enabled" class="flex flex-wrap items-end gap-3 pl-8">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningCenterFrequency") }}</span>
-                            <UInputNumber size="xs" v-model="gyro_notch_hz" :step="1" :min="1" :max="16000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="gyro_notch_hz"
+                                :step="1"
+                                :min="1"
+                                :max="16000"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningCutoffFrequency") }}</span>
-                            <UInputNumber size="xs" v-model="gyro_notch_cutoff" :step="1" :min="0" :max="16000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="gyro_notch_cutoff"
+                                :step="1"
+                                :min="0"
+                                :max="16000"
+                            />
                         </div>
                     </div>
                 </div>
@@ -178,11 +202,27 @@
                     <div v-if="gyroNotch2Enabled" class="flex flex-wrap items-end gap-3 pl-8">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningCenterFrequency") }}</span>
-                            <UInputNumber size="xs" v-model="gyro_notch2_hz" :step="1" :min="1" :max="16000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="gyro_notch2_hz"
+                                :step="1"
+                                :min="1"
+                                :max="16000"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningCutoffFrequency") }}</span>
-                            <UInputNumber size="xs" v-model="gyro_notch2_cutoff" :step="1" :min="0" :max="16000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="gyro_notch2_cutoff"
+                                :step="1"
+                                :min="0"
+                                :max="16000"
+                            />
                         </div>
                     </div>
                 </div>
@@ -203,6 +243,8 @@
                                 <span class="text-xs text-dimmed">{{ $t("pidTuningRpmHarmonics") }}</span>
                                 <UInputNumber
                                     size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
                                     v-model="gyro_rpm_notch_harmonics"
                                     :step="1"
                                     :min="1"
@@ -213,6 +255,8 @@
                                 <span class="text-xs text-dimmed">{{ $t("pidTuningRpmMinHz") }}</span>
                                 <UInputNumber
                                     size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
                                     v-model="gyro_rpm_notch_min_hz"
                                     :step="1"
                                     :min="50"
@@ -239,19 +283,51 @@
                     <div v-if="dynamicNotchEnabled" class="flex flex-wrap items-end gap-3 pl-8">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchCount") }}</span>
-                            <UInputNumber size="xs" v-model="dyn_notch_count" :step="1" :min="1" :max="5" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_notch_count"
+                                :step="1"
+                                :min="1"
+                                :max="5"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchQ") }}</span>
-                            <UInputNumber size="xs" v-model="dyn_notch_q" :step="1" :min="1" :max="1000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_notch_q"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchMinHz") }}</span>
-                            <UInputNumber size="xs" v-model="dyn_notch_min_hz" :step="1" :min="60" :max="250" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_notch_min_hz"
+                                :step="1"
+                                :min="60"
+                                :max="250"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchMaxHz") }}</span>
-                            <UInputNumber size="xs" v-model="dyn_notch_max_hz" :step="1" :min="200" :max="1000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_notch_max_hz"
+                                :step="1"
+                                :min="200"
+                                :max="1000"
+                            />
                         </div>
                     </div>
                 </div>
@@ -284,6 +360,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="dterm_lowpass_hz"
                                 :step="1"
                                 :min="1"
@@ -295,6 +373,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningMinCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="dterm_lowpass_dyn_min_hz"
                                 :step="1"
                                 :min="1"
@@ -306,6 +386,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningMaxCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="dterm_lowpass_dyn_max_hz"
                                 :step="10"
                                 :min="200"
@@ -315,7 +397,15 @@
                         </div>
                         <div v-if="dtermLowpassMode === 1" class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningDTermLowpassDynExpo") }}</span>
-                            <UInputNumber size="xs" v-model="dyn_lpf_curve_expo" :step="1" :min="0" :max="10" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_lpf_curve_expo"
+                                :step="1"
+                                :min="0"
+                                :max="10"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningLowpassFilterType") }}</span>
@@ -334,6 +424,8 @@
                             <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
                             <UInputNumber
                                 size="xs"
+                                orientation="vertical"
+                                class="w-16"
                                 v-model="dterm_lowpass2_hz"
                                 :step="1"
                                 :min="1"
@@ -364,11 +456,27 @@
                     <div v-if="dtermNotchEnabled" class="flex flex-wrap items-end gap-3 pl-8">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningCenterFrequency") }}</span>
-                            <UInputNumber size="xs" v-model="dterm_notch_hz" :step="1" :min="1" :max="16000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dterm_notch_hz"
+                                :step="1"
+                                :min="1"
+                                :max="16000"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningCutoffFrequency") }}</span>
-                            <UInputNumber size="xs" v-model="dterm_notch_cutoff" :step="1" :min="0" :max="16000" />
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dterm_notch_cutoff"
+                                :step="1"
+                                :min="0"
+                                :max="16000"
+                            />
                         </div>
                     </div>
                 </div>
@@ -382,7 +490,15 @@
                 <div class="flex flex-wrap items-end gap-3">
                     <div class="flex flex-col gap-1">
                         <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                        <UInputNumber size="xs" v-model="yaw_lowpass_hz" :step="1" :min="0" :max="500" />
+                        <UInputNumber
+                            size="xs"
+                            orientation="vertical"
+                            class="w-16"
+                            v-model="yaw_lowpass_hz"
+                            :step="1"
+                            :min="0"
+                            :max="500"
+                        />
                     </div>
                 </div>
             </UiBox>
