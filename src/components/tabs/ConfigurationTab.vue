@@ -138,7 +138,7 @@
                         :help="$t('configurationGyroActiveIMUHelp')"
                         v-if="showMultiGyro"
                     >
-                        <SettingRow v-for="gyro in gyroList" :key="gyro.index" fullWidth :label="gyro.name">
+                        <SettingRow v-for="gyro in gyroList" :key="gyro.index" fullWidth :label="getGyroLabel(gyro)">
                             <USwitch
                                 :model-value="gyro.enabled"
                                 @update:model-value="(checked) => toggleGyro(gyro.index, checked)"
@@ -588,6 +588,10 @@ export default defineComponent({
             }
             return gyros;
         });
+
+        const getGyroLabel = (gyro) => {
+            return gyro.name || `Gyro #${gyro.index + 1}`;
+        };
 
         const toggleGyro = (index, enabled) => {
             if (enabled) {
@@ -1299,6 +1303,7 @@ export default defineComponent({
             gyroAlignSelectItems,
             showMultiGyro,
             gyroList,
+            getGyroLabel,
             toggleGyro,
             updateGyroAlign,
             saveConfig,
