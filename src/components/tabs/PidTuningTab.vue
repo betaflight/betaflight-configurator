@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -516,12 +516,6 @@ watch(
         onFormChanged();
     },
 );
-
-// Re-initialize Switchery when switching subtabs (subtabs use v-if so checkboxes re-mount)
-watch(activeSubtab, async () => {
-    await nextTick();
-    GUI.switchery();
-});
 
 // Cleanup callback - called from gui.js tab_switch_cleanup when switching away from this tab
 function cleanup(callback) {
