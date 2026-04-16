@@ -39,6 +39,7 @@ class GuiControl {
             "help",
             "user_profile",
             "backups",
+            "flight_plan",
         ];
 
         this.defaultAllowedTabs = [
