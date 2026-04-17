@@ -22,7 +22,7 @@
                         </div>
                         <UButton
                             class="reset-zaxis sm-min"
-                            :label="$t('initialSetupButtonResetZaxis')"
+                            :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
                             color="neutral"
                             variant="subtle"
                             @click="resetZaxis"
@@ -702,8 +702,6 @@ function process_html() {
     isExpert.value = isExpertModeEnabled();
 
     // no direct DOM dialog wiring here; dialogs use Vue refs and methods
-    // set initial reset button label via reactive yaw value
-    // reset button text will be rendered from template using `yaw_fix`
 
     const displaySensorInfo = async function () {
         const types = await sensorTypes();
