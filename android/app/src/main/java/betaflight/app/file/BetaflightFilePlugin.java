@@ -428,11 +428,13 @@ public class BetaflightFilePlugin extends Plugin {
 
         try {
             if (file.outputStream != null) {
-                file.outputStream.flush();
-                file.outputStream.close();
-                file.outputStream = null;
+                try {
+                    file.outputStream.flush();
+                } finally {
+                    file.outputStream.close();
+                    file.outputStream = null;
+                }
             }
-            openFiles.remove(fileId);
 
             JSObject ret = new JSObject();
             ret.put("success", true);
@@ -440,6 +442,8 @@ public class BetaflightFilePlugin extends Plugin {
         } catch (Exception e) {
             Log.e(TAG, "closeFile failed", e);
             call.reject("Failed to close file: " + e.getMessage());
+        } finally {
+            openFiles.remove(fileId);
         }
     }
 
