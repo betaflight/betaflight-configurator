@@ -10,7 +10,7 @@
                     :indeterminate="state.flashProgressValue === 0"
                     :size="80"
                     :stroke-width="6"
-                    color="primary"
+                    :color="flashRingColor"
                 />
                 <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
             </div>
@@ -536,7 +536,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
+import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import Multiselect from "vue-multiselect";
@@ -715,6 +715,9 @@ export default defineComponent({
             VALID: "VALID",
             INVALID: "INVALID",
             ACTION: "ACTION",
+            ERASING: "ERASING",
+            FLASHING: "FLASHING",
+            VERIFYING: "VERIFYING",
         };
 
         // Helper functions
@@ -767,6 +770,15 @@ export default defineComponent({
                     break;
                 case FLASH_MESSAGE_TYPES.ACTION:
                     state.progressLabelClass = "actionRequired";
+                    break;
+                case FLASH_MESSAGE_TYPES.ERASING:
+                    state.progressLabelClass = "erasing";
+                    break;
+                case FLASH_MESSAGE_TYPES.FLASHING:
+                    state.progressLabelClass = "flashing";
+                    break;
+                case FLASH_MESSAGE_TYPES.VERIFYING:
+                    state.progressLabelClass = "verifying";
                     break;
                 case FLASH_MESSAGE_TYPES.NEUTRAL:
                 default:
@@ -2145,9 +2157,23 @@ export default defineComponent({
             }
         };
 
+        const flashRingColor = computed(() => {
+            switch (state.progressLabelClass) {
+                case "erasing":
+                    return "error";
+                case "flashing":
+                    return "success";
+                case "verifying":
+                    return "primary";
+                default:
+                    return "primary";
+            }
+        });
+
         // Return all public methods and state
         return {
             state,
+            flashRingColor,
             cloudBuild,
             boardSelection,
             FLASH_MESSAGE_TYPES,
