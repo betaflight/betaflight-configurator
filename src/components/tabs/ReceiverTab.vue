@@ -187,68 +187,63 @@
 
                         <!-- Stick settings -->
                         <UiBox :title="$t('receiverStickRange')" class="col-span-6">
-                            <div class="flex justify-between gap-2">
-                                <SettingColumn :label="$t('receiverStickMin')" :help="$t('receiverHelpStickMin')">
-                                    <UInputNumber
-                                        v-model="rxConfig.stick_min"
-                                        :min="1000"
-                                        :max="1200"
-                                        :step="1"
-                                        class="min-w-42"
-                                    />
+                            <div class="grid grid-cols-3 gap-2">
+                                <SettingColumn
+                                    :label="$t('receiverStickMin')"
+                                    :help="$t('receiverHelpStickMin')"
+                                    class="items-start"
+                                >
+                                    <UInputNumber v-model="rxConfig.stick_min" :min="1000" :max="1200" :step="1" />
                                 </SettingColumn>
-                                <SettingColumn :label="$t('receiverStickCenter')" :help="$t('receiverHelpStickCenter')">
-                                    <UInputNumber
-                                        v-model="rxConfig.stick_center"
-                                        :min="1401"
-                                        :max="1599"
-                                        :step="1"
-                                        class="min-w-42"
-                                    />
+                                <SettingColumn
+                                    :label="$t('receiverStickCenter')"
+                                    :help="$t('receiverHelpStickCenter')"
+                                    class="items-center"
+                                >
+                                    <UInputNumber v-model="rxConfig.stick_center" :min="1401" :max="1599" :step="1" />
                                 </SettingColumn>
-                                <SettingColumn :label="$t('receiverStickMax')" :help="$t('receiverHelpStickMax')">
-                                    <UInputNumber
-                                        v-model="rxConfig.stick_max"
-                                        :min="1800"
-                                        :max="2000"
-                                        :step="1"
-                                        class="min-w-42"
-                                    />
+                                <SettingColumn
+                                    :label="$t('receiverStickMax')"
+                                    :help="$t('receiverHelpStickMax')"
+                                    class="items-end"
+                                >
+                                    <UInputNumber v-model="rxConfig.stick_max" :min="1800" :max="2000" :step="1" />
                                 </SettingColumn>
                             </div>
                         </UiBox>
 
                         <!-- Deadband settings -->
                         <UiBox :title="$t('receiverDeadband')" class="col-span-6">
-                            <div class="flex justify-between gap-2">
-                                <SettingColumn :label="$t('receiverDeadband')" :help="$t('receiverHelpDeadband')">
-                                    <UInputNumber
-                                        v-model="rcDeadbandConfig.deadband"
-                                        :min="0"
-                                        :max="32"
-                                        :step="1"
-                                        class="min-w-42"
-                                    />
+                            <div class="grid grid-cols-3 gap-2">
+                                <SettingColumn
+                                    :label="$t('receiverDeadband')"
+                                    :help="$t('receiverHelpDeadband')"
+                                    class="items-start"
+                                >
+                                    <UInputNumber v-model="rcDeadbandConfig.deadband" :min="0" :max="32" :step="1" />
                                 </SettingColumn>
-                                <SettingColumn :label="$t('receiverYawDeadband')" :help="$t('receiverHelpYawDeadband')">
+                                <SettingColumn
+                                    :label="$t('receiverYawDeadband')"
+                                    :help="$t('receiverHelpYawDeadband')"
+                                    class="items-center"
+                                >
                                     <UInputNumber
                                         v-model="rcDeadbandConfig.yaw_deadband"
                                         :min="0"
                                         :max="100"
                                         :step="1"
-                                        class="min-w-42"
                                     />
                                 </SettingColumn>
                                 <SettingColumn
                                     :label="$t('recevier3dDeadbandThrottle')"
                                     :help="$t('receiverHelp3dDeadbandThrottle')"
+                                    class="items-end"
                                 >
                                     <UInputNumber
                                         v-model="rcDeadbandConfig.deadband3d_throttle"
                                         :min="0"
                                         :max="100"
                                         :step="1"
-                                        class="min-w-42"
                                     />
                                 </SettingColumn>
                             </div>
@@ -382,8 +377,8 @@
                     <svg id="RX_plot" class="col-span-5" ref="rxPlot">
                         <g class="axis x" transform="translate(40, 188)"></g>
                         <g class="axis y" transform="translate(40, 10)"></g>
-                        <g class="grid x" transform="translate(40, 188)"></g>
-                        <g class="grid y" transform="translate(40, 10)"></g>
+                        <g class="grid-display x" transform="translate(40, 188)"></g>
+                        <g class="grid-display y" transform="translate(40, 10)"></g>
                         <g class="data" transform="translate(40, 10)"></g>
                     </svg>
 
@@ -1095,10 +1090,10 @@ function updateRxPlot() {
         .x((d) => widthScale(d[0]))
         .y((d) => heightScale(d[1]));
 
-    svg.select(".x.grid").call(xGrid);
-    svg.select(".y.grid").call(yGrid);
-    svg.select(".x.axis").call(xAxis);
-    svg.select(".y.axis").call(yAxis);
+    svg.select(".x.grid-display").call(xGrid);
+    svg.select(".y.grid-display").call(yGrid);
+    svg.select(".x.axis-display").call(xAxis);
+    svg.select(".y.axis-display").call(yAxis);
 
     const data = svg.select("g.data");
     const lines = data.selectAll("path").data(rxPlotData);
@@ -1291,49 +1286,6 @@ onUnmounted(() => {
     }
 }
 
-.sticks {
-    th {
-        width: 33%;
-    }
-}
-
-.deadband {
-    th {
-        width: 33%;
-    }
-}
-
-.rcSmoothing {
-    table {
-        select {
-            width: 90%;
-        }
-        :deep(input) {
-            width: 90%;
-        }
-        .helpicon {
-            margin-top: 0;
-        }
-    }
-    td {
-        &:first-child {
-            width: 120px;
-            padding: 0.5rem 0;
-        }
-        &:last-child {
-            width: calc(100% - 78px);
-        }
-    }
-}
-
-.rcInterpolation {
-    .slider {
-        input {
-            appearance: slider-horizontal;
-        }
-    }
-}
-
 .graphAndLabel {
     display: flex;
     flex-wrap: nowrap;
@@ -1350,45 +1302,6 @@ onUnmounted(() => {
     margin: 0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    .table {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: separate;
-        border-spacing: 5px;
-        box-sizing: border-box;
-        padding: 5px 5px 5px 3px;
-    }
-    .flex flex-col {
-        display: table-row-group;
-    }
-    .receiver-button {
-        a {
-            background-color: var(--primary-500);
-            border-radius: 0.5rem;
-            color: #000;
-            font-size: 10px;
-            line-height: 1.25rem;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            display: block;
-            text-align: center;
-        }
-    }
-    .row {
-        display: table-row;
-    }
-    .left-cell {
-        display: table-cell;
-        vertical-align: middle;
-        font-weight: bold;
-    }
-    .right-cell {
-        display: table-cell;
-        vertical-align: middle;
-        text-align: right;
-        font-size: smaller;
-    }
     .value {
         padding: 4px;
         color: #fff;
@@ -1463,7 +1376,7 @@ onUnmounted(() => {
     }
 }
 
-:deep(.grid) {
+:deep(.grid-display) {
     .tick {
         stroke: silver;
         stroke-width: 1px;
@@ -1485,40 +1398,7 @@ onUnmounted(() => {
     font-size: 10px;
 }
 
-.model_preview_cell {
-    position: relative;
-    width: 100%;
-    height: 11rem;
-}
-
-.model_preview {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-.receiver {
-    select {
-        width: fit-content;
-    }
-}
-
-table {
-    width: 100%;
-    padding: 0;
-    th {
-        border-bottom: 1px solid var(--surface-500);
-    }
-    td {
-        border-bottom: 1px solid var(--surface-500);
-    }
-}
-
-@media all and (max-width: 575px) {
+@media all and (max-width: 1055px) {
     :deep(.grid-box) {
         &.col5 {
             grid-template-columns: 1fr !important;
