@@ -2501,6 +2501,9 @@
     "receiverThrottleHover": {
         "message": "Hover Point"
     },
+    "receiverStickRange": {
+        "message": "Stick Range"
+    },
     "receiverStickMin": {
         "message": "'Stick Low' Threshold"
     },
