@@ -8234,6 +8234,9 @@
     "userBackupDownloadFailed": {
         "message": "Failed to download backup"
     },
+    "userBackupFileEmpty": {
+        "message": "Backup file is empty"
+    },
     "userBackupUpdateSuccess": {
         "message": "Backup updated successfully"
     },
