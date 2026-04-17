@@ -7,18 +7,15 @@
                 <WikiButton docUrl="flight-plan" />
             </div>
 
-            <!-- Two-column layout -->
-            <div class="grid-row grid-box col2">
-                <!-- Left Column: Map Display and Elevation Profile -->
-                <div class="col-span-1">
+            <div class="flex flex-col gap-[25px]">
+                <!-- Top row: Map and Waypoint List (stretch to matching heights) -->
+                <div class="grid grid-cols-1 xl:grid-cols-[1.15fr_1fr] gap-4">
                     <FlightPlanMap />
-                    <ElevationProfile />
-                </div>
-
-                <!-- Right Column: Flight Plan List -->
-                <div class="col-span-1">
                     <WaypointList />
                 </div>
+
+                <!-- Full-width Elevation Profile -->
+                <ElevationProfile />
             </div>
         </div>
 
@@ -30,34 +27,50 @@
             <p v-html="$t('flightPlanConfirmClear')"></p>
 
             <template #footer>
-                <div class="dialog-buttons">
-                    <button @click="showClearDialog = false" class="cancel-btn">
+                <div class="flex gap-2 justify-end">
+                    <UButton variant="soft" color="neutral" @click="showClearDialog = false">
                         {{ $t("cancel") }}
-                    </button>
-                    <button @click="confirmClear" class="clear-btn primary">
+                    </UButton>
+                    <UButton color="error" @click="confirmClear">
                         {{ $t("flightPlanClear") }}
-                    </button>
+                    </UButton>
+                </div>
+            </template>
+        </Dialog>
+
+        <!-- Load-from-FC Confirmation Dialog -->
+        <Dialog v-model="showLoadPromptDialog" :title="$t('flightPlanLoadPromptTitle')" :closeable="false">
+            <p v-html="$t('flightPlanLoadPromptBody')"></p>
+
+            <template #footer>
+                <div class="flex gap-2 justify-end">
+                    <UButton variant="soft" color="neutral" @click="declineLoadFromFC">
+                        {{ $t("flightPlanKeepLocal") }}
+                    </UButton>
+                    <UButton @click="confirmLoadFromFC">
+                        {{ $t("flightPlanLoadFromFC") }}
+                    </UButton>
                 </div>
             </template>
         </Dialog>
 
         <!-- Bottom toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn clear-button">
-                <button @click="handleClear" v-html="$t('flightPlanClear')"></button>
-            </div>
-            <div class="btn load-button">
-                <button @click="handleLoad" v-html="$t('flightPlanLoadFromFC')"></button>
-            </div>
-            <div class="btn save-button">
-                <button @click="handleSave" v-html="$t('save')"></button>
-            </div>
+        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+            <UButton variant="soft" color="error" @click="handleClear">
+                {{ $t("flightPlanClear") }}
+            </UButton>
+            <UButton variant="soft" :disabled="!canUseFC" :title="$t('flightPlanLoadFromFC')" @click="handleLoad">
+                {{ $t("flightPlanLoad") }}
+            </UButton>
+            <UButton :disabled="!canUseFC" :title="$t('flightPlanSaveToFC')" @click="handleSave">
+                {{ $t("save") }}
+            </UButton>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import Dialog from "@/components/elements/Dialog.vue";
@@ -66,23 +79,46 @@ import WaypointEditor from "./FlightPlan/WaypointEditor.vue";
 import FlightPlanMap from "./FlightPlan/FlightPlanMap.vue";
 import ElevationProfile from "./FlightPlan/ElevationProfile.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
+import { useConnectionStore } from "@/stores/connection";
+import FC from "@/js/fc";
 import GUI from "@/js/gui";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 
-const { loadFromFC, saveToFC, clearOnFC, clearPlan, waypoints } = useFlightPlan();
+const { loadFromFC, saveToFC, clearOnFC, clearPlan, loadPlan, waypoints } = useFlightPlan();
+const connectionStore = useConnectionStore();
 const showClearDialog = ref(false);
+const showLoadPromptDialog = ref(false);
+
+const isConnected = computed(() => connectionStore.connectionValid);
+const fcHasFlightPlan = computed(() => FC.CONFIG?.buildOptions?.includes("USE_FLIGHT_PLAN") ?? false);
+const canUseFC = computed(() => isConnected.value && fcHasFlightPlan.value);
 
 onMounted(async () => {
-    await loadFromFC();
+    loadPlan();
+
+    if (canUseFC.value) {
+        if (waypoints.value.length === 0) {
+            await loadFromFC();
+        } else {
+            showLoadPromptDialog.value = true;
+        }
+    }
+
     GUI.content_ready();
 });
 
 const handleSave = async () => {
+    if (!canUseFC.value) {
+        return;
+    }
     await saveToFC();
 };
 
 const handleLoad = async () => {
+    if (!canUseFC.value) {
+        return;
+    }
     await loadFromFC();
 };
 
@@ -97,69 +133,26 @@ const handleClear = () => {
 
 const confirmClear = async () => {
     clearPlan();
-    await clearOnFC();
+    if (canUseFC.value) {
+        await clearOnFC();
+    }
     showClearDialog.value = false;
+};
+
+const confirmLoadFromFC = async () => {
+    showLoadPromptDialog.value = false;
+    await loadFromFC();
+};
+
+const declineLoadFromFC = () => {
+    showLoadPromptDialog.value = false;
 };
 </script>
 
 <style scoped>
-.grid-row.grid-box.col2 {
-    display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    gap: 1rem;
-}
-
 /* Bottom toolbar (CRITICAL: must be exactly 2rem) */
 .content_toolbar.toolbar_fixed_bottom {
     position: fixed;
     bottom: 2rem;
-}
-
-.content_toolbar.toolbar_fixed_bottom .btn a {
-    min-width: 125px;
-    text-align: center;
-}
-
-/* Dialog buttons */
-.dialog-buttons {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.dialog-buttons button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: 1px solid var(--surface-500);
-    background: var(--surface-200);
-    color: var(--text);
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.dialog-buttons button:hover {
-    background: var(--surface-300);
-}
-
-.dialog-buttons .clear-btn.primary {
-    background: var(--error-500);
-    color: var(--surface-50);
-    border-color: var(--error-500);
-}
-
-.dialog-buttons .clear-btn.primary:hover {
-    background: var(--error-600);
-    border-color: var(--error-600);
-}
-
-.dialog-buttons .cancel-btn:hover {
-    background: var(--surface-400);
-}
-
-/* Responsive */
-@media (max-width: 1055px) {
-    .grid-row.grid-box.col2 {
-        grid-template-columns: 1fr;
-    }
 }
 </style>

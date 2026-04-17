@@ -1,10 +1,7 @@
 <template>
-    <div class="gui_box grey elevation-profile">
-        <div class="gui_box_titlebar">
-            <div class="spacer_box_title" v-html="$t('flightPlanElevationProfile')"></div>
-        </div>
-        <div class="spacer_box">
-            <div class="profile-stats" v-if="waypoints.length > 0">
+    <UiBox :title="$t('flightPlanElevationProfile')" type="neutral" class="elevation-profile">
+        <template v-if="waypoints.length > 0">
+            <div class="profile-stats">
                 <span class="stat">
                     <strong>{{ $t("flightPlanDistance") }}:</strong> {{ formatDistance(totalDistance) }}
                 </span>
@@ -25,7 +22,7 @@
                 </span>
             </div>
 
-            <div class="profile-chart-container" v-if="waypoints.length > 0">
+            <div class="profile-chart-container">
                 <svg
                     ref="chartSvg"
                     :viewBox="`0 0 ${chartWidth} ${chartHeight}`"
@@ -190,16 +187,17 @@
                     </g>
                 </svg>
             </div>
+        </template>
 
-            <div v-else class="no-waypoints">
-                <p>{{ $t("flightPlanNoWaypointsForProfile") }}</p>
-            </div>
+        <div v-else class="no-waypoints">
+            <p>{{ $t("flightPlanNoWaypointsForProfile") }}</p>
         </div>
-    </div>
+    </UiBox>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 
 const { sortedWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
@@ -238,7 +236,6 @@ const getSegmentKey = (fromUid, toUid) => `${fromUid}-${toUid}`;
 // Conversion constants
 const METERS_TO_FEET = 3.28084;
 const METERS_TO_NAUTICAL_MILES = 1 / 1852;
-const NAUTICAL_MILES_TO_METERS = 1852;
 
 // Calculate distance between two points using Haversine formula
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -544,7 +541,7 @@ const handleMarkerHover = (point, index) => {
     };
 };
 
-const handleMouseMove = (event) => {
+const handleMouseMove = () => {
     // Keep current hover if over a marker
 };
 
@@ -774,10 +771,6 @@ watch(
 </script>
 
 <style scoped>
-.elevation-profile {
-    margin-top: 1rem;
-}
-
 .profile-stats {
     display: flex;
     gap: 1rem;

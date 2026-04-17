@@ -3332,7 +3332,13 @@
         "message": "Please wait..."
     },
     "flightPlanClear": {
-        "message": "Clear Plan"
+        "message": "Clear"
+    },
+    "flightPlanLoad": {
+        "message": "Load"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Save to FC"
     },
     "flightPlanLoaded": {
         "message": "Flight plan loaded successfully"
@@ -3390,6 +3396,15 @@
     },
     "flightPlanClearTitle": {
         "message": "Clear Flight Plan"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Load Flight Plan from Flight Controller?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "A flight controller is connected. Do you want to replace the current flight plan with the one stored on the flight controller? Choosing No keeps your current plan so you can save it to the flight controller."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Keep current"
     },
     "flightPlanElevationProfile": {
         "message": "Elevation Profile"
