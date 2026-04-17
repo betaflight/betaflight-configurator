@@ -4,7 +4,7 @@ import OptionsTab from "../components/tabs/OptionsTab.vue";
 import PortsTab from "../components/tabs/PortsTab.vue";
 import ServosTab from "../components/tabs/ServosTab.vue";
 import ConfigurationTab from "../components/tabs/ConfigurationTab.vue";
-import UserProfileTab from "../components/tabs/UserProfile.vue";
+import UserProfileTab from "../components/tabs/UserProfileTab.vue";
 import BackupsTab from "../components/tabs/BackupsTab.vue";
 import LoggingTab from "../components/tabs/LoggingTab.vue";
 import GpsTab from "../components/tabs/GpsTab.vue";
