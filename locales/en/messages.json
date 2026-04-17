@@ -423,6 +423,87 @@
     "tabServos": {
         "message": "Servos"
     },
+    "tabWingTuning": {
+        "message": "Wing Tuning"
+    },
+    "wingTuningStatus": {
+        "message": "Status"
+    },
+    "wingTuningLoading": {
+        "message": "Reading values from FC…"
+    },
+    "wingTuningSaving": {
+        "message": "Saving to FC…"
+    },
+    "wingTuningDirty": {
+        "message": "Unsaved changes. Click Save to write to FC."
+    },
+    "wingTuningClean": {
+        "message": "In sync with FC."
+    },
+    "wingTuningReload": {
+        "message": "Reload from FC"
+    },
+    "wingTuningSave": {
+        "message": "Save to FC"
+    },
+    "wingTuningApiRequired": {
+        "message": "Wing Tuning requires firmware built with USE_WING enabled. Please update or rebuild your flight controller firmware."
+    },
+    "wingSTermTitle": {
+        "message": "S-term (PIDF_S controller)"
+    },
+    "wingSTermDesc": {
+        "message": "S-term translates stick position directly to a servo command. It is the main driver for maneuvers; PID stabilizes the craft around S-term. Recommended start: 50 for all axes. For differential-thrust yaw, set s_yaw to 0."
+    },
+    "wingYawTypeTitle": {
+        "message": "Yaw Type"
+    },
+    "wingYawTypeDesc": {
+        "message": "Select how the aircraft yaws. RUDDER uses a rudder servo. DIFF_THRUST uses differential motor thrust; s_yaw is forced to 0 in this mode."
+    },
+    "wingAxis": {
+        "message": "Axis"
+    },
+    "wingValue": {
+        "message": "Value"
+    },
+    "wingSlider": {
+        "message": "Slider"
+    },
+    "wingSYawForcedZero": {
+        "message": "Yaw type is DIFF_THRUST, so s_yaw is forced to 0."
+    },
+    "wingAngleModeTitle": {
+        "message": "Angle Mode"
+    },
+    "wingAngleModeDesc": {
+        "message": "angle_pitch_offset trims pitch attitude in Angle mode (negative values pitch the nose down). angle_earth_ref controls earth-reference strength; set to 0 to disable axis mixing for wings."
+    },
+    "wingTpaAirspeedTitle": {
+        "message": "TPA Airspeed"
+    },
+    "wingTpaAirspeedDesc": {
+        "message": "Airspeed-based PID attenuation for fixed wings. tpa_mode=PDS enables S-term scaling at low speeds. Set tpa_speed_max_voltage to your battery's full-charge voltage (V × 100) — use the cell-count helper."
+    },
+    "wingTpaAdvancedHint": {
+        "message": "ADVANCED estimation parameters (tpa_speed_adv_*) are CLI-only. Most pilots can use BASIC."
+    },
+    "wingTpaCurveTitle": {
+        "message": "TPA Curve"
+    },
+    "wingTpaCurveDesc": {
+        "message": "TPA curve shape. HYPERBOLIC is recommended for planes. pid_thr0 / pid_thr100 set the PID multiplier at idle and full throttle; stall_throttle is the threshold where PIDs are maxed out."
+    },
+    "wingTpaClassicNoPreview": {
+        "message": "Curve preview only available for HYPERBOLIC type. CLASSIC mode uses tpa_low_rate / tpa_low_breakpoint instead of this curve."
+    },
+    "wingSpaTitle": {
+        "message": "SPA (Setpoint PID Attenuation)"
+    },
+    "wingSpaDesc": {
+        "message": "Reduce PID terms during high-rate maneuvers to prevent bounce-back. I_FREEZE is the recommended starting mode for all axes. Typical start: roll center=200 / width=70, pitch=150/70, yaw=150/70."
+    },
     "tabFailsafe": {
         "message": "Failsafe"
     },

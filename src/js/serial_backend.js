@@ -655,9 +655,14 @@ function finishOpen() {
             }
         }
 
-        // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
-        if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
-            GUI.allowedTabs.push("servos");
+        // USE_WING build: enables servos implicitly AND adds the Wing Tuning tab.
+        if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING"))) {
+            if (!GUI.allowedTabs.includes("servos")) {
+                GUI.allowedTabs.push("servos");
+            }
+            if (!GUI.allowedTabs.includes("wing_tuning")) {
+                GUI.allowedTabs.push("wing_tuning");
+            }
         }
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
