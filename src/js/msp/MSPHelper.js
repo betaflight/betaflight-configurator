@@ -9,6 +9,7 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { enumIndexToString, enumStringToIndex } from "../utils/wingEnumLookups";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1173,6 +1174,51 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     console.log("Advanced PID settings saved");
                     FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
                     break;
+                case MSPCodes.MSP2_SET_WING_TUNING:
+                    console.log("Wing tuning saved");
+                    FC.WING_TUNING_ACTIVE = { ...FC.WING_TUNING };
+                    break;
+                case MSPCodes.MSP2_WING_TUNING: {
+                    // Atomic decode: populate a local snapshot first; only
+                    // copy to FC.WING_TUNING / _ACTIVE after the full 39
+                    // bytes parse without error. Leaves prior values
+                    // intact on truncated / failed payload.
+                    // Wire format: firmware PR #15124, 39 bytes. Gating
+                    // is via buildOptions USE_WING; firmware not advertising
+                    // the MSP code simply rejects with unknown-message error
+                    // and the promise rejection surfaces in the tab.
+                    const snap = {
+                        s_roll: data.readU8(),
+                        s_pitch: data.readU8(),
+                        s_yaw: data.readU8(),
+                        yaw_type: enumIndexToString("yaw_type", data.readU8()),
+                        angle_pitch_offset: data.read16(),
+                        angle_earth_ref: data.readU8(),
+                        tpa_mode: enumIndexToString("tpa_mode", data.readU8()),
+                        tpa_speed_type: enumIndexToString("tpa_speed_type", data.readU8()),
+                        tpa_speed_basic_delay: data.readU16(),
+                        tpa_speed_basic_gravity: data.readU16(),
+                        tpa_speed_max_voltage: data.readU16(),
+                        tpa_speed_pitch_offset: data.read16(),
+                        tpa_curve_type: enumIndexToString("tpa_curve_type", data.readU8()),
+                        tpa_curve_stall_throttle: data.readU8(),
+                        tpa_curve_pid_thr0: data.readU16(),
+                        tpa_curve_pid_thr100: data.readU16(),
+                        tpa_curve_expo: data.read8(),
+                        spa_roll_center: data.readU16(),
+                        spa_roll_width: data.readU16(),
+                        spa_roll_mode: enumIndexToString("spa_mode", data.readU8()),
+                        spa_pitch_center: data.readU16(),
+                        spa_pitch_width: data.readU16(),
+                        spa_pitch_mode: enumIndexToString("spa_mode", data.readU8()),
+                        spa_yaw_center: data.readU16(),
+                        spa_yaw_width: data.readU16(),
+                        spa_yaw_mode: enumIndexToString("spa_mode", data.readU8()),
+                    };
+                    FC.WING_TUNING = snap;
+                    FC.WING_TUNING_ACTIVE = { ...snap };
+                    break;
+                }
                 case MSPCodes.MSP_PID_ADVANCED:
                     FC.ADVANCED_TUNING.rollPitchItermIgnoreRate = data.readU16();
                     FC.ADVANCED_TUNING.yawItermIgnoreRate = data.readU16();
@@ -2271,6 +2317,46 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.ADVANCED_TUNING.tpaMode);
             buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
             buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
+            break;
+        case MSPCodes.MSP2_SET_WING_TUNING:
+            // 39-byte payload matching firmware .plan/WIRE_FORMAT.md.
+            // Field order is part of the MSP wire contract — do NOT
+            // reorder. New fields must be APPENDED (append-only rule);
+            // type change or removal requires MSP2_SET_WING_TUNING_V2
+            // at a new code slot.
+            //
+            // Signed int16 masked to 0xFFFF before push16 so negative
+            // values serialize correctly (push16 unmasked high byte can
+            // sign-extend into the array as a negative number, fine at
+            // MSP frame assembly but not when comparing to golden bytes).
+            // push8(val & 0xFF) handles int8 (tpa_curve_expo).
+            buffer
+                .push8(FC.WING_TUNING.s_roll)
+                .push8(FC.WING_TUNING.s_pitch)
+                .push8(FC.WING_TUNING.s_yaw)
+                .push8(enumStringToIndex("yaw_type", FC.WING_TUNING.yaw_type))
+                .push16(FC.WING_TUNING.angle_pitch_offset & 0xffff)
+                .push8(FC.WING_TUNING.angle_earth_ref)
+                .push8(enumStringToIndex("tpa_mode", FC.WING_TUNING.tpa_mode))
+                .push8(enumStringToIndex("tpa_speed_type", FC.WING_TUNING.tpa_speed_type))
+                .push16(FC.WING_TUNING.tpa_speed_basic_delay)
+                .push16(FC.WING_TUNING.tpa_speed_basic_gravity)
+                .push16(FC.WING_TUNING.tpa_speed_max_voltage)
+                .push16(FC.WING_TUNING.tpa_speed_pitch_offset & 0xffff)
+                .push8(enumStringToIndex("tpa_curve_type", FC.WING_TUNING.tpa_curve_type))
+                .push8(FC.WING_TUNING.tpa_curve_stall_throttle)
+                .push16(FC.WING_TUNING.tpa_curve_pid_thr0)
+                .push16(FC.WING_TUNING.tpa_curve_pid_thr100)
+                .push8(FC.WING_TUNING.tpa_curve_expo & 0xff)
+                .push16(FC.WING_TUNING.spa_roll_center)
+                .push16(FC.WING_TUNING.spa_roll_width)
+                .push8(enumStringToIndex("spa_mode", FC.WING_TUNING.spa_roll_mode))
+                .push16(FC.WING_TUNING.spa_pitch_center)
+                .push16(FC.WING_TUNING.spa_pitch_width)
+                .push8(enumStringToIndex("spa_mode", FC.WING_TUNING.spa_pitch_mode))
+                .push16(FC.WING_TUNING.spa_yaw_center)
+                .push16(FC.WING_TUNING.spa_yaw_width)
+                .push8(enumStringToIndex("spa_mode", FC.WING_TUNING.spa_yaw_mode));
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
             buffer.push8(FC.SENSOR_CONFIG.acc_hardware);
