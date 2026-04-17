@@ -14,6 +14,12 @@
                 />
                 <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
             </div>
+            <div
+                v-else-if="state.progressLabelText && state.progressLabelClass === 'invalid'"
+                class="flash-status-message flash-status-error"
+            >
+                {{ state.progressLabelText }}
+            </div>
             <div class="grid-box-spacer"></div>
             <div class="grid-box col2">
                 <UiBox
@@ -976,8 +982,10 @@ export default defineComponent({
         };
 
         const loadFailed = () => {
-            state.progressLabelText = $t("firmwareFlasherFailedToLoadOnlineFirmware");
+            const message = $t("firmwareFlasherFailedToLoadOnlineFirmware");
+            state.progressLabelText = message;
             state.progressLabelClass = "invalid";
+            gui_log(message);
             enableLoadRemoteFileButton(true);
             if (loadRemoteFileButton.value) {
                 loadRemoteFileButton.value.textContent = $t("firmwareFlasherButtonLoadOnline");
@@ -2159,8 +2167,10 @@ export default defineComponent({
 
         const flashRingColor = computed(() => {
             switch (state.progressLabelClass) {
+                case "invalid":
                 case "erasing":
                     return "error";
+                case "valid":
                 case "flashing":
                     return "success";
                 case "verifying":
@@ -2257,6 +2267,15 @@ export default defineComponent({
         align-items: center;
         justify-content: center;
         gap: 1rem;
+    }
+    .flash-status-message {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        font-size: 0.85rem;
+    }
+    .flash-status-error {
+        background-color: var(--error-500);
+        color: #fff;
     }
     .grid-box-spacer {
         height: 1rem;
