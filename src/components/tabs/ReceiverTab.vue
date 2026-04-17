@@ -375,8 +375,8 @@
             <UiBox class="col-span-6 mt-3">
                 <div class="wrapper graphAndLabel">
                     <svg id="RX_plot" class="col-span-5" ref="rxPlot">
-                        <g class="axis x" transform="translate(40, 188)"></g>
-                        <g class="axis y" transform="translate(40, 10)"></g>
+                        <g class="axis-display x" transform="translate(40, 188)"></g>
+                        <g class="axis-display y" transform="translate(40, 10)"></g>
                         <g class="grid-display x" transform="translate(40, 188)"></g>
                         <g class="grid-display y" transform="translate(40, 10)"></g>
                         <g class="data" transform="translate(40, 10)"></g>
@@ -778,18 +778,18 @@ const channelMapPresetValue = computed({
 });
 
 // Feature toggles
-function toggleTelemetry(event) {
+function toggleTelemetry(checked) {
     if (features.value?.features?.updateData) {
-        features.value.features.updateData({ name: "TELEMETRY", checked: event.target.checked });
+        features.value.features.updateData({ name: "TELEMETRY", checked });
         updateTabList(features.value.features);
-        needReboot.value = true;
+        needReboot.value = needReboot.value || checked !== undefined;
     }
 }
 
-function toggleRssiAdc(event) {
+function toggleRssiAdc(checked) {
     if (features.value?.features?.updateData) {
-        features.value.features.updateData({ name: "RSSI_ADC", checked: event.target.checked });
-        needReboot.value = true;
+        features.value.features.updateData({ name: "RSSI_ADC", checked });
+        needReboot.value = needReboot.value || checked !== undefined;
     }
 }
 
