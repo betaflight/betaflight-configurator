@@ -293,40 +293,6 @@
                             </template>
                         </InfoGrid>
                     </UiBox>
-                    <UiBox
-                        :title="$t('initialSetupNetworkInfo')"
-                        :help="$t('initialSetupNetworkInfoHelp')"
-                        type="neutral"
-                    >
-                        <InfoGrid
-                            :items="[
-                                {
-                                    id: 'network-status',
-                                    i18n: 'initialSetupNetworkInfoStatus',
-                                    value: state.networkStatus,
-                                    class: 'network-status',
-                                },
-                                {
-                                    id: 'network-type',
-                                    i18n: 'initialSetupNetworkType',
-                                    value: state.networkType,
-                                    class: 'network-type',
-                                },
-                                {
-                                    id: 'network-downlink',
-                                    i18n: 'initialSetupNetworkDownlink',
-                                    value: state.networkDownlink,
-                                    class: 'network-downlink',
-                                },
-                                {
-                                    id: 'network-rtt',
-                                    i18n: 'initialSetupNetworkRtt',
-                                    value: state.networkRtt,
-                                    class: 'network-rtt',
-                                },
-                            ]"
-                        />
-                    </UiBox>
                 </div>
             </div>
         </div>
@@ -420,10 +386,7 @@ const state = reactive({
     buildType: "",
     buildInfo: "",
     buildFirmware: "",
-    networkStatus: "",
-    networkType: "",
-    networkDownlink: "",
-    networkRtt: "",
+
     attitude: { roll: 0, pitch: 0, heading: 0 },
     calibratingAccel: false,
     calibratingMag: false,
@@ -909,35 +872,6 @@ function process_html() {
         }
     }
 
-    function showNetworkStatus() {
-        const networkStatus = ispConnected();
-
-        let statusText = "";
-
-        const connection = navigator.connection;
-        const type = connection?.effectiveType || "Unknown";
-        const downlink = connection?.downlink ?? "Unknown";
-        const rtt = connection?.rtt ?? "Unknown";
-
-        if (!networkStatus || !navigator.onLine || type === "none") {
-            statusText = t("initialSetupNetworkInfoStatusOffline");
-        } else if (
-            type === "slow-2g" ||
-            type === "2g" ||
-            (typeof downlink === "number" && downlink < 0.115) ||
-            (typeof rtt === "number" && rtt > 1000)
-        ) {
-            statusText = t("initialSetupNetworkInfoStatusSlow");
-        } else {
-            statusText = t("initialSetupNetworkInfoStatusOnline");
-        }
-
-        state.networkStatus = statusText;
-        state.networkType = type;
-        state.networkDownlink = typeof downlink === "number" ? `${downlink} Mbps` : "Unknown";
-        state.networkRtt = typeof rtt === "number" ? `${rtt} ms` : "Unknown";
-    }
-
     prepareDisarmFlags();
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         showSensorInfo();
@@ -945,7 +879,6 @@ function process_html() {
         hideSensorInfo();
     }
     showFirmwareInfo();
-    showNetworkStatus();
 
     if (!have_sensor(fcStore.config.activeSensors, "sonar")) {
         state.showSonarBox = false;
