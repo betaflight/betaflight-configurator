@@ -50,6 +50,15 @@
                 <action android:name="com.betaflight.USB_PERMISSION" />
             </intent-filter>
         </receiver>
+
+        <!-- Explicit receiver for DFU USB permission on Android 14+ -->
+        <receiver
+            android:name="betaflight.app.protocols.dfu.DfuUsbPermissionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.betaflight.DFU_USB_PERMISSION" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <!-- Permissions -->

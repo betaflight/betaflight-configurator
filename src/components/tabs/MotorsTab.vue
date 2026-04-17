@@ -1,595 +1,457 @@
 <template>
     <BaseTab tab-name="motors">
         <div class="content_wrapper">
-            <div class="tab_title" v-html="$t('tabMotorTesting')"></div>
+            <div class="tab_title !text-xl !mb-2.5" v-html="$t('tabMotorTesting')"></div>
             <div class="cf_doc_version_bt">
                 <WikiButton docUrl="motors" />
             </div>
 
-            <div class="grid-row grid-box col2">
+            <div class="grid-row grid-box col2 max-[1055px]:!grid-cols-1">
                 <div class="col-span-1">
-                    <div class="configuration">
+                    <div class="flex flex-col gap-4">
                         <!-- MIXER -->
-                        <div class="mixer">
-                            <div class="gui_box grey">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title" v-html="$t('configurationMixer')"></div>
-                                </div>
-                                <div class="spacer_box mixer_settings">
-                                    <select class="mixerList" v-model="fcStore.mixerConfig.mixer">
-                                        <option
-                                            v-for="mixer in sortedMixerList"
-                                            :key="mixer.pos"
-                                            :value="mixer.pos + 1"
-                                            :disabled="mixer.disabled"
-                                        >
-                                            {{ mixer.name.toUpperCase() }}
-                                        </option>
-                                    </select>
-                                    <div class="motor_direction_reversed">
-                                        <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px">
-                                            <input
-                                                type="checkbox"
-                                                id="reverseMotorSwitch"
-                                                class="toggle"
-                                                v-model="reverseMotorDir"
-                                            />
-                                            <label
-                                                for="reverseMotorSwitch"
-                                                class="freelabel"
-                                                v-html="$t('configurationReverseMotorSwitch')"
-                                            ></label>
-                                        </div>
-                                        <div
-                                            class="helpicon cf_tip"
-                                            :title="$t('configurationReverseMotorSwitchHelp')"
-                                        ></div>
-                                    </div>
-                                </div>
-                                <div class="grid-row">
-                                    <div class="grid-col col6">
-                                        <div class="mixerPreview" v-html="mixerPreviewSvg"></div>
-                                    </div>
-                                </div>
-                                <div class="btn motor_tool_buttons">
-                                    <button
-                                        id="motorOutputReorderDialogOpen"
-                                        class="tool regular-button"
-                                        :class="{ disabled: buttonStates.toolsDisabled }"
-                                        :disabled="buttonStates.toolsDisabled"
-                                        v-if="isMotorReorderingAvailable"
-                                        @click="openMotorOutputReorderDialog()"
-                                        v-html="$t('motorOutputReorderDialogOpen')"
-                                    ></button>
-                                    <button
-                                        id="escDshotDirectionDialog-Open"
-                                        class="tool regular-button"
-                                        :class="{ disabled: buttonStates.toolsDisabled }"
-                                        :disabled="buttonStates.toolsDisabled"
-                                        v-if="digitalProtocolConfigured"
-                                        @click="openEscDshotDirectionDialog()"
-                                        v-html="$t('escDshotDirectionDialog-Open')"
-                                    ></button>
-                                </div>
+                        <UiBox :title="$t('configurationMixer')" type="neutral">
+                            <USelect v-model="fcStore.mixerConfig.mixer" :items="sortedMixerListItems" />
+                            <SettingRow
+                                :label="$t('configurationReverseMotorSwitch')"
+                                :help="$t('configurationReverseMotorSwitchHelp')"
+                                full-width
+                            >
+                                <USwitch v-model="reverseMotorDir" size="sm" />
+                            </SettingRow>
+                            <div
+                                class="flex justify-center p-2.5 [&_svg]:w-[150px] [&_svg]:h-[150px] [&_svg]:ml-[15px]"
+                                v-html="mixerPreviewSvg"
+                            ></div>
+                            <div class="flex gap-2">
+                                <UButton
+                                    v-if="isMotorReorderingAvailable"
+                                    :label="$t('motorOutputReorderDialogOpen')"
+                                    :disabled="buttonStates.toolsDisabled"
+                                    @click="openMotorOutputReorderDialog()"
+                                />
+                                <UButton
+                                    v-if="digitalProtocolConfigured"
+                                    :label="$t('escDshotDirectionDialog-Open')"
+                                    :disabled="buttonStates.toolsDisabled"
+                                    @click="openEscDshotDirectionDialog()"
+                                />
                             </div>
-                        </div>
-                        <!-- MOTOR STOP -->
-                        <div class="motorstop">
-                            <div class="gui_box grey">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title" v-html="$t('configurationEscFeatures')"></div>
-                                </div>
-                                <div class="spacer_box">
-                                    <div id="escProtocolDisabled" class="note" v-if="!protocolConfigured">
-                                        <p v-html="$t('configurationEscProtocolDisabled')"></p>
-                                    </div>
-                                    <div class="selectProtocol">
-                                        <label for="escProtocolSelect">
-                                            <select
-                                                id="escProtocolSelect"
-                                                class="escprotocol"
-                                                v-model="selectedEscProtocol"
-                                                @change="onProtocolChange"
-                                            >
-                                                <option
-                                                    v-for="option in sortedEscProtocolOptions"
-                                                    :key="option.value"
-                                                    :value="option.value"
-                                                    :disabled="isProtocolDisabled(option.name)"
-                                                >
-                                                    {{ option.name }}
-                                                </option>
-                                            </select>
-                                            <span v-html="$t('configurationEscProtocol')"></span>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('configurationEscProtocolHelp')"
-                                            ></div>
-                                        </label>
-                                    </div>
-                                    <div class="number checkboxPwm" v-if="showAnalogSettings">
-                                        <div>
-                                            <input
-                                                type="checkbox"
-                                                id="unsyncedPWMSwitch"
-                                                class="toggle"
-                                                v-model="useUnsyncedPwm"
-                                            />
-                                            <label
-                                                for="unsyncedPWMSwitch"
-                                                class="freelabel"
-                                                v-html="$t('configurationunsyndePwm')"
-                                            ></label>
-                                        </div>
-                                    </div>
-                                    <div class="number unsyncedpwmfreq" v-if="showAnalogSettings && useUnsyncedPwm">
-                                        <label for="unsyncedpwmfreq">
-                                            <div class="numberspacer">
-                                                <UInputNumber
-                                                    id="unsyncedpwmfreq"
-                                                    name="unsyncedpwmfreq"
-                                                    :min="200"
-                                                    :max="32000"
-                                                    :step="100"
-                                                    v-model="fcStore.pidAdvancedConfig.motor_pwm_rate"
-                                                />
-                                            </div>
-                                            <span v-html="$t('configurationUnsyncedPWMFreq')"></span>
-                                        </label>
-                                    </div>
-
-                                    <table class="featuresMultiple">
-                                        <thead>
-                                            <tr>
-                                                <th>Enable</th>
-                                                <th>Feature</th>
-                                                <th>Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="features escMotorStop" v-if="protocolConfigured">
-                                            <tr>
-                                                <td>
-                                                    <label for="motorStop">
-                                                        <input
-                                                            id="motorStop"
-                                                            type="checkbox"
-                                                            class="toggle"
-                                                            :checked="isFeatureEnabled('MOTOR_STOP')"
-                                                            @change="toggleFeature('MOTOR_STOP', $event.target.checked)"
-                                                            :disabled="isFeatureEnabled('AIRMODE')"
-                                                        />
-                                                    </label>
-                                                </td>
-                                                <td>MOTOR_STOP</td>
-                                                <td>
-                                                    <span v-html="$t('featureMOTOR_STOPTip')"></span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tbody class="features escSensor" v-if="digitalProtocolConfigured">
-                                            <tr>
-                                                <td>
-                                                    <label for="escSensor">
-                                                        <input
-                                                            id="escSensor"
-                                                            type="checkbox"
-                                                            class="toggle"
-                                                            :checked="isFeatureEnabled('ESC_SENSOR')"
-                                                            @change="toggleFeature('ESC_SENSOR', $event.target.checked)"
-                                                        />
-                                                    </label>
-                                                </td>
-                                                <td>ESC_SENSOR</td>
-                                                <td>
-                                                    <span v-html="$t('featureESC_SENSOR')"></span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div class="number checkboxDshotBidir" v-if="digitalProtocolConfigured">
-                                        <label for="dshotBidir">
-                                            <input
-                                                type="checkbox"
-                                                id="dshotBidir"
-                                                class="toggle"
-                                                v-model="fcStore.motorConfig.use_dshot_telemetry"
-                                            />
-                                            <span v-html="$t('configurationDshotBidir')"></span>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('configurationDshotBidirHelp')"
-                                            ></div>
-                                        </label>
-                                    </div>
-                                    <div class="number motorPoles" v-if="protocolConfigured && rpmFeaturesVisible">
-                                        <label for="motorPoles">
-                                            <div class="numberspacer">
-                                                <UInputNumber
-                                                    id="motorPoles"
-                                                    name="motorPoles"
-                                                    :min="4"
-                                                    :max="255"
-                                                    :step="1"
-                                                    v-model="fcStore.motorConfig.motor_poles"
-                                                />
-                                            </div>
-                                            <span v-html="$t('configurationMotorPolesLong')"></span>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('configurationMotorPolesHelp')"
-                                            ></div>
-                                        </label>
-                                    </div>
-                                    <div class="number motorIdle" v-if="showMotorIdle">
-                                        <label for="motorIdle">
-                                            <div class="numberspacer">
-                                                <UInputNumber
-                                                    id="motorIdle"
-                                                    name="motorIdle"
-                                                    :min="0"
-                                                    :max="20"
-                                                    :step="0.1"
-                                                    v-model="fcStore.pidAdvancedConfig.motorIdle"
-                                                />
-                                            </div>
-                                            <span v-html="$t('configurationMotorIdle')"></span>
-                                            <div
-                                                class="helpicon cf_tip_wide"
-                                                :title="$t('configurationMotorIdleHelp')"
-                                            ></div>
-                                        </label>
-                                    </div>
-                                    <div class="number idleMinRpm" v-if="showIdleMinRpm">
-                                        <label for="idleMinRpm">
-                                            <div class="numberspacer noarrows">
-                                                <UInputNumber
-                                                    id="idleMinRpm"
-                                                    name="idleMinRpm"
-                                                    :min="0"
-                                                    :max="100"
-                                                    :step="1"
-                                                    :readonly="true"
-                                                    v-model="fcStore.advancedTuning.idleMinRpm"
-                                                />
-                                            </div>
-                                            <span v-html="$t('pidTuningIdleMinRpm')"></span>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('configurationMotorIdleRpmHelp')"
-                                            ></div>
-                                        </label>
-                                    </div>
-                                    <div class="number mincommand" v-if="showAnalogSettings">
-                                        <label for="mincommand">
-                                            <div class="numberspacer">
-                                                <UInputNumber
-                                                    id="mincommand"
-                                                    name="mincommand"
-                                                    :min="0"
-                                                    :max="2000"
-                                                    :step="1"
-                                                    v-model="fcStore.motorConfig.mincommand"
-                                                />
-                                            </div>
-                                            <span v-html="$t('configurationThrottleMinimumCommand')"></span>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('configurationThrottleMinimumCommandHelp')"
-                                            ></div>
-                                        </label>
-                                    </div>
-                                    <div class="number minthrottle" v-if="showMinThrottle">
-                                        <label for="minthrottle">
-                                            <div class="numberspacer">
-                                                <UInputNumber
-                                                    id="minthrottle"
-                                                    name="minthrottle"
-                                                    :min="0"
-                                                    :max="2000"
-                                                    :step="1"
-                                                    v-model="fcStore.motorConfig.minthrottle"
-                                                />
-                                            </div>
-                                            <span v-html="$t('configurationThrottleMinimum')"></span>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('configurationThrottleMinimumHelp')"
-                                            ></div>
-                                        </label>
-                                    </div>
-                                    <div class="number maxthrottle" v-if="showAnalogSettings">
-                                        <label for="maxthrottle">
-                                            <div class="numberspacer">
-                                                <UInputNumber
-                                                    id="maxthrottle"
-                                                    name="maxthrottle"
-                                                    :min="0"
-                                                    :max="2000"
-                                                    :step="1"
-                                                    v-model="fcStore.motorConfig.maxthrottle"
-                                                />
-                                            </div>
-                                            <span v-html="$t('configurationThrottleMaximum')"></span>
-                                        </label>
-                                    </div>
-                                </div>
+                        </UiBox>
+                        <!-- ESC FEATURES -->
+                        <UiBox :title="$t('configurationEscFeatures')" type="neutral">
+                            <div v-if="!protocolConfigured" class="text-sm text-orange-500">
+                                <p v-html="$t('configurationEscProtocolDisabled')"></p>
                             </div>
-                        </div>
+                            <SettingRow
+                                :label="$t('configurationEscProtocol')"
+                                :help="$t('configurationEscProtocolHelp')"
+                                full-width
+                            >
+                                <USelect
+                                    v-model="selectedEscProtocol"
+                                    :items="escProtocolItems"
+                                    class="min-w-32"
+                                    @update:model-value="onProtocolChange"
+                                />
+                            </SettingRow>
+                            <SettingRow v-if="showAnalogSettings" :label="$t('configurationunsyndePwm')" full-width>
+                                <USwitch v-model="useUnsyncedPwm" size="sm" />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="showAnalogSettings && useUnsyncedPwm"
+                                :label="$t('configurationUnsyncedPWMFreq')"
+                                full-width
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.pidAdvancedConfig.motor_pwm_rate"
+                                    :min="200"
+                                    :max="32000"
+                                    :step="100"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow v-if="protocolConfigured" full-width>
+                                <USwitch
+                                    :model-value="isFeatureEnabled('MOTOR_STOP')"
+                                    @update:model-value="toggleFeature('MOTOR_STOP', $event)"
+                                    :disabled="isFeatureEnabled('AIRMODE')"
+                                    size="sm"
+                                />
+                                <template #label>
+                                    <span class="font-semibold">MOTOR_STOP</span>
+                                    <span class="ml-2" v-html="$t('featureMOTOR_STOPTip')"></span>
+                                </template>
+                            </SettingRow>
+                            <SettingRow v-if="digitalProtocolConfigured" full-width>
+                                <USwitch
+                                    :model-value="isFeatureEnabled('ESC_SENSOR')"
+                                    @update:model-value="toggleFeature('ESC_SENSOR', $event)"
+                                    size="sm"
+                                />
+                                <template #label>
+                                    <span class="font-semibold">ESC_SENSOR</span>
+                                    <span class="ml-2" v-html="$t('featureESC_SENSOR')"></span>
+                                </template>
+                            </SettingRow>
+                            <SettingRow
+                                v-if="digitalProtocolConfigured"
+                                :label="$t('configurationDshotBidir')"
+                                :help="$t('configurationDshotBidirHelp')"
+                                full-width
+                            >
+                                <USwitch v-model="useDshotTelemetry" size="sm" />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="protocolConfigured && rpmFeaturesVisible"
+                                :label="$t('configurationMotorPolesLong')"
+                                :help="$t('configurationMotorPolesHelp')"
+                                full-width
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.motor_poles"
+                                    :min="4"
+                                    :max="255"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="showMotorIdle"
+                                :label="$t('configurationMotorIdle')"
+                                :help="$t('configurationMotorIdleHelp')"
+                                full-width
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.pidAdvancedConfig.motorIdle"
+                                    :min="0"
+                                    :max="20"
+                                    :step="0.1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="showIdleMinRpm"
+                                :label="$t('pidTuningIdleMinRpm')"
+                                :help="$t('configurationMotorIdleRpmHelp')"
+                                full-width
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.advancedTuning.idleMinRpm"
+                                    :min="0"
+                                    :max="100"
+                                    :step="1"
+                                    :readonly="true"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="showAnalogSettings"
+                                :label="$t('configurationThrottleMinimumCommand')"
+                                :help="$t('configurationThrottleMinimumCommandHelp')"
+                                full-width
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.mincommand"
+                                    :min="0"
+                                    :max="2000"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="showMinThrottle"
+                                :label="$t('configurationThrottleMinimum')"
+                                :help="$t('configurationThrottleMinimumHelp')"
+                                full-width
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.minthrottle"
+                                    :min="0"
+                                    :max="2000"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="showAnalogSettings"
+                                :label="$t('configurationThrottleMaximum')"
+                                full-width
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.maxthrottle"
+                                    :min="0"
+                                    :max="2000"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                        </UiBox>
                         <!-- 3D -->
-                        <div class="_3d">
-                            <div class="gui_box grey">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title" v-html="$t('configuration3d')"></div>
-                                </div>
-                                <div class="spacer_box">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th v-html="$t('configurationFeatureEnabled')"></th>
-                                                <th v-html="$t('configurationFeatureDescription')"></th>
-                                                <th v-html="$t('configurationFeatureName')"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="features 3D" id="features_3d" style="margin-bottom: 10px">
-                                            <tr>
-                                                <td>
-                                                    <label for="3dFeature">
-                                                        <input
-                                                            id="3dFeature"
-                                                            type="checkbox"
-                                                            class="toggle"
-                                                            :checked="isFeatureEnabled('3D')"
-                                                            @change="toggleFeature('3D', $event.target.checked)"
-                                                        />
-                                                    </label>
-                                                </td>
-                                                <td><span v-html="$t('feature3D')"></span></td>
-                                                <td>
-                                                    <span>3D</span>
-                                                    <div class="helpicon cf_tip" :title="$t('feature3DTip')"></div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div class="_3dSettings" v-if="isFeatureEnabled('3D')">
-                                        <div class="number">
-                                            <label for="_3ddeadbandlow">
-                                                <UInputNumber
-                                                    id="_3ddeadbandlow"
-                                                    name="_3ddeadbandlow"
-                                                    :step="1"
-                                                    :min="1250"
-                                                    :max="1600"
-                                                    v-model="fcStore.motor3dConfig.deadband3d_low"
-                                                />
-                                                <span v-html="$t('configuration3dDeadbandLow')"></span>
-                                            </label>
-                                        </div>
-                                        <div class="number">
-                                            <label for="_3ddeadbandhigh">
-                                                <UInputNumber
-                                                    id="_3ddeadbandhigh"
-                                                    name="_3ddeadbandhigh"
-                                                    :step="1"
-                                                    :min="1400"
-                                                    :max="1750"
-                                                    v-model="fcStore.motor3dConfig.deadband3d_high"
-                                                />
-                                                <span v-html="$t('configuration3dDeadbandHigh')"></span>
-                                            </label>
-                                        </div>
-                                        <div class="number">
-                                            <label for="_3dneutral">
-                                                <UInputNumber
-                                                    id="_3dneutral"
-                                                    name="_3dneutral"
-                                                    :step="1"
-                                                    :min="1400"
-                                                    :max="1600"
-                                                    v-model="fcStore.motor3dConfig.neutral"
-                                                />
-                                                <span v-html="$t('configuration3dNeutral')"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END 3D -->
+                        <UiBox :title="$t('configuration3d')" type="neutral">
+                            <SettingRow :help="$t('feature3DTip')" full-width>
+                                <USwitch
+                                    :model-value="isFeatureEnabled('3D')"
+                                    @update:model-value="toggleFeature('3D', $event)"
+                                    size="sm"
+                                />
+                                <template #label>
+                                    <span v-html="$t('feature3D')"></span>
+                                    <span class="ml-2 font-semibold">3D</span>
+                                </template>
+                            </SettingRow>
+                            <template v-if="isFeatureEnabled('3D')">
+                                <SettingRow :label="$t('configuration3dDeadbandLow')" full-width>
+                                    <UInputNumber
+                                        v-model="fcStore.motor3dConfig.deadband3d_low"
+                                        :min="1250"
+                                        :max="1600"
+                                        :step="1"
+                                        size="xs"
+                                        orientation="vertical"
+                                        class="w-16"
+                                    />
+                                </SettingRow>
+                                <SettingRow :label="$t('configuration3dDeadbandHigh')" full-width>
+                                    <UInputNumber
+                                        v-model="fcStore.motor3dConfig.deadband3d_high"
+                                        :min="1400"
+                                        :max="1750"
+                                        :step="1"
+                                        size="xs"
+                                        orientation="vertical"
+                                        class="w-16"
+                                    />
+                                </SettingRow>
+                                <SettingRow :label="$t('configuration3dNeutral')" full-width>
+                                    <UInputNumber
+                                        v-model="fcStore.motor3dConfig.neutral"
+                                        :min="1400"
+                                        :max="1600"
+                                        :step="1"
+                                        size="xs"
+                                        orientation="vertical"
+                                        class="w-16"
+                                    />
+                                </SettingRow>
+                            </template>
+                        </UiBox>
                     </div>
                 </div>
                 <!-- END CONFIGURATION -->
                 <div class="col-span-1">
                     <!-- MOTOR TEST SECTION -->
-                    <div class="gui_box motorblock">
-                        <div class="spacer">
-                            <!-- SENSOR GRAPH SECTION -->
-                            <div class="gui_box grey">
-                                <div class="graph-grid">
-                                    <svg ref="graphSvg" id="graph">
-                                        <g class="grid x" transform="translate(40, 120)"></g>
-                                        <g class="grid y" transform="translate(40, 10)"></g>
-                                        <g class="data" transform="translate(41, 10)"></g>
-                                        <g class="axis x" transform="translate(40, 120)"></g>
-                                        <g class="axis y" transform="translate(40, 10)"></g>
-                                    </svg>
-                                    <div class="plot_control">
-                                        <div class="table">
-                                            <div class="sensor row">
-                                                <div class="left-cell motor-button">
-                                                    <button
-                                                        class="reset_max"
-                                                        @click="resetMaxValues"
-                                                        :title="$t('motorsResetMaximum')"
-                                                        v-html="$t('motorsResetMaximumButton')"
-                                                    ></button>
-                                                </div>
-                                                <div class="right-cell">
-                                                    <select name="sensor_choice" v-model="sensorType">
-                                                        <option
-                                                            value="gyro"
-                                                            v-html="$t('motorsSensorGyroSelect')"
-                                                        ></option>
-                                                        <option
-                                                            value="accel"
-                                                            v-html="$t('motorsSensorAccelSelect')"
-                                                        ></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row-container">
-                                                <div class="row">
-                                                    <div class="left-cell">
-                                                        <div v-html="$t('sensorsRefresh')"></div>
-                                                    </div>
-                                                    <div class="rate right-cell">
-                                                        <select name="rate" v-model.number="sensorRate">
-                                                            <option
-                                                                v-for="rate in availableRates"
-                                                                :key="rate"
-                                                                :value="rate"
-                                                            >
-                                                                {{ rate }} ms
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="left-cell">
-                                                        <div v-html="$t('sensorsScale')"></div>
-                                                    </div>
-                                                    <div class="scale right-cell">
-                                                        <select name="scale" v-model.number="sensorScale">
-                                                            <option
-                                                                v-for="(val, label) in currentScaleOptions"
-                                                                :key="label"
-                                                                :value="val"
-                                                            >
-                                                                {{ label }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row" v-for="axis in ['x', 'y', 'z']" :key="axis">
-                                                    <div class="left-cell">{{ axis.toUpperCase() }}:</div>
-                                                    <div class="value right-cell" :class="axis">
-                                                        {{ rawDataDisplay[axis] }}
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="left-cell">RMS:</div>
-                                                    <div class="rms value right-cell">
-                                                        {{ rawDataDisplay.rms }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div class="flex flex-col gap-3">
+                        <!-- SENSOR GRAPH SECTION -->
+                        <UiBox type="neutral">
+                            <div class="graph-grid">
+                                <svg ref="graphSvg" id="graph" class="w-full h-full">
+                                    <g class="grid x" transform="translate(40, 120)"></g>
+                                    <g class="grid y" transform="translate(40, 10)"></g>
+                                    <g class="data" transform="translate(41, 10)"></g>
+                                    <g class="axis x" transform="translate(40, 120)"></g>
+                                    <g class="axis y" transform="translate(40, 10)"></g>
+                                </svg>
+                                <div
+                                    class="text-[10px] flex flex-col gap-1 [&_button]:!text-[10px] [&_[data-slot=base]]:!text-[10px]"
+                                >
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <UButton
+                                            :label="$t('motorsResetMaximumButton')"
+                                            :title="$t('motorsResetMaximum')"
+                                            @click="resetMaxValues"
+                                            size="xs"
+                                        />
+                                        <USelect
+                                            v-model="sensorType"
+                                            :items="sensorTypeItems"
+                                            class="min-w-24"
+                                            size="xs"
+                                        />
                                     </div>
-                                </div>
-                                <div class="power_info">
-                                    <span class="power_text" v-html="$t('motorsVoltage')"></span>
-                                    <span class="motors-bat-voltage power_value">{{ powerValues.voltage }}</span>
-
-                                    <span class="power_text" v-html="$t('motorsADrawing')"></span>
-                                    <span class="motors-bat-mah-drawing power_value">{{ powerValues.amperage }}</span>
-
-                                    <span class="power_text" v-html="$t('motorsmAhDrawn')"></span>
-                                    <span class="motors-bat-mah-drawn power_value">{{ powerValues.mAhDrawn }}</span>
-                                </div>
-                            </div>
-
-                            <div class="motors">
-                                <ul :class="`grid-box col${numberOfValidOutputs + 1} titles`">
-                                    <li v-for="i in numberOfValidOutputs" :key="i" :title="$t('motorNumber' + i)">
-                                        {{ i }}
-                                    </li>
-                                    <li></li>
-                                </ul>
-                                <div :class="`bar-wrapper grid-box col${numberOfValidOutputs + 1}`">
-                                    <div v-for="i in numberOfValidOutputs" :key="i" :class="'m-block motor-' + (i - 1)">
-                                        <div class="meter-bar">
-                                            <div class="label">{{ getMotorValue(i - 1) }}</div>
-                                            <div
-                                                class="indicator"
-                                                :style="{
-                                                    marginTop: `${100 - getMotorBarHeight(i - 1)}px`,
-                                                    height: `${getMotorBarHeight(i - 1)}px`,
-                                                    backgroundColor: `rgba(255,187,0,${(getMotorBarHeight(i - 1) * 0.009).toFixed(2)})`,
-                                                }"
-                                            >
-                                                <div class="label"></div>
-                                            </div>
-                                        </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="flex-1" v-html="$t('sensorsRefresh')"></span>
+                                        <USelect
+                                            v-model.number="sensorRate"
+                                            :items="rateItems"
+                                            class="min-w-24"
+                                            size="xs"
+                                        />
                                     </div>
-                                    <div class="m-block"></div>
-                                </div>
-                            </div>
-
-                            <div class="motor_testing">
-                                <ul :class="`grid-box col${numberOfValidOutputs + 1} telemetry`">
-                                    <li v-for="i in numberOfValidOutputs" :key="i">
+                                    <div class="flex items-center gap-2">
+                                        <span class="flex-1" v-html="$t('sensorsScale')"></span>
+                                        <USelect
+                                            v-model.number="sensorScale"
+                                            :items="scaleItems"
+                                            class="min-w-24"
+                                            size="xs"
+                                        />
+                                    </div>
+                                    <div
+                                        v-for="axis in ['x', 'y', 'z']"
+                                        :key="axis"
+                                        class="flex justify-between py-0.5"
+                                    >
+                                        <span>{{ axis.toUpperCase() }}:</span>
                                         <span
-                                            :class="`motor-${i - 1} cf_tip`"
-                                            :title="$t('motorsTelemetryHelp')"
-                                            v-html="getTelemetryHtml(i - 1)"
-                                        ></span>
-                                    </li>
-                                    <li>
-                                        <span class="motor-master cf_tip" :title="$t('motorsTelemetryHelp')"
-                                            >&nbsp;</span
+                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
+                                            :class="{
+                                                'bg-[#1fb1f0]': axis === 'x',
+                                                'bg-[#97d800]': axis === 'y',
+                                                'bg-[#e24761]': axis === 'z',
+                                            }"
+                                            >{{ rawDataDisplay[axis] }}</span
                                         >
+                                    </div>
+                                    <div class="flex justify-between py-0.5">
+                                        <span>RMS:</span>
+                                        <span
+                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#00d800]"
+                                            >{{ rawDataDisplay.rms }}</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-[10px] flex flex-wrap items-center gap-x-2">
+                                <span class="font-bold" v-html="$t('motorsVoltage')"></span>
+                                <span class="text-left w-[50px]">{{ powerValues.voltage }}</span>
+
+                                <span class="font-bold" v-html="$t('motorsADrawing')"></span>
+                                <span class="text-left w-[50px]">{{ powerValues.amperage }}</span>
+
+                                <span class="font-bold" v-html="$t('motorsmAhDrawn')"></span>
+                                <span class="text-left w-[50px]">{{ powerValues.mAhDrawn }}</span>
+                            </div>
+                        </UiBox>
+
+                        <div class="motors">
+                            <ul :class="`grid-box col${numberOfValidOutputs + 1} h-5`">
+                                <li
+                                    v-for="i in numberOfValidOutputs"
+                                    :key="i"
+                                    class="text-center"
+                                    :title="$t('motorNumber' + i)"
+                                >
+                                    {{ i }}
+                                </li>
+                                <li></li>
+                            </ul>
+                            <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
+                                <li
+                                    v-for="i in numberOfValidOutputs"
+                                    :key="i"
+                                    class="relative h-[100px]"
+                                    :style="{ '--bar-opacity': (getMotorBarHeight(i - 1) * 0.009 + 0.1).toFixed(2) }"
+                                >
+                                    <div
+                                        class="absolute inset-x-0 bottom-[45px] z-10 text-center text-[10px] font-bold"
+                                    >
+                                        {{ getMotorValue(i - 1) }}
+                                    </div>
+                                    <UProgress
+                                        orientation="vertical"
+                                        inverted
+                                        :model-value="getMotorBarHeight(i - 1)"
+                                        :max="100"
+                                        color="warning"
+                                        size="2xl"
+                                        :ui="{
+                                            root: '!w-full',
+                                            base: '!w-full !rounded-md border border-(--ui-border)',
+                                            indicator: '!rounded-none !transition-none opacity-(--bar-opacity)',
+                                        }"
+                                        class="h-full"
+                                    />
+                                </li>
+                                <li></li>
+                            </ul>
+                        </div>
+
+                        <div class="m-0 p-0 border-0 list-none outline-none">
+                            <ul :class="`grid-box col${numberOfValidOutputs + 1} mb-2`">
+                                <li
+                                    v-for="i in numberOfValidOutputs"
+                                    :key="i"
+                                    class="text-center text-[10px] whitespace-nowrap overflow-hidden"
+                                >
+                                    <span
+                                        :class="`motor-${i - 1}`"
+                                        :title="$t('motorsTelemetryHelp')"
+                                        v-html="getTelemetryHtml(i - 1)"
+                                    ></span>
+                                </li>
+                                <li class="text-center text-[10px] whitespace-nowrap overflow-hidden">
+                                    <span class="motor-master" :title="$t('motorsTelemetryHelp')">&nbsp;</span>
+                                </li>
+                            </ul>
+
+                            <div class="mb-2">
+                                <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
+                                    <li
+                                        v-for="i in numberOfValidOutputs"
+                                        :key="i"
+                                        class="flex items-end justify-center"
+                                        @wheel.prevent="onSliderWheel(i - 1, $event)"
+                                    >
+                                        <USlider
+                                            orientation="vertical"
+                                            :min="minSliderValue"
+                                            :max="maxSliderValue"
+                                            :model-value="motorValues[i - 1]"
+                                            :disabled="slidersDisabled"
+                                            tooltip
+                                            class="h-24"
+                                            @update:model-value="onMotorValueUpdate(i - 1, $event)"
+                                        />
+                                    </li>
+                                    <li
+                                        class="flex items-end justify-center"
+                                        @wheel.prevent="onSliderWheel(-1, $event)"
+                                    >
+                                        <USlider
+                                            orientation="vertical"
+                                            :min="minSliderValue"
+                                            :max="maxSliderValue"
+                                            :model-value="masterValue"
+                                            :disabled="slidersDisabled"
+                                            color="warning"
+                                            tooltip
+                                            class="h-24"
+                                            @update:model-value="onMasterValueUpdate($event)"
+                                        />
                                     </li>
                                 </ul>
-
-                                <div class="sliders">
-                                    <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
-                                        <li v-for="i in numberOfValidOutputs" :key="i">
-                                            <input
-                                                type="range"
-                                                class="motor-slider"
-                                                :min="minSliderValue"
-                                                :max="maxSliderValue"
-                                                v-model.number="motorValues[i - 1]"
-                                                :disabled="slidersDisabled"
-                                                @input="onMotorSliderChange(i - 1)"
-                                                @wheel.prevent="onSliderWheel(i - 1, $event)"
-                                            />
-                                        </li>
-                                        <li>
-                                            <input
-                                                type="range"
-                                                class="master-slider master"
-                                                :min="minSliderValue"
-                                                :max="maxSliderValue"
-                                                v-model.number="masterValue"
-                                                :disabled="slidersDisabled"
-                                                @input="onMasterSliderChange"
-                                                @wheel.prevent="onSliderWheel(-1, $event)"
-                                            />
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="values">
-                                    <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
-                                        <li v-for="i in numberOfValidOutputs" :key="i">{{ motorValues[i - 1] }}</li>
-                                        <li style="font-weight: bold" v-html="$t('motorsMaster')"></li>
-                                    </ul>
-                                </div>
                             </div>
 
-                            <div class="danger">
-                                <p v-html="$t('motorsNotice')"></p>
-                                <label for="motorsEnableTestMode">
-                                    <input
-                                        id="motorsEnableTestMode"
-                                        type="checkbox"
-                                        class="togglesmall"
-                                        v-model="motorsTestingEnabled"
-                                    />
-                                    <span class="motorsEnableTestMode" v-html="$t('motorsEnableControl')"></span>
-                                </label>
+                            <div>
+                                <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
+                                    <li v-for="i in numberOfValidOutputs" :key="i" class="text-center text-[10px]">
+                                        {{ motorValues[i - 1] }}
+                                    </li>
+                                    <li class="text-center text-[10px] font-bold" v-html="$t('motorsMaster')"></li>
+                                </ul>
                             </div>
+                        </div>
+
+                        <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
+                            <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
+                            <SettingRow :label="$t('motorsEnableControl')" full-width>
+                                <USwitch v-model="motorsTestingEnabled" size="sm" />
+                            </SettingRow>
                         </div>
                     </div>
                     <!-- END MOTOR TEST SECTION -->
@@ -597,35 +459,25 @@
             </div>
 
             <!-- Warning Dialog -->
-            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged">
-                <div id="dialog-settings-changed-content-wrapper">
-                    <div id="dialog-settings-changed-content">{{ warningMessage }}</div>
-                    <div class="btn dialog-buttons">
-                        <button
-                            class="regular-button"
-                            @click="closeWarningDialog"
-                            v-html="$t('motorsDialogSettingsChangedOk')"
-                        ></button>
-                    </div>
+            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged" class="w-[400px] h-fit">
+                <div class="p-4">
+                    <div class="mb-4" v-html="warningMessage"></div>
+                    <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
                 </div>
             </dialog>
 
             <!-- Dynamic Notch Filters Dialog -->
-            <dialog id="dialog-dyn-filters" ref="dialogDynFilters">
-                <div class="dialog-content-wrapper">
-                    <div class="dialog-title" v-html="$t('dialogDynFiltersChangeTitle')"></div>
-                    <div class="dialog-text" v-html="$t('dialogDynFiltersChangeNote')"></div>
-                    <div class="btn dialog-buttons">
-                        <button
-                            class="regular-button"
-                            @click="applyDynFiltersChange"
-                            v-html="$t('presetsWarningDialogYesButton')"
-                        ></button>
-                        <button
-                            class="regular-button"
+            <dialog id="dialog-dyn-filters" ref="dialogDynFilters" class="w-[400px] h-fit">
+                <div class="p-4">
+                    <div class="font-semibold mb-2" v-html="$t('dialogDynFiltersChangeTitle')"></div>
+                    <div class="mb-4" v-html="$t('dialogDynFiltersChangeNote')"></div>
+                    <div class="flex gap-2">
+                        <UButton :label="$t('presetsWarningDialogYesButton')" @click="applyDynFiltersChange" />
+                        <UButton
+                            :label="$t('presetsWarningDialogNoButton')"
+                            variant="outline"
                             @click="closeDynFiltersDialog"
-                            v-html="$t('presetsWarningDialogNoButton')"
-                        ></button>
+                        />
                     </div>
                 </div>
             </dialog>
@@ -633,36 +485,30 @@
 
         <!-- Fixed Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
-                <button
-                    type="button"
-                    class="save"
-                    :class="{ disabled: buttonStates.saveDisabled }"
+            <div class="flex gap-2">
+                <UButton
+                    :label="$t('configurationButtonSave')"
                     :disabled="buttonStates.saveDisabled"
+                    :color="buttonStates.saveDisabled ? 'neutral' : 'success'"
                     @click="saveAndReboot(true)"
-                >
-                    {{ $t("configurationButtonSave") }}
-                </button>
-            </div>
-            <div class="btn">
-                <button
-                    type="button"
-                    class="stop"
-                    :class="{ disabled: buttonStates.stopDisabled }"
+                />
+                <UButton
+                    :label="$t('escDshotDirectionDialog-StopWizard')"
                     :disabled="buttonStates.stopDisabled"
                     @click="stopMotors()"
-                >
-                    {{ $t("escDshotDirectionDialog-StopWizard") }}
-                </button>
+                    :color="motorsTestingEnabled ? 'error' : 'neutral'"
+                />
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { computed, ref, watch, onMounted, onUnmounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
+import UiBox from "@/components/elements/UiBox.vue";
+import SettingRow from "@/components/elements/SettingRow.vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDialog } from "@/composables/useDialog";
 import { mixerList } from "@/js/model";
@@ -675,7 +521,6 @@ import * as d3 from "d3";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import { tracking } from "@/js/Analytics";
-import GUI from "@/js/gui";
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
 import { useMotorTesting } from "@/composables/motors/useMotorTesting";
@@ -707,6 +552,7 @@ const closeWarningDialog = () => {
 // Dynamic notch filter dialog
 const dialogDynFilters = ref(null);
 const previousDshotBidir = ref(false);
+const dshotBidirInitialized = ref(false);
 const previousFilterDynQ = ref(null);
 const previousFilterDynCount = ref(null);
 
@@ -758,6 +604,14 @@ const sortedEscProtocolOptions = computed(() => {
 // I should update the template to use `sortedEscProtocolOptions` if I want sorting.
 // But the template used index as value, which works if I iterate over the original array.
 // If I use sorted array, I must explicitely use the stored value.
+
+const escProtocolItems = computed(() =>
+    sortedEscProtocolOptions.value.map((o) => ({
+        label: o.name,
+        value: o.value,
+        disabled: isProtocolDisabled(o.name),
+    })),
+);
 
 const isProtocolDisabled = (protocolName) => {
     if (protocolName === "DISABLED") {
@@ -879,13 +733,20 @@ const buttonStates = computed(() => ({
     stopDisabled: !motorsTestingEnabled.value,
 }));
 
+const useDshotTelemetry = computed({
+    get: () => !!fcStore.motorConfig.use_dshot_telemetry,
+    set: (val) => {
+        fcStore.motorConfig.use_dshot_telemetry = !!val;
+    },
+});
+
 // Watch for bidirectional DShot changes
 watch(
     () => fcStore.motorConfig.use_dshot_telemetry,
-    (newValue, oldValue) => {
-        if (oldValue === undefined) {
+    (newValue) => {
+        if (!dshotBidirInitialized.value) {
             return;
-        } // Skip initial load
+        } // Skip until MSP data is loaded
 
         const rpmFilterIsDisabled = fcStore.filterConfig.gyro_rpm_notch_harmonics === 0;
 
@@ -896,6 +757,8 @@ watch(
         // Show dialog when dshotBidir differs from original firmware value and RPM filter is enabled
         if (newValue !== previousDshotBidir.value && !rpmFilterIsDisabled) {
             showDynFiltersDialog();
+        } else {
+            closeDynFiltersDialog();
         }
     },
 );
@@ -921,10 +784,11 @@ onMounted(async () => {
     // Setup configuration change watchers (CRITICAL: tracks all config changes)
     setupConfigWatchers();
 
-    // Store initial dshotBidir value for comparison
+    // Store initial dshotBidir value for comparison (MUST be set before enabling watcher)
     previousDshotBidir.value = fcStore.motorConfig.use_dshot_telemetry;
     previousFilterDynQ.value = fcStore.filterConfig.dyn_notch_q;
     previousFilterDynCount.value = fcStore.filterConfig.dyn_notch_count;
+    dshotBidirInitialized.value = true;
 
     updateMixerPreview();
 
@@ -948,11 +812,6 @@ onMounted(async () => {
 
     // Start graph
     setupGraph();
-
-    // Initialize Switchery for toggle switches - wait for DOM to be fully updated
-    await nextTick();
-    await nextTick();
-    GUI.switchery();
 });
 
 // Sensor Graph Logic
@@ -1000,6 +859,17 @@ const sensorSelectValues = {
 const currentScaleOptions = computed(() => {
     return sensorType.value === "gyro" ? sensorSelectValues.gyroScale : sensorSelectValues.accelScale;
 });
+
+const sensorTypeItems = [
+    { label: "Gyro", value: "gyro" },
+    { label: "Accel", value: "accel" },
+];
+
+const rateItems = availableRates.map((r) => ({ label: `${r} ms`, value: r }));
+
+const scaleItems = computed(() =>
+    Object.entries(currentScaleOptions.value).map(([label, value]) => ({ label, value })),
+);
 
 const sensorRate = computed({
     get: () => (sensorType.value === "gyro" ? sensorGyroRate.value : sensorAccelRate.value),
@@ -1325,6 +1195,14 @@ const sortedMixerList = computed(() => {
     return [...mixerList].sort((a, b) => a.name.localeCompare(b.name));
 });
 
+const sortedMixerListItems = computed(() =>
+    sortedMixerList.value.map((m) => ({
+        label: m.name.toUpperCase(),
+        value: m.pos + 1,
+        disabled: m.disabled,
+    })),
+);
+
 const mixerPreviewSvg = ref("");
 
 const updateMixerPreview = async () => {
@@ -1625,6 +1503,16 @@ const onMasterSliderChange = () => {
     }
 };
 
+const onMotorValueUpdate = (index, val) => {
+    motorValues.value[index] = val;
+    onMotorSliderChange();
+};
+
+const onMasterValueUpdate = (val) => {
+    masterValue.value = val;
+    onMasterSliderChange();
+};
+
 const onSliderWheel = (index, event) => {
     if (!motorsTestingEnabled.value) {
         return;
@@ -1655,29 +1543,13 @@ const onSliderWheel = (index, event) => {
     }
 };
 
-// UI-only concerns when motor testing is toggled
-// (DShot commands, keyboard listener, arming, motor stop are handled by useMotorTesting composable)
-watch(motorsTestingEnabled, async (enabled) => {
+// Clear buffered motor commands when testing is disabled
+watch(motorsTestingEnabled, (enabled) => {
     if (!enabled) {
-        // Clear any pending buffered commands
         if (bufferDelay) {
             clearTimeout(bufferDelay);
             bufferDelay = null;
             bufferingSetMotor = [];
-        }
-
-        // Sync Switchery visual state with programmatic change
-        await nextTick();
-        const checkbox = document.getElementById("motorsEnableTestMode");
-        if (checkbox) {
-            const switcheryElement = checkbox.nextElementSibling;
-            if (switcheryElement && switcheryElement.classList.contains("switchery")) {
-                switcheryElement.remove();
-            }
-            if (!checkbox.classList.contains("toggle")) {
-                checkbox.classList.add("toggle");
-            }
-            GUI.switchery();
         }
     }
 });
@@ -1750,450 +1622,27 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="less">
-.tab-motors {
-    .tab_title {
-        margin-bottom: 10px;
-        font-size: 20px;
-    }
-    .spacer {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .motorstop {
-        .spacer_box {
-            gap: 0;
-        }
-    }
-    .configuration {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .danger {
-        color: var(--text);
-        .switchery {
-            margin-right: 0.1rem;
-        }
-    }
-    .ui-grid-col {
-        margin-bottom: 0;
-    }
-    position: relative;
-    .groupTitle {
-        padding: 0 0 5px 0;
-        margin: 0 0 10px 0;
-        font-size: 16px;
-        border-bottom: 1px solid var(--surface-500);
-    }
-    .mixerPreview {
-        display: flex;
-        justify-content: center;
-        padding: 10px;
-        svg {
-            width: 150px;
-            height: 150px;
-            margin-left: 15px;
-        }
-    }
-    dl.features {
-        dt {
-            width: 10px;
-            height: 18px;
-            line-height: 18px;
-        }
-        dd {
-            margin: 0 0 0 20px;
-            height: 18px;
-            line-height: 18px;
-        }
-    }
-    table.featuresMultiple {
-        border-collapse: collapse;
-        margin-bottom: 0.5rem;
-        tbody {
-            border-bottom: 1px solid var(--surface-500);
-            tr {
-                td {
-                    padding: 0 0 0.5rem 0;
-                }
-            }
-        }
-    }
-    .number {
-        input {
-            height: 20px;
-            line-height: 20px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: normal;
-        }
-        .disabled {
-            width: 48px;
-            padding: 0 5px;
-            background-color: var(--surface-400);
-        }
-        input[readonly] {
-            background-color: #afafaf;
-            border: none;
-            pointer-events: none;
-            opacity: 0.5;
-        }
-        span {
-            margin-left: 0;
-        }
-        &:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-    }
-    .disarm {
-        .checkbox {
-            padding-left: 0;
-            margin-top: -5px;
-            margin-right: 5px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid var(--surface-500);
-            width: 100%;
-        }
-        margin-bottom: 5px;
-        border-bottom: 1px solid var(--surface-500);
-        width: 100%;
-    }
-    .freelabel {
-        margin-left: 10px;
-        position: relative;
-    }
-    span {
-        margin: 0;
-    }
-    .spacer_box.mixer_settings {
-        padding-bottom: 0px;
-    }
-    .motor_direction_reversed {
-        padding-top: 10px;
-    }
-    .motor_tool_buttons {
-        padding-left: 10px;
-        margin-top: 10px;
-        display: flex;
-        gap: 10px;
-    }
-    .disarmdelay {
-        width: 100%;
-        border-bottom: 1px solid var(--surface-500);
-    }
-    .select {
-        margin-bottom: 5px;
-        clear: left;
-        padding-bottom: 5px;
-        border-bottom: 1px solid var(--surface-500);
-        width: 100%;
-        &:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-    }
-    .selectProtocol {
-        padding: 0.5rem 0;
-        margin-bottom: 0.5rem;
-        border-bottom: 1px solid var(--surface-500);
-        width: 100%;
-    }
-    thead {
-        display: none;
-    }
-    .alignicon {
-        width: 15px;
-        height: 15px;
-        margin: 3px;
-    }
-    ._3dSettings {
-        width: 100%;
-    }
-    .modelAndGraph {
-        width: 100%;
-    }
-    #dialogMotorOutputReorder-closebtn {
-        margin-right: 0px;
-        margin-bottom: 0px;
-    }
-    dialog {
-        width: 400px;
-        height: 440px;
-    }
-    #dialogMotorOutputReorderContentWrapper {
-        display: flex;
-        flex-flow: column;
-        width: 100%;
-        height: 100%;
-    }
-    #dialogMotorOutputReorderContent {
-        flex-grow: 1;
-    }
-    #escDshotDirectionDialog-closebtn {
-        margin-right: 0px;
-        margin-bottom: 0px;
-        position: absolute;
-        right: 0px;
-        bottom: 0px;
-    }
-    #escDshotDirectionDialog-ContentWrapper {
-        display: flex;
-        flex-flow: column;
-        width: 100%;
-        height: 100%;
-        position: relative;
-    }
-    #escDshotDirectionDialog-Content {
-        flex-grow: 1;
-    }
-    #dialog-mixer-reset {
-        width: 400px;
-        height: fit-content;
-    }
-    #dialog-settings-changed {
-        height: 120px;
-    }
-    #dialog-settings-reset-confirmbtn {
-        margin-bottom: 12px;
-        position: relative;
-    }
-    #dialog-settings-changed-confirmbtn {
-        margin-right: 0px;
-        margin-bottom: 0px;
-        position: absolute;
-        right: 0px;
-        bottom: 0px;
-    }
-    #dialog-settings-changed-content-wrapper {
-        display: flex;
-        flex-flow: column;
-        width: 100%;
-        height: 100%;
-        position: relative;
-    }
-    #dialog-settings-changed-content {
-        flex-grow: 1;
-    }
-    .plot_control {
-        margin: 0;
-        background-color: transparent;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        .table {
-            display: table;
-            table-layout: fixed;
-            border-collapse: separate;
-            border-spacing: 5px;
-            box-sizing: border-box;
-        }
-        .row-container {
-            display: table-row-group;
-        }
-        .motor-button {
-            a {
-                background-color: var(--primary-500);
-                border-radius: 3px;
-                border: 1px solid #e8b423;
-                color: #000;
-                font-size: 10px;
-                line-height: 17px;
-                text-transform: uppercase;
-                letter-spacing: 0.03em;
-                display: block;
-                text-align: center;
-            }
-        }
-        .row {
-            display: table-row;
-        }
-        .left-cell {
-            display: table-cell;
-            vertical-align: middle;
-        }
-        .right-cell {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: right;
-            width: 95px;
-            font-size: smaller;
-        }
-        select {
-            width: 100%;
-            border: 1px solid var(--surface-500);
-            border-radius: 3px;
-        }
-        .value {
-            padding: 3px;
-            color: black;
-            border-radius: 3px;
-        }
-        .rms {
-            background-color: #00d800;
-        }
-    }
-    .power_info {
-        margin-left: 1em;
-        .power_text {
-            font-weight: bold;
-        }
-        .power_value {
-            margin-right: 2em;
-            margin-left: 1em;
-            display: inline-block;
-            text-align: left;
-            width: 50px;
-        }
-    }
-    .stop {
-        background-color: var(--error-500);
-        border: 1px solid var(--error-600);
-        color: #fff;
-        &.disabled {
-            background-color: var(--surface-300);
-            border: 1px solid var(--surface-400);
-            color: var(--text);
-            cursor: default;
-        }
-    }
-    svg {
-        width: 100%;
-        height: 100%;
-    }
-    .grid {
-        .tick {
-            stroke: silver;
-            stroke-width: 1px;
-            shape-rendering: crispEdges;
-        }
-        path {
-            stroke-width: 0;
-        }
-    }
-    .data {
-        .line {
-            stroke-width: 2px;
-            fill: none;
-        }
-    }
-    text {
-        stroke: none;
-        fill: var(--text);
-        font-size: 10px;
-    }
-    .motorblock {
-        margin-bottom: 0;
-        background-color: var(--surface-200);
-    }
-    .title {
-        padding-bottom: 2px;
-        text-align: center;
-        font-weight: bold;
-    }
-    .title2 {
-        padding-bottom: 2px;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 300;
-    }
-    .titles {
-        height: 20px;
-        li {
-            text-align: center;
-        }
-        .active {
-            color: green;
-        }
-    }
-    .m-block {
-        height: 100px;
-        width: 100%;
-        text-align: center;
-        background-color: var(--surface-300);
-        border-radius: 0.5rem;
-        .meter-bar {
-            position: relative;
-            width: 100%;
-            height: 100px;
-            background-color: var(--surface-300);
-            border-radius: 0.5rem;
-            border: 1px solid var(--surface-500);
-        }
-        .label {
-            position: absolute;
-            width: 100%;
-            bottom: 45px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 10px;
-            color: var(--surface-950);
-        }
-        .label.rpm_info {
-            bottom: 28px;
-        }
-        .indicator {
-            .label {
-                color: white;
-            }
-        }
-    }
-    .indicator {
-        position: absolute;
-        overflow: hidden;
-        width: 100%;
-        text-align: center;
-        border-radius: 2px;
-    }
-    .motor_testing {
-        margin-bottom: 0;
-        padding: 0;
-        border: 0;
-        list-style: none;
-        outline: none;
-        .sliders {
-            ul li {
-                display: flex;
-                align-items: flex-end;
-                justify-content: center;
-            }
-            input {
-                cursor: ns-resize;
-                writing-mode: vertical-lr;
-                direction: rtl;
-                height: 6rem !important;
-                padding: 0 !important;
-            }
-        }
-        .values {
-            li {
-                text-align: center;
-                font-size: 10px;
-            }
-        }
-        .telemetry {
-            margin-bottom: 0.5rem;
-            .warning {
-                color: var(--error-500);
-            }
-            li {
-                text-align: center;
-                font-size: 10px;
-                white-space: nowrap;
-                overflow: hidden;
-            }
-        }
-    }
-
-    @media all and (max-width: 1055px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr !important;
-            }
-        }
-    }
+<!-- D3/SVG graph styles — cannot be expressed as Tailwind (generated by D3 at runtime) -->
+<style>
+.tab-motors .grid .tick {
+    stroke: silver;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+.tab-motors .grid path {
+    stroke-width: 0;
+}
+.tab-motors .data .line {
+    stroke-width: 2px;
+    fill: none;
+}
+.tab-motors svg text {
+    stroke: none;
+    fill: var(--text);
+    font-size: 10px;
+}
+/* Telemetry warning — class generated in getTelemetryHtml() */
+.tab-motors .warning {
+    color: var(--error-500);
 }
 </style>

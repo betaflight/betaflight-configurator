@@ -158,6 +158,14 @@
                                     i18n_title="tabPreflight"
                                 ></a>
                             </li>
+                            <li class="tab_flight_plan" v-show="expertMode">
+                                <a
+                                    href="#"
+                                    i18n="tabFlightPlan"
+                                    class="tabicon ic_route"
+                                    i18n_title="tabFlightPlan"
+                                ></a>
+                            </li>
                         </ul>
                         <ul class="mode-connected">
                             <li class="tab_setup">

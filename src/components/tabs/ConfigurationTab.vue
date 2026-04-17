@@ -3,718 +3,439 @@
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabConfiguration") }}</div>
             <WikiButton docUrl="configuration" />
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('configurationFeaturesHelp')"></p>
-            </div>
+            </UiBox>
 
             <div class="grid-row grid-box col2">
                 <div class="col-span-1">
                     <!-- SYSTEM CONFIGURATION -->
-                    <div class="systemconfig">
-                        <div class="gui_box grey">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title">{{ $t("configurationSystem") }}</div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="note">
-                                    <p class="systemconfigNote" v-html="$t('configurationLoopTimeHelp')"></p>
-                                </div>
-                                <div class="select">
-                                    <input type="text" class="gyroFrequency" readonly :value="gyroFrequencyDisplay" />
-
-                                    <span>{{ $t("configurationGyroFrequency") }}</span>
-                                </div>
-                                <div class="select">
-                                    <select
-                                        class="pidProcessDenom"
-                                        v-model.number="pidAdvancedConfig.pid_process_denom"
-                                    >
-                                        <option v-for="opt in pidDenomOptions" :key="opt.value" :value="opt.value">
-                                            {{ opt.text }}
-                                        </option>
-                                    </select>
-                                    <span>{{ $t("configurationPidProcessDenom") }}</span>
-                                    <div class="helpicon cf_tip" :title="$t('configurationPidProcessDenomHelp')"></div>
-                                </div>
-                                <div class="select">
-                                    <div>
-                                        <input
-                                            type="checkbox"
-                                            id="accHardwareSwitch"
-                                            class="toggle"
-                                            v-model="accHardwareEnabled"
-                                            :aria-label="$t('configurationAccHardware')"
-                                        />
-                                    </div>
-                                    <span class="freelabel">{{ $t("configurationAccHardware") }}</span>
-                                </div>
-                                <div class="select">
-                                    <div>
-                                        <input
-                                            type="checkbox"
-                                            id="baroHardwareSwitch"
-                                            class="toggle"
-                                            v-model="baroHardwareEnabled"
-                                            :aria-label="$t('configurationBaroHardware')"
-                                        />
-                                    </div>
-                                    <span class="freelabel">{{ $t("configurationBaroHardware") }}</span>
-                                </div>
-                                <div class="select">
-                                    <div>
-                                        <input
-                                            type="checkbox"
-                                            id="magHardwareSwitch"
-                                            class="toggle"
-                                            v-model="magHardwareEnabled"
-                                            :aria-label="$t('configurationMagHardware')"
-                                        />
-                                    </div>
-                                    <span class="freelabel">{{ $t("configurationMagHardware") }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <UiBox :title="$t('configurationSystem')">
+                        <UiBox highlight>
+                            <p class="systemconfigNote" v-html="$t('configurationLoopTimeHelp')"></p>
+                        </UiBox>
+                        <SettingRow :label="$t('configurationGyroFrequency')">
+                            <UInput readonly disabled :value="gyroFrequencyDisplay" class="min-w-40" />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('configurationPidProcessDenom')"
+                            :help="$t('configurationPidProcessDenomHelp')"
+                        >
+                            <USelect
+                                :items="pidDenomOptions"
+                                v-model="pidAdvancedConfig.pid_process_denom"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('configurationAccHardware')">
+                            <USwitch v-model="accHardwareEnabled" />
+                        </SettingRow>
+                        <SettingRow :label="$t('configurationBaroHardware')">
+                            <USwitch v-model="baroHardwareEnabled" />
+                        </SettingRow>
+                        <SettingRow :label="$t('configurationMagHardware')">
+                            <USwitch v-model="magHardwareEnabled" />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- PERSONALIZATION -->
-                    <div class="gui_box grey miscSettings">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationPersonalization") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="number">
-                                <label>
-                                    <input
-                                        type="text"
-                                        v-model="craftName"
-                                        maxlength="16"
-                                        style="width: 100px"
-                                        :aria-label="$t('craftName')"
-                                    />
-                                    <span>{{ $t("craftName") }}</span>
-                                </label>
-                                <div class="helpicon cf_tip" :title="$t('configurationCraftNameHelp')"></div>
-                            </div>
-                            <div class="number pilotName" v-if="showPilotName">
-                                <label>
-                                    <input
-                                        type="text"
-                                        v-model="pilotName"
-                                        maxlength="16"
-                                        style="width: 100px"
-                                        :aria-label="$t('configurationPilotName')"
-                                    />
-                                    <span>{{ $t("configurationPilotName") }}</span>
-                                </label>
-                                <div class="helpicon cf_tip" :title="$t('configurationPilotNameHelp')"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <UiBox :title="$t('configurationPersonalization')">
+                        <SettingRow :label="$t('craftName')" :help="$t('configurationCraftNameHelp')">
+                            <UInput v-model="craftName" maxlength="16" class="min-w-40" />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('configurationPilotName')"
+                            :help="$t('configurationPilotNameHelp')"
+                            v-if="showPilotName"
+                        >
+                            <UInput v-model="pilotName" maxlength="16" class="min-w-40" />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- CAMERA -->
-                    <div class="gui_box grey miscSettings" v-if="accHardwareEnabled">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationCamera") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="number fpvCamAngleDegrees">
-                                <label>
-                                    <UInputNumber
-                                        name="fpvCamAngleDegrees"
-                                        v-model="fpvCamAngleDegrees"
-                                        :step="1"
-                                        :min="0"
-                                        :max="90"
-                                    />
-                                    <span>{{ $t("configurationFpvCamAngleDegrees") }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    <UiBox :title="$t('configurationCamera')" v-if="accHardwareEnabled">
+                        <SettingRow :label="$t('configurationFpvCamAngleDegrees')">
+                            <UInputNumber v-model="fpvCamAngleDegrees" :step="1" :min="0" :max="90" />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- ARMING -->
-                    <div class="gui_box grey arming" v-if="accHardwareEnabled">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationArming") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationArmingHelp')"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="number">
-                                <label>
-                                    <UInputNumber
-                                        name="small_angle"
-                                        v-model="armingConfig.small_angle"
-                                        :step="1"
-                                        :min="0"
-                                        :max="180"
-                                    />
-                                    <span>{{ $t("configurationSmallAngle") }}</span>
-                                </label>
-                                <div class="helpicon cf_tip" :title="$t('configurationSmallAngleHelp')"></div>
-                            </div>
-
-                            <div class="select" v-if="showGyroCalOnFirstArm">
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        class="toggle"
-                                        id="gyroCalOnFirstArm"
-                                        v-model="armingConfig.gyro_cal_on_first_arm_bool"
-                                    />
-                                </div>
-                                <span class="freelabel">{{ $t("configurationGyroCalOnFirstArm") }}</span>
-                                <div class="helpicon cf_tip" :title="$t('configurationGyroCalOnFirstArmHelp')"></div>
-                            </div>
-
-                            <div class="number" v-if="showAutoDisarmDelay">
-                                <label>
-                                    <UInputNumber
-                                        name="auto_disarm_delay"
-                                        v-model="armingConfig.auto_disarm_delay"
-                                        :step="1"
-                                        :min="0"
-                                        :max="60"
-                                    />
-                                    <span>{{ $t("configurationAutoDisarmDelay") }}</span>
-                                </label>
-                                <div class="helpicon cf_tip" :title="$t('configurationAutoDisarmDelayHelp')"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <UiBox
+                        :title="$t('configurationArming')"
+                        :help="$t('configurationArmingHelp')"
+                        v-if="accHardwareEnabled"
+                    >
+                        <SettingRow :label="$t('configurationSmallAngle')" :help="$t('configurationSmallAngleHelp')">
+                            <UInputNumber v-model="armingConfig.small_angle" :step="1" :min="0" :max="180" />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('configurationGyroCalOnFirstArm')"
+                            :help="$t('configurationGyroCalOnFirstArmHelp')"
+                            v-if="showGyroCalOnFirstArm"
+                        >
+                            <USwitch v-model="armingConfig.gyro_cal_on_first_arm_bool" />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('configurationAutoDisarmDelay')"
+                            :help="$t('configurationAutoDisarmDelayHelp')"
+                            v-if="showAutoDisarmDelay"
+                        >
+                            <UInputNumber v-model="armingConfig.auto_disarm_delay" :step="1" :min="0" :max="60" />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- FEATURES -->
-                    <div class="gui_box grey features">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationFeatures") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <table class="features-table">
-                                <thead class="visually-hidden">
-                                    <tr>
-                                        <th scope="col">{{ $t("configurationFeatureEnabled") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureName") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureHelp") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="feature in featuresList" :key="feature.bit">
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                class="feature toggle"
-                                                :id="'feature' + feature.bit"
-                                                :name="feature.name"
-                                                :checked="isFeatureEnabled(feature)"
-                                                @change="toggleFeature(feature, $event.target.checked)"
-                                            />
-                                        </td>
-                                        <td>
-                                            <div>{{ feature.name }}</div>
-                                        </td>
-                                        <td>
-                                            <span class="xs" v-html="$t('feature' + feature.name)"></span>
-                                        </td>
-                                        <td>
-                                            <span class="sm-min" v-html="$t('feature' + feature.name)"></span>
-                                            <div
-                                                v-if="feature.haveTip"
-                                                class="helpicon cf_tip"
-                                                :title="$t('feature' + feature.name + 'Tip')"
-                                            ></div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <UiBox :title="$t('configurationFeatures')">
+                        <SettingRow
+                            v-for="feature in featuresList"
+                            :key="feature.bit"
+                            fullWidth
+                            :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
+                        >
+                            <USwitch
+                                :model-value="isFeatureEnabled(feature)"
+                                @update:model-value="(checked) => toggleFeature(feature, checked)"
+                            />
+                            <template #label>
+                                <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ feature.name }}</span>
+                                <span
+                                    class="min-w-0 flex-1 text-xs leading-snug"
+                                    v-html="$t('feature' + feature.name)"
+                                ></span>
+                            </template>
+                        </SettingRow>
+                    </UiBox>
                 </div>
 
                 <div class="col-span-1">
                     <!-- BOARD ALIGNMENT -->
-                    <div class="board acc">
-                        <div class="gui_box grey">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title">{{ $t("configurationBoardAlignment") }}</div>
-                                <div class="helpicon cf_tip" :title="$t('configurationBoardAlignmentHelp')"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="sensor_align_content">
-                                    <div class="sensor_align_inputs">
-                                        <div class="alignicon roll"></div>
-                                        <label>
-                                            <UInputNumber
-                                                v-model="boardAlignment.roll"
-                                                :step="1"
-                                                :min="-180"
-                                                :max="360"
-                                                :aria-label="$t('configurationBoardAlignmentRoll')"
-                                            />
-                                            <span>{{ $t("configurationBoardAlignmentRoll") }}</span>
-                                        </label>
-                                    </div>
-                                    <div class="sensor_align_inputs">
-                                        <div class="alignicon pitch"></div>
-                                        <label>
-                                            <UInputNumber
-                                                v-model="boardAlignment.pitch"
-                                                :step="1"
-                                                :min="-180"
-                                                :max="360"
-                                                :aria-label="$t('configurationBoardAlignmentPitch')"
-                                            />
-                                            <span>{{ $t("configurationBoardAlignmentPitch") }}</span>
-                                        </label>
-                                    </div>
-                                    <div class="sensor_align_inputs">
-                                        <div class="alignicon yaw"></div>
-                                        <label>
-                                            <UInputNumber
-                                                v-model="boardAlignment.yaw"
-                                                :step="1"
-                                                :min="-180"
-                                                :max="360"
-                                                :aria-label="$t('configurationBoardAlignmentYaw')"
-                                            />
-                                            <span>{{ $t("configurationBoardAlignmentYaw") }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                    <UiBox :title="$t('configurationBoardAlignment')" :help="$t('configurationBoardAlignmentHelp')">
+                        <div class="flex gap-4 justify-between">
+                            <SettingColumn :label="$t('configurationBoardAlignmentRoll')">
+                                <template v-slot:label>
+                                    <div class="alignicon roll"></div>
+                                </template>
+                                <UInputNumber v-model="boardAlignment.roll" :step="1" :min="-180" :max="360" />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationBoardAlignmentPitch')">
+                                <template v-slot:label>
+                                    <div class="alignicon pitch"></div>
+                                </template>
+                                <UInputNumber v-model="boardAlignment.pitch" :step="1" :min="-180" :max="360" />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationBoardAlignmentYaw')">
+                                <template v-slot:label>
+                                    <div class="alignicon yaw"></div>
+                                </template>
+                                <UInputNumber v-model="boardAlignment.yaw" :step="1" :min="-180" :max="360" />
+                            </SettingColumn>
                         </div>
-                    </div>
+                    </UiBox>
 
                     <!-- NEW MULTI-GYRO ALIGNMENT (API 1.47+) -->
-                    <div class="gui_box grey" v-if="showMultiGyro">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationGyroActiveIMU") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationGyroActiveIMUHelp')"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <div
-                                v-for="gyro in gyroList"
-                                :key="gyro.index"
-                                class="gyro-row"
-                                style="margin-bottom: 10px; border-bottom: 1px solid #111; padding-bottom: 10px"
-                            >
-                                <div class="grid-row col2">
-                                    <div class="col-span-1">
-                                        <!-- Gyro Enable Toggle -->
-                                        <div class="select">
-                                            <div>
-                                                <input
-                                                    type="checkbox"
-                                                    class="toggle"
-                                                    :id="'gyro-enable-' + gyro.index"
-                                                    :checked="gyro.enabled"
-                                                    @change="toggleGyro(gyro.index, $event.target.checked)"
-                                                />
-                                            </div>
-                                            <span class="freelabel">{{ gyro.name }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-span-1">
-                                        <!-- Alignment configuration removed for API 1.47+ -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <UiBox
+                        :title="$t('configurationGyroActiveIMU')"
+                        :help="$t('configurationGyroActiveIMUHelp')"
+                        v-if="showMultiGyro"
+                    >
+                        <SettingRow v-for="gyro in gyroList" :key="gyro.index" fullWidth :label="getGyroLabel(gyro)">
+                            <USwitch
+                                :model-value="gyro.enabled"
+                                @update:model-value="(checked) => toggleGyro(gyro.index, checked)"
+                            />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- GYRO ALIGNMENT (Legacy) -->
-                    <div class="gui_box grey" v-if="showSensorAlignment">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationActiveImu") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationGyroAlignmentHelp')"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="grid-row col2">
-                                <div class="col-span-1">
-                                    <!-- GYRO ALIGNMENT -->
-                                    <div class="select" v-if="showGyroToUse">
-                                        <select v-model.number="sensorAlignment.gyro_to_use">
-                                            <option value="0">{{ $t("configurationSensorGyroToUseFirst") }}</option>
-                                            <option value="1" v-if="hasSecondGyro">
-                                                {{ $t("configurationSensorGyroToUseSecond") }}
-                                            </option>
-                                            <option value="2" v-if="hasDualGyros">
-                                                {{ $t("configurationSensorGyroToUseBoth") }}
-                                            </option>
-                                        </select>
-                                        <span>{{ $t("configurationSensorGyroToUse") }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-span-1">
-                                    <div class="select" v-if="showGyro1Align">
-                                        <select v-model.number="sensorAlignment.gyro_1_align">
-                                            <option :value="0">
-                                                {{ $t("configurationSensorAlignmentDefaultOption") }}
-                                            </option>
-                                            <option
-                                                v-for="(align, idx) in sensorAlignments"
-                                                :key="idx"
-                                                :value="idx + 1"
-                                            >
-                                                {{ align }}
-                                            </option>
-                                        </select>
-                                        <span>{{ $t("configurationSensorAlignmentGyro1") }}</span>
-                                    </div>
+                    <UiBox
+                        v-if="showSensorAlignment"
+                        :title="$t('configurationActiveImu')"
+                        :help="$t('configurationGyroAlignmentHelp')"
+                    >
+                        <div class="grid-row grid-box col2 gap-2">
+                            <div class="col-span-1 flex flex-col gap-2">
+                                <SettingColumn v-if="showGyroToUse" :label="$t('configurationSensorGyroToUse')">
+                                    <USelect
+                                        v-model="sensorAlignment.gyro_to_use"
+                                        :items="gyroToUseSelectItems"
+                                        class="min-w-40"
+                                    />
+                                </SettingColumn>
+                            </div>
+                            <div class="col-span-1 flex flex-col gap-2">
+                                <SettingColumn v-if="showGyro1Align" :label="$t('configurationSensorAlignmentGyro1')">
+                                    <USelect
+                                        v-model="sensorAlignment.gyro_1_align"
+                                        :items="gyroAlignSelectItems"
+                                        class="min-w-40"
+                                    />
+                                </SettingColumn>
 
-                                    <div class="sensor_align_content" v-if="sensorAlignment.gyro_1_align === 9">
-                                        <div class="sensor_align_inputs">
-                                            <div class="alignicon roll"></div>
-                                            <label>
-                                                <UInputNumber
-                                                    v-model="sensorAlignment.gyro_1_align_roll"
-                                                    :step="0.1"
-                                                    :min="-180"
-                                                    :max="360"
-                                                    :aria-label="$t('configurationGyro1AlignmentRoll')"
-                                                />
-                                                <span>{{ $t("configurationGyro1AlignmentRoll") }}</span>
-                                            </label>
-                                        </div>
-                                        <div class="sensor_align_inputs">
-                                            <div class="alignicon pitch"></div>
-                                            <label>
-                                                <UInputNumber
-                                                    v-model="sensorAlignment.gyro_1_align_pitch"
-                                                    :step="0.1"
-                                                    :min="-180"
-                                                    :max="360"
-                                                    :aria-label="$t('configurationGyro1AlignmentPitch')"
-                                                />
-                                                <span>{{ $t("configurationGyro1AlignmentPitch") }}</span>
-                                            </label>
-                                        </div>
-                                        <div class="sensor_align_inputs">
-                                            <div class="alignicon yaw"></div>
-                                            <label>
-                                                <UInputNumber
-                                                    v-model="sensorAlignment.gyro_1_align_yaw"
-                                                    :step="0.1"
-                                                    :min="-180"
-                                                    :max="360"
-                                                    :aria-label="$t('configurationGyro1AlignmentYaw')"
-                                                />
-                                                <span>{{ $t("configurationGyro1AlignmentYaw") }}</span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="select" v-if="showGyro2Align">
-                                        <select v-model.number="sensorAlignment.gyro_2_align">
-                                            <option :value="0">
-                                                {{ $t("configurationSensorAlignmentDefaultOption") }}
-                                            </option>
-                                            <option
-                                                v-for="(align, idx) in sensorAlignments"
-                                                :key="idx"
-                                                :value="idx + 1"
-                                            >
-                                                {{ align }}
-                                            </option>
-                                        </select>
-                                        <span>{{ $t("configurationSensorAlignmentGyro2") }}</span>
-                                    </div>
-
-                                    <div class="sensor_align_content" v-if="sensorAlignment.gyro_2_align === 9">
-                                        <div class="sensor_align_inputs">
-                                            <div class="alignicon roll"></div>
-                                            <label>
-                                                <UInputNumber
-                                                    v-model="sensorAlignment.gyro_2_align_roll"
-                                                    :step="0.1"
-                                                    :min="-180"
-                                                    :max="360"
-                                                    :aria-label="$t('configurationGyro2AlignmentRoll')"
-                                                />
-                                                <span>{{ $t("configurationGyro2AlignmentRoll") }}</span>
-                                            </label>
-                                        </div>
-                                        <div class="sensor_align_inputs">
-                                            <div class="alignicon pitch"></div>
-                                            <label>
-                                                <UInputNumber
-                                                    v-model="sensorAlignment.gyro_2_align_pitch"
-                                                    :step="0.1"
-                                                    :min="-180"
-                                                    :max="360"
-                                                    :aria-label="$t('configurationGyro2AlignmentPitch')"
-                                                />
-                                                <span>{{ $t("configurationGyro2AlignmentPitch") }}</span>
-                                            </label>
-                                        </div>
-                                        <div class="sensor_align_inputs">
-                                            <div class="alignicon yaw"></div>
-                                            <label>
-                                                <UInputNumber
-                                                    v-model="sensorAlignment.gyro_2_align_yaw"
-                                                    :step="0.1"
-                                                    :min="-180"
-                                                    :max="360"
-                                                    :aria-label="$t('configurationGyro2AlignmentYaw')"
-                                                />
-                                                <span>{{ $t("configurationGyro2AlignmentYaw") }}</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                                <SettingColumn v-if="showGyro2Align" :label="$t('configurationSensorAlignmentGyro2')">
+                                    <USelect
+                                        v-model="sensorAlignment.gyro_2_align"
+                                        :items="gyroAlignSelectItems"
+                                        class="min-w-40"
+                                    />
+                                </SettingColumn>
                             </div>
                         </div>
-                    </div>
+
+                        <div
+                            v-if="showGyro1Align && sensorAlignment.gyro_1_align === 9"
+                            class="flex gap-4 justify-between flex-wrap w-full"
+                        >
+                            <SettingColumn :label="$t('configurationGyro1AlignmentRoll')">
+                                <template #label>
+                                    <div class="alignicon roll"></div>
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.gyro_1_align_roll"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationGyro1AlignmentRoll')"
+                                />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationGyro1AlignmentPitch')">
+                                <template #label>
+                                    <div class="alignicon pitch"></div>
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.gyro_1_align_pitch"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationGyro1AlignmentPitch')"
+                                />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationGyro1AlignmentYaw')">
+                                <template #label>
+                                    <div class="alignicon yaw"></div>
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.gyro_1_align_yaw"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationGyro1AlignmentYaw')"
+                                />
+                            </SettingColumn>
+                        </div>
+
+                        <div
+                            v-if="showGyro2Align && sensorAlignment.gyro_2_align === 9"
+                            class="flex gap-4 justify-between flex-wrap w-full"
+                        >
+                            <SettingColumn :label="$t('configurationGyro2AlignmentRoll')">
+                                <template #label>
+                                    <div class="alignicon roll"></div>
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.gyro_2_align_roll"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationGyro2AlignmentRoll')"
+                                />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationGyro2AlignmentPitch')">
+                                <template #label>
+                                    <div class="alignicon pitch"></div>
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.gyro_2_align_pitch"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationGyro2AlignmentPitch')"
+                                />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationGyro2AlignmentYaw')">
+                                <template #label>
+                                    <div class="alignicon yaw"></div>
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.gyro_2_align_yaw"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationGyro2AlignmentYaw')"
+                                />
+                            </SettingColumn>
+                        </div>
+                    </UiBox>
 
                     <!-- MAGNETOMETER ALIGNMENT -->
-                    <div class="gui_box grey" v-if="showMagAlign">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationMagAlignment") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationMagAlignmentHelp')"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="select">
-                                <select v-model.number="sensorAlignment.align_mag">
-                                    <option :value="0">
-                                        {{ $t("configurationSensorAlignmentDefaultOption") }}
-                                    </option>
-                                    <option v-for="(align, idx) in sensorAlignments" :key="idx" :value="idx + 1">
-                                        {{ align }}
-                                    </option>
-                                </select>
-                            </div>
+                    <UiBox
+                        v-if="showMagAlign"
+                        :title="$t('configurationMagAlignment')"
+                        :help="$t('configurationMagAlignmentHelp')"
+                    >
+                        <SettingRow fullWidth>
+                            <USelect
+                                v-model="sensorAlignment.align_mag"
+                                :items="gyroAlignSelectItems"
+                                class="min-w-40"
+                                :aria-label="$t('configurationMagAlignment')"
+                            />
+                        </SettingRow>
 
-                            <div class="sensor_align_content" v-if="sensorAlignment.align_mag === 9">
-                                <div class="sensor_align_inputs">
+                        <div v-if="sensorAlignment.align_mag === 9" class="flex gap-4 justify-between flex-wrap w-full">
+                            <SettingColumn :label="$t('configurationMagAlignmentRoll')">
+                                <template #label>
                                     <div class="alignicon roll"></div>
-                                    <label>
-                                        <UInputNumber
-                                            v-model="sensorAlignment.mag_align_roll"
-                                            :step="0.1"
-                                            :min="-180"
-                                            :max="360"
-                                            :aria-label="$t('configurationMagAlignmentRoll')"
-                                        />
-                                        <span>{{ $t("configurationMagAlignmentRoll") }}</span>
-                                    </label>
-                                </div>
-                                <div class="sensor_align_inputs">
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.mag_align_roll"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationMagAlignmentRoll')"
+                                />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationMagAlignmentPitch')">
+                                <template #label>
                                     <div class="alignicon pitch"></div>
-                                    <label>
-                                        <UInputNumber
-                                            v-model="sensorAlignment.mag_align_pitch"
-                                            :step="0.1"
-                                            :min="-180"
-                                            :max="360"
-                                            :aria-label="$t('configurationMagAlignmentPitch')"
-                                        />
-                                        <span>{{ $t("configurationMagAlignmentPitch") }}</span>
-                                    </label>
-                                </div>
-                                <div class="sensor_align_inputs">
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.mag_align_pitch"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationMagAlignmentPitch')"
+                                />
+                            </SettingColumn>
+                            <SettingColumn :label="$t('configurationMagAlignmentYaw')">
+                                <template #label>
                                     <div class="alignicon yaw"></div>
-                                    <label>
-                                        <UInputNumber
-                                            v-model="sensorAlignment.mag_align_yaw"
-                                            :step="0.1"
-                                            :min="-180"
-                                            :max="360"
-                                            :aria-label="$t('configurationMagAlignmentYaw')"
-                                        />
-                                        <span>{{ $t("configurationMagAlignmentYaw") }}</span>
-                                    </label>
-                                </div>
-                            </div>
+                                </template>
+                                <UInputNumber
+                                    v-model="sensorAlignment.mag_align_yaw"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="360"
+                                    :aria-label="$t('configurationMagAlignmentYaw')"
+                                />
+                            </SettingColumn>
                         </div>
-                    </div>
+                    </UiBox>
 
                     <!-- OTHER SENSORS -->
-                    <div class="gui_box grey" v-if="showOtherSensors">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationSensors") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationSensorsHelp')"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <!-- MAG DECLINATION -->
-                            <div class="number" v-if="showMagDeclination">
-                                <label>
-                                    <UInputNumber :step="0.1" :min="-180" :max="180" v-model="magDeclination" />
-                                    <span>{{ $t("configurationMagDeclination") }}</span>
-                                </label>
-                            </div>
-
-                            <!-- RANGEFINDER -->
-                            <div class="select" v-if="showRangefinder">
-                                <select v-model.number="sensorConfig.sonar_hardware">
-                                    <option v-for="(type, idx) in sonarTypesList" :key="idx" :value="idx">
-                                        {{ type }}
-                                    </option>
-                                </select>
-                                <span>{{ $t("configurationRangefinder") }}</span>
-                            </div>
-
-                            <!-- OPTICAL FLOW -->
-                            <div class="select" v-if="showOpticalFlow">
-                                <select v-model.number="sensorConfig.opticalflow_hardware">
-                                    <option v-for="(type, idx) in opticalFlowTypesList" :key="idx" :value="idx">
-                                        {{ type }}
-                                    </option>
-                                </select>
-                                <span>{{ $t("configurationOpticalflow") }}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <UiBox
+                        v-if="showOtherSensors"
+                        :title="$t('configurationSensors')"
+                        :help="$t('configurationSensorsHelp')"
+                    >
+                        <SettingRow
+                            v-if="showMagDeclination"
+                            :label="$t('configurationMagDeclination')"
+                            :help="$t('configurationMagDeclinationHelp')"
+                        >
+                            <UInputNumber v-model="magDeclination" :step="0.1" :min="-180" :max="180" />
+                        </SettingRow>
+                        <SettingRow
+                            v-if="showRangefinder"
+                            :label="$t('configurationRangefinder')"
+                            :help="$t('configurationRangefinderHelp')"
+                        >
+                            <USelect
+                                v-model="sensorConfig.sonar_hardware"
+                                :items="sonarTypesList.map((label, idx) => ({ label, value: idx }))"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            v-if="showOpticalFlow"
+                            :label="$t('configurationOpticalflow')"
+                            :help="$t('configurationOpticalflowHelp')"
+                        >
+                            <USelect
+                                v-model="sensorConfig.opticalflow_hardware"
+                                :items="opticalFlowTypesList.map((label, idx) => ({ label, value: idx }))"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- ACCELEROMETER TRIM -->
-                    <div class="gui_box grey" v-if="accHardwareEnabled">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("initialSetupAccelTrimsHead") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="number">
-                                <label>
-                                    <UInputNumber
-                                        name="acc_trim_roll"
-                                        :step="1"
-                                        :min="-300"
-                                        :max="300"
-                                        v-model="accelTrims.roll"
-                                    />
-                                    <span>{{ $t("configurationAccelTrimRoll") }}</span>
-                                </label>
-                            </div>
-                            <div class="number">
-                                <label>
-                                    <UInputNumber
-                                        name="acc_trim_pitch"
-                                        :step="1"
-                                        :min="-300"
-                                        :max="300"
-                                        v-model="accelTrims.pitch"
-                                    />
-                                    <span>{{ $t("configurationAccelTrimPitch") }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    <UiBox :title="$t('configurationAccelTrims')">
+                        <SettingRow :label="$t('configurationAccelTrimRoll')">
+                            <UInputNumber v-model="accelTrims.roll" :step="1" :min="-300" :max="300" />
+                        </SettingRow>
+                        <SettingRow :label="$t('configurationAccelTrimPitch')">
+                            <UInputNumber v-model="accelTrims.pitch" :step="1" :min="-300" :max="300" />
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- DSHOT BEACON -->
-                    <div class="gui_box grey dshotbeeper">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationDshotBeeper") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationDshotBeaconHelp')"></div>
+                    <UiBox :title="$t('configurationDshotBeeper')" :help="$t('configurationDshotBeaconHelp')">
+                        <SettingRow
+                            :label="$t('configurationDshotBeaconTone')"
+                            :help="$t('configurationUseDshotBeeper')"
+                        >
+                            <USelect
+                                v-model="dshotBeaconTone"
+                                class="min-w-24"
+                                :items="[
+                                    { label: $t('portsTelemetryDisabled'), value: 0 },
+                                    ...[1, 2, 3, 4, 5].map((i) => ({ label: String(i), value: i })),
+                                ]"
+                            />
+                        </SettingRow>
+                        <div class="flex gap-2">
+                            <UButton :label="$t('configurationBeeperEnableAll')" @click="enableAllDshot" size="xs" />
+                            <UButton :label="$t('configurationBeeperDisableAll')" @click="disableAllDshot" size="xs" />
                         </div>
-                        <div class="spacer_box">
-                            <div class="select">
-                                <select class="dshotBeeperBeaconTone" v-model.number="dshotBeaconTone">
-                                    <option value="0">{{ $t("portsTelemetryDisabled") }}</option>
-                                    <option v-for="i in 5" :key="i" :value="i">{{ i }}</option>
-                                </select>
-                                <span>{{ $t("configurationDshotBeaconTone") }}</span>
-                            </div>
-
-                            <div class="beeper-controls">
-                                <button type="button" class="btn beeper-enable-all" @click="enableAllDshot">
-                                    {{ $t("configurationBeeperEnableAll") }}
-                                </button>
-                                <button type="button" class="btn beeper-disable-all" @click="disableAllDshot">
-                                    {{ $t("configurationBeeperDisableAll") }}
-                                </button>
-                            </div>
-
-                            <table class="dshot-beacon-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" class="col-enable">
-                                            {{ $t("configurationFeatureEnabled") }}
-                                        </th>
-                                        <th scope="col" class="col-name">{{ $t("configurationFeatureName") }}</th>
-                                        <th scope="col" class="col-description">
-                                            {{ $t("configurationFeatureDescription") }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="cond in dshotBeaconConditionsList" :key="cond.bit">
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                class="condition toggle"
-                                                :id="'dshot-cond-' + cond.bit"
-                                                :checked="isDshotConditionEnabled(cond)"
-                                                @change="toggleDshotCondition(cond, $event.target.checked)"
-                                            />
-                                        </td>
-                                        <td>
-                                            <div>{{ cond.name }}</div>
-                                        </td>
-                                        <td>
-                                            <span :title="$t('beeper' + cond.name)">{{
-                                                $t("beeper" + cond.name)
-                                            }}</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                        <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
+                            <USwitch
+                                :model-value="isDshotConditionEnabled(cond)"
+                                @update:model-value="(checked) => toggleDshotCondition(cond, checked)"
+                            />
+                            <template #label>
+                                <span class="w-20 shrink-0 font-bold text-xs leading-snug">{{ cond.name }}</span>
+                                <span
+                                    class="min-w-0 flex-1 text-xs leading-snug"
+                                    v-html="$t('beeper' + cond.name)"
+                                ></span>
+                            </template>
+                        </SettingRow>
+                    </UiBox>
 
                     <!-- BEEPER CONFIGURATION -->
-                    <div class="gui_box grey beepers">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationBeeper") }}</div>
+                    <UiBox :title="$t('configurationBeeper')">
+                        <div class="flex gap-2">
+                            <UButton :label="$t('configurationBeeperEnableAll')" @click="enableAllBeepers" size="xs" />
+                            <UButton
+                                :label="$t('configurationBeeperDisableAll')"
+                                @click="disableAllBeepers"
+                                size="xs"
+                            />
                         </div>
-                        <div class="spacer_box">
-                            <div class="beeper-controls">
-                                <button type="button" class="btn beeper-enable-all" @click="enableAllBeepers">
-                                    {{ $t("configurationBeeperEnableAll") }}
-                                </button>
-                                <button type="button" class="btn beeper-disable-all" @click="disableAllBeepers">
-                                    {{ $t("configurationBeeperDisableAll") }}
-                                </button>
-                            </div>
-                            <table class="beeper-configuration-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">{{ $t("configurationFeatureEnabled") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureName") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="beeper-configuration">
-                                    <tr
-                                        v-for="beeper in beepersList"
-                                        :key="beeper.bit"
-                                        v-show="beeper.visible !== false"
-                                    >
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                class="condition toggle"
-                                                :id="'beeper-' + beeper.bit"
-                                                :checked="isBeeperEnabled(beeper)"
-                                                @change="toggleBeeper(beeper, $event.target.checked)"
-                                            />
-                                        </td>
-                                        <td>
-                                            <div>{{ beeper.name }}</div>
-                                        </td>
-                                        <td>
-                                            <span :title="$t('beeper' + beeper.name)">{{
-                                                $t("beeper" + beeper.name)
-                                            }}</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                        <SettingRow
+                            v-for="beeper in beepersList"
+                            :key="beeper.bit"
+                            v-show="beeper.visible !== false"
+                            fullWidth
+                        >
+                            <USwitch
+                                :model-value="isBeeperEnabled(beeper)"
+                                @update:model-value="(checked) => toggleBeeper(beeper, checked)"
+                            />
+                            <template #label>
+                                <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ beeper.name }}</span>
+                                <span
+                                    class="min-w-0 flex-1 text-xs leading-snug"
+                                    v-html="$t('beeper' + beeper.name)"
+                                ></span>
+                            </template>
+                        </SettingRow>
+                    </UiBox>
                 </div>
             </div>
         </div>
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
-                <button type="button" class="save" @click="saveConfig()">{{ $t("configurationButtonSave") }}</button>
-            </div>
+            <UButton :label="$t('configurationButtonSave')" @click="saveConfig" />
         </div>
     </div>
 </template>
@@ -737,11 +458,17 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/d
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
 import WikiButton from "../elements/WikiButton.vue";
+import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
+import SettingColumn from "../elements/SettingColumn.vue";
 
 export default defineComponent({
     name: "ConfigurationTab",
     components: {
         WikiButton,
+        UiBox,
+        SettingRow,
+        SettingColumn,
     },
     setup() {
         // Reactive State
@@ -820,7 +547,6 @@ export default defineComponent({
 
         const magDeclination = ref(0);
         const showGyroCalOnFirstArm = ref(false);
-        const showAutoDisarmDelay = ref(false);
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
         const showMultiGyro = ref(false); // API 1.47+ multi-gyro UI
@@ -863,6 +589,10 @@ export default defineComponent({
             return gyros;
         });
 
+        const getGyroLabel = (gyro) => {
+            return gyro.name || `Gyro #${gyro.index + 1}`;
+        };
+
         const toggleGyro = (index, enabled) => {
             if (enabled) {
                 sensorAlignment.gyro_enable_mask = bit_set(sensorAlignment.gyro_enable_mask, index);
@@ -876,8 +606,7 @@ export default defineComponent({
                     semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)
                 ) {
                     gui_log(i18n.getMessage("configurationGyroRequired"));
-                    // Reset checkbox state visually (since v-model isn't used here directly, we rely on re-rendering or manual intervention,
-                    // but since the mask isn't updated, the computed property 'gyroList' will re-evaluate to 'enabled: true')
+                    // Mask unchanged; gyroList still reports enabled, so the switch stays on.
                     return;
                 }
 
@@ -929,6 +658,25 @@ export default defineComponent({
             i18n.getMessage("configurationSensorAlignmentCustom"),
         ]);
 
+        const gyroToUseSelectItems = computed(() => {
+            const items = [{ label: i18n.getMessage("configurationSensorGyroToUseFirst"), value: 0 }];
+            if (hasSecondGyro.value) {
+                items.push({ label: i18n.getMessage("configurationSensorGyroToUseSecond"), value: 1 });
+            }
+            if (hasDualGyros.value) {
+                items.push({ label: i18n.getMessage("configurationSensorGyroToUseBoth"), value: 2 });
+            }
+            return items;
+        });
+
+        const gyroAlignSelectItems = computed(() => {
+            const items = [{ label: i18n.getMessage("configurationSensorAlignmentDefaultOption"), value: 0 }];
+            sensorAlignments.value.forEach((label, idx) => {
+                items.push({ label, value: idx + 1 });
+            });
+            return items;
+        });
+
         // Other Features & Beepers State wrapper
         const featuresList = computed(() => {
             if (!fcStore.features?.features?._features) {
@@ -937,6 +685,11 @@ export default defineComponent({
             return fcStore.features.features._features.filter((feature) => {
                 return feature.mode !== "select" && feature.group === "other";
             });
+        });
+
+        const MOTOR_STOP_FEATURE_BIT = 4;
+        const motorStopFeatureBit = computed(() => {
+            return featuresList.value.find((feature) => feature.name === "MOTOR_STOP")?.bit ?? MOTOR_STOP_FEATURE_BIT;
         });
 
         const beepersList = computed(() => {
@@ -980,6 +733,13 @@ export default defineComponent({
                 return 0;
             }
             return fcStore.features.features._featureMask;
+        });
+
+        const showAutoDisarmDelay = computed(() => {
+            if (!fcStore.config?.apiVersion || semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
+                return false;
+            }
+            return bit_check(featureMask.value, motorStopFeatureBit.value);
         });
 
         // Methods for toggling bits
@@ -1231,11 +991,6 @@ export default defineComponent({
                 showGyroCalOnFirstArm.value = true;
                 armingConfig.gyro_cal_on_first_arm_bool = fcStore.armingConfig.gyro_cal_on_first_arm === 1;
                 armingConfig.auto_disarm_delay = fcStore.armingConfig.auto_disarm_delay;
-
-                if (isFeatureEnabled({ name: "MOTOR_STOP", bit: 4 })) {
-                    // Check manually or reuse logic
-                    showAutoDisarmDelay.value = true;
-                }
             }
 
             // Accel Trims
@@ -1341,7 +1096,7 @@ export default defineComponent({
                         value: (pidBaseFreq / denom).toFixed(2),
                     });
                 }
-                options.push({ value: denom, text });
+                options.push({ value: denom, label: text });
             }
             pidDenomOptions.value = options;
         };
@@ -1544,8 +1299,11 @@ export default defineComponent({
             showGyroToUse,
             opticalFlowTypesList,
             sensorAlignments,
+            gyroToUseSelectItems,
+            gyroAlignSelectItems,
             showMultiGyro,
             gyroList,
+            getGyroLabel,
             toggleGyro,
             updateGyroAlign,
             saveConfig,
@@ -1561,30 +1319,36 @@ export default defineComponent({
         height: 15px;
         margin: 3px;
     }
+
     .pitch {
         background-image: url(../../images/icons/cf_icon_pitch.svg);
         background-repeat: no-repeat;
         background-position: center;
     }
+
     .yaw {
         background-image: url(../../images/icons/cf_icon_yaw.svg);
         background-repeat: no-repeat;
         background-position: center;
     }
+
     .roll {
         background-image: url(../../images/icons/cf_icon_roll.svg);
         background-repeat: no-repeat;
         background-position: center;
     }
+
     .sensor_align_content {
         display: flex;
         justify-content: space-between;
         width: 100%;
         flex-wrap: wrap;
         gap: 0.5rem;
+
         .sensor_align_inputs {
             display: flex;
             align-items: center;
+
             label {
                 white-space: nowrap;
                 display: flex;
@@ -1593,18 +1357,10 @@ export default defineComponent({
             }
         }
     }
+
     table {
         td {
             height: 1.75rem;
-        }
-        tbody.beeper-configuration {
-            tr {
-                td:nth-child(2) {
-                    font-weight: bold;
-                    padding-left: 1.5rem;
-                    padding-right: 1.5rem;
-                }
-            }
         }
     }
 
@@ -1620,41 +1376,6 @@ export default defineComponent({
         border: 0;
     }
 
-    .beeper-controls {
-        margin-bottom: 0.5rem;
-        display: flex;
-        gap: 0.25rem;
-        .btn {
-            text-align: center;
-            background-color: var(--primary-500);
-            border-radius: 0.5rem;
-            border: 1px solid var(--primary-600);
-            color: #000;
-            font-weight: 600;
-            font-size: 10px;
-            cursor: pointer;
-            white-space: nowrap;
-            height: 1.4rem;
-            display: flex;
-            align-items: center;
-            transition:
-                color 200ms,
-                background-color 200ms;
-
-            &:hover {
-                background-color: var(--primary-400);
-                color: #000;
-                transition: all ease 0.2s;
-                text-decoration: none;
-            }
-            &:active {
-                background-color: var(--primary-400);
-                transition: all ease 0s;
-                box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-            }
-        }
-    }
-
     @media all and (max-width: 575px) {
         .grid-box {
             &.col2 {
@@ -1664,4 +1385,3 @@ export default defineComponent({
     }
 }
 </style>
-```

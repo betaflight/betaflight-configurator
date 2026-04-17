@@ -1,135 +1,87 @@
 <template>
     <Dialog v-model="showEditorDialog" :title="editMode ? $t('flightPlanEditWaypoint') : $t('flightPlanAddWaypoint')">
-        <form ref="formElement" @submit.prevent="handleSave">
-            <!-- Latitude -->
-            <div class="form-row">
-                <div class="input-column">
-                    <UInputNumber
-                        v-model="form.latitude"
-                        :step="0.000001"
-                        :min="-90"
-                        :max="90"
-                        required
-                        :aria-label="$t('flightPlanLatitude')"
-                    />
-                </div>
-                <div class="label-column" v-html="$t('flightPlanLatitude')"></div>
-                <div class="separator"></div>
-                <div class="extra-column-1"></div>
-                <div class="extra-column-2"></div>
-            </div>
+        <form ref="formElement" class="editor-form flex flex-col gap-3" @submit.prevent="handleSave">
+            <SettingRow :label="$t('flightPlanLatitude')" full-width>
+                <UInputNumber
+                    v-model="form.latitude"
+                    :step="0.000001"
+                    :min="-90"
+                    :max="90"
+                    required
+                    :aria-label="$t('flightPlanLatitude')"
+                    class="w-48"
+                />
+            </SettingRow>
 
-            <!-- Longitude -->
-            <div class="form-row">
-                <div class="input-column">
-                    <UInputNumber
-                        v-model="form.longitude"
-                        :step="0.000001"
-                        :min="-180"
-                        :max="180"
-                        required
-                        :aria-label="$t('flightPlanLongitude')"
-                    />
-                </div>
-                <div class="label-column" v-html="$t('flightPlanLongitude')"></div>
-                <div class="separator"></div>
-                <div class="extra-column-1"></div>
-                <div class="extra-column-2"></div>
-            </div>
+            <SettingRow :label="$t('flightPlanLongitude')" full-width>
+                <UInputNumber
+                    v-model="form.longitude"
+                    :step="0.000001"
+                    :min="-180"
+                    :max="180"
+                    required
+                    :aria-label="$t('flightPlanLongitude')"
+                    class="w-48"
+                />
+            </SettingRow>
 
-            <!-- Altitude -->
-            <div class="form-row">
-                <div class="input-column">
-                    <UInputNumber
-                        v-model="form.altitude"
-                        :step="1"
-                        :min="0"
-                        :max="50000"
-                        required
-                        :aria-label="$t('flightPlanAltitude')"
-                    />
-                </div>
-                <div class="label-column" v-html="$t('flightPlanAltitude')"></div>
-                <div class="separator"></div>
-                <div class="extra-column-1"></div>
-                <div class="extra-column-2"></div>
-            </div>
+            <SettingRow :label="$t('flightPlanAltitude')" full-width>
+                <UInputNumber
+                    v-model="form.altitude"
+                    :step="1"
+                    :min="0"
+                    :max="50000"
+                    required
+                    :aria-label="$t('flightPlanAltitude')"
+                    class="w-48"
+                />
+            </SettingRow>
 
-            <!-- Speed -->
-            <div class="form-row">
-                <div class="input-column">
-                    <UInputNumber
-                        v-model="form.speed"
-                        :step="0.1"
-                        :min="0"
-                        :max="500"
-                        required
-                        :aria-label="$t('flightPlanSpeed')"
-                    />
-                </div>
-                <div class="label-column" v-html="$t('flightPlanSpeed')"></div>
-                <div class="separator"></div>
-                <div class="extra-column-1"></div>
-                <div class="extra-column-2"></div>
-            </div>
+            <SettingRow :label="$t('flightPlanSpeed')" full-width>
+                <UInputNumber
+                    v-model="form.speed"
+                    :step="0.1"
+                    :min="0"
+                    :max="500"
+                    required
+                    :aria-label="$t('flightPlanSpeed')"
+                    class="w-48"
+                />
+            </SettingRow>
 
-            <!-- Type -->
-            <div class="form-row">
-                <div class="input-column">
-                    <select v-model="form.type" :aria-label="$t('flightPlanType')">
-                        <option value="flyover">{{ $t("flightPlanTypeFlyover") }}</option>
-                        <option value="flyby">{{ $t("flightPlanTypeFlyby") }}</option>
-                        <option value="hold">{{ $t("flightPlanTypeHold") }}</option>
-                        <option value="land">{{ $t("flightPlanTypeLand") }}</option>
-                    </select>
-                </div>
-                <div class="label-column" v-html="$t('flightPlanType')"></div>
-                <div class="separator"></div>
-                <div class="extra-column-1"></div>
-                <div class="extra-column-2"></div>
-            </div>
+            <SettingRow :label="$t('flightPlanType')" full-width>
+                <USelect v-model="form.type" :items="typeItems" :aria-label="$t('flightPlanType')" class="w-48" />
+            </SettingRow>
 
-            <!-- Duration (conditional - only for hold) -->
-            <div v-if="form.type === 'hold'" class="form-row">
-                <div class="input-column">
-                    <UInputNumber
-                        v-model="form.duration"
-                        :step="0.1"
-                        :min="0"
-                        :max="60"
-                        :aria-label="$t('flightPlanDuration')"
-                    />
-                </div>
-                <div class="label-column" v-html="$t('flightPlanDuration')"></div>
-                <div class="separator"></div>
-                <div class="extra-column-1"></div>
-                <div class="extra-column-2"></div>
-            </div>
+            <SettingRow v-if="form.type === 'hold'" :label="$t('flightPlanDuration')" full-width>
+                <UInputNumber
+                    v-model="form.duration"
+                    :step="0.1"
+                    :min="0"
+                    :max="60"
+                    :aria-label="$t('flightPlanDuration')"
+                    class="w-48"
+                />
+            </SettingRow>
 
-            <!-- Pattern (conditional - only for hold) -->
-            <div v-if="form.type === 'hold'" class="form-row">
-                <div class="input-column">
-                    <select v-model="form.pattern" :aria-label="$t('flightPlanPattern')">
-                        <option value="circle">{{ $t("flightPlanPatternCircle") }}</option>
-                        <option value="figure8">{{ $t("flightPlanPatternFigure8") }}</option>
-                        <option value="orbit">{{ $t("flightPlanPatternOrbit") }}</option>
-                    </select>
-                </div>
-                <div class="label-column" v-html="$t('flightPlanPattern')"></div>
-                <div class="separator"></div>
-                <div class="extra-column-1"></div>
-                <div class="extra-column-2"></div>
-            </div>
+            <SettingRow v-if="form.type === 'hold'" :label="$t('flightPlanPattern')" full-width>
+                <USelect
+                    v-model="form.pattern"
+                    :items="patternItems"
+                    :aria-label="$t('flightPlanPattern')"
+                    class="w-48"
+                />
+            </SettingRow>
         </form>
 
         <template #footer>
-            <div class="buttons">
-                <button type="button" @click="handleCancel" class="cancel-btn">
+            <div class="flex gap-2 justify-end">
+                <UButton variant="soft" color="neutral" @click="handleCancel">
                     {{ $t("cancel") }}
-                </button>
-                <button type="button" @click="handleSave" class="primary save-btn">
+                </UButton>
+                <UButton color="primary" @click="handleSave">
                     {{ editMode ? $t("update") : $t("add") }}
-                </button>
+                </UButton>
             </div>
         </template>
     </Dialog>
@@ -137,9 +89,12 @@
 
 <script setup>
 import { reactive, computed, watch, ref } from "vue";
+import { useTranslation } from "i18next-vue";
 import Dialog from "@/components/elements/Dialog.vue";
+import SettingRow from "@/components/elements/SettingRow.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 
+const { t } = useTranslation();
 const { editingWaypointUid, editingWaypoint, showEditorDialog, addWaypoint, updateWaypoint, cancelEdit } =
     useFlightPlan();
 
@@ -162,6 +117,19 @@ const form = reactive({
 
 // Check if we're in edit mode
 const editMode = computed(() => editingWaypointUid.value !== null);
+
+const typeItems = computed(() => [
+    { label: t("flightPlanTypeFlyover"), value: "flyover" },
+    { label: t("flightPlanTypeFlyby"), value: "flyby" },
+    { label: t("flightPlanTypeHold"), value: "hold" },
+    { label: t("flightPlanTypeLand"), value: "land" },
+]);
+
+const patternItems = computed(() => [
+    { label: t("flightPlanPatternCircle"), value: "circle" },
+    { label: t("flightPlanPatternFigure8"), value: "figure8" },
+    { label: t("flightPlanPatternOrbit"), value: "orbit" },
+]);
 
 // Watch for editing waypoint changes and populate form
 watch(editingWaypoint, (waypoint) => {
@@ -267,91 +235,7 @@ const handleCancel = () => {
 </script>
 
 <style scoped>
-form {
-    min-width: 600px;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 0.575fr 2fr auto 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-    align-items: center;
-}
-
-.separator {
-    width: 1px;
-    height: 100%;
-    background: var(--surface-400);
-    opacity: 0.3;
-    margin: 0 0.5rem;
-}
-
-.extra-column-1,
-.extra-column-2 {
-    /* Placeholder for future options */
-}
-
-.input-column input,
-.input-column select {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid var(--surface-500);
-    border-radius: 4px;
-    background: var(--surface-50);
-    color: var(--text);
-    font-size: 0.9rem;
-}
-
-.input-column input:focus,
-.input-column select:focus {
-    outline: none;
-    border-color: var(--primary-500);
-}
-
-.label-column {
-    text-align: left;
-    color: var(--text);
-    font-size: 0.9rem;
-}
-
-.number,
-.select {
-    margin-bottom: 0.5rem;
-}
-
-.buttons {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.buttons button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: 1px solid var(--surface-500);
-    background: var(--surface-200);
-    color: var(--text);
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.buttons button:hover {
-    background: var(--surface-300);
-}
-
-.save-btn.primary {
-    background: var(--primary-500);
-    color: var(--surface-50);
-    border-color: var(--primary-500);
-}
-
-.save-btn.primary:hover {
-    background: var(--primary-600);
-    border-color: var(--primary-600);
-}
-
-.cancel-btn:hover {
-    background: var(--surface-400);
+.editor-form {
+    min-width: 400px;
 }
 </style>

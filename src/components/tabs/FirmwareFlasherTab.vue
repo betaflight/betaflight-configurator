@@ -543,7 +543,6 @@ import semver from "semver";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup from "../../js/utils/AutoBackup.js";
 import { EventBus } from "../eventBus";
-import DFU from "../../js/protocols/webusbdfu";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
@@ -1488,7 +1487,7 @@ export default defineComponent({
                 $t("stm32DfuPermissionRequired"),
                 async () => {
                     try {
-                        const device = await DFU.requestPermission();
+                        const device = await PortHandler.dfuProtocol.requestPermission();
                         if (!device) {
                             onCancel();
                         }

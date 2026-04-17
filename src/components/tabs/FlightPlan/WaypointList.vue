@@ -1,81 +1,81 @@
 <template>
-    <div class="gui_box grey waypoint-list">
-        <div class="gui_box_titlebar">
-            <div class="spacer_box_title" v-html="$t('flightPlanWaypointList')"></div>
+    <UiBox :title="$t('flightPlanWaypointList')" type="neutral" class="waypoint-list">
+        <div class="flex justify-end">
+            <UButton
+                icon="i-lucide-plus"
+                size="sm"
+                :aria-label="$t('flightPlanAddWaypoint')"
+                @click="handleAddWaypoint"
+            />
         </div>
-        <div class="spacer_box">
-            <div class="add-waypoint-row">
-                <button @click="handleAddWaypoint" class="add-waypoint-btn" :aria-label="$t('flightPlanAddWaypoint')">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
 
-            <div v-if="!waypoints.length" class="note">
-                <p v-html="$t('flightPlanNoWaypoints')"></p>
-            </div>
-            <div v-else>
-                <!-- Add waypoint button row -->
-                <!-- Waypoints list -->
-                <div class="waypoints">
-                    <div
-                        v-for="waypoint in sortedWaypoints"
-                        :key="waypoint.uid"
-                        class="waypoint-item"
-                        :class="{
-                            selected: selectedWaypointUid === waypoint.uid,
-                            'drag-over': dragOverUid === waypoint.uid,
-                        }"
-                        draggable="true"
-                        @click="selectWaypoint(waypoint.uid)"
-                        @dragstart="handleDragStart($event, waypoint.uid)"
-                        @dragover="handleDragOver($event, waypoint.uid)"
-                        @dragleave="handleDragLeave($event)"
-                        @drop="handleDrop($event, waypoint.uid)"
-                        @dragend="handleDragEnd($event)"
-                    >
-                        <div class="waypoint-order">{{ waypoint.order + 1 }}</div>
-                        <div class="waypoint-info">
-                            <div class="waypoint-coords">
-                                {{ waypoint.latitude.toFixed(6) }}°, {{ waypoint.longitude.toFixed(6) }}°
-                            </div>
-                            <div class="waypoint-details">
-                                {{ waypoint.altitude }}ft AMSL - {{ waypoint.speed }}kts -
-                                {{ getWaypointTypeLabel(waypoint.type) }}
-                                <span v-if="waypoint.type === 'hold'" class="hold-details">
-                                    ({{ waypoint.duration }}min, {{ getPatternLabel(waypoint.pattern) }})
-                                </span>
-                            </div>
-                        </div>
-                        <div class="waypoint-actions">
-                            <button @click.stop="handleEdit(waypoint.uid)" :aria-label="$t('edit')" class="edit-btn">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button
-                                @click.stop="handleRemove(waypoint.uid)"
-                                :aria-label="$t('delete')"
-                                class="delete-btn"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
+        <div v-if="!waypoints.length" class="note">
+            <p v-html="$t('flightPlanNoWaypoints')"></p>
+        </div>
+        <div v-else class="waypoints">
+            <div
+                v-for="waypoint in sortedWaypoints"
+                :key="waypoint.uid"
+                class="waypoint-item"
+                :class="{
+                    selected: selectedWaypointUid === waypoint.uid,
+                    'drag-over': dragOverUid === waypoint.uid,
+                }"
+                draggable="true"
+                @click="selectWaypoint(waypoint.uid)"
+                @dragstart="handleDragStart($event, waypoint.uid)"
+                @dragover="handleDragOver($event, waypoint.uid)"
+                @dragleave="handleDragLeave($event)"
+                @drop="handleDrop($event, waypoint.uid)"
+                @dragend="handleDragEnd($event)"
+            >
+                <div class="waypoint-order">{{ waypoint.order + 1 }}</div>
+                <div class="waypoint-info">
+                    <div class="waypoint-coords">
+                        {{ waypoint.latitude.toFixed(6) }}°, {{ waypoint.longitude.toFixed(6) }}°
                     </div>
+                    <div class="waypoint-details">
+                        {{ waypoint.altitude }}ft AMSL - {{ waypoint.speed }}kts -
+                        {{ getWaypointTypeLabel(waypoint.type) }}
+                        <span v-if="waypoint.type === 'hold'" class="hold-details">
+                            ({{ waypoint.duration }}min, {{ getPatternLabel(waypoint.pattern) }})
+                        </span>
+                    </div>
+                </div>
+                <div class="flex gap-1 flex-shrink-0">
+                    <UButton
+                        icon="i-lucide-pencil"
+                        size="xs"
+                        variant="soft"
+                        color="primary"
+                        :aria-label="$t('edit')"
+                        @click.stop="handleEdit(waypoint.uid)"
+                    />
+                    <UButton
+                        icon="i-lucide-trash-2"
+                        size="xs"
+                        variant="soft"
+                        color="error"
+                        :aria-label="$t('delete')"
+                        @click.stop="handleRemove(waypoint.uid)"
+                    />
                 </div>
             </div>
         </div>
-    </div>
+    </UiBox>
 
     <!-- Delete Confirmation Dialog -->
     <Dialog v-model="showDeleteDialog" :title="$t('flightPlanDeleteWaypointTitle')">
         <p v-html="$t('flightPlanDeleteWaypointConfirm')"></p>
 
         <template #footer>
-            <div class="dialog-buttons">
-                <button @click="showDeleteDialog = false" class="cancel-btn">
+            <div class="flex gap-2 justify-end">
+                <UButton variant="soft" color="neutral" @click="showDeleteDialog = false">
                     {{ $t("cancel") }}
-                </button>
-                <button @click="confirmDelete" class="delete-btn primary">
+                </UButton>
+                <UButton color="error" @click="confirmDelete">
                     {{ $t("delete") }}
-                </button>
+                </UButton>
             </div>
         </template>
     </Dialog>
@@ -84,6 +84,7 @@
 <script setup>
 import { ref } from "vue";
 import Dialog from "@/components/elements/Dialog.vue";
+import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { i18n } from "@/js/localization";
 
@@ -190,60 +191,11 @@ const handleDragEnd = (event) => {
 </script>
 
 <style scoped>
-.waypoint-list {
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    min-height: 50%;
-}
-
-.waypoint-list .spacer_box {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-}
-
-.add-waypoint-row {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0.35rem 0.5rem;
-    flex-shrink: 0;
-}
-
-.add-waypoint-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    background: var(--primary-500);
-    color: var(--surface-50);
-    border: 1px solid var(--primary-500);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: background 0.2s;
-}
-
-.add-waypoint-btn:hover {
-    background: var(--primary-600);
-    border-color: var(--primary-600);
-}
-
 .note {
     padding: 1rem;
     text-align: center;
     color: var(--surface-700);
     font-style: italic;
-}
-
-.waypoints {
-    flex: 1;
-    min-height: 0;
-    max-height: 60dvh;
-    overflow-y: scroll;
 }
 
 .waypoint-item {
@@ -303,17 +255,6 @@ const handleDragEnd = (event) => {
     color: var(--surface-50);
 }
 
-.waypoint-item.selected .waypoint-actions button {
-    background: var(--surface-50);
-    border-color: var(--surface-50);
-    color: var(--primary-500);
-}
-
-.waypoint-item.selected .waypoint-actions button:hover {
-    background: var(--surface-100);
-    border-color: var(--surface-100);
-}
-
 .waypoint-order {
     width: 28px;
     height: 28px;
@@ -347,71 +288,5 @@ const handleDragEnd = (event) => {
 
 .hold-details {
     font-style: italic;
-}
-
-.waypoint-actions {
-    display: flex;
-    gap: 0.35rem;
-    flex-shrink: 0;
-}
-
-.waypoint-actions button {
-    padding: 0.4rem;
-    background: var(--surface-200);
-    border: 1px solid var(--surface-500);
-    color: var(--text);
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background 0.2s;
-}
-
-.waypoint-actions button:hover {
-    background: var(--surface-300);
-}
-
-.edit-btn:hover {
-    background: var(--primary-200);
-    border-color: var(--primary-500);
-}
-
-.delete-btn:hover {
-    background: var(--error-200);
-    border-color: var(--error-500);
-    color: var(--error-700);
-}
-
-.dialog-buttons {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.dialog-buttons button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: 1px solid var(--surface-500);
-    background: var(--surface-200);
-    color: var(--text);
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.dialog-buttons button:hover {
-    background: var(--surface-300);
-}
-
-.dialog-buttons .delete-btn.primary {
-    background: var(--error-500);
-    color: var(--surface-50);
-    border-color: var(--error-500);
-}
-
-.dialog-buttons .delete-btn.primary:hover {
-    background: var(--error-600);
-    border-color: var(--error-600);
-}
-
-.dialog-buttons .cancel-btn:hover {
-    background: var(--surface-400);
 }
 </style>

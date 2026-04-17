@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-2">
-        <div class="flex gap-2">
+        <div class="flex gap-2 items-center">
             <slot name="label"></slot>
             <span v-if="label" v-html="label"></span>
             <HelpIcon v-if="help" :text="help" class="text-dimmed" />

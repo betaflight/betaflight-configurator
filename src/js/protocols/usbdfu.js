@@ -1,5 +1,5 @@
 /*
-    WEB USB DFU uses:
+    USB DFU protocol implementation.
 
     Some references:
     https://wicg.github.io/webusb/
@@ -12,13 +12,17 @@
     General rule to remember is that DFU doesn't like running specific operations while the device isn't in idle state
     that being said, it seems that certain level of CLRSTATUS is required before running another type of operation for
     example switching from DNLOAD to UPLOAD, etc, clearning the state so device is in dfuIDLE is highly recommended.
+
+    This module now uses a pluggable transport layer:
+    - WebUsbDfuTransport (desktop browsers with WebUSB)
+    - CapacitorDfuTransport (Android via native USB APIs)
 */
 import GUI from "../gui";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
-import { usbDevices } from "./devices";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
+import WebUsbDfuTransport from "./WebUsbDfuTransport";
 
 // Error constant used when an already-authorized DFU device isn't found
 export const DFU_AUTH_REQUIRED = "DFU_AUTH_REQUIRED";
@@ -30,11 +34,13 @@ export class DFUAuthRequiredError extends Error {
         this.code = DFU_AUTH_REQUIRED;
     }
 }
-class WEBUSBDFU_protocol extends EventTarget {
-    constructor() {
+
+export class UsbDfuProtocol extends EventTarget {
+    constructor(transport) {
         super();
 
-        this.logHead = "[WEBUSB DFU]";
+        this.logHead = "[USB DFU]";
+        this.transport = transport;
 
         this.callback = null;
         this.hex = null;
@@ -88,51 +94,36 @@ class WEBUSBDFU_protocol extends EventTarget {
         this.flash_layout = { start_address: 0, total_size: 0, sectors: [] };
         this.transferSize = 2048; // Default USB DFU transfer size for F3,F4 and F7
 
-        if (!navigator?.usb) {
-            console.error(`${this.logHead} WebUSB API not supported`);
+        if (!this.transport) {
+            console.error(`${this.logHead} No transport provided`);
             return;
         }
 
-        navigator.usb.addEventListener("connect", (e) => this.handleNewDevice(e.device));
-        navigator.usb.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.device));
-    }
-    handleNewDevice(device) {
-        const added = this.createPort(device);
-        this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        // Forward device events from transport
+        this.transport.addEventListener("addedDevice", (e) => {
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: e.detail }));
+        });
 
-        return added;
+        this.transport.addEventListener("removedDevice", (e) => {
+            this.dispatchEvent(new CustomEvent("removedDevice", { detail: e.detail }));
+        });
     }
-    handleRemovedDevice(device) {
-        const removed = this.createPort(device);
-        this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-    }
-    createPort(port) {
-        return {
-            path: `usb_${port.serialNumber}`,
-            displayName: `Betaflight ${port.productName}`,
-            vendorId: port.manufacturerName,
-            productId: port.productName,
-            port: port,
-        };
-    }
-    async getDevices() {
-        const ports = await navigator.usb.getDevices(usbDevices);
-        const customPorts = ports.map(function (port) {
-            return this.createPort(port);
-        }, this);
 
-        return customPorts;
+    // Backward-compatible getter: port_handler.js checks WEBUSBDFU.usbDevice
+    // to determine if a DFU device is currently connected.
+    get usbDevice() {
+        return this.transport.getConnectedPort() ? true : null;
     }
+
+    getDevices() {
+        return this.transport.getDevices();
+    }
+
     async requestPermission() {
         let newPermissionPort = null;
         try {
-            const userSelectedPort = await navigator.usb.requestDevice(usbDevices);
-            console.info("User selected USB device from permissions:", userSelectedPort);
-            console.log(
-                `${this.logHead} WebUSB Version: ${userSelectedPort.deviceVersionMajor}.${userSelectedPort.deviceVersionMinor}.${userSelectedPort.deviceVersionSubminor}`,
-            );
-
-            newPermissionPort = this.handleNewDevice(userSelectedPort);
+            newPermissionPort = await this.transport.requestPermission();
+            console.info("User selected USB device from permissions:", newPermissionPort);
         } catch (error) {
             console.error("User didn't select any USB device when requesting permission:", error);
         }
@@ -145,34 +136,18 @@ class WEBUSBDFU_protocol extends EventTarget {
      * This allows the caller to present a user gesture to call `requestDevice`.
      */
     async waitForDfu(timeout = 10000, interval = 500) {
-        const start = Date.now();
-
-        while (Date.now() - start < timeout) {
-            try {
-                const ports = await navigator.usb.getDevices();
-                // Use usbDevices.filters to decide which DFU devices we consider.
-                // Simplify: require both vendorId and productId to be present and match.
-                const filters = usbDevices?.filters || [];
-                const dfuPort = ports.find((p) => {
-                    return filters.some((f) => p.vendorId === f.vendorId && p.productId === f.productId);
-                });
-
-                if (dfuPort) {
-                    return this.handleNewDevice(dfuPort);
-                }
-            } catch (e) {
-                console.warn(`${this.logHead} waitForDfu getDevices failed:`, e);
-            }
-
-            await new Promise((r) => setTimeout(r, interval));
+        const result = await this.transport.waitForDfuDevice(timeout, interval);
+        if (result) {
+            return result;
         }
-
         // No already-authorized DFU device found within timeout: caller must ask user
         throw new DFUAuthRequiredError();
     }
+
     getConnectedPort() {
-        return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
+        return this.transport.getConnectedPort();
     }
+
     async connect(devicePath, hex, options, callback) {
         if (this._connecting) {
             console.warn(`${this.logHead} Connect already in progress, ignoring duplicate call`);
@@ -235,7 +210,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             return;
         }
 
-        this.usbDevice = deviceFound.port;
+        this.connectedDevice = deviceFound;
         return this.openDevice();
     }
 
@@ -248,14 +223,9 @@ class WEBUSBDFU_protocol extends EventTarget {
     }
 
     openDevice() {
-        this.usbDevice
-            .open()
-            .then(async () => {
-                // show key values for the device
-                console.log(`${this.logHead} USB Device opened: ${this.usbDevice.productName}`);
-                if (this.usbDevice.configuration === null) {
-                    await this.usbDevice.selectConfiguration(1);
-                }
+        this.transport
+            .open(this.connectedDevice)
+            .then(() => {
                 this.claimInterface(0);
             })
             .catch((error) => {
@@ -264,8 +234,9 @@ class WEBUSBDFU_protocol extends EventTarget {
                 this.cleanup();
             });
     }
+
     closeDevice() {
-        this.usbDevice
+        this.transport
             .close()
             .then(() => {
                 gui_log(i18n.getMessage("usbDeviceClosed"));
@@ -275,12 +246,12 @@ class WEBUSBDFU_protocol extends EventTarget {
                 console.log(`${this.logHead} Failed to close USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceCloseFail"));
             });
-        this.usbDevice = null;
     }
+
     async claimInterface(interfaceNumber, retries = 6, delay = 1000) {
         for (let attempt = 1; attempt <= retries; attempt++) {
             try {
-                await this.usbDevice.claimInterface(interfaceNumber);
+                await this.transport.claimInterface(interfaceNumber);
                 console.log(`${this.logHead} Claimed interface: ${interfaceNumber}`);
                 if (this.options.exitDfu) {
                     this.leave();
@@ -301,17 +272,12 @@ class WEBUSBDFU_protocol extends EventTarget {
                     return;
                 }
             }
-            if (!this.usbDevice) {
-                console.warn(`${this.logHead} Device lost during claimInterface retry, aborting`);
-                return;
-            }
         }
     }
+
     releaseInterface(interfaceNumber) {
-        this.usbDevice
-            .releaseInterface(interfaceNumber, () => {
-                console.log(`${this.logHead} Released interface: ${interfaceNumber}`);
-            })
+        this.transport
+            .releaseInterface(interfaceNumber)
             .catch((error) => {
                 console.log(`${this.logHead} Could not release interface: ${interfaceNumber} (${error})`);
             })
@@ -320,8 +286,9 @@ class WEBUSBDFU_protocol extends EventTarget {
                 this.closeDevice();
             });
     }
+
     resetDevice(callback) {
-        this.usbDevice
+        this.transport
             .reset()
             .then(() => {
                 console.log(`${this.logHead} Reset Device`);
@@ -332,146 +299,56 @@ class WEBUSBDFU_protocol extends EventTarget {
                 callback?.();
             });
     }
-    getString(index, callback) {
-        const setup = {
-            requestType: "standard",
-            recipient: "device",
-            request: 6,
-            value: 0x300 | index,
-            index: 0, // specifies language
-        };
 
-        this.usbDevice
-            .controlTransferIn(setup, 255)
-            .then((result) => {
-                if (result.status === "ok") {
-                    const _length = result.data.getUint8(0);
-                    let _descriptor = "";
-                    for (let i = 2; i < _length; i += 2) {
-                        const charCode = result.data.getUint16(i, true);
-                        _descriptor += String.fromCharCode(charCode);
-                    }
-                    callback(_descriptor, 0);
-                } else {
-                    throw new Error(`USB getString failed! ${result.status}`);
-                }
+    getString(index, callback) {
+        this.transport
+            .getString(index)
+            .then((descriptor) => {
+                callback(descriptor, 0);
             })
             .catch((error) => {
                 console.log(`${this.logHead} USB getString failed! ${error}`);
                 callback("", 1);
             });
     }
+
     getInterfaceDescriptors(interfaceNum, callback) {
-        let interfaceID = 0;
-        const descriptorStringArray = [];
-        const interfaceCount = this.usbDevice.configuration.interfaces.length;
-        let descriptorCount = 0;
-
-        if (interfaceCount === 0) {
-            callback(0, 1); // no interfaces
-        } else if (interfaceCount === 1) {
-            descriptorCount = this.usbDevice.configuration.interfaces[0].alternates.length;
-        } else if (interfaceCount > 1) {
-            descriptorCount = interfaceCount;
-        }
-
-        const getDescriptorString = () => {
-            if (interfaceID < descriptorCount) {
-                this.getInterfaceDescriptor(interfaceID, (descriptor, resultCode) => {
-                    if (resultCode) {
-                        callback([], resultCode);
-                        return;
-                    }
-                    interfaceID++;
-                    this.getString(descriptor.iInterface, (descriptorString, resultCode) => {
-                        if (resultCode) {
-                            callback([], resultCode);
-                            return;
-                        }
-                        if (descriptor.bInterfaceNumber === interfaceNum) {
-                            descriptorStringArray.push(descriptorString);
-                        }
-                        getDescriptorString();
-                    });
-                });
-            } else {
-                //console.log(descriptorStringArray);
-                callback(descriptorStringArray, 0);
-                return;
-            }
-        };
-        getDescriptorString();
+        this.transport
+            .getInterfaceDescriptors(interfaceNum)
+            .then((descriptors) => {
+                callback(descriptors, 0);
+            })
+            .catch((error) => {
+                console.log(`${this.logHead} USB getInterfaceDescriptors failed! ${error}`);
+                callback([], 1);
+            });
     }
-    getInterfaceDescriptor(_interface, callback) {
-        const setup = {
-            requestType: "standard",
-            recipient: "device",
-            request: 6,
-            value: 0x200,
-            index: 0,
-        };
 
-        this.usbDevice
-            .controlTransferIn(setup, 18 + _interface * 9)
-            .then((result) => {
-                if (result.status === "ok") {
-                    const buf = new Uint8Array(result.data.buffer, 9 + _interface * 9);
-                    console.log(`${this.logHead} USB getInterfaceDescriptor: ${buf}`);
-                    const descriptor = {
-                        bLength: buf[0],
-                        bDescriptorType: buf[1],
-                        bInterfaceNumber: buf[2],
-                        bAlternateSetting: buf[3],
-                        bNumEndpoints: buf[4],
-                        bInterfaceClass: buf[5],
-                        bInterfaceSubclass: buf[6],
-                        bInterfaceProtocol: buf[7],
-                        iInterface: buf[8],
-                    };
-                    callback(descriptor, 0);
-                } else {
-                    console.log(`${this.logHead} USB getInterfaceDescriptor failed: ${result.status}`);
-                    throw new Error(result.status);
-                }
+    getInterfaceDescriptor(_interface, callback) {
+        this.transport
+            .getInterfaceDescriptor(_interface)
+            .then((descriptor) => {
+                console.log(`${this.logHead} USB getInterfaceDescriptor: ${Object.values(descriptor)}`);
+                callback(descriptor, 0);
             })
             .catch((error) => {
                 console.log(`${this.logHead} USB getInterfaceDescriptor failed: ${error}`);
                 callback({}, 1);
-                return;
             });
     }
-    getFunctionalDescriptor(_interface, callback) {
-        const setup = {
-            requestType: "standard",
-            recipient: "interface",
-            request: 6,
-            value: 0x2100,
-            index: 0,
-        };
 
-        this.usbDevice
-            .controlTransferIn(setup, 255)
-            .then((result) => {
-                if (result.status === "ok") {
-                    const buf = new Uint8Array(result.data.buffer);
-                    const descriptor = {
-                        bLength: buf[0],
-                        bDescriptorType: buf[1],
-                        bmAttributes: buf[2],
-                        wDetachTimeOut: (buf[4] << 8) | buf[3],
-                        wTransferSize: (buf[6] << 8) | buf[5],
-                        bcdDFUVersion: buf[7],
-                    };
-                    callback(descriptor, 0);
-                } else {
-                    throw new Error(result.status);
-                }
+    getFunctionalDescriptor(_interface, callback) {
+        this.transport
+            .getFunctionalDescriptor(_interface)
+            .then((descriptor) => {
+                callback(descriptor, 0);
             })
             .catch((error) => {
                 console.log(`${this.logHead} USB getFunctionalDescriptor failed: ${error}`);
                 callback({}, 1);
             });
     }
+
     getChipInfo(_interface, callback) {
         this.getInterfaceDescriptors(0, (descriptors, resultCode) => {
             if (resultCode) {
@@ -524,7 +401,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                 }
 
                 const type = tmp1[0].trim().replace("@", "");
-                const start_address = parseInt(tmp1[1]);
+                const start_address = Number.parseInt(tmp1[1]);
 
                 // split sectors into array
                 const sectors = [];
@@ -542,8 +419,8 @@ class WEBUSBDFU_protocol extends EventTarget {
                         return null;
                     }
 
-                    const num_pages = parseInt(tmp3[0]);
-                    let page_size = parseInt(tmp3[1]);
+                    const num_pages = Number.parseInt(tmp3[0]);
+                    let page_size = Number.parseInt(tmp3[1]);
 
                     if (!page_size) {
                         return null;
@@ -583,7 +460,8 @@ class WEBUSBDFU_protocol extends EventTarget {
             callback(chipInfo, resultCode);
         });
     }
-    controlTransfer(direction, request, value, _interface, length, data, callback, _timeout = 0) {
+
+    controlTransfer(direction, request, value, _interface, length, data, callback) {
         if (direction === "in") {
             // data is ignored
             const setup = {
@@ -594,14 +472,17 @@ class WEBUSBDFU_protocol extends EventTarget {
                 index: _interface,
             };
 
-            this.usbDevice
+            this.transport
                 .controlTransferIn(setup, length)
-                .then((USBInTransferResult) => {
-                    if (USBInTransferResult.status === "ok") {
-                        const buf = new Uint8Array(USBInTransferResult.data.buffer);
-                        callback(buf, USBInTransferResult.resultCode);
+                .then((result) => {
+                    if (result.status === "ok") {
+                        const buf =
+                            result.data instanceof Uint8Array
+                                ? result.data
+                                : new Uint8Array(result.data.buffer || result.data);
+                        callback(buf, 0);
                     } else {
-                        throw new Error(USBInTransferResult.status);
+                        throw new Error(result.status);
                     }
                 })
                 .catch((error) => {
@@ -618,22 +499,24 @@ class WEBUSBDFU_protocol extends EventTarget {
                 index: _interface,
             };
 
-            const arrayBuf = data ? new Uint8Array(data) : new Uint8Array(0);
-
-            this.usbDevice
-                .controlTransferOut(setup, arrayBuf)
-                .then((USBOutTransferResult) => {
-                    if (USBOutTransferResult.status === "ok") {
-                        callback(USBOutTransferResult);
+            this.transport
+                .controlTransferOut(setup, data)
+                .then((result) => {
+                    if (result.status === "ok") {
+                        callback(result);
                     } else {
-                        throw new Error(USBOutTransferResult.status);
+                        throw new Error(result.status);
                     }
                 })
                 .catch((error) => {
                     console.log(`${this.logHead} USB controlTransfer OUT failed for request: ${request} (${error})`);
+                    if (this._connecting) {
+                        this.cleanup();
+                    }
                 });
         }
     }
+
     // routine calling DFU_CLRSTATUS until device is in dfuIDLE state
     clearStatus(callback) {
         const check_status = () => {
@@ -655,6 +538,7 @@ class WEBUSBDFU_protocol extends EventTarget {
 
         check_status();
     }
+
     loadAddress(address, callback, abort) {
         this.controlTransfer(
             "out",
@@ -674,7 +558,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                                     callback(data);
                                 } else {
                                     console.log(`${this.logHead} Failed to execute address load`);
-                                    if (typeof abort === "undefined" || abort) {
+                                    if (abort === undefined || abort) {
                                         this.cleanup();
                                     } else {
                                         callback(data);
@@ -690,6 +574,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             },
         );
     }
+
     // first_array = usually hex_to_flash array
     // second_array = usually verify_hex array
     // result = true/false
@@ -709,6 +594,7 @@ class WEBUSBDFU_protocol extends EventTarget {
 
         return true;
     }
+
     isBlockUsable(startAddress, length) {
         let result = false;
 
@@ -748,6 +634,7 @@ class WEBUSBDFU_protocol extends EventTarget {
 
         return result;
     }
+
     upload_procedure(step) {
         let blocks;
         let address;
@@ -1340,6 +1227,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             }
         }
     }
+
     leave() {
         // leave DFU
         const address = this.hex ? this.hex.data[0].address : 0x08000000;
@@ -1355,6 +1243,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             });
         });
     }
+
     cleanup() {
         this._connecting = false;
         this.releaseInterface(0);
@@ -1371,7 +1260,8 @@ class WEBUSBDFU_protocol extends EventTarget {
     }
 }
 
-// initialize object
-const WEBUSBDFU = new WEBUSBDFU_protocol();
+// Initialize default instance with WebUSB transport
+const defaultTransport = new WebUsbDfuTransport();
+const defaultInstance = new UsbDfuProtocol(defaultTransport);
 
-export default WEBUSBDFU;
+export default defaultInstance;

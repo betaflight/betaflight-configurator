@@ -46,7 +46,7 @@ export default defineConfig([
                 },
             ],
         },
-        ignores: ["dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
+        ignores: ["dist/", "src/dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
     },
     {
         files: ["**/*.vue"],

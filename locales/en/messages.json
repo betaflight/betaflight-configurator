@@ -3141,6 +3141,27 @@
     "gpsMapHead": {
         "message": "Current location"
     },
+    "gpsMapSatelliteView": {
+        "message": "Satellite view"
+    },
+    "gpsMapHybridView": {
+        "message": "Hybrid view"
+    },
+    "gpsMapStreetView": {
+        "message": "Street view"
+    },
+    "gpsMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "gpsMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Toggle fullscreen"
+    },
+    "gpsMapRetry": {
+        "message": "Retry"
+    },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
     },
@@ -3311,7 +3332,13 @@
         "message": "Please wait..."
     },
     "flightPlanClear": {
-        "message": "Clear Plan"
+        "message": "Clear"
+    },
+    "flightPlanLoad": {
+        "message": "Load"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Save to FC"
     },
     "flightPlanLoaded": {
         "message": "Flight plan loaded successfully"
@@ -3369,6 +3396,15 @@
     },
     "flightPlanClearTitle": {
         "message": "Clear Flight Plan"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Load Flight Plan from Flight Controller?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "A flight controller is connected. Do you want to replace the current flight plan with the one stored on the flight controller? Choosing No keeps your current plan so you can save it to the flight controller."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Keep current"
     },
     "flightPlanElevationProfile": {
         "message": "Elevation Profile"
@@ -8197,6 +8233,9 @@
     },
     "userBackupDownloadFailed": {
         "message": "Failed to download backup"
+    },
+    "userBackupFileEmpty": {
+        "message": "Backup file is empty"
     },
     "userBackupUpdateSuccess": {
         "message": "Backup updated successfully"

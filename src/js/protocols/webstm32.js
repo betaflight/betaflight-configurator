@@ -15,7 +15,8 @@ import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import { serial } from "../serial";
-import DFU, { DFU_AUTH_REQUIRED } from "../protocols/webusbdfu";
+import { DFU_AUTH_REQUIRED } from "../protocols/usbdfu";
+import PortHandler from "../port_handler";
 import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
@@ -116,7 +117,7 @@ class STM32Protocol {
                 // Poll for an already-authorized DFU device (no user gesture needed).
                 // Keep timeout short (~4s) so the Flash button's transient user
                 // activation is still valid if we need to fall back to requestPermission.
-                const device = await DFU.waitForDfu(4000, 500);
+                const device = await PortHandler.dfuProtocol.waitForDfu(4000, 500);
                 console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
             } catch (e) {
                 if (e.code !== DFU_AUTH_REQUIRED) {
@@ -132,9 +133,14 @@ class STM32Protocol {
                 gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
                 GUI.connect_lock = false;
 
-                const device = await DFU.requestPermission();
+                const device = await PortHandler.dfuProtocol.requestPermission();
                 if (device) {
-                    // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
+                    // Only WebUSB needs a manual dispatch here. The Android
+                    // Capacitor adapter already emits addedDevice from
+                    // requestPermission().
+                    if (!PortHandler.dfuProtocol.transport?.emitsAddedDeviceOnPermissionGrant) {
+                        PortHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
+                    }
                     return;
                 }
 
