@@ -6,7 +6,6 @@ import ConfigInserter from "../js/ConfigInserter";
 import { tracking } from "../js/Analytics";
 import read_hex_file from "../js/workers/hex_parser";
 import STM32 from "../js/protocols/webstm32";
-import DFU from "../js/protocols/webusbdfu";
 import PortHandler from "../js/port_handler";
 
 /**
@@ -43,8 +42,8 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Parse HEX string into structured firmware data
      */
-    const parseHex = async (hexString) => {
-        return await read_hex_file(hexString);
+    const parseHex = (hexString) => {
+        return read_hex_file(hexString);
     };
 
     /**
@@ -246,7 +245,7 @@ export function useFirmwareFlashing(params = {}) {
         }
 
         const port = PortHandler.portPicker.selectedPort;
-        const isSerial = port.startsWith("serial");
+        const isSerial = port.startsWith("serial") || port.startsWith("capacitor-");
         const isDFU = port.startsWith("usb");
 
         console.log(`${logHead} Selected port:`, port);
@@ -255,7 +254,7 @@ export function useFirmwareFlashing(params = {}) {
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                 filename: filename || null,
             });
-            DFU.connect(port, firmware, flashing_options);
+            PortHandler.dfuProtocol.connect(port, firmware, flashing_options);
         } else if (isSerial) {
             if (noRebootSequence) {
                 flashing_options.no_reboot = true;
@@ -276,9 +275,10 @@ export function useFirmwareFlashing(params = {}) {
         } else {
             console.log(`${logHead} No valid port detected, asking for permissions`);
 
-            DFU.requestPermission()
+            PortHandler.dfuProtocol
+                .requestPermission()
                 .then((device) => {
-                    DFU.connect(device.path, firmware, flashing_options);
+                    PortHandler.dfuProtocol.connect(device.path, firmware, flashing_options);
                 })
                 .catch((error) => {
                     console.error("Permission request failed", error);
@@ -463,9 +463,9 @@ export function useFirmwareFlashing(params = {}) {
         if (!dfuExitButtonDisabled && !connectLock) {
             try {
                 console.log(`${logHead} Closing DFU`);
-                const device = await DFU.requestPermission();
+                const device = await PortHandler.dfuProtocol.requestPermission();
                 if (device) {
-                    DFU.connect(device.path, firmwareState.parsedHex, {
+                    PortHandler.dfuProtocol.connect(device.path, firmwareState.parsedHex, {
                         exitDfu: true,
                         flashingMessage,
                         flashProgress,
