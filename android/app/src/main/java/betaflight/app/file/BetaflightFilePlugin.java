@@ -22,10 +22,10 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @CapacitorPlugin(name = "BetaflightFile")
 public class BetaflightFilePlugin extends Plugin {
@@ -47,8 +47,10 @@ public class BetaflightFilePlugin extends Plugin {
         }
     }
 
-    /** Open files keyed by opaque fileId (UUID string). */
-    private final HashMap<String, OpenFile> openFiles = new HashMap<>();
+    /** Open files keyed by opaque fileId (UUID string). Thread-safe because
+     *  @PluginMethod runs on the CapacitorPlugins thread while @ActivityCallback
+     *  and handleOnDestroy run on the main thread. */
+    private final ConcurrentHashMap<String, OpenFile> openFiles = new ConcurrentHashMap<>();
 
     // ---------------------------------------------------------------
     // Extension → MIME mapping
@@ -70,7 +72,7 @@ public class BetaflightFilePlugin extends Plugin {
 
     private String mimeForExtension(String ext) {
         if (ext == null) return "*/*";
-        String lower = ext.toLowerCase();
+        String lower = ext.toLowerCase(java.util.Locale.ROOT);
         if (!lower.startsWith(".")) lower = "." + lower;
         String mime = EXTENSION_MIME_MAP.get(lower);
         return mime != null ? mime : "*/*";
@@ -220,7 +222,13 @@ public class BetaflightFilePlugin extends Plugin {
 
         // Persist access across app restarts
         int flags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-        getContext().getContentResolver().takePersistableUriPermission(treeUri, flags);
+        try {
+            getContext().getContentResolver().takePersistableUriPermission(treeUri, flags);
+        } catch (SecurityException e) {
+            Log.e(TAG, "Failed to persist directory permission", e);
+            call.reject("Failed to persist directory permission: " + e.getMessage());
+            return;
+        }
 
         String name = queryTreeDisplayName(treeUri);
 
@@ -412,6 +420,11 @@ public class BetaflightFilePlugin extends Plugin {
             call.resolve(ret);
         } catch (Exception e) {
             Log.e(TAG, "writeChunk failed", e);
+            if (file.outputStream != null) {
+                try { file.outputStream.close(); } catch (Exception ignored) {}
+                file.outputStream = null;
+            }
+            openFiles.remove(fileId);
             call.reject("Failed to write chunk: " + e.getMessage());
         }
     }
@@ -548,8 +561,13 @@ public class BetaflightFilePlugin extends Plugin {
         }
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
-                    + Character.digit(hexString.charAt(i + 1), 16));
+            int hi = Character.digit(hexString.charAt(i), 16);
+            int lo = Character.digit(hexString.charAt(i + 1), 16);
+            if (hi < 0 || lo < 0) {
+                throw new IllegalArgumentException(
+                        "Invalid hex character at index " + i);
+            }
+            data[i / 2] = (byte) ((hi << 4) + lo);
         }
         return data;
     }
