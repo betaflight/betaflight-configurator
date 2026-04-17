@@ -9,6 +9,7 @@ import com.getcapacitor.BridgeActivity;
 import betaflight.app.protocols.tcp.BetaflightTcpPlugin;
 import betaflight.app.protocols.ble.BetaflightBlePlugin;
 import betaflight.app.protocols.dfu.BetaflightDfuPlugin;
+import betaflight.app.file.BetaflightFilePlugin;
 
 public class MainActivity extends BridgeActivity {
   @Override
@@ -17,6 +18,7 @@ public class MainActivity extends BridgeActivity {
     registerPlugin(BetaflightBlePlugin.class);
     registerPlugin(BetaflightTcpPlugin.class);
     registerPlugin(BetaflightDfuPlugin.class);
+    registerPlugin(BetaflightFilePlugin.class);
 
     // If started or recreated by a USB device attachment intent (e.g. the FC
     // re-enumerates after DFU flash), replace it with a plain launcher intent
