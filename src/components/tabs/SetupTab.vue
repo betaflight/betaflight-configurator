@@ -3,52 +3,9 @@
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabSetup") }}</div>
             <WikiButton docUrl="setup" />
-            <div class="flex flex-col gap-2">
-                <SettingRow :label="$t('initialSetupCalibrateAccelText')">
-                    <UButton
-                        :label="
-                            state.calibratingAccel
-                                ? $t('initialSetupButtonCalibratingText')
-                                : $t('initialSetupButtonCalibrateAccel')
-                        "
-                        :disabled="state.disabledAccel"
-                        :loading="state.calibratingAccel"
-                        class="w-48 shrink-0 justify-center"
-                        @click="onCalibrateAccel"
-                    />
-                </SettingRow>
-                <SettingRow :label="$t('initialSetupCalibrateMagText')">
-                    <UButton
-                        :label="
-                            state.calibratingMag
-                                ? $t('initialSetupButtonCalibratingText')
-                                : $t('initialSetupButtonCalibrateMag')
-                        "
-                        :disabled="state.disabledMag"
-                        :loading="state.calibratingMag"
-                        class="w-48 shrink-0 justify-center"
-                        @click="onCalibrateMag"
-                    />
-                </SettingRow>
-                <SettingRow v-show="isExpert" :label="$t('initialSetupResetText')">
-                    <UButton
-                        :label="$t('initialSetupButtonReset')"
-                        color="error"
-                        class="w-48 shrink-0 justify-center"
-                        @click="showConfirmReset"
-                    />
-                </SettingRow>
-                <SettingRow v-show="isExpert" :label="$t('initialSetupRebootBootloaderText')">
-                    <UButton
-                        :label="$t('initialSetupButtonRebootBootloader')"
-                        color="error"
-                        class="w-48 shrink-0 justify-center"
-                        @click="onRebootBootloader"
-                    />
-                </SettingRow>
-            </div>
-            <div class="grid-row grid-box col4">
-                <div class="col-span-3 model-and-info">
+            <!-- Top: 3D Model + Instruments & Calibration side-by-side -->
+            <div class="setup-top">
+                <div class="model-and-info">
                     <div id="interactive_block">
                         <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
                             <canvas id="canvas" ref="canvasEl"></canvas>
@@ -72,7 +29,7 @@
                         />
                     </div>
                 </div>
-                <div class="col-span-1 grid-box col1">
+                <div class="setup-sidebar">
                     <UiBox
                         :title="$t('initialSetupInstrumentsHead')"
                         :help="$t('initialSetupInstrumentsHeadHelp')"
@@ -83,217 +40,273 @@
                             <span id="heading"></span>
                         </div>
                     </UiBox>
-                    <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')" type="neutral">
-                        <InfoGrid
-                            :items="[
-                                { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
-                                { id: 'gpsSats', i18n: 'gpsSats', value: state.gpsSats, class: 'gpsSats' },
-                                { id: 'gpsLatitude', i18n: 'gpsLatitude', slotName: 'gpsLatitude' },
-                                { id: 'gpsLongitude', i18n: 'gpsLongitude', slotName: 'gpsLongitude' },
-                            ]"
+                    <div class="flex flex-col gap-2">
+                        <UButton
+                            :label="
+                                state.calibratingAccel
+                                    ? $t('initialSetupButtonCalibratingText')
+                                    : $t('initialSetupButtonCalibrateAccel')
+                            "
+                            :disabled="state.disabledAccel"
+                            :loading="state.calibratingAccel"
+                            class="w-full justify-center"
+                            @click="onCalibrateAccel"
                         >
-                            <template #gps3dFix>
-                                <span class="colorToggle" :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }">
-                                    {{ state.gpsFix ? $t("gpsFixTrue") : $t("gpsFixFalse") }}
-                                </span>
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupCalibrateAccelText')" />
                             </template>
-                            <template #gpsLatitude>
-                                <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
-                            </template>
-                            <template #gpsLongitude>
-                                <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
-                            </template>
-                        </InfoGrid>
-                    </UiBox>
-                    <UiBox
-                        v-show="state.showSonarBox"
-                        :title="$t('initialSetupSonarHead')"
-                        :help="$t('initialSetupSonarHeadHelp')"
-                        type="neutral"
-                    >
-                        <InfoGrid
-                            :items="[
-                                {
-                                    id: 'sonarAltitude',
-                                    i18n: 'initialSetupAltitudeSonar',
-                                    value: state.sonar,
-                                    class: 'sonarAltitude',
-                                },
-                            ]"
-                        />
-                    </UiBox>
-                    <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')" type="neutral">
-                        <InfoGrid
-                            :items="[
-                                {
-                                    id: 'arming-disable-flag',
-                                    i18n: 'initialSetupArmingDisableFlags',
-                                    slotName: 'arming-disable-flag',
-                                },
-                                {
-                                    i18n: 'initialSetupBattery',
-                                    value: state.batVoltage,
-                                    class: 'bat-voltage',
-                                },
-                                {
-                                    i18n: 'initialSetupDrawn',
-                                    value: state.batMahDrawn,
-                                    class: 'bat-mah-drawn',
-                                },
-                                {
-                                    i18n: 'initialSetupDrawing',
-                                    value: state.batMahDrawing,
-                                    class: 'bat-mah-drawing',
-                                },
-                                { i18n: 'initialSetupRSSI', value: state.rssi, class: 'rssi' },
-                                {
-                                    id: 'mcu',
-                                    i18n: 'initialSetupMCU',
-                                    value: state.mcu,
-                                    class: 'mcu',
-                                },
-                                {
-                                    id: 'cpu-temp',
-                                    i18n: 'initialSetupCpuTemp',
-                                    value: state.cpuTemp,
-                                    class: 'cpu-temp',
-                                },
-                            ]"
-                            gridClass="system_info"
+                        </UButton>
+                        <UButton
+                            :label="
+                                state.calibratingMag
+                                    ? $t('initialSetupButtonCalibratingText')
+                                    : $t('initialSetupButtonCalibrateMag')
+                            "
+                            :disabled="state.disabledMag"
+                            :loading="state.calibratingMag"
+                            class="w-full justify-center"
+                            @click="onCalibrateMag"
                         >
-                            <template #arming-disable-flag>
-                                <span
-                                    v-for="flag in fcStore.armingFlags"
-                                    :key="flag.id"
-                                    v-show="flag.visible"
-                                    class="cf_tip disarm-flag"
-                                    :title="flag.tooltip"
-                                    >{{ flag.name }}</span
-                                >
-                                <span v-show="fcStore.isReadyToArm" id="initialSetupArmingAllowed">{{
-                                    $t("initialSetupArmingAllowed")
-                                }}</span>
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                             </template>
-                        </InfoGrid>
-                    </UiBox>
-                    <UiBox
-                        :title="$t('initialSensorInfoHead')"
-                        :help="$t('initialSensorInfoHeadHelp')"
-                        type="neutral"
-                        id="sensorInfoBox"
-                    >
-                        <InfoGrid
-                            :items="[
-                                {
-                                    id: 'sensor_gyro_hw',
-                                    i18n: 'initialSetupSensorGyro',
-                                    value: state.sensorGyro,
-                                    class: 'sensor_gyro_hw',
-                                },
-                                {
-                                    id: 'sensor_acc_hw',
-                                    i18n: 'initialSetupSensorAcc',
-                                    value: state.sensorAcc,
-                                    class: 'sensor_acc_hw',
-                                },
-                                {
-                                    id: 'sensor-mag-hw',
-                                    i18n: 'initialSetupSensorMag',
-                                    value: state.sensorMag,
-                                    class: 'sensor_mag_hw',
-                                },
-                                {
-                                    id: 'sensor_baro_hw',
-                                    i18n: 'initialSetupSensorBaro',
-                                    value: state.sensorBaro,
-                                    class: 'sensor_baro_hw',
-                                },
-                                {
-                                    id: 'sensor-sonar-hw',
-                                    i18n: 'initialSetupSensorSonar',
-                                    value: state.sensorSonar,
-                                    class: 'sensor_sonar_hw',
-                                },
-                                {
-                                    id: 'sensor-opticalflow-hw',
-                                    i18n: 'initialSetupSensorOpticalflow',
-                                    value: state.sensorOpticalflow,
-                                    class: 'sensor_opticalflow_hw',
-                                },
-                            ]"
-                        />
-                    </UiBox>
-                    <UiBox
-                        :title="$t('initialSetupInfoBuild')"
-                        :help="$t('initialSetupInfoFirmwareHelp')"
-                        type="neutral"
-                    >
-                        <InfoGrid
-                            :items="[
-                                {
-                                    id: 'api-version',
-                                    i18n: 'initialSetupInfoAPIversion',
-                                    value: state.apiVersion,
-                                    class: 'api-version',
-                                },
-                                {
-                                    id: 'build-date',
-                                    i18n: 'initialSetupInfoBuildDate',
-                                    value: state.buildDate,
-                                    class: 'build-date',
-                                },
-                                {
-                                    id: 'build-type',
-                                    i18n: 'initialSetupInfoBuildType',
-                                    value: state.buildType,
-                                    class: 'build-type',
-                                },
-                                {
-                                    id: 'build-info',
-                                    i18n: 'initialSetupInfoBuildInfo',
-                                    slotName: 'build-info',
-                                },
-                                {
-                                    id: 'build-firmware',
-                                    i18n: 'initialSetupInfoBuildFirmware',
-                                    slotName: 'build-firmware',
-                                },
-                            ]"
-                        >
-                            <template #build-info>
-                                <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
-                                    <span v-for="btn in state.buildInfoButtons" :key="btn.type" class="buildInfoBtn">
-                                        <a :href="btn.href" target="_blank" :title="btn.title"
-                                            ><strong>{{ btn.label }}</strong></a
-                                        >
-                                    </span>
+                        </UButton>
+                        <div v-show="isExpert">
+                            <UButton
+                                :label="$t('initialSetupButtonReset')"
+                                color="error"
+                                class="w-full justify-center"
+                                @click="showConfirmReset"
+                            >
+                                <template #trailing>
+                                    <HelpIcon :text="$t('initialSetupResetText')" />
                                 </template>
-                                <template v-else>
-                                    <span v-html="state.buildInfoHtml"></span>
+                            </UButton>
+                        </div>
+                        <div v-show="isExpert">
+                            <UButton
+                                :label="$t('initialSetupButtonRebootBootloader')"
+                                color="error"
+                                class="w-full justify-center"
+                                @click="onRebootBootloader"
+                            >
+                                <template #trailing>
+                                    <HelpIcon :text="$t('initialSetupRebootBootloaderText')" />
                                 </template>
-                            </template>
-
-                            <template #build-firmware>
-                                <span v-if="state.buildOptionsValid" class="buildInfoBtn">
-                                    <a
-                                        href="#"
-                                        :title="$t('initialSetupInfoBuildOptionList')"
-                                        @click.prevent="openBuildOptionsDialog"
-                                        ><strong>{{ $t("initialSetupInfoBuildOptions") }}</strong></a
-                                    >
-                                </span>
-                                <span v-if="state.buildKeyValid" class="buildInfoBtn">
-                                    <a
-                                        :href="state.buildRoot + '/hex'"
-                                        target="_blank"
-                                        :title="$t('initialSetupInfoBuildDownload')"
-                                        ><strong>{{ $t("initialSetupInfoBuildDownload") }}</strong></a
-                                    >
-                                </span>
-                            </template>
-                        </InfoGrid>
-                    </UiBox>
+                            </UButton>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Info panels in responsive multi-column grid -->
+            <div class="setup-info-grid">
+                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')" type="neutral">
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'arming-disable-flag',
+                                i18n: 'initialSetupArmingDisableFlags',
+                                slotName: 'arming-disable-flag',
+                            },
+                            {
+                                i18n: 'initialSetupBattery',
+                                value: state.batVoltage,
+                                class: 'bat-voltage',
+                            },
+                            {
+                                i18n: 'initialSetupDrawn',
+                                value: state.batMahDrawn,
+                                class: 'bat-mah-drawn',
+                            },
+                            {
+                                i18n: 'initialSetupDrawing',
+                                value: state.batMahDrawing,
+                                class: 'bat-mah-drawing',
+                            },
+                            { i18n: 'initialSetupRSSI', value: state.rssi, class: 'rssi' },
+                            {
+                                id: 'mcu',
+                                i18n: 'initialSetupMCU',
+                                value: state.mcu,
+                                class: 'mcu',
+                            },
+                            {
+                                id: 'cpu-temp',
+                                i18n: 'initialSetupCpuTemp',
+                                value: state.cpuTemp,
+                                class: 'cpu-temp',
+                            },
+                        ]"
+                        gridClass="system_info"
+                    >
+                        <template #arming-disable-flag>
+                            <span
+                                v-for="flag in fcStore.armingFlags"
+                                :key="flag.id"
+                                v-show="flag.visible"
+                                class="cf_tip disarm-flag"
+                                :title="flag.tooltip"
+                                >{{ flag.name }}</span
+                            >
+                            <span v-show="fcStore.isReadyToArm" id="initialSetupArmingAllowed">{{
+                                $t("initialSetupArmingAllowed")
+                            }}</span>
+                        </template>
+                    </InfoGrid>
+                </UiBox>
+                <UiBox
+                    :title="$t('initialSensorInfoHead')"
+                    :help="$t('initialSensorInfoHeadHelp')"
+                    type="neutral"
+                    id="sensorInfoBox"
+                >
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'sensor_gyro_hw',
+                                i18n: 'initialSetupSensorGyro',
+                                value: state.sensorGyro,
+                                class: 'sensor_gyro_hw',
+                            },
+                            {
+                                id: 'sensor_acc_hw',
+                                i18n: 'initialSetupSensorAcc',
+                                value: state.sensorAcc,
+                                class: 'sensor_acc_hw',
+                            },
+                            {
+                                id: 'sensor-mag-hw',
+                                i18n: 'initialSetupSensorMag',
+                                value: state.sensorMag,
+                                class: 'sensor_mag_hw',
+                            },
+                            {
+                                id: 'sensor_baro_hw',
+                                i18n: 'initialSetupSensorBaro',
+                                value: state.sensorBaro,
+                                class: 'sensor_baro_hw',
+                            },
+                            {
+                                id: 'sensor-sonar-hw',
+                                i18n: 'initialSetupSensorSonar',
+                                value: state.sensorSonar,
+                                class: 'sensor_sonar_hw',
+                            },
+                            {
+                                id: 'sensor-opticalflow-hw',
+                                i18n: 'initialSetupSensorOpticalflow',
+                                value: state.sensorOpticalflow,
+                                class: 'sensor_opticalflow_hw',
+                            },
+                        ]"
+                    />
+                </UiBox>
+                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')" type="neutral">
+                    <InfoGrid
+                        :items="[
+                            { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
+                            { id: 'gpsSats', i18n: 'gpsSats', value: state.gpsSats, class: 'gpsSats' },
+                            { id: 'gpsLatitude', i18n: 'gpsLatitude', slotName: 'gpsLatitude' },
+                            { id: 'gpsLongitude', i18n: 'gpsLongitude', slotName: 'gpsLongitude' },
+                        ]"
+                    >
+                        <template #gps3dFix>
+                            <span class="colorToggle" :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }">
+                                {{ state.gpsFix ? $t("gpsFixTrue") : $t("gpsFixFalse") }}
+                            </span>
+                        </template>
+                        <template #gpsLatitude>
+                            <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
+                        </template>
+                        <template #gpsLongitude>
+                            <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
+                        </template>
+                    </InfoGrid>
+                </UiBox>
+                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')" type="neutral">
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'api-version',
+                                i18n: 'initialSetupInfoAPIversion',
+                                value: state.apiVersion,
+                                class: 'api-version',
+                            },
+                            {
+                                id: 'build-date',
+                                i18n: 'initialSetupInfoBuildDate',
+                                value: state.buildDate,
+                                class: 'build-date',
+                            },
+                            {
+                                id: 'build-type',
+                                i18n: 'initialSetupInfoBuildType',
+                                value: state.buildType,
+                                class: 'build-type',
+                            },
+                            {
+                                id: 'build-info',
+                                i18n: 'initialSetupInfoBuildInfo',
+                                slotName: 'build-info',
+                            },
+                            {
+                                id: 'build-firmware',
+                                i18n: 'initialSetupInfoBuildFirmware',
+                                slotName: 'build-firmware',
+                            },
+                        ]"
+                    >
+                        <template #build-info>
+                            <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
+                                <span v-for="btn in state.buildInfoButtons" :key="btn.type" class="buildInfoBtn">
+                                    <a :href="btn.href" target="_blank" :title="btn.title"
+                                        ><strong>{{ btn.label }}</strong></a
+                                    >
+                                </span>
+                            </template>
+                            <template v-else>
+                                <span v-html="state.buildInfoHtml"></span>
+                            </template>
+                        </template>
+
+                        <template #build-firmware>
+                            <span v-if="state.buildOptionsValid" class="buildInfoBtn">
+                                <a
+                                    href="#"
+                                    :title="$t('initialSetupInfoBuildOptionList')"
+                                    @click.prevent="openBuildOptionsDialog"
+                                    ><strong>{{ $t("initialSetupInfoBuildOptions") }}</strong></a
+                                >
+                            </span>
+                            <span v-if="state.buildKeyValid" class="buildInfoBtn">
+                                <a
+                                    :href="state.buildRoot + '/hex'"
+                                    target="_blank"
+                                    :title="$t('initialSetupInfoBuildDownload')"
+                                    ><strong>{{ $t("initialSetupInfoBuildDownload") }}</strong></a
+                                >
+                            </span>
+                        </template>
+                    </InfoGrid>
+                </UiBox>
+                <UiBox
+                    v-show="state.showSonarBox"
+                    :title="$t('initialSetupSonarHead')"
+                    :help="$t('initialSetupSonarHeadHelp')"
+                    type="neutral"
+                >
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'sonarAltitude',
+                                i18n: 'initialSetupAltitudeSonar',
+                                value: state.sonar,
+                                class: 'sonarAltitude',
+                            },
+                        ]"
+                    />
+                </UiBox>
             </div>
         </div>
 
@@ -335,9 +348,9 @@ import { useTranslation } from "i18next-vue";
 import { i18n } from "../../js/localization";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
-import SettingRow from "../elements/SettingRow.vue";
 import InfoGrid from "@/components/InfoGrid.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
+import HelpIcon from "@/components/elements/HelpIcon.vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
@@ -1069,9 +1082,13 @@ function openBuildOptionsDialog() {
             z-index: 100;
         }
     }
-    .model-and-info {
+    .setup-top {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1rem;
         margin-top: 0.75rem;
-
+    }
+    .model-and-info {
         #canvas_wrapper {
             position: relative;
             width: 100%;
@@ -1082,17 +1099,23 @@ function openBuildOptionsDialog() {
             border-radius: 1rem;
         }
     }
+    .setup-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .setup-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
     @media only screen and (max-width: 1055px) {
-        .grid-box {
-            grid-template-columns: 1fr !important;
+        .setup-top {
+            grid-template-columns: 1fr;
         }
-        .col-span-3 {
-            display: grid !important;
-            grid-column: span 1 !important;
-        }
-        .col-span-1 {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
+        .setup-info-grid {
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         }
         #canvas_wrapper {
             max-height: 20rem !important;
@@ -1100,8 +1123,8 @@ function openBuildOptionsDialog() {
     }
 
     @media all and (max-width: 575px) {
-        .grid-box {
-            grid-template-columns: 1fr !important;
+        .setup-info-grid {
+            grid-template-columns: 1fr;
         }
     }
     .system_info {
