@@ -301,6 +301,8 @@ public class BetaflightFilePlugin extends Plugin {
         } catch (Exception e) {
             Log.e(TAG, "readFile failed", e);
             call.reject("Failed to read file: " + e.getMessage());
+        } finally {
+            openFiles.remove(fileId);
         }
     }
 
@@ -324,6 +326,8 @@ public class BetaflightFilePlugin extends Plugin {
         } catch (Exception e) {
             Log.e(TAG, "readFileAsBlob failed", e);
             call.reject("Failed to read file as blob: " + e.getMessage());
+        } finally {
+            openFiles.remove(fileId);
         }
     }
 
@@ -349,14 +353,14 @@ public class BetaflightFilePlugin extends Plugin {
             }
 
             ContentResolver resolver = getContext().getContentResolver();
-            OutputStream os = resolver.openOutputStream(file.uri, "wt"); // "wt" = write-truncate
-            if (os == null) {
-                call.reject("Could not open output stream");
-                return;
+            try (OutputStream os = resolver.openOutputStream(file.uri, "wt")) { // "wt" = write-truncate
+                if (os == null) {
+                    call.reject("Could not open output stream");
+                    return;
+                }
+                os.write(bytes);
+                os.flush();
             }
-            os.write(bytes);
-            os.flush();
-            os.close();
 
             JSObject ret = new JSObject();
             ret.put("success", true);
@@ -364,6 +368,8 @@ public class BetaflightFilePlugin extends Plugin {
         } catch (Exception e) {
             Log.e(TAG, "writeFile failed", e);
             call.reject("Failed to write file: " + e.getMessage());
+        } finally {
+            openFiles.remove(fileId);
         }
     }
 
@@ -482,33 +488,29 @@ public class BetaflightFilePlugin extends Plugin {
      */
     private byte[] readAllBytes(Uri uri) throws Exception {
         ContentResolver resolver = getContext().getContentResolver();
-        InputStream is = resolver.openInputStream(uri);
-        if (is == null) throw new Exception("Could not open input stream for " + uri);
-
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        byte[] chunk = new byte[8192];
-        int bytesRead;
-        while ((bytesRead = is.read(chunk)) != -1) {
-            buffer.write(chunk, 0, bytesRead);
+        try (InputStream is = resolver.openInputStream(uri)) {
+            if (is == null) throw new Exception("Could not open input stream for " + uri);
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] chunk = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = is.read(chunk)) != -1) {
+                buffer.write(chunk, 0, bytesRead);
+            }
+            return buffer.toByteArray();
         }
-        is.close();
-        return buffer.toByteArray();
     }
 
     /**
      * Query the display name for a document URI via OpenableColumns.
      */
     private String queryDisplayName(Uri uri) {
-        try {
-            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+        try (Cursor cursor = getContext().getContentResolver()
+                .query(uri, null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 int idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 if (idx >= 0) {
-                    String name = cursor.getString(idx);
-                    cursor.close();
-                    return name;
+                    return cursor.getString(idx);
                 }
-                cursor.close();
             }
         } catch (Exception e) {
             Log.w(TAG, "Could not query display name", e);
@@ -537,6 +539,9 @@ public class BetaflightFilePlugin extends Plugin {
      */
     private byte[] hexStringToByteArray(String hexString) {
         int len = hexString.length();
+        if ((len & 1) != 0) {
+            throw new IllegalArgumentException("Hex string has odd length: " + len);
+        }
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)

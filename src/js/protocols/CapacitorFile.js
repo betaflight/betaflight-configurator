@@ -182,6 +182,9 @@ class CapacitorFile {
         if (!hexString || hexString.length === 0) {
             return new Uint8Array(0);
         }
+        if (hexString.length & 1) {
+            throw new Error(`Hex string has odd length: ${hexString.length}`);
+        }
         const bytes = new Uint8Array(hexString.length / 2);
         for (let i = 0; i < hexString.length; i += 2) {
             bytes[i / 2] = Number.parseInt(hexString.substring(i, i + 2), 16);
