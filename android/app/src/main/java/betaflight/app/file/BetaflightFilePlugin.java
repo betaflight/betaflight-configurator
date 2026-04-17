@@ -396,21 +396,24 @@ public class BetaflightFilePlugin extends Plugin {
         if (file == null) return;
 
         try {
-            // Lazy-open the OutputStream on first chunk
-            if (file.outputStream == null) {
-                ContentResolver resolver = getContext().getContentResolver();
-                file.outputStream = resolver.openOutputStream(file.uri, "wt");
-                if (file.outputStream == null) {
-                    call.reject("Could not open output stream for streaming");
-                    return;
-                }
-            }
-
+            // Validate/convert payload before opening the stream so a malformed
+            // first chunk does not truncate the destination file.
             byte[] bytes;
             if ("hex".equals(encoding)) {
                 bytes = hexStringToByteArray(data);
             } else {
                 bytes = data.getBytes("UTF-8");
+            }
+
+            // Lazy-open the OutputStream on first chunk after payload validation.
+            if (file.outputStream == null) {
+                ContentResolver resolver = getContext().getContentResolver();
+                file.outputStream = resolver.openOutputStream(file.uri, "wt");
+                if (file.outputStream == null) {
+                    openFiles.remove(fileId);
+                    call.reject("Could not open output stream for streaming");
+                    return;
+                }
             }
 
             file.outputStream.write(bytes);
