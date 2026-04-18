@@ -6,9 +6,9 @@
                 <WikiButton docUrl="Failsafe" />
             </div>
 
-            <div class="p-3 mb-4 text-sm bg-(--ui-bg-elevated) rounded-lg border border-(--ui-border)">
-                <p v-html="$t('failsafeFeaturesHelpNew')"></p>
-            </div>
+            <UiBox type="warning" highlight class="mb-4">
+                <p class="text-sm" v-html="$t('failsafeFeaturesHelpNew')"></p>
+            </UiBox>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <!-- Left Column -->
