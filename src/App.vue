@@ -262,7 +262,7 @@ import {
     vueTabState,
 } from "./js/vue_tab_mounter.js";
 import { VueTabComponents } from "./js/vue_tab_registry.js";
-import { connectDisconnect } from "./js/serial_backend.js";
+import { disconnect } from "./js/serial_backend.js";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
@@ -313,7 +313,7 @@ const expertMode = computed({
 });
 
 function onDisconnect() {
-    connectDisconnect();
+    disconnect();
 }
 
 const activeTabComponent = computed(() => {

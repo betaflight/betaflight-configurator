@@ -121,12 +121,13 @@ const indicatorWidth = computed(() =>
 }
 
 .data-flash--compact .dataflash-contents_global {
-    margin: 0;
+    position: relative;
+    margin: 1rem 0 0;
     padding: 0;
     border: none;
     background-color: var(--surface-500);
     border-radius: 3px;
-    overflow: hidden;
+    overflow: visible;
     height: 4px;
     width: 100%;
 }
@@ -135,14 +136,17 @@ const indicatorWidth = computed(() =>
     height: 4px;
     border-radius: 3px 0 0 3px;
     box-shadow: none;
+    overflow: visible;
 }
 
 .data-flash--compact .dataflash-contents_global div span {
-    position: static;
+    position: absolute;
+    top: -1rem;
+    left: 0;
     display: block;
     color: var(--text);
     width: auto;
-    margin-bottom: 0.15rem;
+    margin: 0;
     white-space: nowrap;
 }
 

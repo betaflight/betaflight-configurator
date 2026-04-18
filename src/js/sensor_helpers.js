@@ -20,6 +20,7 @@ export function have_sensor(sensors_detected, sensor_code) {
     return false;
 }
 
-// Kept as a stable entry point for legacy callers. SensorStatus.vue renders
-// reactively from FC state, so no DOM manipulation is needed.
-export function sensor_status() {}
+export function sensor_status() {
+    // Intentionally empty: legacy entry point kept for callers that still invoke it.
+    // SensorStatus.vue renders reactively from FC state, so no DOM work is needed here.
+}

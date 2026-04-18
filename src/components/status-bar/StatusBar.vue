@@ -29,7 +29,6 @@
             <BatteryIcon
                 compact
                 :voltage="analog.voltage ?? 0"
-                :vbatmincellvoltage="batteryConfig.vbatmincellvoltage ?? 0"
                 :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
                 :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
                 :battery-state="batteryState.batteryState"

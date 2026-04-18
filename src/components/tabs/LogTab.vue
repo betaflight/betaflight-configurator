@@ -19,7 +19,7 @@
             <div ref="scrollArea" class="log-scroll">
                 <p v-for="entry in entries" :key="entry.id" class="log-entry">
                     <span class="log-timestamp">{{ entry.timestamp }}</span>
-                    <span class="log-message" v-html="entry.message"></span>
+                    <span class="log-message">{{ entry.message }}</span>
                 </p>
             </div>
         </div>
@@ -49,7 +49,8 @@ function onClear() {
 }
 
 watch(
-    () => entries.value.length,
+    // Watch the newest entry id so auto-scroll keeps firing after the store caps at MAX_ENTRIES.
+    () => entries.value[entries.value.length - 1]?.id,
     () => {
         if (!autoScroll.value) {
             return;

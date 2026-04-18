@@ -22,15 +22,21 @@ const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
 let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
 
-let lastI2cErrorCount = 0;
+let lastI2cErrorCount = null;
 
 function reportI2cErrors(count) {
-    // Counter resets on FC reboot/reconnect; treat a drop as a fresh session.
-    if (count < lastI2cErrorCount) {
-        lastI2cErrorCount = 0;
+    // Seed on first poll (and on FC reboot/reconnect, where the counter drops).
+    if (lastI2cErrorCount === null || count < lastI2cErrorCount) {
+        lastI2cErrorCount = count;
+        return;
     }
     if (count > lastI2cErrorCount) {
-        gui_log(i18n.getMessage("i2cErrorDetected", [count - lastI2cErrorCount, count]));
+        gui_log(
+            i18n.getMessage("i2cErrorDetected", {
+                delta: count - lastI2cErrorCount,
+                total: count,
+            }),
+        );
         lastI2cErrorCount = count;
     }
 }

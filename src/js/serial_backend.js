@@ -59,6 +59,11 @@ function disconnectHandler(event) {
 }
 
 export function initializeSerialBackend() {
+    // Exposed via EventBus so modules that can't import serial_backend directly
+    // (notably gui.js, which is on the other side of an import cycle) can still
+    // request a connect/disconnect toggle.
+    EventBus.$on("connection:toggle", () => connectDisconnect());
+
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
             (!GUI.connected_to &&
@@ -103,6 +108,28 @@ async function sendConfigTracking() {
     });
 }
 
+function beginDisconnect() {
+    GUI.configuration_loaded = false;
+    GUI.timeout_kill_all();
+    GUI.interval_kill_all();
+    GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
+
+    mspHelper?.setArmingEnabled(true, false, function () {
+        finishClose(toggleStatus);
+    });
+}
+
+// Explicit disconnect entry point. Safer than `connectDisconnect()` for
+// callers that know they want to disconnect, because it does not flip back to
+// "connect" if `isConnected` has already been toggled off (e.g. when the UI
+// state still shows "connected" but the internal flag just changed).
+export function disconnect() {
+    if (GUI.connect_lock || !isConnected) {
+        return;
+    }
+    beginDisconnect();
+}
+
 export function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
 
@@ -112,16 +139,7 @@ export function connectDisconnect() {
         GUI.configuration_loaded = false;
 
         if (isConnected) {
-            // If connected, start disconnection sequence
-            GUI.timeout_kill_all();
-            GUI.interval_kill_all();
-            GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
-
-            function onFinishCallback() {
-                finishClose(toggleStatus);
-            }
-
-            mspHelper?.setArmingEnabled(true, false, onFinishCallback);
+            beginDisconnect();
         } else {
             // prevent connection when we do not have permission
             if (selectedPort.startsWith("requestpermission")) {
