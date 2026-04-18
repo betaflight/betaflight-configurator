@@ -438,7 +438,8 @@ onMounted(async () => {
     // Determine debug columns based on API version
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         sensorsStore.debugColumns = 8;
-        await MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, displayDebugColumnNames);
+        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+        displayDebugColumnNames();
     } else {
         sensorsStore.debugColumns = 4;
     }
