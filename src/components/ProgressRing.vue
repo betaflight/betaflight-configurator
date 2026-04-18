@@ -32,7 +32,9 @@
         </svg>
         <div class="progress-ring__content">
             <slot>
-                <span v-if="!indeterminate && value > 0" class="progress-ring__pct"> {{ Math.round(value) }}% </span>
+                <span v-if="!indeterminate && progressPercent > 0" class="progress-ring__pct">
+                    {{ progressPercent }}%
+                </span>
             </slot>
         </div>
     </div>
@@ -73,13 +75,20 @@ const centre = computed(() => props.size / 2);
 const radius = computed(() => (props.size - props.strokeWidth) / 2);
 const circumference = computed(() => 2 * Math.PI * radius.value);
 
+const effectiveMax = computed(() => (Number.isFinite(props.max) && props.max > 0 ? props.max : 100));
+const clampedValue = computed(() => {
+    const v = Number.isFinite(props.value) ? props.value : 0;
+    return Math.min(Math.max(v, 0), effectiveMax.value);
+});
+const progressRatio = computed(() => clampedValue.value / effectiveMax.value);
+const progressPercent = computed(() => Math.round(progressRatio.value * 100));
+
 const dashOffset = computed(() => {
     if (props.indeterminate) {
         // show ~75% arc that spins
         return circumference.value * 0.25;
     }
-    const pct = Math.min(props.value, props.max) / props.max;
-    return circumference.value * (1 - pct);
+    return circumference.value * (1 - progressRatio.value);
 });
 
 const colorMap = {
