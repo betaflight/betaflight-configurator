@@ -25,6 +25,14 @@ export function tpaCurveHyperbolic(x, stallThrottle, pidThr0, pidThr100, expoPar
 
     const pThr100 = pidThr100 / 100;
     const xShifted = (x - thrStall) / (1 - thrStall);
+
+    // Guard: UI allows pidThr0 / pidThr100 = 0, which would drive the
+    // hyperbolic formula into 0/0 → NaN → invalid SVG path. Fall back
+    // to a straight-line interpolation when either endpoint is zero.
+    if (pThr0 <= 0 || pThr100 <= 0) {
+        return pThr0 + (pThr100 - pThr0) * xShifted;
+    }
+
     const base = 1 + (Math.pow(pThr0 / pThr100, 1 / expo) - 1) * xShifted;
     const divisor = Math.pow(base, expo);
 

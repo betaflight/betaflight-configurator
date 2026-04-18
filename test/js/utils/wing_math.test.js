@@ -37,6 +37,13 @@ describe("tpaCurveHyperbolic", () => {
         const v = tpaCurveHyperbolic(0.5, 20, 200, 70, 10);
         expect(Number.isFinite(v)).toBe(true);
     });
+
+    it("does not return NaN when pidThr0 or pidThr100 is zero", () => {
+        // UI min for both is 0 — prevents NaN from polluting the SVG path.
+        expect(Number.isFinite(tpaCurveHyperbolic(0.5, 20, 0, 70, -10))).toBe(true);
+        expect(Number.isFinite(tpaCurveHyperbolic(0.5, 20, 200, 0, -10))).toBe(true);
+        expect(Number.isFinite(tpaCurveHyperbolic(0.5, 20, 0, 0, -10))).toBe(true);
+    });
 });
 
 describe("computeTpaCurve", () => {

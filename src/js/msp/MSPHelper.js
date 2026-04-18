@@ -1181,13 +1181,19 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP2_WING_TUNING: {
                     // Atomic decode: populate a local snapshot first; only
                     // copy to FC.WING_TUNING / _ACTIVE after the full 39
-                    // bytes parse without error. Leaves prior values
-                    // intact on truncated / failed payload.
+                    // bytes parse without error. try/catch so a truncated
+                    // payload can't short-circuit callback dispatch after
+                    // the switch — leaves the tab responsive with prior
+                    // values intact.
                     // Wire format is defined by WING_TUNING_SCHEMA in
                     // wingTuningSchema.js; see firmware PR #15124.
-                    const snap = decodeWingTuning(data);
-                    FC.WING_TUNING = snap;
-                    FC.WING_TUNING_ACTIVE = { ...snap };
+                    try {
+                        const snap = decodeWingTuning(data);
+                        FC.WING_TUNING = snap;
+                        FC.WING_TUNING_ACTIVE = { ...snap };
+                    } catch (error) {
+                        console.warn("Failed to decode wing tuning payload:", error);
+                    }
                     break;
                 }
                 case MSPCodes.MSP_PID_ADVANCED:

@@ -158,4 +158,13 @@ describe("MSP2_WING_TUNING — golden vector round-trip", () => {
         expect(decoded.spa_pitch_mode).toBe("I_FREEZE");
         expect(decoded.spa_yaw_mode).toBe("OFF");
     });
+
+    it("round-trips Unknown (N) enum labels from future firmware", () => {
+        // Forward-compat: if a newer firmware adds a yaw_type = 2, the
+        // configurator decodes it as "Unknown (2)". Saving unrelated
+        // fields must not throw — the raw index should round-trip back.
+        const snapshot = { ...WING_TUNING_CANONICAL, yaw_type: "Unknown (7)" };
+        const bytes = crunchToUnsignedBytes(snapshot);
+        expect(bytes[3]).toBe(7);
+    });
 });

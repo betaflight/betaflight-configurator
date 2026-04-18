@@ -53,8 +53,10 @@ export function enumIndexToString(table, index) {
 
 /**
  * Encode a string label to its enum index for crunching into MSP payload.
- * Throws on unknown strings — the UI must validate before calling this
- * (dropdowns are restricted to known values).
+ * Forward-compat: accepts `Unknown (N)` labels produced by
+ * `enumIndexToString` for enum values added in newer firmware, so a user
+ * editing other fields can still save without the unknown value blocking
+ * the round-trip.
  *
  * @param {string} table - key into WING_ENUM_TABLES
  * @param {string} label - string value from FC.WING_TUNING.*
@@ -66,8 +68,15 @@ export function enumStringToIndex(table, label) {
         throw new Error(`wingEnumLookups: unknown table "${table}"`);
     }
     const idx = values.indexOf(label);
-    if (idx < 0) {
-        throw new Error(`wingEnumLookups: "${label}" is not a valid ${table} value ` + `(valid: ${values.join(", ")})`);
+    if (idx >= 0) {
+        return idx;
     }
-    return idx;
+    const unknownMatch = /^Unknown \((\d+)\)$/.exec(label);
+    if (unknownMatch) {
+        const unknownIndex = Number(unknownMatch[1]);
+        if (Number.isInteger(unknownIndex) && unknownIndex >= 0 && unknownIndex <= 0xff) {
+            return unknownIndex;
+        }
+    }
+    throw new Error(`wingEnumLookups: "${label}" is not a valid ${table} value ` + `(valid: ${values.join(", ")})`);
 }
