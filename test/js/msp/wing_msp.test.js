@@ -10,6 +10,7 @@
 import { describe, it, expect } from "vitest";
 import "../../../src/js/injected_methods";
 import { enumIndexToString, enumStringToIndex, WING_ENUM_TABLES } from "../../../src/js/utils/wingEnumLookups.js";
+import { decodeWingTuning, crunchWingTuning } from "../../../src/js/msp/wingTuningSchema.js";
 
 // ---------------------------------------------------------------------------
 // Golden vector — MUST match firmware `.plan/GOLDEN_VECTOR.md` byte-for-byte
@@ -53,9 +54,9 @@ const WING_TUNING_CANONICAL = {
 };
 
 // ---------------------------------------------------------------------------
-// Decode / crunch — mirror the exact byte layout in MSPHelper so this test
-// acts as a second implementation that must agree with the production code.
-// Any drift between this file and MSPHelper is a red flag.
+// Test-local helpers. Decode/crunch logic lives in wingTuningSchema.js and is
+// shared with MSPHelper; the golden vector below is the cross-repo fixture
+// that cross-checks the schema against the firmware side byte-for-byte.
 // ---------------------------------------------------------------------------
 
 function makeDataView(uint8Array) {
@@ -66,71 +67,13 @@ function makeDataView(uint8Array) {
     return view;
 }
 
-function decodeWingTuning(data) {
-    return {
-        s_roll: data.readU8(),
-        s_pitch: data.readU8(),
-        s_yaw: data.readU8(),
-        yaw_type: enumIndexToString("yaw_type", data.readU8()),
-        angle_pitch_offset: data.read16(),
-        angle_earth_ref: data.readU8(),
-        tpa_mode: enumIndexToString("tpa_mode", data.readU8()),
-        tpa_speed_type: enumIndexToString("tpa_speed_type", data.readU8()),
-        tpa_speed_basic_delay: data.readU16(),
-        tpa_speed_basic_gravity: data.readU16(),
-        tpa_speed_max_voltage: data.readU16(),
-        tpa_speed_pitch_offset: data.read16(),
-        tpa_curve_type: enumIndexToString("tpa_curve_type", data.readU8()),
-        tpa_curve_stall_throttle: data.readU8(),
-        tpa_curve_pid_thr0: data.readU16(),
-        tpa_curve_pid_thr100: data.readU16(),
-        tpa_curve_expo: data.read8(),
-        spa_roll_center: data.readU16(),
-        spa_roll_width: data.readU16(),
-        spa_roll_mode: enumIndexToString("spa_mode", data.readU8()),
-        spa_pitch_center: data.readU16(),
-        spa_pitch_width: data.readU16(),
-        spa_pitch_mode: enumIndexToString("spa_mode", data.readU8()),
-        spa_yaw_center: data.readU16(),
-        spa_yaw_width: data.readU16(),
-        spa_yaw_mode: enumIndexToString("spa_mode", data.readU8()),
-    };
-}
-
-function crunchWingTuning(t) {
-    const buf = [];
-    buf.push8(t.s_roll)
-        .push8(t.s_pitch)
-        .push8(t.s_yaw)
-        .push8(enumStringToIndex("yaw_type", t.yaw_type))
-        .push16(t.angle_pitch_offset & 0xffff)
-        .push8(t.angle_earth_ref)
-        .push8(enumStringToIndex("tpa_mode", t.tpa_mode))
-        .push8(enumStringToIndex("tpa_speed_type", t.tpa_speed_type))
-        .push16(t.tpa_speed_basic_delay)
-        .push16(t.tpa_speed_basic_gravity)
-        .push16(t.tpa_speed_max_voltage)
-        .push16(t.tpa_speed_pitch_offset & 0xffff)
-        .push8(enumStringToIndex("tpa_curve_type", t.tpa_curve_type))
-        .push8(t.tpa_curve_stall_throttle)
-        .push16(t.tpa_curve_pid_thr0)
-        .push16(t.tpa_curve_pid_thr100)
-        .push8(t.tpa_curve_expo & 0xff)
-        .push16(t.spa_roll_center)
-        .push16(t.spa_roll_width)
-        .push8(enumStringToIndex("spa_mode", t.spa_roll_mode))
-        .push16(t.spa_pitch_center)
-        .push16(t.spa_pitch_width)
-        .push8(enumStringToIndex("spa_mode", t.spa_pitch_mode))
-        .push16(t.spa_yaw_center)
-        .push16(t.spa_yaw_width)
-        .push8(enumStringToIndex("spa_mode", t.spa_yaw_mode));
+function crunchToUnsignedBytes(t) {
     // push16/push8 may emit Array elements outside the 0-255 range for
     // negative values (e.g. push16 high byte of -1 is raw -1). Normalize
     // to unsigned bytes so the comparison against the golden Uint8Array
     // works. Production code path (MSP.send_message) does this same
     // coercion when assembling the frame.
-    return buf.map((b) => b & 0xff);
+    return crunchWingTuning([], t).map((b) => b & 0xff);
 }
 
 // ---------------------------------------------------------------------------
@@ -186,13 +129,13 @@ describe("MSP2_WING_TUNING — golden vector round-trip", () => {
     });
 
     it("crunches canonical values to golden bytes", () => {
-        const crunched = crunchWingTuning(WING_TUNING_CANONICAL);
+        const crunched = crunchToUnsignedBytes(WING_TUNING_CANONICAL);
         expect(new Uint8Array(crunched)).toEqual(WING_TUNING_GOLDEN);
     });
 
     it("payload is exactly 39 bytes", () => {
         expect(WING_TUNING_GOLDEN.byteLength).toBe(39);
-        expect(crunchWingTuning(WING_TUNING_CANONICAL).length).toBe(39);
+        expect(crunchToUnsignedBytes(WING_TUNING_CANONICAL).length).toBe(39);
     });
 
     it("preserves negative int16 values (angle_pitch_offset = -120)", () => {
