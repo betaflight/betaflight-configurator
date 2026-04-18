@@ -8,21 +8,24 @@
             icon="i-lucide-plug"
             size="sm"
             :loading="connecting"
+            :title="$t('disconnect')"
             @click="onDisconnectClick"
         >
-            {{ $t("disconnect") }}
+            <span class="sidebar-connect__label">{{ $t("disconnect") }}</span>
         </UButton>
-        <UFieldGroup v-else size="sm" orientation="horizontal" class="sidebar-connect__group">
+        <UFieldGroup v-else size="sm" orientation="horizontal" class="sidebar-connect__group w-full !flex">
             <UButton
                 class="sidebar-connect__main"
+                block
                 color="success"
                 variant="soft"
                 icon="i-lucide-plug"
                 :loading="connecting"
                 :disabled="portPickerDisabled"
+                :title="mainLabel"
                 @click="onConnectClick"
             >
-                {{ mainLabel }}
+                <span class="sidebar-connect__label">{{ mainLabel }}</span>
             </UButton>
             <UDropdownMenu :items="menuItems" :content="{ align: 'end', side: 'top' }" :ui="{ content: 'max-h-96' }">
                 <UButton
@@ -236,13 +239,24 @@ export default defineComponent({
 }
 
 .sidebar-connect__group {
-    display: flex;
-    width: 100%;
+    display: flex !important;
+    width: 100% !important;
 }
 
 .sidebar-connect__main {
-    flex: 1 1 auto;
+    flex: 1 1 0 !important;
     min-width: 0;
-    justify-content: center;
+}
+
+.sidebar-connect__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 1055px) {
+    .sidebar-connect__label {
+        display: none;
+    }
 }
 </style>

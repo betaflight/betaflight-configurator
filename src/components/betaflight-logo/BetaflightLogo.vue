@@ -66,4 +66,17 @@ export default {
     line-height: 1.3;
     text-align: left;
 }
+
+@media (max-width: 1055px) {
+    .tab_container .logo_text {
+        display: none;
+    }
+    .tab_container .logo {
+        align-items: center;
+    }
+    .tab_container .logo_image {
+        width: 48px;
+        background-size: auto 100%;
+    }
+}
 </style>

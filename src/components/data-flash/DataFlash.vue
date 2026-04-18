@@ -112,9 +112,9 @@ const indicatorWidth = computed(() =>
     justify-content: center;
     gap: 0.25rem;
     width: auto;
-    min-width: 140px;
+    min-width: 156px;
     height: auto;
-    padding: 0.25rem 0.5rem;
+    padding: 0.75rem 0.5rem 0.5rem;
     background-image: none;
     color: var(--text);
     font-size: 11px;
