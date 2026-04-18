@@ -23,6 +23,19 @@ const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
 let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
 
+let lastI2cErrorCount = 0;
+
+function reportI2cErrors(count) {
+    // Counter resets on FC reboot/reconnect; treat a drop as a fresh session.
+    if (count < lastI2cErrorCount) {
+        lastI2cErrorCount = 0;
+    }
+    if (count > lastI2cErrorCount) {
+        gui_log(i18n.getMessage("i2cErrorDetected", [count - lastI2cErrorCount, count]));
+        lastI2cErrorCount = count;
+    }
+}
+
 function MspHelper() {
     const self = this;
 
@@ -204,6 +217,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_STATUS:
                     FC.CONFIG.cycleTime = data.readU16();
                     FC.CONFIG.i2cError = data.readU16();
+                    reportI2cErrors(FC.CONFIG.i2cError);
                     FC.CONFIG.activeSensors = data.readU16();
                     FC.CONFIG.mode = data.readU32();
                     FC.CONFIG.profile = data.readU8();
@@ -212,6 +226,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_STATUS_EX:
                     FC.CONFIG.cycleTime = data.readU16();
                     FC.CONFIG.i2cError = data.readU16();
+                    reportI2cErrors(FC.CONFIG.i2cError);
                     FC.CONFIG.activeSensors = data.readU16();
                     FC.CONFIG.mode = data.readU32();
                     FC.CONFIG.profile = data.readU8();

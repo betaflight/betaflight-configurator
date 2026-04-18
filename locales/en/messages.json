@@ -478,6 +478,10 @@
     "tabLog": {
         "message": "Log"
     },
+    "i2cErrorDetected": {
+        "message": "I2C error detected (+{{delta}}, total {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
     "logActionClear": {
         "message": "Clear"
     },
