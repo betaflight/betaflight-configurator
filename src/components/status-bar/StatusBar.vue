@@ -169,8 +169,10 @@ export default defineComponent({
     bottom: 0;
     box-sizing: border-box;
     width: 100%;
-    padding: 0.5rem 1rem;
+    min-height: 2.5rem;
+    padding: 0.25rem 1rem;
     background-color: var(--surface-300);
+    line-height: 1.2;
     .message {
         margin-right: 0.25rem;
     }
@@ -182,10 +184,111 @@ export default defineComponent({
     }
 }
 
+#status-bar > * {
+    display: flex;
+    align-items: center;
+}
+
 .status-indicators {
     display: flex;
     align-items: center;
+    gap: 0.75rem;
+}
+
+/* Neutralise margins/sizes that were tuned for the legacy header bar. */
+.status-indicators :deep(.battery-icon) {
+    margin-top: 0;
+    margin-left: 0;
+    height: 24px;
+    width: 48px;
+}
+
+.status-indicators :deep(.quad-status-contents) {
+    margin-top: 8px;
+    margin-left: 10px;
+    width: 26px;
+    height: 8px;
+}
+
+.status-indicators :deep(.battery-status) {
+    height: 9px;
+}
+
+.status-indicators :deep(.battery-legend) {
+    position: static;
+    display: inline-block;
+    margin: 0;
+    padding: 0 0.25rem;
+    width: auto;
+    color: var(--text);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.status-indicators :deep(.bottomStatusIcons) {
+    height: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0.1rem 0.25rem;
+    background-color: transparent;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
+}
+
+.status-indicators :deep(.bottomStatusIcons .armedicon),
+.status-indicators :deep(.bottomStatusIcons .failsafeicon),
+.status-indicators :deep(.bottomStatusIcons .linkicon) {
+    margin: 0;
+    height: 16px;
+    width: 16px;
+}
+
+.status-indicators :deep(.data-flash) {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    width: auto;
+    min-width: 140px;
+    height: auto;
+    padding: 0.25rem 0.5rem;
+    background-image: none;
+    color: var(--text);
+    font-size: 11px;
+}
+
+.status-indicators :deep(.dataflash-contents_global) {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: var(--surface-500);
+    border-radius: 3px;
+    overflow: hidden;
+    height: 4px;
+    width: 100%;
+}
+
+.status-indicators :deep(.dataflash-contents_global div) {
+    height: 4px;
+    border-radius: 3px 0 0 3px;
+    box-shadow: none;
+}
+
+.status-indicators :deep(.dataflash-contents_global div span) {
+    position: static;
+    display: block;
+    color: var(--text);
+    width: auto;
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+}
+
+.status-indicators :deep(.noflash_global) {
+    margin: 0;
+    text-align: left;
+    color: var(--text);
 }
 
 #status-bar > * ~ * {

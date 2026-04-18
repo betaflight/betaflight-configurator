@@ -1,5 +1,6 @@
 <template>
     <div class="logo">
+        <div class="logo_image" aria-hidden="true"></div>
         <div class="logo_text">
             <span> {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }} </span>
             <span v-if="firmwareVersion && firmwareId">
@@ -36,33 +37,33 @@ export default {
 
 <style>
 .tab_container .logo {
-    display: block;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 56px;
+    padding: 0.25rem 0 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tab_container .logo_image {
+    width: 100%;
+    height: 48px;
     background-image: url(../../images/dark-wide-2.svg);
     background-repeat: no-repeat;
     background-position: left center;
     background-size: contain;
-    padding: 0.5rem 0;
-    margin-bottom: 0.5rem;
-    position: relative;
 }
 
-.dark .tab_container .logo {
+.dark .tab_container .logo_image {
     background-image: url(../../images/light-wide-2.svg);
 }
 
-.tab_container .logo .logo_text {
+.tab_container .logo_text {
     display: flex;
     flex-direction: column;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -0.25rem;
+    margin-top: 0.25rem;
     color: var(--text);
     font-size: 10px;
     line-height: 1.3;
     text-align: left;
-    padding-left: 0.25rem;
 }
 </style>
