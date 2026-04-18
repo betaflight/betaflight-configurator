@@ -4,7 +4,6 @@ import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import { useInterval } from "../useInterval";
 
 export function usePortsState(getRules) {
     const ports = reactive([]);
@@ -96,11 +95,8 @@ export function usePortsState(getRules) {
         );
     });
 
-    const { addInterval } = useInterval();
-
     onMounted(() => {
         loadConfig();
-        addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
     });
 
     return {
