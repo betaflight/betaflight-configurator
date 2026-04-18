@@ -88,29 +88,25 @@
             />
 
             <!-- Debug -->
-            <div v-show="checkboxes[5]">
-                <UiBox type="neutral">
-                    <div class="grid grid-cols-1 gap-2.5 w-full">
-                        <SensorGraph
-                            v-for="i in debugColumns"
-                            :key="i"
-                            :ref="
-                                (el) => {
-                                    if (el) debugSvgs[i - 1] = el;
-                                }
-                            "
-                            sensor-type="debug"
-                            :svg-id="`debug${i - 1}`"
-                            :visible="true"
-                            :title="debugTitles[i - 1]"
-                            :show-refresh-rate="i === 1"
-                            :rate="rates.debug"
-                            @update:rate="updateRate('debug', $event)"
-                            :display-values="[debugDisplay[i - 1]]"
-                            :is-debug="true"
-                        />
-                    </div>
-                </UiBox>
+            <div v-show="checkboxes[5]" class="flex flex-col gap-2.5">
+                <SensorGraph
+                    v-for="i in debugColumns"
+                    :key="i"
+                    :ref="
+                        (el) => {
+                            if (el) debugSvgs[i - 1] = el;
+                        }
+                    "
+                    sensor-type="debug"
+                    :svg-id="`debug${i - 1}`"
+                    :visible="true"
+                    :title="debugTitles[i - 1]"
+                    :show-refresh-rate="i === 1"
+                    :rate="rates.debug"
+                    @update:rate="updateRate('debug', $event)"
+                    :display-values="[debugDisplay[i - 1]]"
+                    :is-debug="true"
+                />
             </div>
         </div>
     </BaseTab>
