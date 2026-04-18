@@ -4,63 +4,76 @@
             <div class="tab_title">{{ $t("tabPidTuning") }}</div>
             <WikiButton docUrl="PID-Tuning" />
 
-            <div class="content_wrapper_header">
+            <div class="flex items-start gap-3 flex-wrap mb-2">
                 <!-- Profile Selector -->
-                <div class="profile single-field">
-                    <div class="helpicon cf_tip" :title="$t('pidTuningProfileTip')"></div>
-                    <div class="head">{{ $t("pidTuningProfile") }}</div>
-                    <div>
-                        <select v-model.number="currentProfile" @change="onProfileChange" :disabled="hasChanges">
-                            <option v-for="i in 3" :key="i" :value="i - 1">{{ i }}</option>
-                        </select>
-                    </div>
+                <div class="flex flex-col gap-1 min-w-[130px]">
+                    <SettingRow :label="$t('pidTuningProfile')" :help="$t('pidTuningProfileTip')">
+                        <USelect
+                            v-model="currentProfile"
+                            :items="profileItems"
+                            class="min-w-20"
+                            :disabled="hasChanges"
+                            @update:model-value="onProfileChange"
+                        />
+                    </SettingRow>
                 </div>
 
                 <!-- Rate Profile Selector -->
-                <div class="rate_profile single-field">
-                    <div class="helpicon cf_tip" :title="$t('pidTuningRateProfileTip')"></div>
-                    <div class="head">{{ $t("pidTuningRateProfile") }}</div>
-                    <div>
-                        <select
-                            v-model.number="currentRateProfile"
-                            @change="onRateProfileChange"
+                <div class="flex flex-col gap-1 min-w-[130px]">
+                    <SettingRow :label="$t('pidTuningRateProfile')" :help="$t('pidTuningRateProfileTip')">
+                        <USelect
+                            v-model="currentRateProfile"
+                            :items="rateProfileItems"
+                            class="min-w-20"
                             :disabled="hasChanges"
-                        >
-                            <option v-for="i in numberOfRateProfiles" :key="i" :value="i - 1">{{ i }}</option>
-                        </select>
-                    </div>
+                            @update:model-value="onRateProfileChange"
+                        />
+                    </SettingRow>
                 </div>
 
-                <!-- Header Buttons -->
-                <div class="content_wrapper_header_btns">
-                    <div class="default_btn copyprofilebtn">
-                        <a href="#" @click.prevent="copyProfile">{{ $t("pidTuningCopyProfile") }}</a>
-                    </div>
-                    <div class="default_btn copyrateprofilebtn">
-                        <a href="#" @click.prevent="copyRateProfile">{{ $t("pidTuningCopyRateProfile") }}</a>
-                    </div>
-                    <div class="default_btn resetbt">
-                        <a href="#" @click.prevent="resetProfile">{{ $t("pidTuningResetPidProfile") }}</a>
-                    </div>
-                    <div class="default_btn show showAllPids">
-                        <a href="#" @click.prevent="toggleShowAllPids">{{
-                            showAllPids ? $t("pidTuningHideUnusedPids") : $t("pidTuningShowAllPids")
-                        }}</a>
-                    </div>
+                <!-- Header Buttons (scoped per subtab) -->
+                <div class="flex gap-2 flex-wrap ml-auto">
+                    <UButton
+                        v-if="activeSubtab === 'pid'"
+                        :label="$t('pidTuningCopyProfile')"
+                        color="neutral"
+                        variant="outline"
+                        @click="copyProfile"
+                    />
+                    <UButton
+                        v-if="activeSubtab === 'rates'"
+                        :label="$t('pidTuningCopyRateProfile')"
+                        color="neutral"
+                        variant="outline"
+                        @click="copyRateProfile"
+                    />
+                    <UButton
+                        v-if="activeSubtab === 'pid'"
+                        :label="$t('pidTuningResetPidProfile')"
+                        color="neutral"
+                        variant="outline"
+                        @click="resetProfile"
+                    />
+                    <UButton
+                        v-if="activeSubtab === 'pid'"
+                        :label="showAllPids ? $t('pidTuningHideUnusedPids') : $t('pidTuningShowAllPids')"
+                        color="neutral"
+                        variant="outline"
+                        @click="toggleShowAllPids"
+                    />
                 </div>
             </div>
 
             <!-- Sub-tab Navigation -->
-            <div class="tab-container">
-                <div class="tab pid" :class="{ active: activeSubtab === 'pid' }" @click="activeSubtab = 'pid'">
-                    <a href="#" @click.prevent="activeSubtab = 'pid'">{{ $t("pidTuningSubTabPid") }}</a>
-                </div>
-                <div class="tab rates" :class="{ active: activeSubtab === 'rates' }" @click="activeSubtab = 'rates'">
-                    <a href="#" @click.prevent="activeSubtab = 'rates'">{{ $t("pidTuningSubTabRates") }}</a>
-                </div>
-                <div class="tab filter" :class="{ active: activeSubtab === 'filter' }" @click="activeSubtab = 'filter'">
-                    <a href="#" @click.prevent="activeSubtab = 'filter'">{{ $t("pidTuningSubTabFilter") }}</a>
-                </div>
+            <div class="subtab-nav">
+                <UTabs
+                    :items="subtabItems"
+                    :model-value="activeSubtab"
+                    :content="false"
+                    color="primary"
+                    variant="pill"
+                    @update:model-value="activeSubtab = $event"
+                />
             </div>
 
             <!-- Tab Content -->
@@ -90,36 +103,28 @@
             </div>
 
             <!-- Save/Revert Buttons -->
-            <div class="content_toolbar toolbar_fixed_bottom">
-                <div class="btn save_btn">
-                    <button
-                        type="button"
-                        class="save"
-                        :class="{ disabled: !hasChanges }"
-                        :disabled="!hasChanges"
-                        @click="save"
-                    >
-                        {{ $t("pidTuningButtonSave") }}
-                    </button>
-                </div>
-                <div class="btn refresh_btn">
-                    <button type="button" class="refresh" @click="refresh">
-                        {{ $t("pidTuningButtonRefresh") }}
-                    </button>
-                </div>
+            <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+                <UButton
+                    :label="$t('pidTuningButtonSave')"
+                    :color="hasChanges ? 'success' : 'primary'"
+                    :disabled="!hasChanges"
+                    @click="save"
+                />
+                <UButton :label="$t('pidTuningButtonRefresh')" color="neutral" variant="outline" @click="refresh" />
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import PidSubTab from "./pid-tuning/PidSubTab.vue";
 import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
 import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
+import SettingRow from "../elements/SettingRow.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -130,7 +135,6 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
-import tippy from "tippy.js";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
 import { useTranslation } from "i18next-vue";
@@ -159,6 +163,29 @@ const numberOfRateProfiles = computed(() => {
     }
     return 4;
 });
+
+// Items arrays for USelect / UTabs
+const profileItems = computed(() => {
+    const items = [];
+    for (let i = 0; i < 3; i++) {
+        items.push({ label: i18n.getMessage("pidTuningProfileOption", [i + 1]), value: i });
+    }
+    return items;
+});
+
+const rateProfileItems = computed(() => {
+    const items = [];
+    for (let i = 0; i < numberOfRateProfiles.value; i++) {
+        items.push({ label: i18n.getMessage("pidTuningRateProfileOption", [i + 1]), value: i });
+    }
+    return items;
+});
+
+const subtabItems = computed(() => [
+    { label: t("pidTuningSubTabPid"), value: "pid" },
+    { label: t("pidTuningSubTabRates"), value: "rates" },
+    { label: t("pidTuningSubTabFilter"), value: "filter" },
+]);
 
 // Profile name state lifted from child components
 const pidProfileName = ref("");
@@ -233,11 +260,7 @@ async function loadData() {
         // Store original values for revert
         storeOriginalValues();
 
-        // Initialize Switchery AFTER data loaded and DOM updated
-        await nextTick();
-        GUI.switchery();
         GUI.content_ready();
-        initToolTips();
         return true;
     } catch (e) {
         console.error("[PidTuning] Failed to load data:", e);
@@ -472,26 +495,6 @@ function onFormChanged() {
     }
     pidTuningStore.checkForChanges(pidProfileName.value, rateProfileName.value);
 }
-
-// Watch for sub-tab changes to re-initialize Switchery for new DOM elements
-function initToolTips() {
-    document.querySelectorAll("#pid-tuning .cf_tip").forEach((el) => {
-        const title = el.getAttribute("title");
-        if (title && !el._tippy) {
-            tippy(el, { content: title, allowHTML: true });
-            el.removeAttribute("title");
-        }
-    });
-}
-
-watch(
-    () => activeSubtab.value,
-    async () => {
-        await nextTick();
-        GUI.switchery();
-        initToolTips();
-    },
-);
 
 // Watch profile name changes: sync to FC.CONFIG and re-check for changes
 watch(
@@ -806,58 +809,6 @@ onUnmounted(() => {
     text-align-last: left;
 }
 
-/* ── Tab container ────────────────────────────────────────────────── */
-.tab-pid_tuning .tab-container {
-    border-bottom: 3px solid var(--primary-500);
-    border-right-width: 0;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: start;
-    width: 100%;
-}
-.tab-pid_tuning .tab-container > div {
-    background-color: var(--surface-200);
-    padding: 6px 12px;
-    border-right: 1px solid var(--surface-500);
-    box-sizing: border-box;
-    text-align: center;
-}
-.tab-pid_tuning .tab-container > div:first-child {
-    border-top-left-radius: 4px;
-}
-.tab-pid_tuning .tab-container > div:last-child {
-    border-top-right-radius: 4px;
-}
-.tab-pid_tuning .tab-container > div a {
-    display: block;
-    color: var(--text);
-}
-.tab-pid_tuning .tab-container > div.active {
-    background-color: var(--primary-500);
-    color: #000;
-    transition: none;
-}
-.tab-pid_tuning .tab-container > div.active a {
-    background-color: var(--primary-500);
-    color: #000;
-    transition: none;
-}
-
-/* ── Single-field selectors ───────────────────────────────────────── */
-.tab-pid_tuning .single-field {
-    display: inline-table;
-    margin-bottom: 10px;
-    margin-right: 5px;
-}
-.tab-pid_tuning .single-field .head {
-    text-align: left;
-    border-radius: 4px;
-    color: var(--text);
-    font-weight: normal;
-    padding-bottom: 0.5rem;
-}
-
 /* ── New rates ────────────────────────────────────────────────────── */
 .tab-pid_tuning .new_rates {
     text-align: center;
@@ -871,9 +822,6 @@ onUnmounted(() => {
 }
 
 /* ── Misc helpers ─────────────────────────────────────────────────── */
-.tab-pid_tuning .top-buttons {
-    float: right;
-}
 .tab-pid_tuning .fixed_band {
     position: absolute;
     width: 100%;
@@ -925,18 +873,6 @@ onUnmounted(() => {
     width: 65px;
     height: 21px;
 }
-.tab-pid_tuning .resetbt {
-    width: 200px;
-    margin-right: 10px;
-}
-.tab-pid_tuning .copyprofilebtn {
-    width: 150px;
-    margin-right: 10px;
-}
-.tab-pid_tuning .copyrateprofilebtn {
-    width: 150px;
-    margin-right: 10px;
-}
 .tab-pid_tuning .right {
     float: right;
 }
@@ -961,32 +897,6 @@ onUnmounted(() => {
 }
 .tab-pid_tuning .topspacer {
     margin-top: 5px;
-}
-
-/* ── Profile / rate profile selectors ─────────────────────────────── */
-.tab-pid_tuning .profile,
-.tab-pid_tuning .rate_profile {
-    min-width: 130px;
-}
-.tab-pid_tuning .profile select,
-.tab-pid_tuning .rate_profile select {
-    width: 100%;
-}
-.tab-pid_tuning .profile .helpicon,
-.tab-pid_tuning .rate_profile .helpicon {
-    margin: 0;
-}
-.tab-pid_tuning .controller {
-    width: 150px;
-}
-.tab-pid_tuning .controller select,
-.tab-pid_tuning .delta select {
-    border: 1px solid var(--surface-500);
-    margin-left: 5px;
-    width: calc(100% - 10px);
-}
-.tab-pid_tuning .delta {
-    width: 150px;
 }
 
 /* ── Bracket icon ─────────────────────────────────────────────────── */
@@ -1257,14 +1167,6 @@ onUnmounted(() => {
     float: left;
 }
 
-/* ── Content header ───────────────────────────────────────────────── */
-.tab-pid_tuning .content_wrapper_header {
-    display: flex;
-}
-.tab-pid_tuning .content_wrapper_header_btns {
-    margin-left: auto;
-}
-
 /* ── Fancy header (not under .tab-pid_tuning) ─────────────────────── */
 .fancy.header {
     background-color: #d6d6d6;
@@ -1357,12 +1259,6 @@ onUnmounted(() => {
     color: black;
 }
 
-/* ── Show all pids button ─────────────────────────────────────────── */
-.show {
-    width: 130px;
-    margin-right: 3px;
-}
-
 /* ── Filter two-columns ───────────────────────────────────────────── */
 .subtab-filter table tr td:first-child {
     text-align: right;
@@ -1379,6 +1275,11 @@ onUnmounted(() => {
 .subtab-filter .two_columns .two_columns_second {
     margin-left: 10px;
     height: fit-content;
+}
+
+/* ── Sub-tab navigation ───────────────────────────────────────────── */
+.subtab-nav {
+    width: calc(100% - 22px);
 }
 
 /* ── Tab area ─────────────────────────────────────────────────────── */
@@ -1398,42 +1299,6 @@ onUnmounted(() => {
     .tab-pid_tuning dialog {
         width: calc(100% - 2em);
         border-radius: unset;
-    }
-    .tab-pid_tuning .content_wrapper_header {
-        flex-wrap: wrap;
-    }
-    .tab-pid_tuning .profile {
-        width: calc(50% - 5px);
-    }
-    .tab-pid_tuning .rate_profile {
-        width: calc(50% - 5px);
-        margin-left: 5px;
-        margin-right: 0;
-    }
-    .tab-pid_tuning .copyprofilebtn {
-        width: calc(50% - 5px);
-    }
-    .tab-pid_tuning .copyrateprofilebtn {
-        width: calc(50% - 5px);
-        margin-right: 0;
-    }
-    .tab-pid_tuning .resetbt {
-        width: calc(50% - 5px);
-    }
-    .tab-pid_tuning .show {
-        width: calc(50% - 5px);
-        margin-right: 0;
-    }
-    .tab-pid_tuning .controller {
-        margin-right: 0;
-        width: 100%;
-    }
-    .tab-pid_tuning .content_wrapper_header_btns {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .tab-pid_tuning .tab-container > div {
-        width: calc(100% / 3);
     }
     .tab-pid_tuning .subtab-pid .cf_column {
         min-width: 100%;

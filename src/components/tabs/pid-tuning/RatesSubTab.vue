@@ -1,424 +1,299 @@
 <template>
-    <div class="subtab-rates">
+    <div class="p-5 grid grid-cols-1 xl:grid-cols-2 gap-4">
         <!-- LEFT COLUMN -->
-        <div class="cf_column">
+        <div class="flex flex-col gap-4">
             <!-- Rate Profile Name (API 1.45+) -->
-            <div v-if="hasProfileNames" class="gui_box grey profile_name">
-                <table class="cf">
-                    <thead>
-                        <tr>
-                            <th>
-                                <div>
-                                    <div class="float-left" v-text="$t('rateProfileName')"></div>
-                                    <div class="helpicon cf_tip" :title="$t('rateProfileNameHelp')"></div>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <input type="text" v-model="rateProfileNameModel" maxlength="8" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <SettingRow v-if="hasProfileNames" :label="$t('rateProfileName')" :help="$t('rateProfileNameHelp')">
+                <UInput v-model="rateProfileNameModel" maxlength="8" class="w-28" />
+            </SettingRow>
 
             <!-- Rates Type Selector -->
-            <div class="gui_box grey">
-                <table class="cf">
-                    <thead>
-                        <tr>
-                            <th>
-                                <div>
-                                    <div class="float-left" v-text="$t('pidTuningRatesType')"></div>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningRatesTypeTip')"></div>
-                                </div>
-                            </th>
-                            <th class="rates_logo_bg"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <select v-model.number="ratesType">
-                                    <option :value="0">Betaflight</option>
-                                    <option :value="1">Raceflight</option>
-                                    <option :value="2">KISS</option>
-                                    <option :value="3">Actual</option>
-                                    <option :value="4">Quick</option>
-                                </select>
-                            </td>
-                            <td class="rates_logo_bg">
-                                <div class="rates_logo_div">
-                                    <img :src="ratesLogoSrc" class="rates_logo" alt="Rates logo" />
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <UiBox type="neutral">
+                <div class="flex items-center gap-3">
+                    <SettingRow :label="$t('pidTuningRatesType')" :help="$t('pidTuningRatesTypeTip')">
+                        <USelect v-model="ratesType" :items="ratesTypeItems" class="w-32" />
+                    </SettingRow>
+                    <img :src="ratesLogoSrc" class="h-8" alt="Rates logo" />
+                    <a
+                        href="https://rates.metamarc.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-xs text-primary hover:underline"
+                    >
+                        rates.metamarc.com
+                    </a>
+                </div>
+            </UiBox>
 
             <!-- Max Rate Warning -->
-            <div v-if="showMaxRateWarning" class="danger rates-tab-warning maxRateWarning">
+            <UiBox v-if="showMaxRateWarning" type="error" highlight>
                 <p v-html="$t('pidTuningMaxRateWarning')"></p>
-            </div>
+            </UiBox>
 
             <!-- Rate Setup Table -->
-            <div class="gui_box grey rateSetup">
-                <table id="rateSetup" class="pid_tuning">
-                    <tbody>
-                        <tr class="pid_titlebar">
-                            <th class="name"></th>
-                            <th class="rc_rate" v-text="rcRateLabel"></th>
-                            <th class="rate" v-text="rateLabel"></th>
-                            <th class="rc_expo" v-text="rcExpoLabel"></th>
-                            <th
-                                v-if="isBetaflightRates"
-                                class="new_rates centerSensitivity"
-                                v-text="fourthColumnLabel"
-                            ></th>
-                            <th v-else class="new_rates maxVel" v-text="fourthColumnLabel"></th>
-                        </tr>
-                        <tr class="pid_titlebar2">
-                            <th colspan="5">
-                                <div class="pid_mode">
-                                    <div class="float-left" v-text="$t('pidTuningRateSetup')"></div>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningRatesTuningHelp')"></div>
-                                </div>
-                            </th>
-                        </tr>
+            <UiBox type="neutral">
+                <div class="grid grid-cols-[4rem_repeat(3,4rem)_4rem] gap-x-1 gap-y-1 items-center min-w-0">
+                    <!-- Header -->
+                    <div></div>
+                    <div class="text-xs text-center">{{ rcRateLabel }}</div>
+                    <div class="text-xs text-center">{{ rateLabel }}</div>
+                    <div class="text-xs text-center">{{ rcExpoLabel }}</div>
+                    <div class="text-xs text-center">{{ fourthColumnLabel }}</div>
 
-                        <!-- Roll -->
-                        <tr class="ROLL">
-                            <td class="pid_roll" v-text="$t('controlAxisRoll')"></td>
-                            <td class="rc_rate">
-                                <UInputNumber
-                                    :model-value="rcRate"
-                                    @update:model-value="rcRate = $event"
-                                    :step="rcRateLimits.step"
-                                    :min="rcRateLimits.min"
-                                    :max="rcRateLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: rcRatePrecision,
-                                        maximumFractionDigits: rcRatePrecision,
-                                    }"
-                                />
-                            </td>
-                            <td class="roll_rate">
-                                <UInputNumber
-                                    :model-value="rollRate"
-                                    @update:model-value="rollRate = $event"
-                                    :step="rateLimits.step"
-                                    :min="rateLimits.min"
-                                    :max="rateLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: ratePrecision,
-                                        maximumFractionDigits: ratePrecision,
-                                    }"
-                                />
-                            </td>
-                            <td>
-                                <UInputNumber
-                                    :model-value="rcExpo"
-                                    @update:model-value="rcExpo = $event"
-                                    :step="expoLimits.step"
-                                    :min="expoLimits.min"
-                                    :max="expoLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: expoPrecision,
-                                        maximumFractionDigits: expoPrecision,
-                                    }"
-                                />
-                            </td>
-                            <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityRoll">
-                                {{ centerSensitivityRoll }}
-                            </td>
-                            <td v-else class="new_rates maxAngularVelRoll">
-                                {{ maxAngularVelRoll }}
-                            </td>
-                        </tr>
+                    <!-- Section label -->
+                    <div class="col-span-5 text-xs text-dimmed">
+                        <div class="flex items-center gap-1">
+                            <span>{{ $t("pidTuningRateSetup") }}</span>
+                            <HelpIcon :text="$t('pidTuningRatesTuningHelp')" />
+                        </div>
+                    </div>
 
-                        <!-- Pitch -->
-                        <tr class="PITCH">
-                            <td class="pid_pitch" v-text="$t('controlAxisPitch')"></td>
-                            <td>
-                                <UInputNumber
-                                    :model-value="rcRatePitch"
-                                    @update:model-value="rcRatePitch = $event"
-                                    :step="rcRateLimits.step"
-                                    :min="rcRateLimits.min"
-                                    :max="rcRateLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: rcRatePrecision,
-                                        maximumFractionDigits: rcRatePrecision,
-                                    }"
-                                />
-                            </td>
-                            <td class="pitch_rate">
-                                <UInputNumber
-                                    :model-value="pitchRate"
-                                    @update:model-value="pitchRate = $event"
-                                    :step="rateLimits.step"
-                                    :min="rateLimits.min"
-                                    :max="rateLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: ratePrecision,
-                                        maximumFractionDigits: ratePrecision,
-                                    }"
-                                />
-                            </td>
-                            <td>
-                                <UInputNumber
-                                    :model-value="rcPitchExpo"
-                                    @update:model-value="rcPitchExpo = $event"
-                                    :step="expoLimits.step"
-                                    :min="expoLimits.min"
-                                    :max="expoLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: expoPrecision,
-                                        maximumFractionDigits: expoPrecision,
-                                    }"
-                                />
-                            </td>
-                            <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityPitch">
-                                {{ centerSensitivityPitch }}
-                            </td>
-                            <td v-else class="new_rates maxAngularVelPitch">
-                                {{ maxAngularVelPitch }}
-                            </td>
-                        </tr>
+                    <!-- Roll -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">
+                        {{ $t("controlAxisRoll") }}
+                    </div>
+                    <UInputNumber
+                        :model-value="rcRate"
+                        @update:model-value="rcRate = $event"
+                        :step="rcRateLimits.step"
+                        :min="rcRateLimits.min"
+                        :max="rcRateLimits.max"
+                        :format-options="{
+                            minimumFractionDigits: rcRatePrecision,
+                            maximumFractionDigits: rcRatePrecision,
+                        }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        :model-value="rollRate"
+                        @update:model-value="rollRate = $event"
+                        :step="rateLimits.step"
+                        :min="rateLimits.min"
+                        :max="rateLimits.max"
+                        :format-options="{ minimumFractionDigits: ratePrecision, maximumFractionDigits: ratePrecision }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        :model-value="rcExpo"
+                        @update:model-value="rcExpo = $event"
+                        :step="expoLimits.step"
+                        :min="expoLimits.min"
+                        :max="expoLimits.max"
+                        :format-options="{ minimumFractionDigits: expoPrecision, maximumFractionDigits: expoPrecision }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <div class="text-xs text-center whitespace-nowrap">
+                        {{ isBetaflightRates ? centerSensitivityRoll : maxAngularVelRoll }}
+                    </div>
 
-                        <!-- Yaw -->
-                        <tr class="YAW">
-                            <td class="pid_yaw" v-text="$t('controlAxisYaw')"></td>
-                            <td>
-                                <UInputNumber
-                                    :model-value="rcRateYaw"
-                                    @update:model-value="rcRateYaw = $event"
-                                    :step="rcRateLimits.step"
-                                    :min="rcRateLimits.min"
-                                    :max="rcRateLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: rcRatePrecision,
-                                        maximumFractionDigits: rcRatePrecision,
-                                    }"
-                                />
-                            </td>
-                            <td>
-                                <UInputNumber
-                                    :model-value="yawRate"
-                                    @update:model-value="yawRate = $event"
-                                    :step="rateLimits.step"
-                                    :min="rateLimits.min"
-                                    :max="rateLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: ratePrecision,
-                                        maximumFractionDigits: ratePrecision,
-                                    }"
-                                />
-                            </td>
-                            <td>
-                                <UInputNumber
-                                    :model-value="rcYawExpo"
-                                    @update:model-value="rcYawExpo = $event"
-                                    :step="expoLimits.step"
-                                    :min="expoLimits.min"
-                                    :max="expoLimits.max"
-                                    :format-options="{
-                                        minimumFractionDigits: expoPrecision,
-                                        maximumFractionDigits: expoPrecision,
-                                    }"
-                                />
-                            </td>
-                            <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityYaw">
-                                {{ centerSensitivityYaw }}
-                            </td>
-                            <td v-else class="new_rates maxAngularVelYaw">
-                                {{ maxAngularVelYaw }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    <!-- Pitch -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">
+                        {{ $t("controlAxisPitch") }}
+                    </div>
+                    <UInputNumber
+                        :model-value="rcRatePitch"
+                        @update:model-value="rcRatePitch = $event"
+                        :step="rcRateLimits.step"
+                        :min="rcRateLimits.min"
+                        :max="rcRateLimits.max"
+                        :format-options="{
+                            minimumFractionDigits: rcRatePrecision,
+                            maximumFractionDigits: rcRatePrecision,
+                        }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        :model-value="pitchRate"
+                        @update:model-value="pitchRate = $event"
+                        :step="rateLimits.step"
+                        :min="rateLimits.min"
+                        :max="rateLimits.max"
+                        :format-options="{ minimumFractionDigits: ratePrecision, maximumFractionDigits: ratePrecision }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        :model-value="rcPitchExpo"
+                        @update:model-value="rcPitchExpo = $event"
+                        :step="expoLimits.step"
+                        :min="expoLimits.min"
+                        :max="expoLimits.max"
+                        :format-options="{ minimumFractionDigits: expoPrecision, maximumFractionDigits: expoPrecision }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <div class="text-xs text-center whitespace-nowrap">
+                        {{ isBetaflightRates ? centerSensitivityPitch : maxAngularVelPitch }}
+                    </div>
+
+                    <!-- Yaw -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">
+                        {{ $t("controlAxisYaw") }}
+                    </div>
+                    <UInputNumber
+                        :model-value="rcRateYaw"
+                        @update:model-value="rcRateYaw = $event"
+                        :step="rcRateLimits.step"
+                        :min="rcRateLimits.min"
+                        :max="rcRateLimits.max"
+                        :format-options="{
+                            minimumFractionDigits: rcRatePrecision,
+                            maximumFractionDigits: rcRatePrecision,
+                        }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        :model-value="yawRate"
+                        @update:model-value="yawRate = $event"
+                        :step="rateLimits.step"
+                        :min="rateLimits.min"
+                        :max="rateLimits.max"
+                        :format-options="{ minimumFractionDigits: ratePrecision, maximumFractionDigits: ratePrecision }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        :model-value="rcYawExpo"
+                        @update:model-value="rcYawExpo = $event"
+                        :step="expoLimits.step"
+                        :min="expoLimits.min"
+                        :max="expoLimits.max"
+                        :format-options="{ minimumFractionDigits: expoPrecision, maximumFractionDigits: expoPrecision }"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <div class="text-xs text-center whitespace-nowrap">
+                        {{ isBetaflightRates ? centerSensitivityYaw : maxAngularVelYaw }}
+                    </div>
+                </div>
+            </UiBox>
 
             <!-- Rate Curve -->
-            <div class="gui_box rc_curve">
-                <div class="rc_curve_bg">
-                    <table class="cf rc_curve">
-                        <thead>
-                            <tr>
-                                <th colspan="2">
-                                    <div>
-                                        <div class="float-left" v-text="$t('pidTuningRatesCurve')"></div>
-                                        <div class="helpicon cf_tip" :title="$t('pidTuningRatesTip')"></div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="2">
-                                    <div class="rate_curve background_paper" style="position: relative">
-                                        <canvas
-                                            ref="rateCurveLayer0"
-                                            style="
-                                                position: absolute;
-                                                top: 0;
-                                                left: 0;
-                                                z-index: 0;
-                                                height: 100%;
-                                                width: 100%;
-                                            "
-                                        ></canvas>
-                                        <canvas
-                                            ref="rateCurveLayer1"
-                                            style="
-                                                position: absolute;
-                                                top: 0;
-                                                left: 0;
-                                                z-index: 1;
-                                                height: 100%;
-                                                width: 100%;
-                                            "
-                                        ></canvas>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <UiBox :title="$t('pidTuningRatesCurve')" :help="$t('pidTuningRatesTip')" type="neutral">
+                <div
+                    class="relative bg-white dark:bg-neutral-900 border border-default p-1"
+                    style="height: 362px; min-width: 200px"
+                >
+                    <canvas ref="rateCurveLayer0" class="absolute inset-0 w-full h-full" style="z-index: 0"></canvas>
+                    <canvas ref="rateCurveLayer1" class="absolute inset-0 w-full h-full" style="z-index: 1"></canvas>
                 </div>
-            </div>
+            </UiBox>
         </div>
 
         <!-- RIGHT COLUMN -->
-        <div class="cf_column">
+        <div class="flex flex-col gap-4">
             <!-- Throttle Limit -->
-            <div class="gui_box throttle_limit spacer_left">
-                <table class="cf">
-                    <thead>
-                        <tr>
-                            <th>
-                                <div>
-                                    <div class="float-left" v-text="$t('pidTuningThrottleLimitType')"></div>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningThrottleLimitTypeTip')"></div>
-                                </div>
-                            </th>
-                            <th>
-                                <div>
-                                    <div class="float-left" v-text="$t('pidTuningThrottleLimitPercent')"></div>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningThrottleLimitPercentTip')"></div>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <select v-model.number="throttleLimitType">
-                                    <option :value="0" v-text="$t('pidTuningThrottleLimitTypeOff')"></option>
-                                    <option :value="1" v-text="$t('pidTuningThrottleLimitTypeScale')"></option>
-                                    <option :value="2" v-text="$t('pidTuningThrottleLimitTypeClip')"></option>
-                                </select>
-                            </td>
-                            <td>
-                                <UInputNumber v-model="throttleLimitPercent" :step="1" :min="25" :max="100" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <UiBox type="neutral">
+                <div class="flex flex-wrap items-end gap-3">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningThrottleLimitType") }}</span>
+                            <HelpIcon :text="$t('pidTuningThrottleLimitTypeTip')" />
+                        </div>
+                        <USelect v-model="throttleLimitType" :items="throttleLimitTypeItems" class="w-28" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningThrottleLimitPercent") }}</span>
+                            <HelpIcon :text="$t('pidTuningThrottleLimitPercentTip')" />
+                        </div>
+                        <UInputNumber
+                            v-model="throttleLimitPercent"
+                            :step="1"
+                            :min="25"
+                            :max="100"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-16"
+                        />
+                    </div>
+                </div>
+            </UiBox>
 
             <!-- Throttle Settings -->
-            <div class="gui_box throttle spacer_left">
-                <table class="cf">
-                    <thead>
-                        <tr>
-                            <th v-text="$t('receiverThrottleMid')"></th>
-                            <th v-if="hasThrottleHover" v-text="$t('receiverThrottleHover')"></th>
-                            <th v-text="$t('receiverThrottleExpo')"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <UInputNumber
-                                    :model-value="throttleMid ?? 0"
-                                    @update:model-value="throttleMid = $event"
-                                    :step="0.01"
-                                    :min="0"
-                                    :max="1"
-                                />
-                            </td>
-                            <td v-if="hasThrottleHover">
-                                <UInputNumber
-                                    :model-value="throttleHover ?? 0.5"
-                                    @update:model-value="throttleHover = $event"
-                                    :step="0.01"
-                                    :min="0"
-                                    :max="1"
-                                />
-                            </td>
-                            <td>
-                                <UInputNumber
-                                    :model-value="throttleExpo ?? 0"
-                                    @update:model-value="throttleExpo = $event"
-                                    :step="0.01"
-                                    :min="0"
-                                    :max="1"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <UiBox type="neutral">
+                <div class="flex flex-wrap items-end gap-3">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-xs text-dimmed">{{ $t("receiverThrottleMid") }}</span>
+                        <UInputNumber
+                            :model-value="throttleMid ?? 0"
+                            @update:model-value="throttleMid = $event"
+                            :step="0.01"
+                            :min="0"
+                            :max="1"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-16"
+                        />
+                    </div>
+                    <div v-if="hasThrottleHover" class="flex flex-col gap-1">
+                        <span class="text-xs text-dimmed">{{ $t("receiverThrottleHover") }}</span>
+                        <UInputNumber
+                            :model-value="throttleHover ?? 0.5"
+                            @update:model-value="throttleHover = $event"
+                            :step="0.01"
+                            :min="0"
+                            :max="1"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-16"
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <span class="text-xs text-dimmed">{{ $t("receiverThrottleExpo") }}</span>
+                        <UInputNumber
+                            :model-value="throttleExpo ?? 0"
+                            @update:model-value="throttleExpo = $event"
+                            :step="0.01"
+                            :min="0"
+                            :max="1"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-16"
+                        />
+                    </div>
+                </div>
+            </UiBox>
 
             <!-- Throttle Curve Preview -->
-            <div class="gui_box throttle spacer_left">
-                <table class="cf">
-                    <thead>
-                        <tr>
-                            <th v-text="$t('pidTuningThrottleCurvePreview')" colspan="2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="2" class="throttleCurvePreview">
-                                <div class="throttle_curve background_paper" style="height: 164px">
-                                    <canvas ref="throttleCurveCanvas" style="width: 100%; height: 100%"></canvas>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="gui_box ratePreview grey spacer_left">
-                <table class="pid_titlebar">
-                    <thead>
-                        <tr>
-                            <th v-text="$t('pidTuningRatesPreview')"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="rates_preview_cell">
-                                <div class="rates_preview background_paper" ref="ratesPreviewContainer">
-                                    <canvas ref="ratesPreviewCanvas"></canvas>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <UiBox :title="$t('pidTuningThrottleCurvePreview')" type="neutral">
+                <div class="bg-white dark:bg-neutral-900 border border-default p-1" style="height: 164px">
+                    <canvas ref="throttleCurveCanvas" class="w-full h-full block"></canvas>
+                </div>
+            </UiBox>
+
+            <!-- Rates 3D Preview -->
+            <UiBox :title="$t('pidTuningRatesPreview')" type="neutral">
+                <div class="bg-white dark:bg-neutral-900 border border-default p-1 w-full" ref="ratesPreviewContainer">
+                    <canvas ref="ratesPreviewCanvas" class="block"></canvas>
+                </div>
+            </UiBox>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { useTranslation } from "i18next-vue";
 import { i18n } from "@/js/localization";
 import { useDialog } from "@/composables/useDialog";
+import UiBox from "@/components/elements/UiBox.vue";
+import HelpIcon from "@/components/elements/HelpIcon.vue";
+import SettingRow from "@/components/elements/SettingRow.vue";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -440,6 +315,23 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:rateProfileName", "change"]);
+
+const { t } = useTranslation();
+
+// USelect item arrays
+const ratesTypeItems = [
+    { value: 0, label: "Betaflight" },
+    { value: 1, label: "Raceflight" },
+    { value: 2, label: "KISS" },
+    { value: 3, label: "Actual" },
+    { value: 4, label: "Quick" },
+];
+
+const throttleLimitTypeItems = computed(() => [
+    { value: 0, label: t("pidTuningThrottleLimitTypeOff") },
+    { value: 1, label: t("pidTuningThrottleLimitTypeScale") },
+    { value: 2, label: t("pidTuningThrottleLimitTypeClip") },
+]);
 
 // Canvas refs
 const rateCurveLayer0 = ref(null);
@@ -1980,49 +1872,3 @@ onUnmounted(() => {
     }
 });
 </script>
-
-<style scoped>
-.subtab-rates {
-    display: flex;
-    gap: 10px;
-}
-
-.cf_column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.gui_box {
-    padding: 10px;
-}
-
-.background_paper {
-    background: var(--surface-50, #fff);
-    border: 1px solid var(--surface-400, #ccc);
-    padding: 5px;
-}
-
-.rate_curve {
-    position: relative;
-}
-
-.throttle_curve {
-    width: 100%;
-}
-
-.rates_preview {
-    width: 100%;
-}
-
-canvas {
-    display: block;
-}
-
-@media all and (max-width: 900px) {
-    .subtab-rates {
-        flex-direction: column;
-    }
-}
-</style>
