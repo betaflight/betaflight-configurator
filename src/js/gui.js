@@ -12,6 +12,7 @@ import MSPCodes from "./msp/MSPCodes";
 import { gui_log } from "./gui_log";
 import { useDialogStore } from "../stores/dialog";
 import { pinia } from "./pinia_instance";
+import { connectDisconnect } from "./serial_backend";
 
 const TABS = {};
 
@@ -40,6 +41,7 @@ class GuiControl {
             "user_profile",
             "backups",
             "flight_plan",
+            "log",
         ];
 
         this.defaultAllowedTabs = [
@@ -59,6 +61,7 @@ class GuiControl {
             "ports",
             "receiver",
             "sensors",
+            "log",
         ];
 
         this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "transponder", "vtx", "flight_plan"];
@@ -441,10 +444,10 @@ class GuiControl {
     reinitializeConnection() {
         if (CONFIGURATOR.virtualMode) {
             this.reboot_timestamp = Date.now();
-            document.querySelector("#connection_button")?.click();
+            connectDisconnect();
             if (PortHandler.portPicker.autoConnect) {
                 return setTimeout(function () {
-                    document.querySelector("#connection_button")?.click();
+                    connectDisconnect();
                 }, 500);
             }
             return;
@@ -463,7 +466,7 @@ class GuiControl {
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
             return setTimeout(function () {
-                document.querySelector("#connection_button")?.click();
+                connectDisconnect();
             }, 1500);
         }
 

@@ -27,6 +27,7 @@ import PreflightTab from "../components/tabs/PreflightTab.vue";
 import TransponderTab from "../components/tabs/TransponderTab.vue";
 import VtxTab from "../components/tabs/VtxTab.vue";
 import PresetsTab from "../components/tabs/PresetsTab.vue";
+import LogTab from "../components/tabs/LogTab.vue";
 
 export const VueTabComponents = {
     help: HelpTab,
@@ -58,4 +59,5 @@ export const VueTabComponents = {
     transponder: TransponderTab,
     vtx: VtxTab,
     presets: PresetsTab,
+    log: LogTab,
 };

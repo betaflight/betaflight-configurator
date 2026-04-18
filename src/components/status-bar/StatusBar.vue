@@ -9,6 +9,26 @@
         <ReadingStat message="statusbar_i2c_error" :model-value="i2cError" />
         <ReadingStat message="statusbar_cycle_time" :model-value="cycleTime" />
         <ReadingStat message="statusbar_cpu_load" :model-value="cpuLoad" unit="%" />
+        <div v-if="connectionTimestamp" class="status-indicators">
+            <BatteryIcon
+                :voltage="analog.voltage ?? 0"
+                :vbatmincellvoltage="batteryConfig.vbatmincellvoltage ?? 0"
+                :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
+                :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
+                :battery-state="batteryState.batteryState"
+            />
+            <BatteryLegend :voltage="analog.voltage ?? 0" :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1" />
+            <BottomStatusIcons
+                :last-received-timestamp="analog.last_received_timestamp ?? 0"
+                :mode="fcConfig.mode ?? 0"
+                :aux-config="auxConfig"
+            />
+            <DataFlash
+                v-if="dataflashSupported"
+                :fc-total-size="dataflash.totalSize"
+                :fc-used-size="dataflash.usedSize"
+            />
+        </div>
         <StatusBarVersion
             :configurator-version="configuratorVersion"
             :firmware-version="firmwareVersion"
@@ -23,12 +43,21 @@ import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
 import StatusBarVersion from "./StatusBarVersion.vue";
 import ReadingStat from "./ReadingStat.vue";
 import PortUtilization from "./PortUtilization.vue";
+import BatteryIcon from "../quad-status/BatteryIcon.vue";
+import BatteryLegend from "../quad-status/BatteryLegend.vue";
+import BottomStatusIcons from "../quad-status/BottomStatusIcons.vue";
+import DataFlash from "../data-flash/DataFlash.vue";
+import FC from "../../js/fc";
 
 export default defineComponent({
     components: {
         PortUtilization,
         ReadingStat,
         StatusBarVersion,
+        BatteryIcon,
+        BatteryLegend,
+        BottomStatusIcons,
+        DataFlash,
     },
     props: {
         portUsageDown: {
@@ -108,8 +137,23 @@ export default defineComponent({
             return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
         });
 
+        const analog = computed(() => FC.ANALOG ?? {});
+        const batteryConfig = computed(() => FC.BATTERY_CONFIG ?? {});
+        const batteryState = computed(() => FC.BATTERY_STATE ?? {});
+        const auxConfig = computed(() => FC.AUX_CONFIG ?? []);
+        const fcConfig = computed(() => FC.CONFIG ?? {});
+        const dataflash = computed(() => FC.DATAFLASH ?? { totalSize: 0, usedSize: 0 });
+        const dataflashSupported = computed(() => (dataflash.value.totalSize ?? 0) > 0);
+
         return {
             formattedConnectionTime,
+            analog,
+            batteryConfig,
+            batteryState,
+            auxConfig,
+            fcConfig,
+            dataflash,
+            dataflashSupported,
         };
     },
 });
@@ -119,6 +163,7 @@ export default defineComponent({
 /** Status bar **/
 #status-bar {
     display: flex;
+    align-items: center;
     white-space: nowrap;
     gap: 0.5rem;
     bottom: 0;
@@ -135,6 +180,12 @@ export default defineComponent({
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+.status-indicators {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 #status-bar > * ~ * {

@@ -475,6 +475,15 @@
     "logActionShow": {
         "message": "Show Log"
     },
+    "tabLog": {
+        "message": "Log"
+    },
+    "logActionClear": {
+        "message": "Clear"
+    },
+    "logAutoScroll": {
+        "message": "Auto-scroll"
+    },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} files",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."

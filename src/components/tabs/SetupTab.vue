@@ -3,6 +3,7 @@
         <div class="content_wrapper">
             <div class="tab_title" i18n="tabSetup">Setup</div>
             <WikiButton docUrl="setup" />
+            <FlightStatusPanel />
             <div class="grid-row">
                 <div class="grid-col col3">
                     <div class="default_btn">
@@ -426,6 +427,7 @@ import { onMounted, onBeforeUnmount, ref, reactive, watch } from "vue";
 import { i18n } from "../../js/localization";
 import InfoGrid from "@/components/InfoGrid.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
+import FlightStatusPanel from "@/components/flight-status/FlightStatusPanel.vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";

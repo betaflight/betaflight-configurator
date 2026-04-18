@@ -12,10 +12,10 @@ import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit.js";
-import { sensor_status, have_sensor } from "./sensor_helpers";
-import { update_dataflash_global } from "./update_dataflash_global";
+import { have_sensor } from "./sensor_helpers";
 import { gui_log } from "./gui_log";
 import { updateTabList } from "./utils/updateTabList";
+import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from "semver";
@@ -30,17 +30,6 @@ import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 
 const logHead = "[SERIAL-BACKEND]";
-
-function setFirmwareFlasherButtonActiveState(isActive) {
-    const fwLabel = document.querySelector(".firmware_flasher_button__label");
-    const fwButton = document.querySelector("#firmware_flasher_button");
-    fwLabel?.classList.toggle("active", isActive);
-    fwButton?.classList.toggle("active", isActive);
-
-    if (globalThis.vm) {
-        globalThis.vm.firmwareFlasherActive = isActive;
-    }
-}
 
 let mspHelper;
 let connectionTimestamp = null;
@@ -70,8 +59,6 @@ function disconnectHandler(event) {
 }
 
 export function initializeSerialBackend() {
-    document.querySelector("#connection_button")?.addEventListener("click", connectDisconnect);
-
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
             (!GUI.connected_to &&
@@ -116,7 +103,7 @@ async function sendConfigTracking() {
     });
 }
 
-function connectDisconnect() {
+export function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
 
     if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb")) {
@@ -154,10 +141,6 @@ function connectDisconnect() {
 
             // lock port select & baud while we are connecting / connected
             PortHandler.portPickerDisabled = true;
-            const connLabel = document.querySelector("div.connection_button__label");
-            if (connLabel) {
-                connLabel.textContent = i18n.getMessage("connecting");
-            }
 
             // Set up event listeners for non-virtual connections
             if (selectedPort !== "virtual") {
@@ -251,17 +234,6 @@ function finishClose(finishedCallback) {
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
 
-    // reset connect / disconnect button
-    document.querySelector("#connection_button")?.classList.remove("active");
-    const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) {
-        connLabel.textContent = i18n.getMessage("connect");
-        connLabel.classList.remove("active");
-    }
-
-    // reset active sensor indicators
-    sensor_status();
-
     if (wasConnected) {
         // Clear the active root-mounted tab before navigation selects the next one.
         try {
@@ -280,11 +252,7 @@ function finishClose(finishedCallback) {
     const pendingTab = GUI.pendingTab;
     GUI.pendingTab = null;
     if (pendingTab === "firmware_flasher") {
-        // Clear premature active state set before disconnect started
-        document.querySelector(".firmware_flasher_button__label")?.classList.remove("active");
-        document.querySelector("#firmware_flasher_button")?.classList.remove("active");
-        setFirmwareFlasherButtonActiveState(false);
-        document.querySelector("#firmware_flasher_button")?.click();
+        document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
     } else {
         document.querySelector("#tabs .tab_landing a")?.click();
     }
@@ -308,14 +276,6 @@ function setConnectionTimeout() {
 }
 
 function resetConnection() {
-    // reset connect / disconnect button
-    const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) {
-        connLabel.textContent = i18n.getMessage("connect");
-        connLabel.classList.remove("active");
-    }
-    document.querySelector("#connection_button")?.classList.remove("active");
-
     clearLiveDataRefreshTimer();
 
     MSP.clearListeners();
@@ -329,12 +289,6 @@ function resetConnection() {
     hide("#tabs ul.mode-connected");
     hide("#tabs ul.mode-connected-cli");
     show("#tabs ul.mode-disconnected");
-
-    // header bar
-    hide("#sensor-status");
-    show("#portsinput");
-    hide("#dataflash_wrapper_global");
-    hide("#quad-status_wrapper");
 
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
@@ -400,12 +354,7 @@ function onOpen(openInfo) {
         gui_log(i18n.getMessage("serialPortOpened", [PortHandler.portPicker.selectedPort]));
 
         // reset expert mode
-        const result = getConfig("expertMode")?.expertMode ?? false;
-        const expertCheckbox = document.querySelector('input[name="expertModeCheckbox"]');
-        if (expertCheckbox) {
-            expertCheckbox.checked = result;
-            expertCheckbox.dispatchEvent(new Event("change"));
-        }
+        applyExpertMode(Boolean(getConfig("expertMode")?.expertMode), { persist: false });
 
         // serial adds event listener for selected connection type
         serial.removeEventListener("receive", read_serial_adapter);
@@ -482,8 +431,6 @@ function onOpenVirtual() {
 
     processBoardInfo();
 
-    update_dataflash_global();
-    sensor_status(FC.CONFIG.activeSensors);
     updateTabList(FC.FEATURE_CONFIG.features);
 }
 
@@ -680,22 +627,7 @@ function connectCli() {
 }
 
 function onConnect() {
-    if (
-        Boolean(globalThis.vm?.firmwareFlasherActive) ||
-        document.querySelector(".firmware_flasher_button__label")?.classList.contains("active") ||
-        document.querySelector("#firmware_flasher_button")?.classList.contains("active")
-    ) {
-        setFirmwareFlasherButtonActiveState(false);
-    }
-
     GUI.timeout_remove("connecting"); // kill connecting timer
-
-    const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) {
-        connLabel.textContent = i18n.getMessage("disconnect");
-        connLabel.classList.add("active");
-    }
-    document.querySelector("#connection_button")?.classList.add("active");
 
     hide("#tabs ul.mode-disconnected");
     show("#tabs ul.mode-connected-cli");
@@ -703,8 +635,6 @@ function onConnect() {
     // update tab visibility and initialize features/UI on connect
     updateTabVisibility();
     initFeaturesOnConnect();
-
-    hide("#portsinput");
 }
 
 // Update which tabs are visible based on `GUI.allowedTabs` and board type
@@ -750,9 +680,6 @@ function initFeaturesOnConnect() {
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
             startLiveDataRefreshTimer();
         }
-
-        show("#sensor-status");
-        show("#dataflash_wrapper_global");
     }
 }
 
@@ -785,69 +712,13 @@ export function read_serial(info) {
 }
 
 export async function update_sensor_status() {
-    const statuswrapper = document.getElementById("quad-status_wrapper");
-
     await MSP.promise(MSPCodes.MSP_ANALOG);
     await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
-
-    if (FC.ANALOG !== undefined) {
-        let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
-
-        if (FC.ANALOG.voltage == 0) {
-            nbCells = 1;
-        }
-
-        const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
-        const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
-        const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
-        const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
-
-        const batteryStatus = document.querySelector(".battery-status");
-        if (batteryStatus) {
-            if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
-                batteryStatus.classList.add("state-empty");
-                batteryStatus.classList.remove("state-ok", "state-warning");
-                batteryStatus.style.width = "100%";
-            } else {
-                batteryStatus.style.width = `${((FC.ANALOG.voltage - min) / (max - min)) * 100}%`;
-
-                if (FC.ANALOG.voltage < warn) {
-                    batteryStatus.classList.add("state-warning");
-                    batteryStatus.classList.remove("state-empty", "state-ok");
-                } else {
-                    batteryStatus.classList.add("state-ok");
-                    batteryStatus.classList.remove("state-warning", "state-empty");
-                }
-            }
-        }
-    }
-
     await MSP.promise(MSPCodes.MSP_BOXNAMES);
     await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
-    const active = performance.now() - FC.ANALOG.last_received_timestamp < 300;
-    document.querySelector(".linkicon")?.classList.toggle("active", active);
-
-    for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-        if (FC.AUX_CONFIG[i] === "ARM") {
-            document.querySelector(".armedicon")?.classList.toggle("active", bit_check(FC.CONFIG.mode, i));
-        }
-        if (FC.AUX_CONFIG[i] === "FAILSAFE") {
-            document.querySelector(".failsafeicon")?.classList.toggle("active", bit_check(FC.CONFIG.mode, i));
-        }
-    }
-
     if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
         await MSP.promise(MSPCodes.MSP_RAW_GPS);
-    }
-
-    sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
-
-    if (statuswrapper) {
-        statuswrapper.style.display = "";
-        if (getComputedStyle(statuswrapper).display === "none") {
-            statuswrapper.style.display = "block";
-        }
     }
 }
 
@@ -885,7 +756,7 @@ export function reinitializeConnection(suppressDialog = false) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
             setTimeout(function () {
-                document.querySelector("#connection_button")?.click();
+                connectDisconnect();
             }, 500);
             return rebootTimestamp;
         }
@@ -899,7 +770,7 @@ export function reinitializeConnection(suppressDialog = false) {
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
         setTimeout(function () {
-            document.querySelector("#connection_button")?.click();
+            connectDisconnect();
         }, 1500);
         return rebootTimestamp;
     }

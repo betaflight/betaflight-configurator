@@ -1,5 +1,5 @@
 <template>
-    <div id="sensor-status" class="sensor_state mode-connected" style="display: block">
+    <div class="sensor-status">
         <ul>
             <li class="gyro" :title="$t('sensorStatusGyro')" :class="{ on: setGyroActive }">
                 <div class="gyroicon" :class="{ active: setGyroActive }">
@@ -21,12 +21,12 @@
                     {{ $t("sensorStatusBaroShort") }}
                 </div>
             </li>
-            <li class="gps" :class="{ on: setGpsActive }" :title="$t('sensorStatusGPS')">
+            <li class="gps" :class="{ on: gpsOn }" :title="$t('sensorStatusGPS')">
                 <div
                     class="gpsicon"
                     :class="{
-                        active: setGpsFixState && setGpsActive,
-                        active_fix: !setGpsFixState && setGpsActive,
+                        active: gpsActiveNoFix,
+                        active_fix: gpsActiveWithFix,
                     }"
                 >
                     {{ $t("sensorStatusGPSShort") }}
@@ -72,9 +72,12 @@ const setAccActive = computed(() => haveSensor(props.sensorsDetected, "acc"));
 const setGyroActive = computed(() => haveSensor(props.sensorsDetected, "gyro"));
 const setBaroActive = computed(() => haveSensor(props.sensorsDetected, "baro"));
 const setMagActive = computed(() => haveSensor(props.sensorsDetected, "mag"));
-const setGpsActive = computed(() => haveSensor(props.sensorsDetected, "gps"));
-const setGpsFixState = computed(() => props.gpsFixState !== 0);
 const setSonarActive = computed(() => haveSensor(props.sensorsDetected, "sonar"));
+const gpsDetected = computed(() => haveSensor(props.sensorsDetected, "gps"));
+const hasFix = computed(() => props.gpsFixState > 0);
+const gpsOn = computed(() => gpsDetected.value || hasFix.value);
+const gpsActiveNoFix = computed(() => gpsOn.value && gpsDetected.value && !hasFix.value);
+const gpsActiveWithFix = computed(() => gpsOn.value && gpsDetected.value && hasFix.value);
 </script>
 
 <style scoped lang="less">

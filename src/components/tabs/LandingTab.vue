@@ -1,6 +1,31 @@
 <template>
     <BaseTab tab-name="landing">
         <div class="content_wrapper">
+            <div class="landing-connect">
+                <port-picker
+                    v-model="portPicker"
+                    :connected-bluetooth-devices="bluetoothDevices"
+                    :connected-serial-devices="serialDevices"
+                    :connected-usb-devices="usbDevices"
+                    :show-virtual-option="showVirtual"
+                    :show-manual-option="showManual"
+                    :show-bluetooth-option="showBluetooth"
+                    :show-serial-option="showSerial"
+                    :show-usb-option="showUsb"
+                    :disabled="portPickerDisabled"
+                ></port-picker>
+                <UButton
+                    id="connection_button"
+                    aria-label="Connect"
+                    icon="i-lucide-plug"
+                    size="xl"
+                    class="rounded-full connection-button"
+                    :color="connectionStore.connectionValid ? 'error' : 'success'"
+                    @click="onConnectClick"
+                >
+                    {{ connectionStore.connectionValid ? $t("disconnect") : $t("connect") }}
+                </UButton>
+            </div>
             <div class="content_top">
                 <div class="logowrapper">
                     <img src="/images/bf_logo_white.svg" alt="" />
@@ -95,11 +120,14 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
+import { useConnectionStore } from "../../stores/connection";
+import PortHandler from "../../js/port_handler";
+import { connectDisconnect } from "../../js/serial_backend";
 
 export default defineComponent({
     name: "LandingTab",
@@ -119,6 +147,28 @@ export default defineComponent({
             }
         }
 
+        const connectionStore = useConnectionStore();
+
+        const portPicker = computed({
+            get: () => PortHandler.portPicker,
+            set: (v) => {
+                PortHandler.portPicker = v;
+            },
+        });
+        const bluetoothDevices = computed(() => PortHandler.currentBluetoothPorts);
+        const serialDevices = computed(() => PortHandler.currentSerialPorts);
+        const usbDevices = computed(() => PortHandler.currentUsbPorts);
+        const showVirtual = computed(() => PortHandler.showVirtualMode);
+        const showManual = computed(() => PortHandler.showManualMode);
+        const showBluetooth = computed(() => PortHandler.showBluetoothOption);
+        const showSerial = computed(() => PortHandler.showSerialOption);
+        const showUsb = computed(() => PortHandler.showUsbOption);
+        const portPickerDisabled = computed(() => PortHandler.portPickerDisabled);
+
+        function onConnectClick() {
+            connectDisconnect();
+        }
+
         onMounted(() => {
             GUI.content_ready();
         });
@@ -127,6 +177,18 @@ export default defineComponent({
             availableLanguages,
             selectedLanguage,
             changeLanguage,
+            connectionStore,
+            portPicker,
+            bluetoothDevices,
+            serialDevices,
+            usbDevices,
+            showVirtual,
+            showManual,
+            showBluetooth,
+            showSerial,
+            showUsb,
+            portPickerDisabled,
+            onConnectClick,
         };
     },
 });
@@ -149,6 +211,21 @@ export default defineComponent({
     padding: 0;
     height: unset;
     overflow-y: auto;
+}
+
+.landing-connect {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background-color: var(--surface-200);
+    flex-wrap: wrap;
+}
+
+.connection-button {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .content_top {

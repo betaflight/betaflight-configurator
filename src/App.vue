@@ -3,125 +3,8 @@
         <div class="app-wrapper">
             <div id="background"></div>
             <div id="side_menu_swipe"></div>
-            <div class="headerbar">
-                <div id="menu_btn">
-                    <em class="fas fa-bars"></em>
-                </div>
-                <betaflight-logo
-                    :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                    :firmware-version="FC.CONFIG.flightControllerVersion"
-                    :firmware-id="FC.CONFIG.flightControllerIdentifier"
-                    :hardware-id="FC.CONFIG.hardwareName"
-                ></betaflight-logo>
-                <port-picker
-                    v-model="PortHandler.portPicker"
-                    :connected-bluetooth-devices="PortHandler.currentBluetoothPorts"
-                    :connected-serial-devices="PortHandler.currentSerialPorts"
-                    :connected-usb-devices="PortHandler.currentUsbPorts"
-                    :show-virtual-option="PortHandler.showVirtualMode"
-                    :show-manual-option="PortHandler.showManualMode"
-                    :show-bluetooth-option="PortHandler.showBluetoothOption"
-                    :show-serial-option="PortHandler.showSerialOption"
-                    :show-usb-option="PortHandler.showUsbOption"
-                    :disabled="PortHandler.portPickerDisabled"
-                ></port-picker>
-                <div class="header-wrapper">
-                    <div id="quad-status_wrapper">
-                        <battery-icon
-                            :voltage="FC.ANALOG.voltage"
-                            :vbatmincellvoltage="FC.BATTERY_CONFIG.vbatmincellvoltage"
-                            :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
-                            :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
-                            :batteryState="FC.BATTERY_STATE?.batteryState"
-                        >
-                        </battery-icon>
-                        <battery-legend
-                            :voltage="FC.ANALOG.voltage"
-                            :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
-                        ></battery-legend>
-                        <div class="bottomStatusIcons">
-                            <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>
-                            <div class="failsafeicon cf_tip" i18n_title="mainHelpFailsafe"></div>
-                            <div class="linkicon cf_tip" i18n_title="mainHelpLink"></div>
-                        </div>
-                    </div>
-                    <div id="sensor-status" class="sensor_state mode-connected">
-                        <ul>
-                            <li class="gyro" i18n_title="sensorStatusGyro">
-                                <div class="gyroicon" i18n="sensorStatusGyroShort"></div>
-                            </li>
-                            <li class="accel" i18n_title="sensorStatusAccel">
-                                <div class="accicon" i18n="sensorStatusAccelShort"></div>
-                            </li>
-                            <li class="mag" i18n_title="sensorStatusMag">
-                                <div class="magicon" i18n="sensorStatusMagShort"></div>
-                            </li>
-                            <li class="baro" i18n_title="sensorStatusBaro">
-                                <div class="baroicon" i18n="sensorStatusBaroShort"></div>
-                            </li>
-                            <li class="gps" i18n_title="sensorStatusGPS">
-                                <div class="gpsicon" i18n="sensorStatusGPSShort"></div>
-                            </li>
-                            <li class="sonar" i18n_title="sensorStatusSonar">
-                                <div class="sonaricon" i18n="sensorStatusSonarShort"></div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="dataflash_wrapper_global">
-                        <div class="noflash_global" i18n="sensorDataFlashNotFound"></div>
-                        <ul class="dataflash-contents_global">
-                            <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
-                            <progress class="dataflash-progress_global" max="100"></progress>
-                        </ul>
-                        <div id="expertMode">
-                            <label>
-                                <input
-                                    name="expertModeCheckbox"
-                                    class="togglesmall"
-                                    type="checkbox"
-                                    v-model="expertMode"
-                                />
-                                <span i18n="expertMode" class="expertModeText"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div id="header_buttons">
-                    <div class="firmware_flasher_button">
-                        <UButton
-                            aria-label="Firmware Flasher"
-                            icon="i-lucide-cpu"
-                            size="2xl"
-                            class="rounded-full"
-                            id="firmware_flasher_button"
-                            :color="firmwareFlasherActive ? 'error' : 'primary'"
-                        />
-                        <span class="firmware_flasher_button__label" i18n="flashTab"></span>
-                    </div>
-                    <div class="connection_button">
-                        <UButton
-                            aria-label="Connect"
-                            icon="i-lucide-plug"
-                            size="2xl"
-                            class="rounded-full"
-                            id="connection_button"
-                            :color="connectionStore.connectionValid ? 'error' : 'success'"
-                        />
-                        <span class="connection_button__label">
-                            {{ connectionStore.connectionValid ? $t("disconnect") : $t("connect") }}
-                        </span>
-                    </div>
-                </div>
-                <div id="reveal_btn">
-                    <em class="fas fa-chevron-down"></em>
-                </div>
-            </div>
-            <div id="log">
-                <div class="logswitch">
-                    <a href="#" id="showlog" i18n="logActionShow"></a>
-                </div>
-                <div id="scrollicon"></div>
-                <div class="wrapper"></div>
+            <div id="menu_btn">
+                <em class="fas fa-bars"></em>
             </div>
             <div id="tab-content-container">
                 <div class="tab_container">
@@ -298,6 +181,11 @@
                                 <a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI"></a>
                             </li>
                         </ul>
+                        <ul class="mode-shared">
+                            <li class="tab_log">
+                                <a href="#" i18n="tabLog" class="tabicon ic_log" i18n_title="tabLog"></a>
+                            </li>
+                        </ul>
                         <ul class="mode-loggedin">
                             <li class="tab_backups">
                                 <a href="#" i18n="tabBackups" class="tabicon ic_data" i18n_title="tabBackups"></a>
@@ -311,6 +199,18 @@
                                 ></a>
                             </li>
                         </ul>
+                    </div>
+                    <div v-if="connectionStore.connectionValid" class="sidebar-disconnect">
+                        <UButton
+                            block
+                            color="error"
+                            variant="soft"
+                            icon="i-lucide-plug"
+                            size="sm"
+                            @click="onDisconnect"
+                        >
+                            {{ $t("disconnect") }}
+                        </UButton>
                     </div>
                     <user-session></user-session>
                     <div class="clear-both"></div>
@@ -353,7 +253,6 @@ import { useConnectionStore } from "./stores/connection";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
-import PortHandlerModule from "./js/port_handler.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 import GUI from "./js/gui.js";
@@ -364,6 +263,7 @@ import {
     vueTabState,
 } from "./js/vue_tab_mounter.js";
 import { VueTabComponents } from "./js/vue_tab_registry.js";
+import { connectDisconnect } from "./js/serial_backend.js";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
@@ -396,7 +296,6 @@ function currentVm() {
 const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
 const FC = computed(() => currentVm()?.FC ?? FCModule);
 const MSP = computed(() => currentVm()?.MSP ?? MSPModule);
-const PortHandler = computed(() => currentVm()?.PortHandler ?? PortHandlerModule);
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
@@ -414,7 +313,10 @@ const expertMode = computed({
     },
 });
 
-const firmwareFlasherActive = computed(() => Boolean(currentVm()?.firmwareFlasherActive));
+function onDisconnect() {
+    connectDisconnect();
+}
+
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
     return tabName ? (VueTabComponents[tabName] ?? null) : null;
@@ -461,5 +363,38 @@ watch(
 /* Legacy cache node is required by some code paths but should never be visible in Vue UI */
 #cache {
     display: none;
+}
+
+.sidebar-disconnect {
+    padding: 0.5rem;
+    margin-top: auto;
+}
+
+.sidebar-disconnect + #user-session-container {
+    margin-top: 0;
+}
+
+/* Floating mobile menu trigger — shown only on narrow viewports. */
+#menu_btn {
+    display: none;
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 2001;
+    width: 2.5rem;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: var(--surface-300);
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    #menu_btn {
+        display: flex;
+    }
 }
 </style>
