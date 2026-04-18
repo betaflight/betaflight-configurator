@@ -16,15 +16,14 @@
                 ></port-picker>
                 <UButton
                     id="connection_button"
-                    aria-label="Connect"
+                    :aria-label="connectionStore.connectionValid ? $t('disconnect') : $t('connect')"
+                    :title="connectionStore.connectionValid ? $t('disconnect') : $t('connect')"
                     icon="i-lucide-plug"
-                    size="xl"
+                    size="2xl"
                     class="rounded-full connection-button"
                     :color="connectionStore.connectionValid ? 'error' : 'success'"
                     @click="onConnectClick"
-                >
-                    {{ connectionStore.connectionValid ? $t("disconnect") : $t("connect") }}
-                </UButton>
+                />
             </div>
             <div class="content_top">
                 <div class="logowrapper">
@@ -224,8 +223,15 @@ export default defineComponent({
 }
 
 .connection-button {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0;
+    justify-content: center;
+}
+
+.connection-button :deep(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .content_top {
