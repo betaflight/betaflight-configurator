@@ -113,11 +113,18 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
         });
     };
 
+    const findRule = (name) => functionRules.find((r) => r.name === name);
+    const isMspShareable = (rule) => rule?.sharableWith?.includes("msp") === true;
+
     const onTelemetryChange = (port) => {
         if (port.telemetry) {
-            const rule = functionRules.find((r) => r.name === port.telemetry);
+            const rule = findRule(port.telemetry);
             if (rule) {
                 analyticsChanges["Telemetry"] = rule.displayName;
+            }
+
+            if (!isMspShareable(rule)) {
+                port.msp = false;
             }
 
             // Enforce mutual exclusivity
@@ -128,13 +135,19 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
     };
 
     const onPeripheralChange = (port) => {
-        if (port.peripheral === "TBS_SMARTAUDIO" || port.peripheral === "IRC_TRAMP") {
-            port.msp = false;
-            analyticsChanges["VtxControl"] = port.peripheral;
-        }
-        if (port.peripheral && port.peripheral.includes("MSP")) {
+        const rule = findRule(port.peripheral);
+
+        // VTX_MSP and similar MSP-based peripherals require MSP enabled
+        if (port.peripheral?.includes("MSP")) {
             port.msp = true;
             analyticsChanges["MspControl"] = port.peripheral;
+        } else if (port.peripheral && !isMspShareable(rule)) {
+            port.msp = false;
+            delete analyticsChanges["MspControl"];
+        }
+
+        if (port.peripheral === "TBS_SMARTAUDIO" || port.peripheral === "IRC_TRAMP") {
+            analyticsChanges["VtxControl"] = port.peripheral;
         }
 
         // Enforce mutual exclusivity
