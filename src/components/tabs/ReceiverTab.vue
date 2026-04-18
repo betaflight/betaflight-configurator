@@ -19,18 +19,24 @@
                     <div class="bars">
                         <ul v-for="(channel, index) in channelBars" :key="index">
                             <li class="name">{{ channel.name }}</li>
-                            <li class="meter">
-                                <div class="meter-bar">
-                                    <div class="label">{{ channel.value }}</div>
-                                    <div
-                                        class="fill"
-                                        :class="{ disabled: rc.active_channels === 0 }"
-                                        :style="{ width: channel.width + '%' }"
-                                    >
-                                        <div class="label">{{ channel.value }}</div>
-                                    </div>
+                            <div class="w-full relative">
+                                <UProgress
+                                    :model-value="rc.active_channels === 0 ? 0 : channel.width"
+                                    :max="100"
+                                    :ui="{
+                                        base: 'w-full bg-elevated',
+                                        indicator: 'duration-50',
+                                    }"
+                                    :disabled="rc.active_channels === 0"
+                                    size="xl"
+                                />
+                                <div
+                                    v-if="rc.active_channels > 0"
+                                    class="text-center text-xs font-bold absolute inset-0"
+                                >
+                                    {{ channel.value }}
                                 </div>
-                            </li>
+                            </div>
                         </ul>
                     </div>
                 </div>
@@ -1170,82 +1176,82 @@ onUnmounted(() => {
         display: flex;
         gap: 0.5rem;
         &:nth-of-type(1) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #f1453d;
             }
         }
         &:nth-of-type(2) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #673fb4;
             }
         }
         &:nth-of-type(3) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #2b98f0;
             }
         }
         &:nth-of-type(4) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #1fbcd2;
             }
         }
         &:nth-of-type(5) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #159588;
             }
         }
         &:nth-of-type(6) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #50ae55;
             }
         }
         &:nth-of-type(7) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #cdda49;
             }
         }
         &:nth-of-type(8) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #fdc02f;
             }
         }
         &:nth-of-type(9) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #fc5830;
             }
         }
         &:nth-of-type(10) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #785549;
             }
         }
         &:nth-of-type(11) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #9e9e9e;
             }
         }
         &:nth-of-type(12) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #617d8a;
             }
         }
         &:nth-of-type(13) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #cf267d;
             }
         }
         &:nth-of-type(14) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #7a1464;
             }
         }
         &:nth-of-type(15) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #3a7a14;
             }
         }
         &:nth-of-type(16) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #14407a;
             }
         }
