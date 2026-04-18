@@ -1,15 +1,26 @@
 <template>
     <div id="status-bar">
         <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
-        <span v-if="connectionTimestamp">
-            <span class="message">{{ $t("statusbar_connection_time") }}</span>
+        <span v-if="connectionTimestamp" class="stat-group" :title="$t('statusbar_connection_time')">
+            <UIcon name="i-lucide-clock" class="stat-icon" />
             <span class="value">{{ formattedConnectionTime }}</span>
         </span>
-        <ReadingStat message="statusbar_packet_error" :model-value="packetError" />
-        <ReadingStat message="statusbar_i2c_error" :model-value="i2cError" />
-        <ReadingStat message="statusbar_cycle_time" :model-value="cycleTime" />
-        <ReadingStat message="statusbar_cpu_load" :model-value="cpuLoad" unit="%" />
+        <span class="stat-group" :title="$t('statusbar_packet_error')">
+            <UIcon name="i-lucide-triangle-alert" class="stat-icon" />
+            <span class="value">{{ packetError }}</span>
+        </span>
+        <span class="stat-group" :title="$t('statusbar_cycle_time')">
+            <UIcon name="i-lucide-timer" class="stat-icon" />
+            <span class="value">{{ cycleTime }}</span>
+        </span>
+        <span class="stat-group cpu-load" :title="`${$t('statusbar_cpu_load')}: ${cpuLoad}%`">
+            <UIcon name="i-lucide-cpu" class="stat-icon" />
+            <span class="cpu-bar" :class="cpuLoadClass">
+                <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
+            </span>
+        </span>
         <div v-if="connectionTimestamp" class="status-indicators">
+            <SensorStatus :sensors-detected="fcConfig.activeSensors ?? 0" :gps-fix-state="gps.fix ?? 0" />
             <BatteryIcon
                 :voltage="analog.voltage ?? 0"
                 :vbatmincellvoltage="batteryConfig.vbatmincellvoltage ?? 0"
@@ -41,23 +52,23 @@
 <script>
 import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
 import StatusBarVersion from "./StatusBarVersion.vue";
-import ReadingStat from "./ReadingStat.vue";
 import PortUtilization from "./PortUtilization.vue";
 import BatteryIcon from "../quad-status/BatteryIcon.vue";
 import BatteryLegend from "../quad-status/BatteryLegend.vue";
 import BottomStatusIcons from "../quad-status/BottomStatusIcons.vue";
 import DataFlash from "../data-flash/DataFlash.vue";
+import SensorStatus from "../sensor-status/SensorStatus.vue";
 import FC from "../../js/fc";
 
 export default defineComponent({
     components: {
         PortUtilization,
-        ReadingStat,
         StatusBarVersion,
         BatteryIcon,
         BatteryLegend,
         BottomStatusIcons,
         DataFlash,
+        SensorStatus,
     },
     props: {
         portUsageDown: {
@@ -73,10 +84,6 @@ export default defineComponent({
             default: null,
         },
         packetError: {
-            type: Number,
-            default: 0,
-        },
-        i2cError: {
             type: Number,
             default: 0,
         },
@@ -142,8 +149,21 @@ export default defineComponent({
         const batteryState = computed(() => FC.BATTERY_STATE ?? {});
         const auxConfig = computed(() => FC.AUX_CONFIG ?? []);
         const fcConfig = computed(() => FC.CONFIG ?? {});
+        const gps = computed(() => FC.GPS_DATA ?? {});
         const dataflash = computed(() => FC.DATAFLASH ?? { totalSize: 0, usedSize: 0 });
         const dataflashSupported = computed(() => (dataflash.value.totalSize ?? 0) > 0);
+
+        const clampedCpuLoad = computed(() => Math.max(0, Math.min(100, Number(props.cpuLoad) || 0)));
+        const cpuLoadClass = computed(() => {
+            const v = clampedCpuLoad.value;
+            if (v >= 85) {
+                return "cpu-bar--critical";
+            }
+            if (v >= 60) {
+                return "cpu-bar--warning";
+            }
+            return "cpu-bar--ok";
+        });
 
         return {
             formattedConnectionTime,
@@ -152,8 +172,11 @@ export default defineComponent({
             batteryState,
             auxConfig,
             fcConfig,
+            gps,
             dataflash,
             dataflashSupported,
+            clampedCpuLoad,
+            cpuLoadClass,
         };
     },
 });
@@ -189,10 +212,82 @@ export default defineComponent({
     align-items: center;
 }
 
+.stat-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.stat-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text);
+    opacity: 0.75;
+}
+
+.value {
+    font-variant-numeric: tabular-nums;
+}
+
+.cpu-load {
+    gap: 0.4rem;
+}
+
+.cpu-bar {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 8px;
+    border-radius: 3px;
+    background-color: var(--surface-500);
+    overflow: hidden;
+}
+
+.cpu-bar__fill {
+    display: block;
+    height: 100%;
+    border-radius: 3px 0 0 3px;
+    transition: width 0.2s ease;
+}
+
+.cpu-bar--ok .cpu-bar__fill {
+    background-color: #59aa29;
+}
+
+.cpu-bar--warning .cpu-bar__fill {
+    background-color: var(--warning-500);
+}
+
+.cpu-bar--critical .cpu-bar__fill {
+    background-color: var(--error-500);
+}
+
 .status-indicators {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+}
+
+.status-indicators :deep(.sensor-status) {
+    background-color: transparent;
+}
+
+.status-indicators :deep(.sensor-status li) {
+    width: 2rem;
+}
+
+.status-indicators :deep(.sensor-status .gyroicon),
+.status-indicators :deep(.sensor-status .accicon),
+.status-indicators :deep(.sensor-status .magicon),
+.status-indicators :deep(.sensor-status .baroicon),
+.status-indicators :deep(.sensor-status .gpsicon),
+.status-indicators :deep(.sensor-status .sonaricon) {
+    padding-top: 1.4rem;
+    height: 0;
+    background-size: 22px;
+    background-position: center 0;
+    font-size: 9px;
+    margin-top: 0;
 }
 
 /* Neutralise margins/sizes that were tuned for the legacy header bar. */

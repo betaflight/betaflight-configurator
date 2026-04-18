@@ -90,9 +90,6 @@
                 </div>
             </div>
             <div class="modelwrapper"></div>
-            <UiBox>
-                <FlightStatusPanel />
-            </UiBox>
             <div class="grid-row grid-box col4">
                 <div class="col-span-3 model-and-info">
                     <div id="interactive_block">
@@ -429,8 +426,6 @@ import { onMounted, onBeforeUnmount, ref, reactive, watch } from "vue";
 import { i18n } from "../../js/localization";
 import InfoGrid from "@/components/InfoGrid.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
-import UiBox from "@/components/elements/UiBox.vue";
-import FlightStatusPanel from "@/components/flight-status/FlightStatusPanel.vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
