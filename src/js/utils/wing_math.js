@@ -13,19 +13,19 @@
  * @returns {number} PID multiplier factor (e.g. 2.0 at stall, 0.7 at max)
  */
 export function tpaCurveHyperbolic(x, stallThrottle, pidThr0, pidThr100, expoParam) {
-    const thrStall = stallThrottle / 100.0;
-    const pThr0 = pidThr0 / 100.0;
+    const thrStall = stallThrottle / 100;
+    const pThr0 = pidThr0 / 100;
 
     if (x <= thrStall) {
         return pThr0;
     }
 
-    const expoDivider = expoParam / 10.0 - 1.0;
-    const expo = Math.abs(expoDivider) > 1e-3 ? 1.0 / expoDivider : 1e3;
+    const expoDivider = expoParam / 10 - 1;
+    const expo = Math.abs(expoDivider) > 1e-3 ? 1 / expoDivider : 1e3;
 
-    const pThr100 = pidThr100 / 100.0;
-    const xShifted = (x - thrStall) / (1.0 - thrStall);
-    const base = 1 + (Math.pow(pThr0 / pThr100, 1.0 / expo) - 1) * xShifted;
+    const pThr100 = pidThr100 / 100;
+    const xShifted = (x - thrStall) / (1 - thrStall);
+    const base = 1 + (Math.pow(pThr0 / pThr100, 1 / expo) - 1) * xShifted;
     const divisor = Math.pow(base, expo);
 
     return pThr0 / divisor;
@@ -57,11 +57,15 @@ export const SPA_SETPOINT_MAX = 1000;
 export function spaSmoothStepDown(setpoint, center, width) {
     const leftLimit = center - width / 2;
     const rightLimit = center + width / 2;
-    if (setpoint <= leftLimit) return 1.0;
-    if (setpoint >= rightLimit) return 0.0;
+    if (setpoint <= leftLimit) {
+        return 1;
+    }
+    if (setpoint >= rightLimit) {
+        return 0;
+    }
     const t = (setpoint - leftLimit) / Math.max(1e-6, width);
     const smooth = t * t * (3 - 2 * t);
-    return 1.0 - smooth;
+    return 1 - smooth;
 }
 
 export function computeSpaCurve(center, width, points = 100, maxSetpoint = SPA_SETPOINT_MAX) {

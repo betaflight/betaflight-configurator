@@ -139,7 +139,7 @@ function crunchWingTuning(t) {
 
 describe("wingEnumLookups", () => {
     it("has the five expected tables", () => {
-        expect(Object.keys(WING_ENUM_TABLES).sort()).toEqual([
+        expect(Object.keys(WING_ENUM_TABLES).sort((a, b) => a.localeCompare(b))).toEqual([
             "spa_mode",
             "tpa_curve_type",
             "tpa_mode",

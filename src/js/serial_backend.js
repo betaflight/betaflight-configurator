@@ -638,6 +638,15 @@ function setRtc() {
     MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
 }
 
+// USE_WING build: enables servos implicitly AND adds the Wing Tuning tab.
+function applyWingBuildOption() {
+    for (const tab of ["servos", "wing_tuning"]) {
+        if (!GUI.allowedTabs.includes(tab)) {
+            GUI.allowedTabs.push(tab);
+        }
+    }
+}
+
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
 
@@ -655,14 +664,8 @@ function finishOpen() {
             }
         }
 
-        // USE_WING build: enables servos implicitly AND adds the Wing Tuning tab.
         if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING"))) {
-            if (!GUI.allowedTabs.includes("servos")) {
-                GUI.allowedTabs.push("servos");
-            }
-            if (!GUI.allowedTabs.includes("wing_tuning")) {
-                GUI.allowedTabs.push("wing_tuning");
-            }
+            applyWingBuildOption();
         }
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);

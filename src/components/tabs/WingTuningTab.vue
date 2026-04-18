@@ -62,56 +62,65 @@
                             <div class="spacer">
                                 <p>{{ $t("wingAngleModeDesc") }}</p>
                                 <table class="fields">
-                                    <tr>
-                                        <td
-                                            title="Trims pitch attitude in Angle mode. Units of 0.1°. Negative pitches the nose down. See BF PR #14009."
-                                        >
-                                            angle_pitch_offset (0.1°)
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                :min="-1000"
-                                                :max="1000"
-                                                v-model.number="fields.angle_pitch_offset"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="range"
-                                                :min="-1000"
-                                                :max="1000"
-                                                v-model.number="fields.angle_pitch_offset"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="Earth-reference strength for Angle mode axis mixing. Set 0 to disable mixing for wings (often preferable)."
-                                        >
-                                            angle_earth_ref
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                v-model.number="fields.angle_earth_ref"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="range"
-                                                min="0"
-                                                max="100"
-                                                v-model.number="fields.angle_earth_ref"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>{{ $t("wingParameter") }}</th>
+                                            <th>{{ $t("wingValue") }}</th>
+                                            <th>{{ $t("wingSlider") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                title="Trims pitch attitude in Angle mode. Units of 0.1°. Negative pitches the nose down. See BF PR #14009."
+                                            >
+                                                angle_pitch_offset (0.1°)
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    :min="-1000"
+                                                    :max="1000"
+                                                    v-model.number="fields.angle_pitch_offset"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="range"
+                                                    :min="-1000"
+                                                    :max="1000"
+                                                    v-model.number="fields.angle_pitch_offset"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="Earth-reference strength for Angle mode axis mixing. Set 0 to disable mixing for wings (often preferable)."
+                                            >
+                                                angle_earth_ref
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="100"
+                                                    v-model.number="fields.angle_earth_ref"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    v-model.number="fields.angle_earth_ref"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -217,112 +226,121 @@
                             <div class="spacer">
                                 <p>{{ $t("wingTpaAirspeedDesc") }}</p>
                                 <table class="fields">
-                                    <tr>
-                                        <td
-                                            title="PID scaling mode. PDS enables S-term scaling at low speeds for wings. See BF PR #14010."
-                                        >
-                                            tpa_mode
-                                        </td>
-                                        <td colspan="2">
-                                            <select v-model="fields.tpa_mode" :disabled="loading">
-                                                <option value="PD">PD</option>
-                                                <option value="D">D</option>
-                                                <option value="PDS">PDS (wing)</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="Airspeed estimation model. BASIC works for most pilots. ADVANCED uses additional params (adv_prop_pitch, adv_mass, adv_drag_k, adv_thrust) that must be set via CLI. See BF PR #13895."
-                                        >
-                                            tpa_speed_type
-                                        </td>
-                                        <td colspan="2">
-                                            <select v-model="fields.tpa_speed_type" :disabled="loading">
-                                                <option value="BASIC">BASIC</option>
-                                                <option value="ADVANCED">ADVANCED (CLI only)</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="BASIC airspeed model filter delay. See BF PR #13895 for tuning procedure."
-                                        >
-                                            tpa_speed_basic_delay
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                max="65535"
-                                                v-model.number="fields.tpa_speed_basic_delay"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td title="BASIC airspeed model gravity term. See BF PR #13895 for tuning.">
-                                            tpa_speed_basic_gravity
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                max="65535"
-                                                v-model.number="fields.tpa_speed_basic_gravity"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="Battery full-charge voltage × 100. Example: 3S = 1260 (12.6V), 6S = 2520 (25.2V). Use the cell-count dropdown to set correctly."
-                                        >
-                                            tpa_speed_max_voltage
-                                            <small>(V × 100)</small>
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="3360"
-                                                v-model.number="fields.tpa_speed_max_voltage"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td>
-                                            <select
-                                                @change="onCellCountChange"
-                                                :value="detectedCellCount"
-                                                :disabled="loading"
-                                                title="Pick your cell count to auto-fill max_voltage."
+                                    <thead>
+                                        <tr>
+                                            <th>{{ $t("wingParameter") }}</th>
+                                            <th>{{ $t("wingValue") }}</th>
+                                            <th>{{ $t("wingSlider") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                title="PID scaling mode. PDS enables S-term scaling at low speeds for wings. See BF PR #14010."
                                             >
-                                                <option value="">— cells —</option>
-                                                <option v-for="n in [2, 3, 4, 5, 6, 7, 8]" :key="n" :value="n">
-                                                    {{ n }}S ({{ (n * 4.2).toFixed(1) }}V)
-                                                </option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="Pitch offset for BASIC airspeed estimation, in units of 0.1° (firmware comment: 'pitch offset in degrees*10 for craft speed estimation'). Compensates for FC mounting angle relative to the wing's aero-zero reference. Default 0."
-                                        >
-                                            tpa_speed_pitch_offset (0.1°)
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="-32768"
-                                                max="32767"
-                                                v-model.number="fields.tpa_speed_pitch_offset"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td></td>
-                                    </tr>
+                                                tpa_mode
+                                            </td>
+                                            <td colspan="2">
+                                                <select v-model="fields.tpa_mode" :disabled="loading">
+                                                    <option value="PD">PD</option>
+                                                    <option value="D">D</option>
+                                                    <option value="PDS">PDS (wing)</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="Airspeed estimation model. BASIC works for most pilots. ADVANCED uses additional params (adv_prop_pitch, adv_mass, adv_drag_k, adv_thrust) that must be set via CLI. See BF PR #13895."
+                                            >
+                                                tpa_speed_type
+                                            </td>
+                                            <td colspan="2">
+                                                <select v-model="fields.tpa_speed_type" :disabled="loading">
+                                                    <option value="BASIC">BASIC</option>
+                                                    <option value="ADVANCED">ADVANCED (CLI only)</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="BASIC airspeed model filter delay. See BF PR #13895 for tuning procedure."
+                                            >
+                                                tpa_speed_basic_delay
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    max="65535"
+                                                    v-model.number="fields.tpa_speed_basic_delay"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td title="BASIC airspeed model gravity term. See BF PR #13895 for tuning.">
+                                                tpa_speed_basic_gravity
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    max="65535"
+                                                    v-model.number="fields.tpa_speed_basic_gravity"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="Battery full-charge voltage × 100. Example: 3S = 1260 (12.6V), 6S = 2520 (25.2V). Use the cell-count dropdown to set correctly."
+                                            >
+                                                tpa_speed_max_voltage
+                                                <small>(V × 100)</small>
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="3360"
+                                                    v-model.number="fields.tpa_speed_max_voltage"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td>
+                                                <select
+                                                    @change="onCellCountChange"
+                                                    :value="detectedCellCount"
+                                                    :disabled="loading"
+                                                    title="Pick your cell count to auto-fill max_voltage."
+                                                >
+                                                    <option value="">— cells —</option>
+                                                    <option v-for="n in [2, 3, 4, 5, 6, 7, 8]" :key="n" :value="n">
+                                                        {{ n }}S ({{ (n * 4.2).toFixed(1) }}V)
+                                                    </option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="Pitch offset for BASIC airspeed estimation, in units of 0.1° (firmware comment: 'pitch offset in degrees*10 for craft speed estimation'). Compensates for FC mounting angle relative to the wing's aero-zero reference. Default 0."
+                                            >
+                                                tpa_speed_pitch_offset (0.1°)
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="-32768"
+                                                    max="32767"
+                                                    v-model.number="fields.tpa_speed_pitch_offset"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                                 <p v-if="fields.tpa_speed_type === 'ADVANCED'" style="color: #c80">
                                     {{ $t("wingTpaAdvancedHint") }}
@@ -342,117 +360,128 @@
                             <div class="spacer">
                                 <p>{{ $t("wingTpaCurveDesc") }}</p>
                                 <table class="fields">
-                                    <tr>
-                                        <td
-                                            title="Curve shape. HYPERBOLIC is recommended for planes. CLASSIC uses tpa_low_* params (CLI only) instead of this curve. See BF PR #13805."
-                                        >
-                                            tpa_curve_type
-                                        </td>
-                                        <td colspan="2">
-                                            <select v-model="fields.tpa_curve_type" :disabled="loading">
-                                                <option value="CLASSIC">CLASSIC</option>
-                                                <option value="HYPERBOLIC">HYPERBOLIC</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="Throttle % below which PID multiplier stays at pid_thr0. Dashed yellow line on the curve."
-                                        >
-                                            tpa_curve_stall_throttle
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                v-model.number="fields.tpa_curve_stall_throttle"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="range"
-                                                min="0"
-                                                max="100"
-                                                v-model.number="fields.tpa_curve_stall_throttle"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="PID multiplier % at zero throttle / stall. Typical: 200 (2.0×) for planes."
-                                        >
-                                            tpa_curve_pid_thr0
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="1000"
-                                                v-model.number="fields.tpa_curve_pid_thr0"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="range"
-                                                min="0"
-                                                max="1000"
-                                                v-model.number="fields.tpa_curve_pid_thr0"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td title="PID multiplier % at full throttle. Typical: 70 (0.7×) for planes.">
-                                            tpa_curve_pid_thr100
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="1000"
-                                                v-model.number="fields.tpa_curve_pid_thr100"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="range"
-                                                min="0"
-                                                max="1000"
-                                                v-model.number="fields.tpa_curve_pid_thr100"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            title="Curve slope parameter. Divided by 10 in the formula. Values near 10 approach a step; negative values invert curvature."
-                                        >
-                                            tpa_curve_expo
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="-100"
-                                                max="100"
-                                                v-model.number="fields.tpa_curve_expo"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="range"
-                                                min="-100"
-                                                max="100"
-                                                v-model.number="fields.tpa_curve_expo"
-                                                :disabled="loading"
-                                            />
-                                        </td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>{{ $t("wingParameter") }}</th>
+                                            <th>{{ $t("wingValue") }}</th>
+                                            <th>{{ $t("wingSlider") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                title="Curve shape. HYPERBOLIC is recommended for planes. CLASSIC uses tpa_low_* params (CLI only) instead of this curve. See BF PR #13805."
+                                            >
+                                                tpa_curve_type
+                                            </td>
+                                            <td colspan="2">
+                                                <select v-model="fields.tpa_curve_type" :disabled="loading">
+                                                    <option value="CLASSIC">CLASSIC</option>
+                                                    <option value="HYPERBOLIC">HYPERBOLIC</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="Throttle % below which PID multiplier stays at pid_thr0. Dashed yellow line on the curve."
+                                            >
+                                                tpa_curve_stall_throttle
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="100"
+                                                    v-model.number="fields.tpa_curve_stall_throttle"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    v-model.number="fields.tpa_curve_stall_throttle"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="PID multiplier % at zero throttle / stall. Typical: 200 (2.0×) for planes."
+                                            >
+                                                tpa_curve_pid_thr0
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="1000"
+                                                    v-model.number="fields.tpa_curve_pid_thr0"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="1000"
+                                                    v-model.number="fields.tpa_curve_pid_thr0"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="PID multiplier % at full throttle. Typical: 70 (0.7×) for planes."
+                                            >
+                                                tpa_curve_pid_thr100
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="1000"
+                                                    v-model.number="fields.tpa_curve_pid_thr100"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="1000"
+                                                    v-model.number="fields.tpa_curve_pid_thr100"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                title="Curve slope parameter. Divided by 10 in the formula. Values near 10 approach a step; negative values invert curvature."
+                                            >
+                                                tpa_curve_expo
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min="-100"
+                                                    max="100"
+                                                    v-model.number="fields.tpa_curve_expo"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="range"
+                                                    min="-100"
+                                                    max="100"
+                                                    v-model.number="fields.tpa_curve_expo"
+                                                    :disabled="loading"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                                 <!-- TPA curve live preview (HYPERBOLIC math from Limon's PR #13805) -->
                                 <div v-if="fields.tpa_curve_type === 'HYPERBOLIC'" class="curve_container">
@@ -851,14 +880,16 @@ export default defineComponent({
         // Full charge per cell = 4.2V → V×100 / 420 ≈ cell count.
         const detectedCellCount = computed(() => {
             const v = fields.tpa_speed_max_voltage;
-            if (!v) return "";
+            if (!v) {
+                return "";
+            }
             const n = Math.round(v / 420);
             return n >= 2 && n <= 8 ? n : "";
         });
 
         function onCellCountChange(event) {
-            const n = parseInt(event.target.value, 10);
-            if (!isNaN(n)) {
+            const n = Number.parseInt(event.target.value, 10);
+            if (!Number.isNaN(n)) {
                 fields.tpa_speed_max_voltage = n * 420;
             }
         }

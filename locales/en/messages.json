@@ -468,6 +468,9 @@
     "wingValue": {
         "message": "Value"
     },
+    "wingParameter": {
+        "message": "Parameter"
+    },
     "wingSlider": {
         "message": "Slider"
     },
