@@ -167,8 +167,13 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
-                <button type="button" class="save" @click="saveConfig">{{ $t("configurationButtonSave") }}</button>
+            <div class="flex gap-2">
+                <UButton
+                    :label="$t('configurationButtonSave')"
+                    :disabled="!dirty"
+                    :color="dirty ? 'success' : 'neutral'"
+                    @click="saveConfig"
+                />
             </div>
         </div>
     </BaseTab>
@@ -190,7 +195,7 @@ const { t } = useTranslation();
 const { functionRules, mspBaudRates, gpsBaudRates, telemetryBaudRates, blackboxBaudRates, getRules, isRuleDisabled } =
     usePortsRules();
 
-const { ports, analyticsChanges, getPortName, vtxTableNotConfigured } = usePortsState(getRules);
+const { ports, analyticsChanges, getPortName, vtxTableNotConfigured, dirty } = usePortsState(getRules);
 
 const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfiguration(
     ports,

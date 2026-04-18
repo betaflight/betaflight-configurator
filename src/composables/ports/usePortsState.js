@@ -1,4 +1,4 @@
-import { reactive, computed, nextTick, onMounted } from "vue";
+import { reactive, ref, computed, nextTick, onMounted } from "vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -9,6 +9,7 @@ import { useInterval } from "../useInterval";
 export function usePortsState(getRules) {
     const ports = reactive([]);
     const analyticsChanges = reactive({});
+    const savedSnapshot = ref("");
 
     const portIdentifierToNameMapping = {
         0: "UART1",
@@ -70,10 +71,15 @@ export function usePortsState(getRules) {
         FC.SERIAL_CONFIG.ports.forEach((p) => {
             ports.push(transformPortData(p));
         });
+        savedSnapshot.value = JSON.stringify(ports);
         nextTick(() => {
             GUI.content_ready();
         });
     };
+
+    const dirty = computed(() => {
+        return savedSnapshot.value !== "" && JSON.stringify(ports) !== savedSnapshot.value;
+    });
 
     const loadConfig = () => {
         MSP.promise(MSPCodes.MSP_VTX_CONFIG).then(() => {
@@ -102,5 +108,6 @@ export function usePortsState(getRules) {
         analyticsChanges,
         getPortName,
         vtxTableNotConfigured,
+        dirty,
     };
 }
