@@ -14,18 +14,7 @@
                         :firmware-id="FC.CONFIG.flightControllerIdentifier"
                         :hardware-id="FC.CONFIG.hardwareName"
                     ></betaflight-logo>
-                    <div v-if="connectionStore.connectionValid" class="sidebar-disconnect">
-                        <UButton
-                            block
-                            color="error"
-                            variant="soft"
-                            icon="i-lucide-plug"
-                            size="sm"
-                            @click="onDisconnect"
-                        >
-                            {{ $t("disconnect") }}
-                        </UButton>
-                    </div>
+                    <ConnectButton />
                     <div id="tabs">
                         <ul class="mode-disconnected">
                             <li class="tab_landing" id="tab_landing">
@@ -244,7 +233,7 @@
 
 <script setup>
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
-import { useConnectionStore } from "./stores/connection";
+import ConnectButton from "./components/port-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
@@ -258,7 +247,6 @@ import {
     vueTabState,
 } from "./js/vue_tab_mounter.js";
 import { VueTabComponents } from "./js/vue_tab_registry.js";
-import { disconnect } from "./js/serial_backend.js";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
@@ -294,7 +282,6 @@ const MSP = computed(() => currentVm()?.MSP ?? MSPModule);
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
-const connectionStore = useConnectionStore();
 const activeTabInstance = ref(null);
 
 // Read/write current vm via currentVm() so we track the same vm as the globals after window.vm is reassigned.
@@ -307,10 +294,6 @@ const expertMode = computed({
         }
     },
 });
-
-function onDisconnect() {
-    disconnect();
-}
 
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
@@ -358,10 +341,6 @@ watch(
 /* Legacy cache node is required by some code paths but should never be visible in Vue UI */
 #cache {
     display: none;
-}
-
-.sidebar-disconnect {
-    padding: 0.5rem 0;
 }
 
 /* Floating mobile menu trigger — shown only on narrow viewports. */
