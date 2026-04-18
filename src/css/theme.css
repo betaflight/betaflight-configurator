@@ -184,7 +184,8 @@ body[data-theme="contrast"] {
             .ic_wizzard,
             .ic_advanced,
             .ic_mission,
-            .ic_user
+            .ic_user,
+            .ic_wing
         )::before {
         background-color: var(--surface-100);
     }

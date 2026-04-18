@@ -220,7 +220,7 @@
                                 <a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a>
                             </li>
                             <li class="tab_wing_tuning" v-show="FC.CONFIG?.buildOptions?.includes('USE_WING')">
-                                <a href="#" i18n="tabWingTuning" class="tabicon ic_pid" i18n_title="tabWingTuning"></a>
+                                <a href="#" i18n="tabWingTuning" class="tabicon ic_wing" i18n_title="tabWingTuning"></a>
                             </li>
                             <li class="tab_gps" v-show="FC.CONFIG?.buildOptions?.includes('USE_GPS')">
                                 <a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a>
