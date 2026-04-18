@@ -12,60 +12,48 @@
 
             <UiBox type="neutral">
                 <div class="flex flex-wrap items-center gap-x-5 gap-y-2 p-2">
-                    <label class="flex items-center gap-2 text-sm">
-                        <USwitch
-                            v-model="checkboxes[0]"
-                            :disabled="!hasGyro"
-                            size="sm"
-                            @update:model-value="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsGyroSelect')"></span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm">
-                        <USwitch
-                            v-model="checkboxes[1]"
-                            :disabled="!hasAccel"
-                            size="sm"
-                            @update:model-value="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsAccelSelect')"></span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm">
-                        <USwitch
-                            v-model="checkboxes[2]"
-                            :disabled="!hasMag"
-                            size="sm"
-                            @update:model-value="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsMagSelect')"></span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm">
-                        <USwitch
-                            v-model="checkboxes[3]"
-                            :disabled="!hasAltitude"
-                            size="sm"
-                            @update:model-value="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsAltitudeSelect')"></span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm">
-                        <USwitch
-                            v-model="checkboxes[4]"
-                            :disabled="!hasSonar"
-                            size="sm"
-                            @update:model-value="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsSonarSelect')"></span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm">
-                        <USwitch
-                            v-model="checkboxes[5]"
-                            :disabled="!hasDebug"
-                            size="sm"
-                            @update:model-value="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsDebugSelect')"></span>
-                    </label>
+                    <USwitch
+                        v-model="checkboxes[0]"
+                        :disabled="!hasGyro"
+                        size="sm"
+                        :label="$t('sensorsGyroSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[1]"
+                        :disabled="!hasAccel"
+                        size="sm"
+                        :label="$t('sensorsAccelSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[2]"
+                        :disabled="!hasMag"
+                        size="sm"
+                        :label="$t('sensorsMagSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[3]"
+                        :disabled="!hasAltitude"
+                        size="sm"
+                        :label="$t('sensorsAltitudeSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[4]"
+                        :disabled="!hasSonar"
+                        size="sm"
+                        :label="$t('sensorsSonarSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[5]"
+                        :disabled="!hasDebug"
+                        size="sm"
+                        :label="$t('sensorsDebugSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
                 </div>
             </UiBox>
 
