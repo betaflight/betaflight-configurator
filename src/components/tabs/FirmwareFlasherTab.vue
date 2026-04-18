@@ -428,7 +428,7 @@
 
                 <!-- Standalone firmware-loaded banner for local loads (no release info) -->
                 <UiBox
-                    v-if="!state.releaseInfoVisible && state.firmwareLoadedName"
+                    v-if="!state.releaseInfoVisible && state.firmwareLoadedName && state.firmwareLoadedIsLocal"
                     :title="$t('firmwareFlasherFirmwareLoaded')"
                     type="neutral"
                     class="col-span-1"
@@ -857,15 +857,19 @@ export default defineComponent({
             state.configFilename = hasFilename ? filename : null;
         };
 
+        const clearLoadedFirmwareInfo = () => {
+            state.firmwareLoadedName = "";
+            state.firmwareLoadedSize = "";
+            state.firmwareLoadedIsLocal = false;
+        };
+
         const clearBufferedFirmware = () => {
             clearBoardConfig();
             firmwareFlashing.clearFirmwareState();
             state.firmware_type = undefined;
             state.localFirmwareLoaded = false;
             state.filename = null;
-            state.firmwareLoadedName = "";
-            state.firmwareLoadedSize = "";
-            state.firmwareLoadedIsLocal = false;
+            clearLoadedFirmwareInfo();
         };
 
         const showLoadedFirmware = (filename, bytes) => {
@@ -1269,6 +1273,7 @@ export default defineComponent({
 
             if (!state.localFirmwareLoaded) {
                 enableFlashButton(false);
+                clearLoadedFirmwareInfo();
                 flashingMessage($t("firmwareFlasherLoadFirmwareFile"), FLASH_MESSAGE_TYPES.NEUTRAL);
                 if (firmwareFlashing.getParsedHex() && firmwareFlashing.getParsedHex().bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
@@ -1988,6 +1993,7 @@ export default defineComponent({
             enableLoadRemoteFileButton(false);
 
             state.localFirmwareLoaded = false;
+            clearLoadedFirmwareInfo();
             const buildType = state.selectedBuildType;
             state.developmentFirmwareLoaded = buildType > 1;
 
@@ -2012,6 +2018,7 @@ export default defineComponent({
 
         const processFirmwareFile = async (file, extension, data) => {
             state.localFirmwareLoaded = true;
+            state.releaseInfoVisible = false;
             const result = await firmwareFlashing.processFirmware(data, extension, {
                 flashingMessage,
                 enableFlashButton,
