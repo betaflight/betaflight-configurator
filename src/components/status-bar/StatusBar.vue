@@ -19,14 +19,6 @@
                 <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
             </span>
         </span>
-        <span
-            v-if="i2cError > 0"
-            class="stat-group i2c-alert"
-            :title="$t('statusbar_i2c_error_alert', { count: i2cError })"
-        >
-            <UIcon name="i-lucide-circle-alert" class="stat-icon" />
-            <span class="value">{{ i2cError }}</span>
-        </span>
         <div v-if="connectionTimestamp" class="status-indicators">
             <SensorStatus
                 class="status-indicators__sensors"
@@ -104,10 +96,6 @@ export default defineComponent({
             default: null,
         },
         packetError: {
-            type: Number,
-            default: 0,
-        },
-        i2cError: {
             type: Number,
             default: 0,
         },
@@ -284,15 +272,6 @@ export default defineComponent({
 
 .cpu-bar--critical .cpu-bar__fill {
     background-color: var(--error-500);
-}
-
-.i2c-alert {
-    color: var(--error-500);
-}
-
-.i2c-alert .stat-icon {
-    color: var(--error-500);
-    opacity: 1;
 }
 
 .status-indicators {
