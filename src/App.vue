@@ -14,6 +14,18 @@
                         :firmware-id="FC.CONFIG.flightControllerIdentifier"
                         :hardware-id="FC.CONFIG.hardwareName"
                     ></betaflight-logo>
+                    <div v-if="connectionStore.connectionValid" class="sidebar-disconnect">
+                        <UButton
+                            block
+                            color="error"
+                            variant="soft"
+                            icon="i-lucide-plug"
+                            size="sm"
+                            @click="onDisconnect"
+                        >
+                            {{ $t("disconnect") }}
+                        </UButton>
+                    </div>
                     <div id="tabs">
                         <ul class="mode-disconnected">
                             <li class="tab_landing" id="tab_landing">
@@ -200,18 +212,6 @@
                             </li>
                         </ul>
                     </div>
-                    <div v-if="connectionStore.connectionValid" class="sidebar-disconnect">
-                        <UButton
-                            block
-                            color="error"
-                            variant="soft"
-                            icon="i-lucide-plug"
-                            size="sm"
-                            @click="onDisconnect"
-                        >
-                            {{ $t("disconnect") }}
-                        </UButton>
-                    </div>
                     <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
@@ -231,10 +231,6 @@
                 :packet-error="MSP.packet_error"
                 :cycle-time="FC.CONFIG.cycleTime"
                 :cpu-load="FC.CONFIG.cpuload"
-                :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                :firmware-version="FC.CONFIG.flightControllerVersion"
-                :firmware-id="FC.CONFIG.flightControllerIdentifier"
-                :hardware-id="FC.CONFIG.hardwareName"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">
@@ -365,12 +361,7 @@ watch(
 }
 
 .sidebar-disconnect {
-    padding: 0.5rem;
-    margin-top: auto;
-}
-
-.sidebar-disconnect + #user-session-container {
-    margin-top: 0;
+    padding: 0.5rem 0;
 }
 
 /* Floating mobile menu trigger — shown only on narrow viewports. */

@@ -51,18 +51,11 @@
                 :fc-used-size="dataflash.usedSize"
             />
         </div>
-        <StatusBarVersion
-            :configurator-version="configuratorVersion"
-            :firmware-version="firmwareVersion"
-            :firmware-id="firmwareId"
-            :hardware-id="hardwareId"
-        />
     </div>
 </template>
 
 <script>
 import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
-import StatusBarVersion from "./StatusBarVersion.vue";
 import PortUtilization from "./PortUtilization.vue";
 import BatteryIcon from "../quad-status/BatteryIcon.vue";
 import BatteryLegend from "../quad-status/BatteryLegend.vue";
@@ -74,7 +67,6 @@ import FC from "../../js/fc";
 export default defineComponent({
     components: {
         PortUtilization,
-        StatusBarVersion,
         BatteryIcon,
         BatteryLegend,
         BottomStatusIcons,
@@ -105,22 +97,6 @@ export default defineComponent({
         cpuLoad: {
             type: Number,
             default: 0,
-        },
-        configuratorVersion: {
-            type: String,
-            default: "",
-        },
-        firmwareVersion: {
-            type: String,
-            default: "",
-        },
-        firmwareId: {
-            type: String,
-            default: "",
-        },
-        hardwareId: {
-            type: String,
-            default: "",
         },
     },
     setup(props) {
