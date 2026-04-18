@@ -461,16 +461,6 @@ onMounted(async () => {
 
     // Start polling
     initializeTimers();
-
-    // Status polling
-    addInterval(
-        "status_pull",
-        () => {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        },
-        250,
-        true,
-    );
 });
 
 // Interval cleanup is handled automatically by the useInterval composable on unmount
