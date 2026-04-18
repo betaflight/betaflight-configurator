@@ -1,7 +1,7 @@
 <template>
     <BaseTab tab-name="failsafe">
         <div class="content_wrapper">
-            <div class="tab_title !text-xl !mb-2.5" v-html="$t('tabFailsafe')"></div>
+            <div class="tab_title text-xl! mb-2.5!" v-html="$t('tabFailsafe')"></div>
             <div class="cf_doc_version_bt">
                 <WikiButton docUrl="Failsafe" />
             </div>
@@ -124,7 +124,13 @@
                                 class="min-w-40 mb-3"
                             />
 
-                            <img v-if="procedureImage" :src="procedureImage" class="h-24 opacity-70 mb-3" />
+                            <img
+                                v-if="procedureImage"
+                                :src="procedureImage"
+                                alt=""
+                                aria-hidden="true"
+                                class="h-24 opacity-70 mb-3"
+                            />
 
                             <!-- Land settings -->
                             <div v-if="failsafeConfig.failsafe_procedure === 0" class="flex flex-col gap-2">
