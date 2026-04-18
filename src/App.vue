@@ -182,7 +182,7 @@
                             </li>
                         </ul>
                         <ul class="mode-shared">
-                            <li class="tab_log">
+                            <li class="tab_log" v-show="expertMode">
                                 <a href="#" i18n="tabLog" class="tabicon ic_log" i18n_title="tabLog"></a>
                             </li>
                         </ul>
