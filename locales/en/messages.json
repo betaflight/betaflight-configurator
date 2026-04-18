@@ -113,6 +113,14 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Simulate a flight controller without hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Enter the serial path or URL to connect to.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },

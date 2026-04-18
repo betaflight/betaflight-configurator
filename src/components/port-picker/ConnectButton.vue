@@ -35,18 +35,28 @@
                 />
             </UDropdownMenu>
         </UFieldGroup>
+        <ConnectOptionsDialog
+            v-model="dialogOpen"
+            :mode="dialogMode"
+            :initial-version="portPicker.virtualMspVersion"
+            :initial-port-override="portPicker.portOverride"
+            @confirm="onDialogConfirm"
+        />
     </div>
 </template>
 
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { useConnectionStore } from "../../stores/connection";
 import PortHandler from "../../js/port_handler";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
+import { set as setConfig } from "../../js/ConfigStorage";
+import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 
 export default defineComponent({
     name: "ConnectButton",
+    components: { ConnectOptionsDialog },
     setup() {
         const connectionStore = useConnectionStore();
 
@@ -75,9 +85,29 @@ export default defineComponent({
             return selectedDisplayName.value ?? i18n.getMessage("connect");
         });
 
+        const dialogOpen = ref(false);
+        const dialogMode = ref("virtual");
+        const portPicker = computed(() => PortHandler.portPicker);
+
         function selectAndConnect(path) {
             PortHandler.portPicker.selectedPort = path;
             connectDisconnect();
+        }
+
+        function openConnectDialog(mode) {
+            dialogMode.value = mode;
+            dialogOpen.value = true;
+        }
+
+        function onDialogConfirm({ mode, version, portOverride }) {
+            if (mode === "virtual") {
+                PortHandler.portPicker.virtualMspVersion = version;
+                selectAndConnect("virtual");
+            } else {
+                PortHandler.portPicker.portOverride = portOverride;
+                setConfig({ portOverride });
+                selectAndConnect("manual");
+            }
         }
 
         const menuItems = computed(() => {
@@ -116,14 +146,14 @@ export default defineComponent({
                 devices.push({
                     label: i18n.getMessage("portsSelectVirtual"),
                     icon: "i-lucide-flask-conical",
-                    onSelect: () => selectAndConnect("virtual"),
+                    onSelect: () => openConnectDialog("virtual"),
                 });
             }
             if (PortHandler.showManualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
-                    onSelect: () => selectAndConnect("manual"),
+                    onSelect: () => openConnectDialog("manual"),
                 });
             }
 
@@ -188,8 +218,12 @@ export default defineComponent({
             portPickerDisabled,
             mainLabel,
             menuItems,
+            dialogOpen,
+            dialogMode,
+            portPicker,
             onConnectClick,
             onDisconnectClick,
+            onDialogConfirm,
         };
     },
 });
