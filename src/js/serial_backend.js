@@ -130,66 +130,78 @@ export function disconnect() {
     beginDisconnect();
 }
 
+function canStartConnectionAction(selectedPort) {
+    return !GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb");
+}
+
+function beginConnect(selectedPort) {
+    // prevent connection when we do not have permission
+    if (selectedPort.startsWith("requestpermission")) {
+        return;
+    }
+
+    // When rebooting, adhere to the auto-connect setting
+    if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
+        console.log(`${logHead} Rebooting, not connecting`);
+        return;
+    }
+
+    const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
+
+    console.log(`${logHead} Connecting to: ${portName}`);
+    GUI.connecting_to = portName;
+
+    // lock port select & baud while we are connecting / connected
+    PortHandler.portPickerDisabled = true;
+
+    // Set up event listeners for non-virtual connections
+    if (selectedPort !== "virtual") {
+        serial.removeEventListener("connect", connectHandler);
+        serial.addEventListener("connect", connectHandler);
+
+        serial.removeEventListener("disconnect", disconnectHandler);
+        serial.addEventListener("disconnect", disconnectHandler);
+    }
+
+    serial.connect(
+        portName,
+        { baudRate: PortHandler.portPicker.selectedBauds },
+        selectedPort === "virtual" ? onOpenVirtual : undefined,
+    );
+    console.log("Press Ctrl+I to open CLI panel");
+}
+
+function isCliHotkey(e) {
+    return e.code === "KeyI" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+}
+
+function registerCliHotkey() {
+    document.onkeydown = function (e) {
+        if (!isCliHotkey(e)) {
+            return;
+        }
+        if (serial.connected && GUI.active_tab !== "cli" && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            GUI.showCliPanel();
+        }
+    };
+}
+
 export function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
-
-    if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb")) {
-        // GUI control overrides the user control
-
-        GUI.configuration_loaded = false;
-
-        if (isConnected) {
-            beginDisconnect();
-        } else {
-            // prevent connection when we do not have permission
-            if (selectedPort.startsWith("requestpermission")) {
-                return;
-            }
-
-            // When rebooting, adhere to the auto-connect setting
-            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
-                console.log(`${logHead} Rebooting, not connecting`);
-                return;
-            }
-
-            const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
-
-            console.log(`${logHead} Connecting to: ${portName}`);
-            GUI.connecting_to = portName;
-
-            // lock port select & baud while we are connecting / connected
-            PortHandler.portPickerDisabled = true;
-
-            // Set up event listeners for non-virtual connections
-            if (selectedPort !== "virtual") {
-                serial.removeEventListener("connect", connectHandler);
-                serial.addEventListener("connect", connectHandler);
-
-                serial.removeEventListener("disconnect", disconnectHandler);
-                serial.addEventListener("disconnect", disconnectHandler);
-            }
-
-            serial.connect(
-                portName,
-                { baudRate: PortHandler.portPicker.selectedBauds },
-                selectedPort === "virtual" ? onOpenVirtual : undefined,
-            );
-            console.log("Press Ctrl+I to open CLI panel");
-        }
-
-        // show CLI panel on Control+I
-        document.onkeydown = function (e) {
-            if (e.code === "KeyI" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
-                if (
-                    serial.connected &&
-                    GUI.active_tab !== "cli" &&
-                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
-                ) {
-                    GUI.showCliPanel();
-                }
-            }
-        };
+    if (!canStartConnectionAction(selectedPort)) {
+        return;
     }
+
+    // GUI control overrides the user control
+    GUI.configuration_loaded = false;
+
+    if (isConnected) {
+        beginDisconnect();
+    } else {
+        beginConnect(selectedPort);
+    }
+
+    registerCliHotkey();
 }
 
 // Helper to show/hide elements used across this module (extracted to avoid duplicate functions)

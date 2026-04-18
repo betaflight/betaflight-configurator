@@ -22,7 +22,7 @@
                     size="2xl"
                     class="rounded-full connection-button"
                     :color="connectionStore.connectionValid ? 'error' : 'success'"
-                    @click="onConnectClick"
+                    @click="connectDisconnect"
                 />
             </div>
             <div class="content_top">
@@ -164,10 +164,6 @@ export default defineComponent({
         const showUsb = computed(() => PortHandler.showUsbOption);
         const portPickerDisabled = computed(() => PortHandler.portPickerDisabled);
 
-        function onConnectClick() {
-            connectDisconnect();
-        }
-
         onMounted(() => {
             GUI.content_ready();
         });
@@ -187,7 +183,7 @@ export default defineComponent({
             showSerial,
             showUsb,
             portPickerDisabled,
-            onConnectClick,
+            connectDisconnect,
         };
     },
 });
