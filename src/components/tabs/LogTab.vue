@@ -11,17 +11,18 @@
                     variant="soft"
                     @click="onClear"
                 />
-                <label class="log-autoscroll">
-                    <input type="checkbox" v-model="autoScroll" />
-                    <span v-html="$t('logAutoScroll')"></span>
-                </label>
+                <div class="log-autoscroll">
+                    <USwitch v-model="autoScroll" size="sm" :label="$t('logAutoScroll')" />
+                </div>
             </div>
-            <div ref="scrollArea" class="log-scroll">
-                <p v-for="entry in entries" :key="entry.id" class="log-entry">
-                    <span class="log-timestamp">{{ entry.timestamp }}</span>
-                    <span class="log-message">{{ entry.message }}</span>
-                </p>
-            </div>
+            <UiBox class="log-box">
+                <div ref="scrollArea" class="log-scroll">
+                    <p v-for="entry in entries" :key="entry.id" class="log-entry">
+                        <span class="log-timestamp">{{ entry.timestamp }}</span>
+                        <span class="log-message">{{ entry.message }}</span>
+                    </p>
+                </div>
+            </UiBox>
         </div>
     </BaseTab>
 </template>
@@ -29,6 +30,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
+import UiBox from "../elements/UiBox.vue";
 import { useLogStore } from "../../stores/log";
 import GUI from "../../js/gui";
 
@@ -84,18 +86,27 @@ onMounted(() => {
 .log-autoscroll {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.5rem;
     font-size: 12px;
     color: var(--text);
+}
+
+.log-box {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.log-box :deep(> div:last-child) {
+    flex: 1;
+    min-height: 0;
+    padding: 0;
 }
 
 .log-scroll {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    background-color: var(--surface-100);
-    border: 1px solid var(--surface-400);
-    border-radius: 0.5rem;
     padding: 0.75rem 1rem;
     font-family: "Courier New", Courier, monospace;
     font-size: 12px;
