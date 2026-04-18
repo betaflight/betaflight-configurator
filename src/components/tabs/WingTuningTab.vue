@@ -145,15 +145,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Pitch</td>
+                                        <tr v-for="axis in ['pitch', 'roll', 'yaw']" :key="axis">
+                                            <td>{{ axis.charAt(0).toUpperCase() + axis.slice(1) }}</td>
                                             <td>
                                                 <input
                                                     type="number"
                                                     min="0"
                                                     :max="PID_GAIN_MAX"
-                                                    v-model.number="fields.s_pitch"
-                                                    :disabled="loading"
+                                                    v-model.number="fields[`s_${axis}`]"
+                                                    :disabled="loading || (axis === 'yaw' && diffThrustMode)"
                                                 />
                                             </td>
                                             <td>
@@ -161,50 +161,8 @@
                                                     type="range"
                                                     min="0"
                                                     :max="PID_GAIN_MAX"
-                                                    v-model.number="fields.s_pitch"
-                                                    :disabled="loading"
-                                                />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Roll</td>
-                                            <td>
-                                                <input
-                                                    type="number"
-                                                    min="0"
-                                                    :max="PID_GAIN_MAX"
-                                                    v-model.number="fields.s_roll"
-                                                    :disabled="loading"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="range"
-                                                    min="0"
-                                                    :max="PID_GAIN_MAX"
-                                                    v-model.number="fields.s_roll"
-                                                    :disabled="loading"
-                                                />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Yaw</td>
-                                            <td>
-                                                <input
-                                                    type="number"
-                                                    min="0"
-                                                    :max="PID_GAIN_MAX"
-                                                    v-model.number="fields.s_yaw"
-                                                    :disabled="loading || diffThrustMode"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="range"
-                                                    min="0"
-                                                    :max="PID_GAIN_MAX"
-                                                    v-model.number="fields.s_yaw"
-                                                    :disabled="loading || diffThrustMode"
+                                                    v-model.number="fields[`s_${axis}`]"
+                                                    :disabled="loading || (axis === 'yaw' && diffThrustMode)"
                                                 />
                                             </td>
                                         </tr>
