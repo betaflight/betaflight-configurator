@@ -102,6 +102,7 @@ export default defineComponent({
         function onDialogConfirm({ mode, version, portOverride }) {
             if (mode === "virtual") {
                 PortHandler.portPicker.virtualMspVersion = version;
+                setConfig({ virtualMspVersion: version });
                 selectAndConnect("virtual");
             } else {
                 PortHandler.portPicker.portOverride = portOverride;
