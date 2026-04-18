@@ -1,5 +1,5 @@
 <template>
-    <div class="sensor-status">
+    <div class="sensor-status" :class="{ 'sensor-status--compact': compact }">
         <ul>
             <li class="gyro" :title="$t('sensorStatusGyro')" :class="{ on: setGyroActive }">
                 <div class="gyroicon" :class="{ active: setGyroActive }">
@@ -48,6 +48,7 @@ import { bit_check } from "../../js/bit";
 const props = defineProps({
     sensorsDetected: { type: Number, default: 0 },
     gpsFixState: { type: Number, default: 0 },
+    compact: { type: Boolean, default: false },
 });
 
 function haveSensor(sensorsDetected, sensorCode) {
@@ -220,5 +221,33 @@ div {
 .sonaricon.active {
     color: #818181;
     background-image: url(../../images/icons/sensor_sonar_on.png);
+}
+
+.sensor-status--compact {
+    background-color: transparent;
+    display: inline-block;
+}
+
+.sensor-status--compact li {
+    width: 2rem;
+    height: auto;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin-right: 0.25rem;
+}
+
+.sensor-status--compact .gyroicon,
+.sensor-status--compact .accicon,
+.sensor-status--compact .magicon,
+.sensor-status--compact .baroicon,
+.sensor-status--compact .gpsicon,
+.sensor-status--compact .sonaricon {
+    padding-top: 1.4rem;
+    height: 0;
+    background-size: 22px;
+    background-position: center 0;
+    font-size: 9px;
+    margin-top: 0;
 }
 </style>

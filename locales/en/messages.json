@@ -482,6 +482,10 @@
         "message": "I2C error detected (+{{delta}}, total {{total}})",
         "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
     },
+    "statusbar_i2c_error_alert": {
+        "message": "I2C errors detected: {{count}}",
+        "description": "Tooltip shown in the status bar when the flight controller is reporting I2C bus errors."
+    },
     "logActionClear": {
         "message": "Clear"
     },

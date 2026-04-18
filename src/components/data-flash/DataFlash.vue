@@ -1,5 +1,5 @@
 <template>
-    <div class="data-flash">
+    <div class="data-flash" :class="{ 'data-flash--compact': compact }">
         <div v-if="!supportDataflash" class="noflash_global">
             {{ $t("sensorDataFlashNotFound") }}
         </div>
@@ -25,6 +25,7 @@ import { computed } from "vue";
 const props = defineProps({
     fcTotalSize: { type: Number, default: 100000 },
     fcUsedSize: { type: Number, default: 82000 },
+    compact: { type: Boolean, default: false },
 });
 
 const supportDataflash = computed(() => props.fcTotalSize > 0);
@@ -103,5 +104,51 @@ const indicatorWidth = computed(() =>
     width: 120px;
     text-align: left;
     color: silver;
+}
+
+.data-flash--compact {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    width: auto;
+    min-width: 140px;
+    height: auto;
+    padding: 0.25rem 0.5rem;
+    background-image: none;
+    color: var(--text);
+    font-size: 11px;
+}
+
+.data-flash--compact .dataflash-contents_global {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: var(--surface-500);
+    border-radius: 3px;
+    overflow: hidden;
+    height: 4px;
+    width: 100%;
+}
+
+.data-flash--compact .dataflash-contents_global div {
+    height: 4px;
+    border-radius: 3px 0 0 3px;
+    box-shadow: none;
+}
+
+.data-flash--compact .dataflash-contents_global div span {
+    position: static;
+    display: block;
+    color: var(--text);
+    width: auto;
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+}
+
+.data-flash--compact .noflash_global {
+    margin: 0;
+    text-align: left;
+    color: var(--text);
 }
 </style>

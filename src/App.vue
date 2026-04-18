@@ -229,6 +229,7 @@
                 :port-usage-up="PortUsage.port_usage_up"
                 :connection-timestamp="CONNECTION.timestamp"
                 :packet-error="MSP.packet_error"
+                :i2c-error="FC.CONFIG.i2cError"
                 :cycle-time="FC.CONFIG.cycleTime"
                 :cpu-load="FC.CONFIG.cpuload"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"

@@ -1,5 +1,4 @@
 import "../injected_methods";
-import { update_dataflash_global } from "../update_dataflash_global";
 import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
@@ -1470,7 +1469,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.DATAFLASH.totalSize = 0;
                         FC.DATAFLASH.usedSize = 0;
                     }
-                    update_dataflash_global();
                     break;
                 case MSPCodes.MSP_DATAFLASH_READ:
                     // No-op, let callback handle it
@@ -1486,7 +1484,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SDCARD.filesystemLastError = data.readU8();
                     FC.SDCARD.freeSizeKB = data.readU32();
                     FC.SDCARD.totalSizeKB = data.readU32();
-                    update_dataflash_global();
                     break;
                 case MSPCodes.MSP_BLACKBOX_CONFIG:
                     FC.BLACKBOX.supported = (data.readU8() & 1) != 0;

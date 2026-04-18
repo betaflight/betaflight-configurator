@@ -19,23 +19,43 @@
                 <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
             </span>
         </span>
+        <span
+            v-if="i2cError > 0"
+            class="stat-group i2c-alert"
+            :title="$t('statusbar_i2c_error_alert', { count: i2cError })"
+        >
+            <UIcon name="i-lucide-circle-alert" class="stat-icon" />
+            <span class="value">{{ i2cError }}</span>
+        </span>
         <div v-if="connectionTimestamp" class="status-indicators">
-            <SensorStatus :sensors-detected="fcConfig.activeSensors ?? 0" :gps-fix-state="gps.fix ?? 0" />
+            <SensorStatus
+                class="status-indicators__sensors"
+                compact
+                :sensors-detected="fcConfig.activeSensors ?? 0"
+                :gps-fix-state="gps.fix ?? 0"
+            />
             <BatteryIcon
+                compact
                 :voltage="analog.voltage ?? 0"
                 :vbatmincellvoltage="batteryConfig.vbatmincellvoltage ?? 0"
                 :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
                 :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
                 :battery-state="batteryState.batteryState"
             />
-            <BatteryLegend :voltage="analog.voltage ?? 0" :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1" />
+            <BatteryLegend
+                compact
+                :voltage="analog.voltage ?? 0"
+                :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
+            />
             <BottomStatusIcons
+                compact
                 :last-received-timestamp="analog.last_received_timestamp ?? 0"
                 :mode="fcConfig.mode ?? 0"
                 :aux-config="auxConfig"
             />
             <DataFlash
                 v-if="dataflashSupported"
+                compact
                 :fc-total-size="dataflash.totalSize"
                 :fc-used-size="dataflash.usedSize"
             />
@@ -84,6 +104,10 @@ export default defineComponent({
             default: null,
         },
         packetError: {
+            type: Number,
+            default: 0,
+        },
+        i2cError: {
             type: Number,
             default: 0,
         },
@@ -262,128 +286,26 @@ export default defineComponent({
     background-color: var(--error-500);
 }
 
+.i2c-alert {
+    color: var(--error-500);
+}
+
+.i2c-alert .stat-icon {
+    color: var(--error-500);
+    opacity: 1;
+}
+
 .status-indicators {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.status-indicators :deep(.sensor-status) {
-    background-color: transparent;
-}
-
-.status-indicators :deep(.sensor-status li) {
-    width: 2rem;
-}
-
-.status-indicators :deep(.sensor-status .gyroicon),
-.status-indicators :deep(.sensor-status .accicon),
-.status-indicators :deep(.sensor-status .magicon),
-.status-indicators :deep(.sensor-status .baroicon),
-.status-indicators :deep(.sensor-status .gpsicon),
-.status-indicators :deep(.sensor-status .sonaricon) {
-    padding-top: 1.4rem;
-    height: 0;
-    background-size: 22px;
-    background-position: center 0;
-    font-size: 9px;
-    margin-top: 0;
-}
-
-/* Neutralise margins/sizes that were tuned for the legacy header bar. */
-.status-indicators :deep(.battery-icon) {
-    margin-top: 0;
-    margin-left: 0;
-    height: 24px;
-    width: 48px;
-}
-
-.status-indicators :deep(.quad-status-contents) {
-    margin-top: 8px;
-    margin-left: 10px;
-    width: 26px;
-    height: 8px;
-}
-
-.status-indicators :deep(.battery-status) {
-    height: 9px;
-}
-
-.status-indicators :deep(.battery-legend) {
-    position: static;
-    display: inline-block;
-    margin: 0;
-    padding: 0 0.25rem;
-    width: auto;
-    color: var(--text);
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.status-indicators :deep(.bottomStatusIcons) {
-    height: auto;
-    max-width: none;
-    margin: 0;
-    padding: 0.1rem 0.25rem;
-    background-color: transparent;
-    border-radius: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.status-indicators :deep(.bottomStatusIcons .armedicon),
-.status-indicators :deep(.bottomStatusIcons .failsafeicon),
-.status-indicators :deep(.bottomStatusIcons .linkicon) {
-    margin: 0;
-    height: 16px;
-    width: 16px;
-}
-
-.status-indicators :deep(.data-flash) {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.25rem;
-    width: auto;
-    min-width: 140px;
-    height: auto;
-    padding: 0.25rem 0.5rem;
-    background-image: none;
-    color: var(--text);
-    font-size: 11px;
-}
-
-.status-indicators :deep(.dataflash-contents_global) {
-    margin: 0;
-    padding: 0;
-    border: none;
-    background-color: var(--surface-500);
-    border-radius: 3px;
-    overflow: hidden;
-    height: 4px;
-    width: 100%;
-}
-
-.status-indicators :deep(.dataflash-contents_global div) {
-    height: 4px;
-    border-radius: 3px 0 0 3px;
-    box-shadow: none;
-}
-
-.status-indicators :deep(.dataflash-contents_global div span) {
-    position: static;
-    display: block;
-    color: var(--text);
-    width: auto;
-    margin-bottom: 0.15rem;
-    white-space: nowrap;
-}
-
-.status-indicators :deep(.noflash_global) {
-    margin: 0;
-    text-align: left;
-    color: var(--text);
+/* Hide the sensor-icon row on narrower viewports so the status bar does not crowd. */
+@media all and (max-width: 1100px) {
+    .status-indicators__sensors {
+        display: none;
+    }
 }
 
 #status-bar > * ~ * {
