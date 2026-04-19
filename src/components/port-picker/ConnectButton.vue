@@ -5,7 +5,7 @@
             block
             color="error"
             variant="soft"
-            icon="i-lucide-plug"
+            icon="i-lucide-link-2-off"
             size="sm"
             :loading="connecting"
             :title="$t('disconnect')"
@@ -19,7 +19,7 @@
                 block
                 color="success"
                 variant="soft"
-                icon="i-lucide-plug"
+                icon="i-lucide-link-2"
                 :loading="connecting"
                 :disabled="portPickerDisabled"
                 :title="mainLabel"

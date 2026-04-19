@@ -1,18 +1,20 @@
 <template>
-    <Dialog v-model="open" :title="title">
-        <div class="connect-options">
-            <p class="connect-options__help">
-                {{ mode === "virtual" ? $t("connectVirtualDescription") : $t("connectManualDescription") }}
-            </p>
-            <label v-if="mode === 'virtual'" class="connect-options__field">
-                <span>{{ $t("virtualMSPVersion") }}</span>
-                <USelect v-model="version" :items="firmwareVersions" size="sm" :ui="{ content: 'max-h-96' }" />
-            </label>
-            <label v-else class="connect-options__field">
-                <span>{{ $t("portOverrideText") }}</span>
-                <UInput v-model="portOverride" size="sm" autofocus />
-            </label>
-        </div>
+    <UModal v-model:open="open" :title="title">
+        <template #body>
+            <div class="connect-options">
+                <p class="connect-options__help">
+                    {{ mode === "virtual" ? $t("connectVirtualDescription") : $t("connectManualDescription") }}
+                </p>
+                <label v-if="mode === 'virtual'" class="connect-options__field">
+                    <span>{{ $t("virtualMSPVersion") }}</span>
+                    <USelect v-model="version" :items="firmwareVersions" size="sm" :ui="{ content: 'max-h-96' }" />
+                </label>
+                <label v-else class="connect-options__field">
+                    <span>{{ $t("portOverrideText") }}</span>
+                    <UInput v-model="portOverride" size="sm" autofocus />
+                </label>
+            </div>
+        </template>
         <template #footer>
             <div class="connect-options__actions">
                 <UButton color="neutral" variant="soft" size="sm" @click="onCancel">
@@ -23,12 +25,11 @@
                 </UButton>
             </div>
         </template>
-    </Dialog>
+    </UModal>
 </template>
 
 <script>
 import { computed, defineComponent, ref, watch } from "vue";
-import Dialog from "../elements/Dialog.vue";
 import { i18n } from "../../js/localization";
 
 const FIRMWARE_VERSIONS = [
@@ -41,7 +42,6 @@ const FIRMWARE_VERSIONS = [
 
 export default defineComponent({
     name: "ConnectOptionsDialog",
-    components: { Dialog },
     props: {
         modelValue: { type: Boolean, default: false },
         mode: { type: String, default: "virtual" },
