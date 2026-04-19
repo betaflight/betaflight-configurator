@@ -11,11 +11,11 @@
                     <div>{{ $t("adjustmentsColumnIsInRange") }}</div>
                     <div>{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
                     <div>{{ $t("adjustmentsColumnViaChannel") }}</div>
-                    <div class="flex items-center gap-1">
+                    <div>
                         {{ $t("adjustmentsColumnAdjustmentCenter") }}
                         <HelpIcon :text="$t('adjustmentsCenterHelp')" />
                     </div>
-                    <div class="flex items-center gap-1">
+                    <div>
                         {{ $t("adjustmentsColumnAdjustmentScale") }}
                         <HelpIcon :text="$t('adjustmentsScaleHelp')" />
                     </div>
@@ -85,6 +85,7 @@
                                 :items="sortedFunctions"
                                 :disabled="!adjustment.enabled"
                                 searchable
+                                class="w-full"
                             />
                         </div>
 
@@ -183,7 +184,7 @@ onMounted(async () => {
 .adjustments-header,
 .adjustment {
     display: grid;
-    grid-template-columns: 3.5rem 5rem 1fr 7rem 5rem 4.5rem 4.5rem;
+    grid-template-columns: 3.5rem 5rem 1fr 13rem 5rem 4.5rem 4.5rem;
     gap: 12px;
     padding: 12px 16px;
 }
@@ -202,21 +203,11 @@ onMounted(async () => {
 .adjustments-list {
     display: flex;
     flex-direction: column;
-    gap: 1px;
-    background: var(--surface-600);
 }
 
 .adjustment {
-    background: var(--surface-200);
+    background: transparent;
     align-items: center;
-}
-
-.adjustment:hover {
-    background: var(--surface-750);
-}
-
-.adjustment:nth-child(even) {
-    background: var(--surface-300);
 }
 
 .adjustment-disabled {
