@@ -27,11 +27,16 @@
             >
                 <span class="sidebar-connect__label">{{ mainLabel }}</span>
             </UButton>
-            <UDropdownMenu :items="menuItems" :content="{ align: 'end', side: 'top' }" :ui="{ content: 'max-h-96' }">
+            <UDropdownMenu
+                v-slot="{ open }"
+                :items="menuItems"
+                :content="{ align: 'end', side: 'top' }"
+                :ui="{ content: 'max-h-96' }"
+            >
                 <UButton
                     color="success"
                     variant="soft"
-                    icon="i-lucide-chevron-up"
+                    :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                     square
                     :disabled="portPickerDisabled"
                     :aria-label="$t('connect')"
