@@ -7,10 +7,10 @@
             </div>
 
             <div class="require-support">
-                <div class="note">
+                <UiBox type="warning" highlight class="mb-4">
                     <p v-html="$t('portsHelp')"></p>
                     <p v-html="$t('portsMSPHelp')"></p>
-                </div>
+                </UiBox>
 
                 <UiBox v-if="vtxTableNotConfigured" type="warning" highlight class="mb-4">
                     <p v-html="$t('portsVtxTableNotSet')"></p>
@@ -18,7 +18,7 @@
 
                 <!-- Desktop: grid table (hidden below 768px) -->
                 <div class="max-[1010px]:hidden mt-4">
-                    <div class="grid grid-cols-[auto_auto_auto_auto_auto_auto] justify-between text-sm">
+                    <div class="grid grid-cols-[auto_auto_auto_auto_auto_auto] justify-between text-xs">
                         <!-- Header -->
                         <div class="p-2 font-semibold" v-html="$t('portsIdentifier')"></div>
                         <div class="p-2 font-semibold" v-html="$t('portsConfiguration')"></div>
@@ -39,13 +39,13 @@
 
                             <!-- Configuration (MSP) -->
                             <div class="flex items-center gap-2 p-1.5">
-                                <USwitch v-model="port.msp" :disabled="port.identifier === 20" size="sm" />
+                                <USwitch v-model="port.msp" :disabled="port.identifier === 20" />
                                 <USelect v-model="port.msp_baudrate" :items="mspBaudItems" size="xs" />
                             </div>
 
                             <!-- Serial RX -->
                             <div class="flex items-center justify-center p-1.5">
-                                <USwitch v-model="port.rxSerial" size="sm" />
+                                <USwitch v-model="port.rxSerial" size="xs" />
                             </div>
 
                             <!-- Telemetry -->
@@ -54,6 +54,7 @@
                                     :model-value="portFieldGet(port, 'telemetry')"
                                     :items="telemetryItems"
                                     size="xs"
+                                    class="min-w-22"
                                     @update:model-value="
                                         portFieldSet(port, 'telemetry', $event);
                                         onTelemetryChange(port);
@@ -68,6 +69,7 @@
                                     :model-value="portFieldGet(port, 'sensor')"
                                     :items="sensorItems"
                                     size="xs"
+                                    class="min-w-22"
                                     @update:model-value="portFieldSet(port, 'sensor', $event)"
                                 />
                                 <USelect v-model="port.gps_baudrate" :items="gpsBaudItems" size="xs" />
@@ -79,7 +81,7 @@
                                     :model-value="portFieldGet(port, 'peripheral')"
                                     :items="peripheralItems"
                                     size="xs"
-                                    class="min-w-44"
+                                    class="min-w-48"
                                     @update:model-value="
                                         portFieldSet(port, 'peripheral', $event);
                                         onPeripheralChange(port);
