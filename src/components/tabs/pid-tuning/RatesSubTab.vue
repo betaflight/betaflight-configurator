@@ -1762,12 +1762,13 @@ onMounted(() => {
         updateRatesLabels();
     });
 
-    // Poll MSP_RC for live stick data and update rate curve labels
+    // Poll MSP_RC for live stick data and update rate curve labels + throttle curve
     rcUpdateInterval = setInterval(() => {
         MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
             if (rateCurveLayer1.value) {
                 updateRatesLabels();
             }
+            drawThrottleCurve();
         });
     }, 100); // Update 10 times per second
 });
