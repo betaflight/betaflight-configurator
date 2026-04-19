@@ -57,6 +57,11 @@ import { i18n } from "../../js/localization";
 import { set as setConfig } from "../../js/ConfigStorage";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 
+function selectAndConnect(path) {
+    PortHandler.portPicker.selectedPort = path;
+    connectDisconnect();
+}
+
 export default defineComponent({
     name: "ConnectButton",
     components: { ConnectOptionsDialog },
@@ -91,11 +96,6 @@ export default defineComponent({
         const dialogOpen = ref(false);
         const dialogMode = ref("virtual");
         const portPicker = computed(() => PortHandler.portPicker);
-
-        function selectAndConnect(path) {
-            PortHandler.portPicker.selectedPort = path;
-            connectDisconnect();
-        }
 
         function openConnectDialog(mode) {
             dialogMode.value = mode;
@@ -162,8 +162,7 @@ export default defineComponent({
             }
 
             if (devices.length) {
-                items.push(...devices);
-                items.push({ type: "separator" });
+                items.push(...devices, { type: "separator" });
             }
 
             if (PortHandler.showSerialOption) {
@@ -212,10 +211,6 @@ export default defineComponent({
             connectDisconnect();
         }
 
-        function onDisconnectClick() {
-            disconnect();
-        }
-
         return {
             isConnected,
             connecting,
@@ -226,7 +221,7 @@ export default defineComponent({
             dialogMode,
             portPicker,
             onConnectClick,
-            onDisconnectClick,
+            onDisconnectClick: disconnect,
             onDialogConfirm,
         };
     },

@@ -3,19 +3,29 @@
         <div v-if="!supportDataflash" class="noflash_global">
             {{ $t("sensorDataFlashNotFound") }}
         </div>
-        <div v-if="supportDataflash" class="dataflash-contents_global">
-            <div
-                class="dataflash-free_global"
-                :style="{
-                    width: indicatorWidth,
-                }"
-            >
-                <span>
-                    {{ $t("sensorDataFlashFreeSpace") }}
-                    {{ freeSpace }}
-                </span>
+        <template v-else>
+            <UIcon
+                v-if="compact"
+                name="i-lucide-database"
+                class="dataflash-icon"
+                :title="$t('sensorDataFlashFreeSpace')"
+            />
+            <div class="dataflash-contents_global">
+                <div
+                    class="dataflash-free_global"
+                    :class="usageClass"
+                    :style="{
+                        width: indicatorWidth,
+                    }"
+                >
+                    <span v-if="!compact">
+                        {{ $t("sensorDataFlashFreeSpace") }}
+                        {{ freeSpace }}
+                    </span>
+                </div>
             </div>
-        </div>
+            <span v-if="compact" class="dataflash-free-label">{{ freeSpace }}</span>
+        </template>
     </div>
 </template>
 
@@ -53,9 +63,21 @@ const freeSpace = computed(() => {
     return `${gigabytes.toFixed(1)}GB`;
 });
 
-const indicatorWidth = computed(() =>
-    supportDataflash.value ? `${Math.min((props.fcUsedSize / props.fcTotalSize) * 100, 100)}%` : "0%",
+const usagePercent = computed(() =>
+    supportDataflash.value ? Math.min((props.fcUsedSize / props.fcTotalSize) * 100, 100) : 0,
 );
+
+const indicatorWidth = computed(() => `${usagePercent.value}%`);
+
+const usageClass = computed(() => {
+    if (usagePercent.value >= 85) {
+        return "dataflash-free_global--critical";
+    }
+    if (usagePercent.value >= 60) {
+        return "dataflash-free_global--warning";
+    }
+    return "dataflash-free_global--ok";
+});
 </script>
 
 <style scoped>
@@ -97,6 +119,18 @@ const indicatorWidth = computed(() =>
     display: block;
     background-color: var(--primary-500);
 }
+
+.dataflash-contents_global div.dataflash-free_global--ok {
+    background-color: var(--success-500);
+}
+
+.dataflash-contents_global div.dataflash-free_global--warning {
+    background-color: var(--warning-500);
+}
+
+.dataflash-contents_global div.dataflash-free_global--critical {
+    background-color: var(--error-500);
+}
 .dataflash-contents_global div span {
     position: absolute;
     top: -18px;
@@ -108,46 +142,51 @@ const indicatorWidth = computed(() =>
 
 .data-flash--compact {
     display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.25rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
     width: auto;
     min-width: 156px;
     height: auto;
-    padding: 0.75rem 0.5rem 0.5rem;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
     background-image: none;
     color: var(--text);
     font-size: 11px;
 }
 
+.data-flash--compact .dataflash-icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    opacity: 0.75;
+}
+
 .data-flash--compact .dataflash-contents_global {
-    position: relative;
-    margin: 1rem 0 0;
+    flex: 1 1 auto;
+    margin: 0;
     padding: 0;
     border: none;
     background-color: var(--surface-500);
     border-radius: 3px;
-    overflow: visible;
-    height: 4px;
-    width: 100%;
+    overflow: hidden;
+    height: 9px;
+    width: auto;
 }
 
 .data-flash--compact .dataflash-contents_global div {
-    height: 4px;
+    height: 9px;
     border-radius: 3px 0 0 3px;
     box-shadow: none;
-    overflow: visible;
+    overflow: hidden;
+    width: 0;
 }
 
-.data-flash--compact .dataflash-contents_global div span {
-    position: absolute;
-    top: -1rem;
-    left: 0;
-    display: block;
-    color: var(--text);
-    width: auto;
-    margin: 0;
-    white-space: nowrap;
+.data-flash--compact .dataflash-free-label {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
 }
 
 .data-flash--compact .noflash_global {
