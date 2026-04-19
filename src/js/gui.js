@@ -337,7 +337,12 @@ class GuiControl {
                 ? result.lastTab
                 : "tab_setup";
 
-        document.querySelector(`#tabs ul.mode-connected .${tab} a`)?.click();
+        const target = document.querySelector(`#tabs ul.mode-connected .${tab} a`);
+        if (target) {
+            target.click();
+        } else {
+            document.querySelector("#tabs ul.mode-connected .tab_setup a")?.click();
+        }
     }
     showYesNoDialog(yesNoDialogSettings) {
         // yesNoDialogSettings:
