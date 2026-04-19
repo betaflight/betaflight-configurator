@@ -180,17 +180,6 @@ const VirtualFC = {
             totalSizeKB: 2048,
         };
 
-        virtualFC.TRANSPONDER = {
-            supported: true,
-            provider: 1, // iLap
-            providers: [
-                { id: 1, dataLength: 2 },
-                { id: 2, dataLength: 9 },
-                { id: 3, dataLength: 1 },
-            ],
-            data: [0, 0],
-        };
-
         virtualFC.SENSOR_ALIGNMENT = { ...FC.SENSOR_ALIGNMENT };
         virtualFC.SENSOR_ALIGNMENT.gyro_to_use = 0;
         virtualFC.SENSOR_ALIGNMENT.gyro_enable_mask = (1 << 8) - 1; // Used for API v1.47+

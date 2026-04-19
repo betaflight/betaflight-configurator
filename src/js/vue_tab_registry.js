@@ -24,7 +24,6 @@ import OsdTab from "../components/tabs/OsdTab.vue";
 import SetupTab from "../components/tabs/SetupTab.vue";
 import PidTuningTab from "../components/tabs/PidTuningTab.vue";
 import PreflightTab from "../components/tabs/PreflightTab.vue";
-import TransponderTab from "../components/tabs/TransponderTab.vue";
 import VtxTab from "../components/tabs/VtxTab.vue";
 import PresetsTab from "../components/tabs/PresetsTab.vue";
 
@@ -55,7 +54,6 @@ export const VueTabComponents = {
     setup: SetupTab,
     pid_tuning: PidTuningTab,
     preflight: PreflightTab,
-    transponder: TransponderTab,
     vtx: VtxTab,
     presets: PresetsTab,
 };

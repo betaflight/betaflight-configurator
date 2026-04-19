@@ -211,7 +211,6 @@ const FC = {
     SERVO_CONFIG: null,
     SERVO_DATA: null,
     SERVO_RULES: null,
-    TRANSPONDER: null,
     TUNING_SLIDERS: null,
     VOLTAGE_METERS: null,
     VOLTAGE_METER_CONFIGS: null,
@@ -466,13 +465,6 @@ const FC = {
             blackboxPDenom: 0,
             blackboxSampleRate: 0,
             blackboxDisabledMask: 0,
-        };
-
-        this.TRANSPONDER = {
-            supported: false,
-            data: [],
-            provider: 0,
-            providers: [],
         };
 
         this.RC_DEADBAND_CONFIG = {

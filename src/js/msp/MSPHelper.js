@@ -1491,36 +1491,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
                     console.log("Blackbox config saved");
                     break;
-                case MSPCodes.MSP_TRANSPONDER_CONFIG:
-                    let bytesRemaining = data.byteLength;
-                    const providerCount = data.readU8();
-                    bytesRemaining--;
-
-                    FC.TRANSPONDER.supported = providerCount > 0;
-                    FC.TRANSPONDER.providers = [];
-
-                    for (let i = 0; i < providerCount; i++) {
-                        const provider = {
-                            id: data.readU8(),
-                            dataLength: data.readU8(),
-                        };
-                        bytesRemaining -= 2;
-
-                        FC.TRANSPONDER.providers.push(provider);
-                    }
-                    FC.TRANSPONDER.provider = data.readU8();
-                    bytesRemaining--;
-
-                    FC.TRANSPONDER.data = [];
-
-                    for (let i = 0; i < bytesRemaining; i++) {
-                        FC.TRANSPONDER.data.push(data.readU8());
-                    }
-                    break;
-
-                case MSPCodes.MSP_SET_TRANSPONDER_CONFIG:
-                    console.log("Transponder config saved");
-                    break;
 
                 case MSPCodes.MSP_VTX_CONFIG:
                     FC.VTX_CONFIG.vtx_type = data.readU8();
@@ -2053,14 +2023,6 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.FAILSAFE_CONFIG.failsafe_switch_mode)
                 .push16(FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay)
                 .push8(FC.FAILSAFE_CONFIG.failsafe_procedure);
-            break;
-
-        case MSPCodes.MSP_SET_TRANSPONDER_CONFIG:
-            buffer.push8(FC.TRANSPONDER.provider); //
-
-            for (let i = 0; i < FC.TRANSPONDER.data.length; i++) {
-                buffer.push8(FC.TRANSPONDER.data[i]);
-            }
             break;
 
         case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
