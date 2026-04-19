@@ -1424,7 +1424,7 @@
         "message": "Race Transponder"
     },
     "featureTRANSPONDERTip": {
-        "message": "Enable transponder firmware support. Configure the provider and data via the CLI (<code>set transponder_*</code>)."
+        "message": "Enable transponder firmware support. Configure the provider (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]</code>) and data (<code>set transponder_data = &lt;bytes&gt;</code>) via the CLI, then <code>save</code>. Run <code>get transponder</code> to inspect current values."
     },
     "featureAIRMODE": {
         "message": "Permanently enable Airmode"
