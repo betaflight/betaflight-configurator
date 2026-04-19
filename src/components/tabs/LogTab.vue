@@ -19,7 +19,7 @@
                 <div ref="scrollArea" class="log-scroll">
                     <p v-for="entry in entries" :key="entry.id" class="log-entry">
                         <span class="log-timestamp">{{ entry.timestamp }}</span>
-                        <span class="log-message">{{ entry.message }}</span>
+                        <span class="log-message" v-html="entry.message"></span>
                     </p>
                 </div>
             </UiBox>
