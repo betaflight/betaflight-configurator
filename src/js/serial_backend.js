@@ -187,8 +187,7 @@ function registerCliHotkey() {
 }
 
 export function connectDisconnect() {
-    const selectedPort = PortHandler.portPicker.selectedPort;
-    if (!canStartConnectionAction(selectedPort)) {
+    if (GUI.connect_lock) {
         return;
     }
 
@@ -198,6 +197,10 @@ export function connectDisconnect() {
     if (isConnected) {
         beginDisconnect();
     } else {
+        const selectedPort = PortHandler.portPicker.selectedPort;
+        if (!canStartConnectionAction(selectedPort)) {
+            return;
+        }
         beginConnect(selectedPort);
     }
 

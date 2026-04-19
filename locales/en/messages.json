@@ -127,6 +127,10 @@
     "close": {
         "message": "Close"
     },
+    "openSidebarMenu": {
+        "message": "Open sidebar menu",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
+    },
     "OK": {
         "message": "OK"
     },
