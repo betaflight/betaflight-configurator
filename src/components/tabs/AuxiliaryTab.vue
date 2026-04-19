@@ -90,19 +90,12 @@
                                         <div
                                             class="w-full h-full flex flex-col items-center justify-center p-3 md:pr-12 md:pb-0"
                                         >
-                                            <USlider
+                                            <DraggableMultiSlider
                                                 v-model="entry.sliderRange"
-                                                v-range-drag="entry"
                                                 :min="CHANNEL_MIN"
                                                 :max="CHANNEL_MAX"
                                                 :step="CHANNEL_STEP"
-                                                :min-steps-between-thumbs="MIN_RANGE_GAP / CHANNEL_STEP"
-                                                size="xl"
-                                                :ui="{
-                                                    track: 'h-6 bg-elevated',
-                                                    thumb: 'size-6 ring-4 cursor-pointer',
-                                                    range: 'rounded-none cursor-w-resize',
-                                                }"
+                                                :min-range-gap="MIN_RANGE_GAP"
                                             />
                                             <div class="pips-channel-range">
                                                 <div
@@ -192,6 +185,7 @@ import inflection from "inflection";
 import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
 
 const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
@@ -224,60 +218,6 @@ function getModeStateColors(state) {
     }
 }
 
-const vRangeDrag = {
-    mounted(el, binding) {
-        const rangeEl = el.querySelector('[data-slot="range"]');
-        if (!rangeEl) {
-            return;
-        }
-
-        rangeEl.style.touchAction = "none";
-
-        let drag = null;
-
-        rangeEl.addEventListener("pointerdown", (e) => {
-            if (e.button !== 0) {
-                return;
-            }
-
-            const entry = binding.value;
-            if (!entry?.sliderRange) {
-                return;
-            }
-
-            const trackWidth = (el.querySelector('[data-slot="track"]') || el).getBoundingClientRect().width;
-            if (!trackWidth) {
-                return;
-            }
-
-            const [start, end] = entry.sliderRange;
-            drag = { entry, startX: e.clientX, startValue: start, rangeWidth: end - start, trackWidth };
-
-            rangeEl.setPointerCapture(e.pointerId);
-            e.preventDefault();
-            e.stopPropagation();
-        });
-
-        rangeEl.addEventListener("pointermove", (e) => {
-            if (!drag) {
-                return;
-            }
-
-            e.stopPropagation();
-
-            const delta =
-                Math.round(((CHANNEL_MAX - CHANNEL_MIN) * (e.clientX - drag.startX)) / drag.trackWidth / CHANNEL_STEP) *
-                CHANNEL_STEP;
-            const nextStart = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX - drag.rangeWidth, drag.startValue + delta));
-            drag.entry.sliderRange = [nextStart, nextStart + drag.rangeWidth];
-        });
-
-        rangeEl.addEventListener("lostpointercapture", () => {
-            drag = null;
-        });
-    },
-};
-
 export default defineComponent({
     name: "AuxiliaryTab",
     components: {
@@ -286,9 +226,7 @@ export default defineComponent({
         UiBox,
         HelpIcon,
         SettingRow,
-    },
-    directives: {
-        "range-drag": vRangeDrag,
+        DraggableMultiSlider,
     },
     setup() {
         // Initialize Pinia stores
@@ -693,6 +631,7 @@ export default defineComponent({
             logicOptions,
             channelOptions,
             linkItemsForMode,
+            rcMarkers,
             infoMinWidthStyle,
             sliderPipValues,
             CHANNEL_MIN,
@@ -706,7 +645,6 @@ export default defineComponent({
             markerStyle,
             pipStyle,
             saveModes,
-            channelPercent,
         };
     },
 });
@@ -720,7 +658,8 @@ export default defineComponent({
         position: relative;
         height: 24px;
         margin-top: 16px;
-        width: calc(100% - 28px);
+        // 20px is the width of the slider thumbs in DraggableMultiSlider, taking 10px from each side of the pip range makes the thumbs align cleanly
+        width: calc(100% - 20px);
     }
 
     .pip {
