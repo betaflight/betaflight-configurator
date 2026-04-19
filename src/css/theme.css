@@ -22,6 +22,8 @@
     --color-primary-800: #984e08;
     --color-primary-900: #7c400b;
     --color-primary-950: #482100;
+
+    --color-neutral-850: oklch(23.5% 0 0);
 }
 
 html {
@@ -85,6 +87,8 @@ html {
     --primary-action: var(--success-500);
     --primary-action-border: var(--success-600);
     --primary-action-hover: var(--success-400);
+
+    --ui-radius: 0.35rem;
 }
 
 .dark {
@@ -105,7 +109,7 @@ html {
     /* --ui-bg: var(--ui-color-neutral-800); */
     --ui-primary: var(--primary-500);
     --ui-error: var(--ui-color-error-500);
-    --ui-radius: 0.35rem;
+    --ui-bg-muted: var(--color-neutral-850);
 
     --text: hsl(0, 0%, 95%);
 }

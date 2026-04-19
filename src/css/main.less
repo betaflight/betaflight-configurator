@@ -688,6 +688,8 @@ td [role="group"] {
     transition: all 0.2s;
     overflow-x: hidden;
     overflow-y: auto;
+    /* Avoid horizontal jump when scrollbar appears/disappears (e.g. toggling long tab lists) */
+    scrollbar-gutter: stable;
     background-color: var(--surface-100);
     width: 100%;
 }
