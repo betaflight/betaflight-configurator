@@ -51,6 +51,9 @@
                 :fc-used-size="dataflash.usedSize"
             />
         </div>
+        <span class="stat-group status-version" :title="$t('versionLabelConfigurator')">
+            <span class="value">{{ configuratorVersion }}</span>
+        </span>
     </div>
 </template>
 
@@ -97,6 +100,10 @@ export default defineComponent({
         cpuLoad: {
             type: Number,
             default: 0,
+        },
+        configuratorVersion: {
+            type: String,
+            default: "",
         },
     },
     setup(props) {
@@ -253,6 +260,12 @@ export default defineComponent({
     display: flex;
     align-items: center;
     gap: 0.75rem;
+}
+
+.status-version {
+    margin-left: auto;
+    opacity: 0.75;
+    font-variant-numeric: tabular-nums;
 }
 
 /* Hide the sensor-icon row on narrower viewports so the status bar does not crowd. */

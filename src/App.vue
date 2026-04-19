@@ -226,6 +226,7 @@
                 :packet-error="MSP.packet_error"
                 :cycle-time="FC.CONFIG.cycleTime"
                 :cpu-load="FC.CONFIG.cpuload"
+                :configurator-version="CONFIGURATOR.getDisplayVersion()"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">

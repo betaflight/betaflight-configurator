@@ -1,19 +1,14 @@
 <template>
-    <div class="logo">
+    <div class="logo" :title="tooltip">
         <div class="logo_image" aria-hidden="true"></div>
-        <div class="logo_text">
-            <span> {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }} </span>
-            <span v-if="firmwareVersion && firmwareId">
-                {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
-                {{ firmwareId }}
-            </span>
-            <span v-if="hardwareId"> {{ $t("versionLabelTarget") }}: {{ hardwareId }} </span>
-        </div>
     </div>
 </template>
 
 <script>
-export default {
+import { computed, defineComponent } from "vue";
+import { i18n } from "../../js/localization";
+
+export default defineComponent({
     props: {
         configuratorVersion: {
             type: String,
@@ -32,7 +27,21 @@ export default {
             default: "",
         },
     },
-};
+    setup(props) {
+        const tooltip = computed(() => {
+            const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${props.configuratorVersion}`];
+            if (props.firmwareVersion && props.firmwareId) {
+                lines.push(`${i18n.getMessage("versionLabelFirmware")}: ${props.firmwareVersion} ${props.firmwareId}`);
+            }
+            if (props.hardwareId) {
+                lines.push(`${i18n.getMessage("versionLabelTarget")}: ${props.hardwareId}`);
+            }
+            return lines.join("\n");
+        });
+
+        return { tooltip };
+    },
+});
 </script>
 
 <style>
@@ -57,20 +66,7 @@ export default {
     background-image: url(../../images/light-wide-2.svg);
 }
 
-.tab_container .logo_text {
-    display: flex;
-    flex-direction: column;
-    margin-top: 0.25rem;
-    color: var(--text);
-    font-size: 10px;
-    line-height: 1.3;
-    text-align: left;
-}
-
 @media (max-width: 1055px) {
-    .tab_container .logo_text {
-        display: none;
-    }
     .tab_container .logo {
         align-items: center;
     }
