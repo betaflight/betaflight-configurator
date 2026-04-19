@@ -395,46 +395,30 @@
                                     min="0"
                                     max="100"
                                 ></progress>
-                                <span ref="cloudTargetStatusSpan" id="cloudTargetStatus">
-                                    {{ cloudBuild.state.cloudTargetStatusText }}</span
-                                >
                             </div>
                             <div>
                                 <UButton
+                                    v-if="!cloudBuild.state.cancelBuildButtonDisabled"
                                     ref="cloudBuildCancelButton"
                                     size="xs"
                                     variant="soft"
-                                    :disabled="cloudBuild.state.cancelBuildButtonDisabled"
                                     @click="cloudBuild.handleCancelBuild"
                                     >{{ $t("cancel") }}</UButton
                                 >
+                                <span v-else ref="cloudTargetStatusSpan" id="cloudTargetStatus">
+                                    {{ cloudBuild.state.cloudTargetStatusText }}
+                                </span>
                             </div>
                         </div>
-                        <!-- Firmware Loaded Rows -->
-                        <div v-if="state.firmwareLoadedName" class="info_row">
+                        <!-- Firmware Loaded Rows (online only) -->
+                        <div v-if="state.firmwareLoadedName && !state.firmwareLoadedIsLocal" class="info_row">
                             <strong>{{ $t("firmwareFlasherFirmwareLoaded") }}</strong>
-                            <span>{{ state.firmwareLoadedName }}</span>
-                            <div v-if="!state.firmwareLoadedIsLocal">
+                            <span>{{ state.firmwareLoadedSize }}</span>
+                            <div>
                                 <UButton size="xs" variant="soft" @click="saveFirmware">{{ $t("save") }}</UButton>
                             </div>
                         </div>
-                        <div v-if="state.firmwareLoadedSize" class="info_row">
-                            <strong>{{ $t("firmwareFlasherFirmwareSize") }}</strong>
-                            <span>{{ state.firmwareLoadedSize }}</span>
-                            <div></div>
-                        </div>
                     </div>
-                </UiBox>
-
-                <!-- Standalone firmware-loaded banner for local loads (no release info) -->
-                <UiBox
-                    v-if="!state.releaseInfoVisible && state.firmwareLoadedName && state.firmwareLoadedIsLocal"
-                    :title="$t('firmwareFlasherFirmwareLoaded')"
-                    type="neutral"
-                    class="col-span-1"
-                >
-                    <div>{{ state.firmwareLoadedName }}</div>
-                    <div>{{ state.firmwareLoadedSize }}</div>
                 </UiBox>
             </div>
             <div class="grid-box-spacer"></div>
@@ -2257,6 +2241,7 @@ export default defineComponent({
             handleVerifyBoardContinue,
             handleVerifyBoardDialogClose,
             handleProgressLabelClick,
+            saveFirmware,
         };
     },
 });
