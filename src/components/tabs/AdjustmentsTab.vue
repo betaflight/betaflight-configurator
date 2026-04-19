@@ -27,8 +27,10 @@
                         :key="index"
                         :id="`adjustment-${index}`"
                         class="adjustment"
+                        :class="{ 'adjustment-disabled': !adjustment.enabled }"
                     >
                         <div class="adjustment-enable" :data-label="$t('adjustmentsColumnEnable')">
+                            <span class="row-index">#{{ index + 1 }}</span>
                             <USwitch
                                 v-model="adjustment.enabled"
                                 size="sm"
@@ -42,26 +44,28 @@
                                 :items="auxChannelOptions"
                                 :disabled="!adjustment.enabled"
                             />
-                            <div class="limits">
-                                <span>{{ $t("adjustmentsMin") }}: {{ adjustment.range.start }}</span>
-                                <span>{{ $t("adjustmentsMax") }}: {{ adjustment.range.end }}</span>
-                            </div>
                         </div>
 
                         <div class="adjustment-range" :data-label="$t('adjustmentsColumnIsInRange')">
-                            <div class="relative">
-                                <USlider
-                                    v-model="adjustment.rangeArray"
-                                    :min="900"
-                                    :max="2100"
-                                    :step="25"
-                                    :disabled="!adjustment.enabled"
-                                />
-                                <div
-                                    v-if="rcChannelData[adjustment.auxChannelIndex] !== undefined"
-                                    class="marker"
-                                    :style="{ left: channelPercent(rcChannelData[adjustment.auxChannelIndex]) + '%' }"
-                                ></div>
+                            <div class="range-row">
+                                <span class="range-value">{{ adjustment.range.start }}</span>
+                                <div class="range-slider">
+                                    <USlider
+                                        v-model="adjustment.rangeArray"
+                                        :min="900"
+                                        :max="2100"
+                                        :step="25"
+                                        :disabled="!adjustment.enabled"
+                                    />
+                                    <div
+                                        v-if="rcChannelData[adjustment.auxChannelIndex] !== undefined"
+                                        class="marker"
+                                        :style="{
+                                            left: channelPercent(rcChannelData[adjustment.auxChannelIndex]) + '%',
+                                        }"
+                                    ></div>
+                                </div>
+                                <span class="range-value">{{ adjustment.range.end }}</span>
                             </div>
                             <div class="pips-channel-range">
                                 <span
@@ -190,6 +194,9 @@ onMounted(async () => {
     font-weight: 600;
     font-size: 13px;
     color: var(--text-primary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .adjustments-list {
@@ -208,26 +215,58 @@ onMounted(async () => {
     background: var(--surface-750);
 }
 
+.adjustment:nth-child(even) {
+    background: var(--surface-300);
+}
+
+.adjustment-disabled {
+    opacity: 0.4;
+}
+
+.adjustment-disabled .adjustment-channel,
+.adjustment-disabled .adjustment-range,
+.adjustment-disabled .adjustment-function,
+.adjustment-disabled .adjustment-via,
+.adjustment-disabled .adjustment-center,
+.adjustment-disabled .adjustment-scale {
+    pointer-events: none;
+}
+
 .adjustment-enable {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 6px;
 }
 
-.adjustment-channel {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.limits {
-    display: flex;
-    gap: 12px;
+.row-index {
     font-size: 11px;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
+    font-weight: 600;
+    min-width: 1.2rem;
 }
 
 .adjustment-range {
+    min-width: 0;
+}
+
+.range-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.range-value {
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.range-slider {
+    position: relative;
+    flex: 1;
     min-width: 0;
 }
 
