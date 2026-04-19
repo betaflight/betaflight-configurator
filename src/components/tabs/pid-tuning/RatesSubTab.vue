@@ -14,14 +14,6 @@
                         <USelect v-model="ratesType" :items="ratesTypeItems" class="w-32" />
                     </SettingRow>
                     <img :src="ratesLogoSrc" class="h-8" alt="Rates logo" />
-                    <a
-                        href="https://rates.metamarc.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-xs text-primary hover:underline"
-                    >
-                        rates.metamarc.com
-                    </a>
                 </div>
             </UiBox>
 
@@ -277,7 +269,7 @@
             </UiBox>
 
             <!-- Rates 3D Preview -->
-            <UiBox :title="$t('pidTuningRatesPreview')" type="neutral">
+            <UiBox :title="$t('pidTuningRatesModelPreview')" type="neutral">
                 <div class="bg-white dark:bg-neutral-900 border border-default p-1 w-full" ref="ratesPreviewContainer">
                     <canvas ref="ratesPreviewCanvas" class="block"></canvas>
                 </div>
