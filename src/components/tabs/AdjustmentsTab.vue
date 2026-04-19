@@ -151,8 +151,8 @@
     </BaseTab>
 </template>
 
-<script>
-import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
+<script setup>
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
@@ -163,6 +163,10 @@ import { i18n } from "../../js/localization";
 import { API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useTranslation } from "i18next-vue";
+
+const { t } = useTranslation();
+const fcStore = useFlightControllerStore();
 
 const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
@@ -170,386 +174,360 @@ const CHANNEL_STEP = 25;
 const MIN_RANGE_GAP = 25;
 const PIP_VALUES = [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
 
-export default defineComponent({
-    name: "AdjustmentsTab",
-    components: {
-        BaseTab,
-        WikiButton,
-    },
-    setup() {
-        const fcStore = useFlightControllerStore();
+const adjustments = reactive([]);
+const auxChannelCount = ref(0);
+const rcChannelData = reactive({});
 
-        const adjustments = reactive([]);
-        const auxChannelCount = ref(0);
-        const rcChannelData = reactive({});
+const pipValues = computed(() => PIP_VALUES);
 
-        const pipValues = computed(() => PIP_VALUES);
+// Generate function options (0-32 base, 33+ gated by API version)
+const adjustmentFunctionCount = computed(() => {
+    return fcStore.isApiVersionSupported(API_VERSION_1_48) ? 34 : 33;
+});
 
-        // Generate function options (0-32 base, 33+ gated by API version)
-        const adjustmentFunctionCount = computed(() => {
-            return fcStore.isApiVersionSupported(API_VERSION_1_48) ? 34 : 33;
+const functionOptions = computed(() => {
+    const options = [];
+    for (let i = 0; i < adjustmentFunctionCount.value; i++) {
+        options.push({
+            value: i,
+            label: t(`adjustmentsFunction${i}`),
         });
+    }
+    return options;
+});
 
-        const functionOptions = computed(() => {
-            const options = [];
-            for (let i = 0; i < adjustmentFunctionCount.value; i++) {
-                options.push({
-                    value: i,
-                    label: i18n.getMessage(`adjustmentsFunction${i}`),
-                });
+// Sort functions alphabetically, but keep first option at top
+const sortedFunctions = computed(() => {
+    const opts = [...functionOptions.value];
+    const first = opts[0];
+    const rest = opts.slice(1).sort((a, b) => a.label.localeCompare(b.label));
+    return [first, ...rest];
+});
+
+const clampChannel = (value) => {
+    if (value === undefined || value === null || Number.isNaN(value)) {
+        return 1500;
+    }
+    return Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
+};
+
+const channelPercent = (value) => {
+    const clamped = clampChannel(value);
+    return ((clamped - CHANNEL_MIN) / (CHANNEL_MAX - CHANNEL_MIN)) * 100;
+};
+
+const pipStyle = (value) => {
+    return { left: `${channelPercent(value)}%` };
+};
+
+const markerStyle = (auxChannelIndex) => {
+    const channelValue = rcChannelData[auxChannelIndex];
+    if (channelValue === undefined) {
+        return { display: "none" };
+    }
+    return { left: `${channelPercent(channelValue)}%` };
+};
+
+const rangeFillStyle = (adjustment) => {
+    const start = channelPercent(adjustment.range.start);
+    const end = channelPercent(adjustment.range.end);
+    return {
+        left: `${start}%`,
+        width: `${Math.max(end - start, 0)}%`,
+    };
+};
+
+const ensureRangeOrder = (adjustment) => {
+    if (adjustment.range.start > adjustment.range.end - MIN_RANGE_GAP) {
+        adjustment.range.start = Math.max(CHANNEL_MIN, adjustment.range.end - MIN_RANGE_GAP);
+    }
+    if (adjustment.range.end < adjustment.range.start + MIN_RANGE_GAP) {
+        adjustment.range.end = Math.min(CHANNEL_MAX, adjustment.range.start + MIN_RANGE_GAP);
+    }
+};
+
+// Drag handling
+let dragState = null;
+let cleanupDragListeners = null;
+
+const getEventX = (e) => {
+    return e.touches ? e.touches[0].clientX : e.clientX;
+};
+
+const snapToStep = (value) => {
+    return Math.round(value / CHANNEL_STEP) * CHANNEL_STEP;
+};
+
+const handleSliderClick = (e, adjustment) => {
+    if (!adjustment.enabled || dragState) {
+        return;
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = getEventX(e);
+    const percent = ((clickX - rect.left) / rect.width) * 100;
+    const value = snapToStep(CHANNEL_MIN + (percent / 100) * (CHANNEL_MAX - CHANNEL_MIN));
+
+    const clamped = clampChannel(value);
+    const midPoint = (adjustment.range.start + adjustment.range.end) / 2;
+
+    if (clamped < midPoint) {
+        adjustment.range.start = clamped;
+    } else {
+        adjustment.range.end = clamped;
+    }
+    ensureRangeOrder(adjustment);
+};
+
+const startDrag = (e, adjustment, dragType) => {
+    if (!adjustment.enabled) {
+        return;
+    }
+
+    e.preventDefault();
+
+    const startX = getEventX(e);
+    const startRange = {
+        start: adjustment.range.start,
+        end: adjustment.range.end,
+    };
+
+    // Measure the actual slider width from the wrapper element
+    const sliderWrapper = e.target.closest(".slider-wrapper");
+    const sliderWidth = sliderWrapper ? sliderWrapper.offsetWidth : 300;
+
+    dragState = {
+        adjustment,
+        dragType,
+        startX,
+        startRange,
+        sliderWidth,
+    };
+
+    const onMove = (e) => {
+        if (!dragState) {
+            return;
+        }
+
+        const currentX = getEventX(e);
+        const deltaX = currentX - dragState.startX;
+        const deltaValue = (deltaX / dragState.sliderWidth) * (CHANNEL_MAX - CHANNEL_MIN);
+        const snappedDelta = snapToStep(deltaValue);
+
+        if (dragState.dragType === "start") {
+            let newStart = dragState.startRange.start + snappedDelta;
+            newStart = clampChannel(newStart);
+            if (newStart > dragState.adjustment.range.end - MIN_RANGE_GAP) {
+                newStart = dragState.adjustment.range.end - MIN_RANGE_GAP;
             }
-            return options;
-        });
-
-        // Sort functions alphabetically, but keep first option at top
-        const sortedFunctions = computed(() => {
-            const opts = [...functionOptions.value];
-            const first = opts[0];
-            const rest = opts.slice(1).sort((a, b) => a.label.localeCompare(b.label));
-            return [first, ...rest];
-        });
-
-        const clampChannel = (value) => {
-            if (value === undefined || value === null || Number.isNaN(value)) {
-                return 1500;
+            dragState.adjustment.range.start = newStart;
+        } else if (dragState.dragType === "end") {
+            let newEnd = dragState.startRange.end + snappedDelta;
+            newEnd = clampChannel(newEnd);
+            if (newEnd < dragState.adjustment.range.start + MIN_RANGE_GAP) {
+                newEnd = dragState.adjustment.range.start + MIN_RANGE_GAP;
             }
-            return Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
-        };
+            dragState.adjustment.range.end = newEnd;
+        } else if (dragState.dragType === "range") {
+            const rangeSize = dragState.startRange.end - dragState.startRange.start;
+            let newStart = dragState.startRange.start + snappedDelta;
+            let newEnd = dragState.startRange.end + snappedDelta;
 
-        const channelPercent = (value) => {
-            const clamped = clampChannel(value);
-            return ((clamped - CHANNEL_MIN) / (CHANNEL_MAX - CHANNEL_MIN)) * 100;
-        };
-
-        const pipStyle = (value) => {
-            return { left: `${channelPercent(value)}%` };
-        };
-
-        const markerStyle = (auxChannelIndex) => {
-            const channelValue = rcChannelData[auxChannelIndex];
-            if (channelValue === undefined) {
-                return { display: "none" };
+            if (newStart < CHANNEL_MIN) {
+                newStart = CHANNEL_MIN;
+                newEnd = newStart + rangeSize;
             }
-            return { left: `${channelPercent(channelValue)}%` };
-        };
-
-        const rangeFillStyle = (adjustment) => {
-            const start = channelPercent(adjustment.range.start);
-            const end = channelPercent(adjustment.range.end);
-            return {
-                left: `${start}%`,
-                width: `${Math.max(end - start, 0)}%`,
-            };
-        };
-
-        const ensureRangeOrder = (adjustment) => {
-            if (adjustment.range.start > adjustment.range.end - MIN_RANGE_GAP) {
-                adjustment.range.start = Math.max(CHANNEL_MIN, adjustment.range.end - MIN_RANGE_GAP);
-            }
-            if (adjustment.range.end < adjustment.range.start + MIN_RANGE_GAP) {
-                adjustment.range.end = Math.min(CHANNEL_MAX, adjustment.range.start + MIN_RANGE_GAP);
-            }
-        };
-
-        // Drag handling
-        let dragState = null;
-        let cleanupDragListeners = null;
-
-        const getEventX = (e) => {
-            return e.touches ? e.touches[0].clientX : e.clientX;
-        };
-
-        const snapToStep = (value) => {
-            return Math.round(value / CHANNEL_STEP) * CHANNEL_STEP;
-        };
-
-        const handleSliderClick = (e, adjustment) => {
-            if (!adjustment.enabled || dragState) {
-                return;
+            if (newEnd > CHANNEL_MAX) {
+                newEnd = CHANNEL_MAX;
+                newStart = newEnd - rangeSize;
             }
 
-            const rect = e.currentTarget.getBoundingClientRect();
-            const clickX = getEventX(e);
-            const percent = ((clickX - rect.left) / rect.width) * 100;
-            const value = snapToStep(CHANNEL_MIN + (percent / 100) * (CHANNEL_MAX - CHANNEL_MIN));
+            dragState.adjustment.range.start = clampChannel(newStart);
+            dragState.adjustment.range.end = clampChannel(newEnd);
+        }
+    };
 
-            const clamped = clampChannel(value);
-            const midPoint = (adjustment.range.start + adjustment.range.end) / 2;
+    const cleanup = () => {
+        if (cleanupDragListeners) {
+            cleanupDragListeners();
+            cleanupDragListeners = null;
+        }
+    };
 
-            if (clamped < midPoint) {
-                adjustment.range.start = clamped;
-            } else {
-                adjustment.range.end = clamped;
-            }
-            ensureRangeOrder(adjustment);
-        };
+    const onEnd = () => {
+        cleanup();
+    };
 
-        const startDrag = (e, adjustment, dragType) => {
-            if (!adjustment.enabled) {
-                return;
-            }
+    // Store cleanup function
+    cleanupDragListeners = () => {
+        dragState = null;
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onEnd);
+        document.removeEventListener("touchmove", onMove);
+        document.removeEventListener("touchend", onEnd);
+    };
 
-            e.preventDefault();
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onEnd);
+    document.addEventListener("touchmove", onMove);
+    document.addEventListener("touchend", onEnd);
+};
 
-            const startX = getEventX(e);
-            const startRange = {
-                start: adjustment.range.start,
-                end: adjustment.range.end,
-            };
+const onEnableChange = (adjustment) => {
+    if (adjustment.enabled) {
+        // Set default range if both start and end are the same
+        if (adjustment.range.start === adjustment.range.end) {
+            adjustment.range.start = 1300;
+            adjustment.range.end = 1700;
+        }
+    } else {
+        // Reset to initial state when disabled
+        adjustment.range.start = 900;
+        adjustment.range.end = 900;
+    }
+};
 
-            // Measure the actual slider width from the wrapper element
-            const sliderWrapper = e.target.closest(".slider-wrapper");
-            const sliderWidth = sliderWrapper ? sliderWrapper.offsetWidth : 300;
-
-            dragState = {
-                adjustment,
-                dragType,
-                startX,
-                startRange,
-                sliderWidth,
-            };
-
-            const onMove = (e) => {
-                if (!dragState) {
-                    return;
-                }
-
-                const currentX = getEventX(e);
-                const deltaX = currentX - dragState.startX;
-                const deltaValue = (deltaX / dragState.sliderWidth) * (CHANNEL_MAX - CHANNEL_MIN);
-                const snappedDelta = snapToStep(deltaValue);
-
-                if (dragState.dragType === "start") {
-                    let newStart = dragState.startRange.start + snappedDelta;
-                    newStart = clampChannel(newStart);
-                    if (newStart > dragState.adjustment.range.end - MIN_RANGE_GAP) {
-                        newStart = dragState.adjustment.range.end - MIN_RANGE_GAP;
-                    }
-                    dragState.adjustment.range.start = newStart;
-                } else if (dragState.dragType === "end") {
-                    let newEnd = dragState.startRange.end + snappedDelta;
-                    newEnd = clampChannel(newEnd);
-                    if (newEnd < dragState.adjustment.range.start + MIN_RANGE_GAP) {
-                        newEnd = dragState.adjustment.range.start + MIN_RANGE_GAP;
-                    }
-                    dragState.adjustment.range.end = newEnd;
-                } else if (dragState.dragType === "range") {
-                    const rangeSize = dragState.startRange.end - dragState.startRange.start;
-                    let newStart = dragState.startRange.start + snappedDelta;
-                    let newEnd = dragState.startRange.end + snappedDelta;
-
-                    if (newStart < CHANNEL_MIN) {
-                        newStart = CHANNEL_MIN;
-                        newEnd = newStart + rangeSize;
-                    }
-                    if (newEnd > CHANNEL_MAX) {
-                        newEnd = CHANNEL_MAX;
-                        newStart = newEnd - rangeSize;
-                    }
-
-                    dragState.adjustment.range.start = clampChannel(newStart);
-                    dragState.adjustment.range.end = clampChannel(newEnd);
-                }
-            };
-
-            const cleanup = () => {
-                if (cleanupDragListeners) {
-                    cleanupDragListeners();
-                    cleanupDragListeners = null;
-                }
-            };
-
-            const onEnd = () => {
-                cleanup();
-            };
-
-            // Store cleanup function
-            cleanupDragListeners = () => {
-                dragState = null;
-                document.removeEventListener("mousemove", onMove);
-                document.removeEventListener("mouseup", onEnd);
-                document.removeEventListener("touchmove", onMove);
-                document.removeEventListener("touchend", onEnd);
-            };
-
-            document.addEventListener("mousemove", onMove);
-            document.addEventListener("mouseup", onEnd);
-            document.addEventListener("touchmove", onMove);
-            document.addEventListener("touchend", onEnd);
-        };
-
-        const onEnableChange = (adjustment) => {
-            if (adjustment.enabled) {
-                // Set default range if both start and end are the same
-                if (adjustment.range.start === adjustment.range.end) {
-                    adjustment.range.start = 1300;
-                    adjustment.range.end = 1700;
-                }
-            } else {
-                // Reset to initial state when disabled
-                adjustment.range.start = 900;
-                adjustment.range.end = 900;
-            }
-        };
-
-        const loadMSPData = async () => {
-            return new Promise((resolve) => {
-                MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, () => {
-                    MSP.send_message(MSPCodes.MSP_ADJUSTMENT_RANGES, false, false, () => {
-                        MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, () => {
-                            MSP.send_message(MSPCodes.MSP_RC, false, false, resolve);
-                        });
-                    });
+const loadMSPData = async () => {
+    return new Promise((resolve) => {
+        MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, () => {
+            MSP.send_message(MSPCodes.MSP_ADJUSTMENT_RANGES, false, false, () => {
+                MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, () => {
+                    MSP.send_message(MSPCodes.MSP_RC, false, false, resolve);
                 });
             });
-        };
-
-        const initializeAdjustments = () => {
-            auxChannelCount.value = fcStore.rc.active_channels - 4;
-
-            // Clear existing adjustments
-            adjustments.splice(0, adjustments.length);
-
-            // Populate adjustments from fcStore
-            fcStore.adjustmentRanges.forEach((range) => {
-                const isEnabled = range.range?.start !== range.range?.end;
-                adjustments.push(
-                    reactive({
-                        slotIndex: range.slotIndex || 0,
-                        auxChannelIndex: range.auxChannelIndex || 0,
-                        range: {
-                            start: range.range?.start || 900,
-                            end: range.range?.end || 900,
-                        },
-                        adjustmentFunction: range.adjustmentFunction || 0,
-                        auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
-                        adjustmentCenter: range.adjustmentCenter || 0,
-                        adjustmentScale: range.adjustmentScale || 0,
-                        enabled: isEnabled,
-                    }),
-                );
-            });
-        };
-
-        const updateRcData = () => {
-            const auxCount = fcStore.rc.active_channels - 4;
-            for (let auxChannelIndex = 0; auxChannelIndex < auxCount; auxChannelIndex++) {
-                rcChannelData[auxChannelIndex] = fcStore.rc.channels[auxChannelIndex + 4];
-            }
-        };
-
-        let rcDataInterval = null;
-
-        const startRcDataPolling = () => {
-            const getRcData = () => {
-                MSP.send_message(MSPCodes.MSP_RC, false, false, updateRcData);
-            };
-
-            // Update immediately
-            updateRcData();
-
-            // Start polling
-            rcDataInterval = setInterval(getRcData, 50);
-        };
-
-        const stopRcDataPolling = () => {
-            if (rcDataInterval) {
-                clearInterval(rcDataInterval);
-                rcDataInterval = null;
-            }
-        };
-
-        const saveAdjustments = () => {
-            const requiredAdjustmentRangeCount = fcStore.adjustmentRanges.length;
-
-            fcStore.adjustmentRanges = [];
-
-            adjustments.forEach((adjustment) => {
-                if (adjustment.enabled) {
-                    fcStore.adjustmentRanges.push({
-                        slotIndex: 0,
-                        auxChannelIndex: adjustment.auxChannelIndex,
-                        range: {
-                            start: adjustment.range.start,
-                            end: adjustment.range.end,
-                        },
-                        adjustmentFunction: adjustment.adjustmentFunction,
-                        auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
-                        adjustmentCenter: adjustment.adjustmentCenter || 0,
-                        adjustmentScale: adjustment.adjustmentScale || 0,
-                    });
-                } else {
-                    fcStore.adjustmentRanges.push({
-                        slotIndex: 0,
-                        auxChannelIndex: 0,
-                        range: {
-                            start: 900,
-                            end: 900,
-                        },
-                        adjustmentFunction: 0,
-                        auxSwitchChannelIndex: 0,
-                        adjustmentCenter: 0,
-                        adjustmentScale: 0,
-                    });
-                }
-            });
-
-            // Fill remaining slots if needed
-            for (let i = fcStore.adjustmentRanges.length; i < requiredAdjustmentRangeCount; i++) {
-                fcStore.adjustmentRanges.push({
-                    slotIndex: 0,
-                    auxChannelIndex: 0,
-                    range: {
-                        start: 900,
-                        end: 900,
-                    },
-                    adjustmentFunction: 0,
-                    auxSwitchChannelIndex: 0,
-                    adjustmentCenter: 0,
-                    adjustmentScale: 0,
-                });
-            }
-
-            mspHelper.sendAdjustmentRanges(() => {
-                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, () => {
-                    gui_log(i18n.getMessage("adjustmentsEepromSaved"));
-                });
-            });
-        };
-
-        onMounted(async () => {
-            await loadMSPData();
-            initializeAdjustments();
-            await nextTick();
-            // Ensure i18n attributes are applied to DOM (i18n_title -> title)
-            i18n.localizePage();
-            GUI.switchery();
-            startRcDataPolling();
-            GUI.content_ready();
         });
+    });
+};
 
-        onUnmounted(() => {
-            stopRcDataPolling();
-            if (cleanupDragListeners) {
-                cleanupDragListeners();
-            }
+const initializeAdjustments = () => {
+    auxChannelCount.value = fcStore.rc.active_channels - 4;
+
+    // Clear existing adjustments
+    adjustments.splice(0, adjustments.length);
+
+    // Populate adjustments from fcStore
+    fcStore.adjustmentRanges.forEach((range) => {
+        const isEnabled = range.range?.start !== range.range?.end;
+        adjustments.push(
+            reactive({
+                slotIndex: range.slotIndex || 0,
+                auxChannelIndex: range.auxChannelIndex || 0,
+                range: {
+                    start: range.range?.start || 900,
+                    end: range.range?.end || 900,
+                },
+                adjustmentFunction: range.adjustmentFunction || 0,
+                auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
+                adjustmentCenter: range.adjustmentCenter || 0,
+                adjustmentScale: range.adjustmentScale || 0,
+                enabled: isEnabled,
+            }),
+        );
+    });
+};
+
+const updateRcData = () => {
+    const auxCount = fcStore.rc.active_channels - 4;
+    for (let auxChannelIndex = 0; auxChannelIndex < auxCount; auxChannelIndex++) {
+        rcChannelData[auxChannelIndex] = fcStore.rc.channels[auxChannelIndex + 4];
+    }
+};
+
+let rcDataInterval = null;
+
+const startRcDataPolling = () => {
+    const getRcData = () => {
+        MSP.send_message(MSPCodes.MSP_RC, false, false, updateRcData);
+    };
+
+    // Update immediately
+    updateRcData();
+
+    // Start polling
+    rcDataInterval = setInterval(getRcData, 50);
+};
+
+const stopRcDataPolling = () => {
+    if (rcDataInterval) {
+        clearInterval(rcDataInterval);
+        rcDataInterval = null;
+    }
+};
+
+const saveAdjustments = () => {
+    const requiredAdjustmentRangeCount = fcStore.adjustmentRanges.length;
+
+    fcStore.adjustmentRanges = [];
+
+    adjustments.forEach((adjustment) => {
+        if (adjustment.enabled) {
+            fcStore.adjustmentRanges.push({
+                slotIndex: 0,
+                auxChannelIndex: adjustment.auxChannelIndex,
+                range: {
+                    start: adjustment.range.start,
+                    end: adjustment.range.end,
+                },
+                adjustmentFunction: adjustment.adjustmentFunction,
+                auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
+                adjustmentCenter: adjustment.adjustmentCenter || 0,
+                adjustmentScale: adjustment.adjustmentScale || 0,
+            });
+        } else {
+            fcStore.adjustmentRanges.push({
+                slotIndex: 0,
+                auxChannelIndex: 0,
+                range: {
+                    start: 900,
+                    end: 900,
+                },
+                adjustmentFunction: 0,
+                auxSwitchChannelIndex: 0,
+                adjustmentCenter: 0,
+                adjustmentScale: 0,
+            });
+        }
+    });
+
+    // Fill remaining slots if needed
+    for (let i = fcStore.adjustmentRanges.length; i < requiredAdjustmentRangeCount; i++) {
+        fcStore.adjustmentRanges.push({
+            slotIndex: 0,
+            auxChannelIndex: 0,
+            range: {
+                start: 900,
+                end: 900,
+            },
+            adjustmentFunction: 0,
+            auxSwitchChannelIndex: 0,
+            adjustmentCenter: 0,
+            adjustmentScale: 0,
         });
+    }
 
-        return {
-            adjustments,
-            auxChannelCount,
-            sortedFunctions,
-            pipValues,
-            pipStyle,
-            markerStyle,
-            rangeFillStyle,
-            channelPercent,
-            onEnableChange,
-            handleSliderClick,
-            startDrag,
-            saveAdjustments,
-        };
-    },
+    mspHelper.sendAdjustmentRanges(() => {
+        MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, () => {
+            gui_log(t("adjustmentsEepromSaved"));
+        });
+    });
+};
+
+onMounted(async () => {
+    await loadMSPData();
+    initializeAdjustments();
+    await nextTick();
+    // Ensure i18n attributes are applied to DOM (i18n_title -> title)
+    i18n.localizePage();
+    GUI.switchery();
+    startRcDataPolling();
+    GUI.content_ready();
+});
+
+onUnmounted(() => {
+    stopRcDataPolling();
+    if (cleanupDragListeners) {
+        cleanupDragListeners();
+    }
 });
 </script>
 
