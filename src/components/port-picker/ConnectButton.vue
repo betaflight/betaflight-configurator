@@ -114,6 +114,11 @@ export default defineComponent({
             }
         }
 
+        function toggleAutoConnect(value) {
+            PortHandler.portPicker.autoConnect = value;
+            setConfig({ autoConnect: value });
+        }
+
         const menuItems = computed(() => {
             const items = [];
             const devices = [];
@@ -186,6 +191,17 @@ export default defineComponent({
                     onSelect: () => PortHandler.requestDevicePermission("usb"),
                 });
             }
+
+            items.push(
+                { type: "separator" },
+                {
+                    type: "checkbox",
+                    label: i18n.getMessage("autoConnect"),
+                    checked: portPicker.value.autoConnect,
+                    onUpdateChecked: toggleAutoConnect,
+                    onSelect: (e) => e.preventDefault(),
+                },
+            );
 
             return items;
         });
