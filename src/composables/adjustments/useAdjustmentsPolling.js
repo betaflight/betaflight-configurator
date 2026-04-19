@@ -17,6 +17,10 @@ export function useAdjustmentsPolling() {
     };
 
     const startRcDataPolling = () => {
+        if (rcDataInterval) {
+            updateRcData();
+            return;
+        }
         updateRcData();
         rcDataInterval = setInterval(() => {
             MSP.send_message(MSPCodes.MSP_RC, false, false, updateRcData);
