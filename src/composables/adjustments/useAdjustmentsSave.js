@@ -15,7 +15,7 @@ export function useAdjustmentsSave(adjustments, storeOriginals, t) {
         adjustments.forEach((adjustment) => {
             if (adjustment.enabled) {
                 fcStore.adjustmentRanges.push({
-                    slotIndex: 0,
+                    slotIndex: adjustment.slotIndex ?? 0,
                     auxChannelIndex: adjustment.auxChannelIndex,
                     range: {
                         start: adjustment.range.start,
