@@ -3,9 +3,15 @@
         <div class="app-wrapper">
             <div id="background"></div>
             <div id="side_menu_swipe"></div>
-            <button id="menu_btn" type="button" :aria-label="$t('openSidebarMenu')">
-                <em class="fas fa-bars"></em>
-            </button>
+            <UButton
+                id="menu_btn"
+                icon="i-lucide-menu"
+                color="neutral"
+                variant="soft"
+                size="lg"
+                square
+                :aria-label="$t('openSidebarMenu')"
+            />
             <div id="tab-content-container">
                 <div class="tab_container">
                     <betaflight-logo
@@ -350,23 +356,12 @@ watch(
     top: 0.5rem;
     left: 0.5rem;
     z-index: 2001;
-    width: 2.5rem;
-    height: 2.5rem;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: none;
-    border-radius: 0.5rem;
-    background-color: var(--surface-300);
-    color: var(--text);
-    font: inherit;
-    cursor: pointer;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
     #menu_btn {
-        display: flex;
+        display: inline-flex;
     }
 }
 </style>
