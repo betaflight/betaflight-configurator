@@ -869,10 +869,7 @@ export default defineComponent({
                 );
             } else {
                 flashingMessage(
-                    `<a class="save_firmware" href="#" title="${$t("firmwareFlasherTooltipSaveFirmware")}">${$t(
-                        "firmwareFlasherFirmwareOnlineLoaded",
-                        { filename, bytes },
-                    )}</a>`,
+                    $t("firmwareFlasherFirmwareOnlineLoaded", { filename, bytes }),
                     FLASH_MESSAGE_TYPES.NEUTRAL,
                 );
             }
@@ -2150,12 +2147,6 @@ export default defineComponent({
             }
         };
 
-        const handleProgressLabelClick = (event) => {
-            if (event.target?.classList.contains("save_firmware")) {
-                saveFirmware();
-            }
-        };
-
         const flashRingColor = computed(() => {
             switch (state.progressLabelClass) {
                 case "invalid":
@@ -2240,7 +2231,6 @@ export default defineComponent({
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
             handleVerifyBoardDialogClose,
-            handleProgressLabelClick,
             saveFirmware,
         };
     },
