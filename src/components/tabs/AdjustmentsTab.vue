@@ -123,234 +123,50 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('adjustmentsSave')" color="neutral" @click="saveAdjustments" />
+            <UButton
+                :label="$t('adjustmentsSave')"
+                :color="hasChanges ? 'success' : 'neutral'"
+                :disabled="!hasChanges"
+                @click="saveAdjustments"
+            />
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { onMounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import GUI from "../../js/gui";
-import MSP from "../../js/msp";
-import MSPCodes from "../../js/msp/MSPCodes";
-import { mspHelper } from "../../js/msp/MSPHelper";
-import { API_VERSION_1_48 } from "../../js/data_storage";
-import { gui_log } from "../../js/gui_log";
-import { useFlightControllerStore } from "@/stores/fc";
 import { useTranslation } from "i18next-vue";
+import { useAdjustmentsState } from "@/composables/adjustments/useAdjustmentsState";
+import { useAdjustmentsData } from "@/composables/adjustments/useAdjustmentsData";
+import { useAdjustmentsSave } from "@/composables/adjustments/useAdjustmentsSave";
+import { useAdjustmentsPolling } from "@/composables/adjustments/useAdjustmentsPolling";
 
 const { t } = useTranslation();
-const fcStore = useFlightControllerStore();
 
-const CHANNEL_MIN = 900;
-const CHANNEL_MAX = 2100;
-const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
-
-const pipValues = PIP_VALUES;
-
-const adjustments = reactive([]);
-const auxChannelCount = ref(0);
-const rcChannelData = reactive({});
-
-const auxChannelOptions = computed(() => {
-    const options = [];
-    for (let i = 0; i < auxChannelCount.value; i++) {
-        options.push({ value: i, label: `AUX ${i + 1}` });
-    }
-    return options;
-});
-
-// Generate function options (0-32 base, 33+ gated by API version)
-const adjustmentFunctionCount = computed(() => {
-    return fcStore.isApiVersionSupported(API_VERSION_1_48) ? 34 : 33;
-});
-
-const functionOptions = computed(() => {
-    const options = [];
-    for (let i = 0; i < adjustmentFunctionCount.value; i++) {
-        options.push({
-            value: i,
-            label: t(`adjustmentsFunction${i}`),
-        });
-    }
-    return options;
-});
-
-// Sort functions alphabetically, but keep first option at top
-const sortedFunctions = computed(() => {
-    const opts = [...functionOptions.value];
-    const first = opts[0];
-    const rest = opts.slice(1).sort((a, b) => a.label.localeCompare(b.label));
-    return [first, ...rest];
-});
-
-const channelPercent = (value) => {
-    if (value === undefined || value === null || Number.isNaN(value)) {
-        return 50;
-    }
-    const clamped = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
-    return ((clamped - CHANNEL_MIN) / (CHANNEL_MAX - CHANNEL_MIN)) * 100;
-};
-
-const onEnableChange = (adjustment) => {
-    if (adjustment.enabled) {
-        // Set default range if both start and end are the same
-        if (adjustment.range.start === adjustment.range.end) {
-            adjustment.range.start = 1300;
-            adjustment.range.end = 1700;
-        }
-    } else {
-        // Reset to initial state when disabled
-        adjustment.range.start = 900;
-        adjustment.range.end = 900;
-    }
-};
-
-const loadMSPData = async () => {
-    return new Promise((resolve) => {
-        MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, () => {
-            MSP.send_message(MSPCodes.MSP_ADJUSTMENT_RANGES, false, false, () => {
-                MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, () => {
-                    MSP.send_message(MSPCodes.MSP_RC, false, false, resolve);
-                });
-            });
-        });
-    });
-};
-
-const initializeAdjustments = () => {
-    auxChannelCount.value = fcStore.rc.active_channels - 4;
-
-    // Clear existing adjustments
-    adjustments.splice(0, adjustments.length);
-
-    // Populate adjustments from fcStore
-    fcStore.adjustmentRanges.forEach((range) => {
-        const isEnabled = range.range?.start !== range.range?.end;
-        const adj = reactive({
-            slotIndex: range.slotIndex || 0,
-            auxChannelIndex: range.auxChannelIndex || 0,
-            range: {
-                start: range.range?.start || 900,
-                end: range.range?.end || 900,
-            },
-            adjustmentFunction: range.adjustmentFunction || 0,
-            auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
-            adjustmentCenter: range.adjustmentCenter || 0,
-            adjustmentScale: range.adjustmentScale || 0,
-            enabled: isEnabled,
-            // USlider range mode adapter
-            get rangeArray() {
-                return [this.range.start, this.range.end];
-            },
-            set rangeArray([start, end]) {
-                this.range.start = start;
-                this.range.end = end;
-            },
-        });
-        adjustments.push(adj);
-    });
-};
-
-const updateRcData = () => {
-    const auxCount = fcStore.rc.active_channels - 4;
-    for (let auxChannelIndex = 0; auxChannelIndex < auxCount; auxChannelIndex++) {
-        rcChannelData[auxChannelIndex] = fcStore.rc.channels[auxChannelIndex + 4];
-    }
-};
-
-let rcDataInterval = null;
-
-const startRcDataPolling = () => {
-    const getRcData = () => {
-        MSP.send_message(MSPCodes.MSP_RC, false, false, updateRcData);
-    };
-
-    // Update immediately
-    updateRcData();
-
-    // Start polling
-    rcDataInterval = setInterval(getRcData, 50);
-};
-
-const stopRcDataPolling = () => {
-    if (rcDataInterval) {
-        clearInterval(rcDataInterval);
-        rcDataInterval = null;
-    }
-};
-
-const saveAdjustments = () => {
-    const requiredAdjustmentRangeCount = fcStore.adjustmentRanges.length;
-
-    fcStore.adjustmentRanges = [];
-
-    adjustments.forEach((adjustment) => {
-        if (adjustment.enabled) {
-            fcStore.adjustmentRanges.push({
-                slotIndex: 0,
-                auxChannelIndex: adjustment.auxChannelIndex,
-                range: {
-                    start: adjustment.range.start,
-                    end: adjustment.range.end,
-                },
-                adjustmentFunction: adjustment.adjustmentFunction,
-                auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
-                adjustmentCenter: adjustment.adjustmentCenter || 0,
-                adjustmentScale: adjustment.adjustmentScale || 0,
-            });
-        } else {
-            fcStore.adjustmentRanges.push({
-                slotIndex: 0,
-                auxChannelIndex: 0,
-                range: {
-                    start: 900,
-                    end: 900,
-                },
-                adjustmentFunction: 0,
-                auxSwitchChannelIndex: 0,
-                adjustmentCenter: 0,
-                adjustmentScale: 0,
-            });
-        }
-    });
-
-    // Fill remaining slots if needed
-    for (let i = fcStore.adjustmentRanges.length; i < requiredAdjustmentRangeCount; i++) {
-        fcStore.adjustmentRanges.push({
-            slotIndex: 0,
-            auxChannelIndex: 0,
-            range: {
-                start: 900,
-                end: 900,
-            },
-            adjustmentFunction: 0,
-            auxSwitchChannelIndex: 0,
-            adjustmentCenter: 0,
-            adjustmentScale: 0,
-        });
-    }
-
-    mspHelper.sendAdjustmentRanges(() => {
-        MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, () => {
-            gui_log(t("adjustmentsEepromSaved"));
-        });
-    });
-};
+const { adjustments, hasChanges, storeOriginals } = useAdjustmentsState();
+const {
+    auxChannelOptions,
+    sortedFunctions,
+    pipValues,
+    channelPercent,
+    onEnableChange,
+    loadMSPData,
+    initializeAdjustments,
+} = useAdjustmentsData(adjustments, t);
+const { saveAdjustments } = useAdjustmentsSave(adjustments, storeOriginals, t);
+const { rcChannelData, startRcDataPolling } = useAdjustmentsPolling();
 
 onMounted(async () => {
     await loadMSPData();
     initializeAdjustments();
+    storeOriginals();
     await nextTick();
     startRcDataPolling();
     GUI.content_ready();
-});
-
-onUnmounted(() => {
-    stopRcDataPolling();
 });
 </script>
 
