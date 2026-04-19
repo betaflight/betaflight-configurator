@@ -3,9 +3,6 @@
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabRawSensorData')"></div>
             <WikiButton docUrl="sensors" />
-            <div class="sensor-status-wrap">
-                <SensorStatus :sensors-detected="activeSensors" :gps-fix-state="gpsFix" />
-            </div>
 
             <div class="note">
                 <p v-html="$t('sensorsInfo')"></p>
@@ -114,7 +111,6 @@ import { have_sensor } from "../../js/sensor_helpers";
 import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./sensors/constants";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
-import SensorStatus from "@/components/sensor-status/SensorStatus.vue";
 import SensorGraph from "./sensors/SensorGraph.vue";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -125,9 +121,6 @@ const fcStore = useFlightControllerStore();
 const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
 const { addInterval, removeInterval } = useInterval();
-
-const activeSensors = computed(() => fcStore.config?.activeSensors ?? 0);
-const gpsFix = computed(() => fcStore.gpsData?.fix ?? 0);
 
 // Get reactive refs from store
 const { checkboxes, rates, scales, debugColumns } = storeToRefs(sensorsStore);
@@ -481,12 +474,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.sensor-status-wrap {
-    display: flex;
-    justify-content: center;
-    margin: 0.5rem 0 0.75rem;
-}
-
 .info {
     margin-bottom: 10px;
     margin-top: 8px;
