@@ -2640,6 +2640,9 @@
     "auxiliaryAutoChannelSelect": {
       "message": "AUTO"
     },
+    "auxiliaryLinkNone": {
+        "message": "None"
+    },
     "auxiliaryModeLogicOR": {
       "message": "OR"
     },
