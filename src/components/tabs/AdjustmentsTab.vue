@@ -5,6 +5,15 @@
             <WikiButton docUrl="adjustments" />
 
             <div class="adjustments-container">
+                <div class="adjustments-summary">
+                    <span>{{ $t("adjustmentsSlotsActive", { active: activeCount, total: adjustments.length }) }}</span>
+                    <UButton
+                        :label="showAllSlots ? $t('adjustmentsHideEmpty') : $t('adjustmentsShowAll')"
+                        variant="link"
+                        size="xs"
+                        @click="showAllSlots = !showAllSlots"
+                    />
+                </div>
                 <div class="adjustments-header">
                     <div>{{ $t("adjustmentsColumnEnable") }}</div>
                     <div>{{ $t("adjustmentsColumnWhenChannel") }}</div>
@@ -23,14 +32,14 @@
 
                 <div class="adjustments-list">
                     <div
-                        v-for="(adjustment, index) in adjustments"
-                        :key="index"
-                        :id="`adjustment-${index}`"
+                        v-for="{ adjustment, originalIndex } in visibleAdjustments"
+                        :key="originalIndex"
+                        :id="`adjustment-${originalIndex}`"
                         class="adjustment"
                         :class="{ 'adjustment-disabled': !adjustment.enabled }"
                     >
                         <div class="adjustment-enable" :data-label="$t('adjustmentsColumnEnable')">
-                            <span class="row-index">#{{ index + 1 }}</span>
+                            <span class="row-index">#{{ originalIndex + 1 }}</span>
                             <USwitch
                                 v-model="adjustment.enabled"
                                 size="sm"
@@ -152,7 +161,8 @@ import { useAdjustmentsPolling } from "@/composables/adjustments/useAdjustmentsP
 
 const { t } = useTranslation();
 
-const { adjustments, hasChanges, storeOriginals } = useAdjustmentsState();
+const { adjustments, hasChanges, storeOriginals, showAllSlots, activeCount, visibleAdjustments } =
+    useAdjustmentsState();
 const {
     auxChannelOptions,
     sortedFunctions,
@@ -179,6 +189,15 @@ onMounted(async () => {
 .adjustments-container {
     width: 100%;
     margin: 20px 0;
+}
+
+.adjustments-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
 }
 
 .adjustments-header,
