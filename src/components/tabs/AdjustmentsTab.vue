@@ -6,18 +6,18 @@
 
             <div class="adjustments-container">
                 <div class="adjustments-header">
-                    <div class="header-enable">{{ $t("adjustmentsColumnEnable") }}</div>
-                    <div class="header-channel">{{ $t("adjustmentsColumnWhenChannel") }}</div>
-                    <div class="header-range">{{ $t("adjustmentsColumnIsInRange") }}</div>
-                    <div class="header-function">{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
-                    <div class="header-via">{{ $t("adjustmentsColumnViaChannel") }}</div>
-                    <div class="header-center">
+                    <div>{{ $t("adjustmentsColumnEnable") }}</div>
+                    <div>{{ $t("adjustmentsColumnWhenChannel") }}</div>
+                    <div>{{ $t("adjustmentsColumnIsInRange") }}</div>
+                    <div>{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
+                    <div>{{ $t("adjustmentsColumnViaChannel") }}</div>
+                    <div class="flex items-center gap-1">
                         {{ $t("adjustmentsColumnAdjustmentCenter") }}
-                        <div class="helpicon cf_tip" i18n_title="adjustmentsCenterHelp"></div>
+                        <HelpIcon :text="$t('adjustmentsCenterHelp')" />
                     </div>
-                    <div class="header-scale">
+                    <div class="flex items-center gap-1">
                         {{ $t("adjustmentsColumnAdjustmentScale") }}
-                        <div class="helpicon cf_tip" i18n_title="adjustmentsScaleHelp"></div>
+                        <HelpIcon :text="$t('adjustmentsScaleHelp')" />
                     </div>
                 </div>
 
@@ -29,98 +29,75 @@
                         class="adjustment"
                     >
                         <div class="adjustment-enable" :data-label="$t('adjustmentsColumnEnable')">
-                            <div class="enabling">
-                                <input
-                                    type="checkbox"
-                                    v-model="adjustment.enabled"
-                                    @change="onEnableChange(adjustment)"
-                                    class="enable toggle"
-                                />
-                            </div>
+                            <USwitch
+                                v-model="adjustment.enabled"
+                                size="sm"
+                                @update:model-value="onEnableChange(adjustment)"
+                            />
                         </div>
 
                         <div class="adjustment-channel" :data-label="$t('adjustmentsColumnWhenChannel')">
-                            <select
-                                v-model.number="adjustment.auxChannelIndex"
-                                class="channel"
+                            <USelect
+                                v-model="adjustment.auxChannelIndex"
+                                :items="auxChannelOptions"
                                 :disabled="!adjustment.enabled"
-                            >
-                                <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">AUX {{ ch }}</option>
-                            </select>
+                            />
                             <div class="limits">
-                                <p class="lowerLimit">
-                                    <span>{{ $t("adjustmentsMin") }}</span
-                                    >: <span class="lowerLimitValue">{{ adjustment.range.start }}</span>
-                                </p>
-                                <p class="upperLimit">
-                                    <span>{{ $t("adjustmentsMax") }}</span
-                                    >: <span class="upperLimitValue">{{ adjustment.range.end }}</span>
-                                </p>
+                                <span>{{ $t("adjustmentsMin") }}: {{ adjustment.range.start }}</span>
+                                <span>{{ $t("adjustmentsMax") }}: {{ adjustment.range.end }}</span>
                             </div>
                         </div>
 
                         <div class="adjustment-range" :data-label="$t('adjustmentsColumnIsInRange')">
-                            <div class="channel-slider">
+                            <div class="relative">
+                                <USlider
+                                    v-model="adjustment.rangeArray"
+                                    :min="900"
+                                    :max="2100"
+                                    :step="25"
+                                    :disabled="!adjustment.enabled"
+                                />
                                 <div
-                                    class="slider-wrapper"
-                                    @mousedown="(e) => handleSliderClick(e, adjustment)"
-                                    @touchstart="(e) => handleSliderClick(e, adjustment)"
+                                    v-if="rcChannelData[adjustment.auxChannelIndex] !== undefined"
+                                    class="marker"
+                                    :style="{ left: channelPercent(rcChannelData[adjustment.auxChannelIndex]) + '%' }"
+                                ></div>
+                            </div>
+                            <div class="pips-channel-range">
+                                <span
+                                    v-for="pip in pipValues"
+                                    :key="pip"
+                                    class="pip"
+                                    :style="{ left: channelPercent(pip) + '%' }"
+                                    >{{ pip }}</span
                                 >
-                                    <div class="track-background"></div>
-                                    <div
-                                        class="track-fill"
-                                        :style="rangeFillStyle(adjustment)"
-                                        @mousedown.stop="(e) => startDrag(e, adjustment, 'range')"
-                                        @touchstart.stop="(e) => startDrag(e, adjustment, 'range')"
-                                    ></div>
-                                    <div
-                                        class="range-handle handle-min"
-                                        :style="{ left: channelPercent(adjustment.range.start) + '%' }"
-                                        @mousedown.stop="(e) => startDrag(e, adjustment, 'start')"
-                                        @touchstart.stop="(e) => startDrag(e, adjustment, 'start')"
-                                    ></div>
-                                    <div
-                                        class="range-handle handle-max"
-                                        :style="{ left: channelPercent(adjustment.range.end) + '%' }"
-                                        @mousedown.stop="(e) => startDrag(e, adjustment, 'end')"
-                                        @touchstart.stop="(e) => startDrag(e, adjustment, 'end')"
-                                    ></div>
-                                    <div class="marker" :style="markerStyle(adjustment.auxChannelIndex)"></div>
-                                </div>
-                                <div class="pips-channel-range">
-                                    <div v-for="pip in pipValues" :key="pip" class="pip" :style="pipStyle(pip)">
-                                        {{ pip }}
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
                         <div class="adjustment-function" :data-label="$t('adjustmentsColumnThenApplyFunction')">
-                            <select
-                                v-model.number="adjustment.adjustmentFunction"
-                                class="function"
+                            <USelectMenu
+                                v-model="adjustment.adjustmentFunction"
+                                value-key="value"
+                                :items="sortedFunctions"
                                 :disabled="!adjustment.enabled"
-                            >
-                                <option v-for="func in sortedFunctions" :key="func.value" :value="func.value">
-                                    {{ func.label }}
-                                </option>
-                            </select>
+                                searchable
+                            />
                         </div>
 
                         <div class="adjustment-via" :data-label="$t('adjustmentsColumnViaChannel')">
-                            <select
-                                v-model.number="adjustment.auxSwitchChannelIndex"
-                                class="channel"
+                            <USelect
+                                v-model="adjustment.auxSwitchChannelIndex"
+                                :items="auxChannelOptions"
                                 :disabled="!adjustment.enabled"
-                            >
-                                <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">AUX {{ ch }}</option>
-                            </select>
+                            />
                         </div>
 
                         <div class="adjustment-center" :data-label="$t('adjustmentsColumnAdjustmentCenter')">
                             <UInputNumber
                                 v-model="adjustment.adjustmentCenter"
-                                class="center-input"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
                                 :disabled="!adjustment.enabled"
                                 :min="0"
                                 :max="2000"
@@ -131,7 +108,9 @@
                         <div class="adjustment-scale" :data-label="$t('adjustmentsColumnAdjustmentScale')">
                             <UInputNumber
                                 v-model="adjustment.adjustmentScale"
-                                class="scale-input"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
                                 :disabled="!adjustment.enabled"
                                 :min="0"
                                 :max="2000"
@@ -144,9 +123,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
-                <button type="button" class="save" @click="saveAdjustments">{{ $t("adjustmentsSave") }}</button>
-            </div>
+            <UButton :label="$t('adjustmentsSave')" color="neutral" @click="saveAdjustments" />
         </div>
     </BaseTab>
 </template>
@@ -155,11 +132,11 @@
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
+import HelpIcon from "@/components/elements/HelpIcon.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import { i18n } from "../../js/localization";
 import { API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
@@ -170,15 +147,21 @@ const fcStore = useFlightControllerStore();
 
 const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
-const CHANNEL_STEP = 25;
-const MIN_RANGE_GAP = 25;
-const PIP_VALUES = [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
+const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
+
+const pipValues = PIP_VALUES;
 
 const adjustments = reactive([]);
 const auxChannelCount = ref(0);
 const rcChannelData = reactive({});
 
-const pipValues = computed(() => PIP_VALUES);
+const auxChannelOptions = computed(() => {
+    const options = [];
+    for (let i = 0; i < auxChannelCount.value; i++) {
+        options.push({ value: i, label: `AUX ${i + 1}` });
+    }
+    return options;
+});
 
 // Generate function options (0-32 base, 33+ gated by API version)
 const adjustmentFunctionCount = computed(() => {
@@ -204,173 +187,12 @@ const sortedFunctions = computed(() => {
     return [first, ...rest];
 });
 
-const clampChannel = (value) => {
-    if (value === undefined || value === null || Number.isNaN(value)) {
-        return 1500;
-    }
-    return Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
-};
-
 const channelPercent = (value) => {
-    const clamped = clampChannel(value);
+    if (value === undefined || value === null || Number.isNaN(value)) {
+        return 50;
+    }
+    const clamped = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
     return ((clamped - CHANNEL_MIN) / (CHANNEL_MAX - CHANNEL_MIN)) * 100;
-};
-
-const pipStyle = (value) => {
-    return { left: `${channelPercent(value)}%` };
-};
-
-const markerStyle = (auxChannelIndex) => {
-    const channelValue = rcChannelData[auxChannelIndex];
-    if (channelValue === undefined) {
-        return { display: "none" };
-    }
-    return { left: `${channelPercent(channelValue)}%` };
-};
-
-const rangeFillStyle = (adjustment) => {
-    const start = channelPercent(adjustment.range.start);
-    const end = channelPercent(adjustment.range.end);
-    return {
-        left: `${start}%`,
-        width: `${Math.max(end - start, 0)}%`,
-    };
-};
-
-const ensureRangeOrder = (adjustment) => {
-    if (adjustment.range.start > adjustment.range.end - MIN_RANGE_GAP) {
-        adjustment.range.start = Math.max(CHANNEL_MIN, adjustment.range.end - MIN_RANGE_GAP);
-    }
-    if (adjustment.range.end < adjustment.range.start + MIN_RANGE_GAP) {
-        adjustment.range.end = Math.min(CHANNEL_MAX, adjustment.range.start + MIN_RANGE_GAP);
-    }
-};
-
-// Drag handling
-let dragState = null;
-let cleanupDragListeners = null;
-
-const getEventX = (e) => {
-    return e.touches ? e.touches[0].clientX : e.clientX;
-};
-
-const snapToStep = (value) => {
-    return Math.round(value / CHANNEL_STEP) * CHANNEL_STEP;
-};
-
-const handleSliderClick = (e, adjustment) => {
-    if (!adjustment.enabled || dragState) {
-        return;
-    }
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const clickX = getEventX(e);
-    const percent = ((clickX - rect.left) / rect.width) * 100;
-    const value = snapToStep(CHANNEL_MIN + (percent / 100) * (CHANNEL_MAX - CHANNEL_MIN));
-
-    const clamped = clampChannel(value);
-    const midPoint = (adjustment.range.start + adjustment.range.end) / 2;
-
-    if (clamped < midPoint) {
-        adjustment.range.start = clamped;
-    } else {
-        adjustment.range.end = clamped;
-    }
-    ensureRangeOrder(adjustment);
-};
-
-const startDrag = (e, adjustment, dragType) => {
-    if (!adjustment.enabled) {
-        return;
-    }
-
-    e.preventDefault();
-
-    const startX = getEventX(e);
-    const startRange = {
-        start: adjustment.range.start,
-        end: adjustment.range.end,
-    };
-
-    // Measure the actual slider width from the wrapper element
-    const sliderWrapper = e.target.closest(".slider-wrapper");
-    const sliderWidth = sliderWrapper ? sliderWrapper.offsetWidth : 300;
-
-    dragState = {
-        adjustment,
-        dragType,
-        startX,
-        startRange,
-        sliderWidth,
-    };
-
-    const onMove = (e) => {
-        if (!dragState) {
-            return;
-        }
-
-        const currentX = getEventX(e);
-        const deltaX = currentX - dragState.startX;
-        const deltaValue = (deltaX / dragState.sliderWidth) * (CHANNEL_MAX - CHANNEL_MIN);
-        const snappedDelta = snapToStep(deltaValue);
-
-        if (dragState.dragType === "start") {
-            let newStart = dragState.startRange.start + snappedDelta;
-            newStart = clampChannel(newStart);
-            if (newStart > dragState.adjustment.range.end - MIN_RANGE_GAP) {
-                newStart = dragState.adjustment.range.end - MIN_RANGE_GAP;
-            }
-            dragState.adjustment.range.start = newStart;
-        } else if (dragState.dragType === "end") {
-            let newEnd = dragState.startRange.end + snappedDelta;
-            newEnd = clampChannel(newEnd);
-            if (newEnd < dragState.adjustment.range.start + MIN_RANGE_GAP) {
-                newEnd = dragState.adjustment.range.start + MIN_RANGE_GAP;
-            }
-            dragState.adjustment.range.end = newEnd;
-        } else if (dragState.dragType === "range") {
-            const rangeSize = dragState.startRange.end - dragState.startRange.start;
-            let newStart = dragState.startRange.start + snappedDelta;
-            let newEnd = dragState.startRange.end + snappedDelta;
-
-            if (newStart < CHANNEL_MIN) {
-                newStart = CHANNEL_MIN;
-                newEnd = newStart + rangeSize;
-            }
-            if (newEnd > CHANNEL_MAX) {
-                newEnd = CHANNEL_MAX;
-                newStart = newEnd - rangeSize;
-            }
-
-            dragState.adjustment.range.start = clampChannel(newStart);
-            dragState.adjustment.range.end = clampChannel(newEnd);
-        }
-    };
-
-    const cleanup = () => {
-        if (cleanupDragListeners) {
-            cleanupDragListeners();
-            cleanupDragListeners = null;
-        }
-    };
-
-    const onEnd = () => {
-        cleanup();
-    };
-
-    // Store cleanup function
-    cleanupDragListeners = () => {
-        dragState = null;
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onEnd);
-        document.removeEventListener("touchmove", onMove);
-        document.removeEventListener("touchend", onEnd);
-    };
-
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onEnd);
-    document.addEventListener("touchmove", onMove);
-    document.addEventListener("touchend", onEnd);
 };
 
 const onEnableChange = (adjustment) => {
@@ -408,21 +230,28 @@ const initializeAdjustments = () => {
     // Populate adjustments from fcStore
     fcStore.adjustmentRanges.forEach((range) => {
         const isEnabled = range.range?.start !== range.range?.end;
-        adjustments.push(
-            reactive({
-                slotIndex: range.slotIndex || 0,
-                auxChannelIndex: range.auxChannelIndex || 0,
-                range: {
-                    start: range.range?.start || 900,
-                    end: range.range?.end || 900,
-                },
-                adjustmentFunction: range.adjustmentFunction || 0,
-                auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
-                adjustmentCenter: range.adjustmentCenter || 0,
-                adjustmentScale: range.adjustmentScale || 0,
-                enabled: isEnabled,
-            }),
-        );
+        const adj = reactive({
+            slotIndex: range.slotIndex || 0,
+            auxChannelIndex: range.auxChannelIndex || 0,
+            range: {
+                start: range.range?.start || 900,
+                end: range.range?.end || 900,
+            },
+            adjustmentFunction: range.adjustmentFunction || 0,
+            auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
+            adjustmentCenter: range.adjustmentCenter || 0,
+            adjustmentScale: range.adjustmentScale || 0,
+            enabled: isEnabled,
+            // USlider range mode adapter
+            get rangeArray() {
+                return [this.range.start, this.range.end];
+            },
+            set rangeArray([start, end]) {
+                this.range.start = start;
+                this.range.end = end;
+            },
+        });
+        adjustments.push(adj);
     });
 };
 
@@ -516,41 +345,35 @@ onMounted(async () => {
     await loadMSPData();
     initializeAdjustments();
     await nextTick();
-    // Ensure i18n attributes are applied to DOM (i18n_title -> title)
-    i18n.localizePage();
-    GUI.switchery();
     startRcDataPolling();
     GUI.content_ready();
 });
 
 onUnmounted(() => {
     stopRcDataPolling();
-    if (cleanupDragListeners) {
-        cleanupDragListeners();
-    }
 });
 </script>
 
 <style scoped>
-/* Adjustments container layout */
 .adjustments-container {
     width: 100%;
     margin: 20px 0;
 }
 
-.adjustments-header {
+.adjustments-header,
+.adjustment {
     display: grid;
-    grid-template-columns: 80px 80px 1fr 200px 80px 120px 120px;
-    gap: 16px;
+    grid-template-columns: 3.5rem 5rem 1fr 7rem 5rem 4.5rem 4.5rem;
+    gap: 12px;
     padding: 12px 16px;
+}
+
+.adjustments-header {
     background: var(--surface-700);
     border-bottom: 2px solid var(--surface-600);
     font-weight: 600;
+    font-size: 13px;
     color: var(--text-primary);
-}
-
-.adjustments-header > div {
-    text-align: left;
 }
 
 .adjustments-list {
@@ -561,10 +384,6 @@ onUnmounted(() => {
 }
 
 .adjustment {
-    display: grid;
-    grid-template-columns: 80px 80px 1fr 200px 80px 120px 120px;
-    gap: 16px;
-    padding: 16px;
     background: var(--surface-200);
     align-items: center;
 }
@@ -585,10 +404,6 @@ onUnmounted(() => {
     gap: 8px;
 }
 
-.adjustment-channel select {
-    width: 100%;
-}
-
 .limits {
     display: flex;
     gap: 12px;
@@ -596,53 +411,34 @@ onUnmounted(() => {
     color: var(--text-secondary);
 }
 
-.limits p {
-    margin: 0;
-}
-
 .adjustment-range {
     min-width: 0;
 }
 
-.adjustment-function select,
-.adjustment-via select {
-    width: 100%;
+.marker {
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    height: 24px;
+    background: #ff0;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
-.adjustment-center,
-.adjustment-scale {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.pips-channel-range {
+    position: relative;
+    height: 20px;
+    margin-top: 4px;
 }
 
-.adjustment-center :deep(input),
-.adjustment-scale :deep(input) {
-    width: 100%;
-    background: var(--surface-700);
-    border: 1px solid var(--surface-600);
-    color: var(--text-primary);
-    padding: 6px 8px;
-    border-radius: 4px;
-}
-
-.adjustment-center :deep(input:disabled),
-.adjustment-scale :deep(input:disabled) {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-select {
-    background: var(--surface-700);
-    border: 1px solid var(--surface-600);
-    color: var(--text-primary);
-    padding: 6px 8px;
-    border-radius: 4px;
-}
-
-select:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.pip {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--text-tertiary);
+    white-space: nowrap;
 }
 
 /* Responsive layout */
@@ -668,104 +464,5 @@ select:disabled {
     .adjustment-enable {
         justify-content: flex-start;
     }
-}
-
-/* Custom Vue slider styling - replaces noUiSlider */
-.channel-slider {
-    position: relative;
-    width: 100%;
-}
-
-.slider-wrapper {
-    position: relative;
-    height: 18px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.track-background {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 8px;
-    background: var(--surface-600);
-    transform: translateY(-50%);
-    border-radius: 4px;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.track-fill {
-    position: absolute;
-    top: 50%;
-    height: 8px;
-    background: var(--primary-500);
-    transform: translateY(-50%);
-    border-radius: 4px;
-    cursor: grab;
-    z-index: 1;
-}
-
-.track-fill:active {
-    cursor: grabbing;
-}
-
-.range-handle {
-    position: absolute;
-    top: 50%;
-    width: 18px;
-    height: 18px;
-    background: var(--surface-200);
-    border: 3px solid var(--primary-500);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    cursor: grab;
-    z-index: 10;
-}
-
-.range-handle:hover {
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
-    transform: translate(-50%, -50%) scale(1.1);
-}
-
-.range-handle:active {
-    cursor: grabbing;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-
-.marker {
-    position: absolute;
-    top: 50%;
-    width: 2px;
-    height: 24px;
-    background: #ff0;
-    transform: translate(-50%, -50%);
-    z-index: 3;
-    pointer-events: none;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-}
-
-.pips-channel-range {
-    position: relative;
-    height: 20px;
-    margin-top: 8px;
-}
-
-.pip {
-    position: absolute;
-    transform: translateX(-50%);
-    font-size: 10px;
-    color: var(--text-tertiary);
-    white-space: nowrap;
-}
-
-/* Disable pointer events when adjustment is disabled */
-.adjustment:has(input.enable:not(:checked)) .slider-wrapper,
-.adjustment:has(input.enable:not(:checked)) .range-handle,
-.adjustment:has(input.enable:not(:checked)) .track-fill {
-    pointer-events: none;
-    opacity: 0.5;
 }
 </style>
