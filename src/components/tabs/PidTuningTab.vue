@@ -71,7 +71,7 @@
                     :model-value="activeSubtab"
                     :content="false"
                     color="primary"
-                    variant="pill"
+                    variant="link"
                     @update:model-value="activeSubtab = $event"
                 />
             </div>
@@ -110,7 +110,12 @@
                     :disabled="!hasChanges"
                     @click="save"
                 />
-                <UButton :label="$t('pidTuningButtonRefresh')" color="neutral" variant="outline" @click="refresh" />
+                <UButton
+                    :label="$t('pidTuningButtonRefresh')"
+                    :color="hasChanges ? 'primary' : 'neutral'"
+                    :disabled="!hasChanges"
+                    @click="refresh"
+                />
             </div>
         </div>
     </BaseTab>
@@ -182,9 +187,9 @@ const rateProfileItems = computed(() => {
 });
 
 const subtabItems = computed(() => [
-    { label: t("pidTuningSubTabPid"), value: "pid" },
-    { label: t("pidTuningSubTabRates"), value: "rates" },
-    { label: t("pidTuningSubTabFilter"), value: "filter" },
+    { label: t("pidTuningSubTabPid"), value: "pid", icon: "i-lucide-sliders-horizontal" },
+    { label: t("pidTuningSubTabRates"), value: "rates", icon: "i-lucide-gauge" },
+    { label: t("pidTuningSubTabFilter"), value: "filter", icon: "i-lucide-filter" },
 ]);
 
 // Profile name state lifted from child components
@@ -1280,6 +1285,7 @@ onUnmounted(() => {
 /* ── Sub-tab navigation ───────────────────────────────────────────── */
 .subtab-nav {
     width: calc(100% - 22px);
+    margin-bottom: 6px;
 }
 
 /* ── Tab area ─────────────────────────────────────────────────────── */
@@ -1291,7 +1297,7 @@ onUnmounted(() => {
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
     border-top: 0 solid var(--surface-500);
-    background: var(--surface-200);
+    background: transparent;
 }
 
 /* ── Responsive: 575px ────────────────────────────────────────────── */

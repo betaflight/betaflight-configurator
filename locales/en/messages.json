@@ -2045,7 +2045,7 @@
         "message": "PID Profile Settings"
     },
     "pidTuningSubTabRates": {
-        "message": "Rateprofile Settings"
+        "message": "Rate Profile Settings"
     },
     "pidTuningSubTabFilter": {
         "message": "Filter Settings"
@@ -2111,7 +2111,7 @@
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
-        "message": "Dynamic<br>Damping",
+        "message": "Dynamic Damping",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
@@ -2239,7 +2239,7 @@
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
+        "message": "Feedforward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward adjusts stick responsiveness.<br /><br /> These options let you adjust it to provide anything from crisp, immediate stick responses for racing, or soft smooth responses for cinematic / HD purposes."
@@ -2344,6 +2344,9 @@
     },
     "pidTuningRatesPreview": {
         "message": "Rates Preview"
+    },
+    "pidTuningRatesModelPreview": {
+        "message": "Rates Model Preview"
     },
     "pidTuningRatesTuningHelp": {
         "message": "<b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting."
@@ -7679,7 +7682,7 @@
         "message": "Rates Type"
     },
     "pidTuningRatesTypeTip": {
-        "message": "Changing rates type will change the rates curve and the way you can set it"
+        "message": "Changing rates type will change the rates curve and the way you can set it<br><br><a href='https://rates.metamarc.com' target='_blank' rel='noopener noreferrer'>rates.metamarc.com</a>"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"
