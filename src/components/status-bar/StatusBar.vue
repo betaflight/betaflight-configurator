@@ -1,56 +1,58 @@
 <template>
     <div id="status-bar">
-        <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
-        <span v-if="connectionTimestamp" class="stat-group" :title="$t('statusbar_connection_time')">
-            <UIcon name="i-lucide-clock" class="stat-icon" />
-            <span class="value">{{ formattedConnectionTime }}</span>
-        </span>
-        <span class="stat-group" :title="$t('statusbar_packet_error')">
-            <UIcon name="i-lucide-triangle-alert" class="stat-icon" />
-            <span class="value">{{ packetError }}</span>
-        </span>
-        <span class="stat-group" :title="$t('statusbar_cycle_time')">
-            <UIcon name="i-lucide-timer" class="stat-icon" />
-            <span class="value">{{ cycleTime }}</span>
-        </span>
-        <span class="stat-group cpu-load" :title="`${$t('statusbar_cpu_load')}: ${cpuLoad}%`">
-            <UIcon name="i-lucide-cpu" class="stat-icon" />
-            <span class="cpu-bar" :class="cpuLoadClass">
-                <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
+        <template v-if="connectionTimestamp">
+            <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
+            <span class="stat-group" :title="$t('statusbar_connection_time')">
+                <UIcon name="i-lucide-clock" class="stat-icon" />
+                <span class="value">{{ formattedConnectionTime }}</span>
             </span>
-        </span>
-        <div v-if="connectionTimestamp" class="status-indicators">
-            <SensorStatus
-                class="status-indicators__sensors"
-                compact
-                :sensors-detected="fcConfig.activeSensors ?? 0"
-                :gps-fix-state="gps.fix ?? 0"
-            />
-            <BatteryIcon
-                compact
-                :voltage="analog.voltage ?? 0"
-                :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
-                :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
-                :battery-state="batteryState.batteryState"
-            />
-            <BatteryLegend
-                compact
-                :voltage="analog.voltage ?? 0"
-                :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
-            />
-            <BottomStatusIcons
-                compact
-                :last-received-timestamp="analog.last_received_timestamp ?? 0"
-                :mode="fcConfig.mode ?? 0"
-                :aux-config="auxConfig"
-            />
-            <DataFlash
-                v-if="dataflashSupported"
-                compact
-                :fc-total-size="dataflash.totalSize"
-                :fc-used-size="dataflash.usedSize"
-            />
-        </div>
+            <span class="stat-group" :title="$t('statusbar_packet_error')">
+                <UIcon name="i-lucide-triangle-alert" class="stat-icon" />
+                <span class="value">{{ packetError }}</span>
+            </span>
+            <span class="stat-group" :title="$t('statusbar_cycle_time')">
+                <UIcon name="i-lucide-timer" class="stat-icon" />
+                <span class="value">{{ cycleTime }}</span>
+            </span>
+            <span class="stat-group cpu-load" :title="`${$t('statusbar_cpu_load')}: ${cpuLoad}%`">
+                <UIcon name="i-lucide-cpu" class="stat-icon" />
+                <span class="cpu-bar" :class="cpuLoadClass">
+                    <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
+                </span>
+            </span>
+            <div class="status-indicators">
+                <SensorStatus
+                    class="status-indicators__sensors"
+                    compact
+                    :sensors-detected="fcConfig.activeSensors ?? 0"
+                    :gps-fix-state="gps.fix ?? 0"
+                />
+                <BatteryIcon
+                    compact
+                    :voltage="analog.voltage ?? 0"
+                    :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
+                    :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
+                    :battery-state="batteryState.batteryState"
+                />
+                <BatteryLegend
+                    compact
+                    :voltage="analog.voltage ?? 0"
+                    :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
+                />
+                <BottomStatusIcons
+                    compact
+                    :last-received-timestamp="analog.last_received_timestamp ?? 0"
+                    :mode="fcConfig.mode ?? 0"
+                    :aux-config="auxConfig"
+                />
+                <DataFlash
+                    v-if="dataflashSupported"
+                    compact
+                    :fc-total-size="dataflash.totalSize"
+                    :fc-used-size="dataflash.usedSize"
+                />
+            </div>
+        </template>
         <span class="stat-group status-version" :title="$t('versionLabelConfigurator')">
             <span class="value">{{ configuratorVersion }}</span>
         </span>
