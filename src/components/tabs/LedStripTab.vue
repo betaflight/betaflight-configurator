@@ -38,13 +38,21 @@
 
                     <div class="clear-buttons-container">
                         <!-- Clear Buttons -->
-                        <button
-                            class="funcClear"
+                        <UButton
+                            size="sm"
+                            color="neutral"
+                            variant="soft"
                             :disabled="!hasSelection"
+                            :label="$t('ledStripClearSelectedButton')"
                             @click="clearSelected"
-                            v-html="$t('ledStripClearSelectedButton')"
-                        ></button>
-                        <button class="funcClearAll" @click="clearAll" v-html="$t('ledStripClearAllButton')"></button>
+                        />
+                        <UButton
+                            size="sm"
+                            color="error"
+                            variant="soft"
+                            :label="$t('ledStripClearAllButton')"
+                            @click="clearAll"
+                        />
                     </div>
                 </div>
                 <!-- Function Selection -->
@@ -185,13 +193,16 @@
                 <!-- Directions -->
                 <div class="section" v-html="$t('ledStripModesOrientationTitle')"></div>
                 <div class="directions">
-                    <button
+                    <UButton
                         v-for="dir in directions"
                         :key="dir"
-                        :class="['dir-' + dir, { btnOn: activeDirections.has(dir) }]"
+                        size="sm"
+                        color="primary"
+                        :variant="activeDirections.has(dir) ? 'solid' : 'soft'"
+                        :class="'dir-' + dir"
+                        :label="$t('ledStripDir' + dir.toUpperCase())"
                         @click="toggleDirection(dir)"
-                        v-html="$t('ledStripDir' + dir.toUpperCase())"
-                    ></button>
+                    />
                 </div>
 
                 <!-- Colors -->
@@ -285,23 +296,31 @@
                 <!-- Wiring Mode -->
                 <div class="section" v-html="$t('ledStripWiring')"></div>
                 <div class="wiring-container">
-                    <button
-                        class="funcWire w100"
-                        :class="{ btnOn: wireMode }"
+                    <UButton
+                        block
+                        size="sm"
+                        color="primary"
+                        :variant="wireMode ? 'solid' : 'soft'"
+                        :label="$t('ledStripWiringMode')"
                         @click="toggleWireMode"
-                        v-html="$t('ledStripWiringMode')"
-                    ></button>
+                    />
                     <div class="wiringControls">
-                        <button
-                            class="funcWireClearSelect w50"
+                        <UButton
+                            size="sm"
+                            color="neutral"
+                            variant="soft"
+                            class="w50"
+                            :label="$t('ledStripWiringClearControl')"
                             @click="clearWiresSelected"
-                            v-html="$t('ledStripWiringClearControl')"
-                        ></button>
-                        <button
-                            class="funcWireClear w50"
+                        />
+                        <UButton
+                            size="sm"
+                            color="error"
+                            variant="soft"
+                            class="w50"
+                            :label="$t('ledStripWiringClearAllControl')"
                             @click="clearWiresAll"
-                            v-html="$t('ledStripWiringClearAllControl')"
-                        ></button>
+                        />
                     </div>
                 </div>
                 <p v-html="$t('ledStripWiringMessage')"></p>
@@ -312,11 +331,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
-                <button type="button" class="save" @click="save">
-                    <span v-html="saveButtonText"></span>
-                </button>
-            </div>
+            <UButton size="md" color="primary" class="save_btn" :label="saveButtonText" @click="save" />
         </div>
     </BaseTab>
 </template>
@@ -1153,21 +1168,8 @@ button.disabled:active {
     transform: none;
 }
 
-/* Save button specific styling */
-.save {
-    display: inline-block;
-    min-width: 64px;
-    text-align: center;
-    color: black;
-}
-
-.funcWire.btnOn {
-    background: rgb(15, 171, 22);
-    border-color: rgb(15, 171, 22);
-}
-
-.w100 {
-    width: 100%;
+.save_btn {
+    min-width: 96px;
 }
 
 .w50 {
@@ -1375,12 +1377,8 @@ button.disabled:active {
     position: absolute;
     width: 30px;
     height: 30px;
-}
-
-.directions button.btnOn {
-    background: var(--surface-50);
-    color: var(--text);
-    border-color: var(--text);
+    padding: 0;
+    justify-content: center;
 }
 
 .directions .dir-n {
