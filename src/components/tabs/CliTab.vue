@@ -1,17 +1,16 @@
 <template>
     <BaseTab tab-name="cli" @mounted="onTabMounted" @cleanup="onTabCleanup">
-        <div class="content_wrapper">
-            <div class="tab_title">{{ $t("tabCLI") }}</div>
+        <div class="content_wrapper cli-content">
             <div class="note">
                 <p v-html="$t('cliInfo')"></p>
             </div>
 
-            <div class="backdrop">
-                <div ref="cliWindowRef" class="window">
-                    <div ref="windowWrapperRef" class="wrapper"></div>
+            <div class="cli-backdrop">
+                <div ref="cliWindowRef" class="cli-window">
+                    <div ref="windowWrapperRef" class="cli-wrapper"></div>
                 </div>
             </div>
-            <div class="cli-input-wrapper">
+            <div class="relative mt-2">
                 <CliAutocompleteDropdown
                     :items="cli.autocomplete.items.value"
                     :visible="cli.autocomplete.visible.value"
@@ -27,6 +26,7 @@
                     :placeholder="$t('cliInputPlaceholder')"
                     rows="1"
                     cols="0"
+                    class="cli-command-input"
                     @keydown="cli.handleCommandKeyDown"
                     @keypress="cli.handleCommandKeyPress"
                     @keyup="cli.handleCommandKeyUp"
@@ -36,38 +36,35 @@
         </div>
 
         <!-- Snippet preview dialog -->
-        <dialog ref="snippetPreviewDialogRef" closedby="any" id="snippetpreviewdialog" class="html-dialog">
-            <div id="snippetpreviewcontent" class="html-dialog-content">
-                <div class="note">
+        <dialog ref="snippetPreviewDialogRef" closedby="any" class="w-[600px] h-fit">
+            <div class="p-4">
+                <div class="note mb-3">
                     <p v-html="$t('cliConfirmSnippetNote')"></p>
                 </div>
-                <textarea id="preview" v-model="cli.state.snippetPreview" rows="20"></textarea>
-                <div class="default_btn">
-                    <a class="confirm" href="#" @click.prevent="handleSnippetConfirm">{{
-                        $t("cliConfirmSnippetBtn")
-                    }}</a>
+                <textarea v-model="cli.state.snippetPreview" rows="20" class="cli-snippet-preview"></textarea>
+                <div class="mt-3">
+                    <UButton :label="$t('cliConfirmSnippetBtn')" @click="handleSnippetConfirm" />
                 </div>
             </div>
         </dialog>
 
         <!-- Support warning dialog -->
-        <dialog ref="supportWarningDialogRef" class="supportWarningDialog">
-            <h3>{{ $t("supportWarningDialogTitle") }}</h3>
-            <div class="content">
-                <div v-html="$t('supportWarningDialogText')"></div>
-                <div>
-                    <textarea
-                        v-model="cli.state.supportDialogInput"
-                        name="supportWarningDialogInput"
-                        :placeholder="$t('supportWarningDialogInputPlaceHolder')"
-                        rows="3"
-                        cols="0"
-                    ></textarea>
+        <dialog ref="supportWarningDialogRef" class="w-[400px] h-fit">
+            <div class="p-4">
+                <h3 class="font-semibold mb-2">{{ $t("supportWarningDialogTitle") }}</h3>
+                <div class="mb-3" v-html="$t('supportWarningDialogText')"></div>
+                <textarea
+                    v-model="cli.state.supportDialogInput"
+                    name="supportWarningDialogInput"
+                    :placeholder="$t('supportWarningDialogInputPlaceHolder')"
+                    rows="3"
+                    cols="0"
+                    class="w-full mt-2 h-[22px] leading-5 pl-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"
+                ></textarea>
+                <div class="flex gap-2 mt-3">
+                    <UButton :label="$t('submit')" @click="handleSupportSubmit" />
+                    <UButton :label="$t('cancel')" variant="outline" @click="handleSupportCancel" />
                 </div>
-            </div>
-            <div class="buttons">
-                <a class="submit regular-button" href="#" @click.prevent="handleSupportSubmit">{{ $t("submit") }}</a>
-                <a class="cancel regular-button" href="#" @click.prevent="handleSupportCancel">{{ $t("cancel") }}</a>
             </div>
         </dialog>
 
@@ -76,32 +73,19 @@
             <div class="toolbar_expand_btn" nbrow="2">
                 <em class="fas fa-ellipsis-h"></em>
             </div>
-            <div class="btn save_btn">
-                <button type="button" class="save" @click="cli.saveFile">{{ $t("cliSaveToFileBtn") }}</button>
-            </div>
-            <div class="btn save_btn">
-                <button type="button" class="load" @click="handleLoadFile">{{ $t("cliLoadFromFileBtn") }}</button>
-            </div>
-            <div class="btn save_btn">
-                <button type="button" class="clear" @click="cli.clearHistory">
-                    {{ $t("cliClearOutputHistoryBtn") }}
-                </button>
-            </div>
-            <div class="btn save_btn">
-                <button
-                    type="button"
-                    class="copy"
-                    :style="{ width: cli.state.copyButtonWidth, textAlign: cli.state.copyButtonWidth ? 'center' : '' }"
-                    @click="cli.copyToClipboard"
-                >
-                    {{ cli.state.copyButtonText }}
-                </button>
-            </div>
-            <div v-if="cli.isSupportRequestAvailable()" class="btn save_btn">
-                <button type="button" class="support" @click="cli.submitSupportRequest">
-                    {{ $t("cliSupportRequestBtn") }}
-                </button>
-            </div>
+            <UButton :label="$t('cliSaveToFileBtn')" @click="cli.saveFile" />
+            <UButton :label="$t('cliLoadFromFileBtn')" @click="handleLoadFile" />
+            <UButton :label="$t('cliClearOutputHistoryBtn')" @click="cli.clearHistory" />
+            <UButton
+                :label="cli.state.copyButtonText"
+                :style="{ minWidth: cli.state.copyButtonWidth }"
+                @click="cli.copyToClipboard"
+            />
+            <UButton
+                v-if="cli.isSupportRequestAvailable()"
+                :label="$t('cliSupportRequestBtn')"
+                @click="cli.submitSupportRequest"
+            />
         </div>
     </BaseTab>
 </template>
@@ -257,27 +241,21 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
+/* Terminal-specific styles — unscoped because .cli-wrapper children are runtime-generated */
 .tab-cli {
     height: calc(100% - 6rem);
 }
 
-.content_wrapper {
+.tab-cli .cli-content {
     flex-direction: column;
     display: flex;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
-p {
-    padding: 0;
-    border: 0 dotted var(--surface-500);
-}
-
-.backdrop {
+.tab-cli .cli-backdrop {
     border: 1px solid var(--surface-500);
     background-color: rgba(0, 0, 0, 0.75);
-    margin-top: 0;
     flex-grow: 1;
     background-image: url("../../images/light-wide-1.svg");
     background-repeat: no-repeat;
@@ -288,7 +266,7 @@ p {
     width: 100%;
 }
 
-.window {
+.tab-cli .cli-window {
     height: 100%;
     width: 100%;
     padding: 5px;
@@ -297,44 +275,38 @@ p {
     font-family: monospace;
     color: white;
     box-sizing: border-box;
-    float: left;
 }
 
-.wrapper {
+.tab-cli .cli-wrapper {
     user-select: text;
     white-space: pre-wrap;
     height: 0px;
 }
 
-.wrapper > * {
+.tab-cli .cli-wrapper > * {
     user-select: text;
 }
 
-.window :deep(.error_message) {
+/* Runtime-generated syntax highlighting — one-dark-pro palette */
+.tab-cli .cli-window .error_message {
     color: red;
     font-weight: bold;
 }
 
-/* Syntax highlighting — one-dark-pro palette */
-.window :deep(.cli-comment) {
+.tab-cli .cli-window .cli-comment {
     color: #7f848e;
 }
 
-.window :deep(.cli-cmd),
-.window :deep(.cli-label) {
+.tab-cli .cli-window .cli-cmd,
+.tab-cli .cli-window .cli-label {
     color: #61afef;
 }
 
-.window :deep(.cli-num) {
+.tab-cli .cli-window .cli-num {
     color: #e5c07b;
 }
 
-.cli-input-wrapper {
-    position: relative;
-    margin-top: 8px;
-}
-
-textarea[name="commands"] {
+.tab-cli .cli-command-input {
     box-sizing: border-box;
     width: 100%;
     height: 22px;
@@ -346,28 +318,7 @@ textarea[name="commands"] {
     color: var(--surface-900);
 }
 
-textarea[name="supportWarningDialogInput"] {
-    -webkit-box-sizing: border-box;
-    width: 100%;
-    margin-top: 8px;
-    height: 22px;
-    line-height: 20px;
-    padding-left: 5px;
-    border: 1px solid var(--surface-500);
-    resize: none;
-    background-color: var(--surface-400);
-    color: var(--text);
-}
-
-#content-watermark {
-    z-index: 0;
-}
-
-.save {
-    color: white;
-}
-
-textarea#preview {
+.tab-cli .cli-snippet-preview {
     background-color: rgba(0, 0, 0, 0.75);
     width: 100%;
     resize: none;
@@ -380,48 +331,14 @@ textarea#preview {
     margin-bottom: 5px;
 }
 
-/* Fixed toolbar positioning */
-:deep(.toolbar_fixed_bottom.content_toolbar) {
-    width: calc(100% - 18rem) !important;
-}
-
-:deep(.content_toolbar) {
-    width: fit-content;
-    background-color: var(--surface-300);
-    box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem 0.75rem 1rem;
-    border-top-left-radius: 1.5rem;
-
-    &::before {
-        width: 1.5rem;
-        aspect-ratio: 1;
-        content: "";
-        mask: url(../../images/corner.svg);
-        background-color: var(--surface-300);
-        position: absolute;
-        left: -1.5rem;
-        bottom: 0;
-    }
-}
-
 @media only screen and (max-width: 1055px) {
-    .content_wrapper {
-        height: calc(100% - 87px);
-    }
-}
-
-@media only screen and (max-device-width: 1055px) {
-    .content_wrapper {
+    .tab-cli .cli-content {
         height: calc(100% - 87px);
     }
 }
 
 @media all and (max-width: 575px) {
-    .backdrop {
+    .tab-cli .cli-backdrop {
         background-size: 100%;
     }
 }
