@@ -34,7 +34,7 @@
                 <div class="grid-row grid-box col4">
                     <!-- Elements Column -->
                     <div class="col-span-1">
-                        <UiBox :title="$t('osdSetupElementsTitle')" :help="$t('osdSectionHelpElements')">
+                        <UiBox :title="$t('osdSetupElementsTitle')" :help="$t('osdSectionHelpElements')" type="neutral">
                             <template #title>
                                 <HelpIcon :text="$t('osdSetupProfilesTitle')" />
                                 <span
@@ -95,7 +95,10 @@
                                     />
 
                                     <!-- Preset button -->
-                                    <div v-if="field.positionable" class="tab-osd-position-controls">
+                                    <div
+                                        v-if="field.positionable"
+                                        class="relative flex items-center justify-center ml-auto shrink-0"
+                                    >
                                         <div
                                             class="tab-osd-preset-btn"
                                             @click="openPresetMenu(field, $event)"
@@ -161,12 +164,8 @@
                         <div class="tab-osd-preview-parent sticky top-6">
                             <!-- Controls bar -->
                             <div
-                                class="flex items-center gap-2 flex-wrap bg-primary rounded-full px-4 py-1.5 mb-2.5 text-[13px] font-bold text-black"
+                                class="flex items-center gap-2 flex-wrap bg-elevated rounded-full px-4 py-1.5 mb-2.5 text-[13px] font-bold text-highlighted"
                             >
-                                <label>{{ $t("osdSetupPreviewSelectProfileTitle") }}</label>
-                                <USelect v-model="previewProfile" :items="profileOptions" size="xs" class="w-36" />
-                                <label>{{ $t("osdSetupPreviewSelectFont") }}</label>
-                                <USelect v-model="selectedFont" :items="fontSelectOptions" size="xs" class="w-36" />
                                 <span class="ml-auto flex items-center gap-1.5">
                                     <USwitch v-model="showRulers" size="xs" />
                                     <label>{{ $t("osdSetupPreviewCheckRulers") }}</label>
@@ -188,7 +187,7 @@
                                     @mouseleave="onPreviewMouseUp"
                                 >
                                     <!-- Preview elements rendered as rows/cells -->
-                                    <div class="flex" v-for="(row, rIdx) in previewRows" :key="rIdx">
+                                    <div class="flex tab-osd-row" v-for="(row, rIdx) in previewRows" :key="rIdx">
                                         <div
                                             v-for="(cell, cIdx) in row"
                                             :key="cIdx"
@@ -229,9 +228,15 @@
                     <!-- Settings Column -->
                     <div class="col-span-1">
                         <!-- Active Profile Selector -->
-                        <UiBox :title="$t('osdSetupSelectedProfileTitle')">
+                        <UiBox :title="$t('osdSetupSelectedProfileTitle')" type="neutral">
                             <SettingRow :label="$t('osdSetupSelectedProfileLabel')">
-                                <USelect v-model="activeProfile" :items="profileOptions" size="sm" class="min-w-40" />
+                                <USelect v-model="activeProfile" :items="profileOptions" size="sm" class="w-full" />
+                            </SettingRow>
+                            <SettingRow :label="$t('osdSetupPreviewSelectProfileTitle')">
+                                <USelect v-model="previewProfile" :items="profileOptions" size="sm" class="w-full" />
+                            </SettingRow>
+                            <SettingRow :label="$t('osdSetupPreviewSelectFont')">
+                                <USelect v-model="selectedFont" :items="fontSelectOptions" size="sm" class="w-full" />
                             </SettingRow>
                         </UiBox>
 
@@ -240,6 +245,7 @@
                             v-if="osdStore.state.haveMax7456Configured || osdStore.state.isMspDevice"
                             :title="$t('osdSetupVideoFormatTitle')"
                             :help="$t('osdSectionHelpVideoMode')"
+                            type="neutral"
                         >
                             <SettingRow :label="$t('osdSetupVideoFormatTitle')">
                                 <USelect
@@ -252,7 +258,7 @@
                                     "
                                     :items="videoTypeSelectItems"
                                     size="sm"
-                                    class="min-w-40"
+                                    class="w-full"
                                 />
                             </SettingRow>
                         </UiBox>
@@ -262,6 +268,7 @@
                             v-if="osdStore.state.haveOsdFeature"
                             :title="$t('osdSetupUnitsTitle')"
                             :help="$t('osdSectionHelpUnits')"
+                            type="neutral"
                         >
                             <SettingRow :label="$t('osdSetupUnitsTitle')">
                                 <USelect
@@ -274,7 +281,7 @@
                                     "
                                     :items="unitTypeSelectItems"
                                     size="sm"
-                                    class="min-w-40"
+                                    class="w-full"
                                 />
                             </SettingRow>
                         </UiBox>
@@ -284,6 +291,7 @@
                             v-if="osdStore.state.haveOsdFeature && osdStore.timers.length > 0"
                             :title="$t('osdSetupTimersTitle')"
                             :help="$t('osdSectionHelpTimers')"
+                            type="neutral"
                         >
                             <div
                                 v-for="(timer, idx) in osdStore.timers"
@@ -302,7 +310,7 @@
                                         "
                                         :items="timerSourceItems"
                                         size="sm"
-                                        class="min-w-36"
+                                        class="w-full"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('osdTimerPrecision')" :help="$t('osdTimerPrecisionTooltip')">
@@ -316,7 +324,7 @@
                                         "
                                         :items="timerPrecisionItems"
                                         size="sm"
-                                        class="min-w-36"
+                                        class="w-full"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('osdTimerAlarm')" :help="$t('osdTimerAlarmTooltip')">
@@ -325,6 +333,7 @@
                                         :min="0"
                                         :max="600"
                                         :step="1"
+                                        :format-options="{ useGrouping: false }"
                                         size="xs"
                                         orientation="vertical"
                                         class="w-16"
@@ -339,6 +348,7 @@
                             v-if="osdStore.state.haveOsdFeature && alarmEntries.length > 0"
                             :title="$t('osdSetupAlarmsTitle')"
                             :help="$t('osdSectionHelpAlarms')"
+                            type="neutral"
                         >
                             <div
                                 v-for="entry in alarmEntries"
@@ -350,6 +360,7 @@
                                     :min="entry.alarm.min || 0"
                                     :max="entry.alarm.max || 9999"
                                     :step="1"
+                                    :format-options="{ useGrouping: false }"
                                     size="xs"
                                     orientation="vertical"
                                     class="w-16"
@@ -364,6 +375,7 @@
                             v-if="osdStore.state.haveOsdFeature && sortedWarnings.length > 0"
                             :title="$t('osdSetupWarningsTitle')"
                             :help="$t('osdSectionHelpWarnings')"
+                            type="neutral"
                         >
                             <div
                                 v-for="warning in sortedWarnings"
@@ -391,6 +403,7 @@
                             v-if="osdStore.state.haveOsdFeature && sortedStatItems.length > 0"
                             :title="$t('osdSetupStatsTitle')"
                             :help="$t('osdSectionHelpStats')"
+                            type="neutral"
                         >
                             <div
                                 v-for="stat in sortedStatItems"
@@ -416,7 +429,7 @@
                 </div>
 
                 <!-- Font Manager Dialog -->
-                <dialog ref="fontManagerDialog" class="w-[750px] h-fit">
+                <dialog ref="fontManagerDialog" class="html-dialog w-[750px] h-fit">
                     <div class="flex h-12 bg-elevated border-b border-default">
                         <div class="flex-1 flex items-center px-4 font-semibold">
                             {{ $t("osdSetupFontManagerTitle") }}
@@ -432,7 +445,6 @@
                     </div>
                     <div class="p-5">
                         <h1 class="text-lg font-bold mb-1">{{ $t("osdSetupFontPresets") }}</h1>
-                        <span class="text-sm opacity-60">{{ fontVersionInfo }}</span>
                         <div class="flex flex-wrap gap-0 my-3" ref="fontPreviewContainer">
                             <img
                                 v-for="(url, charIdx) in fontCharacterUrls"
@@ -448,11 +460,12 @@
                             <USelect
                                 v-model="selectedFontPreset"
                                 :items="fontPresetSelectItems"
+                                :portal="false"
                                 size="sm"
                                 class="min-w-40"
                             />
                             <span>{{ $t("osdSetupFontPresetsSelectorOr") }}</span>
-                            <UButton @click="loadCustomFontFile()" variant="outline" size="sm">
+                            <UButton @click="loadCustomFontFile()" size="sm">
                                 {{ $t("osdSetupOpenFont") }}
                             </UButton>
                             <span class="text-sm opacity-60">(.mcm)</span>
@@ -481,8 +494,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <UButton @click="replaceLogoImage()" variant="outline" size="sm">
-                                {{ $t("osdSetupCustomLogoOpenImageButton") }}
+                            <UButton @click="replaceLogoImage()" size="sm">
+                                <span v-html="$t('osdSetupCustomLogoOpenImageButton')"></span>
                             </UButton>
                         </div>
 
@@ -505,7 +518,6 @@
                 <UButton
                     :disabled="!osdStore.state.isMax7456FontDeviceDetected"
                     @click="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
-                    variant="outline"
                 >
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
@@ -565,7 +577,6 @@ const activeProfile = ref(0);
 const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
-const fontVersionInfo = ref("");
 const isSaving = ref(false);
 const saveButtonTextOverride = ref(null);
 const saveButtonText = computed(() => saveButtonTextOverride.value || i18n.getMessage("osdSetupSave"));
@@ -1317,19 +1328,25 @@ function loadCustomFontFile() {
             LogoManager.drawPreview();
             fontDataVersion.value++;
             updatePreviewBuffer();
-            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
+
             selectedFontPreset.value = -1;
         })
         .catch((err) => console.error("Failed to load custom font file:", err));
 }
 
-function openFontManager() {
+async function openFontManager() {
     if (!osdStore.state.isMax7456FontDeviceDetected) {
         return;
     }
     FONT.initData();
-    // Initialize LogoManager if not already
+
+    // Show the dialog first so DOM elements are available for LogoManager
+    fontManagerDialog.value?.showModal?.();
+    await nextTick();
+
+    // Initialize LogoManager (caches DOM elements via querySelector)
     LogoManager.init(FONT, SYM.LOGO);
+
     // Load selected/default preset on first open if no font is loaded yet.
     if (!FONT.data.character_image_urls.length && fontTypes.value.length > 0) {
         const presetToLoad = Math.max(0, selectedFontPreset.value);
@@ -1339,11 +1356,7 @@ function openFontManager() {
         // Keep dialog previews in sync when font data was loaded earlier (e.g. during tab init).
         LogoManager.drawPreview();
         fontDataVersion.value++;
-        if (selectedFontPreset.value >= 0) {
-            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersion2");
-        }
     }
-    fontManagerDialog.value?.showModal?.();
 }
 
 function loadFontPreset(index) {
@@ -1353,7 +1366,6 @@ function loadFontPreset(index) {
     }
 
     const fontVer = 2;
-    fontVersionInfo.value = i18n.getMessage(`osdDescribeFontVersion${fontVer}`);
 
     // If this font is already loaded in memory, just trigger reactivity
     if (FONT.data?.loaded_font_file === font.file && FONT.data?.characters?.length > 0) {
@@ -1406,7 +1418,7 @@ function replaceLogoImage() {
             lastFontPresetRequestId++;
             LogoManager.drawPreview();
             LogoManager.showUploadHint();
-            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
+
             selectedFontPreset.value = -1;
             fontDataVersion.value++;
             updatePreviewBuffer();
@@ -1432,7 +1444,6 @@ async function flashFont() {
             LogoManager.drawPreview();
             fontDataVersion.value++;
             updatePreviewBuffer();
-            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
         } catch (err) {
             console.error("User cancelled custom font selection or error occurred", err);
             GUI.connect_lock = false;
@@ -1584,15 +1595,6 @@ onUnmounted(() => {
 }
 
 /* Preset position button */
-.tab-osd-position-controls {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
-    flex-shrink: 0;
-}
-
 .tab-osd-preset-btn {
     width: 20px;
     height: 20px;
