@@ -62,7 +62,7 @@
                     <span v-html="$t('ledStripFunctionTitle')"></span>
                     <USelect
                         id="ledStripFunctionSelect"
-                        class="functionSelect min-w-48"
+                        :class="['functionSelect', 'min-w-48', selectedFunction]"
                         size="sm"
                         :items="functionItems"
                         v-model="selectedFunction"
@@ -80,6 +80,7 @@
                             size="sm"
                             v-model="modifiers.throttleHue"
                             @update:model-value="onModifierChange('t')"
+                            :label="$t('ledStripThrottleHue')"
                         />
                         <USelect
                             id="auxSelectThrottle"
@@ -87,7 +88,7 @@
                             size="sm"
                             :items="auxChannelItems"
                             v-model="auxChannelValue"
-                            aria-label="Aux Channel"
+                            :aria-label="$t('ledStripThrottleHueChannel')"
                         />
                     </div>
 
@@ -210,36 +211,39 @@
                     <div class="colorDefineSliders" ref="colorDefineSliders">
                         <div v-html="$t('ledStripColorSetupTitle')"></div>
                         <div class="colorDefineSliderContainer">
-                            <label class="colorDefineSliderLabel" v-html="$t('ledStripH')"></label>
+                            <span class="colorDefineSliderLabel" v-html="$t('ledStripH')"></span>
                             <USlider
                                 id="colorSliderH"
                                 class="sliderHSV"
                                 :min="0"
                                 :max="359"
+                                :aria-label="$t('ledStripH')"
                                 v-model="colorHSV.h"
                                 @update:model-value="onColorSliderChange"
                             />
                             <span class="colorDefineSliderValue Hvalue">{{ colorHSV.h }}</span>
                         </div>
                         <div class="colorDefineSliderContainer">
-                            <label class="colorDefineSliderLabel" v-html="$t('ledStripS')"></label>
+                            <span class="colorDefineSliderLabel" v-html="$t('ledStripS')"></span>
                             <USlider
                                 id="colorSliderS"
                                 class="sliderHSV"
                                 :min="0"
                                 :max="255"
+                                :aria-label="$t('ledStripS')"
                                 v-model="colorHSV.s"
                                 @update:model-value="onColorSliderChange"
                             />
                             <span class="colorDefineSliderValue Svalue">{{ colorHSV.s }}</span>
                         </div>
                         <div class="colorDefineSliderContainer">
-                            <label class="colorDefineSliderLabel" v-html="$t('ledStripV')"></label>
+                            <span class="colorDefineSliderLabel" v-html="$t('ledStripV')"></span>
                             <USlider
                                 id="colorSliderV"
                                 class="sliderHSV"
                                 :min="0"
                                 :max="255"
+                                :aria-label="$t('ledStripV')"
                                 v-model="colorHSV.v"
                                 @update:model-value="onColorSliderChange"
                             />
@@ -1206,19 +1210,8 @@ button.disabled:active {
     margin-left: 3px;
 }
 
-.functionSelect,
-.modeSelect,
-.auxSelect {
-    border: 1px solid var(--surface-500);
-    border-radius: 3px;
-    background: var(--surface-200);
-    color: var(--text);
-    width: 100%;
-    padding: 5px;
-}
-
-/* Function-specific select backgrounds */
-.select .functionSelect.function-c {
+/* Function-specific select backgrounds — reach USelect's trigger button */
+.select .functionSelect.function-c :deep(button) {
     background: linear-gradient(
         to bottom right,
         rgba(255, 0, 0, 0.5) 0%,
@@ -1231,15 +1224,15 @@ button.disabled:active {
     );
 }
 
-.select .functionSelect.function-f {
+.select .functionSelect.function-f :deep(button) {
     background: rgb(50, 205, 50);
 }
 
-.select .functionSelect.function-a {
+.select .functionSelect.function-a :deep(button) {
     background: rgb(52, 155, 255);
 }
 
-.select .functionSelect.function-u {
+.select .functionSelect.function-u :deep(button) {
     background: linear-gradient(
         to bottom right,
         rgba(191, 0, 255, 0.5) 0%,
@@ -1249,19 +1242,19 @@ button.disabled:active {
     );
 }
 
-.select .functionSelect.function-l {
+.select .functionSelect.function-l :deep(button) {
     background: magenta;
 }
 
-.select .functionSelect.function-s {
+.select .functionSelect.function-s :deep(button) {
     background: brown;
 }
 
-.select .functionSelect.function-g {
+.select .functionSelect.function-g :deep(button) {
     background: green;
 }
 
-.select .functionSelect.function-r {
+.select .functionSelect.function-r :deep(button) {
     background: var(--surface-500);
 }
 
