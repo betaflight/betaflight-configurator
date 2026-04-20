@@ -3219,9 +3219,6 @@
     "flightPlanLoading": {
         "message": "Attendi..."
     },
-    "flightPlanClear": {
-        "message": "Cancella Piano"
-    },
     "flightPlanLoaded": {
         "message": "Piano di volo caricato con successo"
     },
@@ -3736,9 +3733,6 @@
     },
     "dataflashNotPresentNote": {
         "message": "Il tuo controllore di volo non ha un chip dataflash compatibile disponibile."
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflash richiede firmware&gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
         "message": "Salva flash su file ..."
@@ -8139,6 +8133,36 @@
     "labelUsePasskey": {
         "message": "Usa Passkey"
     },
+    "labelSignInWithPasskey": {
+        "message": "Accedi con Passkey"
+    },
+    "labelSendVerificationCode": {
+        "message": "Invia codice di verifica"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Accedi con il codice email"
+    },
+    "labelBackToPasskey": {
+        "message": "Torni all'accesso con passkey"
+    },
+    "labelBack": {
+        "message": "Precedente"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Non hai una passkey?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Imposta una volta"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Usa la tua passkey per accedere"
+    },
+    "descriptionCodeRequest": {
+        "message": "Ti invieremo un codice di verifica via email"
+    },
+    "descriptionCodeEntered": {
+        "message": "Inserisci il codice inviato a $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Inserisci Codice Di Verifica"
     },
@@ -8174,6 +8198,15 @@
     },
     "userCreatingPasskey": {
         "message": "Creazione passkey..."
+    },
+    "userCodeRequired": {
+        "message": "Codice di verifica richiesto"
+    },
+    "userSendingCode": {
+        "message": "Invio codice di verifica..."
+    },
+    "userSendCodeFailed": {
+        "message": "Impossibile inviare il codice di verifica"
     },
     "dataWaitingForData": {
         "message": "In attesa dei dati..."

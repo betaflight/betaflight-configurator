@@ -3079,6 +3079,9 @@
     "gnssHealthyUnhealthy": {
         "message": "不完全"
     },
+    "flightPlanLoading": {
+        "message": "しばらくお待ちください..."
+    },
     "motorsVoltage": {
         "message": "電圧:"
     },
@@ -3500,9 +3503,6 @@
     },
     "dataflashNotPresentNote": {
         "message": "このフライトコントローラには使用可能なメモリが付いていません"
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "データ書き換えにはファームウェア &gt;= 1.8.0. が必要です。"
     },
     "dataflashButtonSaveFile": {
         "message": "ファイルに保存します..."

@@ -3062,6 +3062,27 @@
     "gpsMapHead": {
         "message": "Ubicació actual"
     },
+    "gpsMapSatelliteView": {
+        "message": "Vista de satèl·lit"
+    },
+    "gpsMapHybridView": {
+        "message": "Vista híbrida"
+    },
+    "gpsMapStreetView": {
+        "message": "Vista de carrer"
+    },
+    "gpsMapZoomIn": {
+        "message": "Apropa"
+    },
+    "gpsMapZoomOut": {
+        "message": "Allunya"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Commuta pantalla completa"
+    },
+    "gpsMapRetry": {
+        "message": "Tornar a intentar"
+    },
     "gpsMapMessage1": {
         "message": "Si us plau, revisa la connexió a Internet"
     },
@@ -3232,7 +3253,13 @@
         "message": "Espereu, si us plau..."
     },
     "flightPlanClear": {
-        "message": "Esborrar pla"
+        "message": "Esborrar"
+    },
+    "flightPlanLoad": {
+        "message": "Carrega"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Desa a la FC"
     },
     "flightPlanLoaded": {
         "message": "El pla de vol s'ha carregat correctament"
@@ -3290,6 +3317,15 @@
     },
     "flightPlanClearTitle": {
         "message": "Esborrar pla de vol"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Creega el pla de vol des de la controladora de vol?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "La controladora de vol está conectada. Vols canviar el pla de vol amb l'amagatzat a la controladora de vol? Si esculls No es mantè el pla actual que pots carregar a la controladora."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Mantè el current"
     },
     "flightPlanElevationProfile": {
         "message": "Perfil d'elevació"
@@ -3748,9 +3784,6 @@
     },
     "dataflashNotPresentNote": {
         "message": "La teva controladora de vol no te un dataflash compatible disponibe."
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflash requereix firmware &gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
         "message": "Desa la flash a un arxiu..."
@@ -6972,6 +7005,21 @@
         "message": "Avisa si la càrrega de CPU del controlador de vol és massa alta",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Ha fallat el manteniment de la posició",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Mostra un avís quan falla el manteniment de la posició (per exemple, en mode GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Ha fallat el manteniment de la posició",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Ha fallat el manteniment de la posició",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Desconegut $1"
     },
@@ -8103,6 +8151,9 @@
     "userBackupDownloadFailed": {
         "message": "No s'ha pogut descarregar la còpia de seguretat"
     },
+    "userBackupFileEmpty": {
+        "message": "L'arxiu de back up és buit"
+    },
     "userBackupUpdateSuccess": {
         "message": "Perfil actualitzat amb èxit"
     },
@@ -8151,6 +8202,36 @@
     "labelUsePasskey": {
         "message": "Utilitza la clau d'accés"
     },
+    "labelSignInWithPasskey": {
+        "message": "Inicia sessió amb clau d'accés"
+    },
+    "labelSendVerificationCode": {
+        "message": "Envia codi de verificació"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Inicia la sessió amb el codi de correu electrònic"
+    },
+    "labelBackToPasskey": {
+        "message": "Acceptar l'inici de sessió amb clau d'accés"
+    },
+    "labelBack": {
+        "message": "Enrere"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "No tens cap clau d'accés?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Configura'n un"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Utilitza la teva contrasenya per iniciar la sessió"
+    },
+    "descriptionCodeRequest": {
+        "message": "T'enviarem un codi de verificació per correu electrònic"
+    },
+    "descriptionCodeEntered": {
+        "message": "Introduïu el codi que hem enviat a $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Introduïu el codi de verificació"
     },
@@ -8186,6 +8267,15 @@
     },
     "userCreatingPasskey": {
         "message": "S'està creant la clau de pas..."
+    },
+    "userCodeRequired": {
+        "message": "Cal un codi de verificació"
+    },
+    "userSendingCode": {
+        "message": "Enviant el codi de verificació..."
+    },
+    "userSendCodeFailed": {
+        "message": "No s'ha pogut enviar el codi de verificació"
     },
     "dataWaitingForData": {
         "message": "Esperant dades..."

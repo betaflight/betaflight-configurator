@@ -365,6 +365,9 @@
     "tabGPS": {
         "message": "GPS"
     },
+    "tabFlightPlan": {
+        "message": "Flyveplan"
+    },
     "tabMotorTesting": {
         "message": "Motor styring"
     },
@@ -3051,6 +3054,27 @@
     "gpsMapHead": {
         "message": "Nuværende placering"
     },
+    "gpsMapSatelliteView": {
+        "message": "Satellit visning"
+    },
+    "gpsMapHybridView": {
+        "message": "Vej og satellit visning"
+    },
+    "gpsMapStreetView": {
+        "message": "Vej visning"
+    },
+    "gpsMapZoomIn": {
+        "message": "Zoom ind"
+    },
+    "gpsMapZoomOut": {
+        "message": "Zoom ud"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Fuldskærm til\/fra"
+    },
+    "gpsMapRetry": {
+        "message": "Forsøg igen"
+    },
     "gpsMapMessage1": {
         "message": "Tjek Internetforbindelsen"
     },
@@ -3128,7 +3152,7 @@
         "message": "ingen signal"
     },
     "gnssQualitySearching": {
-        "message": "søger&nbsp;&nbsp;&nbsp;&nbsp;"
+        "message": "søger"
     },
     "gnssQualityAcquired": {
         "message": "opnået"
@@ -3137,7 +3161,7 @@
         "message": "uanvendelig"
     },
     "gnssQualityLocked": {
-        "message": "låst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        "message": "låst"
     },
     "gnssQualityFullyLocked": {
         "message": "låst helt"
@@ -3156,6 +3180,162 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "ustabil"
+    },
+    "flightPlanWaypointList": {
+        "message": "Vejpunkter"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "Der er ikke oprettet vejpunkter. Klik på kortet eller brug tabellen til højre, til at tilføje et vejpunkt."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Tilføj vejpunkt"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Rediger vejpunkt"
+    },
+    "flightPlanLatitude": {
+        "message": "Breddegrad <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Længdegrad <span class=\"units\">°<\/span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Højde <span class=\"units\">ft AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Hastighed <span class=\"units\">knob<\/span>"
+    },
+    "flightPlanType": {
+        "message": "Vejpunkt type"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Flyv over"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Flyv forbi"
+    },
+    "flightPlanTypeHold": {
+        "message": "Flyv stop"
+    },
+    "flightPlanTypeLand": {
+        "message": "Land"
+    },
+    "flightPlanDuration": {
+        "message": "Hold varighed <span class=\"units\">min<\/span>"
+    },
+    "flightPlanPattern": {
+        "message": "Hold mønster"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Cirkel"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Ottetal-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Kredsløb"
+    },
+    "flightPlanMap": {
+        "message": "Kort over flyveplan"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Klik for at tilføje vejpunkt. Træk et vejpunkt for at flytte det"
+    },
+    "flightPlanLoading": {
+        "message": "Vent venligst ..."
+    },
+    "flightPlanClear": {
+        "message": "Slet alt"
+    },
+    "flightPlanLoad": {
+        "message": "Indlæs"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Gem i FC"
+    },
+    "flightPlanLoaded": {
+        "message": "Flyveplan er indlæst"
+    },
+    "flightPlanSaved": {
+        "message": "Flyveplan er gemt"
+    },
+    "flightPlanCleared": {
+        "message": "Flyveplan slettet"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Indlæs fra FC"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Flyveplan indlæst fra FC"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Flyveplan gemti FC"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Flyveplanen kunne ikke indlæses fra FC"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Kunne ikke gemme flyplan i FC"
+    },
+    "flightPlanFCEmpty": {
+        "message": "Ingen vejpunkter defineret i FC"
+    },
+    "flightPlanClearedFC": {
+        "message": "Flyveplan sletet i FC"
+    },
+    "flightPlanLoadError": {
+        "message": "Kunne ikke indlæse flyveplan"
+    },
+    "flightPlanSaveError": {
+        "message": "Kunne ikke gemme flyveplan"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Ugyldig breddegrad (skal være mellem -90 og 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Ugyldig længdegrad (skal være mellem -180 og 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Er du sikker på, at du vil slette dette vejpunkt?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Slet vejpunkt"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Er du sikker på, at du vil slette dette vejpunkt? Det kan ikke fortrydes."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Er du sikker på, at du vil slette alle vejpunkter? Dette kan ikke fortrydes."
+    },
+    "flightPlanClearTitle": {
+        "message": "Slet flyveplan"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Indlæs flyveplan fra FC ?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "En FC er tilsluttet. Vil du erstatte den nuværende flyveplan med den, der er gemt i FC ? Nej, beholder din nuværende flyveplan i app, så du kan gemme den i FC."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Behold nuværende"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Højde profil"
+    },
+    "flightPlanDistance": {
+        "message": "Samlet distance"
+    },
+    "flightPlanFlightTime": {
+        "message": "Flyvetid"
+    },
+    "flightPlanMinAlt": {
+        "message": "Min. højde"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Max. højde"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Tilføj vejpunkter for at se højdeprofil"
     },
     "motorsVoltage": {
         "message": "Spænding:"
@@ -3578,9 +3758,6 @@
     },
     "dataflashNotPresentNote": {
         "message": "Din FC har ingen tilgængelig kompatibel dataflash chip."
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflash kræver firmware version &gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
         "message": "Gem flash til fil..."
@@ -4913,8 +5090,11 @@
     "failsafePaneTitleOld": {
         "message": "Modtager fejlsikring"
     },
+    "failsafeFeaturesHelpNew": {
+        "message": "Fejlsikring har to trin.<br>\n<strong>Trin 1 - fejlsikring via kanal<\/strong> begynder, når en radio kanal får en ugyldig pulslængde, modtageren aktiverer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter \"Trin 1 - Fejlsikring via kanal\" tages ibrug for <span class=\"message-negative\">alle kanaler<\/span>, der ventes et kort øjeblik - styret af \"Ventetid på Trin 1, før Trin 2 aktiveres\" for at muliggøre en gendannelse.<br>\n<strong>Trin 2<\/strong> begynder, når fartøjet er <span class=\"message-negative\">aktiveret<\/span> og der kommer en fejltilstand og tid varer længere den indstillede periode til at kunne gendanne. Kanalerne bliver på indstillingerne i \"Trin 1 - Fejlsikring via kanaler\", medmindre de tilsidesættes af den valgte procedure for Trin 2.<br \/><strong>Bemærk:<\/strong> Inden Trin1 begynder, anvendes indstillingerne i \"Trin 1 - Fejlsikring via kanaler\" også på AUX-kanaler, der har ugyldige impulslængder."
+    },
     "failsafePulsrangeTitle": {
-        "message": "Indstilling af gyldigt signal interval"
+        "message": "Indstilling af interval for gyldigt signal"
     },
     "failsafePulsrangeHelp": {
         "message": "Forsvinder signal fra sender kortere end minimum eller længere end maksimum, udløses fejlsikring for kanaler efter indstilling nedenfor og aktivering af fejlsikring indstilling - trin 1 eller trin 2"
@@ -4926,13 +5106,13 @@
         "message": "Største signal"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Trin 1 - fejlsikring via kanal"
+        "message": "Indstilling - Trin 1 - fejlsikring via kanal"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Disse indstillinger anvendes ved fejlsikring for individuelle kanaler eller på alle kanaler, når disse overgår til fejlsikring Trin 1. <strong>Bemærk:<\/strong> Værdierne gemmes i trin på 25 mikrosek, så små ændringer udjævnes"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto<\/strong> betyder krængror, højderor og sideror sat til centrum og gas sat lav.<br><strong>Behold<\/strong> betyder at opretholde den sidste gode værdi som er modtaget.<br><strong>Sæt<\/strong> betyder, at værdien angivet her vil blive brugt."
+        "message": "<strong>Auto<\/strong> betyder at krængror, højderor og sideror bliver sat til centrum og gas sat til lav.<br><strong>Behold<\/strong> betyder at fastholde den sidste gode værdi som er modtaget.<br><strong>Sæt<\/strong> betyder, at den angivne værdi vil blive brugt."
     },
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Behold<\/strong> betyder at opretholde den sidste gode værdi som er modtaget.<br><strong>Sæt<\/strong> betyder, at værdien angivet her vil blive brugt."
@@ -4950,7 +5130,7 @@
         "description": "Text for Set option"
     },
     "failsafeStageTwoSettingsTitle": {
-        "message": "Trin 2 - fejlsikring via automatik - Indstillinger"
+        "message": "Indstilling - Trin 2 - fejlsikring via automatik"
     },
     "failsafeDelayItem": {
         "message": "Ventetid på Trin 1, før Trin 2 aktiveres"
@@ -4974,7 +5154,7 @@
         "message": "Tid at forblive i landingstilstand, indtil motorerne er slået fra, og fartøjet er afkoblet"
     },
     "failsafeSubTitle1": {
-        "message": "Trin 2 - Fejlsikrings handling"
+        "message": "Trin 2 - Aktion ved aktivering"
     },
     "failsafeProcedureItemSelect1": {
         "message": "Land straks"
@@ -5080,7 +5260,7 @@
         "message": "Opsæt indstillingen for at få fejlsikring kontakten (Kanal tilstande) til at fungere som en regulær SLUK kontakt og omgå den valgte fejlsikringsprocedure. <strong>Bemærk:<\/strong> Aktivering er blokeret med fejlsikring SLUK kontakten i TIL position"
     },
     "failsafeSwitchTitle": {
-        "message": "Fejlsikring ved aktivering fra kanal på sender"
+        "message": "Valg af fejlsikring ved aktivering fra kanal"
     },
     "failsafeSwitchModeItem": {
         "message": "Trin som startes ved, når aktivering sker fra AUX knap"
@@ -6799,6 +6979,21 @@
         "message": "Advarelse hvis FC CPU LOAD er for højt",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Fast Position mislykkes",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Viser en advarsel, når fast Position mislykkedes (f.eks. i GPS-tilstand)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Fast Position mislykkes",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Fast Position mislykkes",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Ukendt $1"
     },
@@ -7930,6 +8125,9 @@
     "userBackupDownloadFailed": {
         "message": "Kunne ikke hente sikkerhedskopi"
     },
+    "userBackupFileEmpty": {
+        "message": "Sikkerhedskopi er tom"
+    },
     "userBackupUpdateSuccess": {
         "message": "Sikkerhedskopi opdateret"
     },
@@ -7978,6 +8176,36 @@
     "labelUsePasskey": {
         "message": "Anvend adgangsnøgle"
     },
+    "labelSignInWithPasskey": {
+        "message": "Log ind med adgangsnøgle"
+    },
+    "labelSendVerificationCode": {
+        "message": "Send bekræftelseskode"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Log ind med e-mail adgangskode i stedet"
+    },
+    "labelBackToPasskey": {
+        "message": "Tilbage til log ind"
+    },
+    "labelBack": {
+        "message": "Tilbage"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Har du ikke en adgangsnøgle ?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Konfigurer adgangsnøgle"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Brug din adgangsnøgle til at logge ind"
+    },
+    "descriptionCodeRequest": {
+        "message": "Vi sender dig en bekræftelseskode"
+    },
+    "descriptionCodeEntered": {
+        "message": "Indtast bekræftelseskode sendt til $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Indtast verifikationskode"
     },
@@ -8013,6 +8241,15 @@
     },
     "userCreatingPasskey": {
         "message": "Opret adgangsnøgle..."
+    },
+    "userCodeRequired": {
+        "message": "Bekræftelseskode er påkrævet"
+    },
+    "userSendingCode": {
+        "message": "Sender bekræftelseskode..."
+    },
+    "userSendCodeFailed": {
+        "message": "Mislykkedes at sende bekræftelseskode"
     },
     "dataWaitingForData": {
         "message": "Venter på data..."
@@ -8301,6 +8538,9 @@
     "preflightUvVeryHigh": {
         "message": "Meget høj"
     },
+    "preflightBatteryRisk": {
+        "message": "Batteri forbrug"
+    },
     "preflightBatteryOk": {
         "message": "Normalt område"
     },
@@ -8326,7 +8566,7 @@
         "message": "Risiko for tåge"
     },
     "preflightFogUnlikely": {
-        "message": "Usandsynligt"
+        "message": "Usandsynlig"
     },
     "preflightFogLow": {
         "message": "Lav risiko"
@@ -8349,11 +8589,17 @@
     "preflightDaLow": {
         "message": "Betydelig reduceret ydeevne"
     },
+    "preflightDaPoor": {
+        "message": "Væsentlig reduktion af løft"
+    },
+    "preflightCivilTwilight": {
+        "message": "Skumringstid (civil)"
+    },
     "preflightRefresh": {
         "message": "Opdater"
     },
     "preflightCurrentWeather": {
-        "message": "Nuværende vejr"
+        "message": "Vejrsituation"
     },
     "preflightWind": {
         "message": "Vindhastighed"
@@ -8407,7 +8653,13 @@
         "message": "Nattetimer"
     },
     "preflightWindForecast": {
-        "message": "Prognose for vind ved forventet højde"
+        "message": "Vind prognose ved forventet højde"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Vindhastigheder i forskellige højder er kritiske for langtrækkende og høj højde FPV-flyvninger. Højere højde har typisk kraftigere vind."
+    },
+    "preflightTime": {
+        "message": "Tidspunkt"
     },
     "preflightWind10m": {
         "message": "10m"
@@ -8423,6 +8675,9 @@
     },
     "preflightRainProb": {
         "message": "Nedbør %"
+    },
+    "preflightWindUnit": {
+        "message": "Vindhastighed i m\/s. Højde over jordoverfladen (AGL)."
     },
     "preflightSolarActivity": {
         "message": "Sol aktivitet"
@@ -8466,11 +8721,20 @@
     "preflightAirspace": {
         "message": "Luftrum og flyvefri zoner"
     },
+    "preflightAirspaceNote": {
+        "message": "Kontrollér altid lokale luftrumsrestriktioner og NOTAM'er før flyvning. Reglerne varierer efter land og region. I Danmark findes droneregler.dk."
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector Airspace kort"
+    },
     "preflightNOTAMs": {
         "message": "FAA NOTAMs (US)"
     },
     "preflightNOTAMsEU": {
         "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Kort over flyveplan"
     },
     "preflightNoData": {
         "message": "Indstil en lokation hvor miljødata hentes"

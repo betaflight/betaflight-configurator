@@ -3521,9 +3521,6 @@
     "dataflashNotPresentNote": {
         "message": "Ваш полетный контроллер не имеет совместимого чипа памяти."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Чип памяти требует прошивку &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Сохранено в файл..."
     },

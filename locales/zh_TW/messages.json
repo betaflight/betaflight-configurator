@@ -1970,9 +1970,6 @@
     "dataflashNotPresentNote": {
         "message": "你的飛控沒有可用的快閃記憶體晶片。"
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "板載快閃記憶體需要固件版本 &gt;= 1.8.0。"
-    },
     "dataflashButtonSaveFile": {
         "message": "保存快閃記憶體數據到文件"
     },

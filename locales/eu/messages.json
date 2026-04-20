@@ -2024,9 +2024,6 @@
     "dataflashNotPresentNote": {
         "message": "Zure hegaldi kontrolatzaileak ez dauka flash integratuta erabilgarri."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflashek &gt;= 1,8,0 firmwarea behar du."
-    },
     "dataflashButtonSaveFile": {
         "message": "Flash memoria fitxategira gorde..."
     },

@@ -2169,9 +2169,6 @@
     "dataflashNotPresentNote": {
         "message": "Uw vluchtcontroller heeft geen compatibele dataflash chip beschikbaar."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflash vereist firmware &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Sla flash op in bestand..."
     },

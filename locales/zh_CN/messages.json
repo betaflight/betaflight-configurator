@@ -3298,9 +3298,6 @@
     "dataflashNotPresentNote": {
         "message": "你的飞控没有可用的闪存芯片。"
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "板载闪存需要固件版本 &gt;= 1.8.0。"
-    },
     "dataflashButtonSaveFile": {
         "message": "保存闪存数据到文件"
     },
