@@ -363,10 +363,10 @@
             <UButton :label="$t('vtxButtonLoadClipboard')" @click="loadClipboardJson" />
             <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" />
             <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" />
-            <UButton @click="saveLuaFile">
-                <span v-html="$t('vtxButtonSaveLua')"></span>
+            <div class="inline-flex items-center gap-1">
+                <UButton :label="$t('vtxButtonSaveLua')" @click="saveLuaFile" />
                 <HelpIcon :text="$t('vtxLuaFileHelp')" />
-            </UButton>
+            </div>
         </div>
     </BaseTab>
 </template>
@@ -400,7 +400,6 @@ export default defineComponent({
             MAX_POWERLEVEL_VALUES,
             MAX_BAND_VALUES,
             MAX_BAND_CHANNELS_VALUES,
-            updating,
             savePending,
             factoryBandsSupported,
             frequencyMode,
@@ -445,7 +444,9 @@ export default defineComponent({
         // Dynamic grid column styles for band and power tables
         const bandGridStyle = computed(() => {
             const cols = ["minmax(5rem,auto)", "2.5rem"];
-            if (factoryBandsSupported.value) cols.push("2.5rem");
+            if (factoryBandsSupported.value) {
+                cols.push("2.5rem");
+            }
             const channelCount = vtxConfig.vtx_table_channels || 0;
             for (let i = 0; i < channelCount; i++) {
                 cols.push("minmax(4rem,auto)");
@@ -456,7 +457,7 @@ export default defineComponent({
 
         const powerGridStyle = computed(() => {
             const count = vtxConfig.vtx_table_powerlevels || 0;
-            const cols = Array(count).fill("minmax(4rem,auto)");
+            const cols = new Array(count).fill("minmax(4rem,auto)");
             cols.push("auto");
             return { gridTemplateColumns: cols.join(" ") };
         });
@@ -475,17 +476,31 @@ export default defineComponent({
         // --- VTX Table count setters (with change tracking) ---
 
         function setTableBands(value) {
-            vtxConfig.vtx_table_bands = value;
+            const count = Math.min(MAX_BAND_VALUES, Math.max(0, Number.parseInt(value) || 0));
+            vtxConfig.vtx_table_bands = count;
+            for (let i = 1; i <= count; i++) {
+                ensureBandExists(i);
+                ensureBandFrequencies(i, vtxConfig.vtx_table_channels);
+            }
             onVtxTableChange();
         }
 
         function setTableChannels(value) {
-            vtxConfig.vtx_table_channels = value;
+            const count = Math.min(MAX_BAND_CHANNELS_VALUES, Math.max(0, Number.parseInt(value) || 0));
+            vtxConfig.vtx_table_channels = count;
+            for (let i = 1; i <= vtxConfig.vtx_table_bands; i++) {
+                ensureBandExists(i);
+                ensureBandFrequencies(i, count);
+            }
             onVtxTableChange();
         }
 
         function setTablePowerLevels(value) {
-            vtxConfig.vtx_table_powerlevels = value;
+            const count = Math.min(MAX_POWERLEVEL_VALUES, Math.max(0, Number.parseInt(value) || 0));
+            vtxConfig.vtx_table_powerlevels = count;
+            for (let i = 1; i <= count; i++) {
+                ensurePowerLevelExists(i);
+            }
             onVtxTableChange();
         }
 
@@ -501,6 +516,13 @@ export default defineComponent({
                     vtxtable_band_is_factory_band: false,
                     vtxtable_band_frequencies: [],
                 };
+            }
+        }
+
+        function ensureBandFrequencies(bandIdx, channelCount) {
+            const freqs = bandList[bandIdx - 1].vtxtable_band_frequencies;
+            while (freqs.length < channelCount) {
+                freqs.push(0);
             }
         }
 

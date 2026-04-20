@@ -266,8 +266,11 @@ export function useVtx() {
         return JSON.stringify({
             vtxConfig: { ...vtxConfig },
             frequencyMode: frequencyMode.value,
-            bandList: bandList.map((b) => ({ ...b, vtxtable_band_frequencies: [...b.vtxtable_band_frequencies] })),
-            powerLevelList: powerLevelList.map((p) => ({ ...p })),
+            bandList: bandList.slice(0, vtxConfig.vtx_table_bands).map((b) => ({
+                ...b,
+                vtxtable_band_frequencies: b.vtxtable_band_frequencies.slice(0, vtxConfig.vtx_table_channels),
+            })),
+            powerLevelList: powerLevelList.slice(0, vtxConfig.vtx_table_powerlevels).map((p) => ({ ...p })),
         });
     }
 
@@ -276,7 +279,9 @@ export function useVtx() {
     }
 
     const configDirty = computed(() => {
-        if (!configSnapshot.value) return false;
+        if (!configSnapshot.value) {
+            return false;
+        }
         return serializeState() !== configSnapshot.value;
     });
 
@@ -427,12 +432,10 @@ export function useVtx() {
         setTimeout(() => {
             saveButtonText.value = i18n.getMessage("buttonSaved");
 
-            setTimeout(() => {
+            setTimeout(async () => {
+                await loadVtxConfig();
                 saveButtonText.value = "";
                 saving.value = false;
-                updating.value = false;
-                // Reload after save
-                loadVtxConfig();
             }, buttonDelay);
         }, buttonDelay);
     }
