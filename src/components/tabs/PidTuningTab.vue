@@ -110,7 +110,12 @@
                     :disabled="!hasChanges"
                     @click="save"
                 />
-                <UButton :label="$t('pidTuningButtonRefresh')" color="neutral" variant="outline" @click="refresh" />
+                <UButton
+                    :label="$t('pidTuningButtonRefresh')"
+                    :color="hasChanges ? 'primary' : 'neutral'"
+                    :disabled="!hasChanges"
+                    @click="refresh"
+                />
             </div>
         </div>
     </BaseTab>
