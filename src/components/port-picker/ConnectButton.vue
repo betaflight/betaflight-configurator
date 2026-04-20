@@ -67,6 +67,23 @@ function selectAndConnect(path) {
     connectDisconnect();
 }
 
+function onDialogConfirm({ mode, version, portOverride }) {
+    if (mode === "virtual") {
+        PortHandler.portPicker.virtualMspVersion = version;
+        setConfig({ virtualMspVersion: version });
+        selectAndConnect("virtual");
+    } else {
+        PortHandler.portPicker.portOverride = portOverride;
+        setConfig({ portOverride });
+        selectAndConnect("manual");
+    }
+}
+
+function toggleAutoConnect(value) {
+    PortHandler.portPicker.autoConnect = value;
+    setConfig({ autoConnect: value });
+}
+
 export default defineComponent({
     name: "ConnectButton",
     components: { ConnectOptionsDialog },
@@ -105,23 +122,6 @@ export default defineComponent({
         function openConnectDialog(mode) {
             dialogMode.value = mode;
             dialogOpen.value = true;
-        }
-
-        function onDialogConfirm({ mode, version, portOverride }) {
-            if (mode === "virtual") {
-                PortHandler.portPicker.virtualMspVersion = version;
-                setConfig({ virtualMspVersion: version });
-                selectAndConnect("virtual");
-            } else {
-                PortHandler.portPicker.portOverride = portOverride;
-                setConfig({ portOverride });
-                selectAndConnect("manual");
-            }
-        }
-
-        function toggleAutoConnect(value) {
-            PortHandler.portPicker.autoConnect = value;
-            setConfig({ autoConnect: value });
         }
 
         const menuItems = computed(() => {

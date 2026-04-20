@@ -190,7 +190,13 @@
                         </ul>
                         <ul class="mode-shared">
                             <li class="tab_log" v-show="expertMode">
-                                <a href="#" i18n="tabLog" class="tabicon ic_log" i18n_title="tabLog"></a>
+                                <a
+                                    href="#"
+                                    i18n="tabLog"
+                                    class="tabicon ic_log"
+                                    i18n_title="tabLog"
+                                    :aria-label="$t('tabLog')"
+                                ></a>
                             </li>
                         </ul>
                         <ul class="mode-loggedin">
