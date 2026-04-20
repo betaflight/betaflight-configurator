@@ -91,7 +91,7 @@
                                         "
                                         :items="field.variants.map((v, i) => ({ value: i, label: $t(v) }))"
                                         size="xs"
-                                        class="w-24 shrink-0"
+                                        class="shrink-0"
                                     />
 
                                     <!-- Preset button -->
@@ -162,16 +162,6 @@
                     <!-- Preview Column -->
                     <div class="col-span-2">
                         <div class="tab-osd-preview-parent sticky top-6">
-                            <!-- Controls bar -->
-                            <div
-                                class="flex items-center gap-2 flex-wrap bg-elevated rounded-full px-4 py-1.5 mb-2.5 text-[13px] font-bold text-highlighted"
-                            >
-                                <span class="ml-auto flex items-center gap-1.5">
-                                    <USwitch v-model="showRulers" size="xs" />
-                                    <label>{{ $t("osdSetupPreviewCheckRulers") }}</label>
-                                </span>
-                            </div>
-
                             <!-- Preview area -->
                             <div ref="previewContainerOuter" class="relative">
                                 <canvas
@@ -219,8 +209,12 @@
                                 </div>
                             </div>
 
-                            <div class="text-center mt-6 text-sm font-semibold">
-                                {{ $t("osdSetupPreviewTitle") }}
+                            <div class="flex items-center justify-center gap-3 mt-6 text-sm font-semibold">
+                                <span>{{ $t("osdSetupPreviewTitle") }}</span>
+                                <span class="flex items-center gap-1.5">
+                                    <USwitch v-model="showRulers" size="xs" />
+                                    <label>{{ $t("osdSetupPreviewCheckRulers") }}</label>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -229,14 +223,11 @@
                     <div class="col-span-1">
                         <!-- Active Profile Selector -->
                         <UiBox :title="$t('osdSetupSelectedProfileTitle')" type="neutral">
-                            <SettingRow :label="$t('osdSetupSelectedProfileLabel')">
-                                <USelect v-model="activeProfile" :items="profileOptions" size="sm" class="w-full" />
-                            </SettingRow>
-                            <SettingRow :label="$t('osdSetupPreviewSelectProfileTitle')">
-                                <USelect v-model="previewProfile" :items="profileOptions" size="sm" class="w-full" />
+                            <SettingRow :label="$t('osdSetupSelectedProfileTitle')">
+                                <USelect v-model="activeProfile" :items="profileOptions" size="xs" />
                             </SettingRow>
                             <SettingRow :label="$t('osdSetupPreviewSelectFont')">
-                                <USelect v-model="selectedFont" :items="fontSelectOptions" size="sm" class="w-full" />
+                                <USelect v-model="selectedFont" :items="fontSelectOptions" size="xs" />
                             </SettingRow>
                         </UiBox>
 
@@ -257,8 +248,7 @@
                                         }
                                     "
                                     :items="videoTypeSelectItems"
-                                    size="sm"
-                                    class="w-full"
+                                    size="xs"
                                 />
                             </SettingRow>
                         </UiBox>
@@ -280,8 +270,7 @@
                                         }
                                     "
                                     :items="unitTypeSelectItems"
-                                    size="sm"
-                                    class="w-full"
+                                    size="xs"
                                 />
                             </SettingRow>
                         </UiBox>
@@ -309,8 +298,7 @@
                                             }
                                         "
                                         :items="timerSourceItems"
-                                        size="sm"
-                                        class="w-full"
+                                        size="xs"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('osdTimerPrecision')" :help="$t('osdTimerPrecisionTooltip')">
@@ -323,8 +311,7 @@
                                             }
                                         "
                                         :items="timerPrecisionItems"
-                                        size="sm"
-                                        class="w-full"
+                                        size="xs"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('osdTimerAlarm')" :help="$t('osdTimerAlarmTooltip')">
@@ -1503,6 +1490,7 @@ watch(selectedFont, (newVal) => {
 
 watch(activeProfile, (newVal) => {
     osdStore.osdProfiles.selected = newVal;
+    previewProfile.value = newVal;
     if (hasLoadedConfig.value) {
         osdStore.saveOtherConfig().catch((error) => {
             console.error("Failed to update active OSD profile:", error);
