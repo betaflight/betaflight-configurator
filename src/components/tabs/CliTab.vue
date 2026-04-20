@@ -68,7 +68,7 @@
                     :placeholder="$t('supportWarningDialogInputPlaceHolder')"
                     rows="3"
                     cols="0"
-                    class="w-full mt-2 h-[22px] leading-5 pl-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"
+                    class="w-full mt-2 leading-5 p-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"
                 ></textarea>
                 <div class="flex gap-2 mt-3">
                     <UButton :label="$t('submit')" @click="handleSupportSubmit" />
@@ -78,7 +78,7 @@
         </dialog>
 
         <!-- Bottom toolbar -->
-        <div class="content_toolbar xs-compressed toolbar_fixed_bottom">
+        <div class="content_toolbar xs-compressed toolbar_fixed_bottom flex items-center gap-2">
             <div class="toolbar_expand_btn" nbrow="2">
                 <em class="fas fa-ellipsis-h"></em>
             </div>
