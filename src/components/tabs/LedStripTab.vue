@@ -114,33 +114,15 @@
                         <div class="sliders-group" v-show="modifiers.rainbow">
                             <span v-html="$t('ledStripRainbowDeltaSliderTitle')"></span>
                             <div class="slider-control">
-                                <Vue3Slider
-                                    v-model="rainbowDelta"
-                                    :min="0"
-                                    :max="359"
-                                    width="150px"
-                                    :height="6"
-                                    color="var(--primary-500)"
-                                    track-color="var(--surface-400)"
-                                    :tooltip="true"
-                                    tooltip-color="var(--primary-500)"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('ledStripRainbowDeltaSliderHelp')"></div>
+                                <span class="slider-value">{{ rainbowDelta }}</span>
+                                <USlider v-model="rainbowDelta" :min="0" :max="359" class="w-40" />
+                                <HelpIcon :text="$t('ledStripRainbowDeltaSliderHelp')" />
                             </div>
                             <span v-html="$t('ledStripRainbowFreqSliderTitle')"></span>
                             <div class="slider-control">
-                                <Vue3Slider
-                                    v-model="rainbowFreq"
-                                    :min="1"
-                                    :max="360"
-                                    width="150px"
-                                    :height="6"
-                                    color="var(--primary-500)"
-                                    track-color="var(--surface-400)"
-                                    :tooltip="true"
-                                    tooltip-color="var(--primary-500)"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('ledStripRainbowFreqSliderHelp')"></div>
+                                <span class="slider-value">{{ rainbowFreq }}</span>
+                                <USlider v-model="rainbowFreq" :min="1" :max="360" class="w-40" />
+                                <HelpIcon :text="$t('ledStripRainbowFreqSliderHelp')" />
                             </div>
                         </div>
                     </div>
@@ -217,41 +199,38 @@
                     <div class="colorDefineSliders" ref="colorDefineSliders">
                         <div v-html="$t('ledStripColorSetupTitle')"></div>
                         <div class="colorDefineSliderContainer">
-                            <label for="colorSliderH" class="colorDefineSliderLabel" v-html="$t('ledStripH')"></label>
-                            <input
+                            <label class="colorDefineSliderLabel" v-html="$t('ledStripH')"></label>
+                            <USlider
                                 id="colorSliderH"
                                 class="sliderHSV"
-                                type="range"
-                                min="0"
-                                max="359"
-                                v-model.number="colorHSV.h"
-                                @input="onColorSliderChange"
+                                :min="0"
+                                :max="359"
+                                v-model="colorHSV.h"
+                                @update:model-value="onColorSliderChange"
                             />
                             <span class="colorDefineSliderValue Hvalue">{{ colorHSV.h }}</span>
                         </div>
                         <div class="colorDefineSliderContainer">
-                            <label for="colorSliderS" class="colorDefineSliderLabel" v-html="$t('ledStripS')"></label>
-                            <input
+                            <label class="colorDefineSliderLabel" v-html="$t('ledStripS')"></label>
+                            <USlider
                                 id="colorSliderS"
                                 class="sliderHSV"
-                                type="range"
-                                min="0"
-                                max="255"
-                                v-model.number="colorHSV.s"
-                                @input="onColorSliderChange"
+                                :min="0"
+                                :max="255"
+                                v-model="colorHSV.s"
+                                @update:model-value="onColorSliderChange"
                             />
                             <span class="colorDefineSliderValue Svalue">{{ colorHSV.s }}</span>
                         </div>
                         <div class="colorDefineSliderContainer">
-                            <label for="colorSliderV" class="colorDefineSliderLabel" v-html="$t('ledStripV')"></label>
-                            <input
+                            <label class="colorDefineSliderLabel" v-html="$t('ledStripV')"></label>
+                            <USlider
                                 id="colorSliderV"
                                 class="sliderHSV"
-                                type="range"
-                                min="0"
-                                max="255"
-                                v-model.number="colorHSV.v"
-                                @input="onColorSliderChange"
+                                :min="0"
+                                :max="255"
+                                v-model="colorHSV.v"
+                                @update:model-value="onColorSliderChange"
                             />
                             <span class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</span>
                         </div>
@@ -297,18 +276,9 @@
                 <div class="slider-container" v-show="showBrightness">
                     <span v-html="$t('ledStripBrightnessSliderTitle')"></span>
                     <div class="slider-control">
-                        <Vue3Slider
-                            v-model="brightness"
-                            :min="5"
-                            :max="100"
-                            width="150px"
-                            :height="6"
-                            color="var(--primary-500)"
-                            track-color="var(--surface-400)"
-                            :tooltip="true"
-                            tooltip-color="var(--primary-500)"
-                        />
-                        <div class="helpicon cf_tip" :title="$t('ledStripBrightnessSliderHelp')"></div>
+                        <span class="slider-value">{{ brightness }}%</span>
+                        <USlider v-model="brightness" :min="5" :max="100" class="w-40" />
+                        <HelpIcon :text="$t('ledStripBrightnessSliderHelp')" />
                     </div>
                 </div>
 
@@ -356,7 +326,7 @@ import { ref, reactive, computed, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
-import slider from "vue3-slider";
+import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip } from "@/composables/useLedStrip";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
@@ -364,9 +334,6 @@ import GUI from "@/js/gui";
 import semver from "semver";
 import FC from "@/js/fc";
 import { API_VERSION_1_46 } from "@/js/data_storage";
-
-// Register vue3-slider component
-const Vue3Slider = slider;
 
 // Decode HTML entities in translations (some use &amp; etc) so plain-text
 // component props (e.g. USelect item labels) render correctly.
@@ -1352,56 +1319,12 @@ button.disabled:active {
     margin: 5px 0;
 }
 
-/* Vue3Slider wrapper styling */
-.slider-control :deep(.vue3-slider) {
-    flex-shrink: 0;
-    position: relative;
-    display: inline-block;
-}
-
-/* Vue3Slider track styling */
-.slider-control :deep(.vue3-slider-track) {
-    position: relative;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-/* Vue3Slider handle styling */
-.slider-control :deep(.vue3-slider-handle) {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: white;
-    border: 2px solid var(--primary-500);
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.1s ease;
-}
-
-.slider-control :deep(.vue3-slider-handle:hover) {
-    transform: translate(-50%, -50%) scale(1.1);
-}
-
-.slider-control :deep(.vue3-slider-handle:active) {
-    transform: translate(-50%, -50%) scale(0.95);
-}
-
-/* Style the tooltip to match theme */
-.slider-control :deep(.vue3-slider-tooltip) {
-    background: var(--primary-500) !important;
-    color: white !important;
-    font-weight: 600;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 11px;
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
+.slider-value {
+    min-width: 2.5rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    color: var(--text);
 }
 
 /* Color Define Sliders */
