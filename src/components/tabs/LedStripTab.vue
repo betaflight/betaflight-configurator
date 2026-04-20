@@ -52,97 +52,65 @@
 
                 <div class="select">
                     <span v-html="$t('ledStripFunctionTitle')"></span>
-                    <select
+                    <USelect
                         id="ledStripFunctionSelect"
-                        class="functionSelect"
+                        class="functionSelect min-w-48"
+                        size="sm"
+                        :items="functionItems"
                         v-model="selectedFunction"
-                        @change="onFunctionChange"
-                    >
-                        <option value="" v-html="$t('ledStripFunctionNoneOption')"></option>
-                        <option value="function-c" v-html="$t('ledStripFunctionColorOption')"></option>
-                        <option value="function-f" v-html="$t('ledStripFunctionModesOption')"></option>
-                        <option value="function-a" v-html="$t('ledStripFunctionArmOption')"></option>
-                        <option value="function-l" v-html="$t('ledStripFunctionBatteryOption')"></option>
-                        <option value="function-s" v-html="$t('ledStripFunctionRSSIOption')"></option>
-                        <option value="function-g" v-html="$t('ledStripFunctionGPSOption')"></option>
-                        <option value="function-r" v-html="$t('ledStripFunctionRingOption')"></option>
-                        <option value="function-p" v-html="$t('ledStripFunctionGPSBarOption')"></option>
-                        <option value="function-e" v-html="$t('ledStripFunctionBatteryBarOption')"></option>
-                        <option value="function-u" v-html="$t('ledStripFunctionAltitudeOption')"></option>
-                    </select>
+                        @update:model-value="onFunctionChange"
+                    />
                 </div>
 
                 <!-- Color Modifiers -->
                 <div class="modifiers" v-show="showModifiers">
                     <span class="header" v-html="$t('ledStripColorModifierTitle')"></span>
 
-                    <div class="checkbox">
-                        <input
-                            type="checkbox"
+                    <div class="modifier-row">
+                        <USwitch
                             id="throttleHue"
-                            name="ThrottleHue"
-                            class="toggle function-t"
+                            size="sm"
                             v-model="modifiers.throttleHue"
-                            @change="onModifierChange('t')"
+                            @update:model-value="onModifierChange('t')"
                         />
-                        <label for="throttleHue">
-                            <select
-                                id="auxSelectThrottle"
-                                class="auxSelect"
-                                v-model="auxChannelValue"
-                                aria-label="Aux Channel"
-                            >
-                                <option value="0" v-html="$t('controlAxisRoll')"></option>
-                                <option value="1" v-html="$t('controlAxisPitch')"></option>
-                                <option value="2" v-html="$t('controlAxisYaw')"></option>
-                                <option value="3" v-html="$t('controlAxisThrottle')"></option>
-                                <option value="4" v-html="$t('controlAxisAux1')"></option>
-                                <option value="5" v-html="$t('controlAxisAux2')"></option>
-                                <option value="6" v-html="$t('controlAxisAux3')"></option>
-                                <option value="7" v-html="$t('controlAxisAux4')"></option>
-                                <option value="8" v-html="$t('controlAxisAux5')"></option>
-                                <option value="9" v-html="$t('controlAxisAux6')"></option>
-                                <option value="10" v-html="$t('controlAxisAux7')"></option>
-                                <option value="11" v-html="$t('controlAxisAux8')"></option>
-                            </select>
-                            <span class="labelSelect" v-html="$t('controlAxisThrottle')"></span>
-                        </label>
+                        <USelect
+                            id="auxSelectThrottle"
+                            class="auxSelect"
+                            size="sm"
+                            :items="auxChannelItems"
+                            v-model="auxChannelValue"
+                            aria-label="Aux Channel"
+                        />
                     </div>
 
-                    <div class="checkbox">
-                        <input
-                            type="checkbox"
+                    <div class="modifier-row">
+                        <USwitch
                             id="larsonScanner"
-                            name="LarsonScanner"
-                            class="toggle function-o"
+                            size="sm"
                             v-model="modifiers.larsonScanner"
-                            @change="onModifierChange('o')"
+                            @update:model-value="onModifierChange('o')"
+                            :label="$t('ledStripLarsonOverlay')"
                         />
-                        <label for="larsonScanner"><span v-html="$t('ledStripLarsonOverlay')"></span></label>
                     </div>
 
-                    <div class="checkbox">
-                        <input
-                            type="checkbox"
+                    <div class="modifier-row">
+                        <USwitch
                             id="blink"
-                            name="blink"
-                            class="toggle function-b"
+                            size="sm"
                             v-model="modifiers.blink"
-                            @change="onModifierChange('b')"
+                            @update:model-value="onModifierChange('b')"
+                            :label="$t('ledStripBlinkAlwaysOverlay')"
                         />
-                        <label for="blink"><span v-html="$t('ledStripBlinkAlwaysOverlay')"></span></label>
                     </div>
 
-                    <div class="checkbox rainbowOverlay" v-show="showRainbow">
-                        <input
-                            type="checkbox"
+                    <div class="modifier-row rainbowOverlay" v-show="showRainbow">
+                        <USwitch
                             id="rainbow"
-                            name="Rainbow"
-                            class="toggle function-y"
+                            size="sm"
                             v-model="modifiers.rainbow"
-                            @change="onModifierChange('y')"
+                            @update:model-value="onModifierChange('y')"
+                            :label="$t('ledStripRainbowOverlay')"
                         />
-                        <label for="rainbow"><span v-html="$t('ledStripRainbowOverlay')"></span></label>
                         <div class="sliders-group" v-show="modifiers.rainbow">
                             <span v-html="$t('ledStripRainbowDeltaSliderTitle')"></span>
                             <div class="slider-control">
@@ -181,38 +149,32 @@
                 <!-- Overlays -->
                 <div class="overlays" v-show="showOverlays">
                     <span class="header" v-html="$t('ledStripOverlayTitle')"></span>
-                    <div class="checkbox warningOverlay" v-show="showWarning">
-                        <input
-                            type="checkbox"
+                    <div class="modifier-row warningOverlay" v-show="showWarning">
+                        <USwitch
                             id="warnings"
-                            name="Warnings"
-                            class="toggle function-w"
+                            size="sm"
                             v-model="overlayStates.warnings"
-                            @change="onOverlayChange('w')"
+                            @update:model-value="onOverlayChange('w')"
+                            :label="$t('ledStripWarningsOverlay')"
                         />
-                        <label for="warnings"><span v-html="$t('ledStripWarningsOverlay')"></span></label>
                     </div>
-                    <div class="checkbox indicatorOverlay">
-                        <input
-                            type="checkbox"
+                    <div class="modifier-row indicatorOverlay">
+                        <USwitch
                             id="indicator"
-                            name="Indicator"
-                            class="toggle function-i"
+                            size="sm"
                             v-model="overlayStates.indicator"
-                            @change="onOverlayChange('i')"
+                            @update:model-value="onOverlayChange('i')"
+                            :label="$t('ledStripIndecatorOverlay')"
                         />
-                        <label for="indicator"><span v-html="$t('ledStripIndecatorOverlay')"></span></label>
                     </div>
-                    <div class="checkbox vtxOverlay" v-show="showVtx">
-                        <input
-                            type="checkbox"
+                    <div class="modifier-row vtxOverlay" v-show="showVtx">
+                        <USwitch
                             id="vtx"
-                            name="Vtx"
-                            class="toggle function-v"
+                            size="sm"
                             v-model="overlayStates.vtx"
-                            @change="onOverlayChange('v')"
+                            @update:model-value="onOverlayChange('v')"
+                            :label="$t('ledStripVtxOverlay')"
                         />
-                        <label for="vtx"><span v-html="$t('ledStripVtxOverlay')"></span></label>
                     </div>
                 </div>
 
@@ -220,14 +182,13 @@
                 <div class="mode_colors" v-show="showModeColors">
                     <div class="section" v-html="$t('ledStripModeColorsTitle')"></div>
 
-                    <select id="ledStripModeColorsModeSelect" class="modeSelect gps" v-model="modeColorsMode">
-                        <option value="0" v-html="$t('ledStripModeColorsModeOrientation')"></option>
-                        <option value="1" v-html="$t('ledStripModeColorsModeHeadfree')"></option>
-                        <option value="2" v-html="$t('ledStripModeColorsModeHorizon')"></option>
-                        <option value="3" v-html="$t('ledStripModeColorsModeAngle')"></option>
-                        <option value="4" v-html="$t('ledStripModeColorsModeMag')"></option>
-                        <option value="5" v-html="$t('ledStripModeColorsModeBaro')"></option>
-                    </select>
+                    <USelect
+                        id="ledStripModeColorsModeSelect"
+                        class="modeSelect gps min-w-48"
+                        size="sm"
+                        :items="modeColorsModeItems"
+                        v-model="modeColorsMode"
+                    />
 
                     <button
                         v-for="i in 6"
@@ -312,10 +273,13 @@
                 <div class="special_colors mode_colors" v-show="showSpecialColors">
                     <div class="section" v-html="$t('ledStripModesSpecialColorsTitle')"></div>
 
-                    <select id="ledStripModeGpsModeSelect" class="modeSelect flightmode" v-model="specialColorsMode">
-                        <option value="0" v-html="$t('ledStripModeGpsDefault')"></option>
-                        <option value="1" v-html="$t('ledStripModeGpsBar')"></option>
-                    </select>
+                    <USelect
+                        id="ledStripModeGpsModeSelect"
+                        class="modeSelect flightmode min-w-48"
+                        size="sm"
+                        :items="specialColorsModeItems"
+                        v-model="specialColorsMode"
+                    />
 
                     <button
                         v-for="config in specialColorButtons"
@@ -403,6 +367,18 @@ import { API_VERSION_1_46 } from "@/js/data_storage";
 
 // Register vue3-slider component
 const Vue3Slider = slider;
+
+// Decode HTML entities in translations (some use &amp; etc) so plain-text
+// component props (e.g. USelect item labels) render correctly.
+function decodeHtmlEntities(text) {
+    if (!text) {
+        return text;
+    }
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+const t = (key) => decodeHtmlEntities(i18n.getMessage(key));
 
 const {
     wireMode,
@@ -492,6 +468,50 @@ const showSpecialColors = computed(() => {
     const func = selectedFunction.value;
     return func === "function-g" || func === "function-a" || func === "function-b";
 });
+
+// USelect item arrays
+const functionItems = computed(() => [
+    { label: t("ledStripFunctionNoneOption"), value: "" },
+    { label: t("ledStripFunctionColorOption"), value: "function-c" },
+    { label: t("ledStripFunctionModesOption"), value: "function-f" },
+    { label: t("ledStripFunctionArmOption"), value: "function-a" },
+    { label: t("ledStripFunctionBatteryOption"), value: "function-l" },
+    { label: t("ledStripFunctionRSSIOption"), value: "function-s" },
+    { label: t("ledStripFunctionGPSOption"), value: "function-g" },
+    { label: t("ledStripFunctionRingOption"), value: "function-r" },
+    { label: t("ledStripFunctionGPSBarOption"), value: "function-p" },
+    { label: t("ledStripFunctionBatteryBarOption"), value: "function-e" },
+    { label: t("ledStripFunctionAltitudeOption"), value: "function-u" },
+]);
+
+const auxChannelItems = computed(() => [
+    { label: t("controlAxisRoll"), value: "0" },
+    { label: t("controlAxisPitch"), value: "1" },
+    { label: t("controlAxisYaw"), value: "2" },
+    { label: t("controlAxisThrottle"), value: "3" },
+    { label: t("controlAxisAux1"), value: "4" },
+    { label: t("controlAxisAux2"), value: "5" },
+    { label: t("controlAxisAux3"), value: "6" },
+    { label: t("controlAxisAux4"), value: "7" },
+    { label: t("controlAxisAux5"), value: "8" },
+    { label: t("controlAxisAux6"), value: "9" },
+    { label: t("controlAxisAux7"), value: "10" },
+    { label: t("controlAxisAux8"), value: "11" },
+]);
+
+const modeColorsModeItems = computed(() => [
+    { label: t("ledStripModeColorsModeOrientation"), value: 0 },
+    { label: t("ledStripModeColorsModeHeadfree"), value: 1 },
+    { label: t("ledStripModeColorsModeHorizon"), value: 2 },
+    { label: t("ledStripModeColorsModeAngle"), value: 3 },
+    { label: t("ledStripModeColorsModeMag"), value: 4 },
+    { label: t("ledStripModeColorsModeBaro"), value: 5 },
+]);
+
+const specialColorsModeItems = computed(() => [
+    { label: t("ledStripModeGpsDefault"), value: 0 },
+    { label: t("ledStripModeGpsBar"), value: 1 },
+]);
 
 const specialColorButtons = computed(() => [
     {
@@ -1291,40 +1311,33 @@ button.disabled:active {
     margin-top: 5px;
 }
 
-.modifiers .checkbox {
+.modifier-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin: 5px 0;
 }
 
-.checkbox label span {
-    margin-left: 3px;
-}
-
 .modifiers .auxSelect {
-    margin-left: 5px;
     width: auto;
-}
-
-.modifiers .labelSelect {
-    margin-left: 5px;
+    min-width: 10rem;
 }
 
 .modifiers .rainbowOverlay {
     margin-top: 1px;
+    flex-wrap: wrap;
 }
 
 .modifiers .sliders-group {
     margin-top: 5px;
     margin-left: 20px;
+    width: 100%;
 }
 
 /* Overlays */
 .overlays {
     display: block;
     margin-top: 5px;
-}
-
-.overlays .checkbox {
-    margin: 5px 0;
 }
 
 /* Unified Slider Styles */
