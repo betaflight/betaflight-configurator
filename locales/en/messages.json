@@ -426,9 +426,6 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
-    "tabTransponder": {
-        "message": "Race Transponder"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -1427,7 +1424,7 @@
         "message": "Race Transponder"
     },
     "featureTRANSPONDERTip": {
-        "message": "Configure via the Race Transponder tab after enabling."
+        "message": "Enable transponder firmware support. Configure the provider (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]</code>) and data (<code>set transponder_data = &lt;bytes&gt;</code>) via the CLI, then <code>save</code>. Run <code>get transponder</code> to inspect current values."
     },
     "featureAIRMODE": {
         "message": "Permanently enable Airmode"
@@ -3023,69 +3020,6 @@
     "adjustmentsEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
-    },
-    "transponderNotSupported": {
-        "message": "Your flight controller's firmware does not support transponder functionality."
-    },
-    "transponderInformation": {
-        "message": "Transponders systems allow race organizers to time your laps.  The transponder is fitted to your aircraft and when your aircraft passes the timing gate the track-side receiver registers your code and records your laptime.  When fitting an IR based transponder your should ensure that it points outward from your aircraft towards the track-side receivers and that the light beam is not obstructed by your airframe, battery-straps, cables, propellers, etc."
-    },
-    "transponderConfigurationType": {
-        "message": "Transponder type"
-    },
-    "transponderType0": {
-        "message": "None"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configuration iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configuration aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configuration ERLT"
-    },
-    "transponderData1": {
-        "message": "Data"
-    },
-    "transponderData2": {
-        "message": "Transponder ID"
-    },
-    "transponderData3": {
-        "message": "Transponder ID"
-    },
-    "transponderDataHelp1": {
-        "message": "Hexadecimal digits only, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configure your transponder code here.  Note: Only valid codes will be recognised by race timing systems.  Valid transponder codes can be obtained from <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro</a>."
-    },
-    "transponderHelp2": {
-        "message": "For more information please visit <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer site</a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Choose ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "For more information please visit <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer site</a>"
-    },
-    "transponderButtonSave": {
-        "message": "Save"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Save and Reboot"
-    },
-    "transponderDataInvalid": {
-        "message": "Transponder data is <span class=\"message-negative\">invalid</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requires firmware &gt;= 1.10.0. and target support."

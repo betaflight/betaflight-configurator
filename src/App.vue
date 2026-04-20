@@ -243,20 +243,6 @@
                                 <a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx"></a>
                             </li>
                             <li
-                                class="tab_transponder"
-                                v-show="
-                                    FC.FEATURE_CONFIG?.features?.isEnabled &&
-                                    FC.FEATURE_CONFIG.features.isEnabled('TRANSPONDER')
-                                "
-                            >
-                                <a
-                                    href="#"
-                                    i18n="tabTransponder"
-                                    class="tabicon ic_transponder"
-                                    i18n_title="tabTransponder"
-                                ></a>
-                            </li>
-                            <li
                                 class="tab_led_strip"
                                 v-show="
                                     FC.FEATURE_CONFIG?.features?.isEnabled &&
