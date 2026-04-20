@@ -464,6 +464,7 @@
                             <div class="p-2.5" style="background: rgba(0, 255, 0, 0.4)">
                                 <div
                                     ref="logoPreview"
+                                    id="font-logo-preview"
                                     style="background: rgba(0, 255, 0, 1); line-height: 0; margin: auto"
                                 ></div>
                             </div>
@@ -472,10 +473,10 @@
                                     {{ $t("osdSetupCustomLogoInfoTitle") }}
                                 </h3>
                                 <ul class="tab-osd-logo-info-list">
-                                    <li>{{ $t("osdSetupCustomLogoInfoImageSize") }}</li>
-                                    <li>{{ $t("osdSetupCustomLogoInfoColorMap") }}</li>
+                                    <li id="font-logo-info-size">{{ $t("osdSetupCustomLogoInfoImageSize") }}</li>
+                                    <li id="font-logo-info-colors">{{ $t("osdSetupCustomLogoInfoColorMap") }}</li>
                                 </ul>
-                                <p v-html="$t('osdSetupCustomLogoInfoUploadHint')"></p>
+                                <p id="font-logo-info-upload-hint" v-html="$t('osdSetupCustomLogoInfoUploadHint')"></p>
                             </div>
                         </div>
 
@@ -673,12 +674,20 @@ const profileOptions = computed(() =>
     })),
 );
 
-const fontSelectOptions = computed(() =>
-    fontTypes.value.map((font, idx) => ({
-        value: idx,
-        label: i18n.getMessage(font.name),
-    })),
-);
+const fontSelectOptions = computed(() => {
+    const items = [];
+    if (selectedFont.value === -1) {
+        items.push({
+            value: -1,
+            label: i18n.getMessage("osdSetupFontPresetsSelectorCustomOption"),
+            disabled: true,
+        });
+    }
+    fontTypes.value.forEach((font, idx) => {
+        items.push({ value: idx, label: i18n.getMessage(font.name) });
+    });
+    return items;
+});
 
 const fontPresetSelectItems = computed(() => {
     const items = [];
