@@ -199,6 +199,14 @@ const MSPCodes = {
     MSP2_SENSOR_CONFIG_ACTIVE: 0x300a,
     MSP2_MCU_INFO: 0x300c,
     MSP2_GYRO_SENSOR: 0x300d,
+    // Wing tuning (firmware `#ifdef USE_WING`, see betaflight/betaflight
+    // PR #15124). Shared golden-vector test with firmware
+    // `wing_msp_unittest.cc` for cross-repo wire agreement. Runtime
+    // state (TPA attenuation, SPA scaling, applied S-term) is
+    // intentionally NOT exposed over MSP — blackbox DEBUG_SET covers
+    // that use case at 8 kHz, which is strictly better than polling.
+    MSP2_WING_TUNING: 0x3012,
+    MSP2_SET_WING_TUNING: 0x3013,
     // MSP2_GET_TEXT and MSP2_SET_TEXT variable types
     PILOT_NAME: 1,
     CRAFT_NAME: 2,

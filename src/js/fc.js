@@ -143,6 +143,12 @@ const FC = {
     ADJUSTMENT_RANGES: null,
     ADVANCED_TUNING: null,
     ADVANCED_TUNING_ACTIVE: null,
+    // Wing tuning config (26 fields from pidProfile_t). Populated via
+    // MSP2_WING_TUNING decode (firmware USE_WING build, BF PR #15124).
+    // WING_TUNING_ACTIVE is the post-Reload snapshot used for dirty-
+    // checking in WingTuningTab.vue.
+    WING_TUNING: null,
+    WING_TUNING_ACTIVE: null,
     ANALOG: { ...INITIAL_ANALOG },
     ARMING_CONFIG: null,
     AUX_CONFIG: null,
@@ -590,6 +596,39 @@ const FC = {
             tpaBreakpoint: 0,
         };
         this.ADVANCED_TUNING_ACTIVE = { ...this.ADVANCED_TUNING };
+
+        // Wing tuning — field order matches firmware .plan/WIRE_FORMAT.md
+        // (MSP2_WING_TUNING payload, 39 bytes). Enum fields store string
+        // labels; MSPHelper crunch maps to int indices via wingEnumLookups.
+        this.WING_TUNING = {
+            s_pitch: 0,
+            s_roll: 0,
+            s_yaw: 0,
+            yaw_type: "RUDDER",
+            angle_pitch_offset: 0,
+            angle_earth_ref: 0,
+            tpa_mode: "PD",
+            tpa_speed_type: "BASIC",
+            tpa_speed_basic_delay: 0,
+            tpa_speed_basic_gravity: 0,
+            tpa_speed_max_voltage: 0,
+            tpa_speed_pitch_offset: 0,
+            tpa_curve_type: "CLASSIC",
+            tpa_curve_stall_throttle: 0,
+            tpa_curve_pid_thr0: 0,
+            tpa_curve_pid_thr100: 0,
+            tpa_curve_expo: 0,
+            spa_roll_center: 0,
+            spa_roll_width: 0,
+            spa_roll_mode: "OFF",
+            spa_pitch_center: 0,
+            spa_pitch_width: 0,
+            spa_pitch_mode: "OFF",
+            spa_yaw_center: 0,
+            spa_yaw_width: 0,
+            spa_yaw_mode: "OFF",
+        };
+        this.WING_TUNING_ACTIVE = { ...this.WING_TUNING };
 
         this.SENSOR_CONFIG = {
             acc_hardware: 0,

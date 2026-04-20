@@ -9,6 +9,7 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { decodeWingTuning, crunchWingTuning } from "./wingTuningSchema.js";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1173,6 +1174,28 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     console.log("Advanced PID settings saved");
                     FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
                     break;
+                case MSPCodes.MSP2_SET_WING_TUNING:
+                    console.log("Wing tuning saved");
+                    FC.WING_TUNING_ACTIVE = { ...FC.WING_TUNING };
+                    break;
+                case MSPCodes.MSP2_WING_TUNING: {
+                    // Atomic decode: populate a local snapshot first; only
+                    // copy to FC.WING_TUNING / _ACTIVE after the full 39
+                    // bytes parse without error. try/catch so a truncated
+                    // payload can't short-circuit callback dispatch after
+                    // the switch — leaves the tab responsive with prior
+                    // values intact.
+                    // Wire format is defined by WING_TUNING_SCHEMA in
+                    // wingTuningSchema.js; see firmware PR #15124.
+                    try {
+                        const snap = decodeWingTuning(data);
+                        FC.WING_TUNING = snap;
+                        FC.WING_TUNING_ACTIVE = { ...snap };
+                    } catch (error) {
+                        console.warn("Failed to decode wing tuning payload:", error);
+                    }
+                    break;
+                }
                 case MSPCodes.MSP_PID_ADVANCED:
                     FC.ADVANCED_TUNING.rollPitchItermIgnoreRate = data.readU16();
                     FC.ADVANCED_TUNING.yawItermIgnoreRate = data.readU16();
@@ -2233,6 +2256,14 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.ADVANCED_TUNING.tpaMode);
             buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
             buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
+            break;
+        case MSPCodes.MSP2_SET_WING_TUNING:
+            // 39-byte payload driven by WING_TUNING_SCHEMA. Field order
+            // is part of the MSP wire contract — extend the schema with
+            // new fields appended at the end (never reordered); type
+            // change or removal requires MSP2_SET_WING_TUNING_V2 at a
+            // new code slot.
+            crunchWingTuning(buffer, FC.WING_TUNING);
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
             buffer.push8(FC.SENSOR_CONFIG.acc_hardware);
