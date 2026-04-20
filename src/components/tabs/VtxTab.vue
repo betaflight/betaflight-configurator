@@ -354,41 +354,19 @@
                 <em class="fas fa-ellipsis-h"></em>
             </div>
 
-            <div class="btn save_btn">
-                <a class="save" href="#" :class="{ disabled: saveButtonDisabled }" @click.prevent="handleSave">{{
-                    saveButtonOverride || $t("vtxButtonSave")
-                }}</a>
-            </div>
-            <div class="btn clipboard_available">
-                <a
-                    href="#"
-                    :aria-label="$t('vtxButtonLoadClipboard')"
-                    @click.prevent="loadClipboardJson"
-                    v-html="$t('vtxButtonLoadClipboard')"
-                ></a>
-            </div>
-            <div class="btn">
-                <a
-                    href="#"
-                    :aria-label="$t('vtxButtonLoadFile')"
-                    @click.prevent="loadJsonFile"
-                    v-html="$t('vtxButtonLoadFile')"
-                ></a>
-            </div>
-            <div class="btn">
-                <a
-                    href="#"
-                    :aria-label="$t('vtxButtonSaveFile')"
-                    @click.prevent="saveJsonFile"
-                    v-html="$t('vtxButtonSaveFile')"
-                ></a>
-            </div>
-            <div class="btn">
-                <a href="#" @click.prevent="saveLuaFile" class="flex! items-center gap-1">
-                    <span v-html="$t('vtxButtonSaveLua')"></span>
-                    <HelpIcon :text="$t('vtxLuaFileHelp')" />
-                </a>
-            </div>
+            <UButton
+                :label="saveButtonOverride || $t('vtxButtonSave')"
+                :disabled="saveButtonDisabled"
+                :color="saveButtonDisabled ? 'neutral' : 'success'"
+                @click="handleSave"
+            />
+            <UButton :label="$t('vtxButtonLoadClipboard')" @click="loadClipboardJson" />
+            <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" />
+            <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" />
+            <UButton @click="saveLuaFile">
+                <span v-html="$t('vtxButtonSaveLua')"></span>
+                <HelpIcon :text="$t('vtxLuaFileHelp')" />
+            </UButton>
         </div>
     </BaseTab>
 </template>

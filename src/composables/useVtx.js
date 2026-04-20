@@ -144,7 +144,10 @@ export function useVtx() {
 
     // Save button state
     const saveButtonText = ref("");
-    const saveButtonDisabled = ref(false);
+    const saving = ref(false);
+
+    // Dirty tracking
+    const configSnapshot = ref("");
 
     // Computed properties
     const vtxSupported = computed(
@@ -259,6 +262,26 @@ export function useVtx() {
         deviceReady.value ? i18n.getMessage("vtxReadyTrue") : i18n.getMessage("vtxReadyFalse"),
     );
 
+    function serializeState() {
+        return JSON.stringify({
+            vtxConfig: { ...vtxConfig },
+            frequencyMode: frequencyMode.value,
+            bandList: bandList.map((b) => ({ ...b, vtxtable_band_frequencies: [...b.vtxtable_band_frequencies] })),
+            powerLevelList: powerLevelList.map((p) => ({ ...p })),
+        });
+    }
+
+    function takeSnapshot() {
+        configSnapshot.value = serializeState();
+    }
+
+    const configDirty = computed(() => {
+        if (!configSnapshot.value) return false;
+        return serializeState() !== configSnapshot.value;
+    });
+
+    const saveButtonDisabled = computed(() => saving.value || !configDirty.value);
+
     // --- State sync helpers ---
 
     function populateStateFromFC() {
@@ -331,6 +354,7 @@ export function useVtx() {
         await loadVtxTableBands();
         await loadVtxTablePowerLevels();
         populateStateFromFC();
+        takeSnapshot();
         updating.value = false;
     }
 
@@ -396,7 +420,7 @@ export function useVtx() {
         savePending.value = false;
 
         saveButtonText.value = i18n.getMessage("buttonSaving");
-        saveButtonDisabled.value = true;
+        saving.value = true;
 
         const buttonDelay = 1500;
 
@@ -405,7 +429,7 @@ export function useVtx() {
 
             setTimeout(() => {
                 saveButtonText.value = "";
-                saveButtonDisabled.value = false;
+                saving.value = false;
                 updating.value = false;
                 // Reload after save
                 loadVtxConfig();
