@@ -2880,9 +2880,6 @@
     "dataflashNotPresentNote": {
         "message": "A súa controladora non dispon duna memoria dataflash compatible."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflash require un firmware &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Gardar flash a arquivo..."
     },

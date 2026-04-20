@@ -3010,9 +3010,6 @@
     "dataflashNotPresentNote": {
         "message": "O seu controlador de voo não tem uma Memória flash compatível disponível."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Memória flash requer o firmware &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Salvar memória em um arquivo..."
     },

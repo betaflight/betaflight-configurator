@@ -3540,9 +3540,6 @@
     "dataflashNotPresentNote": {
         "message": "당신의 비행 컨트롤러는 호환 가능한 데이터플래시 칩이 없습니다."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "데이터플래시는 펌웨어 &gt;= 1.8.0.이 필요합니다."
-    },
     "dataflashButtonSaveFile": {
         "message": "플래시를 파일로 저장..."
     },

@@ -3518,9 +3518,6 @@
     "dataflashNotPresentNote": {
         "message": "У вашому польотному контролері відсутній сумісний чіп пам'яті для зберігання даних."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Для використання Dataflash необхідна прошивка &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Зберегти флеш-пам'ять в файл..."
     },

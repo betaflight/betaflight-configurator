@@ -3054,6 +3054,27 @@
     "gpsMapHead": {
         "message": "Localização atual"
     },
+    "gpsMapSatelliteView": {
+        "message": "Vista de Satélite"
+    },
+    "gpsMapHybridView": {
+        "message": "Vista híbrida"
+    },
+    "gpsMapStreetView": {
+        "message": "Vista de rua"
+    },
+    "gpsMapZoomIn": {
+        "message": "Aumentar zoom"
+    },
+    "gpsMapZoomOut": {
+        "message": "Reduzir zoom"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Ativar ecrã completo"
+    },
+    "gpsMapRetry": {
+        "message": "Voltar a tentar"
+    },
     "gpsMapMessage1": {
         "message": "Verifique a sua ligação de internet"
     },
@@ -3224,7 +3245,13 @@
         "message": "Por favor aguarde..."
     },
     "flightPlanClear": {
-        "message": "Limpar Plano"
+        "message": "Limpar"
+    },
+    "flightPlanLoad": {
+        "message": "Carregar"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Salvar na FC"
     },
     "flightPlanLoaded": {
         "message": "Plano de voo carregado com sucesso"
@@ -3282,6 +3309,15 @@
     },
     "flightPlanClearTitle": {
         "message": "Limpar Plano de Voo"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Carregar Plano de Voo da Controladora de Voo?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "Uma controladora de voo está conectada. Quer substituir o atual plano de voo pelo armazenado na controladora de voo? Escolhendo Não mantém o seu plano atual para que possa guardá-lo na controladora de voo."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Manter atual"
     },
     "flightPlanElevationProfile": {
         "message": "Perfil de Elevação"
@@ -3740,9 +3776,6 @@
     },
     "dataflashNotPresentNote": {
         "message": "A sua controladora de voo não tem disponível uma Memória flash compatível."
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Memória flash requer o firmware &gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
         "message": "Gravar flash para ficheiro..."
@@ -6964,6 +6997,21 @@
         "message": "Avisa se a CARGA de CPU do controlador de voo é muito alta",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Mostra um aviso o quando manter de posição falhar (ex. no modo GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"
     },
@@ -8095,6 +8143,9 @@
     "userBackupDownloadFailed": {
         "message": "Falha no download das cópias de segurança"
     },
+    "userBackupFileEmpty": {
+        "message": "O ficheiro de backup está vazio"
+    },
     "userBackupUpdateSuccess": {
         "message": "Cópia de segurança atualizada com sucesso"
     },
@@ -8143,6 +8194,36 @@
     "labelUsePasskey": {
         "message": "Usar Passkey"
     },
+    "labelSignInWithPasskey": {
+        "message": "Iniciar sessão com chave de acesso"
+    },
+    "labelSendVerificationCode": {
+        "message": "Enviar Código de Verificação"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Iniciar sessão com código de e-mail"
+    },
+    "labelBackToPasskey": {
+        "message": "Voltar ao início de sessão com chave de acesso"
+    },
+    "labelBack": {
+        "message": "Retroceder"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Não tem uma chave de acesso?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Configurar uma"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Utilize a sua chave de acesso para iniciar sessão"
+    },
+    "descriptionCodeRequest": {
+        "message": "Vamos enviar-lhe um código de verificação"
+    },
+    "descriptionCodeEntered": {
+        "message": "Digite o código que enviámos para $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Introduza o código de verificação"
     },
@@ -8178,6 +8259,15 @@
     },
     "userCreatingPasskey": {
         "message": "A criar chave de acesso..."
+    },
+    "userCodeRequired": {
+        "message": "É necessário o código de verificação"
+    },
+    "userSendingCode": {
+        "message": "A enviar código de verificação..."
+    },
+    "userSendCodeFailed": {
+        "message": "Falha ao enviar código de verificação"
     },
     "dataWaitingForData": {
         "message": "Aguardando dados..."

@@ -3094,9 +3094,6 @@
     "dataflashNotPresentNote": {
         "message": "Der Flugcontroller hat kein passendes Speichermedium verbaut"
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Firmware &gt;=1.8.0 benötigt"
-    },
     "dataflashButtonSaveFile": {
         "message": "Inhalt in Datei speichern"
     },

@@ -3008,6 +3008,27 @@
     "gpsMapHead": {
         "message": "Obecna lokalizacja"
     },
+    "gpsMapSatelliteView": {
+        "message": "Widok satelitarny"
+    },
+    "gpsMapHybridView": {
+        "message": "Widok hybrydowy"
+    },
+    "gpsMapStreetView": {
+        "message": "Widok ulicy"
+    },
+    "gpsMapZoomIn": {
+        "message": "Powiększ"
+    },
+    "gpsMapZoomOut": {
+        "message": "Pomniejsz"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Przełącz na pełny ekran"
+    },
+    "gpsMapRetry": {
+        "message": "Ponów"
+    },
     "gpsMapMessage1": {
         "message": "Sprawdź swoje połączenie internetowe"
     },
@@ -3113,6 +3134,24 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "nie poprawny"
+    },
+    "flightPlanClear": {
+        "message": "Wyczyść"
+    },
+    "flightPlanLoad": {
+        "message": "Załaduj"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Zapisz w FC"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Załadować plan lotu z kontrolera lotu?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "Podłączono kontroler lotu. Czy chcesz zastąpić bieżący plan lotu tym zapisanym w kontrolerze lotu? Wybór Nie zachowuje aktualnego planu, więc możesz zapisać go w kontrolerze lotu."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Zostaw jak jest"
     },
     "motorsVoltage": {
         "message": "Napięcie:"
@@ -3535,9 +3574,6 @@
     },
     "dataflashNotPresentNote": {
         "message": "Twój kontroler latu nie ma kompatybilnego chipu na dane."
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Aktualizacja wymaga oprogramowania&gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
         "message": "Zapisz do pliku..."
@@ -6759,6 +6795,10 @@
         "message": "Ostrzeżenia jeśli CPU LOAD kontrolera lotu jest zbyt wysokie",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Utrzymanie pozycji nie powiodło się",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Nieznane $1"
     },
@@ -7889,6 +7929,9 @@
     },
     "userBackupDownloadFailed": {
         "message": "Nie udało się pobrać kopii zapasowej"
+    },
+    "userBackupFileEmpty": {
+        "message": "Plik kopii zapasowej jest pusty"
     },
     "userBackupUpdateSuccess": {
         "message": "Kopia zapasowa zaktualizowana pomyślnie"
