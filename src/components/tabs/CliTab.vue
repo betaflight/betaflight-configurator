@@ -1,13 +1,18 @@
 <template>
     <BaseTab tab-name="cli" @mounted="onTabMounted" @cleanup="onTabCleanup">
-        <div class="content_wrapper cli-content">
+        <div class="content_wrapper flex flex-col overflow-hidden max-[1055px]:h-[calc(100%-87px)]">
             <div class="note">
                 <p v-html="$t('cliInfo')"></p>
             </div>
 
-            <div class="cli-backdrop">
-                <div ref="cliWindowRef" class="cli-window">
-                    <div ref="windowWrapperRef" class="cli-wrapper"></div>
+            <div
+                class="cli-backdrop grow w-full border border-(--surface-500) bg-black/75 bg-no-repeat bg-[position:50%_80%] bg-[size:600px] rounded-[5px] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] max-[575px]:bg-[size:100%]"
+            >
+                <div
+                    ref="cliWindowRef"
+                    class="cli-window h-full w-full p-[5px] overflow-y-scroll overflow-x-hidden font-mono text-white"
+                >
+                    <div ref="windowWrapperRef" class="cli-wrapper select-text whitespace-pre-wrap h-0"></div>
                 </div>
             </div>
             <div class="relative mt-2">
@@ -26,7 +31,7 @@
                     :placeholder="$t('cliInputPlaceholder')"
                     rows="1"
                     cols="0"
-                    class="cli-command-input"
+                    class="w-full h-[22px] leading-5 pl-[5px] border border-(--surface-500) resize-none bg-(--surface-200) text-(--surface-900)"
                     @keydown="cli.handleCommandKeyDown"
                     @keypress="cli.handleCommandKeyPress"
                     @keyup="cli.handleCommandKeyUp"
@@ -41,7 +46,11 @@
                 <div class="note mb-3">
                     <p v-html="$t('cliConfirmSnippetNote')"></p>
                 </div>
-                <textarea v-model="cli.state.snippetPreview" rows="20" class="cli-snippet-preview"></textarea>
+                <textarea
+                    v-model="cli.state.snippetPreview"
+                    rows="20"
+                    class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px] mb-[5px]"
+                ></textarea>
                 <div class="mt-3">
                     <UButton :label="$t('cliConfirmSnippetBtn')" @click="handleSnippetConfirm" />
                 </div>
@@ -242,47 +251,17 @@ export default defineComponent({
 </script>
 
 <style>
-/* Terminal-specific styles — unscoped because .cli-wrapper children are runtime-generated */
+/* BaseTab wrapper — no template access to add Tailwind classes */
 .tab-cli {
     height: calc(100% - 6rem);
 }
 
-.tab-cli .cli-content {
-    flex-direction: column;
-    display: flex;
-    overflow: hidden;
-}
-
+/* background-image needs CSS for Vite asset resolution */
 .tab-cli .cli-backdrop {
-    border: 1px solid var(--surface-500);
-    background-color: rgba(0, 0, 0, 0.75);
-    flex-grow: 1;
     background-image: url("../../images/light-wide-1.svg");
-    background-repeat: no-repeat;
-    background-position: 50% 80%;
-    background-size: 600px;
-    border-radius: 5px;
-    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
-    width: 100%;
 }
 
-.tab-cli .cli-window {
-    height: 100%;
-    width: 100%;
-    padding: 5px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    font-family: monospace;
-    color: white;
-    box-sizing: border-box;
-}
-
-.tab-cli .cli-wrapper {
-    user-select: text;
-    white-space: pre-wrap;
-    height: 0px;
-}
-
+/* Child selector for runtime-generated content */
 .tab-cli .cli-wrapper > * {
     user-select: text;
 }
@@ -304,42 +283,5 @@ export default defineComponent({
 
 .tab-cli .cli-window .cli-num {
     color: #e5c07b;
-}
-
-.tab-cli .cli-command-input {
-    box-sizing: border-box;
-    width: 100%;
-    height: 22px;
-    line-height: 20px;
-    padding-left: 5px;
-    border: 1px solid var(--surface-500);
-    resize: none;
-    background-color: var(--surface-200);
-    color: var(--surface-900);
-}
-
-.tab-cli .cli-snippet-preview {
-    background-color: rgba(0, 0, 0, 0.75);
-    width: 100%;
-    resize: none;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    font-family: monospace;
-    color: white;
-    box-sizing: border-box;
-    padding: 5px;
-    margin-bottom: 5px;
-}
-
-@media only screen and (max-width: 1055px) {
-    .tab-cli .cli-content {
-        height: calc(100% - 87px);
-    }
-}
-
-@media all and (max-width: 575px) {
-    .tab-cli .cli-backdrop {
-        background-size: 100%;
-    }
 }
 </style>
