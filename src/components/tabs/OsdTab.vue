@@ -1783,6 +1783,11 @@ onUnmounted(() => {
     content: "\2715\20";
 }
 
+/* Boot logo preview — override Tailwind preflight img { display: block } */
+#font-logo-preview img {
+    display: inline;
+}
+
 /* Responsive layout for OSD grid */
 @media all and (max-width: 1455px) {
     .tab-osd .grid-box .col-span-2 {
