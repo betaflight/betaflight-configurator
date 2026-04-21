@@ -160,7 +160,7 @@ export default defineConfig({
                 },
                 tooltip: {
                     slots: {
-                        content: "ring-2 ring-primary max-w-lg h-fit z-99999", // not good, temporary z-index override to fix other extremely high values interfering
+                        content: "ring-2 ring-primary max-w-sm lg:max-w-lg h-fit z-99999", // not good, temporary z-index override to fix other extremely high values interfering
                         arrow: "fill-primary",
                         text: "whitespace-normal",
                     },
