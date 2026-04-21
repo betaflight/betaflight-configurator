@@ -16,7 +16,7 @@
                 highlight
                 class="mb-3"
             >
-                <p>{{ $t("osdSetupNoOsdChipDetectWarning") }}</p>
+                <p v-html="$t('osdSetupNoOsdChipDetectWarning')"></p>
             </UiBox>
 
             <!-- Warning: Unsupported -->
