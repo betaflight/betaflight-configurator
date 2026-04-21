@@ -5853,6 +5853,9 @@
     "osdSetupSave": {
         "message": "Save"
     },
+    "osdSetupRefresh": {
+        "message": "Refresh"
+    },
     "osdSetupFontManager": {
         "message": "Font Manager"
     },
