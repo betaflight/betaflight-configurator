@@ -161,7 +161,7 @@
 
         <dialog
             ref="cliErrorsDialogRef"
-            class="w-[600px] h-fit p-6"
+            class="w-[600px] max-w-[calc(100vw-2rem)] h-fit p-6"
             @close="handleCliErrorsDialogClose"
             @cancel.prevent
         >

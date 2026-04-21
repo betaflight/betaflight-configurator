@@ -1,5 +1,10 @@
 <template>
-    <dialog ref="dialogRef" class="w-[600px] h-[520px] p-3 pb-0" @close="emit('close')" @cancel.prevent="requestClose">
+    <dialog
+        ref="dialogRef"
+        class="w-[600px] max-w-[calc(100vw-2rem)] h-[520px] p-3 pb-0"
+        @close="emit('close')"
+        @cancel.prevent="requestClose"
+    >
         <div class="flex flex-col flex-1 min-h-0 h-full">
             <div class="flex flex-col flex-1 min-h-0">
                 <div v-if="!loading && preset" class="flex flex-col flex-1 min-h-0">
