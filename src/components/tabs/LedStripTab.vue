@@ -1366,40 +1366,47 @@ button.disabled:active {
     width: 49%;
 }
 
-.directions button {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    padding: 0;
+/* NEWS compass + offset U/D. Force absolute 30x30 so UButton's intrinsic
+ * sizing (min-width, padding) does not distort the cross layout. */
+.directions > button {
+    position: absolute !important;
+    display: inline-flex !important;
+    align-items: center;
     justify-content: center;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    padding: 0 !important;
+    font-size: 12px;
+    line-height: 1;
 }
 
-.directions .dir-n {
+.directions > button.dir-n {
     top: 0;
     left: 32px;
 }
 
-.directions .dir-s {
+.directions > button.dir-s {
     top: 64px;
     left: 32px;
 }
 
-.directions .dir-e {
+.directions > button.dir-e {
     left: 64px;
     top: 32px;
 }
 
-.directions .dir-w {
+.directions > button.dir-w {
     left: 0;
     top: 32px;
 }
 
-.directions .dir-u {
+.directions > button.dir-u {
     right: 10px;
     top: 15px;
 }
 
-.directions .dir-d {
+.directions > button.dir-d {
     right: 10px;
     top: 54px;
 }
