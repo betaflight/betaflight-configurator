@@ -473,7 +473,9 @@
                                     {{ $t("osdSetupCustomLogoInfoTitle") }}
                                 </h3>
                                 <ul class="tab-osd-logo-info-list">
-                                    <li id="font-logo-info-size">{{ $t("osdSetupCustomLogoInfoImageSize") }}</li>
+                                    <li id="font-logo-info-size">
+                                        {{ $t("osdSetupCustomLogoInfoImageSize", logoImageSizeParams) }}
+                                    </li>
                                     <li id="font-logo-info-colors">{{ $t("osdSetupCustomLogoInfoColorMap") }}</li>
                                 </ul>
                                 <p id="font-logo-info-upload-hint" v-html="$t('osdSetupCustomLogoInfoUploadHint')"></p>
@@ -573,6 +575,10 @@ const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const isSaving = ref(false);
+const logoImageSizeParams = {
+    logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
+    logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
+};
 const saveButtonTextOverride = ref(null);
 const saveButtonText = computed(() => saveButtonTextOverride.value || i18n.getMessage("osdSetupSave"));
 const saveMenuItems = computed(() => [
