@@ -580,12 +580,13 @@ const saveMenuItems = computed(() => [
         {
             label: i18n.getMessage("osdSetupSave"),
             icon: "i-lucide-save",
-            disabled: !osdStore.dirty,
+            disabled: !osdStore.dirty || isSaving.value,
             onSelect: saveConfig,
         },
         {
             label: i18n.getMessage("osdSetupRefresh"),
             icon: "i-lucide-refresh-cw",
+            disabled: isSaving.value,
             onSelect: refreshConfig,
         },
     ],
@@ -1224,7 +1225,11 @@ async function loadConfig() {
 }
 
 async function refreshConfig() {
+    if (isSaving.value) {
+        return;
+    }
     await loadConfig();
+    analyticsChanges.value = {};
 }
 
 // Save OSD configuration to FC
