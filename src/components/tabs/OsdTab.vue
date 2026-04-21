@@ -502,10 +502,7 @@
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2 items-center">
-                <UButton
-                    :disabled="!osdStore.state.isMax7456FontDeviceDetected"
-                    @click="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
-                >
+                <UButton :disabled="!osdStore.state.isMax7456FontDeviceDetected" @click="openFontManager()">
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UButton @click="saveConfig()" color="primary">
@@ -536,6 +533,7 @@ import { OSD_CONSTANTS } from "./osd/osd_constants";
 import { positionConfigs, getPresetGridCells } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
+import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
 import semver from "semver";
@@ -672,9 +670,9 @@ const profileOptions = computed(() =>
     })),
 );
 
-const fontSelectOptions = computed(() => {
+function buildFontItems(selectedValue) {
     const items = [];
-    if (selectedFont.value === -1) {
+    if (selectedValue === -1) {
         items.push({
             value: -1,
             label: i18n.getMessage("osdSetupFontPresetsSelectorCustomOption"),
@@ -685,22 +683,11 @@ const fontSelectOptions = computed(() => {
         items.push({ value: idx, label: i18n.getMessage(font.name) });
     });
     return items;
-});
+}
 
-const fontPresetSelectItems = computed(() => {
-    const items = [];
-    if (selectedFontPreset.value === -1) {
-        items.push({
-            value: -1,
-            label: i18n.getMessage("osdSetupFontPresetsSelectorCustomOption"),
-            disabled: true,
-        });
-    }
-    fontTypes.value.forEach((font, idx) => {
-        items.push({ value: idx, label: i18n.getMessage(font.name) });
-    });
-    return items;
-});
+const fontSelectOptions = computed(() => buildFontItems(selectedFont.value));
+
+const fontPresetSelectItems = computed(() => buildFontItems(selectedFontPreset.value));
 
 const videoTypeSelectItems = computed(() =>
     videoTypeOptions.value.map((opt) => ({
@@ -1458,6 +1445,10 @@ async function flashFont() {
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontEnd", {
             length: FONT.data.characters.length,
         });
+        // Reboot FC to apply the new font — reinitializeConnection sends
+        // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
+        // serial backend auto-reconnects after the device comes back.
+        reinitializeConnection();
     } catch (err) {
         console.error("Font upload failed:", err);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
@@ -1505,7 +1496,10 @@ const handleClickOutside = () => closePresetMenu();
 onMounted(async () => {
     document.addEventListener("click", handleClickOutside);
     SYM.loadSymbols();
-    // Initialize LogoManager to inject logo size i18n resources
+    // Inject logo-size i18n resources (logoWidthPx / logoHeightPx) needed by
+    // translation strings before the font manager dialog is opened.  The DOM
+    // element cache will be stale (dialog is not yet mounted), but
+    // openFontManager() re-runs init() after showModal() to fix that.
     LogoManager.init(FONT, SYM.LOGO);
     await loadConfig();
     await nextTick();
