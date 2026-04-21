@@ -126,12 +126,12 @@ defineExpose({ svgElement });
 
 <style>
 /* D3 runtime-generated elements — cannot use Tailwind */
-.tab-sensors .grid .tick {
+.tab-sensors svg g.grid .tick {
     stroke: silver;
     stroke-width: 1px;
     shape-rendering: crispEdges;
 }
-.tab-sensors .grid path {
+.tab-sensors svg g.grid path {
     stroke-width: 0;
 }
 .tab-sensors .data .line {
