@@ -2892,7 +2892,7 @@ export default defineComponent({
         }
     }
     & + .content_toolbar {
-        width: calc(100% - 18rem) !important;
+        width: fit-content;
     }
     @media all and (max-width: 575px) {
         .grid-box {
@@ -2913,7 +2913,7 @@ export default defineComponent({
 }
 
 :deep(.toolbar_fixed_bottom.content_toolbar) {
-    width: calc(100% - 18rem) !important;
+    width: fit-content;
 }
 
 :deep(.content_toolbar) {
