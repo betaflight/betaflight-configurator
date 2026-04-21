@@ -1501,13 +1501,12 @@ const handleClickOutside = () => closePresetMenu();
 onMounted(async () => {
     document.addEventListener("click", handleClickOutside);
     SYM.loadSymbols();
-    // Inject logo-size i18n resources (logoWidthPx / logoHeightPx) needed by
-    // translation strings before the font manager dialog is opened.  The DOM
-    // element cache will be stale (dialog is not yet mounted), but
-    // openFontManager() re-runs init() after showModal() to fix that.
-    LogoManager.init(FONT, SYM.LOGO);
     await loadConfig();
     await nextTick();
+    if (osdStore.isSupported) {
+        // Dialog markup is mounted now; openFontManager() will re-run this after showModal().
+        LogoManager.init(FONT, SYM.LOGO);
+    }
     applyLegacyMobilePreviewZoom();
     GUI.content_ready();
 });
