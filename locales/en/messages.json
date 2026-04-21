@@ -4126,7 +4126,7 @@
         "message": "Firmware"
     },
     "firmwareFlasherFirmwareSize": {
-        "message": "File Size"
+        "message": "{{bytes}} bytes"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes)"

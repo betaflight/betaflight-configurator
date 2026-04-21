@@ -667,13 +667,7 @@ export default defineComponent({
         const corebuildModeCheckbox = ref(null);
 
         // Buttons
-        const exitDfuButton = ref(null);
-        const flashFirmwareButton = ref(null);
-        const loadRemoteFileButton = ref(null);
-        const loadFileButton = ref(null);
         const cloudBuildCancelButton = ref(null);
-
-        // Progress elements (progressLabel ref removed — using reactive state instead)
 
         // Release info elements
         const releaseInfoContainer = ref(null);
@@ -867,7 +861,7 @@ export default defineComponent({
         const showLoadedFirmware = (filename, bytes) => {
             state.filename = filename;
             state.firmwareLoadedName = filename;
-            state.firmwareLoadedSize = `${bytes} bytes`;
+            state.firmwareLoadedSize = $t("firmwareFlasherFirmwareSize", { bytes });
             state.firmwareLoadedIsLocal = state.localFirmwareLoaded;
 
             if (state.localFirmwareLoaded) {
@@ -980,10 +974,6 @@ export default defineComponent({
             state.progressLabelClass = "invalid";
             gui_log(message);
             enableLoadRemoteFileButton(true);
-            if (loadRemoteFileButton.value) {
-                loadRemoteFileButton.value.textContent = $t("firmwareFlasherButtonLoadOnline");
-            }
-            i18n.localizePage();
         };
 
         const normalizeSelectValue = (value) => (value === "" ? null : value);
@@ -2215,10 +2205,6 @@ export default defineComponent({
             FLASH_MESSAGE_TYPES,
             // Template refs
             sponsorTile,
-            exitDfuButton,
-            flashFirmwareButton,
-            loadRemoteFileButton,
-            loadFileButton,
             cloudBuildCancelButton,
             releaseInfoContainer,
             targetSpan,
