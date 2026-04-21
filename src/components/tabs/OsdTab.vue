@@ -517,8 +517,6 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useOsdStore } from "@/stores/osd";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useNavigationStore } from "@/stores/navigation";
-import { useReboot } from "@/composables/useReboot";
 import { useOsdPreview } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
 import BaseTab from "./BaseTab.vue";
@@ -540,9 +538,7 @@ import semver from "semver";
 import { API_VERSION_1_45 } from "@/js/data_storage";
 
 const osdStore = useOsdStore();
-const _fcStore = useFlightControllerStore();
-const _navigationStore = useNavigationStore();
-const { reboot: _reboot } = useReboot();
+const fcStore = useFlightControllerStore();
 
 // Refs for DOM elements
 const previewContainer = ref(null);
@@ -618,8 +614,8 @@ const videoTypeOptions = computed(() => {
         NTSC: "osdSetupVideoFormatOptionNtsc",
         HD: "osdSetupVideoFormatOptionHd",
     };
-    const buildOptions = _fcStore.config?.buildOptions || [];
-    const apiVersion = _fcStore.config?.apiVersion;
+    const buildOptions = fcStore.config?.buildOptions || [];
+    const apiVersion = fcStore.config?.apiVersion;
     const hasBuildOptionGating = apiVersion && semver.gte(apiVersion, API_VERSION_1_45) && buildOptions.length > 0;
 
     return types.map((type, value) => {
@@ -1770,6 +1766,11 @@ onUnmounted(() => {
     display: inline;
 }
 
+#font-logo-info-upload-hint {
+    margin-top: 1em;
+    display: none;
+}
+
 /* Responsive layout for OSD grid */
 @media all and (max-width: 1455px) {
     .tab-osd .grid-box .col-span-2 {
@@ -1792,10 +1793,5 @@ onUnmounted(() => {
     .tab-osd .grid-box.col4 .col-span-1 {
         grid-column: span 1;
     }
-}
-
-#font-logo-info-upload-hint {
-    margin-top: 1em;
-    display: none;
 }
 </style>
