@@ -393,7 +393,7 @@ const gridLeds = reactive(
 
 // Selection state
 const selectedIndices = ref(new Set());
-const selectedFunction = ref("");
+const selectedFunction = ref("none");
 const selectedColorIndex = ref(0);
 
 // Modifier states
@@ -448,7 +448,7 @@ const showSpecialColors = computed(() => {
 
 // USelect item arrays
 const functionItems = computed(() => [
-    { label: t("ledStripFunctionNoneOption"), value: "" },
+    { label: t("ledStripFunctionNoneOption"), value: "none" },
     { label: t("ledStripFunctionColorOption"), value: "function-c" },
     { label: t("ledStripFunctionModesOption"), value: "function-f" },
     { label: t("ledStripFunctionArmOption"), value: "function-a" },
@@ -628,7 +628,7 @@ function handleSelectionComplete() {
 
     // Update selected function
     const baseFunc = led.functions.find((f) => baseFuncs.includes(f));
-    selectedFunction.value = baseFunc ? `function-${baseFunc}` : "";
+    selectedFunction.value = baseFunc ? `function-${baseFunc}` : "none";
 
     // Update directions
     activeDirections.value = new Set(led.directions);
@@ -668,7 +668,7 @@ function clearSelected() {
     });
 
     // Clear UI state
-    selectedFunction.value = "";
+    selectedFunction.value = "none";
     activeDirections.value.clear();
     Object.keys(overlayStates).forEach((key) => {
         overlayStates[key] = false;
@@ -689,7 +689,7 @@ function clearAll() {
     });
 
     // Clear UI state
-    selectedFunction.value = "";
+    selectedFunction.value = "none";
     activeDirections.value.clear();
     Object.keys(overlayStates).forEach((key) => {
         overlayStates[key] = false;
