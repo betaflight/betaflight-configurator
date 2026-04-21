@@ -1441,10 +1441,17 @@ async function flashFont() {
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontEnd", {
             length: FONT.data.characters.length,
         });
-        // Reboot FC to apply the new font — reinitializeConnection sends
-        // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
-        // serial backend auto-reconnects after the device comes back.
-        reinitializeConnection();
+        // Close the dialog before rebooting so the user isn't left with
+        // a stale modal over a disconnected UI.
+        closeFontManager();
+        // Flush any pending MSP callbacks from the char-write burst to
+        // avoid CRC errors when the reboot command goes out.
+        GUI.tab_switch_cleanup(() => {
+            // Reboot FC to apply the new font — reinitializeConnection sends
+            // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
+            // serial backend auto-reconnects after the device comes back.
+            reinitializeConnection();
+        });
     } catch (err) {
         console.error("Font upload failed:", err);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
@@ -1477,7 +1484,9 @@ watch(selectedFont, (newVal) => {
 
 watch(activeProfile, (newVal) => {
     osdStore.osdProfiles.selected = newVal;
-    previewProfile.value = newVal;
+    if (previewProfile.value !== newVal) {
+        previewProfile.value = newVal;
+    }
     if (hasLoadedConfig.value) {
         osdStore.saveOtherConfig().catch((error) => {
             console.error("Failed to update active OSD profile:", error);
