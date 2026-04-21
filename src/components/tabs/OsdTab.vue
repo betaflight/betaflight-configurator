@@ -531,6 +531,7 @@ import { OSD_CONSTANTS } from "./osd/osd_constants";
 import { positionConfigs, getPresetGridCells } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
+import MSP from "@/js/msp";
 import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
@@ -1444,14 +1445,13 @@ async function flashFont() {
         // Close the dialog before rebooting so the user isn't left with
         // a stale modal over a disconnected UI.
         closeFontManager();
-        // Flush any pending MSP callbacks from the char-write burst to
-        // avoid CRC errors when the reboot command goes out.
-        GUI.tab_switch_cleanup(() => {
-            // Reboot FC to apply the new font — reinitializeConnection sends
-            // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
-            // serial backend auto-reconnects after the device comes back.
-            reinitializeConnection();
-        });
+        // Reset MSP parser state and flush pending callbacks to prevent
+        // CRC errors from residual serial data before the reboot command.
+        MSP.disconnect_cleanup();
+        // Reboot FC to apply the new font — reinitializeConnection sends
+        // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
+        // serial backend auto-reconnects after the device comes back.
+        reinitializeConnection();
     } catch (err) {
         console.error("Font upload failed:", err);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
