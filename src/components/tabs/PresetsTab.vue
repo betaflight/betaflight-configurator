@@ -17,9 +17,14 @@
                     <span v-html="store.failedRepositoriesMessage"></span>
                 </UiBox>
                 <UiBox v-if="store.backupWarningVisible" type="warning" highlight>
-                    <div class="flex items-center gap-4">
-                        <span class="flex-1" v-html="$t('presetsWarningBackup')"></span>
-                        <UButton :label="$t('dontShowAgain')" size="xs" @click="hideBackupWarning" />
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                        <span class="flex-1 min-w-0" v-html="$t('presetsWarningBackup')"></span>
+                        <UButton
+                            :label="$t('dontShowAgain')"
+                            size="xs"
+                            class="self-start sm:self-auto"
+                            @click="hideBackupWarning"
+                        />
                     </div>
                 </UiBox>
             </div>
