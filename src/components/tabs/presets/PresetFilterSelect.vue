@@ -4,6 +4,7 @@
         <USelectMenu
             v-model="selectedItems"
             multiple
+            value-key="value"
             :items="items"
             :search-input="{
                 placeholder: $t('dropDownFilterDisabled'),
@@ -51,13 +52,10 @@ const items = computed(() => props.options.map((opt) => ({ value: opt, label: op
 
 const selectedItems = computed({
     get() {
-        return props.modelValue.map((val) => ({ value: val, label: val }));
+        return props.modelValue;
     },
-    set(newItems) {
-        emit(
-            "update:modelValue",
-            newItems.map((item) => item.value),
-        );
+    set(newValues) {
+        emit("update:modelValue", newValues);
     },
 });
 </script>
