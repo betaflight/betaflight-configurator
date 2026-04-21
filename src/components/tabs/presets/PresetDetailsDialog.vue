@@ -91,6 +91,7 @@
                     <div
                         v-if="!showCli && isDescriptionHtml"
                         class="preset-description-text preset-description-html"
+                        data-testid="preset-html-description"
                         v-html="descriptionHtml"
                     ></div>
                     <div v-if="showCli" class="preset-description-text">
@@ -136,6 +137,7 @@
                             rel="noopener noreferrer"
                             :href="discussionHref"
                             :disabled="!discussionLink"
+                            data-testid="preset-discussion-link"
                         />
                     </div>
                     <div class="flex gap-1.5">

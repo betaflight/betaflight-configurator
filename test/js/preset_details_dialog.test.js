@@ -83,11 +83,12 @@ describe("PresetDetailsDialog", () => {
 
         await nextTick();
 
-        const htmlBlock = wrapper.container.querySelector("#presets_detailed_dialog_html_description");
+        const htmlBlock = wrapper.container.querySelector('[data-testid="preset-html-description"]');
         expect(htmlBlock.innerHTML).toContain("<h1");
         expect(htmlBlock.querySelector("a").getAttribute("target")).toBe("_blank");
-        expect(wrapper.container.querySelector("#presets_open_discussion").classList.contains("disabled")).toBe(true);
-        expect(wrapper.container.querySelector("#presets_open_discussion").getAttribute("href")).toBeNull();
+        const discussionBtn = wrapper.container.querySelector('[data-testid="preset-discussion-link"]');
+        expect(discussionBtn).toBeTruthy();
+        expect(discussionBtn.hasAttribute("href")).toBe(false);
 
         const checkbox = wrapper.container.querySelector('input[type="checkbox"]');
         checkbox.checked = false;
