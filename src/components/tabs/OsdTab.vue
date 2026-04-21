@@ -505,7 +505,7 @@
                 <UButton :disabled="!osdStore.state.isMax7456FontDeviceDetected" @click="openFontManager()">
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
-                <UFieldGroup size="sm" orientation="horizontal" class="!flex">
+                <UFieldGroup size="sm" orientation="horizontal" class="flex!">
                     <UButton
                         @click="saveConfig()"
                         :disabled="!osdStore.dirty"
