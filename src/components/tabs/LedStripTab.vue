@@ -1052,8 +1052,8 @@ watch(auxChannelValue, (newVal) => {
     position: relative;
     float: left;
     margin-right: 30px;
-    width: calc((24px + 7px) * 16);
-    height: calc((24px + 7px) * 16);
+    width: calc(29px * 16);
+    height: calc(29px * 16);
 }
 
 /* Grid Sections Overlay */
@@ -1062,8 +1062,8 @@ watch(auxChannelValue, (newVal) => {
     top: 0;
     left: 0;
     z-index: 0;
-    width: calc((24px + 7px) * 16);
-    height: calc((24px + 7px) * 16);
+    width: calc(29px * 16);
+    height: calc(29px * 16);
     border: 1px solid var(--surface-500);
     border-radius: 3px;
     pointer-events: none;
@@ -1071,10 +1071,11 @@ watch(auxChannelValue, (newVal) => {
 }
 
 .gridSections .block {
-    width: 122px;
-    height: 122px;
+    width: 25%;
+    height: 25%;
     float: left;
     border: 1px solid var(--surface-500);
+    box-sizing: border-box;
 }
 
 /* Controls Panel */
@@ -1184,23 +1185,19 @@ button.disabled:active {
 .wiring-container {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 0.5rem;
     margin-bottom: 10px;
-}
-
-.wiring-container > button {
-    margin: 3px 0;
 }
 
 .wiringControls {
     display: flex;
     justify-content: space-between;
+    gap: 0.5rem;
     width: 100%;
 }
 
-.wiringControls button {
-    margin: 3px 0;
-    flex: 0 0 calc(50% - 5px);
+.wiringControls > button {
+    flex: 0 0 calc(50% - 0.25rem);
 }
 
 /* Select Dropdowns */
@@ -1359,56 +1356,57 @@ button.disabled:active {
 }
 
 /* Directions */
+/* NEWS compass cross with U/D stacked on the right. Use CSS grid so the
+ * layout works regardless of UButton's intrinsic sizing/positioning. */
 .directions {
-    height: 130px;
-    position: relative;
-    display: inline-block;
-    width: 49%;
+    display: inline-grid;
+    grid-template-columns: 30px 30px 30px 12px 30px;
+    grid-template-rows: 30px 30px 30px;
+    gap: 4px 2px;
+    vertical-align: top;
+    margin-right: 12px;
 }
 
-/* NEWS compass + offset U/D. Force absolute 30x30 so UButton's intrinsic
- * sizing (min-width, padding) does not distort the cross layout. */
 .directions > button {
-    position: absolute !important;
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
     width: 30px !important;
     height: 30px !important;
     min-width: 30px !important;
     padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 12px;
     line-height: 1;
 }
 
-.directions > button.dir-n {
-    top: 0;
-    left: 32px;
+.directions > .dir-n {
+    grid-column: 2;
+    grid-row: 1;
 }
 
-.directions > button.dir-s {
-    top: 64px;
-    left: 32px;
+.directions > .dir-w {
+    grid-column: 1;
+    grid-row: 2;
 }
 
-.directions > button.dir-e {
-    left: 64px;
-    top: 32px;
+.directions > .dir-e {
+    grid-column: 3;
+    grid-row: 2;
 }
 
-.directions > button.dir-w {
-    left: 0;
-    top: 32px;
+.directions > .dir-s {
+    grid-column: 2;
+    grid-row: 3;
 }
 
-.directions > button.dir-u {
-    right: 10px;
-    top: 15px;
+.directions > .dir-u {
+    grid-column: 5;
+    grid-row: 1;
 }
 
-.directions > button.dir-d {
-    right: 10px;
-    top: 54px;
+.directions > .dir-d {
+    grid-column: 5;
+    grid-row: 3;
 }
 
 /* Colors */
