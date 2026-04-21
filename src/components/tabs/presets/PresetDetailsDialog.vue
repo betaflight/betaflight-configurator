@@ -105,7 +105,7 @@
                 <div v-if="error" class="p-5 text-(--ui-error)">{{ error }}</div>
             </div>
 
-            <div class="flex items-center justify-between mt-auto mx-[-12px] py-2 px-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 mt-auto mx-[-12px] py-2 px-3">
                 <div class="flex items-center flex-wrap gap-1.5">
                     <UButton
                         v-if="!showCli"
@@ -142,7 +142,7 @@
                         data-testid="preset-discussion-link"
                     />
                 </div>
-                <div class="flex gap-1.5">
+                <div class="flex flex-wrap justify-end gap-1.5 ml-auto">
                     <UButton :label="$t('presetsApply')" :disabled="loading || !!error" @click="handleApply" />
                     <UButton :label="$t('close')" variant="outline" @click="requestClose" />
                 </div>
