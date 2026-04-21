@@ -304,7 +304,10 @@ LogoManager.drawPreview = function () {
     el.innerHTML = "";
     for (let i = this.logoStartIndex, I = this.font.constants.MAX_CHAR_COUNT; i < I; i++) {
         const url = this.font.data.character_image_urls[i];
-        el.insertAdjacentHTML("beforeend", `<img src="${url}" title="0x${i.toString(16)}">`);
+        const img = document.createElement("img");
+        img.src = url;
+        img.title = `0x${i.toString(16)}`;
+        el.appendChild(img);
     }
 };
 

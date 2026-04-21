@@ -27,7 +27,7 @@ function applyRulerMargins(containerRef, enabled) {
         return;
     }
 
-    const preview = container.querySelector(".preview");
+    const preview = container.querySelector(".tab-osd-preview");
     if (!preview) {
         return;
     }
@@ -79,17 +79,17 @@ function getContext(canvas, container) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    const rows = container.querySelectorAll(".row");
+    const rows = container.querySelectorAll(".tab-osd-row");
     if (!rows.length) {
         return null;
     }
 
-    const colsInRow = rows[0].querySelectorAll(".char");
+    const colsInRow = rows[0].querySelectorAll(".tab-osd-char");
     if (!colsInRow.length) {
         return null;
     }
 
-    const preview = container.querySelector(".preview");
+    const preview = container.querySelector(".tab-osd-preview");
     if (!preview) {
         return null;
     }
