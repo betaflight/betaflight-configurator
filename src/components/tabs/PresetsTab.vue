@@ -76,7 +76,7 @@
 
                 <div class="px-5">
                     <div v-if="store.hasNoResults" class="text-2xl py-4" v-html="$t('presetsNoPresetsFound')"></div>
-                    <div class="grid gap-3 grid-cols-[repeat(auto-fit,minmax(500px,1fr))] pb-5">
+                    <div class="preset-card-grid grid gap-3 pb-5">
                         <PresetCard
                             v-for="entry in store.visiblePresetEntries"
                             :key="entry.key"
@@ -525,6 +525,10 @@ function handleCliErrorsDialogClose() {
 </script>
 
 <style>
+.preset-card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+}
+
 .tab-presets .content_wrapper {
     height: calc(100% - 30px - 3ex);
     overflow-y: scroll;
