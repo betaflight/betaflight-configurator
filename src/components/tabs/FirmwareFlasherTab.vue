@@ -435,20 +435,22 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton
-                :disabled="state.dfuExitButtonDisabled"
-                :color="state.dfuExitButtonDisabled ? 'neutral' : 'error'"
-                @click="handleExitDfu"
-            >
-                {{ $t("firmwareFlasherExitDfu") }}
-            </UButton>
-            <UButton
-                :disabled="state.flashButtonDisabled"
-                :color="state.flashButtonDisabled ? 'neutral' : 'success'"
-                @click="handleFlashFirmware"
-            >
-                {{ $t("firmwareFlasherFlashFirmware") }}
-            </UButton>
+            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
+                <UButton
+                    :disabled="state.flashButtonDisabled"
+                    :color="state.flashButtonDisabled ? 'neutral' : 'success'"
+                    @click="handleFlashFirmware"
+                >
+                    {{ $t("firmwareFlasherFlashFirmware") }}
+                </UButton>
+                <UDropdownMenu v-slot="{ open }" :items="flashActionMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton
+                        :color="state.flashButtonDisabled ? 'neutral' : 'success'"
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        square
+                    />
+                </UDropdownMenu>
+            </UFieldGroup>
             <UFieldGroup size="sm" orientation="horizontal" class="!flex">
                 <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">{{
                     $t("firmwareFlasherButtonLoadOnline")
@@ -2170,6 +2172,23 @@ export default defineComponent({
             ],
         ]);
 
+        const flashActionMenuItems = computed(() => [
+            [
+                {
+                    label: $t("firmwareFlasherFlashFirmware"),
+                    icon: "i-lucide-zap",
+                    disabled: state.flashButtonDisabled,
+                    onSelect: handleFlashFirmware,
+                },
+                {
+                    label: $t("firmwareFlasherExitDfu"),
+                    icon: "i-lucide-usb",
+                    disabled: state.dfuExitButtonDisabled,
+                    onSelect: handleExitDfu,
+                },
+            ],
+        ]);
+
         const flashRingColor = computed(() => {
             switch (state.progressLabelClass) {
                 case "invalid":
@@ -2189,6 +2208,7 @@ export default defineComponent({
         return {
             state,
             flashRingColor,
+            flashActionMenuItems,
             loadFirmwareMenuItems,
             cloudBuild,
             boardSelection,
