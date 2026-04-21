@@ -115,12 +115,27 @@ export const useOsdStore = defineStore("osd", () => {
         return JSON.stringify({
             videoSystem: videoSystem.value,
             unitMode: unitMode.value,
-            alarms: alarms.value,
-            statItems: statItems.value,
-            warnings: warnings.value,
-            displayItems: displayItems.value,
-            timers: timers.value,
-            osdProfiles: osdProfiles.value,
+            parameters: {
+                cameraFrameWidth: parameters.cameraFrameWidth,
+                cameraFrameHeight: parameters.cameraFrameHeight,
+                overlayRadioMode: parameters.overlayRadioMode,
+            },
+            alarms: Object.fromEntries(
+                Object.entries(alarms.value).map(([key, alarm]) => [key, { value: alarm.value }]),
+            ),
+            statItems: statItems.value.map(({ index, enabled }) => ({ index, enabled })),
+            warnings: warnings.value.map(({ index, enabled }) => ({ index, enabled })),
+            displayItems: displayItems.value.map(({ index, position, variant, isVisible }) => ({
+                index,
+                position,
+                variant,
+                isVisible: [...isVisible],
+            })),
+            timers: timers.value.map(({ index, src, precision, alarm }) => ({ index, src, precision, alarm })),
+            osdProfiles: {
+                number: osdProfiles.value.number,
+                selected: osdProfiles.value.selected,
+            },
         });
     }
 
