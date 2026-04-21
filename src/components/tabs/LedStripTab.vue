@@ -267,14 +267,6 @@
                 <div class="special_colors mode_colors" v-show="showSpecialColors">
                     <div class="section" v-html="$t('ledStripModesSpecialColorsTitle')"></div>
 
-                    <USelect
-                        id="ledStripModeGpsModeSelect"
-                        class="modeSelect flightmode min-w-48"
-                        size="sm"
-                        :items="specialColorsModeItems"
-                        v-model="specialColorsMode"
-                    />
-
                     <button
                         v-for="config in specialColorButtons"
                         :key="config.key"
@@ -422,7 +414,6 @@ const overlayStates = reactive({
 // Other state
 const activeDirections = ref(new Set());
 const modeColorsMode = ref(0);
-const specialColorsMode = ref(0);
 const selectedModeColor = ref(null);
 const auxChannelValue = ref("3");
 const colorDefineSliders = ref(null);
@@ -492,11 +483,6 @@ const modeColorsModeItems = computed(() => [
     { label: t("ledStripModeColorsModeAngle"), value: 3 },
     { label: t("ledStripModeColorsModeMag"), value: 4 },
     { label: t("ledStripModeColorsModeBaro"), value: 5 },
-]);
-
-const specialColorsModeItems = computed(() => [
-    { label: t("ledStripModeGpsDefault"), value: 0 },
-    { label: t("ledStripModeGpsBar"), value: 1 },
 ]);
 
 const specialColorButtons = computed(() => [
