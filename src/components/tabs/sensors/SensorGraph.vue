@@ -83,7 +83,7 @@
                         />
                     </div>
                     <div class="flex justify-between py-0.5">
-                        <span>X:</span>
+                        <span>Value:</span>
                         <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#1fb1f0]">{{
                             displayValues[0]
                         }}</span>

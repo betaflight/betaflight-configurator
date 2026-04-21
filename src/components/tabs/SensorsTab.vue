@@ -258,7 +258,7 @@ const hasDebug = computed(() => {
 });
 
 // Debug titles
-const debugTitles = ref(new Array(8).fill("").map((_, i) => `Debug ${i}`));
+const debugTitles = ref(new Array(8).fill("").map((_, i) => `Debug (${i})`));
 
 function initSensorData() {
     for (let i = 0; i < 3; i++) {
@@ -390,9 +390,10 @@ function displayDebugColumnNames() {
     const debugFields = debugStore.fieldNames[debugModeName];
 
     for (let i = 0; i < debugColumns.value; i++) {
-        let msg = `Debug ${i} unknown`;
+        let msg = `Unknown (${i})`;
         if (debugFields) {
-            msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
+            const fieldName = debugFields[`debug[${i}]`];
+            msg = fieldName ? `${fieldName} (${i})` : `Not used (${i})`;
         }
 
         debugTitles.value[i] = msg;
