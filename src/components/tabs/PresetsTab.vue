@@ -93,7 +93,7 @@
                         />
                         <div
                             v-if="store.hasTooManyResults"
-                            class="text-2xl"
+                            class="text-2xl col-span-full py-4"
                             v-html="$t('presetsTooManyPresetsFound')"
                         ></div>
                     </div>
