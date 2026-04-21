@@ -21,7 +21,7 @@
                     <details
                         v-if="preset?.options?.length"
                         ref="optionsDetailsRef"
-                        class="relative min-h-[26px] h-[26px] overflow-visible mt-1.5 w-fit min-w-[200px]"
+                        class="relative min-h-[38px] overflow-visible mt-1.5 w-fit min-w-[200px]"
                         :open="optionsExpanded"
                         @toggle="handleOptionsToggle"
                     >
