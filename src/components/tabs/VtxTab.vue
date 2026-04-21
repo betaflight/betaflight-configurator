@@ -221,9 +221,8 @@
                                         <div>
                                             <UInput
                                                 :model-value="getBandName(bandIdx)"
-                                                @update:model-value="
-                                                    setBandName(bandIdx, String($event).toUpperCase().trim())
-                                                "
+                                                @update:model-value="setBandName(bandIdx, String($event).toUpperCase())"
+                                                @blur="setBandName(bandIdx, getBandName(bandIdx).trim())"
                                                 maxlength="8"
                                                 size="xs"
                                                 class="uppercase"
@@ -233,8 +232,9 @@
                                             <UInput
                                                 :model-value="getBandLetter(bandIdx)"
                                                 @update:model-value="
-                                                    setBandLetter(bandIdx, String($event).toUpperCase().trim())
+                                                    setBandLetter(bandIdx, String($event).toUpperCase())
                                                 "
+                                                @blur="setBandLetter(bandIdx, getBandLetter(bandIdx).trim())"
                                                 maxlength="1"
                                                 size="xs"
                                                 class="uppercase w-8"
@@ -326,9 +326,8 @@
                                     <div v-for="i in vtxConfig.vtx_table_powerlevels" :key="'pl-lbl-' + i">
                                         <UInput
                                             :model-value="getPowerLevelLabel(i)"
-                                            @update:model-value="
-                                                setPowerLevelLabel(i, String($event).toUpperCase().trim())
-                                            "
+                                            @update:model-value="setPowerLevelLabel(i, String($event).toUpperCase())"
+                                            @blur="setPowerLevelLabel(i, getPowerLevelLabel(i).trim())"
                                             maxlength="3"
                                             size="xs"
                                             class="uppercase"
