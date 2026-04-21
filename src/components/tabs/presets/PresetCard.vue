@@ -37,7 +37,7 @@
             </button>
             <div>
                 <span
-                    class="text-2xl font-bold inline-block mb-2 overflow-hidden whitespace-nowrap text-ellipsis w-[calc(100%-60px)]"
+                    class="text-lg font-bold inline-block mb-2 overflow-hidden whitespace-nowrap text-ellipsis w-[calc(100%-60px)]"
                 >
                     {{ preset.title }}
                 </span>

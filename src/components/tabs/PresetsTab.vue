@@ -1,17 +1,17 @@
 <template>
     <BaseTab tab-name="presets" @mounted="onTabMounted" @cleanup="onTabCleanup">
         <div class="content_wrapper" id="presets_content_wrapper">
-            <div class="tab_title flex items-center flex-wrap gap-2 px-5 pt-5">
-                <div class="text-xl font-semibold" v-html="$t('tabPresets')"></div>
-                <div class="flex items-center gap-2 ml-auto flex-wrap">
-                    <WikiButton docUrl="presets" />
-                    <UButton :label="$t('presetSources')" variant="outline" size="xs" @click="openSourcesDialog" />
-                    <UButton :label="$t('presetsBackupLoad')" variant="outline" size="xs" @click="loadConfigBackup" />
-                    <UButton :label="$t('presetsBackupSave')" variant="outline" size="xs" @click="saveConfigBackup" />
-                </div>
+            <div class="tab_title" v-html="$t('tabPresets')"></div>
+            <div class="cf_doc_version_bt">
+                <WikiButton docUrl="presets" />
+            </div>
+            <div class="flex items-center gap-2 flex-wrap mb-2 px-5 justify-end">
+                <UButton :label="$t('presetSources')" size="xs" @click="openSourcesDialog" />
+                <UButton :label="$t('presetsBackupLoad')" size="xs" @click="loadConfigBackup" />
+                <UButton :label="$t('presetsBackupSave')" size="xs" @click="saveConfigBackup" />
             </div>
 
-            <div class="flex flex-col gap-2 px-5">
+            <div class="flex flex-col gap-2 px-5 mb-3">
                 <UiBox v-if="store.isThirdPartyActive" type="warning" highlight>
                     <span v-html="$t('presetsWarningNotOfficialSource')"></span>
                 </UiBox>
@@ -21,7 +21,7 @@
                 <UiBox v-if="store.backupWarningVisible" type="warning" highlight>
                     <div class="flex items-center gap-4">
                         <span class="flex-1" v-html="$t('presetsWarningBackup')"></span>
-                        <UButton :label="$t('dontShowAgain')" variant="outline" size="xs" @click="hideBackupWarning" />
+                        <UButton :label="$t('dontShowAgain')" size="xs" @click="hideBackupWarning" />
                     </div>
                 </UiBox>
             </div>

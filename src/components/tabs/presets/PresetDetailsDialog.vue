@@ -15,20 +15,21 @@
 
                     <details
                         v-if="preset?.options?.length"
-                        class="relative min-h-[26px] h-[26px] overflow-visible mt-1.5"
+                        ref="optionsDetailsRef"
+                        class="relative min-h-[26px] h-[26px] overflow-visible mt-1.5 w-fit min-w-[200px]"
                         :open="optionsExpanded"
                         @toggle="handleOptionsToggle"
                     >
                         <summary
-                            class="grid grid-cols-[100px_minmax(0,1fr)_16px] items-center gap-3 min-h-[38px] px-3 border-2 border-(--ui-primary) rounded cursor-pointer list-none preset-options-summary"
+                            class="flex items-center gap-3 min-h-[38px] px-3 border border-(--ui-primary) rounded cursor-pointer list-none preset-options-summary"
                         >
-                            <span class="w-[100px] inline-block" v-html="$t('presetsOptions')"></span>
+                            <span class="shrink-0" v-html="$t('presetsOptions')"></span>
                             <span class="min-w-0 text-(--ui-text-muted) truncate" :title="optionsSummary">{{
                                 optionsSummary
                             }}</span>
                         </summary>
                         <div
-                            class="absolute top-full left-0 right-0 z-30 grid gap-2.5 max-h-60 mt-0 p-3 overflow-auto border border-(--ui-border) border-t-0 rounded-b bg-(--ui-bg) shadow-lg"
+                            class="absolute top-full left-0 z-30 grid gap-2.5 min-w-full max-h-60 mt-0 p-3 overflow-auto border border-(--ui-border) border-t-0 rounded-b bg-(--ui-bg) shadow-lg w-fit"
                         >
                             <div v-for="(option, optionIndex) in preset.options" :key="`${option.name}-${optionIndex}`">
                                 <template v-if="Array.isArray(option.childs)">
@@ -102,48 +103,46 @@
                 <div v-if="error" class="p-5 text-(--ui-error)">{{ error }}</div>
             </div>
 
-            <div class="content_toolbar mt-auto mx-[-12px]">
-                <div class="flex items-center justify-between w-full">
-                    <div class="flex items-center flex-wrap gap-1.5 pl-5">
-                        <UButton
-                            v-if="!showCli"
-                            :label="showCliLabel"
-                            variant="outline"
-                            size="xs"
-                            @click="emit('toggle-cli-visible', true)"
-                        />
-                        <UButton
-                            v-if="showCli"
-                            :label="hideCliLabel"
-                            variant="outline"
-                            size="xs"
-                            @click="emit('toggle-cli-visible', false)"
-                        />
-                        <UButton
-                            :label="viewOnlineLabel"
-                            variant="outline"
-                            size="xs"
-                            :as="'a'"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            :href="onlineLink"
-                        />
-                        <UButton
-                            :label="discussionLabel"
-                            variant="outline"
-                            size="xs"
-                            :as="'a'"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            :href="discussionHref"
-                            :disabled="!discussionLink"
-                            data-testid="preset-discussion-link"
-                        />
-                    </div>
-                    <div class="flex gap-1.5">
-                        <UButton :label="$t('presetsApply')" :disabled="loading || !!error" @click="handleApply" />
-                        <UButton :label="$t('close')" variant="outline" @click="requestClose" />
-                    </div>
+            <div class="flex items-center justify-between mt-auto mx-[-12px] py-2 px-3">
+                <div class="flex items-center flex-wrap gap-1.5">
+                    <UButton
+                        v-if="!showCli"
+                        :label="showCliLabel"
+                        variant="outline"
+                        size="xs"
+                        @click="emit('toggle-cli-visible', true)"
+                    />
+                    <UButton
+                        v-if="showCli"
+                        :label="hideCliLabel"
+                        variant="outline"
+                        size="xs"
+                        @click="emit('toggle-cli-visible', false)"
+                    />
+                    <UButton
+                        :label="viewOnlineLabel"
+                        variant="outline"
+                        size="xs"
+                        :as="'a'"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        :href="onlineLink"
+                    />
+                    <UButton
+                        :label="discussionLabel"
+                        variant="outline"
+                        size="xs"
+                        :as="'a'"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        :href="discussionHref"
+                        :disabled="!discussionLink"
+                        data-testid="preset-discussion-link"
+                    />
+                </div>
+                <div class="flex gap-1.5">
+                    <UButton :label="$t('presetsApply')" :disabled="loading || !!error" @click="handleApply" />
+                    <UButton :label="$t('close')" variant="outline" @click="requestClose" />
                 </div>
             </div>
         </div>
@@ -151,7 +150,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { i18n } from "@/js/localization";
@@ -223,16 +222,47 @@ const emit = defineEmits([
 ]);
 
 const dialogRef = ref(null);
+const optionsDetailsRef = ref(null);
+
+function handleClickOutside(event) {
+    if (optionsDetailsRef.value?.open && !optionsDetailsRef.value.contains(event.target)) {
+        optionsDetailsRef.value.open = false;
+        emit("options-expanded-change", false);
+    }
+}
+
+onMounted(() => {
+    document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("click", handleClickOutside);
+});
 
 const descriptionText = computed(() => props.preset?.description?.join("\n") ?? "");
 const isDescriptionHtml = computed(() => props.preset?.parser === "MARKED");
 const cliText = computed(() => props.cliStrings.join("\n"));
-const optionsSummary = computed(() => {
-    if (props.selectedOptionLabels.length === 0) {
-        return "";
+const totalOptionsCount = computed(() => {
+    if (!props.preset?.options) {
+        return 0;
     }
 
-    return props.selectedOptionLabels.join("; ");
+    return props.preset.options.reduce((count, option) => {
+        if (Array.isArray(option.childs)) {
+            return count + option.childs.length;
+        }
+
+        return count + 1;
+    }, 0);
+});
+const optionsSummary = computed(() => {
+    const selected = props.selectedOptionIds.length;
+
+    if (selected === 0) {
+        return `0 of ${totalOptionsCount.value} selected`;
+    }
+
+    return `${selected} of ${totalOptionsCount.value} selected`;
 });
 const onlineLink = computed(() =>
     props.preset && props.repository ? props.repository.getPresetOnlineLink(props.preset) : "#",
