@@ -1,9 +1,11 @@
 <template>
     <BaseTab tab-name="sensors">
         <div class="content_wrapper flex flex-col gap-4">
-            <div class="tab_title text-xl! mb-2.5!" v-html="$t('tabRawSensorData')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="sensors" />
+            <div>
+                <div class="tab_title" v-html="$t('tabRawSensorData')"></div>
+                <div class="cf_doc_version_bt">
+                    <WikiButton docUrl="sensors" />
+                </div>
             </div>
 
             <UiBox type="warning" highlight>
