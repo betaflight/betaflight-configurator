@@ -3,39 +3,40 @@
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabReceiver')"></div>
             <WikiButton docUrl="Receiver" />
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('receiverHelp')"></p>
-            </div>
+            </UiBox>
 
             <div class="grid-row grid-box col5">
                 <!-- Left Column: Model Preview + Channel Bars -->
                 <div class="col-span-2">
-                    <div class="gui_box grey tunings topspacer">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('receiverModelPreview')"></div>
+                    <UiBox :title="$t('receiverModelPreview')">
+                        <div class="background_paper h-48 w-full" ref="modelPreviewContainer">
+                            <canvas ref="modelCanvas"></canvas>
                         </div>
-                        <div class="model_preview_cell spacer_box">
-                            <div class="model_preview background_paper" ref="modelPreviewContainer">
-                                <canvas ref="modelCanvas"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                    </UiBox>
                     <!-- Channel Bars -->
                     <div class="bars">
                         <ul v-for="(channel, index) in channelBars" :key="index">
                             <li class="name">{{ channel.name }}</li>
-                            <li class="meter">
-                                <div class="meter-bar">
-                                    <div class="label">{{ channel.value }}</div>
-                                    <div
-                                        class="fill"
-                                        :class="{ disabled: rc.active_channels === 0 }"
-                                        :style="{ width: channel.width + '%' }"
-                                    >
-                                        <div class="label">{{ channel.value }}</div>
-                                    </div>
+                            <div class="w-full relative">
+                                <UProgress
+                                    :model-value="rc.active_channels === 0 ? 0 : channel.width"
+                                    :max="100"
+                                    :ui="{
+                                        base: 'w-full bg-elevated',
+                                        indicator: 'duration-50',
+                                    }"
+                                    :disabled="rc.active_channels === 0"
+                                    size="xl"
+                                />
+                                <div
+                                    v-if="rc.active_channels > 0"
+                                    class="text-center text-xs font-bold absolute inset-0"
+                                >
+                                    {{ channel.value }}
                                 </div>
-                            </li>
+                            </div>
                         </ul>
                     </div>
                 </div>
@@ -44,563 +45,389 @@
                 <div class="col-span-3">
                     <!-- Receiver Mode -->
                     <div class="receiver">
-                        <div class="gui_box receiver grey">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('configurationReceiver')"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <select
-                                    id="rxModeSelect"
-                                    class="features rxMode"
-                                    name="rxMode"
+                        <UiBox :title="$t('configurationReceiver')">
+                            <SettingRow :label="$t('configurationReceiverMode')">
+                                <USelect
+                                    :items="rxModeOptions"
                                     v-model="selectedRxMode"
                                     @change="onRxModeChange"
-                                >
-                                    <option v-for="mode in rxModeOptions" :key="mode.value" :value="mode.value">
-                                        {{ mode.label }}
-                                    </option>
-                                </select>
-                                <span v-html="$t('configurationReceiverMode')"></span>
-                            </div>
+                                    class="min-w-52"
+                                />
+                            </SettingRow>
 
                             <!-- Serial RX Box -->
-                            <div class="serialRXBox spacer_box" v-if="showSerialRxBox">
-                                <div class="note">
+                            <template v-if="showSerialRxBox">
+                                <UiBox highlight>
                                     <p v-html="$t('configurationSerialRXHelp')"></p>
-                                </div>
-                                <select class="serialRX" v-model.number="rxConfig.serialrx_provider">
-                                    <option
-                                        v-for="(rxType, idx) in serialRxTypes"
-                                        :key="idx"
-                                        :value="idx"
-                                        :disabled="!rxType.enabled"
-                                    >
-                                        {{ rxType.name }}
-                                    </option>
-                                </select>
-                                <span v-html="$t('configurationSerialRX')"></span>
-                                <div class="note someRXTypesDisabled" v-if="showSomeRxTypesDisabled">
-                                    {{ $t("someRXTypesDisabled") }}
-                                </div>
-                                <div class="note gui_warning serialRXNotSupported" v-if="showSerialRxNotSupported">
-                                    {{ $t("serialRXNotSupported") }}
-                                </div>
-                            </div>
+                                </UiBox>
+                                <SettingRow :label="$t('configurationSerialRX')">
+                                    <USelectMenu
+                                        v-model="rxConfig.serialrx_provider"
+                                        value-key="value"
+                                        :items="serialRxTypes"
+                                        :search-input="{
+                                            placeholder: $t('search'),
+                                            icon: 'i-lucide-search',
+                                        }"
+                                        class="min-w-52"
+                                        :ui="{ content: 'max-h-72' }"
+                                    />
+                                </SettingRow>
+                                <UiBox highlight v-if="showSomeRxTypesDisabled">
+                                    <p v-html="$t('someRXTypesDisabled')"></p>
+                                </UiBox>
+                                <UiBox highlight v-if="showSerialRxNotSupported">
+                                    <p v-html="$t('serialRXNotSupported')"></p>
+                                </UiBox>
+                            </template>
 
                             <!-- SPI RX Box -->
-                            <div class="spiRxBox spacer_box" v-if="showSpiRxBox">
-                                <div class="note">
+                            <template v-if="showSpiRxBox">
+                                <UiBox highlight>
                                     <p v-html="$t('configurationSpiRxHelp')"></p>
-                                </div>
-                                <select class="spiRx" v-model.number="rxConfig.rxSpiProtocol">
-                                    <option v-for="(rxType, idx) in spiRxTypes" :key="idx" :value="idx">
-                                        {{ rxType }}
-                                    </option>
-                                </select>
-                                <span v-html="$t('configurationSpiRX')"></span>
-                            </div>
+                                </UiBox>
+                                <SettingRow :label="$t('configurationSpiRX')">
+                                    <USelectMenu
+                                        v-model="rxConfig.rxSpiProtocol"
+                                        value-key="value"
+                                        :items="spiRxMenuItems"
+                                        :search-input="{
+                                            placeholder: $t('search'),
+                                            icon: 'i-lucide-search',
+                                        }"
+                                        class="min-w-52"
+                                        :ui="{ content: 'max-h-72' }"
+                                    />
+                                </SettingRow>
+                            </template>
 
                             <!-- ELRS Container -->
-                            <div id="elrsContainer" class="elrsContainer spacer_box" v-if="showElrsContainer">
-                                <div class="number">
-                                    <input type="text" class="elrsBindingPhrase" v-model="elrsBindingPhrase" />
-                                    <span v-html="$t('receiverButtonBindingPhrase')"></span>
-                                </div>
-                                <div>
-                                    <span class="elrsUid">{{ elrsUidDisplay }}</span>
-                                </div>
-                                <div class="number" v-if="showElrsModelId">
+                            <template v-if="showElrsContainer">
+                                <SettingRow :label="`${$t('receiverButtonBindingPhrase')} (${elrsUidDisplay})`">
+                                    <UInput
+                                        v-model="elrsBindingPhrase"
+                                        :placeholder="$t('receiverButtonBindingPhrase')"
+                                        class="min-w-52"
+                                    />
+                                </SettingRow>
+                                <SettingRow
+                                    :label="$t('receiverModelId')"
+                                    v-if="showElrsModelId"
+                                    :help="$t('receiverHelpModelId')"
+                                >
                                     <UInputNumber
-                                        name="elrsModelId-number"
+                                        v-model="rxConfig.elrsModelId"
                                         :min="0"
                                         :max="255"
                                         :step="1"
-                                        v-model="rxConfig.elrsModelId"
+                                        class="min-w-52"
                                     />
-                                    <span v-html="$t('receiverModelId')"></span>
-                                    <div class="helpicon cf_tip" :title="$t('receiverHelpModelId')"></div>
-                                </div>
-                            </div>
-                        </div>
+                                </SettingRow>
+                            </template>
+                        </UiBox>
                     </div>
 
                     <div class="grid-box col6">
                         <!-- Telemetry -->
-                        <div class="gui_box grey col-span-3">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('configurationTelemetry')"></div>
-                                <div class="helpicon cf_tip" :title="$t('configurationTelemetryHelp')"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <table>
-                                    <tbody class="features telemetry">
-                                        <tr>
-                                            <td>
-                                                <input
-                                                    type="checkbox"
-                                                    class="toggle feature"
-                                                    name="TELEMETRY"
-                                                    :checked="isTelemetryEnabled"
-                                                    @change="toggleTelemetry"
-                                                />
-                                            </td>
-                                            <td>{{ $t("featureTELEMETRY") }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <UiBox
+                            :title="$t('configurationTelemetry')"
+                            :help="$t('configurationTelemetryHelp')"
+                            class="col-span-2"
+                        >
+                            <SettingRow :label="$t('featureTELEMETRY')">
+                                <USwitch
+                                    :model-value="isTelemetryEnabled"
+                                    @update:model-value="(checked) => toggleTelemetry(checked)"
+                                />
+                            </SettingRow>
+                        </UiBox>
 
                         <!-- RSSI -->
-                        <div class="gui_box grey col-span-3">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('configurationRSSI')"></div>
-                                <div class="helpicon cf_tip" :title="$t('configurationRSSIHelp')"></div>
+                        <UiBox :title="$t('configurationRSSI')" :help="$t('configurationRSSIHelp')" class="col-span-3">
+                            <div class="flex justify-between gap-2 flex-wrap">
+                                <SettingRow :label="$t('featureRSSI_ADC')">
+                                    <USwitch
+                                        :model-value="isRssiAdcEnabled"
+                                        @update:model-value="(checked) => toggleRssiAdc(checked)"
+                                    />
+                                </SettingRow>
+                                <SettingRow :label="$t('receiverRssiChannel')">
+                                    <USelect
+                                        :items="[
+                                            { label: $t('receiverRssiChannelDisabledOption'), value: 0 },
+                                            ...rssiChannelOptions.map((i) => ({
+                                                label: $t(`controlAxisAux${i - 4}`),
+                                                value: i,
+                                            })),
+                                        ]"
+                                        v-model="rssiConfig.channel"
+                                        class="min-w-24 w-fit"
+                                    />
+                                </SettingRow>
                             </div>
-                            <div class="spacer_box">
-                                <table>
-                                    <tbody class="features rssi">
-                                        <tr>
-                                            <td>
-                                                <input
-                                                    type="checkbox"
-                                                    class="toggle feature"
-                                                    name="RSSI_ADC"
-                                                    :checked="isRssiAdcEnabled"
-                                                    @change="toggleRssiAdc"
-                                                />
-                                            </td>
-                                            <td>{{ $t("featureRSSI_ADC") }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- RSSI Channel -->
-                        <div class="gui_box grey col-span-3">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('receiverRssiChannel')"></div>
-                            </div>
-                            <select name="rssi_channel" v-model.number="rssiConfig.channel">
-                                <option value="0">{{ $t("receiverRssiChannelDisabledOption") }}</option>
-                                <option v-for="i in rssiChannelOptions" :key="i" :value="i">
-                                    {{ $t(`controlAxisAux${i - 4}`) }}
-                                </option>
-                            </select>
-                        </div>
+                        </UiBox>
 
                         <!-- Channel Map -->
-                        <div class="gui_box grey col-span-3">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('receiverChannelMap')"></div>
-                            </div>
-                            <div class="hybrid_element">
-                                <input
-                                    type="text"
-                                    name="rcmap"
-                                    spellcheck="false"
-                                    v-model="channelMapString"
-                                    @input="onChannelMapInput"
-                                    @focusout="validateChannelMap"
-                                />
-                                <select class="hybrid_helper" name="rcmap_helper" @change="applyChannelMapPreset">
-                                    <option value="">{{ $t("receiverChannelDefaultOption") }}</option>
-                                    <option value="AETR1234">FrSky / Futaba / Hitec (AETR1234)</option>
-                                    <option value="TAER1234">Spektrum / Graupner / JR (TAER1234)</option>
-                                </select>
-                            </div>
-                        </div>
+                        <UiBox :title="$t('receiverChannelMap')" class="col-span-1">
+                            <SettingRow>
+                                <UFieldGroup>
+                                    <UInput
+                                        v-model="channelMapString"
+                                        @input="onChannelMapInput"
+                                        @focusout="validateChannelMap"
+                                        class="w-24"
+                                    />
+                                    <USelect
+                                        v-model="channelMapPresetValue"
+                                        :items="channelMapPresetItems"
+                                        class="w-fit"
+                                        :ui="{
+                                            base: 'gap-0 pl-0',
+                                            value: 'hidden',
+                                            content: 'min-w-fit',
+                                        }"
+                                    />
+                                </UFieldGroup>
+                            </SettingRow>
+                        </UiBox>
 
                         <!-- Stick settings -->
-                        <div class="gui_box grey col-span-2 sticks">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('receiverStickMin')"></div>
+                        <UiBox :title="$t('receiverStickRange')" class="col-span-6">
+                            <div class="grid grid-cols-3 gap-2">
+                                <SettingColumn
+                                    :label="$t('receiverStickMin')"
+                                    :help="$t('receiverHelpStickMin')"
+                                    class="items-start"
+                                >
+                                    <UInputNumber v-model="rxConfig.stick_min" :min="1000" :max="1200" :step="1" />
+                                </SettingColumn>
+                                <SettingColumn
+                                    :label="$t('receiverStickCenter')"
+                                    :help="$t('receiverHelpStickCenter')"
+                                    class="items-center"
+                                >
+                                    <UInputNumber v-model="rxConfig.stick_center" :min="1401" :max="1599" :step="1" />
+                                </SettingColumn>
+                                <SettingColumn
+                                    :label="$t('receiverStickMax')"
+                                    :help="$t('receiverHelpStickMax')"
+                                    class="items-end"
+                                >
+                                    <UInputNumber v-model="rxConfig.stick_max" :min="1800" :max="2000" :step="1" />
+                                </SettingColumn>
                             </div>
-                            <div class="input-helpicon-flex">
-                                <UInputNumber
-                                    name="stick_min"
-                                    :min="1000"
-                                    :max="1200"
-                                    :step="1"
-                                    v-model="rxConfig.stick_min"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('receiverHelpStickMin')"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey col-span-2 sticks">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('receiverStickCenter')"></div>
-                            </div>
-                            <div class="input-helpicon-flex">
-                                <UInputNumber
-                                    name="stick_center"
-                                    :min="1401"
-                                    :max="1599"
-                                    :step="1"
-                                    v-model="rxConfig.stick_center"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('receiverHelpStickCenter')"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey col-span-2 sticks">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('receiverStickMax')"></div>
-                            </div>
-                            <div class="input-helpicon-flex">
-                                <UInputNumber
-                                    name="stick_max"
-                                    :min="1800"
-                                    :max="2000"
-                                    :step="1"
-                                    v-model="rxConfig.stick_max"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('receiverHelpStickMax')"></div>
-                            </div>
-                        </div>
+                        </UiBox>
 
                         <!-- Deadband settings -->
-                        <div class="gui_box grey col-span-2 deadband">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('receiverDeadband')"></div>
+                        <UiBox :title="$t('receiverDeadband')" class="col-span-6">
+                            <div class="grid grid-cols-3 gap-2">
+                                <SettingColumn
+                                    :label="$t('receiverDeadband')"
+                                    :help="$t('receiverHelpDeadband')"
+                                    class="items-start"
+                                >
+                                    <UInputNumber v-model="rcDeadbandConfig.deadband" :min="0" :max="32" :step="1" />
+                                </SettingColumn>
+                                <SettingColumn
+                                    :label="$t('receiverYawDeadband')"
+                                    :help="$t('receiverHelpYawDeadband')"
+                                    class="items-center"
+                                >
+                                    <UInputNumber
+                                        v-model="rcDeadbandConfig.yaw_deadband"
+                                        :min="0"
+                                        :max="100"
+                                        :step="1"
+                                    />
+                                </SettingColumn>
+                                <SettingColumn
+                                    :label="$t('recevier3dDeadbandThrottle')"
+                                    :help="$t('receiverHelp3dDeadbandThrottle')"
+                                    class="items-end"
+                                >
+                                    <UInputNumber
+                                        v-model="rcDeadbandConfig.deadband3d_throttle"
+                                        :min="0"
+                                        :max="100"
+                                        :step="1"
+                                    />
+                                </SettingColumn>
                             </div>
-                            <div class="input-helpicon-flex">
-                                <UInputNumber
-                                    name="deadband"
-                                    :min="0"
-                                    :max="32"
-                                    :step="1"
-                                    v-model="rcDeadbandConfig.deadband"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('receiverHelpDeadband')"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey col-span-2 deadband">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('receiverYawDeadband')"></div>
-                            </div>
-                            <div class="input-helpicon-flex">
-                                <UInputNumber
-                                    name="yaw_deadband"
-                                    :min="0"
-                                    :max="100"
-                                    :step="1"
-                                    v-model="rcDeadbandConfig.yaw_deadband"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('receiverHelpYawDeadband')"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey col-span-2 deadband">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" v-html="$t('recevier3dDeadbandThrottle')"></div>
-                            </div>
-                            <div class="input-helpicon-flex">
-                                <UInputNumber
-                                    name="3ddeadbandthrottle"
-                                    :min="0"
-                                    :max="100"
-                                    :step="1"
-                                    v-model="rcDeadbandConfig.deadband3d_throttle"
-                                />
-                                <div class="helpicon cf_tip" :title="$t('receiverHelp3dDeadbandThrottle')"></div>
-                            </div>
-                        </div>
+                        </UiBox>
                     </div>
 
                     <!-- RC Smoothing -->
-                    <div class="gui_box grey tunings topspacer rcSmoothing">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('receiverRcSmoothing')"></div>
-                        </div>
-                        <table class="rcSmoothing-table">
-                            <tbody>
-                                <tr class="rc-smoothing-type">
-                                    <td>
-                                        <select name="rcSmoothing-select" v-model.number="rxConfig.rcSmoothing">
-                                            <option value="0">{{ $t("off") }}</option>
-                                            <option value="1">{{ $t("on") }}</option>
-                                        </select>
-                                    </td>
-                                    <td colspan="2">
-                                        <label>
-                                            <span v-html="$t('receiverRcSmoothing')"></span>
-                                        </label>
-                                    </td>
-                                </tr>
-                                <template v-if="rxConfig.rcSmoothing === 1">
-                                    <!-- Setpoint Manual/Auto -->
-                                    <tr class="rcSmoothing-setpoint-manual">
-                                        <td>
-                                            <select
-                                                name="rcSmoothing-setpoint-manual-select"
-                                                v-model="setpointManualMode"
-                                            >
-                                                <option value="0">{{ $t("receiverRcSmoothingAuto") }}</option>
-                                                <option value="1">{{ $t("receiverRcSmoothingManual") }}</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <label>
-                                                <span v-html="$t('receiverRcSetpointTypeSelect')"></span>
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('receiverRcSmoothingSetpointManual')"
-                                            ></div>
-                                        </td>
-                                    </tr>
-                                    <tr class="rcSmoothing-setpoint-manual" v-if="setpointManualMode === '1'">
-                                        <td class="rcSmoothing-setpoint-cutoff">
-                                            <UInputNumber
-                                                name="rcSmoothingSetpointHz-number"
-                                                :step="1"
-                                                :min="0"
-                                                :max="255"
-                                                v-model="rxConfig.rcSmoothingSetpointCutoff"
-                                            />
-                                        </td>
-                                        <td class="rcSmoothing-setpoint-cutoff" colspan="2">
-                                            <label>
-                                                <span v-html="$t('receiverRcSmoothingSetpointHz')"></span>
-                                            </label>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('rcSmoothingSetpointCutoffHelp')"
-                                            ></div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Auto Factor -->
-                                    <tr class="rcSmoothing-auto-factor" v-if="showAutoFactor">
-                                        <td>
-                                            <UInputNumber
-                                                name="rcSmoothingAutoFactor-number"
-                                                :step="1"
-                                                :min="0"
-                                                :max="250"
-                                                v-model="rxConfig.rcSmoothingAutoFactor"
-                                            />
-                                        </td>
-                                        <td>
-                                            <label>
-                                                <span v-html="$t('receiverRcSmoothingAutoFactor')"></span>
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <div
-                                                class="helpicon cf_tip receiverRcSmoothingAutoFactorHelp"
-                                                :title="$t('receiverRcSmoothingAutoFactorHelp2')"
-                                            ></div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Throttle Manual/Auto (API >= 1.47) -->
-                                    <template v-if="showThrottleSmoothingOptions">
-                                        <tr class="rcSmoothing-throttle-manual">
-                                            <td>
-                                                <select
-                                                    name="rcSmoothing-throttle-manual-select"
-                                                    v-model="throttleManualMode"
-                                                >
-                                                    <option value="0">{{ $t("receiverRcSmoothingAuto") }}</option>
-                                                    <option value="1">{{ $t("receiverRcSmoothingManual") }}</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <label>
-                                                    <span v-html="$t('receiverThrottleTypeSelect')"></span>
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <div
-                                                    class="helpicon cf_tip"
-                                                    :title="$t('receiverRcSmoothingThrottleManual')"
-                                                ></div>
-                                            </td>
-                                        </tr>
-                                        <tr class="rcSmoothing-throttle-manual" v-if="throttleManualMode === '1'">
-                                            <td class="rcSmoothing-throttle-cutoff">
-                                                <UInputNumber
-                                                    name="rcSmoothingThrottleCutoffHz-number"
-                                                    :step="1"
-                                                    :min="0"
-                                                    :max="255"
-                                                    v-model="rxConfig.rcSmoothingThrottleCutoff"
-                                                />
-                                            </td>
-                                            <td class="rcSmoothing-throttle-cutoff" colspan="2">
-                                                <label>
-                                                    <span v-html="$t('receiverRcSmoothingThrottleCutoffHz')"></span>
-                                                </label>
-                                                <div
-                                                    class="helpicon cf_tip"
-                                                    :title="$t('rcSmoothingThrottleCutoffHelp')"
-                                                ></div>
-                                            </td>
-                                        </tr>
-                                        <tr class="rcSmoothing-auto-factor-throttle" v-if="showThrottleAutoFactor">
-                                            <td>
-                                                <UInputNumber
-                                                    name="rcSmoothingAutoFactorThrottle-number"
-                                                    :step="1"
-                                                    :min="0"
-                                                    :max="250"
-                                                    v-model="rxConfig.rcSmoothingAutoFactorThrottle"
-                                                />
-                                            </td>
-                                            <td>
-                                                <label>
-                                                    <span v-html="$t('receiverRcSmoothingAutoFactorThrottle')"></span>
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <div
-                                                    class="helpicon cf_tip receiverRcSmoothingAutoFactorThrottleHelp"
-                                                    :title="$t('receiverRcSmoothingAutoFactorThrottleHelp')"
-                                                ></div>
-                                            </td>
-                                        </tr>
-                                    </template>
-
-                                    <!-- Feedforward (API < 1.47) -->
-                                    <template v-else>
-                                        <tr class="rcSmoothing-feedforward-manual">
-                                            <td>
-                                                <select
-                                                    name="rcSmoothing-feedforward-select"
-                                                    v-model="feedforwardManualMode"
-                                                >
-                                                    <option value="0">{{ $t("receiverRcSmoothingAuto") }}</option>
-                                                    <option value="1">{{ $t("receiverRcSmoothingManual") }}</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <label>
-                                                    <span v-html="$t('receiverRcFeedforwardTypeSelect')"></span>
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <div
-                                                    class="helpicon cf_tip"
-                                                    :title="$t('receiverRcSmoothingFeedforwardManual')"
-                                                ></div>
-                                            </td>
-                                        </tr>
-                                        <tr class="rcSmoothing-feedforward-manual" v-if="feedforwardManualMode === '1'">
-                                            <td class="rcSmoothing-feedforward-cutoff">
-                                                <UInputNumber
-                                                    name="rcSmoothingFeedforwardCutoff-number"
-                                                    :step="1"
-                                                    :min="1"
-                                                    :max="255"
-                                                    v-model="rxConfig.rcSmoothingFeedforwardCutoff"
-                                                />
-                                            </td>
-                                            <td colspan="2" class="rcSmoothing-feedforward-cutoff">
-                                                <label>
-                                                    <span v-html="$t('receiverRcSmoothingFeedforwardCutoff')"></span>
-                                                </label>
-                                                <div
-                                                    class="helpicon cf_tip"
-                                                    :title="$t('rcSmoothingFeedforwardCutoffHelp')"
-                                                ></div>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
+                    <UiBox :title="$t('receiverRcSmoothing')" class="col-span-6">
+                        <SettingRow :label="$t('receiverRcSmoothing')">
+                            <USwitch
+                                :model-value="rxConfig.rcSmoothing === 1"
+                                @update:model-value="(on) => (rxConfig.rcSmoothing = on ? 1 : 0)"
+                            />
+                        </SettingRow>
+                        <template v-if="rxConfig.rcSmoothing === 1">
+                            <SettingRow
+                                :label="$t('receiverRcSetpointTypeSelect')"
+                                :help="$t('receiverRcSmoothingSetpointManual')"
+                            >
+                                <USelect
+                                    :items="[
+                                        { label: $t('receiverRcSmoothingAuto'), value: '0' },
+                                        { label: $t('receiverRcSmoothingManual'), value: '1' },
+                                    ]"
+                                    v-model="setpointManualMode"
+                                    class="min-w-42"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="setpointManualMode === '1'"
+                                :label="$t('receiverRcSmoothingSetpointHz')"
+                                :help="$t('rcSmoothingSetpointCutoffHelp')"
+                            >
+                                <UInputNumber
+                                    :step="1"
+                                    :min="0"
+                                    :max="255"
+                                    v-model="rxConfig.rcSmoothingSetpointCutoff"
+                                    class="min-w-42"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="showAutoFactor"
+                                :label="$t('receiverRcSmoothingAutoFactor')"
+                                :help="$t('receiverRcSmoothingAutoFactorHelp2')"
+                            >
+                                <UInputNumber
+                                    :step="1"
+                                    :min="0"
+                                    :max="250"
+                                    v-model="rxConfig.rcSmoothingAutoFactor"
+                                    class="min-w-42"
+                                />
+                            </SettingRow>
+                            <template v-if="showThrottleSmoothingOptions">
+                                <SettingRow
+                                    :label="$t('receiverThrottleTypeSelect')"
+                                    :help="$t('receiverRcSmoothingThrottleManual')"
+                                >
+                                    <USelect
+                                        :items="[
+                                            { label: $t('receiverRcSmoothingAuto'), value: '0' },
+                                            { label: $t('receiverRcSmoothingManual'), value: '1' },
+                                        ]"
+                                        v-model="throttleManualMode"
+                                        class="min-w-42"
+                                    />
+                                </SettingRow>
+                                <SettingRow
+                                    v-if="throttleManualMode === '1'"
+                                    :label="$t('receiverRcSmoothingThrottleCutoffHz')"
+                                    :help="$t('rcSmoothingThrottleCutoffHelp')"
+                                >
+                                    <UInputNumber
+                                        :step="1"
+                                        :min="0"
+                                        :max="255"
+                                        v-model="rxConfig.rcSmoothingThrottleCutoff"
+                                        class="min-w-42"
+                                    />
+                                </SettingRow>
+                                <SettingRow
+                                    v-if="showThrottleAutoFactor"
+                                    :label="$t('receiverRcSmoothingAutoFactorThrottle')"
+                                    :help="$t('receiverRcSmoothingAutoFactorThrottleHelp')"
+                                >
+                                    <UInputNumber
+                                        :step="1"
+                                        :min="0"
+                                        :max="250"
+                                        v-model="rxConfig.rcSmoothingAutoFactorThrottle"
+                                        class="min-w-42"
+                                    />
+                                </SettingRow>
+                            </template>
+                            <template v-else>
+                                <SettingRow
+                                    :label="$t('receiverRcFeedforwardTypeSelect')"
+                                    :help="$t('receiverRcSmoothingFeedforwardManual')"
+                                >
+                                    <USelect
+                                        :items="[
+                                            { label: $t('receiverRcSmoothingAuto'), value: '0' },
+                                            { label: $t('receiverRcSmoothingManual'), value: '1' },
+                                        ]"
+                                        v-model="feedforwardManualMode"
+                                        class="min-w-42"
+                                    />
+                                </SettingRow>
+                                <SettingRow
+                                    v-if="feedforwardManualMode === '1'"
+                                    :label="$t('receiverRcSmoothingFeedforwardCutoff')"
+                                    :help="$t('rcSmoothingFeedforwardCutoffHelp')"
+                                >
+                                    <UInputNumber
+                                        :step="1"
+                                        :min="1"
+                                        :max="255"
+                                        v-model="rxConfig.rcSmoothingFeedforwardCutoff"
+                                        class="min-w-42"
+                                    />
+                                </SettingRow>
+                            </template>
+                        </template>
+                    </UiBox>
                 </div>
             </div>
 
-            <!-- RC Plot -->
-            <div class="gui_box grey">
-                <div class="spacer">
-                    <div class="wrapper graphAndLabel">
-                        <svg id="RX_plot" class="col-span-5" ref="rxPlot">
-                            <g class="axis x" transform="translate(40, 188)"></g>
-                            <g class="axis y" transform="translate(40, 10)"></g>
-                            <g class="grid x" transform="translate(40, 188)"></g>
-                            <g class="grid y" transform="translate(40, 10)"></g>
-                            <g class="data" transform="translate(40, 10)"></g>
-                        </svg>
+            <UiBox class="col-span-6 mt-3">
+                <div class="wrapper graphAndLabel">
+                    <svg id="RX_plot" class="col-span-5" ref="rxPlot">
+                        <g class="axis-display x" transform="translate(40, 188)"></g>
+                        <g class="axis-display y" transform="translate(40, 10)"></g>
+                        <g class="grid-display x" transform="translate(40, 188)"></g>
+                        <g class="grid-display y" transform="translate(40, 10)"></g>
+                        <g class="data" transform="translate(40, 10)"></g>
+                    </svg>
 
-                        <div class="plot_control">
-                            <div class="table">
-                                <div class="sensor row">
-                                    <div class="left-cell receiver-button">
-                                        <a class="reset_rate" href="#" @click.prevent="resetRefreshRate">
-                                            {{ $t("receiverResetRefreshRate") }}
-                                        </a>
-                                    </div>
-                                    <div class="right-cell">
-                                        <select
-                                            name="rx_refresh_rate"
-                                            v-model.number="refreshRate"
-                                            :title="$t('receiverRefreshRateTitle')"
-                                        >
-                                            <option value="10">10 ms</option>
-                                            <option value="20">20 ms</option>
-                                            <option value="30">30 ms</option>
-                                            <option value="40">40 ms</option>
-                                            <option value="50">50 ms</option>
-                                            <option value="100">100 ms</option>
-                                            <option value="250">250 ms</option>
-                                            <option value="500">500 ms</option>
-                                            <option value="1000">1000 ms</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row-container">
-                                    <div class="row" v-for="(label, index) in plotLabels" :key="index">
-                                        <div class="left-cell">
-                                            <ul>
-                                                <li class="name">{{ label.name }}</li>
-                                            </ul>
-                                        </div>
-                                        <div :class="`ch${index + 1} value right-cell`">
-                                            {{ label.value }}
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="plot_control flex flex-col gap-2 pt-3 p-1">
+                        <div class="flex gap-2 justify-between">
+                            <UButton :label="$t('receiverResetRefreshRate')" @click="resetRefreshRate" size="xs" />
+                            <USelect
+                                :items="[
+                                    { label: '10 ms', value: 10 },
+                                    { label: '20 ms', value: 20 },
+                                    { label: '30 ms', value: 30 },
+                                    { label: '40 ms', value: 40 },
+                                    { label: '50 ms', value: 50 },
+                                    { label: '100 ms', value: 100 },
+                                    { label: '250 ms', value: 250 },
+                                    { label: '500 ms', value: 500 },
+                                    { label: '1000 ms', value: 1000 },
+                                ]"
+                                v-model="refreshRate"
+                                size="xs"
+                                class="min-w-24"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between" v-for="(label, index) in plotLabels" :key="index">
+                                <span class="font-bold">{{ label.name }}</span>
+                                <span :class="`ch${index + 1} value min-w-24`">
+                                    {{ label.value }}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="clear-both"></div>
+            </UiBox>
         </div>
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn sticks_btn" v-if="showSticksButton">
-                <button type="button" class="sticks" @click="openSticksWindow">
-                    {{ $t("receiverButtonSticks") }}
-                </button>
-            </div>
-            <div class="btn bind_btn" v-if="showBindButton">
-                <button type="button" class="bind" @click="sendBind">
-                    {{ $t("receiverButtonBind") }}
-                </button>
-            </div>
-            <div class="btn refresh_btn">
-                <button type="button" class="refresh" @click="refreshTab">
-                    {{ $t("receiverButtonRefresh") }}
-                </button>
-            </div>
-            <div class="btn update_btn" v-if="!needReboot">
-                <button type="button" class="update" @click="saveConfig(false)">
-                    {{ $t("receiverButtonSave") }}
-                </button>
-            </div>
-            <div class="btn save_btn" v-else>
-                <button type="button" class="save" @click="saveConfig(true)">
-                    {{ $t("configurationButtonSave") }}
-                </button>
-            </div>
+            <UButton :label="$t('receiverButtonSticks')" @click="openSticksWindow" v-if="showSticksButton" />
+            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" />
+            <UButton :label="$t('receiverButtonRefresh')" @click="refreshTab" />
+            <UButton :label="$t('receiverButtonSave')" @click="saveConfig(false)" v-if="!needReboot" />
+            <UButton :label="$t('receiverButtonSave')" @click="saveConfig(true)" v-else />
         </div>
     </BaseTab>
 </template>
@@ -633,6 +460,9 @@ import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
+import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
+import SettingColumn from "../elements/SettingColumn.vue";
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
@@ -699,6 +529,13 @@ const spiRxTypes = [
     "EXPRESSLRS",
 ];
 
+const spiRxMenuItems = computed(() =>
+    spiRxTypes.map((name, index) => ({
+        label: name,
+        value: index,
+    })),
+);
+
 // Computed store access
 const rc = computed(() => fcStore.rc);
 const rxConfig = computed(() => fcStore.rxConfig);
@@ -736,9 +573,10 @@ const rxModeOptions = computed(() => {
 const serialRxTypes = computed(() => {
     const types = fcStore.getSerialRxTypes();
     const supported = fcStore.getSupportedSerialRxTypes();
-    return types.map((name) => ({
-        name,
-        enabled: supported.includes(name),
+    return types.map((name, index) => ({
+        label: name,
+        value: index,
+        disabled: !supported.includes(name),
     }));
 });
 
@@ -746,14 +584,14 @@ const showSomeRxTypesDisabled = computed(() => {
     const types = serialRxTypes.value;
     const selected = rxConfig.value?.serialrx_provider;
     const selectedType = types[selected];
-    const allEnabled = types.every((t) => t.enabled);
-    return selectedType?.enabled && !allEnabled;
+    const allEnabled = types.every((t) => !t.disabled);
+    return selectedType && !selectedType.disabled && !allEnabled;
 });
 
 const showSerialRxNotSupported = computed(() => {
     const types = serialRxTypes.value;
     const selected = rxConfig.value?.serialrx_provider;
-    return types[selected] && !types[selected].enabled;
+    return types[selected]?.disabled ?? false;
 });
 
 // Feature checks
@@ -919,27 +757,45 @@ function updateChannelMapFromRcMap() {
     channelMapString.value = strBuffer.join("");
 }
 
-function applyChannelMapPreset(event) {
-    const val = event.target.value;
-    if (val) {
+/** Reka Select disallows item `value: ""` (empty string clears selection). */
+const CHANNEL_MAP_PRESET_CUSTOM = "__channelMapCustom__";
+
+const channelMapPresetItems = computed(() => [
+    { label: t("receiverChannelDefaultOption"), value: CHANNEL_MAP_PRESET_CUSTOM },
+    { label: "FrSky / Futaba / Hitec (AETR1234)", value: "AETR1234" },
+    { label: "Spektrum / Graupner / JR (TAER1234)", value: "TAER1234" },
+]);
+
+const channelMapPresetValue = computed({
+    get() {
+        const s = channelMapString.value;
+        if (s === "AETR1234" || s === "TAER1234") {
+            return s;
+        }
+        return CHANNEL_MAP_PRESET_CUSTOM;
+    },
+    set(val) {
+        if (val === CHANNEL_MAP_PRESET_CUSTOM) {
+            return;
+        }
         channelMapString.value = val;
         validateChannelMap();
-    }
-}
+    },
+});
 
 // Feature toggles
-function toggleTelemetry(event) {
+function toggleTelemetry(checked) {
     if (features.value?.features?.updateData) {
-        features.value.features.updateData({ name: "TELEMETRY", checked: event.target.checked });
+        features.value.features.updateData({ name: "TELEMETRY", checked });
         updateTabList(features.value.features);
-        needReboot.value = true;
+        needReboot.value = needReboot.value || checked !== undefined;
     }
 }
 
-function toggleRssiAdc(event) {
+function toggleRssiAdc(checked) {
     if (features.value?.features?.updateData) {
-        features.value.features.updateData({ name: "RSSI_ADC", checked: event.target.checked });
-        needReboot.value = true;
+        features.value.features.updateData({ name: "RSSI_ADC", checked });
+        needReboot.value = needReboot.value || checked !== undefined;
     }
 }
 
@@ -1240,10 +1096,10 @@ function updateRxPlot() {
         .x((d) => widthScale(d[0]))
         .y((d) => heightScale(d[1]));
 
-    svg.select(".x.grid").call(xGrid);
-    svg.select(".y.grid").call(yGrid);
-    svg.select(".x.axis").call(xAxis);
-    svg.select(".y.axis").call(yAxis);
+    svg.select(".x.grid-display").call(xGrid);
+    svg.select(".y.grid-display").call(yGrid);
+    svg.select(".x.axis-display").call(xAxis);
+    svg.select(".y.axis-display").call(yAxis);
 
     const data = svg.select("g.data");
     const lines = data.selectAll("path").data(rxPlotData);
@@ -1320,82 +1176,82 @@ onUnmounted(() => {
         display: flex;
         gap: 0.5rem;
         &:nth-of-type(1) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #f1453d;
             }
         }
         &:nth-of-type(2) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #673fb4;
             }
         }
         &:nth-of-type(3) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #2b98f0;
             }
         }
         &:nth-of-type(4) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #1fbcd2;
             }
         }
         &:nth-of-type(5) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #159588;
             }
         }
         &:nth-of-type(6) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #50ae55;
             }
         }
         &:nth-of-type(7) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #cdda49;
             }
         }
         &:nth-of-type(8) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #fdc02f;
             }
         }
         &:nth-of-type(9) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #fc5830;
             }
         }
         &:nth-of-type(10) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #785549;
             }
         }
         &:nth-of-type(11) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #9e9e9e;
             }
         }
         &:nth-of-type(12) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #617d8a;
             }
         }
         &:nth-of-type(13) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #cf267d;
             }
         }
         &:nth-of-type(14) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #7a1464;
             }
         }
         &:nth-of-type(15) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #3a7a14;
             }
         }
         &:nth-of-type(16) {
-            .fill {
+            :deep([data-slot="indicator"]) {
                 background-color: #14407a;
             }
         }
@@ -1436,75 +1292,13 @@ onUnmounted(() => {
     }
 }
 
-.sticks {
-    th {
-        width: 33%;
-    }
-}
-
-.deadband {
-    th {
-        width: 33%;
-    }
-}
-
-.hybrid_element {
-    position: relative;
-    width: 11rem;
-    select {
-        z-index: 3;
-        position: absolute;
-        border: none !important;
-        height: 1.45rem;
-        min-width: 0 !important;
-        width: 1rem;
-        inset: 0;
-        left: calc(100% - 1.25rem);
-        top: 1px;
-    }
-    input {
-        z-index: 2;
-    }
-}
-
-.rcSmoothing {
-    table {
-        select {
-            width: 90%;
-        }
-        :deep(input) {
-            width: 90%;
-        }
-        .helpicon {
-            margin-top: 0;
-        }
-    }
-    td {
-        &:first-child {
-            width: 120px;
-            padding: 0.5rem 0;
-        }
-        &:last-child {
-            width: calc(100% - 78px);
-        }
-    }
-}
-
-.rcInterpolation {
-    .slider {
-        input {
-            appearance: slider-horizontal;
-        }
-    }
-}
-
 .graphAndLabel {
     display: flex;
     flex-wrap: nowrap;
     gap: 0.5rem;
 }
 
-:deep(svg) {
+:deep(svg:not(.iconify)) {
     width: 100%;
     height: 100%;
 }
@@ -1514,45 +1308,6 @@ onUnmounted(() => {
     margin: 0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    .table {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: separate;
-        border-spacing: 5px;
-        box-sizing: border-box;
-        padding: 5px 5px 5px 3px;
-    }
-    .row-container {
-        display: table-row-group;
-    }
-    .receiver-button {
-        a {
-            background-color: var(--primary-500);
-            border-radius: 0.5rem;
-            color: #000;
-            font-size: 10px;
-            line-height: 1.25rem;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            display: block;
-            text-align: center;
-        }
-    }
-    .row {
-        display: table-row;
-    }
-    .left-cell {
-        display: table-cell;
-        vertical-align: middle;
-        font-weight: bold;
-    }
-    .right-cell {
-        display: table-cell;
-        vertical-align: middle;
-        text-align: right;
-        font-size: smaller;
-    }
     .value {
         padding: 4px;
         color: #fff;
@@ -1627,7 +1382,7 @@ onUnmounted(() => {
     }
 }
 
-:deep(.grid) {
+:deep(.grid-display) {
     .tick {
         stroke: silver;
         stroke-width: 1px;
@@ -1649,40 +1404,7 @@ onUnmounted(() => {
     font-size: 10px;
 }
 
-.model_preview_cell {
-    position: relative;
-    width: 100%;
-    height: 11rem;
-}
-
-.model_preview {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-.receiver {
-    select {
-        width: fit-content;
-    }
-}
-
-table {
-    width: 100%;
-    padding: 0;
-    th {
-        border-bottom: 1px solid var(--surface-500);
-    }
-    td {
-        border-bottom: 1px solid var(--surface-500);
-    }
-}
-
-@media all and (max-width: 575px) {
+@media all and (max-width: 1055px) {
     :deep(.grid-box) {
         &.col5 {
             grid-template-columns: 1fr !important;
