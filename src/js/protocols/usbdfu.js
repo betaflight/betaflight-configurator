@@ -905,7 +905,7 @@ export class UsbDfuProtocol extends EventTarget {
                     break;
                 }
 
-                this.flashingMessage(i18n.getMessage("stm32Erase"), this.options?.flashMessageTypes?.NEUTRAL);
+                this.flashingMessage(i18n.getMessage("stm32Erase"), this.options?.flashMessageTypes?.ERASING);
                 console.log(`${this.logHead} Executing local chip erase`, erase_pages);
 
                 let page = 0;
@@ -1019,7 +1019,7 @@ export class UsbDfuProtocol extends EventTarget {
                 // upload
                 // we dont need to clear the state as we are already using DFU_DNLOAD
                 console.log(`${this.logHead} Writing data ...`);
-                this.flashingMessage(i18n.getMessage("stm32Flashing"), this.options?.flashMessageTypes?.NEUTRAL);
+                this.flashingMessage(i18n.getMessage("stm32Flashing"), this.options?.flashMessageTypes?.FLASHING);
 
                 blocks = this.hex.data.length - 1;
                 let flashing_block = 0;
@@ -1113,7 +1113,7 @@ export class UsbDfuProtocol extends EventTarget {
             case 5: {
                 // verify
                 console.log(`${this.logHead} Verifying data ...`);
-                this.flashingMessage(i18n.getMessage("stm32Verifying"), this.options?.flashMessageTypes?.NEUTRAL);
+                this.flashingMessage(i18n.getMessage("stm32Verifying"), this.options?.flashMessageTypes?.VERIFYING);
 
                 blocks = this.hex.data.length - 1;
                 let reading_block = 0;

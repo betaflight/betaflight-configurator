@@ -4,8 +4,21 @@
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
             <WikiButton docUrl="firmware_flasher" />
             <SponsorTile ref="sponsorTile" sponsor-type="flash" />
-            <div v-if="state.flashingInProgress" class="data-loading flashing-wait">
+            <div v-if="state.flashingInProgress" class="flashing-wait">
+                <ProgressRing
+                    :value="state.flashProgressValue"
+                    :indeterminate="state.flashProgressValue === 0"
+                    :size="80"
+                    :stroke-width="6"
+                    :color="flashRingColor"
+                />
                 <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
+            </div>
+            <div
+                v-else-if="state.progressLabelText && state.progressLabelClass === 'invalid'"
+                class="flash-status-message flash-status-error"
+            >
+                {{ state.progressLabelText }}
             </div>
             <div class="grid-box-spacer"></div>
             <div class="grid-box col2">
@@ -309,10 +322,9 @@
                             <strong>{{ $t("firmwareFlasherReleaseTarget") }}</strong>
                             <span ref="targetSpan" class="target">{{ state.targetSpanText }}</span>
                             <div class="board_support">
-                                <a id="targetSupportInfoUrl" :href="state.targetSupportUrl" target="_blank">{{
+                                <UButton size="xs" variant="soft" :to="state.targetSupportUrl" target="_blank">{{
                                     $t("betaflightSupportButton")
-                                }}</a>
-                                <div class="helpicon cf_tip_wide" :title="$t('firmwareFlasherTargetWikiUrlInfo')"></div>
+                                }}</UButton>
                             </div>
                         </div>
 
@@ -383,21 +395,27 @@
                                     min="0"
                                     max="100"
                                 ></progress>
-                                <span ref="cloudTargetStatusSpan" id="cloudTargetStatus">
-                                    {{ cloudBuild.state.cloudTargetStatusText }}</span
-                                >
                             </div>
-                            <div class="btn default_btn">
-                                <a
+                            <div>
+                                <UButton
+                                    v-if="!cloudBuild.state.cancelBuildButtonDisabled"
                                     ref="cloudBuildCancelButton"
-                                    :class="[
-                                        'cloud_build_cancel',
-                                        { disabled: cloudBuild.state.cancelBuildButtonDisabled },
-                                    ]"
-                                    href="#"
-                                    @click.prevent="cloudBuild.handleCancelBuild"
-                                    >{{ $t("cancel") }}</a
+                                    size="xs"
+                                    variant="soft"
+                                    @click="cloudBuild.handleCancelBuild"
+                                    >{{ $t("cancel") }}</UButton
                                 >
+                                <span v-else ref="cloudTargetStatusSpan" id="cloudTargetStatus">
+                                    {{ cloudBuild.state.cloudTargetStatusText }}
+                                </span>
+                            </div>
+                        </div>
+                        <!-- Firmware Loaded Rows (online only) -->
+                        <div v-if="state.firmwareLoadedName && !state.firmwareLoadedIsLocal" class="info_row">
+                            <strong>{{ $t("firmwareFlasherFirmwareLoaded") }}</strong>
+                            <span>{{ state.firmwareLoadedSize }}</span>
+                            <div>
+                                <UButton size="xs" variant="soft" @click="saveFirmware">{{ $t("save") }}</UButton>
                             </div>
                         </div>
                     </div>
@@ -416,41 +434,35 @@
             </div>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
-            <div class="flex flex-1 relative items-center">
-                <UProgress
-                    v-model="state.flashProgressValue"
-                    :max="100"
-                    :color="
-                        state.progressLabelClass === 'valid'
-                            ? 'success'
-                            : state.progressLabelClass === 'invalid'
-                              ? 'error'
-                              : 'primary'
-                    "
-                    :ui="{
-                        base: 'border border-default h-7 rounded-md',
-                    }"
-                />
-                <span
-                    ref="progressLabel"
-                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-xs text-default w-fit h-fit whitespace-nowrap"
-                    v-html="state.progressLabelText"
-                    @click="handleProgressLabelClick"
-                ></span>
-            </div>
-            <UButton :disabled="state.dfuExitButtonDisabled" @click="handleExitDfu" variant="soft">
-                {{ $t("firmwareFlasherExitDfu") }}
-            </UButton>
-            <UButton :disabled="state.flashButtonDisabled" @click="handleFlashFirmware">
-                {{ $t("firmwareFlasherFlashFirmware") }}
-            </UButton>
-            <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">
-                {{ $t("firmwareFlasherButtonLoadOnline") }}
-            </UButton>
-            <UButton :disabled="state.loadFileButtonDisabled" @click="handleLoadFile" variant="soft">
-                {{ $t("firmwareFlasherButtonLoadLocal") }}
-            </UButton>
+        <div class="content_toolbar toolbar_fixed_bottom">
+            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
+                <UButton
+                    :disabled="state.flashButtonDisabled"
+                    :color="state.flashButtonDisabled ? 'neutral' : 'success'"
+                    @click="handleFlashFirmware"
+                >
+                    {{ $t("firmwareFlasherFlashFirmware") }}
+                </UButton>
+                <UDropdownMenu v-slot="{ open }" :items="flashActionMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton
+                        :color="state.flashButtonDisabled ? 'neutral' : 'success'"
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        square
+                    />
+                </UDropdownMenu>
+            </UFieldGroup>
+            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
+                <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">{{
+                    $t("firmwareFlasherButtonLoadOnline")
+                }}</UButton>
+                <UDropdownMenu
+                    v-slot="{ open }"
+                    :items="loadFirmwareMenuItems"
+                    :content="{ align: 'end', side: 'top' }"
+                >
+                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
+                </UDropdownMenu>
+            </UFieldGroup>
         </div>
 
         <dialog
@@ -522,7 +534,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
+import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import Multiselect from "vue-multiselect";
@@ -548,6 +560,7 @@ import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import UiBox from "../elements/UiBox.vue";
+import ProgressRing from "../ProgressRing.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 
@@ -559,6 +572,7 @@ export default defineComponent({
         Multiselect,
         SponsorTile,
         UiBox,
+        ProgressRing,
         SettingRow,
         SettingColumn,
     },
@@ -635,6 +649,9 @@ export default defineComponent({
             targetSupportUrl: "https://betaflight.com/docs/wiki/boards/archive/Missing",
             progressLabelText: "",
             progressLabelClass: "", // "valid", "invalid", "actionRequired"
+            firmwareLoadedName: "",
+            firmwareLoadedSize: "",
+            firmwareLoadedIsLocal: false,
             /** 0–100; drives firmware flash UProgress (replaces native progress element). */
             flashProgressValue: 0,
             osdProtocolNeedsAttention: false, // True if OSD protocol is empty (shows red)
@@ -650,14 +667,7 @@ export default defineComponent({
         const corebuildModeCheckbox = ref(null);
 
         // Buttons
-        const exitDfuButton = ref(null);
-        const flashFirmwareButton = ref(null);
-        const loadRemoteFileButton = ref(null);
-        const loadFileButton = ref(null);
         const cloudBuildCancelButton = ref(null);
-
-        // Progress elements
-        const progressLabel = ref(null);
 
         // Release info elements
         const releaseInfoContainer = ref(null);
@@ -697,6 +707,9 @@ export default defineComponent({
             VALID: "VALID",
             INVALID: "INVALID",
             ACTION: "ACTION",
+            ERASING: "ERASING",
+            FLASHING: "FLASHING",
+            VERIFYING: "VERIFYING",
         };
 
         // Helper functions
@@ -749,6 +762,15 @@ export default defineComponent({
                     break;
                 case FLASH_MESSAGE_TYPES.ACTION:
                     state.progressLabelClass = "actionRequired";
+                    break;
+                case FLASH_MESSAGE_TYPES.ERASING:
+                    state.progressLabelClass = "erasing";
+                    break;
+                case FLASH_MESSAGE_TYPES.FLASHING:
+                    state.progressLabelClass = "flashing";
+                    break;
+                case FLASH_MESSAGE_TYPES.VERIFYING:
+                    state.progressLabelClass = "verifying";
                     break;
                 case FLASH_MESSAGE_TYPES.NEUTRAL:
                 default:
@@ -821,31 +843,35 @@ export default defineComponent({
             state.configFilename = hasFilename ? filename : null;
         };
 
+        const clearLoadedFirmwareInfo = () => {
+            state.firmwareLoadedName = "";
+            state.firmwareLoadedSize = "";
+            state.firmwareLoadedIsLocal = false;
+        };
+
         const clearBufferedFirmware = () => {
             clearBoardConfig();
             firmwareFlashing.clearFirmwareState();
             state.firmware_type = undefined;
             state.localFirmwareLoaded = false;
             state.filename = null;
+            clearLoadedFirmwareInfo();
         };
 
         const showLoadedFirmware = (filename, bytes) => {
             state.filename = filename;
+            state.firmwareLoadedName = filename;
+            state.firmwareLoadedSize = $t("firmwareFlasherFirmwareSize", { bytes });
+            state.firmwareLoadedIsLocal = state.localFirmwareLoaded;
 
             if (state.localFirmwareLoaded) {
                 flashingMessage(
-                    $t("firmwareFlasherFirmwareLocalLoaded", {
-                        filename: filename,
-                        bytes: bytes,
-                    }),
+                    $t("firmwareFlasherFirmwareLocalLoaded", { filename, bytes }),
                     FLASH_MESSAGE_TYPES.NEUTRAL,
                 );
             } else {
                 flashingMessage(
-                    `<a class="save_firmware" href="#" title="${$t("firmwareFlasherTooltipSaveFirmware")}">${$t(
-                        "firmwareFlasherFirmwareOnlineLoaded",
-                        { filename: filename, bytes: bytes },
-                    )}</a>`,
+                    $t("firmwareFlasherFirmwareOnlineLoaded", { filename, bytes }),
                     FLASH_MESSAGE_TYPES.NEUTRAL,
                 );
             }
@@ -943,15 +969,11 @@ export default defineComponent({
         };
 
         const loadFailed = () => {
-            if (progressLabel.value) {
-                progressLabel.value.setAttribute("i18n", "firmwareFlasherFailedToLoadOnlineFirmware");
-                progressLabel.value.classList.remove("i18n-replaced");
-            }
+            const message = $t("firmwareFlasherFailedToLoadOnlineFirmware");
+            state.progressLabelText = message;
+            state.progressLabelClass = "invalid";
+            gui_log(message);
             enableLoadRemoteFileButton(true);
-            if (loadRemoteFileButton.value) {
-                loadRemoteFileButton.value.textContent = $t("firmwareFlasherButtonLoadOnline");
-            }
-            i18n.localizePage();
         };
 
         const normalizeSelectValue = (value) => (value === "" ? null : value);
@@ -1230,6 +1252,7 @@ export default defineComponent({
 
             if (!state.localFirmwareLoaded) {
                 enableFlashButton(false);
+                clearLoadedFirmwareInfo();
                 flashingMessage($t("firmwareFlasherLoadFirmwareFile"), FLASH_MESSAGE_TYPES.NEUTRAL);
                 if (firmwareFlashing.getParsedHex() && firmwareFlashing.getParsedHex().bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
@@ -1949,6 +1972,7 @@ export default defineComponent({
             enableLoadRemoteFileButton(false);
 
             state.localFirmwareLoaded = false;
+            clearLoadedFirmwareInfo();
             const buildType = state.selectedBuildType;
             state.developmentFirmwareLoaded = buildType > 1;
 
@@ -1973,6 +1997,7 @@ export default defineComponent({
 
         const processFirmwareFile = async (file, extension, data) => {
             state.localFirmwareLoaded = true;
+            state.releaseInfoVisible = false;
             const result = await firmwareFlashing.processFirmware(data, extension, {
                 flashingMessage,
                 enableFlashButton,
@@ -2120,26 +2145,67 @@ export default defineComponent({
             }
         };
 
-        const handleProgressLabelClick = (event) => {
-            if (event.target?.classList.contains("save_firmware")) {
-                saveFirmware();
+        const loadFirmwareMenuItems = computed(() => [
+            [
+                {
+                    label: $t("firmwareFlasherButtonLoadOnline"),
+                    icon: "i-lucide-cloud-download",
+                    disabled: state.loadRemoteButtonDisabled,
+                    onSelect: handleLoadRemoteFile,
+                },
+                {
+                    label: $t("firmwareFlasherButtonLoadLocal"),
+                    icon: "i-lucide-hard-drive-download",
+                    disabled: state.loadFileButtonDisabled,
+                    onSelect: handleLoadFile,
+                },
+            ],
+        ]);
+
+        const flashActionMenuItems = computed(() => [
+            [
+                {
+                    label: $t("firmwareFlasherFlashFirmware"),
+                    icon: "i-lucide-zap",
+                    disabled: state.flashButtonDisabled,
+                    onSelect: handleFlashFirmware,
+                },
+                {
+                    label: $t("firmwareFlasherExitDfu"),
+                    icon: "i-lucide-usb",
+                    disabled: state.dfuExitButtonDisabled,
+                    onSelect: handleExitDfu,
+                },
+            ],
+        ]);
+
+        const flashRingColor = computed(() => {
+            switch (state.progressLabelClass) {
+                case "invalid":
+                case "erasing":
+                    return "error";
+                case "valid":
+                case "flashing":
+                    return "success";
+                case "verifying":
+                    return "primary";
+                default:
+                    return "primary";
             }
-        };
+        });
 
         // Return all public methods and state
         return {
             state,
+            flashRingColor,
+            flashActionMenuItems,
+            loadFirmwareMenuItems,
             cloudBuild,
             boardSelection,
             FLASH_MESSAGE_TYPES,
             // Template refs
             sponsorTile,
-            exitDfuButton,
-            flashFirmwareButton,
-            loadRemoteFileButton,
-            loadFileButton,
             cloudBuildCancelButton,
-            progressLabel,
             releaseInfoContainer,
             targetSpan,
             manufacturerInfoDiv,
@@ -2195,7 +2261,7 @@ export default defineComponent({
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
             handleVerifyBoardDialogClose,
-            handleProgressLabelClick,
+            saveFirmware,
         };
     },
 });
@@ -2205,14 +2271,23 @@ export default defineComponent({
 .tab-firmware_flasher {
     min-height: 100%;
 
-    .content_wrapper .data-loading {
+    .content_wrapper .flashing-wait {
         min-height: 150px;
         height: 50%;
-        p {
-            text-align: center;
-            margin-top: 100px;
-            padding-top: 1rem;
-        }
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .flash-status-message {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        font-size: 0.85rem;
+    }
+    .flash-status-error {
+        background-color: var(--error-500);
+        color: #fff;
     }
     .grid-box-spacer {
         height: 1rem;
@@ -2730,9 +2805,9 @@ export default defineComponent({
     }
 
     /* Waiting overlay shown during flashing */
-    .flashing-wait {
+    .flashing-wait p {
         text-align: center;
-        padding: 2rem 1rem;
+        padding: 0 1rem;
         font-size: 14px;
     }
 
@@ -2823,7 +2898,7 @@ export default defineComponent({
         }
     }
     & + .content_toolbar {
-        width: calc(100% - 18rem) !important;
+        width: fit-content;
     }
     @media all and (max-width: 575px) {
         .grid-box {
@@ -2844,7 +2919,7 @@ export default defineComponent({
 }
 
 :deep(.toolbar_fixed_bottom.content_toolbar) {
-    width: calc(100% - 18rem) !important;
+    width: fit-content;
 }
 
 :deep(.content_toolbar) {
@@ -2866,40 +2941,6 @@ export default defineComponent({
         position: absolute;
         left: -1.5rem;
         bottom: 0;
-    }
-    .info {
-        flex: 100;
-        position: relative;
-        .progress {
-            width: 100%;
-            height: 30px;
-            border-radius: 0.25rem;
-            overflow: hidden;
-            &::-webkit-progress-bar {
-                background-color: var(--surface-400);
-            }
-        }
-        .progressLabel {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 0.75rem;
-            line-height: 1.75rem;
-            &.valid {
-                background-color: var(--success-600);
-                border-radius: 5px;
-            }
-            &.invalid {
-                background-color: var(--error-500);
-                border-radius: 5px;
-            }
-            &.actionRequired {
-                background-color: var(--warning-500);
-                border-radius: 5px;
-            }
-        }
     }
     .btn {
         a {

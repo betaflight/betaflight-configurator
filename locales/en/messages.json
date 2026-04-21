@@ -4125,6 +4125,12 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware not loaded"
     },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "Firmware"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} bytes"
+    },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes)"
     },

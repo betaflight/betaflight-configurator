@@ -619,7 +619,7 @@ class STM32Protocol {
                         console.log(`${this.logHead} Executing global chip erase (via extended erase)`);
                         TABS.firmware_flasher.flashingMessage(
                             i18n.getMessage("stm32GlobalEraseExtended"),
-                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ERASING,
                         );
 
                         this.send([this.command.extended_erase, 0xbb], 1, (reply) => {
@@ -636,7 +636,7 @@ class STM32Protocol {
                         console.log(`${this.logHead} Executing local erase (via extended erase)`);
                         TABS.firmware_flasher.flashingMessage(
                             i18n.getMessage("stm32LocalEraseExtended"),
-                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ERASING,
                         );
 
                         this.send([this.command.extended_erase, 0xbb], 1, (reply) => {
@@ -751,7 +751,7 @@ class STM32Protocol {
                 console.log(`${this.logHead} Writing data ...`);
                 TABS.firmware_flasher.flashingMessage(
                     i18n.getMessage("stm32Flashing"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.FLASHING,
                 );
 
                 let blocks = this.hex.data.length - 1,
@@ -844,7 +844,7 @@ class STM32Protocol {
                 console.log(`${this.logHead} Verifying data ...`);
                 TABS.firmware_flasher.flashingMessage(
                     i18n.getMessage("stm32Verifying"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VERIFYING,
                 );
 
                 const blocks = this.hex.data.length - 1;
