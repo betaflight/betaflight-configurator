@@ -142,7 +142,12 @@
         <!-- Save button toolbar -->
         <div v-if="isSupported" class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton :label="$t('servosButtonSave')" color="success" @click="saveServoConfig" />
+                <UButton
+                    :label="$t('servosButtonSave')"
+                    :disabled="!configHasChanged"
+                    :color="configHasChanged ? 'success' : 'neutral'"
+                    @click="saveServoConfig"
+                />
             </div>
         </div>
     </BaseTab>
@@ -170,12 +175,14 @@ const isSupported = ref(false);
 const liveMode = ref(false);
 const servoConfigs = reactive([]);
 const servoData = reactive([]);
+const originalConfigs = ref("");
 
 const { addInterval } = useInterval();
 const { addTimeout } = useTimeout();
 
 const totalChannels = computed(() => FC.RC?.active_channels || 8);
 const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
+const configHasChanged = computed(() => originalConfigs.value !== JSON.stringify(servoConfigs));
 
 // Rate options: 100% down to -100%, as {value, label} for USelect
 const rateOptions = computed(() => {
@@ -241,6 +248,7 @@ function updateServos(saveToEeprom) {
         if (saveToEeprom) {
             mspHelper.writeConfiguration(false, () => {
                 gui_log(i18n.getMessage("servosEepromSave"));
+                originalConfigs.value = JSON.stringify(servoConfigs);
             });
         }
     });
@@ -299,6 +307,8 @@ function initializeUI() {
             });
         }
     }
+
+    originalConfigs.value = JSON.stringify(servoConfigs);
 
     addInterval("servo_data_pull", getServoData, 50);
     addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
