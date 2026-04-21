@@ -64,16 +64,16 @@ export function useAdjustmentsData(adjustments, t) {
         }
     };
 
-    const loadMSPData = async () => {
-        return new Promise((resolve) => {
-            MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, () => {
-                MSP.send_message(MSPCodes.MSP_ADJUSTMENT_RANGES, false, false, () => {
-                    MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, () => {
-                        MSP.send_message(MSPCodes.MSP_RC, false, false, resolve);
-                    });
-                });
-            });
+    const sendMsp = (code) =>
+        new Promise((resolve) => {
+            MSP.send_message(code, false, false, resolve);
         });
+
+    const loadMSPData = async () => {
+        await sendMsp(MSPCodes.MSP_BOXNAMES);
+        await sendMsp(MSPCodes.MSP_ADJUSTMENT_RANGES);
+        await sendMsp(MSPCodes.MSP_BOXIDS);
+        await sendMsp(MSPCodes.MSP_RC);
     };
 
     const initializeAdjustments = () => {
