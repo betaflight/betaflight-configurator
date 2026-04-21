@@ -86,11 +86,8 @@
                         </div>
                     </details>
 
-                    <div v-if="!showCli && !isDescriptionHtml" class="preset-description-text">
-                        {{ descriptionText }}
-                    </div>
                     <div
-                        v-if="!showCli && isDescriptionHtml"
+                        v-if="!showCli"
                         class="preset-description-text preset-description-html"
                         data-testid="preset-html-description"
                         v-html="descriptionHtml"
@@ -240,7 +237,6 @@ onBeforeUnmount(() => {
 });
 
 const descriptionText = computed(() => props.preset?.description?.join("\n") ?? "");
-const isDescriptionHtml = computed(() => props.preset?.parser === "MARKED");
 const cliText = computed(() => props.cliStrings.join("\n"));
 const totalOptionsCount = computed(() => {
     if (!props.preset?.options) {
@@ -275,7 +271,7 @@ const viewOnlineLabel = decodeHtmlEntities(i18n.getMessage("presetsViewOnline"))
 const discussionLabel = decodeHtmlEntities(i18n.getMessage("presetsOpenDiscussion"));
 
 const descriptionHtml = computed(() => {
-    if (!isDescriptionHtml.value) {
+    if (!descriptionText.value) {
         return "";
     }
 
