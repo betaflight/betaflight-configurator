@@ -1415,12 +1415,18 @@ button.disabled:active {
 .colors {
     height: 130px;
     position: relative;
-    display: inline-block;
+    display: inline-grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 4px;
     width: 49%;
+    vertical-align: top;
 }
 
-.colors button {
-    width: 23%;
+.colors > button {
+    width: 100%;
+    height: 100%;
+    padding: 0;
     color: white;
 }
 
