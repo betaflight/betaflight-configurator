@@ -52,7 +52,7 @@
                         >
                         <span
                             v-show="preset.status === 'COMMUNITY'"
-                            class="px-1 py-0.5 inline-block text-white font-bold rounded bg-(--ui-primary)"
+                            class="px-1 py-0.5 inline-block text-black font-bold rounded bg-(--ui-primary)"
                             >{{ $t("presetsCommunity") }}</span
                         >
                         <span
