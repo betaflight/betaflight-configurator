@@ -1761,7 +1761,6 @@ onUnmounted(() => {
     content: "\2715\20";
 }
 
-/* Boot logo preview — override Tailwind preflight img { display: block } */
 #font-logo-preview img {
     display: inline;
 }
