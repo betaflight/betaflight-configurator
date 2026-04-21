@@ -449,12 +449,18 @@
             >
                 {{ $t("firmwareFlasherFlashFirmware") }}
             </UButton>
-            <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">
-                {{ $t("firmwareFlasherButtonLoadOnline") }}
-            </UButton>
-            <UButton :disabled="state.loadFileButtonDisabled" @click="handleLoadFile" variant="soft">
-                {{ $t("firmwareFlasherButtonLoadLocal") }}
-            </UButton>
+            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
+                <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">{{
+                    $t("firmwareFlasherButtonLoadOnline")
+                }}</UButton>
+                <UDropdownMenu
+                    v-slot="{ open }"
+                    :items="loadFirmwareMenuItems"
+                    :content="{ align: 'end', side: 'top' }"
+                >
+                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
+                </UDropdownMenu>
+            </UFieldGroup>
         </div>
 
         <dialog
@@ -2147,6 +2153,23 @@ export default defineComponent({
             }
         };
 
+        const loadFirmwareMenuItems = computed(() => [
+            [
+                {
+                    label: $t("firmwareFlasherButtonLoadOnline"),
+                    icon: "i-lucide-cloud-download",
+                    disabled: state.loadRemoteButtonDisabled,
+                    onSelect: handleLoadRemoteFile,
+                },
+                {
+                    label: $t("firmwareFlasherButtonLoadLocal"),
+                    icon: "i-lucide-hard-drive-download",
+                    disabled: state.loadFileButtonDisabled,
+                    onSelect: handleLoadFile,
+                },
+            ],
+        ]);
+
         const flashRingColor = computed(() => {
             switch (state.progressLabelClass) {
                 case "invalid":
@@ -2166,6 +2189,7 @@ export default defineComponent({
         return {
             state,
             flashRingColor,
+            loadFirmwareMenuItems,
             cloudBuild,
             boardSelection,
             FLASH_MESSAGE_TYPES,
