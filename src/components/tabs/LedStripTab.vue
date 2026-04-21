@@ -1358,10 +1358,9 @@ button.disabled:active {
 
 /* Directions */
 /* Reproduce the compass-with-U/D layout from the pre-Nuxt-UI version:
- *   Row 1:  .   N   .   .
- *   Row 2:  .   .   .   U
- *   Row 3:  W   .   E   D
- *   Row 4:  .   S   .   .
+ *   Row 1:  .   N   .   U
+ *   Row 2:  W   .   E   D
+ *   Row 3:  .   S   .   .
  * :deep() is needed because UButton renders through ULink/ULinkBase, so
  * the rendered <button> sits outside this component's scoped selector. */
 .directions {
