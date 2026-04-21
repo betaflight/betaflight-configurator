@@ -1052,8 +1052,8 @@ watch(auxChannelValue, (newVal) => {
     position: relative;
     float: left;
     margin-right: 30px;
-    width: calc(29px * 16);
-    height: calc(29px * 16);
+    width: calc(29px * 16 + 3px);
+    height: calc(29px * 16 + 3px);
 }
 
 /* Grid Sections Overlay */
@@ -1062,8 +1062,8 @@ watch(auxChannelValue, (newVal) => {
     top: 0;
     left: 0;
     z-index: 0;
-    width: calc(29px * 16);
-    height: calc(29px * 16);
+    width: calc(29px * 16 + 3px);
+    height: calc(29px * 16 + 3px);
     border: 1px solid var(--surface-500);
     border-radius: 3px;
     pointer-events: none;
@@ -1186,6 +1186,7 @@ button.disabled:active {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-top: 0.5rem;
     margin-bottom: 10px;
 }
 
@@ -1356,22 +1357,27 @@ button.disabled:active {
 }
 
 /* Directions */
-/* NEWS compass cross with U/D stacked on the right. Use CSS grid so the
- * layout works regardless of UButton's intrinsic sizing/positioning. */
+/* Reproduce the compass-with-U/D layout from the pre-Nuxt-UI version:
+ *   Row 1:  .   N   .   .
+ *   Row 2:  .   .   .   U
+ *   Row 3:  W   .   E   D
+ *   Row 4:  .   S   .   .
+ * :deep() is needed because UButton renders through ULink/ULinkBase, so
+ * the rendered <button> sits outside this component's scoped selector. */
 .directions {
     display: inline-grid;
-    grid-template-columns: 30px 30px 30px 12px 30px;
+    grid-template-columns: 30px 30px 30px 30px;
     grid-template-rows: 30px 30px 30px;
-    gap: 4px 2px;
-    vertical-align: top;
+    gap: 4px;
+    vertical-align: middle;
     margin-right: 12px;
 }
 
-.directions > button {
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
-    padding: 0 !important;
+.directions :deep(button) {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    padding: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1379,33 +1385,33 @@ button.disabled:active {
     line-height: 1;
 }
 
-.directions > .dir-n {
+.directions :deep(.dir-n) {
     grid-column: 2;
     grid-row: 1;
 }
 
-.directions > .dir-w {
+.directions :deep(.dir-u) {
+    grid-column: 4;
+    grid-row: 1;
+}
+
+.directions :deep(.dir-w) {
     grid-column: 1;
     grid-row: 2;
 }
 
-.directions > .dir-e {
+.directions :deep(.dir-e) {
     grid-column: 3;
     grid-row: 2;
 }
 
-.directions > .dir-s {
+.directions :deep(.dir-d) {
+    grid-column: 4;
+    grid-row: 2;
+}
+
+.directions :deep(.dir-s) {
     grid-column: 2;
-    grid-row: 3;
-}
-
-.directions > .dir-u {
-    grid-column: 5;
-    grid-row: 1;
-}
-
-.directions > .dir-d {
-    grid-column: 5;
     grid-row: 3;
 }
 
@@ -1418,7 +1424,7 @@ button.disabled:active {
     grid-template-rows: repeat(4, 1fr);
     gap: 4px;
     width: 49%;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .colors > button {
