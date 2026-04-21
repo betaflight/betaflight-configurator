@@ -40,7 +40,7 @@ export function useAdjustmentsData(adjustments, t) {
     const sortedFunctions = computed(() => {
         const opts = [...functionOptions.value];
         const first = opts[0];
-        const rest = opts.slice(1).sort((a, b) => a.label.localeCompare(b.label));
+        const rest = opts.slice(1).sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
         return [first, ...rest];
     });
 
@@ -77,23 +77,23 @@ export function useAdjustmentsData(adjustments, t) {
     };
 
     const initializeAdjustments = () => {
-        auxChannelCount.value = fcStore.rc.active_channels - 4;
+        auxChannelCount.value = Math.max(0, fcStore.rc.active_channels - 4);
 
         adjustments.splice(0, adjustments.length);
 
         fcStore.adjustmentRanges.forEach((range) => {
             const isEnabled = range.range?.start !== range.range?.end;
             const adj = reactive({
-                slotIndex: range.slotIndex || 0,
-                auxChannelIndex: range.auxChannelIndex || 0,
+                slotIndex: range.slotIndex ?? 0,
+                auxChannelIndex: range.auxChannelIndex ?? 0,
                 range: {
-                    start: range.range?.start || 900,
-                    end: range.range?.end || 900,
+                    start: range.range?.start ?? 900,
+                    end: range.range?.end ?? 900,
                 },
-                adjustmentFunction: range.adjustmentFunction || 0,
-                auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
-                adjustmentCenter: range.adjustmentCenter || 0,
-                adjustmentScale: range.adjustmentScale || 0,
+                adjustmentFunction: range.adjustmentFunction ?? 0,
+                auxSwitchChannelIndex: range.auxSwitchChannelIndex ?? 0,
+                adjustmentCenter: range.adjustmentCenter ?? 0,
+                adjustmentScale: range.adjustmentScale ?? 0,
                 enabled: isEnabled,
                 get rangeArray() {
                     return [this.range.start, this.range.end];
