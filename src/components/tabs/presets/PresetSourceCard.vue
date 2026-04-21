@@ -2,96 +2,73 @@
     <div>
         <div
             :class="[
-                'presets_source_panel',
-                selected ? 'presets_source_panel_selected' : 'presets_source_panel_not_selected',
+                'bg-(--ui-bg-muted) border border-(--ui-border) p-4 shadow-sm rounded mb-1.5',
+                selected ? '' : 'cursor-pointer hover:bg-(--ui-bg-elevated) hover:shadow-md',
             ]"
             @click="!selected && emit('select')"
         >
-            <div v-if="!selected" class="presets_source_panel_no_editing">
-                <div v-if="active" class="presets_source_panel_no_editing_selected"></div>
-                <div class="presets_source_panel_no_editing_name">{{ source.name }}</div>
+            <div v-if="!selected" class="flex items-center gap-2">
+                <img v-if="active" :src="checkIcon" alt="" aria-hidden="true" class="w-[30px] h-[30px]" />
+                <span class="text-lg inline-block align-middle">{{ source.name }}</span>
             </div>
 
-            <div v-else class="presets_source_panel_editing">
-                <div class="presets_source_panel_editing_table">
-                    <div class="presets_source_panel_editing_row">
-                        <div class="presets_source_panel_editing_field_label">Name</div>
-                        <div class="presets_source_panel_editing_field_edit">
-                            <input
-                                v-model="draft.name"
-                                type="text"
-                                class="presets_source_panel_editing_name_field standard_input"
-                                :disabled="source.official"
-                            />
-                        </div>
-                    </div>
-                    <div class="presets_source_panel_editing_row">
-                        <div class="presets_source_panel_editing_field_label">Url</div>
-                        <div class="presets_source_panel_editing_field_edit">
-                            <input
-                                v-model="draft.url"
-                                type="text"
-                                class="presets_source_panel_editing_url_field standard_input"
-                                :disabled="source.official"
-                                @input="handleUrlInput"
-                            />
-                        </div>
-                    </div>
-                    <div
-                        v-if="showGithubBranch"
-                        class="presets_source_panel_editing_row presets_source_panel_editing_github_branch"
-                    >
-                        <div class="presets_source_panel_editing_field_label">GitHub branch</div>
-                        <div class="presets_source_panel_editing_field_edit">
-                            <input
-                                v-model="draft.gitHubBranch"
-                                type="text"
-                                class="presets_source_panel_editing_branch_field standard_input"
-                                :disabled="source.official"
-                            />
-                        </div>
-                    </div>
+            <div v-else>
+                <div class="grid grid-cols-[100px_1fr] gap-1.5 items-center">
+                    <span class="whitespace-pre pr-2.5 min-w-[100px]">Name</span>
+                    <UInput v-model="draft.name" :disabled="source.official" class="w-full" />
+                    <span class="whitespace-pre pr-2.5 min-w-[100px]">Url</span>
+                    <UInput
+                        v-model="draft.url"
+                        :disabled="source.official"
+                        class="w-full"
+                        @update:model-value="handleUrlInput"
+                    />
+                    <template v-if="showGithubBranch">
+                        <span class="whitespace-pre pr-2.5 min-w-[100px]">GitHub branch</span>
+                        <UInput v-model="draft.gitHubBranch" :disabled="source.official" class="w-full" />
+                    </template>
                 </div>
 
-                <div>
-                    <div v-if="active" class="presets_source_panel_no_editing_selected"></div>
-                    <a
+                <div class="flex items-center flex-wrap gap-2 mt-3">
+                    <img v-if="active" :src="checkIcon" alt="" aria-hidden="true" class="w-[30px] h-[30px]" />
+                    <UButton
                         v-if="!active"
-                        href="#"
-                        class="tool regular-button presets_source_panel_activate"
-                        @click.prevent="handleActivate"
-                        >{{ $t("presetsSourcesDialogMakeSourceActive") }}</a
-                    >
-                    <a
+                        :label="$t('presetsSourcesDialogMakeSourceActive')"
+                        size="xs"
+                        @click="handleActivate"
+                    />
+                    <UButton
                         v-if="active"
-                        href="#"
-                        class="tool regular-button presets_source_panel_deactivate"
-                        @click.prevent="handleDeactivate"
-                        >{{ $t("presetsSourcesDialogMakeSourceDisable") }}</a
-                    >
-                    <a
-                        v-if="!source.official"
-                        href="#"
-                        class="tool regular-button presets_source_panel_save"
-                        :class="{ disabled: !isDirty }"
-                        @click.prevent="isDirty && handleSave()"
-                        >{{ $t("presetsSourcesDialogSaveSource") }}</a
-                    >
-                    <a
-                        v-if="!source.official"
-                        href="#"
-                        class="tool regular-button presets_source_panel_reset"
-                        :class="{ disabled: !isDirty }"
-                        @click.prevent="isDirty && resetDraft()"
-                        >{{ $t("presetsSourcesDialogResetSource") }}</a
-                    >
-                    <a
-                        v-if="!source.official"
-                        href="#"
-                        class="tool regular-button presets_source_panel_delete"
-                        @click.prevent="emit('delete')"
-                        >{{ $t("presetsSourcesDialogDeleteSource") }}</a
-                    >
+                        :label="$t('presetsSourcesDialogMakeSourceDisable')"
+                        variant="outline"
+                        size="xs"
+                        @click="handleDeactivate"
+                    />
+                    <div class="ml-auto flex gap-1.5">
+                        <UButton
+                            v-if="!source.official"
+                            :label="$t('presetsSourcesDialogSaveSource')"
+                            :disabled="!isDirty"
+                            size="xs"
+                            @click="handleSave"
+                        />
+                        <UButton
+                            v-if="!source.official"
+                            :label="$t('presetsSourcesDialogResetSource')"
+                            :disabled="!isDirty"
+                            variant="outline"
+                            size="xs"
+                            @click="resetDraft"
+                        />
+                        <UButton
+                            v-if="!source.official"
+                            :label="$t('presetsSourcesDialogDeleteSource')"
+                            variant="outline"
+                            color="error"
+                            size="xs"
+                            @click="emit('delete')"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,6 +78,7 @@
 <script setup>
 import { computed, reactive, watch } from "vue";
 import PresetSource from "./SourcesDialog/PresetSource";
+import checkIcon from "@/images/icons/cf_icon_check_orange.svg";
 
 const props = defineProps({
     source: {
@@ -178,7 +156,9 @@ function handleUrlInput() {
 }
 
 function handleSave() {
-    emit("save", normalizedDraft());
+    if (isDirty.value) {
+        emit("save", normalizedDraft());
+    }
 }
 
 function handleActivate() {
@@ -191,74 +171,3 @@ function handleDeactivate() {
     emit("deactivate");
 }
 </script>
-
-<style lang="less">
-.presets_source_panel {
-    background-color: var(--surface-200);
-    border: 1px solid var(--surface-500);
-    padding: 1.5ex;
-    box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.25);
-    border-radius: 4px;
-    margin-bottom: 6px;
-}
-
-.presets_source_panel_not_selected {
-    cursor: pointer;
-}
-
-.presets_source_panel_not_selected:hover {
-    background-color: var(--surface-500);
-    box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.5);
-}
-
-.presets_source_panel_editing_table {
-    display: table;
-    width: 100%;
-    border-spacing: 6px;
-}
-
-.presets_source_panel_editing_row {
-    display: table-row;
-}
-
-.presets_source_panel_editing_field_label {
-    display: table-cell;
-    white-space: pre;
-    padding-right: 10px;
-    min-width: 100px;
-}
-
-.presets_source_panel_editing_field_edit {
-    display: table-cell;
-    width: 100%;
-    padding-right: 10px;
-}
-
-.presets_source_panel_editing_row .standard_input {
-    width: 100%;
-    margin-right: 12px;
-}
-
-.presets_source_panel_no_editing_name {
-    font-size: 130%;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.presets_source_panel_no_editing_selected {
-    background-image: url(../../../images/icons/cf_icon_check_orange.svg);
-    width: 30px;
-    height: 30px;
-    display: inline-block;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-.presets_source_panel_reset,
-.presets_source_panel_save,
-.presets_source_panel_delete {
-    float: right;
-}
-</style>
