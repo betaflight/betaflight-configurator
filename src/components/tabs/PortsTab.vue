@@ -16,7 +16,7 @@
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
-                <!-- Desktop: grid table (hidden below 768px) -->
+                <!-- Desktop: grid table (hidden below 1010px) -->
                 <div class="max-[1010px]:hidden mt-4">
                     <div class="grid grid-cols-[auto_auto_auto_auto_auto_auto] justify-between text-xs">
                         <!-- Header -->
@@ -93,7 +93,7 @@
                     </div>
                 </div>
 
-                <!-- Mobile: card per port (hidden at 768px+) -->
+                <!-- Mobile: card per port (hidden at 1010px+) -->
                 <div class="flex flex-col gap-3 min-[1010px]:hidden">
                     <UiBox
                         v-for="port in ports"
