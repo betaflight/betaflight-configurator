@@ -1,5 +1,4 @@
 import "../injected_methods";
-import { update_dataflash_global } from "../update_dataflash_global";
 import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
@@ -22,6 +21,25 @@ import { reinitializeConnection } from "../serial_backend";
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
 let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+
+let lastI2cErrorCount = null;
+
+function reportI2cErrors(count) {
+    // Seed on first poll (and on FC reboot/reconnect, where the counter drops).
+    if (lastI2cErrorCount === null || count < lastI2cErrorCount) {
+        lastI2cErrorCount = count;
+        return;
+    }
+    if (count > lastI2cErrorCount) {
+        gui_log(
+            i18n.getMessage("i2cErrorDetected", {
+                delta: count - lastI2cErrorCount,
+                total: count,
+            }),
+        );
+        lastI2cErrorCount = count;
+    }
+}
 
 function MspHelper() {
     const self = this;
@@ -204,6 +222,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_STATUS:
                     FC.CONFIG.cycleTime = data.readU16();
                     FC.CONFIG.i2cError = data.readU16();
+                    reportI2cErrors(FC.CONFIG.i2cError);
                     FC.CONFIG.activeSensors = data.readU16();
                     FC.CONFIG.mode = data.readU32();
                     FC.CONFIG.profile = data.readU8();
@@ -212,6 +231,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_STATUS_EX:
                     FC.CONFIG.cycleTime = data.readU16();
                     FC.CONFIG.i2cError = data.readU16();
+                    reportI2cErrors(FC.CONFIG.i2cError);
                     FC.CONFIG.activeSensors = data.readU16();
                     FC.CONFIG.mode = data.readU32();
                     FC.CONFIG.profile = data.readU8();
@@ -1455,7 +1475,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.DATAFLASH.totalSize = 0;
                         FC.DATAFLASH.usedSize = 0;
                     }
-                    update_dataflash_global();
                     break;
                 case MSPCodes.MSP_DATAFLASH_READ:
                     // No-op, let callback handle it
@@ -1471,7 +1490,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SDCARD.filesystemLastError = data.readU8();
                     FC.SDCARD.freeSizeKB = data.readU32();
                     FC.SDCARD.totalSizeKB = data.readU32();
-                    update_dataflash_global();
                     break;
                 case MSPCodes.MSP_BLACKBOX_CONFIG:
                     FC.BLACKBOX.supported = (data.readU8() & 1) != 0;

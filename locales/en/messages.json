@@ -113,11 +113,23 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Simulate a flight controller without hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Enter the serial path or URL to connect to.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },
     "close": {
         "message": "Close"
+    },
+    "openSidebarMenu": {
+        "message": "Open sidebar menu",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -471,6 +483,19 @@
     },
     "logActionShow": {
         "message": "Show Log"
+    },
+    "tabLog": {
+        "message": "Log"
+    },
+    "i2cErrorDetected": {
+        "message": "I2C error detected (+{{delta}}, total {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "Clear"
+    },
+    "logAutoScroll": {
+        "message": "Auto-scroll"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} files",

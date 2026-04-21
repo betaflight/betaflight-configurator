@@ -1,5 +1,5 @@
 <template>
-    <div id="sensor-status" class="sensor_state mode-connected" style="display: block">
+    <div class="sensor-status" :class="{ 'sensor-status--compact': compact }">
         <ul>
             <li class="gyro" :title="$t('sensorStatusGyro')" :class="{ on: setGyroActive }">
                 <div class="gyroicon" :class="{ active: setGyroActive }">
@@ -21,12 +21,12 @@
                     {{ $t("sensorStatusBaroShort") }}
                 </div>
             </li>
-            <li class="gps" :class="{ on: setGpsActive }" :title="$t('sensorStatusGPS')">
+            <li class="gps" :class="{ on: gpsOn }" :title="$t('sensorStatusGPS')">
                 <div
                     class="gpsicon"
                     :class="{
-                        active: setGpsFixState && setGpsActive,
-                        active_fix: !setGpsFixState && setGpsActive,
+                        active: gpsActiveNoFix,
+                        active_fix: gpsActiveWithFix,
                     }"
                 >
                     {{ $t("sensorStatusGPSShort") }}
@@ -48,6 +48,7 @@ import { bit_check } from "../../js/bit";
 const props = defineProps({
     sensorsDetected: { type: Number, default: 0 },
     gpsFixState: { type: Number, default: 0 },
+    compact: { type: Boolean, default: false },
 });
 
 function haveSensor(sensorsDetected, sensorCode) {
@@ -72,9 +73,12 @@ const setAccActive = computed(() => haveSensor(props.sensorsDetected, "acc"));
 const setGyroActive = computed(() => haveSensor(props.sensorsDetected, "gyro"));
 const setBaroActive = computed(() => haveSensor(props.sensorsDetected, "baro"));
 const setMagActive = computed(() => haveSensor(props.sensorsDetected, "mag"));
-const setGpsActive = computed(() => haveSensor(props.sensorsDetected, "gps"));
-const setGpsFixState = computed(() => props.gpsFixState !== 0);
 const setSonarActive = computed(() => haveSensor(props.sensorsDetected, "sonar"));
+const gpsDetected = computed(() => haveSensor(props.sensorsDetected, "gps"));
+const hasFix = computed(() => props.gpsFixState > 0);
+const gpsOn = computed(() => gpsDetected.value || hasFix.value);
+const gpsActiveNoFix = computed(() => gpsOn.value && gpsDetected.value && !hasFix.value);
+const gpsActiveWithFix = computed(() => gpsOn.value && gpsDetected.value && hasFix.value);
 </script>
 
 <style scoped lang="less">
@@ -217,5 +221,33 @@ div {
 .sonaricon.active {
     color: #818181;
     background-image: url(../../images/icons/sensor_sonar_on.png);
+}
+
+.sensor-status--compact {
+    background-color: transparent;
+    display: inline-block;
+}
+
+.sensor-status--compact li {
+    width: 2rem;
+    height: auto;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin-right: 0.25rem;
+}
+
+.sensor-status--compact .gyroicon,
+.sensor-status--compact .accicon,
+.sensor-status--compact .magicon,
+.sensor-status--compact .baroicon,
+.sensor-status--compact .gpsicon,
+.sensor-status--compact .sonaricon {
+    padding-top: 1.4rem;
+    height: 0;
+    background-size: 22px;
+    background-position: center 0;
+    font-size: 9px;
+    margin-top: 0;
 }
 </style>

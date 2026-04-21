@@ -1,5 +1,5 @@
 <template>
-    <div class="battery-icon">
+    <div class="battery-icon" :class="{ 'battery-icon--compact': compact }">
         <div class="quad-status-contents">
             <div class="battery-status" :class="classes" :style="{ width: batteryWidth + '%' }" />
         </div>
@@ -28,6 +28,10 @@ export default defineComponent({
         vbatwarningcellvoltage: {
             type: Number,
             default: 1,
+        },
+        compact: {
+            type: Boolean,
+            default: false,
         },
     },
     setup(props) {
@@ -145,5 +149,23 @@ export default defineComponent({
 
 .battery-status.state-empty {
     animation: error-blinker 1s linear infinite;
+}
+
+.battery-icon--compact {
+    margin-top: 0;
+    margin-left: 0;
+    height: 24px;
+    width: 48px;
+}
+
+.battery-icon--compact .quad-status-contents {
+    margin-top: 8px;
+    margin-left: 10px;
+    width: 26px;
+    height: 8px;
+}
+
+.battery-icon--compact .battery-status {
+    height: 9px;
 }
 </style>

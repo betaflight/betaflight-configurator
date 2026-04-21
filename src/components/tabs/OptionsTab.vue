@@ -132,6 +132,7 @@ import { checkSetupAnalytics } from "../../js/Analytics";
 import NotificationManager from "../../js/utils/notifications";
 import { ispConnected } from "../../js/utils/connection";
 import { DEFAULT_DEVELOPMENT_OPTIONS, resetDevelopmentOptions } from "../../js/utils/developmentOptions";
+import { applyExpertMode } from "../../js/utils/applyExpertMode";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 
@@ -237,11 +238,7 @@ export default defineComponent({
         watch(
             () => settings.expertMode,
             (value) => {
-                setConfig({ expertMode: value });
-                // Update global Vue expertMode state
-                if (globalThis.vm) {
-                    globalThis.vm.expertMode = value;
-                }
+                applyExpertMode(value);
             },
         );
 

@@ -12,6 +12,7 @@ import MSPCodes from "./msp/MSPCodes";
 import { gui_log } from "./gui_log";
 import { useDialogStore } from "../stores/dialog";
 import { pinia } from "./pinia_instance";
+import { EventBus } from "../components/eventBus";
 
 const TABS = {};
 
@@ -40,6 +41,7 @@ class GuiControl {
             "user_profile",
             "backups",
             "flight_plan",
+            "log",
         ];
 
         this.defaultAllowedTabs = [
@@ -59,6 +61,7 @@ class GuiControl {
             "ports",
             "receiver",
             "sensors",
+            "log",
         ];
 
         this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "vtx", "flight_plan"];
@@ -444,13 +447,15 @@ class GuiControl {
         }
     }
     reinitializeConnection() {
+        // Emit via EventBus so gui.js doesn't have to import serial_backend
+        // (which already imports gui.js — this would create a module cycle).
+        const emitToggle = () => EventBus.$emit("connection:toggle");
+
         if (CONFIGURATOR.virtualMode) {
             this.reboot_timestamp = Date.now();
-            document.querySelector("#connection_button")?.click();
+            emitToggle();
             if (PortHandler.portPicker.autoConnect) {
-                return setTimeout(function () {
-                    document.querySelector("#connection_button")?.click();
-                }, 500);
+                return setTimeout(emitToggle, 500);
             }
             return;
         }
@@ -467,9 +472,7 @@ class GuiControl {
         CONFIGURATOR.connectionValid = false;
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-            return setTimeout(function () {
-                document.querySelector("#connection_button")?.click();
-            }, 1500);
+            return setTimeout(emitToggle, 1500);
         }
 
         // Show reboot progress modal except for cli and presets tab

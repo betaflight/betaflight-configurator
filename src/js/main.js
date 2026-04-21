@@ -1,21 +1,19 @@
 import "../components/init.js";
 import { gui_log } from "./gui_log.js";
 import { i18n } from "./localization.js";
-import GUI, { TABS } from "./gui.js";
+import GUI from "./gui.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 import { checkSetupAnalytics } from "./Analytics.js";
-import { initializeSerialBackend } from "./serial_backend.js";
-import FC from "./fc.js";
+import { initializeSerialBackend, connectDisconnect } from "./serial_backend.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
-import { updateTabList } from "./utils/updateTabList.js";
+import { applyExpertMode } from "./utils/applyExpertMode.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
-import { EventBus } from "../components/eventBus.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 
 // Silence Capacitor bridge debug spam on native platforms
@@ -85,9 +83,6 @@ function appReady() {
             });
         });
 
-        document.querySelector("#connection_button")?.removeAttribute("disabled");
-        document.querySelector("#firmware_flasher_button")?.removeAttribute("disabled");
-
         initializeSerialBackend();
 
         // Open options tab on first run (Vue)
@@ -108,17 +103,6 @@ function appReady() {
     }
 }
 
-function setFirmwareFlasherButtonActiveState(isActive) {
-    const fwLabel = document.querySelector(".firmware_flasher_button__label");
-    const fwButton = document.querySelector("#firmware_flasher_button");
-    fwLabel?.classList.toggle("active", isActive);
-    fwButton?.classList.toggle("active", isActive);
-
-    if (globalThis.vm) {
-        globalThis.vm.firmwareFlasherActive = isActive;
-    }
-}
-
 //Process to execute to real start the app
 async function startProcess() {
     // translate to user-selected language
@@ -130,7 +114,6 @@ async function startProcess() {
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
-    document.querySelector("#connection_button")?.removeAttribute("disabled");
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
     // updateTopBarVersion();
@@ -192,35 +175,6 @@ async function startProcess() {
         });
     }
 
-    document.querySelector("#firmware_flasher_button")?.addEventListener("click", function () {
-        if (GUI.tab_switch_in_progress) {
-            return;
-        }
-        const isActive = Boolean(globalThis.vm?.firmwareFlasherActive);
-        const needsDisconnect = GUI.connected_to || GUI.connecting_to;
-
-        if (isActive) {
-            setFirmwareFlasherButtonActiveState(false);
-            if (needsDisconnect) {
-                document.querySelector("#connection_button")?.click();
-                return;
-            }
-            document.querySelector("#tabs ul.mode-disconnected .tab_landing a")?.click();
-            return;
-        }
-
-        // Flasher lives in the disconnected tab strip; when connected that strip is hidden, so
-        // we must disconnect first and let finishClose() open the flasher (see serial_backend).
-        if (needsDisconnect) {
-            GUI.pendingTab = "firmware_flasher";
-            document.querySelector("#connection_button")?.click();
-            return;
-        }
-
-        document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
-        setFirmwareFlasherButtonActiveState(true);
-    });
-
     const canSwitchTab = (tabRequiresConnection) => {
         if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
             gui_log(i18n.getMessage("tabSwitchConnectionRequired"));
@@ -246,13 +200,13 @@ async function startProcess() {
             return false;
         }
 
-        // Special handling for firmware flasher tab
+        // Firmware flasher lives in the disconnected tab strip; disconnect first if needed
+        // and let finishClose() restore the flasher via GUI.pendingTab.
         if (GUI.connected_to || GUI.connecting_to) {
-            // Disconnect is async; defer firmware flasher navigation until finishClose
             GUI.pendingTab = "firmware_flasher";
-            document.querySelector("#connection_button")?.click();
+            connectDisconnect();
         } else {
-            document.querySelector("#firmware_flasher_button")?.click();
+            document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
         }
         return true;
     };
@@ -287,9 +241,6 @@ async function startProcess() {
             GUI.tab_switch_in_progress = true;
 
             GUI.tab_switch_cleanup(function () {
-                // Keep header firmware button synchronized with selected sidebar tab.
-                const shouldActivateFwButton = tab === "firmware_flasher";
-                setFirmwareFlasherButtonActiveState(shouldActivateFwButton);
                 // disable previously active tab highlight
                 for (const ul of uiTabs) {
                     for (const li of ul.querySelectorAll("li")) {
@@ -341,10 +292,6 @@ async function startProcess() {
         this.style.display = "none";
     });
 
-    document.getElementById("reveal_btn")?.addEventListener("click", function () {
-        document.querySelector(".headerbar")?.classList.toggle("expand");
-    });
-
     window.addEventListener("resize", function () {
         syncCompactHeaderLayout();
 
@@ -358,70 +305,9 @@ async function startProcess() {
         }
     });
 
-    const showlogBtn = document.getElementById("showlog");
-    let logState = false;
-    showlogBtn?.addEventListener("click", function () {
-        if (logState) {
-            setTimeout(function () {
-                const commandLog = document.getElementById("log");
-                const wrapper = commandLog?.querySelector("div.wrapper");
-                if (commandLog && wrapper) {
-                    commandLog.scrollTop = wrapper.offsetHeight;
-                }
-            }, 200);
-            document.getElementById("log")?.classList.remove("active");
-            document.getElementById("tab-content-container")?.classList.remove("logopen");
-            document.getElementById("scrollicon")?.classList.remove("active");
-            setConfig({ logopen: false });
+    applyExpertMode(Boolean(getConfig("expertMode").expertMode), { persist: false });
 
-            logState = false;
-        } else {
-            document.getElementById("log")?.classList.add("active");
-            document.getElementById("tab-content-container")?.classList.add("logopen");
-            document.getElementById("scrollicon")?.classList.add("active");
-            setConfig({ logopen: true });
-
-            logState = true;
-        }
-        this.textContent = logState ? i18n.getMessage("logActionHide") : i18n.getMessage("logActionShow");
-    });
-
-    let result = getConfig("logopen");
-    if (result.logopen) {
-        showlogBtn?.click();
-    }
-
-    result = getConfig("expertMode").expertMode ?? false;
-
-    const expertModeCheckbox = document.querySelector('input[name="expertModeCheckbox"]');
-
-    expertModeCheckbox?.addEventListener("change", () => {
-        const checked = expertModeCheckbox.checked;
-
-        checkSetupAnalytics(function (analyticsService) {
-            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "ExpertMode", {
-                status: checked ? "On" : "Off",
-            });
-        });
-
-        // Always sync vm.expertMode so Vue reactivity stays in sync (updateTabList syncs checkbox -> vm)
-        updateTabList(FC.FEATURE_CONFIG?.features);
-
-        if (GUI.active_tab) {
-            TABS[GUI.active_tab]?.expertModeChanged?.(checked);
-        }
-
-        EventBus.$emit("expert-mode-change", checked);
-
-        setConfig({ expertMode: checked });
-    });
-
-    if (expertModeCheckbox) {
-        expertModeCheckbox.checked = result;
-        expertModeCheckbox.dispatchEvent(new Event("change"));
-    }
-
-    result = getConfig("cliAutoComplete");
+    let result = getConfig("cliAutoComplete");
     CliAutoComplete.setEnabled(typeof result.cliAutoComplete === "undefined" || result.cliAutoComplete); // On by default
 
     result = getConfig("darkTheme");

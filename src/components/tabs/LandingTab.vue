@@ -108,7 +108,6 @@ export default defineComponent({
         SponsorTile,
     },
     setup() {
-        // Get available languages including DEFAULT
         const availableLanguages = ref(["DEFAULT", ...i18n.getLanguagesAvailables()]);
         const selectedLanguage = ref(i18n.selectedLanguage);
 

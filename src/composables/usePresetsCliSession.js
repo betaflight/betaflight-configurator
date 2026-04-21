@@ -2,6 +2,7 @@ import { computed, ref } from "vue";
 import GUI from "../js/gui";
 import CONFIGURATOR from "../js/data_storage";
 import CliEngine from "../components/tabs/presets/CliEngine";
+import { connectDisconnect } from "../js/serial_backend";
 
 const READ_DUMP_IDLE_MS = 500;
 const MAX_READ_TIMEOUT = 10000;
@@ -12,7 +13,7 @@ function disconnectCliMakeSure() {
     GUI.timeout_add(
         DISCONNECT_TIMEOUT_NAME,
         () => {
-            document.querySelector("a.connection_button__link")?.click();
+            connectDisconnect();
         },
         500,
     );
