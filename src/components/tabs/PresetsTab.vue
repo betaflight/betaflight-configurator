@@ -1,17 +1,15 @@
 <template>
     <BaseTab tab-name="presets" @mounted="onTabMounted" @cleanup="onTabCleanup">
         <div class="content_wrapper" id="presets_content_wrapper">
-            <div class="tab_title" v-html="$t('tabPresets')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="presets" />
-            </div>
-            <div class="flex items-center gap-2 flex-wrap mb-2 px-5 justify-end">
+            <div class="tab_title">{{ $t("tabPresets") }}</div>
+            <WikiButton docUrl="presets" />
+            <div class="flex items-center gap-2 flex-wrap mb-2 justify-end">
                 <UButton :label="$t('presetSources')" size="xs" @click="openSourcesDialog" />
                 <UButton :label="$t('presetsBackupLoad')" size="xs" @click="loadConfigBackup" />
                 <UButton :label="$t('presetsBackupSave')" size="xs" @click="saveConfigBackup" />
             </div>
 
-            <div class="flex flex-col gap-2 px-5 mb-3">
+            <div class="flex flex-col gap-2 mb-3">
                 <UiBox v-if="store.isThirdPartyActive" type="warning" highlight>
                     <span v-html="$t('presetsWarningNotOfficialSource')"></span>
                 </UiBox>
@@ -35,7 +33,7 @@
 
             <div v-else>
                 <div class="sticky top-0 bg-(--ui-bg) z-10">
-                    <div class="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-1.5 px-5">
+                    <div class="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-1.5">
                         <PresetFilterSelect
                             v-model="store.filters.categories"
                             label-key="presetsFilterCategory"
@@ -63,7 +61,7 @@
                         />
                     </div>
 
-                    <div class="flex items-center gap-3 px-5 py-3">
+                    <div class="flex items-center gap-3 py-3">
                         <UInput
                             :model-value="store.filters.searchString"
                             :placeholder="searchPlaceholder"
@@ -74,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="px-5">
+                <div>
                     <div v-if="store.hasNoResults" class="text-2xl py-4" v-html="$t('presetsNoPresetsFound')"></div>
                     <div class="preset-card-grid grid gap-3 pb-5">
                         <PresetCard
@@ -530,11 +528,8 @@ function handleCliErrorsDialogClose() {
 }
 
 .tab-presets .content_wrapper {
-    height: calc(100% - 30px - 3ex);
     overflow-y: scroll;
     overflow-x: hidden;
-    padding: 0;
-    position: relative;
 }
 
 /* CLI terminal window — runtime-generated DOM, cannot use Tailwind */
