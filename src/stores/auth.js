@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { onScopeDispose, ref } from "vue";
 import loginManager from "@/js/LoginManager";
 
 export const useAuthStore = defineStore("auth", () => {
@@ -9,11 +9,16 @@ export const useAuthStore = defineStore("auth", () => {
         isLoggedIn.value = await loginManager.isUserLoggedIn();
     };
 
-    loginManager.onLogin(() => {
+    const unsubscribeLogin = loginManager.onLogin(() => {
         isLoggedIn.value = true;
     });
-    loginManager.onLogout(() => {
+    const unsubscribeLogout = loginManager.onLogout(() => {
         isLoggedIn.value = false;
+    });
+
+    onScopeDispose(() => {
+        unsubscribeLogin?.();
+        unsubscribeLogout?.();
     });
 
     refresh();

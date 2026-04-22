@@ -1,28 +1,24 @@
 <template>
-    <UNavigationMenu
-        :items="visibleItems"
-        orientation="vertical"
-        :collapsed="isCompact"
-        :tooltip="isCompact"
-        class="sidebar-nav"
-    />
+    <UNavigationMenu :items="visibleItems" orientation="vertical" :collapsed="isCompact" tooltip class="sidebar-nav" />
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useMediaQuery } from "@vueuse/core";
 import { useTranslation } from "i18next-vue";
-import { sidebarItems } from "./sidebar_items.js";
+import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
 import { useAuthStore } from "@/stores/auth";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";
-import FC from "@/js/fc.js";
+import GUI from "@/js/gui.js";
+import FCModule from "@/js/fc.js";
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
 const authStore = useAuthStore();
 const isCompact = useMediaQuery("(max-width: 575px)");
+const betaflightModel = inject("betaflightModel", null);
 
 const isModeVisible = (mode) => {
     switch (mode) {
@@ -40,16 +36,28 @@ const isModeVisible = (mode) => {
     }
 };
 
-const ctx = computed(() => ({
-    expertMode: Boolean(globalThis.vm?.expertMode),
-    buildOptions: FC.CONFIG?.buildOptions,
-    features: FC.FEATURE_CONFIG?.features,
-}));
+const ctx = computed(() => {
+    const model = betaflightModel ?? globalThis.vm;
+    const fc = model?.FC ?? FCModule;
+    return {
+        expertMode: Boolean(model?.expertMode),
+        buildOptions: fc?.CONFIG?.buildOptions,
+        features: fc?.FEATURE_CONFIG?.features,
+    };
+});
+
+const isAllowed = (item) => {
+    if (item.mode === "loggedin" || item.mode === "shared") {
+        return true;
+    }
+    return GUI.allowedTabs.includes(item.tab ?? item.key);
+};
 
 const activeItems = computed(() =>
     sidebarItems
         .filter((item) => isModeVisible(item.mode))
-        .filter((item) => (item.visibleWhen ? item.visibleWhen(ctx.value) : true)),
+        .filter((item) => isAllowed(item))
+        .filter((item) => isItemVisible(item, ctx.value)),
 );
 
 const visibleItems = computed(() =>

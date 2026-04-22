@@ -286,9 +286,9 @@ function finishClose(finishedCallback) {
     const pendingTab = GUI.pendingTab;
     GUI.pendingTab = null;
     if (pendingTab === "firmware_flasher") {
-        switchTab("firmware_flasher", { mode: "disconnected", label: i18n.getMessage("tabFirmwareFlasher") });
+        switchTab("firmware_flasher", { mode: "disconnected" });
     } else {
-        switchTab("landing", { mode: "disconnected", label: i18n.getMessage("tabLanding") });
+        switchTab("landing", { mode: "disconnected" });
     }
 
     finishedCallback();
@@ -657,7 +657,7 @@ function connectCli() {
     MSP.disconnect_cleanup();
 
     onConnect();
-    switchTab("cli", { mode: "cli", label: i18n.getMessage("tabCLI") });
+    switchTab("cli", { mode: "cli" });
 }
 
 function onConnect() {

@@ -37,9 +37,6 @@ class LoginManager {
      */
     async initialize() {
         await this.fetchUserProfile();
-
-        // Update tab visibility based on login state
-        await this.updateTabVisibility();
     }
 
     /**
@@ -114,7 +111,6 @@ class LoginManager {
 
             // Fetch user profile data
             await this.fetchUserProfile();
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -124,13 +120,6 @@ class LoginManager {
             console.error("Verify and create passkey error:", error);
             throw error;
         }
-    }
-
-    /**
-     * Update tab visibility based on login state
-     */
-    async updateTabVisibility() {
-        // Sidebar filters login-only tabs reactively via the auth store.
     }
 
     /**
@@ -162,7 +151,6 @@ class LoginManager {
             await this._loginApi.verifyLogin(email, code);
 
             await this.fetchUserProfile();
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -188,8 +176,6 @@ class LoginManager {
 
             // Fetch user profile data
             await this.fetchUserProfile();
-
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -227,11 +213,10 @@ class LoginManager {
             await this._loginApi.signOut();
 
             this._profile = null;
-            await this.updateTabVisibility();
             this.notifyLogoutCallbacks();
 
             // Always switch to landing/welcome tab on logout
-            switchTab("landing", { mode: "disconnected", label: i18n.getMessage("tabLanding") });
+            switchTab("landing", { mode: "disconnected" });
 
             gui_log(i18n.getMessage("userSignedOut"));
         } catch (error) {

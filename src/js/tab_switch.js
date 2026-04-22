@@ -5,6 +5,12 @@ import { gui_log } from "./gui_log.js";
 import { set as setConfig } from "./ConfigStorage.js";
 import { checkSetupAnalytics } from "./Analytics.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
+import { sidebarItems } from "../components/sidebar/sidebar_items.js";
+
+function defaultLabel(tabKey) {
+    const item = sidebarItems.find((i) => (i.tab ?? i.key) === tabKey);
+    return item ? i18n.getMessage(item.i18n) : tabKey;
+}
 
 function canSwitchTab(requiresConnection) {
     if (requiresConnection && !CONFIGURATOR.connectionValid) {
@@ -35,12 +41,15 @@ function handleDisallowedTab(tabKey, tabLabel) {
     }
 }
 
-export function switchTab(tabKey, { mode = "disconnected", label = tabKey } = {}) {
+export function switchTab(tabKey, options = {}) {
+    const mode = options.mode ?? "disconnected";
+    const label = options.label ?? defaultLabel(tabKey);
+
     if (GUI.active_tab === tabKey || GUI.tab_switch_in_progress) {
         return false;
     }
 
-    const requiresConnection = mode === "connected";
+    const requiresConnection = mode === "connected" || mode === "cli";
     if (!canSwitchTab(requiresConnection)) {
         return false;
     }

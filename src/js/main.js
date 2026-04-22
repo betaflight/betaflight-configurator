@@ -163,7 +163,7 @@ async function startProcess() {
     }
 
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
-    switchTab("landing", { mode: "disconnected", label: i18n.getMessage("tabLanding") });
+    switchTab("landing", { mode: "disconnected" });
 
     const compactHeaderLayoutMediaQuery = window.matchMedia(
         "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",

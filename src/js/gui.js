@@ -342,8 +342,8 @@ class GuiControl {
         const tabKey = tabClass.substring(4);
 
         import("./tab_switch.js").then(({ switchTab }) => {
-            if (!switchTab(tabKey, { mode: "connected", label: tabKey })) {
-                switchTab("setup", { mode: "connected", label: "setup" });
+            if (!switchTab(tabKey, { mode: "connected" })) {
+                switchTab("setup", { mode: "connected" });
             }
         });
     }
