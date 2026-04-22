@@ -22,15 +22,15 @@ export function useUserSession() {
     const loginCodeInputRef = ref(null);
     const codeEmail = ref("");
 
-    const dialogLoginRef = ref(null);
-    const dialogWaitingRef = ref(null);
+    const loginDialogOpen = ref(false);
+    const waitingDialogOpen = ref(false);
     const waitingMessage = ref("");
 
     // Legacy passkey-creation verification dialog
     const verificationError = ref(null);
     const verificationCode = ref("");
     const verificationInputRef = ref(null);
-    const dialogVerificationRef = ref(null);
+    const verificationDialogOpen = ref(false);
     const currentVerificationEmail = ref("");
 
     const displayName = computed(() => {
@@ -118,9 +118,7 @@ export function useUserSession() {
     };
 
     const showLoginDialog = () => {
-        if (dialogLoginRef.value && !dialogLoginRef.value.open) {
-            dialogLoginRef.value.showModal();
-        }
+        loginDialogOpen.value = true;
     };
 
     const openLoginDialog = () => {
@@ -129,9 +127,7 @@ export function useUserSession() {
     };
 
     const closeLoginDialog = () => {
-        if (dialogLoginRef.value?.open) {
-            dialogLoginRef.value.close();
-        }
+        loginDialogOpen.value = false;
     };
 
     const switchToCodeRequest = () => {
@@ -153,45 +149,26 @@ export function useUserSession() {
     };
 
     const closeVerificationDialog = () => {
-        if (dialogVerificationRef.value?.open) {
-            dialogVerificationRef.value.close();
-        }
+        verificationDialogOpen.value = false;
     };
 
     const openVerificationDialog = (email) => {
         currentVerificationEmail.value = email;
         verificationCode.value = "";
         verificationError.value = null;
-        if (dialogVerificationRef.value) {
-            dialogVerificationRef.value.showModal();
-            nextTick(() => {
-                verificationInputRef.value?.inputRef?.focus();
-            });
-        }
+        verificationDialogOpen.value = true;
+        nextTick(() => {
+            verificationInputRef.value?.inputRef?.focus();
+        });
     };
 
-    // Waiting dialog controls (component-managed)
     const showWaitingDialog = (message = i18n.getMessage("userLoggingIn")) => {
         waitingMessage.value = message || i18n.getMessage("userLoggingIn");
-        const dlg = dialogWaitingRef.value;
-        if (!dlg) return;
-        try {
-            dlg.showModal();
-        } catch {
-            if (!dlg.open) dlg.setAttribute("open", "open");
-        }
+        waitingDialogOpen.value = true;
     };
 
     const hideWaitingDialog = () => {
-        const dlg = dialogWaitingRef.value;
-        if (!dlg) return;
-        if (dlg.open) {
-            try {
-                dlg.close();
-            } catch {}
-        }
-        dlg.classList.remove("non-blocking");
-        dlg.removeAttribute("inert");
+        waitingDialogOpen.value = false;
     };
 
     const handleUsePasskey = async () => {
@@ -349,13 +326,13 @@ export function useUserSession() {
         loginTitle,
         loginDescription,
         loginCodeInputRef,
-        dialogLoginRef,
-        dialogWaitingRef,
+        loginDialogOpen,
+        waitingDialogOpen,
         waitingMessage,
         verificationError,
         verificationCode,
         verificationInputRef,
-        dialogVerificationRef,
+        verificationDialogOpen,
         handleLoginClick,
         toggleMenu,
         handleSignOut,

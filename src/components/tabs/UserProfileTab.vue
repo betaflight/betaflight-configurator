@@ -4,8 +4,9 @@
             <div class="tab_title">{{ $t("tabUserProfile") }}</div>
 
             <!-- Loading State -->
-            <div v-if="isLoading" class="data-loading">
-                <p>{{ $t("dataWaitingForData") }}</p>
+            <div v-if="isLoading" class="flex items-center justify-center py-16">
+                <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin text-[var(--color-primary-500)]" />
+                <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
             </div>
 
             <!-- Not Logged In State -->
@@ -97,78 +98,61 @@
 
                 <!-- Token Section -->
                 <UiBox class="options col-span-3" :title="$t('sectionUserTokens')">
-                    <div class="grid grid-cols-[auto_auto_auto_1fr_auto] text-sm">
-                        <div class="col-span-5 grid grid-cols-subgrid border-b border-[var(--surface-300)]">
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelId") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelCreated") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelExpiry") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelDetails") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelActions") }}</div>
-                        </div>
-                        <div v-if="tokens.length === 0" class="col-span-5 py-1.5 px-2 text-dimmed">
-                            {{ $t("userTokenNoTokens") }}
-                        </div>
-                        <div
-                            v-for="token in tokens"
-                            :key="token.id"
-                            class="col-span-5 grid grid-cols-subgrid items-center border-b border-[var(--surface-200)] hover:bg-[var(--surface-100)]"
-                        >
-                            <div class="py-1.5 px-2">{{ token.id }}</div>
-                            <div class="py-1.5 px-2">{{ formatDate(token.created) }}</div>
-                            <div class="py-1.5 px-2">{{ formatDate(token.expiry) }}</div>
-                            <div class="py-1.5 px-2 text-dimmed">
-                                {{ token.details || token.client?.address || "-" }}
-                            </div>
-                            <div class="py-1.5 px-2">
-                                <UButton
-                                    size="xs"
-                                    variant="soft"
-                                    color="error"
-                                    icon="i-lucide-trash-2"
-                                    @click="deleteToken(token.id)"
-                                >
-                                    {{ $t("actionDelete") }}
-                                </UButton>
-                            </div>
-                        </div>
-                    </div>
+                    <UTable :data="tokens" :columns="tokenColumns" :empty="$t('userTokenNoTokens')" class="text-sm">
+                        <template #created-cell="{ row }">
+                            {{ formatDate(row.original.created) }}
+                        </template>
+                        <template #expiry-cell="{ row }">
+                            {{ formatDate(row.original.expiry) }}
+                        </template>
+                        <template #details-cell="{ row }">
+                            <span class="text-dimmed">
+                                {{ row.original.details || row.original.client?.address || "-" }}
+                            </span>
+                        </template>
+                        <template #actions-cell="{ row }">
+                            <UButton
+                                size="xs"
+                                variant="soft"
+                                color="error"
+                                icon="i-lucide-trash-2"
+                                @click="deleteToken(row.original.id)"
+                            >
+                                {{ $t("actionDelete") }}
+                            </UButton>
+                        </template>
+                    </UTable>
                 </UiBox>
 
                 <!-- Passkeys Section -->
                 <UiBox class="options col-span-3" :title="$t('sectionUserPasskeys')">
-                    <div class="grid grid-cols-[auto_auto_auto_1fr_auto] text-sm">
-                        <div class="col-span-5 grid grid-cols-subgrid border-b border-[var(--surface-300)]">
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelId") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelCreated") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelLastUsed") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelDetails") }}</div>
-                            <div class="py-1.5 px-2 text-dimmed font-semibold">{{ $t("labelActions") }}</div>
-                        </div>
-                        <div v-if="passkeys.length === 0" class="col-span-5 py-1.5 px-2 text-dimmed">
-                            {{ $t("userPasskeyNoPasskeys") }}
-                        </div>
-                        <div
-                            v-for="passkey in passkeys"
-                            :key="passkey.id"
-                            class="col-span-5 grid grid-cols-subgrid items-center border-b border-[var(--surface-200)] hover:bg-[var(--surface-100)]"
-                        >
-                            <div class="py-1.5 px-2">{{ passkey.id }}</div>
-                            <div class="py-1.5 px-2">{{ formatDate(passkey.createdAtUtc) }}</div>
-                            <div class="py-1.5 px-2">{{ formatDate(passkey.updatedAtUtc) }}</div>
-                            <div class="py-1.5 px-2 text-dimmed">{{ passkey.client?.address || "-" }}</div>
-                            <div class="py-1.5 px-2">
-                                <UButton
-                                    size="xs"
-                                    variant="soft"
-                                    color="error"
-                                    icon="i-lucide-trash-2"
-                                    @click="deletePasskey(passkey.id)"
-                                >
-                                    {{ $t("actionDelete") }}
-                                </UButton>
-                            </div>
-                        </div>
-                    </div>
+                    <UTable
+                        :data="passkeys"
+                        :columns="passkeyColumns"
+                        :empty="$t('userPasskeyNoPasskeys')"
+                        class="text-sm"
+                    >
+                        <template #createdAtUtc-cell="{ row }">
+                            {{ formatDate(row.original.createdAtUtc) }}
+                        </template>
+                        <template #updatedAtUtc-cell="{ row }">
+                            {{ formatDate(row.original.updatedAtUtc) }}
+                        </template>
+                        <template #details-cell="{ row }">
+                            <span class="text-dimmed">{{ row.original.client?.address || "-" }}</span>
+                        </template>
+                        <template #actions-cell="{ row }">
+                            <UButton
+                                size="xs"
+                                variant="soft"
+                                color="error"
+                                icon="i-lucide-trash-2"
+                                @click="deletePasskey(row.original.id)"
+                            >
+                                {{ $t("actionDelete") }}
+                            </UButton>
+                        </template>
+                    </UTable>
                 </UiBox>
             </div>
         </div>
@@ -198,6 +182,22 @@ const editDialogRef = ref(null);
 let userApi = null;
 let unsubscribeLogin = null;
 let unsubscribeLogout = null;
+
+const tokenColumns = computed(() => [
+    { accessorKey: "id", header: t("labelId") },
+    { accessorKey: "created", header: t("labelCreated") },
+    { accessorKey: "expiry", header: t("labelExpiry") },
+    { accessorKey: "details", header: t("labelDetails") },
+    { id: "actions", header: t("labelActions") },
+]);
+
+const passkeyColumns = computed(() => [
+    { accessorKey: "id", header: t("labelId") },
+    { accessorKey: "createdAtUtc", header: t("labelCreated") },
+    { accessorKey: "updatedAtUtc", header: t("labelLastUsed") },
+    { accessorKey: "details", header: t("labelDetails") },
+    { id: "actions", header: t("labelActions") },
+]);
 
 const profilePhoto = computed(() => {
     if (profile.value?.avatar) {

@@ -22,37 +22,20 @@
                     <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                         <div class="mb-4">
                             <div class="text-sm font-bold text-[var(--color-primary-500)] mb-1">{{ craft }}</div>
-                            <div class="grid grid-cols-[auto_auto_1fr_auto] text-sm">
-                                <div class="col-span-4 grid grid-cols-subgrid border-b border-[var(--surface-300)]">
-                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
-                                        {{ $t("labelDate") }}
-                                    </div>
-                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
-                                        {{ $t("labelName") }}
-                                    </div>
-                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
-                                        {{ $t("labelDescription") }}
-                                    </div>
-                                    <div class="py-1.5 px-2 text-dimmed font-semibold">
-                                        {{ $t("labelActions") }}
-                                    </div>
-                                </div>
-                                <div
-                                    v-for="backup in groupBackups"
-                                    :key="backup.id"
-                                    class="col-span-4 grid grid-cols-subgrid items-center border-b border-[var(--surface-200)] hover:bg-[var(--surface-100)]"
-                                >
-                                    <div class="py-1.5 px-2">{{ formatDate(backup.created) }}</div>
-                                    <div class="py-1.5 px-2">{{ backup.name }}</div>
-                                    <div class="py-1.5 px-2 text-dimmed">
-                                        {{ backup.description || "" }}
-                                    </div>
-                                    <div class="py-1.5 px-2 flex gap-2">
+                            <UTable :data="groupBackups" :columns="columns" class="text-sm">
+                                <template #created-cell="{ row }">
+                                    {{ formatDate(row.original.created) }}
+                                </template>
+                                <template #description-cell="{ row }">
+                                    <span class="text-dimmed">{{ row.original.description || "" }}</span>
+                                </template>
+                                <template #actions-cell="{ row }">
+                                    <div class="flex gap-2">
                                         <UButton
                                             size="xs"
                                             variant="soft"
                                             icon="i-lucide-download"
-                                            @click="downloadBackup(backup)"
+                                            @click="downloadBackup(row.original)"
                                         >
                                             {{ $t("actionDownload") }}
                                         </UButton>
@@ -60,7 +43,7 @@
                                             size="xs"
                                             variant="soft"
                                             icon="i-lucide-pencil"
-                                            @click="startEdit(backup)"
+                                            @click="startEdit(row.original)"
                                         >
                                             {{ $t("actionEdit") }}
                                         </UButton>
@@ -69,13 +52,13 @@
                                             variant="soft"
                                             color="error"
                                             icon="i-lucide-trash-2"
-                                            @click="deleteBackup(backup.id)"
+                                            @click="deleteBackup(row.original.id)"
                                         >
                                             {{ $t("actionDelete") }}
                                         </UButton>
                                     </div>
-                                </div>
-                            </div>
+                                </template>
+                            </UTable>
                         </div>
                     </template>
                 </UiBox>
@@ -137,6 +120,13 @@ const editForm = ref({ id: null, name: "", description: "", created: null });
 let userApi = null;
 let unsubscribeLogin = null;
 let unsubscribeLogout = null;
+
+const columns = computed(() => [
+    { accessorKey: "created", header: t("labelDate") },
+    { accessorKey: "name", header: t("labelName") },
+    { accessorKey: "description", header: t("labelDescription") },
+    { id: "actions", header: t("labelActions") },
+]);
 
 const groupedBackups = computed(() => {
     const grouped = {};
