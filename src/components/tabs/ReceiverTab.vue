@@ -120,7 +120,9 @@
                                         :min="0"
                                         :max="255"
                                         :step="1"
-                                        class="min-w-52"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                             </template>
@@ -199,21 +201,48 @@
                                     :help="$t('receiverHelpStickMin')"
                                     class="items-start"
                                 >
-                                    <UInputNumber v-model="rxConfig.stick_min" :min="1000" :max="1200" :step="1" />
+                                    <UInputNumber
+                                        v-model="rxConfig.stick_min"
+                                        :min="1000"
+                                        :max="1200"
+                                        :step="1"
+                                        orientation="vertical"
+                                        size="xs"
+                                        :format-options="{ useGrouping: false }"
+                                        class="w-16"
+                                    />
                                 </SettingColumn>
                                 <SettingColumn
                                     :label="$t('receiverStickCenter')"
                                     :help="$t('receiverHelpStickCenter')"
                                     class="items-center"
                                 >
-                                    <UInputNumber v-model="rxConfig.stick_center" :min="1401" :max="1599" :step="1" />
+                                    <UInputNumber
+                                        v-model="rxConfig.stick_center"
+                                        :min="1401"
+                                        :max="1599"
+                                        :step="1"
+                                        orientation="vertical"
+                                        size="xs"
+                                        :format-options="{ useGrouping: false }"
+                                        class="w-16"
+                                    />
                                 </SettingColumn>
                                 <SettingColumn
                                     :label="$t('receiverStickMax')"
                                     :help="$t('receiverHelpStickMax')"
                                     class="items-end"
                                 >
-                                    <UInputNumber v-model="rxConfig.stick_max" :min="1800" :max="2000" :step="1" />
+                                    <UInputNumber
+                                        v-model="rxConfig.stick_max"
+                                        :min="1800"
+                                        :max="2000"
+                                        :step="1"
+                                        orientation="vertical"
+                                        size="xs"
+                                        :format-options="{ useGrouping: false }"
+                                        class="w-16"
+                                    />
                                 </SettingColumn>
                             </div>
                         </UiBox>
@@ -226,7 +255,15 @@
                                     :help="$t('receiverHelpDeadband')"
                                     class="items-start"
                                 >
-                                    <UInputNumber v-model="rcDeadbandConfig.deadband" :min="0" :max="32" :step="1" />
+                                    <UInputNumber
+                                        v-model="rcDeadbandConfig.deadband"
+                                        :min="0"
+                                        :max="32"
+                                        :step="1"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
+                                    />
                                 </SettingColumn>
                                 <SettingColumn
                                     :label="$t('receiverYawDeadband')"
@@ -238,6 +275,9 @@
                                         :min="0"
                                         :max="100"
                                         :step="1"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingColumn>
                                 <SettingColumn
@@ -250,6 +290,9 @@
                                         :min="0"
                                         :max="100"
                                         :step="1"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingColumn>
                             </div>
@@ -288,7 +331,9 @@
                                     :min="0"
                                     :max="255"
                                     v-model="rxConfig.rcSmoothingSetpointCutoff"
-                                    class="min-w-42"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingRow>
                             <SettingRow
@@ -301,7 +346,9 @@
                                     :min="0"
                                     :max="250"
                                     v-model="rxConfig.rcSmoothingAutoFactor"
-                                    class="min-w-42"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingRow>
                             <template v-if="showThrottleSmoothingOptions">
@@ -328,7 +375,9 @@
                                         :min="0"
                                         :max="255"
                                         v-model="rxConfig.rcSmoothingThrottleCutoff"
-                                        class="min-w-42"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                                 <SettingRow
@@ -341,7 +390,9 @@
                                         :min="0"
                                         :max="250"
                                         v-model="rxConfig.rcSmoothingAutoFactorThrottle"
-                                        class="min-w-42"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                             </template>
@@ -369,7 +420,9 @@
                                         :min="1"
                                         :max="255"
                                         v-model="rxConfig.rcSmoothingFeedforwardCutoff"
-                                        class="min-w-42"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                             </template>
