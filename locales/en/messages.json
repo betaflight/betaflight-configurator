@@ -4497,6 +4497,14 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink always"
     },
+    "ledStripThrottleHue": {
+        "message": "Throttle hue",
+        "description": "Label of throttle hue modifier switch on LED Strip tab"
+    },
+    "ledStripThrottleHueChannel": {
+        "message": "Throttle hue channel",
+        "description": "Accessible label for the aux-channel select next to the throttle hue switch"
+    },
     "ledStripRainbowOverlay": {
         "message": "Rainbow",
         "description": "Label of rainbow effect switch on LED Strip tab"
