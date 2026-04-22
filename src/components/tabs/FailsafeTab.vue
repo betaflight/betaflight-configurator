@@ -512,13 +512,11 @@ const procedureImage = computed(() => {
     return map[failsafeConfig.value.failsafe_procedure];
 });
 
-const channelModeItems = (index) => {
-    const items = [];
-    if (index < 4) items.push({ label: t("failsafeChannelFallbackSettingsValueAuto"), value: 0 });
-    items.push({ label: t("failsafeChannelFallbackSettingsValueHold"), value: 1 });
-    items.push({ label: t("failsafeChannelFallbackSettingsValueSet"), value: 2 });
-    return items;
-};
+const channelModeItems = (index) => [
+    ...(index < 4 ? [{ label: t("failsafeChannelFallbackSettingsValueAuto"), value: 0 }] : []),
+    { label: t("failsafeChannelFallbackSettingsValueHold"), value: 1 },
+    { label: t("failsafeChannelFallbackSettingsValueSet"), value: 2 },
+];
 
 const altitudeModeItems = computed(() => [
     { label: t("failsafeGpsRescueItemAltitudeModeMaxAlt"), value: 0 },
