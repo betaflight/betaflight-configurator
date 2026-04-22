@@ -188,7 +188,7 @@ const tokenColumns = computed(() => [
     { accessorKey: "created", header: t("labelCreated") },
     { accessorKey: "expiry", header: t("labelExpiry") },
     { accessorKey: "details", header: t("labelDetails") },
-    { accessorKey: "actions", header: t("labelActions") },
+    { id: "actions", header: t("labelActions") },
 ]);
 
 const passkeyColumns = computed(() => [
@@ -196,7 +196,7 @@ const passkeyColumns = computed(() => [
     { accessorKey: "createdAtUtc", header: t("labelCreated") },
     { accessorKey: "updatedAtUtc", header: t("labelLastUsed") },
     { accessorKey: "details", header: t("labelDetails") },
-    { accessorKey: "actions", header: t("labelActions") },
+    { id: "actions", header: t("labelActions") },
 ]);
 
 const profilePhoto = computed(() => {

@@ -33,17 +33,22 @@
             </div>
 
             <!-- Login Dialog -->
-            <UModal
-                v-model:open="loginDialogOpen"
-                :title="loginTitle"
-                :description="loginDescription"
-                :ui="{ content: 'max-w-sm' }"
-            >
-                <template #header>
-                    <div class="dialog-header-stack">
-                        <div class="dialog-logo" aria-hidden="true"></div>
-                        <h3 class="dialog-title">{{ loginTitle }}</h3>
-                        <p class="dialog-description">{{ loginDescription }}</p>
+            <UModal v-model:open="loginDialogOpen" :ui="{ content: 'max-w-sm' }">
+                <template #header="{ close }">
+                    <div class="flex items-start justify-between gap-2 w-full">
+                        <div class="dialog-header-stack">
+                            <div class="dialog-logo" aria-hidden="true"></div>
+                            <h3 class="dialog-title">{{ loginTitle }}</h3>
+                            <p class="dialog-description">{{ loginDescription }}</p>
+                        </div>
+                        <UButton
+                            color="neutral"
+                            variant="ghost"
+                            icon="i-lucide-x"
+                            size="sm"
+                            :aria-label="$t('dialogClose')"
+                            @click="close"
+                        />
                     </div>
                 </template>
                 <template #body>
@@ -154,14 +159,20 @@
             </UModal>
 
             <!-- Verification Code Dialog -->
-            <UModal
-                v-model:open="verificationDialogOpen"
-                :title="$t('titleEnterVerificationCode')"
-                :ui="{ content: 'max-w-sm' }"
-            >
-                <template #header>
-                    <div class="dialog-header-stack">
-                        <h3 class="dialog-title">{{ $t("titleEnterVerificationCode") }}</h3>
+            <UModal v-model:open="verificationDialogOpen" :ui="{ content: 'max-w-sm' }">
+                <template #header="{ close }">
+                    <div class="flex items-start justify-between gap-2 w-full">
+                        <div class="dialog-header-stack">
+                            <h3 class="dialog-title">{{ $t("titleEnterVerificationCode") }}</h3>
+                        </div>
+                        <UButton
+                            color="neutral"
+                            variant="ghost"
+                            icon="i-lucide-x"
+                            size="sm"
+                            :aria-label="$t('dialogClose')"
+                            @click="close"
+                        />
                     </div>
                 </template>
                 <template #body>

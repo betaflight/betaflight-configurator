@@ -125,7 +125,7 @@ const columns = computed(() => [
     { accessorKey: "created", header: t("labelDate") },
     { accessorKey: "name", header: t("labelName") },
     { accessorKey: "description", header: t("labelDescription") },
-    { accessorKey: "actions", header: t("labelActions") },
+    { id: "actions", header: t("labelActions") },
 ]);
 
 const groupedBackups = computed(() => {
