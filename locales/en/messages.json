@@ -3052,6 +3052,15 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
+    "adjustmentsShowAll": {
+        "message": "Show all slots"
+    },
+    "adjustmentsHideEmpty": {
+        "message": "Hide empty slots"
+    },
+    "adjustmentsSlotsActive": {
+        "message": "{{active}} of {{total}} slots active"
+    },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requires firmware &gt;= 1.10.0. and target support."
     },
