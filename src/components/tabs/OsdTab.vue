@@ -473,7 +473,9 @@
                                     {{ $t("osdSetupCustomLogoInfoTitle") }}
                                 </h3>
                                 <ul class="tab-osd-logo-info-list">
-                                    <li id="font-logo-info-size">{{ $t("osdSetupCustomLogoInfoImageSize") }}</li>
+                                    <li id="font-logo-info-size">
+                                        {{ $t("osdSetupCustomLogoInfoImageSize", logoImageSizeParams) }}
+                                    </li>
                                     <li id="font-logo-info-colors">{{ $t("osdSetupCustomLogoInfoColorMap") }}</li>
                                 </ul>
                                 <p id="font-logo-info-upload-hint" v-html="$t('osdSetupCustomLogoInfoUploadHint')"></p>
@@ -505,9 +507,22 @@
                 <UButton :disabled="!osdStore.state.isMax7456FontDeviceDetected" @click="openFontManager()">
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
-                <UButton @click="saveConfig()" color="primary">
-                    {{ saveButtonText }}
-                </UButton>
+                <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+                    <UButton
+                        @click="saveConfig()"
+                        :disabled="!osdStore.dirty"
+                        :color="osdStore.dirty ? 'success' : 'neutral'"
+                    >
+                        {{ saveButtonText }}
+                    </UButton>
+                    <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
+                        <UButton
+                            :color="osdStore.dirty ? 'success' : 'neutral'"
+                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                            square
+                        />
+                    </UDropdownMenu>
+                </UFieldGroup>
             </div>
         </div>
     </BaseTab>
@@ -560,8 +575,28 @@ const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const isSaving = ref(false);
+const logoImageSizeParams = {
+    logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
+    logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
+};
 const saveButtonTextOverride = ref(null);
 const saveButtonText = computed(() => saveButtonTextOverride.value || i18n.getMessage("osdSetupSave"));
+const saveMenuItems = computed(() => [
+    [
+        {
+            label: i18n.getMessage("osdSetupSave"),
+            icon: "i-lucide-save",
+            disabled: !osdStore.dirty || isSaving.value,
+            onSelect: saveConfig,
+        },
+        {
+            label: i18n.getMessage("osdSetupRefresh"),
+            icon: "i-lucide-refresh-cw",
+            disabled: isSaving.value,
+            onSelect: refreshConfig,
+        },
+    ],
+]);
 const hasLoadedConfig = ref(false);
 // State for popover
 const presetMenuField = ref(null);
@@ -776,70 +811,38 @@ function unhighlightField() {
 function toggleFieldVisibility(fieldIndex, profileIndex, event) {
     osdStore.updateDisplayItemVisibility(fieldIndex, profileIndex, event.target.checked);
     trackChange("displayItem", osdStore.displayItems[fieldIndex].name);
-    osdStore.saveDisplayItem(osdStore.displayItems[fieldIndex]).catch((error) => {
-        console.error("Failed to update display item visibility:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save visibility change" }));
-    });
     updatePreview();
 }
 
 // Handle variant change
 function onVariantChange(field) {
     trackChange("variant", field.name);
-    osdStore.saveDisplayItem(field).catch((error) => {
-        console.error("Failed to update display item variant:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save variant change" }));
-    });
     updatePreview();
 }
 
 // Handle video system change
 function onVideoSystemChange() {
     osdStore.updateDisplaySize();
-    osdStore.saveOtherConfig().catch((error) => {
-        console.error("Failed to update OSD video system:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD video system" }));
-    });
     updatePreview();
 }
 
 function onUnitModeChange() {
-    osdStore.saveOtherConfig().catch((error) => {
-        console.error("Failed to update OSD unit mode:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD unit mode" }));
-    });
     updatePreview();
 }
 
-function onTimerChange(timer) {
-    osdStore.saveTimerConfig(timer).catch((error) => {
-        console.error("Failed to update OSD timer:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD timer" }));
-    });
+function onTimerChange() {
     updatePreview();
 }
 
 function onAlarmChange() {
-    osdStore.saveOtherConfig().catch((error) => {
-        console.error("Failed to update OSD alarms:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD alarms" }));
-    });
     updatePreview();
 }
 
 function onWarningChange() {
-    osdStore.saveOtherConfig().catch((error) => {
-        console.error("Failed to update OSD warnings:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD warnings" }));
-    });
     updatePreview();
 }
 
-function onStatChange(stat) {
-    osdStore.saveStatisticItem(stat).catch((error) => {
-        console.error("Failed to update OSD statistic:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD statistic" }));
-    });
+function onStatChange() {
     updatePreview();
 }
 
@@ -1025,10 +1028,6 @@ function onDropCell(event) {
     // Update display item position
     displayItem.position = position;
     trackChange("position", displayItem.name);
-    osdStore.saveDisplayItem(displayItem).catch((error) => {
-        console.error("Failed to update display item position:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save display item position" }));
-    });
     updatePreview();
 
     dragState.value.field = null;
@@ -1123,10 +1122,6 @@ function applyPresetPosition(field, positionKey) {
 
     field.position = finalPosition;
     trackChange("position", field.name);
-    osdStore.saveDisplayItem(field).catch((error) => {
-        console.error("Failed to apply preset position:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save preset position" }));
-    });
     updatePreview();
 
     closePresetMenu();
@@ -1235,7 +1230,14 @@ async function loadConfig() {
     }
 }
 
-// Save OSD configuration to FC
+async function refreshConfig() {
+    if (isSaving.value) {
+        return;
+    }
+    await loadConfig();
+    analyticsChanges.value = {};
+}
+
 // Save OSD configuration to FC
 async function saveConfig() {
     if (isSaving.value) {
@@ -1247,8 +1249,8 @@ async function saveConfig() {
         // Sync store state to the shared OSD.data bridge used by legacy helpers.
         osdStore.syncToLegacy();
 
-        // Legacy parity: Save button commits pending in-memory config to EEPROM.
-        await osdStore.saveToEeprom();
+        // Send all OSD config to FC and write EEPROM.
+        await osdStore.saveAllConfig();
 
         // Track analytics
         const changes = analyticsChanges.value;
@@ -1486,12 +1488,6 @@ watch(activeProfile, (newVal) => {
     osdStore.osdProfiles.selected = newVal;
     if (previewProfile.value !== newVal) {
         previewProfile.value = newVal;
-    }
-    if (hasLoadedConfig.value) {
-        osdStore.saveOtherConfig().catch((error) => {
-            console.error("Failed to update active OSD profile:", error);
-            gui_log(i18n.getMessage("error", { errorMessage: "Failed to save active OSD profile" }));
-        });
     }
 });
 
