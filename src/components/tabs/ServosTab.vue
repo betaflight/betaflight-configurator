@@ -111,15 +111,15 @@
                             v-for="i in 8"
                             :key="'bar' + i"
                             class="relative h-[100px]"
-                            :style="{ '--bar-opacity': getBarOpacity(servoData[i - 1] || 1500) }"
+                            :style="{ '--bar-opacity': getBarOpacity(servoData[i - 1] ?? 1500) }"
                         >
                             <div class="absolute inset-x-0 bottom-[45px] z-10 text-center text-[10px] font-bold">
-                                {{ servoData[i - 1] || 1500 }}
+                                {{ servoData[i - 1] ?? 1500 }}
                             </div>
                             <UProgress
                                 orientation="vertical"
                                 inverted
-                                :model-value="getBarHeight(servoData[i - 1] || 1500)"
+                                :model-value="getBarHeight(servoData[i - 1] ?? 1500)"
                                 :max="100"
                                 color="warning"
                                 size="2xl"
