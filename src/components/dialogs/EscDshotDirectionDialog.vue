@@ -150,12 +150,7 @@
                     ></p>
                     <div class="escDshotDirectionToggleParentContainer">
                         <div class="escDshotDirectionToggleNarrow">
-                            <input
-                                id="escDshotDirectionDialog-safetyCheckbox"
-                                type="checkbox"
-                                class="toggle"
-                                v-model="safetyAgreed"
-                            />
+                            <USwitch v-model="safetyAgreed" />
                         </div>
                         <div class="escDshotDirectionDialog-ToggleWide">
                             <span
@@ -211,12 +206,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { getMixerImageSrc } from "@/js/utils/common";
 import EscDshotDirectionMotorDriver from "@/components/EscDshotDirection/EscDshotDirectionMotorDriver";
 import DshotCommand from "@/js/utils/DshotCommand";
-import GUI from "@/js/gui";
 import { i18n } from "@/js/localization";
 
 const props = defineProps({
@@ -480,25 +474,6 @@ const cleanup = () => {
     showSecondAction.value = false;
     currentSpinningButton.value = -1;
     spinningDirection.value = null;
-
-    // Sync Switchery visual state after resetting safetyAgreed
-    // Use nextTick to ensure DOM is updated before reinitializing Switchery
-    nextTick(() => {
-        const checkbox = document.getElementById("escDshotDirectionDialog-safetyCheckbox");
-        if (checkbox) {
-            // Remove existing Switchery element
-            const switcheryElement = checkbox.nextElementSibling;
-            if (switcheryElement && switcheryElement.classList.contains("switchery")) {
-                switcheryElement.remove();
-            }
-            // Add the toggle class back so GUI.switchery() will reinitialize
-            if (!checkbox.classList.contains("toggle")) {
-                checkbox.classList.add("toggle");
-            }
-            // Reinitialize Switchery with correct state
-            GUI.switchery();
-        }
-    });
 };
 
 // Handle ESC key
@@ -521,10 +496,6 @@ onMounted(async () => {
         MOTOR_DRIVER_QUEUE_INTERVAL_MS,
         MOTOR_DRIVER_STOP_MOTORS_PAUSE_MS,
     );
-
-    // Initialize switchery for the checkbox
-    await nextTick();
-    GUI.switchery();
 
     document.addEventListener("keydown", handleKeyDown);
 });

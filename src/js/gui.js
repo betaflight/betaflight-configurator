@@ -1,7 +1,6 @@
 import { get as getConfig } from "./ConfigStorage";
 import { reactive } from "vue";
 import MSP from "./msp";
-import Switchery from "switchery-latest";
 import tippy from "tippy.js";
 
 import { getOS } from "./utils/checkCompatibility";
@@ -266,49 +265,7 @@ class GuiControl {
             callback();
         }
     }
-    switchery() {
-        const COLOR_ACCENT = "var(--primary-500)";
-        const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
-
-        for (const elem of document.querySelectorAll("[data-switchery]")) {
-            elem.switchery?.setPosition();
-        }
-
-        const setupSwitchery = (selector, className, extraOptions = {}) => {
-            for (const elem of document.querySelectorAll(selector)) {
-                const existingSwitcherySelector = extraOptions.className
-                    ? `.switchery, .${extraOptions.className}`
-                    : ".switchery";
-
-                if (elem.nextElementSibling?.matches(existingSwitcherySelector)) {
-                    elem.switchery?.setPosition();
-                    continue;
-                }
-
-                const switchery = new Switchery(elem, {
-                    ...extraOptions,
-                    color: COLOR_ACCENT,
-                    secondaryColor: COLOR_SWITCHERY_SECOND,
-                });
-                elem.switchery = switchery;
-                elem.addEventListener("change", function () {
-                    switchery.setPosition();
-                });
-                elem.classList.remove(className);
-            }
-        };
-
-        setupSwitchery(".togglesmall", "togglesmall", {
-            size: "small",
-        });
-        setupSwitchery(".toggle", "toggle");
-        setupSwitchery(".togglemedium", "togglemedium", {
-            className: "switcherymid",
-        });
-    }
     content_ready(callback) {
-        this.switchery();
-
         const tRex = GUI.active_tab.replaceAll("_", "-").toLowerCase();
 
         const docButton = document.querySelector("div#content #button-documentation");
