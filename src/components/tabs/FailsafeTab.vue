@@ -1,7 +1,7 @@
 <template>
     <BaseTab tab-name="failsafe">
         <div class="content_wrapper">
-            <div class="tab_title text-xl! mb-2.5!" v-html="$t('tabFailsafe')"></div>
+            <div class="tab_title" v-html="$t('tabFailsafe')"></div>
             <div class="cf_doc_version_bt">
                 <WikiButton docUrl="Failsafe" />
             </div>
