@@ -269,17 +269,6 @@ export default defineComponent({
         }
     }
 
-    /* Show username when the compact navigation drawer is revealed */
-    :global(.tab_container.reveal) & {
-        #open-login,
-        #user-menu-trigger {
-            justify-content: flex-start;
-        }
-        .username {
-            display: inline;
-        }
-    }
-
     @media (max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
         margin-bottom: 0.25rem;
         .user-avatar-icon {
@@ -291,6 +280,15 @@ export default defineComponent({
 </style>
 
 <style>
+/* Show username when the compact navigation drawer is revealed — unscoped so the external .tab_container.reveal selector matches. */
+.tab_container.reveal #user-session-container #open-login,
+.tab_container.reveal #user-session-container #user-menu-trigger {
+    justify-content: flex-start !important;
+}
+.tab_container.reveal #user-session-container .username {
+    display: inline !important;
+}
+
 /* Unscoped styles for teleported popup menu */
 .user-popup-menu {
     position: fixed;
