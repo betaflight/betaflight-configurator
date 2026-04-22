@@ -13,19 +13,19 @@
                         <USwitch
                             :model-value="selectedProperties.includes(prop.code)"
                             :disabled="isLogging"
+                            :label="prop.label"
                             size="sm"
+                            class="w-44"
                             @update:model-value="toggleProperty(prop.code, $event)"
                         />
-                        <span class="font-semibold text-sm w-28">{{ prop.label }}</span>
                         <span class="text-sm text-dimmed">{{ prop.description }}</span>
                     </div>
                 </div>
             </UiBox>
 
-            <div class="flex items-center gap-3 mt-4">
-                <span class="text-sm font-semibold" v-html="$t('loggingSamplingInterval')"></span>
+            <SettingRow :label="$t('loggingSamplingInterval')" class="mt-4">
                 <USelect v-model="samplingInterval" :items="speedItems" :disabled="isLogging" class="w-28" size="sm" />
-            </div>
+            </SettingRow>
 
             <UiBox type="neutral" class="mt-4">
                 <div class="flex flex-col gap-1">
@@ -57,6 +57,7 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
+import SettingRow from "@/components/elements/SettingRow.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { millitime } from "@/js/utils/common";
 import GUI from "@/js/gui";
