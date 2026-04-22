@@ -474,7 +474,10 @@
             <div class="content">
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
                 <div class="flex items-center gap-2">
-                    <USwitch v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox" />
+                    <USwitch
+                        v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
+                        :aria-label="$t('unstableFirmwareAcknowledgement')"
+                    />
                     <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
                 </div>
             </div>
