@@ -1,6 +1,7 @@
 <template>
     <BaseTab tab-name="cli" @mounted="onTabMounted" @cleanup="onTabCleanup">
         <div class="content_wrapper">
+            <div class="tab_title">{{ $t("tabCLI") }}</div>
             <div class="note">
                 <p v-html="$t('cliInfo')"></p>
             </div>

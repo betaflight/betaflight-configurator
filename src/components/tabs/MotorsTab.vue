@@ -1,7 +1,7 @@
 <template>
     <BaseTab tab-name="motors">
         <div class="content_wrapper">
-            <div class="tab_title !text-xl !mb-2.5" v-html="$t('tabMotorTesting')"></div>
+            <div class="tab_title" v-html="$t('tabMotorTesting')"></div>
             <div class="cf_doc_version_bt">
                 <WikiButton docUrl="motors" />
             </div>
