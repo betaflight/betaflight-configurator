@@ -59,6 +59,9 @@
                                 :min="1"
                                 :max="batteryConfig.vbatwarningcellvoltage"
                                 v-model="batteryConfig.vbatmincellvoltage"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
                             />
                         </SettingRow>
                         <SettingRow :label="$t('powerBatteryMaximum')" :help="$t('powerBatteryMaximumHelp')">
@@ -69,6 +72,9 @@
                                 :min="batteryConfig.vbatwarningcellvoltage"
                                 :max="5"
                                 v-model="batteryConfig.vbatmaxcellvoltage"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
                             />
                         </SettingRow>
                         <SettingRow :label="$t('powerBatteryWarning')" :help="$t('powerBatteryWarningHelp')">
@@ -79,6 +85,9 @@
                                 :min="batteryConfig.vbatmincellvoltage"
                                 :max="batteryConfig.vbatmaxcellvoltage"
                                 v-model="batteryConfig.vbatwarningcellvoltage"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
                             />
                         </SettingRow>
                         <SettingRow :label="$t('powerBatteryCapacity')">
@@ -89,6 +98,10 @@
                                 :min="0"
                                 :max="20000"
                                 v-model="batteryConfig.capacity"
+                                orientation="vertical"
+                                size="xs"
+                                :format-options="{ useGrouping: false }"
+                                class="w-20"
                             />
                         </SettingRow>
                     </UiBox>
@@ -118,6 +131,9 @@
                                         :max="255"
                                         v-model="voltageConfigs[index].vbatscale"
                                         @update:model-value="onVoltageScaleChange(index, $event)"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('powerVoltageDivider')">
@@ -128,6 +144,9 @@
                                         :min="1"
                                         :max="255"
                                         v-model="voltageConfigs[index].vbatresdivval"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('powerVoltageMultiplier')">
@@ -138,6 +157,9 @@
                                         :min="1"
                                         :max="255"
                                         v-model="voltageConfigs[index].vbatresdivmultiplier"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-16"
                                     />
                                 </SettingRow>
                             </div>
@@ -198,6 +220,10 @@
                                         :max="16000"
                                         v-model="currentConfigs[index].scale"
                                         @update:model-value="onAmperageScaleChange(index, $event)"
+                                        orientation="vertical"
+                                        size="xs"
+                                        :format-options="{ useGrouping: false }"
+                                        class="w-20"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('powerAmperageOffset')">
@@ -208,6 +234,10 @@
                                         :min="-32000"
                                         :max="32000"
                                         v-model="currentConfigs[index].offset"
+                                        orientation="vertical"
+                                        size="xs"
+                                        :format-options="{ useGrouping: false }"
+                                        class="w-20"
                                     />
                                 </SettingRow>
                             </div>
@@ -260,6 +290,9 @@
                         :min="0"
                         :max="255"
                         v-model="vbatcalibrationValue"
+                        orientation="vertical"
+                        size="xs"
+                        class="w-20"
                     />
                 </SettingRow>
             </div>
@@ -272,6 +305,9 @@
                         :min="0"
                         :max="255"
                         v-model="amperagecalibrationValue"
+                        orientation="vertical"
+                        size="xs"
+                        class="w-20"
                     />
                 </SettingRow>
             </div>

@@ -88,6 +88,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_lowpass_hz"
                                 :step="1"
@@ -101,6 +102,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_lowpass_dyn_min_hz"
                                 :step="1"
@@ -114,6 +116,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_lowpass_dyn_max_hz"
                                 :step="1"
@@ -140,6 +143,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_lowpass2_hz"
                                 :step="1"
@@ -172,6 +176,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_notch_hz"
                                 :step="1"
@@ -184,6 +189,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_notch_cutoff"
                                 :step="1"
@@ -205,6 +211,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_notch2_hz"
                                 :step="1"
@@ -217,6 +224,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="gyro_notch2_cutoff"
                                 :step="1"
@@ -298,6 +306,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dyn_notch_q"
                                 :step="1"
@@ -322,6 +331,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dyn_notch_max_hz"
                                 :step="1"
@@ -361,6 +371,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dterm_lowpass_hz"
                                 :step="1"
@@ -374,6 +385,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dterm_lowpass_dyn_min_hz"
                                 :step="1"
@@ -387,6 +399,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dterm_lowpass_dyn_max_hz"
                                 :step="10"
@@ -425,6 +438,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dterm_lowpass2_hz"
                                 :step="1"
@@ -459,6 +473,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dterm_notch_hz"
                                 :step="1"
@@ -471,6 +486,7 @@
                             <UInputNumber
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dterm_notch_cutoff"
                                 :step="1"

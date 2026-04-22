@@ -55,7 +55,15 @@
                     <!-- CAMERA -->
                     <UiBox :title="$t('configurationCamera')" v-if="accHardwareEnabled">
                         <SettingRow :label="$t('configurationFpvCamAngleDegrees')">
-                            <UInputNumber v-model="fpvCamAngleDegrees" :step="1" :min="0" :max="90" />
+                            <UInputNumber
+                                v-model="fpvCamAngleDegrees"
+                                :step="1"
+                                :min="0"
+                                :max="90"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
+                            />
                         </SettingRow>
                     </UiBox>
 
@@ -66,7 +74,15 @@
                         v-if="accHardwareEnabled"
                     >
                         <SettingRow :label="$t('configurationSmallAngle')" :help="$t('configurationSmallAngleHelp')">
-                            <UInputNumber v-model="armingConfig.small_angle" :step="1" :min="0" :max="180" />
+                            <UInputNumber
+                                v-model="armingConfig.small_angle"
+                                :step="1"
+                                :min="0"
+                                :max="180"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
+                            />
                         </SettingRow>
                         <SettingRow
                             :label="$t('configurationGyroCalOnFirstArm')"
@@ -80,7 +96,15 @@
                             :help="$t('configurationAutoDisarmDelayHelp')"
                             v-if="showAutoDisarmDelay"
                         >
-                            <UInputNumber v-model="armingConfig.auto_disarm_delay" :step="1" :min="0" :max="60" />
+                            <UInputNumber
+                                v-model="armingConfig.auto_disarm_delay"
+                                :step="1"
+                                :min="0"
+                                :max="60"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
+                            />
                         </SettingRow>
                     </UiBox>
 
@@ -115,19 +139,43 @@
                                 <template v-slot:label>
                                     <div class="alignicon roll"></div>
                                 </template>
-                                <UInputNumber v-model="boardAlignment.roll" :step="1" :min="-180" :max="360" />
+                                <UInputNumber
+                                    v-model="boardAlignment.roll"
+                                    :step="1"
+                                    :min="-180"
+                                    :max="360"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationBoardAlignmentPitch')">
                                 <template v-slot:label>
                                     <div class="alignicon pitch"></div>
                                 </template>
-                                <UInputNumber v-model="boardAlignment.pitch" :step="1" :min="-180" :max="360" />
+                                <UInputNumber
+                                    v-model="boardAlignment.pitch"
+                                    :step="1"
+                                    :min="-180"
+                                    :max="360"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationBoardAlignmentYaw')">
                                 <template v-slot:label>
                                     <div class="alignicon yaw"></div>
                                 </template>
-                                <UInputNumber v-model="boardAlignment.yaw" :step="1" :min="-180" :max="360" />
+                                <UInputNumber
+                                    v-model="boardAlignment.yaw"
+                                    :step="1"
+                                    :min="-180"
+                                    :max="360"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
                             </SettingColumn>
                         </div>
                     </UiBox>
@@ -195,6 +243,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationGyro1AlignmentRoll')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationGyro1AlignmentPitch')">
@@ -207,6 +258,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationGyro1AlignmentPitch')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationGyro1AlignmentYaw')">
@@ -219,6 +273,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationGyro1AlignmentYaw')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                         </div>
@@ -237,6 +294,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationGyro2AlignmentRoll')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationGyro2AlignmentPitch')">
@@ -249,6 +309,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationGyro2AlignmentPitch')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationGyro2AlignmentYaw')">
@@ -261,6 +324,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationGyro2AlignmentYaw')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                         </div>
@@ -292,6 +358,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationMagAlignmentRoll')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationMagAlignmentPitch')">
@@ -304,6 +373,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationMagAlignmentPitch')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                             <SettingColumn :label="$t('configurationMagAlignmentYaw')">
@@ -316,6 +388,9 @@
                                     :min="-180"
                                     :max="360"
                                     :aria-label="$t('configurationMagAlignmentYaw')"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
                                 />
                             </SettingColumn>
                         </div>
@@ -332,7 +407,15 @@
                             :label="$t('configurationMagDeclination')"
                             :help="$t('configurationMagDeclinationHelp')"
                         >
-                            <UInputNumber v-model="magDeclination" :step="0.1" :min="-180" :max="180" />
+                            <UInputNumber
+                                v-model="magDeclination"
+                                :step="0.1"
+                                :min="-180"
+                                :max="180"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
+                            />
                         </SettingRow>
                         <SettingRow
                             v-if="showRangefinder"
@@ -361,10 +444,26 @@
                     <!-- ACCELEROMETER TRIM -->
                     <UiBox :title="$t('configurationAccelTrims')">
                         <SettingRow :label="$t('configurationAccelTrimRoll')">
-                            <UInputNumber v-model="accelTrims.roll" :step="1" :min="-300" :max="300" />
+                            <UInputNumber
+                                v-model="accelTrims.roll"
+                                :step="1"
+                                :min="-300"
+                                :max="300"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
+                            />
                         </SettingRow>
                         <SettingRow :label="$t('configurationAccelTrimPitch')">
-                            <UInputNumber v-model="accelTrims.pitch" :step="1" :min="-300" :max="300" />
+                            <UInputNumber
+                                v-model="accelTrims.pitch"
+                                :step="1"
+                                :min="-300"
+                                :max="300"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-16"
+                            />
                         </SettingRow>
                     </UiBox>
 

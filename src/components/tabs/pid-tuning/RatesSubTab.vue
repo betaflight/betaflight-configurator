@@ -53,6 +53,7 @@
                         :format-options="{
                             minimumFractionDigits: rcRatePrecision,
                             maximumFractionDigits: rcRatePrecision,
+                            useGrouping: false,
                         }"
                         size="xs"
                         orientation="vertical"
@@ -64,7 +65,11 @@
                         :step="rateLimits.step"
                         :min="rateLimits.min"
                         :max="rateLimits.max"
-                        :format-options="{ minimumFractionDigits: ratePrecision, maximumFractionDigits: ratePrecision }"
+                        :format-options="{
+                            minimumFractionDigits: ratePrecision,
+                            maximumFractionDigits: ratePrecision,
+                            useGrouping: false,
+                        }"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -75,7 +80,11 @@
                         :step="expoLimits.step"
                         :min="expoLimits.min"
                         :max="expoLimits.max"
-                        :format-options="{ minimumFractionDigits: expoPrecision, maximumFractionDigits: expoPrecision }"
+                        :format-options="{
+                            minimumFractionDigits: expoPrecision,
+                            maximumFractionDigits: expoPrecision,
+                            useGrouping: false,
+                        }"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -97,6 +106,7 @@
                         :format-options="{
                             minimumFractionDigits: rcRatePrecision,
                             maximumFractionDigits: rcRatePrecision,
+                            useGrouping: false,
                         }"
                         size="xs"
                         orientation="vertical"
@@ -108,7 +118,11 @@
                         :step="rateLimits.step"
                         :min="rateLimits.min"
                         :max="rateLimits.max"
-                        :format-options="{ minimumFractionDigits: ratePrecision, maximumFractionDigits: ratePrecision }"
+                        :format-options="{
+                            minimumFractionDigits: ratePrecision,
+                            maximumFractionDigits: ratePrecision,
+                            useGrouping: false,
+                        }"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -119,7 +133,11 @@
                         :step="expoLimits.step"
                         :min="expoLimits.min"
                         :max="expoLimits.max"
-                        :format-options="{ minimumFractionDigits: expoPrecision, maximumFractionDigits: expoPrecision }"
+                        :format-options="{
+                            minimumFractionDigits: expoPrecision,
+                            maximumFractionDigits: expoPrecision,
+                            useGrouping: false,
+                        }"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -141,6 +159,7 @@
                         :format-options="{
                             minimumFractionDigits: rcRatePrecision,
                             maximumFractionDigits: rcRatePrecision,
+                            useGrouping: false,
                         }"
                         size="xs"
                         orientation="vertical"
@@ -152,7 +171,11 @@
                         :step="rateLimits.step"
                         :min="rateLimits.min"
                         :max="rateLimits.max"
-                        :format-options="{ minimumFractionDigits: ratePrecision, maximumFractionDigits: ratePrecision }"
+                        :format-options="{
+                            minimumFractionDigits: ratePrecision,
+                            maximumFractionDigits: ratePrecision,
+                            useGrouping: false,
+                        }"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -163,7 +186,11 @@
                         :step="expoLimits.step"
                         :min="expoLimits.min"
                         :max="expoLimits.max"
-                        :format-options="{ minimumFractionDigits: expoPrecision, maximumFractionDigits: expoPrecision }"
+                        :format-options="{
+                            minimumFractionDigits: expoPrecision,
+                            maximumFractionDigits: expoPrecision,
+                            useGrouping: false,
+                        }"
                         size="xs"
                         orientation="vertical"
                         class="w-full"

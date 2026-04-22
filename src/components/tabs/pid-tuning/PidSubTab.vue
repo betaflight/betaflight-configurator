@@ -86,6 +86,7 @@
                         :disabled="rollPitchDisabled"
                         size="xs"
                         orientation="vertical"
+                        :format-options="{ useGrouping: false }"
                         class="w-full"
                     />
 
@@ -139,6 +140,7 @@
                         :disabled="rollPitchDisabled"
                         size="xs"
                         orientation="vertical"
+                        :format-options="{ useGrouping: false }"
                         class="w-full"
                     />
 
@@ -192,6 +194,7 @@
                         :disabled="yawDisabled"
                         size="xs"
                         orientation="vertical"
+                        :format-options="{ useGrouping: false }"
                         class="w-full"
                     />
                 </div>
@@ -805,6 +808,7 @@
                                 :max="1000"
                                 size="xs"
                                 orientation="vertical"
+                                :format-options="{ useGrouping: false }"
                                 class="w-16"
                             />
                         </div>
@@ -973,6 +977,7 @@
                             :max="2250"
                             size="xs"
                             orientation="vertical"
+                            :format-options="{ useGrouping: false }"
                             class="w-16"
                         />
                     </div>
