@@ -1,56 +1,63 @@
 <template>
     <BaseTab tab-name="sensors">
-        <div class="content_wrapper">
-            <div class="tab_title" v-html="$t('tabRawSensorData')"></div>
-            <WikiButton docUrl="sensors" />
-
-            <div class="note">
-                <p v-html="$t('sensorsInfo')"></p>
-            </div>
-            <div class="gui_box">
-                <div class="info">
-                    <div class="checkboxes">
-                        <input
-                            type="checkbox"
-                            v-model="checkboxes[0]"
-                            :disabled="!hasGyro"
-                            class="first"
-                            @change="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsGyroSelect')"></span>
-                        <input
-                            type="checkbox"
-                            v-model="checkboxes[1]"
-                            :disabled="!hasAccel"
-                            @change="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsAccelSelect')"></span>
-                        <input type="checkbox" v-model="checkboxes[2]" :disabled="!hasMag" @change="onCheckboxChange" />
-                        <span v-html="$t('sensorsMagSelect')"></span>
-                        <input
-                            type="checkbox"
-                            v-model="checkboxes[3]"
-                            :disabled="!hasAltitude"
-                            @change="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsAltitudeSelect')"></span>
-                        <input
-                            type="checkbox"
-                            v-model="checkboxes[4]"
-                            :disabled="!hasSonar"
-                            @change="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsSonarSelect')"></span>
-                        <input
-                            type="checkbox"
-                            v-model="checkboxes[5]"
-                            :disabled="!hasDebug"
-                            @change="onCheckboxChange"
-                        />
-                        <span v-html="$t('sensorsDebugSelect')"></span>
-                    </div>
+        <div class="content_wrapper flex flex-col gap-4">
+            <div>
+                <div class="tab_title" v-html="$t('tabRawSensorData')"></div>
+                <div class="cf_doc_version_bt">
+                    <WikiButton docUrl="sensors" />
                 </div>
             </div>
+
+            <UiBox type="warning" highlight>
+                <p v-html="$t('sensorsInfo')"></p>
+            </UiBox>
+
+            <UiBox type="neutral">
+                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 p-2">
+                    <USwitch
+                        v-model="checkboxes[0]"
+                        :disabled="!hasGyro"
+                        size="sm"
+                        :label="$t('sensorsGyroSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[1]"
+                        :disabled="!hasAccel"
+                        size="sm"
+                        :label="$t('sensorsAccelSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[2]"
+                        :disabled="!hasMag"
+                        size="sm"
+                        :label="$t('sensorsMagSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[3]"
+                        :disabled="!hasAltitude"
+                        size="sm"
+                        :label="$t('sensorsAltitudeSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[4]"
+                        :disabled="!hasSonar"
+                        size="sm"
+                        :label="$t('sensorsSonarSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                    <USwitch
+                        v-model="checkboxes[5]"
+                        :disabled="!hasDebug"
+                        size="sm"
+                        :label="$t('sensorsDebugSelect')"
+                        @update:model-value="onCheckboxChange"
+                    />
+                </div>
+            </UiBox>
 
             <!-- Sensors -->
             <SensorGraph
@@ -71,29 +78,25 @@
             />
 
             <!-- Debug -->
-            <div class="wrapper debug" v-show="checkboxes[5]">
-                <div class="gui_box grey">
-                    <div class="graph-grid">
-                        <SensorGraph
-                            v-for="i in debugColumns"
-                            :key="i"
-                            :ref="
-                                (el) => {
-                                    if (el) debugSvgs[i - 1] = el;
-                                }
-                            "
-                            sensor-type="debug"
-                            :svg-id="`debug${i - 1}`"
-                            :visible="true"
-                            :title="debugTitles[i - 1]"
-                            :show-refresh-rate="i === 1"
-                            :rate="rates.debug"
-                            @update:rate="updateRate('debug', $event)"
-                            :display-values="[debugDisplay[i - 1]]"
-                            :is-debug="true"
-                        />
-                    </div>
-                </div>
+            <div v-show="checkboxes[5]" class="flex flex-col gap-2.5">
+                <SensorGraph
+                    v-for="i in debugColumns"
+                    :key="i"
+                    :ref="
+                        (el) => {
+                            if (el) debugSvgs[i - 1] = el;
+                        }
+                    "
+                    sensor-type="debug"
+                    :svg-id="`debug${i - 1}`"
+                    :visible="true"
+                    :title="debugTitles[i - 1]"
+                    :show-refresh-rate="i === 1"
+                    :rate="rates.debug"
+                    @update:rate="updateRate('debug', $event)"
+                    :display-values="[debugDisplay[i - 1]]"
+                    :is-debug="true"
+                />
             </div>
         </div>
     </BaseTab>
@@ -110,6 +113,7 @@ import { useInterval } from "../../composables/useInterval";
 import { have_sensor } from "../../js/sensor_helpers";
 import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./sensors/constants";
 import BaseTab from "./BaseTab.vue";
+import UiBox from "@/components/elements/UiBox.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import SensorGraph from "./sensors/SensorGraph.vue";
 import MSP from "../../js/msp";
@@ -256,7 +260,7 @@ const hasDebug = computed(() => {
 });
 
 // Debug titles
-const debugTitles = ref(new Array(8).fill("").map((_, i) => `Debug ${i}`));
+const debugTitles = ref(new Array(8).fill("").map((_, i) => `Debug (${i})`));
 
 function initSensorData() {
     for (let i = 0; i < 3; i++) {
@@ -388,9 +392,10 @@ function displayDebugColumnNames() {
     const debugFields = debugStore.fieldNames[debugModeName];
 
     for (let i = 0; i < debugColumns.value; i++) {
-        let msg = `Debug ${i} unknown`;
+        let msg = `Unknown (${i})`;
         if (debugFields) {
-            msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
+            const fieldName = debugFields[`debug[${i}]`];
+            msg = fieldName ? `${fieldName} (${i})` : `Not used (${i})`;
         }
 
         debugTitles.value[i] = msg;
@@ -424,7 +429,8 @@ onMounted(async () => {
     // Determine debug columns based on API version
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         sensorsStore.debugColumns = 8;
-        await MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, displayDebugColumnNames);
+        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+        displayDebugColumnNames();
     } else {
         sensorsStore.debugColumns = 4;
     }
@@ -458,39 +464,7 @@ onMounted(async () => {
 
     // Start polling
     initializeTimers();
-
-    // Status polling
-    addInterval(
-        "status_pull",
-        () => {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        },
-        250,
-        true,
-    );
 });
 
 // Interval cleanup is handled automatically by the useInterval composable on unmount
 </script>
-
-<style scoped>
-.info {
-    margin-bottom: 10px;
-    margin-top: 8px;
-    margin-left: 10px;
-}
-
-.info input {
-    vertical-align: middle;
-    margin: 0 5px 0 15px;
-    width: 18px;
-    height: 18px;
-}
-
-.debug .graph-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    width: 100%;
-}
-</style>

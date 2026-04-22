@@ -1,104 +1,108 @@
 <template>
-    <div class="wrapper" :class="[sensorType, { 'debug-item': isDebug }]" v-show="visible">
-        <!-- Conditional wrapper for non-debug (grey box) -->
-        <div v-if="!isDebug" class="gui_box grey">
-            <div class="graph-grid">
-                <svg :id="svgId" ref="svgElement" class="sensor-graph">
+    <div :class="sensorType" v-show="visible">
+        <!-- Normal sensor layout -->
+        <UiBox v-if="!isDebug" type="neutral">
+            <div class="grid grid-cols-[1fr_10rem] gap-4 w-full">
+                <svg :id="svgId" ref="svgElement" class="w-full h-full">
                     <g class="grid x" transform="translate(40, 120)"></g>
                     <g class="grid y" transform="translate(40, 10)"></g>
                     <g class="data" transform="translate(41, 10)"></g>
                     <g class="axis x" transform="translate(40, 120)"></g>
                     <g class="axis y" transform="translate(40, 10)"></g>
                 </svg>
-                <div class="plot_control">
-                    <div class="title">
+                <div class="text-[10px] flex flex-col gap-1 [&_button]:!text-[10px] [&_[data-slot=base]]:!text-[10px]">
+                    <div class="font-bold mb-2 flex items-center gap-1">
                         <span v-html="title"></span>
-                        <div v-if="hint" class="helpicon cf_tip" :title="hint"></div>
+                        <HelpIcon v-if="hint" :text="hint" />
                     </div>
-                    <dl>
-                        <template v-if="showRefreshRate">
-                            <dt v-html="$t('sensorsRefresh')"></dt>
-                            <dd class="rate">
-                                <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
-                                    <option
-                                        v-for="option in REFRESH_RATE_OPTIONS"
-                                        :key="option.value"
-                                        :value="option.value"
-                                    >
-                                        {{ option.label }}
-                                    </option>
-                                </select>
-                            </dd>
-                        </template>
-                        <template v-if="scaleOptions">
-                            <dt v-html="$t('sensorsScale')"></dt>
-                            <dd class="scale">
-                                <select :value="scale" @change="$emit('update:scale', Number($event.target.value))">
-                                    <option v-for="option in scaleOptions" :key="option" :value="option">
-                                        {{ option }}
-                                    </option>
-                                </select>
-                            </dd>
-                        </template>
-                        <template v-if="displayValues.length === 3">
-                            <dt>X:</dt>
-                            <dd class="x">{{ displayValues[0] }}</dd>
-                            <dt>Y:</dt>
-                            <dd class="y">{{ displayValues[1] }}</dd>
-                            <dt>Z:</dt>
-                            <dd class="z">{{ displayValues[2] }}</dd>
-                        </template>
-                        <template v-else>
-                            <dt>X:</dt>
-                            <dd class="x">{{ displayValues[0] }}</dd>
-                        </template>
-                    </dl>
+                    <div v-if="showRefreshRate" class="flex items-center gap-2">
+                        <span class="flex-1" v-html="$t('sensorsRefresh')"></span>
+                        <USelect
+                            :model-value="rate"
+                            :items="refreshRateItems"
+                            @update:model-value="$emit('update:rate', Number($event))"
+                            class="min-w-24"
+                            size="xs"
+                        />
+                    </div>
+                    <div v-if="scaleOptions" class="flex items-center gap-2">
+                        <span class="flex-1" v-html="$t('sensorsScale')"></span>
+                        <USelect
+                            :model-value="scale"
+                            :items="scaleItems"
+                            @update:model-value="$emit('update:scale', Number($event))"
+                            class="min-w-24"
+                            size="xs"
+                        />
+                    </div>
+                    <template v-if="displayValues.length === 3">
+                        <div v-for="(axis, i) in ['x', 'y', 'z']" :key="axis" class="flex justify-between py-0.5">
+                            <span>{{ axis.toUpperCase() }}:</span>
+                            <span
+                                class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
+                                :class="{
+                                    'bg-[#1fb1f0]': axis === 'x',
+                                    'bg-[#97d800]': axis === 'y',
+                                    'bg-[#e24761]': axis === 'z',
+                                }"
+                                >{{ displayValues[i] }}</span
+                            >
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="flex justify-between py-0.5">
+                            <span>X:</span>
+                            <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#1fb1f0]">{{
+                                displayValues[0]
+                            }}</span>
+                        </div>
+                    </template>
                 </div>
             </div>
-        </div>
-        <!-- Debug layout (no wrapper, simplified controls) -->
-        <template v-else>
-            <div class="graph-grid">
-                <svg :id="svgId" ref="svgElement" class="sensor-graph">
+        </UiBox>
+        <!-- Debug layout (own UiBox, same graph-grid as normal sensors) -->
+        <UiBox v-else type="neutral">
+            <div class="grid grid-cols-[1fr_10rem] gap-4 w-full">
+                <svg :id="svgId" ref="svgElement" class="w-full h-[140px]">
                     <g class="grid x" transform="translate(40, 120)"></g>
                     <g class="grid y" transform="translate(40, 10)"></g>
                     <g class="data" transform="translate(41, 10)"></g>
                     <g class="axis x" transform="translate(40, 120)"></g>
                     <g class="axis y" transform="translate(40, 10)"></g>
                 </svg>
-                <div class="plot_control">
-                    <div class="title"><span v-html="title"></span></div>
-                    <dl>
-                        <template v-if="showRefreshRate">
-                            <dt v-html="$t('sensorsRefresh')"></dt>
-                            <dd class="rate">
-                                <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
-                                    <option
-                                        v-for="option in REFRESH_RATE_OPTIONS"
-                                        :key="option.value"
-                                        :value="option.value"
-                                    >
-                                        {{ option.label }}
-                                    </option>
-                                </select>
-                            </dd>
-                        </template>
-                        <dt>X:</dt>
-                        <dd class="x">{{ displayValues[0] }}</dd>
-                    </dl>
+                <div class="text-[10px] flex flex-col gap-1 [&_button]:!text-[10px] [&_[data-slot=base]]:!text-[10px]">
+                    <div class="font-bold mb-2"><span v-html="title"></span></div>
+                    <div v-if="showRefreshRate" class="flex items-center gap-2">
+                        <span class="flex-1" v-html="$t('sensorsRefresh')"></span>
+                        <USelect
+                            :model-value="rate"
+                            :items="refreshRateItems"
+                            @update:model-value="$emit('update:rate', Number($event))"
+                            class="min-w-24"
+                            size="xs"
+                        />
+                    </div>
+                    <div class="flex justify-between py-0.5">
+                        <span>Value:</span>
+                        <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#1fb1f0]">{{
+                            displayValues[0]
+                        }}</span>
+                    </div>
                 </div>
             </div>
-        </template>
+        </UiBox>
     </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { REFRESH_RATE_OPTIONS } from "./constants";
+import UiBox from "@/components/elements/UiBox.vue";
+import HelpIcon from "@/components/elements/HelpIcon.vue";
 
 const svgElement = ref(null);
 
-defineProps({
+const props = defineProps({
     sensorType: { type: String, required: true },
     svgId: { type: String, required: true },
     visible: { type: Boolean, default: true },
@@ -112,111 +116,31 @@ defineProps({
     isDebug: { type: Boolean, default: false },
 });
 
+const refreshRateItems = REFRESH_RATE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+
+const scaleItems = computed(() => props.scaleOptions?.map((v) => ({ value: v, label: String(v) })) ?? []);
+
 defineEmits(["update:rate", "update:scale"]);
 defineExpose({ svgElement });
 </script>
 
-<style scoped>
-.wrapper .gui_box {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-.graph-grid {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.debug-item {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-.plot_control {
-    width: fit-content;
-    min-width: 200px;
-    flex-shrink: 0;
-}
-
-.plot_control .title {
-    font-weight: bold;
-    margin-bottom: 0.75rem;
-}
-
-.plot_control .helpicon {
-    margin: 2px 4px;
-}
-
-.plot_control dl {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.25rem;
-}
-
-.plot_control dt,
-.plot_control dd {
-    display: flex;
-    align-items: center;
-}
-
-.plot_control dt {
-    font-weight: bold;
-}
-
-.plot_control select {
-    min-width: 100%;
-}
-
-.plot_control .x,
-.plot_control .y,
-.plot_control .z {
-    border-radius: 0.25rem;
-    padding: 0.25rem;
-    text-align: center;
-}
-
-.sensor-graph {
-    width: 100%;
-    height: 140px;
-    flex: 1;
-}
-
-:deep(.grid .tick) {
+<style>
+/* D3 runtime-generated elements — cannot use Tailwind */
+.tab-sensors svg g.grid .tick {
     stroke: silver;
     stroke-width: 1px;
     shape-rendering: crispEdges;
 }
-
-:deep(.grid path) {
+.tab-sensors svg g.grid path {
     stroke-width: 0;
 }
-
-:deep(.data .line) {
+.tab-sensors .data .line {
     stroke-width: 2px;
     fill: none;
 }
-
-:deep(text) {
+.tab-sensors svg text {
     stroke: none;
     fill: var(--text);
     font-size: 10px;
-}
-
-:deep(.line:nth-child(1)) {
-    stroke: #00a8f0;
-}
-
-:deep(.line:nth-child(2)) {
-    stroke: #c0d800;
-}
-
-:deep(.line:nth-child(3)) {
-    stroke: #cb4b4b;
-}
-
-:deep(.line:nth-child(4)) {
-    stroke: #4da74d;
 }
 </style>
