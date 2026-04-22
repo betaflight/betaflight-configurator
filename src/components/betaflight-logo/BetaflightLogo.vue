@@ -72,7 +72,12 @@ export default defineComponent({
     }
     .tab_container .logo_image {
         width: 48px;
-        background-size: auto 100%;
+        background-image: url(../../images/bf_logo_short_white.svg);
+        background-position: center;
+        background-size: contain;
+    }
+    .dark .tab_container .logo_image {
+        background-image: url(../../images/bf_logo_short_black.svg);
     }
 }
 
