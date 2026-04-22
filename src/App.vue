@@ -258,10 +258,6 @@ watch(
     .mobile-topbar {
         display: flex;
     }
-    /* Push sidebar contents below the top bar when the drawer is open. */
-    .tab_container.reveal {
-        padding-top: 3.5rem;
-    }
     /* Leave room at the top of the content area for the top bar. */
     #content {
         padding-top: 3rem;
