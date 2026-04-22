@@ -285,10 +285,12 @@ export default defineComponent({
 
 /* Default Nuxt UI `success` soft tint is too pale in light mode — lift the contrast. */
 html:not(.dark) .sidebar-connect :deep(button) {
-    background-color: var(--success-transparent-3);
+    background-color: var(--success-400);
+    border: 1px solid var(--success-600);
+    color: var(--surface-900);
 }
 html:not(.dark) .sidebar-connect :deep(button:hover) {
-    background-color: var(--success-transparent-4);
+    background-color: var(--success-500);
 }
 
 .tab_container.reveal .sidebar-connect {
