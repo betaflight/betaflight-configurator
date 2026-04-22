@@ -53,6 +53,10 @@ export function isIOS() {
     return false;
 }
 
+export function isTauri() {
+    return typeof globalThis !== "undefined" && "__TAURI_INTERNALS__" in globalThis;
+}
+
 export function checkCompatibility() {
     const hasSerialSupport = checkSerialSupport();
     const hasBluetoothSupport = checkBluetoothSupport();
@@ -60,13 +64,17 @@ export function checkCompatibility() {
     const isChromium = isChromiumBrowser();
 
     const isNative = Capacitor.isNativePlatform();
+    const isTauriShell = isTauri();
 
     // Check if running in a test environment
     const isTestEnvironment =
         typeof process !== "undefined" && (process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined);
 
     const compatible =
-        isTestEnvironment || isNative || (isChromium && (hasSerialSupport || hasBluetoothSupport || hasUsbSupport));
+        isTestEnvironment ||
+        isNative ||
+        isTauriShell ||
+        (isChromium && (hasSerialSupport || hasBluetoothSupport || hasUsbSupport));
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
@@ -77,6 +85,7 @@ export function checkCompatibility() {
     console.log("OS: ", getOS());
     console.log("Android: ", isAndroid());
     console.log("iOS: ", isIOS());
+    console.log("Tauri: ", isTauriShell);
 
     if (compatible) {
         return true;
@@ -128,7 +137,7 @@ export function checkCompatibility() {
 
 export function checkSerialSupport() {
     let result = false;
-    if (isAndroid()) {
+    if (isAndroid() || isTauri()) {
         result = true;
     } else if (navigator.serial) {
         result = true;

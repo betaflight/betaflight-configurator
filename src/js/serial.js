@@ -2,10 +2,11 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid } from "./utils/checkCompatibility.js";
+import { isAndroid, isTauri } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
+import TauriSerial from "./protocols/TauriSerial.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -26,6 +27,14 @@ class Serial extends EventTarget {
                 { name: "serial", instance: new CapacitorSerial() },
                 { name: "bluetooth", instance: new CapacitorBle() },
                 { name: "tcp", instance: new CapacitorTcp() },
+            ];
+        } else if (isTauri()) {
+            // Desktop Tauri shell: native serial via tauri-plugin-serialplugin,
+            // bluetooth/tcp fall back to the web APIs (the webview exposes them).
+            this._protocols = [
+                { name: "serial", instance: new TauriSerial() },
+                { name: "bluetooth", instance: new WebBluetooth() },
+                { name: "tcp", instance: new Websocket() },
             ];
         } else {
             this._protocols = [
