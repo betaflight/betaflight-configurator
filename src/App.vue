@@ -3,16 +3,20 @@
         <div class="app-wrapper">
             <div id="background" v-show="isRevealed" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
-            <UButton
-                id="menu_btn"
-                icon="i-lucide-menu"
-                color="neutral"
-                variant="soft"
-                size="lg"
-                square
-                :aria-label="$t('openSidebarMenu')"
-                @click="isRevealed = !isRevealed"
-            />
+            <div class="mobile-topbar" :class="{ 'mobile-topbar--hidden': topbarHidden }">
+                <UButton
+                    id="menu_btn"
+                    icon="i-lucide-menu"
+                    color="neutral"
+                    variant="soft"
+                    size="lg"
+                    square
+                    :aria-label="$t('openSidebarMenu')"
+                    @click="isRevealed = !isRevealed"
+                />
+                <div class="mobile-topbar__logo" :title="logoTooltip" aria-hidden="true"></div>
+                <div class="mobile-topbar__spacer" aria-hidden="true"></div>
+            </div>
             <div id="tab-content-container">
                 <div class="tab_container" :class="{ reveal: isRevealed }">
                     <betaflight-logo
@@ -26,7 +30,7 @@
                     <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
-                <div id="content">
+                <div id="content" @scroll.passive="onContentScroll">
                     <component
                         :is="activeTabComponent"
                         v-if="activeTabComponent"
@@ -65,6 +69,7 @@ import MSPModule from "./js/msp.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 import GUI from "./js/gui.js";
+import { i18n } from "./js/localization";
 import {
     completeVueTabMount,
     tabAdapterRegistration,
@@ -120,6 +125,48 @@ watch(sidebarCompact, (compact) => {
     }
 });
 
+const topbarHidden = ref(false);
+let lastScrollTop = 0;
+const scrollThreshold = 6;
+
+function onContentScroll(event) {
+    const current = event.target.scrollTop;
+    if (current <= 0) {
+        topbarHidden.value = false;
+        lastScrollTop = 0;
+        return;
+    }
+    const diff = current - lastScrollTop;
+    if (diff > scrollThreshold) {
+        topbarHidden.value = true;
+        lastScrollTop = current;
+    } else if (diff < -scrollThreshold) {
+        topbarHidden.value = false;
+        lastScrollTop = current;
+    }
+}
+
+// Ensure the topbar is visible when the drawer opens so the hamburger stays reachable.
+watch(isRevealed, (revealed) => {
+    if (revealed) {
+        topbarHidden.value = false;
+    }
+});
+
+const logoTooltip = computed(() => {
+    const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
+    const cfg = FC.value.CONFIG ?? {};
+    if (cfg.flightControllerVersion && cfg.flightControllerIdentifier) {
+        lines.push(
+            `${i18n.getMessage("versionLabelFirmware")}: ${cfg.flightControllerVersion} ${cfg.flightControllerIdentifier}`,
+        );
+    }
+    if (cfg.hardwareName) {
+        lines.push(`${i18n.getMessage("versionLabelTarget")}: ${cfg.hardwareName}`);
+    }
+    return lines.join("\n");
+});
+
 provide("sidebarExpanded", isSidebarExpanded);
 
 const activeTabComponent = computed(() => {
@@ -170,25 +217,52 @@ watch(
     display: none;
 }
 
-/* Floating mobile menu trigger — shown only on narrow viewports. */
-#menu_btn {
+/* Mobile top bar — hamburger left, centred wide logo, auto-hides on scroll down. */
+.mobile-topbar {
     display: none;
     position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 2001;
+    height: 3rem;
+    padding: 0.25rem 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--surface-100);
+    border-bottom: 1px solid var(--surface-200);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.25s ease;
+}
+.mobile-topbar--hidden {
+    transform: translateY(-100%);
+}
+.mobile-topbar__logo {
+    flex: 1;
+    min-width: 0;
+    height: 2.5rem;
+    background-image: url(./images/dark-wide-2.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
+}
+.dark .mobile-topbar__logo {
+    background-image: url(./images/light-wide-2.svg);
+}
+.mobile-topbar__spacer {
+    width: 2.5rem;
+    flex-shrink: 0;
 }
 
 @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-    #menu_btn {
-        display: inline-flex;
+    .mobile-topbar {
+        display: flex;
     }
-    /* Push sidebar contents below the floating menu button when the drawer is open. */
+    /* Push sidebar contents below the top bar when the drawer is open. */
     .tab_container.reveal {
         padding-top: 3.5rem;
     }
-    /* Leave room at the top of the content area for the floating menu button. */
+    /* Leave room at the top of the content area for the top bar. */
     #content {
         padding-top: 3rem;
     }

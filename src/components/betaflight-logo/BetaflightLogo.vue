@@ -75,4 +75,10 @@ export default defineComponent({
         background-size: auto 100%;
     }
 }
+
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .tab_container .logo {
+        display: none;
+    }
+}
 </style>
