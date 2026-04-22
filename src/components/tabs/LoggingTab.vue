@@ -350,8 +350,12 @@ async function stopLogging(force = false) {
     removeInterval(LOG_POLL_INTERVAL);
     removeInterval(LOG_WRITE_INTERVAL);
 
-    await pendingWrite;
-    await writePendingData();
+    try {
+        await pendingWrite;
+        await writePendingData();
+    } catch (error) {
+        console.error("Error flushing pending log data:", error);
+    }
 
     if (fileWriter.value) {
         try {
