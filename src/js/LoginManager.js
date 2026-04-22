@@ -3,6 +3,7 @@ import { gui_log } from "./gui_log";
 import LoginApi from "./LoginApi";
 import UserApi from "./UserApi";
 import { switchTab } from "./tab_switch";
+import GUI from "./gui";
 
 /**
  * LoginManager - Handles user authentication using passkeys
@@ -215,8 +216,13 @@ class LoginManager {
             this._profile = null;
             this.notifyLogoutCallbacks();
 
-            // Always switch to landing/welcome tab on logout
-            switchTab("landing", { mode: "disconnected" });
+            // Pick a tab that is valid for the current connection state —
+            // "landing" is disconnected-only, so fall back to "setup" or the
+            // first allowed tab when connected.
+            const fallback = ["landing", "setup", ...GUI.allowedTabs].find((tab) => GUI.allowedTabs.includes(tab));
+            if (fallback) {
+                switchTab(fallback, { mode: fallback === "landing" ? "disconnected" : "connected" });
+            }
 
             gui_log(i18n.getMessage("userSignedOut"));
         } catch (error) {
