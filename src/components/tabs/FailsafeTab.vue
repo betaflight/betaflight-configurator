@@ -601,7 +601,7 @@ const hasGpsRescueAsMode = computed(() => {
 });
 
 const showGpsRescue = computed(() => {
-    return failsafeConfig.value.failsafe_procedure === 2 || hasGpsRescueAsMode.value;
+    return gpsRescue.value && (failsafeConfig.value.failsafe_procedure === 2 || hasGpsRescueAsMode.value);
 });
 
 const isGpsSettingsDisabled = computed(() => {
