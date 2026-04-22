@@ -1,6 +1,6 @@
 <template>
     <BaseTab tab-name="cli" @mounted="onTabMounted" @cleanup="onTabCleanup">
-        <div class="content_wrapper flex flex-col overflow-hidden max-[1055px]:h-[calc(100%-87px)]">
+        <div class="content_wrapper flex flex-col overflow-hidden pb-0 max-[1055px]:h-[calc(100%-87px)]">
             <div class="note">
                 <p v-html="$t('cliInfo')"></p>
             </div>
@@ -253,7 +253,7 @@ export default defineComponent({
 <style>
 /* BaseTab wrapper — no template access to add Tailwind classes */
 .tab-cli {
-    height: calc(100% - 6rem);
+    height: calc(100% - 3rem);
 }
 
 /* background-image needs CSS for Vite asset resolution */
