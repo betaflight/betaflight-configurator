@@ -222,10 +222,6 @@ export default defineComponent({
     #user-menu-trigger {
         position: relative;
         width: 100%;
-    }
-
-    #open-login,
-    #user-menu-trigger {
         display: flex;
         flex-direction: row;
         align-items: center;
