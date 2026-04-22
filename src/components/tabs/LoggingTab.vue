@@ -103,6 +103,7 @@ let logBuffer = [];
 let requestedProperties = [];
 let hasPreviousRequest = false;
 let isDestroyed = false;
+let pendingWrite = Promise.resolve();
 
 const propertyDefinitions = {
     MSP_RAW_IMU: {
@@ -294,9 +295,7 @@ function appendToFile(data) {
         return Promise.resolve();
     }
 
-    return FileSystem.writeChunck(fileWriter.value, new Blob([data], { type: "text/plain" })).catch((error) => {
-        console.error("Error appending to file:", error);
-    });
+    return FileSystem.writeChunck(fileWriter.value, new Blob([data], { type: "text/plain" }));
 }
 
 function sendRequests() {
@@ -307,18 +306,28 @@ function sendRequests() {
     });
 }
 
-function writePendingData() {
+async function writePendingData() {
     if (!fileWriter.value || !logBuffer.length) {
-        return Promise.resolve();
+        return;
     }
 
-    const rowsToPersist = logBuffer.length;
-    const payload = logBuffer.join("\n").concat("\n");
+    const rows = logBuffer;
+    const payload = rows.join("\n").concat("\n");
     logBuffer = [];
 
-    return appendToFile(payload).then(() => {
-        samplesSaved.value += rowsToPersist;
-    });
+    try {
+        await appendToFile(payload);
+        samplesSaved.value += rows.length;
+    } catch (error) {
+        logBuffer = rows.concat(logBuffer);
+        console.error("Error appending to file:", error);
+        throw error;
+    }
+}
+
+function queueWritePendingData() {
+    pendingWrite = pendingWrite.then(() => writePendingData()).catch(() => {});
+    return pendingWrite;
 }
 
 async function stopLogging(force = false) {
@@ -331,6 +340,7 @@ async function stopLogging(force = false) {
     removeInterval(LOG_POLL_INTERVAL);
     removeInterval(LOG_WRITE_INTERVAL);
 
+    await pendingWrite;
     await writePendingData();
 
     if (fileWriter.value) {
@@ -400,7 +410,7 @@ async function startLogging() {
         addInterval(
             LOG_WRITE_INTERVAL,
             () => {
-                writePendingData();
+                queueWritePendingData();
             },
             1000,
         );
