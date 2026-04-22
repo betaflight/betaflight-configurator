@@ -320,7 +320,10 @@
                                             class="w-full"
                                         />
                                     </div>
-                                    <div class="text-xs text-dimmed" v-html="$t('vtxTablePowerLevelsValue')"></div>
+                                    <div
+                                        class="text-xs text-dimmed whitespace-nowrap"
+                                        v-html="$t('vtxTablePowerLevelsValue')"
+                                    ></div>
 
                                     <!-- Labels row -->
                                     <div v-for="i in vtxConfig.vtx_table_powerlevels" :key="'pl-lbl-' + i">
@@ -330,10 +333,13 @@
                                             @blur="setPowerLevelLabel(i, getPowerLevelLabel(i).trim())"
                                             maxlength="3"
                                             size="xs"
-                                            class="uppercase"
+                                            class="uppercase w-full"
                                         />
                                     </div>
-                                    <div class="text-xs text-dimmed" v-html="$t('vtxTablePowerLevelsLabel')"></div>
+                                    <div
+                                        class="text-xs text-dimmed whitespace-nowrap"
+                                        v-html="$t('vtxTablePowerLevelsLabel')"
+                                    ></div>
                                 </div>
                             </div>
                         </div>
@@ -461,7 +467,7 @@ export default defineComponent({
 
         const powerGridStyle = computed(() => {
             const count = vtxConfig.vtx_table_powerlevels || 0;
-            const cols = new Array(count).fill("minmax(4rem,auto)");
+            const cols = new Array(count).fill("minmax(5rem,1fr)");
             cols.push("auto");
             return { gridTemplateColumns: cols.join(" ") };
         });
