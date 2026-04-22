@@ -12,7 +12,7 @@
                     <div v-for="prop in propertyOptions" :key="prop.code" class="flex items-center gap-3">
                         <USwitch
                             :model-value="selectedProperties.includes(prop.code)"
-                            :disabled="isLogging"
+                            :disabled="isLogging || isBusy"
                             :label="prop.label"
                             size="sm"
                             class="w-44"
@@ -24,7 +24,13 @@
             </UiBox>
 
             <SettingRow :label="$t('loggingSamplingInterval')" class="mt-4">
-                <USelect v-model="samplingInterval" :items="speedItems" :disabled="isLogging" class="w-28" size="sm" />
+                <USelect
+                    v-model="samplingInterval"
+                    :items="speedItems"
+                    :disabled="isLogging || isBusy"
+                    class="w-28"
+                    size="sm"
+                />
             </SettingRow>
 
             <UiBox type="neutral" class="mt-4">
@@ -233,6 +239,10 @@ const startStopLabel = computed(() =>
 const canToggle = computed(() => (isLogging.value || !!fileEntry.value) && !isBusy.value);
 
 function toggleProperty(code, enabled) {
+    if (isLogging.value || isBusy.value) {
+        return;
+    }
+
     if (enabled) {
         if (!selectedProperties.value.includes(code)) {
             selectedProperties.value.push(code);
