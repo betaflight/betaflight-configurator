@@ -1,5 +1,12 @@
 <template>
-    <UNavigationMenu :items="visibleItems" orientation="vertical" :collapsed="isCompact" tooltip class="sidebar-nav" />
+    <UNavigationMenu
+        :items="visibleItems"
+        orientation="vertical"
+        :collapsed="isCompact"
+        tooltip
+        :ui="navMenuUi"
+        class="sidebar-nav"
+    />
 </template>
 
 <script setup>
@@ -17,7 +24,8 @@ import FCModule from "@/js/fc.js";
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
 const authStore = useAuthStore();
-const isCompact = useMediaQuery("(max-width: 575px)");
+const isCompact = useMediaQuery("(max-width: 1055px)");
+const navMenuUi = computed(() => (isCompact.value ? { link: "justify-center" } : {}));
 const betaflightModel = inject("betaflightModel", null);
 
 const isModeVisible = (mode) => {
