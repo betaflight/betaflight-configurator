@@ -2,6 +2,7 @@ import { i18n } from "./localization";
 import { gui_log } from "./gui_log";
 import LoginApi from "./LoginApi";
 import UserApi from "./UserApi";
+import { switchTab } from "./tab_switch";
 
 /**
  * LoginManager - Handles user authentication using passkeys
@@ -129,10 +130,7 @@ class LoginManager {
      * Update tab visibility based on login state
      */
     async updateTabVisibility() {
-        const el = document.querySelector("#tabs ul.mode-loggedin");
-        if (el) {
-            el.style.display = (await this.isUserLoggedIn()) ? "block" : "none";
-        }
+        // Sidebar filters login-only tabs reactively via the auth store.
     }
 
     /**
@@ -233,7 +231,7 @@ class LoginManager {
             this.notifyLogoutCallbacks();
 
             // Always switch to landing/welcome tab on logout
-            document.querySelector(".tab_landing a")?.click();
+            switchTab("landing", { mode: "disconnected", label: i18n.getMessage("tabLanding") });
 
             gui_log(i18n.getMessage("userSignedOut"));
         } catch (error) {

@@ -72,8 +72,6 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 1rem;
-    gap: 0.5rem;
 }
 
 .log-toolbar {
@@ -81,6 +79,7 @@ onMounted(() => {
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
+    margin-bottom: 0.5rem;
 }
 
 .log-autoscroll {

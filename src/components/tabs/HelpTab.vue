@@ -1,6 +1,7 @@
 <template>
     <BaseTab tab-name="help">
         <div class="content_wrapper">
+            <div class="tab_title">{{ $t("tabHelp") }}</div>
             <div class="grid-row grid-box col5">
                 <div class="col-span-3">
                     <UiBox :title="$t('defaultDocumentationHead')" class="sm:h-full">
