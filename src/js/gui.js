@@ -335,17 +335,17 @@ class GuiControl {
     }
     selectDefaultTabWhenConnected() {
         const result = getConfig(["rememberLastTab", "lastTab"]);
-        const tab =
+        const tabClass =
             result.rememberLastTab && result.lastTab && this.allowedTabs.includes(result.lastTab.substring(4))
                 ? result.lastTab
                 : "tab_setup";
+        const tabKey = tabClass.substring(4);
 
-        const target = document.querySelector(`#tabs ul.mode-connected .${tab} a`);
-        if (target) {
-            target.click();
-        } else {
-            document.querySelector("#tabs ul.mode-connected .tab_setup a")?.click();
-        }
+        import("./tab_switch.js").then(({ switchTab }) => {
+            if (!switchTab(tabKey, { mode: "connected" })) {
+                switchTab("setup", { mode: "connected" });
+            }
+        });
     }
     showYesNoDialog(yesNoDialogSettings) {
         // yesNoDialogSettings:

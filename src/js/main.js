@@ -4,12 +4,13 @@ import { i18n } from "./localization.js";
 import GUI from "./gui.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 import { checkSetupAnalytics } from "./Analytics.js";
-import { initializeSerialBackend, connectDisconnect } from "./serial_backend.js";
+import { initializeSerialBackend } from "./serial_backend.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
 import { applyExpertMode } from "./utils/applyExpertMode.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
+import { switchTab } from "./tab_switch.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
@@ -161,113 +162,8 @@ async function startProcess() {
         }
     }
 
-    // Tabs
-    for (const li of document.querySelectorAll("#tabs ul.mode-connected li")) {
-        li.addEventListener("click", function () {
-            // store the first class of the current tab (omit things like ".active")
-            const tabName = this.className.split(" ")[0];
-
-            const tabNameWithoutPrefix = tabName.substring(4);
-            if (tabNameWithoutPrefix !== "cli") {
-                // Don't store 'cli' otherwise you can never connect to another tab.
-                setConfig({ lastTab: tabName });
-            }
-        });
-    }
-
-    const canSwitchTab = (tabRequiresConnection) => {
-        if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
-            gui_log(i18n.getMessage("tabSwitchConnectionRequired"));
-            return false;
-        }
-
-        if (GUI.connect_lock) {
-            gui_log(i18n.getMessage("tabSwitchWaitForOperation"));
-            return false;
-        }
-
-        if (GUI.flashingInProgress) {
-            gui_log(i18n.getMessage("tabSwitchWaitForOperation"));
-            return false;
-        }
-
-        return true;
-    };
-
-    const handleDisallowedTab = (tab, tabName) => {
-        if (tab !== "firmware_flasher") {
-            gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
-            return false;
-        }
-
-        // Firmware flasher lives in the disconnected tab strip; disconnect first if needed
-        // and let finishClose() restore the flasher via GUI.pendingTab.
-        if (GUI.connected_to || GUI.connecting_to) {
-            GUI.pendingTab = "firmware_flasher";
-            connectDisconnect();
-        } else {
-            document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
-        }
-        return true;
-    };
-
-    const uiTabs = document.querySelectorAll("#tabs > ul");
-    for (const a of document.querySelectorAll("#tabs > ul a")) {
-        a.addEventListener("click", function () {
-            if (this.parentElement.classList.contains("active") || GUI.tab_switch_in_progress) {
-                return;
-            }
-
-            // only initialize when the tab isn't already active
-            const self = this;
-            const tabClass = self.parentElement.className.split(/\s+/)[0];
-            const tabRequiresConnection = self.closest("ul").classList.contains("mode-connected");
-            const tab = tabClass.substring(4);
-            const tabName = self.textContent;
-
-            if (!canSwitchTab(tabRequiresConnection)) {
-                return;
-            }
-
-            // Check if tab is allowed
-            const isLoginSectionTab = self.closest("ul").classList.contains("mode-loggedin");
-            const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
-
-            if (!isTabAllowed) {
-                handleDisallowedTab(tab, tabName);
-                return;
-            }
-
-            GUI.tab_switch_in_progress = true;
-
-            GUI.tab_switch_cleanup(function () {
-                // disable previously active tab highlight
-                for (const ul of uiTabs) {
-                    for (const li of ul.querySelectorAll("li")) {
-                        li.classList.remove("active");
-                    }
-                }
-
-                // Highlight selected tab
-                self.parentElement.classList.add("active");
-
-                function content_ready() {
-                    GUI.tab_switch_in_progress = false;
-                }
-
-                checkSetupAnalytics(function (analyticsService) {
-                    analyticsService.sendAppView(tab);
-                });
-
-                if (!mountVueTab(tab, content_ready)) {
-                    console.log(`Tab not found: ${tab}`);
-                    GUI.tab_switch_in_progress = false;
-                }
-            });
-        });
-    }
-
-    document.querySelector("#tabs ul.mode-disconnected li a")?.click();
+    // Kick off initial tab — sidebar handles subsequent clicks reactively.
+    switchTab("landing", { mode: "disconnected" });
 
     const compactHeaderLayoutMediaQuery = window.matchMedia(
         "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",
@@ -278,32 +174,7 @@ async function startProcess() {
     syncCompactHeaderLayout();
     compactHeaderLayoutMediaQuery.addEventListener("change", syncCompactHeaderLayout);
 
-    document.getElementById("menu_btn")?.addEventListener("click", function () {
-        document.querySelector(".tab_container")?.classList.toggle("reveal");
-        const bg = document.getElementById("background");
-        if (bg) {
-            bg.style.display =
-                bg.style.display === "none" || getComputedStyle(bg).display === "none" ? "block" : "none";
-        }
-    });
-
-    document.getElementById("background")?.addEventListener("click", function () {
-        document.querySelector(".tab_container")?.classList.remove("reveal");
-        this.style.display = "none";
-    });
-
-    window.addEventListener("resize", function () {
-        syncCompactHeaderLayout();
-
-        // Keep JS toggle cleanup aligned with the compact header CSS breakpoint.
-        if (!compactHeaderLayoutMediaQuery.matches) {
-            document.querySelector(".tab_container")?.classList.remove("reveal");
-            const bg = document.getElementById("background");
-            if (bg) {
-                bg.style.display = "none";
-            }
-        }
-    });
+    window.addEventListener("resize", syncCompactHeaderLayout);
 
     applyExpertMode(Boolean(getConfig("expertMode").expertMode), { persist: false });
 

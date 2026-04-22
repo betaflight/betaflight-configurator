@@ -222,10 +222,10 @@ export default defineComponent({
 
 <style scoped>
 #user-session-container {
-    background-color: var(--surface-100);
-    border-radius: 1rem;
+    background-color: transparent;
+    border-top: 1px solid var(--surface-300);
+    padding-top: 0.5rem;
     font-size: 13px;
-    padding: 0;
     position: relative;
     margin-top: auto;
     margin-bottom: 1rem;
@@ -234,43 +234,20 @@ export default defineComponent({
     #user-menu-trigger {
         position: relative;
         width: 100%;
-    }
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        padding: 0.5rem;
+        color: var(--text);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 0;
 
-    #user-logged-out {
-        #open-login {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 8px;
-            padding: 0.5rem;
-            color: var(--text);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-
-            &:hover {
-                background-color: var(--surface-200);
-                border-radius: 0.5rem;
-            }
-        }
-    }
-
-    #user-logged-in {
-        #user-menu-trigger {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 8px;
-            padding: 0.5rem;
-            color: var(--text);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 0;
-            &:hover {
-                background-color: var(--surface-200);
-                border-radius: 0.5rem;
-            }
+        &:hover {
+            background-color: var(--surface-200);
+            border-radius: 0.5rem;
         }
     }
 
@@ -290,26 +267,36 @@ export default defineComponent({
         flex: 1;
     }
 
-    /* Show username when the compact navigation drawer is revealed */
+    @media (max-width: 1055px) {
+        #open-login,
+        #user-menu-trigger {
+            justify-content: center;
+        }
+        .username {
+            display: none;
+        }
+    }
+
     @media (max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
         margin-bottom: 0.25rem;
-        padding: 0.5rem 0;
-        :global(.tab_container.reveal) & .username {
-            display: block;
-        }
         .user-avatar-icon {
             width: 32px;
             height: 32px;
         }
     }
-
-    :global(body.compact-header-layout .tab_container.reveal) & .username {
-        display: block;
-    }
 }
 </style>
 
 <style>
+/* Show username when the compact navigation drawer is revealed — unscoped so the external .tab_container.reveal selector matches. */
+.tab_container.reveal #user-session-container #open-login,
+.tab_container.reveal #user-session-container #user-menu-trigger {
+    justify-content: flex-start !important;
+}
+.tab_container.reveal #user-session-container .username {
+    display: inline !important;
+}
+
 /* Unscoped styles for teleported popup menu */
 .user-popup-menu {
     position: fixed;

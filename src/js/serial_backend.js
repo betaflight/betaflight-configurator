@@ -26,6 +26,7 @@ import { serial } from "./serial.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
+import { switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 
@@ -285,9 +286,9 @@ function finishClose(finishedCallback) {
     const pendingTab = GUI.pendingTab;
     GUI.pendingTab = null;
     if (pendingTab === "firmware_flasher") {
-        document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
+        switchTab("firmware_flasher", { mode: "disconnected" });
     } else {
-        document.querySelector("#tabs .tab_landing a")?.click();
+        switchTab("landing", { mode: "disconnected" });
     }
 
     finishedCallback();
@@ -656,7 +657,7 @@ function connectCli() {
     MSP.disconnect_cleanup();
 
     onConnect();
-    document.querySelector("#tabs .tab_cli a")?.click();
+    switchTab("cli", { mode: "cli" });
 }
 
 function onConnect() {

@@ -2,6 +2,8 @@ import { i18n } from "./localization";
 import { gui_log } from "./gui_log";
 import LoginApi from "./LoginApi";
 import UserApi from "./UserApi";
+import { switchTab } from "./tab_switch";
+import GUI from "./gui";
 
 /**
  * LoginManager - Handles user authentication using passkeys
@@ -36,9 +38,6 @@ class LoginManager {
      */
     async initialize() {
         await this.fetchUserProfile();
-
-        // Update tab visibility based on login state
-        await this.updateTabVisibility();
     }
 
     /**
@@ -113,7 +112,6 @@ class LoginManager {
 
             // Fetch user profile data
             await this.fetchUserProfile();
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -122,16 +120,6 @@ class LoginManager {
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Verify and create passkey error:", error);
             throw error;
-        }
-    }
-
-    /**
-     * Update tab visibility based on login state
-     */
-    async updateTabVisibility() {
-        const el = document.querySelector("#tabs ul.mode-loggedin");
-        if (el) {
-            el.style.display = (await this.isUserLoggedIn()) ? "block" : "none";
         }
     }
 
@@ -164,7 +152,6 @@ class LoginManager {
             await this._loginApi.verifyLogin(email, code);
 
             await this.fetchUserProfile();
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -190,8 +177,6 @@ class LoginManager {
 
             // Fetch user profile data
             await this.fetchUserProfile();
-
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -229,11 +214,15 @@ class LoginManager {
             await this._loginApi.signOut();
 
             this._profile = null;
-            await this.updateTabVisibility();
             this.notifyLogoutCallbacks();
 
-            // Always switch to landing/welcome tab on logout
-            document.querySelector(".tab_landing a")?.click();
+            // Pick a tab that is valid for the current connection state —
+            // "landing" is disconnected-only, so fall back to "setup" or the
+            // first allowed tab when connected.
+            const fallback = ["landing", "setup", ...GUI.allowedTabs].find((tab) => GUI.allowedTabs.includes(tab));
+            if (fallback) {
+                switchTab(fallback, { mode: fallback === "landing" ? "disconnected" : "connected" });
+            }
 
             gui_log(i18n.getMessage("userSignedOut"));
         } catch (error) {

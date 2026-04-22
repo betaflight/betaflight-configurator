@@ -1,6 +1,7 @@
 <template>
     <BaseTab tab-name="backups">
         <div class="content_wrapper grid-box col1">
+            <div class="tab_title">{{ $t("tabBackups") }}</div>
             <!-- Loading State -->
             <div v-if="isLoading" class="flex items-center justify-center py-16">
                 <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin text-[var(--color-primary-500)]" />

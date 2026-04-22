@@ -317,4 +317,14 @@ export default defineComponent({
         }
     }
 }
+
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .content_top {
+        height: auto;
+        padding: 10px 20px;
+    }
+    .logowrapper img {
+        display: none;
+    }
+}
 </style>

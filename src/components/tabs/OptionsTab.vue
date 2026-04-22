@@ -1,6 +1,7 @@
 <template>
     <BaseTab tab-name="options">
         <div class="content_wrapper grid-box col1">
+            <div class="tab_title">{{ $t("tabOptions") }}</div>
             <UiBox :title="$t('tabOptions')">
                 <SettingRow :label="$t('expertMode')">
                     <USwitch v-model="settings.expertMode" size="sm" />

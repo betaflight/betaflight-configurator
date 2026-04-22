@@ -1,19 +1,24 @@
 <template>
     <UApp>
         <div class="app-wrapper">
-            <div id="background"></div>
+            <div id="background" v-show="isRevealed" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
-            <UButton
-                id="menu_btn"
-                icon="i-lucide-menu"
-                color="neutral"
-                variant="soft"
-                size="lg"
-                square
-                :aria-label="$t('openSidebarMenu')"
-            />
+            <div class="mobile-topbar" :class="{ 'mobile-topbar--hidden': topbarHidden }">
+                <UButton
+                    id="menu_btn"
+                    icon="i-lucide-menu"
+                    color="neutral"
+                    variant="soft"
+                    size="lg"
+                    square
+                    :aria-label="$t('openSidebarMenu')"
+                    @click="isRevealed = !isRevealed"
+                />
+                <div class="mobile-topbar__logo" :title="logoTooltip" aria-hidden="true"></div>
+                <div class="mobile-topbar__spacer" aria-hidden="true"></div>
+            </div>
             <div id="tab-content-container">
-                <div class="tab_container">
+                <div class="tab_container" :class="{ reveal: isRevealed }">
                     <betaflight-logo
                         :configurator-version="CONFIGURATOR.getDisplayVersion()"
                         :firmware-version="FC.CONFIG.flightControllerVersion"
@@ -21,188 +26,11 @@
                         :hardware-id="FC.CONFIG.hardwareName"
                     ></betaflight-logo>
                     <ConnectButton />
-                    <div id="tabs">
-                        <ul class="mode-disconnected">
-                            <li class="tab_landing" id="tab_landing">
-                                <a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a>
-                            </li>
-                            <li class="tab_help" id="tab_help">
-                                <a href="#" i18n="tabHelp" class="tabicon ic_help" i18n_title="tabHelp"></a>
-                            </li>
-                            <li class="tab_options" id="tab_options">
-                                <a href="#" i18n="tabOptions" class="tabicon ic_config" i18n_title="tabOptions"></a>
-                            </li>
-                            <li class="tab_firmware_flasher" id="tabFirmware">
-                                <a
-                                    href="#"
-                                    i18n="tabFirmwareFlasher"
-                                    class="tabicon ic_flasher"
-                                    i18n_title="tabFirmwareFlasher"
-                                ></a>
-                            </li>
-                            <li class="tab_preflight">
-                                <a
-                                    href="#"
-                                    i18n="tabPreflight"
-                                    class="tabicon ic_preflight"
-                                    i18n_title="tabPreflight"
-                                ></a>
-                            </li>
-                            <li class="tab_flight_plan" v-show="expertMode">
-                                <a
-                                    href="#"
-                                    i18n="tabFlightPlan"
-                                    class="tabicon ic_route"
-                                    i18n_title="tabFlightPlan"
-                                ></a>
-                            </li>
-                        </ul>
-                        <ul class="mode-connected">
-                            <li class="tab_setup">
-                                <a href="#" i18n="tabSetup" class="tabicon ic_setup" i18n_title="tabSetup"></a>
-                            </li>
-                            <li class="tab_setup_osd">
-                                <a href="#" i18n="tabSetupOSD" class="tabicon ic_setup" i18n_title="tabSetupOSD"></a>
-                            </li>
-                            <li class="tab_ports">
-                                <a href="#" i18n="tabPorts" class="tabicon ic_ports" i18n_title="tabPorts"></a>
-                            </li>
-                            <li class="tab_configuration">
-                                <a
-                                    href="#"
-                                    i18n="tabConfiguration"
-                                    class="tabicon ic_config"
-                                    i18n_title="tabConfiguration"
-                                ></a>
-                            </li>
-                            <li class="tab_power">
-                                <a href="#" i18n="tabPower" class="tabicon ic_power" i18n_title="tabPower"></a>
-                            </li>
-                            <li class="tab_failsafe" v-show="expertMode">
-                                <a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"></a>
-                            </li>
-                            <li class="tab_presets">
-                                <a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"></a>
-                            </li>
-                            <li class="tab_pid_tuning">
-                                <a href="#" i18n="tabPidTuning" class="tabicon ic_pid" i18n_title="tabPidTuning"></a>
-                            </li>
-                            <li class="tab_receiver">
-                                <a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"></a>
-                            </li>
-                            <li class="tab_auxiliary">
-                                <a href="#" i18n="tabAuxiliary" class="tabicon ic_modes" i18n_title="tabAuxiliary"></a>
-                            </li>
-                            <li class="tab_adjustments" v-show="expertMode">
-                                <a
-                                    href="#"
-                                    i18n="tabAdjustments"
-                                    class="tabicon ic_adjust"
-                                    i18n_title="tabAdjustments"
-                                ></a>
-                            </li>
-                            <li
-                                class="tab_servos"
-                                v-show="
-                                    ['USE_SERVOS', 'USE_WING'].some((opt) => FC.CONFIG?.buildOptions?.includes(opt))
-                                "
-                            >
-                                <a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a>
-                            </li>
-                            <li class="tab_gps" v-show="FC.CONFIG?.buildOptions?.includes('USE_GPS')">
-                                <a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a>
-                            </li>
-                            <li class="tab_motors">
-                                <a
-                                    href="#"
-                                    i18n="tabMotorTesting"
-                                    class="tabicon ic_motor"
-                                    i18n_title="tabMotorTesting"
-                                ></a>
-                            </li>
-                            <li
-                                class="tab_osd"
-                                v-show="
-                                    FC.FEATURE_CONFIG?.features?.isEnabled &&
-                                    FC.FEATURE_CONFIG.features.isEnabled('OSD')
-                                "
-                            >
-                                <a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd"></a>
-                            </li>
-                            <li class="tab_vtx">
-                                <a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx"></a>
-                            </li>
-                            <li
-                                class="tab_led_strip"
-                                v-show="
-                                    FC.FEATURE_CONFIG?.features?.isEnabled &&
-                                    FC.FEATURE_CONFIG.features.isEnabled('LED_STRIP')
-                                "
-                            >
-                                <a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"></a>
-                            </li>
-                            <li class="tab_sensors" v-show="expertMode">
-                                <a
-                                    href="#"
-                                    i18n="tabRawSensorData"
-                                    class="tabicon ic_sensors"
-                                    i18n_title="tabRawSensorData"
-                                ></a>
-                            </li>
-                            <li class="tab_flight_plan" v-show="FC.CONFIG?.buildOptions?.includes('USE_FLIGHT_PLAN')">
-                                <a
-                                    href="#"
-                                    i18n="tabFlightPlan"
-                                    class="tabicon ic_route"
-                                    i18n_title="tabFlightPlan"
-                                ></a>
-                            </li>
-                            <li class="tab_logging" v-show="expertMode">
-                                <a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a>
-                            </li>
-                            <li class="tab_onboard_logging">
-                                <a
-                                    href="#"
-                                    i18n="tabOnboardLogging"
-                                    class="tabicon ic_data"
-                                    i18n_title="tabOnboardLogging"
-                                ></a>
-                            </li>
-                        </ul>
-                        <ul class="mode-connected mode-connected-cli">
-                            <li class="tab_cli">
-                                <a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI"></a>
-                            </li>
-                        </ul>
-                        <ul class="mode-shared">
-                            <li class="tab_log" v-show="expertMode">
-                                <a
-                                    href="#"
-                                    i18n="tabLog"
-                                    class="tabicon ic_log"
-                                    i18n_title="tabLog"
-                                    :aria-label="$t('tabLog')"
-                                ></a>
-                            </li>
-                        </ul>
-                        <ul class="mode-loggedin">
-                            <li class="tab_backups">
-                                <a href="#" i18n="tabBackups" class="tabicon ic_data" i18n_title="tabBackups"></a>
-                            </li>
-                            <li class="tab_user_profile">
-                                <a
-                                    href="#"
-                                    i18n="tabUserProfile"
-                                    class="tabicon ic_user"
-                                    i18n_title="tabUserProfile"
-                                ></a>
-                            </li>
-                        </ul>
-                    </div>
+                    <Sidebar />
                     <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
-                <div id="content">
+                <div id="content" @scroll.passive="onContentScroll">
                     <component
                         :is="activeTabComponent"
                         v-if="activeTabComponent"
@@ -232,13 +60,16 @@
 
 <script setup>
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
+import { useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/port-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
+import Sidebar from "./components/sidebar/Sidebar.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 import GUI from "./js/gui.js";
+import { i18n } from "./js/localization";
 import {
     completeVueTabMount,
     tabAdapterRegistration,
@@ -283,16 +114,60 @@ const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback)
 
 const activeTabInstance = ref(null);
 
-// Read/write current vm via currentVm() so we track the same vm as the globals after window.vm is reassigned.
-const expertMode = computed({
-    get: () => Boolean(currentVm()?.expertMode),
-    set: (value) => {
-        const v = currentVm();
-        if (v) {
-            v.expertMode = value;
-        }
-    },
+const isRevealed = ref(false);
+const sidebarCompact = useMediaQuery("(max-width: 1055px)");
+const isSidebarExpanded = computed(() => !sidebarCompact.value || isRevealed.value);
+
+// Auto-close the drawer when leaving the compact breakpoint.
+watch(sidebarCompact, (compact) => {
+    if (!compact) {
+        isRevealed.value = false;
+    }
 });
+
+const topbarHidden = ref(false);
+let lastScrollTop = 0;
+const scrollThreshold = 6;
+
+function onContentScroll(event) {
+    const current = event.target.scrollTop;
+    if (current <= 0) {
+        topbarHidden.value = false;
+        lastScrollTop = 0;
+        return;
+    }
+    const diff = current - lastScrollTop;
+    if (diff > scrollThreshold) {
+        topbarHidden.value = true;
+        lastScrollTop = current;
+    } else if (diff < -scrollThreshold) {
+        topbarHidden.value = false;
+        lastScrollTop = current;
+    }
+}
+
+// Ensure the topbar is visible when the drawer opens so the hamburger stays reachable.
+watch(isRevealed, (revealed) => {
+    if (revealed) {
+        topbarHidden.value = false;
+    }
+});
+
+const logoTooltip = computed(() => {
+    const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
+    const cfg = FC.value.CONFIG ?? {};
+    if (cfg.flightControllerVersion && cfg.flightControllerIdentifier) {
+        lines.push(
+            `${i18n.getMessage("versionLabelFirmware")}: ${cfg.flightControllerVersion} ${cfg.flightControllerIdentifier}`,
+        );
+    }
+    if (cfg.hardwareName) {
+        lines.push(`${i18n.getMessage("versionLabelTarget")}: ${cfg.hardwareName}`);
+    }
+    return lines.join("\n");
+});
+
+provide("sidebarExpanded", isSidebarExpanded);
 
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
@@ -342,19 +217,50 @@ watch(
     display: none;
 }
 
-/* Floating mobile menu trigger — shown only on narrow viewports. */
-#menu_btn {
+/* Mobile top bar — hamburger left, centred wide logo, auto-hides on scroll down. */
+.mobile-topbar {
     display: none;
     position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 2001;
+    height: 3rem;
+    padding: 0.25rem 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--surface-100);
+    border-bottom: 1px solid var(--surface-200);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.25s ease;
+}
+.mobile-topbar--hidden {
+    transform: translateY(-100%);
+}
+.mobile-topbar__logo {
+    flex: 1;
+    min-width: 0;
+    height: 2.5rem;
+    background-image: url(./images/bf_logo_white.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
+}
+.dark .mobile-topbar__logo {
+    background-image: url(./images/bf_logo_black.svg);
+}
+.mobile-topbar__spacer {
+    width: 2.5rem;
+    flex-shrink: 0;
 }
 
 @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-    #menu_btn {
-        display: inline-flex;
+    .mobile-topbar {
+        display: flex;
+    }
+    /* Leave room at the top of the content area for the top bar. */
+    #content {
+        padding-top: 3rem;
     }
 }
 </style>

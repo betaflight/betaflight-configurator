@@ -31,7 +31,7 @@
                 v-slot="{ open }"
                 :items="menuItems"
                 :content="{ align: 'end', side: 'top' }"
-                :ui="{ content: 'max-h-96' }"
+                :ui="{ content: 'max-h-96 z-[2100]' }"
             >
                 <UButton
                     color="success"
@@ -271,8 +271,35 @@ export default defineComponent({
 }
 
 @media (max-width: 1055px) {
+    .sidebar-connect {
+        display: flex;
+        justify-content: center;
+    }
     .sidebar-connect__label {
         display: none;
     }
+    .sidebar-connect__group {
+        width: auto !important;
+    }
+}
+
+/* Default Nuxt UI `success` soft tint is too pale in light mode — lift the contrast. */
+html:not(.dark) .sidebar-connect :deep(button) {
+    background-color: var(--success-400);
+    border: 1px solid var(--success-600);
+    color: var(--surface-900);
+}
+html:not(.dark) .sidebar-connect :deep(button:hover) {
+    background-color: var(--success-500);
+}
+
+.tab_container.reveal .sidebar-connect {
+    display: block;
+}
+.tab_container.reveal .sidebar-connect__label {
+    display: inline;
+}
+.tab_container.reveal .sidebar-connect__group {
+    width: 100% !important;
 }
 </style>
