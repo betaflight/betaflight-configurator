@@ -2,7 +2,7 @@
     <BaseTab tab-name="vtx">
         <div class="content_wrapper">
             <!-- Title -->
-            <div class="tab_title text-xl! mb-2.5!" v-html="$t('tabVtx')"></div>
+            <div class="tab_title" v-html="$t('tabVtx')"></div>
             <div class="cf_doc_version_bt">
                 <WikiButton docUrl="vtx" />
             </div>
