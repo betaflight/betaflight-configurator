@@ -1,7 +1,7 @@
 <template>
     <UApp>
         <div class="app-wrapper">
-            <div id="background"></div>
+            <div id="background" v-show="isRevealed" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
             <UButton
                 id="menu_btn"
@@ -11,9 +11,10 @@
                 size="lg"
                 square
                 :aria-label="$t('openSidebarMenu')"
+                @click="isRevealed = !isRevealed"
             />
             <div id="tab-content-container">
-                <div class="tab_container">
+                <div class="tab_container" :class="{ reveal: isRevealed }">
                     <betaflight-logo
                         :configurator-version="CONFIGURATOR.getDisplayVersion()"
                         :firmware-version="FC.CONFIG.flightControllerVersion"
@@ -55,6 +56,7 @@
 
 <script setup>
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
+import { useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/port-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
@@ -106,6 +108,19 @@ const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
 const activeTabInstance = ref(null);
+
+const isRevealed = ref(false);
+const sidebarCompact = useMediaQuery("(max-width: 1055px)");
+const isSidebarExpanded = computed(() => !sidebarCompact.value || isRevealed.value);
+
+// Auto-close the drawer when leaving the compact breakpoint.
+watch(sidebarCompact, (compact) => {
+    if (!compact) {
+        isRevealed.value = false;
+    }
+});
+
+provide("sidebarExpanded", isSidebarExpanded);
 
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
@@ -168,6 +183,10 @@ watch(
 @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
     #menu_btn {
         display: inline-flex;
+    }
+    /* Push sidebar contents below the floating menu button when the drawer is open. */
+    .tab_container.reveal {
+        padding-top: 3.5rem;
     }
 }
 </style>

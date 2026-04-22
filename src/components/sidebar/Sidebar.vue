@@ -10,8 +10,7 @@
 </template>
 
 <script setup>
-import { computed, inject } from "vue";
-import { useMediaQuery } from "@vueuse/core";
+import { computed, inject, ref } from "vue";
 import { useTranslation } from "i18next-vue";
 import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
@@ -24,7 +23,8 @@ import FCModule from "@/js/fc.js";
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
 const authStore = useAuthStore();
-const isCompact = useMediaQuery("(max-width: 1055px)");
+const sidebarExpanded = inject("sidebarExpanded", ref(true));
+const isCompact = computed(() => !sidebarExpanded.value);
 const navMenuUi = computed(() => (isCompact.value ? { link: "justify-center" } : {}));
 const betaflightModel = inject("betaflightModel", null);
 

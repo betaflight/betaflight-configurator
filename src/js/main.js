@@ -174,32 +174,7 @@ async function startProcess() {
     syncCompactHeaderLayout();
     compactHeaderLayoutMediaQuery.addEventListener("change", syncCompactHeaderLayout);
 
-    document.getElementById("menu_btn")?.addEventListener("click", function () {
-        document.querySelector(".tab_container")?.classList.toggle("reveal");
-        const bg = document.getElementById("background");
-        if (bg) {
-            bg.style.display =
-                bg.style.display === "none" || getComputedStyle(bg).display === "none" ? "block" : "none";
-        }
-    });
-
-    document.getElementById("background")?.addEventListener("click", function () {
-        document.querySelector(".tab_container")?.classList.remove("reveal");
-        this.style.display = "none";
-    });
-
-    window.addEventListener("resize", function () {
-        syncCompactHeaderLayout();
-
-        // Keep JS toggle cleanup aligned with the compact header CSS breakpoint.
-        if (!compactHeaderLayoutMediaQuery.matches) {
-            document.querySelector(".tab_container")?.classList.remove("reveal");
-            const bg = document.getElementById("background");
-            if (bg) {
-                bg.style.display = "none";
-            }
-        }
-    });
+    window.addEventListener("resize", syncCompactHeaderLayout);
 
     applyExpertMode(Boolean(getConfig("expertMode").expertMode), { persist: false });
 
