@@ -359,13 +359,18 @@
                 :color="saveButtonDisabled ? 'neutral' : 'success'"
                 @click="handleSave"
             />
-            <UButton :label="$t('vtxButtonLoadClipboard')" @click="loadClipboardJson" />
-            <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" />
-            <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" />
-            <div class="inline-flex items-center gap-1">
-                <UButton :label="$t('vtxButtonSaveLua')" @click="saveLuaFile" />
-                <HelpIcon :text="$t('vtxLuaFileHelp')" />
-            </div>
+            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
+                <UButton :label="$t('vtxButtonLoadClipboard')" @click="loadClipboardJson" />
+                <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
+                </UDropdownMenu>
+            </UFieldGroup>
+            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
+                <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" />
+                <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
+                </UDropdownMenu>
+            </UFieldGroup>
         </div>
     </BaseTab>
 </template>
@@ -460,6 +465,36 @@ export default defineComponent({
             cols.push("auto");
             return { gridTemplateColumns: cols.join(" ") };
         });
+
+        const loadMenuItems = computed(() => [
+            [
+                {
+                    label: t("vtxButtonLoadClipboard"),
+                    icon: "i-lucide-clipboard-paste",
+                    onSelect: loadClipboardJson,
+                },
+                {
+                    label: t("vtxButtonLoadFile"),
+                    icon: "i-lucide-hard-drive-download",
+                    onSelect: loadJsonFile,
+                },
+            ],
+        ]);
+
+        const saveFileMenuItems = computed(() => [
+            [
+                {
+                    label: t("vtxButtonSaveFile"),
+                    icon: "i-lucide-hard-drive-upload",
+                    onSelect: saveJsonFile,
+                },
+                {
+                    label: t("vtxButtonSaveLua"),
+                    icon: "i-lucide-file-code",
+                    onSelect: saveLuaFile,
+                },
+            ],
+        ]);
 
         onMounted(async () => {
             await loadVtxConfig();
@@ -628,6 +663,8 @@ export default defineComponent({
             deviceReadyText,
             bandGridStyle,
             powerGridStyle,
+            loadMenuItems,
+            saveFileMenuItems,
 
             // Actions
             handleSave,
