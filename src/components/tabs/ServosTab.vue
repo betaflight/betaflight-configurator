@@ -1,12 +1,11 @@
 <template>
     <BaseTab tab-name="servos">
         <div class="content_wrapper">
-            <div class="tab_title text-xl! mb-2.5!" v-html="$t('tabServos')"></div>
+            <div class="tab_title" v-html="$t('tabServos')"></div>
             <div class="cf_doc_version_bt">
                 <WikiButton docUrl="servos" />
             </div>
 
-            <!-- Servo configuration (when supported) -->
             <div v-if="isSupported">
                 <UiBox :title="$t('servosChangeDirection')" type="neutral">
                     <div class="overflow-x-auto">
@@ -45,6 +44,7 @@
                                     :step="1"
                                     size="xs"
                                     orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
                                     class="w-full"
                                     @change="onServoChange"
                                 />
@@ -55,6 +55,7 @@
                                     :step="1"
                                     size="xs"
                                     orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
                                     class="w-full"
                                     @change="onServoChange"
                                 />
@@ -65,6 +66,7 @@
                                     :step="1"
                                     size="xs"
                                     orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
                                     class="w-full"
                                     @change="onServoChange"
                                 />
@@ -132,11 +134,6 @@
                     </ul>
                 </UiBox>
             </div>
-
-            <!-- Upgrade required message -->
-            <UiBox v-else type="warning" highlight>
-                <p>{{ $t("servosFirmwareUpgradeRequired") }}</p>
-            </UiBox>
         </div>
 
         <!-- Save button toolbar -->
