@@ -366,7 +366,7 @@
                 @click="handleSave"
             />
             <UFieldGroup size="sm" orientation="horizontal" class="!flex">
-                <UButton :label="$t('vtxButtonLoadClipboard')" @click="loadClipboardJson" />
+                <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" />
                 <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
                 </UDropdownMenu>
@@ -475,14 +475,14 @@ export default defineComponent({
         const loadMenuItems = computed(() => [
             [
                 {
-                    label: t("vtxButtonLoadClipboard"),
-                    icon: "i-lucide-clipboard-paste",
-                    onSelect: loadClipboardJson,
-                },
-                {
                     label: t("vtxButtonLoadFile"),
                     icon: "i-lucide-hard-drive-download",
                     onSelect: loadJsonFile,
+                },
+                {
+                    label: t("vtxButtonLoadClipboard"),
+                    icon: "i-lucide-clipboard-paste",
+                    onSelect: loadClipboardJson,
                 },
             ],
         ]);
