@@ -1,8 +1,14 @@
 <template>
     <div class="bottomStatusIcons" :class="{ 'bottomStatusIcons--compact': compact }">
-        <div class="armedicon cf_tip" :title="$t('mainHelpArmed')" :class="{ active: setActiveArmed }" />
-        <div class="failsafeicon cf_tip" :title="$t('mainHelpFailsafe')" :class="{ active: setFailsafeActive }" />
-        <div class="linkicon cf_tip" :title="$t('mainHelpLink')" :class="{ active: setActiveLink }" />
+        <UTooltip :text="$t('mainHelpArmed')">
+            <div class="armedicon" :class="{ active: setActiveArmed }" />
+        </UTooltip>
+        <UTooltip :text="$t('mainHelpFailsafe')">
+            <div class="failsafeicon" :class="{ active: setFailsafeActive }" />
+        </UTooltip>
+        <UTooltip :text="$t('mainHelpLink')">
+            <div class="linkicon" :class="{ active: setActiveLink }" />
+        </UTooltip>
     </div>
 </template>
 

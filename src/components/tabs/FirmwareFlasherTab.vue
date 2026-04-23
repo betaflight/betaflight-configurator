@@ -473,18 +473,12 @@
             <h3>{{ $t("warningTitle") }}</h3>
             <div class="content">
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
-                <div>
-                    <label class="vue-switch-label">
-                        <input
-                            v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
-                            name="dialogUnstableFirmwareAcknowledgement-acknowledge"
-                            class="vue-switch-input"
-                            type="checkbox"
-                            :aria-label="$t('unstableFirmwareAcknowledgement')"
-                        />
-                        <span class="vue-switch-slider" aria-hidden="true"></span>
-                        <span class="vue-switch-text" v-html="$t('unstableFirmwareAcknowledgement')"></span>
-                    </label>
+                <div class="flex items-center gap-2">
+                    <USwitch
+                        v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
+                        :aria-label="$t('unstableFirmwareAcknowledgement')"
+                    />
+                    <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
                 </div>
             </div>
             <div class="dialog_toolbar">
@@ -2465,51 +2459,6 @@ export default defineComponent({
             margin-left: 0.5rem;
         }
     }
-    /* Generic Vue-native switch styling (Switchery-like) */
-    .vue-switch-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-    }
-    .vue-switch-input {
-        position: absolute;
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    .vue-switch-slider {
-        position: relative;
-        width: 30px; /* Switchery small width */
-        height: 14px; /* Switchery small height */
-        background: var(--switcherysecond);
-        border-radius: 20px;
-        transition: background-color 200ms ease;
-        box-sizing: content-box;
-        background-clip: content-box;
-    }
-    .vue-switch-slider::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 14px;
-        height: 14px;
-        background: #fff;
-        border-radius: 50%;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-        transition: transform 200ms ease;
-    }
-    .vue-switch-input:checked + .vue-switch-slider {
-        background: var(--primary-500);
-    }
-    .vue-switch-input:checked + .vue-switch-slider::before {
-        transform: translateX(16px);
-    }
-    .vue-switch-text {
-        font-size: 12px;
-        line-height: 14px;
-    }
     .board-selection-grid {
         display: grid;
         grid-template-columns: 1fr auto auto;
@@ -2657,51 +2606,6 @@ export default defineComponent({
         }
         #customDefinesInfo {
             width: 100%;
-        }
-        /* Vue-native switch styling to mimic Switchery */
-        #build_configuration_toggle_label.vue-switch-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-        #build_configuration_toggle_label .vue-switch-input {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        #build_configuration_toggle_label .vue-switch-slider {
-            position: relative;
-            width: 30px; /* Matches Switchery small width */
-            height: 14px; /* Matches Switchery small height */
-            background: var(--switcherysecond);
-            border-radius: 20px;
-            transition: background-color 200ms ease;
-            box-sizing: content-box;
-            background-clip: content-box;
-        }
-        #build_configuration_toggle_label .vue-switch-slider::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-            transition: transform 200ms ease;
-        }
-        #build_configuration_toggle_label .vue-switch-input:checked + .vue-switch-slider {
-            background: var(--primary-500);
-        }
-        #build_configuration_toggle_label .vue-switch-input:checked + .vue-switch-slider::before {
-            transform: translateX(16px);
-        }
-        #build_configuration_toggle_label .vue-switch-text {
-            font-size: 12px; /* Align with base form font size */
-            line-height: 14px;
         }
     }
 
@@ -3082,7 +2986,7 @@ export default defineComponent({
     background: var(--surface-400);
     border: 1px solid var(--surface-600);
     border-top: none;
-    z-index: 99999 !important; /* Extremely high to clear all elements including switchery (1000) */
+    z-index: 99999 !important;
     max-height: 250px;
     overflow-y: auto;
     width: 100%;

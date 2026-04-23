@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch, onMounted, nextTick } from "vue";
+import { defineComponent, reactive, watch, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "../../js/gui";
@@ -170,23 +170,6 @@ export default defineComponent({
         });
 
         const availableLanguages = i18n.getLanguagesAvailables();
-
-        // switchery workaround to refresh the toggles
-        const refreshDevelopmentToggles = () => {
-            nextTick(() => {
-                const toggleSelectors = [
-                    "[data-setting='showManualMode']",
-                    "[data-setting='showVirtualMode']",
-                    "[data-setting='showAllSerialDevices']",
-                ];
-                toggleSelectors.forEach((selector) => {
-                    const element = document.querySelector(selector);
-                    if (element) {
-                        element.dispatchEvent(new Event("change", { bubbles: true }));
-                    }
-                });
-            });
-        };
 
         // Watch each setting and persist changes
         watch(
@@ -329,7 +312,6 @@ export default defineComponent({
                     settings.showManualMode = DEFAULT_DEVELOPMENT_OPTIONS.showManualMode;
                     settings.showAllSerialDevices = DEFAULT_DEVELOPMENT_OPTIONS.showAllSerialDevices;
                     settings.backupOnFlash = DEFAULT_DEVELOPMENT_OPTIONS.backupOnFlash;
-                    refreshDevelopmentToggles();
                 }
             },
         );
