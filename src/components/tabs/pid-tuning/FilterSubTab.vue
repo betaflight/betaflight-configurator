@@ -1159,6 +1159,9 @@ watch(
     () => emit("change"),
 );
 
+watch(gyroSliderMode, () => emit("change"));
+watch(dtermSliderMode, () => emit("change"));
+
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {
     isUpdatingSliders = true;
