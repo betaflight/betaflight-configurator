@@ -18,7 +18,7 @@
             <!-- Gyro Filter Slider -->
             <div class="flex items-center gap-3 py-1">
                 <USwitch v-model="gyroSliderEnabled" size="sm" />
-                <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningGyroFilterSlider')"></div>
+                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningGyroFilterSlider')"></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ gyroFilterMultiplier.toFixed(2) }}</span>
                 <USlider
                     v-model="gyroFilterMultiplier"
@@ -34,7 +34,7 @@
             <!-- DTerm Filter Slider -->
             <div class="flex items-center gap-3 py-1">
                 <USwitch v-model="dtermSliderEnabled" size="sm" />
-                <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDTermFilterSlider')"></div>
+                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningDTermFilterSlider')"></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ dtermFilterMultiplier.toFixed(2) }}</span>
                 <USlider
                     v-model="dtermFilterMultiplier"
