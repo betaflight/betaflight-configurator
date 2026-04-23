@@ -1,4 +1,4 @@
-import { ref, computed, shallowRef } from "vue";
+import { ref, computed, shallowRef, onScopeDispose } from "vue";
 import geomagnetism from "geomagnetism";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
@@ -82,6 +82,8 @@ export function useMagCalibration() {
             monitorInterval = null;
         }
     }
+
+    onScopeDispose(cleanup);
 
     // --- Internal ---
 
