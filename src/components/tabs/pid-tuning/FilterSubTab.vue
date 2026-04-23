@@ -2,11 +2,17 @@
     <div class="p-5 flex flex-col gap-5">
         <!-- Filter Sliders -->
         <UiBox type="neutral">
-            <!-- Scale labels above sliders -->
-            <div class="flex justify-between text-xs text-dimmed mb-2">
-                <span>{{ $t("pidTuningSliderHighFiltering") }}</span>
-                <span>{{ $t("pidTuningSliderDefaultFiltering") }}</span>
-                <span>{{ $t("pidTuningSliderLowFiltering") }}</span>
+            <!-- Scale labels above sliders — aligned with the slider column -->
+            <div class="flex items-center gap-3">
+                <div class="shrink-0 invisible" style="width: 40px"></div>
+                <div class="min-w-32 shrink-0"></div>
+                <span class="min-w-10"></span>
+                <div class="flex-1 flex justify-between text-xs text-dimmed">
+                    <span>{{ $t("pidTuningSliderHighFiltering") }}</span>
+                    <span>{{ $t("pidTuningSliderDefaultFiltering") }}</span>
+                    <span>{{ $t("pidTuningSliderLowFiltering") }}</span>
+                </div>
+                <div class="invisible"><HelpIcon text="" /></div>
             </div>
 
             <!-- Gyro Filter Slider -->
