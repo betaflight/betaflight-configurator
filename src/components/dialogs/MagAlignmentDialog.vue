@@ -149,8 +149,8 @@ function startDetection() {
     errorMessage.value = "";
     lastMag = null;
     lastMovementTime = Date.now();
-    currentRoll = 0;
-    currentPitch = 0;
+    currentRoll = fcStore.sensorData.kinematics[0];
+    currentPitch = fcStore.sensorData.kinematics[1];
     phase.value = "collecting";
 
     // Poll attitude for roll/pitch
