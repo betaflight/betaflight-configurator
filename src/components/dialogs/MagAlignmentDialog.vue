@@ -177,6 +177,10 @@ function startDetection() {
 }
 
 function onImuData() {
+    if (phase.value !== "collecting") {
+        return;
+    }
+
     const mx = fcStore.sensorData.magnetometer[0];
     const my = fcStore.sensorData.magnetometer[1];
     const mz = fcStore.sensorData.magnetometer[2];
