@@ -111,17 +111,29 @@ let currentRoll = 0;
 let currentPitch = 0;
 
 const confidenceLevel = computed(() => {
-    if (!result.value) return "none";
-    if (result.value.confidence >= 5) return "high";
-    if (result.value.confidence >= 2) return "medium";
+    if (!result.value) {
+        return "none";
+    }
+    if (result.value.confidence >= 5) {
+        return "high";
+    }
+    if (result.value.confidence >= 2) {
+        return "medium";
+    }
     return "low";
 });
 
 const confidenceText = computed(() => {
-    if (!result.value) return "";
+    if (!result.value) {
+        return "";
+    }
     const c = result.value.confidence;
-    if (c >= 5) return `${c}x (high)`;
-    if (c >= 2) return `${c}x (medium)`;
+    if (c >= 5) {
+        return `${c}x (high)`;
+    }
+    if (c >= 2) {
+        return `${c}x (medium)`;
+    }
     return `${c}x (low)`;
 });
 
@@ -165,7 +177,9 @@ function onImuData() {
     const my = fcStore.sensorData.magnetometer[1];
     const mz = fcStore.sensorData.magnetometer[2];
 
-    if (mx === 0 && my === 0 && mz === 0) return;
+    if (mx === 0 && my === 0 && mz === 0) {
+        return;
+    }
 
     // Track movement
     if (
