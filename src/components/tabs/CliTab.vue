@@ -261,8 +261,12 @@ export default defineComponent({
     background-image: url("../../images/light-wide-1.svg");
 }
 
-/* Child selector for runtime-generated content */
-.tab-cli .cli-wrapper > * {
+/* Allow text selection in the CLI output area.
+   The global `* { user-select: none }` in main.less disables selection everywhere,
+   so we re-enable it on the scroll container and all descendants (runtime-generated
+   spans from syntax highlighting, text nodes, etc.). */
+.tab-cli .cli-window,
+.tab-cli .cli-window * {
     user-select: text;
 }
 
