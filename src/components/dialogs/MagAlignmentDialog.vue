@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeUnmount } from "vue";
 import Dialog from "../elements/Dialog.vue";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -239,6 +239,8 @@ function cleanup() {
         movementCheckInterval = null;
     }
 }
+
+onBeforeUnmount(cleanup);
 
 function onClose() {
     cleanup();
