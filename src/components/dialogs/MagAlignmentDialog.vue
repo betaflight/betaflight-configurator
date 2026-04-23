@@ -221,6 +221,7 @@ function retryDetection() {
 function applyResult() {
     if (result.value) {
         emit("apply", result.value.alignment);
+        retryDetection();
         emit("update:modelValue", false);
     }
 }
