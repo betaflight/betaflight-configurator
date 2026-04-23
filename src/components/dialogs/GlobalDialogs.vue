@@ -22,6 +22,7 @@ import ProfileSelectionDialog from "./ProfileSelectionDialog.vue";
 import RatesTypeDialog from "./RatesTypeDialog.vue";
 import CopyProfileDialog from "./CopyProfileDialog.vue";
 import ReportProblemsDialog from "./ReportProblemsDialog.vue";
+import InteractiveDialog from "./InteractiveDialog.vue";
 
 const dialogStore = useDialogStore();
 const currentDialogRef = ref(null);
@@ -37,6 +38,7 @@ const dialogComponents = {
     RatesTypeDialog,
     CopyProfileDialog,
     ReportProblemsDialog,
+    InteractiveDialog,
 };
 
 watch(

@@ -27,7 +27,7 @@ function applyRulerMargins(containerRef, enabled) {
         return;
     }
 
-    const preview = container.querySelector(".preview");
+    const preview = container.querySelector(".tab-osd-preview");
     if (!preview) {
         return;
     }
@@ -79,17 +79,17 @@ function getContext(canvas, container) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    const rows = container.querySelectorAll(".row");
+    const rows = container.querySelectorAll(".tab-osd-row");
     if (!rows.length) {
         return null;
     }
 
-    const colsInRow = rows[0].querySelectorAll(".char");
+    const colsInRow = rows[0].querySelectorAll(".tab-osd-char");
     if (!colsInRow.length) {
         return null;
     }
 
-    const preview = container.querySelector(".preview");
+    const preview = container.querySelector(".tab-osd-preview");
     if (!preview) {
         return null;
     }
@@ -181,7 +181,7 @@ function drawHorizontalAxis(ctx, params, axis) {
     const centerIndex = Math.floor(params.cols / 2);
     const minOffset = -centerIndex;
     const maxOffset = centerIndex;
-    const isDark = document.body.classList.contains("dark-theme");
+    const isDark = document.documentElement.classList.contains("dark");
 
     for (let i = 0; i < params.cols; i++) {
         const offset = i - centerIndex + (params.cols % 2 === 0 ? 1 : 0);
@@ -247,7 +247,7 @@ function drawVerticalLabel(ctx, params, axis, offset, x1, y, isDark) {
 
 function drawVerticalAxis(ctx, params, axis) {
     ctx.textAlign = axis === "left" ? "right" : "left";
-    const isDark = document.body.classList.contains("dark-theme");
+    const isDark = document.documentElement.classList.contains("dark");
 
     for (let i = 0; i < params.rowsCount; i++) {
         const y = rowCenterY(i, params.containerRect, params.rows);

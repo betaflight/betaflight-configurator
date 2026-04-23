@@ -125,6 +125,21 @@
     "submit": {
         "message": "Submeter"
     },
+    "delete": {
+        "message": "Apagar"
+    },
+    "edit": {
+        "message": "Editar"
+    },
+    "add": {
+        "message": "Adicionar"
+    },
+    "update": {
+        "message": "Atualizar"
+    },
+    "save": {
+        "message": "Gravar"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Conectar: Ativado - App tenta se conectar automaticamente quando uma nova porta é detectada"
     },
@@ -346,6 +361,9 @@
     "tabGPS": {
         "message": "GPS"
     },
+    "tabFlightPlan": {
+        "message": "Plano de Voo"
+    },
     "tabMotorTesting": {
         "message": "Motores"
     },
@@ -424,6 +442,9 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU não encontrado"
+    },
+    "stm32DfuPermissionRequired": {
+        "message": "O dispositivo reiniciou para o modo DFU.<br><br>O seu navegador requer permissão USB para aceder ao dispositivo DFU. Carregue no botão abaixo para selecioná-lo no seletor de dispositivo."
     },
     "stm32RebootingToBootloader": {
         "message": "Iniciando reinicialização para o bootloader..."
@@ -2566,6 +2587,10 @@
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Manter Altitude<\/a> regula ativamente a altitude da aeronave combinando o uso de sensores externos com o Modo Ângulo (Modo Estabilizado).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "O modo piloto automático permite o controle de voo autónomo, combinando os modos de fixar altitude e fixar posição para manter um pairar estável ou seguir um caminho de voo planeado.",
+        "description": "Help text for AUTOPILOT mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Ativar o beeper - útil para localizar uma aeronave caída",
         "description": "Help text to BEEPER mode"
@@ -3029,6 +3054,27 @@
     "gpsMapHead": {
         "message": "Localização atual"
     },
+    "gpsMapSatelliteView": {
+        "message": "Vista de Satélite"
+    },
+    "gpsMapHybridView": {
+        "message": "Vista híbrida"
+    },
+    "gpsMapStreetView": {
+        "message": "Vista de rua"
+    },
+    "gpsMapZoomIn": {
+        "message": "Aumentar zoom"
+    },
+    "gpsMapZoomOut": {
+        "message": "Reduzir zoom"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Ativar ecrã completo"
+    },
+    "gpsMapRetry": {
+        "message": "Voltar a tentar"
+    },
     "gpsMapMessage1": {
         "message": "Verifique a sua ligação de internet"
     },
@@ -3134,6 +3180,180 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "não saudável"
+    },
+    "flightPlanWaypointList": {
+        "message": "Lista de Pontos de Referência"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "Nenhuns pontos de referência definidos. Clique no mapa ou use o formulário para adicionar pontos de referência."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Adicionar ponto de referência"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Editar Ponto de Referência"
+    },
+    "flightPlanLatitude": {
+        "message": "Latitude <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Longitude <span class=\"units\">°<\/span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Altitude <span class=\"units\">ft AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Velocidade <span class=\"units\">nós<\/span>"
+    },
+    "flightPlanType": {
+        "message": "Tipo de ponto de referência"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Fly Over"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Fly By"
+    },
+    "flightPlanTypeHold": {
+        "message": "Fly Hold"
+    },
+    "flightPlanTypeLand": {
+        "message": "Land"
+    },
+    "flightPlanDuration": {
+        "message": "Duração do Hold <span class=\"units\">min<\/span>"
+    },
+    "flightPlanPattern": {
+        "message": "Padrão de Hold"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Círculo"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Figura-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Órbita"
+    },
+    "flightPlanMap": {
+        "message": "Mapa de Plano de Voo"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Clique para adicionar pontos de referência. Arraste os marcadores de pontos de referência para movê-los."
+    },
+    "flightPlanLoading": {
+        "message": "Por favor aguarde..."
+    },
+    "flightPlanClear": {
+        "message": "Limpar"
+    },
+    "flightPlanLoad": {
+        "message": "Carregar"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Salvar na FC"
+    },
+    "flightPlanLoaded": {
+        "message": "Plano de voo carregado com sucesso"
+    },
+    "flightPlanSaved": {
+        "message": "Plano de voo guardado com sucesso"
+    },
+    "flightPlanCleared": {
+        "message": "Plano de voo limpo"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Carregar da FC"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Plano de voo carregado da controladora de voo"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Plano de voo guardado na controladora de voo"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Falha ao carregar o plano de voo da controladora de voo"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Falha a gravar o plano de voo para a controladora de voo"
+    },
+    "flightPlanFCEmpty": {
+        "message": "Nenhuns pontos de referência encontrados na controladora de voo"
+    },
+    "flightPlanClearedFC": {
+        "message": "Plano de voo limpo na controladora de voo"
+    },
+    "flightPlanLoadError": {
+        "message": "Falha ao carregar o plano de voo"
+    },
+    "flightPlanSaveError": {
+        "message": "Falha ao guardar o plano de voo"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Latitude inválida (deve ser entre -90 e 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Latitude inválida (deve ser entre -180 e 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Tem certeza que deseja excluir este ponto de referência?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Apagar Ponto de Referência"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Tem a certeza que pretende eliminar este ponto de referência? Esta ação não pode ser revertida."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Tem certeza que deseja limpar todos os pontos da referência? Esta ação não pode ser revertida."
+    },
+    "flightPlanClearTitle": {
+        "message": "Limpar Plano de Voo"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Carregar Plano de Voo da Controladora de Voo?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "Uma controladora de voo está conectada. Quer substituir o atual plano de voo pelo armazenado na controladora de voo? Escolhendo Não mantém o seu plano atual para que possa guardá-lo na controladora de voo."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Manter atual"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Perfil de Elevação"
+    },
+    "flightPlanDistance": {
+        "message": "Distância Total"
+    },
+    "flightPlanFlightTime": {
+        "message": "Tempo de Voo"
+    },
+    "flightPlanMinAlt": {
+        "message": "Altitude Min"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Altitude Max"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Adicionar pontos de referência para ver o perfil de elevação"
+    },
+    "flightPlanGroundElev": {
+        "message": "Elevação do solo"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Elevação do solo máx"
+    },
+    "flightPlanAvgGround": {
+        "message": "Média do Solo"
+    },
+    "flightPlanMaxGround": {
+        "message": "Máx do solo"
+    },
+    "flightPlanAlt": {
+        "message": "Alt"
+    },
+    "flightPlanDist": {
+        "message": "Dist"
     },
     "motorsVoltage": {
         "message": "Voltagem:"
@@ -3556,9 +3776,6 @@
     },
     "dataflashNotPresentNote": {
         "message": "A sua controladora de voo não tem disponível uma Memória flash compatível."
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Memória flash requer o firmware &gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
         "message": "Gravar flash para ficheiro..."
@@ -6780,6 +6997,21 @@
         "message": "Avisa se a CARGA de CPU do controlador de voo é muito alta",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Mostra um aviso o quando manter de posição falhar (ex. no modo GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"
     },
@@ -7911,6 +8143,9 @@
     "userBackupDownloadFailed": {
         "message": "Falha no download das cópias de segurança"
     },
+    "userBackupFileEmpty": {
+        "message": "O ficheiro de backup está vazio"
+    },
     "userBackupUpdateSuccess": {
         "message": "Cópia de segurança atualizada com sucesso"
     },
@@ -7959,6 +8194,36 @@
     "labelUsePasskey": {
         "message": "Usar Passkey"
     },
+    "labelSignInWithPasskey": {
+        "message": "Iniciar sessão com chave de acesso"
+    },
+    "labelSendVerificationCode": {
+        "message": "Enviar Código de Verificação"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Iniciar sessão com código de e-mail"
+    },
+    "labelBackToPasskey": {
+        "message": "Voltar ao início de sessão com chave de acesso"
+    },
+    "labelBack": {
+        "message": "Retroceder"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Não tem uma chave de acesso?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Configurar uma"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Utilize a sua chave de acesso para iniciar sessão"
+    },
+    "descriptionCodeRequest": {
+        "message": "Vamos enviar-lhe um código de verificação"
+    },
+    "descriptionCodeEntered": {
+        "message": "Digite o código que enviámos para $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Introduza o código de verificação"
     },
@@ -7994,6 +8259,15 @@
     },
     "userCreatingPasskey": {
         "message": "A criar chave de acesso..."
+    },
+    "userCodeRequired": {
+        "message": "É necessário o código de verificação"
+    },
+    "userSendingCode": {
+        "message": "A enviar código de verificação..."
+    },
+    "userSendCodeFailed": {
+        "message": "Falha ao enviar código de verificação"
     },
     "dataWaitingForData": {
         "message": "Aguardando dados..."

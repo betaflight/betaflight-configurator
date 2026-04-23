@@ -4,15 +4,21 @@ run-name: Manual Build ${{ github.ref_name }} ${{ ((inputs.debug_build == true) 
 on:
   workflow_dispatch:
     inputs:
-        debug_build:
-          description: 'Specifies if it is a debug build or a release build'
-          default: true
-          required: false
-          type: boolean
+      debug_build:
+        description: 'Specifies if it is a debug build or a release build'
+        default: true
+        required: false
+        type: boolean
 
 jobs:
-  ci:
-    name: CI
-    uses: ./.github/workflows/ci.yml
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
     with:
       debug_build: ${{ inputs.debug_build }}
+      commit_ref: ${{ github.sha }}
+    secrets:
+      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}

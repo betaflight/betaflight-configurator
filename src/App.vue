@@ -1,302 +1,52 @@
 <template>
     <UApp>
         <div class="app-wrapper">
-            <div id="background"></div>
+            <div id="background" v-show="isRevealed" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
-            <div class="headerbar">
-                <div id="menu_btn">
-                    <em class="fas fa-bars"></em>
-                </div>
-                <betaflight-logo
-                    :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                    :firmware-version="FC.CONFIG.flightControllerVersion"
-                    :firmware-id="FC.CONFIG.flightControllerIdentifier"
-                    :hardware-id="FC.CONFIG.hardwareName"
-                ></betaflight-logo>
-                <port-picker
-                    v-model="PortHandler.portPicker"
-                    :connected-bluetooth-devices="PortHandler.currentBluetoothPorts"
-                    :connected-serial-devices="PortHandler.currentSerialPorts"
-                    :connected-usb-devices="PortHandler.currentUsbPorts"
-                    :show-virtual-option="PortHandler.showVirtualMode"
-                    :show-manual-option="PortHandler.showManualMode"
-                    :show-bluetooth-option="PortHandler.showBluetoothOption"
-                    :show-serial-option="PortHandler.showSerialOption"
-                    :show-usb-option="PortHandler.showUsbOption"
-                    :disabled="PortHandler.portPickerDisabled"
-                ></port-picker>
-                <div class="header-wrapper">
-                    <div id="quad-status_wrapper">
-                        <battery-icon
-                            :voltage="FC.ANALOG.voltage"
-                            :vbatmincellvoltage="FC.BATTERY_CONFIG.vbatmincellvoltage"
-                            :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
-                            :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
-                            :batteryState="FC.BATTERY_STATE?.batteryState"
-                        >
-                        </battery-icon>
-                        <battery-legend
-                            :voltage="FC.ANALOG.voltage"
-                            :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
-                        ></battery-legend>
-                        <div class="bottomStatusIcons">
-                            <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>
-                            <div class="failsafeicon cf_tip" i18n_title="mainHelpFailsafe"></div>
-                            <div class="linkicon cf_tip" i18n_title="mainHelpLink"></div>
-                        </div>
-                    </div>
-                    <div id="sensor-status" class="sensor_state mode-connected">
-                        <ul>
-                            <li class="gyro" i18n_title="sensorStatusGyro">
-                                <div class="gyroicon" i18n="sensorStatusGyroShort"></div>
-                            </li>
-                            <li class="accel" i18n_title="sensorStatusAccel">
-                                <div class="accicon" i18n="sensorStatusAccelShort"></div>
-                            </li>
-                            <li class="mag" i18n_title="sensorStatusMag">
-                                <div class="magicon" i18n="sensorStatusMagShort"></div>
-                            </li>
-                            <li class="baro" i18n_title="sensorStatusBaro">
-                                <div class="baroicon" i18n="sensorStatusBaroShort"></div>
-                            </li>
-                            <li class="gps" i18n_title="sensorStatusGPS">
-                                <div class="gpsicon" i18n="sensorStatusGPSShort"></div>
-                            </li>
-                            <li class="sonar" i18n_title="sensorStatusSonar">
-                                <div class="sonaricon" i18n="sensorStatusSonarShort"></div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="dataflash_wrapper_global">
-                        <div class="noflash_global" i18n="sensorDataFlashNotFound"></div>
-                        <ul class="dataflash-contents_global">
-                            <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
-                            <progress class="dataflash-progress_global" max="100"></progress>
-                        </ul>
-                        <div id="expertMode">
-                            <label>
-                                <input
-                                    name="expertModeCheckbox"
-                                    class="togglesmall"
-                                    type="checkbox"
-                                    v-model="expertMode"
-                                />
-                                <span i18n="expertMode" class="expertModeText"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div id="header_buttons">
-                    <div class="firmware_flasher_button">
-                        <a class="firmware_flasher_button__link disabled" href="#" aria-label="Firmware Flasher"></a>
-                        <div class="firmware_flasher_button__label" i18n="flashTab"></div>
-                    </div>
-                    <div class="connection_button">
-                        <a class="connection_button__link disabled" href="#" aria-label="Connect"></a>
-                        <div class="connection_button__label" i18n="connect"></div>
-                    </div>
-                </div>
-                <div id="reveal_btn">
-                    <em class="fas fa-chevron-down"></em>
-                </div>
-            </div>
-            <div id="log">
-                <div class="logswitch">
-                    <a href="#" id="showlog" i18n="logActionShow"></a>
-                </div>
-                <div id="scrollicon"></div>
-                <div class="wrapper"></div>
+            <div class="mobile-topbar" :class="{ 'mobile-topbar--hidden': topbarHidden }">
+                <UButton
+                    id="menu_btn"
+                    icon="i-lucide-menu"
+                    color="neutral"
+                    variant="soft"
+                    size="lg"
+                    square
+                    :aria-label="$t('openSidebarMenu')"
+                    @click="isRevealed = !isRevealed"
+                />
+                <div class="mobile-topbar__logo" :title="logoTooltip" aria-hidden="true"></div>
+                <div class="mobile-topbar__spacer" aria-hidden="true"></div>
             </div>
             <div id="tab-content-container">
-                <div class="tab_container">
+                <div class="tab_container" :class="{ reveal: isRevealed }">
                     <betaflight-logo
                         :configurator-version="CONFIGURATOR.getDisplayVersion()"
                         :firmware-version="FC.CONFIG.flightControllerVersion"
                         :firmware-id="FC.CONFIG.flightControllerIdentifier"
                         :hardware-id="FC.CONFIG.hardwareName"
                     ></betaflight-logo>
-                    <div id="tabs">
-                        <ul class="mode-disconnected">
-                            <li class="tab_landing" id="tab_landing">
-                                <a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a>
-                            </li>
-                            <li class="tab_help" id="tab_help">
-                                <a href="#" i18n="tabHelp" class="tabicon ic_help" i18n_title="tabHelp"></a>
-                            </li>
-                            <li class="tab_options" id="tab_options">
-                                <a href="#" i18n="tabOptions" class="tabicon ic_config" i18n_title="tabOptions"></a>
-                            </li>
-                            <li class="tab_firmware_flasher" id="tabFirmware">
-                                <a
-                                    href="#"
-                                    i18n="tabFirmwareFlasher"
-                                    class="tabicon ic_flasher"
-                                    i18n_title="tabFirmwareFlasher"
-                                ></a>
-                            </li>
-                            <li class="tab_preflight">
-                                <a
-                                    href="#"
-                                    i18n="tabPreflight"
-                                    class="tabicon ic_preflight"
-                                    i18n_title="tabPreflight"
-                                ></a>
-                            </li>
-                        </ul>
-                        <ul class="mode-connected">
-                            <li class="tab_setup">
-                                <a href="#" i18n="tabSetup" class="tabicon ic_setup" i18n_title="tabSetup"></a>
-                            </li>
-                            <li class="tab_setup_osd">
-                                <a href="#" i18n="tabSetupOSD" class="tabicon ic_setup" i18n_title="tabSetupOSD"></a>
-                            </li>
-                            <li class="tab_ports">
-                                <a href="#" i18n="tabPorts" class="tabicon ic_ports" i18n_title="tabPorts"></a>
-                            </li>
-                            <li class="tab_configuration">
-                                <a
-                                    href="#"
-                                    i18n="tabConfiguration"
-                                    class="tabicon ic_config"
-                                    i18n_title="tabConfiguration"
-                                ></a>
-                            </li>
-                            <li class="tab_power">
-                                <a href="#" i18n="tabPower" class="tabicon ic_power" i18n_title="tabPower"></a>
-                            </li>
-                            <li class="tab_failsafe" v-show="expertMode">
-                                <a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"></a>
-                            </li>
-                            <li class="tab_presets">
-                                <a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"></a>
-                            </li>
-                            <li class="tab_pid_tuning">
-                                <a href="#" i18n="tabPidTuning" class="tabicon ic_pid" i18n_title="tabPidTuning"></a>
-                            </li>
-                            <li class="tab_receiver">
-                                <a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"></a>
-                            </li>
-                            <li class="tab_auxiliary">
-                                <a href="#" i18n="tabAuxiliary" class="tabicon ic_modes" i18n_title="tabAuxiliary"></a>
-                            </li>
-                            <li class="tab_adjustments" v-show="expertMode">
-                                <a
-                                    href="#"
-                                    i18n="tabAdjustments"
-                                    class="tabicon ic_adjust"
-                                    i18n_title="tabAdjustments"
-                                ></a>
-                            </li>
-                            <li
-                                class="tab_servos"
-                                v-show="
-                                    ['USE_SERVOS', 'USE_WING'].some((opt) => FC.CONFIG?.buildOptions?.includes(opt))
-                                "
-                            >
-                                <a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a>
-                            </li>
-                            <li class="tab_gps" v-show="FC.CONFIG?.buildOptions?.includes('USE_GPS')">
-                                <a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a>
-                            </li>
-                            <li class="tab_motors">
-                                <a
-                                    href="#"
-                                    i18n="tabMotorTesting"
-                                    class="tabicon ic_motor"
-                                    i18n_title="tabMotorTesting"
-                                ></a>
-                            </li>
-                            <li
-                                class="tab_osd"
-                                v-show="
-                                    FC.FEATURE_CONFIG?.features?.isEnabled &&
-                                    FC.FEATURE_CONFIG.features.isEnabled('OSD')
-                                "
-                            >
-                                <a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd"></a>
-                            </li>
-                            <li class="tab_vtx">
-                                <a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx"></a>
-                            </li>
-                            <li
-                                class="tab_transponder"
-                                v-show="
-                                    FC.FEATURE_CONFIG?.features?.isEnabled &&
-                                    FC.FEATURE_CONFIG.features.isEnabled('TRANSPONDER')
-                                "
-                            >
-                                <a
-                                    href="#"
-                                    i18n="tabTransponder"
-                                    class="tabicon ic_transponder"
-                                    i18n_title="tabTransponder"
-                                ></a>
-                            </li>
-                            <li
-                                class="tab_led_strip"
-                                v-show="
-                                    FC.FEATURE_CONFIG?.features?.isEnabled &&
-                                    FC.FEATURE_CONFIG.features.isEnabled('LED_STRIP')
-                                "
-                            >
-                                <a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"></a>
-                            </li>
-                            <li class="tab_sensors" v-show="expertMode">
-                                <a
-                                    href="#"
-                                    i18n="tabRawSensorData"
-                                    class="tabicon ic_sensors"
-                                    i18n_title="tabRawSensorData"
-                                ></a>
-                            </li>
-                            <li class="tab_logging" v-show="expertMode">
-                                <a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a>
-                            </li>
-                            <li class="tab_onboard_logging">
-                                <a
-                                    href="#"
-                                    i18n="tabOnboardLogging"
-                                    class="tabicon ic_data"
-                                    i18n_title="tabOnboardLogging"
-                                ></a>
-                            </li>
-                        </ul>
-                        <ul class="mode-connected mode-connected-cli">
-                            <li class="tab_cli">
-                                <a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI"></a>
-                            </li>
-                        </ul>
-                        <ul class="mode-loggedin">
-                            <li class="tab_backups">
-                                <a href="#" i18n="tabBackups" class="tabicon ic_data" i18n_title="tabBackups"></a>
-                            </li>
-                            <li class="tab_user_profile">
-                                <a
-                                    href="#"
-                                    i18n="tabUserProfile"
-                                    class="tabicon ic_user"
-                                    i18n_title="tabUserProfile"
-                                ></a>
-                            </li>
-                        </ul>
-                    </div>
+                    <ConnectButton />
+                    <Sidebar />
                     <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
-                <div id="content"></div>
+                <div id="content" @scroll.passive="onContentScroll">
+                    <component
+                        :is="activeTabComponent"
+                        v-if="activeTabComponent"
+                        :key="vueTabState.activeTabKey"
+                        ref="activeTabInstance"
+                    />
+                </div>
             </div>
             <status-bar
                 :port-usage-down="PortUsage.port_usage_down"
                 :port-usage-up="PortUsage.port_usage_up"
                 :connection-timestamp="CONNECTION.timestamp"
                 :packet-error="MSP.packet_error"
-                :i2c-error="FC.CONFIG.i2cError"
                 :cycle-time="FC.CONFIG.cycleTime"
                 :cpu-load="FC.CONFIG.cpuload"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                :firmware-version="FC.CONFIG.flightControllerVersion"
-                :firmware-id="FC.CONFIG.flightControllerIdentifier"
-                :hardware-id="FC.CONFIG.hardwareName"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">
@@ -309,13 +59,24 @@
 </template>
 
 <script setup>
-import { computed, reactive, shallowRef } from "vue";
+import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
+import { useMediaQuery } from "@vueuse/core";
+import ConnectButton from "./components/port-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
+import Sidebar from "./components/sidebar/Sidebar.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
-import PortHandlerModule from "./js/port_handler.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
+import GUI from "./js/gui.js";
+import { i18n } from "./js/localization";
+import {
+    completeVueTabMount,
+    tabAdapterRegistration,
+    TAB_ADAPTER_REGISTRATION_KEY,
+    vueTabState,
+} from "./js/vue_tab_mounter.js";
+import { VueTabComponents } from "./js/vue_tab_registry.js";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
@@ -348,20 +109,87 @@ function currentVm() {
 const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
 const FC = computed(() => currentVm()?.FC ?? FCModule);
 const MSP = computed(() => currentVm()?.MSP ?? MSPModule);
-const PortHandler = computed(() => currentVm()?.PortHandler ?? PortHandlerModule);
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
-// Read/write current vm via currentVm() so we track the same vm as the globals after window.vm is reassigned.
-const expertMode = computed({
-    get: () => Boolean(currentVm()?.expertMode),
-    set: (value) => {
-        const v = currentVm();
-        if (v) {
-            v.expertMode = value;
-        }
-    },
+const activeTabInstance = ref(null);
+
+const isRevealed = ref(false);
+const sidebarCompact = useMediaQuery("(max-width: 1055px)");
+const isSidebarExpanded = computed(() => !sidebarCompact.value || isRevealed.value);
+
+// Auto-close the drawer when leaving the compact breakpoint.
+watch(sidebarCompact, (compact) => {
+    if (!compact) {
+        isRevealed.value = false;
+    }
 });
+
+const topbarHidden = ref(false);
+let lastScrollTop = 0;
+const scrollThreshold = 6;
+
+function onContentScroll(event) {
+    const current = event.target.scrollTop;
+    if (current <= 0) {
+        topbarHidden.value = false;
+        lastScrollTop = 0;
+        return;
+    }
+    const diff = current - lastScrollTop;
+    if (diff > scrollThreshold) {
+        topbarHidden.value = true;
+        lastScrollTop = current;
+    } else if (diff < -scrollThreshold) {
+        topbarHidden.value = false;
+        lastScrollTop = current;
+    }
+}
+
+// Ensure the topbar is visible when the drawer opens so the hamburger stays reachable.
+watch(isRevealed, (revealed) => {
+    if (revealed) {
+        topbarHidden.value = false;
+    }
+});
+
+const logoTooltip = computed(() => {
+    const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
+    const cfg = FC.value.CONFIG ?? {};
+    if (cfg.flightControllerVersion && cfg.flightControllerIdentifier) {
+        lines.push(
+            `${i18n.getMessage("versionLabelFirmware")}: ${cfg.flightControllerVersion} ${cfg.flightControllerIdentifier}`,
+        );
+    }
+    if (cfg.hardwareName) {
+        lines.push(`${i18n.getMessage("versionLabelTarget")}: ${cfg.hardwareName}`);
+    }
+    return lines.join("\n");
+});
+
+provide("sidebarExpanded", isSidebarExpanded);
+
+const activeTabComponent = computed(() => {
+    const tabName = vueTabState.activeTabName;
+    return tabName ? (VueTabComponents[tabName] ?? null) : null;
+});
+
+provide("betaflightModel", currentVm());
+provide("gui", GUI);
+provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
+
+watch(
+    () => vueTabState.activeTabKey,
+    async () => {
+        if (!vueTabState.activeTabName) {
+            return;
+        }
+
+        await nextTick();
+        completeVueTabMount(activeTabInstance.value);
+    },
+    { flush: "post" },
+);
 </script>
 
 <style scoped>
@@ -387,5 +215,52 @@ const expertMode = computed({
 /* Legacy cache node is required by some code paths but should never be visible in Vue UI */
 #cache {
     display: none;
+}
+
+/* Mobile top bar — hamburger left, centred wide logo, auto-hides on scroll down. */
+.mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2001;
+    height: 3rem;
+    padding: 0.25rem 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--surface-100);
+    border-bottom: 1px solid var(--surface-200);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.25s ease;
+}
+.mobile-topbar--hidden {
+    transform: translateY(-100%);
+}
+.mobile-topbar__logo {
+    flex: 1;
+    min-width: 0;
+    height: 2.5rem;
+    background-image: url(./images/bf_logo_white.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
+}
+.dark .mobile-topbar__logo {
+    background-image: url(./images/bf_logo_black.svg);
+}
+.mobile-topbar__spacer {
+    width: 2.5rem;
+    flex-shrink: 0;
+}
+
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .mobile-topbar {
+        display: flex;
+    }
+    /* Leave room at the top of the content area for the top bar. */
+    #content {
+        padding-top: 3rem;
+    }
 }
 </style>

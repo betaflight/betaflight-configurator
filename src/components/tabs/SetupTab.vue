@@ -1,431 +1,356 @@
 <template>
-    <div class="tab-setup">
+    <BaseTab tab-name="setup">
         <div class="content_wrapper">
-            <div class="tab_title" i18n="tabSetup">Setup</div>
+            <div class="tab_title">{{ $t("tabSetup") }}</div>
             <WikiButton docUrl="setup" />
-            <div class="grid-row">
-                <div class="grid-col col3">
-                    <div class="default_btn">
-                        <div id="accel_calib_rest" v-show="!state.calibratingAccel">
-                            <a
-                                class="calibrateAccel"
-                                :class="{ disabled: state.disabledAccel, calibrating: state.calibratingAccel }"
-                                href="#"
-                                @click.prevent="onCalibrateAccel"
-                                >{{ i18n.getMessage("initialSetupButtonCalibrateAccel") }}</a
-                            >
-                        </div>
-                        <div id="accel_calib_running" v-show="state.calibratingAccel">
-                            <div class="data-loading-setup">
-                                <p i18n="initialSetupButtonCalibratingText"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid-col col9">
-                    <div class="cell_setup">
-                        <span i18n="initialSetupCalibrateAccelText"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="grid-col col3">
-                    <div class="default_btn">
-                        <div id="mag_calib_rest" v-show="!state.calibratingMag">
-                            <a
-                                class="calibrateMag"
-                                :class="{ disabled: state.disabledMag, calibrating: state.calibratingMag }"
-                                href="#"
-                                @click.prevent="onCalibrateMag"
-                                >{{ i18n.getMessage("initialSetupButtonCalibrateMag") }}</a
-                            >
-                        </div>
-                        <div id="mag_calib_running" v-show="state.calibratingMag">
-                            <div class="data-loading-setup">
-                                <p i18n="initialSetupButtonCalibratingText"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid-col col9">
-                    <div class="cell_setup">
-                        <span i18n="initialSetupCalibrateMagText"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="grid-row" v-show="isExpert">
-                <div class="grid-col col3">
-                    <div class="default_btn initialSetupReset">
-                        <a
-                            class="resetSettings"
-                            href="#"
-                            @click.prevent="showConfirmReset"
-                            i18n="initialSetupButtonReset"
-                            >{{ i18n.getMessage("initialSetupButtonReset") }}</a
-                        >
-                    </div>
-                </div>
-                <div class="grid-col col9">
-                    <div class="cell_setup initialSetupReset">
-                        <span i18n="initialSetupResetText"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="grid-row" v-show="isExpert">
-                <div class="grid-col col3">
-                    <div class="default_btn initialSetupRebootBootloader">
-                        <a
-                            class="rebootBootloader"
-                            href="#"
-                            @click.prevent="onRebootBootloader"
-                            i18n="initialSetupButtonRebootBootloader"
-                            >{{ i18n.getMessage("initialSetupButtonRebootBootloader") }}</a
-                        >
-                    </div>
-                </div>
-                <div class="grid-col col9">
-                    <div class="cell_setup initialSetupRebootBootloader">
-                        <span i18n="initialSetupRebootBootloaderText"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="modelwrapper"></div>
-            <div class="grid-row grid-box col4">
-                <div class="col-span-3 model-and-info">
+            <!-- Top: 3D Model + Instruments & Calibration side-by-side -->
+            <div class="setup-top">
+                <div class="model-and-info">
                     <div id="interactive_block">
                         <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
                             <canvas id="canvas" ref="canvasEl"></canvas>
                             <div class="attitude_info">
                                 <dl>
-                                    <dt i18n="initialSetupHeading"></dt>
+                                    <dt>{{ $t("initialSetupHeading") }}</dt>
                                     <dd class="heading">{{ state.attitude.heading }}</dd>
-                                    <dt i18n="initialSetupPitch"></dt>
+                                    <dt>{{ $t("initialSetupPitch") }}</dt>
                                     <dd class="pitch">{{ state.attitude.pitch }}</dd>
-                                    <dt i18n="initialSetupRoll"></dt>
+                                    <dt>{{ $t("initialSetupRoll") }}</dt>
                                     <dd class="roll">{{ state.attitude.roll }}</dd>
                                 </dl>
                             </div>
                         </div>
-                        <a
-                            class="reset sm-min"
-                            href="#"
-                            i18n="initialSetupButtonResetZaxis"
-                            @click.prevent="resetZaxis"
-                            >{{ i18n.getMessage("initialSetupButtonResetZaxis") }}</a
+                        <UButton
+                            class="reset-zaxis sm-min"
+                            :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
+                            color="neutral"
+                            variant="subtle"
+                            @click="resetZaxis"
+                        />
+                    </div>
+                </div>
+                <div class="setup-sidebar">
+                    <UiBox
+                        :title="$t('initialSetupInstrumentsHead')"
+                        :help="$t('initialSetupInstrumentsHeadHelp')"
+                        type="neutral"
+                    >
+                        <div class="flex flex-row justify-center gap-2">
+                            <span id="attitude"></span>
+                            <span id="heading"></span>
+                        </div>
+                    </UiBox>
+                    <div class="flex flex-col gap-2">
+                        <UButton
+                            :label="
+                                state.calibratingAccel
+                                    ? $t('initialSetupButtonCalibratingText')
+                                    : $t('initialSetupButtonCalibrateAccel')
+                            "
+                            :disabled="state.disabledAccel"
+                            :loading="state.calibratingAccel"
+                            class="w-full justify-center"
+                            @click="onCalibrateAccel"
                         >
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupCalibrateAccelText')" />
+                            </template>
+                        </UButton>
+                        <UButton
+                            :label="
+                                state.calibratingMag
+                                    ? $t('initialSetupButtonCalibratingText')
+                                    : $t('initialSetupButtonCalibrateMag')
+                            "
+                            :disabled="state.disabledMag"
+                            :loading="state.calibratingMag"
+                            class="w-full justify-center"
+                            @click="onCalibrateMag"
+                        >
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
+                            </template>
+                        </UButton>
+                        <div v-show="isExpert">
+                            <UButton
+                                :label="$t('initialSetupButtonReset')"
+                                color="error"
+                                class="w-full justify-center"
+                                @click="showConfirmReset"
+                            >
+                                <template #trailing>
+                                    <HelpIcon :text="$t('initialSetupResetText')" />
+                                </template>
+                            </UButton>
+                        </div>
+                        <div v-show="isExpert">
+                            <UButton
+                                :label="$t('initialSetupButtonRebootBootloader')"
+                                color="error"
+                                class="w-full justify-center"
+                                @click="onRebootBootloader"
+                            >
+                                <template #trailing>
+                                    <HelpIcon :text="$t('initialSetupRebootBootloaderText')" />
+                                </template>
+                            </UButton>
+                        </div>
                     </div>
                 </div>
-                <div class="col-span-1 grid-box col1">
-                    <div class="gui_box grey instrumentsbox">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="initialSetupInstrumentsHead"></div>
-                            <div class="helpicon cf_tip" i18n_title="initialSetupInstrumentsHeadHelp"></div>
-                        </div>
-                        <span id="attitude"></span> <span id="heading"></span>
-                    </div>
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="initialSetupGPSHead"></div>
-                            <div class="helpicon cf_tip" i18n_title="initialSetupGPSHeadHelp"></div>
-                        </div>
-                        <div class="spacer_box GPS_info">
-                            <InfoGrid
-                                :items="[
-                                    { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
-                                    { id: 'gpsSats', i18n: 'gpsSats', value: state.gpsSats, class: 'gpsSats' },
-                                    { id: 'gpsLatitude', i18n: 'gpsLatitude', slotName: 'gpsLatitude' },
-                                    { id: 'gpsLongitude', i18n: 'gpsLongitude', slotName: 'gpsLongitude' },
-                                ]"
-                            >
-                                <template #gps3dFix>
-                                    <span class="colorToggle" :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }">
-                                        {{
-                                            state.gpsFix
-                                                ? i18n.getMessage("gpsFixTrue")
-                                                : i18n.getMessage("gpsFixFalse")
-                                        }}
-                                    </span>
-                                </template>
-                                <template #gpsLatitude>
-                                    <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
-                                </template>
-                                <template #gpsLongitude>
-                                    <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
-                                </template>
-                            </InfoGrid>
-                        </div>
-                    </div>
-                    <div class="gui_box grey sonarBox" v-show="state.showSonarBox">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="initialSetupSonarHead"></div>
-                            <div class="helpicon cf_tip" i18n_title="initialSetupSonarHeadHelp"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <InfoGrid
-                                :items="[
-                                    {
-                                        id: 'sonarAltitude',
-                                        i18n: 'initialSetupAltitudeSonar',
-                                        value: state.sonar,
-                                        class: 'sonarAltitude',
-                                    },
-                                ]"
-                            />
-                        </div>
-                    </div>
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="initialSetupInfoHead"></div>
-                            <div class="helpicon cf_tip" i18n_title="initialSetupInfoHeadHelp"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <InfoGrid
-                                :items="[
-                                    {
-                                        id: 'arming-disable-flag',
-                                        i18n: 'initialSetupArmingDisableFlags',
-                                        slotName: 'arming-disable-flag',
-                                    },
-                                    { i18n: 'initialSetupBattery', value: state.batVoltage, class: 'bat-voltage' },
-                                    { i18n: 'initialSetupDrawn', value: state.batMahDrawn, class: 'bat-mah-drawn' },
-                                    {
-                                        i18n: 'initialSetupDrawing',
-                                        value: state.batMahDrawing,
-                                        class: 'bat-mah-drawing',
-                                    },
-                                    { i18n: 'initialSetupRSSI', value: state.rssi, class: 'rssi' },
-                                    { id: 'mcu', i18n: 'initialSetupMCU', value: state.mcu, class: 'mcu' },
-                                    {
-                                        id: 'cpu-temp',
-                                        i18n: 'initialSetupCpuTemp',
-                                        value: state.cpuTemp,
-                                        class: 'cpu-temp',
-                                    },
-                                ]"
-                                gridClass="system_info"
-                            >
-                                <template #arming-disable-flag>
-                                    <span
-                                        v-for="(flag, idx) in fcStore.armingFlags"
-                                        :key="flag.id"
-                                        v-show="flag.visible"
-                                        class="cf_tip disarm-flag"
-                                        :title="flag.tooltip"
-                                        >{{ flag.name }}</span
-                                    >
-                                    <span v-show="fcStore.isReadyToArm" id="initialSetupArmingAllowed">{{
-                                        i18n.getMessage("initialSetupArmingAllowed")
-                                    }}</span>
-                                </template>
-                            </InfoGrid>
-                        </div>
-                    </div>
-                    <div class="gui_box grey" id="sensorInfoBox">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="initialSensorInfoHead"></div>
-                            <div class="helpicon cf_tip" i18n_title="initialSensorInfoHeadHelp"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <InfoGrid
-                                :items="[
-                                    {
-                                        id: 'sensor_gyro_hw',
-                                        i18n: 'initialSetupSensorGyro',
-                                        value: state.sensorGyro,
-                                        class: 'sensor_gyro_hw',
-                                    },
-                                    {
-                                        id: 'sensor_acc_hw',
-                                        i18n: 'initialSetupSensorAcc',
-                                        value: state.sensorAcc,
-                                        class: 'sensor_acc_hw',
-                                    },
-                                    {
-                                        id: 'sensor-mag-hw',
-                                        i18n: 'initialSetupSensorMag',
-                                        value: state.sensorMag,
-                                        class: 'sensor_mag_hw',
-                                    },
-                                    {
-                                        id: 'sensor_baro_hw',
-                                        i18n: 'initialSetupSensorBaro',
-                                        value: state.sensorBaro,
-                                        class: 'sensor_baro_hw',
-                                    },
-                                    {
-                                        id: 'sensor-sonar-hw',
-                                        i18n: 'initialSetupSensorSonar',
-                                        value: state.sensorSonar,
-                                        class: 'sensor_sonar_hw',
-                                    },
-                                    {
-                                        id: 'sensor-opticalflow-hw',
-                                        i18n: 'initialSetupSensorOpticalflow',
-                                        value: state.sensorOpticalflow,
-                                        class: 'sensor_opticalflow_hw',
-                                    },
-                                ]"
-                            />
-                        </div>
-                    </div>
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="initialSetupInfoBuild"></div>
-                            <div class="helpicon cf_tip" i18n_title="initialSetupInfoFirmwareHelp"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <InfoGrid
-                                :items="[
-                                    {
-                                        id: 'api-version',
-                                        i18n: 'initialSetupInfoAPIversion',
-                                        value: state.apiVersion,
-                                        class: 'api-version',
-                                    },
-                                    {
-                                        id: 'build-date',
-                                        i18n: 'initialSetupInfoBuildDate',
-                                        value: state.buildDate,
-                                        class: 'build-date',
-                                    },
-                                    {
-                                        id: 'build-type',
-                                        i18n: 'initialSetupInfoBuildType',
-                                        value: state.buildType,
-                                        class: 'build-type',
-                                    },
-                                    { id: 'build-info', i18n: 'initialSetupInfoBuildInfo', slotName: 'build-info' },
-                                    {
-                                        id: 'build-firmware',
-                                        i18n: 'initialSetupInfoBuildFirmware',
-                                        slotName: 'build-firmware',
-                                    },
-                                ]"
-                            >
-                                <template #build-info>
-                                    <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
-                                        <span
-                                            v-for="btn in state.buildInfoButtons"
-                                            :key="btn.type"
-                                            class="buildInfoBtn"
-                                        >
-                                            <a :href="btn.href" target="_blank" :title="btn.title"
-                                                ><strong>{{ btn.label }}</strong></a
-                                            >
-                                        </span>
-                                    </template>
-                                    <template v-else>
-                                        <span v-html="state.buildInfoHtml"></span>
-                                    </template>
-                                </template>
+            </div>
 
-                                <template #build-firmware>
-                                    <span v-if="state.buildOptionsValid" class="buildInfoBtn">
-                                        <a
-                                            href="#"
-                                            :title="i18n.getMessage('initialSetupInfoBuildOptionList')"
-                                            @click.prevent="openBuildOptionsDialog"
-                                            ><strong>{{ i18n.getMessage("initialSetupInfoBuildOptions") }}</strong></a
-                                        >
-                                    </span>
-                                    <span v-if="state.buildKeyValid" class="buildInfoBtn">
-                                        <a
-                                            :href="state.buildRoot + '/hex'"
-                                            target="_blank"
-                                            :title="i18n.getMessage('initialSetupInfoBuildDownload')"
-                                            ><strong>{{ i18n.getMessage("initialSetupInfoBuildDownload") }}</strong></a
-                                        >
-                                    </span>
-                                </template>
-                            </InfoGrid>
-                        </div>
-                    </div>
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="initialSetupNetworkInfo"></div>
-                            <div class="helpicon cf_tip" i18n_title="initialSetupNetworkInfoHelp"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <InfoGrid
-                                :items="[
-                                    {
-                                        id: 'network-status',
-                                        i18n: 'initialSetupNetworkInfoStatus',
-                                        value: state.networkStatus,
-                                        class: 'network-status',
-                                    },
-                                    {
-                                        id: 'network-type',
-                                        i18n: 'initialSetupNetworkType',
-                                        value: state.networkType,
-                                        class: 'network-type',
-                                    },
-                                    {
-                                        id: 'network-downlink',
-                                        i18n: 'initialSetupNetworkDownlink',
-                                        value: state.networkDownlink,
-                                        class: 'network-downlink',
-                                    },
-                                    {
-                                        id: 'network-rtt',
-                                        i18n: 'initialSetupNetworkRtt',
-                                        value: state.networkRtt,
-                                        class: 'network-rtt',
-                                    },
-                                ]"
-                            />
-                        </div>
-                    </div>
-                </div>
+            <!-- Info panels in responsive multi-column grid -->
+            <div class="setup-info-grid">
+                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')" type="neutral">
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'arming-disable-flag',
+                                i18n: 'initialSetupArmingDisableFlags',
+                                slotName: 'arming-disable-flag',
+                            },
+                            {
+                                i18n: 'initialSetupBattery',
+                                value: state.batVoltage,
+                                class: 'bat-voltage',
+                            },
+                            {
+                                i18n: 'initialSetupDrawn',
+                                value: state.batMahDrawn,
+                                class: 'bat-mah-drawn',
+                            },
+                            {
+                                i18n: 'initialSetupDrawing',
+                                value: state.batMahDrawing,
+                                class: 'bat-mah-drawing',
+                            },
+                            { i18n: 'initialSetupRSSI', value: state.rssi, class: 'rssi' },
+                            {
+                                id: 'mcu',
+                                i18n: 'initialSetupMCU',
+                                value: state.mcu,
+                                class: 'mcu',
+                            },
+                            {
+                                id: 'cpu-temp',
+                                i18n: 'initialSetupCpuTemp',
+                                value: state.cpuTemp,
+                                class: 'cpu-temp',
+                            },
+                        ]"
+                        gridClass="system_info"
+                    >
+                        <template #arming-disable-flag>
+                            <span
+                                v-for="flag in fcStore.armingFlags"
+                                :key="flag.id"
+                                v-show="flag.visible"
+                                class="cf_tip disarm-flag"
+                                :title="flag.tooltip"
+                                >{{ flag.name }}</span
+                            >
+                            <span v-show="fcStore.isReadyToArm" id="initialSetupArmingAllowed">{{
+                                $t("initialSetupArmingAllowed")
+                            }}</span>
+                        </template>
+                    </InfoGrid>
+                </UiBox>
+                <UiBox
+                    :title="$t('initialSensorInfoHead')"
+                    :help="$t('initialSensorInfoHeadHelp')"
+                    type="neutral"
+                    id="sensorInfoBox"
+                >
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'sensor_gyro_hw',
+                                i18n: 'initialSetupSensorGyro',
+                                value: state.sensorGyro,
+                                class: 'sensor_gyro_hw',
+                            },
+                            {
+                                id: 'sensor_acc_hw',
+                                i18n: 'initialSetupSensorAcc',
+                                value: state.sensorAcc,
+                                class: 'sensor_acc_hw',
+                            },
+                            {
+                                id: 'sensor-mag-hw',
+                                i18n: 'initialSetupSensorMag',
+                                value: state.sensorMag,
+                                class: 'sensor_mag_hw',
+                            },
+                            {
+                                id: 'sensor_baro_hw',
+                                i18n: 'initialSetupSensorBaro',
+                                value: state.sensorBaro,
+                                class: 'sensor_baro_hw',
+                            },
+                            {
+                                id: 'sensor-sonar-hw',
+                                i18n: 'initialSetupSensorSonar',
+                                value: state.sensorSonar,
+                                class: 'sensor_sonar_hw',
+                            },
+                            {
+                                id: 'sensor-opticalflow-hw',
+                                i18n: 'initialSetupSensorOpticalflow',
+                                value: state.sensorOpticalflow,
+                                class: 'sensor_opticalflow_hw',
+                            },
+                        ]"
+                    />
+                </UiBox>
+                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')" type="neutral">
+                    <InfoGrid
+                        :items="[
+                            { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
+                            { id: 'gpsSats', i18n: 'gpsSats', value: state.gpsSats, class: 'gpsSats' },
+                            { id: 'gpsLatitude', i18n: 'gpsLatitude', slotName: 'gpsLatitude' },
+                            { id: 'gpsLongitude', i18n: 'gpsLongitude', slotName: 'gpsLongitude' },
+                        ]"
+                    >
+                        <template #gps3dFix>
+                            <span class="colorToggle" :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }">
+                                {{ state.gpsFix ? $t("gpsFixTrue") : $t("gpsFixFalse") }}
+                            </span>
+                        </template>
+                        <template #gpsLatitude>
+                            <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
+                        </template>
+                        <template #gpsLongitude>
+                            <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
+                        </template>
+                    </InfoGrid>
+                </UiBox>
+                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')" type="neutral">
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'api-version',
+                                i18n: 'initialSetupInfoAPIversion',
+                                value: state.apiVersion,
+                                class: 'api-version',
+                            },
+                            {
+                                id: 'build-date',
+                                i18n: 'initialSetupInfoBuildDate',
+                                value: state.buildDate,
+                                class: 'build-date',
+                            },
+                            {
+                                id: 'build-type',
+                                i18n: 'initialSetupInfoBuildType',
+                                value: state.buildType,
+                                class: 'build-type',
+                            },
+                            {
+                                id: 'build-info',
+                                i18n: 'initialSetupInfoBuildInfo',
+                                slotName: 'build-info',
+                            },
+                            {
+                                id: 'build-firmware',
+                                i18n: 'initialSetupInfoBuildFirmware',
+                                slotName: 'build-firmware',
+                            },
+                        ]"
+                    >
+                        <template #build-info>
+                            <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
+                                <span v-for="btn in state.buildInfoButtons" :key="btn.type" class="buildInfoBtn">
+                                    <a :href="btn.href" target="_blank" :title="btn.title"
+                                        ><strong>{{ btn.label }}</strong></a
+                                    >
+                                </span>
+                            </template>
+                            <template v-else>
+                                <span v-html="state.buildInfoHtml"></span>
+                            </template>
+                        </template>
+
+                        <template #build-firmware>
+                            <span v-if="state.buildOptionsValid" class="buildInfoBtn">
+                                <a
+                                    href="#"
+                                    :title="$t('initialSetupInfoBuildOptionList')"
+                                    @click.prevent="openBuildOptionsDialog"
+                                    ><strong>{{ $t("initialSetupInfoBuildOptions") }}</strong></a
+                                >
+                            </span>
+                            <span v-if="state.buildKeyValid" class="buildInfoBtn">
+                                <a
+                                    :href="state.buildRoot + '/hex'"
+                                    target="_blank"
+                                    :title="$t('initialSetupInfoBuildDownload')"
+                                    ><strong>{{ $t("initialSetupInfoBuildDownload") }}</strong></a
+                                >
+                            </span>
+                        </template>
+                    </InfoGrid>
+                </UiBox>
+                <UiBox
+                    v-show="state.showSonarBox"
+                    :title="$t('initialSetupSonarHead')"
+                    :help="$t('initialSetupSonarHeadHelp')"
+                    type="neutral"
+                >
+                    <InfoGrid
+                        :items="[
+                            {
+                                id: 'sonarAltitude',
+                                i18n: 'initialSetupAltitudeSonar',
+                                value: state.sonar,
+                                class: 'sonarAltitude',
+                            },
+                        ]"
+                    />
+                </UiBox>
             </div>
         </div>
 
         <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
-            <h3>{{ i18n.getMessage("dialogConfirmResetTitle") }}</h3>
+            <h3>{{ $t("dialogConfirmResetTitle") }}</h3>
             <div class="content">
-                <div i18n="dialogConfirmResetNote" style="margin-top: 10px"></div>
+                <div style="margin-top: 10px">{{ $t("dialogConfirmResetNote") }}</div>
             </div>
             <div class="buttons">
-                <a
-                    href="#"
-                    class="dialogConfirmReset-confirmbtn danger-button"
-                    @click.prevent="confirmReset"
-                    i18n="dialogConfirmResetConfirm"
-                    >{{ i18n.getMessage("dialogConfirmResetConfirm") }}</a
-                >
-                <a
-                    href="#"
-                    class="dialogConfirmReset-cancelbtn regular-button"
-                    @click.prevent="cancelConfirmReset"
-                    i18n="dialogConfirmResetClose"
-                    >{{ i18n.getMessage("dialogConfirmResetClose") }}</a
-                >
+                <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
+                <UButton
+                    :label="$t('dialogConfirmResetClose')"
+                    color="neutral"
+                    variant="outline"
+                    @click="cancelConfirmReset"
+                />
             </div>
         </dialog>
 
         <dialog class="dialogBuildInfo" ref="dialogBuildInfo">
-            <div class="dialogBuildInfo-title"></div>
+            <h3>{{ state.buildInfoDialogTitle }}</h3>
             <div class="contentBuildInfo">
-                <div class="dialogBuildInfo-content" style="margin-top: 10px"></div>
+                <div class="dialogBuildInfoGrid-container" style="margin-top: 10px">
+                    <div v-for="option in state.sortedBuildOptions" :key="option" class="dialogBuildInfoGrid-item">
+                        {{ option }}
+                    </div>
+                </div>
             </div>
             <div class="dialogButtons">
-                <a
-                    href="#"
-                    class="dialogBuildInfo-closebtn regular-button"
-                    @click.prevent="closeBuildInfo"
-                    i18n="close"
-                    >{{ i18n.getMessage("close") }}</a
-                >
+                <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
             </div>
         </dialog>
-    </div>
+    </BaseTab>
 </template>
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref, reactive, watch } from "vue";
+import { useTranslation } from "i18next-vue";
 import { i18n } from "../../js/localization";
+import BaseTab from "./BaseTab.vue";
+import UiBox from "../elements/UiBox.vue";
 import InfoGrid from "@/components/InfoGrid.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
+import HelpIcon from "@/components/elements/HelpIcon.vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
@@ -444,6 +369,8 @@ import { ispConnected } from "../../js/utils/connection";
 import { sensorTypes } from "../../js/sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
 import { flightIndicator } from "../../../libraries/flightIndicators";
+
+const { t } = useTranslation();
 
 const yaw_fix = ref(0);
 
@@ -472,10 +399,7 @@ const state = reactive({
     buildType: "",
     buildInfo: "",
     buildFirmware: "",
-    networkStatus: "",
-    networkType: "",
-    networkDownlink: "",
-    networkRtt: "",
+
     attitude: { roll: 0, pitch: 0, heading: 0 },
     calibratingAccel: false,
     calibratingMag: false,
@@ -487,6 +411,8 @@ const state = reactive({
     buildKeyValid: false,
     buildRoot: "",
     buildOptionsArray: [],
+    buildInfoDialogTitle: "",
+    sortedBuildOptions: [],
 });
 
 const fcStore = useFlightControllerStore();
@@ -562,7 +488,7 @@ const prepareDisarmFlags = function () {
         return reactive({
             id: `initialSetupArmingDisableFlags${i}`,
             name: displayName,
-            tooltip: i18n.getMessage(messageKey),
+            tooltip: t(messageKey),
             visible: false,
         });
     });
@@ -629,7 +555,7 @@ function onCalibrateAccel() {
     GUI.interval_pause("setup_data_pull_slow");
     MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
         if (mountedFlag) {
-            gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
+            gui_log(t("initialSetupAccelCalibStarted"));
             state.calibratingAccel = true;
             state.accelRunning = true;
         }
@@ -642,7 +568,7 @@ function onCalibrateAccel() {
                 // Resume both polling intervals after calibration completes
                 GUI.interval_resume("setup_data_pull_fast");
                 GUI.interval_resume("setup_data_pull_slow");
-                gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
+                gui_log(t("initialSetupAccelCalibEnded"));
                 state.calibratingAccel = false;
                 state.accelRunning = false;
             }
@@ -658,7 +584,7 @@ function onCalibrateMag() {
     state.calibratingMag = true;
     MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
         if (mountedFlag) {
-            gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
+            gui_log(t("initialSetupMagCalibStarted"));
             state.calibratingMag = true;
             state.magRunning = true;
         }
@@ -675,7 +601,7 @@ function onCalibrateMag() {
             magCalibTimeoutName = null;
         }
 
-        gui_log(i18n.getMessage("initialSetupMagCalibEnded"));
+        gui_log(t("initialSetupMagCalibEnded"));
         state.calibratingMag = false;
         state.magRunning = false;
     }
@@ -717,30 +643,12 @@ function confirmReset() {
         dialogConfirmReset.value.close();
     }
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
-        gui_log(i18n.getMessage("initialSetupSettingsRestored"));
+        gui_log(t("initialSetupSettingsRestored"));
         GUI.tab_switch_cleanup(function () {
             // Re-initialize the Setup tab component directly (avoid legacy TABS reference)
             initialize();
         });
     });
-}
-
-function showDialogBuildInfo(title, message) {
-    if (!dialogBuildInfo.value) {
-        return;
-    }
-    const dialog = dialogBuildInfo.value;
-    const titleEl = dialog.querySelector(".dialogBuildInfo-title");
-    const contentEl = dialog.querySelector(".dialogBuildInfo-content");
-    if (titleEl) {
-        titleEl.innerHTML = title;
-    }
-    if (contentEl) {
-        contentEl.innerHTML = message;
-    }
-    if (!dialog.hasAttribute("open")) {
-        dialog.showModal();
-    }
 }
 
 function closeBuildInfo() {
@@ -780,9 +688,9 @@ function process_html() {
     // initialize 3D Model
     initModel();
 
-    state.attitude.roll = i18n.getMessage("initialSetupAttitude", [(0).toFixed(1)]);
-    state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [(0).toFixed(1)]);
-    state.attitude.heading = i18n.getMessage("initialSetupAttitude", [(0).toFixed(1)]);
+    state.attitude.roll = t("initialSetupAttitude", { 1: (0).toFixed(1) });
+    state.attitude.pitch = t("initialSetupAttitude", { 1: (0).toFixed(1) });
+    state.attitude.heading = t("initialSetupAttitude", { 1: (0).toFixed(1) });
 
     // set disabled state from sensors
     state.disabledAccel = !have_sensor(fcStore.config.activeSensors, "acc");
@@ -794,8 +702,6 @@ function process_html() {
     isExpert.value = isExpertModeEnabled();
 
     // no direct DOM dialog wiring here; dialogs use Vue refs and methods
-    // set initial reset button label via reactive yaw value
-    // reset button text will be rendered from template using `yaw_fix`
 
     const displaySensorInfo = async function () {
         const types = await sensorTypes();
@@ -812,17 +718,17 @@ function process_html() {
             const g = fcStore.sensorConfigActive.gyro_hardware;
             state.sensorGyro =
                 g === 0xff
-                    ? i18n.getMessage("initialSetupNotInBuild")
+                    ? t("initialSetupNotInBuild")
                     : have_sensor(fcStore.config.activeSensors, "gyro")
                         ? types.gyro.elements[g]
-                        : i18n.getMessage("initialSetupNotDetected");
+                        : t("initialSetupNotDetected");
         }
 
         const a = fcStore.sensorConfigActive.acc_hardware;
         if (a === 0xff) {
-            state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
+            state.sensorAcc = t("initialSetupNotInBuild");
         } else if (!have_sensor(fcStore.config.activeSensors, "acc")) {
-            state.sensorAcc = i18n.getMessage("initialSetupNotDetected");
+            state.sensorAcc = t("initialSetupNotDetected");
         } else {
             let name = types.acc.elements[a] || "AUTO";
             if (
@@ -838,9 +744,9 @@ function process_html() {
 
         const b = fcStore.sensorConfigActive.baro_hardware;
         if (b === 0xff) {
-            state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
+            state.sensorBaro = t("initialSetupNotInBuild");
         } else if (!have_sensor(fcStore.config.activeSensors, "baro")) {
-            state.sensorBaro = i18n.getMessage("initialSetupNotDetected");
+            state.sensorBaro = t("initialSetupNotDetected");
         } else {
             let nameB = types.baro.elements[b] || "DEFAULT";
             if (
@@ -857,27 +763,29 @@ function process_html() {
         const m = fcStore.sensorConfigActive.mag_hardware;
         state.sensorMag =
             m === 0xff
-                ? i18n.getMessage("initialSetupNotInBuild")
+                ? t("initialSetupNotInBuild")
                 : have_sensor(fcStore.config.activeSensors, "mag")
                     ? types.mag.elements[m]
-                    : i18n.getMessage("initialSetupNotDetected");
+                    : t("initialSetupNotDetected");
 
         const s = fcStore.sensorConfigActive.sonar_hardware;
         state.sensorSonar =
             s === 0xff
-                ? i18n.getMessage("initialSetupNotInBuild")
+                ? t("initialSetupNotInBuild")
                 : have_sensor(fcStore.config.activeSensors, "sonar")
                     ? types.sonar.elements[s]
-                    : i18n.getMessage("initialSetupNotDetected");
+                    : t("initialSetupNotDetected");
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             const o = fcStore.sensorConfigActive.opticalflow_hardware;
             state.sensorOpticalflow =
                 o === 0xff
-                    ? i18n.getMessage("initialSetupNotInBuild")
+                    ? t("initialSetupNotInBuild")
                     : have_sensor(fcStore.config.activeSensors, "opticalflow")
                         ? types.opticalflow.elements[o]
-                        : i18n.getMessage("initialSetupNotDetected");
+                        : t("initialSetupNotDetected");
+        } else {
+            state.sensorOpticalflow = t("initialSetupNotInBuild");
         }
     };
 
@@ -890,19 +798,17 @@ function process_html() {
     };
 
     const hideSensorInfo = function () {
-        state.sensorGyro = i18n.getMessage("initialSetupNotInBuild");
-        state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
-        state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
-        state.sensorMag = i18n.getMessage("initialSetupNotInBuild");
-        state.sensorSonar = i18n.getMessage("initialSetupNotInBuild");
-        state.sensorOpticalflow = i18n.getMessage("initialSetupNotInBuild");
+        state.sensorGyro = t("initialSetupNotInBuild");
+        state.sensorAcc = t("initialSetupNotInBuild");
+        state.sensorBaro = t("initialSetupNotInBuild");
+        state.sensorMag = t("initialSetupNotInBuild");
+        state.sensorSonar = t("initialSetupNotInBuild");
+        state.sensorOpticalflow = t("initialSetupNotInBuild");
     };
 
     const showBuildType = function () {
         state.buildType =
-            fcStore.config.buildKey.length === 32
-                ? i18n.getMessage("initialSetupInfoBuildCloud")
-                : i18n.getMessage("initialSetupInfoBuildLocal");
+            fcStore.config.buildKey.length === 32 ? t("initialSetupInfoBuildCloud") : t("initialSetupInfoBuildLocal");
     };
 
     const hideBuildType = function () {
@@ -926,22 +832,20 @@ function process_html() {
                 {
                     type: "log",
                     href: `${buildRoot}/log`,
-                    title: `${i18n.getMessage("initialSetupInfoBuildLog")}: ${buildRoot}/log`,
-                    label: i18n.getMessage("initialSetupInfoBuildLog"),
+                    title: `${t("initialSetupInfoBuildLog")}: ${buildRoot}/log`,
+                    label: t("initialSetupInfoBuildLog"),
                 },
                 {
                     type: "config",
                     href: `${buildRoot}/json`,
-                    title: `${i18n.getMessage("initialSetupInfoBuildConfig")}: ${buildRoot}/json`,
-                    label: i18n.getMessage("initialSetupInfoBuildConfig"),
+                    title: `${t("initialSetupInfoBuildConfig")}: ${buildRoot}/json`,
+                    label: t("initialSetupInfoBuildConfig"),
                 },
             ];
             state.buildInfoHtml = "";
         } else {
             state.buildInfoButtons = [];
-            state.buildInfoHtml = isIspConnected
-                ? i18n.getMessage("initialSetupNoBuildInfo")
-                : i18n.getMessage("initialSetupNotOnline");
+            state.buildInfoHtml = isIspConnected ? t("initialSetupNoBuildInfo") : t("initialSetupNotOnline");
         }
     };
 
@@ -979,35 +883,6 @@ function process_html() {
         }
     }
 
-    function showNetworkStatus() {
-        const networkStatus = ispConnected();
-
-        let statusText = "";
-
-        const connection = navigator.connection;
-        const type = connection?.effectiveType || "Unknown";
-        const downlink = connection?.downlink ?? "Unknown";
-        const rtt = connection?.rtt ?? "Unknown";
-
-        if (!networkStatus || !navigator.onLine || type === "none") {
-            statusText = i18n.getMessage("initialSetupNetworkInfoStatusOffline");
-        } else if (
-            type === "slow-2g" ||
-            type === "2g" ||
-            (typeof downlink === "number" && downlink < 0.115) ||
-            (typeof rtt === "number" && rtt > 1000)
-        ) {
-            statusText = i18n.getMessage("initialSetupNetworkInfoStatusSlow");
-        } else {
-            statusText = i18n.getMessage("initialSetupNetworkInfoStatusOnline");
-        }
-
-        state.networkStatus = statusText;
-        state.networkType = type;
-        state.networkDownlink = typeof downlink === "number" ? `${downlink} Mbps` : "Unknown";
-        state.networkRtt = typeof rtt === "number" ? `${rtt} ms` : "Unknown";
-    }
-
     prepareDisarmFlags();
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         showSensorInfo();
@@ -1015,7 +890,6 @@ function process_html() {
         hideSensorInfo();
     }
     showFirmwareInfo();
-    showNetworkStatus();
 
     if (!have_sensor(fcStore.config.activeSensors, "sonar")) {
         state.showSonarBox = false;
@@ -1024,15 +898,15 @@ function process_html() {
     function get_slow_data() {
         fcStore.updateArmingFlags(fcStore.config.armingDisableFlags);
 
-        state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [fcStore.analogData.voltage]);
-        state.batMahDrawn = i18n.getMessage("initialSetupBatteryMahValue", [fcStore.analogData.mAhdrawn]);
-        state.batMahDrawing = i18n.getMessage("initialSetupBatteryAValue", [fcStore.analogData.amperage.toFixed(2)]);
-        state.rssi = i18n.getMessage("initialSetupRSSIValue", [((fcStore.analogData.rssi / 1023) * 100).toFixed(0)]);
+        state.batVoltage = t("initialSetupBatteryValue", { 1: fcStore.analogData.voltage });
+        state.batMahDrawn = t("initialSetupBatteryMahValue", { 1: fcStore.analogData.mAhdrawn });
+        state.batMahDrawing = t("initialSetupBatteryAValue", { 1: fcStore.analogData.amperage.toFixed(2) });
+        state.rssi = t("initialSetupRSSIValue", { 1: ((fcStore.analogData.rssi / 1023) * 100).toFixed(0) });
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46) && fcStore.config.cpuTemp) {
             state.cpuTemp = `${fcStore.config.cpuTemp.toFixed(0)} \u2103`;
         } else {
-            state.cpuTemp = i18n.getMessage("initialSetupCpuTempNotSupported");
+            state.cpuTemp = t("initialSetupCpuTempNotSupported");
         }
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
@@ -1047,7 +921,7 @@ function process_html() {
         const latitude = fcStore.gpsData.latitude / 10000000;
         const longitude = fcStore.gpsData.longitude / 10000000;
         const url = `https://maps.google.com/?q=${latitude},${longitude}`;
-        const gpsUnitText = i18n.getMessage("gpsPositionUnit");
+        const gpsUnitText = t("gpsPositionUnit");
         state.latitude = `${latitude.toFixed(4)} ${gpsUnitText}`;
         state.longitude = `${longitude.toFixed(4)} ${gpsUnitText}`;
         state.gpsUrl = url;
@@ -1060,15 +934,15 @@ function process_html() {
                     const fixed = val.toFixed(1);
                     return Number.parseFloat(fixed) >= 0 ? ` ${fixed}` : fixed;
                 };
-                state.attitude.roll = i18n.getMessage("initialSetupAttitude", [
-                    formatAttitude(fcStore.sensorData.kinematics[0]),
-                ]);
-                state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [
-                    formatAttitude(fcStore.sensorData.kinematics[1]),
-                ]);
-                state.attitude.heading = i18n.getMessage("initialSetupAttitude", [
-                    formatAttitude(fcStore.sensorData.kinematics[2]),
-                ]);
+                state.attitude.roll = t("initialSetupAttitude", {
+                    1: formatAttitude(fcStore.sensorData.kinematics[0]),
+                });
+                state.attitude.pitch = t("initialSetupAttitude", {
+                    1: formatAttitude(fcStore.sensorData.kinematics[1]),
+                });
+                state.attitude.heading = t("initialSetupAttitude", {
+                    1: formatAttitude(fcStore.sensorData.kinematics[2]),
+                });
 
                 renderModel();
                 // updateInstruments is defined in initializeInstruments
@@ -1181,17 +1055,14 @@ function openBuildOptionsDialog() {
         return;
     }
 
-    const sortedOptions = [...state.buildOptionsArray].sort((a, b) =>
+    state.sortedBuildOptions = [...state.buildOptionsArray].sort((a, b) =>
         a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }),
     );
+    state.buildInfoDialogTitle = t("initialSetupInfoBuildOptionList");
 
-    let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
-    for (const buildOptionElement of sortedOptions) {
-        buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
+    if (dialogBuildInfo.value && !dialogBuildInfo.value.hasAttribute("open")) {
+        dialogBuildInfo.value.showModal();
     }
-    buildOptionList += `</div>`;
-
-    showDialogBuildInfo(`<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`, buildOptionList);
 }
 </script>
 
@@ -1202,28 +1073,20 @@ function openBuildOptionsDialog() {
         background-color: var(--surface-200);
         border-radius: 1rem;
         border: 2px solid var(--surface-400);
-        a.reset {
+        .reset-zaxis {
             position: absolute;
-            display: block;
             top: 1rem;
             right: 1rem;
-            border-radius: 0.5rem;
-            bottom: 10px;
-            height: 28px;
-            line-height: 28px;
-            padding: 0 15px 0 15px;
-            text-align: center;
-            font-weight: bold;
-            background-color: var(--surface-400);
             z-index: 100;
-            &:hover {
-                background-color: var(--surface-500);
-            }
         }
     }
-    .model-and-info {
+    .setup-top {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1rem;
         margin-top: 0.75rem;
-
+    }
+    .model-and-info {
         #canvas_wrapper {
             position: relative;
             width: 100%;
@@ -1234,17 +1097,23 @@ function openBuildOptionsDialog() {
             border-radius: 1rem;
         }
     }
+    .setup-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .setup-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
     @media only screen and (max-width: 1055px) {
-        .grid-box {
-            grid-template-columns: 1fr !important;
+        .setup-top {
+            grid-template-columns: 1fr;
         }
-        .col-span-3 {
-            display: grid !important;
-            grid-column: span 1 !important;
-        }
-        .col-span-1 {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
+        .setup-info-grid {
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         }
         #canvas_wrapper {
             max-height: 20rem !important;
@@ -1252,51 +1121,16 @@ function openBuildOptionsDialog() {
     }
 
     @media all and (max-width: 575px) {
-        .grid-box {
-            grid-template-columns: 1fr !important;
+        .setup-info-grid {
+            grid-template-columns: 1fr;
         }
     }
-    .instrumentsbox {
-        flex-direction: row;
-        justify-content: center;
-    }
-
     .system_info {
         td {
             width: 50%;
             vertical-align: baseline;
         }
     }
-}
-#accel_calib_running {
-    width: 100%;
-    position: relative;
-    padding: 5px 0 5px 0;
-    text-align: center;
-    background-color: var(--surface-300);
-    border-radius: 0.5rem;
-    border: 1px solid var(--primary-500);
-    color: var(--primary-500);
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 13px;
-    transition: all ease 0.2s;
-    text-decoration: none;
-}
-#mag_calib_running {
-    width: 100%;
-    position: relative;
-    padding: 5px 0 5px 0;
-    text-align: center;
-    background-color: var(--surface-300);
-    border-radius: 0.5rem;
-    border: 1px solid var(--primary-500);
-    color: var(--primary-500);
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 13px;
-    transition: all ease 0.2s;
-    text-decoration: none;
 }
 #canvas {
     width: 100% !important;
@@ -1332,40 +1166,6 @@ function openBuildOptionsDialog() {
 .dialogBuildInfoGrid-item {
     padding: 5px 5px 3px 5px;
     user-select: text;
-}
-.block.info {
-    .fields {
-        padding: 5px 5px 3px 5px;
-    }
-    dt {
-        width: 99px;
-        height: 20px;
-        line-height: 20px;
-    }
-    dd {
-        width: 76px;
-        height: 20px;
-        line-height: 20px;
-        margin-left: 99px;
-    }
-}
-.block.gps {
-    width: 185px;
-    margin-bottom: 10px;
-    .fields {
-        padding: 5px 5px 3px 5px;
-    }
-    dt {
-        width: 85px;
-        height: 20px;
-        margin-bottom: 2px;
-        line-height: 20px;
-    }
-}
-.block.instruments {
-    width: 285px;
-    align-content: center;
-    text-align: center;
 }
 .buttons {
     bottom: 20px;

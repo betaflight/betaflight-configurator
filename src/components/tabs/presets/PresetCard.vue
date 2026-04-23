@@ -1,7 +1,13 @@
 <template>
     <div
-        :class="wrapperClasses"
-        :style="wrapperStyle"
+        :class="[
+            'rounded p-4 shadow-sm',
+            clickable
+                ? 'cursor-pointer focus-visible:outline-2 focus-visible:outline-(--ui-primary) focus-visible:outline-offset-[-2px]'
+                : '',
+            isPicked ? 'border-2 border-green-500' : 'border border-(--ui-border)',
+            clickable && mouseOnPanel && !mouseOnStar ? 'bg-(--ui-bg-elevated)' : 'bg-(--ui-bg-muted)',
+        ]"
         :role="clickable ? 'button' : undefined"
         :tabindex="clickable ? 0 : undefined"
         @click="handleOpen"
@@ -9,16 +15,17 @@
         @mouseenter="mouseOnPanel = true"
         @mouseleave="mouseOnPanel = false"
     >
-        <div class="preset_title_panel">
+        <div class="relative text-(--ui-text-highlighted)">
             <img
                 v-if="repository?.official"
-                class="preset_title_panel_betaflight_official"
+                class="w-[25px] h-[25px] rounded-[5px] p-[5px] bg-origin-content bg-no-repeat absolute right-[26px] top-[-5px]"
                 :src="officialIcon"
                 alt=""
+                aria-hidden="true"
             />
             <button
                 type="button"
-                class="preset_title_panel_star"
+                class="w-[35px] h-[35px] rounded-[5px] p-[5px] absolute right-[-6px] top-[-5px] border-0 flex items-center justify-center cursor-pointer focus-visible:outline-2 focus-visible:outline-(--ui-primary) focus-visible:outline-offset-1"
                 :style="{ backgroundColor: starBackgroundColor }"
                 :aria-pressed="isFavorite"
                 :aria-label="favoriteAriaLabel"
@@ -26,76 +33,68 @@
                 @mouseenter="mouseOnStar = true"
                 @mouseleave="mouseOnStar = false"
             >
-                <img :src="starImage" alt="" class="preset_title_panel_star_img" />
+                <img :src="starImage" alt="" class="w-[25px] h-[25px] pointer-events-none" />
             </button>
             <div>
-                <span class="preset_title_panel_title">{{ preset.title }}</span>
+                <span
+                    class="text-lg font-bold inline-block mb-2 overflow-hidden whitespace-nowrap text-ellipsis w-[calc(100%-60px)]"
+                >
+                    {{ preset.title }}
+                </span>
             </div>
-            <div class="presets_title_panel_meta">
-                <div class="presets_title_panel_row">
-                    <div class="presets_title_panel_key">
+            <div class="grid gap-0">
+                <div class="grid grid-cols-[100px_minmax(0,1fr)] items-center min-h-6">
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
                         <span
-                            class="preset_title_panel_official preset_title_panel_status_experimental"
                             v-show="preset.status === 'EXPERIMENTAL'"
+                            class="px-1 py-0.5 inline-block text-white font-bold rounded bg-(--ui-error)"
                             >{{ $t("presetsExperimental") }}</span
                         >
                         <span
-                            class="preset_title_panel_official preset_title_panel_status_community"
                             v-show="preset.status === 'COMMUNITY'"
+                            class="px-1 py-0.5 inline-block text-black font-bold rounded bg-(--ui-primary)"
                             >{{ $t("presetsCommunity") }}</span
                         >
                         <span
-                            class="preset_title_panel_official preset_title_panel_status_official"
                             v-show="preset.status === 'OFFICIAL'"
+                            class="px-1 py-0.5 inline-block text-white font-bold rounded bg-(--ui-success)"
                             >{{ $t("presetsOfficial") }}</span
                         >
                     </div>
-                    <div class="presets_title_panel_value">
-                        <span class="preset_title_panel_category">{{ preset.category }}</span>
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="text-(--ui-text-highlighted) font-bold">{{ preset.category }}</span>
                     </div>
                 </div>
-                <div class="presets_title_panel_row">
-                    <div class="presets_title_panel_key">
-                        <span
-                            class="preset_title_panel_label preset_title_panel_author_label"
-                            v-html="$t('presetsAuthor')"
-                        ></span>
+                <div class="grid grid-cols-[100px_minmax(0,1fr)] items-center min-h-6">
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="text-(--ui-text-muted)" v-html="$t('presetsAuthor')"></span>
                     </div>
-                    <div class="presets_title_panel_value">
-                        <span class="preset_title_panel_author_text">{{ preset.author }}</span>
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span>{{ preset.author }}</span>
                     </div>
                 </div>
-                <div class="presets_title_panel_row">
-                    <div class="presets_title_panel_key">
-                        <span
-                            class="preset_title_panel_label preset_title_panel_versions_label"
-                            v-html="$t('presetsVersions')"
-                        ></span>
+                <div class="grid grid-cols-[100px_minmax(0,1fr)] items-center min-h-6">
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="text-(--ui-text-muted)" v-html="$t('presetsVersions')"></span>
                     </div>
-                    <div class="presets_title_panel_value">
-                        <span class="preset_title_panel_versions_text">{{ firmwareVersions }}</span>
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="font-bold">{{ firmwareVersions }}</span>
                     </div>
                 </div>
-                <div class="presets_title_panel_row">
-                    <div class="presets_title_panel_key">
-                        <span
-                            class="preset_title_panel_label preset_title_panel_keywords_label"
-                            v-html="$t('presetsKeywords')"
-                        ></span>
+                <div class="grid grid-cols-[100px_minmax(0,1fr)] items-center min-h-6">
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="text-(--ui-text-muted)" v-html="$t('presetsKeywords')"></span>
                     </div>
-                    <div class="presets_title_panel_value">
-                        <span class="preset_title_panel_keywords_text" :title="keywords">{{ keywords }}</span>
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span :title="keywords">{{ keywords }}</span>
                     </div>
                 </div>
-                <div v-if="showRepositoryName" class="presets_title_panel_row preset_title_panel_repository_row">
-                    <div class="presets_title_panel_key">
-                        <span
-                            class="preset_title_panel_label preset_title_panel_repository_label"
-                            v-html="$t('presetsSourceRepository')"
-                        ></span>
+                <div v-if="showRepositoryName" class="grid grid-cols-[100px_minmax(0,1fr)] items-center min-h-6">
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="text-(--ui-text-muted)" v-html="$t('presetsSourceRepository')"></span>
                     </div>
-                    <div class="presets_title_panel_value">
-                        <span class="preset_title_panel_repository_text">{{ repository?.name }}</span>
+                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span>{{ repository?.name }}</span>
                     </div>
                 </div>
             </div>
@@ -149,20 +148,8 @@ const favoriteAriaLabel = computed(() =>
     i18n.getMessage(props.isFavorite ? "presetsFavoriteRemoveAriaLabel" : "presetsFavoriteAddAriaLabel"),
 );
 
-const wrapperClasses = computed(() => ({
-    preset_title_panel_border: true,
-    preset_title_panel_clickable: props.clickable,
-    preset_title_panel_wrapper: true,
-}));
-
-const wrapperStyle = computed(() => ({
-    border: props.isPicked ? "2px solid green" : "1px solid var(--surface-500)",
-    backgroundColor:
-        props.clickable && mouseOnPanel.value && !mouseOnStar.value ? "var(--surface-500)" : "var(--surface-200)",
-}));
-
 const starBackgroundColor = computed(() =>
-    mouseOnStar.value || (mouseOnPanel.value && props.clickable) ? "var(--surface-500)" : "transparent",
+    mouseOnStar.value || (mouseOnPanel.value && props.clickable) ? "var(--ui-bg-elevated)" : "transparent",
 );
 
 const starImage = computed(() => {
@@ -203,138 +190,3 @@ function handleCardKeydown(event) {
     }
 }
 </script>
-
-<style lang="less">
-.preset_title_panel_wrapper {
-    border-radius: 4px;
-}
-
-.preset_title_panel {
-    color: var(--text);
-    position: relative;
-}
-
-.preset_title_panel_border {
-    padding: 1.5ex;
-    box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.25);
-    border-radius: 4px;
-}
-
-.preset_title_panel_clickable {
-    cursor: pointer;
-
-    &:focus-visible {
-        outline: 2px solid var(--primary-500);
-        outline-offset: -2px;
-    }
-}
-
-.preset_title_panel_title {
-    font-size: 1.5em;
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 1ex;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    width: calc(100% - 60px);
-}
-
-.preset_title_panel_star {
-    width: 35px;
-    height: 35px;
-    border-radius: 5px;
-    padding: 5px;
-    position: absolute;
-    cursor: pointer;
-    right: -6px;
-    top: -5px;
-    border: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:focus-visible {
-        outline: 2px solid var(--primary-500);
-        outline-offset: 1px;
-    }
-}
-
-.preset_title_panel_star_img {
-    width: 25px;
-    height: 25px;
-    pointer-events: none;
-}
-
-.preset_title_panel_betaflight_official {
-    width: 25px;
-    height: 25px;
-    background-size: cover;
-    border-radius: 5px;
-    padding: 5px;
-    background-origin: content-box;
-    background-repeat: no-repeat;
-    position: absolute;
-    right: 26px;
-    top: -5px;
-}
-
-.preset_title_panel_category {
-    color: var(--surface-950);
-    font-weight: bold;
-}
-
-.preset_title_panel_official {
-    padding: 3px;
-    display: inline-block;
-    color: white;
-    font-weight: 700;
-    border-radius: 4px;
-}
-
-.preset_title_panel_status_official {
-    background-color: var(--success-500);
-}
-
-.preset_title_panel_status_community {
-    background-color: var(--primary-500);
-}
-
-.preset_title_panel_status_experimental {
-    background-color: var(--error-500);
-}
-
-.preset_title_panel_versions_text {
-    font-weight: bold;
-}
-
-.preset_title_panel_keywords_text,
-.preset_title_panel_repository_text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.presets_title_panel_meta {
-    display: grid;
-    gap: 0;
-}
-
-.presets_title_panel_row {
-    display: grid;
-    grid-template-columns: 100px minmax(0, 1fr);
-    align-items: center;
-    min-height: 24px;
-}
-
-.presets_title_panel_key,
-.presets_title_panel_value {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.preset_title_panel_label {
-    color: var(--surface-800);
-}
-</style>

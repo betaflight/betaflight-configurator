@@ -3494,9 +3494,6 @@
     "dataflashNotPresentNote": {
         "message": "Tu controlador de vuelo no tiene un chip de memoria flash integrada disponible."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Memoria flash requiere firmware &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Guardar flash a archivo..."
     },

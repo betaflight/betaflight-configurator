@@ -2745,9 +2745,6 @@
     "dataflashNotPresentNote": {
         "message": "Votre contrôleur de vol ne dispose pas de mémoire d'enregistrement."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "La mémoire interne nécessite un firmware &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Enregistrer sous..."
     },

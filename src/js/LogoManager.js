@@ -130,6 +130,8 @@ LogoManager.init = function (font, logoStartIndex) {
                         i18n.getMessage("osdSetupCustomLogoImageSizeError", {
                             width: img.width,
                             height: img.height,
+                            logoWidthPx: constraint.expectedWidth,
+                            logoHeightPx: constraint.expectedHeight,
                         }),
                     );
                     return false;
@@ -175,11 +177,6 @@ LogoManager.init = function (font, logoStartIndex) {
     // deps from osd.js
     this.font = font;
     this.logoStartIndex = logoStartIndex;
-    // inject logo size variables for dynamic translation strings
-    i18n.addResources({
-        logoWidthPx: `${this.constraints.imageSize.expectedWidth}`, // NOSONAR
-        logoHeightPx: `${this.constraints.imageSize.expectedHeight}`, // NOSONAR
-    });
     // find/cache DOM elements (skip _-prefixed keys from previous init calls)
     Object.keys(this.elements).forEach((key) => {
         if (key.startsWith("_")) {
@@ -304,7 +301,10 @@ LogoManager.drawPreview = function () {
     el.innerHTML = "";
     for (let i = this.logoStartIndex, I = this.font.constants.MAX_CHAR_COUNT; i < I; i++) {
         const url = this.font.data.character_image_urls[i];
-        el.insertAdjacentHTML("beforeend", `<img src="${url}" title="0x${i.toString(16)}">`);
+        const img = document.createElement("img");
+        img.src = url;
+        img.title = `0x${i.toString(16)}`;
+        el.appendChild(img);
     }
 };
 

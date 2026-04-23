@@ -81,6 +81,7 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import GUI from "@/js/gui";
+import { i18n } from "@/js/localization";
 
 const props = defineProps({
     droneConfiguration: {
@@ -127,7 +128,7 @@ const JERKING_PAUSE_DURATION = 500;
 
 // Translation helper
 const i18nMessage = (key) => {
-    return globalThis.i18n.getMessage(key);
+    return i18n.getMessage(key);
 };
 
 // Initialize config
@@ -201,7 +202,7 @@ const onMotorClick = (motorIndex) => {
         startMotorJerking(currentJerkingMotor);
     } else {
         stopAnyMotorJerking();
-        actionHintText.value = globalThis.i18n.getMessage("motorOutputReorderDialogRemapIsDone");
+        actionHintText.value = i18n.getMessage("motorOutputReorderDialogRemapIsDone");
         calculateNewMotorOutputReorder();
         motorOutputReorderCanvas.remappingReady = true;
         showSaveButtons.value = true;
@@ -272,7 +273,7 @@ const onStartButtonClicked = async () => {
 
 const startOver = () => {
     showSaveButtons.value = false;
-    actionHintText.value = globalThis.i18n.getMessage("motorOutputReorderDialogSelectSpinningMotor");
+    actionHintText.value = i18n.getMessage("motorOutputReorderDialogSelectSpinningMotor");
     startUserInteraction();
 };
 

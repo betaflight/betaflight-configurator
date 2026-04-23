@@ -14,13 +14,19 @@ const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim(
 
 const devHostname = process.env.BF_DEV_HOSTNAME || "local.betaflight.com";
 
-// Check if SSL certificates exist
+// Check if SSL certificates exist. Skipped when running under `tauri dev`
+// because the native webview needs a predictable HTTP endpoint and won't
+// trust the mkcert root out of the box.
 const certPath = "./local.betaflight.com.pem";
 const keyPath = "./local.betaflight.com-key.pem";
-const certsExist = existsSync(certPath) && existsSync(keyPath);
+const tauriDev = process.env.TAURI_DEV === "1";
+const certsExist = !tauriDev && existsSync(certPath) && existsSync(keyPath);
 const serverPort = certsExist ? 8443 : 8080;
 
-if (certsExist) {
+if (tauriDev) {
+    console.log("⚙ TAURI_DEV=1 — forcing HTTP mode for the Tauri shell");
+    console.log(`  Server will be available at: http://localhost:${serverPort}`);
+} else if (certsExist) {
     console.log("✓ SSL certificates found - HTTPS enabled");
     console.log(`  Server will be available at: https://${devHostname}:8443`);
 } else {
@@ -137,7 +143,84 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        ui(),
+        ui({
+            colorMode: false, // light/dark mode is handled elsewhere in the app itself, Nuxt UI would otherwise override it
+            ui: {
+                button: {
+                    slots: {
+                        base: "font-semibold cursor-pointer",
+                    },
+                    variants: {
+                        size: {
+                            "2xl": {
+                                base: "p-2 text-lg gap-2.5",
+                                leadingIcon: "size-8",
+                                leadingAvatarSize: "md",
+                                trailingIcon: "size-8",
+                            },
+                        },
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                tooltip: {
+                    slots: {
+                        content: "ring-2 ring-primary max-w-sm lg:max-w-lg h-fit z-99999", // not good, temporary z-index override to fix other extremely high values interfering
+                        arrow: "fill-primary",
+                        text: "whitespace-normal",
+                    },
+                },
+                switch: {
+                    slots: {
+                        base: "cursor-pointer",
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                select: {
+                    slots: {
+                        base: "cursor-pointer",
+                        item: "cursor-pointer",
+                        content: "z-99999",
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                selectMenu: {
+                    slots: {
+                        base: "cursor-pointer",
+                        item: "cursor-pointer",
+                        content: "z-99999",
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                input: {
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                inputNumber: {
+                    slots: {
+                        root: "min-w-12 w-28",
+                        base: "appearance-none",
+                    },
+                    defaultVariants: {
+                        size: "sm",
+                    },
+                },
+                colors: {
+                    primary: "primary",
+                    neutral: "neutral",
+                    success: "lime",
+                    warning: "orange",
+                },
+            },
+        }),
         serveLocalesPlugin(),
         copy({
             targets: [
@@ -176,7 +259,9 @@ export default defineConfig({
             },
         }),
     ],
-    root: "./src",
+    // Absolute root so @nuxt/ui's template aliases (#build/ui.css, etc.) resolve to
+    // absolute paths; a relative root yields relative aliases and Vite warns about duplicated modules.
+    root: path.resolve(__dirname, "src"),
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),

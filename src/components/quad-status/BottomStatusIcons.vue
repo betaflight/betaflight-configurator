@@ -1,5 +1,5 @@
 <template>
-    <div class="bottomStatusIcons">
+    <div class="bottomStatusIcons" :class="{ 'bottomStatusIcons--compact': compact }">
         <div class="armedicon cf_tip" :title="$t('mainHelpArmed')" :class="{ active: setActiveArmed }" />
         <div class="failsafeicon cf_tip" :title="$t('mainHelpFailsafe')" :class="{ active: setFailsafeActive }" />
         <div class="linkicon cf_tip" :title="$t('mainHelpLink')" :class="{ active: setActiveLink }" />
@@ -14,6 +14,7 @@ const props = defineProps({
     lastReceivedTimestamp: { type: Number, default: 0 },
     mode: { type: Number, default: 0 },
     auxConfig: { type: Array, default: null },
+    compact: { type: Boolean, default: false },
 });
 
 const setActiveArmed = computed(
@@ -103,5 +104,25 @@ button.active {
 }
 .linkicon.active {
     background-image: url(../../images/icons/cf_icon_link_active.svg);
+}
+
+.bottomStatusIcons--compact {
+    height: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0.1rem 0.25rem;
+    background-color: transparent;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bottomStatusIcons--compact .armedicon,
+.bottomStatusIcons--compact .failsafeicon,
+.bottomStatusIcons--compact .linkicon {
+    margin: 0;
+    height: 16px;
+    width: 16px;
 }
 </style>

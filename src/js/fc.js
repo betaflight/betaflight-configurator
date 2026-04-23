@@ -132,6 +132,9 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_WING: 16424,
     USE_POSITION_HOLD: 16425,
     USE_CHIRP: 16426,
+    USE_FLIGHT_PLAN: 16427,
+    USE_OPTICALFLOW: 16428,
+    USE_RANGEFINDER: 16429,
 };
 
 const FC = {
@@ -208,7 +211,6 @@ const FC = {
     SERVO_CONFIG: null,
     SERVO_DATA: null,
     SERVO_RULES: null,
-    TRANSPONDER: null,
     TUNING_SLIDERS: null,
     VOLTAGE_METERS: null,
     VOLTAGE_METER_CONFIGS: null,
@@ -463,13 +465,6 @@ const FC = {
             blackboxPDenom: 0,
             blackboxSampleRate: 0,
             blackboxDisabledMask: 0,
-        };
-
-        this.TRANSPONDER = {
-            supported: false,
-            data: [],
-            provider: 0,
-            providers: [],
         };
 
         this.RC_DEADBAND_CONFIG = {

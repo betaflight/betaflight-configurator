@@ -4,179 +4,154 @@
             <div class="tab_title">{{ $t("tabAuxiliary") }}</div>
             <WikiButton docUrl="modes" />
 
-            <div class="note">
-                <p v-html="$t('auxiliaryHelp')"></p>
-            </div>
+            <div class="flex flex-col gap-4">
+                <UiBox highlight>
+                    <p v-html="$t('auxiliaryHelp')"></p>
+                </UiBox>
+                <SettingRow :label="$t('auxiliaryToggleUnused')">
+                    <USwitch v-model="hideUnused" />
+                </SettingRow>
 
-            <div class="toolbox">
-                <form>
-                    <input
-                        id="switch-toggle-unused"
-                        v-model="hideUnused"
-                        type="checkbox"
-                        name="switch-toggle-unused"
-                        class="toggle"
-                    />
-                    <label for="switch-toggle-unused">{{ $t("auxiliaryToggleUnused") }}</label>
-                </form>
-            </div>
+                <div class="flex flex-col gap-2">
+                    <div
+                        v-for="{ mode, state, stateUi, buttonSolid } in visibleModesWithState"
+                        :key="mode.id"
+                        class="flex flex-col md:flex-row md:min-h-24 bg-muted rounded-md group"
+                    >
+                        <div
+                            class="flex flex-row md:flex-col bg-elevated min-h-full p-3 rounded-md md:rounded-r-none items-center relative gap-2"
+                            :class="stateUi.solid"
+                        >
+                            <HelpIcon class="absolute top-2.5 right-2.5" :text="$t(mode.helpKey)" />
 
-            <div class="modes">
-                <div v-for="mode in visibleModes" :key="mode.id" :class="['mode', modeState(mode)]">
-                    <div class="info" :style="infoMinWidthStyle">
-                        <div class="helpicon cf_tip" :title="$t(mode.helpKey)"></div>
-                        <p class="name">
-                            <span>{{ mode.displayName }}</span>
-                            <template v-if="modeState(mode) === 'disabled'">
-                                <br />
-                                <span>{{ $t("auxiliaryDisabled") }}</span>
-                            </template>
-                        </p>
-                        <div class="buttons">
-                            <a v-if="mode.id !== 0" class="addLink sm-min" href="#" @click.prevent="addLink(mode)">
-                                {{ $t("auxiliaryAddLink") }}
-                            </a>
-                            <a class="addRange sm-min" href="#" @click.prevent="addRange(mode)">
-                                {{ $t("auxiliaryAddRange") }}
-                            </a>
-                            <a v-if="mode.id !== 0" class="addLink xs" href="#" @click.prevent="addLink(mode)">
-                                <em class="fas fa-link"></em>
-                            </a>
-                            <a class="addRange xs" href="#" @click.prevent="addRange(mode)">
-                                <em class="fas fa-plus"></em>
-                            </a>
+                            <!-- Negative margin for mobile where the minWidthStyle is computed a little too wide -->
+                            <div
+                                class="text-xs font-bold md:w-full pr-4 md:text-center -mr-10 md:mr-0"
+                                :style="infoMinWidthStyle"
+                            >
+                                {{ mode.displayName }}
+                            </div>
+                            <div class="text-xs font-bold" v-if="state === 'disabled'">
+                                {{ $t("auxiliaryDisabled") }}
+                            </div>
+
+                            <div class="flex flex-row md:flex-col gap-2 md:gap-1 w-full mt-auto">
+                                <UButton
+                                    icon="i-lucide-link"
+                                    size="xs"
+                                    class="md:w-full w-fit"
+                                    v-if="mode.id !== 0"
+                                    @click="addLink(mode)"
+                                    :color="stateUi.color"
+                                    :variant="buttonSolid ? 'solid' : 'soft'"
+                                    :ui="{
+                                        base: buttonSolid ? '' : 'bg-accented',
+                                    }"
+                                >
+                                    {{ $t("auxiliaryAddLink") }}
+                                </UButton>
+                                <UButton
+                                    icon="i-lucide-plus"
+                                    size="xs"
+                                    class="md:w-full w-fit"
+                                    @click="addRange(mode)"
+                                    :color="stateUi.color"
+                                    :variant="buttonSolid ? 'solid' : 'soft'"
+                                    :ui="{
+                                        base: buttonSolid ? '' : 'bg-accented',
+                                    }"
+                                >
+                                    {{ $t("auxiliaryAddRange") }}
+                                </UButton>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="ranges">
-                        <template v-if="mode.entries.length">
-                            <template v-for="(entry, entryIndex) in mode.entries" :key="entry.uid">
-                                <div v-if="entry.kind === 'range'" class="range">
-                                    <div class="channelInfo">
-                                        <div class="channelName">
-                                            <select v-model.number="entry.auxChannelIndex" class="channel">
-                                                <option
-                                                    v-for="opt in channelOptions"
-                                                    :key="opt.value"
-                                                    :value="opt.value"
-                                                >
-                                                    {{ opt.label }}
-                                                </option>
-                                            </select>
+                        <div class="w-full">
+                            <template v-if="mode.entries.length">
+                                <template v-for="(entry, entryIndex) in mode.entries" :key="entry.uid">
+                                    <div
+                                        v-if="entry.kind === 'range'"
+                                        class="flex flex-col md:flex-row w-full relative"
+                                    >
+                                        <div class="flex flex-row md:flex-col gap-1 p-3 pb-3 md:pb-2 items-center">
+                                            <USelect
+                                                v-model="entry.auxChannelIndex"
+                                                :items="channelOptions"
+                                                class="min-w-22"
+                                            />
+                                            <USelect
+                                                v-model="entry.modeLogic"
+                                                :items="logicOptions"
+                                                v-if="mode.entries.length > 1"
+                                                class="min-w-22"
+                                            />
+                                            <p class="text-xs">{{ $t("auxiliaryMin") }}: {{ entry.sliderRange[0] }}</p>
+                                            <p class="text-xs">{{ $t("auxiliaryMax") }}: {{ entry.sliderRange[1] }}</p>
                                         </div>
-                                        <div class="rangeLogic" v-show="mode.entries.length > 1">
-                                            <select v-model.number="entry.modeLogic" class="logic">
-                                                <option
-                                                    v-for="logic in logicOptions"
-                                                    :key="logic.value"
-                                                    :value="logic.value"
-                                                >
-                                                    {{ logic.label }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="limits">
-                                            <p class="lowerLimit">
-                                                <span>{{ $t("auxiliaryMin") }}</span
-                                                >:
-                                                <span class="lowerLimitValue">{{ entry.range.start }}</span>
-                                            </p>
-                                            <p class="upperLimit">
-                                                <span>{{ $t("auxiliaryMax") }}</span
-                                                >:
-                                                <span class="upperLimitValue">{{ entry.range.end }}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="channel-slider">
                                         <div
-                                            class="slider-wrapper"
-                                            @mousedown="(e) => handleSliderClick(e, entry)"
-                                            @touchstart="(e) => handleSliderClick(e, entry)"
+                                            class="w-full h-full flex flex-col items-center justify-center p-3 md:pr-12 md:pb-0"
                                         >
-                                            <div class="track-background"></div>
-                                            <div
-                                                class="track-fill"
-                                                :style="rangeFillStyle(entry)"
-                                                @mousedown.stop="(e) => startDrag(e, entry, 'range')"
-                                                @touchstart.stop="(e) => startDrag(e, entry, 'range')"
-                                            ></div>
-                                            <div
-                                                class="range-handle handle-min"
-                                                :style="{ left: channelPercent(entry.range.start) + '%' }"
-                                                @mousedown.stop="(e) => startDrag(e, entry, 'start')"
-                                                @touchstart.stop="(e) => startDrag(e, entry, 'start')"
-                                            ></div>
-                                            <div
-                                                class="range-handle handle-max"
-                                                :style="{ left: channelPercent(entry.range.end) + '%' }"
-                                                @mousedown.stop="(e) => startDrag(e, entry, 'end')"
-                                                @touchstart.stop="(e) => startDrag(e, entry, 'end')"
-                                            ></div>
-                                        </div>
-                                        <div class="pips-channel-range">
-                                            <div
-                                                v-for="pip in sliderPipValues"
-                                                :key="pip"
-                                                class="pip"
-                                                :style="pipStyle(pip)"
-                                            >
-                                                {{ pip }}
+                                            <DraggableMultiSlider
+                                                v-model="entry.sliderRange"
+                                                :min="CHANNEL_MIN"
+                                                :max="CHANNEL_MAX"
+                                                :step="CHANNEL_STEP"
+                                                :min-range-gap="MIN_RANGE_GAP"
+                                            />
+                                            <div class="pips-channel-range">
+                                                <div
+                                                    v-for="pip in sliderPipValues"
+                                                    :key="pip"
+                                                    class="pip"
+                                                    :style="pipStyle(pip)"
+                                                >
+                                                    {{ pip }}
+                                                </div>
+                                                <div
+                                                    v-if="markerStyle(entry.auxChannelIndex)"
+                                                    class="pip-marker"
+                                                    :style="markerStyle(entry.auxChannelIndex)"
+                                                ></div>
                                             </div>
-                                            <div
-                                                v-if="markerStyle(entry.auxChannelIndex)"
-                                                class="pip-marker"
-                                                :style="markerStyle(entry.auxChannelIndex)"
-                                            ></div>
                                         </div>
+                                        <UButton
+                                            icon="i-lucide-x"
+                                            size="xs"
+                                            color="neutral"
+                                            variant="soft"
+                                            :ui="{
+                                                base: 'bg-accented absolute top-3 right-3 rounded-full',
+                                            }"
+                                            @click="removeEntry(mode, entry.uid)"
+                                        />
                                     </div>
-
-                                    <div class="delete">
-                                        <a
-                                            class="deleteRange invertable"
-                                            href="#"
-                                            @click.prevent="removeEntry(mode, entry.uid)"
-                                        >
-                                            &nbsp;
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div v-else class="link">
-                                    <div class="modeInfo">
-                                        <div class="modeLink">
-                                            <select v-model.number="entry.linkedTo" class="linkedTo">
-                                                <option
-                                                    v-for="opt in linkOptions"
-                                                    :key="opt.value"
-                                                    :value="opt.value"
-                                                    :disabled="opt.value === mode.id"
-                                                >
-                                                    {{ opt.label }}
-                                                </option>
-                                            </select>
+                                    <div v-else class="flex w-full relative">
+                                        <div class="flex flex-col gap-2 p-3 items-start">
+                                            <USelect
+                                                v-model="entry.linkedTo"
+                                                :items="linkItemsForMode(mode)"
+                                                class="min-w-52"
+                                            />
+                                            <USelect
+                                                v-model="entry.modeLogic"
+                                                :items="logicOptions"
+                                                v-if="mode.entries.length > 1"
+                                                class="min-w-22"
+                                            />
                                         </div>
-                                        <div class="linkLogic" v-show="mode.entries.length > 1">
-                                            <select v-model.number="entry.modeLogic" class="logic">
-                                                <option
-                                                    v-for="logic in logicOptions"
-                                                    :key="logic.value"
-                                                    :value="logic.value"
-                                                >
-                                                    {{ logic.label }}
-                                                </option>
-                                            </select>
-                                        </div>
+                                        <UButton
+                                            icon="i-lucide-x"
+                                            size="xs"
+                                            color="neutral"
+                                            variant="soft"
+                                            :ui="{
+                                                base: 'bg-accented absolute top-3 right-3 rounded-full',
+                                            }"
+                                            @click="removeEntry(mode, entry.uid)"
+                                        />
                                     </div>
-                                    <div class="delete">
-                                        <a class="deleteLink" href="#" @click.prevent="removeEntry(mode, entry.uid)"
-                                            >&nbsp;</a
-                                        >
-                                    </div>
-                                </div>
+                                </template>
                             </template>
-                        </template>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -191,7 +166,8 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
+import { defineComponent, reactive, ref, computed, onMounted, watch, nextTick } from "vue";
+import { useWindowSize } from "@vueuse/core";
 import { useFlightControllerStore } from "@/stores/fc";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
@@ -206,6 +182,10 @@ import adjustBoxNameIfPeripheralWithModeID from "../../js/peripherals";
 import { i18n } from "../../js/localization";
 import { getTextWidth } from "../../js/utils/common";
 import inflection from "inflection";
+import UiBox from "../elements/UiBox.vue";
+import HelpIcon from "../elements/HelpIcon.vue";
+import SettingRow from "../elements/SettingRow.vue";
+import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
 
 const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
@@ -213,11 +193,40 @@ const CHANNEL_STEP = 25;
 const MIN_RANGE_GAP = 25;
 const DEFAULT_RANGE = { start: 1300, end: 1700 };
 
+function getModeStateColors(state) {
+    switch (state) {
+        case "on":
+            return {
+                color: "primary",
+                solid: "bg-primary/80",
+            };
+        case "off":
+            return {
+                color: "neutral",
+                solid: "bg-accented",
+            };
+        case "disabled":
+            return {
+                color: "error",
+                solid: "bg-error/20",
+            };
+        default:
+            return {
+                color: "neutral",
+                solid: "bg-accented",
+            };
+    }
+}
+
 export default defineComponent({
     name: "AuxiliaryTab",
     components: {
         BaseTab,
         WikiButton,
+        UiBox,
+        HelpIcon,
+        SettingRow,
+        DraggableMultiSlider,
     },
     setup() {
         // Initialize Pinia stores
@@ -238,8 +247,10 @@ export default defineComponent({
             { value: 1, label: i18n.getMessage("auxiliaryModeLogicAND") },
         ]);
 
+        const { width: windowWidth } = useWindowSize();
+
         const sliderPipValues = computed(() => {
-            if (globalThis.window !== undefined && globalThis.window.innerWidth < 575) {
+            if (windowWidth.value < 575) {
                 return [1000, 1200, 1400, 1600, 1800, 2000];
             }
             return [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
@@ -254,12 +265,20 @@ export default defineComponent({
         });
 
         const linkOptions = computed(() => {
-            const opts = [{ value: 0, label: "" }];
+            const none = { value: 0, label: i18n.getMessage("auxiliaryLinkNone") };
+            const rest = [];
             for (let index = 1; index < fcStore.auxConfig.length; index++) {
-                opts.push({ value: fcStore.auxConfigIds[index], label: fcStore.auxConfig[index] });
+                rest.push({ value: fcStore.auxConfigIds[index], label: fcStore.auxConfig[index] });
             }
-            return opts.sort((a, b) => a.label.localeCompare(b.label));
+            rest.sort((a, b) => a.label.localeCompare(b.label));
+            return [none, ...rest];
         });
+
+        const linkItemsForMode = (mode) =>
+            linkOptions.value.map((opt) => ({
+                ...opt,
+                disabled: opt.value === mode.id,
+            }));
 
         const anyUsedMode = computed(() => modes.some((mode) => mode.entries.length));
 
@@ -305,26 +324,46 @@ export default defineComponent({
             return { left: `${percent}%` };
         };
 
-        const rangeFillStyle = (entry) => {
-            const start = channelPercent(entry.range.start);
-            const end = channelPercent(entry.range.end);
-            return {
-                left: `${start}%`,
-                width: `${Math.max(end - start, 0)}%`,
-            };
+        const snapChannel = (value) => {
+            const numericValue = Number(value);
+            if (Number.isNaN(numericValue)) {
+                return DEFAULT_RANGE.start;
+            }
+            return clampChannel(Math.round(numericValue / CHANNEL_STEP) * CHANNEL_STEP);
         };
 
         const pipStyle = (value) => {
             return { left: `${channelPercent(value)}%` };
         };
 
+        const normalizeRangeValues = (values) => {
+            const [rawStart = DEFAULT_RANGE.start, rawEnd = DEFAULT_RANGE.end] = Array.isArray(values) ? values : [];
+            let start = snapChannel(rawStart);
+            let end = snapChannel(rawEnd);
+
+            if (start > end) {
+                [start, end] = [end, start];
+            }
+
+            if (end - start < MIN_RANGE_GAP) {
+                if (start <= CHANNEL_MIN) {
+                    end = Math.min(CHANNEL_MAX, start + MIN_RANGE_GAP);
+                } else {
+                    start = Math.max(CHANNEL_MIN, end - MIN_RANGE_GAP);
+                }
+            }
+
+            return [start, end];
+        };
+
         const addRange = (mode, auxChannelIndex = -1, modeLogic = 0, range = DEFAULT_RANGE) => {
+            const sliderRange = normalizeRangeValues([range.start, range.end]);
             mode.entries.push({
                 uid: ++entryUid,
                 kind: "range",
                 auxChannelIndex,
                 modeLogic,
-                range: { start: range.start, end: range.end },
+                sliderRange,
             });
         };
 
@@ -366,122 +405,17 @@ export default defineComponent({
             return "off";
         };
 
-        const ensureRangeOrder = (entry) => {
-            if (entry.range.start > entry.range.end - MIN_RANGE_GAP) {
-                entry.range.start = Math.max(CHANNEL_MIN, entry.range.end - MIN_RANGE_GAP);
-            }
-            if (entry.range.end < entry.range.start + MIN_RANGE_GAP) {
-                entry.range.end = Math.min(CHANNEL_MAX, entry.range.start + MIN_RANGE_GAP);
-            }
-        };
-
-        const onRangeStartChange = (entry) => {
-            entry.range.start = clampChannel(entry.range.start);
-            entry.range.end = clampChannel(entry.range.end);
-            if (entry.range.start > entry.range.end - MIN_RANGE_GAP) {
-                entry.range.end = Math.min(CHANNEL_MAX, entry.range.start + MIN_RANGE_GAP);
-            }
-            ensureRangeOrder(entry);
-        };
-
-        const onRangeEndChange = (entry) => {
-            entry.range.start = clampChannel(entry.range.start);
-            entry.range.end = clampChannel(entry.range.end);
-            if (entry.range.end < entry.range.start + MIN_RANGE_GAP) {
-                entry.range.start = Math.max(CHANNEL_MIN, entry.range.end - MIN_RANGE_GAP);
-            }
-            ensureRangeOrder(entry);
-        };
-
-        let dragState = null;
-
-        const getEventX = (e) => {
-            return e.touches ? e.touches[0].clientX : e.clientX;
-        };
-
-        const startDrag = (e, entry, type) => {
-            e.preventDefault();
-            const slider = e.target.closest(".slider-wrapper");
-            const startX = getEventX(e);
-            const initialStart = entry.range.start;
-            const initialEnd = entry.range.end;
-            dragState = { entry, type, slider, startX, initialStart, initialEnd };
-            document.addEventListener("mousemove", onDragMove);
-            document.addEventListener("mouseup", stopDrag);
-            document.addEventListener("touchmove", onDragMove);
-            document.addEventListener("touchend", stopDrag);
-        };
-
-        const onDragMove = (e) => {
-            if (!dragState) {
-                return;
-            }
-
-            const rect = dragState.slider.getBoundingClientRect();
-
-            if (dragState.type === "range") {
-                // Dragging the entire range - move both handles together
-                const deltaX = getEventX(e) - dragState.startX;
-                const deltaPercent = deltaX / rect.width;
-                const deltaValue =
-                    Math.round((deltaPercent * (CHANNEL_MAX - CHANNEL_MIN)) / CHANNEL_STEP) * CHANNEL_STEP;
-
-                const newStart = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, dragState.initialStart + deltaValue));
-                const newEnd = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, dragState.initialEnd + deltaValue));
-
-                // Keep range width constant
-                const rangeWidth = dragState.initialEnd - dragState.initialStart;
-                if (newStart >= CHANNEL_MIN && newEnd <= CHANNEL_MAX) {
-                    dragState.entry.range.start = newStart;
-                    dragState.entry.range.end = newEnd;
-                } else if (newStart < CHANNEL_MIN) {
-                    dragState.entry.range.start = CHANNEL_MIN;
-                    dragState.entry.range.end = CHANNEL_MIN + rangeWidth;
-                } else if (newEnd > CHANNEL_MAX) {
-                    dragState.entry.range.end = CHANNEL_MAX;
-                    dragState.entry.range.start = CHANNEL_MAX - rangeWidth;
-                }
-            } else {
-                // Dragging individual handle
-                const percent = Math.max(0, Math.min(1, (getEventX(e) - rect.left) / rect.width));
-                const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
-                const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
-
-                if (dragState.type === "start") {
-                    dragState.entry.range.start = value;
-                    onRangeStartChange(dragState.entry);
-                } else {
-                    dragState.entry.range.end = value;
-                    onRangeEndChange(dragState.entry);
-                }
-            }
-        };
-
-        const stopDrag = () => {
-            document.removeEventListener("mousemove", onDragMove);
-            document.removeEventListener("mouseup", stopDrag);
-            document.removeEventListener("touchmove", onDragMove);
-            document.removeEventListener("touchend", stopDrag);
-            dragState = null;
-        };
-
-        const handleSliderClick = (e, entry) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const percent = (getEventX(e) - rect.left) / rect.width;
-            const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
-            const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
-
-            const distToStart = Math.abs(value - entry.range.start);
-            const distToEnd = Math.abs(value - entry.range.end);
-
-            if (distToStart < distToEnd) {
-                entry.range.start = value;
-                onRangeStartChange(entry);
-            } else {
-                entry.range.end = value;
-                onRangeEndChange(entry);
-            }
-        };
+        const visibleModesWithState = computed(() =>
+            visibleModes.value.map((mode) => {
+                const state = modeState(mode);
+                return {
+                    mode,
+                    state,
+                    stateUi: getModeStateColors(state),
+                    buttonSolid: state === "on" || state === "disabled",
+                };
+            }),
+        );
 
         const buildModesFromFC = () => {
             modes.length = 0;
@@ -583,11 +517,20 @@ export default defineComponent({
             const rc = fcStore.rc || {};
             const channels = rc.channels || [];
             const activeChannels = rc.active_channels || 0;
-            auxChannelCount.value = Math.max(0, activeChannels - 4);
+            const nextAuxChannelCount = Math.max(0, activeChannels - 4);
 
-            Object.keys(rcMarkers).forEach((key) => delete rcMarkers[key]);
-            for (let idx = 0; idx < auxChannelCount.value; idx++) {
-                rcMarkers[idx] = channelPercent(channels[idx + 4]);
+            auxChannelCount.value = nextAuxChannelCount;
+
+            for (let idx = 0; idx < nextAuxChannelCount; idx++) {
+                const nextPercent = channelPercent(channels[idx + 4]);
+                if (rcMarkers[idx] !== nextPercent) {
+                    rcMarkers[idx] = nextPercent;
+                }
+            }
+
+            const existingMarkerCount = Object.keys(rcMarkers).length;
+            for (let idx = nextAuxChannelCount; idx < existingMarkerCount; idx++) {
+                delete rcMarkers[idx];
             }
 
             autoSelectChannel(channels, activeChannels, fcStore.rssiConfig?.channel || 0);
@@ -600,8 +543,7 @@ export default defineComponent({
             modes.forEach((mode) => {
                 mode.entries.forEach((entry) => {
                     if (entry.kind === "range") {
-                        const start = clampChannel(entry.range.start);
-                        const end = clampChannel(entry.range.end);
+                        const [start, end] = normalizeRangeValues(entry.sliderRange);
                         if (start >= end) {
                             return;
                         }
@@ -680,43 +622,29 @@ export default defineComponent({
             addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
         });
 
-        onUnmounted(() => {
-            // Clean up drag event listeners if drag is in progress
-            if (dragState) {
-                document.removeEventListener("mousemove", onDragMove);
-                document.removeEventListener("mouseup", stopDrag);
-                dragState = null;
-            }
-            // Interval cleanup handled automatically by useInterval on unmount
-        });
-
         watch(hideUnused, (value) => setConfig({ hideUnusedModes: value }));
 
         return {
             modes,
             hideUnused,
-            visibleModes,
+            visibleModesWithState,
             logicOptions,
             channelOptions,
-            linkOptions,
+            linkItemsForMode,
+            rcMarkers,
             infoMinWidthStyle,
             sliderPipValues,
             CHANNEL_MIN,
             CHANNEL_MAX,
             CHANNEL_STEP,
+            MIN_RANGE_GAP,
+            getModeStateColors,
             addRange,
             addLink,
             removeEntry,
-            modeState,
             markerStyle,
-            rangeFillStyle,
-            onRangeStartChange,
-            onRangeEndChange,
             pipStyle,
             saveModes,
-            startDrag,
-            handleSliderClick,
-            channelPercent,
         };
     },
 });
@@ -724,157 +652,19 @@ export default defineComponent({
 
 <style lang="less">
 .tab-auxiliary {
-    /* Slider UI component styles */
-    .slider-wrapper {
-        position: relative;
-        height: 40px;
-        margin: 10px 0;
-    }
-
-    .track-background {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 0;
-        right: 0;
-        height: 8px;
-        background: var(--surface-700);
-        border-radius: 4px;
-        z-index: 0;
-        pointer-events: none;
-    }
-
-    .track-fill {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        height: 8px;
-        background: var(--primary-500);
-        border-radius: 4px;
-        z-index: 1;
-        cursor: grab;
-    }
-
-    .track-fill:active {
-        cursor: grabbing;
-    }
-
-    .slider-input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background: transparent;
-        pointer-events: auto;
-        touch-action: none;
-        -webkit-appearance: none;
-        appearance: none;
-        z-index: 3;
-    }
-
-    .slider-input-min {
-        z-index: 4;
-    }
-
-    .slider-input-max {
-        z-index: 3;
-    }
-
-    .slider-input::-webkit-slider-thumb {
-        pointer-events: auto;
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--surface-200);
-        border: 3px solid var(--primary-500);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-        cursor: grab;
-    }
-
-    .slider-input::-webkit-slider-thumb:active {
-        cursor: grabbing;
-    }
-
-    .slider-input::-moz-range-thumb {
-        pointer-events: auto;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--surface-200);
-        border: 3px solid var(--primary-500);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-        cursor: grab;
-    }
-
-    .slider-input::-moz-range-thumb:active {
-        cursor: grabbing;
-    }
-
-    .slider-input::-webkit-slider-runnable-track {
-        background: transparent;
-        border: none;
-    }
-
-    .slider-input::-moz-range-track {
-        background: transparent;
-        border: none;
-    }
-
-    .slider-inputs {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        margin-top: 8px;
-    }
-
-    .range-value {
-        width: 80px;
-        padding: 4px 8px;
-        background: var(--surface-700);
-        border: 1px solid var(--surface-600);
-        border-radius: 4px;
-        color: var(--text-primary);
-        font-size: 12px;
-    }
-
-    .range-handle {
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--surface-200);
-        border: 3px solid var(--primary-500);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-        cursor: grab;
-        z-index: 10;
-    }
-
-    .range-handle:hover {
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
-        transform: translate(-50%, -50%) scale(1.1);
-    }
-
-    .range-handle:active {
-        cursor: grabbing;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    }
+    min-height: 100%;
 
     .pips-channel-range {
         position: relative;
         height: 24px;
-        margin-top: 8px;
+        margin-top: 16px;
+        // 20px is the width of the slider thumbs in DraggableMultiSlider, taking 10px from each side of the pip range makes the thumbs align cleanly
+        width: calc(100% - 20px);
     }
 
     .pip {
         position: absolute;
-        top: 0;
+        top: 12px;
         transform: translateX(-50%);
         font-size: 11px;
         color: var(--text-muted);
@@ -884,11 +674,11 @@ export default defineComponent({
     .pip::before {
         content: "";
         position: absolute;
-        bottom: 12px;
+        bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
         width: 2px;
-        height: 8px;
+        height: 16px;
         background: var(--surface-600);
     }
 
@@ -896,314 +686,13 @@ export default defineComponent({
         position: absolute;
         bottom: 12px;
         transform: translateX(-50%);
-        width: 3px;
-        height: 8px;
+        width: 6px;
+        height: 20px;
         background: var(--primary-500);
         box-shadow: 0 0 6px rgba(255, 187, 0, 0.9);
         pointer-events: none;
         z-index: 10;
-    }
-
-    /* Tab layout and mode styles */
-    min-height: 100%;
-    .help {
-        padding: 10px;
-        background-color: #ffcb18;
-        margin-bottom: 10px;
-    }
-    .toolbox {
-        font-weight: bold;
-        padding: 1rem 0;
-        form {
-            display: flex;
-            gap: 0.5rem;
-        }
-    }
-    .range {
-        .marker {
-            background: var(--primary-500);
-            border-radius: 3px;
-            position: absolute;
-            left: 50%;
-            top: 2rem;
-            height: 1rem;
-            width: 6px;
-            margin-left: -3px;
-            z-index: 1000;
-        }
-        position: relative;
-        padding-top: 1rem;
-        padding-left: 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--surface-500);
-        &:first-child {
-            border-top: 0;
-        }
-        &:last-child {
-            border-bottom: 0;
-        }
-        > .buttons {
-            position: absolute;
-            top: 0;
-            right: 0;
-            a {
-                padding: 2px;
-            }
-        }
-        .channel {
-            border: 1px solid var(--surface-500);
-            border-radius: 3px;
-            margin-bottom: 3px;
-        }
-        .channel-slider {
-            width: 100%;
-            margin-right: 1.5rem;
-        }
-    }
-    .mode.on {
-        .info {
-            background: var(--primary-500);
-            color: black;
-        }
-        &:nth-child(odd) {
-            .info {
-                background: var(--primary-500);
-            }
-        }
-        .buttons {
-            a {
-                background-color: var(--primary-300);
-                color: black;
-                &:hover {
-                    background-color: var(--primary-200);
-                    color: black;
-                }
-            }
-        }
-    }
-    .mode.off {
-        .info {
-            background: var(--surface-300);
-            color: var(--surface-950);
-        }
-        &:nth-child(odd) {
-            .info {
-                background: var(--surface-300);
-            }
-        }
-        .buttons {
-            a {
-                background-color: var(--surface-400);
-                color: var(--surface-950);
-                &:hover {
-                    background-color: var(--surface-500);
-                    color: var(--surface-950);
-                }
-            }
-        }
-    }
-    .mode.disabled {
-        .info {
-            background: var(--error-transparent-4);
-            color: var(--text);
-            .buttons {
-                a {
-                    background-color: var(--error-500);
-                    &:hover {
-                        background-color: var(--error-400);
-                    }
-                }
-            }
-        }
-    }
-    .modes {
-        width: 100%;
-    }
-    .mode {
-        background-color: var(--surface-200);
-        vertical-align: top;
-        display: flex;
-        margin-bottom: 0.5rem;
-        border-radius: 0.5rem;
-        overflow: hidden;
-        min-height: 6.5rem;
-        .name {
-            padding: 0.5rem;
-        }
-        .info {
-            text-align: center;
-            width: fit-content;
-            white-space: nowrap;
-            position: relative;
-            background-color: var(--surface-300);
-            padding: 0.5rem;
-            .name {
-                font-weight: bold;
-                font-size: 1em;
-            }
-            .buttons {
-                a {
-                    padding: 0.25rem 0.5rem;
-                    border-radius: 0.5rem;
-                    cursor: pointer;
-                    margin: 3px;
-                    display: block;
-                }
-            }
-        }
-        .range {
-            display: flex;
-            .channelInfo {
-                padding: 0 1.5rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    }
-    .ranges {
-        width: 100%;
-    }
-    .link {
-        padding-top: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--surface-500);
-        background-color: var(--surface-200);
-        display: flex;
-        gap: 0.5rem;
-        &:first-child {
-            border-top: 0;
-        }
-        &:last-child {
-            border-bottom: 0;
-        }
-        .delete {
-            a {
-                margin-top: 0.35rem;
-            }
-        }
-        .modeInfo {
-            padding: 0 1.5rem;
-        }
-        .linkLogic {
-            margin-top: 0.25rem;
-        }
-    }
-    .logic {
-        border: 1px solid var(--surface-700);
-        border-radius: 3px;
-    }
-    .buttons {
-        a {
-            text-align: center;
-            font-weight: bold;
-            background-color: var(--surface-400);
-            color: var(--text);
-            transition: all ease 0.3s;
-            &:hover {
-                background-color: var(--surface-500);
-                opacity: 1;
-                transition: all ease 0.3s;
-            }
-        }
-    }
-    .delete {
-        a {
-            height: 15px;
-            width: 15px;
-            transition: all ease 0.3s;
-            opacity: 0.3;
-            position: relative;
-            margin-right: 5px;
-            margin-top: -9px;
-            background-image: url("../../images/icons/close1.svg");
-            background-repeat: no-repeat;
-            background-position: center 100%;
-            display: block;
-            &:hover {
-                transition: all ease 0.3s;
-                opacity: 0.6;
-            }
-        }
-    }
-}
-#tab-auxiliary-templates {
-    display: none;
-}
-@media all and (max-width: 575px) {
-    .tab-auxiliary {
-        .mode {
-            flex-wrap: wrap;
-            height: fit-content;
-            .info {
-                width: 100%;
-                border-bottom: 0;
-                display: flex;
-                flex-direction: row-reverse;
-                justify-content: space-between;
-                align-items: center;
-                .name {
-                    text-align: left;
-                    min-height: auto;
-                    margin-right: auto;
-                }
-                .buttons {
-                    right: 0;
-                    width: auto;
-                    display: flex;
-                }
-                .helpicon {
-                    margin-top: 0;
-                }
-            }
-            // offset "add" button for ARM mode since the "link" button is hidden
-            // keeps the layout consistent with other modes
-            &:first-of-type {
-                .buttons {
-                    margin-left: 2.5rem;
-                }
-            }
-            .ranges {
-                width: 100%;
-                max-width: 100%;
-            }
-            .range {
-                .channelInfo {
-                    display: flex;
-                    margin: 0 10px;
-                    width: 100%;
-                    flex-wrap: wrap;
-                }
-            }
-        }
-        .range {
-            display: flex;
-            height: auto;
-            flex-wrap: wrap;
-            .channel-slider {
-                width: 100%;
-                margin: 0.5rem 1rem 3.5rem 1rem;
-            }
-        }
-        .limits {
-            width: 100%;
-            justify-content: space-between;
-            display: flex;
-        }
-        .delete {
-            a {
-                margin-top: 15px;
-                margin-right: 10px;
-                position: absolute;
-                top: 0;
-                right: 0;
-            }
-        }
-        .link {
-            height: auto;
-            display: flex;
-            padding-bottom: 10px;
-        }
+        border-radius: 9999px;
     }
 }
 </style>

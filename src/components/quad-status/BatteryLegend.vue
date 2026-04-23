@@ -1,5 +1,5 @@
 <template>
-    <div class="battery-legend">
+    <div class="battery-legend" :class="{ 'battery-legend--compact': compact }">
         {{ reading }}
     </div>
 </template>
@@ -11,6 +11,7 @@ const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
 const props = defineProps({
     voltage: { type: Number, default: 0 },
     vbatmaxcellvoltage: { type: Number, default: 1 },
+    compact: { type: Boolean, default: false },
 });
 
 const reading = computed(() => {
@@ -36,5 +37,17 @@ const reading = computed(() => {
     color: var(--surface-800);
     margin-left: -8px;
     padding-right: 4px;
+}
+
+.battery-legend--compact {
+    position: static;
+    display: inline-block;
+    top: 0;
+    margin: 0;
+    padding: 0 0.25rem;
+    width: auto;
+    color: var(--text);
+    font-size: 12px;
+    white-space: nowrap;
 }
 </style>

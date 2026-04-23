@@ -84,13 +84,13 @@
                         <!-- Frequency input -->
                         <div class="field number vtx_frequency" v-show="frequencyMode">
                             <span class="numberspacer">
-                                <input
+                                <UInputNumber
                                     class="frequency_input"
-                                    type="number"
                                     id="vtx_frequency"
-                                    min="64"
-                                    max="5999"
-                                    v-model.number="vtxConfig.vtx_frequency"
+                                    :min="64"
+                                    :max="5999"
+                                    :step="1"
+                                    v-model="vtxConfig.vtx_frequency"
                                 />
                             </span>
                             <label>
@@ -133,13 +133,13 @@
                         <!-- Pit mode frequency -->
                         <div class="field number vtx_pit_mode_frequency">
                             <span class="numberspacer">
-                                <input
+                                <UInputNumber
                                     class="frequency_input"
-                                    type="number"
                                     id="vtx_pit_mode_frequency"
-                                    min="0"
-                                    max="5999"
-                                    v-model.number="vtxConfig.vtx_pit_mode_frequency"
+                                    :min="0"
+                                    :max="5999"
+                                    :step="1"
+                                    v-model="vtxConfig.vtx_pit_mode_frequency"
                                 />
                             </span>
                             <label>
@@ -235,13 +235,13 @@
                             <!-- Bands count -->
                             <div class="field number vtx_table_bands_channels">
                                 <span class="numberspacer">
-                                    <input
+                                    <UInputNumber
                                         class="one_digit_input"
-                                        type="number"
                                         id="vtx_table_bands"
-                                        min="0"
-                                        max="8"
-                                        v-model.number="vtxConfig.vtx_table_bands"
+                                        :min="0"
+                                        :max="8"
+                                        :step="1"
+                                        v-model="vtxConfig.vtx_table_bands"
                                     />
                                 </span>
                                 <label>
@@ -253,13 +253,13 @@
                             <!-- Channels count -->
                             <div class="field number vtx_table_channels">
                                 <span class="numberspacer">
-                                    <input
+                                    <UInputNumber
                                         class="one_digit_input"
-                                        type="number"
                                         id="vtx_table_channels"
-                                        min="0"
-                                        max="8"
-                                        v-model.number="vtxConfig.vtx_table_channels"
+                                        :min="0"
+                                        :max="8"
+                                        :step="1"
+                                        v-model="vtxConfig.vtx_table_channels"
                                     />
                                 </span>
                                 <label>
@@ -346,14 +346,14 @@
                                                     v-show="chIdx <= vtxConfig.vtx_table_channels"
                                                 >
                                                     <span class="numberspacer field_band_channel">
-                                                        <input
+                                                        <UInputNumber
                                                             class="frequency_input"
-                                                            type="number"
-                                                            min="0"
-                                                            max="5999"
-                                                            :value="getBandChannelFreq(bandIdx, chIdx)"
-                                                            @input="
-                                                                setBandChannelFreq(bandIdx, chIdx, $event.target.value)
+                                                            :min="0"
+                                                            :max="5999"
+                                                            :step="1"
+                                                            :model-value="getBandChannelFreq(bandIdx, chIdx)"
+                                                            @update:model-value="
+                                                                setBandChannelFreq(bandIdx, chIdx, $event)
                                                             "
                                                         />
                                                     </span>
@@ -373,13 +373,13 @@
                             <!-- Power levels count -->
                             <div class="field number vtx_table_powerlevels">
                                 <span class="numberspacer">
-                                    <input
+                                    <UInputNumber
                                         class="one_digit_input"
-                                        type="number"
                                         id="vtx_table_powerlevels"
-                                        min="0"
-                                        max="8"
-                                        v-model.number="vtxConfig.vtx_table_powerlevels"
+                                        :min="0"
+                                        :max="8"
+                                        :step="1"
+                                        v-model="vtxConfig.vtx_table_powerlevels"
                                     />
                                 </span>
                                 <label>
@@ -412,12 +412,12 @@
                                                     v-show="i <= vtxConfig.vtx_table_powerlevels"
                                                 >
                                                     <span class="numberspacer field_powerlevel_value">
-                                                        <input
-                                                            type="number"
-                                                            min="0"
-                                                            max="65535"
-                                                            :value="getPowerLevelValue(i)"
-                                                            @input="setPowerLevelValue(i, $event.target.value)"
+                                                        <UInputNumber
+                                                            :min="0"
+                                                            :max="65535"
+                                                            :step="1"
+                                                            :model-value="getPowerLevelValue(i)"
+                                                            @update:model-value="setPowerLevelValue(i, $event)"
                                                         />
                                                     </span>
                                                 </td>
@@ -796,12 +796,12 @@ export default defineComponent({
     align-items: center;
 }
 
-input.one_digit_input {
-    width: 28px;
+.one_digit_input {
+    width: 80px;
 }
 
-input.frequency_input {
-    width: 64px;
+.frequency_input {
+    width: 120px;
 }
 
 .vtx_table_box {
@@ -825,7 +825,7 @@ input.frequency_input {
     text-align: center;
 }
 
-.table_vtx_bands input {
+.table_vtx_bands :deep(input) {
     min-width: 0;
     padding-right: 0.25rem;
 }
@@ -839,7 +839,7 @@ input.frequency_input {
     text-align: center;
 }
 
-.table_vtx_powerlevels input {
+.table_vtx_powerlevels :deep(input) {
     display: block;
     min-width: 5rem;
 }

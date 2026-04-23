@@ -1563,6 +1563,7 @@ OSD.chooseFields = function () {
     }
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.filter((w) => w.name !== "RC_SMOOTHING_FAILURE");
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.POSHOLD_FAILED]);
     }
 };
 

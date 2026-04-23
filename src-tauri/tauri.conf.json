@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.tauri.app/config/2",
+    "productName": "Betaflight App",
+    "version": "2026.6.0",
+    "identifier": "com.betaflight.app",
+    "build": {
+        "beforeDevCommand": "yarn dev",
+        "beforeBuildCommand": "yarn tauri:prebuild",
+        "devUrl": "http://localhost:8080",
+        "frontendDist": "../src/dist"
+    },
+    "app": {
+        "security": {
+            "csp": null,
+            "capabilities": [
+                "default"
+            ]
+        },
+        "windows": [
+            {
+                "title": "Betaflight App",
+                "width": 1024,
+                "height": 550,
+                "minWidth": 1024,
+                "minHeight": 550,
+                "resizable": true,
+                "fullscreen": false
+            }
+        ]
+    },
+    "bundle": {
+        "active": true,
+        "targets": [
+            "deb",
+            "appimage",
+            "dmg",
+            "nsis"
+        ],
+        "icon": [
+            "icons/bf_icon_128.png",
+            "icons/icon.ico"
+        ],
+        "category": "Utility",
+        "copyright": "The Betaflight open source project.",
+        "shortDescription": "Configuration and management application for Betaflight flight controllers.",
+        "longDescription": "Crossplatform configuration and management application for the Betaflight flight control firmware."
+    },
+    "plugins": {
+        "shell": {
+            "open": true
+        }
+    }
+}

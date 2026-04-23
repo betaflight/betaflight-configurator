@@ -108,6 +108,45 @@ export const useOsdStore = defineStore("osd", () => {
     // Currently selected preview profile
     const selectedPreviewProfile = ref(0);
 
+    // Dirty state tracking
+    const savedSnapshot = ref("");
+
+    function takeSnapshot() {
+        return JSON.stringify({
+            videoSystem: videoSystem.value,
+            unitMode: unitMode.value,
+            parameters: {
+                cameraFrameWidth: parameters.cameraFrameWidth,
+                cameraFrameHeight: parameters.cameraFrameHeight,
+                overlayRadioMode: parameters.overlayRadioMode,
+            },
+            alarms: Object.fromEntries(
+                Object.entries(alarms.value).map(([key, alarm]) => [key, { value: alarm.value }]),
+            ),
+            statItems: statItems.value.map(({ index, enabled }) => ({ index, enabled })),
+            warnings: warnings.value.map(({ index, enabled }) => ({ index, enabled })),
+            displayItems: displayItems.value.map(({ index, position, variant, isVisible }) => ({
+                index,
+                position,
+                variant,
+                isVisible: [...isVisible],
+            })),
+            timers: timers.value.map(({ index, src, precision, alarm }) => ({ index, src, precision, alarm })),
+            osdProfiles: {
+                number: osdProfiles.value.number,
+                selected: osdProfiles.value.selected,
+            },
+        });
+    }
+
+    function captureSnapshot() {
+        savedSnapshot.value = takeSnapshot();
+    }
+
+    const dirty = computed(() => {
+        return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
+    });
+
     // Video system constants
     const VIDEO_COLS = {
         PAL: 30,
@@ -215,6 +254,7 @@ export const useOsdStore = defineStore("osd", () => {
             await decodeOsdData(info);
             syncStoreFromDecodedOsdData();
             await ensureDefaultFontLoaded();
+            captureSnapshot();
         } catch (e) {
             console.error("Failed to fetch OSD config", e);
             throw e;
@@ -355,6 +395,28 @@ export const useOsdStore = defineStore("osd", () => {
         return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
     };
 
+    const saveAllConfig = async () => {
+        await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
+
+        for (const item of displayItems.value) {
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item));
+        }
+
+        for (const timer of timers.value) {
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer));
+        }
+
+        for (const stat of statItems.value) {
+            await MSP.promise(
+                MSPCodes.MSP_SET_OSD_CONFIG,
+                encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, OSD.virtualMode),
+            );
+        }
+
+        await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+        captureSnapshot();
+    };
+
     return {
         // State
         videoSystem,
@@ -374,6 +436,7 @@ export const useOsdStore = defineStore("osd", () => {
         numberOfProfiles,
         currentPreviewProfile,
         isSupported,
+        dirty,
 
         // Actions
         initData,
@@ -387,5 +450,6 @@ export const useOsdStore = defineStore("osd", () => {
         saveTimerConfig,
         saveStatisticItem,
         saveToEeprom,
+        saveAllConfig,
     };
 });

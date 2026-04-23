@@ -1,73 +1,44 @@
 <template>
     <BaseTab tab-name="presets" @mounted="onTabMounted" @cleanup="onTabCleanup">
         <div class="content_wrapper" id="presets_content_wrapper">
-            <div class="tab_title">
-                <div class="presets_title_text" v-html="$t('tabPresets')"></div>
-                <div class="presets_top_bar_button_pannel">
-                    <a
-                        href="https://betaflight.com/docs/wiki/app/presets-tab"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="presetsWikiButton tool regular-button right"
-                        >{{ $t("presetsWiki") }}</a
-                    >
-                    <div class="top_panel_spacer visible-on-desktop-only"></div>
-                    <a
-                        href="#"
-                        class="presets_sources_show tool regular-button right"
-                        @click.prevent="openSourcesDialog"
-                        >{{ $t("presetSources") }}</a
-                    >
-                    <div class="top_panel_spacer visible-on-desktop-only"></div>
-                    <a
-                        href="#"
-                        class="presets_load_config tool regular-button right"
-                        @click.prevent="loadConfigBackup"
-                        >{{ $t("presetsBackupLoad") }}</a
-                    >
-                    <a
-                        href="#"
-                        class="presets_save_config tool regular-button right"
-                        @click.prevent="saveConfigBackup"
-                        >{{ $t("presetsBackupSave") }}</a
-                    >
-                </div>
+            <div class="tab_title">{{ $t("tabPresets") }}</div>
+            <WikiButton docUrl="presets" />
+            <div class="flex items-center gap-2 flex-wrap mb-2 justify-end">
+                <UButton :label="$t('presetSources')" size="xs" @click="openSourcesDialog" />
+                <UButton :label="$t('presetsBackupLoad')" size="xs" @click="loadConfigBackup" />
+                <UButton :label="$t('presetsBackupSave')" size="xs" @click="saveConfigBackup" />
             </div>
 
-            <div class="presets_warnings">
-                <div
-                    v-if="store.isThirdPartyActive"
-                    class="note presets_warning_not_official_source"
-                    v-html="$t('presetsWarningNotOfficialSource')"
-                ></div>
-                <div
-                    v-if="store.failedRepositoryNames.length"
-                    class="note presets_failed_to_load_repositories"
-                    v-html="store.failedRepositoriesMessage"
-                ></div>
-                <div v-if="store.backupWarningVisible" class="note presets_warning_backup">
-                    <div class="presets_warning_backup_text" v-html="$t('presetsWarningBackup')"></div>
-                    <a
-                        href="#"
-                        class="tool regular-button presets_warning_backup_button_hide"
-                        @click.prevent="hideBackupWarning"
-                        >{{ $t("dontShowAgain") }}</a
-                    >
-                </div>
+            <div class="flex flex-col gap-2 mb-3">
+                <UiBox v-if="store.isThirdPartyActive" type="warning" highlight>
+                    <span v-html="$t('presetsWarningNotOfficialSource')"></span>
+                </UiBox>
+                <UiBox v-if="store.failedRepositoryNames.length" type="error" highlight>
+                    <span v-html="store.failedRepositoriesMessage"></span>
+                </UiBox>
+                <UiBox v-if="store.backupWarningVisible" type="warning" highlight>
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                        <span class="flex-1 min-w-0" v-html="$t('presetsWarningBackup')"></span>
+                        <UButton
+                            :label="$t('dontShowAgain')"
+                            size="xs"
+                            class="self-start sm:self-auto"
+                            @click="hideBackupWarning"
+                        />
+                    </div>
+                </UiBox>
             </div>
 
-            <div v-if="store.isLoading" id="presets_global_loading" class="data-loading presets_visible_block"></div>
+            <div v-if="store.isLoading" class="data-loading p-5 w-1/2 h-1/2 mx-auto"></div>
 
-            <div v-else-if="store.hasLoadError" id="presets_global_loading_error" class="presets_visible_block">
+            <div v-else-if="store.hasLoadError" class="p-5">
                 <h3 v-html="$t('presetsLoadError')"></h3>
-                <a href="#" id="presets_reload" class="tool regular-button" @click.prevent="reloadPresets">{{
-                    $t("presetsReload")
-                }}</a>
+                <UButton :label="$t('presetsReload')" class="mt-2" @click="reloadPresets" />
             </div>
 
-            <div v-else id="presets_main_content" class="presets_visible_block">
-                <div class="presets_search_settings">
-                    <div class="presets_filter_table_wrapper">
+            <div v-else>
+                <div class="sticky top-0 bg-(--ui-bg) z-10">
+                    <div class="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-1.5">
                         <PresetFilterSelect
                             v-model="store.filters.categories"
                             label-key="presetsFilterCategory"
@@ -95,26 +66,20 @@
                         />
                     </div>
 
-                    <div id="presets_search_bar_wrapper">
-                        <div id="presets_search_hint"></div>
-                        <input
-                            id="presets_filter_text"
-                            type="text"
-                            class="presets_text_input"
-                            :value="store.filters.searchString"
+                    <div class="flex items-center gap-3 py-3">
+                        <UInput
+                            :model-value="store.filters.searchString"
                             :placeholder="searchPlaceholder"
-                            @input="store.setSearchString($event.target.value)"
+                            icon="i-lucide-search"
+                            class="flex-1"
+                            @update:model-value="store.setSearchString($event)"
                         />
                     </div>
                 </div>
 
-                <div id="preset_list_wrapper">
-                    <div
-                        v-if="store.hasNoResults"
-                        id="presets_list_no_found"
-                        v-html="$t('presetsNoPresetsFound')"
-                    ></div>
-                    <div id="presets_list">
+                <div>
+                    <div v-if="store.hasNoResults" class="text-2xl py-4" v-html="$t('presetsNoPresetsFound')"></div>
+                    <div class="preset-card-grid grid gap-3 pb-5">
                         <PresetCard
                             v-for="entry in store.visiblePresetEntries"
                             :key="entry.key"
@@ -128,7 +93,7 @@
                         />
                         <div
                             v-if="store.hasTooManyResults"
-                            id="presets_list_too_many_found"
+                            class="text-2xl col-span-full py-4"
                             v-html="$t('presetsTooManyPresetsFound')"
                         ></div>
                     </div>
@@ -137,23 +102,19 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn">
-                <a
-                    href="#"
-                    id="presets_save_button"
-                    class="tool regular-button"
-                    :class="{ disabled: !store.canApply }"
-                    @click.prevent="store.canApply && applyPickedPresets()"
-                    >{{ $t("presetsButtonSave") }}</a
-                >
-                <a
-                    href="#"
-                    id="presets_cancel_button"
-                    class="tool regular-button"
-                    :class="{ disabled: !store.canApply }"
-                    @click.prevent="store.canApply && store.clearPickedPresets()"
-                    >{{ $t("presetsButtonCancel") }}</a
-                >
+            <div class="flex gap-2">
+                <UButton
+                    :label="$t('presetsButtonSave')"
+                    :disabled="!store.canApply"
+                    :color="store.canApply ? 'success' : 'neutral'"
+                    @click="applyPickedPresets()"
+                />
+                <UButton
+                    :label="$t('presetsButtonCancel')"
+                    :disabled="!store.canApply"
+                    :color="store.canApply ? 'primary' : 'neutral'"
+                    @click="store.clearPickedPresets()"
+                />
             </div>
         </div>
 
@@ -192,54 +153,32 @@
             @deactivate-source="handleDeactivateSource"
         />
 
-        <dialog id="presets_apply_progress_dialog" ref="progressDialogRef" @cancel.prevent>
-            <div class="presets_apply_progress_dialog_label" v-html="$t('presetsApplyingPresets')"></div>
-            <div class="presets_apply_progress_dialog_please_wait" v-html="$t('presetsPleaseWait')"></div>
-            <progress
-                class="presets_apply_progress_dialog_progress_bar"
-                :value="store.applyState.progress"
-                max="100"
-            ></progress>
+        <dialog ref="progressDialogRef" class="w-[300px] h-fit p-6" @cancel.prevent>
+            <div class="text-lg mb-2" v-html="$t('presetsApplyingPresets')"></div>
+            <div class="text-sm text-(--ui-text-muted)" v-html="$t('presetsPleaseWait')"></div>
+            <UProgress :model-value="store.applyState.progress" :max="100" class="mt-3" />
         </dialog>
 
         <dialog
-            id="presets_cli_errors_dialog"
             ref="cliErrorsDialogRef"
+            class="w-[600px] max-w-[calc(100vw-2rem)] h-fit p-6"
             @close="handleCliErrorsDialogClose"
             @cancel.prevent
         >
-            <div class="presets_cli_errors_dialog_warning" v-html="$t('presetsCliErrorsWarning')"></div>
-            <div id="presets_cli">
-                <div id="presets_cli_background">
-                    <div id="presets_cli_window" ref="cliWindowRef" class="window">
-                        <div id="presets_cli_window_wrapper" ref="windowWrapperRef" class="wrapper"></div>
+            <div class="text-lg mb-2" v-html="$t('presetsCliErrorsWarning')"></div>
+            <div id="presets_cli" class="w-full">
+                <div class="presets_cli_background">
+                    <div ref="cliWindowRef" class="presets_cli_window">
+                        <div ref="windowWrapperRef" class="presets_cli_wrapper"></div>
                     </div>
                 </div>
-                <div class="commandline">
-                    <textarea
-                        id="presets_cli_command"
-                        ref="commandInputRef"
-                        name="commands"
-                        rows="1"
-                        cols="0"
-                    ></textarea>
+                <div class="presets_cli_commandline">
+                    <textarea ref="commandInputRef" name="commands" rows="1" cols="0"></textarea>
                 </div>
             </div>
-            <div class="btn">
-                <a
-                    href="#"
-                    id="presets_cli_errors_save_anyway_button"
-                    class="tool regular-button"
-                    @click.prevent="saveAnywayAfterCliErrors"
-                    >{{ $t("presetsSaveAnyway") }}</a
-                >
-                <a
-                    href="#"
-                    id="presets_cli_errors_exit_no_save_button"
-                    class="tool regular-button"
-                    @click.prevent="closeCliErrorsWithoutSaving"
-                    >{{ $t("presetsButtonCancel") }}</a
-                >
+            <div class="flex gap-2 justify-end mt-3">
+                <UButton :label="$t('presetsButtonCancel')" variant="outline" @click="closeCliErrorsWithoutSaving" />
+                <UButton :label="$t('presetsSaveAnyway')" @click="saveAnywayAfterCliErrors" />
             </div>
         </dialog>
     </BaseTab>
@@ -248,6 +187,8 @@
 <script setup>
 import { inject, nextTick, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
+import UiBox from "@/components/elements/UiBox.vue";
+import WikiButton from "@/components/elements/WikiButton.vue";
 import PresetFilterSelect from "./presets/PresetFilterSelect.vue";
 import PresetCard from "./presets/PresetCard.vue";
 import PresetDetailsDialog from "./presets/PresetDetailsDialog.vue";
@@ -586,339 +527,72 @@ function handleCliErrorsDialogClose() {
 }
 </script>
 
-<style lang="less">
-.tab-presets {
-    height: 100%;
-
-    .content_wrapper {
-        height: calc(100% - 30px - 3ex);
-        overflow-y: scroll;
-        overflow-x: hidden;
-    }
-
-    p {
-        padding: 0;
-        border: 0 dotted var(--surface-500);
-    }
-
-    .presets_warnings {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    .top_panel_spacer {
-        width: 0;
-        display: inline;
-        border: 1px var(--surface-500);
-        border-style: none none none solid;
-        height: 60%;
-        margin-right: 10px;
-        float: right;
-    }
-
-    .tab_title {
-        padding: 20px 20px 0 20px;
-
-        .presets_top_bar_button_pannel .regular-button {
-            margin-bottom: 0;
-            margin-top: 0;
-            line-height: 17px;
-            font-size: 10px;
-            border-radius: 3px;
-        }
-    }
-
-    .window {
-        height: 100%;
-        width: 100%;
-        padding: 5px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        font-family: monospace;
-        color: white;
-        box-sizing: border-box;
-        -webkit-user-select: text;
-        user-select: text;
-        float: left;
-
-        .wrapper {
-            white-space: pre-wrap;
-            user-select: text;
-        }
-
-        .error_message {
-            color: red;
-            font-weight: bold;
-        }
-    }
-
-    textarea[name="commands"] {
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        width: 100%;
-        margin-top: 6px;
-        padding: 4px 8px;
-        color: white;
-        border: 1px solid var(--surface-500);
-        background-color: rgba(64, 64, 64, 1);
-        resize: none;
-    }
-
-    .presets_cli_errors_dialog_warning {
-        font-size: 1.2em;
-        margin-bottom: 8px;
-    }
-
-    .presets_apply_progress_dialog_progress_bar {
-        width: 100%;
-        height: 20px;
-        margin-top: 12px;
-        border-radius: 4px;
-        appearance: none;
-        -webkit-appearance: none;
-        overflow: hidden;
-
-        &::-webkit-progress-bar {
-            background-color: var(--surface-500);
-        }
-
-        &::-webkit-progress-value {
-            background-color: var(--primary-500);
-            border-radius: 0 4px 4px 0;
-        }
-    }
+<style>
+.preset-card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
 }
 
-#presets_content_wrapper {
-    padding: 0;
-    position: relative;
+.tab-presets .content_wrapper {
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
-.presets_title_text {
-    display: inline-block;
-}
-
-.presets_top_bar_button_pannel {
-    display: inline;
-}
-
-.presets_warning_backup {
-    display: grid;
-    grid-template-columns: 1fr fit-content(300px);
-}
-
-.presets_warning_backup_text {
-    padding-right: 24px;
-}
-
-.presets_warning_backup_button_hide {
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-right: 0;
-    line-height: 17px;
-    font-size: 10px;
-    height: 17px;
-}
-
-.presetsWikiButton {
-    margin-right: 0;
-}
-
-#preset_list_wrapper {
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-#presets_list {
-    padding: 0 0 20px 0;
-    height: calc(100% - 180px);
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-}
-
-#presets_global_loading {
-    padding: 0 20px 20px 20px;
-    width: 50%;
-    height: 50%;
-    margin: auto;
-}
-
-#presets_global_loading_error {
-    padding: 0 20px 20px 20px;
-}
-
-.presets_visible_block {
-    display: block !important;
-}
-
-.presets_search_settings {
-    position: sticky;
-    top: 0;
-    background-color: var(--surface-100);
-    z-index: 10;
-}
-
-.presets_text_input {
-    border: 1px solid var(--surface-500);
-    border-radius: 3px;
-    background-color: var(--surface-200);
-    color: var(--text);
-}
-
-#presets_filter_text {
-    height: 26px;
-    flex: 1;
-    padding-left: 5px;
-}
-
-#presets_search_hint {
-    float: left;
-    width: 28px;
-    height: 28px;
-    margin-right: 12px;
-    background-repeat: no-repeat;
-    background-image: url(../../images/icons/cf_icon_search_orange.svg);
-}
-
-#presets_search_bar_wrapper {
-    display: flex;
-    padding: 2ex 20px 2ex 20px;
-}
-
-#presets_cli {
-    width: 100%;
-}
-
-#presets_cli_background {
-    border: 1px solid var(--surface-500);
+/* CLI terminal window — runtime-generated DOM, cannot use Tailwind */
+.presets_cli_background {
+    border: 1px solid var(--ui-border);
     background-color: rgba(64, 64, 64, 1);
-    margin-top: 0;
     height: 300px;
     border-radius: 5px;
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
-#presets_cli_errors_dialog {
-    width: 600px;
-    padding: 24px;
+.presets_cli_window {
+    height: 100%;
+    width: 100%;
+    padding: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: monospace;
+    color: white;
+    box-sizing: border-box;
+    user-select: text;
+    float: left;
+}
 
-    .regular-button {
-        margin-bottom: 0;
-        margin-left: 12px;
-        margin-right: 0;
-        float: right;
+.presets_cli_wrapper {
+    white-space: pre-wrap;
+    user-select: text;
+}
+
+.presets_cli_window .error_message {
+    color: red;
+    font-weight: bold;
+}
+
+.presets_cli_commandline textarea {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 6px;
+    padding: 4px 8px;
+    color: white;
+    border: 1px solid var(--ui-border);
+    background-color: rgba(64, 64, 64, 1);
+    resize: none;
+}
+
+@media only screen and (max-width: 1055px) {
+    .tab-presets .content_wrapper {
+        height: calc(100% - 87px);
     }
-}
 
-#presets_apply_progress_dialog {
-    width: 300px;
-    padding: 24px;
-}
-
-.presets_filter_table_wrapper {
-    display: grid;
-    gap: 5px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    padding: 0 20px 0 20px;
-}
-
-#presets_list_no_found,
-#presets_list_too_many_found {
-    font-size: 1.5em;
-}
-
-@media only screen and (max-width: 1055px), only screen and (max-device-width: 1055px) {
-    .tab-presets {
-        .content_wrapper {
-            height: calc(100% - 87px);
-        }
-
-        .content_toolbar {
-            margin-top: 5px;
-        }
-    }
-
-    .presets_search_settings {
-        position: static;
-        top: unset;
+    .tab-presets .content_toolbar {
+        margin-top: 5px;
     }
 }
 
 @media all and (max-width: 575px) {
-    .tab-presets {
-        .content_wrapper {
-            height: calc(100% - 51px);
-        }
-
-        .tab_title {
-            padding: 20px 10px 10px 10px;
-        }
-
-        .presets_warnings {
-            padding-left: 8px;
-            padding-right: 8px;
-        }
-    }
-
-    #presets_list {
-        grid-template-columns: 100%;
-    }
-
-    #preset_list_wrapper {
-        padding-left: 8px;
-        padding-right: 8px;
-    }
-
-    .presets_search_settings {
-        padding-left: 8px;
-        padding-right: 8px;
-    }
-
-    .presets_filter_table_wrapper {
-        display: table;
-        border-spacing: 6px;
-        margin-right: -6px;
-        margin-left: -6px;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    #presets_search_bar_wrapper {
-        padding-left: 0;
-        padding-right: 0;
-        padding-top: 1ex;
-    }
-
-    #presets_cli_errors_dialog {
-        padding: 12px;
-
-        .btn {
-            position: fixed;
-            right: 12px;
-            bottom: 12px;
-        }
-    }
-
-    #presets_apply_progress_dialog {
-        padding: 12px;
-    }
-
-    #presets_cli {
-        height: calc(100% - 121px);
-    }
-
-    #presets_cli_background {
-        height: 100%;
-    }
-
-    .presets_warning_backup {
-        display: block;
-    }
-
-    .presets_warning_backup_text {
-        padding-right: 24px;
-        margin-bottom: 6px;
+    .tab-presets .content_wrapper {
+        height: calc(100% - 51px);
     }
 }
 </style>

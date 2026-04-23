@@ -269,7 +269,7 @@ onUnmounted(() => {
 
 .selection-box {
     position: absolute;
-    background: rgba(52, 155, 255, 0.3);
+    background: color-mix(in srgb, var(--primary-500) 30%, transparent);
     border: 2px solid var(--primary-500);
     border-radius: 4px;
     pointer-events: none;
