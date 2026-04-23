@@ -10,7 +10,8 @@
             </div>
 
             <!-- Gyro Filter Slider -->
-            <div class="flex items-center gap-3 py-1" :class="{ 'opacity-50 pointer-events-none': gyroSliderDisabled }">
+            <div class="flex items-center gap-3 py-1">
+                <USwitch v-model="gyroSliderEnabled" size="sm" />
                 <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningGyroFilterSlider')"></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ gyroFilterMultiplier.toFixed(2) }}</span>
                 <USlider
@@ -25,10 +26,8 @@
             </div>
 
             <!-- DTerm Filter Slider -->
-            <div
-                class="flex items-center gap-3 py-1"
-                :class="{ 'opacity-50 pointer-events-none': dtermSliderDisabled }"
-            >
+            <div class="flex items-center gap-3 py-1">
+                <USwitch v-model="dtermSliderEnabled" size="sm" />
                 <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDTermFilterSlider')"></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ dtermFilterMultiplier.toFixed(2) }}</span>
                 <USlider
@@ -62,11 +61,6 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- LEFT COLUMN: Non-Profile Filter Settings -->
             <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral">
-                <!-- Gyro Filter Slider On/Off -->
-                <SettingRow :label="$t('pidTuningGyroSliderEnabled')">
-                    <USwitch v-model="gyroSliderEnabled" size="sm" />
-                </SettingRow>
-
                 <!-- Gyro Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</span>
@@ -345,11 +339,6 @@
 
             <!-- RIGHT COLUMN: Profile-dependent Filter Settings -->
             <UiBox :title="$t('pidTuningFilterSettings')" type="neutral">
-                <!-- DTerm Filter Slider On/Off -->
-                <SettingRow :label="$t('pidTuningDTermSliderEnabled')">
-                    <USwitch v-model="dtermSliderEnabled" size="sm" />
-                </SettingRow>
-
                 <!-- D-Term Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</span>
