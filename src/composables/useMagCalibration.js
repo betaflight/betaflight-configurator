@@ -255,8 +255,13 @@ export function useMagCalibration() {
  * @param {number} lon - Longitude in decimal degrees
  * @returns {{ declination: number, inclination: number }}
  */
+const geoModel = geomagnetism.model();
+
 export function computeDeclination(lat, lon) {
-    const model = geomagnetism.model();
-    const info = model.point([lat, lon]);
-    return { declination: info.decl, inclination: info.incl };
+    try {
+        const info = geoModel.point([lat, lon]);
+        return { declination: info.decl, inclination: info.incl };
+    } catch {
+        return { declination: 0, inclination: 0 };
+    }
 }
