@@ -60,6 +60,7 @@ import PortHandler from "../../js/port_handler";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
 import { set as setConfig } from "../../js/ConfigStorage";
+import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 
 function selectAndConnect(path) {
@@ -156,14 +157,15 @@ export default defineComponent({
                 }
             }
 
-            if (PortHandler.showVirtualMode) {
+            const expertMode = isExpertModeEnabled();
+            if (expertMode && PortHandler.showVirtualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectVirtual"),
                     icon: "i-lucide-flask-conical",
                     onSelect: () => openConnectDialog("virtual"),
                 });
             }
-            if (PortHandler.showManualMode) {
+            if (expertMode && PortHandler.showManualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
