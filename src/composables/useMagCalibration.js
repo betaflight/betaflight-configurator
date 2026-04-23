@@ -37,7 +37,6 @@ export function useMagCalibration() {
     // --- Internal state (non-reactive) ---
     let dataInterval = null;
     let monitorInterval = null;
-    let monitorCycles = 0;
     let samplesSinceLastFit = 0;
     let lastMovementTime = 0;
     let lastMag = null;
@@ -52,7 +51,6 @@ export function useMagCalibration() {
         coverage.value = null;
         quality.value = null;
         progress.value = 0;
-        monitorCycles = 0;
         samplesSinceLastFit = 0;
         lastMovementTime = Date.now();
         lastMag = null;
@@ -97,8 +95,6 @@ export function useMagCalibration() {
 
     function startCompletionMonitor() {
         monitorInterval = setInterval(() => {
-            monitorCycles++;
-
             // No-movement timeout
             if (phase.value === "collecting" && Date.now() - lastMovementTime > NO_MOVEMENT_TIMEOUT_MS) {
                 cleanup();
