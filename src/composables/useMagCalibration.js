@@ -12,6 +12,32 @@ const ARMING_DISABLE_BIT_CALIBRATING = 12;
 const NO_MOVEMENT_TIMEOUT_MS = 30000;
 const MOVEMENT_THRESHOLD = 5;
 
+function centroid(pts) {
+    let sx = 0,
+        sy = 0,
+        sz = 0;
+    for (const p of pts) {
+        sx += p.x;
+        sy += p.y;
+        sz += p.z;
+    }
+    const n = pts.length;
+    return { x: sx / n, y: sy / n, z: sz / n };
+}
+
+function computeQuality(fit, cov) {
+    if (!fit || !cov) {
+        return null;
+    }
+    if (fit.residual < 50 && cov.uniform > 0.6) {
+        return "good";
+    }
+    if (fit.residual < 100) {
+        return "fair";
+    }
+    return "poor";
+}
+
 /**
  * Composable managing the magnetometer calibration lifecycle.
  * Triggers firmware calibration via MSP, polls raw IMU data,
@@ -182,32 +208,6 @@ export function useMagCalibration() {
             sphereFitResult.value = fit;
             quality.value = computeQuality(fit, cov);
         }
-    }
-
-    function centroid(pts) {
-        let sx = 0,
-            sy = 0,
-            sz = 0;
-        for (const p of pts) {
-            sx += p.x;
-            sy += p.y;
-            sz += p.z;
-        }
-        const n = pts.length;
-        return { x: sx / n, y: sy / n, z: sz / n };
-    }
-
-    function computeQuality(fit, cov) {
-        if (!fit || !cov) {
-            return null;
-        }
-        if (fit.residual < 50 && cov.uniform > 0.6) {
-            return "good";
-        }
-        if (fit.residual < 100) {
-            return "fair";
-        }
-        return "poor";
     }
 
     function completeCalibration() {
