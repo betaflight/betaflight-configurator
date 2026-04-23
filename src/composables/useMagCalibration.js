@@ -45,6 +45,7 @@ export function useMagCalibration() {
     // --- Actions ---
 
     function startCalibration() {
+        cleanup();
         // Reset state
         samples.value = [];
         sphereFitResult.value = null;
