@@ -207,7 +207,7 @@ function setChannelForward(servoIndex, channelIndex, event) {
     if (event.target.checked) {
         servoConfigs[servoIndex].indexOfChannelToForward = channelIndex;
     } else {
-        servoConfigs[servoIndex].indexOfChannelToForward = -1;
+        servoConfigs[servoIndex].indexOfChannelToForward = 255;
     }
     onServoChange();
 }
@@ -234,7 +234,7 @@ function updateServos(saveToEeprom) {
         cfg.middle = middle;
         cfg.max = max;
         cfg.rate = src.rate;
-        cfg.indexOfChannelToForward = src.indexOfChannelToForward ?? -1;
+        cfg.indexOfChannelToForward = src.indexOfChannelToForward ?? 255;
 
         src.min = min;
         src.middle = middle;
