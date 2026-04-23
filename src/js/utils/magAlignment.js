@@ -76,16 +76,26 @@ const ALIGNMENT_LABELS = {
  *   roll and pitch in degrees (from MSP_ATTITUDE).
  * @param {number} currentAlignment - Current align_mag value (0-9).
  *   Used to undo the firmware's rotation so we test against the true sensor frame.
+ * @param {{ roll: number, pitch: number, yaw: number }} [customAngles] -
+ *   Custom alignment angles in degrees, required when currentAlignment === 9.
  * @returns {{ alignment: number, label: string, confidence: number, reliable: boolean } | null}
  */
-export function detectAlignment(samples, currentAlignment) {
+export function detectAlignment(samples, currentAlignment, customAngles) {
     if (samples.length < 30) {
         return null;
     }
 
-    // Get current alignment matrix (DEFAULT/0 treated as CW0/identity)
-    const curAlign = currentAlignment >= 1 && currentAlignment <= 8 ? currentAlignment : 1;
-    const currentMat = ALIGNMENT_MATRICES[curAlign];
+    // Build the current alignment matrix
+    let currentMat;
+    if (currentAlignment === 9) {
+        if (!customAngles) {
+            return null;
+        }
+        currentMat = eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
+    } else {
+        const curAlign = currentAlignment >= 1 && currentAlignment <= 8 ? currentAlignment : 1;
+        currentMat = ALIGNMENT_MATRICES[curAlign];
+    }
     const currentInv = mat3transpose(currentMat);
 
     let bestAlignment = 1;
@@ -201,6 +211,29 @@ function computeVariance(values) {
         sumSq += d * d;
     }
     return sumSq / values.length;
+}
+
+/**
+ * Build a 3×3 rotation matrix from Euler angles (degrees) using ZYX order,
+ * matching Betaflight's custom alignment convention.
+ */
+function eulerToMatrix(rollDeg, pitchDeg, yawDeg) {
+    const r = (rollDeg * Math.PI) / 180;
+    const p = (pitchDeg * Math.PI) / 180;
+    const y = (yawDeg * Math.PI) / 180;
+
+    const cr = Math.cos(r);
+    const sr = Math.sin(r);
+    const cp = Math.cos(p);
+    const sp = Math.sin(p);
+    const cy = Math.cos(y);
+    const sy = Math.sin(y);
+
+    return [
+        [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+        [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+        [-sp, cp * sr, cp * cr],
+    ];
 }
 
 export { ALIGNMENT_LABELS };
