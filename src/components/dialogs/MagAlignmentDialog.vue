@@ -84,6 +84,10 @@ const props = defineProps({
         type: Number,
         default: 0,
     },
+    customAngles: {
+        type: Object,
+        default: null,
+    },
 });
 
 const emit = defineEmits(["update:modelValue", "apply"]);
@@ -208,7 +212,7 @@ function onImuData() {
 function finishDetection() {
     cleanup();
 
-    const detection = detectAlignment(samples, props.currentAlignment);
+    const detection = detectAlignment(samples, props.currentAlignment, props.customAngles);
     if (!detection) {
         phase.value = "error";
         errorMessage.value = "magAlignmentNotEnoughData";

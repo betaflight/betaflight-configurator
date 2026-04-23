@@ -356,6 +356,15 @@
                             <MagAlignmentDialog
                                 v-model="showMagAlignDialog"
                                 :current-alignment="sensorAlignment.align_mag"
+                                :custom-angles="
+                                    sensorAlignment.align_mag === 9
+                                        ? {
+                                              roll: sensorAlignment.mag_align_roll,
+                                              pitch: sensorAlignment.mag_align_pitch,
+                                              yaw: sensorAlignment.mag_align_yaw,
+                                          }
+                                        : null
+                                "
                                 @apply="onMagAlignApply"
                             />
                         </SettingRow>
