@@ -125,13 +125,13 @@ export function detectAlignment(samples, currentAlignment) {
         }
     }
 
-    const confidence = bestVariance > 0 ? secondBestVariance / bestVariance : 0;
+    const confidence = bestVariance > 0 ? secondBestVariance / bestVariance : secondBestVariance > 0 ? Infinity : 0;
 
     return {
         alignment: bestAlignment,
         label: ALIGNMENT_LABELS[bestAlignment],
         confidence: Math.round(confidence * 10) / 10,
-        reliable: confidence > 2.0,
+        reliable: confidence > 2,
     };
 }
 
