@@ -95,35 +95,67 @@ export const webSerialDevices = serialDevices.map(({ vendorId, productId }) => (
     usbProductId: productId,
 }));
 
+const UNSAFE_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
+function isPlainObject(value) {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function sanitizeVidPidEntries(arr) {
+    return arr.filter(
+        (entry) => isPlainObject(entry) && typeof entry.vendorId === "number" && typeof entry.productId === "number",
+    );
+}
+
 function applyFilters(data) {
     if (Array.isArray(data?.bluetoothDevices)) {
-        bluetoothDevices.splice(0, bluetoothDevices.length, ...data.bluetoothDevices);
+        const sanitized = data.bluetoothDevices.filter((d) => isPlainObject(d) && typeof d.serviceUuid === "string");
+        bluetoothDevices.splice(0, bluetoothDevices.length, ...sanitized);
     }
     if (Array.isArray(data?.serialDevices)) {
-        serialDevices.splice(0, serialDevices.length, ...data.serialDevices);
+        const sanitized = sanitizeVidPidEntries(data.serialDevices);
+        serialDevices.splice(0, serialDevices.length, ...sanitized);
         webSerialDevices.splice(
             0,
             webSerialDevices.length,
-            ...data.serialDevices.map(({ vendorId, productId }) => ({
+            ...sanitized.map(({ vendorId, productId }) => ({
                 usbVendorId: vendorId,
                 usbProductId: productId,
             })),
         );
     }
     if (Array.isArray(data?.usbDevices?.filters)) {
-        usbDevices.filters.splice(0, usbDevices.filters.length, ...data.usbDevices.filters);
+        const sanitized = sanitizeVidPidEntries(data.usbDevices.filters);
+        usbDevices.filters.splice(0, usbDevices.filters.length, ...sanitized);
     }
-    if (data?.vendorIdNames && typeof data.vendorIdNames === "object") {
+    if (isPlainObject(data?.vendorIdNames)) {
         for (const key of Object.keys(vendorIdNames)) {
             delete vendorIdNames[key];
         }
-        Object.assign(vendorIdNames, data.vendorIdNames);
+        for (const [key, value] of Object.entries(data.vendorIdNames)) {
+            if (UNSAFE_KEYS.has(key) || typeof value !== "string") {
+                continue;
+            }
+            vendorIdNames[key] = value;
+        }
     }
+}
+
+function isValidPayload(data) {
+    if (!isPlainObject(data)) {
+        return false;
+    }
+    return (
+        Array.isArray(data.bluetoothDevices) ||
+        Array.isArray(data.serialDevices) ||
+        Array.isArray(data.usbDevices?.filters) ||
+        isPlainObject(data.vendorIdNames)
+    );
 }
 
 export async function loadDeviceFilters(buildApi = new BuildApi()) {
     const remote = await buildApi.loadDeviceFilters();
-    if (remote) {
+    if (isValidPayload(remote)) {
         applyFilters(remote);
         setConfig({ [STORAGE_KEY]: remote });
         return;

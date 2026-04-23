@@ -71,7 +71,9 @@ function appReady() {
 
     cleanupLocalStorage();
 
-    loadDeviceFilters().catch(() => {});
+    loadDeviceFilters().catch((err) => {
+        console.warn("Failed to load device filters, using defaults:", err);
+    });
 
     i18n.init(async function () {
         await startProcess();

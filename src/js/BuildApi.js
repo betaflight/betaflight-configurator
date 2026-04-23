@@ -227,23 +227,12 @@ export default class BuildApi {
     }
 
     async loadDeviceFilters() {
-        const url = `${this._url}/api/app/devices`;
-        const authHeaders = await this._authHeaders();
         try {
-            const response = await fetch(url, {
-                method: "GET",
-                headers: {
-                    "X-CFG-VER": `${CONFIGURATOR.version}`,
-                    ...authHeaders,
-                },
-            });
-            if (this.isSuccessCode(response.status)) {
-                return await response.json();
-            }
+            return await this.fetchJson(`${this._url}/api/app/devices`);
         } catch {
             // offline or network error — caller falls back to cache
+            return null;
         }
-        return null;
     }
 
     async loadSponsorTile(mode, page) {
