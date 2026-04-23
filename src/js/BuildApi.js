@@ -222,12 +222,12 @@ export default class BuildApi {
     }
 
     async loadConfiguratorRelease(type) {
-        const url = `${this._url}/api/configurator/releases/${type}`;
+        const url = `${this._url}/api/app/releases/${type}`;
         return await this.fetchJson(url);
     }
 
     async loadDeviceFilters() {
-        const url = `${this._url}/api/configurator/devices`;
+        const url = `${this._url}/api/app/devices`;
         const authHeaders = await this._authHeaders();
         try {
             const response = await fetch(url, {
@@ -247,7 +247,7 @@ export default class BuildApi {
     }
 
     async loadSponsorTile(mode, page) {
-        const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
+        const url = `${this._url}/api/app/sponsors/${mode}/${page}`;
         return await this.fetchText(url);
     }
 }
