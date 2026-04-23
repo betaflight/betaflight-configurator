@@ -476,7 +476,7 @@
                             <div class="spacer_box_title">
                                 <em class="fas fa-wind"></em> {{ $t("preflightWindForecast") }}
                             </div>
-                            <div class="helpicon cf_tip" :title="$t('preflightWindForecastHelp')"></div>
+                            <HelpIcon :text="$t('preflightWindForecastHelp')" />
                         </div>
                         <div class="spacer_box">
                             <div v-if="preflight.weather.hourly && preflight.weather.hourly.length > 0">
@@ -535,7 +535,7 @@
                             <div class="spacer_box_title">
                                 <em class="fas fa-calendar-alt"></em> {{ $t("preflightForecast") }}
                             </div>
-                            <div class="helpicon cf_tip" :title="$t('preflightForecastHelp')"></div>
+                            <HelpIcon :text="$t('preflightForecastHelp')" />
                         </div>
                         <div class="spacer_box">
                             <table class="cf_table forecast-table">
@@ -597,7 +597,7 @@
                             <div class="spacer_box_title">
                                 <em class="fas fa-sun"></em> {{ $t("preflightSolarActivity") }}
                             </div>
-                            <div class="helpicon cf_tip" :title="$t('preflightSolarHelp')"></div>
+                            <HelpIcon :text="$t('preflightSolarHelp')" />
                         </div>
                         <div class="spacer_box">
                             <div v-if="preflight.solar.error" class="error-message">
@@ -671,7 +671,7 @@
                             <div class="spacer_box_title">
                                 <em class="fas fa-satellite"></em> {{ $t("preflightGNSS") }}
                             </div>
-                            <div class="helpicon cf_tip" :title="$t('preflightGNSSHelp')"></div>
+                            <HelpIcon :text="$t('preflightGNSSHelp')" />
                         </div>
                         <div class="spacer_box">
                             <div class="gnss-info">
@@ -871,6 +871,7 @@
 import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
+import HelpIcon from "../elements/HelpIcon.vue";
 import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
 import { usePreflight } from "@/composables/usePreflight";
@@ -990,6 +991,7 @@ export default defineComponent({
     components: {
         BaseTab,
         WikiButton,
+        HelpIcon,
     },
     setup() {
         const preflight = reactive(usePreflight());

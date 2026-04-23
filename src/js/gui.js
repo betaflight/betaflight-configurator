@@ -1,8 +1,6 @@
 import { get as getConfig } from "./ConfigStorage";
 import { reactive } from "vue";
 import MSP from "./msp";
-import tippy from "tippy.js";
-
 import { getOS } from "./utils/checkCompatibility";
 import PortHandler from "./port_handler";
 import CONFIGURATOR from "./data_storage";
@@ -272,18 +270,6 @@ class GuiControl {
         if (docButton) {
             docButton.innerHTML = i18n.getMessage("betaflightSupportButton");
             docButton.setAttribute("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
-        }
-
-        // loading tooltip
-        for (const element of document.querySelectorAll(".cf_tip, .cf_tip_wide")) {
-            const attrTitle = element.getAttribute("title");
-            if (attrTitle && !element._tippy) {
-                tippy(element, {
-                    content: attrTitle,
-                    allowHTML: true,
-                });
-                element.removeAttribute("title");
-            }
         }
 
         if (callback) {
