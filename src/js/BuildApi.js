@@ -226,6 +226,26 @@ export default class BuildApi {
         return await this.fetchJson(url);
     }
 
+    async loadDeviceFilters() {
+        const url = `${this._url}/api/configurator/devices`;
+        const authHeaders = await this._authHeaders();
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "X-CFG-VER": `${CONFIGURATOR.version}`,
+                    ...authHeaders,
+                },
+            });
+            if (this.isSuccessCode(response.status)) {
+                return await response.json();
+            }
+        } catch {
+            // offline or network error — caller falls back to cache
+        }
+        return null;
+    }
+
     async loadSponsorTile(mode, page) {
         const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
         return await this.fetchText(url);

@@ -1,4 +1,9 @@
-export const bluetoothDevices = [
+import BuildApi from "../BuildApi.js";
+import { get as getConfig, set as setConfig } from "../ConfigStorage.js";
+
+const STORAGE_KEY = "device-filters";
+
+const defaultBluetoothDevices = [
     {
         name: "CC2541",
         serviceUuid: "0000ffe0-0000-1000-8000-00805f9b34fb",
@@ -50,7 +55,7 @@ export const bluetoothDevices = [
     },
 ];
 
-export const serialDevices = [
+const defaultSerialDevices = [
     { vendorId: 1027, productId: 24577 }, // FT232R USB UART
     { vendorId: 1155, productId: 12886 }, // STM32 in HID mode
     { vendorId: 1155, productId: 14158 }, // 0483:374e STM Electronics STLink Virtual COM Port (NUCLEO boards)
@@ -64,17 +69,15 @@ export const serialDevices = [
     { vendorId: 11914, productId: 9 }, // Raspberry Pi Pico VCP
 ];
 
-export const usbDevices = {
-    filters: [
-        { vendorId: 1155, productId: 57105 }, // STM Device in DFU Mode || Digital Radio in USB mode
-        { vendorId: 10473, productId: 393 }, // GD32 DFU Bootloader
-        { vendorId: 11836, productId: 57105 }, // AT32F435 DFU Bootloader
-        { vendorId: 12619, productId: 262 }, // APM32 DFU Bootloader
-        { vendorId: 11914, productId: 15 }, // Raspberry Pi Pico in Bootloader mode
-    ],
-};
+const defaultUsbFilters = [
+    { vendorId: 1155, productId: 57105 }, // STM Device in DFU Mode || Digital Radio in USB mode
+    { vendorId: 10473, productId: 393 }, // GD32 DFU Bootloader
+    { vendorId: 11836, productId: 57105 }, // AT32F435 DFU Bootloader
+    { vendorId: 12619, productId: 262 }, // APM32 DFU Bootloader
+    { vendorId: 11914, productId: 15 }, // Raspberry Pi Pico in Bootloader mode
+];
 
-export const vendorIdNames = {
+const defaultVendorIdNames = {
     1027: "FTDI",
     1155: "STM Electronics",
     4292: "Silicon Labs",
@@ -83,7 +86,51 @@ export const vendorIdNames = {
     11914: "Raspberry Pi Pico",
 };
 
+export const bluetoothDevices = [...defaultBluetoothDevices];
+export const serialDevices = [...defaultSerialDevices];
+export const usbDevices = { filters: [...defaultUsbFilters] };
+export const vendorIdNames = { ...defaultVendorIdNames };
 export const webSerialDevices = serialDevices.map(({ vendorId, productId }) => ({
     usbVendorId: vendorId,
     usbProductId: productId,
 }));
+
+function applyFilters(data) {
+    if (Array.isArray(data?.bluetoothDevices)) {
+        bluetoothDevices.splice(0, bluetoothDevices.length, ...data.bluetoothDevices);
+    }
+    if (Array.isArray(data?.serialDevices)) {
+        serialDevices.splice(0, serialDevices.length, ...data.serialDevices);
+        webSerialDevices.splice(
+            0,
+            webSerialDevices.length,
+            ...data.serialDevices.map(({ vendorId, productId }) => ({
+                usbVendorId: vendorId,
+                usbProductId: productId,
+            })),
+        );
+    }
+    if (Array.isArray(data?.usbDevices?.filters)) {
+        usbDevices.filters.splice(0, usbDevices.filters.length, ...data.usbDevices.filters);
+    }
+    if (data?.vendorIdNames && typeof data.vendorIdNames === "object") {
+        for (const key of Object.keys(vendorIdNames)) {
+            delete vendorIdNames[key];
+        }
+        Object.assign(vendorIdNames, data.vendorIdNames);
+    }
+}
+
+export async function loadDeviceFilters(buildApi = new BuildApi()) {
+    const remote = await buildApi.loadDeviceFilters();
+    if (remote) {
+        applyFilters(remote);
+        setConfig({ [STORAGE_KEY]: remote });
+        return;
+    }
+
+    const cached = getConfig(STORAGE_KEY)?.[STORAGE_KEY];
+    if (cached) {
+        applyFilters(cached);
+    }
+}
