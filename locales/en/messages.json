@@ -4750,7 +4750,7 @@
         "description": "Filter tuning slider high header"
     },
     "pidTuningGyroFilterSlider": {
-        "message": "Gyro Filter Multiplier:",
+        "message": "Gyro Filter Multiplier",
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
@@ -4758,11 +4758,11 @@
         "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningGyroSliderEnabled": {
-        "message": "Use Gyro Slider",
+        "message": "Use Gyro Filter Multiplier",
         "description": "Disable or enable Gyro Filter Tuning Slider"
     },
     "pidTuningDTermFilterSlider": {
-        "message": "D Term Filter Multiplier:",
+        "message": "D Term Filter Multiplier",
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
@@ -4770,7 +4770,7 @@
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
-        "message": "Use D Term Slider",
+        "message": "Use D Term Filter Multiplier",
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {

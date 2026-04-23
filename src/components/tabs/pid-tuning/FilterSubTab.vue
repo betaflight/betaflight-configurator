@@ -63,8 +63,8 @@
             <!-- LEFT COLUMN: Non-Profile Filter Settings -->
             <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral">
                 <!-- Gyro Filter Slider On/Off -->
-                <SettingRow :label="$t('pidTuningGyroFilterSlider')">
-                    <USelect v-model="gyroSliderMode" :items="sliderModeItems" class="w-20" />
+                <SettingRow :label="$t('pidTuningGyroSliderEnabled')">
+                    <USwitch v-model="gyroSliderEnabled" size="sm" />
                 </SettingRow>
 
                 <!-- Gyro Lowpass Filters Section -->
@@ -346,8 +346,8 @@
             <!-- RIGHT COLUMN: Profile-dependent Filter Settings -->
             <UiBox :title="$t('pidTuningFilterSettings')" type="neutral">
                 <!-- DTerm Filter Slider On/Off -->
-                <SettingRow :label="$t('pidTuningDTermFilterSlider')">
-                    <USelect v-model="dtermSliderMode" :items="sliderModeItems" class="w-20" />
+                <SettingRow :label="$t('pidTuningDTermSliderEnabled')">
+                    <USwitch v-model="dtermSliderEnabled" size="sm" />
                 </SettingRow>
 
                 <!-- D-Term Lowpass Filters Section -->
@@ -503,18 +503,26 @@
                     <HelpIcon :text="$t('pidTuningYawLowpassFiltersGroupHelp')" />
                 </div>
 
-                <div class="flex flex-wrap items-end gap-3">
-                    <div class="flex flex-col gap-1">
-                        <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                        <UInputNumber
-                            size="xs"
-                            orientation="vertical"
-                            class="w-16"
-                            v-model="yaw_lowpass_hz"
-                            :step="1"
-                            :min="0"
-                            :max="500"
-                        />
+                <div class="flex flex-col gap-2">
+                    <SettingRow
+                        :label="$t('pidTuningYawLowpassFiltersGroup')"
+                        :help="$t('pidTuningYawLowpassFiltersGroupHelp')"
+                    >
+                        <USwitch v-model="yawLowpassEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="yawLowpassEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="yaw_lowpass_hz"
+                                :step="1"
+                                :min="1"
+                                :max="500"
+                            />
+                        </div>
                     </div>
                 </div>
             </UiBox>
@@ -551,11 +559,6 @@ const props = defineProps({
 const emit = defineEmits(["change"]);
 
 // USelect item arrays
-const sliderModeItems = computed(() => [
-    { value: 0, label: t("pidTuningOptionOff") },
-    { value: 1, label: t("pidTuningOptionOn") },
-]);
-
 const lowpassModeItems = computed(() => [
     { value: 0, label: t("pidTuningLowpassStatic") },
     { value: 1, label: t("pidTuningLowpassDynamic") },
@@ -589,6 +592,7 @@ const previousValues = ref({
     dtermNotchCutoff: 160,
     dynNotchCount: 3, // Default dynamic notch count
     lastDynNotchMode: 1, // Track if dynamic notch was enabled
+    yawLowpassHz: 100,
 });
 
 // Slider Modes (ON/OFF toggles for gyro and dterm sliders)
@@ -601,6 +605,17 @@ const gyroSliderMode = computed({
 const dtermSliderMode = computed({
     get: () => FC.TUNING_SLIDERS.slider_dterm_filter ?? 1,
     set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter = value),
+});
+
+// Boolean wrappers for USwitch binding
+const gyroSliderEnabled = computed({
+    get: () => gyroSliderMode.value === 1,
+    set: (value) => (gyroSliderMode.value = value ? 1 : 0),
+});
+
+const dtermSliderEnabled = computed({
+    get: () => dtermSliderMode.value === 1,
+    set: (value) => (dtermSliderMode.value = value ? 1 : 0),
 });
 
 // Filter Sliders
@@ -1061,6 +1076,20 @@ const dterm_notch_cutoff = computed({
 });
 
 // Yaw Lowpass Filter
+const yawLowpassEnabled = computed({
+    get: () => FC.FILTER_CONFIG.yaw_lowpass_hz !== 0,
+    set: (value) => {
+        if (value) {
+            FC.FILTER_CONFIG.yaw_lowpass_hz = previousValues.value.yawLowpassHz;
+        } else {
+            if (FC.FILTER_CONFIG.yaw_lowpass_hz > 0) {
+                previousValues.value.yawLowpassHz = FC.FILTER_CONFIG.yaw_lowpass_hz;
+            }
+            FC.FILTER_CONFIG.yaw_lowpass_hz = 0;
+        }
+    },
+});
+
 const yaw_lowpass_hz = computed({
     get: () => FC.FILTER_CONFIG.yaw_lowpass_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.yaw_lowpass_hz = value),
