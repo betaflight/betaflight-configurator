@@ -41,6 +41,7 @@ export function useMagCalibration() {
     let samplesSinceLastFit = 0;
     let lastMovementTime = 0;
     let lastMag = null;
+    let firmwareFlagSeen = false;
 
     // --- Actions ---
 
@@ -56,6 +57,7 @@ export function useMagCalibration() {
         lastMovementTime = Date.now();
         lastMag = null;
         firmwareDone.value = false;
+        firmwareFlagSeen = false;
 
         phase.value = "waiting";
         statusMessage.value = "magCalibrationWaiting";
@@ -109,13 +111,17 @@ export function useMagCalibration() {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, () => {
                 const flagSet = (fcStore.config.armingDisableFlags & (1 << ARMING_DISABLE_BIT_CALIBRATING)) !== 0;
 
+                if (flagSet) {
+                    firmwareFlagSeen = true;
+                }
+
                 if (phase.value === "waiting" && flagSet) {
                     phase.value = "collecting";
                     statusMessage.value = "magCalibrationCollecting";
                 }
 
-                // Track when firmware finishes (flag clears after being set)
-                if (!firmwareDone.value && !flagSet && monitorCycles > 5) {
+                // Track when firmware finishes (flag was set, now cleared)
+                if (!firmwareDone.value && firmwareFlagSeen && !flagSet) {
                     firmwareDone.value = true;
                 }
             });
