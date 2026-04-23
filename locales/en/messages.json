@@ -3757,6 +3757,12 @@
     "loggingNote": {
         "message": "Data will be logged in this tab <span class=\"message-negative\">only</span>. Leaving the tab will <span class=\"message-negative\">cancel</span> logging and the application will return to its normal state.<br /> You can select the global update period; data will be written to the log file every <strong>1</strong> second for performance reasons."
     },
+    "loggingPropertiesTitle": {
+        "message": "Log Properties"
+    },
+    "loggingSamplingInterval": {
+        "message": "Sampling Interval:"
+    },
     "loggingSamplesSaved": {
         "message": "Samples Saved:"
     },

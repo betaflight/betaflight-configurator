@@ -141,14 +141,11 @@
                         gridClass="system_info"
                     >
                         <template #arming-disable-flag>
-                            <span
-                                v-for="flag in fcStore.armingFlags"
-                                :key="flag.id"
-                                v-show="flag.visible"
-                                class="cf_tip disarm-flag"
-                                :title="flag.tooltip"
-                                >{{ flag.name }}</span
-                            >
+                            <template v-for="flag in fcStore.armingFlags" :key="flag.id">
+                                <UTooltip v-if="flag.visible" :text="flag.tooltip">
+                                    <span class="disarm-flag">{{ flag.name }}</span>
+                                </UTooltip>
+                            </template>
                             <span v-show="fcStore.isReadyToArm" id="initialSetupArmingAllowed">{{
                                 $t("initialSetupArmingAllowed")
                             }}</span>

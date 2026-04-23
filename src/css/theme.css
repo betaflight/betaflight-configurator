@@ -82,8 +82,6 @@ html {
     --warning-500: #ff6600;
     --warning-600: #e65c00;
 
-    --switcherysecond: var(--surface-400);
-
     --primary-action: var(--success-500);
     --primary-action-border: var(--success-600);
     --primary-action-hover: var(--success-400);
@@ -151,8 +149,6 @@ body[data-theme="contrast"] {
     --error-400: #ff7575;
     --error-500: #ff3333;
     --error-600: #cc0000;
-
-    --switcherysecond: var(--surface-400);
 
     #tabs li.active a {
         color: #000;

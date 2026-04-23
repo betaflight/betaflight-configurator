@@ -6,80 +6,76 @@
             <div class="note">
                 <p v-html="$t('loggingNote')"></p>
             </div>
-            <div class="properties">
-                <dl>
-                    <template v-for="prop in propertyOptions" :key="prop.code">
-                        <dt>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    :name="prop.code"
-                                    :value="prop.code"
-                                    v-model="selectedProperties"
-                                    :disabled="isLogging"
-                                />
-                                {{ prop.label }}
-                            </label>
-                        </dt>
-                        <dd>{{ prop.description }}</dd>
-                    </template>
-                </dl>
-            </div>
-            <select class="speed" name="speed" v-model.number="samplingInterval" :disabled="isLogging">
-                <option v-for="option in speedOptions" :key="option" :value="option">{{ option }} ms</option>
-            </select>
-            <div class="info">
-                <dl>
-                    <dt v-html="$t('loggingSamplesSaved')"></dt>
-                    <dd class="samples">{{ samplesSaved }}</dd>
-                    <dt v-html="$t('loggingLogName')"></dt>
-                    <dd class="name">{{ logFileName || "—" }}</dd>
-                </dl>
-            </div>
+
+            <UiBox type="neutral" :title="$t('loggingPropertiesTitle')" class="mt-6">
+                <div class="flex flex-col gap-1.5">
+                    <div v-for="prop in propertyOptions" :key="prop.code" class="flex items-center gap-3">
+                        <USwitch
+                            :model-value="selectedProperties.includes(prop.code)"
+                            :disabled="isLogging || isBusy"
+                            :label="prop.label"
+                            size="sm"
+                            class="w-44"
+                            @update:model-value="toggleProperty(prop.code, $event)"
+                        />
+                        <span class="text-sm text-dimmed">{{ prop.description }}</span>
+                    </div>
+                </div>
+            </UiBox>
+
+            <SettingRow :label="$t('loggingSamplingInterval')" class="mt-4">
+                <USelect
+                    v-model="samplingInterval"
+                    :items="speedItems"
+                    :disabled="isLogging || isBusy"
+                    class="w-28"
+                    size="sm"
+                />
+            </SettingRow>
+
+            <UiBox type="neutral" class="mt-4">
+                <div class="flex flex-col gap-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-semibold" v-html="$t('loggingSamplesSaved')"></span>
+                        <span class="text-sm">{{ samplesSaved }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-semibold" v-html="$t('loggingLogName')"></span>
+                        <span class="text-sm">{{ logFileName || "—" }}</span>
+                    </div>
+                </div>
+            </UiBox>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn file_btn">
-                <button
-                    type="button"
-                    class="log_file"
-                    :class="{ disabled: isLogging || isBusy }"
-                    :disabled="isLogging || isBusy"
-                    @click="selectLogFile"
-                >
-                    {{ $t("loggingButtonLogFile") }}
-                </button>
-            </div>
-            <div class="btn logging_btn">
-                <button
-                    type="button"
-                    class="logging"
-                    :class="{ disabled: !canToggle }"
-                    :disabled="!canToggle"
-                    @click="toggleLogging"
-                >
-                    {{ startStopLabel }}
-                </button>
-            </div>
+        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+            <UButton :label="$t('loggingButtonLogFile')" :disabled="isLogging || isBusy" @click="selectLogFile" />
+            <UButton
+                :label="startStopLabel"
+                :disabled="!canToggle"
+                :color="isLogging ? 'error' : selectedProperties.length ? 'success' : 'neutral'"
+                @click="toggleLogging"
+            />
         </div>
     </BaseTab>
 </template>
 
-<script>
-import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
+<script setup>
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
-import { millitime } from "../../js/utils/common.js";
-import GUI from "../../js/gui";
-import { generateFilename } from "../../js/utils/generate_filename.js";
-import { i18n } from "../../js/localization";
-import FileSystem from "../../js/FileSystem";
-import MSP from "../../js/msp.js";
-import MSPCodes from "../../js/msp/MSPCodes.js";
+import UiBox from "@/components/elements/UiBox.vue";
+import SettingRow from "@/components/elements/SettingRow.vue";
+import WikiButton from "@/components/elements/WikiButton.vue";
+import { millitime } from "@/js/utils/common";
+import GUI from "@/js/gui";
+import { generateFilename } from "@/js/utils/generate_filename";
+import { i18n } from "@/js/localization";
+import FileSystem from "@/js/FileSystem";
+import MSP from "@/js/msp";
+import MSPCodes from "@/js/msp/MSPCodes";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
-import { useInterval } from "../../composables/useInterval";
-import WikiButton from "../elements/WikiButton.vue";
+import { useInterval } from "@/composables/useInterval";
 
 const PROPERTY_ORDER = [
     "MSP_RAW_IMU",
@@ -96,8 +92,374 @@ const SPEED_OPTIONS = [10, 20, 30, 40, 50, 100, 250, 500, 1000, 2000, 5000];
 const LOG_POLL_INTERVAL = "log_data_poll";
 const LOG_WRITE_INTERVAL = "write_data";
 
+const fcStore = useFlightControllerStore();
+const connectionStore = useConnectionStore();
+const dialog = useDialog();
+const { addInterval, removeInterval } = useInterval();
+
+const selectedProperties = ref([]);
+const samplingInterval = ref(100);
+const samplesSaved = ref(0);
+const fileEntry = ref(null);
+const fileWriter = ref(null);
+const isLogging = ref(false);
+const isBusy = ref(false);
+
+let logBuffer = [];
+let requestedProperties = [];
+let hasPreviousRequest = false;
+let isDestroyed = false;
+let pendingWrite = Promise.resolve();
+
+const propertyDefinitions = {
+    MSP_RAW_IMU: {
+        label: "MSP_RAW_IMU",
+        description: "9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])",
+        columns: () => [
+            "gyroscopeX",
+            "gyroscopeY",
+            "gyroscopeZ",
+            "accelerometerX",
+            "accelerometerY",
+            "accelerometerZ",
+            "magnetometerX",
+            "magnetometerY",
+            "magnetometerZ",
+        ],
+        values: () => {
+            const data = fcStore.sensorData || {};
+            return [...(data.gyroscope || []), ...(data.accelerometer || []), ...(data.magnetometer || [])];
+        },
+    },
+    MSP_ATTITUDE: {
+        label: "MSP_ATTITUDE",
+        description: "3 columns (kine[x, y, z])",
+        columns: () => ["kinematicsX", "kinematicsY", "kinematicsZ"],
+        values: () => {
+            const data = fcStore.sensorData || {};
+            const kinematics = data.kinematics || [];
+            return [kinematics[0] ?? 0, kinematics[1] ?? 0, kinematics[2] ?? 0];
+        },
+    },
+    MSP_ALTITUDE: {
+        label: "MSP_ALTITUDE",
+        description: "1 column (alt)",
+        columns: () => ["altitude"],
+        values: () => {
+            const data = fcStore.sensorData || {};
+            return [data.altitude ?? 0];
+        },
+    },
+    MSP_RAW_GPS: {
+        label: "MSP_RAW_GPS",
+        description: "7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)",
+        columns: () => ["gpsFix", "gpsNumSat", "gpsLat", "gpsLon", "gpsAlt", "gpsSpeed", "gpsGroundCourse"],
+        values: () => {
+            const gps = fcStore.gpsData || {};
+            return [
+                gps.fix ?? 0,
+                gps.numSat ?? 0,
+                (gps.lat ?? 0) / 10000000,
+                (gps.lon ?? 0) / 10000000,
+                gps.alt ?? 0,
+                gps.speed ?? 0,
+                gps.ground_course ?? 0,
+            ];
+        },
+    },
+    MSP_ANALOG: {
+        label: "MSP_ANALOG",
+        description: "4 columns (voltage, amperage, mAhdrawn, rssi)",
+        columns: () => ["voltage", "amperage", "mAhdrawn", "rssi"],
+        values: () => {
+            const analog = fcStore.analogData || {};
+            return [analog.voltage ?? 0, analog.amperage ?? 0, analog.mAhdrawn ?? 0, analog.rssi ?? 0];
+        },
+    },
+    MSP_RC: {
+        label: "MSP_RC",
+        description: "8 columns (RC0, RC1, RC2, RC3, RC4, RC5, RC6, RC7)",
+        columns: () => {
+            const rc = fcStore.rc || {};
+            const channels = rc.channels || [];
+            const count = rc.active_channels ?? channels.length;
+            return Array.from({ length: count }, (_, chan) => `RC${chan}`);
+        },
+        values: () => {
+            const rc = fcStore.rc || {};
+            const channels = rc.channels || [];
+            const count = rc.active_channels ?? channels.length;
+            return channels.slice(0, count);
+        },
+    },
+    MSP_MOTOR: {
+        label: "MSP_MOTOR",
+        description: "8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)",
+        columns: () => {
+            const motors = fcStore.motorData || [];
+            const length = Array.isArray(motors) ? motors.length : 0;
+            return Array.from({ length }, (_, motor) => `Motor${motor}`);
+        },
+        values: () => {
+            const motors = fcStore.motorData || [];
+            return Array.isArray(motors) ? [...motors] : [];
+        },
+    },
+    MSP_DEBUG: {
+        label: "MSP_DEBUG",
+        description: "4 columns (Debug0, Debug1, Debug2, Debug3)",
+        columns: () => {
+            const data = fcStore.sensorData || {};
+            const debug = data.debug || [];
+            return Array.from({ length: debug.length }, (_, idx) => `Debug${idx}`);
+        },
+        values: () => {
+            const data = fcStore.sensorData || {};
+            const debug = data.debug || [];
+            return [...debug];
+        },
+    },
+};
+
+const propertyOptions = PROPERTY_ORDER.map((code) => {
+    const definition = propertyDefinitions[code];
+    return {
+        code,
+        label: definition.label,
+        description: definition.description,
+    };
+});
+
+const speedItems = SPEED_OPTIONS.map((ms) => ({ label: `${ms} ms`, value: ms }));
+
+const logFileName = computed(() => fileEntry.value?.name ?? "");
+const startStopLabel = computed(() =>
+    isLogging.value ? i18n.getMessage("loggingStop") : i18n.getMessage("loggingStart"),
+);
+const canToggle = computed(() => (isLogging.value || !!fileEntry.value) && !isBusy.value);
+
+function toggleProperty(code, enabled) {
+    if (isLogging.value || isBusy.value) {
+        return;
+    }
+
+    if (enabled) {
+        if (!selectedProperties.value.includes(code)) {
+            selectedProperties.value.push(code);
+        }
+    } else {
+        selectedProperties.value = selectedProperties.value.filter((c) => c !== code);
+    }
+}
+
+async function selectLogFile() {
+    if (isLogging.value || isBusy.value) {
+        return;
+    }
+    const prefix = "log";
+    const suffix = "csv";
+    const filename = generateFilename(prefix, suffix);
+
+    try {
+        const file = await FileSystem.pickSaveFile(
+            filename,
+            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
+            `.${suffix}`,
+        );
+        fileEntry.value = file;
+    } catch (error) {
+        console.error("Log file selection failed:", error);
+    }
+}
+
+function buildHeader() {
+    const columns = ["timestamp"];
+
+    requestedProperties.forEach((property) => {
+        const definition = propertyDefinitions[property];
+        if (!definition) {
+            return;
+        }
+        columns.push(...definition.columns());
+    });
+
+    return `${columns.join(",")}\n`;
+}
+
+function crunchData() {
+    const row = [millitime()];
+
+    requestedProperties.forEach((property) => {
+        const definition = propertyDefinitions[property];
+        if (!definition) {
+            return;
+        }
+        row.push(...definition.values());
+    });
+
+    logBuffer.push(row.join(","));
+}
+
+function appendToFile(data) {
+    if (!fileWriter.value) {
+        return Promise.resolve();
+    }
+
+    return FileSystem.writeChunck(fileWriter.value, new Blob([data], { type: "text/plain" }));
+}
+
+function sendRequests() {
+    requestedProperties.forEach((property) => {
+        if (MSPCodes[property]) {
+            MSP.send_message(MSPCodes[property]);
+        }
+    });
+}
+
+async function writePendingData() {
+    if (!fileWriter.value || !logBuffer.length) {
+        return;
+    }
+
+    const rows = logBuffer;
+    const payload = rows.join("\n").concat("\n");
+    logBuffer = [];
+
+    try {
+        await appendToFile(payload);
+        samplesSaved.value += rows.length;
+    } catch (error) {
+        logBuffer = rows.concat(logBuffer);
+        console.error("Error appending to file:", error);
+        throw error;
+    }
+}
+
+function queueWritePendingData() {
+    pendingWrite = pendingWrite.then(() => writePendingData()).catch(() => {});
+    return pendingWrite;
+}
+
+async function stopLogging(force = false) {
+    if (isBusy.value && !force) {
+        return;
+    }
+
+    isBusy.value = true;
+
+    removeInterval(LOG_POLL_INTERVAL);
+    removeInterval(LOG_WRITE_INTERVAL);
+
+    try {
+        await pendingWrite;
+        await writePendingData();
+    } catch (error) {
+        console.error("Error flushing pending log data:", error);
+    }
+
+    if (fileWriter.value) {
+        try {
+            await FileSystem.closeFile(fileWriter.value);
+        } catch (error) {
+            console.error("Error closing file:", error);
+        }
+    }
+
+    fileWriter.value = null;
+    requestedProperties = [];
+    hasPreviousRequest = false;
+    isLogging.value = false;
+    isBusy.value = false;
+}
+
+async function startLogging() {
+    if (isBusy.value) {
+        return;
+    }
+
+    if (!connectionStore.connectedTo) {
+        dialog.openInfo("Error", i18n.getMessage("loggingErrorNotConnected"));
+        return;
+    }
+
+    if (!fileEntry.value) {
+        dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
+        return;
+    }
+
+    if (!selectedProperties.value.length) {
+        dialog.openInfo("Error", i18n.getMessage("loggingErrorOneProperty"));
+        return;
+    }
+
+    isBusy.value = true;
+    requestedProperties = [...selectedProperties.value];
+    logBuffer = [];
+    samplesSaved.value = 0;
+    hasPreviousRequest = false;
+
+    try {
+        fileWriter.value = await FileSystem.openFile(fileEntry.value);
+        await appendToFile(buildHeader());
+
+        if (isDestroyed) {
+            await stopLogging(true);
+            return;
+        }
+
+        addInterval(
+            LOG_POLL_INTERVAL,
+            () => {
+                if (hasPreviousRequest) {
+                    crunchData();
+                }
+
+                sendRequests();
+                hasPreviousRequest = true;
+            },
+            samplingInterval.value,
+            true,
+        );
+
+        addInterval(
+            LOG_WRITE_INTERVAL,
+            () => {
+                queueWritePendingData();
+            },
+            1000,
+        );
+
+        isLogging.value = true;
+    } catch (error) {
+        if (fileWriter.value) {
+            try {
+                await FileSystem.closeFile(fileWriter.value);
+            } catch (closeError) {
+                console.error("Error closing file after start failure:", closeError);
+            }
+            fileWriter.value = null;
+        }
+        console.error("Failed to start logging:", error);
+        dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
+    } finally {
+        isBusy.value = false;
+    }
+}
+
+async function toggleLogging() {
+    if (!isLogging.value && !fileEntry.value) {
+        dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
+        return;
+    }
+
+    if (isLogging.value) {
+        await stopLogging();
+    } else {
+        await startLogging();
+    }
+}
+
 function sendInitialRequests() {
-    const connectionStore = useConnectionStore();
     if (!connectionStore.connectionValid) {
         GUI.content_ready();
         return;
@@ -110,473 +472,12 @@ function sendInitialRequests() {
     });
 }
 
-export default defineComponent({
-    name: "LoggingTab",
-    components: {
-        BaseTab,
-        WikiButton,
-    },
-    setup() {
-        const fcStore = useFlightControllerStore();
-        const connectionStore = useConnectionStore();
-        const dialog = useDialog();
-        const { addInterval, removeInterval } = useInterval();
+onMounted(() => {
+    sendInitialRequests();
+});
 
-        const selectedProperties = ref([]);
-        const samplingInterval = ref(100);
-        const samplesSaved = ref(0);
-        const fileEntry = ref(null);
-        const fileWriter = ref(null);
-        const isLogging = ref(false);
-        const isBusy = ref(false);
-
-        let logBuffer = [];
-        let requestedProperties = [];
-        let hasPreviousRequest = false;
-        let isDestroyed = false;
-
-        const propertyDefinitions = {
-            MSP_RAW_IMU: {
-                label: "MSP_RAW_IMU",
-                description: "9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])",
-                columns: () => [
-                    "gyroscopeX",
-                    "gyroscopeY",
-                    "gyroscopeZ",
-                    "accelerometerX",
-                    "accelerometerY",
-                    "accelerometerZ",
-                    "magnetometerX",
-                    "magnetometerY",
-                    "magnetometerZ",
-                ],
-                values: () => {
-                    const data = fcStore.sensorData || {};
-                    return [...(data.gyroscope || []), ...(data.accelerometer || []), ...(data.magnetometer || [])];
-                },
-            },
-            MSP_ATTITUDE: {
-                label: "MSP_ATTITUDE",
-                description: "3 columns (kine[x, y, z])",
-                columns: () => ["kinematicsX", "kinematicsY", "kinematicsZ"],
-                values: () => {
-                    const data = fcStore.sensorData || {};
-                    const kinematics = data.kinematics || [];
-                    return [kinematics[0] ?? 0, kinematics[1] ?? 0, kinematics[2] ?? 0];
-                },
-            },
-            MSP_ALTITUDE: {
-                label: "MSP_ALTITUDE",
-                description: "1 column (alt)",
-                columns: () => ["altitude"],
-                values: () => {
-                    const data = fcStore.sensorData || {};
-                    return [data.altitude ?? 0];
-                },
-            },
-            MSP_RAW_GPS: {
-                label: "MSP_RAW_GPS",
-                description: "7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)",
-                columns: () => ["gpsFix", "gpsNumSat", "gpsLat", "gpsLon", "gpsAlt", "gpsSpeed", "gpsGroundCourse"],
-                values: () => {
-                    const gps = fcStore.gpsData || {};
-                    return [
-                        gps.fix ?? 0,
-                        gps.numSat ?? 0,
-                        (gps.lat ?? 0) / 10000000,
-                        (gps.lon ?? 0) / 10000000,
-                        gps.alt ?? 0,
-                        gps.speed ?? 0,
-                        gps.ground_course ?? 0,
-                    ];
-                },
-            },
-            MSP_ANALOG: {
-                label: "MSP_ANALOG",
-                description: "4 columns (voltage, amperage, mAhdrawn, rssi)",
-                columns: () => ["voltage", "amperage", "mAhdrawn", "rssi"],
-                values: () => {
-                    const analog = fcStore.analogData || {};
-                    return [analog.voltage ?? 0, analog.amperage ?? 0, analog.mAhdrawn ?? 0, analog.rssi ?? 0];
-                },
-            },
-            MSP_RC: {
-                label: "MSP_RC",
-                description: "8 columns (RC0, RC1, RC2, RC3, RC4, RC5, RC6, RC7)",
-                columns: () => {
-                    const rc = fcStore.rc || {};
-                    const channels = rc.channels || [];
-                    const count = rc.active_channels ?? channels.length;
-                    return Array.from({ length: count }, (_, chan) => `RC${chan}`);
-                },
-                values: () => {
-                    const rc = fcStore.rc || {};
-                    const channels = rc.channels || [];
-                    const count = rc.active_channels ?? channels.length;
-                    return channels.slice(0, count);
-                },
-            },
-            MSP_MOTOR: {
-                label: "MSP_MOTOR",
-                description: "8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)",
-                columns: () => {
-                    const motors = fcStore.motorData || [];
-                    const length = Array.isArray(motors) ? motors.length : 0;
-                    return Array.from({ length }, (_, motor) => `Motor${motor}`);
-                },
-                values: () => {
-                    const motors = fcStore.motorData || [];
-                    return Array.isArray(motors) ? [...motors] : [];
-                },
-            },
-            MSP_DEBUG: {
-                label: "MSP_DEBUG",
-                description: "4 columns (Debug0, Debug1, Debug2, Debug3)",
-                columns: () => {
-                    const data = fcStore.sensorData || {};
-                    const debug = data.debug || [];
-                    return Array.from({ length: debug.length }, (_, idx) => `Debug${idx}`);
-                },
-                values: () => {
-                    const data = fcStore.sensorData || {};
-                    const debug = data.debug || [];
-                    return [...debug];
-                },
-            },
-        };
-
-        const propertyOptions = PROPERTY_ORDER.map((code) => {
-            const definition = propertyDefinitions[code];
-            return {
-                code,
-                label: definition.label,
-                description: definition.description,
-            };
-        });
-        const speedOptions = SPEED_OPTIONS;
-
-        const logFileName = computed(() => fileEntry.value?.name ?? "");
-        const startStopLabel = computed(() =>
-            isLogging.value ? i18n.getMessage("loggingStop") : i18n.getMessage("loggingStart"),
-        );
-        const canToggle = computed(() => (isLogging.value || !!fileEntry.value) && !isBusy.value);
-
-        async function selectLogFile() {
-            if (isLogging.value || isBusy.value) {
-                return;
-            }
-            const prefix = "log";
-            const suffix = "csv";
-            const filename = generateFilename(prefix, suffix);
-
-            try {
-                const file = await FileSystem.pickSaveFile(
-                    filename,
-                    i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-                    `.${suffix}`,
-                );
-                fileEntry.value = file;
-            } catch (error) {
-                console.error("Log file selection failed:", error);
-            }
-        }
-
-        function buildHeader() {
-            const columns = ["timestamp"];
-
-            requestedProperties.forEach((property) => {
-                const definition = propertyDefinitions[property];
-                if (!definition) {
-                    return;
-                }
-                columns.push(...definition.columns());
-            });
-
-            return `${columns.join(",")}\n`;
-        }
-
-        function crunchData() {
-            const row = [millitime()];
-
-            requestedProperties.forEach((property) => {
-                const definition = propertyDefinitions[property];
-                if (!definition) {
-                    return;
-                }
-                row.push(...definition.values());
-            });
-
-            logBuffer.push(row.join(","));
-        }
-
-        function appendToFile(data) {
-            if (!fileWriter.value) {
-                return Promise.resolve();
-            }
-
-            return FileSystem.writeChunck(fileWriter.value, new Blob([data], { type: "text/plain" })).catch((error) => {
-                console.error("Error appending to file:", error);
-            });
-        }
-
-        function sendRequests() {
-            requestedProperties.forEach((property) => {
-                if (MSPCodes[property]) {
-                    MSP.send_message(MSPCodes[property]);
-                }
-            });
-        }
-
-        function writePendingData() {
-            if (!fileWriter.value || !logBuffer.length) {
-                return Promise.resolve();
-            }
-
-            const rowsToPersist = logBuffer.length;
-            const payload = logBuffer.join("\n").concat("\n");
-            logBuffer = [];
-
-            return appendToFile(payload).then(() => {
-                samplesSaved.value += rowsToPersist;
-            });
-        }
-
-        async function stopLogging(force = false) {
-            if (isBusy.value && !force) {
-                return;
-            }
-
-            isBusy.value = true;
-
-            removeInterval(LOG_POLL_INTERVAL);
-            removeInterval(LOG_WRITE_INTERVAL);
-
-            await writePendingData();
-
-            if (fileWriter.value) {
-                try {
-                    await FileSystem.closeFile(fileWriter.value);
-                } catch (error) {
-                    console.error("Error closing file:", error);
-                }
-            }
-
-            fileWriter.value = null;
-            requestedProperties = [];
-            hasPreviousRequest = false;
-            isLogging.value = false;
-            isBusy.value = false;
-        }
-
-        async function startLogging() {
-            if (isBusy.value) {
-                return;
-            }
-
-            if (!connectionStore.connectedTo) {
-                dialog.openInfo("Error", i18n.getMessage("loggingErrorNotConnected"));
-                return;
-            }
-
-            if (!fileEntry.value) {
-                dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
-                return;
-            }
-
-            if (!selectedProperties.value.length) {
-                dialog.openInfo("Error", i18n.getMessage("loggingErrorOneProperty"));
-                return;
-            }
-
-            isBusy.value = true;
-            requestedProperties = [...selectedProperties.value];
-            logBuffer = [];
-            samplesSaved.value = 0;
-            hasPreviousRequest = false;
-
-            try {
-                fileWriter.value = await FileSystem.openFile(fileEntry.value);
-                await appendToFile(buildHeader());
-
-                if (isDestroyed) {
-                    await stopLogging(true);
-                    return;
-                }
-
-                addInterval(
-                    LOG_POLL_INTERVAL,
-                    () => {
-                        if (hasPreviousRequest) {
-                            crunchData();
-                        }
-
-                        sendRequests();
-                        hasPreviousRequest = true;
-                    },
-                    samplingInterval.value,
-                    true,
-                );
-
-                addInterval(
-                    LOG_WRITE_INTERVAL,
-                    () => {
-                        writePendingData();
-                    },
-                    1000,
-                );
-
-                isLogging.value = true;
-            } catch (error) {
-                if (fileWriter.value) {
-                    try {
-                        await FileSystem.closeFile(fileWriter.value);
-                    } catch (closeError) {
-                        console.error("Error closing file after start failure:", closeError);
-                    }
-                    fileWriter.value = null;
-                }
-                console.error("Failed to start logging:", error);
-                dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
-            } finally {
-                isBusy.value = false;
-            }
-        }
-
-        async function toggleLogging() {
-            if (!isLogging.value && !fileEntry.value) {
-                dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
-                return;
-            }
-
-            if (isLogging.value) {
-                await stopLogging();
-            } else {
-                await startLogging();
-            }
-        }
-
-        onMounted(() => {
-            sendInitialRequests();
-        });
-
-        onUnmounted(async () => {
-            isDestroyed = true;
-            await stopLogging(true);
-        });
-
-        return {
-            propertyOptions,
-            speedOptions,
-            selectedProperties,
-            samplingInterval,
-            samplesSaved,
-            fileEntry,
-            isLogging,
-            isBusy,
-            logFileName,
-            startStopLabel,
-            canToggle,
-            selectLogFile,
-            toggleLogging,
-        };
-    },
+onUnmounted(async () => {
+    isDestroyed = true;
+    await stopLogging(true);
 });
 </script>
-
-<style lang="less">
-.tab-logging {
-    .properties {
-        margin-top: 10px;
-        dt {
-            float: left;
-            width: 120px;
-            height: 20px;
-            line-height: 20px;
-            font-weight: bold;
-            input {
-                vertical-align: middle;
-            }
-        }
-        dd {
-            display: block;
-            margin-left: 130px;
-            height: 20px;
-            line-height: 20px;
-            color: var(--subtleText);
-        }
-    }
-    .speed {
-        margin-top: 5px;
-        width: 80px;
-        border: 1px solid var(--surface-500);
-        border-radius: 3px;
-    }
-    .info {
-        margin-top: 10px;
-        dt {
-            float: left;
-            width: fit-content;
-            height: 20px;
-            line-height: 20px;
-            font-weight: bold;
-        }
-        dd {
-            display: block;
-            margin-left: 130px;
-            height: 20px;
-            line-height: 20px;
-        }
-    }
-    .fixed_band {
-        width: 100%;
-        bottom: 0;
-    }
-    .save_btn {
-        .back {
-            display: none;
-        }
-    }
-    .back_btn {
-        display: none;
-    }
-}
-@media only screen and (max-width: 1055px) {
-    .tab-logging {
-        table {
-            thead {
-                tr {
-                    &:first-child {
-                        font-size: 12px;
-                        height: 22px;
-                    }
-                }
-            }
-        }
-    }
-}
-@media only screen and (max-device-width: 1055px) {
-    .tab-logging {
-        table {
-            thead {
-                tr {
-                    &:first-child {
-                        font-size: 12px;
-                        height: 22px;
-                    }
-                }
-            }
-        }
-    }
-}
-@media all and (max-width: 575px) {
-    .tab-logging {
-        .properties {
-            dd {
-                width: 100%;
-                height: auto;
-            }
-            width: auto;
-        }
-    }
-}
-</style>

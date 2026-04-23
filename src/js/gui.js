@@ -1,9 +1,6 @@
 import { get as getConfig } from "./ConfigStorage";
 import { reactive } from "vue";
 import MSP from "./msp";
-import Switchery from "switchery-latest";
-import tippy from "tippy.js";
-
 import { getOS } from "./utils/checkCompatibility";
 import PortHandler from "./port_handler";
 import CONFIGURATOR from "./data_storage";
@@ -266,67 +263,13 @@ class GuiControl {
             callback();
         }
     }
-    switchery() {
-        const COLOR_ACCENT = "var(--primary-500)";
-        const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
-
-        for (const elem of document.querySelectorAll("[data-switchery]")) {
-            elem.switchery?.setPosition();
-        }
-
-        const setupSwitchery = (selector, className, extraOptions = {}) => {
-            for (const elem of document.querySelectorAll(selector)) {
-                const existingSwitcherySelector = extraOptions.className
-                    ? `.switchery, .${extraOptions.className}`
-                    : ".switchery";
-
-                if (elem.nextElementSibling?.matches(existingSwitcherySelector)) {
-                    elem.switchery?.setPosition();
-                    continue;
-                }
-
-                const switchery = new Switchery(elem, {
-                    ...extraOptions,
-                    color: COLOR_ACCENT,
-                    secondaryColor: COLOR_SWITCHERY_SECOND,
-                });
-                elem.switchery = switchery;
-                elem.addEventListener("change", function () {
-                    switchery.setPosition();
-                });
-                elem.classList.remove(className);
-            }
-        };
-
-        setupSwitchery(".togglesmall", "togglesmall", {
-            size: "small",
-        });
-        setupSwitchery(".toggle", "toggle");
-        setupSwitchery(".togglemedium", "togglemedium", {
-            className: "switcherymid",
-        });
-    }
     content_ready(callback) {
-        this.switchery();
-
         const tRex = GUI.active_tab.replaceAll("_", "-").toLowerCase();
 
         const docButton = document.querySelector("div#content #button-documentation");
         if (docButton) {
             docButton.innerHTML = i18n.getMessage("betaflightSupportButton");
             docButton.setAttribute("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
-        }
-
-        // loading tooltip
-        for (const element of document.querySelectorAll(".cf_tip, .cf_tip_wide")) {
-            const attrTitle = element.getAttribute("title");
-            if (attrTitle && !element._tippy) {
-                tippy(element, {
-                    content: attrTitle,
-                    allowHTML: true,
-                });
-                element.removeAttribute("title");
-            }
         }
 
         if (callback) {

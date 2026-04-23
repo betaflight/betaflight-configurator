@@ -5,8 +5,6 @@ import "../js/injected_methods";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
-import tippy from "tippy.js";
-import "tippy.js/dist/tippy.css";
 import I18NextVue from "i18next-vue";
 import FC from "../js/fc.js";
 import MSP from "../js/msp.js";
@@ -47,18 +45,6 @@ const betaflightModel = reactive({
 
 // Keep the legacy global model available while the app finishes moving away from imperative globals.
 globalThis.vm = betaflightModel;
-
-tippy.setDefaultProps({
-    allowHTML: true,
-    appendTo: () => document.body,
-    delay: 100,
-    interactive: true,
-    placement: "right",
-    theme: "custom",
-    // Un-comment for debugging:
-    // hideOnClick: false,
-    // trigger: 'click',
-});
 
 i18next.on("initialized", function () {
     console.log("i18n initialized, starting Vue framework");

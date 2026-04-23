@@ -185,7 +185,7 @@
                             ref="verificationInputRef"
                             id="verification-code-input"
                             type="password"
-                            class="w-full"
+                            class="dialog-input-code w-full"
                             @keyup.enter="handleVerificationSubmit"
                         />
                     </div>

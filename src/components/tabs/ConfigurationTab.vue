@@ -540,7 +540,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch, onUnmounted } from "vue";
+import { defineComponent, ref, reactive, onMounted, computed, nextTick, onUnmounted } from "vue";
 import { useNavigationStore } from "@/stores/navigation";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
@@ -1034,7 +1034,6 @@ export default defineComponent({
 
                 await initializeUI();
                 await nextTick();
-                GUI.switchery();
                 GUI.content_ready();
             } catch (e) {
                 console.error("Failed to load configuration", e);
@@ -1340,12 +1339,6 @@ export default defineComponent({
 
         onMounted(() => {
             loadConfig();
-        });
-
-        // Watch for beeper mask changes to reinitialize Switchery
-        watch([beeperDisabledMask, dshotDisabledMask, featureMask], async () => {
-            await nextTick();
-            GUI.switchery();
         });
 
         return {
