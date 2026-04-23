@@ -53,11 +53,30 @@ export function isIOS() {
     return false;
 }
 
+/**
+ * Detect whether the configurator is running in an embedded deployment where
+ * WebSocket is the only available transport (e.g. a WiFi bridge device).
+ *
+ * The host signals this by injecting a meta tag into the served HTML:
+ *   <meta name="bf-transport" content="websocket">
+ *
+ * When present, Serial/Bluetooth/USB and the Chromium browser gate are
+ * irrelevant — only WebSocket transport is needed.
+ */
+export function isEmbeddedDeployment() {
+    return document.querySelector('meta[name="bf-transport"]')?.content === "websocket";
+}
+
 export function isTauri() {
     return typeof globalThis !== "undefined" && "__TAURI_INTERNALS__" in globalThis;
 }
 
 export function checkCompatibility() {
+    if (isEmbeddedDeployment()) {
+        console.log("[COMPAT] Embedded deployment detected — skipping browser checks");
+        return true;
+    }
+
     const hasSerialSupport = checkSerialSupport();
     const hasBluetoothSupport = checkBluetoothSupport();
     const hasUsbSupport = checkUsbSupport();
