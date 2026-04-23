@@ -339,11 +339,24 @@
                         :help="$t('configurationMagAlignmentHelp')"
                     >
                         <SettingRow fullWidth>
-                            <USelect
-                                v-model="sensorAlignment.align_mag"
-                                :items="gyroAlignSelectItems"
-                                class="min-w-40"
-                                :aria-label="$t('configurationMagAlignment')"
+                            <div class="flex items-center gap-2">
+                                <USelect
+                                    v-model="sensorAlignment.align_mag"
+                                    :items="gyroAlignSelectItems"
+                                    class="min-w-40"
+                                    :aria-label="$t('configurationMagAlignment')"
+                                />
+                                <UButton
+                                    size="sm"
+                                    variant="outline"
+                                    :label="$t('configurationMagDetectAlignment')"
+                                    @click="showMagAlignDialog = true"
+                                />
+                            </div>
+                            <MagAlignmentDialog
+                                v-model="showMagAlignDialog"
+                                :current-alignment="sensorAlignment.align_mag"
+                                @apply="onMagAlignApply"
                             />
                         </SettingRow>
 
@@ -415,6 +428,12 @@
                                 orientation="vertical"
                                 size="xs"
                                 class="w-16"
+                            />
+                            <UButton
+                                size="xs"
+                                variant="outline"
+                                :label="$t('configurationMagDeclinationAuto')"
+                                @click="autoSetDeclination"
                             />
                         </SettingRow>
                         <SettingRow
@@ -558,6 +577,8 @@ import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
+import { computeDeclination } from "../../composables/useMagCalibration";
+import MagAlignmentDialog from "../dialogs/MagAlignmentDialog.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 
@@ -566,6 +587,7 @@ export default defineComponent({
     components: {
         WikiButton,
         UiBox,
+        MagAlignmentDialog,
         SettingRow,
         SettingColumn,
     },
@@ -645,6 +667,24 @@ export default defineComponent({
         });
 
         const magDeclination = ref(0);
+
+        async function autoSetDeclination() {
+            await MSP.promise(MSPCodes.MSP_RAW_GPS, false);
+            if (!fcStore.gpsData.fix) {
+                gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+                return;
+            }
+            const lat = fcStore.gpsData.latitude / 10000000;
+            const lon = fcStore.gpsData.longitude / 10000000;
+            const { declination } = computeDeclination(lat, lon);
+            magDeclination.value = Math.round(declination * 10) / 10;
+            gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
+        }
+
+        function onMagAlignApply(alignment) {
+            sensorAlignment.align_mag = alignment;
+        }
+
         const showGyroCalOnFirstArm = ref(false);
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
@@ -725,6 +765,7 @@ export default defineComponent({
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
         const showMagAlign = ref(false);
+        const showMagAlignDialog = ref(false);
         const showMagDeclination = ref(false);
         const showRangefinder = ref(false);
         const showGyroToUse = computed(() => {
@@ -1375,6 +1416,7 @@ export default defineComponent({
             accelTrims,
             sensorAlignment,
             magDeclination,
+            autoSetDeclination,
             showGyroCalOnFirstArm,
             showAutoDisarmDelay,
             hasSecondGyro,
@@ -1382,6 +1424,8 @@ export default defineComponent({
             showGyro1Align,
             showGyro2Align,
             showMagAlign,
+            showMagAlignDialog,
+            onMagAlignApply,
             showSensorAlignment,
             showOtherSensors,
             showMagDeclination,

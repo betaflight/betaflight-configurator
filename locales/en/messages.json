@@ -7484,6 +7484,141 @@
     "configurationMagHardware": {
         "message": "Magnetometer (if supported)"
     },
+    "configurationMagCalibrate": {
+        "message": "Calibrate"
+    },
+    "configurationMagDeclinationAuto": {
+        "message": "Auto"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "No GPS fix available. Connect a GPS module and wait for a fix, then try again."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Magnetic declination set to {{declination}}° from GPS position."
+    },
+    "magCalibrationTitle": {
+        "message": "Magnetometer Calibration"
+    },
+    "magCalibrationStart": {
+        "message": "Start Calibration"
+    },
+    "magCalibrationCancel": {
+        "message": "Cancel"
+    },
+    "magCalibrationAccept": {
+        "message": "Accept"
+    },
+    "magCalibrationRetry": {
+        "message": "Retry"
+    },
+    "magCalibrationNextStep": {
+        "message": "Next Step"
+    },
+    "magCalibrationFinish": {
+        "message": "Finish"
+    },
+    "magCalibrationStepOf": {
+        "message": "Step {{current}} of {{total}}"
+    },
+    "magCalibrationIdle": {
+        "message": "Place your vehicle in an open area away from metal objects, then click Start."
+    },
+    "magCalibrationWaiting": {
+        "message": "Waiting for movement... Shake the vehicle to begin."
+    },
+    "magCalibrationCollecting": {
+        "message": "Rotate the vehicle slowly through all orientations."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibration complete."
+    },
+    "magCalibrationError": {
+        "message": "Calibration failed. Try again in an area with less magnetic interference."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No movement detected for 30 seconds. Calibration cancelled."
+    },
+    "magCalibrationSamples": {
+        "message": "Samples"
+    },
+    "magCalibrationOffsets": {
+        "message": "Offsets"
+    },
+    "magCalibrationQuality": {
+        "message": "Quality"
+    },
+    "magCalibrationResidual": {
+        "message": "Fit Residual"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Good"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Fair"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Poor"
+    },
+    "magCalibrationStep1": {
+        "message": "Level — rotate 360° in yaw"
+    },
+    "magCalibrationStep2": {
+        "message": "Nose down — rotate 360°"
+    },
+    "magCalibrationStep3": {
+        "message": "Nose up — rotate 360°"
+    },
+    "magCalibrationStep4": {
+        "message": "Left side down — rotate 360°"
+    },
+    "magCalibrationStep5": {
+        "message": "Right side down — rotate 360°"
+    },
+    "magCalibrationStep6": {
+        "message": "Inverted — rotate 360°"
+    },
+    "magAlignmentTitle": {
+        "message": "Detect Magnetometer Alignment"
+    },
+    "magAlignmentStart": {
+        "message": "Start Detection"
+    },
+    "magAlignmentApply": {
+        "message": "Apply"
+    },
+    "magAlignmentIdle": {
+        "message": "Slowly rotate the vehicle through various orientations (pitch, roll, yaw) while collecting data. The algorithm will determine the best sensor alignment."
+    },
+    "magAlignmentCollecting": {
+        "message": "Rotate the vehicle slowly through different orientations..."
+    },
+    "magAlignmentSampleCount": {
+        "message": "{{count}} samples collected"
+    },
+    "magAlignmentDetected": {
+        "message": "Detected Alignment"
+    },
+    "magAlignmentConfidence": {
+        "message": "Confidence"
+    },
+    "magAlignmentSamples": {
+        "message": "Samples"
+    },
+    "magAlignmentLowConfidence": {
+        "message": "Low confidence — try again with more diverse orientations, or verify the result manually."
+    },
+    "magAlignmentError": {
+        "message": "Detection failed. Try again with more movement and varied orientations."
+    },
+    "magAlignmentNoMovement": {
+        "message": "No movement detected. Rotate the vehicle and try again."
+    },
+    "magAlignmentNotEnoughData": {
+        "message": "Not enough valid samples collected. Try again."
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Detect"
+    },
     "configurationSmallAngle": {
         "message": "Maximum ARM Angle [degrees]"
     },
