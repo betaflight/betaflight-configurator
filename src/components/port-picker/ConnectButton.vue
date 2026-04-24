@@ -125,10 +125,8 @@ export default defineComponent({
             dialogOpen.value = true;
         }
 
-        const menuItems = computed(() => {
-            const items = [];
+        function buildDeviceItems(expertMode) {
             const devices = [];
-
             if (PortHandler.showSerialOption) {
                 for (const d of serialPorts.value) {
                     devices.push({
@@ -156,8 +154,6 @@ export default defineComponent({
                     });
                 }
             }
-
-            const expertMode = isExpertModeEnabled();
             if (expertMode && PortHandler.showVirtualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectVirtual"),
@@ -172,11 +168,11 @@ export default defineComponent({
                     onSelect: () => openConnectDialog("manual"),
                 });
             }
+            return devices;
+        }
 
-            if (devices.length) {
-                items.push(...devices, { type: "separator" });
-            }
-
+        function buildPermissionItems() {
+            const items = [];
             if (PortHandler.showSerialOption) {
                 items.push({
                     label: i18n.getMessage("portsSelectPermission"),
@@ -198,8 +194,14 @@ export default defineComponent({
                     onSelect: () => PortHandler.requestDevicePermission("usb"),
                 });
             }
+            return items;
+        }
 
+        const menuItems = computed(() => {
+            const devices = buildDeviceItems(isExpertModeEnabled());
+            const items = devices.length ? [...devices, { type: "separator" }] : [];
             items.push(
+                ...buildPermissionItems(),
                 { type: "separator" },
                 {
                     type: "checkbox",
@@ -209,13 +211,18 @@ export default defineComponent({
                     onSelect: (e) => e.preventDefault(),
                 },
             );
-
             return items;
         });
 
         async function onConnectClick() {
             if (portPickerDisabled.value) {
                 return;
+            }
+
+            // Guard against a persisted virtual/manual selection when expert mode is off.
+            const gatedModes = ["virtual", "manual"];
+            if (!isExpertModeEnabled() && gatedModes.includes(selectedPort.value)) {
+                PortHandler.portPicker.selectedPort = "noselection";
             }
 
             if (selectedPort.value === "noselection") {
