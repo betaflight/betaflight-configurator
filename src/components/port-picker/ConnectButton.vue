@@ -60,6 +60,7 @@ import PortHandler from "../../js/port_handler";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
 import { set as setConfig } from "../../js/ConfigStorage";
+import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 
 function selectAndConnect(path) {
@@ -124,10 +125,9 @@ export default defineComponent({
             dialogOpen.value = true;
         }
 
-        const menuItems = computed(() => {
-            const items = [];
+        function buildDeviceItems() {
+            const expertMode = isExpertModeEnabled();
             const devices = [];
-
             if (PortHandler.showSerialOption) {
                 for (const d of serialPorts.value) {
                     devices.push({
@@ -155,26 +155,25 @@ export default defineComponent({
                     });
                 }
             }
-
-            if (PortHandler.showVirtualMode) {
+            if (expertMode && PortHandler.showVirtualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectVirtual"),
                     icon: "i-lucide-flask-conical",
                     onSelect: () => openConnectDialog("virtual"),
                 });
             }
-            if (PortHandler.showManualMode) {
+            if (expertMode && PortHandler.showManualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
                     onSelect: () => openConnectDialog("manual"),
                 });
             }
+            return devices;
+        }
 
-            if (devices.length) {
-                items.push(...devices, { type: "separator" });
-            }
-
+        function buildPermissionItems() {
+            const items = [];
             if (PortHandler.showSerialOption) {
                 items.push({
                     label: i18n.getMessage("portsSelectPermission"),
@@ -196,8 +195,14 @@ export default defineComponent({
                     onSelect: () => PortHandler.requestDevicePermission("usb"),
                 });
             }
+            return items;
+        }
 
+        const menuItems = computed(() => {
+            const devices = buildDeviceItems();
+            const items = devices.length ? [...devices, { type: "separator" }] : [];
             items.push(
+                ...buildPermissionItems(),
                 { type: "separator" },
                 {
                     type: "checkbox",
@@ -207,13 +212,18 @@ export default defineComponent({
                     onSelect: (e) => e.preventDefault(),
                 },
             );
-
             return items;
         });
 
         async function onConnectClick() {
             if (portPickerDisabled.value) {
                 return;
+            }
+
+            // Guard against a persisted virtual/manual selection when expert mode is off.
+            const gatedModes = ["virtual", "manual"];
+            if (!isExpertModeEnabled() && gatedModes.includes(selectedPort.value)) {
+                PortHandler.portPicker.selectedPort = "noselection";
             }
 
             if (selectedPort.value === "noselection") {

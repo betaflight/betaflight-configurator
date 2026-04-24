@@ -3,6 +3,7 @@ import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
+import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
 import { reactive } from "vue";
 import {
     checkCompatibility,
@@ -283,13 +284,14 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         }
     }
 
-    // Return the virtual port
-    if (!selectedPort && this.showVirtualMode) {
+    // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
+    const expertMode = isExpertModeEnabled();
+
+    if (!selectedPort && expertMode && this.showVirtualMode) {
         selectedPort = "virtual";
     }
 
-    // Return the manual port
-    if (!selectedPort && this.showManualMode) {
+    if (!selectedPort && expertMode && this.showManualMode) {
         selectedPort = "manual";
     }
 
