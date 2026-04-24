@@ -587,6 +587,7 @@ import { updateTabList } from "../../js/utils/updateTabList";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import { computeDeclination } from "../../composables/useMagCalibration";
+import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import MagAlignmentDialog from "../dialogs/MagAlignmentDialog.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
@@ -677,26 +678,49 @@ export default defineComponent({
 
         const magDeclination = ref(0);
 
+        const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
+
         async function autoSetDeclination() {
             let lat, lon;
 
             // Try FC GPS first
-            await MSP.promise(MSPCodes.MSP_RAW_GPS, false);
+            try {
+                await MSP.promise(MSPCodes.MSP_RAW_GPS);
+            } catch {
+                // MSP failed — fall through to IP fallback
+            }
+
             if (fcStore.gpsData.fix) {
                 lat = fcStore.gpsData.latitude / 10000000;
                 lon = fcStore.gpsData.longitude / 10000000;
             } else {
-                // Fall back to IP geolocation
+                // Check consent before sending IP to third-party service
+                const hasConsent = !!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY];
+                if (!hasConsent) {
+                    const allowed = confirm(i18n.getMessage("preflightIpConsentMessage"));
+                    if (!allowed) {
+                        gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+                        return;
+                    }
+                    const obj = {};
+                    obj[IP_GEOLOCATION_CONSENT_KEY] = true;
+                    setConfig(obj);
+                }
+
+                // Fall back to IP geolocation with timeout
                 try {
-                    const response = await fetch("https://ipapi.co/json/");
+                    const controller = new AbortController();
+                    const timeout = setTimeout(() => controller.abort(), 10000);
+                    const response = await fetch("https://ipapi.co/json/", { signal: controller.signal });
+                    clearTimeout(timeout);
                     if (!response.ok) {
                         throw new Error("IP geolocation failed");
                     }
                     const data = await response.json();
-                    lat = parseFloat(data.latitude);
-                    lon = parseFloat(data.longitude);
+                    lat = Number.parseFloat(data.latitude);
+                    lon = Number.parseFloat(data.longitude);
                     if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
-                        throw new Error("Invalid coordinates");
+                        throw new TypeError("Invalid coordinates");
                     }
                 } catch {
                     gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
