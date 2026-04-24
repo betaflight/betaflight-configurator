@@ -1,4 +1,4 @@
-import { ref, computed, shallowRef, onScopeDispose } from "vue";
+import { ref, computed, shallowRef, triggerRef, onScopeDispose } from "vue";
 import geomagnetism from "geomagnetism";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
@@ -11,6 +11,7 @@ const SPHERE_FIT_EVERY_N = 10;
 const ARMING_DISABLE_BIT_CALIBRATING = 12;
 const NO_MOVEMENT_TIMEOUT_MS = 30000;
 const MOVEMENT_THRESHOLD = 5;
+const PROGRESS_TARGET_SAMPLES = 300;
 
 function centroid(pts) {
     let sx = 0,
@@ -178,9 +179,9 @@ export function useMagCalibration() {
             statusMessage.value = "magCalibrationCollecting";
         }
 
-        // Append sample (create new array for reactivity)
-        const newSamples = [...samples.value, { x: mx, y: my, z: mz, timestamp: Date.now() }];
-        samples.value = newSamples;
+        // Append sample (in-place push with manual trigger for shallowRef reactivity)
+        samples.value.push({ x: mx, y: my, z: mz, timestamp: Date.now() });
+        triggerRef(samples);
 
         samplesSinceLastFit++;
         if (samplesSinceLastFit >= SPHERE_FIT_EVERY_N) {
@@ -189,7 +190,7 @@ export function useMagCalibration() {
         }
 
         // Update progress (rough estimate based on sample count, capped at 95 until firmware signals done)
-        progress.value = Math.min(95, Math.round((newSamples.length / 300) * 100));
+        progress.value = Math.min(95, Math.round((samples.value.length / PROGRESS_TARGET_SAMPLES) * 100));
     }
 
     function updateAnalysis() {
@@ -258,11 +259,9 @@ export function useMagCalibration() {
  * @param {number} lon - Longitude in decimal degrees
  * @returns {{ declination: number, inclination: number }}
  */
-const geoModel = geomagnetism.model();
-
 export function computeDeclination(lat, lon) {
     try {
-        const info = geoModel.point([lat, lon]);
+        const info = geomagnetism.model().point([lat, lon]);
         return { declination: info.decl, inclination: info.incl };
     } catch {
         return { declination: 0, inclination: 0 };

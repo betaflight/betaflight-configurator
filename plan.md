@@ -34,7 +34,7 @@ Firmware-side calibration is unchanged — we trigger `MSP_MAG_CALIBRATION` and 
 |------|---------|
 | `src/components/tabs/SetupTab.vue` | Replaced old basic mag calibrate button with MagCalibrationDialog |
 | `src/components/tabs/ConfigurationTab.vue` | Added "Detect" button + MagAlignmentDialog, "Auto" declination button |
-| `locales/en/messages.json` | ~45 new i18n keys for both dialogs |
+| `locales/en/messages.json` | New i18n keys for calibration, alignment detection, and auto-declination flows |
 
 ---
 
@@ -150,7 +150,8 @@ Two-column layout: left = step panel (counter + orientation diagram + instructio
 
 `autoSetDeclination()` in ConfigurationTab:
 - Fetches `MSP_RAW_GPS` on demand (button always enabled, GPS fetched on click)
-- If no fix, shows log message
+- If GPS has a fix, uses those coordinates
+- If no GPS fix, falls back to IP-based geolocation via `ipapi.co` (gated by `IP_GEOLOCATION_CONSENT_KEY` consent prompt)
 - Uses `geomagnetism.model().point([lat, lon])` for World Magnetic Model lookup
 - Sets `magDeclination` ref
 

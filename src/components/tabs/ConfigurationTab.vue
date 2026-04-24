@@ -347,7 +347,7 @@
                                     :aria-label="$t('configurationMagAlignment')"
                                 />
                                 <UButton
-                                    size="sm"
+                                    size="xs"
                                     variant="outline"
                                     :label="$t('configurationMagDetectAlignment')"
                                     @click="showMagAlignDialog = true"

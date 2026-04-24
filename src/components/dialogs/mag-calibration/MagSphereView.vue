@@ -247,11 +247,12 @@ function updatePoints(sampleList) {
     }
 
     const count = Math.min(sampleList.length, MAX_POINTS);
+    const start = Math.max(0, sampleList.length - count);
     const positions = positionAttr.array;
     const colors = colorAttr.array;
 
     for (let i = 0; i < count; i++) {
-        const s = sampleList[i];
+        const s = sampleList[start + i];
         const idx = i * 3;
         positions[idx] = s.x;
         positions[idx + 1] = s.y;
@@ -393,6 +394,24 @@ function disposeScene() {
         pointMesh = null;
         pointGeometry = null;
         pointMaterial = null;
+    }
+
+    // Dispose remaining scene resources (axis lines, labels, sprites)
+    if (scene) {
+        scene.traverse((obj) => {
+            if (obj.geometry) {
+                obj.geometry.dispose();
+            }
+            if (obj.material) {
+                const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+                for (const m of mats) {
+                    if (m.map) {
+                        m.map.dispose();
+                    }
+                    m.dispose();
+                }
+            }
+        });
     }
 
     if (renderer) {
