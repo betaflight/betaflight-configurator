@@ -593,7 +593,7 @@ dialog {
     align-items: center;
     justify-content: end;
     gap: 0.5rem;
-    padding: 0.75rem 1rem 0.75rem 1rem;
+    padding: 0.75rem 1rem 0.25rem 1rem;
     border-top-left-radius: 1.5rem;
     &::before {
         width: 1.5rem;
@@ -662,7 +662,7 @@ dialog {
         display: flex;
         flex-wrap: wrap;
         position: fixed;
-        bottom: 34px;
+        bottom: 2.5rem;
         right: 0;
     }
 }
@@ -1431,9 +1431,6 @@ each(range(12), {
             overflow-y: auto;
             position: initial;
         }
-        &.content_toolbar {
-            bottom: 0;
-        }
     }
 }
 @media (max-width: 1055px) {
@@ -1452,7 +1449,9 @@ each(range(12), {
         width: calc(100% - 42px);
     }
     .content_wrapper {
-        padding: 15px 15px 15px 14px;
+        padding: 1rem 0.5rem;
+        // 3rem to clear the status bar + buttons
+        padding-bottom: 3rem;
     }
     .tab_title {
         font-size: 16px;
