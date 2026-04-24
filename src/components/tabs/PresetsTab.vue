@@ -469,25 +469,19 @@ async function applyPickedPresets() {
     store.updateApplyProgress(0);
     store.openProgressDialog();
 
-    try {
-        store.markPickedPresetsAsFavorites();
-        const result = await cliSession.runBatch(store.getPickedPresetsCli(), {
-            onProgress: reportProgress,
-        });
+    store.markPickedPresetsAsFavorites();
+    const result = await cliSession.runBatch(store.getPickedPresetsCli(), {
+        onProgress: reportProgress,
+    });
 
-        if (result.errors.length > 0) {
-            store.closeProgressDialog();
-            store.openCliErrorsDialog(result.errors);
-            return;
-        }
+    store.closeProgressDialog();
 
-        store.closeProgressDialog();
-        await saveAndReconnect();
-    } catch (error) {
-        console.error(error);
-        store.closeProgressDialog();
-        store.openCliErrorsDialog([{ command: "", response: [String(error.message ?? error)] }]);
+    if (result.errors.length > 0) {
+        store.openCliErrorsDialog(result.errors);
+        return;
     }
+
+    await saveAndReconnect();
 }
 
 async function saveAndReconnect() {

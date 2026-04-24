@@ -362,27 +362,23 @@ async function restoreBackup(backup) {
     restoreProgress.value = 0;
     restoreProgressOpen.value = true;
 
-    try {
-        const result = await cliSession.runBatch(commands, {
-            onProgress: ({ index, total }) => {
-                restoreProgress.value = total > 0 ? Math.round((index / total) * 100) : 100;
-            },
-        });
+    const result = await cliSession.runBatch(commands, {
+        onProgress: ({ index, total }) => {
+            restoreProgress.value = total > 0 ? Math.round((index / total) * 100) : 100;
+        },
+        commandTimeoutMs: 5000,
+    });
 
-        restoreProgressOpen.value = false;
+    restoreProgressOpen.value = false;
 
-        if (result.errors.length > 0) {
-            restoreErrors.value = result.errors;
-            restoreErrorsOpen.value = true;
-            return;
-        }
-
-        gui_log(t("userBackupRestoreSuccess"));
-        await saveAndReconnect();
-    } catch (error) {
-        restoreProgressOpen.value = false;
-        gui_log(`${t("userBackupRestoreFailed")}: ${error.message || error}`);
+    if (result.errors.length > 0) {
+        restoreErrors.value = result.errors;
+        restoreErrorsOpen.value = true;
+        return;
     }
+
+    gui_log(t("userBackupRestoreSuccess"));
+    await saveAndReconnect();
 }
 
 async function closeRestoreErrors(saveAnyway) {

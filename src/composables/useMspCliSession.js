@@ -90,8 +90,18 @@ export function useMspCliSession() {
                 }
 
                 const line = rawLine.trim();
-                const response = await send(line, { timeoutMs: commandTimeoutMs });
-                sent++;
+                let response;
+                try {
+                    response = await send(line, { timeoutMs: commandTimeoutMs });
+                    sent++;
+                } catch (error) {
+                    const message = String(error?.message ?? error);
+                    const failure = { command: line, response: [message], errors: [message] };
+                    errors.push(failure);
+                    onError?.(failure);
+                    onProgress?.({ index, total, sent, errorCount: errors.length });
+                    continue;
+                }
 
                 const commandErrors = parseErrors(response);
                 if (commandErrors.length > 0) {
