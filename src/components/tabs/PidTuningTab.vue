@@ -98,15 +98,9 @@
                         v-if="activeSubtab === 'pid'"
                         :expert-mode="expertModeEnabled"
                         :show-all-pids="showAllPids"
-                        v-model:profile-name="pidProfileName"
                         @change="onFormChanged"
                     />
-                    <RatesSubTab
-                        ref="ratesSubTab"
-                        v-if="activeSubtab === 'rates'"
-                        v-model:rate-profile-name="rateProfileName"
-                        @change="onFormChanged"
-                    />
+                    <RatesSubTab ref="ratesSubTab" v-if="activeSubtab === 'rates'" @change="onFormChanged" />
                     <FilterSubTab
                         ref="filterSubTab"
                         v-if="activeSubtab === 'filter'"
