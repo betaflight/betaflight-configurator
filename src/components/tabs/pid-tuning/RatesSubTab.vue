@@ -2,11 +2,6 @@
     <div class="p-5 grid grid-cols-1 xl:grid-cols-2 gap-4">
         <!-- LEFT COLUMN -->
         <div class="flex flex-col gap-4">
-            <!-- Rate Profile Name (API 1.45+) -->
-            <SettingRow v-if="hasProfileNames" :label="$t('rateProfileName')" :help="$t('rateProfileNameHelp')">
-                <UInput v-model="rateProfileNameModel" maxlength="8" class="w-28" />
-            </SettingRow>
-
             <!-- Rates Type Selector -->
             <UiBox type="neutral">
                 <div class="flex items-center gap-3">
@@ -319,21 +314,14 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import RateCurve from "@/js/RateCurve";
 import Model from "@/js/model";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import { API_VERSION_1_47 } from "@/js/data_storage";
 import betaflightLogo from "@/images/rate_logos/betaflight.svg";
 import raceflightLogo from "@/images/rate_logos/raceflight.svg";
 import kissLogo from "@/images/rate_logos/kiss.svg";
 import actualLogo from "@/images/rate_logos/actual.svg";
 import quickratesLogo from "@/images/rate_logos/quickrates.svg";
 
-const props = defineProps({
-    rateProfileName: {
-        type: String,
-        default: "",
-    },
-});
-
-const emit = defineEmits(["update:rateProfileName", "change"]);
+const emit = defineEmits(["change"]);
 
 const { t } = useTranslation();
 
@@ -372,12 +360,6 @@ let keepRendering = true;
 // API Version helpers
 const hasProfileNames = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45));
 const hasThrottleHover = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47));
-
-// Rate Profile Name
-const rateProfileNameModel = computed({
-    get: () => props.rateProfileName,
-    set: (value) => emit("update:rateProfileName", value),
-});
 
 // Rates Type
 const dialog = useDialog();

@@ -6,7 +6,7 @@
 
             <div class="flex items-start gap-3 flex-wrap mb-2">
                 <!-- Profile Selector -->
-                <div class="flex flex-col gap-1 min-w-[130px]">
+                <div v-if="['pid', 'filter'].includes(activeSubtab)" class="flex flex-col gap-1 min-w-[130px]">
                     <SettingRow :label="$t('pidTuningProfile')" :help="$t('pidTuningProfileTip')">
                         <USelect
                             v-model="currentProfile"
@@ -19,7 +19,7 @@
                 </div>
 
                 <!-- Rate Profile Selector -->
-                <div class="flex flex-col gap-1 min-w-[130px]">
+                <div v-if="activeSubtab === 'rates'" class="flex flex-col gap-1 min-w-[130px]">
                     <SettingRow :label="$t('pidTuningRateProfile')" :help="$t('pidTuningRateProfileTip')">
                         <USelect
                             v-model="currentRateProfile"
@@ -28,6 +28,20 @@
                             :disabled="hasChanges"
                             @update:model-value="onRateProfileChange"
                         />
+                    </SettingRow>
+                </div>
+                <div>
+                    <!-- Profile Name (API 1.45+) -->
+                    <SettingRow v-if="showProfileName" :label="$t('pidProfileName')" :help="$t('pidProfileNameHelp')">
+                        <UInput v-model="localProfileName" maxlength="8" class="w-28" />
+                    </SettingRow>
+                    <!-- Rate Profile Name (API 1.45+) -->
+                    <SettingRow
+                        v-if="showRateProfileName"
+                        :label="$t('rateProfileName')"
+                        :help="$t('rateProfileNameHelp')"
+                    >
+                        <UInput v-model="localRateProfileName" maxlength="8" class="w-28" />
                     </SettingRow>
                 </div>
 
@@ -84,15 +98,9 @@
                         v-if="activeSubtab === 'pid'"
                         :expert-mode="expertModeEnabled"
                         :show-all-pids="showAllPids"
-                        v-model:profile-name="pidProfileName"
                         @change="onFormChanged"
                     />
-                    <RatesSubTab
-                        ref="ratesSubTab"
-                        v-if="activeSubtab === 'rates'"
-                        v-model:rate-profile-name="rateProfileName"
-                        @change="onFormChanged"
-                    />
+                    <RatesSubTab ref="ratesSubTab" v-if="activeSubtab === 'rates'" @change="onFormChanged" />
                     <FilterSubTab
                         ref="filterSubTab"
                         v-if="activeSubtab === 'filter'"
@@ -195,6 +203,27 @@ const subtabItems = computed(() => [
 // Profile name state lifted from child components
 const pidProfileName = ref("");
 const rateProfileName = ref("");
+
+const showProfileName = computed(
+    () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && ["pid", "filter"].includes(activeSubtab.value),
+);
+const showRateProfileName = computed(
+    () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && activeSubtab.value === "rates",
+);
+
+const localProfileName = computed({
+    get: () => pidProfileName.value,
+    set: (val) => {
+        pidProfileName.value = val;
+    },
+});
+
+const localRateProfileName = computed({
+    get: () => rateProfileName.value,
+    set: (val) => {
+        rateProfileName.value = val;
+    },
+});
 
 // hasChanges is owned by the Pinia store
 const hasChanges = computed(() => pidTuningStore.hasChanges);

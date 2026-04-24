@@ -2,10 +2,201 @@
     <div class="p-5 grid grid-cols-1 xl:grid-cols-2 gap-4">
         <!-- LEFT COLUMN: PID Table and Sliders -->
         <div class="flex flex-col gap-4">
-            <!-- Profile Name (API 1.45+) -->
-            <SettingRow v-if="showProfileName" :label="$t('pidProfileName')" :help="$t('pidProfileNameHelp')">
-                <UInput v-model="localProfileName" maxlength="8" class="w-28" />
-            </SettingRow>
+            <!-- Tuning Sliders Section -->
+            <UiBox :title="$t('pidTuningSliders')" type="neutral">
+                <!-- Slider Header: Mode select + range labels -->
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="flex items-center gap-2 min-w-44 shrink-0">
+                        <span class="text-xs whitespace-nowrap">{{ $t("pidTuningSliderPidsMode") }}</span>
+                        <USelect
+                            v-model="sliderPidsMode"
+                            :items="pidsModeItems"
+                            size="xs"
+                            class="w-24"
+                            @update:model-value="onSliderModeChange"
+                        />
+                        <HelpIcon :text="$t('pidTuningSliderModeHelp')" />
+                    </div>
+                    <div class="flex justify-between flex-1 text-xs text-dimmed">
+                        <span>{{ $t("pidTuningSliderLow") }}</span>
+                        <span>{{ $t("pidTuningSliderDefault") }}</span>
+                        <span>{{ $t("pidTuningSliderHigh") }}</span>
+                    </div>
+                    <HelpIcon :text="$t('pidTuningPidSlidersHelp')" />
+                </div>
+
+                <!-- Basic Sliders -->
+                <div
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': sliderDGainDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderDGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="sliderDGainDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange('sliderDGain')"
+                    />
+                    <HelpIcon :text="$t('pidTuningDGainSliderHelp')" />
+                </div>
+
+                <div
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': sliderPIGainDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPIGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPIGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderPIGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="sliderPIGainDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange('sliderPIGain')"
+                    />
+                    <HelpIcon :text="$t('pidTuningPIGainSliderHelp')" />
+                </div>
+
+                <div
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': sliderFFGainDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningResponseSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderFFGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderFeedforwardGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="sliderFFGainDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange('sliderFeedforwardGain')"
+                    />
+                    <HelpIcon :text="$t('pidTuningResponseSliderHelp')" />
+                </div>
+
+                <!-- Divider before advanced sliders -->
+                <hr v-show="showAdvancedSliders" class="border-default my-2" />
+
+                <!-- Advanced Sliders -->
+                <div
+                    v-show="showDMaxSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': dMaxSliderDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDMaxGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDMaxGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderDMaxGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="dMaxSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningDMaxGainSliderHelp')" />
+                </div>
+
+                <div
+                    v-show="showIGainSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': iGainSliderDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningIGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderIGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderIGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="iGainSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningIGainSliderHelp')" />
+                </div>
+
+                <div
+                    v-show="showRPRatioSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': rpRatioSliderDisabled }"
+                >
+                    <div
+                        class="min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningRollPitchRatioSlider')"
+                    ></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderRPRatioDisplay }}</span>
+                    <USlider
+                        v-model="sliderRollPitchRatio"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="rpRatioSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningRollPitchRatioSliderHelp')" />
+                </div>
+
+                <div
+                    v-show="showPitchPISlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': pitchPISliderDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPitchPIGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPitchPIDisplay }}</span>
+                    <USlider
+                        v-model="sliderPitchPIGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="pitchPISliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningPitchPIGainSliderHelp')" />
+                </div>
+
+                <div
+                    v-show="showMasterSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': masterSliderDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningMasterSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderMasterDisplay }}</span>
+                    <USlider
+                        v-model="sliderMasterMultiplier"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="masterSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningMasterSliderHelp')" />
+                </div>
+
+                <!-- Danger Zone Warning -->
+                <UiBox v-if="slidersInDangerZone" type="error" highlight>
+                    <p v-html="$t('pidTuningSliderWarning')"></p>
+                </UiBox>
+
+                <!-- Non-Expert Mode Warning -->
+                <UiBox v-if="!props.expertMode && sliderPidsMode > 0" type="warning" highlight>
+                    <p v-html="$t('pidTuningPidSlidersNonExpertMode')"></p>
+                </UiBox>
+
+                <!-- Expert Settings Detected Warning -->
+                <UiBox v-if="showExpertSettingsWarning" type="warning" highlight>
+                    <p v-html="$t('pidTuningSlidersExpertSettingsDetectedNote')"></p>
+                </UiBox>
+            </UiBox>
 
             <!-- PID Table -->
             <UiBox type="neutral">
@@ -198,201 +389,6 @@
                         class="w-full"
                     />
                 </div>
-            </UiBox>
-
-            <!-- Tuning Sliders Section -->
-            <UiBox type="neutral">
-                <!-- Slider Header: Mode select + range labels -->
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="flex items-center gap-2 min-w-44 shrink-0">
-                        <span class="text-xs whitespace-nowrap">{{ $t("pidTuningSliderPidsMode") }}</span>
-                        <USelect
-                            v-model="sliderPidsMode"
-                            :items="pidsModeItems"
-                            class="w-24"
-                            @update:model-value="onSliderModeChange"
-                        />
-                        <HelpIcon :text="$t('pidTuningSliderModeHelp')" />
-                    </div>
-                    <div class="flex justify-between flex-1 text-xs text-dimmed">
-                        <span>{{ $t("pidTuningSliderLow") }}</span>
-                        <span>{{ $t("pidTuningSliderDefault") }}</span>
-                        <span>{{ $t("pidTuningSliderHigh") }}</span>
-                    </div>
-                    <HelpIcon :text="$t('pidTuningPidSlidersHelp')" />
-                </div>
-
-                <!-- Basic Sliders -->
-                <div
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': sliderDGainDisabled }"
-                >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDGainSlider')"></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDGainDisplay }}</span>
-                    <USlider
-                        v-model="sliderDGain"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="sliderDGainDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange('sliderDGain')"
-                    />
-                    <HelpIcon :text="$t('pidTuningDGainSliderHelp')" />
-                </div>
-
-                <div
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': sliderPIGainDisabled }"
-                >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPIGainSlider')"></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPIGainDisplay }}</span>
-                    <USlider
-                        v-model="sliderPIGain"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="sliderPIGainDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange('sliderPIGain')"
-                    />
-                    <HelpIcon :text="$t('pidTuningPIGainSliderHelp')" />
-                </div>
-
-                <div
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': sliderFFGainDisabled }"
-                >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningResponseSlider')"></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderFFGainDisplay }}</span>
-                    <USlider
-                        v-model="sliderFeedforwardGain"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="sliderFFGainDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange('sliderFeedforwardGain')"
-                    />
-                    <HelpIcon :text="$t('pidTuningResponseSliderHelp')" />
-                </div>
-
-                <!-- Divider before advanced sliders -->
-                <hr v-show="showAdvancedSliders" class="border-default my-2" />
-
-                <!-- Advanced Sliders -->
-                <div
-                    v-show="showDMaxSlider"
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': dMaxSliderDisabled }"
-                >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDMaxGainSlider')"></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDMaxGainDisplay }}</span>
-                    <USlider
-                        v-model="sliderDMaxGain"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="dMaxSliderDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange()"
-                    />
-                    <HelpIcon :text="$t('pidTuningDMaxGainSliderHelp')" />
-                </div>
-
-                <div
-                    v-show="showIGainSlider"
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': iGainSliderDisabled }"
-                >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningIGainSlider')"></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderIGainDisplay }}</span>
-                    <USlider
-                        v-model="sliderIGain"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="iGainSliderDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange()"
-                    />
-                    <HelpIcon :text="$t('pidTuningIGainSliderHelp')" />
-                </div>
-
-                <div
-                    v-show="showRPRatioSlider"
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': rpRatioSliderDisabled }"
-                >
-                    <div
-                        class="min-w-32 text-right text-xs shrink-0"
-                        v-html="$t('pidTuningRollPitchRatioSlider')"
-                    ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderRPRatioDisplay }}</span>
-                    <USlider
-                        v-model="sliderRollPitchRatio"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="rpRatioSliderDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange()"
-                    />
-                    <HelpIcon :text="$t('pidTuningRollPitchRatioSliderHelp')" />
-                </div>
-
-                <div
-                    v-show="showPitchPISlider"
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': pitchPISliderDisabled }"
-                >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPitchPIGainSlider')"></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPitchPIDisplay }}</span>
-                    <USlider
-                        v-model="sliderPitchPIGain"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="pitchPISliderDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange()"
-                    />
-                    <HelpIcon :text="$t('pidTuningPitchPIGainSliderHelp')" />
-                </div>
-
-                <div
-                    v-show="showMasterSlider"
-                    class="flex items-center gap-3 py-1"
-                    :class="{ 'opacity-50 pointer-events-none': masterSliderDisabled }"
-                >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningMasterSlider')"></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderMasterDisplay }}</span>
-                    <USlider
-                        v-model="sliderMasterMultiplier"
-                        :min="0"
-                        :max="2.0"
-                        :step="0.05"
-                        :disabled="masterSliderDisabled"
-                        class="flex-1"
-                        @update:model-value="onSliderChange()"
-                    />
-                    <HelpIcon :text="$t('pidTuningMasterSliderHelp')" />
-                </div>
-
-                <!-- Danger Zone Warning -->
-                <UiBox v-if="slidersInDangerZone" type="error" highlight>
-                    <p v-html="$t('pidTuningSliderWarning')"></p>
-                </UiBox>
-
-                <!-- Non-Expert Mode Warning -->
-                <UiBox v-if="!props.expertMode && sliderPidsMode > 0" type="warning" highlight>
-                    <p v-html="$t('pidTuningPidSlidersNonExpertMode')"></p>
-                </UiBox>
-
-                <!-- Expert Settings Detected Warning -->
-                <UiBox v-if="showExpertSettingsWarning" type="warning" highlight>
-                    <p v-html="$t('pidTuningSlidersExpertSettingsDetectedNote')"></p>
-                </UiBox>
             </UiBox>
 
             <!-- BARO, MAG, GPS Optional PIDs -->
@@ -678,7 +674,8 @@
                             <USelect
                                 v-model="advancedTuning.feedforward_averaging"
                                 :items="feedforwardAveragingItems"
-                                class="w-28"
+                                size="xs"
+                                class="w-24"
                             />
                         </div>
                         <div class="flex flex-col gap-1">
@@ -732,23 +729,64 @@
                         </div>
                     </div>
                 </div>
+                <!-- TPA Settings -->
+                <div class="flex flex-col gap-2">
+                    <span class="text-sm font-semibold" v-html="$t('pidTuningTpaGroup')"></span>
+                    <div class="flex flex-wrap items-end gap-3 pl-4">
+                        <div v-if="usesAdvancedTpa" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningTPAMode") }}</span>
+                            <USelect v-model="tpaMode" :items="tpaModeItems" size="xs" class="w-24" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningTPARate") }}</span>
+                            <UInputNumber
+                                v-model="tpaRate"
+                                :step="1"
+                                :min="0"
+                                :max="100"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningTPABreakPoint") }}</span>
+                            <UInputNumber
+                                v-model="tpaBreakpoint"
+                                :step="10"
+                                :min="750"
+                                :max="2250"
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
 
                 <!-- I-term Relax -->
                 <div class="flex flex-col gap-2">
                     <SettingRow :label="$t('pidTuningItermRelax')" :help="$t('pidTuningItermRelaxHelp')">
                         <USwitch v-model="itermRelaxEnabled" size="sm" />
                     </SettingRow>
-                    <div v-if="itermRelaxEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                    <div v-if="itermRelaxEnabled" class="flex flex-wrap items-end gap-3 pl-4">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed" v-html="$t('pidTuningItermRelaxAxes')"></span>
-                            <USelect v-model="advancedTuning.itermRelax" :items="itermRelaxAxesItems" class="w-28" />
+                            <USelect
+                                v-model="advancedTuning.itermRelax"
+                                :items="itermRelaxAxesItems"
+                                size="xs"
+                                class="w-24"
+                            />
                         </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed" v-html="$t('pidTuningItermRelaxType')"></span>
                             <USelect
                                 v-model="advancedTuning.itermRelaxType"
                                 :items="itermRelaxTypeItems"
-                                class="w-28"
+                                size="xs"
+                                class="w-24"
                             />
                         </div>
                         <div class="flex flex-col gap-1">
@@ -774,13 +812,14 @@
                     <SettingRow :label="$t('pidTuningAntiGravity')" :help="$t('pidTuningAntiGravityHelp')">
                         <USwitch v-model="antiGravityEnabled" size="sm" />
                     </SettingRow>
-                    <div v-if="antiGravityEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                    <div v-if="antiGravityEnabled" class="flex flex-wrap items-end gap-3 pl-4">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed" v-html="$t('pidTuningAntiGravityMode')"></span>
                             <USelect
                                 v-model="advancedTuning.antiGravityMode"
                                 :items="antiGravityModeItems"
-                                class="w-28"
+                                size="xs"
+                                class="w-24"
                             />
                         </div>
                         <div class="flex flex-col gap-1">
@@ -908,9 +947,8 @@
                     >
                         <USwitch v-model="vbatSagEnabled" size="sm" />
                     </SettingRow>
-                    <div v-if="vbatSagEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                    <div v-if="vbatSagEnabled" class="flex flex-wrap items-end gap-3 pl-4">
                         <div class="flex flex-col gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('pidTuningVbatSagValue')"></span>
                             <UInputNumber
                                 v-model="advancedTuning.vbat_sag_compensation"
                                 :step="1"
@@ -932,9 +970,8 @@
                     >
                         <USwitch v-model="thrustLinearEnabled" size="sm" />
                     </SettingRow>
-                    <div v-if="thrustLinearEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                    <div v-if="thrustLinearEnabled" class="flex flex-wrap items-end gap-3 pl-4">
                         <div class="flex flex-col gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('pidTuningThrustLinearValue')"></span>
                             <UInputNumber
                                 v-model="advancedTuning.thrustLinearization"
                                 :step="1"
@@ -949,45 +986,15 @@
                 </div>
             </UiBox>
 
-            <!-- TPA Settings -->
-            <UiBox type="neutral">
-                <div class="flex flex-wrap items-end gap-3">
-                    <div v-if="usesAdvancedTpa" class="flex flex-col gap-1">
-                        <span class="text-xs text-dimmed">{{ $t("pidTuningTPAMode") }}</span>
-                        <USelect v-model="tpaMode" :items="tpaModeItems" class="w-24" />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <span class="text-xs text-dimmed">{{ $t("pidTuningTPARate") }}</span>
-                        <UInputNumber
-                            v-model="tpaRate"
-                            :step="1"
-                            :min="0"
-                            :max="100"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-16"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <span class="text-xs text-dimmed">{{ $t("pidTuningTPABreakPoint") }}</span>
-                        <UInputNumber
-                            v-model="tpaBreakpoint"
-                            :step="10"
-                            :min="750"
-                            :max="2250"
-                            size="xs"
-                            orientation="vertical"
-                            :format-options="{ useGrouping: false }"
-                            class="w-16"
-                        />
-                    </div>
-                </div>
-            </UiBox>
-
             <!-- Misc Settings -->
             <UiBox :title="$t('pidTuningMiscSettings')" type="neutral">
                 <SettingRow :label="$t('pidTuningCellCount')" :help="$t('pidTuningCellCountHelp')">
-                    <USelect v-model="advancedTuning.autoProfileCellCount" :items="cellCountItems" class="w-32" />
+                    <USelect
+                        v-model="advancedTuning.autoProfileCellCount"
+                        :items="cellCountItems"
+                        size="xs"
+                        class="w-24"
+                    />
                 </SettingRow>
 
                 <SettingRow
@@ -1011,7 +1018,7 @@
                     </SettingRow>
                     <span
                         v-if="integratedYawEnabled"
-                        class="text-xs text-warning pl-8"
+                        class="text-xs text-warning pl-4"
                         v-html="$t('pidTuningIntegratedYawCaution')"
                     ></span>
                 </div>
@@ -1059,13 +1066,9 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    profileName: {
-        type: String,
-        default: "",
-    },
 });
 
-const emit = defineEmits(["update:profileName", "change"]);
+const emit = defineEmits(["change"]);
 
 // USelect item arrays
 const pidsModeItems = computed(() => [
@@ -1115,15 +1118,6 @@ const cellCountItems = computed(() => [
     { value: 7, label: t("pidTuningCellCount7S") },
     { value: 8, label: t("pidTuningCellCount8S") },
 ]);
-
-// Profile name (local writable computed to avoid duplicate key with prop)
-const localProfileName = computed({
-    get: () => props.profileName,
-    set: (value) => emit("update:profileName", value),
-});
-const showProfileName = computed(() => {
-    return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
-});
 
 // For API < 1.47, derivative and dmax column headers are swapped (PR #4173)
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
