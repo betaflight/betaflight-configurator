@@ -11,7 +11,7 @@
             <slot name="title"></slot>
             <HelpIcon v-if="help" :text="help" />
         </div>
-        <div :class="`flex flex-col p-3 gap-2 ${title ? 'pt-6' : ''}`">
+        <div :class="`flex flex-col ${padding ? 'p-3' : 'rounded-lg overflow-hidden'} gap-2 ${title ? 'pt-6' : ''}`">
             <slot></slot>
         </div>
     </div>
@@ -42,6 +42,11 @@ const props = defineProps({
     highlight: {
         type: Boolean,
         default: false,
+        required: false,
+    },
+    padding: {
+        type: Boolean,
+        default: true,
         required: false,
     },
 });
