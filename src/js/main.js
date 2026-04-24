@@ -16,6 +16,7 @@ import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
+import { loadDeviceFilters } from "./protocols/devices.js";
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
@@ -69,6 +70,10 @@ function appReady() {
     readConfiguratorVersionMetadata();
 
     cleanupLocalStorage();
+
+    loadDeviceFilters().catch((err) => {
+        console.warn("Failed to load device filters, using defaults:", err);
+    });
 
     i18n.init(async function () {
         await startProcess();

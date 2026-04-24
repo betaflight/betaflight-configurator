@@ -222,12 +222,21 @@ export default class BuildApi {
     }
 
     async loadConfiguratorRelease(type) {
-        const url = `${this._url}/api/configurator/releases/${type}`;
+        const url = `${this._url}/api/app/releases/${type}`;
         return await this.fetchJson(url);
     }
 
+    async loadDeviceFilters() {
+        try {
+            return await this.fetchJson(`${this._url}/api/app/devices`);
+        } catch {
+            // offline or network error — caller falls back to cache
+            return null;
+        }
+    }
+
     async loadSponsorTile(mode, page) {
-        const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
+        const url = `${this._url}/api/app/sponsors/${mode}/${page}`;
         return await this.fetchText(url);
     }
 }
