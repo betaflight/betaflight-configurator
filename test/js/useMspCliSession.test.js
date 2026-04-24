@@ -15,13 +15,23 @@ describe("useMspCliSession", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         pending = [];
-        sendCliCommandSpy = vi.spyOn(MSP, "send_cli_command").mockImplementation((cmd, cb) => {
-            pending.push({ cmd, cb });
+        sendCliCommandSpy = vi.spyOn(MSP, "send_cli_command").mockImplementation((cmd, cb, opts = {}) => {
+            const entry = { cmd, cb, opts };
+            if (opts.timeoutMs) {
+                entry.timer = setTimeout(() => {
+                    const idx = pending.indexOf(entry);
+                    if (idx < 0) {
+                        return;
+                    }
+                    pending.splice(idx, 1);
+                    cb([], new Error(`Timed out after ${opts.timeoutMs}ms waiting for response to "${cmd}"`));
+                }, opts.timeoutMs);
+            }
+            pending.push(entry);
         });
     });
 
     afterEach(async () => {
-        // Drain any timers so the module-level CLI mutex resolves between tests.
         await vi.runAllTimersAsync();
         vi.useRealTimers();
         vi.restoreAllMocks();
@@ -33,6 +43,9 @@ describe("useMspCliSession", () => {
         if (!entry) {
             throw new Error(`No pending CLI command "${cmd}". pending=${pending.map((p) => p.cmd).join(",")}`);
         }
+        if (entry.timer) {
+            clearTimeout(entry.timer);
+        }
         pending.splice(pending.indexOf(entry), 1);
         entry.cb(lines);
         await flushMicrotasks();
@@ -43,48 +56,19 @@ describe("useMspCliSession", () => {
             const promise = send("status");
             await respondTo("status", ["foo", "bar"]);
             await expect(promise).resolves.toEqual(["foo", "bar"]);
-            expect(sendCliCommandSpy).toHaveBeenCalledWith("status", expect.any(Function));
+            expect(sendCliCommandSpy).toHaveBeenCalledWith(
+                "status",
+                expect.any(Function),
+                expect.objectContaining({ timeoutMs: expect.any(Number) }),
+            );
         });
 
-        it("rejects on timeout", async () => {
+        it("rejects when MSP reports a timeout error", async () => {
             const promise = send("hang", { timeoutMs: 100 });
             const expectation = expect(promise).rejects.toThrow(/Timed out after 100ms/);
             await flushMicrotasks();
             await vi.advanceTimersByTimeAsync(150);
             await expectation;
-        });
-
-        it("clears MSP CLI state on timeout so late responses cannot leak into the next send", async () => {
-            MSP.cli_output.push("stale");
-            MSP.cli_buffer.push("x");
-
-            const promise = send("hang", { timeoutMs: 50 });
-            const rejection = expect(promise).rejects.toThrow(/Timed out/);
-            await flushMicrotasks();
-            await vi.advanceTimersByTimeAsync(60);
-            await rejection;
-
-            expect(MSP.cli_callback).toBeNull();
-            expect(MSP.cli_output).toHaveLength(0);
-            expect(MSP.cli_buffer).toHaveLength(0);
-        });
-
-        it("serialises concurrent sends through a module-level queue", async () => {
-            const first = send("one");
-            const second = send("two");
-
-            await flushMicrotasks();
-            expect(sendCliCommandSpy).toHaveBeenCalledTimes(1);
-            expect(sendCliCommandSpy).toHaveBeenLastCalledWith("one", expect.any(Function));
-
-            await respondTo("one", ["one-response"]);
-            await expect(first).resolves.toEqual(["one-response"]);
-
-            expect(sendCliCommandSpy).toHaveBeenCalledTimes(2);
-            expect(sendCliCommandSpy).toHaveBeenLastCalledWith("two", expect.any(Function));
-
-            await respondTo("two", ["two-response"]);
-            await expect(second).resolves.toEqual(["two-response"]);
         });
     });
 
@@ -93,14 +77,14 @@ describe("useMspCliSession", () => {
             const promise = sendSave();
             await respondTo("save", []);
             await promise;
-            expect(sendCliCommandSpy).toHaveBeenCalledWith("save", expect.any(Function));
+            expect(sendCliCommandSpy).toHaveBeenCalledWith("save", expect.any(Function), expect.any(Object));
         });
 
         it("readDumpAll issues diff all", async () => {
             const promise = readDumpAll();
             await respondTo("diff all", ["line1"]);
             await expect(promise).resolves.toEqual(["line1"]);
-            expect(sendCliCommandSpy).toHaveBeenCalledWith("diff all", expect.any(Function));
+            expect(sendCliCommandSpy).toHaveBeenCalledWith("diff all", expect.any(Function), expect.any(Object));
         });
     });
 
@@ -146,10 +130,8 @@ describe("useMspCliSession", () => {
             const session = useMspCliSession();
             const promise = session.runBatch(["slow", "set x = 1"], { commandTimeoutMs: 100 });
 
-            // Let the first command time out without a response.
             await flushMicrotasks();
             await vi.advanceTimersByTimeAsync(150);
-            // The second command should have been dispatched; respond so the batch completes.
             await respondTo("set x = 1", []);
             await vi.advanceTimersByTimeAsync(20);
 
