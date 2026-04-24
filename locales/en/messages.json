@@ -7625,6 +7625,9 @@
     "magAlignmentNotEnoughData": {
         "message": "Not enough valid samples collected. Try again."
     },
+    "magAlignmentMissingCustomAngles": {
+        "message": "Custom alignment angles are not configured. Set roll, pitch, and yaw before detecting."
+    },
     "configurationMagDetectAlignment": {
         "message": "Detect"
     },

@@ -78,16 +78,16 @@ const ALIGNMENT_LABELS = {
  *   Used to undo the firmware's rotation so we test against the true sensor frame.
  * @param {{ roll: number, pitch: number, yaw: number }} [customAngles] -
  *   Custom alignment angles in degrees, required when currentAlignment === 9.
- * @returns {{ alignment: number, label: string, confidence: number, reliable: boolean } | null}
+ * @returns {{ alignment: number, label: string, confidence: number, reliable: boolean } | { error: string }}
  */
 export function detectAlignment(samples, currentAlignment, customAngles) {
     if (samples.length < 30) {
-        return null;
+        return { error: "not_enough_data" };
     }
 
     const currentMat = buildCurrentMatrix(currentAlignment, customAngles);
     if (!currentMat) {
-        return null;
+        return { error: "missing_custom_angles" };
     }
     const currentInv = mat3transpose(currentMat);
 
