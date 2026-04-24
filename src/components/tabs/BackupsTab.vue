@@ -153,18 +153,19 @@ import UiBox from "../elements/UiBox.vue";
 import Dialog from "../elements/Dialog.vue";
 import loginManager from "@/js/LoginManager";
 import { gui_log } from "@/js/gui_log";
-import GUI from "@/js/gui";
 import { useConnectionStore } from "@/stores/connection";
-import { useMspCliSession } from "@/composables/useMspCliSession";
+import {
+    cancelScheduledReconnect,
+    saveAndReconnect,
+    scheduleReconnect,
+    useMspCliSession,
+} from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
-import { connectDisconnect } from "@/js/serial_backend";
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
 const cliSession = useMspCliSession();
 const dialog = useDialog();
-
-const RESTORE_DISCONNECT_TIMEOUT = "backups_restore_disconnect";
 
 const isLoading = ref(true);
 const backups = ref([]);
@@ -175,6 +176,7 @@ const restoreProgress = ref(0);
 const restoreProgressOpen = ref(false);
 const restoreErrors = ref([]);
 const restoreErrorsOpen = ref(false);
+const restoreSavePressed = ref(false);
 const restoreProgressDialogRef = ref(null);
 const restoreErrorsDialogRef = ref(null);
 let userApi = null;
@@ -202,7 +204,7 @@ const groupedBackups = computed(() => {
 
 const isConnected = computed(() => connectionStore.connectionValid);
 const isRestoreBusy = computed(
-    () => restoreProgressOpen.value || restoreErrorsOpen.value || cliSession.isSending.value,
+    () => restoreProgressOpen.value || restoreErrorsOpen.value || cliSession.isBatchRunning.value,
 );
 
 async function loadBackups() {
@@ -305,21 +307,6 @@ async function saveBackupChanges() {
     }
 }
 
-function scheduleReconnect() {
-    GUI.timeout_remove(RESTORE_DISCONNECT_TIMEOUT);
-    GUI.timeout_add(RESTORE_DISCONNECT_TIMEOUT, () => connectDisconnect(), 500);
-}
-
-async function saveAndReconnect() {
-    try {
-        await cliSession.sendSave();
-    } catch (error) {
-        console.error("Failed to save configuration:", error);
-    } finally {
-        scheduleReconnect();
-    }
-}
-
 async function restoreBackup(backup) {
     if (!userApi) {
         gui_log(t("notLoggedIn"));
@@ -385,11 +372,16 @@ async function restoreBackup(backup) {
     await saveAndReconnect();
 }
 
-async function closeRestoreErrors(saveAnyway) {
+function closeRestoreErrors(saveAnyway) {
+    restoreSavePressed.value = saveAnyway;
     restoreErrorsOpen.value = false;
+}
 
-    if (saveAnyway) {
-        gui_log(t("userBackupRestoreSuccess"));
+async function handleRestoreErrorsClose() {
+    const savePressed = restoreSavePressed.value;
+    restoreSavePressed.value = false;
+
+    if (savePressed) {
         await saveAndReconnect();
         return;
     }
@@ -400,12 +392,6 @@ async function closeRestoreErrors(saveAnyway) {
         console.error("Failed to send exit:", error);
     } finally {
         scheduleReconnect();
-    }
-}
-
-function handleRestoreErrorsClose() {
-    if (restoreErrorsOpen.value) {
-        restoreErrorsOpen.value = false;
     }
 }
 
@@ -467,7 +453,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-    GUI.timeout_remove(RESTORE_DISCONNECT_TIMEOUT);
+    cancelScheduledReconnect();
     cliSession.cancel();
     unsubscribeLogin?.();
     unsubscribeLogout?.();

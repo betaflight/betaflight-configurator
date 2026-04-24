@@ -200,7 +200,12 @@ import PresetCard from "./presets/PresetCard.vue";
 import PresetDetailsDialog from "./presets/PresetDetailsDialog.vue";
 import PresetSourcesDialog from "./presets/PresetSourcesDialog.vue";
 import { usePresetsStore } from "@/stores/presets";
-import { useMspCliSession } from "@/composables/useMspCliSession";
+import {
+    cancelScheduledReconnect,
+    saveAndReconnect,
+    scheduleReconnect,
+    useMspCliSession,
+} from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "@/js/gui";
 import FC from "@/js/fc";
@@ -209,9 +214,7 @@ import { useConnectionStore } from "@/stores/connection";
 import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
-import { connectDisconnect, update_sensor_status } from "@/js/serial_backend";
-
-const DISCONNECT_TIMEOUT_NAME = "presets_disconnect_cli";
+import { update_sensor_status } from "@/js/serial_backend";
 
 const store = usePresetsStore();
 const connectionStore = useConnectionStore();
@@ -220,11 +223,6 @@ const cliSession = useMspCliSession();
 const progressDialogRef = ref(null);
 const cliErrorsDialogRef = ref(null);
 const searchPlaceholder = 'example: "karate race", or "5\'\' freestyle"';
-
-function scheduleReconnect() {
-    GUI.timeout_remove(DISCONNECT_TIMEOUT_NAME);
-    GUI.timeout_add(DISCONNECT_TIMEOUT_NAME, () => connectDisconnect(), 500);
-}
 
 function reportProgress({ index, total }) {
     if (total <= 0) {
@@ -276,7 +274,7 @@ async function onTabMounted() {
 }
 
 function onTabCleanup() {
-    GUI.timeout_remove(DISCONNECT_TIMEOUT_NAME);
+    cancelScheduledReconnect();
     cliSession.cancel();
     store.resetTransientState();
 }
@@ -486,16 +484,6 @@ async function applyPickedPresets() {
     }
 
     await saveAndReconnect();
-}
-
-async function saveAndReconnect() {
-    try {
-        await cliSession.sendSave();
-    } catch (error) {
-        console.error("Failed to save configuration:", error);
-    } finally {
-        scheduleReconnect();
-    }
 }
 
 async function saveAnywayAfterCliErrors() {

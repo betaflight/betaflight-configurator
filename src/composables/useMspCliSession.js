@@ -1,5 +1,7 @@
 import { ref } from "vue";
 import MSP from "../js/msp";
+import GUI from "../js/gui";
+import { connectDisconnect } from "../js/serial_backend";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const SAVE_COMMAND_TIMEOUT_MS = 5000;
@@ -7,6 +9,8 @@ const DUMP_READ_TIMEOUT_MS = 10000;
 const LINE_DELAY_MS = 15;
 const PROFILE_COMMAND_DELAY_MS = 100;
 const ERROR_PREFIX = "###ERROR";
+const RECONNECT_TIMEOUT_NAME = "msp_cli_reconnect";
+const RECONNECT_DELAY_MS = 500;
 
 let cliMutex = Promise.resolve();
 
@@ -79,13 +83,32 @@ export function readDumpAll() {
     return send("diff all", { timeoutMs: DUMP_READ_TIMEOUT_MS });
 }
 
+export function scheduleReconnect() {
+    GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
+    GUI.timeout_add(RECONNECT_TIMEOUT_NAME, () => connectDisconnect(), RECONNECT_DELAY_MS);
+}
+
+export function cancelScheduledReconnect() {
+    GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
+}
+
+export async function saveAndReconnect() {
+    try {
+        await sendSave();
+    } catch (error) {
+        console.error("Failed to save configuration:", error);
+    } finally {
+        scheduleReconnect();
+    }
+}
+
 export function useMspCliSession() {
-    const isSending = ref(false);
+    const isBatchRunning = ref(false);
     let cancelRequested = false;
 
     async function runBatch(commands, { onProgress, onError, commandTimeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
         cancelRequested = false;
-        isSending.value = true;
+        isBatchRunning.value = true;
 
         const errors = [];
         const total = commands.length;
@@ -130,7 +153,7 @@ export function useMspCliSession() {
                 await wait(delayAfter(line));
             }
         } finally {
-            isSending.value = false;
+            isBatchRunning.value = false;
         }
 
         return { sent, total, errors, cancelled: cancelRequested };
@@ -141,7 +164,7 @@ export function useMspCliSession() {
     }
 
     return {
-        isSending,
+        isBatchRunning,
         send,
         sendSave,
         readDumpAll,
