@@ -12,13 +12,19 @@ export function useSensorGraph() {
     const sonar_data = ref([]);
     const debug_data = ref([]);
 
-    // Sample counters
+    // Sample counters and dirty flags
     let samples_gyro_i = 0;
     let samples_accel_i = 0;
     let samples_mag_i = 0;
     let samples_altitude_i = 0;
     let samples_sonar_i = 0;
     let samples_debug_i = 0;
+    let dirty_gyro = false;
+    let dirty_accel = false;
+    let dirty_mag = false;
+    let dirty_altitude = false;
+    let dirty_sonar = false;
+    let dirty_debug = false;
 
     // Graph helpers storage
     let gyroHelpers = null;
@@ -242,42 +248,55 @@ export function useSensorGraph() {
     }
 
     function updateGraphs() {
-        if (gyroHelpers) {
+        if (gyroHelpers && dirty_gyro) {
             drawGraph(gyroHelpers, samples_gyro_i);
+            dirty_gyro = false;
         }
-        if (accelHelpers) {
+        if (accelHelpers && dirty_accel) {
             drawGraph(accelHelpers, samples_accel_i);
+            dirty_accel = false;
         }
-        if (magHelpers) {
+        if (magHelpers && dirty_mag) {
             drawGraph(magHelpers, samples_mag_i);
+            dirty_mag = false;
         }
-        if (altitudeHelpers) {
+        if (altitudeHelpers && dirty_altitude) {
             drawGraph(altitudeHelpers, samples_altitude_i);
+            dirty_altitude = false;
         }
-        if (sonarHelpers) {
+        if (sonarHelpers && dirty_sonar) {
             drawGraph(sonarHelpers, samples_sonar_i);
+            dirty_sonar = false;
         }
-        debugHelpers.forEach((helper) => drawGraph(helper, samples_debug_i));
+        if (dirty_debug) {
+            debugHelpers.forEach((helper) => drawGraph(helper, samples_debug_i));
+            dirty_debug = false;
+        }
     }
 
     function addGyroSample(data) {
         samples_gyro_i = addSampleToData(gyro_data.value, samples_gyro_i, data);
+        dirty_gyro = true;
     }
 
     function addAccelSample(data) {
         samples_accel_i = addSampleToData(accel_data.value, samples_accel_i, data);
+        dirty_accel = true;
     }
 
     function addMagSample(data) {
         samples_mag_i = addSampleToData(mag_data.value, samples_mag_i, data);
+        dirty_mag = true;
     }
 
     function addAltitudeSample(data) {
         samples_altitude_i = addSampleToData(altitude_data.value, samples_altitude_i, data);
+        dirty_altitude = true;
     }
 
     function addSonarSample(data) {
         samples_sonar_i = addSampleToData(sonar_data.value, samples_sonar_i, data);
+        dirty_sonar = true;
     }
 
     function addDebugSample(index, data) {
@@ -286,6 +305,7 @@ export function useSensorGraph() {
         }
         // Don't increment counter here - will be done once after all columns are updated
         addSampleToData(debug_data.value[index], samples_debug_i, data);
+        dirty_debug = true;
     }
 
     function incrementDebugCounter() {
