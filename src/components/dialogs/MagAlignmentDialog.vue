@@ -107,8 +107,8 @@ const result = ref(null);
 const errorMessage = ref("");
 
 let samples = [];
-let dataInterval = null;
-let attitudeInterval = null;
+let imuPollTimeout = null;
+let attitudePollTimeout = null;
 let lastMag = null;
 let lastMovementTime = 0;
 let movementCheckInterval = null;
@@ -165,7 +165,7 @@ function startDetection() {
             }
             currentRoll = fcStore.sensorData.kinematics[0];
             currentPitch = fcStore.sensorData.kinematics[1];
-            attitudeInterval = setTimeout(pollAttitude, POLL_INTERVAL_MS);
+            attitudePollTimeout = setTimeout(pollAttitude, POLL_INTERVAL_MS);
         });
     }
 
@@ -176,7 +176,7 @@ function startDetection() {
         MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, () => {
             onImuData();
             if (phase.value === "collecting") {
-                dataInterval = setTimeout(pollImu, POLL_INTERVAL_MS);
+                imuPollTimeout = setTimeout(pollImu, POLL_INTERVAL_MS);
             }
         });
     }
@@ -267,13 +267,13 @@ function applyResult() {
 }
 
 function cleanup() {
-    if (dataInterval !== null) {
-        clearTimeout(dataInterval);
-        dataInterval = null;
+    if (imuPollTimeout !== null) {
+        clearTimeout(imuPollTimeout);
+        imuPollTimeout = null;
     }
-    if (attitudeInterval !== null) {
-        clearTimeout(attitudeInterval);
-        attitudeInterval = null;
+    if (attitudePollTimeout !== null) {
+        clearTimeout(attitudePollTimeout);
+        attitudePollTimeout = null;
     }
     if (movementCheckInterval !== null) {
         clearInterval(movementCheckInterval);
