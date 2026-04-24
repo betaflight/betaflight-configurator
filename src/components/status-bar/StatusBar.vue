@@ -71,14 +71,11 @@
                 :aux-config="auxConfig"
             />
 
-            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+            <template v-if="dataflashSupported">
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
-            <DataFlash
-                v-if="dataflashSupported"
-                compact
-                :fc-total-size="dataflash.totalSize"
-                :fc-used-size="dataflash.usedSize"
-            />
+                <DataFlash compact :fc-total-size="dataflash.totalSize" :fc-used-size="dataflash.usedSize" />
+            </template>
         </template>
         <div class="flex gap-2 text-xs text-muted ml-auto items-center h-full">
             <template v-if="firmwareTarget && firmwareVersion">
@@ -87,9 +84,8 @@
                 <UTooltip :text="$t('versionLabelFirmware')">
                     <span>{{ displayedFirmwareTarget }} {{ displayedFirmwareVersion }}</span>
                 </UTooltip>
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
             </template>
-
-            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
             <UIcon name="i-lucide-monitor" class="size-4" />
             <UTooltip :text="$t('versionLabelConfigurator')">
@@ -273,10 +269,6 @@ export default defineComponent({
             }
             return stripVersionDisplay(props.firmwareVersion);
         });
-
-        const fullFirmwareStatusTooltip = computed(() =>
-            [props.firmwareTarget, props.firmwareVersion].filter(Boolean).join(" ").trim(),
-        );
 
         return {
             expertMode,
