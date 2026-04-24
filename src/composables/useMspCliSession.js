@@ -63,13 +63,16 @@ export function cancelScheduledReconnect() {
 }
 
 export async function saveAndReconnect() {
+    let saveError = null;
     try {
         await sendSave();
     } catch (error) {
-        console.error("Failed to save configuration:", error);
+        saveError = error;
+        console.error("sendSave failed:", error);
     } finally {
         scheduleReconnect();
     }
+    return { ok: saveError === null, error: saveError };
 }
 
 export function useMspCliSession() {

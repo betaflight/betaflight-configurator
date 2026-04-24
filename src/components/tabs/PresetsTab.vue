@@ -338,7 +338,9 @@ async function saveConfigBackup() {
     try {
         const cliStrings = await cliSession.readDumpAll();
         const filename = generateFilename("cli_backup", "txt");
-        const text = ["defaults nosave", "", ...cliStrings].join("\n");
+        const hasDefaultsPrefix = cliStrings.some((line) => line.trim().toLowerCase() === "defaults nosave");
+        const lines = hasDefaultsPrefix ? cliStrings : ["defaults nosave", "", ...cliStrings];
+        const text = lines.join("\n");
         const file = await FileSystem.pickSaveFile(
             filename,
             i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
@@ -497,7 +499,9 @@ function closeCliErrorsWithoutSaving() {
 
 async function handleCliErrorsDialogClose() {
     const savePressed = store.applyState.cliErrorsSavePressed;
-    store.closeCliErrorsDialog(savePressed);
+    if (store.applyState.cliErrorsDialogOpen) {
+        store.closeCliErrorsDialog(savePressed);
+    }
 
     if (!savePressed) {
         try {

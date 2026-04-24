@@ -13,7 +13,7 @@ function toReadInfo(bytes) {
 function responseBytes(body) {
     const bytes = [STX];
     for (let i = 0; i < body.length; i++) {
-        bytes.push(body.charCodeAt(i));
+        bytes.push(body.codePointAt(i));
     }
     bytes.push(LF, ETX);
     return bytes;
