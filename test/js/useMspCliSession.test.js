@@ -54,6 +54,21 @@ describe("useMspCliSession", () => {
             await expectation;
         });
 
+        it("clears MSP CLI state on timeout so late responses cannot leak into the next send", async () => {
+            MSP.cli_output.push("stale");
+            MSP.cli_buffer.push("x");
+
+            const promise = send("hang", { timeoutMs: 50 });
+            const rejection = expect(promise).rejects.toThrow(/Timed out/);
+            await flushMicrotasks();
+            await vi.advanceTimersByTimeAsync(60);
+            await rejection;
+
+            expect(MSP.cli_callback).toBeNull();
+            expect(MSP.cli_output).toHaveLength(0);
+            expect(MSP.cli_buffer).toHaveLength(0);
+        });
+
         it("serialises concurrent sends through a module-level queue", async () => {
             const first = send("one");
             const second = send("two");
@@ -146,7 +161,7 @@ describe("useMspCliSession", () => {
             expect(sendCliCommandSpy).toHaveBeenCalledTimes(2);
         });
 
-        it("stops when cancel() is called", async () => {
+        it("stops when cancel() is called and reports cancelled=true", async () => {
             const session = useMspCliSession();
             const promise = session.runBatch(["a", "b", "c"]);
 

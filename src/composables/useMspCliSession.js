@@ -27,25 +27,41 @@ function delayAfter(line) {
     return line.toLowerCase().startsWith("profile") ? PROFILE_COMMAND_DELAY_MS : LINE_DELAY_MS;
 }
 
+function clearMspCliState() {
+    MSP.cli_output.length = 0;
+    MSP.cli_buffer.length = 0;
+}
+
 function dispatch(command, timeoutMs) {
+    // Drop any stale CLI state left over from a prior timed-out send so
+    // late bytes can't bleed into this command's response.
+    clearMspCliState();
+
     return new Promise((resolve, reject) => {
         let settled = false;
-        const timer = setTimeout(() => {
-            if (settled) {
-                return;
-            }
-            settled = true;
-            reject(new Error(`Timed out after ${timeoutMs}ms waiting for response to "${command}"`));
-        }, timeoutMs);
-
-        MSP.send_cli_command(command, (lines) => {
+        const onResponse = (lines) => {
             if (settled) {
                 return;
             }
             settled = true;
             clearTimeout(timer);
             resolve(Array.isArray(lines) ? [...lines] : []);
-        });
+        };
+        const timer = setTimeout(() => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            // Disown our callback and wipe the accumulator so a late ETX for
+            // this command cannot be routed to the next command's callback.
+            if (MSP.cli_callback === onResponse) {
+                MSP.cli_callback = null;
+            }
+            clearMspCliState();
+            reject(new Error(`Timed out after ${timeoutMs}ms waiting for response to "${command}"`));
+        }, timeoutMs);
+
+        MSP.send_cli_command(command, onResponse);
     });
 }
 

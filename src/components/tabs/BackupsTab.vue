@@ -371,6 +371,10 @@ async function restoreBackup(backup) {
 
     restoreProgressOpen.value = false;
 
+    if (result.cancelled) {
+        return;
+    }
+
     if (result.errors.length > 0) {
         restoreErrors.value = result.errors;
         restoreErrorsOpen.value = true;

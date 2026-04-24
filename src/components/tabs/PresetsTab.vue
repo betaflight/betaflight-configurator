@@ -476,6 +476,10 @@ async function applyPickedPresets() {
 
     store.closeProgressDialog();
 
+    if (result.cancelled) {
+        return;
+    }
+
     if (result.errors.length > 0) {
         store.openCliErrorsDialog(result.errors);
         return;
