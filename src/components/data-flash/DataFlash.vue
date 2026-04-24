@@ -10,21 +10,23 @@
                 class="dataflash-icon"
                 :title="$t('sensorDataFlashFreeSpace')"
             />
-            <div class="dataflash-contents_global">
-                <div
-                    class="dataflash-free_global"
-                    :class="usageClass"
-                    :style="{
-                        width: indicatorWidth,
-                    }"
-                >
-                    <span v-if="!compact">
-                        {{ $t("sensorDataFlashFreeSpace") }}
-                        {{ freeSpace }}
-                    </span>
+            <UTooltip :text="$t('sensorDataFlashFreeSpace')">
+                <div class="dataflash-contents_global">
+                    <div
+                        class="dataflash-free_global"
+                        :class="usageClass"
+                        :style="{
+                            width: indicatorWidth,
+                        }"
+                    >
+                        <span v-if="!compact">
+                            {{ $t("sensorDataFlashFreeSpace") }}
+                            {{ freeSpace }}
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <span v-if="compact" class="dataflash-free-label">{{ freeSpace }}</span>
+                <span v-if="compact" class="dataflash-free-label">{{ freeSpace }}</span>
+            </UTooltip>
         </template>
     </div>
 </template>

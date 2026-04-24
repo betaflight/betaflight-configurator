@@ -1,5 +1,5 @@
 <template>
-    <div class="battery-icon" :class="{ 'battery-icon--compact': compact }">
+    <div class="battery-icon shrink-0" :class="{ 'battery-icon--compact': compact }">
         <div class="quad-status-contents">
             <div class="battery-status" :class="classes" :style="{ width: batteryWidth + '%' }" />
         </div>
@@ -97,23 +97,15 @@ export default defineComponent({
 
 <style scoped>
 .quad-status-contents {
-    display: inline-block;
-    margin-top: 10px;
-    margin-left: 14px;
+    position: absolute;
+    top: 10px;
+    left: 14px;
     height: 10px;
     width: 31px;
 }
 
-.quad-status-contents progress::-webkit-progress-bar {
-    height: 12px;
-    background-color: var(--surface-300);
-}
-
-.quad-status-contents progress::-webkit-progress-value {
-    background-color: #bcf;
-}
-
 .battery-icon {
+    position: relative;
     background-image: url(../../images/icons/cf_icon_bat_grey.svg);
     background-size: contain;
     background-position: center;
@@ -159,8 +151,8 @@ export default defineComponent({
 }
 
 .battery-icon--compact .quad-status-contents {
-    margin-top: 8px;
-    margin-left: 10px;
+    top: 8px;
+    left: 11px;
     width: 26px;
     height: 8px;
 }

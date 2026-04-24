@@ -751,7 +751,7 @@
         "message": "Target"
     },
     "versionLabelFirmware": {
-        "message": "Firmware"
+        "message": "Firmware Version"
     },
     "versionLabelConfigurator": {
         "message": "App Version"
