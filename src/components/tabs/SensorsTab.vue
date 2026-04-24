@@ -103,7 +103,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, reactive, computed, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
@@ -141,7 +141,6 @@ const {
     updateScales: updateGraphScales,
     updateGraphs,
     initializeGraphs,
-    cleanup: cleanupGraphs,
 } = useSensorGraph();
 
 // SVG refs
@@ -467,8 +466,5 @@ onMounted(async () => {
     initializeTimers();
 });
 
-onUnmounted(() => {
-    cleanupGraphs();
-});
 // Interval cleanup is handled automatically by the useInterval composable on unmount
 </script>

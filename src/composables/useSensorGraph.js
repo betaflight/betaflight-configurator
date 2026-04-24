@@ -34,11 +34,6 @@ export function useSensorGraph() {
     let sonarHelpers = null;
     let debugHelpers = [];
 
-    // ResizeObserver keeps graph dimensions up-to-date without per-frame
-    // getBoundingClientRect() calls that cause forced reflows.
-    const nodeToHelpers = new WeakMap();
-    let resizeObserver = null;
-
     function initDataArray(length) {
         const data = new Array(length);
         for (let i = 0; i < length; i++) {
@@ -141,17 +136,11 @@ export function useSensorGraph() {
             .attr("class", "line")
             .attr("clip-path", `url(#${helpers.clipId})`)
             .attr("d", line);
-        const node = d3.select(selector).node();
-        if (node && resizeObserver) {
-            nodeToHelpers.set(node, helpers);
-            resizeObserver.observe(node);
-        }
-
         return helpers;
     }
 
     function drawGraph(helpers, sampleNumber) {
-        // Skip until ResizeObserver delivers a valid size
+        // Skip if dimensions are not yet available (e.g. SVG not laid out)
         if (!helpers.width || !helpers.height) {
             return;
         }
@@ -191,29 +180,7 @@ export function useSensorGraph() {
         element.select(".data").selectAll(".line").attr("d", line);
     }
 
-    function createResizeObserver() {
-        if (resizeObserver) {
-            resizeObserver.disconnect();
-        }
-        resizeObserver = new ResizeObserver((entries) => {
-            for (const entry of entries) {
-                const helpers = nodeToHelpers.get(entry.target);
-                if (helpers) {
-                    helpers.width = Math.max(0, entry.contentRect.width - margin.left - margin.right);
-                    helpers.height = Math.max(0, entry.contentRect.height - margin.top - margin.bottom);
-                    if (helpers.width > 0 && helpers.height > 0 && helpers.clipId) {
-                        d3.select(entry.target)
-                            .select(`#${helpers.clipId} rect`)
-                            .attr("width", helpers.width)
-                            .attr("height", helpers.height);
-                    }
-                }
-            }
-        });
-    }
-
     function initializeGraphs(refs, debugColumns) {
-        createResizeObserver();
         gyro_data.value = initDataArray(3);
         accel_data.value = initDataArray(3);
         mag_data.value = initDataArray(3);
@@ -315,13 +282,6 @@ export function useSensorGraph() {
         samples_debug_i++;
     }
 
-    function cleanup() {
-        if (resizeObserver) {
-            resizeObserver.disconnect();
-            resizeObserver = null;
-        }
-    }
-
     return {
         gyro_data,
         accel_data,
@@ -339,6 +299,5 @@ export function useSensorGraph() {
         addSonarSample,
         addDebugSample,
         incrementDebugCounter,
-        cleanup,
     };
 }
