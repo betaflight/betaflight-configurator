@@ -62,7 +62,7 @@
                                 <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                             </template>
                         </UButton>
-                        <MagCalibrationDialog v-model="showMagCalDialog" @complete="onMagCalComplete" />
+                        <MagCalibrationDialog v-model="showMagCalDialog" />
                         <div v-show="isExpert">
                             <UButton
                                 :label="$t('initialSetupButtonReset')"
@@ -359,10 +359,6 @@ const { t } = useTranslation();
 const yaw_fix = ref(0);
 const showMagCalDialog = ref(false);
 
-function onMagCalComplete() {
-    showMagCalDialog.value = false;
-}
-
 let modelInstance = null;
 // Local reactive state to replace jQuery DOM updates
 const state = reactive({
@@ -391,7 +387,6 @@ const state = reactive({
 
     attitude: { roll: 0, pitch: 0, heading: 0 },
     calibratingAccel: false,
-    calibratingMag: false,
     disabledAccel: false,
     disabledMag: false,
     showSonarBox: true,
