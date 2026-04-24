@@ -5026,6 +5026,18 @@
         "message": "Minimum frequency that will be used by the RPM Filter.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Fade Range [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Q Factor",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmWeight": {
+        "message": "Weight {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
+    },
     "pidTuningFilterSettings": {
         "message": "Profile dependent Filter Settings"
     },

@@ -536,6 +536,9 @@ const FC = {
             dyn_notch_count: 0,
             gyro_rpm_notch_harmonics: 0,
             gyro_rpm_notch_min_hz: 0,
+            gyro_rpm_notch_fade_range_hz: 0,
+            gyro_rpm_notch_q: 0,
+            gyro_rpm_notch_weights: [0, 0, 0],
         };
 
         this.ADVANCED_TUNING = {
