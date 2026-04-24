@@ -85,16 +85,9 @@ export function detectAlignment(samples, currentAlignment, customAngles) {
         return null;
     }
 
-    // Build the current alignment matrix
-    let currentMat;
-    if (currentAlignment === 9) {
-        if (!customAngles) {
-            return null;
-        }
-        currentMat = eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
-    } else {
-        const curAlign = currentAlignment >= 1 && currentAlignment <= 8 ? currentAlignment : 1;
-        currentMat = ALIGNMENT_MATRICES[curAlign];
+    const currentMat = buildCurrentMatrix(currentAlignment, customAngles);
+    if (!currentMat) {
+        return null;
     }
     const currentInv = mat3transpose(currentMat);
 
@@ -103,39 +96,18 @@ export function detectAlignment(samples, currentAlignment, customAngles) {
     let secondBestVariance = Infinity;
 
     for (const [alignStr, candidateMat] of Object.entries(ALIGNMENT_MATRICES)) {
-        const align = parseInt(alignStr, 10);
-
-        // Combined rotation: undo current alignment, apply candidate
-        const combined = mat3mul(candidateMat, currentInv);
-
-        const verticals = [];
-        const horizMags = [];
-
-        for (const s of samples) {
-            // Apply combined rotation to get body-frame mag under this candidate
-            const bodyMag = mat3mulVec(combined, s.mag);
-
-            // Undo roll and pitch to get level-frame field
-            const rollRad = s.roll * (Math.PI / 180);
-            const pitchRad = s.pitch * (Math.PI / 180);
-            const level = undoRollPitch(bodyMag, rollRad, pitchRad);
-
-            verticals.push(level[2]);
-            horizMags.push(Math.sqrt(level[0] * level[0] + level[1] * level[1]));
-        }
-
-        const totalVar = computeVariance(verticals) + computeVariance(horizMags);
+        const totalVar = evaluateCandidate(candidateMat, currentInv, samples);
 
         if (totalVar < bestVariance) {
             secondBestVariance = bestVariance;
             bestVariance = totalVar;
-            bestAlignment = align;
+            bestAlignment = Number.parseInt(alignStr, 10);
         } else if (totalVar < secondBestVariance) {
             secondBestVariance = totalVar;
         }
     }
 
-    const confidence = bestVariance > 0 ? secondBestVariance / bestVariance : secondBestVariance > 0 ? Infinity : 0;
+    const confidence = computeConfidence(bestVariance, secondBestVariance);
 
     return {
         alignment: bestAlignment,
@@ -143,6 +115,42 @@ export function detectAlignment(samples, currentAlignment, customAngles) {
         confidence: Math.round(confidence * 10) / 10,
         reliable: confidence > 2,
     };
+}
+
+function buildCurrentMatrix(currentAlignment, customAngles) {
+    if (currentAlignment === 9) {
+        if (!customAngles) {
+            return null;
+        }
+        return eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
+    }
+    const curAlign = currentAlignment >= 1 && currentAlignment <= 8 ? currentAlignment : 1;
+    return ALIGNMENT_MATRICES[curAlign];
+}
+
+function evaluateCandidate(candidateMat, currentInv, samples) {
+    const combined = mat3mul(candidateMat, currentInv);
+    const verticals = [];
+    const horizMags = [];
+
+    for (const s of samples) {
+        const bodyMag = mat3mulVec(combined, s.mag);
+        const rollRad = s.roll * (Math.PI / 180);
+        const pitchRad = s.pitch * (Math.PI / 180);
+        const level = undoRollPitch(bodyMag, rollRad, pitchRad);
+
+        verticals.push(level[2]);
+        horizMags.push(Math.hypot(level[0], level[1]));
+    }
+
+    return computeVariance(verticals) + computeVariance(horizMags);
+}
+
+function computeConfidence(bestVariance, secondBestVariance) {
+    if (bestVariance > 0) {
+        return secondBestVariance / bestVariance;
+    }
+    return secondBestVariance > 0 ? Infinity : 0;
 }
 
 // --- Linear algebra helpers ---

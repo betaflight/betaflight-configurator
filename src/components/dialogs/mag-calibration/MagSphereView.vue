@@ -259,8 +259,8 @@ function updatePoints(sampleList) {
 
         // Color gradient: blue (old) → cyan → green → yellow → red (new)
         const t = count > 1 ? i / (count - 1) : 0;
-        const hue = (1.0 - t) * 0.65; // 0.65=blue → 0=red
-        const rgb = hslToRgb(hue, 1.0, 0.5);
+        const hue = (1 - t) * 0.65; // 0.65=blue → 0=red
+        const rgb = hslToRgb(hue, 1, 0.5);
         colors[idx] = rgb[0];
         colors[idx + 1] = rgb[1];
         colors[idx + 2] = rgb[2];
