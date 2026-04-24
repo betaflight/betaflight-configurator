@@ -7491,7 +7491,7 @@
         "message": "Auto"
     },
     "configurationMagDeclinationNoGps": {
-        "message": "No GPS fix available. Connect a GPS module and wait for a fix, then try again."
+        "message": "Could not determine location. Connect a GPS module or allow browser location access."
     },
     "configurationMagDeclinationSet": {
         "message": "Magnetic declination set to {{declination}}° from GPS position."
