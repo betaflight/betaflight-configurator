@@ -204,6 +204,12 @@ export function useSensorGraph() {
                 if (helpers) {
                     helpers.width = Math.max(0, entry.contentRect.width - margin.left - margin.right);
                     helpers.height = Math.max(0, entry.contentRect.height - margin.top - margin.bottom);
+                    if (helpers.width > 0 && helpers.height > 0 && helpers.clipId) {
+                        d3.select(entry.target)
+                            .select(`#${helpers.clipId} rect`)
+                            .attr("width", helpers.width)
+                            .attr("height", helpers.height);
+                    }
                 }
             }
         });
