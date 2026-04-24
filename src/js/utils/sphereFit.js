@@ -20,11 +20,31 @@ export function fitSphere(points) {
         return null;
     }
 
-    const n = points.length;
+    const matrix = buildNormalEquations(points);
+    const params = solveGaussian(matrix, 4, 5);
+    if (!params) {
+        return null;
+    }
 
-    // Build normal equations: A^T A * params = A^T b
-    // where A row = [2x, 2y, 2z, 1] and b row = x² + y² + z²
-    // params = [a, b, c, d] where center=(a,b,c), d = r² - a² - b² - c²
+    const [a, b, c, d] = params;
+    const radiusSq = d + a * a + b * b + c * c;
+
+    if (radiusSq <= 0) {
+        return null;
+    }
+
+    const radius = Math.sqrt(radiusSq);
+    const residual = computeResidual(points, a, b, c, radius);
+
+    return {
+        center: { x: a, y: b, z: c },
+        radius,
+        residual,
+    };
+}
+
+function buildNormalEquations(points) {
+    const n = points.length;
 
     let sumX = 0,
         sumY = 0,
@@ -44,14 +64,12 @@ export function fitSphere(points) {
         sumYZZ = 0;
     let sumZXX = 0,
         sumZYY = 0;
-    let sumS = 0; // sum of x² + y² + z²
+    let sumS = 0;
 
-    for (let i = 0; i < n; i++) {
-        const { x, y, z } = points[i];
+    for (const { x, y, z } of points) {
         const xx = x * x;
         const yy = y * y;
         const zz = z * z;
-        const s = xx + yy + zz;
 
         sumX += x;
         sumY += y;
@@ -71,26 +89,23 @@ export function fitSphere(points) {
         sumYZZ += y * zz;
         sumZXX += z * xx;
         sumZYY += z * yy;
-        sumS += s;
+        sumS += xx + yy + zz;
     }
 
-    // Normal equations matrix (4x5 augmented matrix)
-    // Row 0: 4*sumXX, 4*sumXY, 4*sumXZ, 2*sumX | 2*(sumXXX + sumXYY + sumXZZ)
-    // Row 1: 4*sumXY, 4*sumYY, 4*sumYZ, 2*sumY | 2*(sumYXX + sumYYY + sumYZZ)
-    // Row 2: 4*sumXZ, 4*sumYZ, 4*sumZZ, 2*sumZ | 2*(sumZXX + sumZYY + sumZZZ)
-    // Row 3: 2*sumX,  2*sumY,  2*sumZ,  n       | sumS
-    const matrix = [
+    return [
         [4 * sumXX, 4 * sumXY, 4 * sumXZ, 2 * sumX, 2 * (sumXXX + sumXYY + sumXZZ)],
         [4 * sumXY, 4 * sumYY, 4 * sumYZ, 2 * sumY, 2 * (sumYXX + sumYYY + sumYZZ)],
         [4 * sumXZ, 4 * sumYZ, 4 * sumZZ, 2 * sumZ, 2 * (sumZXX + sumZYY + sumZZZ)],
         [2 * sumX, 2 * sumY, 2 * sumZ, n, sumS],
     ];
+}
 
-    // Gaussian elimination with partial pivoting
-    const rows = 4;
-    const cols = 5;
+/**
+ * Gaussian elimination with partial pivoting on an augmented matrix.
+ * @returns {Array<number>|null} Solution vector or null if singular.
+ */
+function solveGaussian(matrix, rows, cols) {
     for (let col = 0; col < rows; col++) {
-        // Find pivot
         let maxVal = Math.abs(matrix[col][col]);
         let maxRow = col;
         for (let row = col + 1; row < rows; row++) {
@@ -102,15 +117,13 @@ export function fitSphere(points) {
         }
 
         if (maxVal < 1e-12) {
-            return null; // Singular matrix
+            return null;
         }
 
-        // Swap rows
         if (maxRow !== col) {
             [matrix[col], matrix[maxRow]] = [matrix[maxRow], matrix[col]];
         }
 
-        // Eliminate below
         for (let row = col + 1; row < rows; row++) {
             const factor = matrix[row][col] / matrix[col][col];
             for (let j = col; j < cols; j++) {
@@ -119,7 +132,6 @@ export function fitSphere(points) {
         }
     }
 
-    // Back substitution
     const params = new Array(rows);
     for (let row = rows - 1; row >= 0; row--) {
         let sum = matrix[row][cols - 1];
@@ -128,31 +140,17 @@ export function fitSphere(points) {
         }
         params[row] = sum / matrix[row][row];
     }
+    return params;
+}
 
-    const [a, b, c, d] = params;
-    const radiusSq = d + a * a + b * b + c * c;
-
-    if (radiusSq <= 0) {
-        return null;
-    }
-
-    const radius = Math.sqrt(radiusSq);
-
-    // Compute RMS residual (distance from each point to sphere surface)
+function computeResidual(points, a, b, c, radius) {
     let sumResidualSq = 0;
-    for (let i = 0; i < n; i++) {
-        const { x, y, z } = points[i];
-        const dist = Math.sqrt((x - a) ** 2 + (y - b) ** 2 + (z - c) ** 2);
+    for (const { x, y, z } of points) {
+        const dist = Math.hypot(x - a, y - b, z - c);
         const err = dist - radius;
         sumResidualSq += err * err;
     }
-    const residual = Math.sqrt(sumResidualSq / n);
-
-    return {
-        center: { x: a, y: b, z: c },
-        radius,
-        residual,
-    };
+    return Math.sqrt(sumResidualSq / points.length);
 }
 
 /**
@@ -168,37 +166,39 @@ export function fitSphere(points) {
 export function computeCoverage(points, center) {
     const zones = { "+X": 0, "-X": 0, "+Y": 0, "-Y": 0, "+Z": 0, "-Z": 0 };
 
-    for (let i = 0; i < points.length; i++) {
-        const dx = points[i].x - center.x;
-        const dy = points[i].y - center.y;
-        const dz = points[i].z - center.z;
-
-        const ax = Math.abs(dx);
-        const ay = Math.abs(dy);
-        const az = Math.abs(dz);
-
-        if (ax >= ay && ax >= az) {
-            zones[dx >= 0 ? "+X" : "-X"]++;
-        } else if (ay >= ax && ay >= az) {
-            zones[dy >= 0 ? "+Y" : "-Y"]++;
-        } else {
-            zones[dz >= 0 ? "+Z" : "-Z"]++;
-        }
+    for (const pt of points) {
+        const zone = classifyZone(pt, center);
+        zones[zone]++;
     }
 
     const total = points.length;
     const zoneValues = Object.values(zones);
-    const filledZones = zoneValues.filter((c) => c > 0).length;
+    const nonZero = zoneValues.filter((c) => c > 0);
 
-    // Uniformity: ratio of min-populated zone to max-populated zone (among non-empty)
-    // Score 0-1 where 1 means all zones have equal counts
     let uniform = 0;
-    if (filledZones > 0) {
-        const nonZero = zoneValues.filter((c) => c > 0);
+    if (nonZero.length > 0) {
         const min = Math.min(...nonZero);
         const max = Math.max(...nonZero);
-        uniform = max > 0 ? (min / max) * (filledZones / 6) : 0;
+        uniform = max > 0 ? (min / max) * (nonZero.length / 6) : 0;
     }
 
     return { zones, total, uniform };
+}
+
+function classifyZone(pt, center) {
+    const dx = pt.x - center.x;
+    const dy = pt.y - center.y;
+    const dz = pt.z - center.z;
+
+    const ax = Math.abs(dx);
+    const ay = Math.abs(dy);
+    const az = Math.abs(dz);
+
+    if (ax >= ay && ax >= az) {
+        return dx >= 0 ? "+X" : "-X";
+    }
+    if (ay >= ax && ay >= az) {
+        return dy >= 0 ? "+Y" : "-Y";
+    }
+    return dz >= 0 ? "+Z" : "-Z";
 }
