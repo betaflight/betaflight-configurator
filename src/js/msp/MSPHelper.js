@@ -2192,9 +2192,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo).push8(FC.FILTER_CONFIG.dyn_notch_count);
 
             // Introduced in 1.48
-            buffer.push16(FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz).push16(FC.FILTER_CONFIG.gyro_rpm_notch_q);
-            for (let i = 0; i < 3; i++) {
-                buffer.push8(FC.FILTER_CONFIG.gyro_rpm_notch_weights[i]);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                buffer.push16(FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz).push16(FC.FILTER_CONFIG.gyro_rpm_notch_q);
+                for (let i = 0; i < 3; i++) {
+                    buffer.push8(FC.FILTER_CONFIG.gyro_rpm_notch_weights[i]);
+                }
             }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:

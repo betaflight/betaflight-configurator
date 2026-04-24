@@ -271,47 +271,48 @@
                                     :max="200"
                                 />
                             </div>
-                            <template v-if="hasExtendedRpmFilter">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs text-dimmed">{{ $t("pidTuningRpmFadeRangeHz") }}</span>
-                                    <UInputNumber
-                                        size="xs"
-                                        orientation="vertical"
-                                        class="w-16"
-                                        v-model="gyro_rpm_notch_fade_range_hz"
-                                        :step="1"
-                                        :min="0"
-                                        :max="1000"
-                                    />
-                                </div>
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs text-dimmed">{{ $t("pidTuningRpmQ") }}</span>
-                                    <UInputNumber
-                                        size="xs"
-                                        orientation="vertical"
-                                        class="w-16"
-                                        v-model="gyro_rpm_notch_q"
-                                        :step="1"
-                                        :min="1"
-                                        :max="3000"
-                                    />
-                                </div>
-                                <div v-for="i in gyro_rpm_notch_harmonics" :key="i" class="flex flex-col gap-1">
-                                    <span class="text-xs text-dimmed">{{
-                                        $t("pidTuningRpmWeight", { index: i })
-                                    }}</span>
-                                    <UInputNumber
-                                        size="xs"
-                                        orientation="vertical"
-                                        class="w-16"
-                                        :model-value="gyro_rpm_notch_weights[i - 1]"
-                                        @update:model-value="setRpmWeight(i - 1, $event)"
-                                        :step="1"
-                                        :min="0"
-                                        :max="100"
-                                    />
-                                </div>
-                            </template>
+                        </div>
+                        <div
+                            v-if="rpmFilterEnabled && hasExtendedRpmFilter"
+                            class="flex flex-wrap items-end gap-3 pl-8"
+                        >
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmQ") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_q"
+                                    :step="1"
+                                    :min="250"
+                                    :max="3000"
+                                />
+                            </div>
+                            <div v-for="i in gyro_rpm_notch_harmonics" :key="i" class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmWeight", { index: i }) }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    :model-value="gyro_rpm_notch_weights[i - 1]"
+                                    @update:model-value="setRpmWeight(i - 1, $event)"
+                                    :step="1"
+                                    :min="0"
+                                    :max="100"
+                                />
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmFadeRangeHz") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_fade_range_hz"
+                                    :step="1"
+                                    :min="0"
+                                    :max="1000"
+                                />
+                            </div>
                         </div>
                     </div>
                 </template>
