@@ -125,7 +125,8 @@ export default defineComponent({
             dialogOpen.value = true;
         }
 
-        function buildDeviceItems(expertMode) {
+        function buildDeviceItems() {
+            const expertMode = isExpertModeEnabled();
             const devices = [];
             if (PortHandler.showSerialOption) {
                 for (const d of serialPorts.value) {
@@ -198,7 +199,7 @@ export default defineComponent({
         }
 
         const menuItems = computed(() => {
-            const devices = buildDeviceItems(isExpertModeEnabled());
+            const devices = buildDeviceItems();
             const items = devices.length ? [...devices, { type: "separator" }] : [];
             items.push(
                 ...buildPermissionItems(),
