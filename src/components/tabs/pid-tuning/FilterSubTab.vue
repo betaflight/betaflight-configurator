@@ -2,16 +2,23 @@
     <div class="p-5 flex flex-col gap-5">
         <!-- Filter Sliders -->
         <UiBox type="neutral">
-            <!-- Scale labels above sliders -->
-            <div class="flex justify-between text-xs text-dimmed mb-2">
-                <span>{{ $t("pidTuningSliderHighFiltering") }}</span>
-                <span>{{ $t("pidTuningSliderDefaultFiltering") }}</span>
-                <span>{{ $t("pidTuningSliderLowFiltering") }}</span>
+            <!-- Scale labels above sliders — aligned with the slider column -->
+            <div class="flex items-center gap-3">
+                <div class="shrink-0 invisible" style="width: 40px"></div>
+                <div class="min-w-32 shrink-0"></div>
+                <span class="min-w-10"></span>
+                <div class="flex-1 flex justify-between text-xs text-dimmed">
+                    <span>{{ $t("pidTuningSliderHighFiltering") }}</span>
+                    <span>{{ $t("pidTuningSliderDefaultFiltering") }}</span>
+                    <span>{{ $t("pidTuningSliderLowFiltering") }}</span>
+                </div>
+                <div class="invisible"><HelpIcon text="" /></div>
             </div>
 
             <!-- Gyro Filter Slider -->
-            <div class="flex items-center gap-3 py-1" :class="{ 'opacity-50 pointer-events-none': gyroSliderDisabled }">
-                <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningGyroFilterSlider')"></div>
+            <div class="flex items-center gap-3 py-1">
+                <USwitch v-model="gyroSliderEnabled" size="sm" />
+                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningGyroFilterSlider')"></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ gyroFilterMultiplier.toFixed(2) }}</span>
                 <USlider
                     v-model="gyroFilterMultiplier"
@@ -25,11 +32,9 @@
             </div>
 
             <!-- DTerm Filter Slider -->
-            <div
-                class="flex items-center gap-3 py-1"
-                :class="{ 'opacity-50 pointer-events-none': dtermSliderDisabled }"
-            >
-                <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDTermFilterSlider')"></div>
+            <div class="flex items-center gap-3 py-1">
+                <USwitch v-model="dtermSliderEnabled" size="sm" />
+                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningDTermFilterSlider')"></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ dtermFilterMultiplier.toFixed(2) }}</span>
                 <USlider
                     v-model="dtermFilterMultiplier"
@@ -62,11 +67,6 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- LEFT COLUMN: Non-Profile Filter Settings -->
             <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral">
-                <!-- Gyro Filter Slider On/Off -->
-                <SettingRow :label="$t('pidTuningGyroFilterSlider')">
-                    <USelect v-model="gyroSliderMode" :items="sliderModeItems" class="w-20" />
-                </SettingRow>
-
                 <!-- Gyro Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</span>
@@ -345,11 +345,6 @@
 
             <!-- RIGHT COLUMN: Profile-dependent Filter Settings -->
             <UiBox :title="$t('pidTuningFilterSettings')" type="neutral">
-                <!-- DTerm Filter Slider On/Off -->
-                <SettingRow :label="$t('pidTuningDTermFilterSlider')">
-                    <USelect v-model="dtermSliderMode" :items="sliderModeItems" class="w-20" />
-                </SettingRow>
-
                 <!-- D-Term Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</span>
@@ -503,18 +498,26 @@
                     <HelpIcon :text="$t('pidTuningYawLowpassFiltersGroupHelp')" />
                 </div>
 
-                <div class="flex flex-wrap items-end gap-3">
-                    <div class="flex flex-col gap-1">
-                        <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                        <UInputNumber
-                            size="xs"
-                            orientation="vertical"
-                            class="w-16"
-                            v-model="yaw_lowpass_hz"
-                            :step="1"
-                            :min="0"
-                            :max="500"
-                        />
+                <div class="flex flex-col gap-2">
+                    <SettingRow
+                        :label="$t('pidTuningYawLowpassFiltersGroup')"
+                        :help="$t('pidTuningYawLowpassFiltersGroupHelp')"
+                    >
+                        <USwitch v-model="yawLowpassEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="yawLowpassEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="yaw_lowpass_hz"
+                                :step="1"
+                                :min="1"
+                                :max="500"
+                            />
+                        </div>
                     </div>
                 </div>
             </UiBox>
@@ -551,11 +554,6 @@ const props = defineProps({
 const emit = defineEmits(["change"]);
 
 // USelect item arrays
-const sliderModeItems = computed(() => [
-    { value: 0, label: t("pidTuningOptionOff") },
-    { value: 1, label: t("pidTuningOptionOn") },
-]);
-
 const lowpassModeItems = computed(() => [
     { value: 0, label: t("pidTuningLowpassStatic") },
     { value: 1, label: t("pidTuningLowpassDynamic") },
@@ -589,6 +587,7 @@ const previousValues = ref({
     dtermNotchCutoff: 160,
     dynNotchCount: 3, // Default dynamic notch count
     lastDynNotchMode: 1, // Track if dynamic notch was enabled
+    yawLowpassHz: 100,
 });
 
 // Slider Modes (ON/OFF toggles for gyro and dterm sliders)
@@ -601,6 +600,17 @@ const gyroSliderMode = computed({
 const dtermSliderMode = computed({
     get: () => FC.TUNING_SLIDERS.slider_dterm_filter ?? 1,
     set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter = value),
+});
+
+// Boolean wrappers for USwitch binding
+const gyroSliderEnabled = computed({
+    get: () => gyroSliderMode.value === 1,
+    set: (value) => (gyroSliderMode.value = value ? 1 : 0),
+});
+
+const dtermSliderEnabled = computed({
+    get: () => dtermSliderMode.value === 1,
+    set: (value) => (dtermSliderMode.value = value ? 1 : 0),
 });
 
 // Filter Sliders
@@ -1061,6 +1071,20 @@ const dterm_notch_cutoff = computed({
 });
 
 // Yaw Lowpass Filter
+const yawLowpassEnabled = computed({
+    get: () => FC.FILTER_CONFIG.yaw_lowpass_hz !== 0,
+    set: (value) => {
+        if (value) {
+            FC.FILTER_CONFIG.yaw_lowpass_hz = previousValues.value.yawLowpassHz;
+        } else {
+            if (FC.FILTER_CONFIG.yaw_lowpass_hz > 0) {
+                previousValues.value.yawLowpassHz = FC.FILTER_CONFIG.yaw_lowpass_hz;
+            }
+            FC.FILTER_CONFIG.yaw_lowpass_hz = 0;
+        }
+    },
+});
+
 const yaw_lowpass_hz = computed({
     get: () => FC.FILTER_CONFIG.yaw_lowpass_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.yaw_lowpass_hz = value),
@@ -1140,6 +1164,9 @@ watch(
     () => JSON.stringify(FC.FILTER_CONFIG),
     () => emit("change"),
 );
+
+watch(gyroSliderMode, () => emit("change"));
+watch(dtermSliderMode, () => emit("change"));
 
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {

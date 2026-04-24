@@ -4751,28 +4751,20 @@
         "description": "Filter tuning slider high header"
     },
     "pidTuningGyroFilterSlider": {
-        "message": "Gyro Filter Multiplier:",
+        "message": "Gyro Filter Multiplier",
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Changes the Gyro Lowpass filter cutoffs.<br /><br />Moving the slider to the left gives stronger Gyro filtering (lower cutoff frequency).<br /><br />Moving the slider to the right gives less Gyro filtering (higher cutoff frequency).<br /><br />When moving the slider to the right to improve propwash handling, BE CAREFUL to not get too radical.  You will allow more noise into both P and D and may get fly-aways or burnt out motors.<br /><br />You may need  to move the slider to left if you have frame resonance issues, bad bearings, beat up props, hot motors, etc.<br /><br />Gyro filtering is applied before, and in addition to, D filtering.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Use Gyro Slider",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
     "pidTuningDTermFilterSlider": {
-        "message": "D Term Filter Multiplier:",
+        "message": "D Term Filter Multiplier",
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Changes the D-term Lowpass Filter cutoffs.<br /><br />Moving the slider to the left gives stronger D filtering (lower cutoff frequency).<br /><br />Moving the slider to the right gives less filtering (higher cutoff frequency).<br /><br />D-term is the most sensitive PID element to noise and resonance. It can amplify high frequency noise by 10x to 100x. That's why D filter cutoffs are much lower than the gyro filters.<br /><br />D-term filtering is applied after, and in addition to, the gyro filtering. The default D filtering is optimal for most aircraft and rarely needs changing.<br /><br />Moving this slider to the left reduces motor heat in noisy aircraft and with high PID 'D' tunes, but we may see more propwash and lower frequency D resonances.<br /><br />Moving the slider to the right is not recommended, but may improve propwash on clean builds.  It may cause motor grinding on arming, sudden resonances in-flight, and serious motor overheating.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Use D Term Slider",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Sliders to adjust the aircraft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enhances the responsiveness of the aircraft; if too high, may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the aircraft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strength on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or lowers all the PID gains, keeping their proportions constant.",
