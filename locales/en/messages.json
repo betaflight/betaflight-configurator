@@ -7604,6 +7604,15 @@
     "magAlignmentSamples": {
         "message": "Samples"
     },
+    "magAlignmentConfidenceHigh": {
+        "message": "{{value}}x (high)"
+    },
+    "magAlignmentConfidenceMedium": {
+        "message": "{{value}}x (medium)"
+    },
+    "magAlignmentConfidenceLow": {
+        "message": "{{value}}x (low)"
+    },
     "magAlignmentLowConfidence": {
         "message": "Low confidence — try again with more diverse orientations, or verify the result manually."
     },

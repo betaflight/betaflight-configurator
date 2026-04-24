@@ -69,6 +69,7 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { useFlightControllerStore } from "../../stores/fc";
 import { detectAlignment } from "../../js/utils/magAlignment";
+import { i18n } from "../../js/localization";
 
 const POLL_INTERVAL_MS = 100;
 const TARGET_SAMPLES = 150;
@@ -133,12 +134,12 @@ const confidenceText = computed(() => {
     }
     const c = result.value.confidence;
     if (c >= 5) {
-        return `${c}x (high)`;
+        return i18n.getMessage("magAlignmentConfidenceHigh", { value: c });
     }
     if (c >= 2) {
-        return `${c}x (medium)`;
+        return i18n.getMessage("magAlignmentConfidenceMedium", { value: c });
     }
-    return `${c}x (low)`;
+    return i18n.getMessage("magAlignmentConfidenceLow", { value: c });
 });
 
 function startDetection() {
