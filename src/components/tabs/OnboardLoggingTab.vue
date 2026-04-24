@@ -52,7 +52,7 @@
                                         icon: 'i-lucide-search',
                                     }"
                                     class="min-w-64"
-                                    :ui="{ content: 'max-h-72 z-[9999]' }"
+                                    :ui="{ content: 'max-h-72' }"
                                 />
                             </SettingRow>
                         </UiBox>

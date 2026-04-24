@@ -9,9 +9,9 @@
             :search-input="{
                 placeholder: $t('dropDownFilterDisabled'),
             }"
-            :ui="{ content: 'max-h-72 z-[9999]' }"
+            :ui="{ content: 'max-h-72' }"
             class="w-full"
-            :class="{ 'ring-2 ring-(--ui-primary) rounded-md': modelValue.length > 0 }"
+            :class="{ 'ring-2 ring-primary rounded-md': modelValue.length > 0 }"
         >
             <template #default>
                 <span v-if="modelValue.length > 0 && modelValue.length === options.length" class="truncate">
