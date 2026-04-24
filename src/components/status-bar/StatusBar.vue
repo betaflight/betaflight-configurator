@@ -272,7 +272,6 @@ export default defineComponent({
 
         return {
             expertMode,
-            fullFirmwareStatusTooltip,
             displayedFirmwareTarget,
             displayedConfiguratorVersion,
             displayedFirmwareVersion,
