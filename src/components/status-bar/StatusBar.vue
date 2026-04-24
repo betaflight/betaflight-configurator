@@ -218,9 +218,11 @@ export default defineComponent({
                 return "00:00";
             }
 
-            // Use currentTime.value to make this reactive to time changes
+            // Use currentTime.value to make this reactive to time changes.
+            // Clamp so we never show negative time: currentTime can lag up to ~1s behind
+            // Date.now() used when the connection timestamp was set.
             const elapsedMs = currentTime.value - props.connectionTimestamp;
-            const elapsedSeconds = Math.floor(elapsedMs / 1000);
+            const elapsedSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
 
             const minutes = Math.floor(elapsedSeconds / 60);
             const seconds = elapsedSeconds % 60;
@@ -297,7 +299,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     white-space: nowrap;
-    gap: 0.5rem;
+    gap: 0.6rem;
     bottom: 0;
     box-sizing: border-box;
     width: 100%;
