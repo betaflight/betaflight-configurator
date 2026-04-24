@@ -86,6 +86,7 @@ export const usePresetsStore = defineStore("presets", () => {
         progressDialogOpen: false,
         cliErrorsDialogOpen: false,
         cliErrorsSavePressed: false,
+        cliErrors: [],
     });
 
     const selectedPresetEntry = ref(null);
@@ -273,6 +274,7 @@ export const usePresetsStore = defineStore("presets", () => {
         applyState.progressDialogOpen = false;
         applyState.cliErrorsDialogOpen = false;
         applyState.cliErrorsSavePressed = false;
+        applyState.cliErrors = [];
     }
 
     function resetTransientState() {
@@ -618,8 +620,9 @@ export const usePresetsStore = defineStore("presets", () => {
         applyState.progressDialogOpen = false;
     }
 
-    function openCliErrorsDialog() {
+    function openCliErrorsDialog(cliErrors = []) {
         applyState.cliErrorsSavePressed = false;
+        applyState.cliErrors = cliErrors;
         applyState.cliErrorsDialogOpen = true;
     }
 

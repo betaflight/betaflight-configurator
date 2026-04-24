@@ -166,14 +166,16 @@
             @cancel.prevent
         >
             <div class="text-lg mb-2" v-html="$t('presetsCliErrorsWarning')"></div>
-            <div id="presets_cli" class="w-full">
-                <div class="presets_cli_background">
-                    <div ref="cliWindowRef" class="presets_cli_window">
-                        <div ref="windowWrapperRef" class="presets_cli_wrapper"></div>
+            <div class="presets_cli_background">
+                <div class="presets_cli_window">
+                    <div class="presets_cli_wrapper">
+                        <template v-for="(failure, idx) in store.applyState.cliErrors" :key="idx">
+                            <div>{{ failure.command }}</div>
+                            <div v-for="(line, lineIdx) in failure.response" :key="lineIdx" class="error_message">
+                                {{ line }}
+                            </div>
+                        </template>
                     </div>
-                </div>
-                <div class="presets_cli_commandline">
-                    <textarea ref="commandInputRef" name="commands" rows="1" cols="0"></textarea>
                 </div>
             </div>
             <div class="flex gap-2 justify-end mt-3">
@@ -185,7 +187,7 @@
 </template>
 
 <script setup>
-import { inject, nextTick, ref, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -194,7 +196,7 @@ import PresetCard from "./presets/PresetCard.vue";
 import PresetDetailsDialog from "./presets/PresetDetailsDialog.vue";
 import PresetSourcesDialog from "./presets/PresetSourcesDialog.vue";
 import { usePresetsStore } from "@/stores/presets";
-import { usePresetsCliSession } from "@/composables/usePresetsCliSession";
+import { useMspCliSession } from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "@/js/gui";
 import FC from "@/js/fc";
@@ -203,37 +205,29 @@ import { useConnectionStore } from "@/stores/connection";
 import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
-import { update_sensor_status } from "@/js/serial_backend";
-import { TAB_ADAPTER_REGISTRATION_KEY } from "@/js/vue_tab_mounter";
-import CliEngine from "./presets/CliEngine";
+import { connectDisconnect, update_sensor_status } from "@/js/serial_backend";
+
+const DISCONNECT_TIMEOUT_NAME = "presets_disconnect_cli";
 
 const store = usePresetsStore();
 const connectionStore = useConnectionStore();
 const dialog = useDialog();
-const cliSession = usePresetsCliSession({
-    onProgressChange: (value) => store.updateApplyProgress(value),
-});
-const { cliWindowRef, windowWrapperRef, commandInputRef } = cliSession;
+const cliSession = useMspCliSession();
 const progressDialogRef = ref(null);
 const cliErrorsDialogRef = ref(null);
 const searchPlaceholder = 'example: "karate race", or "5\'\' freestyle"';
-const tabAdapterRegistration = inject(TAB_ADAPTER_REGISTRATION_KEY, null);
-let isCleaningUpCliSession = false;
 
-const tabAdapter = {
-    read: (info) => cliSession.readSerial(info),
-    cleanup: (callback) => {
-        isCleaningUpCliSession = true;
-        store.resetTransientState();
-        cliSession.cleanup(() => {
-            isCleaningUpCliSession = false;
-            callback?.();
-        });
-    },
-};
+function scheduleReconnect() {
+    GUI.timeout_remove(DISCONNECT_TIMEOUT_NAME);
+    GUI.timeout_add(DISCONNECT_TIMEOUT_NAME, () => connectDisconnect(), 500);
+}
 
-if (tabAdapterRegistration) {
-    tabAdapterRegistration.current = tabAdapter;
+function reportProgress({ index, total }) {
+    if (total <= 0) {
+        store.updateApplyProgress(100);
+        return;
+    }
+    store.updateApplyProgress(Math.round((index / total) * 100));
 }
 
 watch(
@@ -337,11 +331,7 @@ async function saveConfigBackup() {
 
     const waitingDialog = dialog.showWait(i18n.getMessage("presetsLoadingDumpAll"), null);
 
-    let activated = false;
-
     try {
-        await cliSession.activate();
-        activated = true;
         const cliStrings = await cliSession.readDumpAll();
         const filename = generateFilename("cli_backup", "txt");
         const text = cliStrings.join("\n");
@@ -368,10 +358,6 @@ async function saveConfigBackup() {
         await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("dumpAllNotSavedWarning"), {
             confirmText: i18n.getMessage("close"),
         });
-    } finally {
-        if (activated) {
-            cliSession.sendLine(CliEngine.s_commandExit);
-        }
     }
 }
 
@@ -474,55 +460,61 @@ async function applyPickedPresets() {
         return;
     }
 
-    cliSession.resetProgress();
+    store.updateApplyProgress(0);
     store.openProgressDialog();
-    const currentCliErrorsCount = cliSession.getErrorCount();
 
     try {
-        await cliSession.activate();
         store.markPickedPresetsAsFavorites();
-        await cliSession.executeCommandsArray(store.getPickedPresetsCli());
-        const newCliErrorsCount = cliSession.getErrorCount();
+        const result = await cliSession.runBatch(store.getPickedPresetsCli(), {
+            onProgress: reportProgress,
+        });
 
-        if (newCliErrorsCount !== currentCliErrorsCount) {
+        if (result.errors.length > 0) {
             store.closeProgressDialog();
-            store.openCliErrorsDialog();
+            store.openCliErrorsDialog(result.errors);
             return;
         }
 
         store.closeProgressDialog();
-        cliSession.sendLine(CliEngine.s_commandSave);
-        cliSession.disconnectCliMakeSure();
+        await saveAndReconnect();
     } catch (error) {
         console.error(error);
         store.closeProgressDialog();
-        store.openCliErrorsDialog();
+        store.openCliErrorsDialog([{ command: "", response: [String(error.message ?? error)] }]);
     }
 }
 
-function saveAnywayAfterCliErrors() {
+async function saveAndReconnect() {
+    try {
+        await cliSession.sendSave();
+    } catch (error) {
+        console.error("Failed to save configuration:", error);
+    } finally {
+        scheduleReconnect();
+    }
+}
+
+async function saveAnywayAfterCliErrors() {
     store.closeCliErrorsDialog(true);
-    cliSession.sendLine(CliEngine.s_commandSave, null, () => {
-        cliSession.sendLine(CliEngine.s_commandSave);
-    });
-    cliSession.disconnectCliMakeSure();
+    await saveAndReconnect();
 }
 
 function closeCliErrorsWithoutSaving() {
     store.closeCliErrorsDialog(false);
 }
 
-function handleCliErrorsDialogClose() {
-    if (isCleaningUpCliSession) {
-        return;
-    }
-
+async function handleCliErrorsDialogClose() {
     const savePressed = store.applyState.cliErrorsSavePressed;
     store.closeCliErrorsDialog(savePressed);
 
     if (!savePressed) {
-        cliSession.sendLine(CliEngine.s_commandExit);
-        cliSession.disconnectCliMakeSure();
+        try {
+            await cliSession.send("exit");
+        } catch (error) {
+            console.error("Failed to send exit:", error);
+        } finally {
+            scheduleReconnect();
+        }
     }
 }
 </script>
@@ -567,17 +559,6 @@ function handleCliErrorsDialogClose() {
 .presets_cli_window .error_message {
     color: red;
     font-weight: bold;
-}
-
-.presets_cli_commandline textarea {
-    box-sizing: border-box;
-    width: 100%;
-    margin-top: 6px;
-    padding: 4px 8px;
-    color: white;
-    border: 1px solid var(--ui-border);
-    background-color: rgba(64, 64, 64, 1);
-    resize: none;
 }
 
 @media only screen and (max-width: 1055px) {

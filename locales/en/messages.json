@@ -8249,6 +8249,27 @@
     "userBackupDeleteFailed": {
         "message": "Failed to delete backup"
     },
+    "actionRestore": {
+        "message": "Restore"
+    },
+    "titleRestoreBackup": {
+        "message": "Restore backup"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Apply the backup \"{{name}}\" to the connected flight controller? The current configuration will be overwritten."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Restoring backup..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Backup restored successfully"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Failed to restore backup"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>WARNING!</span><br/>Backup applied with CLI errors."
+    },
     "userPasskeyNoPasskeys": {
         "message": "No passkeys available"
     },
