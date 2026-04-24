@@ -154,21 +154,35 @@ function startDetection() {
     currentPitch = fcStore.sensorData.kinematics[1];
     phase.value = "collecting";
 
-    // Poll attitude for roll/pitch
-    attitudeInterval = setInterval(() => {
+    // Self-pacing polls: schedule next request only after previous reply
+    function pollAttitude() {
+        if (phase.value !== "collecting") {
+            return;
+        }
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
             if (phase.value !== "collecting") {
                 return;
             }
             currentRoll = fcStore.sensorData.kinematics[0];
             currentPitch = fcStore.sensorData.kinematics[1];
+            attitudeInterval = setTimeout(pollAttitude, POLL_INTERVAL_MS);
         });
-    }, POLL_INTERVAL_MS);
+    }
 
-    // Poll raw IMU for mag data
-    dataInterval = setInterval(() => {
-        MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, onImuData);
-    }, POLL_INTERVAL_MS);
+    function pollImu() {
+        if (phase.value !== "collecting") {
+            return;
+        }
+        MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, () => {
+            onImuData();
+            if (phase.value === "collecting") {
+                dataInterval = setTimeout(pollImu, POLL_INTERVAL_MS);
+            }
+        });
+    }
+
+    pollAttitude();
+    pollImu();
 
     // Movement timeout check
     movementCheckInterval = setInterval(() => {
@@ -254,11 +268,11 @@ function applyResult() {
 
 function cleanup() {
     if (dataInterval !== null) {
-        clearInterval(dataInterval);
+        clearTimeout(dataInterval);
         dataInterval = null;
     }
     if (attitudeInterval !== null) {
-        clearInterval(attitudeInterval);
+        clearTimeout(attitudeInterval);
         attitudeInterval = null;
     }
     if (movementCheckInterval !== null) {
@@ -280,8 +294,7 @@ watch(
 );
 
 function onClose() {
-    cleanup();
-    retryDetection();
+    emit("update:modelValue", false);
 }
 </script>
 
@@ -365,25 +378,25 @@ function onClose() {
 .mag-align-warning {
     margin-top: 16px;
     padding: 8px 12px;
-    background: #fef3c7;
+    background: var(--warning-500);
     border-radius: 6px;
     font-size: 0.85em;
-    color: #92400e;
+    color: var(--surface-100);
 }
 
 .mag-align-error-msg {
-    color: #ef4444;
+    color: var(--error-500);
     font-weight: 600;
 }
 
 .confidence-high {
-    color: #22c55e;
+    color: var(--success-500);
 }
 .confidence-medium {
-    color: #eab308;
+    color: var(--warning-500);
 }
 .confidence-low {
-    color: #ef4444;
+    color: var(--error-500);
 }
 .confidence-none {
     color: var(--surface-500);
