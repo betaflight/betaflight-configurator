@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount } from "vue";
+import { ref, computed, onBeforeUnmount, watch } from "vue";
 import Dialog from "../elements/Dialog.vue";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -268,6 +268,16 @@ function cleanup() {
 }
 
 onBeforeUnmount(cleanup);
+
+watch(
+    () => props.modelValue,
+    (open) => {
+        if (!open) {
+            cleanup();
+            retryDetection();
+        }
+    },
+);
 
 function onClose() {
     cleanup();
