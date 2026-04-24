@@ -33,6 +33,7 @@ export default {
         switch: {
             slots: {
                 base: "cursor-pointer",
+                thumb: "bg-white",
             },
             defaultVariants: {
                 size: "sm",
