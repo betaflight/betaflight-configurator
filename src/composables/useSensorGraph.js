@@ -151,12 +151,9 @@ export function useSensorGraph() {
     }
 
     function drawGraph(helpers, sampleNumber) {
-        // One-time fallback: read size if the init measurement got zero
+        // Skip until ResizeObserver delivers a valid size
         if (!helpers.width || !helpers.height) {
-            measureGraphSize(helpers);
-            if (!helpers.width || !helpers.height) {
-                return;
-            }
+            return;
         }
 
         // Update scales with current dimensions
