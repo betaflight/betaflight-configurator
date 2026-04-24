@@ -20,7 +20,15 @@ export function fitSphere(points) {
         return null;
     }
 
-    const matrix = buildNormalEquations(points);
+    // Pre-subtract centroid for numerical stability with large coordinates
+    const centroid = computeCentroid(points);
+    const centered = points.map((p) => ({
+        x: p.x - centroid.x,
+        y: p.y - centroid.y,
+        z: p.z - centroid.z,
+    }));
+
+    const matrix = buildNormalEquations(centered);
     const params = solveGaussian(matrix, 4, 5);
     if (!params) {
         return null;
@@ -34,13 +42,30 @@ export function fitSphere(points) {
     }
 
     const radius = Math.sqrt(radiusSq);
-    const residual = computeResidual(points, a, b, c, radius);
+    // Translate center back to original coordinate system
+    const cx = a + centroid.x;
+    const cy = b + centroid.y;
+    const cz = c + centroid.z;
+    const residual = computeResidual(points, cx, cy, cz, radius);
 
     return {
-        center: { x: a, y: b, z: c },
+        center: { x: cx, y: cy, z: cz },
         radius,
         residual,
     };
+}
+
+function computeCentroid(points) {
+    let sx = 0,
+        sy = 0,
+        sz = 0;
+    for (const { x, y, z } of points) {
+        sx += x;
+        sy += y;
+        sz += z;
+    }
+    const n = points.length;
+    return { x: sx / n, y: sy / n, z: sz / n };
 }
 
 function buildNormalEquations(points) {
@@ -106,32 +131,42 @@ function buildNormalEquations(points) {
  */
 function solveGaussian(matrix, rows, cols) {
     for (let col = 0; col < rows; col++) {
-        let maxVal = Math.abs(matrix[col][col]);
-        let maxRow = col;
-        for (let row = col + 1; row < rows; row++) {
-            const val = Math.abs(matrix[row][col]);
-            if (val > maxVal) {
-                maxVal = val;
-                maxRow = row;
-            }
-        }
-
-        if (maxVal < 1e-12) {
+        const pivotRow = findPivotRow(matrix, col, rows);
+        if (Math.abs(matrix[pivotRow][col]) < 1e-12) {
             return null;
         }
-
-        if (maxRow !== col) {
-            [matrix[col], matrix[maxRow]] = [matrix[maxRow], matrix[col]];
+        if (pivotRow !== col) {
+            [matrix[col], matrix[pivotRow]] = [matrix[pivotRow], matrix[col]];
         }
-
-        for (let row = col + 1; row < rows; row++) {
-            const factor = matrix[row][col] / matrix[col][col];
-            for (let j = col; j < cols; j++) {
-                matrix[row][j] -= factor * matrix[col][j];
-            }
-        }
+        eliminateBelow(matrix, col, rows, cols);
     }
 
+    return backSubstitute(matrix, rows, cols);
+}
+
+function findPivotRow(matrix, col, rows) {
+    let maxVal = Math.abs(matrix[col][col]);
+    let maxRow = col;
+    for (let row = col + 1; row < rows; row++) {
+        const val = Math.abs(matrix[row][col]);
+        if (val > maxVal) {
+            maxVal = val;
+            maxRow = row;
+        }
+    }
+    return maxRow;
+}
+
+function eliminateBelow(matrix, col, rows, cols) {
+    for (let row = col + 1; row < rows; row++) {
+        const factor = matrix[row][col] / matrix[col][col];
+        for (let j = col; j < cols; j++) {
+            matrix[row][j] -= factor * matrix[col][j];
+        }
+    }
+}
+
+function backSubstitute(matrix, rows, cols) {
     const params = new Array(rows);
     for (let row = rows - 1; row >= 0; row--) {
         let sum = matrix[row][cols - 1];

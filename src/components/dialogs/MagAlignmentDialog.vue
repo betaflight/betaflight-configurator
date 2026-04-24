@@ -235,9 +235,12 @@ function finishDetection() {
     cleanup();
 
     const detection = detectAlignment(samples, props.currentAlignment, props.customAngles);
-    if (!detection) {
+    if (detection.error) {
         phase.value = "error";
-        errorMessage.value = "magAlignmentNotEnoughData";
+        errorMessage.value =
+            detection.error === "missing_custom_angles"
+                ? "magAlignmentMissingCustomAngles"
+                : "magAlignmentNotEnoughData";
         return;
     }
 
