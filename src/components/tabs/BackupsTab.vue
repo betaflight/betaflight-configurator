@@ -46,6 +46,7 @@
                                             variant="soft"
                                             color="success"
                                             icon="i-lucide-upload"
+                                            :disabled="isRestoreBusy"
                                             @click="restoreBackup(row.original)"
                                         >
                                             {{ $t("actionRestore") }}
@@ -117,7 +118,11 @@
                     <div class="backups_cli_window">
                         <template v-for="(failure, idx) in restoreErrors" :key="idx">
                             <div>{{ failure.command }}</div>
-                            <div v-for="(line, lineIdx) in failure.response" :key="lineIdx" class="error_message">
+                            <div
+                                v-for="(line, lineIdx) in failure.response"
+                                :key="lineIdx"
+                                :class="{ error_message: line.startsWith('###ERROR') }"
+                            >
                                 {{ line }}
                             </div>
                         </template>
@@ -196,6 +201,9 @@ const groupedBackups = computed(() => {
 });
 
 const isConnected = computed(() => connectionStore.connectionValid);
+const isRestoreBusy = computed(
+    () => restoreProgressOpen.value || restoreErrorsOpen.value || cliSession.isSending.value,
+);
 
 async function loadBackups() {
     isLoading.value = true;
@@ -347,7 +355,9 @@ async function restoreBackup(backup) {
         return;
     }
 
-    const commands = text.split(/\r?\n/);
+    const fileLines = text.split(/\r?\n/);
+    const hasDefaultsPrefix = fileLines.some((line) => line.trim().toLowerCase() === "defaults nosave");
+    const commands = hasDefaultsPrefix ? fileLines : ["defaults nosave", "", ...fileLines];
 
     restoreProgress.value = 0;
     restoreProgressOpen.value = true;
@@ -457,6 +467,8 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+    GUI.timeout_remove(RESTORE_DISCONNECT_TIMEOUT);
+    cliSession.cancel();
     unsubscribeLogin?.();
     unsubscribeLogout?.();
 });

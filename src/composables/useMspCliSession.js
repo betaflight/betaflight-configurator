@@ -8,6 +8,8 @@ const LINE_DELAY_MS = 15;
 const PROFILE_COMMAND_DELAY_MS = 100;
 const ERROR_PREFIX = "###ERROR";
 
+let cliMutex = Promise.resolve();
+
 function wait(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -25,39 +27,45 @@ function delayAfter(line) {
     return line.toLowerCase().startsWith("profile") ? PROFILE_COMMAND_DELAY_MS : LINE_DELAY_MS;
 }
 
+function dispatch(command, timeoutMs) {
+    return new Promise((resolve, reject) => {
+        let settled = false;
+        const timer = setTimeout(() => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            reject(new Error(`Timed out after ${timeoutMs}ms waiting for response to "${command}"`));
+        }, timeoutMs);
+
+        MSP.send_cli_command(command, (lines) => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            clearTimeout(timer);
+            resolve(Array.isArray(lines) ? [...lines] : []);
+        });
+    });
+}
+
+export function send(command, { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
+    const next = cliMutex.then(() => dispatch(command, timeoutMs));
+    cliMutex = next.catch(() => undefined);
+    return next;
+}
+
+export function sendSave() {
+    return send("save", { timeoutMs: SAVE_COMMAND_TIMEOUT_MS });
+}
+
+export function readDumpAll() {
+    return send("diff all", { timeoutMs: DUMP_READ_TIMEOUT_MS });
+}
+
 export function useMspCliSession() {
     const isSending = ref(false);
     let cancelRequested = false;
-
-    function send(command, { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
-        return new Promise((resolve, reject) => {
-            let settled = false;
-            const timer = setTimeout(() => {
-                if (settled) {
-                    return;
-                }
-                settled = true;
-                reject(new Error(`Timed out after ${timeoutMs}ms waiting for response to "${command}"`));
-            }, timeoutMs);
-
-            MSP.send_cli_command(command, (lines) => {
-                if (settled) {
-                    return;
-                }
-                settled = true;
-                clearTimeout(timer);
-                resolve(Array.isArray(lines) ? [...lines] : []);
-            });
-        });
-    }
-
-    function sendSave() {
-        return send("save", { timeoutMs: SAVE_COMMAND_TIMEOUT_MS });
-    }
-
-    function readDumpAll() {
-        return send("diff all", { timeoutMs: DUMP_READ_TIMEOUT_MS });
-    }
 
     async function runBatch(commands, { onProgress, onError, commandTimeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
         cancelRequested = false;

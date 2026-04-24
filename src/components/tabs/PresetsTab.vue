@@ -171,7 +171,11 @@
                     <div class="presets_cli_wrapper">
                         <template v-for="(failure, idx) in store.applyState.cliErrors" :key="idx">
                             <div>{{ failure.command }}</div>
-                            <div v-for="(line, lineIdx) in failure.response" :key="lineIdx" class="error_message">
+                            <div
+                                v-for="(line, lineIdx) in failure.response"
+                                :key="lineIdx"
+                                :class="{ error_message: line.startsWith('###ERROR') }"
+                            >
                                 {{ line }}
                             </div>
                         </template>
@@ -272,6 +276,8 @@ async function onTabMounted() {
 }
 
 function onTabCleanup() {
+    GUI.timeout_remove(DISCONNECT_TIMEOUT_NAME);
+    cliSession.cancel();
     store.resetTransientState();
 }
 
@@ -334,7 +340,7 @@ async function saveConfigBackup() {
     try {
         const cliStrings = await cliSession.readDumpAll();
         const filename = generateFilename("cli_backup", "txt");
-        const text = cliStrings.join("\n");
+        const text = ["defaults nosave", "", ...cliStrings].join("\n");
         const file = await FileSystem.pickSaveFile(
             filename,
             i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
