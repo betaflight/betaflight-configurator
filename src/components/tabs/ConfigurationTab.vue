@@ -678,13 +678,32 @@ export default defineComponent({
         const magDeclination = ref(0);
 
         async function autoSetDeclination() {
+            let lat, lon;
+
+            // Try FC GPS first
             await MSP.promise(MSPCodes.MSP_RAW_GPS, false);
-            if (!fcStore.gpsData.fix) {
-                gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
-                return;
+            if (fcStore.gpsData.fix) {
+                lat = fcStore.gpsData.latitude / 10000000;
+                lon = fcStore.gpsData.longitude / 10000000;
+            } else {
+                // Fall back to IP geolocation
+                try {
+                    const response = await fetch("https://ipapi.co/json/");
+                    if (!response.ok) {
+                        throw new Error("IP geolocation failed");
+                    }
+                    const data = await response.json();
+                    lat = parseFloat(data.latitude);
+                    lon = parseFloat(data.longitude);
+                    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+                        throw new Error("Invalid coordinates");
+                    }
+                } catch {
+                    gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+                    return;
+                }
             }
-            const lat = fcStore.gpsData.latitude / 10000000;
-            const lon = fcStore.gpsData.longitude / 10000000;
+
             const { declination } = computeDeclination(lat, lon);
             magDeclination.value = Math.round(declination * 10) / 10;
             gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
