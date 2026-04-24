@@ -190,17 +190,17 @@ function mat3mulVec(m, v) {
  * This avoids needing yaw, which depends on the alignment we're detecting.
  */
 function undoRollPitch(v, rollRad, pitchRad) {
-    // Undo pitch: Ry(-pitch)
-    const cp = Math.cos(-pitchRad);
-    const sp = Math.sin(-pitchRad);
-    const x1 = cp * v[0] + sp * v[2];
-    const y1 = v[1];
-    const z1 = -sp * v[0] + cp * v[2];
+    // V_level = Ry(pitch) · Rx(roll) · V_body
+    // Apply roll first: Rx(roll)
+    const cr = Math.cos(rollRad);
+    const sr = Math.sin(rollRad);
+    const y1 = cr * v[1] - sr * v[2];
+    const z1 = sr * v[1] + cr * v[2];
 
-    // Undo roll: Rx(-roll)
-    const cr = Math.cos(-rollRad);
-    const sr = Math.sin(-rollRad);
-    return [x1, cr * y1 - sr * z1, sr * y1 + cr * z1];
+    // Then pitch: Ry(pitch)
+    const cp = Math.cos(pitchRad);
+    const sp = Math.sin(pitchRad);
+    return [cp * v[0] + sp * z1, y1, -sp * v[0] + cp * z1];
 }
 
 function computeVariance(values) {
