@@ -813,7 +813,7 @@
                         <USwitch v-model="antiGravityEnabled" size="sm" />
                     </SettingRow>
                     <div v-if="antiGravityEnabled" class="flex flex-wrap items-end gap-3 pl-4">
-                        <div class="flex flex-col gap-1">
+                        <div v-if="isPreApi145" class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed" v-html="$t('pidTuningAntiGravityMode')"></span>
                             <USelect
                                 v-model="advancedTuning.antiGravityMode"
@@ -838,7 +838,7 @@
                                 class="w-16"
                             />
                         </div>
-                        <div class="flex flex-col gap-1">
+                        <div v-if="isPreApi145" class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed" v-html="$t('pidTuningAntiGravityThres')"></span>
                             <UInputNumber
                                 v-model="advancedTuning.itermThrottleThreshold"
@@ -1119,6 +1119,8 @@ const cellCountItems = computed(() => [
     { value: 8, label: t("pidTuningCellCount8S") },
 ]);
 
+// For API < 1.45, iterm throttle threshold was removed in API 1.45+
+const isPreApi145 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
 // For API < 1.47, derivative and dmax column headers are swapped (PR #4173)
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
 const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
@@ -1357,14 +1359,33 @@ const itermRelaxEnabled = computed({
 });
 
 const antiGravityEnabled = computed({
-    get: () => FC.ADVANCED_TUNING.antiGravityGain !== 0,
-    set: (val) => (FC.ADVANCED_TUNING.antiGravityGain = val ? FC.ADVANCED_TUNING.antiGravityGain || 80 : 0),
+    get: () =>
+        isPreApi145.value
+            ? FC.ADVANCED_TUNING.itermAcceleratorGain !== 0
+            : FC.ADVANCED_TUNING.antiGravityGain !== 0,
+    set: (val) => {
+        if (isPreApi145.value) {
+            FC.ADVANCED_TUNING.itermAcceleratorGain = val ? FC.ADVANCED_TUNING.itermAcceleratorGain || 1000 : 0;
+        } else {
+            FC.ADVANCED_TUNING.antiGravityGain = val ? FC.ADVANCED_TUNING.antiGravityGain || 80 : 0;
+        }
+    },
 });
 
-// Anti-gravity gain display value (divided by 10 for display)
+// Anti-gravity gain display value (divided by 10 for API 1.45+, divided by 1000 for older)
 const antiGravityGainValue = computed({
-    get: () => FC.ADVANCED_TUNING.antiGravityGain / 10,
-    set: (val) => (FC.ADVANCED_TUNING.antiGravityGain = Math.round(Number.parseFloat(val) * 10)),
+    get: () =>
+        isPreApi145.value
+            ? FC.ADVANCED_TUNING.itermAcceleratorGain / 1000
+            : FC.ADVANCED_TUNING.antiGravityGain / 10,
+    set: (val) => {
+        const parsed = Number.parseFloat(val);
+        if (isPreApi145.value) {
+            FC.ADVANCED_TUNING.itermAcceleratorGain = Math.round(parsed * 1000);
+        } else {
+            FC.ADVANCED_TUNING.antiGravityGain = Math.round(parsed * 10);
+        }
+    },
 });
 
 const itermRotationEnabled = computed({
