@@ -157,6 +157,9 @@ function startDetection() {
     // Poll attitude for roll/pitch
     attitudeInterval = setInterval(() => {
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
+            if (phase.value !== "collecting") {
+                return;
+            }
             currentRoll = fcStore.sensorData.kinematics[0];
             currentPitch = fcStore.sensorData.kinematics[1];
         });
