@@ -122,7 +122,7 @@ const confidenceLevel = computed(() => {
     if (result.value.confidence >= 5) {
         return "high";
     }
-    if (result.value.confidence >= 2) {
+    if (result.value.confidence > 2) {
         return "medium";
     }
     return "low";
@@ -136,7 +136,7 @@ const confidenceText = computed(() => {
     if (c >= 5) {
         return i18n.getMessage("magAlignmentConfidenceHigh", { value: c });
     }
-    if (c >= 2) {
+    if (c > 2) {
         return i18n.getMessage("magAlignmentConfidenceMedium", { value: c });
     }
     return i18n.getMessage("magAlignmentConfidenceLow", { value: c });
