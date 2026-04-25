@@ -454,50 +454,52 @@
                         :title="`<em class='fas fa-wind'></em> ${$t('preflightWindForecast')}`"
                         :help="$t('preflightWindForecastHelp')"
                     >
-                        <div v-if="preflight.weather.hourly && preflight.weather.hourly.length > 0">
-                            <table class="hourly-table">
-                                <thead>
-                                    <tr class="titles">
-                                        <th>{{ $t("preflightTime") }}</th>
-                                        <th>{{ $t("preflightWind10m") }}</th>
-                                        <th>{{ $t("preflightWind80m") }}</th>
-                                        <th>{{ $t("preflightWind120m") }}</th>
-                                        <th>{{ $t("preflightGustsShort") }}</th>
-                                        <th>{{ $t("preflightRainProb") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(hour, idx) in preflight.weather.hourly" :key="idx">
-                                        <td>{{ preflight.formatTime(hour.time) }}</td>
-                                        <td :class="getWindStatusClass(hour.windSpeed10m, hour.windGusts)">
-                                            {{ hour.windSpeed10m?.toFixed(1) ?? "-" }}
-                                        </td>
-                                        <td :class="getWindStatusClass(hour.windSpeed80m, hour.windGusts)">
-                                            {{ hour.windSpeed80m?.toFixed(1) ?? "-" }}
-                                        </td>
-                                        <td :class="getWindStatusClass(hour.windSpeed120m, hour.windGusts)">
-                                            {{ hour.windSpeed120m?.toFixed(1) ?? "-" }}
-                                        </td>
-                                        <td :class="getWindStatusClass(hour.windGusts, hour.windGusts)">
-                                            {{ hour.windGusts?.toFixed(1) ?? "-" }}
-                                        </td>
-                                        <td
-                                            :class="
-                                                hour.precipitationProbability > 50
-                                                    ? 'status-warning'
-                                                    : hour.precipitationProbability > 20
-                                                      ? 'status-moderate'
-                                                      : ''
-                                            "
-                                        >
-                                            {{ hour.precipitationProbability }}%
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="table-note">{{ $t("preflightWindUnit") }}</div>
+                        <UTable
+                            :data="preflight.weather.hourly ?? []"
+                            :columns="hourlyColumns"
+                            :empty="$t('preflightNoData')"
+                            class="text-sm"
+                        >
+                            <template #time-cell="{ row }">
+                                {{ preflight.formatTime(row.original.time) }}
+                            </template>
+                            <template #windSpeed10m-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windSpeed10m, row.original.windGusts)">
+                                    {{ row.original.windSpeed10m?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #windSpeed80m-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windSpeed80m, row.original.windGusts)">
+                                    {{ row.original.windSpeed80m?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #windSpeed120m-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windSpeed120m, row.original.windGusts)">
+                                    {{ row.original.windSpeed120m?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #windGusts-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windGusts, row.original.windGusts)">
+                                    {{ row.original.windGusts?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #precipitationProbability-cell="{ row }">
+                                <span
+                                    :class="
+                                        row.original.precipitationProbability > 50
+                                            ? 'status-warning'
+                                            : row.original.precipitationProbability > 20
+                                              ? 'status-moderate'
+                                              : ''
+                                    "
+                                >
+                                    {{ row.original.precipitationProbability }}%
+                                </span>
+                            </template>
+                        </UTable>
+                        <div v-if="preflight.weather.hourly?.length" class="table-note">
+                            {{ $t("preflightWindUnit") }}
                         </div>
-                        <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
                     </UiBox>
 
                     <!-- 5-Day Forecast -->
@@ -953,6 +955,15 @@ export default defineComponent({
         const locationEditMode = ref(null);
         const saveLocationLabel = ref("");
 
+        const hourlyColumns = computed(() => [
+            { accessorKey: "time", header: i18n.getMessage("preflightTime") },
+            { accessorKey: "windSpeed10m", header: i18n.getMessage("preflightWind10m") },
+            { accessorKey: "windSpeed80m", header: i18n.getMessage("preflightWind80m") },
+            { accessorKey: "windSpeed120m", header: i18n.getMessage("preflightWind120m") },
+            { accessorKey: "windGusts", header: i18n.getMessage("preflightGustsShort") },
+            { accessorKey: "precipitationProbability", header: i18n.getMessage("preflightRainProb") },
+        ]);
+
         const savedLocationOptions = computed(() => {
             return preflight.savedLocations.map((loc, idx) => ({
                 label: loc.label,
@@ -1359,6 +1370,7 @@ export default defineComponent({
             droneSafetyMapLink,
             notamLink,
             notamEuLink,
+            hourlyColumns,
             savedLocationOptions,
             selectedSavedIndex,
             locationEditMode,
@@ -1711,33 +1723,6 @@ export default defineComponent({
     .status-badge {
         font-size: 11px;
         margin-left: 6px;
-    }
-
-    /* Hourly forecast table */
-    .hourly-table {
-        font-size: 12px;
-        width: 100%;
-
-        thead .titles th {
-            font-weight: bold;
-            text-align: center;
-            padding: 4px;
-            background: var(--surface-300);
-            border-bottom: 1px solid var(--surface-500);
-        }
-
-        tbody td {
-            text-align: center;
-            padding: 3px 4px;
-            &:first-child {
-                text-align: left;
-                font-weight: 500;
-            }
-        }
-
-        tbody tr:nth-child(even) {
-            background: var(--surface-200);
-        }
     }
 
     .table-note {
