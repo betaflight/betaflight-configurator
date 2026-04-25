@@ -1,13 +1,12 @@
 <template>
-    <div
-        class="port-utilization"
-        :title="`${$t('statusbar_port_utilization')}  \u2193 ${usageDown}%  \u2191 ${usageUp}%`"
-    >
-        <UIcon name="i-lucide-arrow-down" class="port-utilization__icon" />
-        <span class="value">{{ usageDown }}%</span>
-        <UIcon name="i-lucide-arrow-up" class="port-utilization__icon" />
-        <span class="value">{{ usageUp }}%</span>
-    </div>
+    <UTooltip :text="$t('statusbar_port_utilization')">
+        <div class="port-utilization">
+            <UIcon name="i-lucide-arrow-down" class="port-utilization__icon" />
+            <span class="value w-8">{{ usageDown }}%</span>
+            <UIcon name="i-lucide-arrow-up" class="port-utilization__icon" />
+            <span class="value w-8">{{ usageUp }}%</span>
+        </div>
+    </UTooltip>
 </template>
 
 <script>
@@ -32,11 +31,6 @@ export default defineComponent({
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-}
-
-.port-utilization__icon {
-    width: 14px;
-    height: 14px;
 }
 
 .value {

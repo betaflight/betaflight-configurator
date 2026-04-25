@@ -1,5 +1,5 @@
 <template>
-    <UApp>
+    <UApp :tooltip="{ delayDuration: 100 }">
         <div class="app-wrapper">
             <div id="background" v-show="isRevealed" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
@@ -47,6 +47,8 @@
                 :cycle-time="FC.CONFIG.cycleTime"
                 :cpu-load="FC.CONFIG.cpuload"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
+                :firmware-version="FC.CONFIG.flightControllerVersion"
+                :firmware-target="FC.CONFIG.hardwareName"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">

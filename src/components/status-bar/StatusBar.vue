@@ -1,61 +1,97 @@
 <template>
     <div id="status-bar">
         <template v-if="connectionTimestamp">
-            <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
-            <span class="stat-group" :title="$t('statusbar_connection_time')">
-                <UIcon name="i-lucide-clock" class="stat-icon" />
-                <span class="value">{{ formattedConnectionTime }}</span>
-            </span>
-            <span class="stat-group" :title="$t('statusbar_packet_error')">
-                <UIcon name="i-lucide-triangle-alert" class="stat-icon" />
-                <span class="value">{{ packetError }}</span>
-            </span>
-            <span class="stat-group" :title="$t('statusbar_cycle_time')">
-                <UIcon name="i-lucide-timer" class="stat-icon" />
-                <span class="value">{{ cycleTime }}</span>
-            </span>
-            <span class="stat-group cpu-load" :title="`${$t('statusbar_cpu_load')}: ${cpuLoad}%`">
-                <UIcon name="i-lucide-cpu" class="stat-icon" />
-                <span class="cpu-bar" :class="cpuLoadClass">
-                    <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
+            <template v-if="expertMode">
+                <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
+
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+
+                <UTooltip :text="$t('statusbar_connection_time')">
+                    <span class="stat-group">
+                        <UIcon name="i-lucide-clock" class="stat-icon" />
+                        <span class="value">{{ formattedConnectionTime }}</span>
+                    </span>
+                </UTooltip>
+
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+
+                <UTooltip :text="$t('statusbar_packet_error')">
+                    <span class="stat-group">
+                        <UIcon name="i-lucide-triangle-alert" class="stat-icon" />
+                        <span class="value">{{ packetError }}</span>
+                    </span>
+                </UTooltip>
+
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+
+                <UTooltip :text="$t('statusbar_cycle_time')">
+                    <span class="stat-group">
+                        <UIcon name="i-lucide-timer" class="stat-icon" />
+                        <span class="value">{{ cycleTime }}</span>
+                    </span>
+                </UTooltip>
+
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+            </template>
+
+            <UTooltip :text="`${$t('statusbar_cpu_load')} ${cpuLoad}%`">
+                <span class="stat-group cpu-load">
+                    <UIcon name="i-lucide-cpu" class="stat-icon" />
+                    <span class="cpu-bar" :class="cpuLoadClass">
+                        <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
+                    </span>
                 </span>
-            </span>
-            <div class="status-indicators">
-                <SensorStatus
-                    class="status-indicators__sensors"
-                    compact
-                    :sensors-detected="fcConfig.activeSensors ?? 0"
-                    :gps-fix-state="gps.fix ?? 0"
-                />
-                <BatteryIcon
-                    compact
-                    :voltage="analog.voltage ?? 0"
-                    :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
-                    :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
-                    :battery-state="batteryState.batteryState"
-                />
-                <BatteryLegend
-                    compact
-                    :voltage="analog.voltage ?? 0"
-                    :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
-                />
-                <BottomStatusIcons
-                    compact
-                    :last-received-timestamp="analog.last_received_timestamp ?? 0"
-                    :mode="fcConfig.mode ?? 0"
-                    :aux-config="auxConfig"
-                />
-                <DataFlash
-                    v-if="dataflashSupported"
-                    compact
-                    :fc-total-size="dataflash.totalSize"
-                    :fc-used-size="dataflash.usedSize"
-                />
-            </div>
+            </UTooltip>
+
+            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+
+            <SensorStatus :sensors-detected="fcConfig.activeSensors ?? 0" :gps-fix-state="gps.fix ?? 0" />
+
+            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+
+            <BatteryIcon
+                compact
+                :voltage="analog.voltage ?? 0"
+                :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
+                :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
+                :battery-state="batteryState.batteryState"
+            />
+            <BatteryLegend
+                compact
+                :voltage="analog.voltage ?? 0"
+                :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
+            />
+
+            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+
+            <BottomStatusIcons
+                compact
+                :last-received-timestamp="analog.last_received_timestamp ?? 0"
+                :mode="fcConfig.mode ?? 0"
+                :aux-config="auxConfig"
+            />
+
+            <template v-if="dataflashSupported">
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+
+                <DataFlash compact :fc-total-size="dataflash.totalSize" :fc-used-size="dataflash.usedSize" />
+            </template>
         </template>
-        <span class="stat-group status-version" :title="$t('versionLabelConfigurator')">
-            <span class="value">{{ configuratorVersion }}</span>
-        </span>
+        <div class="flex gap-2 text-xs text-muted ml-auto items-center h-full">
+            <template v-if="firmwareTarget && firmwareVersion">
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <UIcon name="i-lucide-cpu" class="size-4" />
+                <UTooltip :text="$t('versionLabelFirmware')">
+                    <span>{{ displayedFirmwareTarget }} {{ displayedFirmwareVersion }}</span>
+                </UTooltip>
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+            </template>
+
+            <UIcon name="i-lucide-monitor" class="size-4" />
+            <UTooltip :text="$t('versionLabelConfigurator')">
+                <span>{{ displayedConfiguratorVersion }}</span>
+            </UTooltip>
+        </div>
     </div>
 </template>
 
@@ -67,7 +103,43 @@ import BatteryLegend from "../quad-status/BatteryLegend.vue";
 import BottomStatusIcons from "../quad-status/BottomStatusIcons.vue";
 import DataFlash from "../data-flash/DataFlash.vue";
 import SensorStatus from "../sensor-status/SensorStatus.vue";
+import { EventBus } from "../eventBus";
 import FC from "../../js/fc";
+import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
+
+/**
+ * Shorter target for the status bar when not in expert mode, e.g.
+ * "MFGID/TARGETNAME(MCUNAME)" -> "TARGETNAME"
+ */
+function shortenTargetDisplay(name) {
+    if (!name || typeof name !== "string") {
+        return "";
+    }
+    let s = name.trim();
+    const i = s.indexOf("/");
+    if (i >= 0) {
+        s = s.slice(i + 1);
+    }
+    s = s.replace(/\([^)]*\)\s*$/, "").trim();
+    return s;
+}
+
+/**
+ * Drop trailing (git/revision) segments from a display version string, e.g.
+ * "25.1.0 (a1b2c3d)" or "4.5.0 (a1b2c3d)" for non–expert status text.
+ */
+function stripVersionDisplay(version) {
+    if (!version || typeof version !== "string") {
+        return "";
+    }
+    let s = version.trim();
+    let prev;
+    do {
+        prev = s;
+        s = s.replace(/\s+\([^)]*\)\s*$/, "").trim();
+    } while (s !== prev);
+    return s;
+}
 
 export default defineComponent({
     components: {
@@ -107,22 +179,38 @@ export default defineComponent({
             type: String,
             default: "",
         },
+        firmwareVersion: {
+            type: String,
+            default: "",
+        },
+        firmwareTarget: {
+            type: String,
+            default: "",
+        },
     },
     setup(props) {
         const currentTime = ref(Date.now());
+        const expertMode = ref(isExpertModeEnabled());
         let interval = null;
+
+        const onExpertModeChange = (enabled) => {
+            expertMode.value = enabled;
+        };
 
         onMounted(() => {
             // Update current time every second for the connection timer
             interval = setInterval(() => {
                 currentTime.value = Date.now();
             }, 1000);
+            expertMode.value = isExpertModeEnabled();
+            EventBus.$on("expert-mode-change", onExpertModeChange);
         });
 
         onUnmounted(() => {
             if (interval) {
                 clearInterval(interval);
             }
+            EventBus.$off("expert-mode-change", onExpertModeChange);
         });
 
         const formattedConnectionTime = computed(() => {
@@ -161,7 +249,32 @@ export default defineComponent({
             return "cpu-bar--ok";
         });
 
+        const displayedFirmwareTarget = computed(() => {
+            if (expertMode.value) {
+                return props.firmwareTarget;
+            }
+            return shortenTargetDisplay(props.firmwareTarget);
+        });
+
+        const displayedConfiguratorVersion = computed(() => {
+            if (expertMode.value) {
+                return props.configuratorVersion;
+            }
+            return stripVersionDisplay(props.configuratorVersion);
+        });
+
+        const displayedFirmwareVersion = computed(() => {
+            if (expertMode.value) {
+                return props.firmwareVersion;
+            }
+            return stripVersionDisplay(props.firmwareVersion);
+        });
+
         return {
+            expertMode,
+            displayedFirmwareTarget,
+            displayedConfiguratorVersion,
+            displayedFirmwareVersion,
             formattedConnectionTime,
             analog,
             batteryConfig,
@@ -188,13 +301,10 @@ export default defineComponent({
     bottom: 0;
     box-sizing: border-box;
     width: 100%;
-    min-height: 2.5rem;
+    height: 2.5rem;
     padding: 0.25rem 1rem;
     background-color: var(--surface-300);
     line-height: 1.2;
-    .message {
-        margin-right: 0.25rem;
-    }
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -256,36 +366,5 @@ export default defineComponent({
 
 .cpu-bar--critical .cpu-bar__fill {
     background-color: var(--error-500);
-}
-
-.status-indicators {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.status-version {
-    margin-left: auto;
-    opacity: 0.75;
-    font-variant-numeric: tabular-nums;
-}
-
-/* Hide the sensor-icon row on narrower viewports so the status bar does not crowd. */
-@media all and (max-width: 1100px) {
-    .status-indicators__sensors {
-        display: none;
-    }
-}
-
-#status-bar > * ~ * {
-    padding-left: 10px;
-    border-left: 1px solid var(--surface-400);
-}
-
-/** Status bar (phones) **/
-@media all and (max-width: 575px) {
-    #status-bar {
-        display: none;
-    }
 }
 </style>

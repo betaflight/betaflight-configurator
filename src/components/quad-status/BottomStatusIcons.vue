@@ -1,13 +1,21 @@
 <template>
     <div class="bottomStatusIcons" :class="{ 'bottomStatusIcons--compact': compact }">
         <UTooltip :text="$t('mainHelpArmed')">
-            <div class="armedicon" :class="{ active: setActiveArmed }" />
+            <UIcon
+                name="i-lucide-triangle-alert"
+                class="size-4"
+                :class="setActiveArmed ? 'text-primary' : 'text-muted'"
+            />
         </UTooltip>
         <UTooltip :text="$t('mainHelpFailsafe')">
-            <div class="failsafeicon" :class="{ active: setFailsafeActive }" />
+            <UIcon
+                name="i-lucide-shield-alert"
+                class="size-4"
+                :class="setFailsafeActive ? 'text-primary' : 'text-muted'"
+            />
         </UTooltip>
         <UTooltip :text="$t('mainHelpLink')">
-            <div class="linkicon" :class="{ active: setActiveLink }" />
+            <UIcon name="i-lucide-link" class="size-4" :class="setActiveLink ? 'text-primary' : 'text-muted'" />
         </UTooltip>
     </div>
 </template>
@@ -51,66 +59,6 @@ const setActiveLink = computed(() => performance.now() - props.lastReceivedTimes
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-button {
-    padding: 0.5em 0.75em;
-    border-radius: 4px;
-    background-color: #ccc;
-    color: #666;
-    border: 1px solid var(--surface-500);
-    font-weight: 600;
-    font-size: 10pt;
-    cursor: pointer;
-}
-button.active {
-    background-color: var(--primary-500);
-    border: 1px solid #dba718;
-    color: #000;
-}
-.armedicon {
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 6px;
-    height: 18px;
-    width: 18px;
-    opacity: 0.8;
-    background-size: contain;
-    background-position: center;
-    transition: none;
-    background-image: url(../../images/icons/cf_icon_armed_grey.svg);
-}
-.failsafeicon {
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 6px;
-    height: 18px;
-    width: 18px;
-    opacity: 0.8;
-    background-size: contain;
-    background-position: center;
-    transition: none;
-    background-image: url(../../images/icons/cf_icon_failsafe_grey.svg);
-}
-.linkicon {
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 6px;
-    height: 18px;
-    width: 18px;
-    opacity: 0.8;
-    background-size: contain;
-    background-position: center;
-    transition: none;
-    background-image: url(../../images/icons/cf_icon_link_grey.svg);
-}
-.armedicon.active {
-    background-image: url(../../images/icons/cf_icon_armed_active.svg);
-}
-.failsafeicon.active {
-    background-image: url(../../images/icons/cf_icon_failsafe_active.svg);
-}
-.linkicon.active {
-    background-image: url(../../images/icons/cf_icon_link_active.svg);
-}
 
 .bottomStatusIcons--compact {
     height: auto;
@@ -122,13 +70,5 @@ button.active {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-.bottomStatusIcons--compact .armedicon,
-.bottomStatusIcons--compact .failsafeicon,
-.bottomStatusIcons--compact .linkicon {
-    margin: 0;
-    height: 16px;
-    width: 16px;
 }
 </style>
