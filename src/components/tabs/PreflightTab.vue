@@ -235,154 +235,60 @@
                                 </div>
                                 <div class="weather-temp">{{ preflight.weather.current.temperature }}°C</div>
                             </div>
-                            <table class="weather-details">
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightWind") }}</th>
-                                        <td>
-                                            <span
-                                                :class="
-                                                    getWindStatusClass(
-                                                        preflight.weather.current.windSpeed,
-                                                        preflight.weather.current.windGusts,
-                                                    )
-                                                "
-                                            >
-                                                {{ preflight.weather.current.windSpeed.toFixed(1) }} m/s
-                                            </span>
+                            <UTable
+                                :data="weatherDetailsData"
+                                :columns="weatherDetailsColumns"
+                                class="text-sm"
+                                :ui="{ thead: 'hidden', td: 'border-none py-0.5' }"
+                            >
+                                <template #value-cell="{ row }">
+                                    <template v-if="row.original.key === 'wind'">
+                                        <span
+                                            :class="
+                                                getWindStatusClass(
+                                                    preflight.weather.current.windSpeed,
+                                                    preflight.weather.current.windGusts,
+                                                )
+                                            "
+                                        >
+                                            {{ preflight.weather.current.windSpeed.toFixed(1) }} m/s
+                                        </span>
+                                        {{ preflight.getWindDirectionLabel(preflight.weather.current.windDirection) }}
+                                        ({{ preflight.weather.current.windDirection }}°)
+                                    </template>
+                                    <template v-else-if="row.original.key === 'dewPoint'">
+                                        {{ preflight.weather.current.dewPoint }}°C ({{
+                                            toFahrenheit(preflight.weather.current.dewPoint)
+                                        }}°F)
+                                        <span
+                                            :class="
+                                                getDewPointRiskClass(
+                                                    preflight.weather.current.temperature,
+                                                    preflight.weather.current.dewPoint,
+                                                )
+                                            "
+                                            class="status-badge"
+                                        >
                                             {{
-                                                preflight.getWindDirectionLabel(preflight.weather.current.windDirection)
+                                                $t(
+                                                    getDewPointRiskLabel(
+                                                        preflight.weather.current.temperature,
+                                                        preflight.weather.current.dewPoint,
+                                                    ),
+                                                )
                                             }}
-                                            ({{ preflight.weather.current.windDirection }}°)
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightGusts") }}</th>
-                                        <td>
-                                            <span
-                                                :class="
-                                                    getWindStatusClass(
-                                                        preflight.weather.current.windGusts,
-                                                        preflight.weather.current.windGusts,
-                                                    )
-                                                "
-                                            >
-                                                {{ preflight.weather.current.windGusts.toFixed(1) }} m/s
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightVisibility") }}</th>
-                                        <td>
-                                            <span :class="getVisStatusClass(preflight.weather.current.visibility)">
-                                                {{ formatVisibility(preflight.weather.current.visibility) }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightPrecipitation") }}</th>
-                                        <td>
-                                            <span
-                                                :class="getPrecipStatusClass(preflight.weather.current.precipitation)"
-                                            >
-                                                {{ preflight.weather.current.precipitation }} mm
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightDewPoint") }}</th>
-                                        <td>
-                                            {{ preflight.weather.current.dewPoint }}°C ({{
-                                                toFahrenheit(preflight.weather.current.dewPoint)
-                                            }}°F)
-                                            <span
-                                                :class="
-                                                    getDewPointRiskClass(
-                                                        preflight.weather.current.temperature,
-                                                        preflight.weather.current.dewPoint,
-                                                    )
-                                                "
-                                                class="status-badge"
-                                            >
-                                                {{
-                                                    $t(
-                                                        getDewPointRiskLabel(
-                                                            preflight.weather.current.temperature,
-                                                            preflight.weather.current.dewPoint,
-                                                        ),
-                                                    )
-                                                }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightCloudCover") }}</th>
-                                        <td>{{ preflight.weather.current.cloudCover }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightHumidity") }}</th>
-                                        <td>{{ preflight.weather.current.humidity }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightFeelsLike") }}</th>
-                                        <td>
-                                            {{ preflight.weather.current.apparentTemperature }}°C ({{
-                                                toFahrenheit(preflight.weather.current.apparentTemperature)
-                                            }}°F)
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightPressure") }}</th>
-                                        <td>{{ preflight.weather.current.pressure }} hPa</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightBatteryRisk") }}</th>
-                                        <td>
-                                            <span
-                                                :class="
-                                                    preflight.getBatteryTempStatus(
-                                                        preflight.weather.current.temperature,
-                                                    ).cssClass
-                                                "
-                                            >
-                                                {{
-                                                    $t(
-                                                        preflight.getBatteryTempStatus(
-                                                            preflight.weather.current.temperature,
-                                                        ).label,
-                                                    )
-                                                }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightFogRisk") }}</th>
-                                        <td>
-                                            <span
-                                                :class="
-                                                    preflight.getFogRisk(
-                                                        preflight.weather.current.temperature,
-                                                        preflight.weather.current.dewPoint,
-                                                        preflight.weather.current.humidity,
-                                                        preflight.weather.current.windSpeed,
-                                                    ).cssClass
-                                                "
-                                            >
-                                                {{
-                                                    $t(
-                                                        preflight.getFogRisk(
-                                                            preflight.weather.current.temperature,
-                                                            preflight.weather.current.dewPoint,
-                                                            preflight.weather.current.humidity,
-                                                            preflight.weather.current.windSpeed,
-                                                        ).label,
-                                                    )
-                                                }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        </span>
+                                    </template>
+                                    <template v-else-if="row.original.key === 'feelsLike'">
+                                        {{ preflight.weather.current.apparentTemperature }}°C ({{
+                                            toFahrenheit(preflight.weather.current.apparentTemperature)
+                                        }}°F)
+                                    </template>
+                                    <span v-else :class="row.original.valueClass">
+                                        {{ row.original.value }}
+                                    </span>
+                                </template>
+                            </UTable>
                         </div>
                         <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
                     </UiBox>
@@ -459,6 +365,7 @@
                             :columns="hourlyColumns"
                             :empty="$t('preflightNoData')"
                             class="text-sm"
+                            :ui="{ td: 'border-none py-0.5' }"
                         >
                             <template #time-cell="{ row }">
                                 {{ preflight.formatTime(row.original.time) }}
@@ -508,52 +415,52 @@
                         :title="`<em class='fas fa-calendar-alt'></em> ${$t('preflightForecast')}`"
                         :help="$t('preflightForecastHelp')"
                     >
-                        <table class="forecast-table">
-                            <thead>
-                                <tr class="titles">
-                                    <th>{{ $t("preflightForecastDay") }}</th>
-                                    <th>{{ $t("preflightForecastWeather") }}</th>
-                                    <th>{{ $t("preflightTempRange") }}</th>
-                                    <th>{{ $t("preflightWind") }}</th>
-                                    <th>{{ $t("preflightGusts") }}</th>
-                                    <th>{{ $t("preflightRainProb") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="(day, idx) in preflight.weather.forecast"
-                                    :key="idx"
-                                    :class="getForecastRowClass(day)"
+                        <UTable
+                            :data="preflight.weather.forecast"
+                            :columns="forecastColumns"
+                            :meta="{ class: { tr: (row) => getForecastRowClass(row.original) } }"
+                            class="text-sm"
+                            :ui="{ td: 'border-none py-0.5' }"
+                        >
+                            <template #date-cell="{ row }">
+                                {{ formatForecastDay(row.original.date) }}
+                            </template>
+                            <template #weatherCode-cell="{ row }">
+                                {{ getWeatherEmoji(row.original.weatherCode) }}
+                                {{ $t(row.original.weatherDescription) }}
+                            </template>
+                            <template #tempMin-cell="{ row }">
+                                {{ row.original.tempMin !== null ? row.original.tempMin + "°" : "-" }} /
+                                {{ row.original.tempMax !== null ? row.original.tempMax + "°C" : "-" }}
+                            </template>
+                            <template #windMax-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windMax, row.original.gustsMax)">
+                                    {{ row.original.windMax !== null ? row.original.windMax.toFixed(1) : "-" }}
+                                </span>
+                            </template>
+                            <template #gustsMax-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.gustsMax, row.original.gustsMax)">
+                                    {{ row.original.gustsMax !== null ? row.original.gustsMax.toFixed(1) : "-" }}
+                                </span>
+                            </template>
+                            <template #precipProbability-cell="{ row }">
+                                <span
+                                    :class="
+                                        row.original.precipProbability > 50
+                                            ? 'status-warning'
+                                            : row.original.precipProbability > 20
+                                              ? 'status-moderate'
+                                              : ''
+                                    "
                                 >
-                                    <td>{{ formatForecastDay(day.date) }}</td>
-                                    <td>
-                                        {{ getWeatherEmoji(day.weatherCode) }}
-                                        {{ $t(day.weatherDescription) }}
-                                    </td>
-                                    <td>
-                                        {{ day.tempMin !== null ? day.tempMin + "°" : "-" }} /
-                                        {{ day.tempMax !== null ? day.tempMax + "°C" : "-" }}
-                                    </td>
-                                    <td :class="getWindStatusClass(day.windMax, day.gustsMax)">
-                                        {{ day.windMax !== null ? day.windMax.toFixed(1) : "-" }}
-                                    </td>
-                                    <td :class="getWindStatusClass(day.gustsMax, day.gustsMax)">
-                                        {{ day.gustsMax !== null ? day.gustsMax.toFixed(1) : "-" }}
-                                    </td>
-                                    <td
-                                        :class="
-                                            day.precipProbability > 50
-                                                ? 'status-warning'
-                                                : day.precipProbability > 20
-                                                  ? 'status-moderate'
-                                                  : ''
-                                        "
-                                    >
-                                        {{ day.precipProbability !== null ? day.precipProbability + "%" : "-" }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    {{
+                                        row.original.precipProbability !== null
+                                            ? row.original.precipProbability + "%"
+                                            : "-"
+                                    }}
+                                </span>
+                            </template>
+                        </UTable>
                         <div class="table-note">{{ $t("preflightWindUnit") }}</div>
                     </UiBox>
                 </div>
@@ -593,28 +500,18 @@
                                 </div>
                             </div>
                             <div v-if="preflight.solar.stormLevel" class="storm-scales">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightGeoStorm") }}</th>
-                                            <td :class="getStormClass(preflight.solar.stormLevel.geoStorm)">
-                                                G{{ preflight.solar.stormLevel.geoStorm }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightSolarRadiation") }}</th>
-                                            <td :class="getStormClass(preflight.solar.stormLevel.solarRadiation)">
-                                                S{{ preflight.solar.stormLevel.solarRadiation }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightRadioBlackout") }}</th>
-                                            <td :class="getStormClass(preflight.solar.stormLevel.radioBlackout)">
-                                                R{{ preflight.solar.stormLevel.radioBlackout }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <UTable
+                                    :data="stormScalesData"
+                                    :columns="stormScalesColumns"
+                                    class="text-sm"
+                                    :ui="{ thead: 'hidden', td: 'border-none py-0.5' }"
+                                >
+                                    <template #value-cell="{ row }">
+                                        <span :class="row.original.valueClass">
+                                            {{ row.original.value }}
+                                        </span>
+                                    </template>
+                                </UTable>
                             </div>
                             <div class="solar-timestamp" v-if="preflight.solar.kpTimestamp">
                                 {{ $t("preflightLastMeasurement") }}: {{ preflight.solar.kpTimestamp }}
@@ -633,76 +530,18 @@
                     >
                         <div class="gnss-info">
                             <p>{{ $t("preflightGNSSNote") }}</p>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightCoordinates") }}</th>
-                                        <td>
-                                            <span v-if="preflight.location.latitude !== null">
-                                                {{ preflight.location.latitude.toFixed(4) }},
-                                                {{ preflight.location.longitude.toFixed(4) }}
-                                            </span>
-                                            <span v-else>-</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightElevation") }}</th>
-                                        <td>
-                                            <span v-if="preflight.location.elevation !== null">
-                                                {{ preflight.location.elevation }} m AMSL
-                                            </span>
-                                            <span v-else>-</span>
-                                        </td>
-                                    </tr>
-                                    <tr v-if="densityAltitude !== null">
-                                        <th scope="row">{{ $t("preflightDensityAlt") }}</th>
-                                        <td>
-                                            <span :class="getDensityAltStatusClass()">
-                                                {{ densityAltitude }} ft ({{ Math.round(densityAltitude * 0.3048) }}
-                                                m)
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightKpEffect") }}</th>
-                                        <td>
-                                            <span
-                                                v-if="preflight.solar.kpIndex !== null"
-                                                :class="getGnssKpClass(preflight.solar.kpIndex)"
-                                            >
-                                                {{ getGnssKpLabel(preflight.solar.kpIndex) }}
-                                            </span>
-                                            <span v-else>-</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightGPSRescue") }}</th>
-                                        <td>
-                                            <span :class="getGpsRescueClass()">
-                                                {{ getGpsRescueLabel() }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightMagDeclination") }}</th>
-                                        <td>
-                                            <span v-if="preflight.mag.declination !== null">
-                                                {{ preflight.mag.declination.toFixed(2) }}°
-                                            </span>
-                                            <span v-else>-</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t("preflightMagInclination") }}</th>
-                                        <td>
-                                            <span v-if="preflight.mag.inclination !== null">
-                                                {{ preflight.mag.inclination.toFixed(2) }}°
-                                            </span>
-                                            <span v-else>-</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <UTable
+                                :data="gnssInfoData"
+                                :columns="gnssInfoColumns"
+                                class="text-sm"
+                                :ui="{ thead: 'hidden', td: 'border-none py-0.5' }"
+                            >
+                                <template #value-cell="{ row }">
+                                    <span :class="row.original.valueClass">
+                                        {{ row.original.value }}
+                                    </span>
+                                </template>
+                            </UTable>
                             <div class="gnss-links">
                                 <a href="https://www.gnssplanning.com/" target="_blank" rel="noopener noreferrer">
                                     <em class="fas fa-external-link-alt"></em> {{ $t("preflightGNSSPlanner") }}
@@ -964,11 +803,148 @@ export default defineComponent({
             { accessorKey: "precipitationProbability", header: i18n.getMessage("preflightRainProb") },
         ]);
 
+        const forecastColumns = computed(() => [
+            { accessorKey: "date", header: i18n.getMessage("preflightForecastDay") },
+            { accessorKey: "weatherCode", header: i18n.getMessage("preflightForecastWeather") },
+            { accessorKey: "tempMin", header: i18n.getMessage("preflightTempRange") },
+            { accessorKey: "windMax", header: i18n.getMessage("preflightWind") },
+            { accessorKey: "gustsMax", header: i18n.getMessage("preflightGusts") },
+            { accessorKey: "precipProbability", header: i18n.getMessage("preflightRainProb") },
+        ]);
+
         const savedLocationOptions = computed(() => {
             return preflight.savedLocations.map((loc, idx) => ({
                 label: loc.label,
                 value: idx,
             }));
+        });
+
+        const weatherDetailsColumns = computed(() => [
+            { accessorKey: "label", header: "" },
+            { id: "value", header: "" },
+        ]);
+
+        const weatherDetailsData = computed(() => {
+            const c = preflight.weather.current;
+            if (!c) {
+                return [];
+            }
+            return [
+                { key: "wind", label: i18n.getMessage("preflightWind") },
+                {
+                    key: "gusts",
+                    label: i18n.getMessage("preflightGusts"),
+                    value: `${c.windGusts.toFixed(1)} m/s`,
+                    valueClass: getWindStatusClass(c.windGusts, c.windGusts),
+                },
+                {
+                    key: "visibility",
+                    label: i18n.getMessage("preflightVisibility"),
+                    value: formatVisibility(c.visibility),
+                    valueClass: getVisStatusClass(c.visibility),
+                },
+                {
+                    key: "precipitation",
+                    label: i18n.getMessage("preflightPrecipitation"),
+                    value: `${c.precipitation} mm`,
+                    valueClass: getPrecipStatusClass(c.precipitation),
+                },
+                { key: "dewPoint", label: i18n.getMessage("preflightDewPoint") },
+                { key: "cloudCover", label: i18n.getMessage("preflightCloudCover"), value: `${c.cloudCover}%` },
+                { key: "humidity", label: i18n.getMessage("preflightHumidity"), value: `${c.humidity}%` },
+                { key: "feelsLike", label: i18n.getMessage("preflightFeelsLike") },
+                { key: "pressure", label: i18n.getMessage("preflightPressure"), value: `${c.pressure} hPa` },
+                {
+                    key: "batteryRisk",
+                    label: i18n.getMessage("preflightBatteryRisk"),
+                    value: i18n.getMessage(preflight.getBatteryTempStatus(c.temperature).label),
+                    valueClass: preflight.getBatteryTempStatus(c.temperature).cssClass,
+                },
+                {
+                    key: "fogRisk",
+                    label: i18n.getMessage("preflightFogRisk"),
+                    value: i18n.getMessage(
+                        preflight.getFogRisk(c.temperature, c.dewPoint, c.humidity, c.windSpeed).label,
+                    ),
+                    valueClass: preflight.getFogRisk(c.temperature, c.dewPoint, c.humidity, c.windSpeed).cssClass,
+                },
+            ];
+        });
+
+        const stormScalesColumns = computed(() => [
+            { accessorKey: "label", header: "" },
+            { id: "value", header: "" },
+        ]);
+
+        const stormScalesData = computed(() => {
+            const s = preflight.solar.stormLevel;
+            if (!s) {
+                return [];
+            }
+            return [
+                {
+                    label: i18n.getMessage("preflightGeoStorm"),
+                    value: `G${s.geoStorm}`,
+                    valueClass: getStormClass(s.geoStorm),
+                },
+                {
+                    label: i18n.getMessage("preflightSolarRadiation"),
+                    value: `S${s.solarRadiation}`,
+                    valueClass: getStormClass(s.solarRadiation),
+                },
+                {
+                    label: i18n.getMessage("preflightRadioBlackout"),
+                    value: `R${s.radioBlackout}`,
+                    valueClass: getStormClass(s.radioBlackout),
+                },
+            ];
+        });
+
+        const gnssInfoColumns = computed(() => [
+            { accessorKey: "label", header: "" },
+            { id: "value", header: "" },
+        ]);
+
+        const gnssInfoData = computed(() => {
+            const loc = preflight.location;
+            const rows = [
+                {
+                    label: i18n.getMessage("preflightCoordinates"),
+                    value: loc.latitude !== null ? `${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}` : "-",
+                },
+                {
+                    label: i18n.getMessage("preflightElevation"),
+                    value: loc.elevation !== null ? `${loc.elevation} m AMSL` : "-",
+                },
+            ];
+            if (densityAltitude.value !== null) {
+                rows.push({
+                    label: i18n.getMessage("preflightDensityAlt"),
+                    value: `${densityAltitude.value} ft (${Math.round(densityAltitude.value * 0.3048)} m)`,
+                    valueClass: getDensityAltStatusClass(),
+                });
+            }
+            rows.push(
+                {
+                    label: i18n.getMessage("preflightKpEffect"),
+                    value: preflight.solar.kpIndex !== null ? getGnssKpLabel(preflight.solar.kpIndex) : "-",
+                    valueClass: preflight.solar.kpIndex !== null ? getGnssKpClass(preflight.solar.kpIndex) : "",
+                },
+                {
+                    label: i18n.getMessage("preflightGPSRescue"),
+                    value: getGpsRescueLabel(),
+                    valueClass: getGpsRescueClass(),
+                },
+                {
+                    label: i18n.getMessage("preflightMagDeclination"),
+                    value: preflight.mag.declination !== null ? `${preflight.mag.declination.toFixed(2)}°` : "-",
+                },
+                {
+                    label: i18n.getMessage("preflightMagInclination"),
+                    value: preflight.mag.inclination !== null ? `${preflight.mag.inclination.toFixed(2)}°` : "-",
+                },
+            );
+            return rows;
         });
 
         const isManualLocationValid = computed(() => {
@@ -1371,7 +1347,14 @@ export default defineComponent({
             notamLink,
             notamEuLink,
             hourlyColumns,
+            forecastColumns,
             savedLocationOptions,
+            weatherDetailsColumns,
+            weatherDetailsData,
+            stormScalesColumns,
+            stormScalesData,
+            gnssInfoColumns,
+            gnssInfoData,
             selectedSavedIndex,
             locationEditMode,
             saveLocationLabel,
@@ -1673,16 +1656,6 @@ export default defineComponent({
                 color: var(--primary-500);
             }
         }
-
-        .weather-details {
-            th[scope="row"],
-            td:first-child {
-                font-weight: 500;
-                width: 40%;
-                color: var(--surface-700);
-                text-align: left;
-            }
-        }
     }
 
     /* Flight Window */
@@ -1732,45 +1705,15 @@ export default defineComponent({
         text-align: right;
     }
 
-    /* 5-Day Forecast table */
-    .forecast-table {
-        font-size: 12px;
-        width: 100%;
-
-        thead .titles th {
-            font-weight: bold;
-            text-align: center;
-            padding: 4px;
-            background: var(--surface-300);
-            border-bottom: 1px solid var(--surface-500);
-        }
-
-        tbody td {
-            text-align: center;
-            padding: 4px 6px;
-            &:first-child {
-                text-align: left;
-                font-weight: 500;
-                white-space: nowrap;
-            }
-            &:nth-child(2) {
-                text-align: left;
-            }
-        }
-
-        tbody tr:nth-child(even) {
-            background: var(--surface-200);
-        }
-
-        .forecast-row-danger {
-            background: rgba(192, 57, 43, 0.1) !important;
-        }
-        .forecast-row-warning {
-            background: rgba(163, 83, 9, 0.1) !important;
-        }
-        .forecast-row-moderate {
-            background: rgba(183, 119, 10, 0.08) !important;
-        }
+    /* 5-Day Forecast row highlights (applied via UTable meta.class.tr) */
+    .forecast-row-danger {
+        background: rgba(192, 57, 43, 0.1) !important;
+    }
+    .forecast-row-warning {
+        background: rgba(163, 83, 9, 0.1) !important;
+    }
+    .forecast-row-moderate {
+        background: rgba(183, 119, 10, 0.08) !important;
     }
 
     /* Solar Activity */
@@ -1847,12 +1790,6 @@ export default defineComponent({
 
         .storm-scales {
             margin-bottom: 8px;
-            th[scope="row"],
-            td:first-child {
-                font-weight: 500;
-                color: var(--surface-700);
-                text-align: left;
-            }
         }
 
         .solar-timestamp {
@@ -1868,17 +1805,6 @@ export default defineComponent({
             font-size: 12px;
             color: var(--surface-700);
             margin-bottom: 8px;
-        }
-
-        table {
-            margin-bottom: 8px;
-            th[scope="row"],
-            td:first-child {
-                font-weight: 500;
-                color: var(--surface-700);
-                width: 50%;
-                text-align: left;
-            }
         }
 
         .gnss-links {
