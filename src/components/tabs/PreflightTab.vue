@@ -238,8 +238,7 @@
                             <UTable
                                 :data="weatherDetailsData"
                                 :columns="weatherDetailsColumns"
-                                class="text-sm"
-                                :ui="{ thead: 'hidden', td: 'border-none py-0.5' }"
+                                :ui="{ thead: 'hidden', td: 'border-none py-0.5 text-xs' }"
                             >
                                 <template #value-cell="{ row }">
                                     <template v-if="row.original.key === 'wind'">
@@ -364,8 +363,7 @@
                             :data="preflight.weather.hourly ?? []"
                             :columns="hourlyColumns"
                             :empty="$t('preflightNoData')"
-                            class="text-sm"
-                            :ui="{ td: 'border-none py-0.5' }"
+                            :ui="{ th: 'text-xs', td: 'border-none py-0.5 text-xs' }"
                         >
                             <template #time-cell="{ row }">
                                 {{ preflight.formatTime(row.original.time) }}
@@ -419,8 +417,7 @@
                             :data="preflight.weather.forecast"
                             :columns="forecastColumns"
                             :meta="{ class: { tr: (row) => getForecastRowClass(row.original) } }"
-                            class="text-sm"
-                            :ui="{ td: 'border-none py-0.5' }"
+                            :ui="{ th: 'text-xs', td: 'border-none py-0.5 text-xs' }"
                         >
                             <template #date-cell="{ row }">
                                 {{ formatForecastDay(row.original.date) }}
@@ -533,8 +530,7 @@
                             <UTable
                                 :data="gnssInfoData"
                                 :columns="gnssInfoColumns"
-                                class="text-sm"
-                                :ui="{ thead: 'hidden', td: 'border-none py-0.5' }"
+                                :ui="{ thead: 'hidden', td: 'border-none py-0.5 text-xs' }"
                             >
                                 <template #value-cell="{ row }">
                                     <span :class="row.original.valueClass">
