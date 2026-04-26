@@ -100,12 +100,7 @@
 
                 <!-- Mobile: card per port -->
                 <div v-else class="flex flex-col gap-3">
-                    <UiBox
-                        v-for="port in ports"
-                        :key="port.identifier"
-                        :title="getPortName(port.identifier)"
-                        type="neutral"
-                    >
+                    <UiBox v-for="port in ports" :key="port.identifier" :title="getPortName(port.identifier)">
                         <!-- MSP -->
                         <div class="flex items-center gap-2">
                             <USwitch v-model="port.msp" :disabled="port.identifier === 20" size="sm" />

@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('flightPlanWaypointList')" type="neutral" class="waypoint-list">
+    <UiBox :title="$t('flightPlanWaypointList')" class="waypoint-list">
         <div class="flex justify-end">
             <UButton
                 icon="i-lucide-plus"

@@ -10,7 +10,7 @@
                 <div class="col-span-1">
                     <div class="flex flex-col gap-4">
                         <!-- MIXER -->
-                        <UiBox :title="$t('configurationMixer')" type="neutral">
+                        <UiBox :title="$t('configurationMixer')">
                             <USelect v-model="fcStore.mixerConfig.mixer" :items="sortedMixerListItems" />
                             <SettingRow
                                 :label="$t('configurationReverseMotorSwitch')"
@@ -39,7 +39,7 @@
                             </div>
                         </UiBox>
                         <!-- ESC FEATURES -->
-                        <UiBox :title="$t('configurationEscFeatures')" type="neutral">
+                        <UiBox :title="$t('configurationEscFeatures')">
                             <div v-if="!protocolConfigured" class="text-sm text-orange-500">
                                 <p v-html="$t('configurationEscProtocolDisabled')"></p>
                             </div>
@@ -202,7 +202,7 @@
                             </SettingRow>
                         </UiBox>
                         <!-- 3D -->
-                        <UiBox :title="$t('configuration3d')" type="neutral">
+                        <UiBox :title="$t('configuration3d')">
                             <SettingRow :help="$t('feature3DTip')" full-width>
                                 <USwitch
                                     :model-value="isFeatureEnabled('3D')"
@@ -257,7 +257,7 @@
                     <!-- MOTOR TEST SECTION -->
                     <div class="flex flex-col gap-3">
                         <!-- SENSOR GRAPH SECTION -->
-                        <UiBox type="neutral">
+                        <UiBox>
                             <div class="graph-grid">
                                 <svg ref="graphSvg" id="graph" class="w-full h-full">
                                     <g class="grid x" transform="translate(40, 120)"></g>

@@ -1,7 +1,7 @@
 <template>
     <div :class="sensorType" v-show="visible">
         <!-- Normal sensor layout -->
-        <UiBox v-if="!isDebug" type="neutral">
+        <UiBox v-if="!isDebug">
             <div class="grid grid-cols-[1fr_10rem] gap-4 w-full">
                 <svg :id="svgId" ref="svgElement" class="w-full h-full">
                     <g class="grid x" transform="translate(40, 120)"></g>
@@ -61,7 +61,7 @@
             </div>
         </UiBox>
         <!-- Debug layout (own UiBox, same graph-grid as normal sensors) -->
-        <UiBox v-else type="neutral">
+        <UiBox v-else>
             <div class="grid grid-cols-[1fr_10rem] gap-4 w-full">
                 <svg :id="svgId" ref="svgElement" class="w-full h-[140px]">
                     <g class="grid x" transform="translate(40, 120)"></g>

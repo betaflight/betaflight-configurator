@@ -12,7 +12,7 @@
                 <p v-html="$t('sensorsInfo')"></p>
             </UiBox>
 
-            <UiBox type="neutral">
+            <UiBox>
                 <div class="flex flex-wrap items-center gap-x-5 gap-y-2 p-2">
                     <USwitch
                         v-model="checkboxes[0]"

@@ -7,7 +7,7 @@
                 <p v-html="$t('loggingNote')"></p>
             </div>
 
-            <UiBox type="neutral" :title="$t('loggingPropertiesTitle')" class="mt-6">
+            <UiBox :title="$t('loggingPropertiesTitle')" class="mt-6">
                 <div class="flex flex-col gap-1.5">
                     <div v-for="prop in propertyOptions" :key="prop.code" class="flex items-center gap-3">
                         <USwitch
@@ -33,7 +33,7 @@
                 />
             </SettingRow>
 
-            <UiBox type="neutral" class="mt-4">
+            <UiBox class="mt-4">
                 <div class="flex flex-col gap-1">
                     <div class="flex items-center gap-2">
                         <span class="text-sm font-semibold" v-html="$t('loggingSamplesSaved')"></span>
