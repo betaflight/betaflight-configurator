@@ -201,7 +201,9 @@ import PresetDetailsDialog from "./presets/PresetDetailsDialog.vue";
 import PresetSourcesDialog from "./presets/PresetSourcesDialog.vue";
 import { usePresetsStore } from "@/stores/presets";
 import {
+    MIN_FC_VERSION_FOR_MSP_CLI,
     cancelScheduledReconnect,
+    isMspCliSupported,
     saveAndReconnect,
     scheduleReconnect,
     useMspCliSession,
@@ -313,15 +315,26 @@ function handleDeactivateSource(sourceId) {
 }
 
 async function ensureCliPresetActionSupported() {
-    if (!connectionStore.virtualMode) {
-        return true;
+    if (connectionStore.virtualMode) {
+        await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("presetsVirtualModeCliUnsupported"), {
+            confirmText: i18n.getMessage("close"),
+        });
+        return false;
     }
 
-    await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("presetsVirtualModeCliUnsupported"), {
-        confirmText: i18n.getMessage("close"),
-    });
+    if (!isMspCliSupported()) {
+        await dialog.showInfo(
+            i18n.getMessage("warningTitle"),
+            i18n.getMessage("mspCliFirmwareTooOld", {
+                required: MIN_FC_VERSION_FOR_MSP_CLI,
+                current: FC.CONFIG?.flightControllerVersion || "?",
+            }),
+            { confirmText: i18n.getMessage("close") },
+        );
+        return false;
+    }
 
-    return false;
+    return true;
 }
 
 function isPickerAbortError(error) {

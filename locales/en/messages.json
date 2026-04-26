@@ -7960,6 +7960,10 @@
         "message": "Preset apply and backup actions require the CLI, which is not available in Virtual Mode.",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
+    "mspCliFirmwareTooOld": {
+        "message": "This action requires Betaflight firmware {{required}} or newer (currently connected to {{current}}). Please update your flight controller firmware before continuing.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",
         "description": "Title for the waiting dialog when loading dump all into a file"

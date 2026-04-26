@@ -1,6 +1,8 @@
 import { ref } from "vue";
+import semver from "semver";
 import MSP from "../js/msp";
 import GUI from "../js/gui";
+import FC from "../js/fc";
 import { connectDisconnect } from "../js/serial_backend";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
@@ -11,6 +13,16 @@ const PROFILE_COMMAND_DELAY_MS = 100;
 const ERROR_PREFIX = "###ERROR";
 const RECONNECT_TIMEOUT_NAME = "msp_cli_reconnect";
 const RECONNECT_DELAY_MS = 500;
+
+export const MIN_FC_VERSION_FOR_MSP_CLI = "4.5.4";
+
+export function isMspCliSupported() {
+    const version = FC.CONFIG?.flightControllerVersion;
+    if (!version) {
+        return false;
+    }
+    return semver.gte(version, MIN_FC_VERSION_FOR_MSP_CLI);
+}
 
 function wait(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));

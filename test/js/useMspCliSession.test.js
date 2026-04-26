@@ -1,6 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import MSP from "../../src/js/msp";
-import { useMspCliSession, send, readDumpAll, sendSave } from "../../src/composables/useMspCliSession";
+import FC from "../../src/js/fc";
+import {
+    MIN_FC_VERSION_FOR_MSP_CLI,
+    isMspCliSupported,
+    useMspCliSession,
+    send,
+    readDumpAll,
+    sendSave,
+} from "../../src/composables/useMspCliSession";
 
 async function flushMicrotasks() {
     for (let i = 0; i < 5; i++) {
@@ -170,6 +178,34 @@ describe("useMspCliSession", () => {
 
             await promise;
             expect(sendCliCommandSpy).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    describe("isMspCliSupported", () => {
+        const originalVersion = FC.CONFIG.flightControllerVersion;
+
+        afterEach(() => {
+            FC.CONFIG.flightControllerVersion = originalVersion;
+        });
+
+        it("returns false when no firmware version is connected", () => {
+            FC.CONFIG.flightControllerVersion = "";
+            expect(isMspCliSupported()).toBe(false);
+        });
+
+        it("returns false on firmware older than the minimum", () => {
+            FC.CONFIG.flightControllerVersion = "4.5.3";
+            expect(isMspCliSupported()).toBe(false);
+        });
+
+        it("returns true on the minimum supported firmware", () => {
+            FC.CONFIG.flightControllerVersion = MIN_FC_VERSION_FOR_MSP_CLI;
+            expect(isMspCliSupported()).toBe(true);
+        });
+
+        it("returns true on newer firmware", () => {
+            FC.CONFIG.flightControllerVersion = "4.6.0";
+            expect(isMspCliSupported()).toBe(true);
         });
     });
 });

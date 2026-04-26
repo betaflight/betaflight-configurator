@@ -155,12 +155,15 @@ import loginManager from "@/js/LoginManager";
 import { gui_log } from "@/js/gui_log";
 import { useConnectionStore } from "@/stores/connection";
 import {
+    MIN_FC_VERSION_FOR_MSP_CLI,
     cancelScheduledReconnect,
+    isMspCliSupported,
     saveAndReconnect,
     scheduleReconnect,
     useMspCliSession,
 } from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
+import FC from "@/js/fc";
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
@@ -207,6 +210,22 @@ const isRestoreBusy = computed(
     () => restoreProgressOpen.value || restoreErrorsOpen.value || cliSession.isBatchRunning.value,
 );
 
+async function ensureMspCliSupported() {
+    if (isMspCliSupported()) {
+        return true;
+    }
+
+    await dialog.showInfo(
+        t("warningTitle"),
+        t("mspCliFirmwareTooOld", {
+            required: MIN_FC_VERSION_FOR_MSP_CLI,
+            current: FC.CONFIG?.flightControllerVersion || "?",
+        }),
+        { confirmText: t("close") },
+    );
+    return false;
+}
+
 async function loadBackups() {
     isLoading.value = true;
 
@@ -232,6 +251,10 @@ async function loadBackups() {
 }
 
 async function createBackup() {
+    if (!(await ensureMspCliSupported())) {
+        return;
+    }
+
     try {
         if (!userApi) {
             throw new Error(t("notLoggedIn"));
@@ -314,6 +337,10 @@ async function restoreBackup(backup) {
     }
 
     if (!connectionStore.connectionValid) {
+        return;
+    }
+
+    if (!(await ensureMspCliSupported())) {
         return;
     }
 
