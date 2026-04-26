@@ -15,7 +15,11 @@ export function usePower() {
         return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44);
     });
     const hasBatteryProfiles = computed(() => {
-        return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48);
+        if (!FC.CONFIG?.apiVersion || !semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            return false;
+        }
+        // Custom firmware builds may omit multi-profile support while still reporting API 1.48+; hide UI when the FC reports no profiles.
+        return (FC.CONFIG.numberOfBatteryProfiles || 0) > 0;
     });
     const activeBatteryProfile = ref(0);
     const batteryProfileName = ref("");
