@@ -3,9 +3,9 @@
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabLogging')"></div>
             <WikiButton docUrl="logging" />
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('loggingNote')"></p>
-            </div>
+            </UiBox>
 
             <UiBox :title="$t('loggingPropertiesTitle')" class="mt-6">
                 <div class="flex flex-col gap-1.5">

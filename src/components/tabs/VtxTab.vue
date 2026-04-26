@@ -8,24 +8,24 @@
             </div>
 
             <!-- Help note -->
-            <div class="note" v-show="vtxSupported">
+            <UiBox highlight class="mb-3" v-show="vtxSupported">
                 <p v-html="$t('vtxHelp')"></p>
-            </div>
+            </UiBox>
 
             <!-- Not supported -->
-            <div class="note" v-show="!vtxSupported">
+            <UiBox highlight class="mb-3" v-show="!vtxSupported">
                 <div v-html="$t('vtxMessageNotSupported')"></div>
-            </div>
+            </UiBox>
 
             <!-- Table not configured -->
-            <div class="note" v-show="vtxTableNotConfigured">
+            <UiBox highlight class="mb-3" v-show="vtxTableNotConfigured">
                 <div v-html="$t('vtxMessageTableNotConfigured')"></div>
-            </div>
+            </UiBox>
 
             <!-- Factory bands not supported -->
-            <div class="note" v-show="factoryBandsNotSupported">
+            <UiBox highlight class="mb-3" v-show="factoryBandsNotSupported">
                 <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
-            </div>
+            </UiBox>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Configuration Panel -->
@@ -348,9 +348,9 @@
             </div>
 
             <!-- Save pending warning -->
-            <div class="note" v-show="savePending">
+            <UiBox highlight class="mb-3" v-show="savePending">
                 <div v-html="$t('vtxMessageVerifyTable')"></div>
-            </div>
+            </UiBox>
         </div>
 
         <!-- Toolbar -->

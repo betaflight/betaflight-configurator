@@ -204,8 +204,7 @@ onMounted(async () => {
 }
 
 .adjustments-header {
-    background: var(--surface-700);
-    border-bottom: 2px solid var(--surface-600);
+    background: var(--ui-bg-muted);
     font-weight: 600;
     font-size: 13px;
     color: var(--text-primary);

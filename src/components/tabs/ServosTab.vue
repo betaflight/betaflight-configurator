@@ -6,7 +6,7 @@
                 <WikiButton docUrl="servos" />
             </div>
 
-            <div v-if="isSupported">
+            <div v-if="isSupported" class="flex flex-col gap-4">
                 <UiBox :title="$t('servosChangeDirection')">
                     <div class="overflow-x-auto">
                         <div

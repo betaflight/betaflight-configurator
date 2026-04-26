@@ -1,9 +1,9 @@
 <template>
     <BaseTab tab-name="cli" @mounted="onTabMounted" @cleanup="onTabCleanup">
         <div class="content_wrapper flex flex-col overflow-hidden pb-0 max-[1055px]:h-[calc(100%-87px)]">
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('cliInfo')"></p>
-            </div>
+            </UiBox>
 
             <div
                 class="cli-backdrop grow w-full border border-(--surface-500) bg-black/75 bg-no-repeat bg-[position:50%_80%] bg-[size:600px] rounded-[5px] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] max-[575px]:bg-[size:100%]"

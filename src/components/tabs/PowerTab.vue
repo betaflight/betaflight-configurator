@@ -108,9 +108,9 @@
 
                     <!-- Voltage Configuration -->
                     <UiBox v-show="showVoltageConfiguration" :title="$t('powerVoltageHead')">
-                        <div class="note">
+                        <UiBox highlight class="mb-3">
                             <div v-html="$t('powerVoltageWarning')"></div>
-                        </div>
+                        </UiBox>
                         <div
                             v-for="(meter, index) in voltageMeters"
                             :key="`voltage-${index}`"
@@ -197,9 +197,9 @@
 
                     <!-- Amperage Configuration -->
                     <UiBox v-show="showAmperageConfiguration" :title="$t('powerAmperageHead')">
-                        <div class="note">
+                        <UiBox highlight class="mb-3">
                             <div v-html="$t('powerAmperageWarning')"></div>
-                        </div>
+                        </UiBox>
                         <div
                             v-for="(meter, index) in currentMeters"
                             :key="`amperage-${index}`"
@@ -246,9 +246,9 @@
                 </div>
             </div>
 
-            <div class="note hidden">
+            <UiBox highlight class="mb-3" hidden>
                 <p v-html="$t('powerFirmwareUpgradeRequired')"></p>
-            </div>
+            </UiBox>
         </div>
 
         <!-- Bottom Toolbar -->
@@ -264,18 +264,18 @@
 
         <!-- Calibration Manager Dialog -->
         <Dialog v-model="showCalibrationManagerDialog" :title="$t('powerCalibrationManagerTitle')">
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('powerCalibrationManagerHelp')"></p>
-            </div>
-            <div class="note">
+            </UiBox>
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('powerCalibrationManagerNote')"></p>
-            </div>
-            <div class="note nocalib" v-show="calibrationVisibility.showNoCalib">
+            </UiBox>
+            <UiBox highlight class="mb-3" v-show="calibrationVisibility.showNoCalib">
                 <p v-html="$t('powerCalibrationManagerWarning')"></p>
-            </div>
-            <div class="note srcchange" v-show="calibrationVisibility.showSrcChange">
+            </UiBox>
+            <UiBox highlight class="mb-3" v-show="calibrationVisibility.showSrcChange">
                 <p v-html="$t('powerCalibrationManagerSourceNote')"></p>
-            </div>
+            </UiBox>
             <div v-show="calibrationVisibility.showVbat">
                 <SettingRow :label="$t('powerVoltageCalibration')">
                     <UInputNumber
@@ -323,9 +323,9 @@
             :title="$t('powerCalibrationManagerConfirmationTitle')"
             @close="handleCalibrationConfirmClose"
         >
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('powerCalibrationConfirmHelp')"></p>
-            </div>
+            </UiBox>
             <div v-show="vbatscalechanged" class="flex justify-between items-center font-semibold">
                 <span v-html="$t('powerVoltageCalibratedScale')"></span>
                 <span>{{ vbatnewscale }}</span>

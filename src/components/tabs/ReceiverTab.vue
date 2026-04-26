@@ -10,7 +10,7 @@
             <div class="grid-row grid-box col5">
                 <!-- Left Column: Model Preview + Channel Bars -->
                 <div class="col-span-2">
-                    <UiBox :title="$t('receiverModelPreview')">
+                    <UiBox :title="$t('receiverModelPreview')" :padding="false" class="bg-muted">
                         <div class="background_paper h-48 w-full" ref="modelPreviewContainer">
                             <canvas ref="modelCanvas"></canvas>
                         </div>

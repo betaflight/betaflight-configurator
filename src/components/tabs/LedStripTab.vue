@@ -4,9 +4,9 @@
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
             <WikiButton doc-url="led-strip" />
 
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('ledStripHelp')"></p>
-            </div>
+            </UiBox>
 
             <!-- LED Grid Container -->
             <div class="grid-container">
@@ -345,6 +345,7 @@ import GUI from "@/js/gui";
 import semver from "semver";
 import FC from "@/js/fc";
 import { API_VERSION_1_46 } from "@/js/data_storage";
+import UiBox from "../elements/UiBox.vue";
 
 // Decode HTML entities in translations (some use &amp; etc) so plain-text
 // component props (e.g. USelect item labels) render correctly.
