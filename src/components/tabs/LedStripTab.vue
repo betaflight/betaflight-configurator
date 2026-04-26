@@ -327,7 +327,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton size="md" color="primary" class="save_btn" :label="saveButtonText" @click="save" />
+            <UButton :label="saveButtonText" @click="save" />
         </div>
     </BaseTab>
 </template>

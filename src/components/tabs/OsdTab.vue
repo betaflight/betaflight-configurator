@@ -504,23 +504,19 @@
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2 items-center">
-                <UButton :disabled="!osdStore.state.isMax7456FontDeviceDetected" @click="openFontManager()">
+                <UButton
+                    :disabled="!osdStore.state.isMax7456FontDeviceDetected"
+                    @click="openFontManager()"
+                    variant="soft"
+                >
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                    <UButton
-                        @click="saveConfig()"
-                        :disabled="!osdStore.dirty"
-                        :color="osdStore.dirty ? 'success' : 'neutral'"
-                    >
+                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                        <UButton
-                            :color="osdStore.dirty ? 'success' : 'neutral'"
-                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                            square
-                        />
+                        <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
                     </UDropdownMenu>
                 </UFieldGroup>
             </div>

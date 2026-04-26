@@ -104,17 +104,13 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
                 <UButton
-                    :label="$t('presetsButtonSave')"
-                    :disabled="!store.canApply"
-                    :color="store.canApply ? 'success' : 'neutral'"
-                    @click="applyPickedPresets()"
-                />
-                <UButton
                     :label="$t('presetsButtonCancel')"
                     :disabled="!store.canApply"
-                    :color="store.canApply ? 'primary' : 'neutral'"
                     @click="store.clearPickedPresets()"
+                    color="error"
+                    variant="soft"
                 />
+                <UButton :label="$t('presetsButtonSave')" :disabled="!store.canApply" @click="applyPickedPresets()" />
             </div>
         </div>
 

@@ -158,9 +158,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
-                <button type="button" class="save" @click="saveModes">{{ $t("auxiliaryButtonSave") }}</button>
-            </div>
+            <UButton :label="$t('auxiliaryButtonSave')" :disabled="!dirty" @click="saveModes" />
         </div>
     </BaseTab>
 </template>
@@ -234,6 +232,7 @@ export default defineComponent({
 
         // Reactive State
         const modes = reactive([]);
+        const modesDirtyBaseline = ref("");
         const hideUnused = ref(false);
         const auxChannelCount = ref(0);
         const requiredModeRangeCount = ref(0);
@@ -356,6 +355,33 @@ export default defineComponent({
             return [start, end];
         };
 
+        const serializeModesForDirtyCheck = () =>
+            JSON.stringify(
+                modes.map((mode) => ({
+                    id: mode.id,
+                    entries: mode.entries.map((entry) => {
+                        if (entry.kind === "range") {
+                            const [start, end] = normalizeRangeValues(entry.sliderRange);
+                            return {
+                                kind: "range",
+                                auxChannelIndex: entry.auxChannelIndex,
+                                modeLogic: entry.modeLogic,
+                                start,
+                                end,
+                            };
+                        }
+                        return { kind: "link", modeLogic: entry.modeLogic, linkedTo: entry.linkedTo };
+                    }),
+                })),
+            );
+
+        const dirty = computed(() => {
+            if (!modesDirtyBaseline.value) {
+                return false;
+            }
+            return modesDirtyBaseline.value !== serializeModesForDirtyCheck();
+        });
+
         const addRange = (mode, auxChannelIndex = -1, modeLogic = 0, range = DEFAULT_RANGE) => {
             const sliderRange = normalizeRangeValues([range.start, range.end]);
             mode.entries.push({
@@ -468,6 +494,7 @@ export default defineComponent({
             });
 
             updateInfoWidth();
+            modesDirtyBaseline.value = serializeModesForDirtyCheck();
         };
 
         const autoSelectChannel = (rcChannels, activeChannels, rssiChannel) => {
@@ -585,7 +612,9 @@ export default defineComponent({
             fcStore.modeRangesExtra = nextModeRangesExtra;
 
             mspHelper.sendModeRanges(() => {
-                mspHelper.writeConfiguration(false);
+                mspHelper.writeConfiguration(false, () => {
+                    modesDirtyBaseline.value = serializeModesForDirtyCheck();
+                });
             });
         };
 
@@ -645,6 +674,7 @@ export default defineComponent({
             markerStyle,
             pipStyle,
             saveModes,
+            dirty,
         };
     },
 });

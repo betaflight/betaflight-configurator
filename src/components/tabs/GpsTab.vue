@@ -244,9 +244,10 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
+            <!-- <div class="btn save_btn">
                 <button type="button" class="save" @click="saveConfig">{{ $t("configurationButtonSave") }}</button>
-            </div>
+            </div> -->
+            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
         </div>
     </BaseTab>
 </template>
@@ -351,6 +352,27 @@ export default defineComponent({
             ublox_use_galileo: 0,
             ublox_sbas: 0,
             home_point_once: 0,
+        });
+
+        /** Baseline after MSP load or successful save; same pattern as Power/Auxiliary tabs */
+        const gpsTabBaseline = ref("");
+
+        const serializeGpsTabState = () =>
+            JSON.stringify({
+                featureMask: fcStore.features?.features?._featureMask ?? 0,
+                provider: gpsConfig.provider,
+                auto_baud: gpsConfig.auto_baud,
+                auto_config: gpsConfig.auto_config,
+                ublox_use_galileo: gpsConfig.ublox_use_galileo,
+                ublox_sbas: gpsConfig.ublox_sbas,
+                home_point_once: gpsConfig.home_point_once,
+            });
+
+        const dirty = computed(() => {
+            if (!gpsTabBaseline.value) {
+                return false;
+            }
+            return gpsTabBaseline.value !== serializeGpsTabState();
         });
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
@@ -705,6 +727,8 @@ export default defineComponent({
 
                 await updateGpsProtocols();
 
+                gpsTabBaseline.value = serializeGpsTabState();
+
                 isOnline.value = ispConnected();
                 isWaiting.value = true;
                 showMap.value = false;
@@ -726,6 +750,7 @@ export default defineComponent({
             await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
 
             mspHelper.writeConfiguration(true);
+            gpsTabBaseline.value = serializeGpsTabState();
         };
 
         const initializeMap = () => {
@@ -818,6 +843,7 @@ export default defineComponent({
             toggleFullscreen,
             checkConnectivity,
             saveConfig,
+            dirty,
             onGpsProtocolChange,
             loadingBarsUrl,
         };

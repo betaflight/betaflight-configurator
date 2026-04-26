@@ -79,16 +79,14 @@
 
         <!-- Bottom toolbar -->
         <div class="content_toolbar xs-compressed toolbar_fixed_bottom flex items-center gap-2">
-            <div class="toolbar_expand_btn" nbrow="2">
-                <em class="fas fa-ellipsis-h"></em>
-            </div>
-            <UButton :label="$t('cliSaveToFileBtn')" @click="cli.saveFile" />
-            <UButton :label="$t('cliLoadFromFileBtn')" @click="handleLoadFile" />
-            <UButton :label="$t('cliClearOutputHistoryBtn')" @click="cli.clearHistory" />
+            <UButton :label="$t('cliSaveToFileBtn')" @click="cli.saveFile" variant="soft" />
+            <UButton :label="$t('cliLoadFromFileBtn')" @click="handleLoadFile" variant="soft" />
+            <UButton :label="$t('cliClearOutputHistoryBtn')" @click="cli.clearHistory" variant="soft" />
             <UButton
                 :label="cli.state.copyButtonText"
                 :style="{ minWidth: cli.state.copyButtonWidth }"
                 @click="cli.copyToClipboard"
+                variant="soft"
             />
             <UButton
                 v-if="cli.isSupportRequestAvailable()"

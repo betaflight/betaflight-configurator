@@ -487,16 +487,15 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
                 <UButton
-                    :label="$t('configurationButtonSave')"
-                    :disabled="buttonStates.saveDisabled"
-                    :color="buttonStates.saveDisabled ? 'neutral' : 'success'"
-                    @click="saveAndReboot(true)"
-                />
-                <UButton
                     :label="$t('escDshotDirectionDialog-StopWizard')"
                     :disabled="buttonStates.stopDisabled"
                     @click="stopMotors()"
-                    :color="motorsTestingEnabled ? 'error' : 'neutral'"
+                    color="error"
+                />
+                <UButton
+                    :label="$t('configurationButtonSave')"
+                    :disabled="buttonStates.saveDisabled"
+                    @click="saveAndReboot(true)"
                 />
             </div>
         </div>

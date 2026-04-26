@@ -253,18 +253,13 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn calibration" v-show="showCalibration">
-                <button
-                    type="button"
-                    class="calibrationmanager"
-                    id="calibrationmanager"
-                    @click="openCalibrationManager"
-                    v-html="$t('powerCalibrationManagerButton')"
-                ></button>
-            </div>
-            <div class="btn save_btn">
-                <button type="button" class="save" @click="handleSave" v-html="$t('powerButtonSave')"></button>
-            </div>
+            <UButton
+                :label="$t('powerCalibrationManagerButton')"
+                v-if="showCalibration"
+                @click="openCalibrationManager"
+                variant="soft"
+            />
+            <UButton :label="$t('powerButtonSave')" :disabled="!dirty" @click="handleSave" />
         </div>
 
         <!-- Calibration Manager Dialog -->
@@ -424,6 +419,7 @@ export default defineComponent({
             vbatnewscale,
             amperagenewscale,
             sourceschanged,
+            dirty,
         } = usePower();
 
         const calibrationVisibility = computed(() => getCalibrationVisibility());
@@ -554,6 +550,7 @@ export default defineComponent({
             handleApplyCalibration,
             handleDiscardCalibration,
             handleCalibrationConfirmClose,
+            dirty,
         };
     },
 });

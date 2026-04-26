@@ -137,12 +137,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton
-                :label="$t('adjustmentsSave')"
-                :color="hasChanges ? 'success' : 'neutral'"
-                :disabled="!hasChanges"
-                @click="saveAdjustments"
-            />
+            <UButton :label="$t('adjustmentsSave')" :disabled="!hasChanges" @click="saveAdjustments" />
         </div>
     </BaseTab>
 </template>

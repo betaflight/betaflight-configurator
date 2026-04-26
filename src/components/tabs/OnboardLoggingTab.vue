@@ -268,9 +268,10 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
+            <!-- <div class="btn save_btn">
                 <button type="button" class="save" @click="saveSettings">{{ $t("blackboxButtonSave") }}</button>
-            </div>
+            </div> -->
+            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" @click="saveSettings" />
         </div>
     </BaseTab>
 </template>
@@ -528,6 +529,24 @@ export default defineComponent({
             );
         });
 
+        /** Baseline after MSP load or successful save; same pattern as Power / Auxiliary */
+        const onboardLoggingBaseline = ref("");
+
+        const serializeOnboardLoggingState = () =>
+            JSON.stringify({
+                blackboxDevice: blackboxDevice.value,
+                blackboxRate: blackboxRate.value,
+                debugMode: debugMode.value,
+                debugFieldsEnabled: [...debugFieldsEnabled.value],
+            });
+
+        const dirty = computed(() => {
+            if (!onboardLoggingBaseline.value) {
+                return false;
+            }
+            return onboardLoggingBaseline.value !== serializeOnboardLoggingState();
+        });
+
         function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
             debugFieldsEnabled.value.splice(index, 1, value);
@@ -557,6 +576,7 @@ export default defineComponent({
             await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
             mspHelper.writeConfiguration(true);
+            onboardLoggingBaseline.value = serializeOnboardLoggingState();
         }
 
         function askToEraseFlash() {
@@ -855,6 +875,7 @@ export default defineComponent({
                 }
 
                 updateVirtualGyro();
+                onboardLoggingBaseline.value = serializeOnboardLoggingState();
                 updateHtml();
             } catch (error) {
                 console.error("Failed to load onboard logging data", error);
@@ -912,6 +933,7 @@ export default defineComponent({
             formatKilobytes,
             updateDebugField,
             saveSettings,
+            dirty,
             askToEraseFlash,
             flashErase,
             flashEraseCancel,

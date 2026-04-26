@@ -355,28 +355,23 @@
 
         <!-- Toolbar -->
         <div class="content_toolbar xs-compressed toolbar_fixed_bottom">
-            <div class="toolbar_expand_btn" nbrow="2">
-                <em class="fas fa-ellipsis-h"></em>
-            </div>
-
+            <UFieldGroup size="sm" orientation="horizontal">
+                <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" variant="soft" />
+                <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
+                </UDropdownMenu>
+            </UFieldGroup>
+            <UFieldGroup size="sm" orientation="horizontal">
+                <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" variant="soft" />
+                <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
+                </UDropdownMenu>
+            </UFieldGroup>
             <UButton
                 :label="saveButtonOverride || $t('vtxButtonSave')"
                 :disabled="saveButtonDisabled"
-                :color="saveButtonDisabled ? 'neutral' : 'success'"
                 @click="handleSave"
             />
-            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
-                <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" />
-                <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
-                </UDropdownMenu>
-            </UFieldGroup>
-            <UFieldGroup size="sm" orientation="horizontal" class="!flex">
-                <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" />
-                <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
-                </UDropdownMenu>
-            </UFieldGroup>
         </div>
     </BaseTab>
 </template>
