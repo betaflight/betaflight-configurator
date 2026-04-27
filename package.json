@@ -104,7 +104,7 @@
     "less": "^4.2.2",
     "lint-staged": "^15.4.3",
     "os": "^0.1.2",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.12",
     "prettier": "^3.5.2",
     "rollup": "^4.59.0",
     "rollup-plugin-copy": "^3.5.0",
