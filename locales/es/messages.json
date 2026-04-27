@@ -323,9 +323,6 @@
     "tabFailsafe": {
         "message": "Modo de Seguridad"
     },
-    "tabTransponder": {
-        "message": "Transpondedor de Carrera"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -616,9 +613,6 @@
     },
     "versionLabelTarget": {
         "message": "Placa"
-    },
-    "versionLabelFirmware": {
-        "message": "Firmware"
     },
     "versionLabelConfigurator": {
         "message": "Versión de la aplicación"
@@ -1311,9 +1305,6 @@
     "featureTRANSPONDER": {
         "message": "Transpondedor de Carrera"
     },
-    "featureTRANSPONDERTip": {
-        "message": "Configurar a través del apartado Transpondedor de Carrera después de activar."
-    },
     "featureAIRMODE": {
         "message": "Activar Airmode permanentemente"
     },
@@ -1365,9 +1356,6 @@
     },
     "configurationTelemetryHelp": {
         "message": "Salida de telemetría desde el receptor"
-    },
-    "configurationRSSI": {
-        "message": "RSSI (Fuerza de la Señal)"
     },
     "configurationRSSIHelp": {
         "message": "RSSI es una medida de la fuerza de la señal y es muy útil para saber que la aeronave está saliendo de rango o hay interferencias de RF."
@@ -1894,9 +1882,6 @@
     "pidTuningSubTabPid": {
         "message": "PID"
     },
-    "pidTuningSubTabRates": {
-        "message": "Tasas"
-    },
     "pidTuningSubTabFilter": {
         "message": "Filtros"
     },
@@ -1958,10 +1943,6 @@
     "pidTuningDMaxFeatureTitle": {
         "message": "Amortiguación Dinámica \/ Ajustes D Max",
         "description": "Title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "Amortiguación<br>Dinámica",
-        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "Ganancia",
@@ -2086,9 +2067,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> El uso de un Punto de Ajuste de Transición de D mayor que 0 y menor que 0.1 está altamente desaconsejado. Puede causar inestabilidad y reducir la respuesta de los controles al cruzar el punto central.<\/span>"
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": "Pre<br>alimentación"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "La prealimentación ajusta la respuesta de los mandos.<br \/><br \/> Estas opciones te permiten ajustarlo para que sea más nítido, respuestas inmediatas a los mandos para carreras o respuestas más suaves para fines cinematográficos \/ HD."
@@ -2849,69 +2827,6 @@
     },
     "adjustmentsSave": {
         "message": "Guardar"
-    },
-    "transponderNotSupported": {
-        "message": "El firmware de tu controlador de vuelo no soporta la funcionalidad de transpondedor."
-    },
-    "transponderInformation": {
-        "message": "Los sistemas de transpondedor permiten a los organizadores de carreras cronometrar tus vueltas. El transpondedor se instala en la aeronave y cuando pasa por la puerta de cronometraje el receptor de pista registra el código y guarda el tiempo de vuelta. Cuando instales un transpondedor basado en IR, debes asegurarte de que apunta hacia fuera de la aeronave hacia los receptores de la pista y que el haz de luz no está obstruido por el chasis, correas de batería, cables, hélices, etc."
-    },
-    "transponderConfigurationType": {
-        "message": "Tipo de transpondedor"
-    },
-    "transponderType0": {
-        "message": "Ninguno"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configuración de iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configuración de aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configuración de ERLT"
-    },
-    "transponderData1": {
-        "message": "Datos"
-    },
-    "transponderData2": {
-        "message": "ID del Transpondedor"
-    },
-    "transponderData3": {
-        "message": "ID del Transpondedor"
-    },
-    "transponderDataHelp1": {
-        "message": "Sólo dígitos hexadecimales, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configura el código de tu transpondedor aquí. Nota: Sólo los códigos válidos serán reconocidos por los sistemas de medición de tiempos de carreras. Códigos válidos de transpondedor pueden obtenerse de <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Para más información visita <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">la web de aRCiTimer<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Elije ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Para más información visita <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">la web de EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Guardar"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Guardar y Reiniciar"
-    },
-    "transponderDataInvalid": {
-        "message": "Los datos del transpondedor <span class=\"message-negative\">no son válidos<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requieren firmware &gt;= 1.10.0 y que la placa lo soporte."
@@ -4382,29 +4297,13 @@
         "message": "Más Filtrado",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Filtro Giro Multiplicador:",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Cambia los cortes del filtro Paso Bajo del Giro.<br \/><br \/>Al mover el deslizador a la izquierda se obtiene un filtrado de Giro más fuerte (menor frecuencia de corte).<br \/><br \/>Al mover el deslizador a la derecha se obtiene menor filtrado de Giro (mayor frecuencia de corte).<br \/><br \/>Al mover el deslizador a la derecha se mejora el control de turbulencias, SE CUIDADOSO para no ser demasiado radical. Permitirás que llegue más ruido tanto a P como a D y puede que la aeronave se vaya volando o quemes los motores.<br \/><br \/>Es posible que tengas que mover el control deslizante a la izquierda si tiene problemas de resonancia del bastidor, rodamientos dañados, hélices dobladas, motores calientes, etc.<br \/><br \/>El filtrado del Giro se aplica antes, y en adición a, el filtrado de D.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Usar deslizador del Giro",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "Filtro D Term Multiplicador:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Cambia los cortes del filtro Paso Bajo del D Term.<br \/><br \/>Mover el deslizador a la izquierda produce un filtrado de D es más fuerte (frecuencia de corte más baja).<br \/><br \/>Mover el deslizador a la derecha producen un filtrado de D más suave (mayor frecuencia de corte).<br \/><br \/>El término D es el elemento PID más sensible al ruido y las resonancias. Puede amplificar el ruido de alta frecuencia entre 10x y 100x. Por eso los cortes de los de filtros D son mucho más bajos que los filtros del giro.<br \/><br \/>El filtrado de D se aplica después, y en adición a, el filtro del giro. El filtrado por defecto D es óptimo para la mayoría de las aeronaves y rara vez se necesita cambiar.<br \/><br \/>El desplazamiento de este deslizador a la izquierda reduce el calor del motor en aeronaves ruidosas y con valores altos de 'D' en el ajuste del PID, pero es posible que notes más turbulencias y resonancias en D de baja frecuencia.<br \/><br \/>No se recomienda mover el deslizador a la derecha, pero puede mejorar las turbulencias en construcciones limpias. Puede causar que los motores chirríen al armar, resonancias repentinas en vuelo, y sobrecalentamiento grave del motor.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Usar deslizador del D Term",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Deslizadores para ajustar las características de vuelo de la aeronave (ganancias de PID)<br \/><br \/>Amortiguación (ganancia de D): Resiste el movimiento rápido, minimiza la oscilación de P.<br \/><br \/>Seguimiento (ganancias de P y D): Mejora la capacidad de respuesta de la aeronave, si es demasiado alto puede causar vibración u oscilación.<br \/><br \/>Respuesta de los mandos (Prealimentación): Aumenta la capacidad de respuesta de la aeronave a movimientos de mando más rápidos.<br \/><br \/>Rumbo - Oscilación (ganancia de I, experto): Ajuste fino de I.<br \/><br \/>D dinámica (D Max, experto): Establece la cantidad máxima a la que D puede ser impulsada durante movimientos rápidos.<br \/><br \/>Amortiguación de Pitch (ratio Pitch:Roll de D, experto): Aumenta la cantidad de amortiguación en el pitch relativo al roll.<br \/><br \/>Seguimiento de Pitch (ratio Pitch:Roll de P, I y F, experto): Aumenta la fuerza de estabilización en pitch relativo al roll.<br \/><br \/>Multiplicador Maestro (todas las ganancias, expertos): Aumenta o reduce todas las ganancias del PID, manteniendo constantes sus proporciones.",
@@ -4615,9 +4514,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Giro Filtro Notch Dinámico Rango"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Factor Q"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Frecuencia mínima [Hz]"
     },
@@ -4629,9 +4525,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Filtro Notch Dinámico tiene tres rangos de frecuencias en las que puede operar: LOW (80-300Hz) para quads con pocas revoluciones como 6\" o más, MEDIUM (140-550Hz) para un quad normal de 5\", HIGH (230-800Hz) para quads de altas revoluciones como por ejemplo 2,5\"-3\". La opción AUTO selecciona el rango dependiendo del valor de la frecuencia de corte máxima del filtro Giro Paso Bajo 1 Dinámico."
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "El factor Q ajusta como de estrechos o anchos son los Filtros Notch Dinámicos. Valores más altos lo hacen estrecho y más preciso y valores más bajos lo hacen más ancho y extenso. Un valor muy bajo aumenta considerablemente el retraso producido por el filtro."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Ajusta esto a la frecuencia mínima que necesita ser controlada por el filtro notch dinámico."
@@ -4719,17 +4612,11 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Incrementa los valores del PID para compensar cuando la Vbat está baja. Esto proporciona características de vuelo más constantes durante el vuelo. La cantidad de compensación que se aplica se calcula a partir del $t(powerBatteryMaximum.message) indicado en la página de $t(tabPower.message), así que asegúrate de que tiene un valor apropiado."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Compensación de Caída de Tensión"
-    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Proporciona un rendimiento consistente del acelerador y del PID sobre el rango de voltaje de la batería utilizable incrementando la salida del motor según el voltaje de la batería va cayendo.<br \/><br \/> La cantidad de compensación puede variar entre el 0 y el 100 %. Se recomienda compensación completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki<\/a> para más información."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Linearización de Empuje"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Mejora la autoridad con acelerador bajo y la capacidad de respuesta.<br><br> Especialmente útil para whoops y ESCs de 48kHz. No tiene efecto con acelerador alto.<br><br>La cantidad de compensación puede variar entre 0 y 150 %. Generalmente el 30-40 % es suficiente."
@@ -5466,17 +5353,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Imagen personalizada:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Tamaño debe ser de $t(logoWidthPx)x$t(logoHeightPx) píxeles"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Debe contener píxeles verdes, blancos y negros"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Pulse <b>$t(osdSetupUploadFont.message)<\/b> para persistir logo personalizado"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Tamaño de imagen no válido: {{width}}x{{height}} (esperado $t(logoWidthPx)x$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "La imagen contiene un pixel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) en las coordenadas {{posX}}×{{posY}}"
@@ -7276,9 +7157,6 @@
     },
     "pidTuningRatesType": {
         "message": "Tipo de Tasas"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "Cambiar el tipo de tasas cambiará la curva de tasas y la forma en la que puede ser configurada"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Tasa"

@@ -278,9 +278,6 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
-    "tabTransponder": {
-        "message": "Transponder de corridas"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -543,9 +540,6 @@
     },
     "versionLabelTarget": {
         "message": "Destino"
-    },
-    "versionLabelFirmware": {
-        "message": "Firmware"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Aplicação atualizada para a versão: $1"
@@ -1142,9 +1136,6 @@
     "featureTRANSPONDER": {
         "message": "Transponder de corridas"
     },
-    "featureTRANSPONDERTip": {
-        "message": "Configure através da aba Transponder de Corridas após a ativação."
-    },
     "featureAIRMODE": {
         "message": "Ativar permanentemente o Airmode"
     },
@@ -1193,9 +1184,6 @@
     },
     "configurationTelemetryHelp": {
         "message": "Saída de telemetria do receptor"
-    },
-    "configurationRSSI": {
-        "message": "RSSI (Potência do sinal)"
     },
     "configurationRSSIHelp": {
         "message": "RSSI é uma medida de intensidade do sinal e é muito útil para saber quando a aeronave está saindo de alcance ou se está sofrendo interferência."
@@ -1595,9 +1583,6 @@
     "pidTuningSubTabPid": {
         "message": "Definições do perfil PID"
     },
-    "pidTuningSubTabRates": {
-        "message": "Definições do perfil da Taxas"
-    },
     "pidTuningSubTabFilter": {
         "message": "Configurar Filtro"
     },
@@ -1659,10 +1644,6 @@
     "pidTuningDMaxFeatureTitle": {
         "message": "Amortecedor Dinâmico \/ Configurações de D Máximo",
         "description": "Title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "Amortecedor<br>Dinâmico",
-        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "Ganho",
@@ -1740,9 +1721,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Usar a Transição do ponto D com um valor maior que 0 e menor do que 0.1 não é recomendado. Fazer isso pode causar instabilidade e resposta reduzida do stick conforme o stick atravessa a posição central.<\/span>"
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward ajusta a responsividade dos sticks.<br \/><br \/> Estas opções permitem ajustes para fornecer respostas mais nítidas e imediatas para corridas, ou respostas suaves e leves para fins cinemáticos \/ HD."
@@ -2410,69 +2388,6 @@
     },
     "adjustmentsSave": {
         "message": "Salvar"
-    },
-    "transponderNotSupported": {
-        "message": "O firmware do seu controlador de voo não suporta a função de transponder."
-    },
-    "transponderInformation": {
-        "message": "Sistemas de transponder permitem que os organizadores de corridas cronometrem as suas voltas. O transponder é instalado na sua aeronave, e quando passar por um 'gate' equipado com receptores, seu código é registrado junto com o tempo da sua volta. Quando equipar um transponder baseado em IR, você deve garantir que ele aponta para fora da sua aeronave, na direção dos receptores da pista, e que os feixes de luz não estão sendo obstruídos pela estrutura, bateria, cabos, hélices, etc."
-    },
-    "transponderConfigurationType": {
-        "message": "Tipo de transponder"
-    },
-    "transponderType0": {
-        "message": "Nenhum"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configuração iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configuração aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configuração ERLT"
-    },
-    "transponderData1": {
-        "message": "Dados"
-    },
-    "transponderData2": {
-        "message": "ID do Transponder"
-    },
-    "transponderData3": {
-        "message": "ID do Transponder"
-    },
-    "transponderDataHelp1": {
-        "message": "Somente dígitos Hexadecimais, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configure o código do seu transponder aqui. Nota: Somente códigos válidos serão reconhecidos em sistemas de tempo de corrida. Códigos válidos para o transponder podem ser obtidos em <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Para mais informações visite o site <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Escolha o ID ERTL (0 a 63)"
-    },
-    "transponderHelp3": {
-        "message": "Para mais informações visite o site <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Salvar"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Salvar e Reiniciar"
-    },
-    "transponderDataInvalid": {
-        "message": "Dados do transponder são <span class=\"message-negative\">inválidos<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requerem o firmware &gt;= 1.10.0. e suporte do destino."
@@ -3818,25 +3733,9 @@
         "message": "Mais Filtragem",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Multiplicador do Filtro do Gyro:",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Altera a frequência de corte do filtro Lowpass do Gyro.<br \/><br \/>Mover o slider para a esquerda dá mais força à filtragem do Gyro (menor frequência de corte).<br \/><br \/>Mover o slider para a direita dá menos filtragem do Gyro (maior frequência de corte).<br \/><br \/>Ao mover o slider para a direita para melhorar a turbulência nas hélices, TENHA CUIDADO e não exagere. Isso irá permitir mais ruído nos termos P e D e poderá fazer com que a aeronave perca o controle ou queimar os motores.<br \/><br \/>Mova os sliders para a esquerda se estiver com problemas de ressonância na fuselagem, rolamentos com defeitos, hélices desgastadas, motores quentes, etc.<br \/><br \/>A filtragem do Gyro é aplicada antes, e em adição à filtragem do D.",
         "description": "Gyro filter tuning slider helpicon message"
-    },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Usar Slider no Gyro",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "Multiplicador do Termo D:",
-        "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Usar Slider no termo D",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Nota:<\/strong> Os sliders foram desativados por que os valores foram modificados manualmente. Pressionar o botão '$t(pidTuningSliderEnableButton.message)' irá ativa-los novamente. Isto porem irá reverter os valores e qualquer alteração não salva será perdida.",
@@ -4003,9 +3902,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Filtro Notch dinâmico - Alcance"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Fator Q"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Frequência Mínima [Hz]"
     },
@@ -4014,9 +3910,6 @@
     },
     "pidTuningDynamicNotchCount": {
         "message": "Quantidade de Notch"
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Fator Q ajusta quão curto ou amplo são os filtros Notch Dinâmicos. Valores maiores fazem com que fiquem mais curtos e mais precisos e valores menores fazem com que fiquem mais largos e amplos. Utilizar um valor muito baixo irá aumentar o atraso do filtro consideravelmente."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Defina este valor com a menor frequência do ruído de entrada que precisa ser controlado pelo filtro notch dinâmico."
@@ -4100,14 +3993,8 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Aumenta os valores do PID para compensar quando a voltagem da bateria (Vbat) diminui. Isso resulta em características mais constantes durante o voo. A quantidade de compensação aplicada é calculada a partir da $t(powerBatteryMaximum.message) indicada na aba $t(tabPower.message), então tenha certeza de que a configurou corretamente."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Compensar Bateria Fraca"
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Linearização da Propulsão"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Melhora a autoridade e responsividade em baixa velocidade. <br><br> Especialmente útil para whoops e ESCs a 48k. Não tem efeito em aceleração mais elevada.<br><br>O valor da compensação pode variar entre 0% e 150%. Geralmente um valor entre 30% e 40% é o suficiente."
@@ -4781,17 +4668,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Imagem personalizada:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "O tamanho deve ser $t(logoWidthPx)×$t(logoHeightPx) pixels"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Deve conter pixels verdes, preto e branco"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Pressione <b>$t(osdSetupUploadFont.message)<\/b> para manter o logo personalizado"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Tamanho da imagem inválido: {{width}}×{{height}} (deveria ser $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "A imagem contém um pixel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) nas coordenadas {{posX}}x{{posY}}"
@@ -6460,9 +6341,6 @@
     },
     "pidTuningRatesType": {
         "message": "Tipos de taxas"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "Alterar o tipo de taxa irá modificar as curvas e a maneira de configurá-las"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Taxa"

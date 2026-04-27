@@ -190,9 +190,6 @@
     "tabFailsafe": {
         "message": "失控保護"
     },
-    "tabTransponder": {
-        "message": "比賽應答器"
-    },
     "tabOsd": {
         "message": "OSD 熒幕疊加顯示"
     },
@@ -423,9 +420,6 @@
     },
     "versionLabelTarget": {
         "message": "飛控型號"
-    },
-    "versionLabelFirmware": {
-        "message": "固件"
     },
     "notifications_app_just_updated_to_version": {
         "message": "程式已更新到版本: $1"
@@ -768,9 +762,6 @@
     "featureTRANSPONDER": {
         "message": "比賽應答器"
     },
-    "featureTRANSPONDERTip": {
-        "message": "開啟後，請在比賽應答器頁面完成設置。"
-    },
     "featureAIRMODE": {
         "message": "永久啟用 Airmode"
     },
@@ -803,9 +794,6 @@
     },
     "configurationReceiverMode": {
         "message": "接收機模式"
-    },
-    "configurationRSSI": {
-        "message": "RSSI（接收機訊號強度）"
     },
     "configurationRSSIHelp": {
         "message": "RSSI 是接收訊號的強度，對判斷飛機是否收到無線訊號干擾或者即將超出範圍很有用。"
@@ -1165,9 +1153,6 @@
     },
     "pidTuningSubTabPid": {
         "message": "PID 配置文件設置"
-    },
-    "pidTuningSubTabRates": {
-        "message": "Rate 配置文件設置"
     },
     "pidTuningSubTabFilter": {
         "message": "濾波器設置"
@@ -1588,69 +1573,6 @@
     },
     "adjustmentsSave": {
         "message": "保存"
-    },
-    "transponderNotSupported": {
-        "message": "該飛控不支援比賽收發器"
-    },
-    "transponderInformation": {
-        "message": "比賽收發器供賽事組織者記錄您的單圈時間。收發器安裝在您的飛機上，當它通過計時門時賽道接收機會記錄下您的編號和時間。安裝基於紅外線的收發器時請確保它只想機體外部的賽道接收機方向，並且光纖中間不會被機架、電池扎帶、螺旋槳等遮擋。"
-    },
-    "transponderConfigurationType": {
-        "message": "比賽收發器類型"
-    },
-    "transponderType0": {
-        "message": "無"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "配置 iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "配置 aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "配置 ERLT"
-    },
-    "transponderData1": {
-        "message": "數據"
-    },
-    "transponderData2": {
-        "message": "比賽收發器 編號"
-    },
-    "transponderData3": {
-        "message": "比賽收發器 編號"
-    },
-    "transponderDataHelp1": {
-        "message": "仅十六進制數字，0-9， A-F"
-    },
-    "transponderHelp1": {
-        "message": "在此配置您的比賽收發器編號。注意：只有有效的編號才會被系統接收。有效的編號可以在這裡獲得：<a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>。"
-    },
-    "transponderHelp2": {
-        "message": "更多訊息請訪問<a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "選擇 ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "更多訊息請訪問<a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "保存"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "保存並重啟"
-    },
-    "transponderDataInvalid": {
-        "message": "收發器數據 <span class=\"message-negative\">無效<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "舵機功能要求固件版本大於1.10.0 且飛控支援"
@@ -2581,14 +2503,6 @@
         "message": "更多濾波",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "陀螺儀濾波器乘數:",
-        "description": "Gyro filter tuning slider label"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "D Term 濾波器乘數:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>注意:<\/strong>滑塊已禁用，因為已手動更改數值。點擊$t(pidTuningSliderEnableButton.message)按鈕將再次激活它們。這將重置數值，任何未保存的更改都將丟失。",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -2632,9 +2546,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "動態陷波濾波器範圍"
     },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Q調整了動態陷波濾波器的寬度。更高的值將使其變得更窄、更精準，較低的值將使其變得更寬、更寬泛。將Q調到很低將會帶來很大的濾波器延遲。"
-    },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "將此設置為需要由動態陷波器控制的傳入噪聲的最低頻率。"
     },
@@ -2668,9 +2579,6 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "當電池電壓變低時， 飛控自動增加PID數值來補償動力的損失。這會在整個飛行過程中提供一個更一致的飛行特性。該補償數值通過在 ‘$t(tabPower.message)‘的 ‘$t(powerBatteryMaximum.message)’ 計算而得，所以請確保正確設置了該數值。"
-    },
-    "pidTuningVbatSagCompensation": {
-        "message": "電池壓降補償"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4512,9 +4420,6 @@
     },
     "pidTuningRatesType": {
         "message": "Rate 類型"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "改變 Rate 類型將改變 Rate 曲線及配置方式"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"

@@ -193,9 +193,6 @@
     "tabFailsafe": {
         "message": "Segurtasun Modua"
     },
-    "tabTransponder": {
-        "message": "Laizterketarako Transpondedorea"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -429,9 +426,6 @@
     },
     "versionLabelTarget": {
         "message": "Target"
-    },
-    "versionLabelFirmware": {
-        "message": "Firmwarea"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Aplikazioa:$1 bertsiora eguneratu da"
@@ -786,9 +780,6 @@
     "featureTRANSPONDER": {
         "message": "Laizterketarako Transpondedorea"
     },
-    "featureTRANSPONDERTip": {
-        "message": "Gaitu ondoren, laizterketarako transpondedore atala konfiguratu."
-    },
     "featureAIRMODE": {
         "message": "Airmode etengabe gaitu"
     },
@@ -821,9 +812,6 @@
     },
     "configurationReceiverMode": {
         "message": "Hartzaile modua"
-    },
-    "configurationRSSI": {
-        "message": "RSSI (seinalearen indarra)"
     },
     "configurationRSSIHelp": {
         "message": "RSSI seinalearen indarraren neurketa da eta oso erabilgarria da, aireontziak noiz irtengo diren barrutitik kanpora edo RF interferentziak jasaten ari den jakiteko."
@@ -1183,9 +1171,6 @@
     },
     "pidTuningSubTabPid": {
         "message": "PID profilaren ezarpenak"
-    },
-    "pidTuningSubTabRates": {
-        "message": "Rate profilaren ezarpenak"
     },
     "pidTuningSubTabFilter": {
         "message": "Iragazkiak"
@@ -1612,69 +1597,6 @@
     },
     "adjustmentsSave": {
         "message": "Gorde"
-    },
-    "transponderNotSupported": {
-        "message": "Hegaldi-kontroladorearen firmwareak ez du transpondedor funtzionaltasunik onartzen."
-    },
-    "transponderInformation": {
-        "message": "Transponder sistemek lasterketen antolatzaileek zure bueltak kronometratzea ahalbidetzen dute. Transpondorea aireontziari egokituta dago eta aireontziak denbora-atea pasatzen duenean pista-alboko hartzaileak zure kodea erregistratzen du eta buelta denbora grabatzen du. IR oinarritutako transponder bat egokitzean zure hegazkinetik pista-alboko hargailuetara zuzentzen dela ziurtatu behar duzu, eta argi-izpiak zure egitura, bateria-uhalak, kableak, helizeak eta abar ez duela oztopatzen."
-    },
-    "transponderConfigurationType": {
-        "message": "Transponder mota"
-    },
-    "transponderType0": {
-        "message": "Bat ere ez"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "iLap Konfigurazioa"
-    },
-    "transponderConfiguration2": {
-        "message": "aRCitimer konfigurazioa"
-    },
-    "transponderConfiguration3": {
-        "message": "ERLT Konfigurazioa"
-    },
-    "transponderData1": {
-        "message": "Datuak"
-    },
-    "transponderData2": {
-        "message": "Transponder IDa"
-    },
-    "transponderData3": {
-        "message": "Transponder IDa"
-    },
-    "transponderDataHelp1": {
-        "message": "Zenbaki hexadekimalak bakarrik, 0-9, AF"
-    },
-    "transponderHelp1": {
-        "message": "Hemen konfiguratu zure transpondedore kodea. Oharra: lasterketen krono-sistemek bakarrik aitortuko dituzte baliozko kodeak. Baliozko transpondedor kodeak <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a> bidez lor daitezke."
-    },
-    "transponderHelp2": {
-        "message": "Informazio gehiago <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer web-orrian<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "ERLT ID 0-63 aukeratu"
-    },
-    "transponderHelp3": {
-        "message": "Informazio gehiago <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer web-orrian<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Gorde"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Gorde eta berrabiarazi"
-    },
-    "transponderDataInvalid": {
-        "message": "Transpondedore datuak <span class=\"message-negative\">baliogabeak dira<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Serboek &gt;=1.10.0. firmwarea eta kontroladoreak onartzea behar du."
@@ -2641,14 +2563,6 @@
         "message": "Iragazketa Gehiago",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Giro Iragazkien Biderkatzailea:",
-        "description": "Gyro filter tuning slider label"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "D Term Iragazki Biderkatzailea:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Oharra:<\/strong> Graduatzaileak desgaituta daude balioak eskuz aldatu direlako. '$t(pidTuningSliderEnableButton.message)' botoia sakatzen, balioak berrezarriko dira eta gorde gabeko aldaketa guztiak galduko dira.",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -2692,9 +2606,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Notch Dinamikoa Iragazkiaren Barrutia"
     },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Q faktorea Notch Iragazki Dinamikoak estu edo zabal egokitzeko erabiltzen da. Balio altuagoak estuagoak eta zehatzagoak dira eta balio baxuagoak zabalagoak eta zabalagoak egiten ditu. Benetan balio txikia izateak asko handituko du iragazkien atzerapena."
-    },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Notch dinamikoa kontrolatu behar duen zarata maiztasun txikienean ezarri."
     },
@@ -2729,14 +2640,8 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "PID balioak handitzen ditu Vbat jaisten denean konpentsatzeko. Horrek hegaldi ezaugarri konstanteagoak emango ditu hegaldi osoan. Aplikatzen den kalte-ordaina zenbatekoa kalkulatuko da $t(powerBatteryMaximum.message) aren arabera $t(tabPower.message) horrian konfiguraturik, beraz, ziurtatu egokia dela."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Vbat Sag Konpentsazioa"
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Bultzada Linealizazioa"
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -4589,9 +4494,6 @@
     },
     "pidTuningRatesType": {
         "message": "Rate Mota"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "Rate mota aldatzeak rateen kurba aldatuko du eta ezartzen duzun modua ere"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"

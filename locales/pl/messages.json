@@ -106,11 +106,23 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Symulacja kontrolera lotu bez sprzętu.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Wprowadź ścieżkę szeregową lub adres URL do połączenia.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Automatyczne połączenie"
     },
     "close": {
         "message": "Zamknij"
+    },
+    "openSidebarMenu": {
+        "message": "Otwórz menu paska bocznego",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -120,6 +132,21 @@
     },
     "submit": {
         "message": "Prześlij"
+    },
+    "delete": {
+        "message": "Usuń"
+    },
+    "edit": {
+        "message": "Edytuj"
+    },
+    "add": {
+        "message": "Dodaj"
+    },
+    "update": {
+        "message": "Aktualizuj"
+    },
+    "save": {
+        "message": "Zapisz"
     },
     "autoConnectEnabled": {
         "message": "Automatyczne połączenie: Włączone - Aplikacja automatycznie próbuje połączyć się po wykryciu nowego portu"
@@ -331,9 +358,6 @@
     "tabFailsafe": {
         "message": "Procedura Fail-Safe"
     },
-    "tabTransponder": {
-        "message": "Transponder"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -345,6 +369,9 @@
     },
     "tabGPS": {
         "message": "GPS"
+    },
+    "tabFlightPlan": {
+        "message": "Plan lotu"
     },
     "tabMotorTesting": {
         "message": "Silniki"
@@ -375,6 +402,19 @@
     },
     "logActionShow": {
         "message": "Pokaż logi"
+    },
+    "tabLog": {
+        "message": "Log"
+    },
+    "i2cErrorDetected": {
+        "message": "Wykryto błąd I2C (+{{delta}}, łącznie {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "Wyczyść"
+    },
+    "logAutoScroll": {
+        "message": "Automatyczne przewijanie"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} pliki",
@@ -627,9 +667,6 @@
     },
     "versionLabelTarget": {
         "message": "Kontroler lotu"
-    },
-    "versionLabelFirmware": {
-        "message": "Oprogramowanie"
     },
     "versionLabelConfigurator": {
         "message": "Wersja aplikacji"
@@ -1323,7 +1360,7 @@
         "message": "Transponder"
     },
     "featureTRANSPONDERTip": {
-        "message": "Po uruchomieniu skonfiguruj w zakładce Transponder."
+        "message": "Włącz obsługę oprogramowania transpondera. Skonfiguruj dostawcę (<code>ustaw transponder_provider = [ILAP|ARCITIMER|ERLT]<\/code>) i dane (<code>ustaw transponder_data = &lt;bytes&gt;<\/code>) za pomocą CLI, następnie <code>zaoszczędź<\/code>. Uruchom <code>pobiera transponder<\/code>, aby sprawdzić aktualne wartości."
     },
     "featureAIRMODE": {
         "message": "Uruchom Airmode na stałe."
@@ -1378,7 +1415,7 @@
         "message": "Wyjście telemetrii z odbiornika"
     },
     "configurationRSSI": {
-        "message": "RSSI (Siła sygnału)"
+        "message": "RSSI"
     },
     "configurationRSSIHelp": {
         "message": "Siła sygnału RSSI jest bardzo pomocna, bo pokazuje, gdy Twój model traci zasięg lub występują zakłócenia sygnału."
@@ -1932,9 +1969,6 @@
     "pidTuningSubTabPid": {
         "message": "Ustawienia profilu PID"
     },
-    "pidTuningSubTabRates": {
-        "message": "Ustawienia Profilu Rate"
-    },
     "pidTuningSubTabFilter": {
         "message": "Ustawienia filtrów"
     },
@@ -1998,7 +2032,7 @@
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
-        "message": "Dynamiczny<br>Damping",
+        "message": "Dynamiczne Dampowanie",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
@@ -2125,9 +2159,6 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): <\/strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. <\/span>"
     },
-    "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
-    },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward pozwala dostosować responsywność drążków, zapewniając pełną kontrolę nad stylem sterowania.<br \/><br \/> Dzięki tym ustawieniom możesz uzyskać szybkie i precyzyjne reakcje idealne do wyścigów lub płynne, łagodne ruchy doskonałe do nagrań kinowych i w jakości HD."
     },
@@ -2237,6 +2268,9 @@
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
+    },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
     },
     "pidTuningTPAMode": {
         "message": "Tryb TPA"
@@ -2358,6 +2392,9 @@
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Uwaga:<\/b><\/span> Aktualne ustawienia filtrowania są niebezpiecznie niskie. Latenie maszyną będzie ciężkie, zachowanie maszyny może być nieprzewidywalnie niebezpieczne (flayaways). Jest wysoko zalecane aby <b>Włączyć przynajmniej jeden filter: Dynamiczny lub pierwszy (1) filter dolnoprzepustowy żyroskopu i przynajmniej jeden \"D-term\" Dynamiczny lub pierwszy (1) filtr dolnoprzepustowy<\/b>."
+    },
+    "pidTuningSliders": {
+        "message": "Suwaki dostrajające PID"
     },
     "pidTuningSliderPidsMode": {
         "message": "Tryb:",
@@ -2519,6 +2556,9 @@
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
+    "auxiliaryLinkNone": {
+        "message": "Brak"
+    },
     "auxiliaryModeLogicOR": {
         "message": "LUB"
     },
@@ -2552,6 +2592,10 @@
     "auxiliaryHelpMode_ALTHOLD": {
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> Aktywnie utrzymuje wysokość modelu za pomocą zewnętrznych czujników połączonych z trybem stabilizowanym Angle.",
         "description": "Help text for ALTITUDE HOLD mode"
+    },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "Tryb autopilota umożliwia autonomiczne sterowanie lotem, łączące utrzymywanie i utrzymywanie wysokości bezwzględnej w pozycji umożliwiającej utrzymanie stabilnego zawinięcia lub podążanie planowaną trasą lotu.",
+        "description": "Help text for AUTOPILOT mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionej jednostki latającej",
@@ -2892,68 +2936,11 @@
     "adjustmentsSave": {
         "message": "Zapisz"
     },
-    "transponderNotSupported": {
-        "message": "Firmowe oprogramowanie kontrolera lotu nie obsługuje funkcji transpondera."
+    "adjustmentsShowAll": {
+        "message": "Pokaż wszystkie sloty"
     },
-    "transponderInformation": {
-        "message": "Systemy transponderów pozwalają organizatorom wyścigu mierzyć czas Twoich okrążeń. Transponder jest zamontowany na twoim modelu, kiedy twój model mija bramkę pomiaru czasu, odbiornik przytorowy rejestruje numer startowy i czas okrążenia. Instalując transponder na podczerwień, należy upewnić się, że wiązka podczerwieni jest skierowana na zewnątrz modelu w kierunku odbiorników przytorowych, oraz że  nie jest zasłonięta przez kadłub, paski akumulatora, kable, śmigła itp."
-    },
-    "transponderConfigurationType": {
-        "message": "Typ transpondera"
-    },
-    "transponderType0": {
-        "message": "Brak"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Konfiguracja iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Konfiguracja aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Konfiguracja ERLT"
-    },
-    "transponderData1": {
-        "message": "Dane"
-    },
-    "transponderData2": {
-        "message": "ID transpondera"
-    },
-    "transponderData3": {
-        "message": "ID transpondera"
-    },
-    "transponderDataHelp1": {
-        "message": "Tylko cyfry szesnastkowe, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Skonfiguruj swój kod transpondera tutaj. Uwaga:  Tylko poprawne kody będą rozpoznane przez system mierzenia czasu podczas wyścigu. Poprawne kody można uzyskać na stronie <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Aby uzyskać więcej informacji odwiedź stronę <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Wybierz ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Aby uzyskać więcej informacji odwiedź stronę <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Zapisz"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Zapisz i uruchom ponownie"
-    },
-    "transponderDataInvalid": {
-        "message": "Dane transpondera są <span class=\"message-negative\">nieprawidłowe<\/span>"
+    "adjustmentsHideEmpty": {
+        "message": "Ukryj puste sloty"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Do działania serwomechanizmów wymagane jest oprogramowanie układowe &gt;= 1.10.0. oraz wsparcie dla urządzenia docelowego."
@@ -3491,6 +3478,12 @@
     "loggingNote": {
         "message": "Dane będą rejestrowane <span class=\"message-negative\">tylko<\/span> w tej zakładce. Opuszczenie tej zakładki <span class=\"message-negative\">przerwie<\/span> rejestrowanie, a aplikacja powróci do normalnego działania.<br \/> Możesz wybrać globalny okres aktualizacji; jednak ze względów wydajnościowych dane będą zapisywane do pliku dziennika co <strong>1<\/strong> sekundę."
     },
+    "loggingPropertiesTitle": {
+        "message": "Właściwości dziennika"
+    },
+    "loggingSamplingInterval": {
+        "message": "Częstotliwość pobierania próbek:"
+    },
     "loggingSamplesSaved": {
         "message": "Zapisane próbki:"
     },
@@ -3867,6 +3860,12 @@
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Oprogramowanie nie załadowane"
+    },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "Oprogramowanie"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} bajtów"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Załadowano lokalne firmware: {{filename}} ({{bytes}} bajtów)"
@@ -4463,29 +4462,13 @@
         "message": "Mocniejsze Filtrowanie",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Mnożnik filtru żyroskopowego:",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Zmienia odcięcia filtra dolnoprzepustowego żyroskopu.<br \/><br \/>Przesunięcie suwaka w lewo zapewnia silniejsze filtrowanie żyroskopu (niższa częstotliwość odcięcia).<br \/><br \/>Przesunięcie suwaka w prawo zmniejsza filtrowanie żyroskopu ( wyższa częstotliwość odcięcia).<br \/><br \/>Podczas przesuwania suwaka w prawo, aby poprawić obsługę propwash, UWAŻAJ, aby nie posunąć się zbyt radykalnie. Wprowadzisz więcej szumów zarówno do P, jak i D, co może spowodować odloty lub spalenie silników.<br \/><br \/>Może być konieczne przesunięcie suwaka w lewo, jeśli masz problemy z rezonansem ramy, złe łożyska, pobicie rekwizyty, gorące silniki itp.<br \/><br \/>Filtrowanie żyroskopowe jest stosowane przed i oprócz filtrowania D.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Użyj filtrów suwakowych",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "Mnożnik członu D filtra:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Zmienia wartości odcięcia filtra dolnoprzepustowego D-term.<br \/><br \/>Przesunięcie suwaka w lewo zapewnia silniejsze filtrowanie D (niższa częstotliwość odcięcia).<br \/><br \/>Przesunięcie suwaka w prawo zmniejsza filtrowanie (wyższa częstotliwość odcięcia).<br \/><br \/>D-term jest najbardziej wrażliwym elementem PID na szum i rezonans. Może wzmocnić hałas o wysokiej częstotliwości od 10x do 100x. Dlatego wartości odcięcia filtra D są znacznie niższe niż filtry żyroskopowe.<br \/><br \/>Filtrowanie D-term jest stosowane po filtrowaniu żyroskopowym i oprócz niego. Domyślne filtrowanie D jest optymalne dla większości quadów i rzadko wymaga zmiany.<br \/><br \/>Przesunięcie tego suwaka w lewo zmniejsza ciepło silnika w modelach i przy wysokich ustawieniach PID „D”, ale możemy zobaczyć więcej propwash i rezonanse D o niższej częstotliwości.<br \/><br \/>Przesunięcie suwaka w prawo nie jest zalecane, ale może poprawić pranie wstępne na czystych kompilacjach. Może to spowodować zgrzytanie silnika podczas uzbrajania, nagłe rezonanse podczas lotu i poważne przegrzanie silnika.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Użyj suwaka dla D",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Suwaki do regulacji charakterystyki lotu jednostki latającej (wzmocnienia PID)<br \/><br \/>Tłumienie (wzmocnienie D): Odporność na szybki ruch, minimalizacja oscylacji P.<br \/><br \/>Śledzenie (wzmocnienie P i I): ​​Ulepszenia reakcja jednostki latającej, jeśli jest zbyt wysoka, może powodować drżenie lub oscylacje.<br \/><br \/>Stick Response (feedforward): Zwiększa reakcję jednostki latającej na szybsze ruchy drążków.<br \/><br \/>Drift - Wobble (wzmocnienie, ekspert): Precyzyjna regulacja I.<br \/><br \/>Dynamiczne D (D Max, ekspert): Ustawia maksymalną wartość, do której można zwiększyć D podczas szybkich ruchów.<br \/><br \/>Tłumienie tonu (współczynnik Pitch:Roll D, ekspert): Zwiększa tłumienie na boisku względem przechyłu.<br \/><br \/>Śledzenie tonu (stosunek Pitch:Roll P, I i F, ekspert): Zwiększa stabilizująca siłę na skoku w stosunku do przechyłu.<br \/><br \/>Master Multiplier (wszystkie wzmocnienia, ekspert): podnosi lub obniża wszystkie wzmocnienia PID, utrzymując ich proporcje na stałym poziomie.",
@@ -4697,7 +4680,7 @@
         "message": "Zakres filtra dynamicznego:"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "Współczynnik Q"
+        "message": "Współczynnik Q (x100)"
     },
     "pidTuningDynamicNotchMinHz": {
         "message": "Min częstotliwość [Hz]"
@@ -4712,7 +4695,7 @@
         "message": "Równanie dynamiczne ma trzy zakresy częstotliwości, w których może działać: NISKIE (80-330hz) dla gorzej odwołujących się modeli na śmigłach 6 cali i więcej, ŚREDNIE (140-550hz) dla normalnego modelu o długości śmigieł 5 cali, WYSOKIE (230-800hz) dla bardzo małych 2-3 calowych modeli. Opcja AUTO wybiera zakres w zależności od wartości maksymalnej częstotliwości dolnoprzepustowego filtra żyroskopu."
     },
     "pidTuningDynamicNotchQHelp": {
-        "message": "Współczynnik Q dostosowuje szerokość charakterystyki filtra dynamicznego. Wyższa wartość sprawia, że pasmo aktywne filtra jest wąskie i dokładniejsze, a niższa wartość daje szerszą strefę aktywną. Używanie naprawdę niskiej wartości znacznie zwiększy opóźnienie filtra (więcej obliczeń)."
+        "message": "Współczynnik Q dostosowuje wąski lub szeroki zakres filtrów dynamicznych. Zapisaną wartością jest współczynnik Q × 100 (np. 300 = Q 3.0). Wyższa wartość sprawia, że jest ona węższa i bardziej precyzyjna, a niższa wartość sprawia, że jest szersza i szersza. Posiadanie naprawdę niskiej wartości znacznie zwiększy opóźnienia filtrowania."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Ustaw tę wartość na najniższą częstotliwość zakłóceń które muszą być kontrolowane przez wycięcie dynamiczne."
@@ -4800,17 +4783,11 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Zwiększa wartości PID, aby zrekompensować spadek Vbat. Zapewni to bardziej stałą charakterystykę podczas całego lotu. Zastosowana rekompensata jest obliczana na podstawie wartości $t(powerBatteryMaximum.message) ustawionej na stronie $t(tabPower.message), więc upewnij się, że jest ustawiona tak jak byś tego chciał."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Kompensacja spadku napięcia baterii"
-    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br \/><br \/>Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br \/><br \/>Odwiedź <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki<\/a>, aby uzyskać więcej informacji."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Linearyzacja ciągu silników"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Poprawia autorytet i szybkość reakcji przy niskiej przepustnicy. <br><br> Szczególnie przydatne w przypadku  ESC 48k.  Nie ma wpływu przy większej przepustnicy. <br><br>Zakres rekompensacji może wynosić od 0 do 150%. Zwykle wystarczy 30-40%."
@@ -5559,17 +5536,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Własny obraz:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Wymagane wymiary obrazu: $t(logoWidthPx)×$t(logoHeightPx) pikseli"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Musi zawierać piksele w kolorach zielonym, czarnym i białym"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Kliknij <b>$t(osdSetupUploadFont.message)<\/b> , aby zapisać własne logo"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Nieprawidłowe wymiary obrazu: {{width}}×{{height}} (oczekiwano $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Obraz zawiera nieprawidłowy piksel: rgb({{valueR}}, {{valueG}}, {{valueB}}) o współrzędnych {{posX}}×{{posY}}"
@@ -7373,9 +7344,6 @@
     },
     "pidTuningRatesType": {
         "message": "Rodzaj Rate"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "Zmiana rodzaju Rate zmieni krzywą Rate oraz sposób jej ustawiania"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Profil szybkości"

@@ -292,9 +292,6 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
-    "tabTransponder": {
-        "message": "Transpondeur de course"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -573,9 +570,6 @@
     },
     "versionLabelTarget": {
         "message": "Cible"
-    },
-    "versionLabelFirmware": {
-        "message": "Micrologiciel"
     },
     "versionLabelConfigurator": {
         "message": "Version du configurateur"
@@ -1116,9 +1110,6 @@
     "featureTRANSPONDER": {
         "message": "Transpondeur"
     },
-    "featureTRANSPONDERTip": {
-        "message": "Aller à l'onglet transpondeur après activation."
-    },
     "featureAIRMODE": {
         "message": "Airmode permanent"
     },
@@ -1163,9 +1154,6 @@
     },
     "configurationTelemetryHelp": {
         "message": "Sortie de télémétrie depuis le récepteur"
-    },
-    "configurationRSSI": {
-        "message": "RSSI (Force du signal)"
     },
     "configurationRSSIHelp": {
         "message": "Le RSSI mesure la force du signal radio. Il permet de savoir quand la machine commence à être hors de portée ou dans une zone d'interférences."
@@ -1563,9 +1551,6 @@
     "pidTuningSubTabPid": {
         "message": "Paramètres PID du profil"
     },
-    "pidTuningSubTabRates": {
-        "message": "Paramètres Rates du profil"
-    },
     "pidTuningSubTabFilter": {
         "message": "Réglages filtres"
     },
@@ -1619,10 +1604,6 @@
     },
     "pidTuningAntiGravityHelp": {
         "message": "L'anti Gravité renforce I (et, en 4.3, P) pendant et peu de temps après le changement rapide de l'accélérateur, augmentant la stabilité d'attitude pendant les pompes à papillon.<br><br>Des valeurs de gain plus élevées peuvent améliorer la stabilité sur les machines de basse autorité ou celles avec un centre de gravité décalé."
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "Atténuation<br>Dynamique",
-        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Réglages du Contrôleur PID"
@@ -1692,9 +1673,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong>Régler le D Setpoint transition sur une valeur comprise entre 0 et 0.1 est vivement déconseillée. Risques d'instabilité et manque réactivité vers les centres des sticks.<\/span>"
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Le Feedforward ajuste la réactivité des sticks.<br \/><br \/> Ces options vous permettent de l'ajuster pour obtenir ce que vous voulez du stick a réactif et net pour la course au douces réponses lissées à des fins cinématiques \/ HD."
@@ -2168,69 +2146,6 @@
     },
     "adjustmentsSave": {
         "message": "Enregistrer"
-    },
-    "transponderNotSupported": {
-        "message": "Le firmware de votre contrôleur de vol ne supporte pas la fonction transpondeur."
-    },
-    "transponderInformation": {
-        "message": "Le transpondeur permet aux organisateurs de courses de mesurer vos temps par tour. Il est monté sur la machine. Lorsqu'elle franchit la porte munie d'un chronomètre, le récepteur enregistre votre numéro et établit votre temps par tour. Si le transpondeur est Infra Rouge, vous devez vous assurer que le faisceau est orienté dans la bonne direction et qu'il n'est pas obstrué par le châssis, les sangles de batteries, des fils, les hélices etc..."
-    },
-    "transponderConfigurationType": {
-        "message": "Type de transpondeur"
-    },
-    "transponderType0": {
-        "message": "Aucun"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configuration iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configuration aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configuration ERLT"
-    },
-    "transponderData1": {
-        "message": "Données"
-    },
-    "transponderData2": {
-        "message": "ID du Transpondeur"
-    },
-    "transponderData3": {
-        "message": "ID du Transpondeur"
-    },
-    "transponderDataHelp1": {
-        "message": "Chiffres hexadécimaux uniquement, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configurez votre code transpondeur ici. Remarque: Seuls les codes valides seront reconnus par les systèmes de chronométrage de course. Les codes de transpondeur valides peuvent être obtenus auprès de <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\"> Seriously Pro <\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Pour plus d'informations, rendez vous sur le site <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Choisissez l'ID du ERLT 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Pour plus d'informations, rendez-vous sur le site <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Enregistrer "
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Enregistrer et redémarrer"
-    },
-    "transponderDataInvalid": {
-        "message": "Les données du transpondeur sont <span class=\"message-negative\">invalides<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Utiliser les servos nécessite un firmware &gt;= 1.10.0. et une carte compatible."
@@ -3484,25 +3399,9 @@
         "message": "Plus de filtrage",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Multiplicateur du Filtre Gyro. :",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Change les coupures du filtre gyro passe-bas.<br \/><br \/>Déplacer le curseur à gauche augmente le filtrage du gyro (fréquence de coupure plus basse).<br \/><br \/>Déplacer le curseur à droite réduit le filtrage du gyro (fréquence de coupure plus élevée).<br \/><br \/>Lorsque vous déplacez le curseur à droite pour améliorer le propwash, SOYEZ PRUDENT pour ne pas être excessif. Vous autoriserez plus de bruit sur P et D et pouvez obtenir des décollages non-contrôlés ou de brûler les moteurs.<br \/><br \/>Vous devriez peut-être déplacer le curseur à gauche si vous avez des problèmes de raisonnance du cadre, de roulements à bille, d'hélices usées, moteurs chauds, etc...<br \/><br \/>Le filtre Gyro est appliqué avant, et en plus du filtrage D.",
         "description": "Gyro filter tuning slider helpicon message"
-    },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Utiliser le curseur Gyro",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "Multiplicateur de filtre D Term :",
-        "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Utiliser le curseur D Term",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Note :<\/strong>Les curseurs sont désactivés car les valeurs ont été modifiées manuellement. Cliquer sur '$t(pidTuningSliderEnableButton.message)' les réactivera. Les valeurs seront réinitialisées et toute modification non enregistrée sera perdue.",
@@ -3669,9 +3568,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Étendue du filtre coupe bande dynamique"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Facteur Q"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Fréquence Min [Hz]"
     },
@@ -3680,9 +3576,6 @@
     },
     "pidTuningDynamicNotchCount": {
         "message": "Nombre de coupures"
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Q ajuste la largeur de plage du filtre coupe bande Dynamique. Une valeur élevée rétrécie la plage et le rend plus précis, une valeur élevée élargit la plage. Une valeur vraiment basse augmente significativement la latence liée au filtrage."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Régler ceci sur la fréquence de bruit entrante la plus basse qui doit contrôlée par le coupe bande dynamique."
@@ -3766,14 +3659,8 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Augmente les PID quand la batterie se vide. Cela procure plus de linéarité dans le vol. La compensation est calculée à partir de la valeur $t(powerBatteryMaximum.message) renseignée dans la page $t(tabPower.message). Il faut s'assurer qu'une valeur cohérente soit renseignée."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Compensation de l'affaiblissement du vbat"
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Linéarisation de poussée"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Améliore les réactions à faible gaz. <br><br>Surtout utile pour les whoops et les ESC 4k. N'a aucun effet lors de gaz plus élevés.<br><br>Le quantité de compensation peut varier entre 0 et 150%. 30-40% est généralement suffisant."
@@ -5974,9 +5861,6 @@
     },
     "pidTuningRatesType": {
         "message": "Type de rates"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "Changer le type de rates modifiera leur courbe et la façon de les régler"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"
