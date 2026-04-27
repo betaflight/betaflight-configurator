@@ -268,9 +268,6 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <!-- <div class="btn save_btn">
-                <button type="button" class="save" @click="saveSettings">{{ $t("blackboxButtonSave") }}</button>
-            </div> -->
             <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" @click="saveSettings" />
         </div>
     </BaseTab>
