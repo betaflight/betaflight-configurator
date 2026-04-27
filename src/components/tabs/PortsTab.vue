@@ -16,7 +16,7 @@
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
-                <div v-if="!tabReady || ports.length === 0" class="flex items-center justify-center py-16">
+                <div v-if="!tabReady || isLoading" class="flex items-center justify-center py-16">
                     <UIcon name="i-lucide-loader-circle" class="size-8 animate-spin text-muted" />
                     <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
                 </div>
@@ -195,7 +195,7 @@ const isDesktop = useMediaQuery("(min-width: 1010px)");
 const { functionRules, mspBaudRates, gpsBaudRates, telemetryBaudRates, blackboxBaudRates, getRules, isRuleDisabled } =
     usePortsRules();
 
-const { ports, analyticsChanges, getPortName, vtxTableNotConfigured, dirty } = usePortsState(getRules);
+const { ports, analyticsChanges, getPortName, vtxTableNotConfigured, dirty, isLoading } = usePortsState(getRules);
 
 const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfiguration(
     ports,
