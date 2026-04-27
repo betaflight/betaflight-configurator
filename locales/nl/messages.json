@@ -217,9 +217,6 @@
     "tabFailsafe": {
         "message": "Uitval beveiliging"
     },
-    "tabTransponder": {
-        "message": "Race Transponder"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -460,9 +457,6 @@
     },
     "versionLabelTarget": {
         "message": "Doel"
-    },
-    "versionLabelFirmware": {
-        "message": "Besturingssysteem"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Applicatie is geupdate naar versie: $1"
@@ -817,9 +811,6 @@
     "featureTRANSPONDER": {
         "message": "Race Transponder"
     },
-    "featureTRANSPONDERTip": {
-        "message": "Configureer via het tabblad Race Transponder nadat u dit heeft ingeschakeld."
-    },
     "featureAIRMODE": {
         "message": "Airmode permanent inschakelen"
     },
@@ -852,9 +843,6 @@
     },
     "configurationReceiverMode": {
         "message": "Ontvanger modus"
-    },
-    "configurationRSSI": {
-        "message": "RSSI (signaalsterkte)"
     },
     "configurationRSSIHelp": {
         "message": "RSSI is een meting van de signaalsterkte en is erg handig om te weten wanneer uw vliegtuig buiten het bereik gaat of als deze aan RF-interferentie lijdt."
@@ -1214,9 +1202,6 @@
     },
     "pidTuningSubTabPid": {
         "message": "PID Profiel Instellingen"
-    },
-    "pidTuningSubTabRates": {
-        "message": "Rateprofiel Instellingen"
     },
     "pidTuningSubTabFilter": {
         "message": "Filterinstellingen"
@@ -1670,69 +1655,6 @@
     },
     "adjustmentsSave": {
         "message": "Opslaan"
-    },
-    "transponderNotSupported": {
-        "message": "De firmware van uw vlucht-controller ondersteunt geen transponder functionaliteit."
-    },
-    "transponderInformation": {
-        "message": "Transponders systemen zorgen ervoor dat raceorganisatoren je rondetijden bij kunnen houden. De transponder is op je drone gemonteerd en wanneer je drone een timing gate passeert wordt jouw code en rondetijd geregistreerd. Wanneer je een Infrarood transponder gebruikt dien je ervoor te zorgen dat deze niet geblokkeerd wordt door je frame, batterij, kabels, propellers of andere zaken."
-    },
-    "transponderConfigurationType": {
-        "message": "Transponder type"
-    },
-    "transponderType0": {
-        "message": "Geen"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configuratie iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configuratie aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configuratie ERLT"
-    },
-    "transponderData1": {
-        "message": "Data"
-    },
-    "transponderData2": {
-        "message": "Transponder ID"
-    },
-    "transponderData3": {
-        "message": "Transponder ID"
-    },
-    "transponderDataHelp1": {
-        "message": "Alleen hexadecimale karakters, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configureer hier uw transponder code. Let op: Alleen geldige codes worden herkend door race timing systemen. Geldige transponder codes kunnen worden verkregen op <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Serious Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Voor meer informatie bezoek <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer site<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Kies ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Voor meer informatie bezoek <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer website<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Opslaan"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Sla op en Herstart"
-    },
-    "transponderDataInvalid": {
-        "message": "Transponder data is <span class=\"message-negative\">ongeldig<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos vereisen firmware &gt;= 1.10.0. en doel ondersteuning."
@@ -2799,14 +2721,6 @@
         "message": "Meer filteren",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Gyro-filtervermenigvuldiger:",
-        "description": "Gyro filter tuning slider label"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "D Term Filtervermenigvuldiger:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Opmerking:<\/strong> schuifregelaars zijn uitgeschakeld omdat de waarden handmatig gewijzigd zijn. Als u op de knop '$t(pidTuningSliderEnableButton.message)' klikt, worden ze opnieuw geactiveerd. Hierdoor worden de waarden gereset en gaan alle niet-opgeslagen wijzigingen verloren.",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -2850,9 +2764,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Bereik"
     },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Q-factor bepaalt hoe smal of breed de dynamische notch-filters zijn. Een hogere waarde maakt het smaller en nauwkeuriger en een lagere waarde maakt het breder en minder nauwkeurig. Een erg lage waarde zal de filtervertraging enorm vergroten."
-    },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Stel dit in op de laagste inkomende ruisfrequentie die moet worden gebruikt door de dynamische notch."
     },
@@ -2894,14 +2805,8 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Verhoogt de PID-waarden om te compenseren wanneer Vbat lager wordt. Dit zorgt voor meer constante vliegeigenschappen gedurende de totale vlucht. De hoeveelheid compensatie die wordt toegepast wordt berekend op basis van de $t(powerBatteryMaximum.message) die instelbaar is op de $t(tabPower.message)-pagina. Zorg ervoor dat deze correct is ingesteld."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Vbat Sag Compenseren"
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Stuwkracht Linearisatie"
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -4817,9 +4722,6 @@
     },
     "pidTuningRatesType": {
         "message": "Rates Type"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "Als u een ratetype wijzigt, verandert de rate curve en de manier waarop u deze kunt instellen"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"

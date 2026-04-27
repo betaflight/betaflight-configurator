@@ -121,6 +121,21 @@
     "submit": {
         "message": "Надіслати"
     },
+    "delete": {
+        "message": "Видалити"
+    },
+    "edit": {
+        "message": "Редагувати"
+    },
+    "add": {
+        "message": "Додати"
+    },
+    "update": {
+        "message": "Оновити"
+    },
+    "save": {
+        "message": "Зберегти"
+    },
     "autoConnectEnabled": {
         "message": "Автопідключення: Увімкнено - застосунок автоматично здійснює підключення при виявленні нового порту"
     },
@@ -323,9 +338,6 @@
     "tabFailsafe": {
         "message": "Безаварійність"
     },
-    "tabTransponder": {
-        "message": "Транспондер перегонів"
-    },
     "tabOsd": {
         "message": "Наекранне меню"
     },
@@ -367,6 +379,9 @@
     },
     "logActionShow": {
         "message": "Показати журнал подій"
+    },
+    "logActionClear": {
+        "message": "Очистити"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} файли",
@@ -616,9 +631,6 @@
     },
     "versionLabelTarget": {
         "message": "Цільовий пристрій"
-    },
-    "versionLabelFirmware": {
-        "message": "Прошивка"
     },
     "versionLabelConfigurator": {
         "message": "Версія застосунку"
@@ -1311,9 +1323,6 @@
     "featureTRANSPONDER": {
         "message": "Перегоновий транспондер"
     },
-    "featureTRANSPONDERTip": {
-        "message": "Налаштуйте на вкладці Перегоновий транспондер після включення."
-    },
     "featureAIRMODE": {
         "message": "Увімкнути AIR режим перманентно"
     },
@@ -1367,7 +1376,7 @@
         "message": "Виведення телеметрії з приймача"
     },
     "configurationRSSI": {
-        "message": "RSSI (Сила сигналу)"
+        "message": "RSSI"
     },
     "configurationRSSIHelp": {
         "message": "Індикатор рівня потужності отриманого сигналу (RSSI) - це вимірювання рівня сигналу, і він дуже зручний, щоб ви знали, коли ваше повітряне судно виходить за межі діапазону або зазнає радіочастотних перешкод."
@@ -1798,6 +1807,9 @@
     "configurationButtonSave": {
         "message": "Зберегти та перезавантажити"
     },
+    "dialogClose": {
+        "message": "Закрити"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Зміна значення динамічного режекторного фільтра"
     },
@@ -1918,9 +1930,6 @@
     "pidTuningSubTabPid": {
         "message": "Налаштування профілю ПІД"
     },
-    "pidTuningSubTabRates": {
-        "message": "Налаштування Rateprofile"
-    },
     "pidTuningSubTabFilter": {
         "message": "Налаштування фільтру"
     },
@@ -1982,10 +1991,6 @@
     "pidTuningDMaxFeatureTitle": {
         "message": "Динамічне демпфування \/ Д Макс",
         "description": "Title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "Динамічне<br>Демпфування",
-        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "Коефіцієнт",
@@ -2110,9 +2115,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Використання переходу заданого значення Д більше 0 і менше 0.1 вкрай не рекомендується. Це може призвести до нестабільності та зниження чутливості стіків, коли вони перетинають центральну точку.<\/span>"
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": "Упередження"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Упередження (анг. - Feedforward) регулює реакцію стіка.<br \/><br \/> Ці опції дають змогу налаштувати його так, щоб забезпечити будь-яку реакцію стіка - від чіткої, миттєвої для перегонів до м'якої і плавної для кінематографічних \/ HD цілей."
@@ -2871,71 +2873,12 @@
     "adjustmentsFunction32": {
         "message": "Повзунок головного множника"
     },
+    "adjustmentsFunction33": {
+        "message": "Вибір профілю батареї",
+        "description": "Allows switching battery profiles via RC channel"
+    },
     "adjustmentsSave": {
         "message": "Зберегти"
-    },
-    "transponderNotSupported": {
-        "message": "Прошивка вашого польотного контролера не підтримує функцію транспондера."
-    },
-    "transponderInformation": {
-        "message": "Системи транспондерів дозволяють організаторам гонок вимірювати час кола. Транспондер встановлюється на вашу модель літального апарату, і коли ваш апарат проходить через пункт вимірювання часу, приймач на трасі реєструє ваш код і записує час вашого кола. При встановленні інфрачервоного транспондера вам слід переконатися, що він спрямований від вашого літального апарату в напрямку приймачів на трасі і що світловий промінь не перекривається рамою, батарейними ремінцями, кабелями, пропелерами і т.д."
-    },
-    "transponderConfigurationType": {
-        "message": "Тип транспондера"
-    },
-    "transponderType0": {
-        "message": "Відсутній"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Конфігурація iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Конфігурація aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Конфігурація ERLT"
-    },
-    "transponderData1": {
-        "message": "Дані"
-    },
-    "transponderData2": {
-        "message": "ID транспондера"
-    },
-    "transponderData3": {
-        "message": "ID транспондера"
-    },
-    "transponderDataHelp1": {
-        "message": "Шістнадцяткові символи лише 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Налаштуйте свій код транспондера тут. Примітка. Тільки дійсні коди будуть розпізнаватися системами хронометражу перегонів. Дійсні коди транспондерів можна отримати на сайті <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Для отримання додаткової інформації, відвідайте <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">сайт aRCiTimer<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Оберіть ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Щоб дізнатися більше, відвідайте <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">сайт EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Зберегти"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Зберегти й перезавантажити"
-    },
-    "transponderDataInvalid": {
-        "message": "Дані транспондера <span class=\"message-negative\">недійсні<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Сервоприводи потребують прошивки &gt;= 1.10.0. та підтримки цільовим пристроєм."
@@ -2989,6 +2932,12 @@
     },
     "gpsMapHead": {
         "message": "Поточне розташування"
+    },
+    "gpsMapZoomIn": {
+        "message": "Наблизити"
+    },
+    "gpsMapZoomOut": {
+        "message": "Віддалити"
     },
     "gpsMapMessage1": {
         "message": "Перевірте інтернет-з'єднання"
@@ -3095,6 +3044,15 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "нездоровий"
+    },
+    "flightPlanLatitude": {
+        "message": "Широта <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Довгота <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLoading": {
+        "message": "Будь ласка, зачекайте..."
     },
     "motorsVoltage": {
         "message": "Напруга:"
@@ -4406,29 +4364,13 @@
         "message": "Більше фільтрації",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Множник фільтра гіроскопа:",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Змінює межу фільтра низьких частот гіроскопа.<br \/><br \/>Переміщення повзунка ліворуч забезпечує сильнішу фільтрацію гіроскопа (нижчу частоту відсікання).<br \/><br \/>Переміщення повзунка праворуч зменшує фільтрацію гіроскопа ( вища частота відсікання).<br \/><br \/>Пересуваючи повзунок праворуч, щоб покращити реакцію на самотурбулентність (propwash), БУДЬТЕ ОБЕРЕЖНІ, щоб не стати занадто радикальним. Ви створите більше шуму в P і D регуляторах і можете отримати некеровані відлітання або перегоранням моторів.<br \/><br \/>Можливо, вам доведеться перемістити повзунок ліворуч, якщо у вас проблеми з резонансом рами, погані підшипники, побиті попелери, гарячі мотори тощо.<br \/><br \/>Фільтрація гіроскопа застосовується перед, і додатково до фільтрації D-коефіцієнта.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Використовуйте повзунок гіроскопа",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "Множник фільтра Д-складової:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Змінює частоту зрізу фільтра нижніх частот Д-складової.<br \/><br \/>Переміщення повзунка ліворуч забезпечує сильнішу фільтрацію Д-складової (нижчу частоту зрізу).<br \/><br \/>Переміщення повзунка праворуч зменшує фільтрацію (вища частота зрізу).<br \/><br \/>Д-складова є найбільш чутливим до шуму та резонансу елементом ПІД-регулятора. Вона може посилювати високочастотний шум у 10-100 разів. Ось чому пороги Д-фільтра набагато нижчі, ніж у фільтра гіроскопа.<br \/><br \/>Фільтрація Д-складової застосовується після та на додачу до фільтрації даних гіроскопа. Фільтрація Д-складової за замовчуванням є оптимальною для більшості повітряних суден і рідко потребує змін.<br \/><br \/>Переміщення цього повзунка ліворуч зменшує нагрів мотора в шумних повітряних суднах з високим значенням Д-коефіцієнта, але ми можемо спостерігати більше самотурбуленції (propwash) і резонансні коливання, спричинені Д-складовою на низьких частотах.<br \/><br \/>Переміщення повзунка вправо не рекомендується, але це може покращити реакцію на самотурбулентність на чистих від шумів збірках. Це може спричинити скрегіт двигуна під час взведення, раптові резонанси під час польоту та серйозний перегрів мотора.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Використовуйте повзунок Д-складової",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Слайдери для налаштування характеристик польоту повітряного судна (ПІД-коефіцієнтів)<br \/><br \/>Демпфування (Д коефіцієнт): Запобігає швидким рухам, мінімізує коливання P.<br \/><br \/>Відслідковування (P та I коефіцієнти): Збільшує відгук повітряного судна; якщо значення занадто високе, може спричинити тремтіння або коливання.<br \/><br \/>Відгук на рух стіків (Упередження або Feed Forward): Підвищує відгук повітряного судна на швидкі рухи стіками.<br \/><br \/>Дрейф - Коливання (I коефіцієнт, експертний): Точна настройка I.<br \/><br \/>Динамічний Д (Д макс., експертний): Встановлює максимальне значення, до якого Д може бути збільшено під час швидких рухів.<br \/><br \/>Демпфер тангажа (Д співвідношення тангажа по відношенню до крену, експертний): Збільшує кількість затухання для тангажа по відношенню до крену.<br \/><br \/>Стабілізація тангажа (для тангажа, співвідношення P, I та F, експертний): Підвищує стабільність тангажа відносно крену.<br \/><br \/>Майстер-множник (всі коефіцієнти, експертний): Підвищує або знижує всі ПІД-коефіцієнти, зберігаючи їх пропорції незмінними.",
@@ -4639,9 +4581,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Діапазон динамічного режекторного фільтру"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Добротність (Q factor)"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Найнижча частота [Hz]"
     },
@@ -4653,9 +4592,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамічний нотч фільтр має три діапазони частот, в яких він може працювати: НИЗЬКИЙ (80-330 Гц) для повітряних суден з нижчою швидкістю обертання, наприклад, 6+ дюймів, СЕРЕДНІЙ (140-550 Гц) для звичайного повітряного судна розміром 5 дюймів і ВИСОКИЙ (230-800 Гц) для дуже швидкого повітряного судна розміром 2.5-3 дюйма. Опція \"АВТО\" вибирає діапазон залежно від значення максимальної частоти зрізу фільтра динамічного нижньочастотного фільтра гіроскопа 1."
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Добротність впливає на ширину динамічних зрізових фільтрів. Високе значення робить їх вужчими і точнішими, а низьке значення робить їх ширшими і більшими. Дуже низьке значення суттєво збільшить затримку фільтра."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Встановіть це на найнижчу частоту вхідного шуму, яку потрібно контролювати динамічним зрізом."
@@ -4743,17 +4679,11 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Збільшує значення PID для компенсації, коли напруга батареї знижується. Це дозволяє зберігати більш сталі характеристики протягом усього польоту. Кількість компенсації, яка застосовується, розраховується на основі значення $t(powerBatteryMaximum.message), встановленого на вкладці $t(tabPower.message), тому переконайтеся, що це значення встановлене правильно."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Компенсація падіння напруги батареї"
-    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Забезпечує стабільність тяги та характеристик ПІД у діапазоні корисної напруги батареї, збільшуючи потужність моторів, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Лінеаризація тяги"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Зменшує інерційність при збільшенні тяги та чутливість. <br><br> Особливо корисно для вупів і 48k електронних регуліторів швидкості (анг. - ESC). Не має жодного ефекту при вищих значеннях тяги.<br><br>Ступінь компенсації може варіюватися від 0 до 150%. Зазвичай достатньо 30-40%."
@@ -5288,6 +5218,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Відкалібрований масштаб струму:"
     },
+    "powerBatteryProfile": {
+        "message": "Профіль батареї"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Профіль батареї $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "наприклад LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Назва профілю"
+    },
     "powerBatteryHead": {
         "message": "Батарея"
     },
@@ -5490,17 +5432,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Власне зображення:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Розмір повинен бути $t(logoWidthPx)x$t(logoHeightPx) пікселів"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Має містити зелені, чорні та білі пікселі"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Натисніть <b>$t(osdSetupUploadFont.message)<\/b> щоб зберегти користувацький логотип"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Неправильний розмір зображення: {{width}}×{{height}} (очікується $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Зображення містить неприпустимий піксель: rgb({{valueR}}, {{valueG}}, {{valueB}}) у координатах {{posX}}×{{posY}}"
@@ -5513,6 +5449,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Завантажено всі {{length}} символів до наекранного меню"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Завантаження невдале"
     },
     "osdSetupSave": {
         "message": "Зберегти"
@@ -7298,9 +7237,6 @@
     "pidTuningRatesType": {
         "message": "Тип коефіцієнтів"
     },
-    "pidTuningRatesTypeTip": {
-        "message": "Зміна типу коефіцієнтів змінить криву коефіцієнтів та спосіб її налаштування"
-    },
     "pidTuningRcRateRaceflight": {
         "message": "Коефіцієнт"
     },
@@ -7552,6 +7488,14 @@
         "message": "Скасувати",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Додати обраний шаблон",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Видалити обраний шаблон",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Wiki пресетів",
         "description": "Button to open Presets Wiki link"
@@ -7563,6 +7507,10 @@
     "presetsBackupLoad": {
         "message": "Завантажити резервну копію",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Для застосування шаблону і дій з резервного копіювання потрібен командний рядок, що є недоступним у віртуальному режимі.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "presetsLoadingDumpAll": {
         "message": "Завантаження поточної конфігурації з польотного контролера",
@@ -7994,5 +7942,196 @@
     },
     "sectionUserPasskeys": {
         "message": "Користувацькі ключі доступу"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Вирівняти до позиції",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Оберіть позицію",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "preflightUseMyLocation": {
+        "message": "Використовувати моє розташування"
+    },
+    "preflightDetecting": {
+        "message": "Виявлення..."
+    },
+    "preflightOr": {
+        "message": "або введіть координати:"
+    },
+    "preflightLatitude": {
+        "message": "Широта"
+    },
+    "preflightLongitude": {
+        "message": "Довгота"
+    },
+    "preflightApply": {
+        "message": "Застосувати"
+    },
+    "preflightLaunchStatus": {
+        "message": "Статус запуску"
+    },
+    "preflightStatusNoData": {
+        "message": "Немає даних"
+    },
+    "preflightCheckWind": {
+        "message": "Вітер"
+    },
+    "preflightCheckVisibility": {
+        "message": "Видимість"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Опади"
+    },
+    "preflightLevelUnknown": {
+        "message": "Невідомо"
+    },
+    "preflightWmoClearSky": {
+        "message": "Ясне небо"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Переважно ясно"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Місцями хмарно"
+    },
+    "preflightWmoFog": {
+        "message": "Туман"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Легкий сніг"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Помірний сніг"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Снігопад"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Сніжна крупа"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Гроза"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Гроза з легким градом"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Гроза із сильним градом"
+    },
+    "preflightKpStorm": {
+        "message": "Буревій"
+    },
+    "preflightBatteryCool": {
+        "message": "Знижена продуктивність, зігрійте батареї"
+    },
+    "preflightBatteryCold": {
+        "message": "Значно знижена ємність"
+    },
+    "preflightBatteryHot": {
+        "message": "Ризик роздуття, тримайте в тіні"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Не летіти, перегрів"
+    },
+    "preflightCheckBattery": {
+        "message": "Батарея"
+    },
+    "preflightFeelsLike": {
+        "message": "Відчувається як"
+    },
+    "preflightFogRisk": {
+        "message": "Можливий туман"
+    },
+    "preflightFogLow": {
+        "message": "Низький ризик"
+    },
+    "preflightFogModerate": {
+        "message": "Помірний ризик"
+    },
+    "preflightFogHigh": {
+        "message": "Високий ризик"
+    },
+    "preflightDaNormal": {
+        "message": "Продуктивність у нормі"
+    },
+    "preflightRefresh": {
+        "message": "Оновити"
+    },
+    "preflightCurrentWeather": {
+        "message": "Поточна погода"
+    },
+    "preflightWind": {
+        "message": "Швидкість вітру"
+    },
+    "preflightGusts": {
+        "message": "Пориви вітру"
+    },
+    "preflightVisibility": {
+        "message": "Видимість"
+    },
+    "preflightPrecipitation": {
+        "message": "Опади"
+    },
+    "preflightHumidity": {
+        "message": "Вологість"
+    },
+    "preflightPressure": {
+        "message": "Тиск"
+    },
+    "preflightDewPoint": {
+        "message": "Точка роси"
+    },
+    "preflightSunrise": {
+        "message": "Світанок"
+    },
+    "preflightSunset": {
+        "message": "Захід"
+    },
+    "preflightTime": {
+        "message": "Час"
+    },
+    "preflightGustsShort": {
+        "message": "Пориви"
+    },
+    "preflightSolarActivity": {
+        "message": "Сонячна активність"
+    },
+    "preflightKpEffect": {
+        "message": "Вплив іоносфери"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Перейменувати"
+    },
+    "preflightCoordinates": {
+        "message": "Координати"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Зберегти розташування"
+    },
+    "preflightConfirmSave": {
+        "message": "Зберегти"
+    },
+    "preflightCancel": {
+        "message": "Скасувати"
+    },
+    "preflightMapZoomIn": {
+        "message": "Наблизити"
+    },
+    "preflightMapZoomOut": {
+        "message": "Віддалити"
+    },
+    "preflightKpMinimal": {
+        "message": "Мінімальний вплив на GPS"
+    },
+    "preflightForecast": {
+        "message": "Прогноз на 5 днів"
+    },
+    "preflightForecastDay": {
+        "message": "День"
+    },
+    "preflightForecastWeather": {
+        "message": "Погода"
     }
 }

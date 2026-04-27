@@ -80,15 +80,15 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- Non trovo il dispositivo USB ---",
+        "message": "--- Ricerca il dispositivo USB ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "portsSelectPermissionBluetooth": {
-        "message": "--- Non trovo il dispositivo Bluetooth---",
+        "message": "--- Ricerca il dispositivo Bluetooth---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
     "portsSelectPermissionDFU": {
-        "message": "--- Non trovo il dispositivo DFU ---",
+        "message": "--- Ricerca il dispositivo DFU ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "portsEepromSaved": {
@@ -110,11 +110,23 @@
     "portOverrideText": {
         "message": "Porta:"
     },
+    "connectVirtualDescription": {
+        "message": "Simula un controllore di volo senza hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Inserire il percorso seriale o l'URL a cui connettersi.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Connessione automatica"
     },
     "close": {
         "message": "Chiudi"
+    },
+    "openSidebarMenu": {
+        "message": "Apri menu su barra laterale",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -342,9 +354,6 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
-    "tabTransponder": {
-        "message": "Race Transponder"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -389,6 +398,19 @@
     },
     "logActionShow": {
         "message": "Mostra Log"
+    },
+    "tabLog": {
+        "message": "Log"
+    },
+    "i2cErrorDetected": {
+        "message": "Rilevato errore I2C (+{{delta}}, totale {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "Cancella"
+    },
+    "logAutoScroll": {
+        "message": "Scorrimento automatico"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} files",
@@ -643,7 +665,7 @@
         "message": "Destinazione"
     },
     "versionLabelFirmware": {
-        "message": "Firmware"
+        "message": "Versione firmware"
     },
     "versionLabelConfigurator": {
         "message": "Versione App"
@@ -1341,7 +1363,7 @@
         "message": "Race Transponder"
     },
     "featureTRANSPONDERTip": {
-        "message": "Configura nella sezione Transponder dopo l'abilitazione."
+        "message": "Abilita il supporto firmware transponder. Configura il provider (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]<\/code>) e i dati (<code>set transponder_data = &lt;bytes&gt;<\/code>) tramite il CLI, poi <code>salva<\/code>. Esegui <code>ottieni il transponder<\/code> per ispezionare i valori correnti."
     },
     "featureAIRMODE": {
         "message": "Abilita Airmode permanente"
@@ -1396,7 +1418,7 @@
         "message": "Uscita telemetria dalla ricevente"
     },
     "configurationRSSI": {
-        "message": "RSSI (Potenza del segnale)"
+        "message": "RSSI"
     },
     "configurationRSSIHelp": {
         "message": "L'RSSI è la misura della potenza del segnale ed è molto utile per sapere quando il tuo velivolo sta andando fuori portata o se subisce interferenze radio."
@@ -2020,7 +2042,7 @@
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
-        "message": "Damping<br>Dinamico",
+        "message": "Damping Dinamico",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
@@ -2148,7 +2170,7 @@
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> L'utilizzo di un D Setpoint transition più grande di 0 e minore di 0.1 è fortemente sconsigliato. Se lo fai può portare instabilità e ridurre la risposta degli stick quando si trova in posizioni centrali.<\/span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
+        "message": "Feedforward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Il Feedforward regola la responsività degli stick.<br \/><br \/>Queste opzioni consentono di regolarlo per avere una risposta degli stick immediata per le corse o morbida per voli cinematici\/HD."
@@ -2254,11 +2276,17 @@
     "pidTuningRatesPreview": {
         "message": "Anteprima Rates"
     },
+    "pidTuningRatesModelPreview": {
+        "message": "Anteprima Modello Rates"
+    },
     "pidTuningRatesTuningHelp": {
         "message": "<b>Rates ed Esponenziali<\/b>: Questi parametri determinano il comportamento degli stick. Utilizza il grafico e il modello 3D per trovare le tue impostazioni preferite."
     },
     "pidTuningRcExpo": {
         "message": "Esponenziale"
+    },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
     },
     "pidTuningTPAMode": {
         "message": "Modalità TPA"
@@ -2385,6 +2413,9 @@
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Avviso:<\/b><\/span> La quantità di filtraggio che stai utilizzando è pericolosamente bassa. È probabile che ciò renda difficile il controllo del modello e che possa causare flyaway. Si consiglia vivamente di <b>abilitare almeno uno dei Passabasso Dinamico del Gyro o Passabasso 1 del Gyro e almeno uno dei D Term Passabasso Dinamico o Passabasso 1 del D Term<\/b>."
     },
+    "pidTuningSliders": {
+        "message": "Sliders Pid Tuning"
+    },
     "pidTuningSliderPidsMode": {
         "message": "Modalità:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2409,6 +2440,9 @@
     },
     "receiverThrottleHover": {
         "message": "Hover Point"
+    },
+    "receiverStickRange": {
+        "message": "Intervallo Stick"
     },
     "receiverStickMin": {
         "message": "Soglia \"Stick Giù\""
@@ -2548,6 +2582,9 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryLinkNone": {
+        "message": "Nessuno"
     },
     "auxiliaryModeLogicOR": {
         "message": "O"
@@ -2930,68 +2967,14 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "transponderNotSupported": {
-        "message": "Il firmware del tuo controllore di volo non supporta la funzionalità transponder."
+    "adjustmentsShowAll": {
+        "message": "Mostra gli slot"
     },
-    "transponderInformation": {
-        "message": "I sistemi transponder permettono di tenere traccia dei tempi dei giri in gara. il transponder è posizionato sul tuo modello e, quando passi attraverso una porta, i ricevitori posizionati sul tracciato registrano il tuo codice e il tuo tempo. Quando posizioni sul tuo mezzo un transponder a infrarossi devi assicurarti che il LED del transponder punti verso l'esterno dove si trovano i ricevitori sul tracciato e che il fascio infrarossi che non sia ostruito da frame, cavi o da altro oggetto."
+    "adjustmentsHideEmpty": {
+        "message": "Nascondi gli slot vuoti"
     },
-    "transponderConfigurationType": {
-        "message": "Tipo di transponder"
-    },
-    "transponderType0": {
-        "message": "Nessuno"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configurazione iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configurazione aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configurazione ERLT"
-    },
-    "transponderData1": {
-        "message": "Dati"
-    },
-    "transponderData2": {
-        "message": "ID transponder"
-    },
-    "transponderData3": {
-        "message": "ID transponder"
-    },
-    "transponderDataHelp1": {
-        "message": "Solo cifre esadecimali, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configura qui il codice del tuo transponder. Nota: solo i codici validi saranno riconosciuti dai sistemi di tracciamento del tempo in gara. Codici transponder validi si possono ottenere da <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Per maggiori informazioni visita il <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">sito aRCiTimer<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Scegli ID ERLT 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Per maggiori informazioni visita il <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">sito EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Salva"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Salva e riavvia"
-    },
-    "transponderDataInvalid": {
-        "message": "I dati del transponder <span class=\"message-negative\">non sono validi<\/span>"
+    "adjustmentsSlotsActive": {
+        "message": "{{active}} di {{total}} slots attivi"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "I servi richiedono il firmware &gt;= 1.10.0. ed il supporto del target."
@@ -3049,6 +3032,27 @@
     },
     "gpsMapHead": {
         "message": "Posizione attuale"
+    },
+    "gpsMapSatelliteView": {
+        "message": "Vista Satellite"
+    },
+    "gpsMapHybridView": {
+        "message": "Vista Ibrida"
+    },
+    "gpsMapStreetView": {
+        "message": "Vista Stradale"
+    },
+    "gpsMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "gpsMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Attiva Schermo intero"
+    },
+    "gpsMapRetry": {
+        "message": "Riprova"
     },
     "gpsMapMessage1": {
         "message": "Per favore controlla la tua connessione Internet"
@@ -3127,7 +3131,7 @@
         "message": "nessun segnale"
     },
     "gnssQualitySearching": {
-        "message": "cercando"
+        "message": "ricerca"
     },
     "gnssQualityAcquired": {
         "message": "acquisito"
@@ -3219,6 +3223,15 @@
     "flightPlanLoading": {
         "message": "Attendi..."
     },
+    "flightPlanClear": {
+        "message": "Cancella"
+    },
+    "flightPlanLoad": {
+        "message": "Carica"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Salva su FC"
+    },
     "flightPlanLoaded": {
         "message": "Piano di volo caricato con successo"
     },
@@ -3275,6 +3288,15 @@
     },
     "flightPlanClearTitle": {
         "message": "Cancella Piano Di Volo"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Caricare piano di volo dal controllore di volo?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "Un controllore di volo è collegato. Vuoi sostituire l'attuale piano di volo con quello memorizzato sul controllore di volo? Scegliere No mantiene il tuo piano attuale in modo da poterlo salvare nel controllore di volo."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Mantieni corrente"
     },
     "flightPlanElevationProfile": {
         "message": "Profilo Di Elevazione"
@@ -3649,6 +3671,12 @@
     },
     "loggingNote": {
         "message": "I dati saranno registrati <span class=\"message-negative\">solo<\/span> in questa scheda. Lasciando la scheda <span class=\"message-negative\">annullerà la registrazione<\/span> e l'applicazione tornerà al suo stato normale.<br \/> È possibile selezionare il periodo di aggiornamento globale; i dati saranno scritti nel file di log ogni <strong>1<\/strong> secondo per motivi di prestazioni."
+    },
+    "loggingPropertiesTitle": {
+        "message": "Proprietà Log"
+    },
+    "loggingSamplingInterval": {
+        "message": "Intervallo Di Campionamento:"
     },
     "loggingSamplesSaved": {
         "message": "Esempi salvati:"
@@ -4027,6 +4055,12 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware non caricato"
     },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "Firmware"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} byte"
+    },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Caricato Firmware Locale: {{filename}} ({{bytes}} byte)"
     },
@@ -4393,6 +4427,14 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "Lampeggia sempre"
     },
+    "ledStripThrottleHue": {
+        "message": "Tonalità Gas",
+        "description": "Label of throttle hue modifier switch on LED Strip tab"
+    },
+    "ledStripThrottleHueChannel": {
+        "message": "Canale tonalità gas",
+        "description": "Accessible label for the aux-channel select next to the throttle hue switch"
+    },
     "ledStripRainbowOverlay": {
         "message": "Arcobaleno",
         "description": "Label of rainbow effect switch on LED Strip tab"
@@ -4623,28 +4665,20 @@
         "description": "Filter tuning slider high header"
     },
     "pidTuningGyroFilterSlider": {
-        "message": "Moltiplicatore filtro Giroscopio:",
+        "message": "Moltiplicatore Filtro Giroscopio",
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Cambia i cutoff del filtro passabasso del gyro.<br \/><br \/>Spostando il cursore a sinistra si ottiene un filtraggio maggiore sul giroscopio (frequenza di cutoff più bassa).<br \/><br \/>Spostando il cursore a destra dà meno filtraggio (frequenza di cutoff più elevata).<br \/><br \/>Quando si sposta il cursore a destra per migliorare la gestione dei propwash, FAI ATTENZIONE a non esagerare. Permetterete più rumore in P e D e può dare flyaway o bruciare i motori.<br \/><br \/>Potrebbe essere necessario spostare il cursore a sinistra se si hanno problemi di risonanza, cuscinetti rotti, pale scheggiate, motori caldi, ecc.<br \/><br \/>Il filtraggio del gyro viene applicato prima e in aggiunta al filtraggio D.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Usa Slider Gyro",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
     "pidTuningDTermFilterSlider": {
-        "message": "Moltiplicatore Filtro D Term:",
+        "message": "Moltiplicatore Filtro D Term",
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Cambia i cutoff del filtro passabasso del D-term.<br \/><br \/>Spostando lo slider a sinistra si ottiene un filtraggio D maggiore (frequenza di cutoff più bassa).<br \/><br \/>Spostando lo slider a destra dà meno filtraggio (frequenza di cutoff più elevata).<br \/><br \/>Il D-term è l'elemento PID più sensibile al rumore e alla risonanza. Può amplificare il rumore ad alta frequenza da 10x a 100x. Questo è il motivo per cui i cutoff del filtro D sono molto più bassi dei filtri del gyro.<br \/><br \/>Il filtraggio del D-term viene applicato dopo e in aggiunta al filtraggio del gyro. Il filtraggio D predefinito è ottimale per la maggior parte dei quad e raramente necessita di cambiamenti.<br \/><br \/>Spostando lo slider a sinistra si riduce il calore dei motori in quad rumorosi e con alti PID 'D', ma si può avere più propwash e risonanze D a più bassa frequenza.<br \/><br \/>Spostando lo slider a destra non è raccomandato, ma potrebbe migliorare il propwash su build pulite. Può causare grinding dei motori all'armamento, risonanze improvvise durante il volo e surriscaldamento grave dei motori.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Usa Slider D Term",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Slider per regolare le caratteristiche di volo del quad (guadagni PID)<br \/><br \/>Damping (guadagno D): Resiste ai movimenti rapidi, minimizza le oscillazioni di P.<br \/><br \/>Tracking (guadagni P e I): Incrementa la responsività del quad, se troppo alto può causare vibrazioni o oscillazioni.<br \/><br \/>Risposta stick (Feedforward): Aumenta la responsività del quad a movimenti rapidi degli stick.<br \/><br \/>Drift - Wobble (guadagni I, esperto): regolazione accurata di I.<br \/><br \/>D Dinamico (D max, esperto): Setta il valore massimo a cui la D può essere aumentata durante i movimenti rapidi.<br \/><br \/>Pitch Damping (rapporto D Pitch:Roll, esperto): Aumenta la quantità di damping sul pitch relativa al roll.<br \/><br \/>Pitch Tracking  (rapporti P, I ed F Pitch:Roll, esperto): Aumenta la forza stabilizzante sul pitch relativamente al roll.<br \/><br \/>Moltiplicatore Master (tutti i guadagni, esperto): Aumenta o Diminuisce tutti i guadagni PID, mantenendo costanti le loro proporzioni.",
@@ -4671,7 +4705,7 @@
         "description": "Tuning sliders disabled note"
     },
     "pidTuningSliderEnableButton": {
-        "message": "Abilita slider",
+        "message": "Abilita Sliders",
         "description": "Button label for enabling sliders"
     },
     "pidTuningSlidersNonExpertMode": {
@@ -4856,7 +4890,7 @@
         "message": "Range Filtro Notch dinamico"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "Fattore Q"
+        "message": "Fattore Q (x100)"
     },
     "pidTuningDynamicNotchMinHz": {
         "message": "Frequenza minima [Hz]"
@@ -4871,7 +4905,7 @@
         "message": "Il notch dinamico ha tre intervalli di frequenze in cui può funzionare: Basso (80-330Hz) per quad con giri del motore bassi come 6 inch (e più grandi), Medio (140-550Hz) per un normale quad da 5 inch, Alto (230-800Hz) per quad 2.5-3 inch con giri del motore alti. L'opzione AUTO seleziona l'intervallo in base al valore della frequenza di taglio massima del filtro Gyro Dynamic Lowpass 1."
     },
     "pidTuningDynamicNotchQHelp": {
-        "message": "Il fattore Q regola la larghezza del filtro notch dinamico. Un valore più alto lo rende più stretto e preciso e un valore inferiore lo rende sempre più ampio. Impostando un valore molto basso si aumenterà notevolmente il ritardo del filtro."
+        "message": "Il fattore Q regola quanto sono corti o larghi i filtri di notch dinamici. Il valore memorizzato è il fattore Q × 100 (ad esempio, 300 = Q 3.0). Valori elevati lo rendono più corto e più preciso e valori più bassi lo rendono più ampio e più largo. Un valore basso aumenterà notevolmente il ritardo del filtro."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Impostala alla frequenza più bassa del rumore in ingresso che deve essere controllato dal notch dinamico."
@@ -4960,7 +4994,7 @@
         "message": "Aumenta i valori del PID per compensare il calo di tensione della batteria. Darà caratteristiche di volo più costanti per la durata di tutto il volo. La quantità di compensazione applicata è calcolata in base al $t(powerBatteryMaximum.message) impostato nella pagina $t(tabPower.message), quindi assicurati che sia impostato su un valore appropriato."
     },
     "pidTuningVbatSagCompensation": {
-        "message": "Compensazione calo Vbat"
+        "message": "Compensazione Calo Vbat %"
     },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Dà prestazioni costanti di gas e PID sulla tensione utilizzabile della batteria aumentando l'output di motori al calo della tensione della batteria.<br \/><br \/>Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki<\/a> per ulteriori informazioni."
@@ -4969,7 +5003,7 @@
         "message": "%"
     },
     "pidTuningThrustLinearization": {
-        "message": "Linearizzazione Spinta"
+        "message": "Linearizzazione Spinta %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Migliora il controllo e la reattività con gas basso. <br><br> Particolarmente utile in whoop ed ESC a 48k. Non ha alcun effetto a gas più alto.<br><br>La compensazione può essere variata tra 0 e 150%. Solitamente il 30-40% è sufficiente."
@@ -5719,7 +5753,7 @@
         "message": "Immagine personalizzata:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "Le dimensioni devono essere $t(logoWidthPx)×$t(logoHeightPx) pixels"
+        "message": "Le dimensioni devono essere {{logoWidthPx}}x{{logoHeightPx}} pixels"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Deve contenere pixel verdi, bianchi e neri"
@@ -5728,7 +5762,7 @@
         "message": "Fare clic su <b>$t(osdSetupUploadFont.message)<\/b> per mantenere il logo personalizzato"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Dimensione immagine non valida: {{width}}×{{height}} (prevista $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Dimensione immagine invalida: {{width}}x{{height}} (expected {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "L'immagine contiene un pixel non valido: RGB({{valueR}}, {{valueG}}, {{valueB}}) alle coordinate {{posX}}×{{posY}}"
@@ -5747,6 +5781,9 @@
     },
     "osdSetupSave": {
         "message": "Salva"
+    },
+    "osdSetupRefresh": {
+        "message": "Aggiorna"
     },
     "osdSetupFontManager": {
         "message": "Manager dei Font"
@@ -6954,6 +6991,21 @@
         "message": "Avvisa se il CARICO CPU del controllore di volo è troppo alto",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Mantieni posizione fallita",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Mostra un avviso quando mantieni la posizione fallisce (es. in modalità GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Mantieni posizione fallita",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Mantieni posizione fallita",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Sconosciuto $1"
     },
@@ -7530,7 +7582,7 @@
         "message": "Tipo di rates"
     },
     "pidTuningRatesTypeTip": {
-        "message": "La modifica del tipo di rates cambierà la curva dei rates e il modo in cui è possibile impostarla"
+        "message": "La modifica del tipo di rates cambierà la curva dei rates e il modo di impostarli<br><br><a href='https:\/\/rates.metamarc.com' target='_blank' rel='noopener noreferrer'>rates.metamarc.com<\/a>"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"
@@ -8084,6 +8136,9 @@
     },
     "userBackupDownloadFailed": {
         "message": "Impossibile scaricare il backup"
+    },
+    "userBackupFileEmpty": {
+        "message": "Il file di backup è vuoto"
     },
     "userBackupUpdateSuccess": {
         "message": "Backup aggiornato con successo"

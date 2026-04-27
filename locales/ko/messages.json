@@ -335,9 +335,6 @@
     "tabFailsafe": {
         "message": "페일세이프"
     },
-    "tabTransponder": {
-        "message": "레이스 트랜스폰더"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -628,9 +625,6 @@
     },
     "versionLabelTarget": {
         "message": "타겟"
-    },
-    "versionLabelFirmware": {
-        "message": "펌웨어"
     },
     "versionLabelConfigurator": {
         "message": "앱 버전"
@@ -1327,9 +1321,6 @@
     "featureTRANSPONDER": {
         "message": "레이스 트랜스폰더"
     },
-    "featureTRANSPONDERTip": {
-        "message": "활성화 한 후 레이스 트랜스폰더 탭을 통해 환경설정하십시오."
-    },
     "featureAIRMODE": {
         "message": "에어모드 영구 사용"
     },
@@ -1381,9 +1372,6 @@
     },
     "configurationTelemetryHelp": {
         "message": "수신기로부터 텔레메트리 출력"
-    },
-    "configurationRSSI": {
-        "message": "RSSI (신호 강도)"
     },
     "configurationRSSIHelp": {
         "message": "RSSI는 신호 강도의 측정이며 매우 편리하므로 기체가 범위를 벗어나거나 RF 간섭을 받을 때를 알 수 있습니다."
@@ -1938,9 +1926,6 @@
     "pidTuningSubTabPid": {
         "message": "PID 프로필 설정"
     },
-    "pidTuningSubTabRates": {
-        "message": "레이트프로필 설정"
-    },
     "pidTuningSubTabFilter": {
         "message": "필터 설정"
     },
@@ -2002,10 +1987,6 @@
     "pidTuningDMaxFeatureTitle": {
         "message": "다이나믹 댐핑 \/ D 최대 설정",
         "description": "Title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "다이나믹<br>댐핑",
-        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "게인",
@@ -2130,9 +2111,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 0 보다 크고 0.1 보다 작은 D 설정값 전환의 사용은 불안정을 유발시킬 수 있으며, 중립포인트에서 만나는 스틱의 반응성이 감소될 수 있습니다.<\/span>"
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": "피드-<br>포워드"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "피드포워드는 스틱 응답성을 조절합니다.<br \/><br \/> 이러한 옵션을 사용하면 레이싱을 위한 선명하고 즉각적인 스틱 반응 또는 씨네마틱 \/ HD를 위한 부드러운 반응 등 모든 것을 제공하도록 조정할 수 있습니다."
@@ -2891,69 +2869,6 @@
     "adjustmentsEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
-    },
-    "transponderNotSupported": {
-        "message": "당신의 비행 컨트롤러의 펌웨어는 트랜스폰더 기능을 지원하지 않습니다."
-    },
-    "transponderInformation": {
-        "message": "트랜스폰더 시스템을 레이스 주최자에게 당신의 랩타임을 허용할 수 있습니다. 트랜스 폰더는 기체에 장착되며 기첵가 타이밍 게이트를 통과하면 트랙측 수신기가 코드를 등록하고 랩타임을 기록합니다. IR 기반 트랜스폰더를 장착 할 때는 기체에서 트랙면 수신기쪽으로 바깥쪽으로 향하게 하고, 광선이 기체, 배터리 끈, 케이블, 프로펠러 등에 의해 가려지지 않도록 해야 합니다."
-    },
-    "transponderConfigurationType": {
-        "message": "트랜스폰더 형식"
-    },
-    "transponderType0": {
-        "message": "없음"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "iLap 환경설정"
-    },
-    "transponderConfiguration2": {
-        "message": "aRCiTimer 환경설정"
-    },
-    "transponderConfiguration3": {
-        "message": "ERLT 환경설정"
-    },
-    "transponderData1": {
-        "message": "데이터"
-    },
-    "transponderData2": {
-        "message": "트랜스폰더 ID"
-    },
-    "transponderData3": {
-        "message": "트랜스폰더 ID"
-    },
-    "transponderDataHelp1": {
-        "message": "16 진수 만, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "여기서 트랜스폰더 코드를 환경설정하십시오. 참고: 유효한 코드만 레이스 타이밍 시스템에 의해 인식됩니다. 유효한 트랜스폰더 코드는 <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>에서 얻을 수 있습니다."
-    },
-    "transponderHelp2": {
-        "message": "자세한 내용은 <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 사이트<\/a>를 방문하십시오."
-    },
-    "transponderDataHelp3": {
-        "message": "ERLT ID 0-63 선택"
-    },
-    "transponderHelp3": {
-        "message": "자세한 내용은 <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer 사이트<\/a>를 방문하십시오."
-    },
-    "transponderButtonSave": {
-        "message": "저장"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "저장 및 재부팅"
-    },
-    "transponderDataInvalid": {
-        "message": "트랜스폰더 데이터가 <span class=\"message-negative\">유효하지 않음<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "서보는 펌웨어 &gt;= 1.10.0.와 타겟 지원이 필요합니다."
@@ -4425,29 +4340,13 @@
         "message": "많은 필터링",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "자이로 필터 승수:",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "자이로 저역통과 필터 컷오프를 변경합니다.<br \/><br \/>슬라이더를 왼쪽으로 이동하면 더 강력한 자이로 필터링(낮은 차단 주파수)이 제공됩니다.<br \/><br \/> 슬라이더를 오른쪽으로 이동하면 자이로 필터링이 줄어듭니다(더 높은 차단 주파수).<br \/><br \/>슬라이더를 오른쪽으로 이동하여 프롭워시 취급을 개선할 때는 너무 급진적이지 않도록 주의하십시오.  당신은 P와 D에 더 많은 소음을 허용하게 될 것이고 플라이어웨이 또는 모터의 연소가 발생할 수 있습니다.<br \/><br \/>프레임 공명 문제, 베어링 불량, 굽은 프롭, 뜨거운 모터 등이 있는 경우 슬라이더를 왼쪽으로 이동해야 할 수 있습니다.<br \/><br \/>추가로 자이로 필터링은 D 필터링 이전에 적용됩니다.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "자이로 슬라이더 사용",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "D 텀 필터 승수:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningDTermFilterSliderHelp": {
         "message": "D-텀 저역통과 필터 컷오프를 변경합니다.<br \/><br \/> 슬라이더를 왼쪽으로 이동하면 더 강력한 D 필터링(더 낮은 차단 주파수)이 제공됩니다.<br \/><br \/> 슬라이더를 오른쪽으로 이동하면 필터링이 줄어듭니다(더 높은 차단 주파수).<br \/><br \/>D-텀은 소음 및 공명에 가장 민감한 PID 요소입니다. 고주파 노이즈를 10배~100배 증폭할 수 있습니다. 그것이 D 필터 컷오프가 자이로 필터보다 훨씬 낮은 이유입니다.<br \/><br \/>D-텀 필터링은 자이로 필터링 후 및 추가로 적용됩니다. 기본 D 필터링은 대부분의 기체에 적합하며 변경할 필요가 거의 없습니다.<br \/><br \/> 이 슬라이더를 왼쪽으로 이동하면 노이즈가 많은 기체와 높은 PID 'D' 튜닝에서 모터 열이 감소하지만, 더 많은 프롭워시와 더 낮은 주파수 D 공명을 볼 수 있습니다.<br \/><br \/> 슬라이더를 오른쪽으로 이동하는 것은 권장되지 않지만, 깨끗한 빌드에서 프롭워시를 개선할 수 있습니다.  아밍 시 모터 갈림, 갑작스런 공진, 심각한 모터 과열을 유발할 수 있습니다.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "D 텀 슬라이더 사용",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "기체 비행 특성(PID 게인)을 조정하는 슬라이더<br \/><br \/>댐핑 (D 게인): 빠른 움직임에 저항하고, P 진동을 최소화합니다.<br \/><br \/>추적 (P 및 I 게인): 기체의 응답성을 강화시킵니다; 너무 높으면, 떨림이나 진동이 발생할 수 있습니다.<br \/><br \/>스틱 응답 (피드포워드): 더 빠른 스틱 움직임에 대한 기체의 응답성을 증가시킵니다.<br \/><br \/>드리프트 - 워블(I 게인, 전문가): I의 미세 조정.<br \/><br \/>다이나믹 D (D 최대, 전문가): 빠른 이동 중에 D가 부스트될 수 있는 최대 양을 설정합니다.<br \/><br \/>피치 댐핑 (피치:롤 D 비율, 전문가): 롤에 대한 피치의 댐핑 양을 증가시킵니다.<br \/><br \/>피치 추적 (피치:롤 P, I 및 F 비율, 전문가): 롤에 대한 피치의 안정화 강도를 증가시킵니다.<br \/><br \/>마스터 승수 (모든 게인, 전문가): 비율을 일정하게 유지하면서 모든 PID 게인을 높이거나 낮춥니다.",
@@ -4658,9 +4557,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "다이나믹 노치 필터 범위"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Q 인자"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "최소 주파수 [Hz]"
     },
@@ -4672,9 +4568,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "다이나믹 노치는 작동할수 있는 세 개의 주파수 범위를 가집니다: 6+인치처럼 낮은 모터속도를 가진 기체는 LOW(80-330Hz), 일반적인 5인치 기체는 MEDIUM(140-550Hz), 매우 높은 모터속도를 가진 2.5-3인치 기체는 HIGH(230-800Hz). AUTO 옵션은 자이로 다이나믹 저역통과 1 필터의 최대 컷오프 주파수의 값에 따라 범위를 선택합니다."
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Q 인자는 다이나믹 노치 필터를 얼마나 좁게 또는 넓게 조절하는 것을 의미합니다. 높은 값일수록 필터는 좁아지며 더 정밀합니다. 낮은 값일수록 필터는 넓어지며 커집니다. 매우 낮은 값은 필터 지연을 상당히 증가시킵니다."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "다이나믹 노치로 제어하는데 필요한 최저 유입 노이즈 주파수로 설정하세요."
@@ -4762,17 +4655,11 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Vbat이 낮아질 때 이를 보충하기 위해 PID 값을 증가시킵니다. 이것은 비행 내내 보다 일정한 비행 특성을 줄 것입니다. 적용되는 보정량은 $t(tabPower.message) 페이지에서 설정된 $t(powerBatteryMaximum.message)에서 계산되므로 적절한 값으로 설정되어 있는지 확인하십시오."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Vbat 처짐 보상"
-    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br \/><br \/>보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br \/><br \/>더 많은 정보는 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리<\/a>를 방문하십시오."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "추력 선형화"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "낮은 스로틀 권한과 반응성을 개선합니다. <br><br> 특히 후프 및 48k ESC에 유용합니다.  더 높은 스로틀에서는 효과가 없습니다.<br><br>보상양은 0%에서 150%까지 다양할 수 있습니다. 보통 30-40%면 충분합니다."
@@ -5509,17 +5396,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "사용자 이미지:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "크기는 $t(logoWidthPx)×$t(logoHeightPx) 픽셀 이어야 합니다"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "녹색, 검은색과 흰색 픽셀을 포함 해야 합니다."
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "서용자 로고를 지속하려면 <b>$t(osdSetupUploadFont.message)<\/b>를 클릭하세요."
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "잘못 된 이미지 크기: {{width}}×{{height}} (예상된 크기 $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "이미지가 유효하지 않은 픽셀을 포함하고 있습니다: 좌표계 {{posX}}×{{posY}} 에서 rgb({{valueR}}, {{valueG}}, {{valueB}})"
@@ -7316,9 +7197,6 @@
     },
     "pidTuningRatesType": {
         "message": "레이트 형식"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "레이트 형식을 변경하면 레이트 곡선과 설정 방법이 변경됩니다."
     },
     "pidTuningRcRateRaceflight": {
         "message": "레이트"

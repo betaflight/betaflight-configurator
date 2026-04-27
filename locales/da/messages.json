@@ -110,11 +110,19 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Simulering af FC uden hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
     "autoConnect": {
         "message": "Autotilslut"
     },
     "close": {
         "message": "Luk"
+    },
+    "openSidebarMenu": {
+        "message": "Åbn sidepanel",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -251,7 +259,7 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
-        "message": "Magnetometer \/ Kompas"
+        "message": "Kompas"
     },
     "sensorStatusMagShort": {
         "message": "Mag",
@@ -350,9 +358,6 @@
     "tabFailsafe": {
         "message": "Fejlsikring"
     },
-    "tabTransponder": {
-        "message": "Race transponder"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -397,6 +402,19 @@
     },
     "logActionShow": {
         "message": "Vis log"
+    },
+    "tabLog": {
+        "message": "Log"
+    },
+    "i2cErrorDetected": {
+        "message": "I2C fejl (+{{delta}}, i alt {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "Slet alt"
+    },
+    "logAutoScroll": {
+        "message": "Rul automatisk"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} filer",
@@ -651,7 +669,7 @@
         "message": "FC type:"
     },
     "versionLabelFirmware": {
-        "message": "Firmware"
+        "message": "Firmware version"
     },
     "versionLabelConfigurator": {
         "message": "App version"
@@ -819,7 +837,7 @@
         "message": "Anbring FC\/drone på en <strong>plan og ret<\/strong> overflade, fortsæt kalibreringen, tjek at overfladen\/FC\/dronen ikke bevæges under kalibreringen"
     },
     "initialSetupButtonCalibrateMag": {
-        "message": "Kalibrering af Magnetometer \/ kompas"
+        "message": "Kalibrering af kompas"
     },
     "initialSetupCalibrateMagText": {
         "message": "Bevæg indenfor 30 sek. dronen <strong>360<\/strong> grader i alle dens rotationsakser"
@@ -901,7 +919,7 @@
         "message": "Krængror:"
     },
     "initialSetupMagHead": {
-        "message": "Magnetometer"
+        "message": "Kompas"
     },
     "initialSetupMagDeclination": {
         "message": "Kompas afvigelse:"
@@ -971,7 +989,7 @@
         "message": "Accelerometer:"
     },
     "initialSetupSensorMag": {
-        "message": "Magnetometer \/ Kompas:"
+        "message": "Kompas:"
     },
     "initialSetupSensorBaro": {
         "message": "Barometer:"
@@ -1220,10 +1238,10 @@
         "message": "Accelerometerkalibrering <span class=\"message-positive\">færdig<\/span>"
     },
     "initialSetupMagCalibStarted": {
-        "message": "Magnetometerkalibrering startet"
+        "message": "Kompas kalibrering startet"
     },
     "initialSetupMagCalibEnded": {
-        "message": "Magnetometerkalibrering <span class=\"message-positive\">færdig<\/span>"
+        "message": "Kompas kalibrering <span class=\"message-positive\">færdig<\/span>"
     },
     "initialSetupSettingsRestored": {
         "message": "Opsætninger sat til <strong>standardindstillinger<\/strong>"
@@ -1349,7 +1367,7 @@
         "message": "Race transponder"
     },
     "featureTRANSPONDERTip": {
-        "message": "Efter aktivering, opsæt via fanen Race Transponder."
+        "message": "Aktiver transponder firmware support. Konfigurer udbyderen (<code>sæt transponder_provider = [ILAP¤ ARCITIMERERS ERLT]<\/code>) og data (<code>sæt transponder_data = &lt;bytes&gt;<\/code>) via CLI, derefter <code>gem<\/code>. Kør <code>hent transponder<\/code> til at inspicere aktuelle værdier."
     },
     "featureAIRMODE": {
         "message": "Aktiver Airmode permanent"
@@ -1404,7 +1422,7 @@
         "message": "Telemetri data transmitteres til sender"
     },
     "configurationRSSI": {
-        "message": "RSSI (signalstyrke)"
+        "message": "RSSI"
     },
     "configurationRSSIHelp": {
         "message": "RSSI er en måling af signalstyrke og er meget praktisk for at vide, hvornår dit fly når uden for rækkevidde eller udsættes for RF-interferens."
@@ -1431,7 +1449,7 @@
         "message": "Konfiguration af flere sensorer og avancerede funktioner."
     },
     "configurationMagAlignmentHelp": {
-        "message": "Magnetometer \/ Kompas indstilling er orienteringen af kompas retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret build eller en FC med en anden kompas retning, det kan være nødvendigt at ændre denne indstilling."
+        "message": "Kompas indstilling er orienteringen af kompas retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret byg eller en FC med en anden kompas retning, det kan være nødvendigt at ændre denne indstilling."
     },
     "configurationMagDeclination": {
         "message": "Kompas afvigelse"
@@ -1962,9 +1980,6 @@
     "pidTuningSubTabPid": {
         "message": "PID profiler"
     },
-    "pidTuningSubTabRates": {
-        "message": "Hastighed profiler"
-    },
     "pidTuningSubTabFilter": {
         "message": "Filter indstillinger"
     },
@@ -2028,7 +2043,7 @@
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
-        "message": "Dynamisk<br>dæmpning",
+        "message": "Dynamiskdæmpning",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
@@ -2154,9 +2169,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser centerpositionerne.<\/span>"
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward justerer stick lydhørhed.<br \/><br \/> Disse indstillinger lader dig justere det til at give noget fra crisp, umiddelbare stick svar til væddeløb, eller bløde glatte svar til biograf\/HD-formål."
@@ -2530,7 +2542,7 @@
         "message": "Aktiver kontroller"
     },
     "auxiliaryHelp": {
-        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og\/eller kanalområder (kanal områder understøttes fra BF 4.0).<br>Benyt <strong>Tilknyt kanal<\/strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med signal mellem et min\/maks område, aktiverer tilstanden. Benyt et <strong>Tilknyt kanal område<\/strong> for at aktivere en tilstand, når et andet område er aktiveret.<br><strong>Undtagelser:<\/strong> Aktiver(ARM) kan ikke tilknyttes til eller fra en anden tilstand, tilstande kan ikke tilknyttes til andre tilstande, som er opsat med en tilknytning (kædede tilknytninger). Flere områder\/tilknytninger kan benyttes til at aktivere enhver tilstand.<br>Er der defineret mere end ét område\/tilknytning for en tilstand, kan hver af dem opsættes til <strong>OG<\/strong> eller <strong>ELLER<\/strong>. En tilstand aktiveres, når: <br \/>- ALLE <strong>OG<\/strong> områder\/tilknytninger er aktive; <br \/> - ELLER mindst ét <strong>ELLER<\/strong> område\/tilknytning er aktivt.<br \/>Husk at gemme dine indstillinger med knappen Gem."
+        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og\/eller kanalområder.<br>Benyt <strong>Tilknyt kanal<\/strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med signal mellem et min\/maks område, aktiverer tilstanden. Benyt et <strong>Tilknyt kanal område<\/strong> for at aktivere en tilstand, når et andet område er aktiveret.<br><strong>Undtagelser:<\/strong> Aktiver(ARM) kan ikke tilknyttes til eller fra en anden tilstand, tilstande kan ikke tilknyttes til andre tilstande, som er opsat med en tilknytning (kædede tilknytninger). Flere områder\/tilknytninger kan benyttes til at aktivere enhver tilstand.<br>Er der defineret mere end ét område\/tilknytning for en tilstand, kan hver af dem opsættes til <strong>OG<\/strong> eller <strong>ELLER<\/strong>. En tilstand aktiveres, når: <br \/>- ALLE <strong>OG<\/strong> områder\/tilknytninger er aktive; <br \/> - ELLER mindst ét <strong>ELLER<\/strong> område\/tilknytning er aktivt."
     },
     "auxiliaryToggleUnused": {
         "message": "Skjul ubrugte kanaler"
@@ -2556,6 +2568,9 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryLinkNone": {
+        "message": "Ingen"
     },
     "auxiliaryModeLogicOR": {
         "message": "ELLER"
@@ -2590,6 +2605,10 @@
     "auxiliaryHelpMode_ALTHOLD": {
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Hold højde<\/a> regulerer fartøjets højde vha. eksterne sensorer kombineret med Vinkeltilstand (Stabil tilstand).",
         "description": "Help text for ALTITUDE HOLD mode"
+    },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "Autopilot tilstand gør det muligt for autonom flyvning, som kombinerer højde og fast position til at opretholde en stabil svævning eller følge en flyveplan.",
+        "description": "Help text for AUTOPILOT mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",
@@ -2934,69 +2953,6 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "transponderNotSupported": {
-        "message": "<span class=\"message-negative\">Bemærk:<\/span> Din FC firmware understøtter ikke transponderfunktionalitet."
-    },
-    "transponderInformation": {
-        "message": "Transpondersystemer gør tidtagning af dine omgange mulig for konkurrencearrangører. Transponderen monteres på fartøjet, og når det passerer tidtagningsporten, registrerer banemodtageren din kode og gemmer din omgangstid. Monteres en IR-baseret transponder, så tjek, at den peger udad fra fartøjet mod banemodtageren, samt at lysstrålen ikke er obstrueres af steldele, batteribefæstigelser, kabler, propeller mv."
-    },
-    "transponderConfigurationType": {
-        "message": "Transpondertype"
-    },
-    "transponderType0": {
-        "message": "Ingen"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "iLap-opsætning"
-    },
-    "transponderConfiguration2": {
-        "message": "aRCiTimer opsætning"
-    },
-    "transponderConfiguration3": {
-        "message": "ERLT-opsætning"
-    },
-    "transponderData1": {
-        "message": "Data"
-    },
-    "transponderData2": {
-        "message": "Transponder-ID"
-    },
-    "transponderData3": {
-        "message": "Transponder-ID"
-    },
-    "transponderDataHelp1": {
-        "message": "Kun hexadecimale cifre, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Konfigurer din transponderkode her. Bemærk: Kun gyldige koder vil blive genkendt af race-timing systemer. Gyldige transponderkoder kan fås fra <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "For yderligere information besøg <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer-webstedet<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Vælg ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "For yderligere information se <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer-webstedet<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Gem"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Gem og genstart"
-    },
-    "transponderDataInvalid": {
-        "message": "Transponderdata er <span class=\"message-negative\">ugyldig<\/span>"
-    },
     "servosFirmwareUpgradeRequired": {
         "message": "Servoer kræver firmware version &gt;= 1.10.0 og understøttelse af FC"
     },
@@ -3048,7 +3004,7 @@
         "message": "Generelt"
     },
     "gpsHeadHelp": {
-        "message": "Vis forskellige GPS oplysninger. Kurs vises kun, hvis magnetometer anvendes.",
+        "message": "Vis forskellige GPS oplysninger. Kurs vises kun, hvis kompas anvendes.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3589,7 +3545,7 @@
         "message": "Accelerometer (hvis understøttet)"
     },
     "sensorsMagSelect": {
-        "message": "Magnetometer"
+        "message": "Kompas"
     },
     "sensorsAltitudeSelect": {
         "message": "Højde"
@@ -3607,7 +3563,7 @@
         "message": "Accelerometer - g"
     },
     "sensorsMagTitle": {
-        "message": "Magnetometer \/ Kompas"
+        "message": "Kompas"
     },
     "sensorsAltitudeTitle": {
         "message": "Højde - meter"
@@ -3674,6 +3630,12 @@
     },
     "loggingNote": {
         "message": "Data vil <span class=\"message-negative\">kun <\/span>blive logget i dette vindue, når du forlader vinduet vil logning <span class=\"message-negative\">standse<\/span> og app vil vende tilbage til sin normale tilstand. Du kan ændre opdateringsperiode for målinger, data skrives uanset til logfilen hvert <strong>1<\/strong> sekund pga hensyn til hastighed."
+    },
+    "loggingPropertiesTitle": {
+        "message": "Logning af"
+    },
+    "loggingSamplingInterval": {
+        "message": "Interval mellem logning"
     },
     "loggingSamplesSaved": {
         "message": "Gemte målinger:"
@@ -4051,6 +4013,9 @@
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware image ikke indlæst"
+    },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "Firmware"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Indlæst lokalt firmware image: {{filename}} ({{bytes}} bytes)"
@@ -4647,29 +4612,13 @@
         "message": "Mere filtrering",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Gyrofilter Multiplikator:",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Ændrer Gyro Lowpass filter afskæring.<br \/><br \/>Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere cutoff frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre Gyro filtrering (højere afskærings frekvens).<br \/><br \/>Når skyderen flyttes til højre for at forbedre  mod propel turbulens, skal du være FORSIGTIG for ikke at være for radikal. Hvis du tillader mere støj i både P og D kan det få et fartøj til at flyver væk eller få brændte motorer.<br \/><br \/>Du kan være nødt til at flytte skyderen til venstre, hvis du har resonans problemer, dårlige lejer, ødelagte propeller, varme motorer, osv.<br \/><br \/>Gyro filtrering anvendes før, og i tillæg til D filtrering.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Brug Gyro Slider",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "Gyrofilter Multiplikator:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Ændrer D-termen Lowpass Filter cutoffs.<br \/><br \/>Flytning skyderen til venstre giver stærkere D filtrering (lavere afskærings frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre filtrering (højere afskærings frekvens).<br \/><br \/>D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter afskæring meget lavere end gyro filtre.<br \/><br \/>D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og skal sjældent ændres.<br \/><br \/>Flyttes denne skyder til venstre reduceres motorvarme i frekvens støjende fartøjer og med høj PID 'D' term, men vi kan også se mere propel turbulens og lavere frekvens D resonans.<br \/><br \/>Flytning af skyderen til højre anbefales ikke, men kan forbedre mod propel turbulens på enkle fartøjer. Det kan forårsage uønsket slid på motor ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Brug D Term Slider",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Skyderne til at justere fartøj flyveegenskaber (PID forstærkning)<br \/><br \/>Dæmpning (D forstærkning): Modstår hurtig bevægelse, minimerer P svingning.<br \/><br \/>Sporing (P og I forstærkning): Sporer fartøjets reaktionshastighed, hvis den er for høj, kan den forårsage rullen eller resonans.<br \/><br \/>Pind svarhastighed (Feedforward): Øger fartøjets reaktionshastighed ved for hurtigere pind bevægelser.<br \/><br \/>Drift - Wobble (I forstærkning, for ekspert): Fin justering af I.<br \/><br \/>Dynamisk D (D Max, for ekspert): Indstiller den maksimale værdi, som D kan øges til ved hurtige bevægelser.<br \/><br \/>Højderor dæmpning (højderor:krængror D ratio, for ekspert): Øger dæmpning af højderor i forhold til krængror.<br \/><br \/>Højderor sporing (højderor:krængror P, I og F ratio, for ekspert): Øger stabiliserende værdier til højderor i forhold til krængror.<br \/><br \/>Generel (påvirker alle forstærkninger, for ekspert): Hæver eller sænker alle PID værdier, holder deres indbyrdes forhold konstant.",
@@ -4880,9 +4829,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamisk Notch filter område"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Q faktor"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Min. frekvens [Hz]"
     },
@@ -4894,9 +4840,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Den dynamiske hak har tre frekvensområder: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro Dynamic Lowpass 1 Filters max afskærings frekvens."
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Q faktor justerer, hvor smalle eller brede de dynamiske hak filtre er. Højere værdi gør det smallere og mere præcis og lavere værdi gør det bredere og bredere. At have en virkelig lav værdi vil i høj grad øge filter forsinkelse."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Sæt denne til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske hak."
@@ -4984,17 +4927,11 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Forøger PID værdierne for at kompensere når Vbat bliver lavere. Dette vil give mere konstante flyveegenskaber under hele flyvningen. Den  kompensation som søges, beregnes fra $t(powerBatteryMaximum.message) sat på $t(tabPower.message) siden, så sørg for, at det er indstillet til noget passende."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Vbat Sag Compensation"
-    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Giver stabil gas og PID ydeevne i hele batteris spændingsområde ved at øge motoren output som kompensation for fald i batteri spænding.<br \/><br \/>Kompensationen kan variere mellem 0 og 100%. Fuld kompensation (100%) anbefales.<br \/><br \/>Besøg <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post<\/a> for mere info."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Thrust Linearization"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Forbedrer lav gas styring og mere reaktion. <br><br> Specielt nyttigt for klynger og 48k ESC'er. Har ingen effekt ved højere gas.<br><br>Mængden af kompensation kan varieres mellem 0 og 150%. Normalt 30-40% er nok."
@@ -5091,7 +5028,7 @@
         "message": "Modtager fejlsikring"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Fejlsikring har to trin.<br>\n<strong>Trin 1 - fejlsikring via kanal<\/strong> begynder, når en radio kanal får en ugyldig pulslængde, modtageren aktiverer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter \"Trin 1 - Fejlsikring via kanal\" tages ibrug for <span class=\"message-negative\">alle kanaler<\/span>, der ventes et kort øjeblik - styret af \"Ventetid på Trin 1, før Trin 2 aktiveres\" for at muliggøre en gendannelse.<br>\n<strong>Trin 2<\/strong> begynder, når fartøjet er <span class=\"message-negative\">aktiveret<\/span> og der kommer en fejltilstand og tid varer længere den indstillede periode til at kunne gendanne. Kanalerne bliver på indstillingerne i \"Trin 1 - Fejlsikring via kanaler\", medmindre de tilsidesættes af den valgte procedure for Trin 2.<br \/><strong>Bemærk:<\/strong> Inden Trin1 begynder, anvendes indstillingerne i \"Trin 1 - Fejlsikring via kanaler\" også på AUX-kanaler, der har ugyldige impulslængder."
+        "message": "Fejlsikring har to trin.<br>\n<strong>Trin 1 - fejlsikring via kanal<\/strong> begynder, når en radio kanal får en ugyldig pulslængde, modtageren aktiverer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter \"Trin 1 - Fejlsikring via kanal\" tages ibrug for <span class=\"message-negative\">alle kanaler<\/span>, der ventes et kort øjeblik - styret af \"Ventetid på Trin 1, før Trin 2 aktiveres\" for at muliggøre en gendannelse.<br>\n<strong>Trin 2 - fejlsikring via automatik<\/strong> begynder, når fartøjet er <span class=\"message-negative\">aktiveret<\/span> og der kommer en fejltilstand og tid varer længere den indstillede periode til at kunne gendanne. Kanalerne bliver på indstillingerne i \"Trin 1 - Fejlsikring via kanal\", medmindre de tilsidesættes af den valgte procedure for \"Trin 2 - Aktion ved aktivering\". Det er under Trin 2, du kan vælge \"Drop - sluk alt\", \"Land straks\" eller \"Flyv hjem med GPS (Return To Home)\".<br \/><strong>Bemærk:<\/strong> Før Trin1 aktiveres, anvendes indstillingerne i \"Trin 1 - Fejlsikring via kanal\" også på AUX-kanaler, der har ugyldige impulslængder."
     },
     "failsafePulsrangeTitle": {
         "message": "Indstilling af interval for gyldigt signal"
@@ -5224,7 +5161,7 @@
         "message": "Gas indstilling for svævning - <span class=\"message-negative\">VIGTIGT: Indstil denne værdi præcist<\/span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "For at bestemme rigtige værdi, indstil Fejlsikring til Trin 2, indstil trin 2 Fejlsikring til Land straks, og juster gasværdi anvendt under landing indtil fartøj svæver eller falder langsomt.<br>Indstil derefter Gas indstilling for svævning, og Trin 1 - Fejlsikring for kanaler - Gas[T] , Aktion \"Sæt\", til denne værdi."
+        "message": "For at bestemme rigtige værdi, indstil Fejlsikring til Trin 2, indstil Trin 2 - Fejlsikring via automatik til \"Land straks\", og juster gasværdi anvendt under landing indtil fartøj svæver eller falder langsomt.<br>Indstil derefter \"Gas indstilling for svævning\", og også Trin 1 - Fejlsikring via kanaler - Gas[T], Aktion \"Sæt\", til denne værdi."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Mindste afstand til hjem (meter)"
@@ -5743,17 +5680,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Tilpasset billede:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Størrelse skal være $t(logoWidthPx)×$t(logoHeightPx) pixel"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Skal indeholde grønne, sorte og hvide pixels"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik på <b>$t(osdSetupUploadFont.message)<\/b> for at bevare tilpasset logo"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Ugyldig billedstørrelse: {{width}}×{{height}} (forventet $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Billedet indeholder en ugyldig pixel: rgb ({{valueR}}, {{valueG}}, {{valueB}}) i koordinaterne {{posX}}×{{posY}}"
@@ -5772,6 +5703,9 @@
     },
     "osdSetupSave": {
         "message": "Gem"
+    },
+    "osdSetupRefresh": {
+        "message": "Opdater"
     },
     "osdSetupFontManager": {
         "message": "Rediger skrifttype"
@@ -7373,7 +7307,7 @@
         "message": "Barometer (hvis understøttet)"
     },
     "configurationMagHardware": {
-        "message": "Magnetometer (hvis understøttet)"
+        "message": "Kompas (hvis understøttet)"
     },
     "configurationSmallAngle": {
         "message": "Maksimal vinkel [grader] hvorunder fartøj kan aktiveres"
@@ -7570,7 +7504,7 @@
         "message": "Hastighed type"
     },
     "pidTuningRatesTypeTip": {
-        "message": "Ændring af hastighed type vil ændre kurven og den måde, du kan indstille den"
+        "message": "Ændring af hastighed type vil ændre kurven og den måde, du kan indstille den<br><br><a href='https:\/\/rates.metamarc.com' target='_blank' rel='noopener noreferrer'>rates.metamarc.com<\/a>"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Hastighed"
@@ -8427,8 +8361,14 @@
     "preflightWmoModerateDrizzle": {
         "message": "Moderat støvregn"
     },
+    "preflightWmoDenseDrizzle": {
+        "message": "Tæt støvregn"
+    },
     "preflightWmoLightFreezingDrizzle": {
         "message": "Let isslag"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Tæt underafkølet støvregn"
     },
     "preflightWmoSlightRain": {
         "message": "Let regn"
@@ -8490,6 +8430,9 @@
     "preflightKpStorm": {
         "message": "Storm"
     },
+    "preflightWindCalm": {
+        "message": "Rolig"
+    },
     "preflightWindModerate": {
         "message": "Moderat"
     },
@@ -8498,6 +8441,9 @@
     },
     "preflightWindDangerous": {
         "message": "Farlig"
+    },
+    "preflightVisExcellent": {
+        "message": "Fremragende"
     },
     "preflightVisGood": {
         "message": "God"
@@ -8545,7 +8491,7 @@
         "message": "Normalt område"
     },
     "preflightBatteryCool": {
-        "message": "Reduceret ydeevne, pga varme batterier"
+        "message": "Reduceret ydeevne, pga kolde batterier"
     },
     "preflightBatteryCold": {
         "message": "Stærkt reduceret kapacitet"
@@ -8558,6 +8504,9 @@
     },
     "preflightCheckBattery": {
         "message": "Batteri"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Densitetshøjde"
     },
     "preflightFeelsLike": {
         "message": "Føles som"
@@ -8579,6 +8528,9 @@
     },
     "preflightElevation": {
         "message": "Højde"
+    },
+    "preflightDensityAlt": {
+        "message": "Densitetshøjde"
     },
     "preflightDaNormal": {
         "message": "Normal ydelse"
@@ -8682,6 +8634,9 @@
     "preflightSolarActivity": {
         "message": "Sol aktivitet"
     },
+    "preflightSolarHelp": {
+        "message": "Høj solaktivitet (Kp > 5) forårsager ionosfærisk interferens, som kan forringe GPS-nøjagtighed og dermed påvirke pålidelighed ved GPS-fejlsikring."
+    },
     "preflightGeoStorm": {
         "message": "Geomagnetisk storm"
     },
@@ -8723,6 +8678,9 @@
     },
     "preflightAirspaceNote": {
         "message": "Kontrollér altid lokale luftrumsrestriktioner og NOTAM'er før flyvning. Reglerne varierer efter land og region. I Danmark findes droneregler.dk."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Drone Safety kort (Altitude Angel)"
     },
     "preflightAirspaceExplorer": {
         "message": "SkyVector Airspace kort"

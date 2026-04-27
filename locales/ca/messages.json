@@ -110,11 +110,23 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Simular un controlador de vol sense maquinari.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Introduïu el port sèrie o l'URL a la qual voleu connectar-vos.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Auto-Connectar"
     },
     "close": {
         "message": "Tanca"
+    },
+    "openSidebarMenu": {
+        "message": "Obre el menú de la barra lateral",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -354,9 +366,6 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
-    "tabTransponder": {
-        "message": "Transponder de curses"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -401,6 +410,19 @@
     },
     "logActionShow": {
         "message": "Mostrar Log"
+    },
+    "tabLog": {
+        "message": "Registre"
+    },
+    "i2cErrorDetected": {
+        "message": "S'ha detectat un error I2C (+{{delta}}, total {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "Buida"
+    },
+    "logAutoScroll": {
+        "message": "Desplaçament automàtic"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} arxius",
@@ -655,7 +677,7 @@
         "message": "Destí"
     },
     "versionLabelFirmware": {
-        "message": "Programari"
+        "message": "Versió de programari"
     },
     "versionLabelConfigurator": {
         "message": "Versió de l'aplicació"
@@ -1353,7 +1375,7 @@
         "message": "Transponder de curses"
     },
     "featureTRANSPONDERTip": {
-        "message": "Configura la pestanya Transponder de Cursa després d'activar"
+        "message": "Activeu la compatibilitat amb el firmware del transponedor. Configureu el proveïdor (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]<\/code>) i les dades (<code>set transponder_data = &lt;bytes&gt;<\/code>) a través del CLI i, a continuació, <code>deseu<\/code>. Executeu <code>get transponder<\/code> per inspeccionar els valors actuals."
     },
     "featureAIRMODE": {
         "message": "Activa Airmode permanentment"
@@ -1408,7 +1430,7 @@
         "message": "Sortida de Telemetria des de receptor"
     },
     "configurationRSSI": {
-        "message": "RSSI (Força de la senyal)"
+        "message": "RSSI"
     },
     "configurationRSSIHelp": {
         "message": "RSSI és una mesura de la força del senyal i és molt pràctic, de manera que et permet saber quan el quad està sortint del rang de cobertura o si està patint una interferència de RF."
@@ -1967,7 +1989,7 @@
         "message": "Configuració del perfil PID"
     },
     "pidTuningSubTabRates": {
-        "message": "Configuració dels Rates"
+        "message": "Ajustaments del perfil de ràtios"
     },
     "pidTuningSubTabFilter": {
         "message": "Configuració de Filtres"
@@ -2032,7 +2054,7 @@
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
-        "message": "Amortiment<br>dinàmic",
+        "message": "Amortiment dinàmic",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
@@ -2160,7 +2182,7 @@
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Es desaconsella l'ús d'una transició de punt de partida D superior a 0 i inferior a 0,1. Si ho fa, pot generar inestabilitat i una menor capacitat de resposta a mesura que els sticks passen pel punt central.<\/span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
+        "message": "Transició"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward ajusta la capacitat de resposta del stick.<br \/><br \/> Aquestes opcions us permeten ajustar-lo per oferir qualsevol cosa, des de respostes nítides i immediates del stick per a les curses o respostes suaus amb finalitats cinematogràfiques\/HD."
@@ -2266,11 +2288,17 @@
     "pidTuningRatesPreview": {
         "message": "Previsualització de Rates"
     },
+    "pidTuningRatesModelPreview": {
+        "message": "Vista prèvia dels models de ràtios"
+    },
     "pidTuningRatesTuningHelp": {
         "message": "<b>Rates i Expo<\/b>: Determineu la sensació d’adherència dels sticks en funció d’aquests paràmetres. Utilitzeu el gràfic i el model 3D en viu per trobar la vostra configuració de rates preferida."
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
+    },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
     },
     "pidTuningTPAMode": {
         "message": "TPA Mode"
@@ -2397,6 +2425,9 @@
     "filterWarning": {
         "message": "<span class =\"message-negative\"><b>Advertència:<\/b><\/span> La quantitat de filtratge que utilitzeu és perillosament baixa. És probable que això faci que el dron sigui difícil de controlar i que es pugui traduir en fugides. És molt recomanable que <b>activeu almenys un pasaa baix dinàmic del Giro o passa baix 1 de Giro i almenys un passa baix dinàmic D Term o pas baix D Term 1<\/b>."
     },
+    "pidTuningSliders": {
+        "message": "Controladors d'afinació dels PID"
+    },
     "pidTuningSliderPidsMode": {
         "message": "Mode:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2421,6 +2452,9 @@
     },
     "receiverThrottleHover": {
         "message": "Punt de Hover"
+    },
+    "receiverStickRange": {
+        "message": "Rang del stick"
     },
     "receiverStickMin": {
         "message": "Llindar 'Stick Low'"
@@ -2560,6 +2594,9 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryLinkNone": {
+        "message": "Cap"
     },
     "auxiliaryModeLogicOR": {
         "message": "OR"
@@ -2942,68 +2979,14 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "transponderNotSupported": {
-        "message": "El firmware del teu controlador de vol no suporta la funcionalitat de transponder."
+    "adjustmentsShowAll": {
+        "message": "Mostra tots els espais"
     },
-    "transponderInformation": {
-        "message": "Els sistemes de transponders permeten als organitzadors de cursa cronometrar les teves voltes. El transponder s'intal·la al teu quad i, quan aquest passa per la porta on es troba el receptor, es registre el teu temps de volta. Quan instal·lis un transponder basat en IR, assegura't que aquest apunta cap a fora del quad dirigint-se al receptor i sense que el feix de llum sigui obtruït pel frame, cinta de la bateria, cables, hèlixs, etc."
+    "adjustmentsHideEmpty": {
+        "message": "Amaga els espais buits"
     },
-    "transponderConfigurationType": {
-        "message": "Tipus de transponder"
-    },
-    "transponderType0": {
-        "message": "None"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configuració iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configuració aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configuració ERLT"
-    },
-    "transponderData1": {
-        "message": "Data"
-    },
-    "transponderData2": {
-        "message": "Transponder ID"
-    },
-    "transponderData3": {
-        "message": "Transponder ID"
-    },
-    "transponderDataHelp1": {
-        "message": "Només dígits hexadecimals, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configureu el codi del transponder aquí. Nota: Només els codis vàlids seran reconeguts pels sistemes de crono de cursa. Els codis de transponder vàlids es poden obtenir a <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Per més informació visita <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer<\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Escull ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Per més informació visita <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Desa"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Desa i Reinicia"
-    },
-    "transponderDataInvalid": {
-        "message": "Les dades del transponder són <span class=\"message-negative\">invalides<\/span>"
+    "adjustmentsSlotsActive": {
+        "message": "{{active}} de {{total}} espais actius"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Els servos requereixen un firmware &gt;=1.10.0 i suport de la controladora."
@@ -3701,6 +3684,12 @@
     "loggingNote": {
         "message": "Les dades es registraran en aquesta pestanya <span class=\"message-negative\">només<\/span>, deixant la pestanya <span class=\"message-negative\">cancel·lar<\/span> el registre i l'aplicació tornarà a la normalitat. <br \/> Podeu seleccionar el període d'actualització global, les dades seran escrites al fitxer de registre cada <strong>1<\/strong> segon per motius de rendiment."
     },
+    "loggingPropertiesTitle": {
+        "message": "Propietats del registre"
+    },
+    "loggingSamplingInterval": {
+        "message": "Interval de mostreig:"
+    },
     "loggingSamplesSaved": {
         "message": "Mostres desades:"
     },
@@ -4078,6 +4067,12 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware no carregat"
     },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "Programari"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} bytes"
+    },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Firmware local carregat: {{filename}} ({{bytes}} bytes)"
     },
@@ -4444,6 +4439,14 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "Pampallugues sempre"
     },
+    "ledStripThrottleHue": {
+        "message": "To del throttle",
+        "description": "Label of throttle hue modifier switch on LED Strip tab"
+    },
+    "ledStripThrottleHueChannel": {
+        "message": "Canal de to del throttle",
+        "description": "Accessible label for the aux-channel select next to the throttle hue switch"
+    },
     "ledStripRainbowOverlay": {
         "message": "Arc de Sant Martí",
         "description": "Label of rainbow effect switch on LED Strip tab"
@@ -4674,28 +4677,20 @@
         "description": "Filter tuning slider high header"
     },
     "pidTuningGyroFilterSlider": {
-        "message": "Multiplicador del filtre del Giro:",
+        "message": "Multiplicador del filtre del Giro",
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Canvia els talls del filtre pasa baixos del gyro.<br \/><br \/>Mou el control lliscant cap a l'esquerra proporciona un filtratge Gyro més fort (freqüència de tall més baixa).<br \/><br \/>Mou el control lliscant cap a la dreta proporciona menys filtratge Gyro ( freqüència de tall més alta).<br \/><br \/>Quan moveu el control lliscant cap a la dreta per millorar el maneig del propwash, vés amb compte de no ser massa radical. Permetreu més soroll tant en P com en D i és possible que s'enviïn o es cremin motors.<br \/><br \/>És possible que hàgiu de moure el control lliscant cap a l'esquerra si teniu problemes de ressonància del quadre, rodaments defectuosos, cops. accessoris, motors calents, etc.<br \/><br \/>El filtratge de giroscopi s'aplica abans i a més del filtratge D.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Utilitzeu el control lliscant del Giro",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
     "pidTuningDTermFilterSlider": {
-        "message": "Multiplicador del filtre D Term:",
+        "message": "Multiplicador del filtre D Term",
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Canvia els talls del filtre de pas baix del terme D.<br \/><br \/>Mou el control lliscant cap a l'esquerra proporciona un filtratge D més fort (freqüència de tall més baixa).<br \/><br \/>Mou el control lliscant cap a la dreta proporciona menys filtratge (freqüència de tall més alta).<br \/><br \/>D-term és l'element PID més sensible al soroll i la ressonància. Pot amplificar el soroll d'alta freqüència de 10x a 100x. És per això que els talls de filtre D són molt més baixos que els filtres de giroscopi.<br \/><br \/>El filtratge de terme D s'aplica després i a més del filtratge de giroscopi. El filtratge D predeterminat és òptim per a la majoria de quads i rarament s'ha de canviar.<br \/><br \/>Mou aquest control lliscant cap a l'esquerra redueix la calor del motor en quads sorollosos i amb \"D\" de PID alt, però és possible que veiem més propwash i ressonàncies D de freqüència més baixa.<br \/><br \/>No es recomana moure el control lliscant cap a la dreta, però pot millorar el propwash en construccions noves. Pot provocar un triturat del motor en armar-se, ressonàncies sobtades durant el vol i un sobreescalfament greu del motor.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Utilitzeu el control lliscant de D Term",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Controls lliscants per ajustar les característiques del vol del quad (guanys PID)<br \/><br \/>Amortiment (guany D): Resisteix el moviment ràpid, minimitza l’oscil·lació P. <br \/><br \/>Seguiment (guany P i I): encoratja la capacitat de resposta del quad, si és massa alta, pot provocar trillacions o oscil·lacions. <br \/><br \/>Resposta al stick (Feedforward): augmenta la capacitat de resposta del quad a moviments de stick més ràpids. <br \/><br \/>Deriva - Wobble (Jo guanyo, expert): ajust fi de I.<br \/><br \/>Dynamic D (D Max, expert): estableix la quantitat màxima del D reforçada durant moviments ràpids. <br \/><br \/>Pitch Damping (Pitch: Roll D ratio, expert): augmenta la quantitat d'amortiment en el pitch respecte al roll. <br \/><br \/>Pitch Tracking (Pitch: Roll P, I and F ratio, expert): Augmenta força estabilitzadora en el to respecte al roll. <br \/><br \/>Multiplicador principal (Tots els guanys, expert): augmenta o disminueix tots els guanys PID, mantenint les seves proporcions constants.",
@@ -4907,7 +4902,7 @@
         "message": "Rang del filtre dinàmic de banda eliminada (Notch)"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "Factor Q"
+        "message": "Q factor (x100)"
     },
     "pidTuningDynamicNotchMinHz": {
         "message": "Freqüència mínima [Hz]"
@@ -4922,7 +4917,7 @@
         "message": "El Notch (banda eliminada) dinàmic té tres rangs de freqüència en els quals pot funcionar: BAIX (80-330hz) per a quads revolucionats de 6 o més polzades, MITJA (140-550hz) per a un quad normal de 5 polzades, ALT (230-800Hz) per quads molt revolucionats de 2,5-3 polzades. L'opció AUTO selecciona l'abast en funció del valor de la freqüència màxima de tall del filtre dinàmic passa-baixos de Giro 1."
     },
     "pidTuningDynamicNotchQHelp": {
-        "message": "El factor Q ajusta quan ample o estret es son els filtres dinàmics Notch. Valors elevats els fan més estrets i acurats, valors baixos els fa més amples y alts. Tenir un valor molt baix augmentarà considerablement el retard del filtre."
+        "message": "El factor Q ajusta l'amplada o estret dels filtres de pinta dinàmics. El valor emmagatzemat és el factor Q × 100 (per exemple, 300 = Q 3.0). Un valor més alt el fa més estret i precís, i un valor més baix el fa més ample i ample. Un valor molt baix augmentarà considerablement el retard del filtre."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Configureu-lo a la freqüència de soroll entrant més baixa que fa falta per ser controlat pel Notch dinàmic."
@@ -5011,7 +5006,7 @@
         "message": "Incrementa el valors de PIDs per compensar la caiguda del voltatge de bateria. Aquest donarà característiques de vol constants durant el vol. La quantitat de compensació que s'aplica es calcula per el valor de voltatge màxim de ceŀla definit a la pestanya de configuració, assegura't que és correcte."
     },
     "pidTuningVbatSagCompensation": {
-        "message": "Compensació del Battery Sag"
+        "message": "Compensació de baixada de Vbat %"
     },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Ofereix un rendiment constant de l'acceleració i el PID en l'interval de tensió de la bateria utilitzable augmentant la sortida del motor a mesura que cau la tensió de la bateria.<br \/><br \/>La quantitat de compensació es pot variar entre 0 i 100%. Es recomana una compensació total (100%).<br \/><br \/>Visiteu <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/4-2-Tuning-Notes#dynamic-battery-sag-compensation \"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki<\/a> per a més informació."
@@ -5020,7 +5015,7 @@
         "message": "%"
     },
     "pidTuningThrustLinearization": {
-        "message": "Linealització de l'empenta"
+        "message": "Linealització de l'empenta %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Millora l'autoritat i la capacitat de resposta de l'accelerador baix. <br><br> Especialment útil per a whoops i 48k ESC. No té cap efecte a un accelerador més alt.<br><br>La quantitat de compensació es pot variar entre 0 i 150%. Normalment un 30-40% és suficient."
@@ -5770,7 +5765,7 @@
         "message": "Imatge personalitzada:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "La mida ha de ser de $t(logoWidthPx)x$t(logoHeightPx) píxels"
+        "message": "La mida ha de ser de {{logoWidthPx}}x{{logoHeightPx}} píxels"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Ha de contenir píxels verds, blancs i negres"
@@ -5779,7 +5774,7 @@
         "message": "Prem <b>$t(osdSetupUploadFont.message)<\/b> per a desar la imatge personalitzada"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Mida de la imatge no vàlida: {{width}}x{{height}} (s'esperava $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Mida d'imatge no vàlida: {{width}}x{{height}} (s'esperava {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "L'imatge conte píxels invàlids: rgb({{valueR}}, {{valueG}}, {{valueB}}) a les coordenades {{posX}}×{{posY}}"
@@ -5798,6 +5793,9 @@
     },
     "osdSetupSave": {
         "message": "Desa"
+    },
+    "osdSetupRefresh": {
+        "message": "Actualitza"
     },
     "osdSetupFontManager": {
         "message": "Gestor de Fonts"
@@ -7596,7 +7594,7 @@
         "message": "Tipus de Rates"
     },
     "pidTuningRatesTypeTip": {
-        "message": "Camvis del tipus de rates, canviarà la corba de rates i la manera de configurar-la"
+        "message": "Canviar el tipus de ràtios modificarà la corba de ràtios i la manera com la pots configurar<br><br><a href='https:\/\/rates.metamarc.com' target='_blank' rel='noopener noreferrer'>rates.metamarc.com<\/a>"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rates"

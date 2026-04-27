@@ -323,9 +323,6 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
-    "tabTransponder": {
-        "message": "Транспондер гонки"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -616,9 +613,6 @@
     },
     "versionLabelTarget": {
         "message": "Target"
-    },
-    "versionLabelFirmware": {
-        "message": "Прошивка"
     },
     "versionLabelConfigurator": {
         "message": "Версия приложения"
@@ -1311,9 +1305,6 @@
     "featureTRANSPONDER": {
         "message": "Транспондер гонки"
     },
-    "featureTRANSPONDERTip": {
-        "message": "После включения настройте во вкладке Транспондер гонки."
-    },
     "featureAIRMODE": {
         "message": "Включить Airmode по умолчанию"
     },
@@ -1365,9 +1356,6 @@
     },
     "configurationTelemetryHelp": {
         "message": "Выход телеметрии с приемника"
-    },
-    "configurationRSSI": {
-        "message": "RSSI (Уровень сигнала)"
     },
     "configurationRSSIHelp": {
         "message": "RSSI - это измерение уровня сигнала, он очень полезен, т.к. вы уже знаете, когда ваш летательный аппарат начинает выходить из зоны приёма или страдает от радиочастотных помех."
@@ -1921,9 +1909,6 @@
     "pidTuningSubTabPid": {
         "message": "Настройка профилей PID"
     },
-    "pidTuningSubTabRates": {
-        "message": "Настройка rate - профилей"
-    },
     "pidTuningSubTabFilter": {
         "message": "Настройки фильтров"
     },
@@ -1985,10 +1970,6 @@
     "pidTuningDMaxFeatureTitle": {
         "message": "Динамическое демпфирование \/ настройки D Max",
         "description": "Title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "Динамическое<br>Демпфирование",
-        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "Коэффициент усиления",
@@ -2113,9 +2094,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> использование D Setpoint больше 0 и меньше, чем 0.1 не рекомендуется. Это может привести к нестабильности и снижению чувствительности стиков когда стик пересекает центральную точку.<\/span>"
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward регулирует отзывчивость стиков.<br \/><br \/> Эти параметры позволяют вам настроить таким образом, чтобы получить немедленный отклик от стиков во время гонок или плавных откликов для кинематографических целей \/ HD."
@@ -2876,69 +2854,6 @@
     },
     "adjustmentsSave": {
         "message": "Сохранить"
-    },
-    "transponderNotSupported": {
-        "message": "Прошивка Вашего полетного контроллера не поддерживает работу транспондера."
-    },
-    "transponderInformation": {
-        "message": "Система транспондеров позволяет организовать гонки на время круга.  Транспондер устанавливается на ваш аппарат и когда ваш аппарат проходит ворота то приемник со стороны трека регистрирует ваш код и записывает ваше время круга.  Когда установлен ИК транспондер вам следует быть уверенным, что он указывает наружу от вашего аппарата в сторону приемника на стороне трека и что луч света не загораживается планером, батарей, кабелями и т. д."
-    },
-    "transponderConfigurationType": {
-        "message": "Тип транспондера"
-    },
-    "transponderType0": {
-        "message": "Нет"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Конфигурация iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Конфигурация aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Конфигурация ERLT"
-    },
-    "transponderData1": {
-        "message": "Данные"
-    },
-    "transponderData2": {
-        "message": "ID Транспондера"
-    },
-    "transponderData3": {
-        "message": "ID Транспондера"
-    },
-    "transponderDataHelp1": {
-        "message": "Только хексдецимальные цифры, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Здесь можно настроить код транспондера. Примечание: Только действующие коды будут распознаваться с помощью систем контроля времени круга. Действующий код транспондера можно получить от <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
-    },
-    "transponderHelp2": {
-        "message": "Для получения дополнительной информации посетите сайт aRCiTimer <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Выберите ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Для получения дополнительной информации посетите сайт <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer<\/a>"
-    },
-    "transponderButtonSave": {
-        "message": "Сохранить"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Сохранить и Перезагрузить"
-    },
-    "transponderDataInvalid": {
-        "message": "Информация с транспондера <span class=\"message-negative\">не правильная<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Сервы требуют firmware &gt;= 1.10.0. и целевую поддержку."
@@ -4409,29 +4324,13 @@
         "message": "Больше фильтрации",
         "description": "Filter tuning slider high header"
     },
-    "pidTuningGyroFilterSlider": {
-        "message": "Множитель фильтра Gyro:",
-        "description": "Gyro filter tuning slider label"
-    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Изменяет частоты среза фильтров низких частот (Lowpass) гироскопа.<br \/><br \/>\nПеремещение ползунка влево обеспечивает более сильную фильтрацию гироскопа (более низкие частоты среза).<br \/><br \/>\nПеремещение ползунка вправо приводит к меньшей фильтрации гироскопа (более высокие частоты среза).<br \/><br \/>\nПри перемещении ползунка вправо для улучшения обработки \"prop-wash \" БУДЬТЕ ОСТОРОЖНЫ, чтобы не вносить слишком радикальные изменения. Это позволит большему количеству шума попасть в P и D, что может привести к неконтролируемому поведению или перегреву моторов.<br \/><br \/>\nВам может понадобиться переместить ползунок влево, если у вас возникают проблемы с резонансом рамы, плохими подшипниками, поврежденными пропеллерами, перегреваемыми моторами и т. д.<br \/><br \/>\nФильтрация гироскопа применяется до и в дополнение к фильтрации D.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Использовать слайдер для настройки гироскопа",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "Множитель фильтра D-Term:",
-        "description": "D Term filter tuning slider label"
-    },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Изменяет частоты среза НЧ-фильтров D-term.<br \/><br \/>Перемещение слайдера влево дает более сильную фильтрацию D-term (низкие частоты среза).<br \/><br \/>Перемещение слайдера вправо дает меньше фильтрации (более высокие частоты среза).<br \/><br \/>D составлюящая - это наиболее чувствительный элемент PID  к шуму и резонансу. Он может усиливать высокочастотный шум в 10 - 100 раз. Поэтому частоты среза фильтров D намного ниже фильтров сигнала гироскопа.<br \/><br \/>Фильтрация D применяется после и в дополнение к фильтрации гироскопа. По умолчанию D фильтрация оптимальна для большинства бортов и редко требует изменения.<br \/><br \/>Перемещение этого ползунка влево уменьшает нагрев двигателей в шумных сборках и при высоких значения 'D' в ПИД регуляторе, но мы можем заметить усиление негативных последствий от propwash и низкчастотный D резонанс.<br \/><br \/>Перемещение слайдера вправо не рекомендуется, но может улучшить обработку propwash при чистых сборках. Так же, это может привести к скрежету двигателей, внезапному резонансу в полете и серьезному перегреву двигателей.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Использовать слайдер для настройки D-Term",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Ползунки для настройки характеристик полёта (коэффициенты PID)<br \/><br \/>Демпфирование (D gain): Подавляет быстрые движения, снижает осцилляции P.<br \/><br \/>Трекинг (P и I gain): Повышает отзывчивость летательного аппарата; при слишком высоких значениях может вызывать треллинг или осцилляции.<br \/><br \/>Отзывчивость стиков (Feedforward): Увеличивает отклик на быстрые движения стиков.<br \/><br \/>Дрейф - Колебания (I gain, эксперт): Тонкая настройка I-компоненты.<br \/><br \/>Динамическое демпфирование (D Max, эксперт): Задаёт максимальное усиление D-компоненты при быстрых движениях.<br \/><br \/>Демпфирование по тангажу (Pitch:Roll D ratio, эксперт): Увеличивает демпфирование по тангажу относительно крена.<br \/><br \/>Трекинг по тангажу (Pitch:Roll P, I и F ratio, эксперт): Увеличивает стабилизирующее воздействие по тангажу относительно крена.<br \/><br \/>Мастер-множитель (все коэффициенты, эксперт): Увеличивает или уменьшает все коэффициенты PID, сохраняя их пропорции.",
@@ -4642,9 +4541,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Диапазон динамического режекторного фильтра"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Q фактор"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Мин. частота [Гц]"
     },
@@ -4656,9 +4552,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамическая нотка имеет три диапазона частот, в которых она может работать: LOW(80-330hz) для более низких реверсивных самолетов типа 6+ дюймов, СРЕДНИЙ (140-550гц) для обычного самолета на 5 дюймов (HIGH(230-800гц) для очень высокой рентабельности 2. Авиакомпания AUTO выбирает диапазон в зависимости от значения максимальной частоты динамического нижнего пасса 1 фильтра Gyro Dynamic Lowpass 1."
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": "Коэффициент Q регулирует, на сколько узкими или широкими будут динамические режекторные фильтры. Более высокое значение делает их более точным и узким, а более низкие - шире и менее точным. При достаточно низком значении значительно увеличится задержка фильтра."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Установите это параметр на минимальную частоту входящего шума, которая должна контролироваться динамическим режекторным фильтром."
@@ -4746,17 +4639,11 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Увеличивает значения PID-ов, в целях компенсации, при низком заряде батареи. Это даёт более стабильные лётные характеристики на протяжении всего полёта. Значение компенсации вычисляется исходя $t(powerBatteryMaximum.message), установленного во вкладке $t(tabPower.message)."
     },
-    "pidTuningVbatSagCompensation": {
-        "message": "Компенсация просадки напряжения батареи"
-    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Обеспечивает стабильные показатели тяги и работы PID во всем рабочем диапазоне напряжения батареи, увеличивая выходную мощность моторов по мере падения напряжения.<br \/><br \/>\n\nУровень компенсации можно регулировать от 0% до 100%. Рекомендуется полная компенсация (100%).<br \/><br \/>\n\nПодробнее см. в <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">этой статье вики<\/a>."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
-    },
-    "pidTuningThrustLinearization": {
-        "message": "Линейная тяга"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Улучшает управление и отзывчивость на малых оборотах.  <br><br>  Особенно полезно для вупов (whoops) и 48К ESC. Не оказывает влияния на высоких оборотах.  <br><br> Уровень компенсации можно варьировать от 0 до 150%. Обычно достаточно 30-40%."
@@ -5493,17 +5380,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Свое изображение"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Размер должен быть $t(logoWidthPx)x$t(logoHeightPx) пикселей"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Должен содержать зеленые, черные и белые пиксели"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Нажмите <b>$t(osdSetupUploadFont.message)<\/b> для установки собственного логотипа"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Недопустимый размер: {{width}}x{{height}} (ожидается $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Изображение содержит недопустимый пиксель: rgb ({{valueR}}, {{valueG}}, {{valueB}}) в координаты {{posX}}×{{posY}}"
@@ -7303,9 +7184,6 @@
     },
     "pidTuningRatesType": {
         "message": "Тип коэффициентов"
-    },
-    "pidTuningRatesTypeTip": {
-        "message": "Изменение типов коэффициентов изменит кривую коэффициентов и то, как она отображается"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Коэффициент"
