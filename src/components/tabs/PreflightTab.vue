@@ -342,12 +342,20 @@
                                 <div class="fw-label">{{ $t("preflightCurrentlyDay") }}</div>
                                 <div
                                     class="fw-value"
-                                    :class="preflight.weather.current?.isDay ? 'status-good' : 'status-warning'"
+                                    :class="
+                                        preflight.weather.current
+                                            ? preflight.weather.current.isDay
+                                                ? 'status-good'
+                                                : 'status-warning'
+                                            : ''
+                                    "
                                 >
                                     {{
-                                        preflight.weather.current?.isDay
-                                            ? $t("preflightDaytime")
-                                            : $t("preflightNighttime")
+                                        preflight.weather.current
+                                            ? preflight.weather.current.isDay
+                                                ? $t("preflightDaytime")
+                                                : $t("preflightNighttime")
+                                            : "-"
                                     }}
                                 </div>
                             </div>
