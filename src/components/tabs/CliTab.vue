@@ -106,12 +106,14 @@ import { TABS } from "../../js/gui";
 import CliAutoComplete from "../../js/CliAutoComplete";
 import { EventBus } from "../eventBus";
 import { i18n } from "../../js/localization";
+import UiBox from "../elements/UiBox.vue";
 
 export default defineComponent({
     name: "CliTab",
     components: {
         BaseTab,
         CliAutocompleteDropdown,
+        UiBox,
     },
     setup() {
         const cli = useCli();
