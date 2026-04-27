@@ -5,8 +5,8 @@
             <WikiButton docUrl="setup" />
             <!-- Top: 3D Model + Instruments & Calibration side-by-side -->
             <div class="setup-top">
-                <UiBox :padding="false" class="mt-3">
-                    <div class="relative bg-muted">
+                <UiBox :padding="false" class="mt-3 setup-model-box">
+                    <div class="relative bg-muted h-full min-h-0">
                         <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
                             <canvas id="canvas" ref="canvasEl"></canvas>
                             <div class="attitude_info">
@@ -1073,16 +1073,18 @@ function openBuildOptionsDialog() {
         gap: 1rem;
         margin-top: 0.75rem;
     }
-    .model-and-info {
-        #canvas_wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            max-height: 32rem;
-            top: 0;
-            left: 0;
-            border-radius: 1rem;
-        }
+    .setup-model-box :deep(> div) {
+        height: 100%;
+        min-height: 0;
+    }
+    #canvas_wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        max-height: 32rem;
+        top: 0;
+        left: 0;
+        border-radius: 1rem;
     }
     .setup-sidebar {
         display: flex;
