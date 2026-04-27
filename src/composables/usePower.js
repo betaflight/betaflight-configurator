@@ -477,6 +477,9 @@ export function usePower() {
             await mspHelper.sendVoltageConfig();
             await mspHelper.sendCurrentConfig();
             await mspHelper.writeConfiguration(false);
+            // Refresh the saveConfig() baseline so dirty reflects persisted values.
+            // Equivalent to updateStateFromFC() baseline reset without extra FC reads.
+            powerConfigBaseline.value = serializePowerConfig();
 
             if (callback) {
                 callback();

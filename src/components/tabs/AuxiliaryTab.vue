@@ -375,6 +375,48 @@ export default defineComponent({
                 })),
             );
 
+        const serializeModesPayloadForDirtyCheck = (modeRanges, modeRangesExtra) => {
+            const byModeId = new Map(
+                modes.map((mode) => [
+                    mode.id,
+                    {
+                        id: mode.id,
+                        entries: [],
+                    },
+                ]),
+            );
+
+            modeRanges.forEach((range, index) => {
+                const target = byModeId.get(range.id);
+                if (!target || range.id === 0) {
+                    return;
+                }
+
+                const extra = modeRangesExtra[index];
+                const modeLogic = extra?.modeLogic ?? 0;
+                const linkedTo = extra?.linkedTo ?? 0;
+
+                if (linkedTo > 0) {
+                    target.entries.push({
+                        kind: "link",
+                        modeLogic,
+                        linkedTo,
+                    });
+                    return;
+                }
+
+                target.entries.push({
+                    kind: "range",
+                    auxChannelIndex: range.auxChannelIndex,
+                    modeLogic,
+                    start: range.range.start,
+                    end: range.range.end,
+                });
+            });
+
+            return JSON.stringify(Array.from(byModeId.values()));
+        };
+
         const dirty = computed(() => {
             if (!modesDirtyBaseline.value) {
                 return false;
@@ -613,7 +655,7 @@ export default defineComponent({
 
             mspHelper.sendModeRanges(() => {
                 mspHelper.writeConfiguration(false, () => {
-                    modesDirtyBaseline.value = serializeModesForDirtyCheck();
+                    modesDirtyBaseline.value = serializeModesPayloadForDirtyCheck(nextModeRanges, nextModeRangesExtra);
                 });
             });
         };
