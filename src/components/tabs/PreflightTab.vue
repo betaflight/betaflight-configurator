@@ -210,9 +210,9 @@
             </div>
 
             <!-- Main Content Grid -->
-            <div v-if="preflight.location.latitude !== null" class="grid-row grid-box col5">
+            <div v-if="preflight.location.latitude !== null" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <!-- Left Column: Weather -->
-                <div class="col-span-3">
+                <div class="flex flex-col gap-4 md:col-span-3">
                     <!-- Current Weather -->
                     <UiBox :title="`<em class='fas fa-cloud-sun'></em> ${$t('preflightCurrentWeather')}`">
                         <template #title>
@@ -463,7 +463,7 @@
                 </div>
 
                 <!-- Right Column: Solar, GNSS, Airspace -->
-                <div class="col-span-2">
+                <div class="flex flex-col gap-4 md:col-span-2">
                     <!-- Solar Activity -->
                     <UiBox
                         :title="`<em class='fas fa-sun'></em> ${$t('preflightSolarActivity')}`"
@@ -1657,8 +1657,12 @@ export default defineComponent({
     /* Flight Window */
     .flight-window-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
 
         .flight-window-item {
             text-align: center;
