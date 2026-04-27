@@ -4,8 +4,8 @@
     "version": "2026.6.0",
     "identifier": "com.betaflight.app",
     "build": {
-        "beforeDevCommand": "yarn dev",
-        "beforeBuildCommand": "yarn tauri:prebuild",
+        "beforeDevCommand": "npm run dev",
+        "beforeBuildCommand": "npm run tauri:prebuild",
         "devUrl": "http://localhost:8080",
         "frontendDist": "../src/dist"
     },
@@ -32,6 +32,7 @@
         "active": true,
         "targets": [
             "deb",
+            "rpm",
             "appimage",
             "dmg",
             "nsis"
