@@ -255,6 +255,9 @@ try {
 
     const manifest = args.manifest ? JSON.parse(readFileSync(args.manifest, "utf8")) : { nightly: null };
     const releases = args.releases ? JSON.parse(readFileSync(args.releases, "utf8")) : [];
+    if (!Array.isArray(releases)) {
+        throw new Error(`Releases payload at ${args.releases} is not an array`);
+    }
 
     const publicReleases = releases.filter((r) => !r.draft);
     const latestStable = publicReleases.find((r) => !r.prerelease) || null;
