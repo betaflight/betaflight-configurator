@@ -182,6 +182,7 @@ function renderLatestStableSection(latest) {
 }
 
 const RECENT_RELEASE_YEARS = 4;
+const PRERELEASE_VISIBILITY_MONTHS = 9;
 const RELEASES_INDEX_URL = "https://github.com/betaflight/betaflight-configurator/releases";
 
 function renderReleaseHistorySection(releases) {
@@ -195,7 +196,21 @@ function renderReleaseHistorySection(releases) {
 
     const cutoff = new Date();
     cutoff.setFullYear(cutoff.getFullYear() - RECENT_RELEASE_YEARS);
-    const recent = releases.filter((r) => r.published_at && new Date(r.published_at) >= cutoff);
+    const prereleaseCutoff = new Date();
+    prereleaseCutoff.setMonth(prereleaseCutoff.getMonth() - PRERELEASE_VISIBILITY_MONTHS);
+    const recent = releases.filter((r) => {
+        if (!r.published_at) {
+            return false;
+        }
+        const published = new Date(r.published_at);
+        if (published < cutoff) {
+            return false;
+        }
+        if (r.prerelease && published < prereleaseCutoff) {
+            return false;
+        }
+        return true;
+    });
     const olderCount = releases.length - recent.length;
     const olderNote = olderCount
         ? `<p class="meta">Earlier releases are available on <a href="${RELEASES_INDEX_URL}">GitHub</a>.</p>`
