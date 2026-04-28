@@ -74,7 +74,7 @@ jobs:
           - os: macos-latest
             label: macos-arm64
             target: aarch64-apple-darwin
-          - os: macos-13
+          - os: macos-15-intel
             label: macos-x64
             target: x86_64-apple-darwin
           - os: windows-latest
@@ -148,6 +148,10 @@ jobs:
           do
             cp "$path" staging/
           done
+          if ! compgen -G 'staging/*' > /dev/null; then
+            echo "No desktop bundles produced for ${{ matrix.label }}" >&2
+            exit 1
+          fi
           ls -la staging
 
       - name: Upload to R2
@@ -207,7 +211,7 @@ jobs:
                   group,
                   entry: {
                       label,
-                      url: `${base}/${prefix}/${file}`,
+                      url: `${base}/${prefix}/${encodeURIComponent(file)}`,
                       size: stat.size,
                   },
               };
@@ -320,6 +324,7 @@ jobs:
 
   publish:
     name: Publish downloads index
+    if: github.ref == 'refs/heads/master'
     needs: [prepare, desktop, android]
     runs-on: ubuntu-latest
     permissions:
@@ -383,7 +388,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api 'repos/${{ github.repository }}/releases?per_page=30' > releases.json
+          gh api --paginate --slurp -f per_page=100 repos/${{ github.repository }}/releases | jq 'add' > releases.json
 
       - name: Generate index
         env:
@@ -404,4 +409,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist-downloads --project-name=${{ vars.CLOUDFLARE_DOWNLOADS_PROJECT_NAME }} --branch=main --commit-dirty=true
+          command: pages deploy dist-downloads --project-name=${{ vars.CLOUDFLARE_DOWNLOADS_PROJECT_NAME }} --branch=master --commit-dirty=true

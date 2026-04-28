@@ -20,19 +20,26 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 function parseArgs(argv) {
     const args = {};
     for (let i = 0; i < argv.length; i += 2) {
-        const key = argv[i].replace(/^--/, "");
-        args[key] = argv[i + 1];
+        const flag = argv[i];
+        if (!flag?.startsWith("--")) {
+            throw new Error(`Expected a CLI flag starting with --, got: ${flag ?? "<missing>"}`);
+        }
+        const value = argv[i + 1];
+        if (value === undefined || value.startsWith("--")) {
+            throw new Error(`Missing value for CLI flag: ${flag}`);
+        }
+        args[flag.slice(2)] = value;
     }
     return args;
 }
 
 function escapeHtml(value) {
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
 }
 
 function formatBytes(bytes) {
@@ -97,7 +104,16 @@ function renderWebAppSection(masterUrl, releaseUrl) {
 }
 
 function renderNightlySection(nightly) {
-    if (!nightly) {
+    const desktop = nightly?.desktop || {};
+    const platforms = [
+        { key: "windows", title: "Windows" },
+        { key: "macos", title: "macOS" },
+        { key: "linux", title: "Linux" },
+    ];
+    const hasDesktop = platforms.some((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0);
+    const hasAndroid = Boolean(nightly?.android);
+
+    if (!nightly || (!hasDesktop && !hasAndroid)) {
         return `
             <section>
                 <h2>Nightly build</h2>
@@ -105,19 +121,12 @@ function renderNightlySection(nightly) {
             </section>`;
     }
 
-    const desktop = nightly.desktop || {};
-    const platforms = [
-        { key: "windows", title: "Windows" },
-        { key: "macos", title: "macOS" },
-        { key: "linux", title: "Linux" },
-    ];
-
     const platformBlocks = platforms
         .filter((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0)
         .map((p) => `<h3>${escapeHtml(p.title)}</h3>${fileList(desktop[p.key])}`)
         .join("");
 
-    const androidBlock = nightly.android ? `<h3>Android</h3>${fileList([nightly.android])}` : "";
+    const androidBlock = hasAndroid ? `<h3>Android</h3>${fileList([nightly.android])}` : "";
 
     const commitShort = nightly.commit ? nightly.commit.slice(0, 8) : "";
     const metaParts = [];
@@ -166,16 +175,24 @@ function renderLatestStableSection(latest) {
             </section>`;
 }
 
+const RECENT_RELEASE_YEARS = 4;
+const RELEASES_INDEX_URL = "https://github.com/betaflight/betaflight-configurator/releases";
+
 function renderReleaseHistorySection(releases) {
     if (!releases?.length) {
         return `
             <section>
-                <h2>All releases</h2>
+                <h2>Recent releases</h2>
                 <p class="empty">No releases found.</p>
             </section>`;
     }
 
-    const items = releases
+    const cutoff = new Date();
+    cutoff.setFullYear(cutoff.getFullYear() - RECENT_RELEASE_YEARS);
+    const recent = releases.filter((r) => r.published_at && new Date(r.published_at) >= cutoff);
+    const olderCount = releases.length - recent.length;
+
+    const items = recent
         .map((release) => {
             const assets = (release.assets || []).filter((a) => !a.name.endsWith(".sha256"));
             const assetItems = assets.length
@@ -202,14 +219,19 @@ function renderReleaseHistorySection(releases) {
         })
         .join("");
 
+    const olderNote = olderCount
+        ? `<p class="meta">Earlier releases are available on <a href="${RELEASES_INDEX_URL}">GitHub</a>.</p>`
+        : "";
+
     return `
             <section>
-                <h2>All releases</h2>
+                <h2>Recent releases</h2>
                 ${items}
+                ${olderNote}
             </section>`;
 }
 
-async function main() {
+try {
     const args = parseArgs(process.argv.slice(2));
     if (!args.output) {
         throw new Error("--output is required");
@@ -220,8 +242,8 @@ async function main() {
     const manifest = args.manifest ? JSON.parse(readFileSync(args.manifest, "utf8")) : { nightly: null };
     const releases = args.releases ? JSON.parse(readFileSync(args.releases, "utf8")) : [];
 
-    const stableReleases = releases.filter((r) => !r.draft && !r.prerelease);
-    const latestStable = stableReleases[0] || null;
+    const publicReleases = releases.filter((r) => !r.draft);
+    const latestStable = publicReleases.find((r) => !r.prerelease) || null;
 
     const masterUrl = args["master-url"] || "https://master.betaflight-app.pages.dev";
     const releaseUrl = args["release-url"] || "https://app.betaflight.com";
@@ -230,7 +252,7 @@ async function main() {
         renderWebAppSection(masterUrl, releaseUrl),
         renderNightlySection(manifest.nightly),
         renderLatestStableSection(latestStable),
-        renderReleaseHistorySection(releases),
+        renderReleaseHistorySection(publicReleases),
     ].join("\n");
 
     const templatePath = join(__dirname, "templates", "downloads-index.html");
@@ -247,9 +269,7 @@ async function main() {
     copyFileSync(join(repoRoot, "src-tauri/icons/bf_icon_128.png"), join(outputDir, "favicon.png"));
 
     console.log(`Wrote ${join(outputDir, "index.html")}`);
-}
-
-main().catch((error) => {
+} catch (error) {
     console.error(error);
     process.exit(1);
-});
+}
