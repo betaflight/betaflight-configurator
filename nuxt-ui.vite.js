@@ -19,6 +19,13 @@ export default {
                     },
                 },
             },
+            compoundVariants: [
+                {
+                    color: "primary",
+                    variant: "solid",
+                    class: "disabled:bg-accented disabled:text-toned",
+                },
+            ],
             defaultVariants: {
                 size: "sm",
             },
