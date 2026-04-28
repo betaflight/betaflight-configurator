@@ -383,6 +383,7 @@ jobs:
         run: |
           set -o pipefail
           gh api --paginate --slurp "repos/${{ github.repository }}/releases?per_page=100" | jq 'add' > releases.json
+          jq -e 'type == "array" and (length == 0 or all(.[]; has("tag_name") and has("html_url")))' releases.json > /dev/null
 
       - name: Generate index
         env:
