@@ -154,16 +154,12 @@ jobs:
           fi
           ls -la staging
 
-      - name: Upload to R2
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
-          aws-region: auto
-
       - name: Sync desktop bundles to R2
         shell: bash
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
           R2_BUCKET: ${{ vars.CLOUDFLARE_R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_ENDPOINT }}
           PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/desktop
@@ -290,15 +286,11 @@ jobs:
           cp android/app/build/outputs/apk/release/app-release.apk "staging/${APK_NAME}"
           echo "APK_NAME=${APK_NAME}" >> "$GITHUB_ENV"
 
-      - name: Configure R2 credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
-          aws-region: auto
-
       - name: Sync APK to R2
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
           R2_BUCKET: ${{ vars.CLOUDFLARE_R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_ENDPOINT }}
           PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/android
