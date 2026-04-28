@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Betaflight downloads</title>
+        <meta name="description" content="Download Betaflight Configurator nightly builds, stable releases, and the web app." />
+        <link rel="icon" type="image/png" href="favicon.png" />
+        <style>
+            :root {
+                --primary-500: #ffbb00;
+                --primary-700: #bb6502;
+                --surface-100: #0a0a0a;
+                --surface-200: #141414;
+                --surface-400: #2a2a2a;
+                --text: hsl(0, 0%, 95%);
+                --text-dim: hsl(0, 0%, 60%);
+                --link: var(--primary-500);
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: var(--surface-100);
+                color: var(--text);
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    "Segoe UI",
+                    Roboto,
+                    sans-serif;
+                font-size: 16px;
+                line-height: 1.55;
+            }
+
+            a {
+                color: var(--link);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+
+            header {
+                background: var(--surface-200);
+                border-bottom: 1px solid var(--surface-400);
+                padding: 1.5rem 2rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            header img {
+                height: 40px;
+            }
+            header h1 {
+                font-size: 1.5rem;
+                margin: 0;
+                color: var(--primary-500);
+            }
+
+            main {
+                max-width: 880px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem 4rem;
+            }
+
+            section {
+                margin-bottom: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+                color: var(--primary-500);
+                border-bottom: 1px solid var(--surface-400);
+                padding-bottom: 0.4rem;
+                margin: 0 0 0.75rem;
+            }
+
+            h3 {
+                font-size: 0.95rem;
+                color: var(--text);
+                margin: 1rem 0 0.25rem;
+                font-weight: 600;
+            }
+
+            .meta,
+            .size {
+                color: var(--text-dim);
+                font-size: 0.875rem;
+            }
+            .meta {
+                margin: -0.25rem 0 0.75rem;
+            }
+
+            ul.file-list,
+            ul.link-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            ul.file-list li,
+            ul.link-list li {
+                padding: 0.2rem 0;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+                font-size: 0.92rem;
+            }
+            ul.link-list li {
+                font-family: inherit;
+            }
+            ul.file-list .size {
+                margin-left: 0.5rem;
+            }
+
+            details {
+                border-top: 1px solid var(--surface-400);
+                padding: 0.5rem 0;
+            }
+            details:last-of-type {
+                border-bottom: 1px solid var(--surface-400);
+            }
+            details summary {
+                cursor: pointer;
+                font-weight: 600;
+                padding: 0.15rem 0;
+            }
+            details summary .release-meta {
+                color: var(--text-dim);
+                font-weight: 400;
+                margin-left: 0.5rem;
+                font-size: 0.875rem;
+            }
+            details ul {
+                list-style: none;
+                padding: 0;
+                margin: 0.5rem 0 0.25rem 1rem;
+            }
+            details li {
+                padding: 0.15rem 0;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+                font-size: 0.9rem;
+            }
+            details li .size {
+                margin-left: 0.5rem;
+            }
+
+            footer {
+                color: var(--text-dim);
+                font-size: 0.85rem;
+                text-align: center;
+                padding: 2rem 1rem;
+                border-top: 1px solid var(--surface-400);
+            }
+
+            .empty {
+                color: var(--text-dim);
+                font-style: italic;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <img src="logo.svg" alt="Betaflight" />
+            <h1>Downloads</h1>
+        </header>
+        <main>
+            <!--SECTIONS-->
+        </main>
+        <footer>
+            Generated <!--GENERATED_AT-->. Source:
+            <a href="https://github.com/betaflight/betaflight-configurator">betaflight/betaflight-configurator</a>.
+        </footer>
+    </body>
+</html>

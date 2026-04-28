@@ -1,0 +1,412 @@
+name: Nightly downloads
+
+# Builds Tauri desktop bundles + Android APK every day, uploads them to the
+# Cloudflare R2 bucket behind binaries.betaflight.com, regenerates the static
+# downloads index, and deploys it to the betaflight-downloads Cloudflare Pages
+# project (downloads.betaflight.com).
+#
+# Required repository configuration:
+#   Variables:
+#     CLOUDFLARE_R2_BUCKET                 — R2 bucket name (e.g. betaflight-downloads)
+#     CLOUDFLARE_R2_ENDPOINT               — https://<accountid>.r2.cloudflarestorage.com
+#     CLOUDFLARE_R2_PUBLIC_BASE_URL        — https://binaries.betaflight.com
+#     CLOUDFLARE_DOWNLOADS_PROJECT_NAME    — Cloudflare Pages project (e.g. betaflight-downloads)
+#     WEB_APP_MASTER_URL (optional)        — Master web-app URL (defaults to main project preview)
+#     WEB_APP_RELEASE_URL (optional)       — Release web-app URL (defaults to https://app.betaflight.com)
+#   Secrets:
+#     CLOUDFLARE_R2_ACCESS_KEY_ID
+#     CLOUDFLARE_R2_SECRET_ACCESS_KEY
+#     CLOUDFLARE_API_TOKEN                 — already provisioned for the existing PWA deploy
+#     CLOUDFLARE_ACCOUNT_ID                — already provisioned
+#     RELEASE_KEYSTORE / *_PASSWORD / *_ALIAS / *_ALIAS_PASSWORD — already provisioned for APK signing
+#
+# R2 lifecycle: configure a 30-day expiry rule on prefix "nightly/" against the bucket
+# (one-time, in the Cloudflare dashboard or via the R2 API).
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-downloads
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Prepare nightly metadata
+    runs-on: ubuntu-latest
+    outputs:
+      nightly_date: ${{ steps.meta.outputs.nightly_date }}
+      nightly_prefix: ${{ steps.meta.outputs.nightly_prefix }}
+      commit_sha: ${{ steps.meta.outputs.commit_sha }}
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Compute metadata
+        id: meta
+        run: |
+          NIGHTLY_DATE=$(date -u +%Y-%m-%d)
+          COMMIT_SHA=$(git rev-parse HEAD)
+          VERSION=$(jq -r '.version' package.json)
+          {
+            echo "nightly_date=${NIGHTLY_DATE}"
+            echo "nightly_prefix=nightly/${NIGHTLY_DATE}"
+            echo "commit_sha=${COMMIT_SHA}"
+            echo "version=${VERSION}"
+          } >> "$GITHUB_OUTPUT"
+
+  desktop:
+    name: Tauri desktop (${{ matrix.label }})
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            target: ''
+          - os: macos-latest
+            label: macos-arm64
+            target: aarch64-apple-darwin
+          - os: macos-15-intel
+            label: macos-x64
+            target: x86_64-apple-darwin
+          - os: windows-latest
+            label: windows
+            target: ''
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install Tauri Linux prereqs
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libsoup-3.0-dev \
+            librsvg2-dev \
+            libssl-dev \
+            libudev-dev \
+            rpm
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache Cargo registry and target
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: src-tauri
+          key: ${{ matrix.label }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Tauri bundle
+        shell: bash
+        run: |
+          if [ -n "${{ matrix.target }}" ]; then
+            npm run tauri:build -- --target ${{ matrix.target }}
+          else
+            npm run tauri:build
+          fi
+
+      - name: Stage desktop bundles
+        shell: bash
+        run: |
+          mkdir -p staging
+          shopt -s nullglob
+          for path in \
+            src-tauri/target/release/bundle/deb/*.deb \
+            src-tauri/target/release/bundle/rpm/*.rpm \
+            src-tauri/target/release/bundle/appimage/*.AppImage \
+            src-tauri/target/release/bundle/dmg/*.dmg \
+            src-tauri/target/release/bundle/nsis/*.exe \
+            src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb \
+            src-tauri/target/${{ matrix.target }}/release/bundle/rpm/*.rpm \
+            src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage \
+            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg \
+            src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe
+          do
+            cp "$path" staging/
+          done
+          if ! compgen -G 'staging/*' > /dev/null; then
+            echo "No desktop bundles produced for ${{ matrix.label }}" >&2
+            exit 1
+          fi
+          ls -la staging
+
+      - name: Upload to R2
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          aws-region: auto
+
+      - name: Sync desktop bundles to R2
+        shell: bash
+        env:
+          R2_BUCKET: ${{ vars.CLOUDFLARE_R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_ENDPOINT }}
+          PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/desktop
+        run: |
+          aws s3 sync staging/ "s3://${R2_BUCKET}/${PREFIX}/" --endpoint-url "${R2_ENDPOINT}" --no-progress
+
+      - name: Emit per-platform manifest fragment
+        shell: bash
+        env:
+          PUBLIC_BASE: ${{ vars.CLOUDFLARE_R2_PUBLIC_BASE_URL }}
+          PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/desktop
+          PLATFORM: ${{ matrix.label }}
+        run: |
+          mkdir -p manifest-fragments
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const base = process.env.PUBLIC_BASE.replace(/\/$/, '');
+          const prefix = process.env.PREFIX;
+          const platform = process.env.PLATFORM;
+          const files = fs.readdirSync('staging');
+          const entries = files.map((file) => {
+              const stat = fs.statSync(path.join('staging', file));
+              let group;
+              let label;
+              if (file.endsWith('.exe')) {
+                  group = 'windows';
+                  label = 'Windows installer (x64)';
+              } else if (file.endsWith('.dmg')) {
+                  group = 'macos';
+                  label = platform === 'macos-arm64' ? 'macOS (Apple Silicon)' : 'macOS (Intel)';
+              } else if (file.endsWith('.deb')) {
+                  group = 'linux';
+                  label = 'Linux (.deb)';
+              } else if (file.endsWith('.rpm')) {
+                  group = 'linux';
+                  label = 'Linux (.rpm)';
+              } else if (file.endsWith('.AppImage')) {
+                  group = 'linux';
+                  label = 'Linux (AppImage)';
+              } else {
+                  return null;
+              }
+              return {
+                  group,
+                  entry: {
+                      label,
+                      url: `${base}/${prefix}/${encodeURIComponent(file)}`,
+                      size: stat.size,
+                  },
+              };
+          }).filter(Boolean);
+          fs.writeFileSync(`manifest-fragments/${platform}.json`, JSON.stringify(entries));
+          NODE
+
+      - name: Upload manifest fragment
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-${{ matrix.label }}
+          path: manifest-fragments/${{ matrix.label }}.json
+
+  android:
+    name: Android APK
+    needs: prepare
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - run: npm install yarn -g
+      - run: yarn install
+      - run: yarn build
+      - run: node capacitor.config.generator.mjs
+      - run: npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Build and sign APK
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
+        run: |
+          : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret with your base64-encoded keystore}"
+          : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret with your keystore password}"
+          : "${RELEASE_KEY_ALIAS:?Set the RELEASE_KEY_ALIAS secret with your key alias}"
+          : "${RELEASE_KEY_ALIAS_PASSWORD:?Set the RELEASE_KEY_ALIAS_PASSWORD secret with your key alias password}"
+
+          mkdir -p android/keystore
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > android/keystore/release.jks
+
+          pushd android >/dev/null
+          ./gradlew clean
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$PWD/keystore/release.jks" \
+            -Pandroid.injected.signing.store.password="$RELEASE_KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$RELEASE_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$RELEASE_KEY_ALIAS_PASSWORD"
+          popd >/dev/null
+
+      - name: Stage APK
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+          COMMIT_SHA: ${{ needs.prepare.outputs.commit_sha }}
+        run: |
+          mkdir -p staging
+          SHA_SHORT=$(echo "$COMMIT_SHA" | head -c 8)
+          APK_NAME="betaflight-app-${VERSION}-${SHA_SHORT}.apk"
+          cp android/app/build/outputs/apk/release/app-release.apk "staging/${APK_NAME}"
+          echo "APK_NAME=${APK_NAME}" >> "$GITHUB_ENV"
+
+      - name: Configure R2 credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          aws-region: auto
+
+      - name: Sync APK to R2
+        env:
+          R2_BUCKET: ${{ vars.CLOUDFLARE_R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_ENDPOINT }}
+          PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/android
+        run: |
+          aws s3 sync staging/ "s3://${R2_BUCKET}/${PREFIX}/" --endpoint-url "${R2_ENDPOINT}" --no-progress
+
+      - name: Emit Android manifest fragment
+        env:
+          PUBLIC_BASE: ${{ vars.CLOUDFLARE_R2_PUBLIC_BASE_URL }}
+          PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/android
+        run: |
+          mkdir -p manifest-fragments
+          BASE="${PUBLIC_BASE%/}"
+          SIZE=$(stat -c %s "staging/${APK_NAME}")
+          jq -n --arg label "Android APK" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
+            '{label: $label, url: $url, size: $size}' > manifest-fragments/android.json
+
+      - name: Upload manifest fragment
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-android
+          path: manifest-fragments/android.json
+
+  publish:
+    name: Publish downloads index
+    if: github.ref == 'refs/heads/master'
+    needs: [prepare, desktop, android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    environment:
+      name: nightly-downloads
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Download manifest fragments
+        uses: actions/download-artifact@v5
+        with:
+          path: manifest-fragments
+          pattern: manifest-*
+          merge-multiple: true
+
+      - name: Build manifest
+        env:
+          NIGHTLY_DATE: ${{ needs.prepare.outputs.nightly_date }}
+          COMMIT_SHA: ${{ needs.prepare.outputs.commit_sha }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const fragmentsDir = 'manifest-fragments';
+          const desktop = { windows: [], macos: [], linux: [] };
+          let android = null;
+          for (const file of fs.readdirSync(fragmentsDir)) {
+              const data = JSON.parse(fs.readFileSync(path.join(fragmentsDir, file), 'utf8'));
+              if (file === 'android.json') {
+                  android = data;
+                  continue;
+              }
+              for (const item of data) {
+                  desktop[item.group]?.push(item.entry);
+              }
+          }
+          const manifest = {
+              generatedAt: new Date().toISOString(),
+              nightly: {
+                  date: process.env.NIGHTLY_DATE,
+                  commit: process.env.COMMIT_SHA,
+                  version: process.env.VERSION,
+                  desktop,
+                  android,
+              },
+          };
+          fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2));
+          NODE
+          cat manifest.json
+
+      - name: Fetch GitHub releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --paginate --slurp -f per_page=100 repos/${{ github.repository }}/releases | jq 'add' > releases.json
+
+      - name: Generate index
+        env:
+          MASTER_URL: ${{ vars.WEB_APP_MASTER_URL }}
+          RELEASE_URL: ${{ vars.WEB_APP_RELEASE_URL }}
+        run: |
+          ARGS=(--manifest manifest.json --releases releases.json --output dist-downloads)
+          if [ -n "${MASTER_URL}" ]; then
+            ARGS+=(--master-url "${MASTER_URL}")
+          fi
+          if [ -n "${RELEASE_URL}" ]; then
+            ARGS+=(--release-url "${RELEASE_URL}")
+          fi
+          node scripts/generate-downloads-index.mjs "${ARGS[@]}"
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3.14.1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist-downloads --project-name=${{ vars.CLOUDFLARE_DOWNLOADS_PROJECT_NAME }} --branch=master --commit-dirty=true
