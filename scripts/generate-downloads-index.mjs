@@ -17,6 +17,8 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+const ALLOWED_FLAGS = new Set(["manifest", "releases", "output", "master-url", "release-url"]);
+
 function parseArgs(argv) {
     const args = {};
     for (let i = 0; i < argv.length; i += 2) {
@@ -28,7 +30,11 @@ function parseArgs(argv) {
         if (value === undefined || value.startsWith("--")) {
             throw new Error(`Missing value for CLI flag: ${flag}`);
         }
-        args[flag.slice(2)] = value;
+        const key = flag.slice(2);
+        if (!ALLOWED_FLAGS.has(key)) {
+            throw new Error(`Unknown CLI flag: ${flag}`);
+        }
+        args[key] = value;
     }
     return args;
 }
@@ -191,6 +197,18 @@ function renderReleaseHistorySection(releases) {
     cutoff.setFullYear(cutoff.getFullYear() - RECENT_RELEASE_YEARS);
     const recent = releases.filter((r) => r.published_at && new Date(r.published_at) >= cutoff);
     const olderCount = releases.length - recent.length;
+    const olderNote = olderCount
+        ? `<p class="meta">Earlier releases are available on <a href="${RELEASES_INDEX_URL}">GitHub</a>.</p>`
+        : "";
+
+    if (!recent.length) {
+        return `
+            <section>
+                <h2>Recent releases</h2>
+                <p class="empty">No releases in the last ${RECENT_RELEASE_YEARS} years.</p>
+                ${olderNote}
+            </section>`;
+    }
 
     const items = recent
         .map((release) => {
@@ -218,10 +236,6 @@ function renderReleaseHistorySection(releases) {
                 </details>`;
         })
         .join("");
-
-    const olderNote = olderCount
-        ? `<p class="meta">Earlier releases are available on <a href="${RELEASES_INDEX_URL}">GitHub</a>.</p>`
-        : "";
 
     return `
             <section>
