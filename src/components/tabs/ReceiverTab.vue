@@ -1004,6 +1004,7 @@ async function loadConfig() {
             refreshRate.value = savedRate.rx_refresh_rate;
         }
 
+        needReboot.value = false;
         savedSnapshot.value = takeSnapshot();
     } catch (e) {
         console.error("Failed to load Receiver configuration", e);
