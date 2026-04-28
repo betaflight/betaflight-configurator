@@ -12,7 +12,7 @@
  * The manifest schema is documented in the workflow that calls this script.
  */
 import { readFileSync, writeFileSync, copyFileSync, mkdirSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -60,32 +60,39 @@ function formatDate(value) {
     return date.toISOString().slice(0, 10);
 }
 
-function downloadCard({ label, sub, url }) {
-    const subLine = sub ? `<div class="sub">${escapeHtml(sub)}</div>` : "";
-    return `
-                <div class="card">
-                    <div class="label">${escapeHtml(label)}</div>
-                    ${subLine}
-                    <a class="download-btn" href="${escapeHtml(url)}">Download</a>
-                </div>`;
+function filenameFrom(entry) {
+    if (entry.filename) {
+        return entry.filename;
+    }
+    try {
+        return basename(new URL(entry.url).pathname);
+    } catch {
+        return entry.url;
+    }
+}
+
+function fileListItem(entry) {
+    const filename = filenameFrom(entry);
+    const size = formatBytes(entry.size);
+    const sizeHtml = size ? `<span class="size">${escapeHtml(size)}</span>` : "";
+    return `<li><a href="${escapeHtml(entry.url)}">${escapeHtml(filename)}</a> ${sizeHtml}</li>`;
+}
+
+function fileList(entries) {
+    if (!entries.length) {
+        return `<p class="empty">No files available.</p>`;
+    }
+    return `<ul class="file-list">${entries.map(fileListItem).join("")}</ul>`;
 }
 
 function renderWebAppSection(masterUrl, releaseUrl) {
     return `
             <section>
                 <h2>Web app</h2>
-                <div class="card-grid">
-                    ${downloadCard({
-                        label: "Latest release",
-                        sub: "Stable, runs in your browser",
-                        url: releaseUrl,
-                    })}
-                    ${downloadCard({
-                        label: "Master (development)",
-                        sub: "Latest commit on master",
-                        url: masterUrl,
-                    })}
-                </div>
+                <ul class="link-list">
+                    <li><a href="${escapeHtml(releaseUrl)}">Latest release</a> — stable, runs in your browser</li>
+                    <li><a href="${escapeHtml(masterUrl)}">Master (development)</a> — latest commit on master</li>
+                </ul>
             </section>`;
 }
 
@@ -105,35 +112,12 @@ function renderNightlySection(nightly) {
         { key: "linux", title: "Linux" },
     ];
 
-    const desktopHtml = platforms
+    const platformBlocks = platforms
         .filter((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0)
-        .map((p) => {
-            const cards = desktop[p.key]
-                .map((entry) =>
-                    downloadCard({
-                        label: entry.label,
-                        sub: formatBytes(entry.size),
-                        url: entry.url,
-                    }),
-                )
-                .join("");
-            return `
-                <h3>${escapeHtml(p.title)}</h3>
-                <div class="card-grid">${cards}
-                </div>`;
-        })
+        .map((p) => `<h3>${escapeHtml(p.title)}</h3>${fileList(desktop[p.key])}`)
         .join("");
 
-    const androidHtml = nightly.android
-        ? `
-                <h3>Android</h3>
-                <div class="card-grid">${downloadCard({
-                    label: nightly.android.label || "Android APK",
-                    sub: formatBytes(nightly.android.size),
-                    url: nightly.android.url,
-                })}
-                </div>`
-        : "";
+    const androidBlock = nightly.android ? `<h3>Android</h3>${fileList([nightly.android])}` : "";
 
     const commitShort = nightly.commit ? nightly.commit.slice(0, 8) : "";
     const metaParts = [];
@@ -154,8 +138,8 @@ function renderNightlySection(nightly) {
             <section>
                 <h2>Nightly build</h2>
                 ${meta}
-                ${desktopHtml}
-                ${androidHtml}
+                ${platformBlocks}
+                ${androidBlock}
             </section>`;
 }
 
@@ -168,16 +152,9 @@ function renderLatestStableSection(latest) {
             </section>`;
     }
 
-    const assets = (latest.assets || []).filter((a) => !a.name.endsWith(".sha256"));
-    const cards = assets
-        .map((asset) =>
-            downloadCard({
-                label: asset.name,
-                sub: formatBytes(asset.size),
-                url: asset.browser_download_url,
-            }),
-        )
-        .join("");
+    const assets = (latest.assets || [])
+        .filter((a) => !a.name.endsWith(".sha256"))
+        .map((a) => ({ filename: a.name, url: a.browser_download_url, size: a.size }));
 
     const meta = `Released ${escapeHtml(formatDate(latest.published_at))} &middot; tag <a href="${escapeHtml(latest.html_url)}">${escapeHtml(latest.tag_name)}</a>`;
 
@@ -185,8 +162,7 @@ function renderLatestStableSection(latest) {
             <section>
                 <h2>Latest stable release</h2>
                 <p class="meta">${meta}</p>
-                <div class="card-grid">${cards || `<p class="empty">No assets attached.</p>`}
-                </div>
+                ${fileList(assets)}
             </section>`;
 }
 
@@ -206,7 +182,7 @@ function renderReleaseHistorySection(releases) {
                 ? assets
                       .map(
                           (asset) =>
-                              `<li><a href="${escapeHtml(asset.browser_download_url)}">${escapeHtml(asset.name)}</a> <span class="sub">${formatBytes(asset.size)}</span></li>`,
+                              `<li><a href="${escapeHtml(asset.browser_download_url)}">${escapeHtml(asset.name)}</a> <span class="size">${formatBytes(asset.size)}</span></li>`,
                       )
                       .join("")
                 : `<li class="empty">No assets attached.</li>`;
