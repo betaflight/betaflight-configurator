@@ -377,10 +377,12 @@ jobs:
           cat manifest.json
 
       - name: Fetch GitHub releases
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api --paginate --slurp -f per_page=100 repos/${{ github.repository }}/releases | jq 'add' > releases.json
+          set -o pipefail
+          gh api --paginate --slurp "repos/${{ github.repository }}/releases?per_page=100" | jq 'add' > releases.json
 
       - name: Generate index
         env:
