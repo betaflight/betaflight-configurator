@@ -70,6 +70,7 @@
                                     :step="100"
                                     size="xs"
                                     orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
                                     class="w-16"
                                 />
                             </SettingRow>
@@ -166,6 +167,7 @@
                                     :step="1"
                                     size="xs"
                                     orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
                                     class="w-16"
                                 />
                             </SettingRow>
@@ -182,6 +184,7 @@
                                     :step="1"
                                     size="xs"
                                     orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
                                     class="w-16"
                                 />
                             </SettingRow>
@@ -197,6 +200,7 @@
                                     :step="1"
                                     size="xs"
                                     orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
                                     class="w-16"
                                 />
                             </SettingRow>
@@ -211,7 +215,6 @@
                                 />
                                 <template #label>
                                     <span v-html="$t('feature3D')"></span>
-                                    <span class="ml-2 font-semibold">3D</span>
                                 </template>
                             </SettingRow>
                             <template v-if="isFeatureEnabled('3D')">
@@ -223,6 +226,7 @@
                                         :step="1"
                                         size="xs"
                                         orientation="vertical"
+                                        :format-options="{ useGrouping: false }"
                                         class="w-16"
                                     />
                                 </SettingRow>
@@ -234,6 +238,7 @@
                                         :step="1"
                                         size="xs"
                                         orientation="vertical"
+                                        :format-options="{ useGrouping: false }"
                                         class="w-16"
                                     />
                                 </SettingRow>
@@ -245,6 +250,7 @@
                                         :step="1"
                                         size="xs"
                                         orientation="vertical"
+                                        :format-options="{ useGrouping: false }"
                                         class="w-16"
                                     />
                                 </SettingRow>
@@ -534,7 +540,7 @@ const dialog = useDialog();
 
 // Initialize motors state management
 const motorsState = useMotorsState();
-const { configHasChanged, trackChange, resetChanges } = motorsState;
+const { configHasChanged, resetChanges } = motorsState;
 
 // Warning dialog
 const dialogSettingsChanged = ref(null);
@@ -1402,15 +1408,7 @@ const toggleFeature = (featureName, checked) => {
     } else {
         featuresHelper.disable(featureName);
     }
-    // Track the change for config change detection
-    trackChange(featureName, checked);
-    // We might need to trigger an update to make sure Vue detects change if the helper modifies internal state but not the ref directly in a way Vue sees?
-    // Pinia store `features` refers to `FC.FEATURE_CONFIG`.
-    // The `featureMask` is inside.
-    // To ensure reactivity, we might need to re-assign or trigger update.
-    // `fcStore.features = { ...fcStore.features }` might be too heavy.
-    // But since `FC.FEATURE_CONFIG` is reactive in `fc.js` (proxy), it should work?
-    // Let's assume it works for now.
+    // Change tracking is handled by watchers in useMotorConfiguration
 };
 
 const numberOfValidOutputs = computed(() => {
