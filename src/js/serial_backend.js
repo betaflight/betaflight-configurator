@@ -327,8 +327,6 @@ function resetConnection() {
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;
-    CONFIGURATOR.cliEngineValid = false;
-    CONFIGURATOR.cliEngineActive = false;
 
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
@@ -738,8 +736,6 @@ export function read_serial(info) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
         TABS.cli?.read?.(info);
-    } else if (CONFIGURATOR.cliEngineActive) {
-        TABS.presets.read(info);
     } else {
         MSP.read(info);
     }

@@ -41,6 +41,17 @@
                                             {{ $t("actionDownload") }}
                                         </UButton>
                                         <UButton
+                                            v-if="isConnected"
+                                            size="xs"
+                                            variant="soft"
+                                            color="success"
+                                            icon="i-lucide-upload"
+                                            :disabled="isRestoreBusy"
+                                            @click="restoreBackup(row.original)"
+                                        >
+                                            {{ $t("actionRestore") }}
+                                        </UButton>
+                                        <UButton
                                             size="xs"
                                             variant="soft"
                                             icon="i-lucide-pencil"
@@ -87,6 +98,41 @@
                     </UButton>
                 </template>
             </Dialog>
+
+            <!-- Restore progress dialog -->
+            <dialog ref="restoreProgressDialogRef" class="w-[320px] h-fit p-6" @cancel.prevent>
+                <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
+                <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
+                <UProgress :model-value="restoreProgress" :max="100" class="mt-3" />
+            </dialog>
+
+            <!-- Restore errors dialog -->
+            <dialog
+                ref="restoreErrorsDialogRef"
+                class="w-[600px] max-w-[calc(100vw-2rem)] h-fit p-6"
+                @close="handleRestoreErrorsClose"
+                @cancel.prevent
+            >
+                <div class="text-lg mb-2" v-html="$t('userBackupRestoreErrors')"></div>
+                <div class="backups_cli_background">
+                    <div class="backups_cli_window">
+                        <template v-for="(failure, idx) in restoreErrors" :key="idx">
+                            <div>{{ failure.command }}</div>
+                            <div
+                                v-for="(line, lineIdx) in failure.response"
+                                :key="lineIdx"
+                                :class="{ error_message: line.startsWith('###ERROR') }"
+                            >
+                                {{ line }}
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="flex gap-2 justify-end mt-3">
+                    <UButton :label="$t('presetsButtonCancel')" variant="outline" @click="closeRestoreErrors(false)" />
+                    <UButton :label="$t('presetsSaveAnyway')" @click="closeRestoreErrors(true)" />
+                </div>
+            </dialog>
         </div>
 
         <!-- Bottom toolbar -->
@@ -100,24 +146,42 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, nextTick, onMounted, onUnmounted, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
 import Dialog from "../elements/Dialog.vue";
 import loginManager from "@/js/LoginManager";
 import { gui_log } from "@/js/gui_log";
-import MSP from "@/js/msp";
 import { useConnectionStore } from "@/stores/connection";
+import {
+    MIN_FC_VERSION_FOR_MSP_CLI,
+    cancelScheduledReconnect,
+    isMspCliSupported,
+    saveAndReconnect,
+    scheduleReconnect,
+    useMspCliSession,
+} from "@/composables/useMspCliSession";
+import { useDialog } from "@/composables/useDialog";
+import FC from "@/js/fc";
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
+const cliSession = useMspCliSession();
+const dialog = useDialog();
 
 const isLoading = ref(true);
 const backups = ref([]);
 const backupMessage = ref(null);
 const isEditing = ref(false);
 const editForm = ref({ id: null, name: "", description: "", created: null });
+const restoreProgress = ref(0);
+const restoreProgressOpen = ref(false);
+const restoreErrors = ref([]);
+const restoreErrorsOpen = ref(false);
+const restoreSavePressed = ref(false);
+const restoreProgressDialogRef = ref(null);
+const restoreErrorsDialogRef = ref(null);
 let userApi = null;
 let unsubscribeLogin = null;
 let unsubscribeLogout = null;
@@ -142,6 +206,25 @@ const groupedBackups = computed(() => {
 });
 
 const isConnected = computed(() => connectionStore.connectionValid);
+const isRestoreBusy = computed(
+    () => restoreProgressOpen.value || restoreErrorsOpen.value || cliSession.isBatchRunning.value,
+);
+
+async function ensureMspCliSupported() {
+    if (isMspCliSupported()) {
+        return true;
+    }
+
+    await dialog.showInfo(
+        t("warningTitle"),
+        t("mspCliFirmwareTooOld", {
+            required: MIN_FC_VERSION_FOR_MSP_CLI,
+            current: FC.CONFIG?.flightControllerVersion || "?",
+        }),
+        { confirmText: t("close") },
+    );
+    return false;
+}
 
 async function loadBackups() {
     isLoading.value = true;
@@ -168,20 +251,19 @@ async function loadBackups() {
 }
 
 async function createBackup() {
+    if (!(await ensureMspCliSupported())) {
+        return;
+    }
+
     try {
         if (!userApi) {
             throw new Error(t("notLoggedIn"));
         }
 
-        const output = await new Promise((resolve, reject) => {
-            MSP.send_cli_command("diff all", (data) => {
-                if (data?.length > 0) {
-                    resolve([...data]);
-                } else {
-                    reject(new Error(t("profileBackupEmptyResult") || "Empty backup result"));
-                }
-            });
-        });
+        const output = await cliSession.readDumpAll();
+        if (!output.length) {
+            throw new Error(t("profileBackupEmptyResult") || "Empty backup result");
+        }
 
         gui_log(t("profileBackupSuccess"));
         await userApi.uploadBackup(output.join("\n"));
@@ -248,6 +330,122 @@ async function saveBackupChanges() {
     }
 }
 
+async function restoreBackup(backup) {
+    if (!userApi) {
+        gui_log(t("notLoggedIn"));
+        return;
+    }
+
+    if (!connectionStore.connectionValid) {
+        return;
+    }
+
+    if (!(await ensureMspCliSupported())) {
+        return;
+    }
+
+    const confirmed = await dialog.showYesNo(
+        t("titleRestoreBackup"),
+        t("userBackupRestoreConfirm", { name: backup.name || t("itemBackup") }),
+        {
+            yesText: t("actionRestore"),
+            noText: t("presetsButtonCancel"),
+        },
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    let text;
+    try {
+        const response = await userApi.downloadBackupFile(backup.id);
+        text = response.file;
+        if (!text?.length) {
+            throw new Error(t("userBackupFileEmpty"));
+        }
+    } catch (error) {
+        gui_log(`${t("userBackupRestoreFailed")}: ${error.message || error}`);
+        return;
+    }
+
+    const fileLines = text.split(/\r?\n/);
+    const hasDefaultsPrefix = fileLines.some((line) => line.trim().toLowerCase() === "defaults nosave");
+    const commands = hasDefaultsPrefix ? fileLines : ["defaults nosave", "", ...fileLines];
+
+    restoreProgress.value = 0;
+    restoreProgressOpen.value = true;
+
+    const result = await cliSession.runBatch(commands, {
+        onProgress: ({ index, total }) => {
+            restoreProgress.value = total > 0 ? Math.round((index / total) * 100) : 100;
+        },
+        commandTimeoutMs: 5000,
+    });
+
+    restoreProgressOpen.value = false;
+
+    if (result.cancelled) {
+        return;
+    }
+
+    if (result.errors.length > 0) {
+        restoreErrors.value = result.errors;
+        restoreErrorsOpen.value = true;
+        return;
+    }
+
+    gui_log(t("userBackupRestoreSuccess"));
+    await saveAndReconnect();
+}
+
+function closeRestoreErrors(saveAnyway) {
+    restoreSavePressed.value = saveAnyway;
+    restoreErrorsOpen.value = false;
+}
+
+async function handleRestoreErrorsClose() {
+    const savePressed = restoreSavePressed.value;
+    restoreSavePressed.value = false;
+
+    if (savePressed) {
+        await saveAndReconnect();
+        return;
+    }
+
+    try {
+        await cliSession.send("exit");
+    } catch (error) {
+        console.error("Failed to send exit:", error);
+    } finally {
+        scheduleReconnect();
+    }
+}
+
+watch(restoreProgressOpen, async (isOpen) => {
+    await nextTick();
+    if (!restoreProgressDialogRef.value) {
+        return;
+    }
+    if (isOpen && !restoreProgressDialogRef.value.open) {
+        restoreProgressDialogRef.value.showModal();
+    } else if (!isOpen && restoreProgressDialogRef.value.open) {
+        restoreProgressDialogRef.value.close();
+    }
+});
+
+watch(restoreErrorsOpen, async (isOpen) => {
+    await nextTick();
+    if (!restoreErrorsDialogRef.value) {
+        return;
+    }
+    if (isOpen && !restoreErrorsDialogRef.value.open) {
+        restoreErrorsDialogRef.value.showModal();
+    } else if (!isOpen && restoreErrorsDialogRef.value.open) {
+        restoreErrorsDialogRef.value.close();
+    }
+});
+
 async function deleteBackup(backupId) {
     const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemBackup") }));
     if (!confirmed) {
@@ -282,7 +480,33 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+    cancelScheduledReconnect();
+    cliSession.cancel();
     unsubscribeLogin?.();
     unsubscribeLogout?.();
 });
 </script>
+
+<style scoped>
+.backups_cli_background {
+    border: 1px solid var(--ui-border);
+    background-color: rgba(64, 64, 64, 1);
+    height: 300px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    overflow-y: auto;
+}
+
+.backups_cli_window {
+    padding: 5px;
+    font-family: monospace;
+    color: white;
+    white-space: pre-wrap;
+    user-select: text;
+}
+
+.backups_cli_window .error_message {
+    color: red;
+    font-weight: bold;
+}
+</style>
