@@ -30,6 +30,7 @@
     },
     "bundle": {
         "active": true,
+        "fileName": "betaflight-app",
         "targets": [
             "deb",
             "rpm",

@@ -131,6 +131,9 @@ jobs:
 
       - name: Stage desktop bundles
         shell: bash
+        env:
+          PKG_VERSION: ${{ needs.prepare.outputs.version }}
+          COMMIT_SHA: ${{ needs.prepare.outputs.commit_sha }}
         run: |
           mkdir -p staging
           shopt -s nullglob
@@ -152,6 +155,16 @@ jobs:
             echo "No desktop bundles produced for ${{ matrix.label }}" >&2
             exit 1
           fi
+          STRIPPED="${PKG_VERSION%%-*}"
+          SHA_SHORT="${COMMIT_SHA:0:8}"
+          NIGHTLY_VERSION="${PKG_VERSION}-${SHA_SHORT}"
+          for f in staging/*; do
+            base=$(basename "$f")
+            new=${base/${STRIPPED}/${NIGHTLY_VERSION}}
+            if [[ "$new" != "$base" ]]; then
+              mv -- "$f" "staging/${new}"
+            fi
+          done
           ls -la staging
 
       - name: Sync desktop bundles to R2

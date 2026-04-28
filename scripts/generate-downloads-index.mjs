@@ -5,7 +5,7 @@
  * Inputs:
  *   --manifest <path>     JSON manifest of today's nightly artefact URLs (R2)
  *   --releases <path>     JSON file with the GitHub releases payload (output of `gh api releases`)
- *   --output <dir>        Output directory; index.html, logo.svg and favicon.png are written here
+ *   --output <dir>        Output directory; index.html and favicon.png are written here
  *   --master-url <url>    URL to the master branch web app deploy
  *   --release-url <url>   URL to the release web app (default: https://app.betaflight.com)
  *
@@ -282,7 +282,6 @@ try {
     writeFileSync(join(outputDir, "index.html"), html);
 
     const repoRoot = resolve(__dirname, "..");
-    copyFileSync(join(repoRoot, "src/images/dark-wide-2-compact.svg"), join(outputDir, "logo.svg"));
     copyFileSync(join(repoRoot, "src-tauri/icons/bf_icon_128.png"), join(outputDir, "favicon.png"));
 
     console.log(`Wrote ${join(outputDir, "index.html")}`);
