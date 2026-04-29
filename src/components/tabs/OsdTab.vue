@@ -510,7 +510,11 @@
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                        <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
+                        <UButton
+                            :disabled="!osdStore.dirty || isSaving"
+                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                            square
+                        />
                     </UDropdownMenu>
                 </UFieldGroup>
             </div>
