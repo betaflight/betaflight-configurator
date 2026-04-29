@@ -5,8 +5,8 @@
             <WikiButton docUrl="setup" />
             <!-- Top: 3D Model + Instruments & Calibration side-by-side -->
             <div class="setup-top">
-                <div class="model-and-info">
-                    <div id="interactive_block">
+                <UiBox :padding="false" class="mt-3 setup-model-box">
+                    <div class="relative bg-muted h-full min-h-0">
                         <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
                             <canvas id="canvas" ref="canvasEl"></canvas>
                             <div class="attitude_info">
@@ -21,20 +21,16 @@
                             </div>
                         </div>
                         <UButton
-                            class="reset-zaxis sm-min"
+                            class="absolute top-3 right-3"
                             :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
                             color="neutral"
                             variant="subtle"
                             @click="resetZaxis"
                         />
                     </div>
-                </div>
+                </UiBox>
                 <div class="setup-sidebar">
-                    <UiBox
-                        :title="$t('initialSetupInstrumentsHead')"
-                        :help="$t('initialSetupInstrumentsHeadHelp')"
-                        type="neutral"
-                    >
+                    <UiBox :title="$t('initialSetupInstrumentsHead')" :help="$t('initialSetupInstrumentsHeadHelp')">
                         <div class="flex flex-row justify-center gap-2">
                             <span id="attitude"></span>
                             <span id="heading"></span>
@@ -101,7 +97,7 @@
 
             <!-- Info panels in responsive multi-column grid -->
             <div class="setup-info-grid">
-                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')" type="neutral">
+                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')">
                     <InfoGrid
                         :items="[
                             {
@@ -152,12 +148,7 @@
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox
-                    :title="$t('initialSensorInfoHead')"
-                    :help="$t('initialSensorInfoHeadHelp')"
-                    type="neutral"
-                    id="sensorInfoBox"
-                >
+                <UiBox :title="$t('initialSensorInfoHead')" :help="$t('initialSensorInfoHeadHelp')" id="sensorInfoBox">
                     <InfoGrid
                         :items="[
                             {
@@ -199,7 +190,7 @@
                         ]"
                     />
                 </UiBox>
-                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')" type="neutral">
+                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')">
                     <InfoGrid
                         :items="[
                             { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
@@ -221,7 +212,7 @@
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')" type="neutral">
+                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')">
                     <InfoGrid
                         :items="[
                             {
@@ -291,7 +282,6 @@
                     v-show="state.showSonarBox"
                     :title="$t('initialSetupSonarHead')"
                     :help="$t('initialSetupSonarHeadHelp')"
-                    type="neutral"
                 >
                     <InfoGrid
                         :items="[
@@ -1083,16 +1073,18 @@ function openBuildOptionsDialog() {
         gap: 1rem;
         margin-top: 0.75rem;
     }
-    .model-and-info {
-        #canvas_wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            max-height: 32rem;
-            top: 0;
-            left: 0;
-            border-radius: 1rem;
-        }
+    .setup-model-box :deep(> div) {
+        height: 100%;
+        min-height: 0;
+    }
+    #canvas_wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        max-height: 32rem;
+        top: 0;
+        left: 0;
+        border-radius: 1rem;
     }
     .setup-sidebar {
         display: flex;

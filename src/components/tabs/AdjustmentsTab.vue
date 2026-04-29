@@ -137,12 +137,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton
-                :label="$t('adjustmentsSave')"
-                :color="hasChanges ? 'success' : 'neutral'"
-                :disabled="!hasChanges"
-                @click="saveAdjustments"
-            />
+            <UButton :label="$t('adjustmentsSave')" :disabled="!hasChanges" @click="saveAdjustments" />
         </div>
     </BaseTab>
 </template>
@@ -209,8 +204,7 @@ onMounted(async () => {
 }
 
 .adjustments-header {
-    background: var(--surface-700);
-    border-bottom: 2px solid var(--surface-600);
+    background: var(--ui-bg-muted);
     font-weight: 600;
     font-size: 13px;
     color: var(--text-primary);

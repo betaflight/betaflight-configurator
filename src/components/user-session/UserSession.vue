@@ -228,7 +228,6 @@ export default defineComponent({
     font-size: 13px;
     position: relative;
     margin-top: auto;
-    margin-bottom: 1rem;
 
     #open-login,
     #user-menu-trigger {
@@ -238,7 +237,7 @@ export default defineComponent({
         flex-direction: row;
         align-items: center;
         gap: 8px;
-        padding: 0.5rem;
+        padding: 0.25rem;
         color: var(--text);
         text-decoration: none;
         cursor: pointer;

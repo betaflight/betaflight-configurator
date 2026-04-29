@@ -6,7 +6,7 @@
 
 @import "tailwindcss";
 @import "@nuxt/ui";
-@source "../../vite.config.js";
+@source "../../nuxt-ui.vite.js";
 
 @theme static {
     /* Extending Tailwind colors with Betaflight primary colors */

@@ -534,7 +534,7 @@
             </div>
         </div>
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('configurationButtonSave')" @click="saveConfig" />
+            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
         </div>
     </div>
 </template>
@@ -982,6 +982,55 @@ export default defineComponent({
         const gyroFrequencyDisplay = ref("");
         const pidDenomOptions = ref([]);
 
+        /** Baseline after UI init or successful save; same pattern as Power / Auxiliary */
+        const configurationBaseline = ref("");
+
+        const snapshotSensorAlignmentForDirty = () => ({
+            gyro_to_use: sensorAlignment.gyro_to_use,
+            gyro_1_align: sensorAlignment.gyro_1_align,
+            gyro_2_align: sensorAlignment.gyro_2_align,
+            align_mag: sensorAlignment.align_mag,
+            gyro_1_align_roll: sensorAlignment.gyro_1_align_roll,
+            gyro_1_align_pitch: sensorAlignment.gyro_1_align_pitch,
+            gyro_1_align_yaw: sensorAlignment.gyro_1_align_yaw,
+            gyro_2_align_roll: sensorAlignment.gyro_2_align_roll,
+            gyro_2_align_pitch: sensorAlignment.gyro_2_align_pitch,
+            gyro_2_align_yaw: sensorAlignment.gyro_2_align_yaw,
+            gyro_align: [...(sensorAlignment.gyro_align || [])],
+            gyro_enable_mask: sensorAlignment.gyro_enable_mask,
+            gyro_align_roll: [...(sensorAlignment.gyro_align_roll || [])],
+            gyro_align_pitch: [...(sensorAlignment.gyro_align_pitch || [])],
+            gyro_align_yaw: [...(sensorAlignment.gyro_align_yaw || [])],
+            mag_align_roll: sensorAlignment.mag_align_roll,
+            mag_align_pitch: sensorAlignment.mag_align_pitch,
+            mag_align_yaw: sensorAlignment.mag_align_yaw,
+        });
+
+        const serializeConfigurationState = () =>
+            JSON.stringify({
+                featureMask: fcStore.features?.features?._featureMask ?? 0,
+                beeperDisabledMask: beeperDisabledMask.value,
+                dshotDisabledMask: dshotDisabledMask.value,
+                dshotBeaconTone: dshotBeaconTone.value,
+                pidAdvancedConfig: { ...pidAdvancedConfig },
+                sensorConfig: { ...sensorConfig },
+                boardAlignment: { ...boardAlignment },
+                fpvCamAngleDegrees: fpvCamAngleDegrees.value,
+                craftName: craftName.value,
+                pilotName: pilotName.value,
+                armingConfig: { ...armingConfig },
+                accelTrims: { ...accelTrims },
+                sensorAlignment: snapshotSensorAlignmentForDirty(),
+                magDeclination: magDeclination.value,
+            });
+
+        const dirty = computed(() => {
+            if (!configurationBaseline.value) {
+                return false;
+            }
+            return configurationBaseline.value !== serializeConfigurationState();
+        });
+
         // Loading Logic
         const loadConfig = async () => {
             try {
@@ -1166,6 +1215,8 @@ export default defineComponent({
                 opticalFlowTypesList.value = sensorTypesData.value?.opticalflow.elements || [];
                 showOpticalFlow.value = opticalFlowTypesList.value.length > 0;
             }
+
+            configurationBaseline.value = serializeConfigurationState();
         };
 
         const updateGyroDenom = (gyroFrequency) => {
@@ -1320,6 +1371,8 @@ export default defineComponent({
 
                 gui_log(i18n.getMessage("configurationSaved"));
 
+                configurationBaseline.value = serializeConfigurationState();
+
                 // Save to EEPROM and Reboot
                 await new Promise((resolve) => {
                     mspHelper.writeConfiguration(false, () => {
@@ -1399,6 +1452,7 @@ export default defineComponent({
             toggleGyro,
             updateGyroAlign,
             saveConfig,
+            dirty,
         };
     },
 });

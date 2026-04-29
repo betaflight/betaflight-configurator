@@ -1,6 +1,6 @@
 <template>
     <BaseTab tab-name="sensors">
-        <div class="content_wrapper flex flex-col gap-4">
+        <div class="content_wrapper">
             <div>
                 <div class="tab_title" v-html="$t('tabRawSensorData')"></div>
                 <div class="cf_doc_version_bt">
@@ -8,95 +8,94 @@
                 </div>
             </div>
 
-            <UiBox type="warning" highlight>
-                <p v-html="$t('sensorsInfo')"></p>
-            </UiBox>
-
-            <UiBox type="neutral">
-                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 p-2">
-                    <USwitch
-                        v-model="checkboxes[0]"
-                        :disabled="!hasGyro"
-                        size="sm"
-                        :label="$t('sensorsGyroSelect')"
-                        @update:model-value="onCheckboxChange"
-                    />
-                    <USwitch
-                        v-model="checkboxes[1]"
-                        :disabled="!hasAccel"
-                        size="sm"
-                        :label="$t('sensorsAccelSelect')"
-                        @update:model-value="onCheckboxChange"
-                    />
-                    <USwitch
-                        v-model="checkboxes[2]"
-                        :disabled="!hasMag"
-                        size="sm"
-                        :label="$t('sensorsMagSelect')"
-                        @update:model-value="onCheckboxChange"
-                    />
-                    <USwitch
-                        v-model="checkboxes[3]"
-                        :disabled="!hasAltitude"
-                        size="sm"
-                        :label="$t('sensorsAltitudeSelect')"
-                        @update:model-value="onCheckboxChange"
-                    />
-                    <USwitch
-                        v-model="checkboxes[4]"
-                        :disabled="!hasSonar"
-                        size="sm"
-                        :label="$t('sensorsSonarSelect')"
-                        @update:model-value="onCheckboxChange"
-                    />
-                    <USwitch
-                        v-model="checkboxes[5]"
-                        :disabled="!hasDebug"
-                        size="sm"
-                        :label="$t('sensorsDebugSelect')"
-                        @update:model-value="onCheckboxChange"
+            <div class="flex flex-col gap-4">
+                <UiBox type="warning" highlight>
+                    <p v-html="$t('sensorsInfo')"></p>
+                </UiBox>
+                <UiBox>
+                    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 p-2">
+                        <USwitch
+                            v-model="checkboxes[0]"
+                            :disabled="!hasGyro"
+                            size="sm"
+                            :label="$t('sensorsGyroSelect')"
+                            @update:model-value="onCheckboxChange"
+                        />
+                        <USwitch
+                            v-model="checkboxes[1]"
+                            :disabled="!hasAccel"
+                            size="sm"
+                            :label="$t('sensorsAccelSelect')"
+                            @update:model-value="onCheckboxChange"
+                        />
+                        <USwitch
+                            v-model="checkboxes[2]"
+                            :disabled="!hasMag"
+                            size="sm"
+                            :label="$t('sensorsMagSelect')"
+                            @update:model-value="onCheckboxChange"
+                        />
+                        <USwitch
+                            v-model="checkboxes[3]"
+                            :disabled="!hasAltitude"
+                            size="sm"
+                            :label="$t('sensorsAltitudeSelect')"
+                            @update:model-value="onCheckboxChange"
+                        />
+                        <USwitch
+                            v-model="checkboxes[4]"
+                            :disabled="!hasSonar"
+                            size="sm"
+                            :label="$t('sensorsSonarSelect')"
+                            @update:model-value="onCheckboxChange"
+                        />
+                        <USwitch
+                            v-model="checkboxes[5]"
+                            :disabled="!hasDebug"
+                            size="sm"
+                            :label="$t('sensorsDebugSelect')"
+                            @update:model-value="onCheckboxChange"
+                        />
+                    </div>
+                </UiBox>
+                <!-- Sensors -->
+                <SensorGraph
+                    v-for="sensor in sensorConfigs"
+                    :key="sensor.type"
+                    :ref="(el) => setSensorRef(sensor.type, el)"
+                    :sensor-type="sensor.type"
+                    :svg-id="sensor.type"
+                    :visible="checkboxes[sensor.checkboxIndex]"
+                    :title="$t(sensor.titleKey)"
+                    :hint="sensor.hintKey ? $t(sensor.hintKey) : null"
+                    :rate="rates[sensor.type]"
+                    @update:rate="updateRate(sensor.type, $event)"
+                    :scale="sensor.hasScale ? scales[sensor.type] : null"
+                    @update:scale="sensor.hasScale ? updateScale(sensor.type, $event) : null"
+                    :scale-options="sensor.scaleOptions"
+                    :display-values="sensor.getDisplayValues()"
+                />
+                <!-- Debug -->
+                <div v-show="checkboxes[5]" class="flex flex-col gap-2.5">
+                    <SensorGraph
+                        v-for="i in debugColumns"
+                        :key="i"
+                        :ref="
+                            (el) => {
+                                if (el) debugSvgs[i - 1] = el;
+                            }
+                        "
+                        sensor-type="debug"
+                        :svg-id="`debug${i - 1}`"
+                        :visible="true"
+                        :title="debugTitles[i - 1]"
+                        :show-refresh-rate="i === 1"
+                        :rate="rates.debug"
+                        @update:rate="updateRate('debug', $event)"
+                        :display-values="[debugDisplay[i - 1]]"
+                        :is-debug="true"
                     />
                 </div>
-            </UiBox>
-
-            <!-- Sensors -->
-            <SensorGraph
-                v-for="sensor in sensorConfigs"
-                :key="sensor.type"
-                :ref="(el) => setSensorRef(sensor.type, el)"
-                :sensor-type="sensor.type"
-                :svg-id="sensor.type"
-                :visible="checkboxes[sensor.checkboxIndex]"
-                :title="$t(sensor.titleKey)"
-                :hint="sensor.hintKey ? $t(sensor.hintKey) : null"
-                :rate="rates[sensor.type]"
-                @update:rate="updateRate(sensor.type, $event)"
-                :scale="sensor.hasScale ? scales[sensor.type] : null"
-                @update:scale="sensor.hasScale ? updateScale(sensor.type, $event) : null"
-                :scale-options="sensor.scaleOptions"
-                :display-values="sensor.getDisplayValues()"
-            />
-
-            <!-- Debug -->
-            <div v-show="checkboxes[5]" class="flex flex-col gap-2.5">
-                <SensorGraph
-                    v-for="i in debugColumns"
-                    :key="i"
-                    :ref="
-                        (el) => {
-                            if (el) debugSvgs[i - 1] = el;
-                        }
-                    "
-                    sensor-type="debug"
-                    :svg-id="`debug${i - 1}`"
-                    :visible="true"
-                    :title="debugTitles[i - 1]"
-                    :show-refresh-rate="i === 1"
-                    :rate="rates.debug"
-                    @update:rate="updateRate('debug', $event)"
-                    :display-values="[debugDisplay[i - 1]]"
-                    :is-debug="true"
-                />
             </div>
         </div>
     </BaseTab>

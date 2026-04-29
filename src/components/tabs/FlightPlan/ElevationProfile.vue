@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('flightPlanElevationProfile')" type="neutral" class="elevation-profile">
+    <UiBox :title="$t('flightPlanElevationProfile')" class="elevation-profile">
         <template v-if="waypoints.length > 0">
             <div class="profile-stats">
                 <span class="stat">

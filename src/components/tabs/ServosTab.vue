@@ -6,8 +6,8 @@
                 <WikiButton docUrl="servos" />
             </div>
 
-            <div v-if="isSupported">
-                <UiBox :title="$t('servosChangeDirection')" type="neutral">
+            <div v-if="isSupported" class="flex flex-col gap-4">
+                <UiBox :title="$t('servosChangeDirection')">
                     <div class="overflow-x-auto">
                         <div
                             class="grid items-center gap-y-1 min-w-0"
@@ -95,7 +95,7 @@
                 </UiBox>
 
                 <!-- Servo visualization bars -->
-                <UiBox :title="$t('servosText')" type="neutral" class="mt-4">
+                <UiBox :title="$t('servosText')" class="mt-4">
                     <ul class="grid grid-cols-8 gap-2 mb-1">
                         <li
                             v-for="i in 8"
@@ -139,12 +139,7 @@
         <!-- Save button toolbar -->
         <div v-if="isSupported" class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton
-                    :label="$t('servosButtonSave')"
-                    :disabled="!configHasChanged"
-                    :color="configHasChanged ? 'success' : 'neutral'"
-                    @click="saveServoConfig"
-                />
+                <UButton :label="$t('servosButtonSave')" :disabled="!configHasChanged" @click="saveServoConfig" />
             </div>
         </div>
     </BaseTab>

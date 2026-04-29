@@ -5,7 +5,7 @@
         :collapsed="isCompact"
         tooltip
         :ui="navMenuUi"
-        class="sidebar-nav"
+        class="sidebar-nav pb-2"
     />
 </template>
 
@@ -25,7 +25,12 @@ const connectionStore = useConnectionStore();
 const authStore = useAuthStore();
 const sidebarExpanded = inject("sidebarExpanded", ref(true));
 const isCompact = computed(() => !sidebarExpanded.value);
-const navMenuUi = computed(() => (isCompact.value ? { link: "justify-center" } : {}));
+const navMenuUi = computed(() => {
+    const linkBase = "data-active:before:bg-primary/10 cursor-pointer";
+    return {
+        link: isCompact.value ? `${linkBase} justify-center` : linkBase,
+    };
+});
 const betaflightModel = inject("betaflightModel", null);
 
 const isModeVisible = (mode) => {

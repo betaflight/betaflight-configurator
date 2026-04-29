@@ -113,17 +113,12 @@
             <!-- Save/Revert Buttons -->
             <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
                 <UButton
-                    :label="$t('pidTuningButtonSave')"
-                    :color="hasChanges ? 'success' : 'primary'"
-                    :disabled="!hasChanges"
-                    @click="save"
-                />
-                <UButton
                     :label="$t('pidTuningButtonRefresh')"
-                    :color="hasChanges ? 'primary' : 'neutral'"
                     :disabled="!hasChanges"
                     @click="refresh"
+                    variant="soft"
                 />
+                <UButton :label="$t('pidTuningButtonSave')" :disabled="!hasChanges" @click="save" />
             </div>
         </div>
     </BaseTab>

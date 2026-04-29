@@ -1,9 +1,9 @@
 <template>
     <BaseTab tab-name="cli" @mounted="onTabMounted" @cleanup="onTabCleanup">
         <div class="content_wrapper flex flex-col overflow-hidden pb-0 max-[1055px]:h-[calc(100%-87px)]">
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('cliInfo')"></p>
-            </div>
+            </UiBox>
 
             <div
                 class="cli-backdrop grow w-full border border-(--surface-500) bg-black/75 bg-no-repeat bg-[position:50%_80%] bg-[size:600px] rounded-[5px] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] max-[575px]:bg-[size:100%]"
@@ -79,16 +79,14 @@
 
         <!-- Bottom toolbar -->
         <div class="content_toolbar xs-compressed toolbar_fixed_bottom flex items-center gap-2">
-            <div class="toolbar_expand_btn" nbrow="2">
-                <em class="fas fa-ellipsis-h"></em>
-            </div>
-            <UButton :label="$t('cliSaveToFileBtn')" @click="cli.saveFile" />
-            <UButton :label="$t('cliLoadFromFileBtn')" @click="handleLoadFile" />
-            <UButton :label="$t('cliClearOutputHistoryBtn')" @click="cli.clearHistory" />
+            <UButton :label="$t('cliSaveToFileBtn')" @click="cli.saveFile" variant="soft" />
+            <UButton :label="$t('cliLoadFromFileBtn')" @click="handleLoadFile" variant="soft" />
+            <UButton :label="$t('cliClearOutputHistoryBtn')" @click="cli.clearHistory" variant="soft" />
             <UButton
                 :label="cli.state.copyButtonText"
                 :style="{ minWidth: cli.state.copyButtonWidth }"
                 @click="cli.copyToClipboard"
+                variant="soft"
             />
             <UButton
                 v-if="cli.isSupportRequestAvailable()"
@@ -108,12 +106,14 @@ import { TABS } from "../../js/gui";
 import CliAutoComplete from "../../js/CliAutoComplete";
 import { EventBus } from "../eventBus";
 import { i18n } from "../../js/localization";
+import UiBox from "../elements/UiBox.vue";
 
 export default defineComponent({
     name: "CliTab",
     components: {
         BaseTab,
         CliAutocompleteDropdown,
+        UiBox,
     },
     setup() {
         const cli = useCli();

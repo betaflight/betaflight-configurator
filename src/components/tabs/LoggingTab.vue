@@ -3,11 +3,11 @@
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabLogging')"></div>
             <WikiButton docUrl="logging" />
-            <div class="note">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('loggingNote')"></p>
-            </div>
+            </UiBox>
 
-            <UiBox type="neutral" :title="$t('loggingPropertiesTitle')" class="mt-6">
+            <UiBox :title="$t('loggingPropertiesTitle')" class="mt-6">
                 <div class="flex flex-col gap-1.5">
                     <div v-for="prop in propertyOptions" :key="prop.code" class="flex items-center gap-3">
                         <USwitch
@@ -33,7 +33,7 @@
                 />
             </SettingRow>
 
-            <UiBox type="neutral" class="mt-4">
+            <UiBox class="mt-4">
                 <div class="flex flex-col gap-1">
                     <div class="flex items-center gap-2">
                         <span class="text-sm font-semibold" v-html="$t('loggingSamplesSaved')"></span>
@@ -48,11 +48,16 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
-            <UButton :label="$t('loggingButtonLogFile')" :disabled="isLogging || isBusy" @click="selectLogFile" />
+            <UButton
+                :label="$t('loggingButtonLogFile')"
+                :disabled="isLogging || isBusy"
+                @click="selectLogFile"
+                variant="soft"
+            />
             <UButton
                 :label="startStopLabel"
                 :disabled="!canToggle"
-                :color="isLogging ? 'error' : selectedProperties.length ? 'success' : 'neutral'"
+                :color="isLogging ? 'error' : selectedProperties.length ? 'success' : 'primary'"
                 @click="toggleLogging"
             />
         </div>

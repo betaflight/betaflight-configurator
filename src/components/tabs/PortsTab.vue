@@ -16,8 +16,13 @@
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
-                <!-- Desktop: grid table (hidden below 1010px) -->
-                <div class="max-[1010px]:hidden mt-4">
+                <div v-if="!tabReady || isLoading" class="flex items-center justify-center py-16">
+                    <UIcon name="i-lucide-loader-circle" class="size-8 animate-spin text-muted" />
+                    <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
+                </div>
+
+                <!-- Desktop: grid table -->
+                <div v-else-if="isDesktop" class="mt-4">
                     <div class="grid grid-cols-[auto_auto_auto_auto_auto_auto] justify-between text-xs">
                         <!-- Header -->
                         <div class="p-2 font-semibold" v-html="$t('portsIdentifier')"></div>
@@ -93,14 +98,9 @@
                     </div>
                 </div>
 
-                <!-- Mobile: card per port (hidden at 1010px+) -->
-                <div class="flex flex-col gap-3 min-[1010px]:hidden">
-                    <UiBox
-                        v-for="port in ports"
-                        :key="port.identifier"
-                        :title="getPortName(port.identifier)"
-                        type="neutral"
-                    >
+                <!-- Mobile: card per port -->
+                <div v-else class="flex flex-col gap-3">
+                    <UiBox v-for="port in ports" :key="port.identifier" :title="getPortName(port.identifier)">
                         <!-- MSP -->
                         <div class="flex items-center gap-2">
                             <USwitch v-model="port.msp" :disabled="port.identifier === 20" size="sm" />
@@ -170,19 +170,15 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton
-                    :label="$t('configurationButtonSave')"
-                    :disabled="!dirty"
-                    :color="dirty ? 'success' : 'neutral'"
-                    @click="saveConfig"
-                />
+                <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useMediaQuery } from "@vueuse/core";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
@@ -194,10 +190,12 @@ import { usePortsConfiguration } from "../../composables/ports/usePortsConfigura
 
 const { t } = useTranslation();
 
+const isDesktop = useMediaQuery("(min-width: 1010px)");
+
 const { functionRules, mspBaudRates, gpsBaudRates, telemetryBaudRates, blackboxBaudRates, getRules, isRuleDisabled } =
     usePortsRules();
 
-const { ports, analyticsChanges, getPortName, vtxTableNotConfigured, dirty } = usePortsState(getRules);
+const { ports, analyticsChanges, getPortName, vtxTableNotConfigured, dirty, isLoading } = usePortsState(getRules);
 
 const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfiguration(
     ports,
@@ -205,11 +203,20 @@ const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfigurat
     functionRules,
 );
 
-// USelect items
-const mspBaudItems = computed(() => mspBaudRates.map((r) => ({ value: r, label: r })));
-const gpsBaudItems = computed(() => gpsBaudRates.map((r) => ({ value: r, label: r })));
-const telemetryBaudItems = computed(() => telemetryBaudRates.map((r) => ({ value: r, label: r })));
-const blackboxBaudItems = computed(() => blackboxBaudRates.map((r) => ({ value: r, label: r })));
+const tabReady = ref(false);
+
+onMounted(() => {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            tabReady.value = true;
+        });
+    });
+});
+
+const mspBaudItems = mspBaudRates.map((r) => ({ value: r, label: r }));
+const gpsBaudItems = gpsBaudRates.map((r) => ({ value: r, label: r }));
+const telemetryBaudItems = telemetryBaudRates.map((r) => ({ value: r, label: r }));
+const blackboxBaudItems = blackboxBaudRates.map((r) => ({ value: r, label: r }));
 
 const NONE = "_NONE_";
 const disabledLabel = computed(() => t("portsTelemetryDisabled"));
@@ -229,7 +236,6 @@ const peripheralItems = computed(() => [
     ...getRules("peripherals").map((r) => ({ value: r.name, label: r.displayName, disabled: isRuleDisabled(r) })),
 ]);
 
-// Map between "" in port data and NONE sentinel for USelect
 function portFieldGet(port, field) {
     return port[field] || NONE;
 }

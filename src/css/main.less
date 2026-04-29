@@ -287,6 +287,8 @@ td [role="group"] {
     width: 16rem;
     min-height: 0;
     overflow: auto;
+    /* Match #content: avoid horizontal jump when the sidebar scrollbar appears */
+    scrollbar-gutter: stable;
     padding: 1rem;
     background-color: var(--surface-100);
     display: flex;

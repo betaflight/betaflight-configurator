@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('flightPlanMap')" type="neutral" class="flight-plan-map">
+    <UiBox :title="$t('flightPlanMap')" class="flight-plan-map">
         <div class="map-container">
             <div ref="mapRef" class="map"></div>
             <div v-if="isLoading" class="map-loading">

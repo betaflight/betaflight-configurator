@@ -14,7 +14,7 @@
                 <!-- Left Column -->
                 <div class="flex flex-col gap-4">
                     <!-- Pulse Range Settings -->
-                    <UiBox type="neutral" :title="$t('failsafePulsrangeTitle')" :help="$t('failsafePulsrangeHelp')">
+                    <UiBox :title="$t('failsafePulsrangeTitle')" :help="$t('failsafePulsrangeHelp')">
                         <SettingRow :label="$t('failsafeRxMinUsecItem')">
                             <UInputNumber
                                 v-model="rxConfig.rx_min_usec"
@@ -43,7 +43,6 @@
 
                     <!-- Channel Fallback Settings -->
                     <UiBox
-                        type="neutral"
                         :title="$t('failsafeChannelFallbackSettingsTitle')"
                         :help="$t('failsafeChannelFallbackSettingsHelp')"
                     >
@@ -78,7 +77,7 @@
                 <!-- Right Column -->
                 <div class="flex flex-col gap-4">
                     <!-- Failsafe Switch -->
-                    <UiBox type="neutral" :title="$t('failsafeSwitchTitle')">
+                    <UiBox :title="$t('failsafeSwitchTitle')">
                         <SettingRow :label="$t('failsafeSwitchModeItem')" :help="$t('failsafeSwitchModeHelp')">
                             <USelect
                                 v-model="failsafeConfig.failsafe_switch_mode"
@@ -89,7 +88,7 @@
                     </UiBox>
 
                     <!-- Stage 2 Settings -->
-                    <UiBox type="neutral" :title="$t('failsafeStageTwoSettingsTitle')">
+                    <UiBox :title="$t('failsafeStageTwoSettingsTitle')">
                         <SettingRow :label="$t('failsafeDelayItem')" :help="$t('failsafeDelayHelp')">
                             <UInputNumber
                                 v-model="failsafeDelay"
@@ -375,12 +374,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton
-                :label="$t('configurationButtonSave')"
-                :disabled="!configHasChanged"
-                :color="configHasChanged ? 'success' : 'neutral'"
-                @click="saveConfig"
-            />
+            <UButton :label="$t('configurationButtonSave')" :disabled="!configHasChanged" @click="saveConfig" />
         </div>
     </BaseTab>
 </template>

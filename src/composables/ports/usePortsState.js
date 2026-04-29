@@ -9,6 +9,7 @@ export function usePortsState(getRules) {
     const ports = reactive([]);
     const analyticsChanges = reactive({});
     const savedSnapshot = ref("");
+    const isLoading = ref(true);
 
     const portIdentifierToNameMapping = {
         0: "UART1",
@@ -71,6 +72,7 @@ export function usePortsState(getRules) {
             ports.push(transformPortData(p));
         });
         savedSnapshot.value = JSON.stringify(ports);
+        isLoading.value = false;
         nextTick(() => {
             GUI.content_ready();
         });
@@ -105,5 +107,6 @@ export function usePortsState(getRules) {
         getPortName,
         vtxTableNotConfigured,
         dirty,
+        isLoading,
     };
 }

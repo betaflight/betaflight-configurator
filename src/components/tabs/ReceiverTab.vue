@@ -10,7 +10,7 @@
             <div class="grid-row grid-box col5">
                 <!-- Left Column: Model Preview + Channel Bars -->
                 <div class="col-span-2">
-                    <UiBox :title="$t('receiverModelPreview')">
+                    <UiBox :title="$t('receiverModelPreview')" :padding="false" class="bg-muted">
                         <div class="background_paper h-48 w-full" ref="modelPreviewContainer">
                             <canvas ref="modelCanvas"></canvas>
                         </div>
@@ -476,9 +476,14 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('receiverButtonSticks')" @click="openSticksWindow" v-if="showSticksButton" />
-            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" />
-            <UButton :label="$t('receiverButtonRefresh')" @click="refreshTab" />
+            <UButton
+                :label="$t('receiverButtonSticks')"
+                @click="openSticksWindow"
+                v-if="showSticksButton"
+                variant="soft"
+            />
+            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
+            <UButton :label="$t('receiverButtonRefresh')" @click="refreshTab" variant="soft" />
             <UButton :label="$t('receiverButtonSave')" @click="saveConfig(false)" v-if="!needReboot" />
             <UButton :label="$t('receiverButtonSave')" @click="saveConfig(true)" v-else />
         </div>
