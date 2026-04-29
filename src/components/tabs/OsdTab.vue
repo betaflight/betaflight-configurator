@@ -1498,7 +1498,6 @@ onMounted(async () => {
 onUnmounted(() => {
     document.removeEventListener("click", handleClickOutside);
     analyticsChanges.value = {};
-    osdStore.resetSnapshot();
 });
 </script>
 

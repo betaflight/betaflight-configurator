@@ -143,10 +143,6 @@ export const useOsdStore = defineStore("osd", () => {
         savedSnapshot.value = takeSnapshot();
     }
 
-    function resetSnapshot() {
-        savedSnapshot.value = "";
-    }
-
     const dirty = computed(() => {
         return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
     });
@@ -251,8 +247,6 @@ export const useOsdStore = defineStore("osd", () => {
         const fcStore = useFlightControllerStore();
 
         try {
-            resetSnapshot();
-
             SYM.loadSymbols();
             FONT.initData();
 
@@ -446,7 +440,6 @@ export const useOsdStore = defineStore("osd", () => {
 
         // Actions
         initData,
-        resetSnapshot,
         updateDisplaySize,
         setSelectedPreviewProfile,
         updateDisplayItemVisibility,
