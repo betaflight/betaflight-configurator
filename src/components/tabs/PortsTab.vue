@@ -50,7 +50,7 @@
 
                             <!-- Serial RX -->
                             <div class="flex items-center justify-center p-1.5">
-                                <USwitch v-model="port.rxSerial" size="xs" />
+                                <USwitch v-model="port.rxSerial" :disabled="isSerialRxDisabled(port)" size="xs" />
                             </div>
 
                             <!-- Telemetry -->
@@ -110,7 +110,7 @@
 
                         <!-- Serial RX -->
                         <div class="flex items-center gap-2">
-                            <USwitch v-model="port.rxSerial" size="sm" />
+                            <USwitch v-model="port.rxSerial" :disabled="isSerialRxDisabled(port)" size="sm" />
                             <span class="text-xs flex-1" v-html="$t('portsSerialRx')"></span>
                             <HelpIcon :text="$t('portsSerialRxHelp')" />
                         </div>
@@ -235,6 +235,10 @@ const peripheralItems = computed(() => [
     { value: NONE, label: disabledLabel.value },
     ...getRules("peripherals").map((r) => ({ value: r.name, label: r.displayName, disabled: isRuleDisabled(r) })),
 ]);
+
+function isSerialRxDisabled(port) {
+    return !port.rxSerial && ports.some((p) => p !== port && p.rxSerial);
+}
 
 function portFieldGet(port, field) {
     return port[field] || NONE;
