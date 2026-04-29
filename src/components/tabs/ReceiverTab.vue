@@ -483,9 +483,18 @@
                 variant="soft"
             />
             <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
-            <UButton :label="$t('receiverButtonRefresh')" :disabled="!dirty" @click="refreshTab" variant="soft" />
-            <UButton :label="$t('receiverButtonSave')" :disabled="!dirty" @click="saveConfig(false)" v-if="!needReboot" />
-            <UButton :label="$t('receiverButtonSave')" :disabled="!dirty" @click="saveConfig(true)" v-else />
+            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+                <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
+                    {{ $t("receiverButtonSave") }}
+                </UButton>
+                <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :disabled="!dirty || isSaving"
+                        square
+                    />
+                </UDropdownMenu>
+            </UFieldGroup>
         </div>
     </BaseTab>
 </template>
@@ -636,6 +645,23 @@ function takeSnapshot() {
 const dirty = computed(() => {
     return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
 });
+
+const saveMenuItems = computed(() => [
+    [
+        {
+            label: t("receiverButtonSave"),
+            icon: "i-lucide-save",
+            disabled: !dirty.value || isSaving.value,
+            onSelect: () => saveConfig(needReboot.value),
+        },
+        {
+            label: t("receiverButtonRefresh"),
+            icon: "i-lucide-refresh-cw",
+            disabled: !dirty.value || isSaving.value,
+            onSelect: refreshTab,
+        },
+    ],
+]);
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text) {
