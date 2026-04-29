@@ -5,11 +5,8 @@
             <WikiButton docUrl="preflight" />
 
             <!-- Location Bar -->
-            <div class="gui_box grey preflight-location">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title">{{ $t("preflightLocation") }}</div>
-                </div>
-                <div class="spacer_box location-bar">
+            <UiBox :title="$t('preflightLocation')">
+                <div class="location-bar">
                     <div class="location-inputs">
                         <div class="default_btn">
                             <a href="#" @click.prevent="detectLocation" :class="{ disabled: detectingLocation }">
@@ -60,18 +57,13 @@
                     <!-- Saved Locations -->
                     <div class="saved-locations-row" v-if="preflight.savedLocations.length > 0 || locationEditMode">
                         <template v-if="!locationEditMode">
-                            <select
+                            <USelect
                                 v-model="selectedSavedIndex"
-                                class="saved-location-select"
-                                @change="loadSavedLocation"
-                            >
-                                <option :value="-1" disabled>
-                                    {{ $t("preflightSavedLocationsPlaceholder") }}
-                                </option>
-                                <option v-for="(loc, idx) in preflight.savedLocations" :key="idx" :value="idx">
-                                    {{ loc.label }}
-                                </option>
-                            </select>
+                                :items="savedLocationOptions"
+                                :placeholder="$t('preflightSavedLocationsPlaceholder')"
+                                class="min-w-44 max-w-72"
+                                @update:model-value="loadSavedLocation"
+                            />
                             <div class="default_btn saved-loc-btn">
                                 <a
                                     href="#"
@@ -177,7 +169,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </UiBox>
 
             <!-- Launch Status Banner -->
             <div
@@ -218,603 +210,401 @@
             </div>
 
             <!-- Main Content Grid -->
-            <div v-if="preflight.location.latitude !== null" class="grid-row grid-box col5">
+            <div v-if="preflight.location.latitude !== null" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <!-- Left Column: Weather -->
-                <div class="col-span-3">
+                <div class="flex flex-col gap-4 md:col-span-3">
                     <!-- Current Weather -->
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-cloud-sun"></em> {{ $t("preflightCurrentWeather") }}
-                            </div>
-                            <div class="loading-indicator" v-if="preflight.weather.loading">
+                    <UiBox :title="`<em class='fas fa-cloud-sun'></em> ${$t('preflightCurrentWeather')}`">
+                        <template #title>
+                            <div v-if="preflight.weather.loading" class="text-primary">
                                 <em class="fas fa-spinner fa-spin"></em>
                             </div>
+                        </template>
+                        <div v-if="preflight.weather.error" class="error-message">
+                            <em class="fas fa-exclamation-circle"></em> {{ preflight.weather.error }}
                         </div>
-                        <div class="spacer_box">
-                            <div v-if="preflight.weather.error" class="error-message">
-                                <em class="fas fa-exclamation-circle"></em> {{ preflight.weather.error }}
+                        <div v-else-if="preflight.weather.current" class="weather-grid">
+                            <div class="weather-main">
+                                <div class="weather-condition">
+                                    <span class="weather-icon">{{
+                                        getWeatherEmoji(preflight.weather.current.weatherCode)
+                                    }}</span>
+                                    <span class="weather-desc">{{
+                                        $t(preflight.weather.current.weatherDescription)
+                                    }}</span>
+                                </div>
+                                <div class="weather-temp">{{ preflight.weather.current.temperature }}°C</div>
                             </div>
-                            <div v-else-if="preflight.weather.current" class="weather-grid">
-                                <div class="weather-main">
-                                    <div class="weather-condition">
-                                        <span class="weather-icon">{{
-                                            getWeatherEmoji(preflight.weather.current.weatherCode)
-                                        }}</span>
-                                        <span class="weather-desc">{{
-                                            $t(preflight.weather.current.weatherDescription)
-                                        }}</span>
-                                    </div>
-                                    <div class="weather-temp">{{ preflight.weather.current.temperature }}°C</div>
-                                </div>
-                                <table class="cf_table weather-details">
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightWind") }}</th>
-                                            <td>
-                                                <span
-                                                    :class="
-                                                        getWindStatusClass(
-                                                            preflight.weather.current.windSpeed,
-                                                            preflight.weather.current.windGusts,
-                                                        )
-                                                    "
-                                                >
-                                                    {{ preflight.weather.current.windSpeed.toFixed(1) }} m/s
-                                                </span>
-                                                {{
-                                                    preflight.getWindDirectionLabel(
-                                                        preflight.weather.current.windDirection,
-                                                    )
-                                                }}
-                                                ({{ preflight.weather.current.windDirection }}°)
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightGusts") }}</th>
-                                            <td>
-                                                <span
-                                                    :class="
-                                                        getWindStatusClass(
-                                                            preflight.weather.current.windGusts,
-                                                            preflight.weather.current.windGusts,
-                                                        )
-                                                    "
-                                                >
-                                                    {{ preflight.weather.current.windGusts.toFixed(1) }} m/s
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightVisibility") }}</th>
-                                            <td>
-                                                <span :class="getVisStatusClass(preflight.weather.current.visibility)">
-                                                    {{ formatVisibility(preflight.weather.current.visibility) }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightPrecipitation") }}</th>
-                                            <td>
-                                                <span
-                                                    :class="
-                                                        getPrecipStatusClass(preflight.weather.current.precipitation)
-                                                    "
-                                                >
-                                                    {{ preflight.weather.current.precipitation }} mm
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightDewPoint") }}</th>
-                                            <td>
-                                                {{ preflight.weather.current.dewPoint }}°C ({{
-                                                    toFahrenheit(preflight.weather.current.dewPoint)
-                                                }}°F)
-                                                <span
-                                                    :class="
-                                                        getDewPointRiskClass(
-                                                            preflight.weather.current.temperature,
-                                                            preflight.weather.current.dewPoint,
-                                                        )
-                                                    "
-                                                    class="status-badge"
-                                                >
-                                                    {{
-                                                        $t(
-                                                            getDewPointRiskLabel(
-                                                                preflight.weather.current.temperature,
-                                                                preflight.weather.current.dewPoint,
-                                                            ),
-                                                        )
-                                                    }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightCloudCover") }}</th>
-                                            <td>{{ preflight.weather.current.cloudCover }}%</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightHumidity") }}</th>
-                                            <td>{{ preflight.weather.current.humidity }}%</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightFeelsLike") }}</th>
-                                            <td>
-                                                {{ preflight.weather.current.apparentTemperature }}°C ({{
-                                                    toFahrenheit(preflight.weather.current.apparentTemperature)
-                                                }}°F)
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightPressure") }}</th>
-                                            <td>{{ preflight.weather.current.pressure }} hPa</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightBatteryRisk") }}</th>
-                                            <td>
-                                                <span
-                                                    :class="
-                                                        preflight.getBatteryTempStatus(
-                                                            preflight.weather.current.temperature,
-                                                        ).cssClass
-                                                    "
-                                                >
-                                                    {{
-                                                        $t(
-                                                            preflight.getBatteryTempStatus(
-                                                                preflight.weather.current.temperature,
-                                                            ).label,
-                                                        )
-                                                    }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightFogRisk") }}</th>
-                                            <td>
-                                                <span
-                                                    :class="
-                                                        preflight.getFogRisk(
-                                                            preflight.weather.current.temperature,
-                                                            preflight.weather.current.dewPoint,
-                                                            preflight.weather.current.humidity,
-                                                            preflight.weather.current.windSpeed,
-                                                        ).cssClass
-                                                    "
-                                                >
-                                                    {{
-                                                        $t(
-                                                            preflight.getFogRisk(
-                                                                preflight.weather.current.temperature,
-                                                                preflight.weather.current.dewPoint,
-                                                                preflight.weather.current.humidity,
-                                                                preflight.weather.current.windSpeed,
-                                                            ).label,
-                                                        )
-                                                    }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
-                        </div>
-                    </div>
-
-                    <!-- Flight Window -->
-                    <div class="gui_box grey" v-if="preflight.weather.daily">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-clock"></em> {{ $t("preflightFlightWindow") }}
-                            </div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="flight-window-grid">
-                                <div class="flight-window-item">
-                                    <div class="fw-label">{{ $t("preflightSunrise") }}</div>
-                                    <div class="fw-value">
-                                        {{ preflight.formatTime(preflight.weather.daily.sunrise) }}
-                                    </div>
-                                </div>
-                                <div class="flight-window-item">
-                                    <div class="fw-label">{{ $t("preflightSunset") }}</div>
-                                    <div class="fw-value">
-                                        {{ preflight.formatTime(preflight.weather.daily.sunset) }}
-                                    </div>
-                                </div>
-                                <div class="flight-window-item">
-                                    <div class="fw-label">{{ $t("preflightCivilTwilight") }}</div>
-                                    <div class="fw-value" :class="civilTwilightStatus">
-                                        {{ civilTwilightStart }} – {{ civilTwilightEnd }}
-                                    </div>
-                                </div>
-                                <div class="flight-window-item">
-                                    <div class="fw-label">{{ $t("preflightDaylight") }}</div>
-                                    <div class="fw-value">
-                                        {{ formatDuration(preflight.weather.daily.daylightDuration) }}
-                                    </div>
-                                </div>
-                                <div class="flight-window-item">
-                                    <div class="fw-label">{{ $t("preflightUvIndex") }}</div>
-                                    <div class="fw-value" :class="getUvStatusClass(preflight.weather.daily.uvIndexMax)">
-                                        {{ preflight.weather.daily.uvIndexMax }}
-                                        <span class="fw-sublabel">{{
-                                            $t(getUvStatusLabel(preflight.weather.daily.uvIndexMax))
-                                        }}</span>
-                                    </div>
-                                </div>
-                                <div class="flight-window-item">
-                                    <div class="fw-label">{{ $t("preflightTempRange") }}</div>
-                                    <div class="fw-value">
-                                        {{ preflight.weather.daily.temperatureMin }}° /
-                                        {{ preflight.weather.daily.temperatureMax }}°C
-                                    </div>
-                                </div>
-                                <div class="flight-window-item">
-                                    <div class="fw-label">{{ $t("preflightCurrentlyDay") }}</div>
-                                    <div
-                                        class="fw-value"
-                                        :class="preflight.weather.current?.isDay ? 'status-good' : 'status-warning'"
-                                    >
-                                        {{
-                                            preflight.weather.current?.isDay
-                                                ? $t("preflightDaytime")
-                                                : $t("preflightNighttime")
-                                        }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Wind at Altitude (Hourly) -->
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-wind"></em> {{ $t("preflightWindForecast") }}
-                            </div>
-                            <HelpIcon :text="$t('preflightWindForecastHelp')" />
-                        </div>
-                        <div class="spacer_box">
-                            <div v-if="preflight.weather.hourly && preflight.weather.hourly.length > 0">
-                                <table class="cf_table hourly-table">
-                                    <thead>
-                                        <tr class="titles">
-                                            <th>{{ $t("preflightTime") }}</th>
-                                            <th>{{ $t("preflightWind10m") }}</th>
-                                            <th>{{ $t("preflightWind80m") }}</th>
-                                            <th>{{ $t("preflightWind120m") }}</th>
-                                            <th>{{ $t("preflightGustsShort") }}</th>
-                                            <th>{{ $t("preflightRainProb") }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(hour, idx) in preflight.weather.hourly" :key="idx">
-                                            <td>{{ preflight.formatTime(hour.time) }}</td>
-                                            <td :class="getWindStatusClass(hour.windSpeed10m, hour.windGusts)">
-                                                {{ hour.windSpeed10m?.toFixed(1) ?? "-" }}
-                                            </td>
-                                            <td :class="getWindStatusClass(hour.windSpeed80m, hour.windGusts)">
-                                                {{ hour.windSpeed80m?.toFixed(1) ?? "-" }}
-                                            </td>
-                                            <td :class="getWindStatusClass(hour.windSpeed120m, hour.windGusts)">
-                                                {{ hour.windSpeed120m?.toFixed(1) ?? "-" }}
-                                            </td>
-                                            <td :class="getWindStatusClass(hour.windGusts, hour.windGusts)">
-                                                {{ hour.windGusts?.toFixed(1) ?? "-" }}
-                                            </td>
-                                            <td
-                                                :class="
-                                                    hour.precipitationProbability > 50
-                                                        ? 'status-warning'
-                                                        : hour.precipitationProbability > 20
-                                                          ? 'status-moderate'
-                                                          : ''
-                                                "
-                                            >
-                                                {{ hour.precipitationProbability }}%
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="table-note">{{ $t("preflightWindUnit") }}</div>
-                            </div>
-                            <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
-                        </div>
-                    </div>
-
-                    <!-- 5-Day Forecast -->
-                    <div
-                        class="gui_box grey"
-                        v-if="preflight.weather.forecast && preflight.weather.forecast.length > 0"
-                    >
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-calendar-alt"></em> {{ $t("preflightForecast") }}
-                            </div>
-                            <HelpIcon :text="$t('preflightForecastHelp')" />
-                        </div>
-                        <div class="spacer_box">
-                            <table class="cf_table forecast-table">
-                                <thead>
-                                    <tr class="titles">
-                                        <th>{{ $t("preflightForecastDay") }}</th>
-                                        <th>{{ $t("preflightForecastWeather") }}</th>
-                                        <th>{{ $t("preflightTempRange") }}</th>
-                                        <th>{{ $t("preflightWind") }}</th>
-                                        <th>{{ $t("preflightGusts") }}</th>
-                                        <th>{{ $t("preflightRainProb") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(day, idx) in preflight.weather.forecast"
-                                        :key="idx"
-                                        :class="getForecastRowClass(day)"
-                                    >
-                                        <td>{{ formatForecastDay(day.date) }}</td>
-                                        <td>
-                                            {{ getWeatherEmoji(day.weatherCode) }}
-                                            {{ $t(day.weatherDescription) }}
-                                        </td>
-                                        <td>
-                                            {{ day.tempMin !== null ? day.tempMin + "°" : "-" }} /
-                                            {{ day.tempMax !== null ? day.tempMax + "°C" : "-" }}
-                                        </td>
-                                        <td :class="getWindStatusClass(day.windMax, day.gustsMax)">
-                                            {{ day.windMax !== null ? day.windMax.toFixed(1) : "-" }}
-                                        </td>
-                                        <td :class="getWindStatusClass(day.gustsMax, day.gustsMax)">
-                                            {{ day.gustsMax !== null ? day.gustsMax.toFixed(1) : "-" }}
-                                        </td>
-                                        <td
+                            <UTable
+                                :data="weatherDetailsData"
+                                :columns="weatherDetailsColumns"
+                                :ui="{ thead: 'hidden', td: 'border-none py-0.5 text-xs' }"
+                            >
+                                <template #value-cell="{ row }">
+                                    <template v-if="row.original.key === 'wind'">
+                                        <span
                                             :class="
-                                                day.precipProbability > 50
-                                                    ? 'status-warning'
-                                                    : day.precipProbability > 20
-                                                      ? 'status-moderate'
-                                                      : ''
+                                                getWindStatusClass(
+                                                    preflight.weather.current.windSpeed,
+                                                    preflight.weather.current.windGusts,
+                                                )
                                             "
                                         >
-                                            {{ day.precipProbability !== null ? day.precipProbability + "%" : "-" }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="table-note">{{ $t("preflightWindUnit") }}</div>
+                                            {{ preflight.weather.current.windSpeed.toFixed(1) }} m/s
+                                        </span>
+                                        {{ preflight.getWindDirectionLabel(preflight.weather.current.windDirection) }}
+                                        ({{ preflight.weather.current.windDirection }}°)
+                                    </template>
+                                    <template v-else-if="row.original.key === 'dewPoint'">
+                                        {{ preflight.weather.current.dewPoint }}°C ({{
+                                            toFahrenheit(preflight.weather.current.dewPoint)
+                                        }}°F)
+                                        <span
+                                            :class="
+                                                getDewPointRiskClass(
+                                                    preflight.weather.current.temperature,
+                                                    preflight.weather.current.dewPoint,
+                                                )
+                                            "
+                                            class="status-badge"
+                                        >
+                                            {{
+                                                $t(
+                                                    getDewPointRiskLabel(
+                                                        preflight.weather.current.temperature,
+                                                        preflight.weather.current.dewPoint,
+                                                    ),
+                                                )
+                                            }}
+                                        </span>
+                                    </template>
+                                    <template v-else-if="row.original.key === 'feelsLike'">
+                                        {{ preflight.weather.current.apparentTemperature }}°C ({{
+                                            toFahrenheit(preflight.weather.current.apparentTemperature)
+                                        }}°F)
+                                    </template>
+                                    <span v-else :class="row.original.valueClass">
+                                        {{ row.original.value }}
+                                    </span>
+                                </template>
+                            </UTable>
                         </div>
-                    </div>
+                        <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
+                    </UiBox>
+
+                    <!-- Flight Window -->
+                    <UiBox
+                        v-if="preflight.weather.daily"
+                        :title="`<em class='fas fa-clock'></em> ${$t('preflightFlightWindow')}`"
+                    >
+                        <div class="flight-window-grid">
+                            <div class="flight-window-item">
+                                <div class="fw-label">{{ $t("preflightSunrise") }}</div>
+                                <div class="fw-value">
+                                    {{ preflight.formatTime(preflight.weather.daily.sunrise) }}
+                                </div>
+                            </div>
+                            <div class="flight-window-item">
+                                <div class="fw-label">{{ $t("preflightSunset") }}</div>
+                                <div class="fw-value">
+                                    {{ preflight.formatTime(preflight.weather.daily.sunset) }}
+                                </div>
+                            </div>
+                            <div class="flight-window-item">
+                                <div class="fw-label">{{ $t("preflightCivilTwilight") }}</div>
+                                <div class="fw-value" :class="civilTwilightStatus">
+                                    {{ civilTwilightStart }} – {{ civilTwilightEnd }}
+                                </div>
+                            </div>
+                            <div class="flight-window-item">
+                                <div class="fw-label">{{ $t("preflightDaylight") }}</div>
+                                <div class="fw-value">
+                                    {{ formatDuration(preflight.weather.daily.daylightDuration) }}
+                                </div>
+                            </div>
+                            <div class="flight-window-item">
+                                <div class="fw-label">{{ $t("preflightUvIndex") }}</div>
+                                <div class="fw-value" :class="getUvStatusClass(preflight.weather.daily.uvIndexMax)">
+                                    {{ preflight.weather.daily.uvIndexMax }}
+                                    <span class="fw-sublabel">{{
+                                        $t(getUvStatusLabel(preflight.weather.daily.uvIndexMax))
+                                    }}</span>
+                                </div>
+                            </div>
+                            <div class="flight-window-item">
+                                <div class="fw-label">{{ $t("preflightTempRange") }}</div>
+                                <div class="fw-value">
+                                    {{ preflight.weather.daily.temperatureMin }}° /
+                                    {{ preflight.weather.daily.temperatureMax }}°C
+                                </div>
+                            </div>
+                            <div class="flight-window-item">
+                                <div class="fw-label">{{ $t("preflightCurrentlyDay") }}</div>
+                                <div
+                                    class="fw-value"
+                                    :class="
+                                        preflight.weather.current
+                                            ? preflight.weather.current.isDay
+                                                ? 'status-good'
+                                                : 'status-warning'
+                                            : ''
+                                    "
+                                >
+                                    {{
+                                        preflight.weather.current
+                                            ? preflight.weather.current.isDay
+                                                ? $t("preflightDaytime")
+                                                : $t("preflightNighttime")
+                                            : "-"
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    </UiBox>
+
+                    <!-- Wind at Altitude (Hourly) -->
+                    <UiBox
+                        :title="`<em class='fas fa-wind'></em> ${$t('preflightWindForecast')}`"
+                        :help="$t('preflightWindForecastHelp')"
+                    >
+                        <UTable
+                            :data="preflight.weather.hourly ?? []"
+                            :columns="hourlyColumns"
+                            :empty="$t('preflightNoData')"
+                            :ui="{ th: 'text-xs', td: 'border-none py-0.5 text-xs' }"
+                        >
+                            <template #time-cell="{ row }">
+                                {{ preflight.formatTime(row.original.time) }}
+                            </template>
+                            <template #windSpeed10m-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windSpeed10m, row.original.windGusts)">
+                                    {{ row.original.windSpeed10m?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #windSpeed80m-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windSpeed80m, row.original.windGusts)">
+                                    {{ row.original.windSpeed80m?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #windSpeed120m-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windSpeed120m, row.original.windGusts)">
+                                    {{ row.original.windSpeed120m?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #windGusts-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windGusts, row.original.windGusts)">
+                                    {{ row.original.windGusts?.toFixed(1) ?? "-" }}
+                                </span>
+                            </template>
+                            <template #precipitationProbability-cell="{ row }">
+                                <span
+                                    :class="
+                                        row.original.precipitationProbability > 50
+                                            ? 'status-warning'
+                                            : row.original.precipitationProbability > 20
+                                              ? 'status-moderate'
+                                              : ''
+                                    "
+                                >
+                                    {{ row.original.precipitationProbability }}%
+                                </span>
+                            </template>
+                        </UTable>
+                        <div v-if="preflight.weather.hourly?.length" class="table-note">
+                            {{ $t("preflightWindUnit") }}
+                        </div>
+                    </UiBox>
+
+                    <!-- 5-Day Forecast -->
+                    <UiBox
+                        v-if="preflight.weather.forecast && preflight.weather.forecast.length > 0"
+                        :title="`<em class='fas fa-calendar-alt'></em> ${$t('preflightForecast')}`"
+                        :help="$t('preflightForecastHelp')"
+                    >
+                        <UTable
+                            :data="preflight.weather.forecast"
+                            :columns="forecastColumns"
+                            :meta="{ class: { tr: (row) => getForecastRowClass(row.original) } }"
+                            :ui="{ th: 'text-xs', td: 'border-none py-0.5 text-xs' }"
+                        >
+                            <template #date-cell="{ row }">
+                                {{ formatForecastDay(row.original.date) }}
+                            </template>
+                            <template #weatherCode-cell="{ row }">
+                                {{ getWeatherEmoji(row.original.weatherCode) }}
+                                {{ $t(row.original.weatherDescription) }}
+                            </template>
+                            <template #tempMin-cell="{ row }">
+                                {{ row.original.tempMin !== null ? row.original.tempMin + "°" : "-" }} /
+                                {{ row.original.tempMax !== null ? row.original.tempMax + "°C" : "-" }}
+                            </template>
+                            <template #windMax-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.windMax, row.original.gustsMax)">
+                                    {{ row.original.windMax !== null ? row.original.windMax.toFixed(1) : "-" }}
+                                </span>
+                            </template>
+                            <template #gustsMax-cell="{ row }">
+                                <span :class="getWindStatusClass(row.original.gustsMax, row.original.gustsMax)">
+                                    {{ row.original.gustsMax !== null ? row.original.gustsMax.toFixed(1) : "-" }}
+                                </span>
+                            </template>
+                            <template #precipProbability-cell="{ row }">
+                                <span
+                                    :class="
+                                        row.original.precipProbability > 50
+                                            ? 'status-warning'
+                                            : row.original.precipProbability > 20
+                                              ? 'status-moderate'
+                                              : ''
+                                    "
+                                >
+                                    {{
+                                        row.original.precipProbability !== null
+                                            ? row.original.precipProbability + "%"
+                                            : "-"
+                                    }}
+                                </span>
+                            </template>
+                        </UTable>
+                        <div class="table-note">{{ $t("preflightWindUnit") }}</div>
+                    </UiBox>
                 </div>
 
                 <!-- Right Column: Solar, GNSS, Airspace -->
-                <div class="col-span-2">
+                <div class="flex flex-col gap-4 md:col-span-2">
                     <!-- Solar Activity -->
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-sun"></em> {{ $t("preflightSolarActivity") }}
-                            </div>
-                            <HelpIcon :text="$t('preflightSolarHelp')" />
+                    <UiBox
+                        :title="`<em class='fas fa-sun'></em> ${$t('preflightSolarActivity')}`"
+                        :help="$t('preflightSolarHelp')"
+                    >
+                        <div v-if="preflight.solar.error" class="error-message">
+                            <em class="fas fa-exclamation-circle"></em> {{ preflight.solar.error }}
                         </div>
-                        <div class="spacer_box">
-                            <div v-if="preflight.solar.error" class="error-message">
-                                <em class="fas fa-exclamation-circle"></em> {{ preflight.solar.error }}
+                        <div v-else-if="preflight.solar.kpIndex !== null" class="solar-info">
+                            <div class="kp-display">
+                                <div class="kp-value" :class="preflight.getKpStatus(preflight.solar.kpIndex).cssClass">
+                                    Kp {{ preflight.solar.kpIndex.toFixed(1) }}
+                                </div>
+                                <div class="kp-label">
+                                    {{ $t(preflight.getKpStatus(preflight.solar.kpIndex).label) }}
+                                </div>
                             </div>
-                            <div v-else-if="preflight.solar.kpIndex !== null" class="solar-info">
-                                <div class="kp-display">
+                            <div class="kp-scale">
+                                <div class="kp-bar">
                                     <div
-                                        class="kp-value"
+                                        class="kp-fill"
                                         :class="preflight.getKpStatus(preflight.solar.kpIndex).cssClass"
-                                    >
-                                        Kp {{ preflight.solar.kpIndex.toFixed(1) }}
-                                    </div>
-                                    <div class="kp-label">
-                                        {{ $t(preflight.getKpStatus(preflight.solar.kpIndex).label) }}
-                                    </div>
+                                        :style="{ width: Math.min(100, (preflight.solar.kpIndex / 9) * 100) + '%' }"
+                                    ></div>
                                 </div>
-                                <div class="kp-scale">
-                                    <div class="kp-bar">
-                                        <div
-                                            class="kp-fill"
-                                            :class="preflight.getKpStatus(preflight.solar.kpIndex).cssClass"
-                                            :style="{ width: Math.min(100, (preflight.solar.kpIndex / 9) * 100) + '%' }"
-                                        ></div>
-                                    </div>
-                                    <div class="kp-scale-labels">
-                                        <span>0</span>
-                                        <span>3</span>
-                                        <span>5</span>
-                                        <span>9</span>
-                                    </div>
-                                </div>
-                                <div v-if="preflight.solar.stormLevel" class="storm-scales">
-                                    <table class="cf_table">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">{{ $t("preflightGeoStorm") }}</th>
-                                                <td :class="getStormClass(preflight.solar.stormLevel.geoStorm)">
-                                                    G{{ preflight.solar.stormLevel.geoStorm }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{ $t("preflightSolarRadiation") }}</th>
-                                                <td :class="getStormClass(preflight.solar.stormLevel.solarRadiation)">
-                                                    S{{ preflight.solar.stormLevel.solarRadiation }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{ $t("preflightRadioBlackout") }}</th>
-                                                <td :class="getStormClass(preflight.solar.stormLevel.radioBlackout)">
-                                                    R{{ preflight.solar.stormLevel.radioBlackout }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="solar-timestamp" v-if="preflight.solar.kpTimestamp">
-                                    {{ $t("preflightLastMeasurement") }}: {{ preflight.solar.kpTimestamp }}
+                                <div class="kp-scale-labels">
+                                    <span>0</span>
+                                    <span>3</span>
+                                    <span>5</span>
+                                    <span>9</span>
                                 </div>
                             </div>
-                            <div v-else-if="preflight.solar.loading" class="loading-placeholder">
-                                <em class="fas fa-spinner fa-spin"></em> {{ $t("preflightLoadingSolar") }}
+                            <div v-if="preflight.solar.stormLevel" class="storm-scales">
+                                <UTable
+                                    :data="stormScalesData"
+                                    :columns="stormScalesColumns"
+                                    class="text-sm"
+                                    :ui="{ thead: 'hidden', td: 'border-none py-0.5' }"
+                                >
+                                    <template #value-cell="{ row }">
+                                        <span :class="row.original.valueClass">
+                                            {{ row.original.value }}
+                                        </span>
+                                    </template>
+                                </UTable>
                             </div>
-                            <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
+                            <div class="solar-timestamp" v-if="preflight.solar.kpTimestamp">
+                                {{ $t("preflightLastMeasurement") }}: {{ preflight.solar.kpTimestamp }}
+                            </div>
                         </div>
-                    </div>
+                        <div v-else-if="preflight.solar.loading" class="loading-placeholder">
+                            <em class="fas fa-spinner fa-spin"></em> {{ $t("preflightLoadingSolar") }}
+                        </div>
+                        <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
+                    </UiBox>
 
                     <!-- GNSS Info -->
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-satellite"></em> {{ $t("preflightGNSS") }}
-                            </div>
-                            <HelpIcon :text="$t('preflightGNSSHelp')" />
-                        </div>
-                        <div class="spacer_box">
-                            <div class="gnss-info">
-                                <p>{{ $t("preflightGNSSNote") }}</p>
-                                <table class="cf_table">
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightCoordinates") }}</th>
-                                            <td>
-                                                <span v-if="preflight.location.latitude !== null">
-                                                    {{ preflight.location.latitude.toFixed(4) }},
-                                                    {{ preflight.location.longitude.toFixed(4) }}
-                                                </span>
-                                                <span v-else>-</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightElevation") }}</th>
-                                            <td>
-                                                <span v-if="preflight.location.elevation !== null">
-                                                    {{ preflight.location.elevation }} m AMSL
-                                                </span>
-                                                <span v-else>-</span>
-                                            </td>
-                                        </tr>
-                                        <tr v-if="densityAltitude !== null">
-                                            <th scope="row">{{ $t("preflightDensityAlt") }}</th>
-                                            <td>
-                                                <span :class="getDensityAltStatusClass()">
-                                                    {{ densityAltitude }} ft ({{ Math.round(densityAltitude * 0.3048) }}
-                                                    m)
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightKpEffect") }}</th>
-                                            <td>
-                                                <span
-                                                    v-if="preflight.solar.kpIndex !== null"
-                                                    :class="getGnssKpClass(preflight.solar.kpIndex)"
-                                                >
-                                                    {{ getGnssKpLabel(preflight.solar.kpIndex) }}
-                                                </span>
-                                                <span v-else>-</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightGPSRescue") }}</th>
-                                            <td>
-                                                <span :class="getGpsRescueClass()">
-                                                    {{ getGpsRescueLabel() }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightMagDeclination") }}</th>
-                                            <td>
-                                                <span v-if="preflight.mag.declination !== null">
-                                                    {{ preflight.mag.declination.toFixed(2) }}°
-                                                </span>
-                                                <span v-else>-</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">{{ $t("preflightMagInclination") }}</th>
-                                            <td>
-                                                <span v-if="preflight.mag.inclination !== null">
-                                                    {{ preflight.mag.inclination.toFixed(2) }}°
-                                                </span>
-                                                <span v-else>-</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="gnss-links">
-                                    <a href="https://www.gnssplanning.com/" target="_blank" rel="noopener noreferrer">
-                                        <em class="fas fa-external-link-alt"></em> {{ $t("preflightGNSSPlanner") }}
-                                    </a>
-                                </div>
+                    <UiBox
+                        :title="`<em class='fas fa-satellite'></em> ${$t('preflightGNSS')}`"
+                        :help="$t('preflightGNSSHelp')"
+                    >
+                        <div class="gnss-info">
+                            <p>{{ $t("preflightGNSSNote") }}</p>
+                            <UTable
+                                :data="gnssInfoData"
+                                :columns="gnssInfoColumns"
+                                :ui="{ thead: 'hidden', td: 'border-none py-0.5 text-xs' }"
+                            >
+                                <template #value-cell="{ row }">
+                                    <span :class="row.original.valueClass">
+                                        {{ row.original.value }}
+                                    </span>
+                                </template>
+                            </UTable>
+                            <div class="gnss-links">
+                                <a href="https://www.gnssplanning.com/" target="_blank" rel="noopener noreferrer">
+                                    <em class="fas fa-external-link-alt"></em> {{ $t("preflightGNSSPlanner") }}
+                                </a>
                             </div>
                         </div>
-                    </div>
+                    </UiBox>
 
                     <!-- Airspace / No-Fly Zones -->
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-ban"></em> {{ $t("preflightAirspace") }}
+                    <UiBox :title="`<em class='fas fa-ban'></em> ${$t('preflightAirspace')}`">
+                        <div class="airspace-info">
+                            <p>{{ $t("preflightAirspaceNote") }}</p>
+                            <div class="airspace-links">
+                                <a
+                                    v-if="preflight.location.latitude !== null"
+                                    :href="droneSafetyMapLink"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="airspace-link"
+                                >
+                                    <em class="fas fa-shield-alt"></em> {{ $t("preflightDroneSafetyMap") }}
+                                </a>
+                                <a
+                                    v-if="preflight.location.latitude !== null"
+                                    :href="airspaceExplorerLink"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="airspace-link"
+                                >
+                                    <em class="fas fa-map"></em> {{ $t("preflightAirspaceExplorer") }}
+                                </a>
+                                <a
+                                    v-if="preflight.location.latitude !== null"
+                                    :href="notamLink"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="airspace-link"
+                                >
+                                    <em class="fas fa-exclamation-triangle"></em> {{ $t("preflightNOTAMs") }}
+                                </a>
+                                <a
+                                    v-if="preflight.location.latitude !== null"
+                                    :href="notamEuLink"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="airspace-link"
+                                >
+                                    <em class="fas fa-exclamation-triangle"></em> {{ $t("preflightNOTAMsEU") }}
+                                </a>
                             </div>
                         </div>
-                        <div class="spacer_box">
-                            <div class="airspace-info">
-                                <p>{{ $t("preflightAirspaceNote") }}</p>
-                                <div class="airspace-links">
-                                    <a
-                                        v-if="preflight.location.latitude !== null"
-                                        :href="droneSafetyMapLink"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="airspace-link"
-                                    >
-                                        <em class="fas fa-shield-alt"></em> {{ $t("preflightDroneSafetyMap") }}
-                                    </a>
-                                    <a
-                                        v-if="preflight.location.latitude !== null"
-                                        :href="airspaceExplorerLink"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="airspace-link"
-                                    >
-                                        <em class="fas fa-map"></em> {{ $t("preflightAirspaceExplorer") }}
-                                    </a>
-                                    <a
-                                        v-if="preflight.location.latitude !== null"
-                                        :href="notamLink"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="airspace-link"
-                                    >
-                                        <em class="fas fa-exclamation-triangle"></em> {{ $t("preflightNOTAMs") }}
-                                    </a>
-                                    <a
-                                        v-if="preflight.location.latitude !== null"
-                                        :href="notamEuLink"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="airspace-link"
-                                    >
-                                        <em class="fas fa-exclamation-triangle"></em> {{ $t("preflightNOTAMsEU") }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </UiBox>
 
                     <!-- Map -->
-                    <div class="gui_box grey preflight-map-box">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">
-                                <em class="fas fa-map-marked-alt"></em> {{ $t("preflightMap") }}
-                            </div>
-                        </div>
-                        <div class="spacer_box preflight-map-container" ref="mapContainerRef">
+                    <UiBox
+                        :title="`<em class='fas fa-map-marked-alt'></em> ${$t('preflightMap')}`"
+                        class="preflight-map-box"
+                    >
+                        <div class="preflight-map-container" ref="mapContainerRef">
                             <div id="preflight-map" class="preflight-map" ref="mapRef"></div>
                             <div class="controls">
                                 <button
@@ -855,7 +645,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </UiBox>
                 </div>
             </div>
 
@@ -871,7 +661,7 @@
 import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
-import HelpIcon from "../elements/HelpIcon.vue";
+import UiBox from "../elements/UiBox.vue";
 import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
 import { usePreflight } from "@/composables/usePreflight";
@@ -991,7 +781,7 @@ export default defineComponent({
     components: {
         BaseTab,
         WikiButton,
-        HelpIcon,
+        UiBox,
     },
     setup() {
         const preflight = reactive(usePreflight());
@@ -1007,6 +797,159 @@ export default defineComponent({
         const selectedSavedIndex = ref(-1);
         const locationEditMode = ref(null);
         const saveLocationLabel = ref("");
+
+        const hourlyColumns = computed(() => [
+            { accessorKey: "time", header: i18n.getMessage("preflightTime") },
+            { accessorKey: "windSpeed10m", header: i18n.getMessage("preflightWind10m") },
+            { accessorKey: "windSpeed80m", header: i18n.getMessage("preflightWind80m") },
+            { accessorKey: "windSpeed120m", header: i18n.getMessage("preflightWind120m") },
+            { accessorKey: "windGusts", header: i18n.getMessage("preflightGustsShort") },
+            { accessorKey: "precipitationProbability", header: i18n.getMessage("preflightRainProb") },
+        ]);
+
+        const forecastColumns = computed(() => [
+            { accessorKey: "date", header: i18n.getMessage("preflightForecastDay") },
+            { accessorKey: "weatherCode", header: i18n.getMessage("preflightForecastWeather") },
+            { accessorKey: "tempMin", header: i18n.getMessage("preflightTempRange") },
+            { accessorKey: "windMax", header: i18n.getMessage("preflightWind") },
+            { accessorKey: "gustsMax", header: i18n.getMessage("preflightGusts") },
+            { accessorKey: "precipProbability", header: i18n.getMessage("preflightRainProb") },
+        ]);
+
+        const savedLocationOptions = computed(() => {
+            return preflight.savedLocations.map((loc, idx) => ({
+                label: loc.label,
+                value: idx,
+            }));
+        });
+
+        const weatherDetailsColumns = computed(() => [
+            { accessorKey: "label", header: "" },
+            { id: "value", header: "" },
+        ]);
+
+        const weatherDetailsData = computed(() => {
+            const c = preflight.weather.current;
+            if (!c) {
+                return [];
+            }
+            return [
+                { key: "wind", label: i18n.getMessage("preflightWind") },
+                {
+                    key: "gusts",
+                    label: i18n.getMessage("preflightGusts"),
+                    value: `${c.windGusts.toFixed(1)} m/s`,
+                    valueClass: getWindStatusClass(c.windGusts, c.windGusts),
+                },
+                {
+                    key: "visibility",
+                    label: i18n.getMessage("preflightVisibility"),
+                    value: formatVisibility(c.visibility),
+                    valueClass: getVisStatusClass(c.visibility),
+                },
+                {
+                    key: "precipitation",
+                    label: i18n.getMessage("preflightPrecipitation"),
+                    value: `${c.precipitation} mm`,
+                    valueClass: getPrecipStatusClass(c.precipitation),
+                },
+                { key: "dewPoint", label: i18n.getMessage("preflightDewPoint") },
+                { key: "cloudCover", label: i18n.getMessage("preflightCloudCover"), value: `${c.cloudCover}%` },
+                { key: "humidity", label: i18n.getMessage("preflightHumidity"), value: `${c.humidity}%` },
+                { key: "feelsLike", label: i18n.getMessage("preflightFeelsLike") },
+                { key: "pressure", label: i18n.getMessage("preflightPressure"), value: `${c.pressure} hPa` },
+                {
+                    key: "batteryRisk",
+                    label: i18n.getMessage("preflightBatteryRisk"),
+                    value: i18n.getMessage(preflight.getBatteryTempStatus(c.temperature).label),
+                    valueClass: preflight.getBatteryTempStatus(c.temperature).cssClass,
+                },
+                {
+                    key: "fogRisk",
+                    label: i18n.getMessage("preflightFogRisk"),
+                    value: i18n.getMessage(
+                        preflight.getFogRisk(c.temperature, c.dewPoint, c.humidity, c.windSpeed).label,
+                    ),
+                    valueClass: preflight.getFogRisk(c.temperature, c.dewPoint, c.humidity, c.windSpeed).cssClass,
+                },
+            ];
+        });
+
+        const stormScalesColumns = computed(() => [
+            { accessorKey: "label", header: "" },
+            { id: "value", header: "" },
+        ]);
+
+        const stormScalesData = computed(() => {
+            const s = preflight.solar.stormLevel;
+            if (!s) {
+                return [];
+            }
+            return [
+                {
+                    label: i18n.getMessage("preflightGeoStorm"),
+                    value: `G${s.geoStorm}`,
+                    valueClass: getStormClass(s.geoStorm),
+                },
+                {
+                    label: i18n.getMessage("preflightSolarRadiation"),
+                    value: `S${s.solarRadiation}`,
+                    valueClass: getStormClass(s.solarRadiation),
+                },
+                {
+                    label: i18n.getMessage("preflightRadioBlackout"),
+                    value: `R${s.radioBlackout}`,
+                    valueClass: getStormClass(s.radioBlackout),
+                },
+            ];
+        });
+
+        const gnssInfoColumns = computed(() => [
+            { accessorKey: "label", header: "" },
+            { id: "value", header: "" },
+        ]);
+
+        const gnssInfoData = computed(() => {
+            const loc = preflight.location;
+            const rows = [
+                {
+                    label: i18n.getMessage("preflightCoordinates"),
+                    value: loc.latitude !== null ? `${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}` : "-",
+                },
+                {
+                    label: i18n.getMessage("preflightElevation"),
+                    value: loc.elevation !== null ? `${loc.elevation} m AMSL` : "-",
+                },
+            ];
+            if (densityAltitude.value !== null) {
+                rows.push({
+                    label: i18n.getMessage("preflightDensityAlt"),
+                    value: `${densityAltitude.value} ft (${Math.round(densityAltitude.value * 0.3048)} m)`,
+                    valueClass: getDensityAltStatusClass(),
+                });
+            }
+            rows.push(
+                {
+                    label: i18n.getMessage("preflightKpEffect"),
+                    value: preflight.solar.kpIndex !== null ? getGnssKpLabel(preflight.solar.kpIndex) : "-",
+                    valueClass: preflight.solar.kpIndex !== null ? getGnssKpClass(preflight.solar.kpIndex) : "",
+                },
+                {
+                    label: i18n.getMessage("preflightGPSRescue"),
+                    value: getGpsRescueLabel(),
+                    valueClass: getGpsRescueClass(),
+                },
+                {
+                    label: i18n.getMessage("preflightMagDeclination"),
+                    value: preflight.mag.declination !== null ? `${preflight.mag.declination.toFixed(2)}°` : "-",
+                },
+                {
+                    label: i18n.getMessage("preflightMagInclination"),
+                    value: preflight.mag.inclination !== null ? `${preflight.mag.inclination.toFixed(2)}°` : "-",
+                },
+            );
+            return rows;
+        });
 
         const isManualLocationValid = computed(() => {
             const lat = Number.parseFloat(manualLat.value);
@@ -1407,6 +1350,15 @@ export default defineComponent({
             droneSafetyMapLink,
             notamLink,
             notamEuLink,
+            hourlyColumns,
+            forecastColumns,
+            savedLocationOptions,
+            weatherDetailsColumns,
+            weatherDetailsData,
+            stormScalesColumns,
+            stormScalesData,
+            gnssInfoColumns,
+            gnssInfoData,
             selectedSavedIndex,
             locationEditMode,
             saveLocationLabel,
@@ -1504,13 +1456,6 @@ export default defineComponent({
             align-items: center;
             gap: 4px;
             margin-top: 8px;
-
-            .saved-location-select {
-                min-width: 180px;
-                max-width: 300px;
-                padding: 4px 8px;
-                font-size: 12px;
-            }
 
             .saved-loc-btn {
                 a {
@@ -1715,23 +1660,17 @@ export default defineComponent({
                 color: var(--primary-500);
             }
         }
-
-        .weather-details {
-            th[scope="row"],
-            td:first-child {
-                font-weight: 500;
-                width: 40%;
-                color: var(--surface-700);
-                text-align: left;
-            }
-        }
     }
 
     /* Flight Window */
     .flight-window-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
 
         .flight-window-item {
             text-align: center;
@@ -1767,33 +1706,6 @@ export default defineComponent({
         margin-left: 6px;
     }
 
-    /* Hourly forecast table */
-    .hourly-table {
-        font-size: 12px;
-        width: 100%;
-
-        thead .titles th {
-            font-weight: bold;
-            text-align: center;
-            padding: 4px;
-            background: var(--surface-300);
-            border-bottom: 1px solid var(--surface-500);
-        }
-
-        tbody td {
-            text-align: center;
-            padding: 3px 4px;
-            &:first-child {
-                text-align: left;
-                font-weight: 500;
-            }
-        }
-
-        tbody tr:nth-child(even) {
-            background: var(--surface-200);
-        }
-    }
-
     .table-note {
         font-size: 11px;
         color: var(--surface-600);
@@ -1801,45 +1713,15 @@ export default defineComponent({
         text-align: right;
     }
 
-    /* 5-Day Forecast table */
-    .forecast-table {
-        font-size: 12px;
-        width: 100%;
-
-        thead .titles th {
-            font-weight: bold;
-            text-align: center;
-            padding: 4px;
-            background: var(--surface-300);
-            border-bottom: 1px solid var(--surface-500);
-        }
-
-        tbody td {
-            text-align: center;
-            padding: 4px 6px;
-            &:first-child {
-                text-align: left;
-                font-weight: 500;
-                white-space: nowrap;
-            }
-            &:nth-child(2) {
-                text-align: left;
-            }
-        }
-
-        tbody tr:nth-child(even) {
-            background: var(--surface-200);
-        }
-
-        .forecast-row-danger {
-            background: rgba(192, 57, 43, 0.1) !important;
-        }
-        .forecast-row-warning {
-            background: rgba(163, 83, 9, 0.1) !important;
-        }
-        .forecast-row-moderate {
-            background: rgba(183, 119, 10, 0.08) !important;
-        }
+    /* 5-Day Forecast row highlights (applied via UTable meta.class.tr) */
+    .forecast-row-danger {
+        background: rgba(192, 57, 43, 0.1) !important;
+    }
+    .forecast-row-warning {
+        background: rgba(163, 83, 9, 0.1) !important;
+    }
+    .forecast-row-moderate {
+        background: rgba(183, 119, 10, 0.08) !important;
     }
 
     /* Solar Activity */
@@ -1916,12 +1798,6 @@ export default defineComponent({
 
         .storm-scales {
             margin-bottom: 8px;
-            th[scope="row"],
-            td:first-child {
-                font-weight: 500;
-                color: var(--surface-700);
-                text-align: left;
-            }
         }
 
         .solar-timestamp {
@@ -1937,17 +1813,6 @@ export default defineComponent({
             font-size: 12px;
             color: var(--surface-700);
             margin-bottom: 8px;
-        }
-
-        .cf_table {
-            margin-bottom: 8px;
-            th[scope="row"],
-            td:first-child {
-                font-weight: 500;
-                color: var(--surface-700);
-                width: 50%;
-                text-align: left;
-            }
         }
 
         .gnss-links {
@@ -2095,10 +1960,6 @@ export default defineComponent({
         text-align: center;
         padding: 20px;
         font-style: italic;
-    }
-
-    .loading-indicator {
-        color: var(--primary-500);
     }
 
     .loading-placeholder {
