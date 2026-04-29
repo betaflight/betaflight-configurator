@@ -251,7 +251,6 @@ export const useOsdStore = defineStore("osd", () => {
         const fcStore = useFlightControllerStore();
 
         try {
-            initData();
             resetSnapshot();
 
             SYM.loadSymbols();

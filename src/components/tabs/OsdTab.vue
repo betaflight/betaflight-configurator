@@ -1191,8 +1191,6 @@ function updatePreview() {
 
 // Load OSD configuration from FC
 async function loadConfig() {
-    hasLoadedConfig.value = false;
-
     try {
         // Fetch OSD config via Store
         await osdStore.fetchOsdConfig();
