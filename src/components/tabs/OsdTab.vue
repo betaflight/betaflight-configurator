@@ -506,19 +506,11 @@
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                    <UButton
-                        @click="saveConfig()"
-                        :disabled="!osdStore.dirty || isSaving"
-                        :color="osdStore.dirty ? 'primary' : 'neutral'"
-                    >
+                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty || isSaving">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                        <UButton
-                            :color="osdStore.dirty ? 'primary' : 'neutral'"
-                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                            square
-                        />
+                        <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
                     </UDropdownMenu>
                 </UFieldGroup>
             </div>
