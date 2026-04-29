@@ -198,19 +198,24 @@ function renderReleaseHistorySection(releases) {
     cutoff.setFullYear(cutoff.getFullYear() - RECENT_RELEASE_YEARS);
     const prereleaseCutoff = new Date();
     prereleaseCutoff.setMonth(prereleaseCutoff.getMonth() - PRERELEASE_VISIBILITY_MONTHS);
-    const recent = releases.filter((r) => {
-        if (!r.published_at) {
-            return false;
-        }
-        const published = new Date(r.published_at);
-        if (published < cutoff) {
-            return false;
-        }
-        if (r.prerelease && published < prereleaseCutoff) {
-            return false;
-        }
-        return true;
-    });
+    const recent = releases
+        .map((r) => ({ release: r, assets: (r.assets || []).filter((a) => !a.name.endsWith(".sha256")) }))
+        .filter(({ release, assets }) => {
+            if (!release.published_at) {
+                return false;
+            }
+            if (!assets.length) {
+                return false;
+            }
+            const published = new Date(release.published_at);
+            if (published < cutoff) {
+                return false;
+            }
+            if (release.prerelease && published < prereleaseCutoff) {
+                return false;
+            }
+            return true;
+        });
     const olderCount = releases.length - recent.length;
     const olderNote = olderCount
         ? `<p class="meta">Earlier releases are available on <a href="${RELEASES_INDEX_URL}">GitHub</a>.</p>`
@@ -220,22 +225,19 @@ function renderReleaseHistorySection(releases) {
         return `
             <section>
                 <h2>Recent releases</h2>
-                <p class="empty">No releases in the last ${RECENT_RELEASE_YEARS} years.</p>
+                <p class="empty">No releases with downloadable assets in the last ${RECENT_RELEASE_YEARS} years.</p>
                 ${olderNote}
             </section>`;
     }
 
     const items = recent
-        .map((release) => {
-            const assets = (release.assets || []).filter((a) => !a.name.endsWith(".sha256"));
-            const assetItems = assets.length
-                ? assets
-                      .map(
-                          (asset) =>
-                              `<li><a href="${escapeHtml(asset.browser_download_url)}">${escapeHtml(asset.name)}</a> <span class="size">${formatBytes(asset.size)}</span></li>`,
-                      )
-                      .join("")
-                : `<li class="empty">No assets attached.</li>`;
+        .map(({ release, assets }) => {
+            const assetItems = assets
+                .map(
+                    (asset) =>
+                        `<li><a href="${escapeHtml(asset.browser_download_url)}">${escapeHtml(asset.name)}</a> <span class="size">${formatBytes(asset.size)}</span></li>`,
+                )
+                .join("");
             const tag = escapeHtml(release.tag_name);
             const meta = [formatDate(release.published_at), release.prerelease ? "pre-release" : null]
                 .filter(Boolean)
