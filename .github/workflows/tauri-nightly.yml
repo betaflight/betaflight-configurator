@@ -160,7 +160,8 @@ jobs:
           NIGHTLY_VERSION="${PKG_VERSION}-${SHA_SHORT}"
           for f in staging/*; do
             base=$(basename "$f")
-            new=${base/${STRIPPED}/${NIGHTLY_VERSION}}
+            new=${base//Betaflight App/betaflight-app}
+            new=${new/${STRIPPED}/${NIGHTLY_VERSION}}
             if [[ "$new" != "$base" ]]; then
               mv -- "$f" "staging/${new}"
             fi
