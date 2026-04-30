@@ -168,6 +168,9 @@ async function startProcess() {
         }
     }
 
+    // Apply persisted UI scale before initial tab mount to avoid flicker.
+    loadUiScale();
+
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
     switchTab("landing", { mode: "disconnected" });
 
@@ -205,8 +208,6 @@ async function startProcess() {
         setDarkTheme(0);
         setConfig({ darkTheme: 0 });
     }
-
-    loadUiScale();
 
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
         DarkTheme.autoSet();
