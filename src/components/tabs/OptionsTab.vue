@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch, onMounted } from "vue";
+import { defineComponent, reactive, watch, onMounted, onUnmounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "../../js/gui";
@@ -296,15 +296,25 @@ export default defineComponent({
             },
         );
 
+        let uiScalePersistTimer = null;
+
         watch(
             () => settings.uiScale,
             (value) => {
                 const uiScale = sanitizeUiScale(value);
-                settings.uiScale = uiScale;
-                setConfig({ uiScale });
+                if (settings.uiScale !== uiScale) {
+                    settings.uiScale = uiScale;
+                    return;
+                }
                 applyUiScale(uiScale);
+                clearTimeout(uiScalePersistTimer);
+                uiScalePersistTimer = setTimeout(() => {
+                    setConfig({ uiScale });
+                }, 150);
             },
         );
+
+        onUnmounted(() => clearTimeout(uiScalePersistTimer));
 
         watch(
             () => settings.showDevToolsOnStartup,
