@@ -7668,6 +7668,18 @@
         "message": "UI Scale",
         "description": "Scale the entire user interface up or down"
     },
+    "uiScaleKeepTitle": {
+        "message": "Keep this UI scale?"
+    },
+    "uiScaleKeepMessage": {
+        "message": "If the screen is unusable, the previous scale will be restored automatically."
+    },
+    "uiScaleKeep": {
+        "message": "Keep"
+    },
+    "uiScaleRevert": {
+        "message": "Revert"
+    },
     "pidTuningRatesType": {
         "message": "Rates Type"
     },

@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch, onMounted } from "vue";
+import { defineComponent, reactive, watch, ref, onBeforeUnmount, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "../../js/gui";
@@ -154,6 +154,7 @@ import { ispConnected } from "../../js/utils/connection";
 import { DEFAULT_DEVELOPMENT_OPTIONS, resetDevelopmentOptions } from "../../js/utils/developmentOptions";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
 import { applyUiScale } from "../../js/UiScale";
+import { useDialogStore } from "@/stores/dialog";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 
@@ -166,6 +167,7 @@ export default defineComponent({
     },
     setup() {
         const dialog = useDialog();
+        const dialogStore = useDialogStore();
 
         // Load initial settings from config storage
         const settings = reactive({
@@ -283,11 +285,74 @@ export default defineComponent({
             },
         );
 
+        const SCALE_REVERT_SECONDS = 10;
+        let scaleRevertTimer = null;
+        let scaleCountdownTimer = null;
+        const previousScale = ref(settings.uiScale);
+
+        function clearScaleTimers() {
+            clearTimeout(scaleRevertTimer);
+            clearInterval(scaleCountdownTimer);
+            scaleRevertTimer = null;
+            scaleCountdownTimer = null;
+        }
+
+        onBeforeUnmount(() => clearScaleTimers());
+
         watch(
             () => settings.uiScale,
             (value) => {
-                setConfig({ uiScale: value });
+                clearScaleTimers();
+                const oldScale = previousScale.value;
+
+                if (value === oldScale) {
+                    return;
+                }
+
                 applyUiScale(value);
+
+                let remaining = SCALE_REVERT_SECONDS;
+                const revert = () => {
+                    clearScaleTimers();
+                    settings.uiScale = oldScale;
+                    setConfig({ uiScale: oldScale });
+                    applyUiScale(oldScale);
+                    dialog.close();
+                };
+
+                const updateTitle = () => `${i18n.getMessage("uiScaleKeepTitle")  } (${remaining}s)`;
+
+                dialog.openYesNo(
+                    updateTitle(),
+                    i18n.getMessage("uiScaleKeepMessage"),
+                    () => {
+                        // Yes — keep
+                        clearScaleTimers();
+                        previousScale.value = value;
+                        setConfig({ uiScale: value });
+                    },
+                    () => {
+                        // No — revert
+                        revert();
+                    },
+                    {
+                        yesText: i18n.getMessage("uiScaleKeep"),
+                        noText: i18n.getMessage("uiScaleRevert"),
+                    },
+                );
+
+                scaleCountdownTimer = setInterval(() => {
+                    remaining--;
+                    if (remaining <= 0) {
+                        revert();
+                    } else {
+                        dialogStore.updateProps({ title: updateTitle() });
+                    }
+                }, 1000);
+
+                scaleRevertTimer = setTimeout(() => {
+                    revert();
+                }, SCALE_REVERT_SECONDS * 1000);
             },
         );
 
