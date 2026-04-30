@@ -8,6 +8,7 @@ import { initializeSerialBackend } from "./serial_backend.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
+import { loadUiScale } from "./UiScale.js";
 import { applyExpertMode } from "./utils/applyExpertMode.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
 import { switchTab } from "./tab_switch.js";
@@ -204,6 +205,8 @@ async function startProcess() {
         setDarkTheme(0);
         setConfig({ darkTheme: 0 });
     }
+
+    loadUiScale();
 
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
         DarkTheme.autoSet();

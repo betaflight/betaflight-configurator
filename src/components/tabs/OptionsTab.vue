@@ -72,6 +72,25 @@
                         class="min-w-40"
                     />
                 </SettingRow>
+                <SettingRow :label="$t('uiScale')">
+                    <USelect
+                        :items="[
+                            { label: '50%', value: 50 },
+                            { label: '60%', value: 60 },
+                            { label: '70%', value: 70 },
+                            { label: '75%', value: 75 },
+                            { label: '80%', value: 80 },
+                            { label: '90%', value: 90 },
+                            { label: '100%', value: 100 },
+                            { label: '110%', value: 110 },
+                            { label: '125%', value: 125 },
+                            { label: '150%', value: 150 },
+                        ]"
+                        size="sm"
+                        v-model="settings.uiScale"
+                        class="min-w-40"
+                    />
+                </SettingRow>
                 <!-- Includes "languages" icon to be noticeable even if the language is set incorrectly for the user -->
                 <!-- Other input elements are unlikely to need an icon -->
                 <SettingRow :label="$t('userLanguageSelect')">
@@ -134,6 +153,7 @@ import NotificationManager from "../../js/utils/notifications";
 import { ispConnected } from "../../js/utils/connection";
 import { DEFAULT_DEVELOPMENT_OPTIONS, resetDevelopmentOptions } from "../../js/utils/developmentOptions";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
+import { applyUiScale } from "../../js/UiScale";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 
@@ -167,6 +187,7 @@ export default defineComponent({
             cliOnlyMode: !!getConfig("cliOnlyMode", false).cliOnlyMode,
             showPresetsWarningBackup: !!getConfig("showPresetsWarningBackup").showPresetsWarningBackup,
             automaticDevOptions: !!getConfig("automaticDevOptions", true).automaticDevOptions,
+            uiScale: getConfig("uiScale", 100).uiScale ?? 100,
         });
 
         const availableLanguages = i18n.getLanguagesAvailables();
@@ -259,6 +280,14 @@ export default defineComponent({
                     setConfig({ darkTheme: 0 });
                     setDarkTheme(0);
                 }
+            },
+        );
+
+        watch(
+            () => settings.uiScale,
+            (value) => {
+                setConfig({ uiScale: value });
+                applyUiScale(value);
             },
         );
 
