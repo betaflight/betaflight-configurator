@@ -73,7 +73,7 @@
                     />
                 </SettingRow>
                 <div class="flex flex-col gap-2 py-2">
-                    <span class="text-sm font-semibold">{{ $t("uiScale") }}</span>
+                    <label for="ui-scale-slider" class="text-sm font-semibold">{{ $t("uiScale") }}</label>
                     <div class="flex gap-1.5 flex-wrap">
                         <button
                             v-for="preset in [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5]"
@@ -92,6 +92,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <input
+                            id="ui-scale-slider"
                             type="range"
                             v-model.number="settings.uiScale"
                             :min="minUiScale"
