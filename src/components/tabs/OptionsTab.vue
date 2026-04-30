@@ -72,25 +72,38 @@
                         class="min-w-40"
                     />
                 </SettingRow>
-                <SettingRow :label="$t('uiScale')">
-                    <USelect
-                        :items="[
-                            { label: '50%', value: 50 },
-                            { label: '60%', value: 60 },
-                            { label: '70%', value: 70 },
-                            { label: '75%', value: 75 },
-                            { label: '80%', value: 80 },
-                            { label: '90%', value: 90 },
-                            { label: '100%', value: 100 },
-                            { label: '110%', value: 110 },
-                            { label: '125%', value: 125 },
-                            { label: '150%', value: 150 },
-                        ]"
-                        size="sm"
-                        v-model="settings.uiScale"
-                        class="min-w-40"
-                    />
-                </SettingRow>
+                <div class="flex flex-col gap-2 py-2">
+                    <span class="text-sm font-semibold">{{ $t("uiScale") }}</span>
+                    <div class="flex gap-1.5 flex-wrap">
+                        <button
+                            v-for="preset in [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5]"
+                            :key="preset"
+                            type="button"
+                            class="px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors"
+                            :class="
+                                settings.uiScale === preset
+                                    ? 'bg-(--primary-500) border-(--primary-600) text-black font-semibold'
+                                    : 'bg-(--surface-200) border-(--surface-400) text-(--text) hover:bg-(--surface-300)'
+                            "
+                            @click="settings.uiScale = preset"
+                        >
+                            {{ Math.round(preset * 100) }}%
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input
+                            type="range"
+                            v-model.number="settings.uiScale"
+                            :min="minUiScale"
+                            :max="maxUiScale"
+                            step="0.01"
+                            class="flex-1 accent-(--primary-500)"
+                        />
+                        <span class="text-sm font-semibold min-w-12 text-right"
+                            >{{ Math.round(settings.uiScale * 100) }}%</span
+                        >
+                    </div>
+                </div>
                 <!-- Includes "languages" icon to be noticeable even if the language is set incorrectly for the user -->
                 <!-- Other input elements are unlikely to need an icon -->
                 <SettingRow :label="$t('userLanguageSelect')">
@@ -139,7 +152,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch, ref, onBeforeUnmount, onMounted } from "vue";
+import { defineComponent, reactive, watch, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "../../js/gui";
@@ -153,8 +166,7 @@ import NotificationManager from "../../js/utils/notifications";
 import { ispConnected } from "../../js/utils/connection";
 import { DEFAULT_DEVELOPMENT_OPTIONS, resetDevelopmentOptions } from "../../js/utils/developmentOptions";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
-import { applyUiScale } from "../../js/UiScale";
-import { useDialogStore } from "@/stores/dialog";
+import { applyUiScale, sanitizeUiScale, DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE } from "../../js/UiScale";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 
@@ -167,7 +179,6 @@ export default defineComponent({
     },
     setup() {
         const dialog = useDialog();
-        const dialogStore = useDialogStore();
 
         // Load initial settings from config storage
         const settings = reactive({
@@ -189,7 +200,7 @@ export default defineComponent({
             cliOnlyMode: !!getConfig("cliOnlyMode", false).cliOnlyMode,
             showPresetsWarningBackup: !!getConfig("showPresetsWarningBackup").showPresetsWarningBackup,
             automaticDevOptions: !!getConfig("automaticDevOptions", true).automaticDevOptions,
-            uiScale: getConfig("uiScale", 100).uiScale ?? 100,
+            uiScale: sanitizeUiScale(getConfig("uiScale", DEFAULT_UI_SCALE).uiScale),
         });
 
         const availableLanguages = i18n.getLanguagesAvailables();
@@ -285,74 +296,13 @@ export default defineComponent({
             },
         );
 
-        const SCALE_REVERT_SECONDS = 10;
-        let scaleRevertTimer = null;
-        let scaleCountdownTimer = null;
-        const previousScale = ref(settings.uiScale);
-
-        function clearScaleTimers() {
-            clearTimeout(scaleRevertTimer);
-            clearInterval(scaleCountdownTimer);
-            scaleRevertTimer = null;
-            scaleCountdownTimer = null;
-        }
-
-        onBeforeUnmount(() => clearScaleTimers());
-
         watch(
             () => settings.uiScale,
             (value) => {
-                clearScaleTimers();
-                const oldScale = previousScale.value;
-
-                if (value === oldScale) {
-                    return;
-                }
-
-                applyUiScale(value);
-
-                let remaining = SCALE_REVERT_SECONDS;
-                const revert = () => {
-                    clearScaleTimers();
-                    settings.uiScale = oldScale;
-                    setConfig({ uiScale: oldScale });
-                    applyUiScale(oldScale);
-                    dialog.close();
-                };
-
-                const updateTitle = () => `${i18n.getMessage("uiScaleKeepTitle")  } (${remaining}s)`;
-
-                dialog.openYesNo(
-                    updateTitle(),
-                    i18n.getMessage("uiScaleKeepMessage"),
-                    () => {
-                        // Yes — keep
-                        clearScaleTimers();
-                        previousScale.value = value;
-                        setConfig({ uiScale: value });
-                    },
-                    () => {
-                        // No — revert
-                        revert();
-                    },
-                    {
-                        yesText: i18n.getMessage("uiScaleKeep"),
-                        noText: i18n.getMessage("uiScaleRevert"),
-                    },
-                );
-
-                scaleCountdownTimer = setInterval(() => {
-                    remaining--;
-                    if (remaining <= 0) {
-                        revert();
-                    } else {
-                        dialogStore.updateProps({ title: updateTitle() });
-                    }
-                }, 1000);
-
-                scaleRevertTimer = setTimeout(() => {
-                    revert();
-                }, SCALE_REVERT_SECONDS * 1000);
+                const uiScale = sanitizeUiScale(value);
+                settings.uiScale = uiScale;
+                setConfig({ uiScale });
+                applyUiScale(uiScale);
             },
         );
 
@@ -462,6 +412,8 @@ export default defineComponent({
             settings,
             availableLanguages,
             handleNotificationsChange,
+            minUiScale: MIN_UI_SCALE,
+            maxUiScale: MAX_UI_SCALE,
         };
     },
 });

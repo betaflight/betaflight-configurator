@@ -1,5 +1,5 @@
 <template>
-    <Teleport to="body">
+    <Teleport to="#main-wrapper">
         <dialog v-if="modelValue" ref="dialogRef" class="dialog-modal" @close="handleClose">
             <div class="dialog-title-bar">
                 <div class="dialog-title">

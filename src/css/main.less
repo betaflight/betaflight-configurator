@@ -19,6 +19,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    --ui-scale: 1;
 
     ::-webkit-scrollbar {
         width: 0.3rem;
@@ -233,14 +234,19 @@ td [role="group"] {
     font-style: italic;
 }
 #main-wrapper {
-    height: 100vh;
-    height: 100dvh;
-    max-height: 100dvh;
+    width: calc(100vw / var(--ui-scale));
+    height: calc(100vh / var(--ui-scale));
+    height: calc(100dvh / var(--ui-scale));
+    max-height: calc(100dvh / var(--ui-scale));
     min-height: 0;
     overflow: hidden;
     background-color: var(--surface-100);
     display: flex;
     flex-direction: column;
+    transform: scale(var(--ui-scale));
+    transform-origin: top left;
+    container-type: inline-size;
+    container-name: main-wrapper;
 }
 /* StatusBar.vue root; avoid shrinking as a flex item under #main-wrapper */
 #status-bar {
@@ -1347,7 +1353,7 @@ each(range(12), {
     gap: 8px;
 }
 
-@media not all and (max-width: 575px) {
+@container main-wrapper (min-width: 576px) {
     .visible-on-phone-only {
         display: none !important;
     }
@@ -1364,7 +1370,7 @@ each(range(12), {
         overflow-y: auto;
     }
 }
-@media (max-width: 1055px) {
+@container main-wrapper (max-width: 1055px) {
     #tabs {
         li {
             a {
@@ -1435,7 +1441,7 @@ each(range(12), {
         }
     }
 }
-@media (max-width: 1055px) {
+@container main-wrapper (max-width: 1055px) {
     #tabs {
         li {
             a {
@@ -1642,12 +1648,12 @@ body.compact-header-layout {
         display: none !important;
     }
 }
-@media all and (max-width: 991px) {
+@container main-wrapper (max-width: 991px) {
     .md-min {
         display: none !important;
     }
 }
-@media all and (max-width: 575px) {
+@container main-wrapper (max-width: 575px) {
     .sm-min {
         display: none !important;
     }
