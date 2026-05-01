@@ -401,6 +401,9 @@ import GUI from "@/js/gui";
 const procedureDropImage = new URL("../../images/icons/cf_failsafe_procedure1.svg", import.meta.url).href;
 const procedureLandImage = new URL("../../images/icons/cf_failsafe_procedure2.svg", import.meta.url).href;
 const procedureGpsImage = new URL("../../images/icons/cf_failsafe_procedure4.svg", import.meta.url).href;
+const procedureDropImageDark = new URL("../../images/icons/cf_failsafe_procedure1-dark.svg", import.meta.url).href;
+const procedureLandImageDark = new URL("../../images/icons/cf_failsafe_procedure2-dark.svg", import.meta.url).href;
+const procedureGpsImageDark = new URL("../../images/icons/cf_failsafe_procedure4-dark.svg", import.meta.url).href;
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
@@ -501,8 +504,12 @@ const procedureItems = computed(() => {
     return items;
 });
 
+const isDark = document.documentElement.classList.contains("dark");
+
 const procedureImage = computed(() => {
-    const map = { 1: procedureDropImage, 0: procedureLandImage, 2: procedureGpsImage };
+    const map = isDark
+        ? { 1: procedureDropImageDark, 0: procedureLandImageDark, 2: procedureGpsImageDark }
+        : { 1: procedureDropImage, 0: procedureLandImage, 2: procedureGpsImage };
     return map[failsafeConfig.value.failsafe_procedure];
 });
 
