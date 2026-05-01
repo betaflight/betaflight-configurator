@@ -39,6 +39,7 @@ class GuiControl {
             "backups",
             "flight_plan",
             "log",
+            "autotune",
         ];
 
         this.defaultAllowedTabs = [
@@ -55,6 +56,7 @@ class GuiControl {
             "modes",
             "motors",
             "pid_tuning",
+            "autotune",
             "ports",
             "receiver",
             "sensors",
