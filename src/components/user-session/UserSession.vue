@@ -23,7 +23,7 @@
                 <span id="username-display" class="username">{{ displayName }}</span>
             </a>
         </div>
-        <Teleport to="body">
+        <Teleport to="#main-wrapper">
             <div v-show="menuOpen" id="user-menu-popup" class="user-popup-menu" :style="menuStyle">
                 <div id="menu-username" class="menu-username">{{ displayName }}</div>
                 <a href="#" id="menu-signout" class="menu-item" @click.prevent="handleSignOut">

@@ -72,6 +72,39 @@
                         class="min-w-40"
                     />
                 </SettingRow>
+                <div class="flex flex-col gap-2 py-2">
+                    <label for="ui-scale-slider" class="text-sm font-semibold">{{ $t("uiScale") }}</label>
+                    <div class="flex gap-1.5 flex-wrap">
+                        <button
+                            v-for="preset in [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5]"
+                            :key="preset"
+                            type="button"
+                            class="px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors"
+                            :class="
+                                settings.uiScale === preset
+                                    ? 'bg-(--primary-500) border-(--primary-600) text-black font-semibold'
+                                    : 'bg-(--surface-200) border-(--surface-400) text-(--text) hover:bg-(--surface-300)'
+                            "
+                            @click="settings.uiScale = preset"
+                        >
+                            {{ Math.round(preset * 100) }}%
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input
+                            id="ui-scale-slider"
+                            type="range"
+                            v-model.number="settings.uiScale"
+                            :min="minUiScale"
+                            :max="maxUiScale"
+                            step="0.01"
+                            class="flex-1 accent-(--primary-500)"
+                        />
+                        <span class="text-sm font-semibold min-w-12 text-right"
+                            >{{ Math.round(settings.uiScale * 100) }}%</span
+                        >
+                    </div>
+                </div>
                 <!-- Includes "languages" icon to be noticeable even if the language is set incorrectly for the user -->
                 <!-- Other input elements are unlikely to need an icon -->
                 <SettingRow :label="$t('userLanguageSelect')">
@@ -120,7 +153,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch, onMounted } from "vue";
+import { defineComponent, reactive, watch, onMounted, onUnmounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "../../js/gui";
@@ -134,6 +167,7 @@ import NotificationManager from "../../js/utils/notifications";
 import { ispConnected } from "../../js/utils/connection";
 import { DEFAULT_DEVELOPMENT_OPTIONS, resetDevelopmentOptions } from "../../js/utils/developmentOptions";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
+import { applyUiScale, sanitizeUiScale, DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE } from "../../js/UiScale";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 
@@ -167,6 +201,7 @@ export default defineComponent({
             cliOnlyMode: !!getConfig("cliOnlyMode", false).cliOnlyMode,
             showPresetsWarningBackup: !!getConfig("showPresetsWarningBackup").showPresetsWarningBackup,
             automaticDevOptions: !!getConfig("automaticDevOptions", true).automaticDevOptions,
+            uiScale: sanitizeUiScale(getConfig("uiScale", DEFAULT_UI_SCALE).uiScale),
         });
 
         const availableLanguages = i18n.getLanguagesAvailables();
@@ -261,6 +296,26 @@ export default defineComponent({
                 }
             },
         );
+
+        let uiScalePersistTimer = null;
+
+        watch(
+            () => settings.uiScale,
+            (value) => {
+                const uiScale = sanitizeUiScale(value);
+                if (settings.uiScale !== uiScale) {
+                    settings.uiScale = uiScale;
+                    return;
+                }
+                applyUiScale(uiScale);
+                clearTimeout(uiScalePersistTimer);
+                uiScalePersistTimer = setTimeout(() => {
+                    setConfig({ uiScale });
+                }, 150);
+            },
+        );
+
+        onUnmounted(() => clearTimeout(uiScalePersistTimer));
 
         watch(
             () => settings.showDevToolsOnStartup,
@@ -368,6 +423,8 @@ export default defineComponent({
             settings,
             availableLanguages,
             handleNotificationsChange,
+            minUiScale: MIN_UI_SCALE,
+            maxUiScale: MAX_UI_SCALE,
         };
     },
 });

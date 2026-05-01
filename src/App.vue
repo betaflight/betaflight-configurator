@@ -1,5 +1,5 @@
 <template>
-    <UApp :tooltip="{ delayDuration: 100 }">
+    <UApp :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
         <div class="app-wrapper">
             <div id="background" v-show="isRevealed" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
@@ -210,7 +210,7 @@ watch(
 .app-wrapper {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     min-height: 0; /* Allow flex children to shrink below content size */
 }
 

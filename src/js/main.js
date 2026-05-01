@@ -8,6 +8,7 @@ import { initializeSerialBackend } from "./serial_backend.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
+import { loadUiScale } from "./UiScale.js";
 import { applyExpertMode } from "./utils/applyExpertMode.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
 import { switchTab } from "./tab_switch.js";
@@ -166,6 +167,9 @@ async function startProcess() {
             enableDevelopmentOptions();
         }
     }
+
+    // Apply persisted UI scale before initial tab mount to avoid flicker.
+    loadUiScale();
 
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
     switchTab("landing", { mode: "disconnected" });

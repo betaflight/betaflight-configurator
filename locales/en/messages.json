@@ -7664,6 +7664,10 @@
         "message": "High Contrast",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "UI Scale",
+        "description": "Scale the entire user interface up or down"
+    },
     "pidTuningRatesType": {
         "message": "Rates Type"
     },
