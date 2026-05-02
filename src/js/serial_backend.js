@@ -345,22 +345,18 @@ function abortConnection() {
 
 // Centralized helper: show version mismatch warning and switch to CLI
 function showVersionMismatchAndCli(message) {
-    const dialog = document.querySelector(".dialogConnectWarning");
-
-    if (dialog) {
-        const content = dialog.querySelector(".dialogConnectWarning-content");
-        if (content) {
-            content.innerHTML = message;
-        }
-        const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
-        if (closeBtn) {
-            closeBtn.onclick = () => dialog.close();
-        }
-
-        dialog.showModal();
-    } else {
-        gui_log(message);
-    }
+    const dialogStore = useDialogStore();
+    dialogStore.open(
+        "InformationDialog",
+        {
+            title: i18n.getMessage("warningTitle"),
+            text: message,
+            confirmText: i18n.getMessage("close"),
+        },
+        {
+            confirm: () => dialogStore.close(),
+        },
+    );
 
     connectCli();
 }
