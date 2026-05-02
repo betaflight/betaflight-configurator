@@ -123,7 +123,7 @@ The next versions of the App will be a modern tool that based on PWA (Progressiv
 1. Change to project folder and run `npm install`.
 2. Run `npm run dev`.
 
-The web app will be available at http://localhost:8000 with full HMR.
+The web app will be available at http://localhost:8080 with full HMR.
 
 #### Run production version
 
