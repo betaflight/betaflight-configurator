@@ -276,9 +276,11 @@ function finishClose(finishedCallback) {
             console.warn("unmountVueTab failed:", e);
         }
 
-        // close cliPanel if left open
+        // close cliPanel if left open; dismiss Pinia dialogs (e.g. InteractiveDialog, or
+        // InformationDialog from showVersionMismatchAndCli) so disconnect does not leave a modal open
         const dialogStore = useDialogStore();
-        if (dialogStore.activeDialog?.type === "InteractiveDialog") {
+        const activeType = dialogStore.activeDialog?.type;
+        if (activeType === "InteractiveDialog" || activeType === "InformationDialog") {
             dialogStore.close();
         }
     }
@@ -723,6 +725,10 @@ function onClosed(result) {
     }, 100);
 
     console.log(`${logHead} Connection closed:`, result);
+
+    // USB/cable disconnect invokes this path (not finishClose). Clear any Pinia modal
+    // (e.g. InformationDialog from showVersionMismatchAndCli) so it does not linger.
+    useDialogStore().close();
 
     resetConnection();
 }
