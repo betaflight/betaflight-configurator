@@ -340,8 +340,8 @@
                             >
                                 <UInputNumber
                                     v-model="entry.alarm.value"
-                                    :min="entry.alarm.min || 0"
-                                    :max="entry.alarm.max || 9999"
+                                    :min="entry.alarm.min ?? 0"
+                                    :max="entry.alarm.max ?? 9999"
                                     :step="1"
                                     :format-options="{ useGrouping: false }"
                                     size="xs"
@@ -506,11 +506,15 @@
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty">
+                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty || isSaving">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                        <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
+                        <UButton
+                            :disabled="!osdStore.dirty || isSaving"
+                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                            square
+                        />
                     </UDropdownMenu>
                 </UFieldGroup>
             </div>
@@ -582,7 +586,7 @@ const saveMenuItems = computed(() => [
         {
             label: i18n.getMessage("osdSetupRefresh"),
             icon: "i-lucide-refresh-cw",
-            disabled: isSaving.value,
+            disabled: isSaving.value || (hasLoadedConfig.value && !osdStore.dirty),
             onSelect: refreshConfig,
         },
     ],
@@ -1190,7 +1194,6 @@ function updatePreview() {
 }
 
 // Load OSD configuration from FC
-// Load OSD configuration from FC
 async function loadConfig() {
     try {
         // Fetch OSD config via Store
@@ -1213,10 +1216,9 @@ async function loadConfig() {
         }
 
         updatePreview();
+        hasLoadedConfig.value = true;
     } catch (error) {
         console.error("Failed to load OSD configuration:", error);
-    } finally {
-        hasLoadedConfig.value = true;
     }
 }
 
