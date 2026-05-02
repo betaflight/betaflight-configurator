@@ -137,7 +137,7 @@ The web app should behave directly as in production, available at http://localho
 
 ### Android version
 
-NOTE: The Android version is not fully functional yet. It is in development.
+The Android version uses Capacitor as the native wrapper with custom plugins to bridge the PWA to native capabilities.
 
 #### Prerequisites
 
