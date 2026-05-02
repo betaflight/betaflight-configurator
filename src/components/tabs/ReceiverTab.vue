@@ -483,9 +483,18 @@
                 variant="soft"
             />
             <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
-            <UButton :label="$t('receiverButtonRefresh')" @click="refreshTab" variant="soft" />
-            <UButton :label="$t('receiverButtonSave')" @click="saveConfig(false)" v-if="!needReboot" />
-            <UButton :label="$t('receiverButtonSave')" @click="saveConfig(true)" v-else />
+            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+                <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
+                    {{ $t("receiverButtonSave") }}
+                </UButton>
+                <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :disabled="!dirty || isSaving"
+                        square
+                    />
+                </UDropdownMenu>
+            </UFieldGroup>
         </div>
     </BaseTab>
 </template>
@@ -601,6 +610,58 @@ const rssiConfig = computed(() => fcStore.rssiConfig);
 const features = computed(() => fcStore.features);
 
 const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
+
+// Dirty state tracking
+const savedSnapshot = ref("");
+
+function takeSnapshot() {
+    return JSON.stringify({
+        channelMap: channelMapString.value,
+        rxMode: selectedRxMode.value,
+        serialrxProvider: rxConfig.value?.serialrx_provider,
+        rxSpiProtocol: rxConfig.value?.rxSpiProtocol,
+        elrsModelId: rxConfig.value?.elrsModelId,
+        stickMin: rxConfig.value?.stick_min,
+        stickCenter: rxConfig.value?.stick_center,
+        stickMax: rxConfig.value?.stick_max,
+        rcSmoothing: rxConfig.value?.rcSmoothing,
+        rcSmoothingSetpointCutoff: rxConfig.value?.rcSmoothingSetpointCutoff,
+        rcSmoothingAutoFactor: rxConfig.value?.rcSmoothingAutoFactor,
+        rcSmoothingThrottleCutoff: rxConfig.value?.rcSmoothingThrottleCutoff,
+        rcSmoothingAutoFactorThrottle: rxConfig.value?.rcSmoothingAutoFactorThrottle,
+        rcSmoothingFeedforwardCutoff: rxConfig.value?.rcSmoothingFeedforwardCutoff,
+        rssiChannel: rssiConfig.value?.channel,
+        deadband: rcDeadbandConfig.value?.deadband,
+        yawDeadband: rcDeadbandConfig.value?.yaw_deadband,
+        deadband3dThrottle: rcDeadbandConfig.value?.deadband3d_throttle,
+        featureMask: features.value?.features?._featureMask,
+        elrsBindingPhrase: elrsBindingPhrase.value,
+        setpointManualMode: setpointManualMode.value,
+        throttleManualMode: throttleManualMode.value,
+        feedforwardManualMode: feedforwardManualMode.value,
+    });
+}
+
+const dirty = computed(() => {
+    return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
+});
+
+const saveMenuItems = computed(() => [
+    [
+        {
+            label: t("receiverButtonSave"),
+            icon: "i-lucide-save",
+            disabled: !dirty.value || isSaving.value,
+            onSelect: () => saveConfig(needReboot.value),
+        },
+        {
+            label: t("receiverButtonRefresh"),
+            icon: "i-lucide-refresh-cw",
+            disabled: !dirty.value || isSaving.value,
+            onSelect: refreshTab,
+        },
+    ],
+]);
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text) {
@@ -968,6 +1029,9 @@ async function loadConfig() {
         if (savedRate?.rx_refresh_rate) {
             refreshRate.value = savedRate.rx_refresh_rate;
         }
+
+        needReboot.value = false;
+        savedSnapshot.value = takeSnapshot();
     } catch (e) {
         console.error("Failed to load Receiver configuration", e);
     }
@@ -1025,6 +1089,7 @@ async function saveConfig(withReboot = false) {
                 mspHelper.writeConfiguration(false, resolve);
             });
             gui_log(t("receiverConfigSaved") || "Configuration saved");
+            savedSnapshot.value = takeSnapshot();
         }
 
         needReboot.value = false;
