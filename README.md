@@ -155,7 +155,7 @@ As alternative to the step 2, you can execute a `npm run android:open` to open d
 #### Run development version with live reload
 
 1. Change to project folder and run `npm install`.
-2. Run `npm run dev --host`. It will start the vite server and will show you the IP address where the server is listening.
+2. Run `npm run dev -- --host`. It will start the vite server and will show you the IP address where the server is listening.
 3. Run `npm run android:dev`
 
 This will ask for the IP where the server is running (if there are more than one network interfaces). You need to have some Android virtual machine created or some Android phone [connected using ADB](https://developer.android.com/tools/adb).
