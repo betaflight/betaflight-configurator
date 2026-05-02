@@ -1187,6 +1187,15 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     // Introduced in 1.44
                     FC.FILTER_CONFIG.dyn_lpf_curve_expo = data.readU8();
                     FC.FILTER_CONFIG.dyn_notch_count = data.readU8();
+                    // Introduced in 1.48
+                    if (data.remaining() >= 7) {
+                        FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz = data.readU16();
+                        FC.FILTER_CONFIG.gyro_rpm_notch_q = data.readU16();
+                        FC.FILTER_CONFIG.gyro_rpm_notch_weights = [];
+                        for (let i = 0; i < 3; i++) {
+                            FC.FILTER_CONFIG.gyro_rpm_notch_weights.push(data.readU8());
+                        }
+                    }
                     break;
                 case MSPCodes.MSP_SET_PID_ADVANCED:
                     console.log("Advanced PID settings saved");
@@ -2181,6 +2190,14 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
             // Introduced in 1.44
             buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo).push8(FC.FILTER_CONFIG.dyn_notch_count);
+
+            // Introduced in 1.48
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                buffer.push16(FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz).push16(FC.FILTER_CONFIG.gyro_rpm_notch_q);
+                for (let i = 0; i < 3; i++) {
+                    buffer.push8(FC.FILTER_CONFIG.gyro_rpm_notch_weights[i]);
+                }
+            }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:
             buffer

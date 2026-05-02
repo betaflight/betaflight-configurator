@@ -272,6 +272,48 @@
                                 />
                             </div>
                         </div>
+                        <div
+                            v-if="rpmFilterEnabled && hasExtendedRpmFilter"
+                            class="flex flex-wrap items-end gap-3 pl-8"
+                        >
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmQ") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_q"
+                                    :step="1"
+                                    :min="250"
+                                    :max="3000"
+                                />
+                            </div>
+                            <div v-for="i in gyro_rpm_notch_harmonics" :key="i" class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmWeight", { index: i }) }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    :model-value="gyro_rpm_notch_weights[i - 1]"
+                                    @update:model-value="setRpmWeight(i - 1, $event)"
+                                    :step="1"
+                                    :min="0"
+                                    :max="100"
+                                />
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmFadeRangeHz") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_fade_range_hz"
+                                    :step="1"
+                                    :min="0"
+                                    :max="1000"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </template>
 
@@ -535,6 +577,8 @@ import {
     NON_EXPERT_SLIDER_MIN_DTERM,
     NON_EXPERT_SLIDER_MAX_DTERM,
 } from "@/composables/useTuningSliders";
+import semver from "semver";
+import { API_VERSION_1_48 } from "@/js/data_storage";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -887,6 +931,7 @@ const gyro_notch2_cutoff = computed({
 });
 
 // RPM Filter
+const hasExtendedRpmFilter = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48));
 const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry ?? false);
 
 const rpmFilterEnabled = computed({
@@ -914,6 +959,22 @@ const gyro_rpm_notch_min_hz = computed({
     get: () => FC.FILTER_CONFIG.gyro_rpm_notch_min_hz || 100,
     set: (value) => (FC.FILTER_CONFIG.gyro_rpm_notch_min_hz = value),
 });
+
+const gyro_rpm_notch_fade_range_hz = computed({
+    get: () => FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz ?? 0,
+    set: (value) => (FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz = value),
+});
+
+const gyro_rpm_notch_q = computed({
+    get: () => FC.FILTER_CONFIG.gyro_rpm_notch_q ?? 0,
+    set: (value) => (FC.FILTER_CONFIG.gyro_rpm_notch_q = value),
+});
+
+const gyro_rpm_notch_weights = computed(() => FC.FILTER_CONFIG.gyro_rpm_notch_weights ?? [0, 0, 0]);
+
+function setRpmWeight(index, value) {
+    FC.FILTER_CONFIG.gyro_rpm_notch_weights[index] = value;
+}
 
 // Dynamic Notch Filter
 const dynamicNotchEnabled = computed({
