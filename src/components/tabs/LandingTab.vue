@@ -108,7 +108,6 @@ export default defineComponent({
         SponsorTile,
     },
     setup() {
-        // Get available languages including DEFAULT
         const availableLanguages = ref(["DEFAULT", ...i18n.getLanguagesAvailables()]);
         const selectedLanguage = ref(i18n.selectedLanguage);
 
@@ -216,16 +215,25 @@ export default defineComponent({
     }
 }
 
+.donate {
+    img {
+        height: 2rem;
+        display: inline-block;
+    }
+}
+
 .content_foot {
     clear: both;
     padding: 10px 0 5px;
 }
 
 .logowrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-left: auto;
     margin-right: auto;
     margin-top: 5px;
-    width: 800px;
     color: var(--text);
     font-size: 14px;
     font-weight: 300;
@@ -307,6 +315,16 @@ export default defineComponent({
         img {
             width: auto;
         }
+    }
+}
+
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .content_top {
+        height: auto;
+        padding: 10px 20px;
+    }
+    .logowrapper img {
+        display: none;
     }
 }
 </style>

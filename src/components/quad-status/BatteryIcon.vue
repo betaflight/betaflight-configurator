@@ -1,5 +1,5 @@
 <template>
-    <div class="battery-icon">
+    <div class="battery-icon shrink-0" :class="{ 'battery-icon--compact': compact }">
         <div class="quad-status-contents">
             <div class="battery-status" :class="classes" :style="{ width: batteryWidth + '%' }" />
         </div>
@@ -14,7 +14,7 @@ const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
 export default defineComponent({
     props: {
         batteryState: {
-            type: String,
+            type: [String, Number],
             default: "",
         },
         voltage: {
@@ -28,6 +28,10 @@ export default defineComponent({
         vbatwarningcellvoltage: {
             type: Number,
             default: 1,
+        },
+        compact: {
+            type: Boolean,
+            default: false,
         },
     },
     setup(props) {
@@ -56,11 +60,12 @@ export default defineComponent({
         });
 
         const classes = computed(() => {
-            if (props.batteryState) {
+            const state = String(props.batteryState ?? "");
+            if (state) {
                 return {
-                    "state-ok": props.batteryState === "0",
-                    "state-warning": props.batteryState === "1",
-                    "state-empty": props.batteryState === "2",
+                    "state-ok": state === "0",
+                    "state-warning": state === "1",
+                    "state-empty": state === "2",
                     // TODO: BATTERY_NOT_PRESENT
                     // TODO: BATTERY_INIT
                 };
@@ -92,23 +97,15 @@ export default defineComponent({
 
 <style scoped>
 .quad-status-contents {
-    display: inline-block;
-    margin-top: 10px;
-    margin-left: 14px;
+    position: absolute;
+    top: 10px;
+    left: 14px;
     height: 10px;
     width: 31px;
 }
 
-.quad-status-contents progress::-webkit-progress-bar {
-    height: 12px;
-    background-color: var(--surface-300);
-}
-
-.quad-status-contents progress::-webkit-progress-value {
-    background-color: #bcf;
-}
-
 .battery-icon {
+    position: relative;
     background-image: url(../../images/icons/cf_icon_bat_grey.svg);
     background-size: contain;
     background-position: center;
@@ -123,6 +120,7 @@ export default defineComponent({
 
 .battery-status {
     height: 11px;
+    max-width: 100%;
 }
 
 @keyframes error-blinker {
@@ -143,5 +141,23 @@ export default defineComponent({
 
 .battery-status.state-empty {
     animation: error-blinker 1s linear infinite;
+}
+
+.battery-icon--compact {
+    margin-top: 0;
+    margin-left: 0;
+    height: 24px;
+    width: 48px;
+}
+
+.battery-icon--compact .quad-status-contents {
+    top: 8px;
+    left: 11px;
+    width: 26px;
+    height: 8px;
+}
+
+.battery-icon--compact .battery-status {
+    height: 9px;
 }
 </style>

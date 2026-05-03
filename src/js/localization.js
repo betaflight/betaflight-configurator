@@ -1,13 +1,9 @@
 import i18next from "i18next";
-import i18nextXHRBackend from "i18next-xhr-backend";
+import HttpBackend from "i18next-http-backend";
 import { gui_log } from "./gui_log.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
 const i18n = {};
-/*
- * Wrapper around the i18n system
- */
-window.i18n = i18n;
 
 const languagesAvailables = [
     "ca",
@@ -42,10 +38,9 @@ const languageFallback = {
  */
 i18n.init = function (cb) {
     getStoredUserLocale(function (userLanguage) {
-        i18next.use(i18nextXHRBackend).init(
+        i18next.use(HttpBackend).init(
             {
                 lng: userLanguage,
-                getAsync: false,
                 debug: true,
                 ns: ["messages"],
                 defaultNS: ["messages"],

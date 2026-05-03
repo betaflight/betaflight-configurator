@@ -1,41 +1,51 @@
 <template>
-    <div class="bottomStatusIcons">
-        <div class="armedicon cf_tip" :title="$t('mainHelpArmed')" :class="{ active: setActiveArmed }" />
-        <div class="failsafeicon cf_tip" :title="$t('mainHelpFailsafe')" :class="{ active: setFailsafeActive }" />
-        <div class="linkicon cf_tip" :title="$t('mainHelpLink')" :class="{ active: setActiveLink }" />
+    <div class="bottomStatusIcons" :class="{ 'bottomStatusIcons--compact': compact }">
+        <UTooltip :text="$t('mainHelpArmed')">
+            <UIcon
+                name="i-lucide-triangle-alert"
+                class="size-4"
+                :class="setActiveArmed ? 'text-primary' : 'text-muted'"
+            />
+        </UTooltip>
+        <UTooltip :text="$t('mainHelpFailsafe')">
+            <UIcon
+                name="i-lucide-shield-alert"
+                class="size-4"
+                :class="setFailsafeActive ? 'text-primary' : 'text-muted'"
+            />
+        </UTooltip>
+        <UTooltip :text="$t('mainHelpLink')">
+            <UIcon name="i-lucide-link" class="size-4" :class="setActiveLink ? 'text-primary' : 'text-muted'" />
+        </UTooltip>
     </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { computed } from "vue";
 import { bit_check } from "../../js/bit";
 
-export default defineComponent({
-    props: {
-        lastReceivedTimestamp: { type: Number, default: 0 },
-        mode: { type: Number, default: 0 },
-        auxConfig: { type: Array, default: null },
-    },
-    computed: {
-        setActiveArmed() {
-            return (
-                this.auxConfig?.length &&
-                this.auxConfig?.includes("ARM") &&
-                bit_check(this.mode, this.auxConfig?.indexOf("ARM"))
-            );
-        },
-        setFailsafeActive() {
-            return (
-                this.auxConfig?.length &&
-                this.auxConfig?.includes("FAILSAFE") &&
-                bit_check(this.mode, this.auxConfig?.indexOf("FAILSAFE"))
-            );
-        },
-        setActiveLink() {
-            return performance.now() - this.lastReceivedTimestamp < 300;
-        },
-    },
+const props = defineProps({
+    lastReceivedTimestamp: { type: Number, default: 0 },
+    mode: { type: Number, default: 0 },
+    auxConfig: { type: Array, default: null },
+    compact: { type: Boolean, default: false },
 });
+
+const setActiveArmed = computed(
+    () =>
+        props.auxConfig?.length &&
+        props.auxConfig?.includes("ARM") &&
+        bit_check(props.mode, props.auxConfig?.indexOf("ARM")),
+);
+
+const setFailsafeActive = computed(
+    () =>
+        props.auxConfig?.length &&
+        props.auxConfig?.includes("FAILSAFE") &&
+        bit_check(props.mode, props.auxConfig?.indexOf("FAILSAFE")),
+);
+
+const setActiveLink = computed(() => performance.now() - props.lastReceivedTimestamp < 300);
 </script>
 
 <style scoped>
@@ -49,64 +59,16 @@ export default defineComponent({
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-button {
-    padding: 0.5em 0.75em;
-    border-radius: 4px;
-    background-color: #ccc;
-    color: #666;
-    border: 1px solid var(--surface-500);
-    font-weight: 600;
-    font-size: 10pt;
-    cursor: pointer;
-}
-button.active {
-    background-color: var(--primary-500);
-    border: 1px solid #dba718;
-    color: #000;
-}
-.armedicon {
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 6px;
-    height: 18px;
-    width: 18px;
-    opacity: 0.8;
-    background-size: contain;
-    background-position: center;
-    transition: none;
-    background-image: url(../../images/icons/cf_icon_armed_grey.svg);
-}
-.failsafeicon {
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 6px;
-    height: 18px;
-    width: 18px;
-    opacity: 0.8;
-    background-size: contain;
-    background-position: center;
-    transition: none;
-    background-image: url(../../images/icons/cf_icon_failsafe_grey.svg);
-}
-.linkicon {
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 6px;
-    height: 18px;
-    width: 18px;
-    opacity: 0.8;
-    background-size: contain;
-    background-position: center;
-    transition: none;
-    background-image: url(../../images/icons/cf_icon_link_grey.svg);
-}
-.armedicon.active {
-    background-image: url(../../images/icons/cf_icon_armed_active.svg);
-}
-.failsafeicon.active {
-    background-image: url(../../images/icons/cf_icon_failsafe_active.svg);
-}
-.linkicon.active {
-    background-image: url(../../images/icons/cf_icon_link_active.svg);
+
+.bottomStatusIcons--compact {
+    height: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0.1rem 0.25rem;
+    background-color: transparent;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 </style>

@@ -1,3 +1,8 @@
+import { get as getConfig } from "../ConfigStorage";
+
 export function isExpertModeEnabled() {
-    return document.querySelector('input[name="expertModeCheckbox"]')?.checked ?? false;
+    if (globalThis.vm && "expertMode" in globalThis.vm) {
+        return Boolean(globalThis.vm.expertMode);
+    }
+    return Boolean(getConfig("expertMode").expertMode);
 }

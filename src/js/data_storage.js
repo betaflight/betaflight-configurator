@@ -20,8 +20,6 @@ const CONFIGURATOR = reactive({
     cliActive: false,
     cliValid: false,
     productName: "Betaflight App",
-    cliEngineActive: false,
-    cliEngineValid: false,
     gitChangesetId: "unknown",
     version: "0.0.1",
     gitRevision: "norevision",

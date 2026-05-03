@@ -1,6 +1,6 @@
 <template>
-    <dialog class="dialogWait" open>
-        <div class="data-loading"></div>
+    <dialog ref="dialogRef" class="dialogWait" @cancel.prevent>
+        <ProgressRing indeterminate :size="80" :stroke-width="6" color="primary" class="dialogWait-spinner" />
         <h3 class="dialogWaitTitle">{{ title }}</h3>
         <div class="buttons" v-if="showCancel">
             <button type="button" class="dialogWait-cancelButton regular-button" @click="$emit('cancel')">
@@ -8,10 +8,13 @@
             </button>
         </div>
     </dialog>
-    <div class="dialog-backdrop"></div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { i18n } from "@/js/localization";
+import ProgressRing from "../ProgressRing.vue";
+
 defineProps({
     title: String,
     showCancel: {
@@ -20,31 +23,51 @@ defineProps({
     },
     cancelText: {
         type: String,
-        default: () => globalThis.i18n?.getMessage("cancel"),
+        default: () => i18n.getMessage("cancel"),
     },
 });
 
 defineEmits(["cancel"]);
+
+const dialogRef = ref(null);
+
+const show = () => {
+    dialogRef.value?.showModal();
+};
+
+const close = () => {
+    dialogRef.value?.close();
+};
+
+defineExpose({
+    show,
+    close,
+    dialog: dialogRef,
+});
 </script>
 
 <style scoped>
-.dialog-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+.dialogWait:not([open]) {
+    display: none;
 }
 
 .dialogWait {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     z-index: 1000;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
+}
+
+.dialogWait-spinner {
+    margin: 1rem auto;
+}
+
+.dialogWait::backdrop {
+    background: rgba(0, 0, 0, 0.5);
 }
 </style>

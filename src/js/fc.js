@@ -132,6 +132,9 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_WING: 16424,
     USE_POSITION_HOLD: 16425,
     USE_CHIRP: 16426,
+    USE_FLIGHT_PLAN: 16427,
+    USE_OPTICALFLOW: 16428,
+    USE_RANGEFINDER: 16429,
 };
 
 const FC = {
@@ -208,7 +211,6 @@ const FC = {
     SERVO_CONFIG: null,
     SERVO_DATA: null,
     SERVO_RULES: null,
-    TRANSPONDER: null,
     TUNING_SLIDERS: null,
     VOLTAGE_METERS: null,
     VOLTAGE_METER_CONFIGS: null,
@@ -465,13 +467,6 @@ const FC = {
             blackboxDisabledMask: 0,
         };
 
-        this.TRANSPONDER = {
-            supported: false,
-            data: [],
-            provider: 0,
-            providers: [],
-        };
-
         this.RC_DEADBAND_CONFIG = {
             deadband: 0,
             yaw_deadband: 0,
@@ -541,6 +536,9 @@ const FC = {
             dyn_notch_count: 0,
             gyro_rpm_notch_harmonics: 0,
             gyro_rpm_notch_min_hz: 0,
+            gyro_rpm_notch_fade_range_hz: 0,
+            gyro_rpm_notch_q: 0,
+            gyro_rpm_notch_weights: [0, 0, 0],
         };
 
         this.ADVANCED_TUNING = {

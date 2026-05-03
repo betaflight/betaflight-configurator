@@ -4,17 +4,21 @@
  * Based on original motors.js motorsEnableTestMode handler
  */
 
-import { ref, watch, onUnmounted } from "vue";
+import { ref, computed, watch, onUnmounted } from "vue";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import DshotCommand from "@/js/utils/DshotCommand";
 import { i18n } from "@/js/localization";
+import FC from "@/js/fc";
+import { bit_check } from "@/js/bit";
 
-export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured) {
+export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue) {
+    const getZeroThrottleValue = () => zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
+
     const motorsTestingEnabled = ref(false);
-    const motorValues = ref(new Array(8).fill(1000));
-    const masterValue = ref(1000);
+    const motorValues = ref(new Array(8).fill(getZeroThrottleValue()));
+    const masterValue = ref(getZeroThrottleValue());
 
     // Safety: Keys that don't trigger motor stop
     const ignoreKeys = new Set([
@@ -58,8 +62,8 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         // Add keyboard safety listener
         document.addEventListener("keydown", disableMotorTest);
 
-        // Disable arming during motor testing
-        mspHelper.setArmingEnabled(false, false);
+        // Enable arming during motor testing
+        mspHelper.setArmingEnabled(true, true);
     };
 
     /**
@@ -73,8 +77,8 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         // Remove keyboard listener
         document.removeEventListener("keydown", disableMotorTest);
 
-        // Re-enable arming
-        mspHelper.setArmingEnabled(true, true);
+        // Disable arming
+        mspHelper.setArmingEnabled(false, false);
 
         // For digital protocols, send motor stop command to prevent spinning after reboot
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
@@ -119,12 +123,10 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         }
     });
 
-    // Cleanup on unmount
+    // Cleanup on unmount — restore to normal connected state (arming disabled)
     onUnmounted(() => {
         if (motorsTestingEnabled.value) {
-            // Restore arming state before removing event listener
-            mspHelper.setArmingEnabled(true, true);
-            document.removeEventListener("keydown", disableMotorTest);
+            disableMotorTesting();
         }
     });
 
@@ -143,17 +145,39 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     /**
      * Stop all motors immediately
      */
-    const stopAllMotors = (stopValue = 1000) => {
+    const stopAllMotors = (stopValue = getZeroThrottleValue()) => {
         const values = new Array(8).fill(stopValue);
         sendMotorCommand(values);
         motorValues.value = values;
         masterValue.value = stopValue;
     };
 
+    // Arm state detection: FC.CONFIG.mode bit 0 indicates armed (matches original update_arm_status)
+    const isArmed = computed(() => bit_check(FC.CONFIG.mode, 0));
+
+    // Sliders disabled when not testing or when armed via RC (matches original setSlidersEnabled)
+    const slidersDisabled = computed(() => !motorsTestingEnabled.value || isArmed.value);
+
+    // Watch arm state changes during motor testing (matches original update_ui arm detection)
+    watch(isArmed, (armed) => {
+        if (!motorsTestingEnabled.value) {
+            return;
+        }
+
+        if (armed) {
+            // FC armed via RC: reset sliders to zero throttle to prevent MSP_SET_MOTOR interference
+            const stopValue = getZeroThrottleValue();
+            motorValues.value.fill(stopValue);
+            masterValue.value = stopValue;
+        }
+    });
+
     return {
         motorsTestingEnabled,
         motorValues,
         masterValue,
+        isArmed,
+        slidersDisabled,
         sendMotorCommand,
         stopAllMotors,
     };

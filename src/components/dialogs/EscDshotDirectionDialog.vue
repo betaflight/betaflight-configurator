@@ -150,12 +150,7 @@
                     ></p>
                     <div class="escDshotDirectionToggleParentContainer">
                         <div class="escDshotDirectionToggleNarrow">
-                            <input
-                                id="escDshotDirectionDialog-safetyCheckbox"
-                                type="checkbox"
-                                class="toggle"
-                                v-model="safetyAgreed"
-                            />
+                            <USwitch v-model="safetyAgreed" />
                         </div>
                         <div class="escDshotDirectionDialog-ToggleWide">
                             <span
@@ -211,12 +206,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { getMixerImageSrc } from "@/js/utils/common";
 import EscDshotDirectionMotorDriver from "@/components/EscDshotDirection/EscDshotDirectionMotorDriver";
 import DshotCommand from "@/js/utils/DshotCommand";
-import GUI from "@/js/gui";
+import { i18n } from "@/js/localization";
 
 const props = defineProps({
     motorConfig: {
@@ -249,7 +244,7 @@ const wizardMotorDirections = ref([]);
 
 // Translation helper
 const i18nMessage = (key) => {
-    return globalThis.i18n.getMessage(key);
+    return i18n.getMessage(key);
 };
 
 // Motor driver
@@ -291,20 +286,20 @@ const wizardMotorButtons = computed(() => {
 // Text states
 const actionHintText = computed(() => {
     if (motorIsSpinning.value) {
-        return globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
+        return i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
     }
-    return globalThis.i18n.getMessage("escDshotDirectionDialog-SelectMotor");
+    return i18n.getMessage("escDshotDirectionDialog-SelectMotor");
 });
 
 const secondHintText = computed(() => {
     if (motorIsSpinning.value) {
-        return globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
+        return i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
     }
-    return globalThis.i18n.getMessage("escDshotDirectionDialog-SetDirectionHint");
+    return i18n.getMessage("escDshotDirectionDialog-SetDirectionHint");
 });
 
-const normalButtonText = ref(globalThis.i18n.getMessage("escDshotDirectionDialog-CommandNormal"));
-const reverseButtonText = ref(globalThis.i18n.getMessage("escDshotDirectionDialog-CommandReverse"));
+const normalButtonText = ref(i18n.getMessage("escDshotDirectionDialog-CommandNormal"));
+const reverseButtonText = ref(i18n.getMessage("escDshotDirectionDialog-CommandReverse"));
 
 // Motor button handlers
 const onMotorButtonDown = (index) => {
@@ -333,7 +328,7 @@ const onMotorButtonUp = (index) => {
 
 // Direction button handlers
 const onDirectionButtonDown = (direction) => {
-    if (!motorIsSpinning.value) {
+    if (selectedMotor.value === -1) {
         return;
     }
 
@@ -347,9 +342,9 @@ const onDirectionButtonDown = (direction) => {
     motorDriver.spinMotor(selectedMotor.value);
 
     if (direction === "normal") {
-        normalButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
+        normalButtonText.value = i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
     } else {
-        reverseButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
+        reverseButtonText.value = i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
     }
 };
 
@@ -358,8 +353,8 @@ const onDirectionButtonUp = () => {
         motorDriver.stopAllMotors();
         spinningDirection.value = null;
 
-        normalButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-CommandNormal");
-        reverseButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-CommandReverse");
+        normalButtonText.value = i18n.getMessage("escDshotDirectionDialog-CommandNormal");
+        reverseButtonText.value = i18n.getMessage("escDshotDirectionDialog-CommandReverse");
 
         deactivateDirectionButtons();
         activateDirectionButtons(BUTTON_TIMEOUT_MS);
@@ -479,25 +474,6 @@ const cleanup = () => {
     showSecondAction.value = false;
     currentSpinningButton.value = -1;
     spinningDirection.value = null;
-
-    // Sync Switchery visual state after resetting safetyAgreed
-    // Use nextTick to ensure DOM is updated before reinitializing Switchery
-    nextTick(() => {
-        const checkbox = document.getElementById("escDshotDirectionDialog-safetyCheckbox");
-        if (checkbox) {
-            // Remove existing Switchery element
-            const switcheryElement = checkbox.nextElementSibling;
-            if (switcheryElement && switcheryElement.classList.contains("switchery")) {
-                switcheryElement.remove();
-            }
-            // Add the toggle class back so GUI.switchery() will reinitialize
-            if (!checkbox.classList.contains("toggle")) {
-                checkbox.classList.add("toggle");
-            }
-            // Reinitialize Switchery with correct state
-            GUI.switchery();
-        }
-    });
 };
 
 // Handle ESC key
@@ -520,10 +496,6 @@ onMounted(async () => {
         MOTOR_DRIVER_QUEUE_INTERVAL_MS,
         MOTOR_DRIVER_STOP_MOTORS_PAUSE_MS,
     );
-
-    // Initialize switchery for the checkbox
-    await nextTick();
-    GUI.switchery();
 
     document.addEventListener("keydown", handleKeyDown);
 });

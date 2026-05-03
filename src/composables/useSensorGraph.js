@@ -12,13 +12,19 @@ export function useSensorGraph() {
     const sonar_data = ref([]);
     const debug_data = ref([]);
 
-    // Sample counters
+    // Sample counters and dirty flags
     let samples_gyro_i = 0;
     let samples_accel_i = 0;
     let samples_mag_i = 0;
     let samples_altitude_i = 0;
     let samples_sonar_i = 0;
     let samples_debug_i = 0;
+    let dirty_gyro = false;
+    let dirty_accel = false;
+    let dirty_mag = false;
+    let dirty_altitude = false;
+    let dirty_sonar = false;
+    let dirty_debug = false;
 
     // Graph helpers storage
     let gyroHelpers = null;
@@ -57,16 +63,18 @@ export function useSensorGraph() {
         return sampleNumber + 1;
     }
 
-    function updateGraphHelperSize(helpers) {
-        const element = d3.select(helpers.selector);
-        const node = element.node();
+    function measureGraphSize(helpers) {
+        const node = d3.select(helpers.selector).node();
         if (!node) {
             return;
         }
-
         const rect = node.getBoundingClientRect();
         helpers.width = Math.max(0, rect.width - margin.left - margin.right);
         helpers.height = Math.max(0, rect.height - margin.top - margin.bottom);
+    }
+
+    function updateGraphHelperSize(helpers) {
+        measureGraphSize(helpers);
 
         // Always initialize scales to prevent undefined errors
         helpers.scaleX = d3.scaleLinear().domain([0, 300]).range([0, helpers.width]);
@@ -76,7 +84,8 @@ export function useSensorGraph() {
 
         // Only create clipPath rect if dimensions are valid
         if (helpers.width > 0 && helpers.height > 0) {
-            helpers.clip = element
+            const element = d3.select(helpers.selector);
+            element
                 .selectAll("defs")
                 .data([0])
                 .join("defs")
@@ -131,14 +140,16 @@ export function useSensorGraph() {
     }
 
     function drawGraph(helpers, sampleNumber) {
-        // Update size in case the SVG was not sized at init
-        updateGraphHelperSize(helpers);
+        // Skip if dimensions are not yet available (e.g. SVG not laid out)
+        if (!helpers.width || !helpers.height) {
+            return;
+        }
 
-        // Update X scale domain for sliding window (matches original behavior)
-        helpers.scaleX.domain([sampleNumber - 299, sampleNumber]);
+        // Update scales with current dimensions
+        helpers.scaleX.domain([sampleNumber - 299, sampleNumber]).range([0, helpers.width]);
+        helpers.scaleY.domain([-helpers.scaleYMax.value, helpers.scaleYMax.value]).range([helpers.height, 0]);
 
-        // Update Y scale domain - use fixed scale from scaleYMax
-        helpers.scaleY.domain([-helpers.scaleYMax.value, helpers.scaleYMax.value]);
+        const element = d3.select(helpers.selector);
 
         const xAxis = d3
             .axisBottom()
@@ -155,8 +166,6 @@ export function useSensorGraph() {
         const xGrid = d3.axisBottom().scale(helpers.scaleX).ticks(5).tickFormat("").tickSize(-helpers.height, 0, 0);
 
         const yGrid = d3.axisLeft().scale(helpers.scaleY).ticks(5).tickFormat("").tickSize(-helpers.width, 0, 0);
-
-        const element = d3.select(helpers.selector);
 
         element.select(".grid.x").call(xGrid);
         element.select(".grid.y").call(yGrid);
@@ -209,42 +218,55 @@ export function useSensorGraph() {
     }
 
     function updateGraphs() {
-        if (gyroHelpers) {
+        if (gyroHelpers && dirty_gyro) {
             drawGraph(gyroHelpers, samples_gyro_i);
+            dirty_gyro = false;
         }
-        if (accelHelpers) {
+        if (accelHelpers && dirty_accel) {
             drawGraph(accelHelpers, samples_accel_i);
+            dirty_accel = false;
         }
-        if (magHelpers) {
+        if (magHelpers && dirty_mag) {
             drawGraph(magHelpers, samples_mag_i);
+            dirty_mag = false;
         }
-        if (altitudeHelpers) {
+        if (altitudeHelpers && dirty_altitude) {
             drawGraph(altitudeHelpers, samples_altitude_i);
+            dirty_altitude = false;
         }
-        if (sonarHelpers) {
+        if (sonarHelpers && dirty_sonar) {
             drawGraph(sonarHelpers, samples_sonar_i);
+            dirty_sonar = false;
         }
-        debugHelpers.forEach((helper) => drawGraph(helper, samples_debug_i));
+        if (dirty_debug) {
+            debugHelpers.forEach((helper) => drawGraph(helper, samples_debug_i));
+            dirty_debug = false;
+        }
     }
 
     function addGyroSample(data) {
         samples_gyro_i = addSampleToData(gyro_data.value, samples_gyro_i, data);
+        dirty_gyro = true;
     }
 
     function addAccelSample(data) {
         samples_accel_i = addSampleToData(accel_data.value, samples_accel_i, data);
+        dirty_accel = true;
     }
 
     function addMagSample(data) {
         samples_mag_i = addSampleToData(mag_data.value, samples_mag_i, data);
+        dirty_mag = true;
     }
 
     function addAltitudeSample(data) {
         samples_altitude_i = addSampleToData(altitude_data.value, samples_altitude_i, data);
+        dirty_altitude = true;
     }
 
     function addSonarSample(data) {
         samples_sonar_i = addSampleToData(sonar_data.value, samples_sonar_i, data);
+        dirty_sonar = true;
     }
 
     function addDebugSample(index, data) {
@@ -253,6 +275,7 @@ export function useSensorGraph() {
         }
         // Don't increment counter here - will be done once after all columns are updated
         addSampleToData(debug_data.value[index], samples_debug_i, data);
+        dirty_debug = true;
     }
 
     function incrementDebugCounter() {

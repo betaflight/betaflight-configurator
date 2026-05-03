@@ -180,17 +180,6 @@ const VirtualFC = {
             totalSizeKB: 2048,
         };
 
-        virtualFC.TRANSPONDER = {
-            supported: true,
-            provider: 1, // iLap
-            providers: [
-                { id: 1, dataLength: 2 },
-                { id: 2, dataLength: 9 },
-                { id: 3, dataLength: 1 },
-            ],
-            data: [0, 0],
-        };
-
         virtualFC.SENSOR_ALIGNMENT = { ...FC.SENSOR_ALIGNMENT };
         virtualFC.SENSOR_ALIGNMENT.gyro_to_use = 0;
         virtualFC.SENSOR_ALIGNMENT.gyro_enable_mask = (1 << 8) - 1; // Used for API v1.47+
@@ -260,12 +249,13 @@ const VirtualFC = {
         if (semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)) {
             addArrayElementAfter(virtualFC.AUX_CONFIG, "HORIZON", "ALT_HOLD");
             addArrayElementAfter(virtualFC.AUX_CONFIG, "CAMSTAB", "POS_HOLD");
+            addArrayElementAfter(virtualFC.AUX_CONFIG, "GPS RESCUE", "AUTOPILOT");
             addArrayElement(virtualFC.AUX_CONFIG, "CHIRP");
         }
 
         FC.AUX_CONFIG_IDS = [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 15, 17, 19, 20, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-            36, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55,
+            36, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
         ];
 
         for (let i = 0; i < 16; i++) {

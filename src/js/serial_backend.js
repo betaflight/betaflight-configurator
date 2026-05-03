@@ -12,10 +12,10 @@ import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit.js";
-import { sensor_status, have_sensor } from "./sensor_helpers";
-import { update_dataflash_global } from "./update_dataflash_global";
+import { have_sensor } from "./sensor_helpers";
 import { gui_log } from "./gui_log";
 import { updateTabList } from "./utils/updateTabList";
+import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from "semver";
@@ -26,7 +26,9 @@ import { serial } from "./serial.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
+import { switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
+import { useDialogStore } from "../stores/dialog";
 
 const logHead = "[SERIAL-BACKEND]";
 
@@ -58,7 +60,10 @@ function disconnectHandler(event) {
 }
 
 export function initializeSerialBackend() {
-    document.querySelector("a.connection_button__link")?.addEventListener("click", connectDisconnect);
+    // Exposed via EventBus so modules that can't import serial_backend directly
+    // (notably gui.js, which is on the other side of an import cycle) can still
+    // request a connect/disconnect toggle.
+    EventBus.$on("connection:toggle", () => connectDisconnect());
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
@@ -104,79 +109,103 @@ async function sendConfigTracking() {
     });
 }
 
-function connectDisconnect() {
-    const selectedPort = PortHandler.portPicker.selectedPort;
+function beginDisconnect() {
+    GUI.configuration_loaded = false;
+    GUI.timeout_kill_all();
+    GUI.interval_kill_all();
+    GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
 
-    if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb")) {
-        // GUI control overrides the user control
+    mspHelper?.setArmingEnabled(true, false, function () {
+        finishClose(toggleStatus);
+    });
+}
 
-        GUI.configuration_loaded = false;
-
-        if (isConnected) {
-            // If connected, start disconnection sequence
-            GUI.timeout_kill_all();
-            GUI.interval_kill_all();
-            GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
-
-            function onFinishCallback() {
-                finishClose(toggleStatus);
-            }
-
-            mspHelper?.setArmingEnabled(true, false, onFinishCallback);
-        } else {
-            // prevent connection when we do not have permission
-            if (selectedPort.startsWith("requestpermission")) {
-                return;
-            }
-
-            // When rebooting, adhere to the auto-connect setting
-            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
-                console.log(`${logHead} Rebooting, not connecting`);
-                return;
-            }
-
-            const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
-
-            console.log(`${logHead} Connecting to: ${portName}`);
-            GUI.connecting_to = portName;
-
-            // lock port select & baud while we are connecting / connected
-            PortHandler.portPickerDisabled = true;
-            const connLabel = document.querySelector("div.connection_button__label");
-            if (connLabel) {
-                connLabel.textContent = i18n.getMessage("connecting");
-            }
-
-            // Set up event listeners for non-virtual connections
-            if (selectedPort !== "virtual") {
-                serial.removeEventListener("connect", connectHandler);
-                serial.addEventListener("connect", connectHandler);
-
-                serial.removeEventListener("disconnect", disconnectHandler);
-                serial.addEventListener("disconnect", disconnectHandler);
-            }
-
-            serial.connect(
-                portName,
-                { baudRate: PortHandler.portPicker.selectedBauds },
-                selectedPort === "virtual" ? onOpenVirtual : undefined,
-            );
-            console.log("Press Ctrl+I to open CLI panel");
-        }
-
-        // show CLI panel on Control+I
-        document.onkeydown = function (e) {
-            if (e.code === "KeyI" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
-                if (
-                    serial.connected &&
-                    GUI.active_tab !== "cli" &&
-                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
-                ) {
-                    GUI.showCliPanel();
-                }
-            }
-        };
+// Explicit disconnect entry point. Safer than `connectDisconnect()` for
+// callers that know they want to disconnect, because it does not flip back to
+// "connect" if `isConnected` has already been toggled off (e.g. when the UI
+// state still shows "connected" but the internal flag just changed).
+export function disconnect() {
+    if (GUI.connect_lock || !isConnected) {
+        return;
     }
+    beginDisconnect();
+}
+
+function canStartConnectionAction(selectedPort) {
+    return !GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb");
+}
+
+function beginConnect(selectedPort) {
+    // prevent connection when we do not have permission
+    if (selectedPort.startsWith("requestpermission")) {
+        return;
+    }
+
+    // When rebooting, adhere to the auto-connect setting
+    if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
+        console.log(`${logHead} Rebooting, not connecting`);
+        return;
+    }
+
+    const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
+
+    console.log(`${logHead} Connecting to: ${portName}`);
+    GUI.connecting_to = portName;
+
+    // lock port select & baud while we are connecting / connected
+    PortHandler.portPickerDisabled = true;
+
+    // Set up event listeners for non-virtual connections
+    if (selectedPort !== "virtual") {
+        serial.removeEventListener("connect", connectHandler);
+        serial.addEventListener("connect", connectHandler);
+
+        serial.removeEventListener("disconnect", disconnectHandler);
+        serial.addEventListener("disconnect", disconnectHandler);
+    }
+
+    serial.connect(
+        portName,
+        { baudRate: PortHandler.portPicker.selectedBauds },
+        selectedPort === "virtual" ? onOpenVirtual : undefined,
+    );
+    console.log("Press Ctrl+I to open CLI panel");
+}
+
+function isCliHotkey(e) {
+    return e.code === "KeyI" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+}
+
+function registerCliHotkey() {
+    document.onkeydown = function (e) {
+        if (!isCliHotkey(e)) {
+            return;
+        }
+        if (serial.connected && GUI.active_tab !== "cli" && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            GUI.showCliPanel();
+        }
+    };
+}
+
+export function connectDisconnect() {
+    if (GUI.connect_lock) {
+        return;
+    }
+
+    // GUI control overrides the user control
+    GUI.configuration_loaded = false;
+
+    if (isConnected) {
+        beginDisconnect();
+    } else {
+        const selectedPort = PortHandler.portPicker.selectedPort;
+        if (!canStartConnectionAction(selectedPort)) {
+            return;
+        }
+        beginConnect(selectedPort);
+    }
+
+    registerCliHotkey();
 }
 
 // Helper to show/hide elements used across this module (extracted to avoid duplicate functions)
@@ -239,43 +268,27 @@ function finishClose(finishedCallback) {
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
 
-    // reset connect / disconnect button
-    document.querySelector("a.connection_button__link")?.classList.remove("active");
-    const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) {
-        connLabel.textContent = i18n.getMessage("connect");
-        connLabel.classList.remove("active");
-    }
-
-    // reset active sensor indicators
-    sensor_status();
-
     if (wasConnected) {
-        // Ensure any mounted Vue tab is unmounted before we remove DOM to avoid Vue runtime errors
+        // Clear the active root-mounted tab before navigation selects the next one.
         try {
             unmountVueTab();
         } catch (e) {
             console.warn("unmountVueTab failed:", e);
         }
 
-        const content = document.getElementById("content");
-        if (content) {
-            content.innerHTML = "";
-        }
-
         // close cliPanel if left open
-        document.querySelector(".dialogInteractive")?.close();
+        const dialogStore = useDialogStore();
+        if (dialogStore.activeDialog?.type === "InteractiveDialog") {
+            dialogStore.close();
+        }
     }
 
     const pendingTab = GUI.pendingTab;
     GUI.pendingTab = null;
     if (pendingTab === "firmware_flasher") {
-        // Clear premature active state set before disconnect started
-        document.querySelector("a.firmware_flasher_button__label")?.classList.remove("active");
-        document.querySelector("a.firmware_flasher_button__link")?.classList.remove("active");
-        document.querySelector("a.firmware_flasher_button__link")?.click();
+        switchTab("firmware_flasher", { mode: "disconnected" });
     } else {
-        document.querySelector("#tabs .tab_landing a")?.click();
+        switchTab("landing", { mode: "disconnected" });
     }
 
     finishedCallback();
@@ -297,14 +310,6 @@ function setConnectionTimeout() {
 }
 
 function resetConnection() {
-    // reset connect / disconnect button
-    const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) {
-        connLabel.textContent = i18n.getMessage("connect");
-        connLabel.classList.remove("active");
-    }
-    document.querySelector("a.connection_button__link")?.classList.remove("active");
-
     clearLiveDataRefreshTimer();
 
     MSP.clearListeners();
@@ -319,17 +324,9 @@ function resetConnection() {
     hide("#tabs ul.mode-connected-cli");
     show("#tabs ul.mode-disconnected");
 
-    // header bar
-    hide("#sensor-status");
-    show("#portsinput");
-    hide("#dataflash_wrapper_global");
-    hide("#quad-status_wrapper");
-
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;
-    CONFIGURATOR.cliEngineValid = false;
-    CONFIGURATOR.cliEngineActive = false;
 
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
@@ -350,16 +347,20 @@ function abortConnection() {
 function showVersionMismatchAndCli(message) {
     const dialog = document.querySelector(".dialogConnectWarning");
 
-    const content = dialog.querySelector(".dialogConnectWarning-content");
-    if (content) {
-        content.innerHTML = message;
-    }
-    const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
-    if (closeBtn) {
-        closeBtn.onclick = () => dialog.close();
-    }
+    if (dialog) {
+        const content = dialog.querySelector(".dialogConnectWarning-content");
+        if (content) {
+            content.innerHTML = message;
+        }
+        const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
+        if (closeBtn) {
+            closeBtn.onclick = () => dialog.close();
+        }
 
-    dialog.showModal();
+        dialog.showModal();
+    } else {
+        gui_log(message);
+    }
 
     connectCli();
 }
@@ -385,12 +386,7 @@ function onOpen(openInfo) {
         gui_log(i18n.getMessage("serialPortOpened", [PortHandler.portPicker.selectedPort]));
 
         // reset expert mode
-        const result = getConfig("expertMode")?.expertMode ?? false;
-        const expertCheckbox = document.querySelector('input[name="expertModeCheckbox"]');
-        if (expertCheckbox) {
-            expertCheckbox.checked = result;
-            expertCheckbox.dispatchEvent(new Event("change"));
-        }
+        applyExpertMode(Boolean(getConfig("expertMode")?.expertMode), { persist: false });
 
         // serial adds event listener for selected connection type
         serial.removeEventListener("receive", read_serial_adapter);
@@ -467,8 +463,6 @@ function onOpenVirtual() {
 
     processBoardInfo();
 
-    update_dataflash_global();
-    sensor_status(FC.CONFIG.activeSensors);
     updateTabList(FC.FEATURE_CONFIG.features);
 }
 
@@ -545,25 +539,8 @@ async function checkReportProblems() {
     }
 
     if (needsProblemReportingDialog) {
-        const problemItemTemplate = document.getElementById("dialogReportProblems-listItemTemplate");
-        const problemDialogList = document.getElementById("dialogReportProblems-list");
-
-        problemDialogList.innerHTML = "";
-
-        for (const problem of problems) {
-            const item = problemItemTemplate.cloneNode(true);
-            item.removeAttribute("id");
-            item.innerHTML = problem.description;
-            problemDialogList.appendChild(item);
-        }
-
-        const problemDialog = document.getElementById("dialogReportProblems");
-        const closeBtn = document.getElementById("dialogReportProblems-closebtn");
-        closeBtn.onclick = () => problemDialog.close();
-
-        problemDialog.showModal();
-        problemDialog.scrollTop = 0;
-        closeBtn.focus();
+        const dialogStore = useDialogStore();
+        dialogStore.open("ReportProblemsDialog", { problems }, { onClose: () => dialogStore.close() });
     }
 
     processUid();
@@ -678,26 +655,11 @@ function connectCli() {
     MSP.disconnect_cleanup();
 
     onConnect();
-    document.querySelector("#tabs .tab_cli a")?.click();
+    switchTab("cli", { mode: "cli" });
 }
 
 function onConnect() {
-    const fwLabel = document.querySelector("a.firmware_flasher_button__label");
-    const fwLink = document.querySelector("a.firmware_flasher_button__link");
-
-    if (fwLabel?.classList.contains("active") || fwLink?.classList.contains("active")) {
-        fwLabel?.classList.remove("active");
-        fwLink?.classList.remove("active");
-    }
-
     GUI.timeout_remove("connecting"); // kill connecting timer
-
-    const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) {
-        connLabel.textContent = i18n.getMessage("disconnect");
-        connLabel.classList.add("active");
-    }
-    document.querySelector("a.connection_button__link")?.classList.add("active");
 
     hide("#tabs ul.mode-disconnected");
     show("#tabs ul.mode-connected-cli");
@@ -705,8 +667,6 @@ function onConnect() {
     // update tab visibility and initialize features/UI on connect
     updateTabVisibility();
     initFeaturesOnConnect();
-
-    hide("#portsinput");
 }
 
 // Update which tabs are visible based on `GUI.allowedTabs` and board type
@@ -752,9 +712,6 @@ function initFeaturesOnConnect() {
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
             startLiveDataRefreshTimer();
         }
-
-        show("#sensor-status");
-        show("#dataflash_wrapper_global");
     }
 }
 
@@ -779,77 +736,19 @@ export function read_serial(info) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
         TABS.cli?.read?.(info);
-    } else if (CONFIGURATOR.cliEngineActive) {
-        TABS.presets.read(info);
     } else {
         MSP.read(info);
     }
 }
 
 export async function update_sensor_status() {
-    const statuswrapper = document.getElementById("quad-status_wrapper");
-
     await MSP.promise(MSPCodes.MSP_ANALOG);
     await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
-
-    if (FC.ANALOG !== undefined) {
-        let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
-
-        if (FC.ANALOG.voltage == 0) {
-            nbCells = 1;
-        }
-
-        const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
-        const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
-        const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
-        const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
-
-        const batteryStatus = document.querySelector(".battery-status");
-        if (batteryStatus) {
-            if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
-                batteryStatus.classList.add("state-empty");
-                batteryStatus.classList.remove("state-ok", "state-warning");
-                batteryStatus.style.width = "100%";
-            } else {
-                batteryStatus.style.width = `${((FC.ANALOG.voltage - min) / (max - min)) * 100}%`;
-
-                if (FC.ANALOG.voltage < warn) {
-                    batteryStatus.classList.add("state-warning");
-                    batteryStatus.classList.remove("state-empty", "state-ok");
-                } else {
-                    batteryStatus.classList.add("state-ok");
-                    batteryStatus.classList.remove("state-warning", "state-empty");
-                }
-            }
-        }
-    }
-
     await MSP.promise(MSPCodes.MSP_BOXNAMES);
     await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
-    const active = performance.now() - FC.ANALOG.last_received_timestamp < 300;
-    document.querySelector(".linkicon")?.classList.toggle("active", active);
-
-    for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-        if (FC.AUX_CONFIG[i] === "ARM") {
-            document.querySelector(".armedicon")?.classList.toggle("active", bit_check(FC.CONFIG.mode, i));
-        }
-        if (FC.AUX_CONFIG[i] === "FAILSAFE") {
-            document.querySelector(".failsafeicon")?.classList.toggle("active", bit_check(FC.CONFIG.mode, i));
-        }
-    }
-
     if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
         await MSP.promise(MSPCodes.MSP_RAW_GPS);
-    }
-
-    sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
-
-    if (statuswrapper) {
-        statuswrapper.style.display = "";
-        if (getComputedStyle(statuswrapper).display === "none") {
-            statuswrapper.style.display = "block";
-        }
     }
 }
 
@@ -887,7 +786,7 @@ export function reinitializeConnection(suppressDialog = false) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
             setTimeout(function () {
-                document.querySelector("a.connection_button__link")?.click();
+                connectDisconnect();
             }, 500);
             return rebootTimestamp;
         }
@@ -901,7 +800,7 @@ export function reinitializeConnection(suppressDialog = false) {
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
         setTimeout(function () {
-            document.querySelector("a.connection_button__link")?.click();
+            connectDisconnect();
         }, 1500);
         return rebootTimestamp;
     }

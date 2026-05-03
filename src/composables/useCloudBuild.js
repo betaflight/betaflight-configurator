@@ -151,7 +151,7 @@ export function useCloudBuild(params) {
             selectedMotorProtocol,
             expertMode,
             selectedCommit,
-            customDefinesInput,
+            customDefinesTags,
         } = additionalParams;
 
         const request = {
@@ -170,20 +170,41 @@ export function useCloudBuild(params) {
 
         // Add selected protocol options
         if (selectedRadioProtocol) {
-            request.options.push(selectedRadioProtocol.value);
+            request.options.push(
+                typeof selectedRadioProtocol === "object" && selectedRadioProtocol !== null
+                    ? selectedRadioProtocol.value
+                    : selectedRadioProtocol,
+            );
         }
         if (selectedTelemetryProtocol) {
-            request.options.push(selectedTelemetryProtocol.value);
+            request.options.push(
+                typeof selectedTelemetryProtocol === "object" && selectedTelemetryProtocol !== null
+                    ? selectedTelemetryProtocol.value
+                    : selectedTelemetryProtocol,
+            );
         }
         if (selectedOsdProtocol) {
-            request.options.push(selectedOsdProtocol.value);
+            request.options.push(
+                typeof selectedOsdProtocol === "object" && selectedOsdProtocol !== null
+                    ? selectedOsdProtocol.value
+                    : selectedOsdProtocol,
+            );
         }
         if (selectedMotorProtocol) {
-            request.options.push(selectedMotorProtocol.value);
+            request.options.push(
+                typeof selectedMotorProtocol === "object" && selectedMotorProtocol !== null
+                    ? selectedMotorProtocol.value
+                    : selectedMotorProtocol,
+            );
         }
 
         if (Array.isArray(selectedOptions)) {
-            selectedOptions.forEach((option) => request.options.push(option.value));
+            selectedOptions.forEach((option) => {
+                const v = typeof option === "object" && option !== null ? option.value : option;
+                if (v != null && v !== "") {
+                    request.options.push(v);
+                }
+            });
         }
 
         if (expertMode) {
@@ -191,14 +212,13 @@ export function useCloudBuild(params) {
                 request.commit = selectedCommit;
             }
 
-            // Parse custom defines from input
-            if (customDefinesInput?.value) {
-                const customDefinesText = customDefinesInput.value || "";
-                customDefinesText
-                    .split(" ")
-                    .map((element) => element.trim())
-                    .filter(Boolean)
-                    .forEach((v) => request.options.push(v));
+            if (Array.isArray(customDefinesTags) && customDefinesTags.length > 0) {
+                customDefinesTags.forEach((tag) => {
+                    const t = String(tag).trim();
+                    if (t) {
+                        request.options.push(t);
+                    }
+                });
             }
         }
 

@@ -65,6 +65,17 @@ const MSP = {
     cli_buffer: [], // buffer for CLI character output
     cli_output: [],
     cli_callback: null,
+    cli_queue: [], // pending { command, callback, timeoutMs } entries
+    cli_in_flight: null,
+    cli_timer: null,
+    // When a CLI command times out, we don't know whether the firmware is
+    // mid-response, about to respond, or silent. Enter a "draining" state
+    // where every byte is dropped; the decoder clears the state on the
+    // closing ETX (so any bookended late response is consumed in full)
+    // or when the drain grace timer expires (a real hang).
+    cli_discarding: false,
+    cli_drain_timer: null,
+    cli_drain_grace_ms: 1000,
 
     read(readInfo) {
         if (CONFIGURATOR.virtualMode) {
@@ -74,17 +85,24 @@ const MSP = {
         const data = new Uint8Array(readInfo.data ?? readInfo);
 
         for (const chunk of data) {
+            if (this.cli_discarding) {
+                if (chunk === this.symbols.END_OF_TEXT) {
+                    this._end_cli_drain();
+                }
+                continue;
+            }
+
             switch (this.state) {
                 case this.decoder_states.CLI_COMMAND:
                     switch (chunk) {
                         case this.symbols.END_OF_TEXT:
                             this.cli_output.push(this.cli_buffer.join(""));
                             this.cli_buffer.length = 0;
-                            if (this.cli_callback) {
-                                this.cli_callback(this.cli_output);
-                                this.cli_output.length = 0;
-                            }
                             this.state = this.decoder_states.IDLE;
+                            if (this.cli_callback) {
+                                const response = this.cli_output;
+                                this.cli_callback(response);
+                            }
                             break;
                         case this.symbols.LINE_FEED:
                             this.cli_output.push(this.cli_buffer.join(""));
@@ -365,11 +383,110 @@ const MSP = {
         bufView[bufferSize - 1] = this.symbols.END_OF_TEXT; // ETX
         return bufferOut;
     },
-    send_cli_command(str, callback) {
-        const bufferOut = this.encode_message_cli(str);
-        this.cli_callback = callback;
+    send_cli_command(str, callback, { timeoutMs } = {}) {
+        this.cli_queue.push({ command: str, callback, timeoutMs });
+        this._process_cli_queue();
+    },
+    _process_cli_queue() {
+        if (this.cli_in_flight || this.cli_queue.length === 0) {
+            return;
+        }
 
-        serial.send(bufferOut);
+        const entry = this.cli_queue.shift();
+        this.cli_in_flight = entry;
+        this.cli_buffer.length = 0;
+        this.cli_output.length = 0;
+
+        this.cli_callback = (lines) => {
+            this._finish_cli([...lines], null);
+        };
+
+        if (entry.timeoutMs) {
+            this.cli_timer = setTimeout(() => {
+                this._finish_cli(
+                    [],
+                    new Error(`Timed out after ${entry.timeoutMs}ms waiting for response to "${entry.command}"`),
+                );
+            }, entry.timeoutMs);
+        }
+
+        serial.send(this.encode_message_cli(entry.command));
+    },
+    _finish_cli(lines, error) {
+        const entry = this.cli_in_flight;
+        if (!entry) {
+            return;
+        }
+
+        this.cli_in_flight = null;
+        this.cli_callback = null;
+        this.cli_buffer.length = 0;
+        this.cli_output.length = 0;
+
+        if (this.cli_timer) {
+            clearTimeout(this.cli_timer);
+            this.cli_timer = null;
+        }
+
+        try {
+            entry.callback?.(lines, error);
+        } catch (callbackError) {
+            console.error("CLI callback threw:", callbackError);
+        }
+
+        if (error) {
+            // Drain any in-flight or soon-to-arrive response before sending the
+            // next command; the decoder will end drain on ETX, otherwise the
+            // grace timer forces progress.
+            this.cli_discarding = true;
+            if (this.cli_drain_timer) {
+                clearTimeout(this.cli_drain_timer);
+            }
+            this.cli_drain_timer = setTimeout(() => this._end_cli_drain(), this.cli_drain_grace_ms);
+            return;
+        }
+
+        this._process_cli_queue();
+    },
+    _end_cli_drain() {
+        if (this.cli_drain_timer) {
+            clearTimeout(this.cli_drain_timer);
+            this.cli_drain_timer = null;
+        }
+        this.cli_discarding = false;
+        this.cli_buffer.length = 0;
+        this.cli_output.length = 0;
+        this.state = this.decoder_states.IDLE;
+        this._process_cli_queue();
+    },
+    _drain_cli_queue(error) {
+        if (this.cli_timer) {
+            clearTimeout(this.cli_timer);
+            this.cli_timer = null;
+        }
+        if (this.cli_drain_timer) {
+            clearTimeout(this.cli_drain_timer);
+            this.cli_drain_timer = null;
+        }
+
+        const pending = this.cli_queue.splice(0, this.cli_queue.length);
+        const inFlight = this.cli_in_flight;
+        this.cli_in_flight = null;
+        this.cli_callback = null;
+        this.cli_buffer.length = 0;
+        this.cli_output.length = 0;
+        this.cli_discarding = false;
+
+        for (const entry of [inFlight, ...pending]) {
+            if (!entry?.callback) {
+                continue;
+            }
+            try {
+                entry.callback([], error);
+            } catch (callbackError) {
+                console.error("CLI callback threw during drain:", callbackError);
+            }
+        }
     },
     send_message(code, data, callback_sent, callback_msp) {
         if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
@@ -451,6 +568,7 @@ const MSP = {
         this.packet_error = 0; // reset CRC packet error counter for next session
 
         this.callbacks_cleanup();
+        this._drain_cli_queue(new Error("Serial connection closed"));
     },
 };
 

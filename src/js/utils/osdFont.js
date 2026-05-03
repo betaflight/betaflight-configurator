@@ -278,8 +278,6 @@ FONT.upload = function ($progress) {
         .then(function () {
             console.log(`Uploaded all ${FONT.data.characters.length} characters`);
             gui_log(i18n.getMessage("osdSetupUploadingFontEnd", { length: FONT.data.characters.length }));
-
-            return MSP.promise(MSPCodes.MSP_SET_REBOOT);
         });
 };
 

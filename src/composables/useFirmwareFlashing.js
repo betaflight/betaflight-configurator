@@ -1,11 +1,11 @@
 import { reactive } from "vue";
 import { get as getConfig } from "../js/ConfigStorage";
+import { useDialog } from "./useDialog";
 import GUI from "../js/gui";
 import ConfigInserter from "../js/ConfigInserter";
 import { tracking } from "../js/Analytics";
 import read_hex_file from "../js/workers/hex_parser";
 import STM32 from "../js/protocols/webstm32";
-import DFU from "../js/protocols/webusbdfu";
 import PortHandler from "../js/port_handler";
 
 /**
@@ -21,6 +21,7 @@ import PortHandler from "../js/port_handler";
  */
 export function useFirmwareFlashing(params = {}) {
     const { flashingMessage, flashProgress, FLASH_MESSAGE_TYPES, $t, logHead = "[FIRMWARE_FLASHER]" } = params;
+    const dialog = useDialog();
 
     // Reactive firmware state
     const firmwareState = reactive({
@@ -41,8 +42,8 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Parse HEX string into structured firmware data
      */
-    const parseHex = async (hexString) => {
-        return await read_hex_file(hexString);
+    const parseHex = (hexString) => {
+        return read_hex_file(hexString);
     };
 
     /**
@@ -244,7 +245,7 @@ export function useFirmwareFlashing(params = {}) {
         }
 
         const port = PortHandler.portPicker.selectedPort;
-        const isSerial = port.startsWith("serial");
+        const isSerial = port.startsWith("serial") || port.startsWith("capacitor-");
         const isDFU = port.startsWith("usb");
 
         console.log(`${logHead} Selected port:`, port);
@@ -253,7 +254,7 @@ export function useFirmwareFlashing(params = {}) {
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                 filename: filename || null,
             });
-            DFU.connect(port, firmware, flashing_options);
+            PortHandler.dfuProtocol.connect(port, firmware, flashing_options);
         } else if (isSerial) {
             if (noRebootSequence) {
                 flashing_options.no_reboot = true;
@@ -274,9 +275,10 @@ export function useFirmwareFlashing(params = {}) {
         } else {
             console.log(`${logHead} No valid port detected, asking for permissions`);
 
-            DFU.requestPermission()
+            PortHandler.dfuProtocol
+                .requestPermission()
                 .then((device) => {
-                    DFU.connect(device.path, firmware, flashing_options);
+                    PortHandler.dfuProtocol.connect(device.path, firmware, flashing_options);
                 })
                 .catch((error) => {
                     console.error("Permission request failed", error);
@@ -433,16 +435,16 @@ export function useFirmwareFlashing(params = {}) {
                 startBackup?.(initiateFlashing);
                 break;
             case 2:
-                GUI.showYesNoDialog({
-                    title: $t?.("firmwareFlasherRemindBackupTitle"),
-                    text: $t?.("firmwareFlasherRemindBackup"),
-                    buttonYesText: $t?.("firmwareFlasherBackup"),
-                    buttonNoText: $t?.("firmwareFlasherBackupIgnore"),
-                    buttonYesCallback: () => {
-                        startBackup?.(initiateFlashing);
+                dialog.openYesNo(
+                    $t?.("firmwareFlasherRemindBackupTitle"),
+                    $t?.("firmwareFlasherRemindBackup"),
+                    () => startBackup?.(initiateFlashing),
+                    initiateFlashing,
+                    {
+                        yesText: $t?.("firmwareFlasherBackup"),
+                        noText: $t?.("firmwareFlasherBackupIgnore"),
                     },
-                    buttonNoCallback: initiateFlashing,
-                });
+                );
                 break;
             default:
                 await initiateFlashing?.();
@@ -461,9 +463,9 @@ export function useFirmwareFlashing(params = {}) {
         if (!dfuExitButtonDisabled && !connectLock) {
             try {
                 console.log(`${logHead} Closing DFU`);
-                const device = await DFU.requestPermission();
+                const device = await PortHandler.dfuProtocol.requestPermission();
                 if (device) {
-                    DFU.connect(device.path, firmwareState.parsedHex, {
+                    PortHandler.dfuProtocol.connect(device.path, firmwareState.parsedHex, {
                         exitDfu: true,
                         flashingMessage,
                         flashProgress,
@@ -492,14 +494,20 @@ export function useFirmwareFlashing(params = {}) {
         } = options;
 
         const detectedUsbDevice = (device) => {
-        const isFlashOnConnect = getFlashOnConnect();
+            const isFlashOnConnect = getFlashOnConnect();
 
-            console.log(`${logHead} Detected USB device:`, device);
+            console.log(
+                `${logHead} Detected USB device:`,
+                device,
+                `rebootMode=${STM32.rebootMode}`,
+                `connectLock=${GUI.connect_lock}`,
+                `flashOnConnect=${isFlashOnConnect}`,
+            );
 
             updateDfuExitButtonState?.();
 
             if (GUI.connect_lock && !STM32.rebootMode) {
-                console.log(`${logHead} Port event ignored due to active operation (connect_lock)`);
+                console.log(`${logHead} Port event ignored: connect_lock active, no reboot pending`);
                 return;
             }
 
@@ -519,6 +527,8 @@ export function useFirmwareFlashing(params = {}) {
                     console.log(`${logHead} Flash on connect triggered`);
                     initiateFlashing();
                 }
+            } else {
+                console.log(`${logHead} USB device detected but no reboot pending and flash-on-connect disabled`);
             }
         };
 

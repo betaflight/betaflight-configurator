@@ -15,7 +15,11 @@ export function usePower() {
         return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44);
     });
     const hasBatteryProfiles = computed(() => {
-        return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48);
+        if (!FC.CONFIG?.apiVersion || !semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            return false;
+        }
+        // Custom firmware builds may omit multi-profile support while still reporting API 1.48+; hide UI when the FC reports no profiles.
+        return (FC.CONFIG.numberOfBatteryProfiles || 0) > 0;
     });
     const activeBatteryProfile = ref(0);
     const batteryProfileName = ref("");
@@ -38,6 +42,37 @@ export function usePower() {
     });
     const voltageConfigs = reactive([]);
     const currentConfigs = reactive([]);
+
+    /** Serialized baseline after last FC sync; used for save-button dirty detection */
+    const powerConfigBaseline = ref("");
+
+    const buildPowerConfigSnapshot = () => ({
+        voltageMeterSource: batteryConfig.voltageMeterSource,
+        currentMeterSource: batteryConfig.currentMeterSource,
+        vbatmincellvoltage: batteryConfig.vbatmincellvoltage,
+        vbatmaxcellvoltage: batteryConfig.vbatmaxcellvoltage,
+        vbatwarningcellvoltage: batteryConfig.vbatwarningcellvoltage,
+        capacity: batteryConfig.capacity,
+        batteryProfileName: batteryProfileName.value,
+        voltageConfigs: voltageConfigs.map((c) => ({
+            vbatscale: c.vbatscale,
+            vbatresdivval: c.vbatresdivval,
+            vbatresdivmultiplier: c.vbatresdivmultiplier,
+        })),
+        currentConfigs: currentConfigs.map((c) => ({
+            scale: c.scale,
+            offset: c.offset,
+        })),
+    });
+
+    const serializePowerConfig = () => JSON.stringify(buildPowerConfigSnapshot());
+
+    const dirty = computed(() => {
+        if (!powerConfigBaseline.value) {
+            return false;
+        }
+        return powerConfigBaseline.value !== serializePowerConfig();
+    });
 
     // Calibration state
     const sourceschanged = ref(false);
@@ -235,6 +270,8 @@ export function usePower() {
         FC.CURRENT_METER_CONFIGS.forEach((config) => {
             currentConfigs.push({ ...config });
         });
+
+        powerConfigBaseline.value = serializePowerConfig();
     };
 
     // Update live data (polling)
@@ -440,6 +477,9 @@ export function usePower() {
             await mspHelper.sendVoltageConfig();
             await mspHelper.sendCurrentConfig();
             await mspHelper.writeConfiguration(false);
+            // Refresh the saveConfig() baseline so dirty reflects persisted values.
+            // Equivalent to updateStateFromFC() baseline reset without extra FC reads.
+            powerConfigBaseline.value = serializePowerConfig();
 
             if (callback) {
                 callback();
@@ -489,5 +529,6 @@ export function usePower() {
         vbatnewscale,
         amperagenewscale,
         sourceschanged,
+        dirty,
     };
 }

@@ -2,6 +2,8 @@ import { i18n } from "./localization";
 import { gui_log } from "./gui_log";
 import LoginApi from "./LoginApi";
 import UserApi from "./UserApi";
+import { switchTab } from "./tab_switch";
+import GUI from "./gui";
 
 /**
  * LoginManager - Handles user authentication using passkeys
@@ -36,9 +38,6 @@ class LoginManager {
      */
     async initialize() {
         await this.fetchUserProfile();
-
-        // Update tab visibility based on login state
-        await this.updateTabVisibility();
     }
 
     /**
@@ -94,6 +93,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Create passkey error:", error);
+            throw error;
         }
     }
 
@@ -112,7 +112,6 @@ class LoginManager {
 
             // Fetch user profile data
             await this.fetchUserProfile();
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -120,16 +119,48 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Verify and create passkey error:", error);
+            throw error;
         }
     }
 
     /**
-     * Update tab visibility based on login state
+     * Request a verification code to be emailed to the user.
+     * Throws on failure so the caller can present a specific error.
      */
-    async updateTabVisibility() {
-        const el = document.querySelector("#tabs ul.mode-loggedin");
-        if (el) {
-            el.style.display = (await this.isUserLoggedIn()) ? "block" : "none";
+    async requestVerificationCode(email) {
+        try {
+            this.showWaitingDialog(i18n.getMessage("userSendingCode"));
+            await this._loginApi.requestTemporaryPassword(email);
+            this.hideWaitingDialog();
+        } catch (error) {
+            this.hideWaitingDialog();
+            gui_log(`${i18n.getMessage("userSendCodeFailed")}: ${error}`);
+            console.error("Request verification code error:", error);
+            throw error;
+        }
+    }
+
+    /**
+     * Login with an emailed verification code (no passkey).
+     * Used for browsers (e.g. Safari) where passkeys are unreliable.
+     * Throws on failure so the caller can present a specific error.
+     */
+    async loginWithEmailCode(email, code) {
+        try {
+            this.showWaitingDialog(i18n.getMessage("userVerifyingCode"));
+
+            await this._loginApi.verifyLogin(email, code);
+
+            await this.fetchUserProfile();
+            this.notifyLoginCallbacks();
+
+            this.hideWaitingDialog();
+            gui_log(i18n.getMessage("userLoginSuccess"));
+        } catch (error) {
+            this.hideWaitingDialog();
+            gui_log(`${i18n.getMessage("userLoginFailed")}: ${error}`);
+            console.error("Email code login error:", error);
+            throw error;
         }
     }
 
@@ -146,8 +177,6 @@ class LoginManager {
 
             // Fetch user profile data
             await this.fetchUserProfile();
-
-            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -156,6 +185,7 @@ class LoginManager {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userLoginFailed")}: ${error}`);
             console.error("Login error:", error);
+            throw error;
         }
     }
 
@@ -184,11 +214,15 @@ class LoginManager {
             await this._loginApi.signOut();
 
             this._profile = null;
-            await this.updateTabVisibility();
             this.notifyLogoutCallbacks();
 
-            // Always switch to landing/welcome tab on logout
-            document.querySelector(".tab_landing a")?.click();
+            // Pick a tab that is valid for the current connection state —
+            // "landing" is disconnected-only, so fall back to "setup" or the
+            // first allowed tab when connected.
+            const fallback = ["landing", "setup", ...GUI.allowedTabs].find((tab) => GUI.allowedTabs.includes(tab));
+            if (fallback) {
+                switchTab(fallback, { mode: fallback === "landing" ? "disconnected" : "connected" });
+            }
 
             gui_log(i18n.getMessage("userSignedOut"));
         } catch (error) {

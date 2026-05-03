@@ -1,0 +1,8 @@
+[toolchain]
+# Cargo.lock contains transitive dependencies (icu_*, darling, time, etc.)
+# whose latest releases require rustc 1.86+ / 1.88+. Pin to 1.95 so CI
+# runners and contributors stay on a channel that can resolve them without
+# forcing an exact patch version.
+channel = "1.95"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

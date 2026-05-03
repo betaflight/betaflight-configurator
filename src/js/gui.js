@@ -1,15 +1,15 @@
 import { get as getConfig } from "./ConfigStorage";
 import { reactive } from "vue";
 import MSP from "./msp";
-import Switchery from "switchery-latest";
-import tippy from "tippy.js";
-
 import { getOS } from "./utils/checkCompatibility";
 import PortHandler from "./port_handler";
 import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization";
 import MSPCodes from "./msp/MSPCodes";
 import { gui_log } from "./gui_log";
+import { useDialogStore } from "../stores/dialog";
+import { pinia } from "./pinia_instance";
+import { EventBus } from "../components/eventBus";
 
 const TABS = {};
 
@@ -37,6 +37,8 @@ class GuiControl {
             "help",
             "user_profile",
             "backups",
+            "flight_plan",
+            "log",
         ];
 
         this.defaultAllowedTabs = [
@@ -56,9 +58,10 @@ class GuiControl {
             "ports",
             "receiver",
             "sensors",
+            "log",
         ];
 
-        this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "transponder", "vtx"];
+        this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "vtx", "flight_plan"];
 
         this.defaultAllowedFCTabsWhenConnected = [...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
 
@@ -260,49 +263,7 @@ class GuiControl {
             callback();
         }
     }
-    switchery() {
-        const COLOR_ACCENT = "var(--primary-500)";
-        const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
-
-        for (const elem of document.querySelectorAll("[data-switchery]")) {
-            elem.switchery?.setPosition();
-        }
-
-        const setupSwitchery = (selector, className, extraOptions = {}) => {
-            for (const elem of document.querySelectorAll(selector)) {
-                const existingSwitcherySelector = extraOptions.className
-                    ? `.switchery, .${extraOptions.className}`
-                    : ".switchery";
-
-                if (elem.nextElementSibling?.matches(existingSwitcherySelector)) {
-                    elem.switchery?.setPosition();
-                    continue;
-                }
-
-                const switchery = new Switchery(elem, {
-                    ...extraOptions,
-                    color: COLOR_ACCENT,
-                    secondaryColor: COLOR_SWITCHERY_SECOND,
-                });
-                elem.switchery = switchery;
-                elem.addEventListener("change", function () {
-                    switchery.setPosition();
-                });
-                elem.classList.remove(className);
-            }
-        };
-
-        setupSwitchery(".togglesmall", "togglesmall", {
-            size: "small",
-        });
-        setupSwitchery(".toggle", "toggle");
-        setupSwitchery(".togglemedium", "togglemedium", {
-            className: "switcherymid",
-        });
-    }
     content_ready(callback) {
-        this.switchery();
-
         const tRex = GUI.active_tab.replaceAll("_", "-").toLowerCase();
 
         const docButton = document.querySelector("div#content #button-documentation");
@@ -311,30 +272,23 @@ class GuiControl {
             docButton.setAttribute("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
         }
 
-        // loading tooltip
-        for (const element of document.querySelectorAll(".cf_tip, .cf_tip_wide")) {
-            const attrTitle = element.getAttribute("title");
-            if (attrTitle && !element._tippy) {
-                tippy(element, {
-                    content: attrTitle,
-                    allowHTML: true,
-                });
-                element.removeAttribute("title");
-            }
-        }
-
         if (callback) {
             callback();
         }
     }
     selectDefaultTabWhenConnected() {
         const result = getConfig(["rememberLastTab", "lastTab"]);
-        const tab =
+        const tabClass =
             result.rememberLastTab && result.lastTab && this.allowedTabs.includes(result.lastTab.substring(4))
                 ? result.lastTab
                 : "tab_setup";
+        const tabKey = tabClass.substring(4);
 
-        document.querySelector(`#tabs ul.mode-connected .${tab} a`)?.click();
+        import("./tab_switch.js").then(({ switchTab }) => {
+            if (!switchTab(tabKey, { mode: "connected" })) {
+                switchTab("setup", { mode: "connected" });
+            }
+        });
     }
     showYesNoDialog(yesNoDialogSettings) {
         // yesNoDialogSettings:
@@ -404,22 +358,22 @@ class GuiControl {
     showInteractiveDialog(interactiveDialogSettings) {
         // interactiveDialogSettings:
         // title, text, buttonCloseText
+        const dialogStore = useDialogStore(pinia);
         return new Promise((resolve) => {
-            const dialog = document.querySelector(".dialogInteractive");
-            const title = dialog.querySelector(".dialogInteractiveTitle");
-            const content = dialog.querySelector(".dialogInteractiveContent");
-            const buttonClose = dialog.querySelector(".dialogInteractive-closeButton");
-
-            title.innerHTML = interactiveDialogSettings.title ?? "";
-            content.innerHTML = interactiveDialogSettings.text ?? "";
-            buttonClose.innerHTML = interactiveDialogSettings.buttonCloseText ?? "";
-
-            buttonClose.onclick = () => {
-                dialog.close();
-                resolve();
-            };
-
-            dialog.showModal();
+            dialogStore.open(
+                "InteractiveDialog",
+                {
+                    title: interactiveDialogSettings.title ?? "",
+                    buttonCloseText: interactiveDialogSettings.buttonCloseText ?? "",
+                    commandPlaceholder: i18n.getMessage("cliCommand"),
+                },
+                {
+                    close: () => {
+                        dialogStore.close();
+                        resolve();
+                    },
+                },
+            );
         });
     }
     escapeHtml(unsafe) {
@@ -436,13 +390,15 @@ class GuiControl {
         }
     }
     reinitializeConnection() {
+        // Emit via EventBus so gui.js doesn't have to import serial_backend
+        // (which already imports gui.js — this would create a module cycle).
+        const emitToggle = () => EventBus.$emit("connection:toggle");
+
         if (CONFIGURATOR.virtualMode) {
             this.reboot_timestamp = Date.now();
-            document.querySelector("a.connection_button__link")?.click();
+            emitToggle();
             if (PortHandler.portPicker.autoConnect) {
-                return setTimeout(function () {
-                    document.querySelector("a.connection_button__link")?.click();
-                }, 500);
+                return setTimeout(emitToggle, 500);
             }
             return;
         }
@@ -459,9 +415,7 @@ class GuiControl {
         CONFIGURATOR.connectionValid = false;
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-            return setTimeout(function () {
-                document.querySelector("a.connection_button__link")?.click();
-            }, 1500);
+            return setTimeout(emitToggle, 1500);
         }
 
         // Show reboot progress modal except for cli and presets tab
@@ -612,39 +566,34 @@ class GuiControl {
             }
         }
 
-        // cli-command button hook
-        const cliCommandInput = document.querySelector("input#cli-command");
-        if (cliCommandInput) {
-            cliCommandInput.onchange = function () {
-                const command = this.value;
-                if (!command) {
-                    return;
-                }
-                MSP.send_cli_command(command, function (response) {
-                    set_cli_response(response);
-                });
-            };
-        }
-
         const cliPanelDialog = {
             title: i18n.getMessage("cliPanelTitle"),
             buttonCloseText: i18n.getMessage("close"),
         };
 
-        // clear response from previous session
-        const cliResponse = document.getElementById("cli-response");
-        if (cliResponse) {
-            cliResponse.textContent = "";
-        }
-
         this.showInteractiveDialog(cliPanelDialog);
 
-        // Set focus on the CLI command input when dialog opens
-        // Use timeout to ensure dialog is fully rendered
+        // Wait for dialog to render before hooking up DOM elements
         setTimeout(() => {
-            const cliInput = document.getElementById("cli-command");
-            if (cliInput && cliInput.offsetParent !== null) {
-                cliInput.focus();
+            // clear response from previous session
+            const cliResponse = document.getElementById("cli-response");
+            if (cliResponse) {
+                cliResponse.textContent = "";
+            }
+
+            // cli-command input hook
+            const cliCommandInput = document.querySelector("input#cli-command");
+            if (cliCommandInput) {
+                cliCommandInput.onchange = function () {
+                    const command = this.value;
+                    if (!command) {
+                        return;
+                    }
+                    MSP.send_cli_command(command, function (response) {
+                        set_cli_response(response);
+                    });
+                };
+                cliCommandInput.focus();
             }
         }, 100);
     }

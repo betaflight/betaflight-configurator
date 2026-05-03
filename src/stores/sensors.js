@@ -1,73 +1,82 @@
 import { defineStore } from "pinia";
+import { reactive, ref } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 
-export const useSensorsStore = defineStore("sensors", {
-    state: () => ({
-        // Sensor visibility checkboxes
-        checkboxes: [false, false, false, false, false, false],
+export const useSensorsStore = defineStore("sensors", () => {
+    // Sensor visibility checkboxes
+    const checkboxes = ref([false, false, false, false, false, false]);
 
-        // Refresh rates (ms)
-        rates: {
-            gyro: 50,
-            accel: 50,
-            mag: 50,
-            altitude: 100,
-            sonar: 100,
-            debug: 500,
-        },
+    // Refresh rates (ms)
+    const rates = reactive({
+        gyro: 50,
+        accel: 50,
+        mag: 50,
+        altitude: 100,
+        sonar: 100,
+        debug: 500,
+    });
 
-        // Scale values
-        scales: {
-            gyro: 2000,
-            accel: 2,
-            mag: 2000,
-        },
+    // Scale values
+    const scales = reactive({
+        gyro: 2000,
+        accel: 2,
+        mag: 2000,
+    });
 
-        // Debug columns
-        debugColumns: 4,
-    }),
+    // Debug columns
+    const debugColumns = ref(4);
 
-    actions: {
-        loadFromConfig() {
-            const config = getConfig("sensors_tab");
-            if (config) {
-                if (config.checkboxes) {
-                    this.checkboxes = config.checkboxes;
-                }
-                if (config.rates) {
-                    Object.assign(this.rates, config.rates);
-                }
-                if (config.scales) {
-                    Object.assign(this.scales, config.scales);
-                }
-                if (config.debugColumns) {
-                    this.debugColumns = config.debugColumns;
-                }
+    function loadFromConfig() {
+        const config = getConfig("sensors_tab");
+        if (config) {
+            if (config.checkboxes) {
+                checkboxes.value = config.checkboxes;
             }
-        },
+            if (config.rates) {
+                Object.assign(rates, config.rates);
+            }
+            if (config.scales) {
+                Object.assign(scales, config.scales);
+            }
+            if (config.debugColumns) {
+                debugColumns.value = config.debugColumns;
+            }
+        }
+    }
 
-        saveToConfig() {
-            setConfig("sensors_tab", {
-                checkboxes: this.checkboxes,
-                rates: this.rates,
-                scales: this.scales,
-                debugColumns: this.debugColumns,
-            });
-        },
+    function saveToConfig() {
+        setConfig("sensors_tab", {
+            checkboxes: checkboxes.value,
+            rates,
+            scales,
+            debugColumns: debugColumns.value,
+        });
+    }
 
-        updateRate(sensor, value) {
-            this.rates[sensor] = value;
-            this.saveToConfig();
-        },
+    function updateRate(sensor, value) {
+        rates[sensor] = value;
+        saveToConfig();
+    }
 
-        updateScale(sensor, value) {
-            this.scales[sensor] = value;
-            this.saveToConfig();
-        },
+    function updateScale(sensor, value) {
+        scales[sensor] = value;
+        saveToConfig();
+    }
 
-        updateCheckbox(index, value) {
-            this.checkboxes[index] = value;
-            this.saveToConfig();
-        },
-    },
+    function updateCheckbox(index, value) {
+        checkboxes.value[index] = value;
+        saveToConfig();
+    }
+
+    return {
+        checkboxes,
+        rates,
+        scales,
+        debugColumns,
+        loadFromConfig,
+        saveToConfig,
+        updateRate,
+        updateScale,
+        updateCheckbox,
+    };
 });

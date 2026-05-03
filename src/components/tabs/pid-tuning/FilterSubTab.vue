@@ -1,703 +1,575 @@
 <template>
-    <div class="subtab-filter">
-        <div class="clear-both"></div>
-
+    <div class="p-5 flex flex-col gap-5">
         <!-- Filter Sliders -->
-        <div id="slidersFilterBox" class="gui_box grey tuningFilterSliders">
-            <table class="pid_titlebar">
-                <thead>
-                    <tr>
-                        <th scope="col" class="sm-min"></th>
-                        <th></th>
-                        <th>{{ $t("pidTuningSliderHighFiltering") }}</th>
-                        <th>{{ $t("pidTuningSliderDefaultFiltering") }}</th>
-                        <th>{{ $t("pidTuningSliderLowFiltering") }}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
+        <UiBox type="neutral">
+            <!-- Scale labels above sliders — aligned with the slider column -->
+            <div class="flex items-center gap-3">
+                <div class="shrink-0 invisible" style="width: 40px"></div>
+                <div class="min-w-32 shrink-0"></div>
+                <span class="min-w-10"></span>
+                <div class="flex-1 flex justify-between text-xs text-dimmed">
+                    <span>{{ $t("pidTuningSliderHighFiltering") }}</span>
+                    <span>{{ $t("pidTuningSliderDefaultFiltering") }}</span>
+                    <span>{{ $t("pidTuningSliderLowFiltering") }}</span>
+                </div>
+                <div class="invisible"><HelpIcon text="" /></div>
+            </div>
 
-            <table class="sliderLabels">
-                <tbody>
-                    <tr class="xs sliderHeaders">
-                        <td colspan="5">
-                            <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
-                        </td>
-                    </tr>
-                    <tr class="sliderGyroFilter" :class="{ disabledSliders: gyroSliderDisabled }">
-                        <td class="sm-min">
-                            <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
-                        </td>
-                        <td>
-                            <output>{{ gyroFilterMultiplier.toFixed(2) }}</output>
-                        </td>
-                        <td colspan="3">
-                            <input
-                                type="range"
-                                v-model.number="gyroFilterMultiplier"
-                                min="0.1"
-                                max="2.0"
-                                step="0.05"
-                                class="tuningSlider"
-                                :disabled="gyroSliderDisabled"
-                            />
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr class="xs sliderHeaders">
-                        <td colspan="5">
-                            <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
-                        </td>
-                    </tr>
-                    <tr class="sliderDTermFilter" :class="{ disabledSliders: dtermSliderDisabled }">
-                        <td class="sm-min">
-                            <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
-                        </td>
-                        <td>
-                            <output>{{ dtermFilterMultiplier.toFixed(2) }}</output>
-                        </td>
-                        <td colspan="3">
-                            <input
-                                type="range"
-                                v-model.number="dtermFilterMultiplier"
-                                min="0.1"
-                                max="2.0"
-                                step="0.05"
-                                class="tuningSlider"
-                                :disabled="dtermSliderDisabled"
-                            />
-                        </td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Gyro Filter Slider -->
+            <div class="flex items-center gap-3 py-1">
+                <USwitch v-model="gyroSliderEnabled" size="sm" />
+                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningGyroFilterSlider')"></div>
+                <span class="min-w-10 text-center text-sm font-semibold">{{ gyroFilterMultiplier.toFixed(2) }}</span>
+                <USlider
+                    v-model="gyroFilterMultiplier"
+                    :min="0.1"
+                    :max="2.0"
+                    :step="0.05"
+                    :disabled="gyroSliderDisabled"
+                    class="flex-1"
+                />
+                <HelpIcon :text="$t('pidTuningGyroFilterSliderHelp')" />
+            </div>
+
+            <!-- DTerm Filter Slider -->
+            <div class="flex items-center gap-3 py-1">
+                <USwitch v-model="dtermSliderEnabled" size="sm" />
+                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningDTermFilterSlider')"></div>
+                <span class="min-w-10 text-center text-sm font-semibold">{{ dtermFilterMultiplier.toFixed(2) }}</span>
+                <USlider
+                    v-model="dtermFilterMultiplier"
+                    :min="0.1"
+                    :max="2.0"
+                    :step="0.05"
+                    :disabled="dtermSliderDisabled"
+                    class="flex-1"
+                />
+                <HelpIcon :text="$t('pidTuningDTermFilterSliderHelp')" />
+            </div>
 
             <!-- Danger Zone Warning -->
-            <div v-if="filterSlidersInDangerZone" class="danger slidersWarning">
+            <UiBox v-if="filterSlidersInDangerZone" type="error" highlight>
                 <p v-html="$t('pidTuningSliderWarning')"></p>
-            </div>
+            </UiBox>
 
             <!-- Non-expert mode range restriction note -->
-            <div
-                v-if="!props.expertMode && (gyroSliderMode || dtermSliderMode)"
-                class="note expertSettingsDetectedNote nonExpertModeSlidersNote"
-            >
+            <UiBox v-if="!props.expertMode && (gyroSliderMode || dtermSliderMode)" type="warning" highlight>
                 <p v-html="$t('pidTuningFilterSlidersNonExpertMode')"></p>
-            </div>
+            </UiBox>
 
             <!-- Expert settings detected warning -->
-            <div
-                v-if="showGyroExpertSettingsWarning || showDtermExpertSettingsWarning"
-                class="note expertSettingsDetectedNote"
-            >
+            <UiBox v-if="showGyroExpertSettingsWarning || showDtermExpertSettingsWarning" type="warning" highlight>
                 <p v-html="$t('pidTuningSlidersExpertSettingsDetectedNote')"></p>
-            </div>
-        </div>
+            </UiBox>
+        </UiBox>
 
         <!-- Two Column Layout -->
-        <div class="cf_column two_columns">
-            <!-- LEFT COLUMN: Profile independent Filter Settings -->
-            <div class="gui_box grey pid_filter two_columns_first">
-                <table class="pid_titlebar new_rates">
-                    <thead>
-                        <tr>
-                            <th>{{ $t("pidTuningNonProfileFilterSettings") }}</th>
-                            <td>
-                                <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
-                                <select v-model.number="gyroSliderMode" class="sliderMode">
-                                    <option :value="0">{{ $t("pidTuningOptionOff") }}</option>
-                                    <option :value="1">{{ $t("pidTuningOptionOn") }}</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </thead>
-                </table>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- LEFT COLUMN: Non-Profile Filter Settings -->
+            <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral">
+                <!-- Gyro Lowpass Filters Section -->
+                <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
+                    <span>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</span>
+                    <HelpIcon :text="$t('pidTuningGyroLowpassFilterHelp')" />
+                </div>
 
-                <table class="filterTable compensation">
-                    <tbody>
-                        <!-- Gyro Lowpass Filters Header -->
-                        <tr>
-                            <th colspan="2">
-                                <div class="pid_mode">
-                                    <div>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</div>
-                                </div>
-                            </th>
-                        </tr>
+                <!-- Gyro Lowpass 1 -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningGyroLowpass')" :help="$t('pidTuningGyroLowpassHelp')">
+                        <USwitch v-model="gyroLowpassEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="gyroLowpassEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningGyroLowpassMode") }}</span>
+                            <USelect v-model="gyroLowpassMode" :items="lowpassModeItems" class="w-28" />
+                        </div>
+                        <div v-if="gyroLowpassMode === 0" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_lowpass_hz"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                                :disabled="gyroInputsDisabled"
+                            />
+                        </div>
+                        <div v-if="gyroLowpassMode === 1" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningMinCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_lowpass_dyn_min_hz"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                                :disabled="gyroInputsDisabled"
+                            />
+                        </div>
+                        <div v-if="gyroLowpassMode === 1" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningMaxCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_lowpass_dyn_max_hz"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                                :disabled="gyroInputsDisabled"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningLowpassFilterType") }}</span>
+                            <USelect v-model="gyro_lowpass_type" :items="filterTypeItems" class="w-24" />
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Gyro Lowpass 1 -->
-                        <tr class="gyroLowpass">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="gyroLowpassEnabled"
-                                        v-model="gyroLowpassEnabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningGyroLowpass") }}</span>
+                <!-- Gyro Lowpass 2 -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningGyroLowpass2')" :help="$t('pidTuningGyroLowpass2Help')">
+                        <USwitch v-model="gyroLowpass2Enabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="gyroLowpass2Enabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_lowpass2_hz"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                                :disabled="gyroInputsDisabled"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningLowpassFilterType") }}</span>
+                            <USelect v-model="gyro_lowpass2_type" :items="filterTypeItems" class="w-24" />
+                        </div>
+                    </div>
+                </div>
 
-                                <span v-if="gyroLowpassEnabled" class="suboption gyroLowpassFilterModeGroup">
-                                    <span class="inputValue">
-                                        <select v-model.number="gyroLowpassMode">
-                                            <option :value="0">{{ $t("pidTuningLowpassStatic") }}</option>
-                                            <option :value="1">{{ $t("pidTuningLowpassDynamic") }}</option>
-                                        </select>
-                                    </span>
-                                    <label>
-                                        <span>{{ $t("pidTuningGyroLowpassMode") }}</span>
-                                    </label>
-                                </span>
+                <!-- Gyro Notch Filters Section -->
+                <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
+                    <span>{{ $t("pidTuningGyroNotchFiltersGroup") }}</span>
+                    <HelpIcon :text="$t('pidTuningNotchFilterHelp')" />
+                </div>
 
-                                <span v-if="gyroLowpassEnabled && gyroLowpassMode === 0" class="suboption static">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
-                                        :disabled="gyroInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
+                <!-- Gyro Notch Filter 1 -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningGyroNotchFilter')" :help="$t('pidTuningGyroNotchFilterHelp')">
+                        <USwitch v-model="gyroNotch1Enabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="gyroNotch1Enabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningCenterFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_notch_hz"
+                                :step="1"
+                                :min="1"
+                                :max="16000"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_notch_cutoff"
+                                :step="1"
+                                :min="0"
+                                :max="16000"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                                <span v-if="gyroLowpassEnabled && gyroLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass_dyn_min_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
-                                        :disabled="gyroInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningMinCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
+                <!-- Gyro Notch Filter 2 -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningGyroNotchFilter2')" :help="$t('pidTuningGyroNotchFilter2Help')">
+                        <USwitch v-model="gyroNotch2Enabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="gyroNotch2Enabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningCenterFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_notch2_hz"
+                                :step="1"
+                                :min="1"
+                                :max="16000"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="gyro_notch2_cutoff"
+                                :step="1"
+                                :min="0"
+                                :max="16000"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                                <span v-if="gyroLowpassEnabled && gyroLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass_dyn_max_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
-                                        :disabled="gyroInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningMaxCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
+                <!-- RPM Filter Section -->
+                <template v-if="dshotTelemetryEnabled">
+                    <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
+                        <span>{{ $t("pidTuningRpmFilterGroup") }}</span>
+                        <HelpIcon :text="$t('pidTuningRpmFilterHelp')" />
+                    </div>
 
-                                <span v-if="gyroLowpassEnabled" class="suboption">
-                                    <select v-model.number="gyro_lowpass_type">
-                                        <option :value="0">PT1</option>
-                                        <option :value="1">BIQUAD</option>
-                                        <option :value="2">PT2</option>
-                                        <option :value="3">PT3</option>
-                                    </select>
-                                    <label>
-                                        <span>{{ $t("pidTuningLowpassFilterType") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
+                    <div class="flex flex-col gap-2">
+                        <SettingRow :label="$t('pidTuningRpmFilterGroup')" :help="$t('pidTuningRpmFilterHelp')">
+                            <USwitch v-model="rpmFilterEnabled" size="sm" />
+                        </SettingRow>
+                        <div v-if="rpmFilterEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmHarmonics") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_harmonics"
+                                    :step="1"
+                                    :min="1"
+                                    :max="3"
+                                />
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmMinHz") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_min_hz"
+                                    :step="1"
+                                    :min="50"
+                                    :max="200"
+                                />
+                            </div>
+                        </div>
+                        <div
+                            v-if="rpmFilterEnabled && hasExtendedRpmFilter"
+                            class="flex flex-wrap items-end gap-3 pl-8"
+                        >
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmQ") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_q"
+                                    :step="1"
+                                    :min="250"
+                                    :max="3000"
+                                />
+                            </div>
+                            <div v-for="i in gyro_rpm_notch_harmonics" :key="i" class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmWeight", { index: i }) }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    :model-value="gyro_rpm_notch_weights[i - 1]"
+                                    @update:model-value="setRpmWeight(i - 1, $event)"
+                                    :step="1"
+                                    :min="0"
+                                    :max="100"
+                                />
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmFadeRangeHz") }}</span>
+                                <UInputNumber
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                    v-model="gyro_rpm_notch_fade_range_hz"
+                                    :step="1"
+                                    :min="0"
+                                    :max="1000"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </template>
 
-                        <!-- Gyro Lowpass 2 -->
-                        <tr class="gyroLowpass2">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="gyroLowpass2Enabled"
-                                        v-model="gyroLowpass2Enabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningGyroLowpass2") }}</span>
+                <!-- Dynamic Notch Filter Section -->
+                <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
+                    <span>{{ $t("pidTuningDynamicNotchFilterGroup") }}</span>
+                    <HelpIcon :text="$t('pidTuningDynamicNotchFilterHelp')" />
+                </div>
 
-                                <span v-if="gyroLowpass2Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_lowpass2_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
-                                        :disabled="gyroInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
+                <div class="flex flex-col gap-2">
+                    <SettingRow
+                        :label="$t('pidTuningDynamicNotchFilterGroup')"
+                        :help="$t('pidTuningDynamicNotchFilterHelp')"
+                    >
+                        <USwitch v-model="dynamicNotchEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="dynamicNotchEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchCount") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_notch_count"
+                                :step="1"
+                                :min="1"
+                                :max="5"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchQ") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dyn_notch_q"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchMinHz") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_notch_min_hz"
+                                :step="1"
+                                :min="60"
+                                :max="250"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningDynamicNotchMaxHz") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dyn_notch_max_hz"
+                                :step="1"
+                                :min="200"
+                                :max="1000"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </UiBox>
 
-                                <span v-if="gyroLowpass2Enabled" class="suboption">
-                                    <select v-model.number="gyro_lowpass2_type">
-                                        <option :value="0">PT1</option>
-                                        <option :value="1">BIQUAD</option>
-                                        <option :value="2">PT2</option>
-                                        <option :value="3">PT3</option>
-                                    </select>
-                                    <label>
-                                        <span>{{ $t("pidTuningLowpassFilterType") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
+            <!-- RIGHT COLUMN: Profile-dependent Filter Settings -->
+            <UiBox :title="$t('pidTuningFilterSettings')" type="neutral">
+                <!-- D-Term Lowpass Filters Section -->
+                <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
+                    <span>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</span>
+                    <HelpIcon :text="$t('pidTuningDTermLowpassFilterHelp')" />
+                </div>
 
-                        <!-- Gyro Notch Filters Header -->
-                        <tr>
-                            <th colspan="2">
-                                <div class="pid_mode">
-                                    <div>{{ $t("pidTuningGyroNotchFiltersGroup") }}</div>
-                                </div>
-                            </th>
-                        </tr>
+                <!-- DTerm Lowpass 1 -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningDTermLowpass')" :help="$t('pidTuningDTermLowpassHelp')">
+                        <USwitch v-model="dtermLowpassEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="dtermLowpassEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningGyroLowpassMode") }}</span>
+                            <USelect v-model="dtermLowpassMode" :items="lowpassModeItems" class="w-28" />
+                        </div>
+                        <div v-if="dtermLowpassMode === 0" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dterm_lowpass_hz"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                                :disabled="dtermInputsDisabled"
+                            />
+                        </div>
+                        <div v-if="dtermLowpassMode === 1" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningMinCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dterm_lowpass_dyn_min_hz"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                                :disabled="dtermInputsDisabled"
+                            />
+                        </div>
+                        <div v-if="dtermLowpassMode === 1" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningMaxCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dterm_lowpass_dyn_max_hz"
+                                :step="10"
+                                :min="200"
+                                :max="2000"
+                                :disabled="dtermInputsDisabled"
+                            />
+                        </div>
+                        <div v-if="dtermLowpassMode === 1" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningDTermLowpassDynExpo") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="dyn_lpf_curve_expo"
+                                :step="1"
+                                :min="0"
+                                :max="10"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningLowpassFilterType") }}</span>
+                            <USelect v-model="dterm_lowpass_type" :items="filterTypeItems" class="w-24" />
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Gyro Notch Filter 1 -->
-                        <tr class="newFilter gyroNotch1">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="gyroNotch1Enabled"
-                                        v-model="gyroNotch1Enabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningGyroNotchFilter") }}</span>
+                <!-- DTerm Lowpass 2 -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningDTermLowpass2')" :help="$t('pidTuningDTermLowpass2Help')">
+                        <USwitch v-model="dtermLowpass2Enabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="dtermLowpass2Enabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dterm_lowpass2_hz"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
+                                :disabled="dtermInputsDisabled"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningLowpassFilterType") }}</span>
+                            <USelect v-model="dterm_lowpass2_type" :items="filterTypeItems" class="w-24" />
+                        </div>
+                    </div>
+                </div>
 
-                                <span v-if="gyroNotch1Enabled" class="suboption">
-                                    <input type="number" v-model.number="gyro_notch_hz" step="1" min="1" max="16000" />
-                                    <label>
-                                        <span>{{ $t("pidTuningCenterFrequency") }}</span>
-                                    </label>
-                                </span>
+                <!-- D-Term Notch Filter Section -->
+                <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
+                    <span>{{ $t("pidTuningDTermNotchFiltersGroup") }}</span>
+                    <HelpIcon :text="$t('pidTuningDTermNotchFiltersGroupHelp')" />
+                </div>
 
-                                <span v-if="gyroNotch1Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_notch_cutoff"
-                                        step="1"
-                                        min="0"
-                                        max="16000"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
+                <div class="flex flex-col gap-2">
+                    <SettingRow
+                        :label="$t('pidTuningDTermNotchFiltersGroup')"
+                        :help="$t('pidTuningDTermNotchFiltersGroupHelp')"
+                    >
+                        <USwitch v-model="dtermNotchEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="dtermNotchEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningCenterFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dterm_notch_hz"
+                                :step="1"
+                                :min="1"
+                                :max="16000"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                                v-model="dterm_notch_cutoff"
+                                :step="1"
+                                :min="0"
+                                :max="16000"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Gyro Notch Filter 2 -->
-                        <tr class="newFilter gyroNotch2">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="gyroNotch2Enabled"
-                                        v-model="gyroNotch2Enabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningGyroNotchFilter2") }}</span>
+                <!-- Yaw Lowpass Filter Section -->
+                <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
+                    <span>{{ $t("pidTuningYawLowpassFiltersGroup") }}</span>
+                    <HelpIcon :text="$t('pidTuningYawLowpassFiltersGroupHelp')" />
+                </div>
 
-                                <span v-if="gyroNotch2Enabled" class="suboption">
-                                    <input type="number" v-model.number="gyro_notch2_hz" step="1" min="1" max="16000" />
-                                    <label>
-                                        <span>{{ $t("pidTuningCenterFrequency") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="gyroNotch2Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_notch2_cutoff"
-                                        step="1"
-                                        min="0"
-                                        max="16000"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- RPM Filter Header -->
-                        <tr v-if="dshotTelemetryEnabled" class="newFilter rpmFilter">
-                            <th class="rpmFilter" colspan="2">
-                                <div class="pid_mode rpmFilter">
-                                    <div>{{ $t("pidTuningRpmFilterGroup") }}</div>
-                                </div>
-                            </th>
-                        </tr>
-
-                        <!-- RPM Filter -->
-                        <tr v-if="dshotTelemetryEnabled" class="newFilter rpmFilter">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="rpmFilterEnabled"
-                                        v-model="rpmFilterEnabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningRpmFilterGroup") }}</span>
-
-                                <span v-if="rpmFilterEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_rpm_notch_harmonics"
-                                        step="1"
-                                        min="1"
-                                        max="3"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningRpmHarmonics") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="rpmFilterEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="gyro_rpm_notch_min_hz"
-                                        step="1"
-                                        min="50"
-                                        max="200"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningRpmMinHz") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- Dynamic Notch Filter Header -->
-                        <tr class="newFilter dynamicNotch">
-                            <th class="dynamicNotch" colspan="2">
-                                <div class="pid_mode dynamicNotch">
-                                    <div>{{ $t("pidTuningDynamicNotchFilterGroup") }}</div>
-                                </div>
-                            </th>
-                        </tr>
-
-                        <!-- Dynamic Notch Filter -->
-                        <tr class="newFilter dynamicNotch">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="dynamicNotchEnabled"
-                                        v-model="dynamicNotchEnabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningDynamicNotchFilterGroup") }}</span>
-
-                                <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input type="number" v-model.number="dyn_notch_count" step="1" min="1" max="5" />
-                                    <label>
-                                        <span>{{ $t("pidTuningDynamicNotchCount") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input type="number" v-model.number="dyn_notch_q" step="1" min="1" max="1000" />
-                                    <label>
-                                        <span>{{ $t("pidTuningDynamicNotchQ") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dyn_notch_min_hz"
-                                        step="1"
-                                        min="60"
-                                        max="250"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningDynamicNotchMinHz") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dynamicNotchEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dyn_notch_max_hz"
-                                        step="1"
-                                        min="200"
-                                        max="1000"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningDynamicNotchMaxHz") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- RIGHT COLUMN: Profile dependent Filter Settings -->
-            <div class="gui_box grey pid_filter two_columns_second">
-                <table class="pid_titlebar new_rates">
-                    <thead>
-                        <tr>
-                            <th>{{ $t("pidTuningFilterSettings") }}</th>
-                            <td>
-                                <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
-                                <select v-model.number="dtermSliderMode" class="sliderMode">
-                                    <option :value="0">{{ $t("pidTuningOptionOff") }}</option>
-                                    <option :value="1">{{ $t("pidTuningOptionOn") }}</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </thead>
-                </table>
-
-                <table class="filterTable compensation">
-                    <tbody>
-                        <!-- D Term Lowpass Filters Header -->
-                        <tr>
-                            <th colspan="2">
-                                <div class="pid_mode">
-                                    <div>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</div>
-                                </div>
-                            </th>
-                        </tr>
-
-                        <!-- D Term Lowpass 1 -->
-                        <tr class="dtermLowpass">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="dtermLowpassEnabled"
-                                        v-model="dtermLowpassEnabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningDTermLowpass") }}</span>
-
-                                <span v-if="dtermLowpassEnabled" class="suboption dtermLowpassFilterModeGroup">
-                                    <span class="inputValue">
-                                        <select v-model.number="dtermLowpassMode">
-                                            <option :value="0">{{ $t("pidTuningLowpassStatic") }}</option>
-                                            <option :value="1">{{ $t("pidTuningLowpassDynamic") }}</option>
-                                        </select>
-                                    </span>
-                                    <label>
-                                        <span>{{ $t("pidTuningGyroLowpassMode") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dtermLowpassEnabled && dtermLowpassMode === 0" class="suboption static">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
-                                        :disabled="dtermInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dtermLowpassEnabled && dtermLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass_dyn_min_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
-                                        :disabled="dtermInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningMinCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dtermLowpassEnabled && dtermLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass_dyn_max_hz"
-                                        step="10"
-                                        min="200"
-                                        max="2000"
-                                        :disabled="dtermInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningMaxCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dtermLowpassEnabled && dtermLowpassMode === 1" class="suboption dynamic">
-                                    <input
-                                        type="number"
-                                        v-model.number="dyn_lpf_curve_expo"
-                                        step="1"
-                                        min="0"
-                                        max="10"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningDTermLowpassDynExpo") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dtermLowpassEnabled" class="suboption">
-                                    <select v-model.number="dterm_lowpass_type">
-                                        <option :value="0">PT1</option>
-                                        <option :value="1">BIQUAD</option>
-                                        <option :value="2">PT2</option>
-                                        <option :value="3">PT3</option>
-                                    </select>
-                                    <label>
-                                        <span>{{ $t("pidTuningLowpassFilterType") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- D Term Lowpass 2 -->
-                        <tr class="dtermLowpass2">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="dtermLowpass2Enabled"
-                                        v-model="dtermLowpass2Enabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningDTermLowpass2") }}</span>
-
-                                <span v-if="dtermLowpass2Enabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_lowpass2_hz"
-                                        step="1"
-                                        min="1"
-                                        max="1000"
-                                        :disabled="dtermInputsDisabled"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dtermLowpass2Enabled" class="suboption">
-                                    <select v-model.number="dterm_lowpass2_type">
-                                        <option :value="0">PT1</option>
-                                        <option :value="1">BIQUAD</option>
-                                        <option :value="2">PT2</option>
-                                        <option :value="3">PT3</option>
-                                    </select>
-                                    <label>
-                                        <span>{{ $t("pidTuningLowpassFilterType") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- D Term Notch Filter Header -->
-                        <tr>
-                            <th colspan="2">
-                                <div class="pid_mode">
-                                    <div>{{ $t("pidTuningDTermNotchFiltersGroup") }}</div>
-                                </div>
-                            </th>
-                        </tr>
-
-                        <!-- D Term Notch Filter -->
-                        <tr class="newFilter dtermNotch">
-                            <td>
-                                <span class="inputSwitch">
-                                    <input
-                                        type="checkbox"
-                                        id="dtermNotchEnabled"
-                                        v-model="dtermNotchEnabled"
-                                        class="toggle"
-                                    />
-                                </span>
-                            </td>
-                            <td colspan="2">
-                                <span>{{ $t("pidTuningDTermNotchFiltersGroup") }}</span>
-
-                                <span v-if="dtermNotchEnabled" class="suboption">
-                                    <input type="number" v-model.number="dterm_notch_hz" step="1" min="1" max="16000" />
-                                    <label>
-                                        <span>{{ $t("pidTuningCenterFrequency") }}</span>
-                                    </label>
-                                </span>
-
-                                <span v-if="dtermNotchEnabled" class="suboption">
-                                    <input
-                                        type="number"
-                                        v-model.number="dterm_notch_cutoff"
-                                        step="1"
-                                        min="0"
-                                        max="16000"
-                                    />
-                                    <label>
-                                        <span>{{ $t("pidTuningCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- Yaw Lowpass Filter Header -->
-                        <tr>
-                            <th colspan="2">
-                                <div class="pid_mode">
-                                    <div>{{ $t("pidTuningYawLowpassFiltersGroup") }}</div>
-                                </div>
-                            </th>
-                        </tr>
-
-                        <!-- Yaw Lowpass Filter -->
-                        <tr class="yawLowpass">
-                            <td colspan="3">
-                                <span>{{ $t("pidTuningYawLowpassFiltersGroup") }}</span>
-
-                                <span class="suboption">
-                                    <input type="number" v-model.number="yaw_lowpass_hz" step="1" min="0" max="500" />
-                                    <label>
-                                        <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div class="flex flex-col gap-2">
+                    <SettingRow
+                        :label="$t('pidTuningYawLowpassFiltersGroup')"
+                        :help="$t('pidTuningYawLowpassFiltersGroupHelp')"
+                    >
+                        <USwitch v-model="yawLowpassEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="yawLowpassEnabled" class="flex flex-wrap items-end gap-3 pl-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningStaticCutoffFrequency") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="yaw_lowpass_hz"
+                                :step="1"
+                                :min="1"
+                                :max="500"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </UiBox>
         </div>
     </div>
 </template>
 
 <script setup>
 import { computed, ref, watch } from "vue";
+import { useTranslation } from "i18next-vue";
 import FC from "@/js/fc";
 import {
     NON_EXPERT_SLIDER_MIN_GYRO,
@@ -705,9 +577,16 @@ import {
     NON_EXPERT_SLIDER_MIN_DTERM,
     NON_EXPERT_SLIDER_MAX_DTERM,
 } from "@/composables/useTuningSliders";
+import semver from "semver";
+import { API_VERSION_1_48 } from "@/js/data_storage";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
+import UiBox from "@/components/elements/UiBox.vue";
+import HelpIcon from "@/components/elements/HelpIcon.vue";
+import SettingRow from "@/components/elements/SettingRow.vue";
+
+const { t } = useTranslation();
 
 const props = defineProps({
     expertMode: {
@@ -717,6 +596,19 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["change"]);
+
+// USelect item arrays
+const lowpassModeItems = computed(() => [
+    { value: 0, label: t("pidTuningLowpassStatic") },
+    { value: 1, label: t("pidTuningLowpassDynamic") },
+]);
+
+const filterTypeItems = [
+    { value: 0, label: "PT1" },
+    { value: 1, label: "BIQUAD" },
+    { value: 2, label: "PT2" },
+    { value: 3, label: "PT3" },
+];
 
 // Store previous non-zero values AND mode to restore when re-enabling filters
 const previousValues = ref({
@@ -739,6 +631,7 @@ const previousValues = ref({
     dtermNotchCutoff: 160,
     dynNotchCount: 3, // Default dynamic notch count
     lastDynNotchMode: 1, // Track if dynamic notch was enabled
+    yawLowpassHz: 100,
 });
 
 // Slider Modes (ON/OFF toggles for gyro and dterm sliders)
@@ -751,6 +644,17 @@ const gyroSliderMode = computed({
 const dtermSliderMode = computed({
     get: () => FC.TUNING_SLIDERS.slider_dterm_filter ?? 1,
     set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter = value),
+});
+
+// Boolean wrappers for USwitch binding
+const gyroSliderEnabled = computed({
+    get: () => gyroSliderMode.value === 1,
+    set: (value) => (gyroSliderMode.value = value ? 1 : 0),
+});
+
+const dtermSliderEnabled = computed({
+    get: () => dtermSliderMode.value === 1,
+    set: (value) => (dtermSliderMode.value = value ? 1 : 0),
 });
 
 // Filter Sliders
@@ -1027,6 +931,7 @@ const gyro_notch2_cutoff = computed({
 });
 
 // RPM Filter
+const hasExtendedRpmFilter = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48));
 const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry ?? false);
 
 const rpmFilterEnabled = computed({
@@ -1054,6 +959,22 @@ const gyro_rpm_notch_min_hz = computed({
     get: () => FC.FILTER_CONFIG.gyro_rpm_notch_min_hz || 100,
     set: (value) => (FC.FILTER_CONFIG.gyro_rpm_notch_min_hz = value),
 });
+
+const gyro_rpm_notch_fade_range_hz = computed({
+    get: () => FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz ?? 0,
+    set: (value) => (FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz = value),
+});
+
+const gyro_rpm_notch_q = computed({
+    get: () => FC.FILTER_CONFIG.gyro_rpm_notch_q ?? 0,
+    set: (value) => (FC.FILTER_CONFIG.gyro_rpm_notch_q = value),
+});
+
+const gyro_rpm_notch_weights = computed(() => FC.FILTER_CONFIG.gyro_rpm_notch_weights ?? [0, 0, 0]);
+
+function setRpmWeight(index, value) {
+    FC.FILTER_CONFIG.gyro_rpm_notch_weights[index] = value;
+}
 
 // Dynamic Notch Filter
 const dynamicNotchEnabled = computed({
@@ -1211,6 +1132,20 @@ const dterm_notch_cutoff = computed({
 });
 
 // Yaw Lowpass Filter
+const yawLowpassEnabled = computed({
+    get: () => FC.FILTER_CONFIG.yaw_lowpass_hz !== 0,
+    set: (value) => {
+        if (value) {
+            FC.FILTER_CONFIG.yaw_lowpass_hz = previousValues.value.yawLowpassHz;
+        } else {
+            if (FC.FILTER_CONFIG.yaw_lowpass_hz > 0) {
+                previousValues.value.yawLowpassHz = FC.FILTER_CONFIG.yaw_lowpass_hz;
+            }
+            FC.FILTER_CONFIG.yaw_lowpass_hz = 0;
+        }
+    },
+});
+
 const yaw_lowpass_hz = computed({
     get: () => FC.FILTER_CONFIG.yaw_lowpass_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.yaw_lowpass_hz = value),
@@ -1286,6 +1221,14 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
         });
 });
 
+watch(
+    () => JSON.stringify(FC.FILTER_CONFIG),
+    () => emit("change"),
+);
+
+watch(gyroSliderMode, () => emit("change"));
+watch(dtermSliderMode, () => emit("change"));
+
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {
     isUpdatingSliders = true;
@@ -1298,96 +1241,3 @@ defineExpose({
     forceUpdateSliders,
 });
 </script>
-
-<style scoped>
-.subtab-filter {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.gui_box.grey {
-    border: 1px solid var(--surface-300);
-    border-radius: 4px;
-    padding: 15px;
-    background: var(--surface-50);
-}
-
-.gui_box.grey h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: var(--text-primary);
-    font-size: 16px;
-}
-
-.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.checkbox input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-}
-
-.suboption {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-left: 24px;
-}
-
-.suboption label {
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-top: 8px;
-}
-
-.suboption input[type="number"],
-.suboption select {
-    padding: 6px 10px;
-    border: 1px solid var(--surface-300);
-    border-radius: 4px;
-    background: var(--surface-0);
-    color: var(--text-primary);
-    min-width: fit-content;
-    width: auto;
-    max-width: none;
-}
-
-.slider-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.slider-container label {
-    min-width: 200px;
-    font-weight: 500;
-}
-
-.tuningSlider {
-    width: 100%;
-    max-width: none;
-}
-
-.slider-container span {
-    min-width: 50px;
-    font-weight: bold;
-    color: var(--accent-color);
-}
-
-.notch-filter {
-    border-left: 2px solid var(--surface-300);
-    padding-left: 12px;
-    margin-bottom: 12px;
-}
-
-.notch-filter:last-child {
-    margin-bottom: 0;
-}
-</style>

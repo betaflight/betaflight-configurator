@@ -4,289 +4,250 @@
             <div class="tab_title" v-html="$t('tabGPS')"></div>
             <WikiButton docUrl="gps" />
 
-            <div class="grid-row grid-box col5">
-                <div class="col-span-2">
-                    <div class="gui_box grey gps">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('configurationGPS')"></div>
-                            <div class="helpicon cf_tip" :title="$t('configurationGPSHelp')"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="gps_config">
-                                <div>
-                                    <div class="select line">
-                                        <table>
-                                            <tbody class="features gps">
-                                                <tr v-for="feature in gpsFeatures" :key="feature.bit">
-                                                    <td>
-                                                        <input
-                                                            class="feature toggle"
-                                                            type="checkbox"
-                                                            :id="`feature${feature.bit}`"
-                                                            :checked="isFeatureEnabled(feature)"
-                                                            @change="toggleFeature(feature, $event.target.checked)"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <div v-if="!feature.hideName">{{ feature.name }}</div>
-                                                        <span class="xs" v-html="$t(`feature${feature.name}`)"></span>
-                                                    </td>
-                                                    <td>
-                                                        <span
-                                                            class="sm-min"
-                                                            v-html="$t(`feature${feature.name}`)"
-                                                        ></span>
-                                                        <div
-                                                            v-if="feature.haveTip"
-                                                            class="helpicon cf_tip"
-                                                            :title="$t(`feature${feature.name}Tip`)"
-                                                        ></div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div class="helpicon cf_tip" :title="$t('featureGPSTip')"></div>
-                                    </div>
-                                    <div class="number">
-                                        <select
-                                            class="gps_protocol"
-                                            v-model.number="gpsConfig.provider"
-                                            @change="onGpsProtocolChange"
-                                        >
-                                            <option
-                                                v-for="(protocol, idx) in gpsProtocols"
-                                                :key="protocol"
-                                                :value="idx"
-                                            >
-                                                {{ protocol }}
-                                            </option>
-                                        </select>
-                                        <span v-html="$t('configurationGPSProtocol')"></span>
-                                    </div>
-                                    <div class="number gps_auto_baud" v-if="showAutoBaud">
-                                        <div>
-                                            <input type="checkbox" class="toggle" v-model="autoBaudChecked" />
-                                        </div>
-                                        <span class="freelabel" v-html="$t('configurationGPSAutoBaud')"></span>
-                                    </div>
-                                    <div class="number gps_auto_config" v-if="showAutoConfig">
-                                        <div>
-                                            <input
-                                                type="checkbox"
-                                                name="gps_auto_config"
-                                                class="toggle"
-                                                v-model="autoConfigChecked"
-                                            />
-                                        </div>
-                                        <span class="freelabel" v-html="$t('configurationGPSAutoConfig')"></span>
-                                    </div>
-                                    <div class="number gps_ublox_galileo" v-if="showUbloxGalileo">
-                                        <div>
-                                            <input
-                                                type="checkbox"
-                                                name="gps_ublox_galileo"
-                                                class="toggle"
-                                                v-model="ubloxGalileoChecked"
-                                            />
-                                        </div>
-                                        <span class="freelabel" v-html="$t('configurationGPSGalileo')"></span>
-                                        <div class="helpicon cf_tip" :title="$t('configurationGPSGalileoHelp')"></div>
-                                    </div>
-                                    <div class="number gps_home_once">
-                                        <div>
-                                            <input type="checkbox" class="toggle" v-model="homeOnceChecked" />
-                                        </div>
-                                        <span class="freelabel" v-html="$t('configurationGPSHomeOnce')"></span>
-                                        <div class="helpicon cf_tip" :title="$t('configurationGPSHomeOnceHelp')"></div>
-                                    </div>
-                                    <div class="select" v-if="showUbloxSbas">
-                                        <select class="gps_ubx_sbas" v-model.number="gpsConfig.ublox_sbas">
-                                            <option v-for="(sbas, index) in gpsSbas" :key="index" :value="index">
-                                                {{ sbas }}
-                                            </option>
-                                        </select>
-                                        <span class="freelabel" v-html="$t('configurationGPSubxSbas')"></span>
-                                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                <!-- Left Column: Configuration + Signal Strength -->
+                <div class="lg:col-span-2 flex flex-col gap-4">
+                    <!-- GPS Configuration -->
+                    <UiBox :title="$t('configurationGPS')" :help="$t('configurationGPSHelp')">
+                        <SettingRow
+                            v-for="feature in gpsFeatures"
+                            :key="feature.bit"
+                            :label="$t(`feature${feature.name}`)"
+                            :help="feature.haveTip ? $t(`feature${feature.name}Tip`) : $t('featureGPSTip')"
+                        >
+                            <USwitch
+                                :model-value="isFeatureEnabled(feature)"
+                                @update:model-value="toggleFeature(feature, $event)"
+                            />
+                        </SettingRow>
+
+                        <SettingRow :label="$t('configurationGPSProtocol')">
+                            <USelect
+                                :items="gpsProtocolItems"
+                                v-model="gpsConfig.provider"
+                                @update:model-value="onGpsProtocolChange"
+                                size="sm"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+
+                        <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
+                            <USwitch v-model="autoBaudChecked" />
+                        </SettingRow>
+
+                        <SettingRow v-if="showAutoConfig" :label="$t('configurationGPSAutoConfig')">
+                            <USwitch v-model="autoConfigChecked" />
+                        </SettingRow>
+
+                        <SettingRow
+                            v-if="showUbloxGalileo"
+                            :label="$t('configurationGPSGalileo')"
+                            :help="$t('configurationGPSGalileoHelp')"
+                        >
+                            <USwitch v-model="ubloxGalileoChecked" />
+                        </SettingRow>
+
+                        <SettingRow :label="$t('configurationGPSHomeOnce')" :help="$t('configurationGPSHomeOnceHelp')">
+                            <USwitch v-model="homeOnceChecked" />
+                        </SettingRow>
+
+                        <SettingRow v-if="showUbloxSbas" :label="$t('configurationGPSubxSbas')">
+                            <USelect :items="gpsSbasItems" v-model="gpsConfig.ublox_sbas" size="sm" class="min-w-40" />
+                        </SettingRow>
+                    </UiBox>
+
+                    <!-- GPS Signal Strength -->
+                    <UiBox
+                        :title="$t('gpsSignalStrHead')"
+                        :help="$t('gpsSignalStrHeadHelp')"
+                        :type="hasGpsSensor ? 'default' : 'warning'"
+                        :highlight="!hasGpsSensor"
+                    >
+                        <div v-if="!hasGpsSensor" class="text-center p-2 text-sm" v-html="$t('gpsSignalLost')"></div>
+                        <div v-if="hasGpsSensor" class="text-xs">
+                            <div class="grid grid-cols-[12%_14%_30%_1fr] font-bold">
+                                <div class="p-1" v-html="$t('gpsSignalGnssId')"></div>
+                                <div class="p-1 text-center" v-html="$t('gpsSignalSatId')"></div>
+                                <div class="p-1 text-center" v-html="$t('gpsSignalStr')"></div>
+                                <div class="p-1 pl-2.5" v-html="$t('gpsSignalQuality')"></div>
+                            </div>
+                            <div
+                                v-for="(row, index) in signalRows"
+                                :key="index"
+                                class="grid grid-cols-[12%_14%_30%_1fr] items-center"
+                            >
+                                <div class="p-1">{{ row.gnss }}</div>
+                                <div class="p-1 text-center">
+                                    <span
+                                        v-if="typeof row.satId === 'number'"
+                                        class="inline-block w-8 text-center px-1 py-0.5 rounded text-xs text-white"
+                                        :class="row.satUsed ? 'bg-[var(--success-500)]' : 'bg-[var(--error-500)]'"
+                                        :title="row.satUsed ? $t('gnssUsedUsed') : $t('gnssUsedUnused')"
+                                    >
+                                        {{ row.satId }}
+                                    </span>
+                                    <span v-else>-</span>
+                                </div>
+                                <div class="p-1">
+                                    <UProgress :model-value="row.cno" :max="55" size="xs" color="success" />
+                                </div>
+                                <div class="p-1 pl-2.5">
+                                    <span
+                                        v-if="row.quality"
+                                        class="px-1.5 py-0.5 rounded text-xs"
+                                        :class="row.qualityClass"
+                                    >
+                                        {{ row.quality }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('gpsSignalStrHead')"></div>
-                            <div class="helpicon cf_tip" :title="$t('gpsSignalStrHeadHelp')"></div>
-                        </div>
-                        <div class="spacer_box GPS_signal_strength">
-                            <div class="signal_strength note" v-if="!hasGpsSensor" v-html="$t('gpsSignalLost')"></div>
-                            <table class="cf_table" v-if="hasGpsSensor">
-                                <tbody>
-                                    <tr class="titles">
-                                        <td style="text-align: left; width: 12%" v-html="$t('gpsSignalGnssId')"></td>
-                                        <td style="text-align: center; width: 14%" v-html="$t('gpsSignalSatId')"></td>
-                                        <td style="text-align: center; width: 30%" v-html="$t('gpsSignalStr')"></td>
-                                        <td style="text-align: left; width: 44%" v-html="$t('gpsSignalQuality')"></td>
-                                    </tr>
-                                    <tr v-for="(row, index) in signalRows" :key="index">
-                                        <td>{{ row.gnss }}</td>
-                                        <td>
-                                            <span
-                                                v-if="row.satId !== null"
-                                                class="colorToggle sat-id-pill"
-                                                :class="{ ready: row.satUsed }"
-                                                :title="row.satUsed ? $t('gnssUsedUsed') : $t('gnssUsedUnused')"
-                                            >
-                                                {{ row.satId }}
-                                            </span>
-                                            <span v-else>-</span>
-                                        </td>
-                                        <td>
-                                            <meter :value="row.cno" max="55"></meter>
-                                        </td>
-                                        <td>
-                                            <span v-if="row.quality" class="colorToggle" :class="row.qualityClass">
-                                                {{ row.quality }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    </UiBox>
                 </div>
 
-                <div class="col-span-3">
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('gpsHead')"></div>
-                            <div class="helpicon cf_tip" :title="$t('gpsHeadHelp')"></div>
+                <!-- Right Column: GPS Info + Map -->
+                <div class="lg:col-span-3 flex flex-col gap-4">
+                    <!-- GPS Info -->
+                    <UiBox :title="$t('gpsHead')" :help="$t('gpsHeadHelp')">
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gps3dFix')"></span>
+                            <span
+                                class="px-1.5 py-0.5 rounded text-xs text-white"
+                                :class="gpsInfo.fix ? 'bg-[var(--success-500)]' : 'bg-[var(--error-500)]'"
+                            >
+                                {{ gpsInfo.fix ? $t("gpsFixTrue") : $t("gpsFixFalse") }}
+                            </span>
                         </div>
-                        <div class="spacer_box GPS_info">
-                            <table class="cf_table">
-                                <tbody>
-                                    <tr>
-                                        <td v-html="$t('gps3dFix')"></td>
-                                        <td>
-                                            <span class="colorToggle" :class="{ ready: gpsInfo.fix }">{{
-                                                gpsInfo.fix ? $t("gpsFixTrue") : $t("gpsFixFalse")
-                                            }}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td v-html="$t('gpsSats')"></td>
-                                        <td class="sats">{{ gpsInfo.sats }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td v-html="$t('gpsAltitude')"></td>
-                                        <td class="alt">{{ gpsInfo.alt }} m</td>
-                                    </tr>
-                                    <tr>
-                                        <td v-html="$t('gpsSpeed')"></td>
-                                        <td class="speed">{{ gpsInfo.speed }} cm/s</td>
-                                    </tr>
-                                    <tr>
-                                        <td v-html="$t('gpsHeading')"></td>
-                                        <td class="heading">
-                                            {{ gpsInfo.headingImu.toFixed(0) }} / {{ gpsInfo.headingGps.toFixed(0) }}
-                                            {{ $t("gpsPositionUnit") }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td v-html="$t('gpsLatitude')"></td>
-                                        <td class="latitude">
-                                            <a :href="mapLink" target="_blank"
-                                                >{{ gpsInfo.latitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}</a
-                                            >
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td v-html="$t('gpsLongitude')"></td>
-                                        <td class="longitude">
-                                            <a :href="mapLink" target="_blank"
-                                                >{{ gpsInfo.longitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}</a
-                                            >
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td v-html="$t('gpsDistToHome')"></td>
-                                        <td class="distToHome">{{ gpsInfo.distToHome }} m</td>
-                                    </tr>
-                                    <tr v-if="showPositionalDop">
-                                        <td v-html="$t('gpsPositionalDop')"></td>
-                                        <td class="positionalDop" v-html="gpsInfo.positionalDopDisplay"></td>
-                                    </tr>
-                                    <tr v-if="showPositionalDop && hasMag">
-                                        <td v-html="$t('gpsMagneticDeclination')"></td>
-                                        <td class="magDeclination">
-                                            {{ gpsInfo.magDeclination }} {{ $t("gpsPositionUnit") }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gpsSats')"></span>
+                            <span>{{ gpsInfo.sats }}</span>
                         </div>
-                    </div>
-                    <div class="gui_box grey gps_map">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" v-html="$t('gpsMapHead')"></div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gpsAltitude')"></span>
+                            <span>{{ gpsInfo.alt }} m</span>
                         </div>
-                        <div id="connect" v-show="showConnect">
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gpsSpeed')"></span>
+                            <span>{{ gpsInfo.speed }} cm/s</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gpsHeading')"></span>
+                            <span>
+                                {{ gpsInfo.headingImu.toFixed(0) }} / {{ gpsInfo.headingGps.toFixed(0) }}
+                                {{ $t("gpsPositionUnit") }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gpsLatitude')"></span>
+                            <span>
+                                <a :href="mapLink" target="_blank">
+                                    {{ gpsInfo.latitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}
+                                </a>
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gpsLongitude')"></span>
+                            <span>
+                                <a :href="mapLink" target="_blank">
+                                    {{ gpsInfo.longitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}
+                                </a>
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('gpsDistToHome')"></span>
+                            <span>{{ gpsInfo.distToHome }} m</span>
+                        </div>
+                        <div v-if="showPositionalDop" class="flex justify-between items-center">
+                            <span v-html="$t('gpsPositionalDop')"></span>
+                            <span v-html="gpsInfo.positionalDopDisplay"></span>
+                        </div>
+                        <div v-if="showPositionalDop && hasMag" class="flex justify-between items-center">
+                            <span v-html="$t('gpsMagneticDeclination')"></span>
+                            <span>{{ gpsInfo.magDeclination }} {{ $t("gpsPositionUnit") }}</span>
+                        </div>
+                    </UiBox>
+
+                    <!-- GPS Map -->
+                    <UiBox :title="$t('gpsMapHead')">
+                        <div
+                            v-show="showConnect"
+                            class="flex flex-col items-center justify-center h-[433px] gap-2 text-center"
+                        >
                             <div>{{ $t("gpsMapMessage1") }}</div>
-                            <div class="default_btn"><a id="check" @click.prevent="checkConnectivity">retry</a></div>
+                            <UButton variant="subtle" @click="checkConnectivity">
+                                {{ $t("gpsMapRetry") }}
+                            </UButton>
                         </div>
-                        <div id="waiting" v-show="showWaiting">
-                            <div class="info">{{ $t("gpsMapMessage2") }}</div>
+                        <div
+                            v-show="showWaiting"
+                            class="flex items-center justify-center h-[433px] w-full bg-no-repeat"
+                            :style="{
+                                backgroundImage: `url(${loadingBarsUrl})`,
+                                backgroundSize: '15%',
+                                backgroundPosition: 'center 40%',
+                            }"
+                        >
+                            <div class="mt-[30%]">{{ $t("gpsMapMessage2") }}</div>
                         </div>
-                        <div id="loadmap" v-show="showLoadMap" ref="mapContainerRef">
-                            <div id="map" class="map" ref="mapRef"></div>
-                            <div class="controls">
-                                <button
-                                    type="button"
-                                    id="Satellite"
-                                    :class="{ active: activeLayer === 'satellite' }"
-                                    aria-label="Satellite view"
-                                    @click="setLayer('satellite')"
-                                >
-                                    S
-                                </button>
-                                <button
-                                    type="button"
-                                    id="Hybrid"
-                                    :class="{ active: activeLayer === 'hybrid' }"
-                                    aria-label="Hybrid satellite and street view"
-                                    @click="setLayer('hybrid')"
-                                >
-                                    H
-                                </button>
-                                <button
-                                    type="button"
-                                    id="Street"
-                                    :class="{ active: activeLayer === 'street' }"
-                                    aria-label="Street map view"
-                                    @click="setLayer('street')"
-                                >
-                                    R
-                                </button>
-                                <button type="button" id="zoom_in" aria-label="Zoom in" @click="zoomIn">+</button>
-                                <button type="button" id="zoom_out" aria-label="Zoom out" @click="zoomOut">–</button>
-                                <button
-                                    type="button"
-                                    id="fullscreen"
-                                    :class="{ active: isFullscreen }"
-                                    aria-label="Toggle fullscreen"
-                                    @click="toggleFullscreen"
-                                >
-                                    ⛶
-                                </button>
+                        <div v-show="showLoadMap" ref="mapContainerRef" class="map-container h-[433px] w-full">
+                            <div ref="mapRef" class="map h-[400px] w-full"></div>
+                            <div
+                                class="map-controls flex justify-end items-center gap-1 h-[33px] rounded-b px-1 bg-[#FAFAFA] dark:bg-transparent"
+                            >
+                                <UTooltip :text="$t('gpsMapSatelliteView')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="activeLayer === 'satellite' ? 'solid' : 'subtle'"
+                                        @click="setLayer('satellite')"
+                                    >
+                                        S
+                                    </UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapHybridView')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="activeLayer === 'hybrid' ? 'solid' : 'subtle'"
+                                        @click="setLayer('hybrid')"
+                                    >
+                                        H
+                                    </UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapStreetView')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="activeLayer === 'street' ? 'solid' : 'subtle'"
+                                        @click="setLayer('street')"
+                                    >
+                                        R
+                                    </UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapZoomIn')">
+                                    <UButton size="xs" variant="subtle" @click="zoomIn">+</UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapZoomOut')">
+                                    <UButton size="xs" variant="subtle" @click="zoomOut">–</UButton>
+                                </UTooltip>
+                                <UTooltip :text="$t('gpsMapToggleFullscreen')">
+                                    <UButton
+                                        size="xs"
+                                        :variant="isFullscreen ? 'solid' : 'subtle'"
+                                        @click="toggleFullscreen"
+                                    >
+                                        ⛶
+                                    </UButton>
+                                </UTooltip>
                             </div>
                         </div>
-                    </div>
+                    </UiBox>
                 </div>
             </div>
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="btn save_btn">
+            <!-- <div class="btn save_btn">
                 <button type="button" class="save" @click="saveConfig">{{ $t("configurationButtonSave") }}</button>
-            </div>
+            </div> -->
+            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
         </div>
     </BaseTab>
 </template>
@@ -312,13 +273,20 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
+import { useInterval } from "../../composables/useInterval";
 import WikiButton from "../elements/WikiButton.vue";
+import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
+
+const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
 
 export default defineComponent({
     name: "GpsTab",
     components: {
         BaseTab,
         WikiButton,
+        UiBox,
+        SettingRow,
     },
     setup() {
         const fcStore = useFlightControllerStore();
@@ -365,6 +333,12 @@ export default defineComponent({
             gpsProtocols.value = getGpsProtocols();
         };
 
+        const gpsProtocolItems = computed(() =>
+            gpsProtocols.value.map((protocol, idx) => ({ label: protocol, value: idx })),
+        );
+
+        const gpsSbasItems = computed(() => gpsSbas.map((sbas, index) => ({ label: sbas, value: index })));
+
         const apiVersion = computed(() => fcStore.config.apiVersion);
         const hasGpsSensor = computed(() => have_sensor(fcStore.config.activeSensors, "gps"));
         const hasMag = computed(
@@ -380,6 +354,27 @@ export default defineComponent({
             home_point_once: 0,
         });
 
+        /** Baseline after MSP load or successful save; same pattern as Power/Auxiliary tabs */
+        const gpsTabBaseline = ref("");
+
+        const serializeGpsTabState = () =>
+            JSON.stringify({
+                featureMask: fcStore.features?.features?._featureMask ?? 0,
+                provider: gpsConfig.provider,
+                auto_baud: gpsConfig.auto_baud,
+                auto_config: gpsConfig.auto_config,
+                ublox_use_galileo: gpsConfig.ublox_use_galileo,
+                ublox_sbas: gpsConfig.ublox_sbas,
+                home_point_once: gpsConfig.home_point_once,
+            });
+
+        const dirty = computed(() => {
+            if (!gpsTabBaseline.value) {
+                return false;
+            }
+            return gpsTabBaseline.value !== serializeGpsTabState();
+        });
+
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
 
@@ -392,12 +387,6 @@ export default defineComponent({
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showPositionalDop = computed(() => semver.gte(apiVersion.value, API_VERSION_1_46));
-
-        const applySwitchery = () => {
-            nextTick(() => {
-                GUI.switchery();
-            });
-        };
 
         const autoBaudChecked = computed({
             get: () => !!gpsConfig.auto_baud,
@@ -510,22 +499,22 @@ export default defineComponent({
             let qualityColor;
             let stars;
             if (positionalDop < 1) {
-                qualityColor = "ideal";
+                qualityColor = "bg-[blue] text-white";
                 stars = "★★★★★";
             } else if (positionalDop < 2) {
-                qualityColor = "excellent";
+                qualityColor = "bg-[var(--success-500)] text-white";
                 stars = "★★★★☆";
             } else if (positionalDop < 5) {
-                qualityColor = "good";
+                qualityColor = "bg-[var(--warning-500)] text-white";
                 stars = "★★★☆☆";
             } else if (positionalDop < 10) {
-                qualityColor = "moderate";
+                qualityColor = "bg-[var(--primary-500)] text-black";
                 stars = "★★☆☆☆";
             } else if (positionalDop < 20) {
-                qualityColor = "fair";
+                qualityColor = "bg-[var(--error-500)] text-white";
                 stars = "★☆☆☆☆";
             } else {
-                qualityColor = "poor";
+                qualityColor = "bg-[var(--surface-500)] text-white";
                 stars = "☆☆☆☆☆";
             }
 
@@ -570,8 +559,12 @@ export default defineComponent({
                     const satUsed = (gpsData.quality[i] & 0x8) >> 3;
                     const qualityValue = gpsData.quality[i] & 0x7;
                     const quality = i18n.getMessage(qualityArray[qualityValue]);
-                    // qualityValue: 5,6,7 = fully locked, 4 = locked, others = low
-                    const qualityColor = qualityValue >= 5 ? "ready" : qualityValue === 4 ? "locked" : "low";
+                    const qualityColor =
+                        qualityValue >= 5
+                            ? "bg-[var(--success-500)] text-white"
+                            : qualityValue === 4
+                                ? "bg-[var(--warning-500)] text-black"
+                                : "bg-[var(--surface-500)] text-white";
 
                     rows.push({
                         gnss: gnssArray[gnssId],
@@ -612,11 +605,10 @@ export default defineComponent({
             const imuHeadingDegrees = sensorData?.kinematics?.[2] || 0;
             const imuHeadingRadians = ((imuHeadingDegrees + 180) * Math.PI) / 180;
             const gpsHeading = (gpsData?.ground_course || 0) / 10;
-            const alt = gpsData?.alt || 0;
 
             gpsInfo.fix = !!gpsData?.fix;
             gpsInfo.sats = gpsData?.numSat || 0;
-            gpsInfo.alt = alt;
+            gpsInfo.alt = gpsData?.alt || 0;
             gpsInfo.speed = gpsData?.speed || 0;
             gpsInfo.headingImu = imuHeadingDegrees;
             gpsInfo.headingGps = gpsHeading;
@@ -627,7 +619,7 @@ export default defineComponent({
             if (showPositionalDop.value) {
                 const positionalDop = Number(((gpsData?.positionalDop || 0) / 100).toFixed(2));
                 const { qualityColor, stars } = getPositionalDopQuality(positionalDop);
-                gpsInfo.positionalDopDisplay = `${stars} <span class="colorToggle ${qualityColor}">${positionalDop}</span>`;
+                gpsInfo.positionalDopDisplay = `${stars} <span class="px-1.5 py-0.5 rounded text-xs ${qualityColor}">${positionalDop}</span>`;
                 gpsInfo.magDeclination = hasMag.value ? (compassConfig?.mag_declination || 0).toFixed(1) : null;
             } else {
                 gpsInfo.positionalDopDisplay = "";
@@ -665,7 +657,6 @@ export default defineComponent({
                         const center = fromLonLat([longitude, latitude]);
                         view.setCenter(center);
                         geometry.setCoordinates(center);
-                        // Ensure map relayout after showing
                         requestAnimationFrame(rerender);
                         setTimeout(rerender, 50);
                     }
@@ -710,11 +701,7 @@ export default defineComponent({
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, getCompGpsData);
         };
 
-        const localIntervals = [];
-        const addLocalInterval = (name, code, period, first = false) => {
-            GUI.interval_add(name, code, period, first);
-            localIntervals.push(name);
-        };
+        const { addInterval, removeAllIntervals } = useInterval();
 
         const checkConnectivity = () => {
             isOnline.value = ispConnected();
@@ -740,13 +727,13 @@ export default defineComponent({
 
                 await updateGpsProtocols();
 
+                gpsTabBaseline.value = serializeGpsTabState();
+
                 isOnline.value = ispConnected();
                 isWaiting.value = true;
                 showMap.value = false;
 
-                addLocalInterval("gps_pull", getRawGpsData, 100, true);
-
-                applySwitchery();
+                addInterval("gps_pull", getRawGpsData, 100, true);
             } catch (error) {
                 console.error("Failed to load GPS configuration", error);
                 isOnline.value = ispConnected();
@@ -763,6 +750,7 @@ export default defineComponent({
             await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
 
             mspHelper.writeConfiguration(true);
+            gpsTabBaseline.value = serializeGpsTabState();
         };
 
         const initializeMap = () => {
@@ -776,7 +764,6 @@ export default defineComponent({
             if (!showAutoConfig.value) {
                 gpsConfig.auto_config = 0;
             }
-            // Ensure toggles render immediately after protocol change
             nextTick(() => mapInstance.value?.map?.updateSize());
         };
 
@@ -792,8 +779,7 @@ export default defineComponent({
         });
 
         const teardown = () => {
-            localIntervals.forEach((name) => GUI.interval_remove(name));
-            localIntervals.length = 0;
+            removeAllIntervals();
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
             document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
             document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
@@ -806,16 +792,6 @@ export default defineComponent({
         onUnmounted(() => {
             navigationStore.cleanup(teardown);
         });
-
-        watch(
-            () => fcStore.features?.features?._features,
-            () => {
-                applySwitchery();
-            },
-            { deep: true, immediate: true },
-        );
-
-        watch([showAutoConfig, showUbloxGalileo, showAutoBaud], applySwitchery, { immediate: true });
 
         watch(showLoadMap, (visible) => {
             if (visible) {
@@ -838,8 +814,8 @@ export default defineComponent({
             mapContainerRef,
             activeLayer,
             isFullscreen,
-            gpsProtocols,
-            gpsSbas,
+            gpsProtocolItems,
+            gpsSbasItems,
             gpsConfig,
             gpsInfo,
             signalRows,
@@ -867,8 +843,45 @@ export default defineComponent({
             toggleFullscreen,
             checkConnectivity,
             saveConfig,
+            dirty,
             onGpsProtocolChange,
+            loadingBarsUrl,
         };
     },
 });
 </script>
+
+<style lang="less">
+@import "ol/ol.css";
+
+.tab-gps {
+    .fullscreen-map-styles() {
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: var(--surface-100);
+        .map {
+            height: calc(100vh - 33px) !important;
+            width: 100vw !important;
+        }
+        .map-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw !important;
+            z-index: 1000;
+        }
+    }
+
+    .map-container {
+        &:fullscreen {
+            .fullscreen-map-styles();
+        }
+        &:-webkit-full-screen {
+            .fullscreen-map-styles();
+        }
+        &:-ms-fullscreen {
+            .fullscreen-map-styles();
+        }
+    }
+}
+</style>

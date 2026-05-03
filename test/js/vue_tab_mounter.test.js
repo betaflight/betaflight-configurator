@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 
 vi.mock("../../src/js/gui.js", () => {
     const TABS = {};
@@ -13,13 +14,6 @@ vi.mock("../../src/js/gui.js", () => {
     };
 });
 
-vi.mock("../../src/js/tab_state.js", () => ({
-    __esModule: true,
-    tabState: {
-        expertMode: false,
-    },
-}));
-
 vi.mock("../../src/js/vue_components.js", () => ({
     __esModule: true,
     VueTabComponents: {},
@@ -32,12 +26,16 @@ vi.mock("../../src/js/pinia_instance.js", () => ({
 
 import { buildTabAdapter } from "../../src/js/vue_tab_mounter.js";
 import { TABS } from "../../src/js/gui.js";
-import { tabState } from "../../src/js/tab_state.js";
+import { useNavigationStore } from "../../src/stores/navigation.js";
 
 describe("buildTabAdapter", () => {
+    let navigationStore;
+
     beforeEach(() => {
         Object.keys(TABS).forEach((key) => delete TABS[key]);
-        tabState.expertMode = false;
+        setActivePinia(createPinia());
+        navigationStore = useNavigationStore();
+        navigationStore.expertMode = false;
     });
 
     it("preserves an existing tab adapter and augments it with shared hooks", () => {
@@ -57,7 +55,7 @@ describe("buildTabAdapter", () => {
         expect(adapter._vueComponent).toBe(componentInstance);
 
         adapter.expertModeChanged(true);
-        expect(tabState.expertMode).toBe(true);
+        expect(navigationStore.expertMode).toBe(true);
     });
 
     it("creates a fallback cleanup handler when no adapter exists", () => {

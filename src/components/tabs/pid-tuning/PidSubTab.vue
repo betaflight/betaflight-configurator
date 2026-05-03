@@ -1,1174 +1,1047 @@
 <template>
-    <div class="subtab-pid">
-        <div class="clear-both"></div>
-
+    <div class="p-5 grid grid-cols-1 xl:grid-cols-2 gap-4">
         <!-- LEFT COLUMN: PID Table and Sliders -->
-        <div class="cf_column">
-            <!-- Profile Name (API 1.45+) -->
-            <div class="profile_name" v-if="showProfileName">
-                <div class="number">
-                    <label>
-                        <input type="text" v-model="localProfileName" maxlength="8" style="width: 100px" />
-                        <span>{{ $t("pidProfileName") }}</span>
-                    </label>
-                    <div class="helpicon cf_tip" :title="$t('pidProfileNameHelp')"></div>
-                </div>
-            </div>
-
-            <!-- PID Table -->
-            <div class="gui_box grey">
-                <table id="pid_main" class="pid_tuning">
-                    <tbody>
-                        <tr class="pid_titlebar">
-                            <th class="name"></th>
-                            <th class="proportional">
-                                <div class="name-helpicon-flex">
-                                    <div class="xs" v-html="$t('pidTuningProportional')"></div>
-                                    <div
-                                        class="cf_tip sm-min"
-                                        :title="$t('pidTuningProportionalHelp')"
-                                        v-html="$t('pidTuningProportional')"
-                                    ></div>
-                                </div>
-                            </th>
-                            <th class="integral">
-                                <div class="name-helpicon-flex">
-                                    <div class="xs" v-html="$t('pidTuningIntegral')"></div>
-                                    <div
-                                        class="cf_tip sm-min"
-                                        :title="$t('pidTuningIntegralHelp')"
-                                        v-html="$t('pidTuningIntegral')"
-                                    ></div>
-                                </div>
-                            </th>
-                            <th class="derivative">
-                                <div class="name-helpicon-flex">
-                                    <div class="xs" v-html="$t(derivativeLabel)"></div>
-                                    <div
-                                        class="cf_tip sm-min"
-                                        :title="$t(derivativeHelp)"
-                                        v-html="$t(derivativeLabel)"
-                                    ></div>
-                                </div>
-                            </th>
-                            <th class="dmax">
-                                <div class="name-helpicon-flex">
-                                    <div class="xs" v-html="$t(dMaxLabel)"></div>
-                                    <div class="cf_tip sm-min" :title="$t(dMaxHelp)" v-html="$t(dMaxLabel)"></div>
-                                </div>
-                            </th>
-                            <th class="feedforward">
-                                <div class="name-helpicon-flex">
-                                    <div class="xs" v-html="$t('pidTuningFeedforward')"></div>
-                                    <div
-                                        class="cf_tip sm-min"
-                                        :title="$t('pidTuningFeedforwardHelp')"
-                                        v-html="$t('pidTuningFeedforward')"
-                                    ></div>
-                                </div>
-                            </th>
-                        </tr>
-                        <tr class="pid_titlebar2">
-                            <th colspan="6">
-                                <div class="pid_mode">
-                                    <div class="float-left">{{ $t("pidTuningBasic") }}</div>
-                                </div>
-                            </th>
-                        </tr>
-
-                        <!-- ROLL -->
-                        <tr class="ROLL">
-                            <td class="pid_roll" style="background-color: #e24761">ROLL</td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidRollP"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidRollI"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidRollD"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.dMaxRoll"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.feedforwardRoll"
-                                    step="1"
-                                    min="0"
-                                    max="2000"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                        </tr>
-
-                        <!-- PITCH -->
-                        <tr class="PITCH">
-                            <td class="pid_pitch" style="background-color: #49c747">PITCH</td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidPitchP"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidPitchI"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidPitchD"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.dMaxPitch"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.feedforwardPitch"
-                                    step="1"
-                                    min="0"
-                                    max="2000"
-                                    :disabled="rollPitchDisabled"
-                                />
-                            </td>
-                        </tr>
-
-                        <!-- YAW -->
-                        <tr class="YAW">
-                            <td class="pid_yaw" style="background-color: #477ac7">YAW</td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidYawP"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidYawI"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="pidYawD"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.dMaxYaw"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                            <td class="pid_data">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.feedforwardYaw"
-                                    step="1"
-                                    min="0"
-                                    max="2000"
-                                    :disabled="yawDisabled"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+        <div class="flex flex-col gap-4">
             <!-- Tuning Sliders Section -->
-            <div id="slidersPidsBox" class="gui_box grey tuningPIDSliders">
-                <div class="slider-header">
-                    <div class="slider-mode-section">
-                        <div class="sm-min">{{ $t("pidTuningSliderPidsMode") }}</div>
-                        <select
-                            id="sliderPidsModeSelect"
-                            class="sliderMode"
-                            v-model.number="sliderPidsMode"
-                            @change="onSliderModeChange"
-                        >
-                            <option :value="0">{{ $t("pidTuningOptionOff") }}</option>
-                            <option :value="1">{{ $t("pidTuningOptionRP") }}</option>
-                            <option :value="2">{{ $t("pidTuningOptionRPY") }}</option>
-                        </select>
-                        <div class="helpicon cf_tip" :title="$t('pidTuningSliderModeHelp')"></div>
+            <UiBox :title="$t('pidTuningSliders')" type="neutral">
+                <!-- Slider Header: Mode select + range labels -->
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="flex items-center gap-2 min-w-44 shrink-0">
+                        <span class="text-xs whitespace-nowrap">{{ $t("pidTuningSliderPidsMode") }}</span>
+                        <USelect
+                            v-model="sliderPidsMode"
+                            :items="pidsModeItems"
+                            size="xs"
+                            class="w-24"
+                            @update:model-value="onSliderModeChange"
+                        />
+                        <HelpIcon :text="$t('pidTuningSliderModeHelp')" />
                     </div>
-                    <div class="slider-range-labels">
+                    <div class="flex justify-between flex-1 text-xs text-dimmed">
                         <span>{{ $t("pidTuningSliderLow") }}</span>
                         <span>{{ $t("pidTuningSliderDefault") }}</span>
                         <span>{{ $t("pidTuningSliderHigh") }}</span>
                     </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningPidSlidersHelp')"></div>
+                    <HelpIcon :text="$t('pidTuningPidSlidersHelp')" />
                 </div>
 
                 <!-- Basic Sliders -->
-                <div class="slider-row baseSlider" :class="{ disabledSliders: sliderDGainDisabled }">
-                    <div class="slider-label" v-html="$t('pidTuningDGainSlider')"></div>
-                    <div class="slider-value">{{ sliderDGainDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderDGain"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderDGain"
-                            @input="onSliderChange"
-                            :disabled="sliderDGainDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningDGainSliderHelp')"></div>
+                <div
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': sliderDGainDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderDGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="sliderDGainDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange('sliderDGain')"
+                    />
+                    <HelpIcon :text="$t('pidTuningDGainSliderHelp')" />
                 </div>
 
-                <div class="slider-row baseSlider" :class="{ disabledSliders: sliderPIGainDisabled }">
-                    <div class="slider-label" v-html="$t('pidTuningPIGainSlider')"></div>
-                    <div class="slider-value">{{ sliderPIGainDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderPIGain"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderPIGain"
-                            @input="onSliderChange"
-                            :disabled="sliderPIGainDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningPIGainSliderHelp')"></div>
+                <div
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': sliderPIGainDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPIGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPIGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderPIGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="sliderPIGainDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange('sliderPIGain')"
+                    />
+                    <HelpIcon :text="$t('pidTuningPIGainSliderHelp')" />
                 </div>
 
-                <div class="slider-row baseSlider" :class="{ disabledSliders: sliderFFGainDisabled }">
-                    <div class="slider-label" v-html="$t('pidTuningResponseSlider')"></div>
-                    <div class="slider-value">{{ sliderFFGainDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderFeedforwardGain"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderFeedforwardGain"
-                            @input="onSliderChange"
-                            :disabled="sliderFFGainDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningResponseSliderHelp')"></div>
+                <div
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': sliderFFGainDisabled }"
+                >
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningResponseSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderFFGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderFeedforwardGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="sliderFFGainDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange('sliderFeedforwardGain')"
+                    />
+                    <HelpIcon :text="$t('pidTuningResponseSliderHelp')" />
                 </div>
 
                 <!-- Divider before advanced sliders -->
-                <div class="sliderDivider" v-show="showAdvancedSliders">
-                    <hr />
-                </div>
+                <hr v-show="showAdvancedSliders" class="border-default my-2" />
 
                 <!-- Advanced Sliders -->
                 <div
-                    class="slider-row advancedSlider"
-                    :class="{ disabledSliders: dMaxSliderDisabled }"
                     v-show="showDMaxSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': dMaxSliderDisabled }"
                 >
-                    <div class="slider-label" v-html="$t('pidTuningDMaxGainSlider')"></div>
-                    <div class="slider-value">{{ sliderDMaxGainDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderDMaxGain"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderDMaxGain"
-                            @input="onSliderChange"
-                            :disabled="dMaxSliderDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningDMaxGainSliderHelp')"></div>
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDMaxGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDMaxGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderDMaxGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="dMaxSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningDMaxGainSliderHelp')" />
                 </div>
 
                 <div
-                    class="slider-row advancedSlider"
-                    :class="{ disabledSliders: iGainSliderDisabled }"
                     v-show="showIGainSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': iGainSliderDisabled }"
                 >
-                    <div class="slider-label" v-html="$t('pidTuningIGainSlider')"></div>
-                    <div class="slider-value">{{ sliderIGainDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderIGain"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderIGain"
-                            @input="onSliderChange"
-                            :disabled="iGainSliderDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningIGainSliderHelp')"></div>
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningIGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderIGainDisplay }}</span>
+                    <USlider
+                        v-model="sliderIGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="iGainSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningIGainSliderHelp')" />
                 </div>
 
                 <div
-                    class="slider-row advancedSlider"
-                    :class="{ disabledSliders: rpRatioSliderDisabled }"
                     v-show="showRPRatioSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': rpRatioSliderDisabled }"
                 >
-                    <div class="slider-label" v-html="$t('pidTuningRollPitchRatioSlider')"></div>
-                    <div class="slider-value">{{ sliderRPRatioDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderRollPitchRatio"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderRollPitchRatio"
-                            @input="onSliderChange"
-                            :disabled="rpRatioSliderDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningRollPitchRatioSliderHelp')"></div>
+                    <div
+                        class="min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningRollPitchRatioSlider')"
+                    ></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderRPRatioDisplay }}</span>
+                    <USlider
+                        v-model="sliderRollPitchRatio"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="rpRatioSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningRollPitchRatioSliderHelp')" />
                 </div>
 
                 <div
-                    class="slider-row advancedSlider"
-                    :class="{ disabledSliders: pitchPISliderDisabled }"
                     v-show="showPitchPISlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': pitchPISliderDisabled }"
                 >
-                    <div class="slider-label" v-html="$t('pidTuningPitchPIGainSlider')"></div>
-                    <div class="slider-value">{{ sliderPitchPIDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderPitchPIGain"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderPitchPIGain"
-                            @input="onSliderChange"
-                            :disabled="pitchPISliderDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningPitchPIGainSliderHelp')"></div>
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPitchPIGainSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPitchPIDisplay }}</span>
+                    <USlider
+                        v-model="sliderPitchPIGain"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="pitchPISliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningPitchPIGainSliderHelp')" />
                 </div>
 
                 <div
-                    class="slider-row advancedSlider"
-                    :class="{ disabledSliders: masterSliderDisabled }"
                     v-show="showMasterSlider"
+                    class="flex items-center gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': masterSliderDisabled }"
                 >
-                    <div class="slider-label" v-html="$t('pidTuningMasterSlider')"></div>
-                    <div class="slider-value">{{ sliderMasterDisplay }}</div>
-                    <div class="slider-control">
-                        <input
-                            type="range"
-                            class="tuningSlider"
-                            id="sliderMasterMultiplier"
-                            min="0.0"
-                            max="2.0"
-                            step="0.05"
-                            v-model.number="sliderMasterMultiplier"
-                            @input="onSliderChange"
-                            :disabled="masterSliderDisabled"
-                        />
-                    </div>
-                    <div class="helpicon cf_tip" :title="$t('pidTuningMasterSliderHelp')"></div>
+                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningMasterSlider')"></div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderMasterDisplay }}</span>
+                    <USlider
+                        v-model="sliderMasterMultiplier"
+                        :min="0"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="masterSliderDisabled"
+                        class="flex-1"
+                        @update:model-value="onSliderChange()"
+                    />
+                    <HelpIcon :text="$t('pidTuningMasterSliderHelp')" />
                 </div>
 
                 <!-- Danger Zone Warning -->
-                <div v-if="slidersInDangerZone" class="danger slidersWarning">
+                <UiBox v-if="slidersInDangerZone" type="error" highlight>
                     <p v-html="$t('pidTuningSliderWarning')"></p>
-                </div>
+                </UiBox>
 
-                <!-- Warning Messages (Non-Expert Mode) -->
-                <!-- Always show range restriction note when not in expert mode and sliders are on -->
-                <div v-if="!props.expertMode && sliderPidsMode > 0" class="note expertSettingsDetectedNote">
+                <!-- Non-Expert Mode Warning -->
+                <UiBox v-if="!props.expertMode && sliderPidsMode > 0" type="warning" highlight>
                     <p v-html="$t('pidTuningPidSlidersNonExpertMode')"></p>
-                </div>
+                </UiBox>
 
-                <!-- Show disabled warning when values are outside basic range -->
-                <div v-if="showExpertSettingsWarning" class="note expertSettingsDetectedNote">
+                <!-- Expert Settings Detected Warning -->
+                <UiBox v-if="showExpertSettingsWarning" type="warning" highlight>
                     <p v-html="$t('pidTuningSlidersExpertSettingsDetectedNote')"></p>
+                </UiBox>
+            </UiBox>
+
+            <!-- PID Table -->
+            <UiBox type="neutral">
+                <div class="grid grid-cols-[3rem_repeat(5,minmax(4rem,auto))] gap-x-3 gap-y-1 items-center min-w-0">
+                    <!-- Header -->
+                    <div></div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('pidTuningProportional')"></span>
+                        <HelpIcon :text="$t('pidTuningProportionalHelp')" />
+                    </div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('pidTuningIntegral')"></span>
+                        <HelpIcon :text="$t('pidTuningIntegralHelp')" />
+                    </div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t(derivativeLabel)"></span>
+                        <HelpIcon :text="$t(derivativeHelp)" />
+                    </div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t(dMaxLabel)"></span>
+                        <HelpIcon :text="$t(dMaxHelp)" />
+                    </div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('pidTuningFeedforward')"></span>
+                        <HelpIcon :text="$t('pidTuningFeedforwardHelp')" />
+                    </div>
+
+                    <!-- Section label -->
+                    <div class="col-span-6 text-xs text-dimmed">{{ $t("pidTuningBasic") }}</div>
+
+                    <!-- ROLL -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
+                    <UInputNumber
+                        v-model="pidRollP"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidRollI"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidRollD"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="advancedTuning.dMaxRoll"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="advancedTuning.feedforwardRoll"
+                        :step="1"
+                        :min="0"
+                        :max="2000"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        :format-options="{ useGrouping: false }"
+                        class="w-full"
+                    />
+
+                    <!-- PITCH -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">PITCH</div>
+                    <UInputNumber
+                        v-model="pidPitchP"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidPitchI"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidPitchD"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="advancedTuning.dMaxPitch"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="advancedTuning.feedforwardPitch"
+                        :step="1"
+                        :min="0"
+                        :max="2000"
+                        :disabled="rollPitchDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        :format-options="{ useGrouping: false }"
+                        class="w-full"
+                    />
+
+                    <!-- YAW -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">YAW</div>
+                    <UInputNumber
+                        v-model="pidYawP"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidYawI"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidYawD"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="advancedTuning.dMaxYaw"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="advancedTuning.feedforwardYaw"
+                        :step="1"
+                        :min="0"
+                        :max="2000"
+                        :disabled="yawDisabled"
+                        size="xs"
+                        orientation="vertical"
+                        :format-options="{ useGrouping: false }"
+                        class="w-full"
+                    />
                 </div>
-            </div>
+            </UiBox>
 
             <!-- BARO, MAG, GPS Optional PIDs -->
-            <div
-                v-if="showAllLocal && hasBaroMagGpsPids"
-                id="pid_baro_mag_gps"
-                class="pid_optional gui_box grey pid_tuning"
-            >
-                <table class="pid_titlebar">
-                    <tbody>
-                        <tr>
-                            <th class="name"></th>
-                            <th class="proportional" v-html="$t('pidTuningProportional')"></th>
-                            <th class="integral" v-html="$t('pidTuningIntegral')"></th>
-                            <th class="derivative" v-html="$t('pidTuningDerivative')"></th>
-                        </tr>
-                    </tbody>
-                </table>
+            <UiBox v-if="showAllLocal && hasBaroMagGpsPids" type="neutral">
+                <div class="grid grid-cols-[3rem_repeat(3,4rem)] gap-x-2 gap-y-1 items-center min-w-0">
+                    <!-- Header -->
+                    <div></div>
+                    <div class="text-xs text-center" v-html="$t('pidTuningProportional')"></div>
+                    <div class="text-xs text-center" v-html="$t('pidTuningIntegral')"></div>
+                    <div class="text-xs text-center" v-html="$t('pidTuningDerivative')"></div>
 
-                <!-- Altitude (Baro) PIDs -->
-                <template v-if="hasPidName('ALT') || hasPidName('VEL')">
-                    <table class="pid_tuning">
-                        <tbody>
-                            <tr>
-                                <th colspan="4">
-                                    <div class="pid_mode">{{ $t("pidTuningAltitude") }}</div>
-                                </th>
-                            </tr>
-                            <tr v-if="hasPidName('ALT')" class="ALT">
-                                <td></td>
-                                <td><input type="number" v-model.number="pidAltP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidAltI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidAltD" step="1" min="0" max="255" /></td>
-                            </tr>
-                            <tr v-if="hasPidName('VEL')" class="VEL">
-                                <td></td>
-                                <td><input type="number" v-model.number="pidVelP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidVelI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidVelD" step="1" min="0" max="255" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </template>
+                    <!-- Altitude (Baro) PIDs -->
+                    <template v-if="hasPidName('ALT') || hasPidName('VEL')">
+                        <div class="col-span-4 text-xs text-dimmed">{{ $t("pidTuningAltitude") }}</div>
+                        <template v-if="hasPidName('ALT')">
+                            <div></div>
+                            <UInputNumber
+                                v-model="pidAltP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidAltI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidAltD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                        </template>
+                        <template v-if="hasPidName('VEL')">
+                            <div></div>
+                            <UInputNumber
+                                v-model="pidVelP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidVelI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidVelD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                        </template>
+                    </template>
 
-                <!-- Mag PIDs -->
-                <template v-if="hasPidName('MAG')">
-                    <table class="pid_tuning">
-                        <tbody>
-                            <tr>
-                                <th colspan="4">
-                                    <div class="pid_mode">{{ $t("pidTuningMag") }}</div>
-                                </th>
-                            </tr>
-                            <tr class="MAG">
-                                <td></td>
-                                <td><input type="number" v-model.number="pidMagP" step="1" min="0" max="255" /></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </template>
+                    <!-- Mag PIDs -->
+                    <template v-if="hasPidName('MAG')">
+                        <div class="col-span-4 text-xs text-dimmed">{{ $t("pidTuningMag") }}</div>
+                        <div></div>
+                        <UInputNumber
+                            v-model="pidMagP"
+                            :step="1"
+                            :min="0"
+                            :max="255"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                        />
+                        <div></div>
+                        <div></div>
+                    </template>
 
-                <!-- GPS PIDs -->
-                <template v-if="hasPidName('Pos') || hasPidName('PosR') || hasPidName('NavR')">
-                    <table class="pid_tuning">
-                        <tbody>
-                            <tr>
-                                <th colspan="4">
-                                    <div class="pid_mode">{{ $t("pidTuningGps") }}</div>
-                                </th>
-                            </tr>
-                            <tr v-if="hasPidName('Pos')" class="Pos">
-                                <td></td>
-                                <td><input type="number" v-model.number="pidPosP" step="1" min="0" max="255" /></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr v-if="hasPidName('PosR')" class="PosR">
-                                <td></td>
-                                <td><input type="number" v-model.number="pidPosRP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidPosRI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidPosRD" step="1" min="0" max="255" /></td>
-                            </tr>
-                            <tr v-if="hasPidName('NavR')" class="NavR">
-                                <td></td>
-                                <td><input type="number" v-model.number="pidNavRP" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidNavRI" step="1" min="0" max="255" /></td>
-                                <td><input type="number" v-model.number="pidNavRD" step="1" min="0" max="255" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </template>
-            </div>
+                    <!-- GPS PIDs -->
+                    <template v-if="hasPidName('Pos') || hasPidName('PosR') || hasPidName('NavR')">
+                        <div class="col-span-4 text-xs text-dimmed">{{ $t("pidTuningGps") }}</div>
+                        <template v-if="hasPidName('Pos')">
+                            <div></div>
+                            <UInputNumber
+                                v-model="pidPosP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <div></div>
+                            <div></div>
+                        </template>
+                        <template v-if="hasPidName('PosR')">
+                            <div></div>
+                            <UInputNumber
+                                v-model="pidPosRP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidPosRI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidPosRD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                        </template>
+                        <template v-if="hasPidName('NavR')">
+                            <div></div>
+                            <UInputNumber
+                                v-model="pidNavRP"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidNavRI"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                            <UInputNumber
+                                v-model="pidNavRD"
+                                :step="1"
+                                :min="0"
+                                :max="255"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-full"
+                            />
+                        </template>
+                    </template>
+                </div>
+            </UiBox>
 
             <!-- Angle/Horizon Section -->
-            <div class="gui_box grey">
-                <table class="pid_titlebar">
-                    <tbody>
-                        <tr>
-                            <th class="third"></th>
-                            <th class="third" style="width: 33%">{{ $t("pidTuningStrength") }}</th>
-                            <th class="third" style="width: 33%">{{ $t("pidTuningTransition") }}</th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="pid_tuning">
-                    <tbody>
-                        <tr>
-                            <td class="third">{{ $t("pidTuningAngle") }}</td>
-                            <td class="third">
-                                <input type="number" v-model.number="pidLevelAngle" step="1" min="0" max="255" />
-                            </td>
-                            <td class="third"></td>
-                        </tr>
-                        <tr>
-                            <td class="third">{{ $t("pidTuningHorizon") }}</td>
-                            <td class="third">
-                                <input type="number" v-model.number="pidLevelHorizon" step="1" min="0" max="255" />
-                            </td>
-                            <td class="third">
-                                <input type="number" v-model.number="pidLevelTransition" step="1" min="0" max="255" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="pid_titlebar pid_titlebar_extended pid_sensitivity">
-                    <tbody>
-                        <tr>
-                            <th class="third"></th>
-                            <th class="third" style="width: 33%">{{ $t("pidTuningLevelAngleLimit") }}</th>
-                            <th class="third" style="width: 33%"></th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="pid_tuning pid_sensitivity">
-                    <tbody>
-                        <tr>
-                            <td class="third"></td>
-                            <td class="third">
-                                <input
-                                    type="number"
-                                    v-model.number="advancedTuning.levelAngleLimit"
-                                    step="1"
-                                    min="10"
-                                    max="200"
-                                />
-                            </td>
-                            <td class="third"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- END Angle/Horizon Settings-->
+            <UiBox type="neutral">
+                <div class="grid grid-cols-[4rem_repeat(2,4rem)] gap-x-2 gap-y-1 items-center min-w-0">
+                    <!-- Header -->
+                    <div></div>
+                    <div class="text-xs text-center">{{ $t("pidTuningStrength") }}</div>
+                    <div class="text-xs text-center">{{ $t("pidTuningTransition") }}</div>
+
+                    <!-- Angle -->
+                    <div class="text-xs">{{ $t("pidTuningAngle") }}</div>
+                    <UInputNumber
+                        v-model="pidLevelAngle"
+                        :step="1"
+                        :min="0"
+                        :max="255"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <div></div>
+
+                    <!-- Horizon -->
+                    <div class="text-xs">{{ $t("pidTuningHorizon") }}</div>
+                    <UInputNumber
+                        v-model="pidLevelHorizon"
+                        :step="1"
+                        :min="0"
+                        :max="255"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="pidLevelTransition"
+                        :step="1"
+                        :min="0"
+                        :max="255"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+
+                    <!-- Level Angle Limit -->
+                    <div></div>
+                    <div class="text-xs text-center">{{ $t("pidTuningLevelAngleLimit") }}</div>
+                    <div></div>
+
+                    <div></div>
+                    <UInputNumber
+                        v-model="advancedTuning.levelAngleLimit"
+                        :step="1"
+                        :min="10"
+                        :max="200"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <div></div>
+                </div>
+            </UiBox>
         </div>
-        <!-- END LEFT COLUMN -->
 
         <!-- RIGHT COLUMN: PID Controller Settings -->
-        <div class="cf_column_right">
-            <div class="gui_box grey pidControllerAdvancedSettings spacer_left">
-                <table class="pid_titlebar new_rates">
-                    <thead>
-                        <tr>
-                            <th>{{ $t("pidTuningPidSettings") }}</th>
-                        </tr>
-                    </thead>
-                </table>
-                <table class="compensation">
-                    <tbody>
-                        <!-- Feedforward Group -->
-                        <tr class="feedforwardGroup">
-                            <td><span v-html="$t('pidTuningFeedforwardGroup')"></span></td>
-                            <td colspan="2">
-                                <span class="feedforwardOption feedforwardJitterFactor suboption">
-                                    <input
-                                        type="number"
-                                        name="feedforwardJitterFactor"
-                                        v-model.number="advancedTuning.feedforward_jitter_factor"
-                                        step="1"
-                                        min="0"
-                                        max="20"
-                                    />
-                                    <label>
-                                        <span v-html="$t('pidTuningFeedforwardJitter')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningFeedforwardJitterHelp')"></div>
-                                </span>
+        <div class="flex flex-col gap-4">
+            <!-- PID Settings -->
+            <UiBox :title="$t('pidTuningPidSettings')" type="neutral">
+                <!-- Feedforward Group -->
+                <div class="flex flex-col gap-2">
+                    <span class="text-sm font-semibold" v-html="$t('pidTuningFeedforwardGroup')"></span>
+                    <div class="flex flex-wrap items-end gap-3 pl-4">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningFeedforwardJitter')"></span>
+                                <HelpIcon :text="$t('pidTuningFeedforwardJitterHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="advancedTuning.feedforward_jitter_factor"
+                                :step="1"
+                                :min="0"
+                                :max="20"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span
+                                    class="text-xs text-dimmed"
+                                    v-html="$t('pidTuningFeedforwardSmoothFactor')"
+                                ></span>
+                                <HelpIcon :text="$t('pidTuningFeedforwardSmoothnessHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="advancedTuning.feedforward_smooth_factor"
+                                :step="1"
+                                :min="0"
+                                :max="95"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningFeedforwardAveraging')"></span>
+                                <HelpIcon :text="$t('pidTuningFeedforwardAveragingHelp')" />
+                            </div>
+                            <USelect
+                                v-model="advancedTuning.feedforward_averaging"
+                                :items="feedforwardAveragingItems"
+                                size="xs"
+                                class="w-24"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningFeedforwardBoost')"></span>
+                                <HelpIcon :text="$t('pidTuningFeedforwardBoostHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="advancedTuning.feedforward_boost"
+                                :step="1"
+                                :min="0"
+                                :max="50"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span
+                                    class="text-xs text-dimmed"
+                                    v-html="$t('pidTuningFeedforwardMaxRateLimit')"
+                                ></span>
+                                <HelpIcon :text="$t('pidTuningFeedforwardMaxRateLimitHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="advancedTuning.feedforward_max_rate_limit"
+                                :step="1"
+                                :min="0"
+                                :max="150"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningFeedforwardTransition')"></span>
+                                <HelpIcon :text="$t('pidTuningFeedforwardTransitionHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="feedforwardTransitionValue"
+                                :step="0.01"
+                                :min="0"
+                                :max="1"
+                                :format-options="{ minimumFractionDigits: 2, maximumFractionDigits: 2 }"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <!-- TPA Settings -->
+                <div class="flex flex-col gap-2">
+                    <span class="text-sm font-semibold" v-html="$t('pidTuningTpaGroup')"></span>
+                    <div class="flex flex-wrap items-end gap-3 pl-4">
+                        <div v-if="usesAdvancedTpa" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningTPAMode") }}</span>
+                            <USelect v-model="tpaMode" :items="tpaModeItems" size="xs" class="w-24" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningTPARate") }}</span>
+                            <UInputNumber
+                                v-model="tpaRate"
+                                :step="1"
+                                :min="0"
+                                :max="100"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningTPABreakPoint") }}</span>
+                            <UInputNumber
+                                v-model="tpaBreakpoint"
+                                :step="10"
+                                :min="750"
+                                :max="2250"
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                                <span class="feedforwardOption feedforwardSmoothFactor suboption">
-                                    <input
-                                        type="number"
-                                        name="feedforwardSmoothFactor"
-                                        v-model.number="advancedTuning.feedforward_smooth_factor"
-                                        step="1"
-                                        min="0"
-                                        max="95"
-                                    />
-                                    <label for="feedforwardSmoothFactor">
-                                        <span v-html="$t('pidTuningFeedforwardSmoothFactor')"></span>
-                                    </label>
-                                    <div
-                                        class="helpicon cf_tip"
-                                        :title="$t('pidTuningFeedforwardSmoothnessHelp')"
-                                    ></div>
-                                </span>
+                <!-- I-term Relax -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningItermRelax')" :help="$t('pidTuningItermRelaxHelp')">
+                        <USwitch v-model="itermRelaxEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="itermRelaxEnabled" class="flex flex-wrap items-end gap-3 pl-4">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('pidTuningItermRelaxAxes')"></span>
+                            <USelect
+                                v-model="advancedTuning.itermRelax"
+                                :items="itermRelaxAxesItems"
+                                size="xs"
+                                class="w-24"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('pidTuningItermRelaxType')"></span>
+                            <USelect
+                                v-model="advancedTuning.itermRelaxType"
+                                :items="itermRelaxTypeItems"
+                                size="xs"
+                                class="w-24"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningItermRelaxCutoff')"></span>
+                                <HelpIcon :text="$t('pidTuningItermRelaxCutoffHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="advancedTuning.itermRelaxCutoff"
+                                :step="1"
+                                :min="1"
+                                :max="50"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                                <span class="feedforwardOption feedforwardAveraging suboption">
-                                    <select
-                                        id="feedforwardAveraging"
-                                        v-model.number="advancedTuning.feedforward_averaging"
-                                    >
-                                        <option :value="0">{{ $t("pidTuningOptionOff") }}</option>
-                                        <option :value="1">
-                                            {{ $t("pidTuningFeedforwardAveragingOption2Point") }}
-                                        </option>
-                                        <option :value="2">
-                                            {{ $t("pidTuningFeedforwardAveragingOption3Point") }}
-                                        </option>
-                                        <option :value="3">
-                                            {{ $t("pidTuningFeedforwardAveragingOption4Point") }}
-                                        </option>
-                                    </select>
-                                    <label for="feedforwardAveraging">
-                                        <span v-html="$t('pidTuningFeedforwardAveraging')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningFeedforwardAveragingHelp')"></div>
-                                </span>
+                <!-- Anti Gravity -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('pidTuningAntiGravity')" :help="$t('pidTuningAntiGravityHelp')">
+                        <USwitch v-model="antiGravityEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="antiGravityEnabled" class="flex flex-wrap items-end gap-3 pl-4">
+                        <div v-if="isPreApi145" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('pidTuningAntiGravityMode')"></span>
+                            <USelect
+                                v-model="advancedTuning.antiGravityMode"
+                                :items="antiGravityModeItems"
+                                size="xs"
+                                class="w-24"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningAntiGravityGain')"></span>
+                                <HelpIcon :text="$t('pidTuningAntiGravityGainHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="antiGravityGainValue"
+                                :step="0.1"
+                                :min="0.1"
+                                :max="30"
+                                :format-options="{ minimumFractionDigits: 1, maximumFractionDigits: 1 }"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div v-if="isPreApi145" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('pidTuningAntiGravityThres')"></span>
+                            <UInputNumber
+                                v-model="advancedTuning.itermThrottleThreshold"
+                                :step="10"
+                                :min="20"
+                                :max="1000"
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                                <span class="feedforwardOption feedforwardBoost suboption">
-                                    <input
-                                        type="number"
-                                        name="feedforwardBoost"
-                                        v-model.number="advancedTuning.feedforward_boost"
-                                        step="1"
-                                        min="0"
-                                        max="50"
-                                    />
-                                    <label for="feedforwardBoost">
-                                        <span v-html="$t('pidTuningFeedforwardBoost')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningFeedforwardBoostHelp')"></div>
-                                </span>
+                <!-- I-term Rotation -->
+                <SettingRow :label="$t('pidTuningItermRotation')" :help="$t('pidTuningItermRotationHelp')">
+                    <USwitch v-model="itermRotationEnabled" size="sm" />
+                </SettingRow>
 
-                                <span class="feedforwardOption feedforwardMaxRateLimit suboption">
-                                    <input
-                                        type="number"
-                                        name="feedforwardMaxRateLimit"
-                                        v-model.number="advancedTuning.feedforward_max_rate_limit"
-                                        step="1"
-                                        min="0"
-                                        max="150"
-                                    />
-                                    <label>
-                                        <span v-html="$t('pidTuningFeedforwardMaxRateLimit')"></span>
-                                    </label>
-                                    <div
-                                        class="helpicon cf_tip"
-                                        :title="$t('pidTuningFeedforwardMaxRateLimitHelp')"
-                                    ></div>
-                                </span>
-
-                                <span class="feedforwardTransition suboption">
-                                    <input
-                                        type="number"
-                                        name="feedforwardTransition-number"
-                                        v-model.number="feedforwardTransitionValue"
-                                        step="0.01"
-                                        min="0.00"
-                                        max="1.00"
-                                    />
-                                    <label>
-                                        <span v-html="$t('pidTuningFeedforwardTransition')"></span>
-                                    </label>
-                                    <div
-                                        class="helpicon cf_tip"
-                                        :title="$t('pidTuningFeedforwardTransitionHelp')"
-                                    ></div>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- I-term Relax -->
-                        <tr class="itermrelax">
-                            <td>
-                                <input type="checkbox" id="itermrelax" class="toggle" v-model="itermRelaxEnabled" />
-                            </td>
-                            <td colspan="2">
-                                <div class="helpicon cf_tip" :title="$t('pidTuningItermRelaxHelp')"></div>
-                                <span v-html="$t('pidTuningItermRelax')"></span>
-
-                                <span class="suboption" v-if="itermRelaxEnabled">
-                                    <select id="itermrelaxAxes" v-model.number="advancedTuning.itermRelax">
-                                        <option :value="1">{{ $t("pidTuningOptionRP") }}</option>
-                                        <option :value="2">{{ $t("pidTuningOptionRPY") }}</option>
-                                        <option :value="3">{{ $t("pidTuningItermRelaxAxesOptionRPInc") }}</option>
-                                        <option :value="4">{{ $t("pidTuningItermRelaxAxesOptionRPYInc") }}</option>
-                                    </select>
-                                    <label for="itermrelaxAxes">
-                                        <span v-html="$t('pidTuningItermRelaxAxes')"></span>
-                                    </label>
-                                </span>
-
-                                <span class="suboption" v-if="itermRelaxEnabled">
-                                    <select id="itermrelaxType" v-model.number="advancedTuning.itermRelaxType">
-                                        <option :value="0">{{ $t("pidTuningItermRelaxTypeOptionGyro") }}</option>
-                                        <option :value="1">{{ $t("pidTuningItermRelaxTypeOptionSetpoint") }}</option>
-                                    </select>
-                                    <label for="itermrelaxType">
-                                        <span v-html="$t('pidTuningItermRelaxType')"></span>
-                                    </label>
-                                </span>
-
-                                <span class="itermRelaxCutoff suboption" v-if="itermRelaxEnabled">
-                                    <input
-                                        type="number"
-                                        name="itermRelaxCutoff"
-                                        v-model.number="advancedTuning.itermRelaxCutoff"
-                                        step="1"
-                                        min="1"
-                                        max="50"
-                                    />
-                                    <label for="itermRelaxCutoff">
-                                        <span v-html="$t('pidTuningItermRelaxCutoff')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningItermRelaxCutoffHelp')"></div>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- Anti Gravity -->
-                        <tr class="antigravity">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    id="antiGravitySwitch"
-                                    class="toggle"
-                                    v-model="antiGravityEnabled"
-                                />
-                            </td>
-                            <td colspan="3">
-                                <div class="helpicon cf_tip" :title="$t('pidTuningAntiGravityHelp')"></div>
-                                <span v-html="$t('pidTuningAntiGravity')"></span>
-
-                                <span class="suboption antiGravityMode" v-if="antiGravityEnabled">
-                                    <select id="antiGravityMode" v-model.number="advancedTuning.antiGravityMode">
-                                        <option :value="0">{{ $t("pidTuningAntiGravityModeOptionSmooth") }}</option>
-                                        <option :value="1">{{ $t("pidTuningAntiGravityModeOptionStep") }}</option>
-                                    </select>
-                                    <label for="antiGravityMode">
-                                        <span v-html="$t('pidTuningAntiGravityMode')"></span>
-                                    </label>
-                                </span>
-
-                                <span class="suboption" v-if="antiGravityEnabled">
-                                    <input
-                                        type="number"
-                                        name="itermAcceleratorGain"
-                                        v-model.number="antiGravityGainValue"
-                                        step="0.1"
-                                        min="0.1"
-                                        max="30"
-                                    />
-                                    <label for="antiGravityGain">
-                                        <span v-html="$t('pidTuningAntiGravityGain')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningAntiGravityGainHelp')"></div>
-                                </span>
-
-                                <span class="suboption antiGravityThres" v-if="antiGravityEnabled">
-                                    <input
-                                        type="number"
-                                        name="itermThrottleThreshold"
-                                        v-model.number="advancedTuning.itermThrottleThreshold"
-                                        step="10"
-                                        min="20"
-                                        max="1000"
-                                    />
-                                    <label for="antiGravityThres">
-                                        <span v-html="$t('pidTuningAntiGravityThres')"></span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-
-                        <!-- I-term Rotation -->
-                        <tr class="itermrotation">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    id="itermrotation"
-                                    class="toggle"
-                                    v-model="itermRotationEnabled"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <span v-html="$t('pidTuningItermRotation')"></span>
-                                <div class="helpicon cf_tip" :title="$t('pidTuningItermRotationHelp')"></div>
-                            </td>
-                        </tr>
-
-                        <!-- D-Max Group -->
-                        <tr class="dMaxGroup">
-                            <td>
-                                <span v-html="$t('pidTuningDMaxSettingTitle')"></span>
-                            </td>
-                            <td colspan="3">
-                                <span class="suboption">
-                                    <input
-                                        type="number"
-                                        name="dMaxGain"
-                                        v-model.number="advancedTuning.dMaxGain"
-                                        step="1"
-                                        min="0"
-                                        max="100"
-                                    />
-                                    <label for="dMaxGain">
-                                        <span v-html="$t('pidTuningDMaxGain')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningDMaxGainHelp')"></div>
-                                </span>
-                                <span class="suboption">
-                                    <input
-                                        type="number"
-                                        name="dMaxAdvance"
-                                        v-model.number="advancedTuning.dMaxAdvance"
-                                        step="1"
-                                        min="0"
-                                        max="200"
-                                    />
-                                    <label for="dMaxAdvance">
-                                        <span v-html="$t('pidTuningDMaxAdvance')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningDMaxAdvanceHelp')"></div>
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <!-- D-Max Group -->
+                <div class="flex flex-col gap-2">
+                    <span class="text-sm font-semibold" v-html="$t('pidTuningDMaxSettingTitle')"></span>
+                    <div class="flex flex-wrap items-end gap-3 pl-4">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningDMaxGain')"></span>
+                                <HelpIcon :text="$t('pidTuningDMaxGainHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="advancedTuning.dMaxGain"
+                                :step="1"
+                                :min="0"
+                                :max="100"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed" v-html="$t('pidTuningDMaxAdvance')"></span>
+                                <HelpIcon :text="$t('pidTuningDMaxAdvanceHelp')" />
+                            </div>
+                            <UInputNumber
+                                v-model="advancedTuning.dMaxAdvance"
+                                :step="1"
+                                :min="0"
+                                :max="200"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </UiBox>
 
             <!-- Motor Settings -->
-            <div class="gui_box grey pidControllerAdvancedSettings spacer_left">
-                <table class="pid_titlebar new_rates">
-                    <tbody>
-                        <tr>
-                            <th>{{ $t("pidTuningMotorSettings") }}</th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="compensation">
-                    <tbody>
-                        <!-- Throttle Boost -->
-                        <tr class="throttleBoost">
-                            <td>
-                                <input
-                                    type="number"
-                                    name="throttleBoost-number"
-                                    v-model.number="advancedTuning.throttleBoost"
-                                    step="1"
-                                    min="0"
-                                    max="100"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <div>
-                                    <label>
-                                        <span v-html="$t('pidTuningThrottleBoost')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningThrottleBoostHelp')"></div>
-                                </div>
-                            </td>
-                        </tr>
+            <UiBox :title="$t('pidTuningMotorSettings')" type="neutral">
+                <SettingRow :label="$t('pidTuningThrottleBoost')" :help="$t('pidTuningThrottleBoostHelp')">
+                    <UInputNumber
+                        v-model="advancedTuning.throttleBoost"
+                        :step="1"
+                        :min="0"
+                        :max="100"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
+                </SettingRow>
 
-                        <!-- Motor Output Limit -->
-                        <tr class="motorOutputLimit">
-                            <td>
-                                <input
-                                    type="number"
-                                    name="motorLimit"
-                                    v-model.number="advancedTuning.motorOutputLimit"
-                                    step="1"
-                                    min="1"
-                                    max="100"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <div>
-                                    <label>
-                                        <span v-html="$t('pidTuningMotorOutputLimit')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningMotorLimitHelp')"></div>
-                                </div>
-                            </td>
-                        </tr>
+                <SettingRow :label="$t('pidTuningMotorOutputLimit')" :help="$t('pidTuningMotorLimitHelp')">
+                    <UInputNumber
+                        v-model="advancedTuning.motorOutputLimit"
+                        :step="1"
+                        :min="1"
+                        :max="100"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
+                </SettingRow>
 
-                        <!-- VBat Sag Compensation -->
-                        <tr class="vbatSagCompensation">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    id="vbatSagCompensation"
-                                    class="toggle"
-                                    v-model="vbatSagEnabled"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <span v-html="$t('pidTuningVbatSagCompensation')"></span>
-                                <div class="helpicon cf_tip" :title="$t('pidTuningVbatSagCompensationHelp')"></div>
+                <SettingRow
+                    :label="dshotTelemetryEnabled ? $t('pidTuningIdleMinRpm') : $t('pidTuningIdleMinRpmDisabled')"
+                    :help="$t('pidTuningIdleMinRpmHelp')"
+                >
+                    <UInputNumber
+                        v-model="advancedTuning.idleMinRpm"
+                        :step="1"
+                        :min="0"
+                        :max="idleMinRpmMax"
+                        :disabled="!dshotTelemetryEnabled"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
+                </SettingRow>
 
-                                <span class="vbatSagValue suboption" v-if="vbatSagEnabled">
-                                    <input
-                                        type="number"
-                                        name="vbatSagValue"
-                                        v-model.number="advancedTuning.vbat_sag_compensation"
-                                        step="1"
-                                        min="1"
-                                        max="150"
-                                    />
-                                    <label for="vbatSagValue">
-                                        <span v-html="$t('pidTuningVbatSagValue')"></span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
+                <!-- VBat Sag Compensation -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow
+                        :label="$t('pidTuningVbatSagCompensation')"
+                        :help="$t('pidTuningVbatSagCompensationHelp')"
+                    >
+                        <USwitch v-model="vbatSagEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="vbatSagEnabled" class="flex flex-wrap items-end gap-3 pl-4">
+                        <div class="flex flex-col gap-1">
+                            <UInputNumber
+                                v-model="advancedTuning.vbat_sag_compensation"
+                                :step="1"
+                                :min="1"
+                                :max="150"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Thrust Linearization -->
-                        <tr class="thrustLinearization">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    id="thrustLinearization"
-                                    class="toggle"
-                                    v-model="thrustLinearEnabled"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <span v-html="$t('pidTuningThrustLinearization')"></span>
-                                <div class="helpicon cf_tip" :title="$t('pidTuningThrustLinearizationHelp')"></div>
-
-                                <span class="thrustLinearValue suboption" v-if="thrustLinearEnabled">
-                                    <input
-                                        type="number"
-                                        name="thrustLinearValue"
-                                        v-model.number="advancedTuning.thrustLinearization"
-                                        step="1"
-                                        min="1"
-                                        max="150"
-                                    />
-                                    <label for="thrustLinearValue">
-                                        <span v-html="$t('pidTuningThrustLinearValue')"></span>
-                                    </label>
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- TPA Settings -->
-            <div class="gui_box grey tpa pidControllerAdvancedSettings spacer_left">
-                <table class="pid_titlebar tpa-header" aria-labelledby="tpa-header">
-                    <tbody>
-                        <tr>
-                            <th v-if="usesAdvancedTpa">{{ $t("pidTuningTPAMode") }}</th>
-                            <th>{{ $t("pidTuningTPARate") }}</th>
-                            <th>{{ $t("pidTuningTPABreakPoint") }}</th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="tpa-settings" aria-labelledby="tpa-settings" role="presentation">
-                    <tbody>
-                        <tr>
-                            <td v-if="usesAdvancedTpa">
-                                <select id="tpaMode" v-model.number="tpaMode">
-                                    <option :value="0">{{ $t("pidTuningTPAPD") }}</option>
-                                    <option :value="1">{{ $t("pidTuningTPAD") }}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="number" id="tpaRate" v-model.number="tpaRate" step="1" min="0" max="100" />
-                            </td>
-                            <td class="tpa-breakpoint">
-                                <input
-                                    type="number"
-                                    id="tpaBreakpoint"
-                                    v-model.number="tpaBreakpoint"
-                                    step="10"
-                                    min="750"
-                                    max="2250"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <!-- Thrust Linearization -->
+                <div class="flex flex-col gap-2">
+                    <SettingRow
+                        :label="$t('pidTuningThrustLinearization')"
+                        :help="$t('pidTuningThrustLinearizationHelp')"
+                    >
+                        <USwitch v-model="thrustLinearEnabled" size="sm" />
+                    </SettingRow>
+                    <div v-if="thrustLinearEnabled" class="flex flex-wrap items-end gap-3 pl-4">
+                        <div class="flex flex-col gap-1">
+                            <UInputNumber
+                                v-model="advancedTuning.thrustLinearization"
+                                :step="1"
+                                :min="1"
+                                :max="150"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </UiBox>
 
             <!-- Misc Settings -->
-            <div class="gui_box grey pidControllerAdvancedSettings spacer_left">
-                <table class="pid_titlebar new_rates">
-                    <tbody>
-                        <tr>
-                            <th>{{ $t("pidTuningMiscSettings") }}</th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="compensation">
-                    <tbody>
-                        <!-- Cell Count -->
-                        <tr class="cellCount">
-                            <td>
-                                <select name="cellCount" v-model.number="advancedTuning.autoProfileCellCount">
-                                    <option :value="-1">{{ $t("pidTuningCellCountChange") }}</option>
-                                    <option :value="0">{{ $t("pidTuningCellCountStay") }}</option>
-                                    <option :value="1">{{ $t("pidTuningCellCount1S") }}</option>
-                                    <option :value="2">{{ $t("pidTuningCellCount2S") }}</option>
-                                    <option :value="3">{{ $t("pidTuningCellCount3S") }}</option>
-                                    <option :value="4">{{ $t("pidTuningCellCount4S") }}</option>
-                                    <option :value="5">{{ $t("pidTuningCellCount5S") }}</option>
-                                    <option :value="6">{{ $t("pidTuningCellCount6S") }}</option>
-                                    <option :value="7">{{ $t("pidTuningCellCount7S") }}</option>
-                                    <option :value="8">{{ $t("pidTuningCellCount8S") }}</option>
-                                </select>
-                            </td>
-                            <td colspan="2">
-                                <div>
-                                    <label>
-                                        <span v-html="$t('pidTuningCellCount')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningCellCountHelp')"></div>
-                                </div>
-                            </td>
-                        </tr>
+            <UiBox :title="$t('pidTuningMiscSettings')" type="neutral">
+                <SettingRow :label="$t('pidTuningCellCount')" :help="$t('pidTuningCellCountHelp')">
+                    <USelect
+                        v-model="advancedTuning.autoProfileCellCount"
+                        :items="cellCountItems"
+                        size="xs"
+                        class="w-24"
+                    />
+                </SettingRow>
 
-                        <!-- Acro Trainer Angle Limit -->
-                        <tr class="acroTrainerAngleLimit">
-                            <td>
-                                <input
-                                    type="number"
-                                    name="acroTrainerAngleLimit-number"
-                                    v-model.number="advancedTuning.acroTrainerAngleLimit"
-                                    step="1"
-                                    min="10"
-                                    max="80"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <div>
-                                    <label>
-                                        <span v-html="$t('pidTuningAcroTrainerAngleLimit')"></span>
-                                    </label>
-                                    <div
-                                        class="helpicon cf_tip"
-                                        :title="$t('pidTuningAcroTrainerAngleLimitHelp')"
-                                    ></div>
-                                </div>
-                            </td>
-                        </tr>
+                <SettingRow
+                    :label="$t('pidTuningAcroTrainerAngleLimit')"
+                    :help="$t('pidTuningAcroTrainerAngleLimitHelp')"
+                >
+                    <UInputNumber
+                        v-model="advancedTuning.acroTrainerAngleLimit"
+                        :step="1"
+                        :min="10"
+                        :max="80"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
+                </SettingRow>
 
-                        <!-- Integrated Yaw -->
-                        <tr class="integratedYaw">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    id="useIntegratedYaw"
-                                    class="toggle"
-                                    v-model="integratedYawEnabled"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <div class="helpicon cf_tip" :title="$t('pidTuningIntegratedYawHelp')"></div>
-                                <span v-html="$t('pidTuningIntegratedYaw')"></span>
-                                <span class="spacer_left" v-html="$t('pidTuningIntegratedYawCaution')"></span>
-                            </td>
-                        </tr>
+                <div class="flex flex-col gap-1">
+                    <SettingRow :label="$t('pidTuningIntegratedYaw')" :help="$t('pidTuningIntegratedYawHelp')">
+                        <USwitch v-model="integratedYawEnabled" size="sm" />
+                    </SettingRow>
+                    <span
+                        v-if="integratedYawEnabled"
+                        class="text-xs text-warning pl-4"
+                        v-html="$t('pidTuningIntegratedYawCaution')"
+                    ></span>
+                </div>
 
-                        <!-- Absolute Control -->
-                        <tr class="absoluteControlGain">
-                            <td>
-                                <input
-                                    type="number"
-                                    name="absoluteControlGain-number"
-                                    v-model.number="advancedTuning.absoluteControlGain"
-                                    step="1"
-                                    min="0"
-                                    max="20"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <div>
-                                    <label>
-                                        <span v-html="$t('pidTuningAbsoluteControlGain')"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" :title="$t('pidTuningAbsoluteControlGainHelp')"></div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <SettingRow :label="$t('pidTuningAbsoluteControlGain')" :help="$t('pidTuningAbsoluteControlGainHelp')">
+                    <UInputNumber
+                        v-model="advancedTuning.absoluteControlGain"
+                        :step="1"
+                        :min="0"
+                        :max="20"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-16"
+                    />
+                </SettingRow>
+            </UiBox>
         </div>
-        <!-- END RIGHT COLUMN -->
     </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { useTranslation } from "i18next-vue";
 import FC from "@/js/fc";
 import {
     NON_EXPERT_SLIDER_MIN,
@@ -1178,6 +1051,11 @@ import {
 } from "@/composables/useTuningSliders";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import UiBox from "@/components/elements/UiBox.vue";
+import HelpIcon from "@/components/elements/HelpIcon.vue";
+import SettingRow from "@/components/elements/SettingRow.vue";
+
+const { t } = useTranslation();
 
 const props = defineProps({
     expertMode: {
@@ -1188,23 +1066,61 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    profileName: {
-        type: String,
-        default: "",
-    },
 });
 
-const emit = defineEmits(["update:profileName", "change"]);
+const emit = defineEmits(["change"]);
 
-// Profile name (local writable computed to avoid duplicate key with prop)
-const localProfileName = computed({
-    get: () => props.profileName,
-    set: (value) => emit("update:profileName", value),
-});
-const showProfileName = computed(() => {
-    return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
-});
+// USelect item arrays
+const pidsModeItems = computed(() => [
+    { value: 0, label: t("pidTuningOptionOff") },
+    { value: 1, label: t("pidTuningOptionRP") },
+    { value: 2, label: t("pidTuningOptionRPY") },
+]);
 
+const feedforwardAveragingItems = computed(() => [
+    { value: 0, label: t("pidTuningOptionOff") },
+    { value: 1, label: t("pidTuningFeedforwardAveragingOption2Point") },
+    { value: 2, label: t("pidTuningFeedforwardAveragingOption3Point") },
+    { value: 3, label: t("pidTuningFeedforwardAveragingOption4Point") },
+]);
+
+const itermRelaxAxesItems = computed(() => [
+    { value: 1, label: t("pidTuningOptionRP") },
+    { value: 2, label: t("pidTuningOptionRPY") },
+    { value: 3, label: t("pidTuningItermRelaxAxesOptionRPInc") },
+    { value: 4, label: t("pidTuningItermRelaxAxesOptionRPYInc") },
+]);
+
+const itermRelaxTypeItems = computed(() => [
+    { value: 0, label: t("pidTuningItermRelaxTypeOptionGyro") },
+    { value: 1, label: t("pidTuningItermRelaxTypeOptionSetpoint") },
+]);
+
+const antiGravityModeItems = computed(() => [
+    { value: 0, label: t("pidTuningAntiGravityModeOptionSmooth") },
+    { value: 1, label: t("pidTuningAntiGravityModeOptionStep") },
+]);
+
+const tpaModeItems = computed(() => [
+    { value: 0, label: t("pidTuningTPAPD") },
+    { value: 1, label: t("pidTuningTPAD") },
+]);
+
+const cellCountItems = computed(() => [
+    { value: -1, label: t("pidTuningCellCountChange") },
+    { value: 0, label: t("pidTuningCellCountStay") },
+    { value: 1, label: t("pidTuningCellCount1S") },
+    { value: 2, label: t("pidTuningCellCount2S") },
+    { value: 3, label: t("pidTuningCellCount3S") },
+    { value: 4, label: t("pidTuningCellCount4S") },
+    { value: 5, label: t("pidTuningCellCount5S") },
+    { value: 6, label: t("pidTuningCellCount6S") },
+    { value: 7, label: t("pidTuningCellCount7S") },
+    { value: 8, label: t("pidTuningCellCount8S") },
+]);
+
+// For API < 1.45, iterm throttle threshold was removed in API 1.45+
+const isPreApi145 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
 // For API < 1.47, derivative and dmax column headers are swapped (PR #4173)
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
 const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
@@ -1365,6 +1281,10 @@ const pidNavRD = createPidComputed("NavR", 2);
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => FC.ADVANCED_TUNING);
 
+// Dynamic Idle visibility and state
+const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry ?? false);
+const idleMinRpmMax = computed(() => (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? 200 : 100));
+
 // TPA settings with API version gating
 // API >= 1.45: Use ADVANCED_TUNING (tpaMode, tpaRate, tpaBreakpoint)
 // API < 1.45: Use RC_TUNING (dynamic_THR_PID, dynamic_THR_breakpoint)
@@ -1428,7 +1348,7 @@ const tpaBreakpoint = computed({
 
 // Feedforward transition display value (divided by 100 for display)
 const feedforwardTransitionValue = computed({
-    get: () => (FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2),
+    get: () => FC.ADVANCED_TUNING.feedforwardTransition / 100,
     set: (val) => (FC.ADVANCED_TUNING.feedforwardTransition = Math.round(Number.parseFloat(val) * 100)),
 });
 
@@ -1439,14 +1359,33 @@ const itermRelaxEnabled = computed({
 });
 
 const antiGravityEnabled = computed({
-    get: () => FC.ADVANCED_TUNING.antiGravityGain !== 0,
-    set: (val) => (FC.ADVANCED_TUNING.antiGravityGain = val ? FC.ADVANCED_TUNING.antiGravityGain || 80 : 0),
+    get: () =>
+        isPreApi145.value
+            ? FC.ADVANCED_TUNING.itermAcceleratorGain !== 0
+            : FC.ADVANCED_TUNING.antiGravityGain !== 0,
+    set: (val) => {
+        if (isPreApi145.value) {
+            FC.ADVANCED_TUNING.itermAcceleratorGain = val ? FC.ADVANCED_TUNING.itermAcceleratorGain || 1000 : 0;
+        } else {
+            FC.ADVANCED_TUNING.antiGravityGain = val ? FC.ADVANCED_TUNING.antiGravityGain || 80 : 0;
+        }
+    },
 });
 
-// Anti-gravity gain display value (divided by 10 for display)
+// Anti-gravity gain display value (divided by 10 for API 1.45+, divided by 1000 for older)
 const antiGravityGainValue = computed({
-    get: () => (FC.ADVANCED_TUNING.antiGravityGain / 10).toFixed(1),
-    set: (val) => (FC.ADVANCED_TUNING.antiGravityGain = Math.round(Number.parseFloat(val) * 10)),
+    get: () =>
+        isPreApi145.value
+            ? FC.ADVANCED_TUNING.itermAcceleratorGain / 1000
+            : FC.ADVANCED_TUNING.antiGravityGain / 10,
+    set: (val) => {
+        const parsed = Number.parseFloat(val);
+        if (isPreApi145.value) {
+            FC.ADVANCED_TUNING.itermAcceleratorGain = Math.round(parsed * 1000);
+        } else {
+            FC.ADVANCED_TUNING.antiGravityGain = Math.round(parsed * 10);
+        }
+    },
 });
 
 const itermRotationEnabled = computed({
@@ -1456,7 +1395,8 @@ const itermRotationEnabled = computed({
 
 const vbatSagEnabled = computed({
     get: () => FC.ADVANCED_TUNING.vbat_sag_compensation !== 0,
-    set: (val) => (FC.ADVANCED_TUNING.vbat_sag_compensation = val ? FC.ADVANCED_TUNING.vbat_sag_compensation || 100 : 0),
+    set: (val) =>
+        (FC.ADVANCED_TUNING.vbat_sag_compensation = val ? FC.ADVANCED_TUNING.vbat_sag_compensation || 100 : 0),
 });
 
 const thrustLinearEnabled = computed({
@@ -1660,20 +1600,20 @@ function collectSliderValues() {
     };
 }
 
-// Slider change handler
-async function onSliderChange(event) {
+// Slider change handler — accepts optional slider key for non-expert clamping
+async function onSliderChange(activeSliderKey) {
     isUserInteracting.value = true;
 
     // Clamp the slider the user is actually dragging to the non-expert range.
     // We only clamp the active slider — other sliders may legitimately be
     // outside range (loaded from FC via CLI) and must not be silently reset.
-    if (!props.expertMode && event?.target?.id) {
+    if (!props.expertMode && activeSliderKey) {
         const refMap = {
             sliderDGain,
             sliderPIGain,
             sliderFeedforwardGain,
         };
-        const active = refMap[event.target.id];
+        const active = refMap[activeSliderKey];
         if (active) {
             if (active.value > NON_EXPERT_MAX) {
                 active.value = NON_EXPERT_MAX;
@@ -1715,6 +1655,22 @@ watch(
     { deep: true },
 );
 
+// Watch for changes to mark tab dirty state in parent component
+watch(
+    () => JSON.stringify(FC.PIDS),
+    () => emit("change"),
+);
+
+watch(
+    () => JSON.stringify(FC.ADVANCED_TUNING),
+    () => emit("change"),
+);
+
+watch(
+    () => JSON.stringify(FC.RC_TUNING),
+    () => emit("change"),
+);
+
 // Expose method to parent component to force slider update after save
 function forceUpdateSliders() {
     isUserInteracting.value = false; // Allow watcher to work
@@ -1738,129 +1694,3 @@ onUnmounted(() => {
     }
 });
 </script>
-
-<style scoped>
-/* Component-specific styles */
-.disabledSliders {
-    opacity: 0.5;
-}
-
-.pid_roll,
-.pid_pitch,
-.pid_yaw {
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    padding: 5px;
-}
-
-.expertSettingsDetectedNote {
-    margin: 10px;
-    padding: 10px;
-    background-color: #ffe4b5;
-    border: 1px solid #ff8c00;
-    border-radius: 3px;
-    color: #333;
-}
-
-.expertSettingsDetectedNote p {
-    margin: 0;
-    color: #333;
-}
-
-.gui_box.grey {
-    margin-bottom: 10px;
-}
-
-/* Slider Header */
-.slider-header {
-    display: grid;
-    grid-template-columns: 20% 60px 1fr 30px;
-    align-items: center;
-    padding: 0.5rem 10px;
-    background-color: var(--surface-300);
-    color: #fff;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    gap: 10px;
-}
-
-.slider-mode-section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    grid-column: 1 / 3;
-}
-
-.slider-mode-section .sm-min {
-    white-space: nowrap;
-    font-size: 12px;
-}
-
-.slider-range-labels {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    text-align: center;
-    font-size: 12px;
-}
-
-.slider-range-labels span {
-    flex: 1;
-}
-
-/* Slider Rows */
-.slider-row {
-    display: grid;
-    grid-template-columns: 20% 60px 1fr 30px;
-    align-items: center;
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--surface-500);
-    gap: 10px;
-}
-
-.slider-row:last-child {
-    border-bottom: none;
-}
-
-.slider-label {
-    text-align: right;
-    font-size: 12px;
-    line-height: 1.3;
-    padding-right: 10px;
-}
-
-.slider-value {
-    text-align: center;
-    font-weight: bold;
-    font-size: 13px;
-}
-
-.slider-control {
-    display: flex;
-    align-items: center;
-}
-
-.slider-control input[type="range"] {
-    width: 100%;
-}
-
-.slider-row .helpicon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Divider */
-.sliderDivider {
-    padding: 8px 0;
-}
-
-.sliderDivider hr {
-    border: none;
-    border-top: 1px solid var(--surface-500);
-    border-bottom: 1px solid var(--surface-500);
-    height: 2px;
-    margin: 0;
-}
-</style>

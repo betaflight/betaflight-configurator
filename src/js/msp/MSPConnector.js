@@ -17,18 +17,6 @@ function readSerialAdapter(e) {
     read_serial(e.detail);
 }
 
-function disconnectAndCleanup() {
-    serial.disconnect((result) => {
-        console.log("Disconnected", result);
-
-        MSP.clearListeners();
-
-        this.onTimeoutCallback();
-    });
-
-    MSP.disconnect_cleanup();
-}
-
 class MSPConnectorImpl {
     constructor() {
         this.baud = undefined;
@@ -36,20 +24,39 @@ class MSPConnectorImpl {
         this.onConnectCallback = undefined;
         this.onTimeoutCallback = undefined;
         this.onDisconnectCallback = undefined;
+        /** Used for connect timeout only; must not toggle CONFIGURATOR.connectionValid (main UI connect button). */
+        this._mspApiVersionReceived = false;
+    }
+
+    _disconnectAfterMspTimeout() {
+        serial.disconnect((result) => {
+            console.log("Disconnected", result);
+
+            MSP.clearListeners();
+
+            Promise.resolve(this.onTimeoutCallback?.())
+                .catch((err) => {
+                    console.error(err);
+                })
+                .finally(() => {
+                    MSP.disconnect_cleanup();
+                });
+        });
     }
 
     handleConnect(openInfo) {
         if (openInfo) {
+            this._mspApiVersionReceived = false;
             FC.resetState();
 
             // disconnect after 10 seconds with error if we don't get IDENT data
             GUI.timeout_add(
                 "msp_connector",
-                function () {
-                    if (!CONFIGURATOR.connectionValid) {
+                () => {
+                    if (!this._mspApiVersionReceived) {
                         gui_log(i18n.getMessage("noConfigurationReceived"));
 
-                        disconnectAndCleanup();
+                        this._disconnectAfterMspTimeout();
                     }
                 },
                 10000,
@@ -62,8 +69,7 @@ class MSPConnectorImpl {
             MSP.listen(mspHelper.process_data.bind(mspHelper));
 
             MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
-                CONFIGURATOR.connectionValid = true;
-
+                this._mspApiVersionReceived = true;
                 GUI.timeout_remove("msp_connector");
                 console.log("Connected");
 
@@ -86,6 +92,9 @@ class MSPConnectorImpl {
 
         MSP.clearListeners();
         MSP.disconnect_cleanup();
+
+        // Flashing path does not run serial_backend disconnectHandler; clear stale UI state if anything set it.
+        CONFIGURATOR.connectionValid = false;
     }
 
     connect(port, baud, onConnectCallback, onTimeoutCallback, onFailureCallback) {
@@ -111,10 +120,14 @@ class MSPConnectorImpl {
             MSP.clearListeners();
             console.log("Disconnected", result);
 
-            this.onDisconnectCallback(result);
+            Promise.resolve(this.onDisconnectCallback?.(result))
+                .catch((err) => {
+                    console.error(err);
+                })
+                .finally(() => {
+                    MSP.disconnect_cleanup();
+                });
         });
-
-        MSP.disconnect_cleanup();
     }
 }
 

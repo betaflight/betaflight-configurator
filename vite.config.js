@@ -8,18 +8,28 @@ import pkg from "./package.json";
 import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
+import ui from "@nuxt/ui/vite";
+import nuxtUiViteOptions from "./nuxt-ui.vite.js";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
 
-// Check if SSL certificates exist
+const devHostname = process.env.BF_DEV_HOSTNAME || "local.betaflight.com";
+
+// Check if SSL certificates exist. Skipped when running under `tauri dev`
+// because the native webview needs a predictable HTTP endpoint and won't
+// trust the mkcert root out of the box.
 const certPath = "./local.betaflight.com.pem";
 const keyPath = "./local.betaflight.com-key.pem";
-const certsExist = existsSync(certPath) && existsSync(keyPath);
+const tauriDev = process.env.TAURI_DEV === "1";
+const certsExist = !tauriDev && existsSync(certPath) && existsSync(keyPath);
 const serverPort = certsExist ? 8443 : 8080;
 
-if (certsExist) {
+if (tauriDev) {
+    console.log("⚙ TAURI_DEV=1 — forcing HTTP mode for the Tauri shell");
+    console.log(`  Server will be available at: http://localhost:${serverPort}`);
+} else if (certsExist) {
     console.log("✓ SSL certificates found - HTTPS enabled");
-    console.log("  Server will be available at: https://local.betaflight.com:8443");
+    console.log(`  Server will be available at: https://${devHostname}:8443`);
 } else {
     console.log("⚠ SSL certificates not found - Running in HTTP mode");
     console.log("  WebAuthn features will not be available without HTTPS");
@@ -77,6 +87,7 @@ function serveFileFromDirectory(directory) {
             }
 
             res.end(fileContents);
+            // eslint-disable-next-line unused-imports/no-unused-vars
         } catch (e) {
             // If file not found or any other error, pass to the next middleware
             next();
@@ -133,6 +144,7 @@ export default defineConfig({
     },
     plugins: [
         vue(),
+        ui(nuxtUiViteOptions),
         serveLocalesPlugin(),
         copy({
             targets: [
@@ -171,7 +183,9 @@ export default defineConfig({
             },
         }),
     ],
-    root: "./src",
+    // Absolute root so @nuxt/ui's template aliases (#build/ui.css, etc.) resolve to
+    // absolute paths; a relative root yields relative aliases and Vite warns about duplicated modules.
+    root: path.resolve(__dirname, "src"),
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),
@@ -189,7 +203,7 @@ export default defineConfig({
             },
         }),
         host: "0.0.0.0", // Listen on all network interfaces for Android device access
-        allowedHosts: certsExist ? ["local.betaflight.com"] : ["localhost"],
+        allowedHosts: certsExist ? [devHostname] : ["localhost"],
     },
     preview: {
         port: serverPort,
