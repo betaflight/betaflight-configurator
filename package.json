@@ -85,7 +85,7 @@
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
     "@storybook/addon-actions": "^8.6.3",
-    "@storybook/addon-essentials": "^8.6.3",
+    "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-links": "^8.6.3",
     "@storybook/vue3": "^8.6.3",
     "@tauri-apps/cli": "~2.10.0",
@@ -111,12 +111,6 @@
     "run-script-os": "^1.1.6",
     "vite": "^7.3.2",
     "vite-plugin-mkcert": "^1.17.9",
-    "vitest": "^3.2.4",
-    "yarn": "^1.22.22"
-  },
-  "resolutions": {
-    "string-width": "4.2.3",
-    "strip-ansi": "6.0.1",
-    "wrap-ansi": "7.0.0"
+    "vitest": "^3.2.4"
   }
 }
