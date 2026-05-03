@@ -53,20 +53,16 @@
                             </template>
                         </UButton>
                         <UButton
-                            :label="
-                                state.calibratingMag
-                                    ? $t('initialSetupButtonCalibratingText')
-                                    : $t('initialSetupButtonCalibrateMag')
-                            "
+                            :label="$t('initialSetupButtonCalibrateMag')"
                             :disabled="state.disabledMag"
-                            :loading="state.calibratingMag"
                             class="w-full justify-center"
-                            @click="onCalibrateMag"
+                            @click="showMagCalDialog = true"
                         >
                             <template #trailing>
                                 <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                             </template>
                         </UButton>
+                        <MagCalibrationDialog v-model="showMagCalDialog" />
                         <div v-show="isExpert">
                             <UButton
                                 :label="$t('initialSetupButtonReset')"
@@ -356,10 +352,12 @@ import { ispConnected } from "../../js/utils/connection";
 import { sensorTypes } from "../../js/sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
 import { flightIndicator } from "../../../libraries/flightIndicators";
+import MagCalibrationDialog from "../dialogs/MagCalibrationDialog.vue";
 
 const { t } = useTranslation();
 
 const yaw_fix = ref(0);
+const showMagCalDialog = ref(false);
 
 let modelInstance = null;
 // Local reactive state to replace jQuery DOM updates
@@ -389,7 +387,6 @@ const state = reactive({
 
     attitude: { roll: 0, pitch: 0, heading: 0 },
     calibratingAccel: false,
-    calibratingMag: false,
     disabledAccel: false,
     disabledMag: false,
     showSonarBox: true,
@@ -564,55 +561,6 @@ function onCalibrateAccel() {
     );
 }
 
-function onCalibrateMag() {
-    if (state.calibratingMag || state.disabledMag) {
-        return;
-    }
-    state.calibratingMag = true;
-    MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
-        if (mountedFlag) {
-            gui_log(t("initialSetupMagCalibStarted"));
-            state.calibratingMag = true;
-            state.magRunning = true;
-        }
-    });
-
-    function magCalibResetButton() {
-        // clear any running mag calibration timers
-        if (magCalibInterval) {
-            clearInterval(magCalibInterval);
-            magCalibInterval = null;
-        }
-        if (magCalibTimeoutName) {
-            removeTimeout(magCalibTimeoutName);
-            magCalibTimeoutName = null;
-        }
-
-        gui_log(t("initialSetupMagCalibEnded"));
-        state.calibratingMag = false;
-        state.magRunning = false;
-    }
-
-    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-        let cycle = 0;
-        const cycleMax = 45;
-        const interval = 1000;
-        // store the interval id so it can be cleared if the component unmounts
-        magCalibInterval = setInterval(function () {
-            if (cycle >= cycleMax || (fcStore.config.armingDisableFlags & (1 << 12)) === 0) {
-                clearInterval(magCalibInterval);
-                magCalibInterval = null;
-                magCalibResetButton();
-            }
-            cycle++;
-        }, interval);
-    } else {
-        // use a dedicated name so we can remove it safely on unmount
-        magCalibTimeoutName = "mag_button_reset";
-        addTimeout(magCalibTimeoutName, magCalibResetButton, 30000);
-    }
-}
-
 function showConfirmReset() {
     if (dialogConfirmReset.value) {
         dialogConfirmReset.value.showModal();
@@ -647,9 +595,6 @@ function closeBuildInfo() {
 const canvasWrapper = ref(null);
 const canvasEl = ref(null);
 let boundModelResize = null;
-// mag calibration timers (kept across handler scope so they can be cleared on unmount)
-let magCalibInterval = null;
-let magCalibTimeoutName = null;
 
 async function initialize() {
     cleanup();
@@ -1006,16 +951,6 @@ function cleanup(callback) {
 
     // clear accel calibration timeout to prevent it firing after unmount
     removeTimeout("button_reset");
-
-    // ensure mag calibration timers are cleared to avoid callbacks after unmount
-    if (magCalibInterval) {
-        clearInterval(magCalibInterval);
-        magCalibInterval = null;
-    }
-    if (magCalibTimeoutName) {
-        removeTimeout(magCalibTimeoutName);
-        magCalibTimeoutName = null;
-    }
 
     callback?.();
 }

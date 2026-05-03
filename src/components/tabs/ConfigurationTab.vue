@@ -339,11 +339,33 @@
                         :help="$t('configurationMagAlignmentHelp')"
                     >
                         <SettingRow fullWidth>
-                            <USelect
-                                v-model="sensorAlignment.align_mag"
-                                :items="gyroAlignSelectItems"
-                                class="min-w-40"
-                                :aria-label="$t('configurationMagAlignment')"
+                            <div class="flex items-center gap-2">
+                                <USelect
+                                    v-model="sensorAlignment.align_mag"
+                                    :items="gyroAlignSelectItems"
+                                    class="min-w-40"
+                                    :aria-label="$t('configurationMagAlignment')"
+                                />
+                                <UButton
+                                    size="xs"
+                                    variant="outline"
+                                    :label="$t('configurationMagDetectAlignment')"
+                                    @click="showMagAlignDialog = true"
+                                />
+                            </div>
+                            <MagAlignmentDialog
+                                v-model="showMagAlignDialog"
+                                :current-alignment="sensorAlignment.align_mag"
+                                :custom-angles="
+                                    sensorAlignment.align_mag === 9
+                                        ? {
+                                              roll: sensorAlignment.mag_align_roll,
+                                              pitch: sensorAlignment.mag_align_pitch,
+                                              yaw: sensorAlignment.mag_align_yaw,
+                                          }
+                                        : null
+                                "
+                                @apply="onMagAlignApply"
                             />
                         </SettingRow>
 
@@ -415,6 +437,14 @@
                                 orientation="vertical"
                                 size="xs"
                                 class="w-16"
+                            />
+                            <UButton
+                                size="xs"
+                                variant="outline"
+                                :label="$t('configurationMagDeclinationAuto')"
+                                :disabled="isFetchingDeclination"
+                                :loading="isFetchingDeclination"
+                                @click="autoSetDeclination"
                             />
                         </SettingRow>
                         <SettingRow
@@ -558,6 +588,9 @@ import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
+import { computeDeclination } from "../../composables/useMagCalibration";
+import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
+import MagAlignmentDialog from "../dialogs/MagAlignmentDialog.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 
@@ -566,6 +599,7 @@ export default defineComponent({
     components: {
         WikiButton,
         UiBox,
+        MagAlignmentDialog,
         SettingRow,
         SettingColumn,
     },
@@ -645,6 +679,75 @@ export default defineComponent({
         });
 
         const magDeclination = ref(0);
+
+        const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
+        const isFetchingDeclination = ref(false);
+
+        async function autoSetDeclination() {
+            if (isFetchingDeclination.value) {
+                return;
+            }
+            isFetchingDeclination.value = true;
+            try {
+                let lat, lon;
+
+                // Try FC GPS first
+                try {
+                    await MSP.promise(MSPCodes.MSP_RAW_GPS);
+                } catch {
+                    // MSP failed — fall through to IP fallback
+                }
+
+                if (fcStore.gpsData?.fix) {
+                    lat = fcStore.gpsData.latitude / 10000000;
+                    lon = fcStore.gpsData.longitude / 10000000;
+                } else {
+                    // Check consent before sending IP to third-party service
+                    const hasConsent = !!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY];
+                    if (!hasConsent) {
+                        const allowed = confirm(i18n.getMessage("preflightIpConsentMessage"));
+                        if (!allowed) {
+                            gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+                            return;
+                        }
+                        const obj = {};
+                        obj[IP_GEOLOCATION_CONSENT_KEY] = true;
+                        setConfig(obj);
+                    }
+
+                    // Fall back to IP geolocation with timeout
+                    try {
+                        const controller = new AbortController();
+                        const timeout = setTimeout(() => controller.abort(), 10000);
+                        const response = await fetch("https://ipapi.co/json/", { signal: controller.signal });
+                        clearTimeout(timeout);
+                        if (!response.ok) {
+                            throw new Error("IP geolocation failed");
+                        }
+                        const data = await response.json();
+                        lat = Number.parseFloat(data.latitude);
+                        lon = Number.parseFloat(data.longitude);
+                        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+                            throw new TypeError("Invalid coordinates");
+                        }
+                    } catch {
+                        gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+                        return;
+                    }
+                }
+
+                const { declination } = computeDeclination(lat, lon);
+                magDeclination.value = Math.round(declination * 10) / 10;
+                gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
+            } finally {
+                isFetchingDeclination.value = false;
+            }
+        }
+
+        function onMagAlignApply(alignment) {
+            sensorAlignment.align_mag = alignment;
+        }
+
         const showGyroCalOnFirstArm = ref(false);
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
@@ -725,6 +828,7 @@ export default defineComponent({
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
         const showMagAlign = ref(false);
+        const showMagAlignDialog = ref(false);
         const showMagDeclination = ref(false);
         const showRangefinder = ref(false);
         const showGyroToUse = computed(() => {
@@ -1428,6 +1532,8 @@ export default defineComponent({
             accelTrims,
             sensorAlignment,
             magDeclination,
+            autoSetDeclination,
+            isFetchingDeclination,
             showGyroCalOnFirstArm,
             showAutoDisarmDelay,
             hasSecondGyro,
@@ -1435,6 +1541,8 @@ export default defineComponent({
             showGyro1Align,
             showGyro2Align,
             showMagAlign,
+            showMagAlignDialog,
+            onMagAlignApply,
             showSensorAlignment,
             showOtherSensors,
             showMagDeclination,
