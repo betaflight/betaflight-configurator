@@ -1110,8 +1110,8 @@ function clampStringArrayPreviewPosition(position, displaySize, cursorX, limits)
 }
 
 function clampObjectArrayPreviewPosition(position, displaySize, limits) {
-    const selectedPositionX = position % displaySize.x;
-    const selectedPositionY = Math.trunc(position / displaySize.x);
+    const selectedPositionX = ((position % displaySize.x) + displaySize.x) % displaySize.x;
+    const selectedPositionY = Math.floor(position / displaySize.x);
 
     if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
         position += Math.abs(selectedPositionX + limits.minX);
@@ -1124,7 +1124,7 @@ function clampObjectArrayPreviewPosition(position, displaySize, limits) {
         position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
     }
 
-    return position;
+    return Math.max(0, position);
 }
 
 function clampArrayPreviewPosition(displayItem, position, displaySize, cursorX) {
