@@ -2588,13 +2588,6 @@ export default defineComponent({
         margin-top: 0; /* keep vertically centered */
     }
     .build_configuration {
-        .gui_box_titlebar {
-            display: flex;
-            flex-direction: row-reverse;
-            gap: 1rem;
-            flex-wrap: nowrap;
-            align-items: center;
-        }
         .build_configuration_toggle_wrapper {
             display: flex;
             flex-wrap: nowrap;
