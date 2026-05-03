@@ -276,9 +276,11 @@ function finishClose(finishedCallback) {
             console.warn("unmountVueTab failed:", e);
         }
 
-        // close cliPanel if left open
+        // close cliPanel if left open; dismiss Pinia dialogs (e.g. InteractiveDialog, or
+        // InformationDialog from showVersionMismatchAndCli) so disconnect does not leave a modal open
         const dialogStore = useDialogStore();
-        if (dialogStore.activeDialog?.type === "InteractiveDialog") {
+        const activeType = dialogStore.activeDialog?.type;
+        if (activeType === "InteractiveDialog" || activeType === "InformationDialog") {
             dialogStore.close();
         }
     }
@@ -345,22 +347,18 @@ function abortConnection() {
 
 // Centralized helper: show version mismatch warning and switch to CLI
 function showVersionMismatchAndCli(message) {
-    const dialog = document.querySelector(".dialogConnectWarning");
-
-    if (dialog) {
-        const content = dialog.querySelector(".dialogConnectWarning-content");
-        if (content) {
-            content.innerHTML = message;
-        }
-        const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
-        if (closeBtn) {
-            closeBtn.onclick = () => dialog.close();
-        }
-
-        dialog.showModal();
-    } else {
-        gui_log(message);
-    }
+    const dialogStore = useDialogStore();
+    dialogStore.open(
+        "InformationDialog",
+        {
+            title: i18n.getMessage("warningTitle"),
+            text: message,
+            confirmText: i18n.getMessage("close"),
+        },
+        {
+            confirm: () => dialogStore.close(),
+        },
+    );
 
     connectCli();
 }
@@ -727,6 +725,10 @@ function onClosed(result) {
     }, 100);
 
     console.log(`${logHead} Connection closed:`, result);
+
+    // USB/cable disconnect invokes this path (not finishClose). Clear any Pinia modal
+    // (e.g. InformationDialog from showVersionMismatchAndCli) so it does not linger.
+    useDialogStore().close();
 
     resetConnection();
 }
