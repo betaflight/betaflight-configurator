@@ -21,7 +21,7 @@
                 <SettingRow :label="$t('showManualMode')">
                     <USwitch v-model="settings.showManualMode" size="sm" />
                 </SettingRow>
-                <SettingRow :label="$t('showVirtualMode')">
+                <SettingRow v-if="settings.expertMode" :label="$t('showVirtualMode')">
                     <USwitch v-model="settings.showVirtualMode" size="sm" />
                 </SettingRow>
                 <SettingRow :label="$t('showDevToolsOnStartup')">
