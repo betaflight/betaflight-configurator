@@ -2616,14 +2616,6 @@
         "message": "Giro RPM Iragazkia",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Giro RPM Iragazkiaren Armoniko Zenbakia",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Giro RPM Iragazkiaren Min Frekuentzia [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmMinHzHelp": {
         "message": "RPM iragazkiak erabiliko duen gutxieneko frekuentzia.",
         "description": "Help text for one of the parameters of the RPM Filter"

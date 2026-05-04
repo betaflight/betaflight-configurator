@@ -4937,7 +4937,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "Nombre de filtres RPM del Giro harmònics",
+        "message": "Harmònics",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -4945,12 +4945,24 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Freqüència mínima [Hz] del filtre RPM Giro",
+        "message": "Freqüència mínima [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Freqüència mínima que es fa servir pel filtre RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Rang d'esvaïment",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Factor Q",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmWeight": {
+        "message": "Pes {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Perfil dependent dels ajustos de filtre"
@@ -7590,6 +7602,10 @@
         "message": "Alt contrast",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "Escala d'IU",
+        "description": "Scale the entire user interface up or down"
+    },
     "pidTuningRatesType": {
         "message": "Tipus de Rates"
     },
@@ -7874,6 +7890,10 @@
     "presetsVirtualModeCliUnsupported": {
         "message": "Les accions d'aplicació de pre-ajustos i de còpia de seguretat requereixen la CLI, que no està disponible en mode virtual.",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
+    },
+    "mspCliFirmwareTooOld": {
+        "message": "Aquesta acció requereix el programari de Betaflight {{required}} o més recent (actualment connectat a {{current}}). Actualitzeu el programari del controlador de vol abans de continuar.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
     "presetsLoadingDumpAll": {
         "message": "S'està carregant la configuració actual des de la controladora de vol",
@@ -8163,6 +8183,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "No s'ha pogut suprimir la còpia de seguretat"
+    },
+    "actionRestore": {
+        "message": "Restaurar"
+    },
+    "titleRestoreBackup": {
+        "message": "Restaura còpia de seguretat"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Vols aplicar la còpia de seguretat \"{{name}}\" al controlador de vol connectat? La configuració actual se sobreescriurà."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Restaurant còpia de seguretat..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Còpia de seguretat restaurada correctament"
+    },
+    "userBackupRestoreFailed": {
+        "message": "No s'ha pogut restaurar la còpia de seguretat"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>AVÍS!<\/span><br\/>S'ha aplicat una còpia de seguretat amb errors del CLI."
     },
     "userPasskeyNoPasskeys": {
         "message": "No hi ha contrasenyes disponibles"

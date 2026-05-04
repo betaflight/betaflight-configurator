@@ -4714,17 +4714,9 @@
         "message": "Filtrowanie RPM to zestaw filtrów wykorzystujący żyroskop, który wykorzystują dane telemetryczne RPM do usuwania szumów silnika z chirurgiczną precyzją. <br \/> <br \/> <b> <span class = \"message-Positive\"> WAŻNE <\/span>: ESC musi obsługiwać dwukierunkowy protokół DShot, a wartość $t(configurationMotorPoles.message) na karcie $t(tabMotorTesting.message) musi być poprawna, aby ten filtr działał. <\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Liczba harmoniczna żyroskopowego filtra RPM",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Liczba harmonicznych przypadająca na silnik. Wartość 3 (jest zalecana dla większości maszyn) wygeneruje 3 filtry pasmowo zaporowe \"notch\" na silnik, dla każdej osi. Łącznie 36 filtrów. Jeden dla bazowej częstotliwości silnika, i pozostałe dwa w następnych harmonicznych.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Minimalna częstotliwość filtra żyroskopu RPM [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Minimalna częstotliwość, która będzie używana przez filtr RPM.",

@@ -3928,14 +3928,6 @@
         "message": "O Filtro RPM é um banco de filtros Notch no gyro que utilizam os dados de telemetria RPM para remover os ruídos do motor com uma precisão cirúrgica.<br \/><br \/><b><span class=\"message-positive\">IMPORTANTE:<\/span> O ESC deve ser compatível com o protocolo DSHOT Bidirecional e o valor da $t(configurationMotorPoles.message) na aba $t(tabMotorTesting.message) deve estar correto para que este filtro funcione.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Gyro - RPM - Número de harmônicas",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Gyro - RPM - Frequência mínima [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmMinHzHelp": {
         "message": "Frequência mínima utilizada pelo filtro RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"

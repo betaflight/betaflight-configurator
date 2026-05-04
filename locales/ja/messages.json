@@ -106,11 +106,23 @@
     "portOverrideText": {
         "message": "ポート:"
     },
+    "connectVirtualDescription": {
+        "message": "ハードウェアなしでフライトコントローラーをシミュレートします。",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "シリアルパスまたは接続先のURLを入力してください。",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "自動接続"
     },
     "close": {
         "message": "閉じる"
+    },
+    "openSidebarMenu": {
+        "message": "サイドバーメニューを開く",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -120,6 +132,21 @@
     },
     "submit": {
         "message": "送信"
+    },
+    "delete": {
+        "message": "削除"
+    },
+    "edit": {
+        "message": "編集"
+    },
+    "add": {
+        "message": "追加"
+    },
+    "update": {
+        "message": "更新"
+    },
+    "save": {
+        "message": "保存"
     },
     "autoConnectEnabled": {
         "message": "自動接続: 有効 - Appは自動的に新しいポートが検出されたときに接続を試みます"
@@ -335,6 +362,9 @@
     "tabGPS": {
         "message": "GPS"
     },
+    "tabFlightPlan": {
+        "message": "フライトプラン"
+    },
     "tabMotorTesting": {
         "message": "モーター"
     },
@@ -364,6 +394,19 @@
     },
     "logActionShow": {
         "message": "ログ表示"
+    },
+    "tabLog": {
+        "message": "ログ"
+    },
+    "i2cErrorDetected": {
+        "message": "I2Cエラーが検出されました (+{{delta}}, total {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "消去"
+    },
+    "logAutoScroll": {
+        "message": "自動スクロール"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} ファイル",
@@ -413,6 +456,9 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USBデバイスがDFUモードになっていません"
+    },
+    "stm32DfuPermissionRequired": {
+        "message": "デバイスはDFUモードで再起動しました。<br><br>ブラウザでDFUデバイスにアクセスするにはUSBへのアクセス権限が必要です。下のボタンをクリックして、デバイス選択画面から選択してください。"
     },
     "stm32RebootingToBootloader": {
         "message": "ブートローダーの再起動を開始しています..."
@@ -613,6 +659,9 @@
     },
     "versionLabelTarget": {
         "message": "ターゲット"
+    },
+    "versionLabelFirmware": {
+        "message": "ファームウェア バージョン"
     },
     "versionLabelConfigurator": {
         "message": "App バージョン"
@@ -1305,6 +1354,9 @@
     "featureTRANSPONDER": {
         "message": "トランスポンダー"
     },
+    "featureTRANSPONDERTip": {
+        "message": "トランスポンダーファームウェアのサポートを有効化します。CLIでプロバイダ (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]<\/code>) とデータ (<code>set transponder_data = &lt;bytes&gt;<\/code>) を設定し、<code>save<\/code> を実行してください。現在の値は <code>get transponder<\/code> で確認できます。"
+    },
     "featureAIRMODE": {
         "message": "エアモードの常時有効化"
     },
@@ -1356,6 +1408,9 @@
     },
     "configurationTelemetryHelp": {
         "message": "受信機からテレメトリーを出力"
+    },
+    "configurationRSSI": {
+        "message": "RSSI"
     },
     "configurationRSSIHelp": {
         "message": "RSSIは信号強度の値で、機体が圏外になったときやRF干渉を受けていることを確認でき非常に有益です。"
@@ -1786,6 +1841,9 @@
     "configurationButtonSave": {
         "message": "保存して再起動"
     },
+    "dialogClose": {
+        "message": "閉じる"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "動的ノッチ値の変更"
     },
@@ -1906,6 +1964,9 @@
     "pidTuningSubTabPid": {
         "message": "PID Profile 設定"
     },
+    "pidTuningSubTabRates": {
+        "message": "Rate Profile 設定"
+    },
     "pidTuningSubTabFilter": {
         "message": "フィルター設定"
     },
@@ -1967,6 +2028,10 @@
     "pidTuningDMaxFeatureTitle": {
         "message": "動的ダンピング \/ D Max 設定",
         "description": "Title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "動的ダンピング",
+        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "強度[ゲイン]",
@@ -2092,6 +2157,9 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 0より大きく0.1より小さいD値セットポイントの設定はしないでください。スティックが中心を横切るときに不安定となり、スティックレスポンスが低下する可能性があります。<\/span>"
     },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feedforward"
+    },
     "pidTuningFeedforwardGroupHelp": {
         "message": "フィードフォワードはスティックレスポンスを調整します。<br \/><br \/>これらのオプションにより、レース向けの鮮明で素早いスティックレスポンスから、シネマティック \/ HDカメラ用のソフトで撮影したかのような滑らかなレスポンスまで調整することが可能です。"
     },
@@ -2196,11 +2264,17 @@
     "pidTuningRatesPreview": {
         "message": "レートプレビュー"
     },
+    "pidTuningRatesModelPreview": {
+        "message": "レートモデル プレビュー"
+    },
     "pidTuningRatesTuningHelp": {
         "message": "<b>レートとExpo<\/b>: これらのパラメータに基づいてスティック感覚を決定します。グラフと3Dモデルを使用して、お気に入りのレート設定を見つけてください。"
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
+    },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
     },
     "pidTuningTPAMode": {
         "message": "TPA モード"
@@ -2323,6 +2397,9 @@
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>警告:<\/b><\/span> 現在適用されているフィルタリング量が非常に少ない状態です。これは機体制御が困難となる可能性があり、飛行散逸 [フライアウェイ] が発生する可能性があります。<b>『動的ジャイロローパス』または『ジャイロローパス 1』の少なくとも1つと『D値動的ローパス』または『D値ローパス1』の少なくとも1つを有効とする<\/b>ことを強くお奨めします。"
     },
+    "pidTuningSliders": {
+        "message": "PID チューニングスライダー"
+    },
     "pidTuningSliderPidsMode": {
         "message": "モード:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2347,6 +2424,9 @@
     },
     "receiverThrottleHover": {
         "message": "ホバーポイント"
+    },
+    "receiverStickRange": {
+        "message": "スティック範囲"
     },
     "receiverStickMin": {
         "message": "スティック 低"
@@ -2483,6 +2563,9 @@
     "auxiliaryAutoChannelSelect": {
         "message": "自動"
     },
+    "auxiliaryLinkNone": {
+        "message": "なし"
+    },
     "auxiliaryModeLogicOR": {
         "message": "OR"
     },
@@ -2516,6 +2599,10 @@
     "auxiliaryHelpMode_ALTHOLD": {
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度ホールド<\/a>は、外部センサーとアングルモード (安定モード) を組み合わせて、機体の高度を積極的に制御します。",
         "description": "Help text for ALTITUDE HOLD mode"
+    },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "オートパイロットモードは自律飛行制御を有効にし、高度維持とポジションホールドを組み合わせて、安定したホバリングや計画された飛行経路の追従を行います。",
+        "description": "Help text for AUTOPILOT mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "ビープ音を有効にします - 墜落した機体の位置を特定するのに役立ちます",
@@ -2718,6 +2805,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "チャンネル"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "w\/ 中央 (値)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "範囲｜スケール (値｜%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "調整機能で使用される中央値 [基準値] を設定します。<br \/><br \/><strong>スライダー調整:<\/strong><br \/>スライダー調整では、Adjustment Center を 0 に設定してください。現在のスライダー位置が上下の調整に使用されます。<br \/><br \/><strong>選択式調整: <\/strong><br \/>Adjustment Center を 0、または特定のマイクロ秒 (uS) 値に設定します。RC調整開始時に、1500uSからのスイッチ基準位置をオフセットしたい場合に使用します。<br \/><br \/><strong>ステップ調整: <\/strong><br \/>Adjustment Center を 0 に設定すると、調整対象の現在値が使用されます。<br \/><br \/><strong>絶対値調整: <\/strong><br \/>絶対値調整方式を使用するには、Adjustment Center と Adjustment Scale の両方を設定し、目的の値と範囲を指定する必要があります。範囲は【Center ± Scale】で計算されます。例えば、Adjustment Center を 50、Adjustment Scale を 25 に設定すると、範囲は 25〜75 となり、中央位置 (スイッチまたはPOT) は 50 に対応します。<br \/><br \/>詳細は <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのページ<\/a> を参照してください。",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "調整のスケーリング [倍率] または範囲を制御します。値を大きくすると、調整範囲または感度が増加します。<br \/><br \/><strong>スライダー調整: <\/strong><br \/>スライダー調整では、Adjustment Scale は調整の感度を制御します。50 に設定するとスライダー範囲の 50% で動作します。0 に設定するとデフォルトの感度が使用されます。<br \/><br \/><strong>選択式調整: <\/strong><br \/>選択式調整では、Adjustment Scale を0に設定するとデフォルト動作になります。範囲を制限したい場合は、マイクロ秒 (uS) 値を指定します。例：Adjustment Center を1000 (uS) 、Adjustment Scale を500 (uS) に設定すると、3ポジションスイッチを2ポジションスイッチとして使用できます。<br \/><br \/><strong>ステップ調整および絶対値調整: <\/strong><br \/>ステップ調整および絶対値調整では、Adjustment Scale は Adjustment Center の上下の範囲を定義します。例えば値を 25 に設定すると、Adjustment Center [または Adjustment Center が 0 の場合は現在値] を基準に ±25 の調整範囲になります。<br \/><strong>注意: <\/strong> ポテンショメータで絶対値調整方式を使用する場合、Adjustment Scale の値を設定する必要があります。<br \/><br \/>詳細は <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのページ<\/a> を参照してください。",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "スロット1"
     },
@@ -2832,8 +2933,24 @@
     "adjustmentsFunction31": {
         "message": "LED 明るさ調整"
     },
+    "adjustmentsFunction32": {
+        "message": "スライダー 倍率設定"
+    },
+    "adjustmentsFunction33": {
+        "message": "バッテリー プロファイル選択",
+        "description": "Allows switching battery profiles via RC channel"
+    },
     "adjustmentsSave": {
         "message": "保存"
+    },
+    "adjustmentsShowAll": {
+        "message": "すべてのスロットを表示"
+    },
+    "adjustmentsHideEmpty": {
+        "message": "空のスロットを非表示"
+    },
+    "adjustmentsSlotsActive": {
+        "message": "{{active}} \/ {{total}} スロットが有効"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "サーボの利用はBetaflight Configurator 1.10.0か、それ以上が必要であり、サポートするファームウェアが必要です。"
@@ -2887,6 +3004,27 @@
     },
     "gpsMapHead": {
         "message": "現在地"
+    },
+    "gpsMapSatelliteView": {
+        "message": "衛星ビュー"
+    },
+    "gpsMapHybridView": {
+        "message": "ハイブリッドビュー"
+    },
+    "gpsMapStreetView": {
+        "message": "ストリートビュー"
+    },
+    "gpsMapZoomIn": {
+        "message": "拡大"
+    },
+    "gpsMapZoomOut": {
+        "message": "縮小"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "フルスクリーン 切替"
+    },
+    "gpsMapRetry": {
+        "message": "再試行"
     },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
@@ -2994,8 +3132,179 @@
     "gnssHealthyUnhealthy": {
         "message": "不完全"
     },
+    "flightPlanWaypointList": {
+        "message": "ウェイポイント リスト"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "ウェイポイントが定義されていません。マップをクリックするか、フォームからウェイポイントを追加してください。"
+    },
+    "flightPlanAddWaypoint": {
+        "message": "ウェイポイント 追加"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "ウェイポイント 編集"
+    },
+    "flightPlanLatitude": {
+        "message": "緯度 <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "経度 <span class=\"units\">°<\/span>"
+    },
+    "flightPlanAltitude": {
+        "message": "高度 <span class=\"units\">ft AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "速度 <span class=\"units\">ノット<\/span>"
+    },
+    "flightPlanType": {
+        "message": "ウェイポイント タイプ"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Fly Over"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Fly By"
+    },
+    "flightPlanTypeHold": {
+        "message": "Fly Hold"
+    },
+    "flightPlanTypeLand": {
+        "message": "着陸"
+    },
+    "flightPlanDuration": {
+        "message": "保持時間 <span class=\"units\">分<\/span>"
+    },
+    "flightPlanPattern": {
+        "message": "ホールドパターン"
+    },
+    "flightPlanPatternCircle": {
+        "message": "サークル"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "図-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "オービット"
+    },
+    "flightPlanMap": {
+        "message": "フライトプラン マップ"
+    },
+    "flightPlanMapInstructions": {
+        "message": "クリックしてウェイポイントを追加します。ウェイポイントマーカーをドラッグして移動します。"
+    },
     "flightPlanLoading": {
         "message": "しばらくお待ちください..."
+    },
+    "flightPlanClear": {
+        "message": "消去"
+    },
+    "flightPlanLoad": {
+        "message": "読み込み"
+    },
+    "flightPlanSaveToFC": {
+        "message": "FCへ保存"
+    },
+    "flightPlanLoaded": {
+        "message": "フライトプランが正常に読み込まれました"
+    },
+    "flightPlanSaved": {
+        "message": "フライトプランが正常に保存されました"
+    },
+    "flightPlanCleared": {
+        "message": "フライトプランを消去しました"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "FCから読み込み"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "フライトコントローラから読み込まれたフライトプラン"
+    },
+    "flightPlanSavedToFC": {
+        "message": "フライトプランをフライトコントローラに保存しました"
+    },
+    "flightPlanFCLoadError": {
+        "message": "フライトコントローラからフライトプランの読み込みに失敗しました"
+    },
+    "flightPlanFCSaveError": {
+        "message": "フライトコントローラへのフライトプランの保存に失敗しました"
+    },
+    "flightPlanFCEmpty": {
+        "message": "フライトコントローラにウェイポイントが見つかりません"
+    },
+    "flightPlanClearedFC": {
+        "message": "フライトコントローラ内のフライトプランを消去しました"
+    },
+    "flightPlanLoadError": {
+        "message": "フライトプランの読み込みに失敗しました"
+    },
+    "flightPlanSaveError": {
+        "message": "フライトプランの保存に失敗しました"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "無効な緯度 (－90〜＋90の範囲で指定してください)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "無効な経度 (－180～＋180の範囲で指定してください)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "このウェイポイントを削除してもよろしいですか？"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "ウェイポイント 削除"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "このウェイポイントを削除してもよろしいですか？この操作は元に戻せません。"
+    },
+    "flightPlanConfirmClear": {
+        "message": "すべてのウェイポイントを削除してもよろしいですか？この操作は元に戻せません。"
+    },
+    "flightPlanClearTitle": {
+        "message": "フライトプランを消去"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "フライトコントローラからフライトプランを読み込みますか？"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "フライトコントローラが接続されています。現在のフライトプランを、フライトコントローラに保存されているものに置き換えますか？【いいえ】を選択すると現在のプランが保持され、フライトコントローラに保存できます。"
+    },
+    "flightPlanKeepLocal": {
+        "message": "現在の状態を維持"
+    },
+    "flightPlanElevationProfile": {
+        "message": "標高プロファイル"
+    },
+    "flightPlanDistance": {
+        "message": "合計距離"
+    },
+    "flightPlanFlightTime": {
+        "message": "飛行時間"
+    },
+    "flightPlanMinAlt": {
+        "message": "最低高度"
+    },
+    "flightPlanMaxAlt": {
+        "message": "最大高度"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "ウェイポイントを追加し、高度プロファイルを表示"
+    },
+    "flightPlanGroundElev": {
+        "message": "地面高度"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "最大地面高度"
+    },
+    "flightPlanAvgGround": {
+        "message": "平均地面高度"
+    },
+    "flightPlanMaxGround": {
+        "message": "最大地面高度"
+    },
+    "flightPlanAlt": {
+        "message": "標高"
+    },
+    "flightPlanDist": {
+        "message": "距離"
     },
     "motorsVoltage": {
         "message": "電圧:"
@@ -3334,6 +3643,12 @@
     },
     "loggingNote": {
         "message": "ログデータは<span class=\"message-negative\">このタブを選択している間のみ<\/span>記録されます。このタブを離れると記録は<span class=\"message-negative\">中止<\/span>され、アプリケーションは通常の状態に戻ります。<br \/>また項目全体のログ更新間隔を選択できます。パフォーマンス上の理由から、データは<strong>1 秒<\/strong>ごとにログファイルへ書き込まれます。"
+    },
+    "loggingPropertiesTitle": {
+        "message": "ログ プロパティ"
+    },
+    "loggingSamplingInterval": {
+        "message": "サンプリング間隔:"
     },
     "loggingSamplesSaved": {
         "message": "サンプル保存:"
@@ -3712,6 +4027,12 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "ファームウェアがロードできませんでした"
     },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "ファームウェア"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} バイト"
+    },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "ローカルファムウェアがロードされました: {{filename}} ({{bytes}} bytes)"
     },
@@ -3735,6 +4056,9 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "UF2の保存 (更新) に失敗しました"
+    },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "クリックしてDFUデバイスに接続"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "設定ファイル破損の可能性があります。ASCII文字列が入力されました。(chars 0-255)",
@@ -4075,6 +4399,14 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "常時点滅"
     },
+    "ledStripThrottleHue": {
+        "message": "スロットル色相",
+        "description": "Label of throttle hue modifier switch on LED Strip tab"
+    },
+    "ledStripThrottleHueChannel": {
+        "message": "スロットル色相 チャンネル",
+        "description": "Accessible label for the aux-channel select next to the throttle hue switch"
+    },
     "ledStripRainbowOverlay": {
         "message": "レインボー",
         "description": "Label of rainbow effect switch on LED Strip tab"
@@ -4304,9 +4636,17 @@
         "message": "フィルター増加",
         "description": "Filter tuning slider high header"
     },
+    "pidTuningGyroFilterSlider": {
+        "message": "ジャイロフィルター倍率",
+        "description": "Gyro filter tuning slider label"
+    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "ジャイロ ローパスフィルターのカットオフを変更します。<br \/><br \/>スライダーを左側に動かすと、ジャイロのフィルタリングが強くなります。(カットオフ周波数が低くなります) <br \/><br \/>スライダーを右側に動かすと、ジャイロのフィルタリングが弱くなります。(カットオフ周波数が高くなります) <br \/><br \/>スライダーを右側に動かしてプロップウォッシュの挙動を向上させる場合、あまり過激な状態とならないように注意してください。 P値、D値ともにノイズが多くなり、飛行散逸 [フライアウェイ] やモーター焼損が発生する場合があります。<br \/><br \/>フレーム共振問題、ベアリングの不良、プロペラ劣化、モーターの発熱などがある場合は、スライダーを左側に移動させる必要があります。<br \/><br \/>ジャイロフィルタリングは、D値フィルタリングの前、または付加され適用されます。",
         "description": "Gyro filter tuning slider helpicon message"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "D値フィルター倍率",
+        "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "D値 ローパスフィルターのカットオフ値を変更します。<br \/><br \/>スライダーを左側に動かすとD値フィルターが強くなります。 (カットオフ周波数が低くなります) <br \/><br \/>スライダーを右側に動かすと、フィルタリングが弱くなります。 (カットオフ周波数が高くなります) <br \/><br \/>D値は、PID値の中で最もノイズや共振に敏感な要素です。高周波ノイズは10倍から100倍に増幅することがあります。そのため、D値フィルターのカットオフはジャイロフィルターよりもずっと低くなっています。<br \/><br \/>D値フィルタリングは、ジャイロフィルタリングの後、追加で適用されます。デフォルトとなるD値フィルタリングは、ほとんどの機体に最適となり、ほとんど変更する必要はありません。<br \/><br \/>このスライダーを左側に動かすと、ノイズの多い機体や高いPID値『D値』チューニングでモーターの発熱が抑えられますが、プロップウォッシュや低い周波数のD値共振が見られることがあります。<br \/><br \/>スライダーを右側に動かすことは推奨しませんが、新造機体ではプロップウォッシュが改善されるかもしれません。また、アーミング時のモーターグラインド、飛行中の突然の共振、モーターのオーバーヒートを引き起こすかもしれません。",
@@ -4521,6 +4861,9 @@
     "pidTuningDynamicNotchRange": {
         "message": "動的ノッチフィルター範囲"
     },
+    "pidTuningDynamicNotchQ": {
+        "message": "Q係数 (×100)"
+    },
     "pidTuningDynamicNotchMinHz": {
         "message": "最低周波数 [Hz]"
     },
@@ -4532,6 +4875,9 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "動的ノッチには、設定可能な3つの周波数範囲があります。6インチ以上の低回転型クワッドコプターの場合はLOW(80-330hz)、通常の5インチの場合はMEDIUM(140-550hz)、2.5～3インチのような非常に高回転の場合はHIGH(230-800hz) となります。AUTOオプションは、動的ジャイロローパスフィルター1の最大カットオフ周波数の値に応じて範囲を選択します。"
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "Q係数は、動的ノッチフィルターの帯域の狭さ／広さを調整します。保存される値は Q係数 ×100 (例：300 = Q 3.0) です。値が高いほどフィルターは狭く精度が高くなり、低いほど広くなります。値を極端に低くすると、フィルター遅延が大きく増加します。"
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "動的ノッチで制御が必要なノイズ周波数の最低値を設定します。"
@@ -4550,17 +4896,9 @@
         "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br \/><br \/><b><span class=\"message-positive\">重要:<\/span> ESCは双方向DSHOTプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "ジャイロRPMフィルター 高調波数",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "モーターあたりの高調波の数を示します。値3 (ほとんどの機体に推奨) は、各軸のモーター毎に合計36ノッチの3ノッチフィルターを生成します。1つは基本モーター周波数で、2つはその基本周波数の倍数の高調波となります。",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "ジャイロRPMフィルター 周波数最小値 [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "RPMフィルターで使用される周波数最小値。",
@@ -4619,11 +4957,17 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Vbatが低下したとき、それを補正するためPID値を増加させます。 これにより、飛行中にさらに一定の飛行特性を与えられます。 適用される補正量は、 $t(tabPower.message) ページで設定された $t(powerBatteryMaximum.message) から計算されるため、適切な値に設定されていることを確認してください。"
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbatサグ値補正 %"
+    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲内で一定したスロットルおよびPID性能を提供します。<br \/><br \/>補正量は 0 ～ 100% の間で調整可能です。完全な補正 (100%) が推奨されます。<br \/><br \/>詳しくは<a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ<\/a>をご覧ください。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "推力線形化 %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "低速域のスロットル制御と応答性を向上させます。<br><br>特にWhoop機や48KのESCに有効です。高スロットルでは効果がありません。<br><br>補正量は0～150%の間で可変が可能です。通常は30～40%で十分です。"
@@ -5158,6 +5502,18 @@
     "powerAmperageCalibratedScale": {
         "message": "電流スケール調整:"
     },
+    "powerBatteryProfile": {
+        "message": "バッテリー プロファイル"
+    },
+    "powerBatteryProfileOption": {
+        "message": "バッテリー プロファイル $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "例: LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "プロファイル名"
+    },
     "powerBatteryHead": {
         "message": "バッテリー"
     },
@@ -5360,11 +5716,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "カスタム画像:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "サイズは {{logoWidthPx}}x{{logoHeightPx}} ピクセルでなければなりません"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "緑・白・黒色ピクセルで構成しなければなりません"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "<b>$t(osdSetupUploadFont.message)<\/b> をクリックしカスタムロゴを保存してください"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "無効な画像サイズ: {{width}}x{{height}} (既定サイズ {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "画像に無効なピクセルが含まれています: RGB({{valueR}}, {{valueG}}, {{valueB}}) 座標 {{posX}}×{{posY}}"
@@ -5378,8 +5740,14 @@
     "osdSetupUploadingFontEnd": {
         "message": "すべての {{length}} 文字をOSDにアップロードしました"
     },
+    "osdSetupUploadingFontFailed": {
+        "message": "アップロードに失敗しました"
+    },
     "osdSetupSave": {
         "message": "保存"
+    },
+    "osdSetupRefresh": {
+        "message": "更新"
     },
     "osdSetupFontManager": {
         "message": "フォントマネージャー"
@@ -6587,6 +6955,21 @@
         "message": "フライトコントローラのCPU使用率が高すぎる場合の警告",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "ポジションホールドに失敗しました",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "ポジションホールドが失敗した場合 (例: GPSモード等に) 警告を表示"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "ポジションホールドに失敗しました",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "ポジションホールドに失敗しました",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "不明 $1"
     },
@@ -7162,6 +7545,9 @@
     "pidTuningRatesType": {
         "message": "レートタイプ"
     },
+    "pidTuningRatesTypeTip": {
+        "message": "レートタイプを変更すると、レートカーブおよび設定方法が変更されます。<br><br><a href='https:\/\/rates.metamarc.com' target='_blank' rel='noopener noreferrer'>rates.metamarc.com<\/a>"
+    },
     "pidTuningRcRateRaceflight": {
         "message": "レート"
     },
@@ -7397,6 +7783,10 @@
         "message": "しばらくお待ちください。",
         "description": "Second label in the progress dialog when applying presets"
     },
+    "presetsCliErrorsWarning": {
+        "message": "<span class='message-negative'>警告！<\/span><br\/>CLIエラーがある状態で設定が適用されました。",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
+    },
     "presetsSaveAnyway": {
         "message": "強制保存",
         "description": "Save anyway button on the CLI errors presets dialog"
@@ -7413,6 +7803,14 @@
         "message": "キャンセル",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "お気に入りプリセットを追加",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "お気に入りプリセットを削除",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "プリセット Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7424,6 +7822,14 @@
     "presetsBackupLoad": {
         "message": "バックアップデータをロード",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "プリセットの適用およびバックアップ操作にはCLIが必要ですが、バーチャル接続モードでは利用できません。",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
+    },
+    "mspCliFirmwareTooOld": {
+        "message": "この操作にはBetaflightファームウェア {{required}} 以降が必要です。(現在接続中: {{current}}) 継続する前にフライトコントローラのファームウェアを更新してください。",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
     "presetsLoadingDumpAll": {
         "message": "フライトコントローラから現在の設定を読み込みます",
@@ -7630,6 +8036,20 @@
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
     },
+    "osdTextElementCustomSerialText": {
+        "message": "カスタム シリアルテキスト",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "シリアルポートから受信したカスタムテキストを表示"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profile: バッテリー Profile名",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "現在有効なバッテリープロファイル名称、またはインデックスを表示"
+    },
     "osdSetupPreviewCheckRulers": {
         "message": "ルーラー",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
@@ -7685,6 +8105,9 @@
     "userBackupDownloadFailed": {
         "message": "バックアップのダウンロードに失敗しました"
     },
+    "userBackupFileEmpty": {
+        "message": "バックアップファイルが空です"
+    },
     "userBackupUpdateSuccess": {
         "message": "バックアップが正常に更新されました"
     },
@@ -7696,6 +8119,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "バックアップの削除に失敗しました"
+    },
+    "actionRestore": {
+        "message": "復元"
+    },
+    "titleRestoreBackup": {
+        "message": "バックアップから復元"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "バックアップ【{{name}}】を接続中のフライトコントローラに適用しますか？現在の設定は上書きされます。"
+    },
+    "userBackupRestoreInProgress": {
+        "message": "バックアップから復元中..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "バックアップから復元されました"
+    },
+    "userBackupRestoreFailed": {
+        "message": "バックアップからの復元に失敗しました"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>警告！<\/span><br\/>CLIエラーがある状態でバックアップが適用されました。"
     },
     "userPasskeyNoPasskeys": {
         "message": "利用可能なパスキーがありません"
@@ -7733,6 +8177,36 @@
     "labelUsePasskey": {
         "message": "パスキーを使用"
     },
+    "labelSignInWithPasskey": {
+        "message": "パスキーでログイン"
+    },
+    "labelSendVerificationCode": {
+        "message": "認証コードを送信"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "代わりにメールアドレスでログイン"
+    },
+    "labelBackToPasskey": {
+        "message": "パスキー ログインに戻る"
+    },
+    "labelBack": {
+        "message": "戻る"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "パスキーを持っていませんか？"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "セットアップする"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "パスキーを使用してログインする"
+    },
+    "descriptionCodeRequest": {
+        "message": "認証コードをメールで送信します"
+    },
+    "descriptionCodeEntered": {
+        "message": "$1 に送信したコードを入力してください"
+    },
     "titleEnterVerificationCode": {
         "message": "認証コードを入力"
     },
@@ -7768,6 +8242,15 @@
     },
     "userCreatingPasskey": {
         "message": "パスキーを作成中..."
+    },
+    "userCodeRequired": {
+        "message": "認証コードが必要です"
+    },
+    "userSendingCode": {
+        "message": "認証コードを送信中..."
+    },
+    "userSendCodeFailed": {
+        "message": "認証コードの送信に失敗しました"
     },
     "dataWaitingForData": {
         "message": "データに書き込み中..."
@@ -7855,5 +8338,550 @@
     },
     "sectionUserPasskeys": {
         "message": "ユーザ パスキー"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "ポジションに合わせる",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "ポジションを選択する",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "フライト前"
+    },
+    "preflightTitle": {
+        "message": "フライト前の環境チェック"
+    },
+    "preflightLocation": {
+        "message": "フライトの場所"
+    },
+    "preflightUseMyLocation": {
+        "message": "現在地情報を使用する"
+    },
+    "preflightDetecting": {
+        "message": "検出中..."
+    },
+    "preflightOr": {
+        "message": "または座標を入力:"
+    },
+    "preflightLatitude": {
+        "message": "緯度"
+    },
+    "preflightLongitude": {
+        "message": "経度"
+    },
+    "preflightApply": {
+        "message": "適用"
+    },
+    "preflightLaunchStatus": {
+        "message": "起動状態"
+    },
+    "preflightStatusGo": {
+        "message": "飛行可"
+    },
+    "preflightStatusCaution": {
+        "message": "注意"
+    },
+    "preflightStatusWarning": {
+        "message": "警告"
+    },
+    "preflightStatusNoGo": {
+        "message": "飛行不可"
+    },
+    "preflightStatusNoData": {
+        "message": "データなし"
+    },
+    "preflightCheckWind": {
+        "message": "風"
+    },
+    "preflightCheckVisibility": {
+        "message": "表示"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "降水量"
+    },
+    "preflightCheckSolar": {
+        "message": "太陽"
+    },
+    "preflightLevelUnknown": {
+        "message": "不明"
+    },
+    "preflightWmoClearSky": {
+        "message": "快晴"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "おおむね晴れ"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "ところにより曇り"
+    },
+    "preflightWmoOvercast": {
+        "message": "曇り"
+    },
+    "preflightWmoFog": {
+        "message": "霧"
+    },
+    "preflightWmoRimeFog": {
+        "message": "着氷を伴う霧"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "弱い霧雨"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "霧雨"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "濃い霧雨"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "弱い着氷を伴う霧雨"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "強い着氷を伴う霧雨"
+    },
+    "preflightWmoSlightRain": {
+        "message": "小雨"
+    },
+    "preflightWmoModerateRain": {
+        "message": "雨"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "大雨"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "弱い氷雨"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "激しい氷雨"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "小雪"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "雪"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "豪雪"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "粒雪"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "弱いにわか雨"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "にわか雨"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "激しいにわか雨"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "弱いにわか雨"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "激しいにわか雪"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "雷雨"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "わずかな雹のある雷雨"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "激しい雹を伴う雷雨"
+    },
+    "preflightKpLow": {
+        "message": "低"
+    },
+    "preflightKpModerate": {
+        "message": "中"
+    },
+    "preflightKpElevated": {
+        "message": "上"
+    },
+    "preflightKpStorm": {
+        "message": "ストーム"
+    },
+    "preflightWindCalm": {
+        "message": "穏やか"
+    },
+    "preflightWindLight": {
+        "message": "軽い"
+    },
+    "preflightWindModerate": {
+        "message": "中程度"
+    },
+    "preflightWindStrong": {
+        "message": "強い"
+    },
+    "preflightWindDangerous": {
+        "message": "危険"
+    },
+    "preflightVisExcellent": {
+        "message": "素晴らしい"
+    },
+    "preflightVisGood": {
+        "message": "良い"
+    },
+    "preflightVisReduced": {
+        "message": "減少"
+    },
+    "preflightVisPoor": {
+        "message": "悪い"
+    },
+    "preflightPrecipNone": {
+        "message": "なし"
+    },
+    "preflightPrecipLight": {
+        "message": "軽い"
+    },
+    "preflightPrecipModerate": {
+        "message": "中程度"
+    },
+    "preflightPrecipHeavy": {
+        "message": "重い"
+    },
+    "preflightDewNoRisk": {
+        "message": "リスクなし"
+    },
+    "preflightDewLowRisk": {
+        "message": "低リスク"
+    },
+    "preflightDewFogLikely": {
+        "message": "霧\/結露の可能性があります"
+    },
+    "preflightDewFogExpected": {
+        "message": "霧\/レンズの曇りが予想されます"
+    },
+    "preflightUvLow": {
+        "message": "低"
+    },
+    "preflightUvModerate": {
+        "message": "中"
+    },
+    "preflightUvHigh": {
+        "message": "高"
+    },
+    "preflightUvVeryHigh": {
+        "message": " 非常に高い"
+    },
+    "preflightBatteryRisk": {
+        "message": "バッテリーリスク"
+    },
+    "preflightBatteryOk": {
+        "message": "標準範囲"
+    },
+    "preflightBatteryCool": {
+        "message": "性能低下、バッテリー高温"
+    },
+    "preflightBatteryCold": {
+        "message": "バッテリー容量が大幅に低下"
+    },
+    "preflightBatteryHot": {
+        "message": "膨張のリスクあり、日陰で保管してください"
+    },
+    "preflightBatteryExtreme": {
+        "message": "飛行しないでください、極端に高温です"
+    },
+    "preflightCheckBattery": {
+        "message": "バッテリー"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "密度高度"
+    },
+    "preflightFeelsLike": {
+        "message": "体感温度"
+    },
+    "preflightFogRisk": {
+        "message": "霧のリスク"
+    },
+    "preflightFogUnlikely": {
+        "message": "可能性が低い"
+    },
+    "preflightFogLow": {
+        "message": "低リスク"
+    },
+    "preflightFogModerate": {
+        "message": "中リスク"
+    },
+    "preflightFogHigh": {
+        "message": "高リスク"
+    },
+    "preflightElevation": {
+        "message": "標高"
+    },
+    "preflightDensityAlt": {
+        "message": "密度高度"
+    },
+    "preflightDaNormal": {
+        "message": "通常のパフォーマンス"
+    },
+    "preflightDaReduced": {
+        "message": "わずかに揚力低下"
+    },
+    "preflightDaLow": {
+        "message": "顕著にパフォーマンス低下"
+    },
+    "preflightDaPoor": {
+        "message": "大幅に揚力低下"
+    },
+    "preflightCivilTwilight": {
+        "message": "薄暗い時間帯 [夜明け・夕暮れ]"
+    },
+    "preflightRefresh": {
+        "message": "更新"
+    },
+    "preflightCurrentWeather": {
+        "message": "現在の天気"
+    },
+    "preflightWind": {
+        "message": "風速"
+    },
+    "preflightGusts": {
+        "message": "突風"
+    },
+    "preflightVisibility": {
+        "message": "表示"
+    },
+    "preflightPrecipitation": {
+        "message": "降水量"
+    },
+    "preflightCloudCover": {
+        "message": "雲量"
+    },
+    "preflightHumidity": {
+        "message": "湿度"
+    },
+    "preflightPressure": {
+        "message": "気圧"
+    },
+    "preflightDewPoint": {
+        "message": "露点"
+    },
+    "preflightFlightWindow": {
+        "message": "フライト可能時間帯"
+    },
+    "preflightSunrise": {
+        "message": "日の出"
+    },
+    "preflightSunset": {
+        "message": "日の入り"
+    },
+    "preflightDaylight": {
+        "message": "昼間"
+    },
+    "preflightUvIndex": {
+        "message": "UV指数"
+    },
+    "preflightTempRange": {
+        "message": "気温範囲"
+    },
+    "preflightCurrentlyDay": {
+        "message": "現在"
+    },
+    "preflightDaytime": {
+        "message": "日中"
+    },
+    "preflightNighttime": {
+        "message": "夜間"
+    },
+    "preflightWindForecast": {
+        "message": "高度別風予報"
+    },
+    "preflightWindForecastHelp": {
+        "message": "異なる高度での風速は、長距離および高高度のFPVフライトにおいて重要です。一般的に、高度が高いほど風は強くなります。"
+    },
+    "preflightTime": {
+        "message": "時間"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "突風"
+    },
+    "preflightRainProb": {
+        "message": "雨 %"
+    },
+    "preflightWindUnit": {
+        "message": "風速は m\/s で表示されます。高度は地上高度 (AGL) で示されます。"
+    },
+    "preflightSolarActivity": {
+        "message": "太陽活動"
+    },
+    "preflightSolarHelp": {
+        "message": "太陽活動が活発 (Kp > 5) な場合、電離圏の影響によりGPS精度が低下し、GPSレスキューの信頼性に影響する可能性があります。"
+    },
+    "preflightGeoStorm": {
+        "message": "地磁気嵐"
+    },
+    "preflightSolarRadiation": {
+        "message": "日射量"
+    },
+    "preflightRadioBlackout": {
+        "message": "通信障害"
+    },
+    "preflightLastMeasurement": {
+        "message": "前回の測定"
+    },
+    "preflightLoadingSolar": {
+        "message": "太陽に関するデータを読み込んでいます..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS \/ GPS ステータス"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS衛星の信号品質は太陽活動の影響を受けます。Kp値が高い場合、GPS位置精度が低下し、GPSレスキューの信頼性が低下する可能性があります。"
+    },
+    "preflightGNSSNote": {
+        "message": "GPS精度は太陽活動や地磁気の影響を受けます。GPSタブでリアルタイムの衛星データを確認するには、機体を接続してください。"
+    },
+    "preflightKpEffect": {
+        "message": "電離層の影響"
+    },
+    "preflightGPSRescue": {
+        "message": "GPSレスキュー ステータス"
+    },
+    "preflightMagDeclination": {
+        "message": "コンパス偏角"
+    },
+    "preflightMagInclination": {
+        "message": "コンパス傾角"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS衛星計画ツール"
+    },
+    "preflightAirspace": {
+        "message": "空域および飛行禁止区域"
+    },
+    "preflightAirspaceNote": {
+        "message": "フライト前に必ず地域の空域制限およびNOTAMを確認してください。規則は国や地域によって異なります。"
+    },
+    "preflightDroneSafetyMap": {
+        "message": "ドローン安全マップ (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector 空域チャート"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (アメリカ)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU圏)"
+    },
+    "preflightMap": {
+        "message": "ロケーションマップ"
+    },
+    "preflightNoData": {
+        "message": "環境データを読み込む場所を設定します"
+    },
+    "preflightAttribution": {
+        "message": "気象データ: Open-Meteo.com (CC BY 4.0) ｜ 太陽データ: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "場所を保存中..."
+    },
+    "preflightLoadLocation": {
+        "message": "読み込み"
+    },
+    "preflightSaveLocation": {
+        "message": "保存"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "保存できるロケーションは最大5件までです"
+    },
+    "preflightLocationLabel": {
+        "message": "ロケーション名 (最大 20 文字)"
+    },
+    "preflightDeleteLocation": {
+        "message": "選択した場所を削除"
+    },
+    "preflightRenameLocation": {
+        "message": "選択した場所の名前を変更"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "名前を変更"
+    },
+    "preflightCoordinates": {
+        "message": "座標"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "場所を保存"
+    },
+    "preflightConfirmSave": {
+        "message": "保存"
+    },
+    "preflightCancel": {
+        "message": "キャンセル"
+    },
+    "preflightGeolocationFailed": {
+        "message": "位置を検出できませんでした。座標を手動で入力してください。"
+    },
+    "preflightIpConsentMessage": {
+        "message": "ブラウザで位置情報の取得に失敗しました。ipapi.co [サードパーティサービス] を使用して、IPアドレスからおおよその位置を検出できます。"
+    },
+    "preflightIpConsentAllow": {
+        "message": "許可"
+    },
+    "preflightIpConsentDeny": {
+        "message": "同意しない"
+    },
+    "preflightMapSatellite": {
+        "message": "衛星ビュー"
+    },
+    "preflightMapHybrid": {
+        "message": "ハイブリッド衛星とストリートビュー"
+    },
+    "preflightMapStreet": {
+        "message": "ストリートマップビュー"
+    },
+    "preflightMapZoomIn": {
+        "message": "拡大"
+    },
+    "preflightMapZoomOut": {
+        "message": "縮小"
+    },
+    "preflightMapFullscreen": {
+        "message": "フルスクリーン 切替"
+    },
+    "preflightKpMinimal": {
+        "message": "GPSへの影響最小値"
+    },
+    "preflightKpDegraded": {
+        "message": "GPS精度低下の可能性"
+    },
+    "preflightKpSevere": {
+        "message": "GPSに大きな干渉が予想されます"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "最初に太陽活動を確認してください"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPSレスキュー信頼性"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPSレスキューは信頼できない可能性があります"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPSレスキューは推奨されません"
+    },
+    "preflightForecast": {
+        "message": "5日間予報"
+    },
+    "preflightForecastHelp": {
+        "message": "フライト計画に役立つ日別の天気概要"
+    },
+    "preflightForecastDay": {
+        "message": "日"
+    },
+    "preflightForecastWeather": {
+        "message": "天気"
     }
 }

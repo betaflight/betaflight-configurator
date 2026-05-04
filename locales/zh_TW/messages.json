@@ -2556,14 +2556,6 @@
         "message": "陀螺儀 RPM 濾波器",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "陀螺儀 RPM 濾波器諧波數量",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "陀螺儀 RPM 濾波器最低頻率 [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmMinHzHelp": {
         "message": "RPM 濾波器所使用的最小頻率。",
         "description": "Help text for one of the parameters of the RPM Filter"
