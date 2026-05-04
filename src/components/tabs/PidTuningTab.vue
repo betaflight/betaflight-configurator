@@ -681,27 +681,12 @@ onUnmounted(() => {
     border-radius: 3px;
 }
 
-/* ── gui_box ──────────────────────────────────────────────────────── */
-.tab-pid_tuning .gui_box {
-    padding: 0;
-    overflow: hidden;
-    gap: 0;
-}
-.tab-pid_tuning .gui_box span {
-    font-style: normal;
-    font-weight: normal;
-    line-height: 19px;
-    font-size: 11px;
-}
 .tab-pid_tuning .note,
 .tab-pid_tuning .danger {
     margin-bottom: 0;
 }
 
 /* ── Filter sub-tab ───────────────────────────────────────────────── */
-.tab-pid_tuning .subtab-filter .gui_box {
-    float: none;
-}
 .tab-pid_tuning .subtab-filter table select {
     display: inline-block;
 }
@@ -887,10 +872,6 @@ onUnmounted(() => {
     border: 1px solid var(--surface-500);
     border-radius: 3px;
     font-weight: normal;
-}
-.tab-pid_tuning .gui_box_titlebar .helpicon {
-    margin-top: 5px;
-    margin-right: 5px;
 }
 .tab-pid_tuning .spacer_left {
     padding-left: 0;
