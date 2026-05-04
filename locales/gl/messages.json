@@ -3783,14 +3783,6 @@
         "message": "O filtrado RPM é un banco de filtros Noch do xiroscopio que utilizan os datos de telemetría RPM para eliminar o ruído do motor con precisión cirúrxica.<br \/><br \/><b><span class=\"message-positive\">IMPORTANTE<\/span>: O ESC debe soportar o protocolo bidireccional DShot e o valor de $t(configurationMotorPoles.message) na pestana $t(tabMotorTesting.message) debe ser correcto para que este filtro funcione.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Número de armónicos do filtro Gyro RPM",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Frecuencia mínima do filtro RPM de Gyro [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmMinHzHelp": {
         "message": "Frecuencia mínima que empregará o filtro RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"

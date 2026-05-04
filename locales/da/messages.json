@@ -2035,7 +2035,7 @@
         "message": "Anti tyndegraft øger I (og i 4.3, P) under og kort tid efter hurtig ændring af gas, øger positions stabilitet mens gas øges.<br><br>Højere forstærknings værdier kan forbedre stabiliteten på maskiner med lav autoritet eller dem med et offset tyngdepunkt."
     },
     "pidTuningDerivative": {
-        "message": "<b>D<\/b>erivativ (afledt)",
+        "message": "<b>D<\/b>ifferential",
         "description": "Table header of the Derivative feature in the PIDs tab"
     },
     "pidTuningDMaxFeatureTitle": {
@@ -2162,13 +2162,13 @@
         "message": "D Setpoint-vægtning"
     },
     "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes centerpositioner, hvilket betyder en mere glidende afslutning på flips og rolls.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind centreret, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens centerposition. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pind udfalds område."
+        "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes midtpunkt, hvilket betyder en mere glidende afslutning på flips og rul.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind i midtpunkt, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens midtpunkt. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pind udfalds område."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Denne parameter afgør pindaccelerations effekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle måle metode, hvor D kun styres af gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pind respons.<br> Lavere værdi modsvarer langsommere\/jævnere pindrespons, mens højere værdi giver øget pindaccelerations respons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
     },
     "pidTuningDtermSetpointTransitionWarning": {
-        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser centerpositionerne.<\/span>"
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser midtpunktet.<\/span>"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward justerer stick lydhørhed.<br \/><br \/> Disse indstillinger lader dig justere det til at give noget fra crisp, umiddelbare stick svar til væddeløb, eller bløde glatte svar til biograf\/HD-formål."
@@ -2222,7 +2222,7 @@
         "message": "Overgang"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "Linearly reducerer Feedforward når pinde er tæt på centrum. <br><br>I 4. og tidligere kan overgangen bruges til at give glattere stick svar omkring centerpind position.<br><br>I 4. , overgang anbefales ikke, da den er blevet 'erstattet ' af jitter reduktion funktion.<br><br>En værdi på 0 deaktiverer overgang. En værdi på 0. skærer foder til nul, når pinde er dødt centrum, men det øges til fuld normal, når pinde er > 30% ud fra centrum."
+        "message": "Linearly reducerer Feedforward når pinde er tæt på midtpunkt. <br><br>I 4. og tidligere kan overgangen bruges til at give glattere svar fra pind omkring midtpunktet.<br><br>I 4. , overgang anbefales ikke, da den er blevet 'erstattet ' af jitter reduktion funktion.<br><br>En værdi på 0 deaktiverer overgang. En værdi på 0. skærer respons til nul, når pinde er ved dødt midtpunkt, men det øges til fuld normal, når pinde er mere end 30% fra midtpunktet."
     },
     "pidTuningProportional": {
         "message": "<b>P<\/b>roportional"
@@ -2235,7 +2235,7 @@
         "message": "<b>I<\/b>ntegral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Styrer vedvarende små forskydninger.<br><br>Svarende til P, men akkumuleres gradvist og langsomt, indtil fejl er nul. Vigtigt for mere langsigtede biaser såsom en offset centrum af tyngdekraft, eller vedvarende ydre påvirkninger som vind.<br \/><br \/>Højere forstærkning giver strammere sporing, især i omgange, men kan få fartøjet til at føle sig stive.<br><br>Kan forårsage langsomme svingninger i lav autoritet bygger eller hvis høj i forhold til P.",
+        "message": "Styrer vedvarende små forskydninger.<br><br>\nLigner P, men akkumulerer gradvist og langsomt, indtil afvigelsen er nul. Vigtig for langsigtede forskydninger, såsom forskudt tyngdepunkt eller vedvarende ydre påvirkninger som vind.<br \/><br \/>\nHøjere forstærkning giver mere præcis sporing, især i sving, men kan få fartøjet til at føles stift.<br><br>\nKan forårsage langsomme oscillationer i systemer med lav kontrolautoritet eller hvis den er høj i forhold til P.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDMax": {
@@ -2430,6 +2430,9 @@
     "receiverThrottleHover": {
         "message": "Svævepunkt"
     },
+    "receiverStickRange": {
+        "message": "Pind område"
+    },
     "receiverStickMin": {
         "message": "'Pind Lav'-tærskel"
     },
@@ -2437,10 +2440,10 @@
         "message": "Maks. værdi (i μs) for at en pind registreres som lav\/venstre kommandoinput (MIN_CHECK)."
     },
     "receiverStickCenter": {
-        "message": "Pind center"
+        "message": "Pind midtpunkt"
     },
     "receiverHelpStickCenter": {
-        "message": "Værdien (i μs) til bestemmelse af, om en pind er centreret (MID_RC)."
+        "message": "Værdien (i μs) til bestemmelse af, om en pind er i midtpunkt (MID_RC)."
     },
     "receiverStickMax": {
         "message": "'Pind Høj'-tærskel"
@@ -2591,7 +2594,7 @@
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
-        "message": "I denne auto-nivelleret tilstand styrer krængror og højderor vinklen mellem den relevante akse og den lodrette akse, for at udjævne flyning ved blot at lade pindende være centreret",
+        "message": "I denne auto-nivelleret tilstand styrer krængror og højderor vinklen mellem den relevante akse og den lodrette akse, for at udjævne flyning ved blot at lade pindende være i midtpunkt",
         "description": "Help text to ANGLE mode"
     },
     "auxiliaryHelpMode_ANTIGRAVITY": {
@@ -2691,7 +2694,7 @@
         "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
-        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning).<br>Når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
+        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med krængror og højderor pind i midtpunkt (dermed muliggør auto-nivelleret flyvning).<br>Når pind flyttes væk fra midtpunkt, går styring mere og mere mod ACRO tilstand",
         "description": "Help text to HORIZON mode"
     },
     "auxiliaryHelpMode_LAUNCHCONTROL": {
@@ -2812,7 +2815,7 @@
         "message": "via kanal"
     },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "w\/ center (værdi)"
+        "message": "w\/ midtpunkt (værdi)"
     },
     "adjustmentsColumnAdjustmentScale": {
         "message": "og rækkevidde skala (værdi|%)"
@@ -2952,6 +2955,15 @@
     "adjustmentsEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
+    },
+    "adjustmentsShowAll": {
+        "message": "Vis alle PID profiler"
+    },
+    "adjustmentsHideEmpty": {
+        "message": "Skjul tomme PID profiler"
+    },
+    "adjustmentsSlotsActive": {
+        "message": "{{active}} af {{total}} aktive PID profiler"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servoer kræver firmware version &gt;= 1.10.0 og understøttelse af FC"
@@ -3292,6 +3304,24 @@
     },
     "flightPlanNoWaypointsForProfile": {
         "message": "Tilføj vejpunkter for at se højdeprofil"
+    },
+    "flightPlanGroundElev": {
+        "message": "Terrænhøjde"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Maks. terrænhøjde"
+    },
+    "flightPlanAvgGround": {
+        "message": "Gennemsnitlig jordhastighed"
+    },
+    "flightPlanMaxGround": {
+        "message": "Maks. jordhastighed"
+    },
+    "flightPlanAlt": {
+        "message": "Højde"
+    },
+    "flightPlanDist": {
+        "message": "Distance"
     },
     "motorsVoltage": {
         "message": "Spænding:"
@@ -4016,6 +4046,9 @@
     },
     "firmwareFlasherFirmwareLoaded": {
         "message": "Firmware"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} byte"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Indlæst lokalt firmware image: {{filename}} ({{bytes}} bytes)"
@@ -4802,13 +4835,13 @@
         "message": "Giver et andet statisk (konstant frekvens) hak filter for Gyro.<br \/><br \/>Dette er sjældent påkrævet, og bør kun bruges som en sidste udvej til at bekæmpe en anden fast frekvens resonans, der ikke kan styres med andre midler."
     },
     "pidTuningCenterFrequency": {
-        "message": "Centreret frekvens [Hz]"
+        "message": "Midtpunkt frekvens [Hz]"
     },
     "pidTuningCutoffFrequency": {
         "message": "Afskæringsfrekvens [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Et hak filter er et symmetrisk, smalt, high-cut filter, med center og afskærings parmetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er laveste side -3dB afskærings frekvens.<br \/><br \/>For eksempel en hak afskæring på 160 med en center værdi på 260, returnerer et bredt hak med en -3dB bredde på 160-360Hz og med stærkeste dæmpning omkring 260hz.",
+        "message": "Et hak filter er et symmetrisk, smalt, high-cut filter, med midtpunkt og afskærings parmetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er laveste side -3dB afskærings frekvens.<br \/><br \/>For eksempel en hak afskæring på 160 med en midtpunkt værdi på 260, returnerer et bredt hak med en -3dB bredde på 160-360Hz og med stærkeste dæmpning omkring 260hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -4829,6 +4862,9 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamisk Notch filter område"
     },
+    "pidTuningDynamicNotchQ": {
+        "message": "Q faktor (x100)"
+    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Min. frekvens [Hz]"
     },
@@ -4840,6 +4876,9 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Den dynamiske hak har tre frekvensområder: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro Dynamic Lowpass 1 Filters max afskærings frekvens."
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "Q-faktoren justerer, hvor smalle eller brede de dynamiske notch-filtre er. Den gemte værdi er Q-faktor × 100 (f.eks. 300 = Q 3,0).<br><br>\nEn højere værdi gør filtrene smallere og mere præcise, mens en lavere værdi gør dem bredere.<br><br>\nEn meget lav værdi vil øge filterforsinkelsen betydeligt."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Sæt denne til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske hak."
@@ -4858,21 +4897,21 @@
         "message": "RPM filtrering er en gruppe af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br \/><br \/><b><span class=\"message-positive\">VIGTIGT<\/span>: <\/b><br>ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Gyro RPM filter overtone antal",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Antal overtoner pr. motor. En værdi på 3 (anbefales for de fleste fartøjer) vil generere 3 hak filtre, pr. motor for hver akse, i alt 36 hak. Et hak ved den grundlæggende motorfrekvens og to harmoniske ved multipla af denne base frekvens.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Gyro RPM-filter min frekvens [Hz]",
+        "message": "Min. frekvens [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Minimumshyppighed som vil blive brugt af RPM-filtret.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Q faktor",
+        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profil <strong>af<\/strong>hængige filter indstillinger"
@@ -5680,11 +5719,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Tilpasset billede:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Størrelse skal være {{logoWidthPx}}×{{logoHeightPx}} pixel"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Skal indeholde grønne, sorte og hvide pixels"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik på <b>$t(osdSetupUploadFont.message)<\/b> for at bevare tilpasset logo"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Ugyldig billedstørrelse: {{width}}x{{height}} (forventet {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Billedet indeholder en ugyldig pixel: rgb ({{valueR}}, {{valueG}}, {{valueB}}) i koordinaterne {{posX}}×{{posY}}"
@@ -5804,7 +5849,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCrosshairs": {
-        "message": "Centrum for sigtekorn"
+        "message": "Midtpunkt sigtekorn"
     },
     "osdTextElementArtificialHorizon": {
         "message": "Kunstig horisont",
@@ -7785,6 +7830,10 @@
         "message": "Brug af forudindstilling og sikkerhedskopi skal ske i CLI, og ikke i virtual tilstand.",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
+    "mspCliFirmwareTooOld": {
+        "message": "Dette kræver Betaflight firmware {{required}} eller nyere (aktuelt fundet {{current}}). Opdater venligst din FC firmware før du fortsætter.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
     "presetsLoadingDumpAll": {
         "message": "Indlæser nuværende opsætning fra FC",
         "description": "Title for the waiting dialog when loading dump all into a file"
@@ -8074,6 +8123,27 @@
     "userBackupDeleteFailed": {
         "message": "Kunne ikke slette sikkerhedskopi"
     },
+    "actionRestore": {
+        "message": "Gendan fra sikkerhedskopi"
+    },
+    "titleRestoreBackup": {
+        "message": "Gendan sikkerhedskopi"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Indlæs sikkerhedskopi \"{{name}}\" i tilsluttede FC ? Den aktuelle konfiguration i FC vil blive overskrevet."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Gendanner sikkerhedskopi..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Sikkerhedskopi indlæst succesfuldt"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Kunne ikke indlæse sikkerhedskopi"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>ADVARSEL !<\/span><br\/>Sikkerhedskopi indeholder CLI fejl."
+    },
     "userPasskeyNoPasskeys": {
         "message": "Ingen adgangsnøgler tilgængelige"
     },
@@ -8355,6 +8425,9 @@
     "preflightWmoFog": {
         "message": "Tåge"
     },
+    "preflightWmoRimeFog": {
+        "message": "Rimdannende tåge"
+    },
     "preflightWmoLightDrizzle": {
         "message": "Let støvregn"
     },
@@ -8427,11 +8500,17 @@
     "preflightKpModerate": {
         "message": "Moderat"
     },
+    "preflightKpElevated": {
+        "message": "Forhøjet"
+    },
     "preflightKpStorm": {
         "message": "Storm"
     },
     "preflightWindCalm": {
         "message": "Rolig"
+    },
+    "preflightWindLight": {
+        "message": "Let"
     },
     "preflightWindModerate": {
         "message": "Moderat"
@@ -8457,8 +8536,14 @@
     "preflightPrecipNone": {
         "message": "Ingen"
     },
+    "preflightPrecipLight": {
+        "message": "Let"
+    },
     "preflightPrecipModerate": {
         "message": "Moderat"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Kraftig"
     },
     "preflightDewNoRisk": {
         "message": "Ingen risiko"
@@ -8642,6 +8727,9 @@
     },
     "preflightSolarRadiation": {
         "message": "Solstråling"
+    },
+    "preflightRadioBlackout": {
+        "message": "Tab af radiosignal"
     },
     "preflightLastMeasurement": {
         "message": "Sidste måling"

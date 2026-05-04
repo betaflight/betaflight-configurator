@@ -4586,17 +4586,9 @@
         "message": "RPM 필터링은 자이로에 있는 노치 필터의 한 묶음으로, RPM 텔레메트리 데이터를 사용하여 수술 정밀도로 모터 노이즈를 제거합니다.<br \/><br \/><b><span class=\"message-positive\">중요<\/span>: ESC는 양방향 DShot 프로토콜을 지원해야 하며 이 필터가 작동하려면 $t(tabMotorTesting.message) 탭의 $t(configurationMotorPoles.message) 값이 정확해야 합니다.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "자이로 RPM 필터 하모닉 수",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "모터당 하모닉의 수입니다. 3(대부분 기체에 권장) 의 값은 각 축에 대해 모터당 3개의 노치 필터를 생성하여, 총 36개의 노치를 생성합니다. 기본 모터 주파수에서 1개, 기본 주파수의 배수에서 2개의 하모닉으로 구성됩니다.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "자이로 RPM 필터 최소 주파수 [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "RPM 필터로 사용되어질 최소 주파수",
