@@ -67,6 +67,7 @@ const defaultSerialDevices = [
     { vendorId: 11836, productId: 22336 }, // AT32 VCP
     { vendorId: 12619, productId: 22336 }, // APM32 VCP
     { vendorId: 11914, productId: 9 }, // Raspberry Pi Pico VCP
+    { vendorId: 6790, productId: 29987 }, // CH340 USB-to-Serial
 ];
 
 const defaultUsbFilters = [
