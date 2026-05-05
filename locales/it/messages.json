@@ -4925,7 +4925,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "Numero armoniche filtro RPM",
+        "message": "Armoniche",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -4933,12 +4933,24 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Frequenza minima [Hz] del filtro del giroscopio",
+        "message": "Frequenza Min [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "La frequenza minima che verrà utilizzata dal filtro RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Intervallo Di Dissolvenza [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Fattore Q",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmWeight": {
+        "message": "Peso {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Impostazioni filtro dipendenti dal profilo"
@@ -7578,6 +7590,10 @@
         "message": "Alto Contrasto",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "Scala UI",
+        "description": "Scale the entire user interface up or down"
+    },
     "pidTuningRatesType": {
         "message": "Tipo di rates"
     },
@@ -7862,6 +7878,10 @@
     "presetsVirtualModeCliUnsupported": {
         "message": "L'applicazione di preset e di backup richiedono la CLI, che non è disponibile in Modalità Virtuale.",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
+    },
+    "mspCliFirmwareTooOld": {
+        "message": "Questa azione richiede il firmware Betaflight {{required}} o più recente (attualmente connesso a {{current}}). Si prega di aggiornare il firmware del controller di volo prima di continuare.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
     "presetsLoadingDumpAll": {
         "message": "Caricamento della configurazione attuale dal controllore di volo",
@@ -8151,6 +8171,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "Impossibile cancellare il backup"
+    },
+    "actionRestore": {
+        "message": "Ripristino"
+    },
+    "titleRestoreBackup": {
+        "message": "Ripristino backup"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Applicare il backup \"{{name}}\" al controller di volo connesso? La configurazione corrente verrà sovrascritta."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Ripristino backup..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Backup ripristinato con successo"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Ripristino del backup fallito"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>ATTENZIONE!<\/span><br\/>Backup applicato con errori CLI."
     },
     "userPasskeyNoPasskeys": {
         "message": "Nessuna passkey disponibile"

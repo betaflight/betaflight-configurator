@@ -4610,17 +4610,9 @@
         "message": "Фільтрація на основі частоти обертання моторів - це набір динамічних режекторних фільтрів для даних від гіроскопа, який використовує дані телеметрії ESC для точного видалення шуму моторів.<br \/><br \/><b><span class=\"message-positive\">ВАЖЛИВО:<\/span> Регулятор швидкості (ESC) повинен підтримувати двосторонній протокол DShot, а значення $t(configurationMotorPoles.message) на вкладці $t(tabMotorTesting.message) повинне бути правильним, щоб цей фільтр працював.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Кількість гармонік у RPM-фільтрі гіроскопа",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Кількість гармонік на кожний мотор. Значення 3 (рекомендоване для більшості повітряних суден) створить 3 режекторні фільтри на кожний мотор для кожної осі, загалом 36 зрізів. По одному на основну частоту кожного мотора та на дві гармоніки, на частотах кратних базовій.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Мінімальна частота RPM-фільтра гіроскопа [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Мінімальна частота, яка буде використовуватися RPM-фільтром гіроскопа.",

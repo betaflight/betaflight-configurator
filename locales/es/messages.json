@@ -4543,17 +4543,9 @@
         "message": "El filtrado RPM es un banco de filtros notch en el giro que usan los datos de la telemetría RPM para eliminar el ruido del motor con precisión quirúrgica.<br \/><br \/><b><span class=\"message-positive\">IMPORTANTE<\/span>: El ESC debe soportar el protocolo DShot Bidireccional y el valor de $t(configurationMotorPoles.message) en la pestaña $t(tabMotorTesting.message) debe ser correcto para que este filtro funcione.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Número de armónicos",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Número de armónicos por motor. Un valor de 3 (recomendado para la mayoría de aeronaves) generará 3 filtros notch por motor, por cada eje, totalizando 36 filtros notch. Uno en la frecuencia base del motor y dos armónicos en múltiplos de esa frecuencia base.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Frecuencia mínima de corte [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Frecuencia mínima que será usada por el Filtro RPM.",

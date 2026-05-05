@@ -3594,14 +3594,6 @@
         "message": "Le filtrage RPM est une banque de filtres coupe bande s'appliquant au gyro, qui utilisent les données de télémétrie RPM pour retirer le bruit des moteurs avec une précision chirurgicale.<br \/><br \/><b><span class=\"message-positive\">IMPORTANT<\/span> : Les ESC doivent être compatibles avec le protocole DShot Bidirectionnel et la valeur de $t(configurationMotorPoles.message) dans l'onglet $t(tabMotorTesting.message) doit être correcte pour que ce filtre fonctionne.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Nombre d'Harmoniques du Filtre Gyro RPM",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Fréquence min [Hz] du filtre gyro RPM",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmMinHzHelp": {
         "message": "Fréquence minimum qui sera utilisée par le Filtre RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"

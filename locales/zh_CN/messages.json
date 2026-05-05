@@ -1064,7 +1064,7 @@
         "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
-        "message": "CLI (命令行) 已激活",
+        "message": "CLI 已激活",
         "description": "Message that pops up to describe the CLI arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
@@ -4892,17 +4892,9 @@
         "message": "RPM 滤波器是运行在陀螺仪上的一组陷波滤波器，它使用 RPM 回传数据以手术级精度来移除电机噪声。<br \/><br \/><b><span class=\"message-positive\">重要<\/span>:电调必须支持双向 Dshot 协议，$t(tabMotorTesting.message)页面内$t(configurationMotorPoles.message)的值必须正确，这样滤波器才可以工作。<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "陀螺仪 RPM 滤波器谐波数量",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "每个电机的谐波数量。3(推荐适用于大多数飞行器) 将会对每个电机在每个轴上生成3个陷波器，共计36个陷波器。一个基于电机基波频率，另两个基于基波频率整数倍的谐波频率。",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "陀螺仪 RPM 滤波器最低频率 [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "RPM 滤波器所使用的最小频率。",
@@ -7827,6 +7819,10 @@
         "message": "预设应用和备份操作需要 CLI ，这在虚拟模式中不可用。",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
+    "mspCliFirmwareTooOld": {
+        "message": "此操作需要 Betaflight 固件版本 {{required}} 或更新（当前连接的版本是 {{current}}）。在继续前请升级您的飞控固件。",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
     "presetsLoadingDumpAll": {
         "message": "从飞控加载当前配置",
         "description": "Title for the waiting dialog when loading dump all into a file"
@@ -8111,6 +8107,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "删除备份失败"
+    },
+    "actionRestore": {
+        "message": "恢复"
+    },
+    "titleRestoreBackup": {
+        "message": "恢复备份"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "要对已连接的飞控应用备份 \"{{name}}\" 吗？当前的设置会被覆盖。"
+    },
+    "userBackupRestoreInProgress": {
+        "message": "正在恢复备份……"
+    },
+    "userBackupRestoreSuccess": {
+        "message": "备份恢复成功"
+    },
+    "userBackupRestoreFailed": {
+        "message": "备份恢复失败"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>警告！<\/span><br\/>备份已在存在 CLI 错误的情况下应用。"
     },
     "userPasskeyNoPasskeys": {
         "message": "没有可用的密码"

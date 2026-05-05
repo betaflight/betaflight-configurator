@@ -668,6 +668,9 @@
     "versionLabelTarget": {
         "message": "Destino"
     },
+    "versionLabelFirmware": {
+        "message": "Versão de Firmware"
+    },
     "versionLabelConfigurator": {
         "message": "Versão da aplicação"
     },
@@ -2286,6 +2289,9 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
+    },
     "pidTuningTPAMode": {
         "message": "Modo TPA"
     },
@@ -2410,6 +2416,9 @@
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Aviso:<\/b><\/span> A quantidade de filtros utilizados está perigosamente baixa. Isto provavelmente fará com que a aeronave perca o controle durante o voo. É altamente recomendado <b>ativar no mínimo um Filtro Gyro Lowpass Dinâmico ou Lowpass 1 e ao menos um dos filtros do Termo D Lowpass Dinâmico ou Lowpass 1<\/b>."
+    },
+    "pidTuningSliders": {
+        "message": "Sliders de Afinação PID"
     },
     "pidTuningSliderPidsMode": {
         "message": "Modo:",
@@ -4659,9 +4668,17 @@
         "message": "Mais Filtragem",
         "description": "Filter tuning slider high header"
     },
+    "pidTuningGyroFilterSlider": {
+        "message": "Multiplicador do Filtro do Gyro",
+        "description": "Gyro filter tuning slider label"
+    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Altera os cortes do filtro Gyro Lowpass.<br \/><br \/>Mover o slider para a esquerda dá mais força à filtragem do Gyro (menor frequência de corte).<br \/><br \/>Mover o slider para a direita dá menos filtragem do Gyro (maior frequência de corte).<br \/><br \/>Ao mover o slider para a direita para melhorar o propwash, TENHA CUIDADO para não se tornar muito radical. Vai permitir mais ruído tanto no P como no D e poderá causar flyaways ou queimar motores.<br \/><br \/>Poderá ter de mover os sliders para a esquerda se tiver problemas de ressonância na frame, rolamentos em mau estado, hélices desgastadas, motores quentes, etc.<br \/><br \/>A filtragem do Gyro é aplicada antes, e em adição à filtragem do D.",
         "description": "Gyro filter tuning slider helpicon message"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "Multiplicador de Filtro do Termo D",
+        "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Altera os cortes do Filtro D-term Lowpass.<br \/><br \/>Mover o slider para a esquerda dá uma filtragem D mais forte (menor frequência de corte).<br \/><br \/>Mover o slider para a direita dá menor filtragem (maior frequência de corte).<br \/><br \/>O termo D é o elemento PID mais sensível ao ruído e às ressonâncias. Pode amplificar ruído de alta frequência de 10x a 100x. É por isso que os cortes de filtros D são muito inferiores aos dos filtros do gyro.<br \/><br \/>A filtragem do D-term é aplicada depois e, adicionalmente, à filtragem gyro. A filtragem D padrão é ideal para a maioria dos quads e raramente precisa de alteração.<br \/><br \/>Mover este slider para a esquerda reduz o aquecimento do motor em quads com mais ruído e com tons altos PID 'D', mas podemos ver mais prowash e ressonâncias de baixa frequência de D.<br \/><br \/>Mover o slider para a direita não é recomendado, mas pode melhorar o propwash em builds limpas. Pode causar sons de roçar no motor  quando arma, ressonâncias súbitas durante o voo e sobreaquecimento grave dos motores.",
@@ -4876,6 +4893,9 @@
     "pidTuningDynamicNotchRange": {
         "message": "Filtro Notch dinâmico - Alcance"
     },
+    "pidTuningDynamicNotchQ": {
+        "message": "Fator Q (x100)"
+    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Frequência Min [Hz]"
     },
@@ -4887,6 +4907,9 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O filtro Notch dinâmico tem três faixas de frequência em que pode operar: BAIXO (80-330hz) para aeronaves lentas de 6\" ou mais, MÉDIO (140-550hz) para aeronaves convencionais de 5\", ALTO (230-800hz) para aeronaves rápidas de 2.5\" a 3\". a opção AUTO seleciona a faixa de acordo com a frequência de corte máxima do filtro Lowpass 1 Dinâmico do Gyro."
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "O fator Q ajusta o quão estreitos ou largos são os filtros notch dinâmicos. O valor guardado corresponde ao fator Q × 100 (i.e., 300 = Q 3.0). Um valor mais elevado torna o filtro mais estreito e preciso, enquanto um valor mais baixo torna-o mais largo e abrangente. Um valor muito baixo aumentará consideravelmente o atraso do filtro."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Defina isto para a menor frequência de ruído de entrada necessária de ser controlada pelo notch dinâmico."
@@ -4905,17 +4928,9 @@
         "message": "A filtragem RPM é um banco de filtros de notch no gyro que utilizam os dados de telemetria RPM para eliminar o ruído dos motores com precisão cirúrgica.<br \/><br \/><b><span class=\"message-positive\">IMPORTANTE<\/span>: O ESC deve suportar o protocolo DShot Bidirecional e o valor de $t(configurationMotorPoles.message) na aba $t(tabMotorTesting.message) deve estar correto para que este filtro funcione.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Filtro RPM do Gyro - Número de harmónicas",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Quantidade de harmônicas por motor. Um valor de 3 (recomendado para a maioria das aeronaves) irá criar 3 filtros notch por motor, por eixo, em um total de 36 filtros notch. Um filtro na frequência base do motor, e duas harmónicas nos múltiplos dessa frequência base.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Filtro RPM do Gyro - Frequência mínima [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Frequência mínima utilizada pelo filtro RPM.",
@@ -4974,11 +4989,17 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Aumenta os valores do PID para compensar quando a voltagem da bateria (Vbat) diminui. Isto permite características mais constantes ao longo do voo. I. A quantidade de compensação aplicada é calculada a partir da $t(powerBatteryMaximum.message) indicada na aba $t(tabPower.message), portanto assegure-se que está definida para um valor apropriado."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Compensação Vbat Sag %"
+    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Dá uma aceleração consistente e desempenho de PID acima da faixa utilizável de tensão da bateria, ao aumentar o nível de saída do motor consoante a tensão da bateria desce.<br \/><br \/>O valor de compensação pode variar entre 0 e 100% É recomendada compensação total (100%).<br \/><br \/>Visite <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada wiki<\/a> para mais informações."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Linearização de Impulso %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Melhora a autoridade em baixas acelerações e a responsividade. <br><br> Especialmente útil para whoops e ESCs a 48k. Não tem efeito em aceleração mais elevada.<br><br>O valor da compensação pode variar entre 0 e 150%. Geralmente 30-40% é suficiente."
@@ -7838,6 +7859,10 @@
         "message": "A predefinição aplicar e ações de backup requerem a CLI, que não está disponível no Modo Virtual.",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
+    "mspCliFirmwareTooOld": {
+        "message": "Esta ação requer o firmware Betaflight {{required}} ou mais recente (atualmente conectado a {{current}}). Por favor, atualize a sua controladora de voo antes de continuar.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
     "presetsLoadingDumpAll": {
         "message": "A carregar a configuração atual da controladora de voo",
         "description": "Title for the waiting dialog when loading dump all into a file"
@@ -8126,6 +8151,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "Falha a apagar a cópia de segurança"
+    },
+    "actionRestore": {
+        "message": "Restaurar"
+    },
+    "titleRestoreBackup": {
+        "message": "Restaurar backup"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Aplicar o backup \"{{name}}\" à controladora de voo conectada? A configuração atual será substituída."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "A restaurar backup..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Backup restaurado com sucesso"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Falha ao restaurar backup"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>AVISO!<\/span><br\/>Backup aplicado com erros de CLI."
     },
     "userPasskeyNoPasskeys": {
         "message": "Nenhumas chaves de acesso disponíveis"

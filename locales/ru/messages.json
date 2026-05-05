@@ -4570,17 +4570,9 @@
         "message": "Фильтрация RPM – это набор режекторных фильтров для гироскопа, использующий телеметрические данные RPM для высокоточного удаления шума двигателей.<br \/><br \/><b><span class=\"message-positive\">ВАЖНО<\/span>: ESC должны поддерживать протокол двунаправленного DShot и значение $t(configurationMotorPoles.message) во вкладке $t(tabMotorTesting.message) должно быть правильным для работы этого фильтра.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Число гармоник Gyro RPM фильтра",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "<b>Количество гармоник на каждый мотор.<\/b> Значение 3 (рекомендуется для большинства аппаратов) создаст 3 режекторных фильтра на мотор для каждой оси, всего 36 фильтров. Один фильтр на основной частоте мотора и два - на кратных этой частоте гармониках.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Минимальная частота Gyro RPM фильтра [Гц]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Минимальная частота, которая будет использоваться RPM фильтром.",

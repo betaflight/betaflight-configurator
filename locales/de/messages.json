@@ -4012,14 +4012,6 @@
         "message": "RPM-Filterung ist eine Reihe von Gyro Kerb(Notch)-Filter, die die RPM-Telemetrie verwenden, um Frequenzen verursacht durch Motorvibrationen zu entfernen.<br \/><br \/><b><span class=\"message-positive\">WICHTIG<\/span>: Der ESC muss das Bidirektionale DShot-Protokoll und den Wert des $t(configurationMotorPoles.message) im Reiter $t(tabMotorTesting.message) korrekt eingestellt haben, damit der Filter funktioniert.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Gyro RPM Filter Harmonie Anzahl",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Gyro RPM Filter Minimale Frequenz [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmMinHzHelp": {
         "message": "Minimale Frequenz, die vom RPM-Filter verwendet wird.",
         "description": "Help text for one of the parameters of the RPM Filter"

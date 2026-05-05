@@ -2781,14 +2781,6 @@
         "message": "RPM-filtering is een reeks notch-filters die wordt toegepast op de gyroscoop met behulp van de RPM-telemetriegegevens. Om zodoende motorvibraties met chirurgische precisie te verwijderen.<br \/><br \/><b><span class=\"message-positive\">BELANGRIJK<\/span>: De ESC moet het bidirectionele DShot-protocol ondersteunen en de waarde van $t(configurationMotorPoles.message) op het tabblad $t(tabMotorTesting.message) moet correct zijn om dit filter te laten werken.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Gyro RPM Filter Harmonics-nummer",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Gyro RPM Filter Min Frequentie [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmMinHzHelp": {
         "message": "Minimale frequentie die zal worden gebruikt door het RPM Filter.",
         "description": "Help text for one of the parameters of the RPM Filter"
