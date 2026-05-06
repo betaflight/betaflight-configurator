@@ -2911,11 +2911,23 @@
     "adjustmentsColumnViaChannel": {
         "message": "via channel"
     },
+    "adjustmentsColumnMode": {
+        "message": "mode"
+    },
+    "adjustmentsModeStep": {
+        "message": "Step"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Absolute"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Selection"
+    },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "w/ center (val.)"
+        "message": "center (val.)"
     },
     "adjustmentsColumnAdjustmentScale": {
-        "message": "and range|scale (val.|%)"
+        "message": "scale (val.|%)"
     },
     "adjustmentsCenterHelp": {
         "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",

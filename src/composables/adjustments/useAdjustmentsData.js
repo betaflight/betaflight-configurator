@@ -8,6 +8,21 @@ const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
 const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 
+// Functions that use ADJUSTMENT_MODE_SELECT in rc_adjustments.c
+// (profile/mode switching — no center/scale applicable)
+// Indices 12,24,25,29-33 map to: Rate Profile, Horizon Strength, PID-Audio,
+// OSD Profile, LED Profile, LED Brightness, Slider Multiplier, Battery Profile
+const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33]);
+
+export function getFunctionMode(adjustmentFunction) {
+    return SELECT_MODE_FUNCTIONS.has(adjustmentFunction) ? "selection" : "step";
+}
+
+export function getAdjustmentMode(adjustmentFunction, adjustmentCenter) {
+    if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) return "selection";
+    return adjustmentCenter > 0 ? "absolute" : "step";
+}
+
 export function useAdjustmentsData(adjustments, t) {
     const fcStore = useFlightControllerStore();
 
@@ -44,6 +59,11 @@ export function useAdjustmentsData(adjustments, t) {
         return [first, ...rest];
     });
 
+    const stepModeOptions = [
+        { value: "step", label: t("adjustmentsModeStep") },
+        { value: "absolute", label: t("adjustmentsModeAbsolute") },
+    ];
+
     const channelPercent = (value) => {
         if (value === undefined || value === null || Number.isNaN(value)) {
             return 50;
@@ -61,6 +81,24 @@ export function useAdjustmentsData(adjustments, t) {
         } else {
             adjustment.range.start = 900;
             adjustment.range.end = 900;
+        }
+    };
+
+    const onModeChange = (adjustment, newMode) => {
+        if (newMode === "step") {
+            adjustment.adjustmentCenter = 0;
+            adjustment.adjustmentScale = 0;
+        } else if (newMode === "absolute") {
+            if (adjustment.adjustmentCenter === 0) {
+                adjustment.adjustmentCenter = 50;
+            }
+        }
+    };
+
+    const onFunctionChange = (adjustment) => {
+        if (SELECT_MODE_FUNCTIONS.has(adjustment.adjustmentFunction)) {
+            adjustment.adjustmentCenter = 0;
+            adjustment.adjustmentScale = 0;
         }
     };
 
@@ -95,6 +133,9 @@ export function useAdjustmentsData(adjustments, t) {
                 adjustmentCenter: range.adjustmentCenter ?? 0,
                 adjustmentScale: range.adjustmentScale ?? 0,
                 enabled: isEnabled,
+                get mode() {
+                    return getAdjustmentMode(this.adjustmentFunction, this.adjustmentCenter);
+                },
                 get rangeArray() {
                     return [this.range.start, this.range.end];
                 },
@@ -111,9 +152,12 @@ export function useAdjustmentsData(adjustments, t) {
         auxChannelCount,
         auxChannelOptions,
         sortedFunctions,
+        stepModeOptions,
         pipValues,
         channelPercent,
         onEnableChange,
+        onModeChange,
+        onFunctionChange,
         loadMSPData,
         initializeAdjustments,
     };
