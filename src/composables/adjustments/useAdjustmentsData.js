@@ -14,12 +14,10 @@ const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 // OSD Profile, LED Profile, LED Brightness, Slider Multiplier, Battery Profile
 const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33]);
 
-export function getFunctionMode(adjustmentFunction) {
-    return SELECT_MODE_FUNCTIONS.has(adjustmentFunction) ? "selection" : "step";
-}
-
 export function getAdjustmentMode(adjustmentFunction, adjustmentCenter) {
-    if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) return "selection";
+    if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) {
+        return "selection";
+    }
     return adjustmentCenter > 0 ? "absolute" : "step";
 }
 
@@ -59,10 +57,10 @@ export function useAdjustmentsData(adjustments, t) {
         return [first, ...rest];
     });
 
-    const stepModeOptions = [
+    const stepModeOptions = computed(() => [
         { value: "step", label: t("adjustmentsModeStep") },
         { value: "absolute", label: t("adjustmentsModeAbsolute") },
-    ];
+    ]);
 
     const channelPercent = (value) => {
         if (value === undefined || value === null || Number.isNaN(value)) {

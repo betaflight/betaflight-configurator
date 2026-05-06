@@ -129,7 +129,7 @@
                                 orientation="vertical"
                                 class="w-20"
                                 :disabled="!adjustment.enabled"
-                                :min="0"
+                                :min="1"
                                 :max="2000"
                                 :step="1"
                             />
