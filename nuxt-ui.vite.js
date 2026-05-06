@@ -32,7 +32,7 @@ export default {
         },
         tooltip: {
             slots: {
-                content: "ring-2 ring-primary max-w-sm lg:max-w-lg h-fit",
+                content: "ring-2 ring-primary max-w-sm lg:max-w-lg h-fit z-[9999]",
                 arrow: "fill-primary stroke-primary",
                 text: "whitespace-normal",
             },
