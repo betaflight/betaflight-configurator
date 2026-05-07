@@ -301,8 +301,9 @@ function animate() {
         const target = Math.max(props.coverage.total / 6, 1);
         const discRadius = radius * 0.15;
 
+        const zones = props.coverage.zones || {};
         for (let i = 0; i < 6; i++) {
-            const count = props.coverage.zones[ZONE_KEYS[i]];
+            const count = zones[ZONE_KEYS[i]] || 0;
             const ratio = Math.min(count / target, 1);
             // HSL: 0 = red, 0.33 = green
             zoneMeshes[i].material.color.setHSL(ratio * 0.33, 1, 0.5);
