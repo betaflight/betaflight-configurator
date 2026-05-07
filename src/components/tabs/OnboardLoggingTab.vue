@@ -447,10 +447,11 @@ export default defineComponent({
         // the chip's sector-erase throughput, leading to dropped frames in the log.
         const RING_MAX_FRAME_HZ = 1000;
 
-        const flashModeOptions = computed(() => [
+        // Static array — not reactive. Plain `const` avoids needless computed tracking.
+        const flashModeOptions = [
             { label: i18n.getMessage("onboardLoggingFlashModeLinear"), value: 0 },
             { label: i18n.getMessage("onboardLoggingFlashModeRing"), value: 1 },
-        ]);
+        ];
 
         const loggingRates = computed(() => {
             const rates = [];
