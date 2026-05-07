@@ -5035,7 +5035,7 @@
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmQHelp": {
-        "message": "Q factor adjusts how narrow or wide the RPM notch filters are. The stored value is Q factor × 100 (e.g., 500 = Q 5.0). Higher values make each notch narrower and more precise; lower values make them wider. Very low values significantly increase filter delay."
+        "message": "Q factor adjusts how narrow or wide the RPM notch filters are. The stored value is Q factor × 100, allowed range 250–3000 (Q 2.5 to Q 30.0), default 500 (Q 5.0). Higher values make each notch narrower and more precise; lower values make them wider. Very low values significantly increase filter delay."
     },
     "pidTuningRpmWeight": {
         "message": "Weight {{index}}",
