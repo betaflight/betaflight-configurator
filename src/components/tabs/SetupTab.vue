@@ -11,7 +11,9 @@
                             <canvas id="canvas" ref="canvasEl"></canvas>
                             <div class="attitude_info">
                                 <dl>
-                                    <dt>{{ $t("initialSetupHeading") }}</dt>
+                                    <dt>
+                                        {{ $t(state.disabledMag ? "initialSetupHeading" : "initialSetupMagHeading") }}
+                                    </dt>
                                     <dd class="heading">{{ state.attitude.heading }}</dd>
                                     <dt>{{ $t("initialSetupPitch") }}</dt>
                                     <dd class="pitch">{{ state.attitude.pitch }}</dd>
@@ -355,6 +357,11 @@ import { flightIndicator } from "../../../libraries/flightIndicators";
 import MagCalibrationDialog from "../dialogs/MagCalibrationDialog.vue";
 
 const { t } = useTranslation();
+
+const CARDINAL_DIRS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+function toCardinal(deg) {
+    return CARDINAL_DIRS[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
+}
 
 const yaw_fix = ref(0);
 const showMagCalDialog = ref(false);
@@ -872,9 +879,12 @@ function process_html() {
                 state.attitude.pitch = t("initialSetupAttitude", {
                     1: formatAttitude(fcStore.sensorData.kinematics[1]),
                 });
-                state.attitude.heading = t("initialSetupAttitude", {
-                    1: formatAttitude(fcStore.sensorData.kinematics[2]),
-                });
+                const headingDeg = fcStore.sensorData.kinematics[2];
+                let headingText = t("initialSetupAttitude", { 1: formatAttitude(headingDeg) });
+                if (!state.disabledMag) {
+                    headingText += ` ${toCardinal(headingDeg)}`;
+                }
+                state.attitude.heading = headingText;
 
                 renderModel();
                 // updateInstruments is defined in initializeInstruments

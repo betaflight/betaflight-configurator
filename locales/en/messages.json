@@ -956,7 +956,11 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+    },
+    "initialSetupMagHeading": {
+        "message": "Mag Heading:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
