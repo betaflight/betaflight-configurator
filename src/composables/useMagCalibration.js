@@ -301,13 +301,21 @@ export function useMagCalibration() {
  *
  * @param {number} lat - Latitude in decimal degrees
  * @param {number} lon - Longitude in decimal degrees
- * @returns {{ declination: number, inclination: number }}
+ * @returns {{ declination: number, inclination: number, fieldStrength: number }}
  */
+let lastGeoReference = null;
+
 export function computeDeclination(lat, lon) {
     try {
         const info = geomagnetism.model().point([lat, lon]);
-        return { declination: info.decl, inclination: info.incl };
+        const result = { declination: info.decl, inclination: info.incl, fieldStrength: Math.round(info.f) };
+        lastGeoReference = result;
+        return result;
     } catch {
-        return { declination: 0, inclination: 0 };
+        return { declination: 0, inclination: 0, fieldStrength: 0 };
     }
+}
+
+export function getGeoReference() {
+    return lastGeoReference;
 }

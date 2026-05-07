@@ -446,6 +446,12 @@
                                 :loading="isFetchingDeclination"
                                 @click="autoSetDeclination"
                             />
+                            <span v-if="magInclination !== null" class="mag-geo-info">
+                                {{ $t("configurationMagInclination", { value: magInclination }) }}
+                            </span>
+                            <span v-if="magFieldStrength !== null" class="mag-geo-info">
+                                {{ $t("configurationMagFieldStrength", { value: magFieldStrength }) }}
+                            </span>
                         </SettingRow>
                         <SettingRow
                             v-if="showRangefinder"
@@ -679,6 +685,8 @@ export default defineComponent({
         });
 
         const magDeclination = ref(0);
+        const magInclination = ref(null);
+        const magFieldStrength = ref(null);
 
         const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
         const isFetchingDeclination = ref(false);
@@ -736,8 +744,10 @@ export default defineComponent({
                     }
                 }
 
-                const { declination } = computeDeclination(lat, lon);
-                magDeclination.value = Math.round(declination * 10) / 10;
+                const result = computeDeclination(lat, lon);
+                magDeclination.value = Math.round(result.declination * 10) / 10;
+                magInclination.value = Math.round(result.inclination * 10) / 10;
+                magFieldStrength.value = result.fieldStrength;
                 gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
             } finally {
                 isFetchingDeclination.value = false;
@@ -1532,6 +1542,8 @@ export default defineComponent({
             accelTrims,
             sensorAlignment,
             magDeclination,
+            magInclination,
+            magFieldStrength,
             autoSetDeclination,
             isFetchingDeclination,
             showGyroCalOnFirstArm,
@@ -1628,6 +1640,12 @@ export default defineComponent({
         clip: rect(0, 0, 0, 0);
         white-space: nowrap;
         border: 0;
+    }
+
+    .mag-geo-info {
+        font-size: 0.78em;
+        color: var(--surface-500);
+        white-space: nowrap;
     }
 
     @media all and (max-width: 575px) {

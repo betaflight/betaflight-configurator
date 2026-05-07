@@ -7497,6 +7497,12 @@
     "configurationMagDeclinationSet": {
         "message": "Magnetic declination set to {{declination}}° from detected location."
     },
+    "configurationMagInclination": {
+        "message": "Inclination: {{value}}°"
+    },
+    "configurationMagFieldStrength": {
+        "message": "Field: {{value}} nT"
+    },
     "magCalibrationTitle": {
         "message": "Magnetometer Calibration"
     },
@@ -7595,6 +7601,15 @@
     },
     "magCalibrationSphereLegend": {
         "message": "Each dot is a mag sample. Even coverage on a sphere = good calibration. Wireframe = fitted sphere; center = hard-iron offset."
+    },
+    "magCalibrationExpectedField": {
+        "message": "Expected field: {{value}} nT"
+    },
+    "magCalibrationInclination": {
+        "message": "Inclination: {{value}}°"
+    },
+    "magCalibrationExpectedFieldLabel": {
+        "message": "Expected field (WMM)"
     },
     "magAlignmentTitle": {
         "message": "Detect Magnetometer Alignment"

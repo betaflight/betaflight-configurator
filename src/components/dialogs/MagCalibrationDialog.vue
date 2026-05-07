@@ -11,6 +11,11 @@
                 <p v-else-if="isCalibrated === false" class="mag-cal-uncalibrated">
                     {{ $t("magCalibrationUncalibrated") }}
                 </p>
+                <p v-if="geoRef" class="mag-cal-geo-hint">
+                    {{ $t("magCalibrationExpectedField", { value: geoRef.fieldStrength }) }}
+                    &middot;
+                    {{ $t("magCalibrationInclination", { value: Math.round(geoRef.inclination * 10) / 10 }) }}
+                </p>
             </div>
         </div>
 
@@ -44,6 +49,10 @@
                     <dd>{{ cal.sampleCount }}</dd>
                     <dt>{{ $t("magCalibrationOffsets") }}</dt>
                     <dd>{{ offsetsText }}</dd>
+                    <template v-if="expectedFieldText">
+                        <dt>{{ $t("magCalibrationExpectedFieldLabel") }}</dt>
+                        <dd>{{ expectedFieldText }}</dd>
+                    </template>
                 </dl>
                 <dl class="mag-cal-live">
                     <dt>X</dt>
@@ -76,6 +85,10 @@
                         <span v-if="qualityText" :class="'quality-' + cal.quality">{{ $t(qualityText) }}</span>
                         <span v-else class="quality-none">&mdash;</span>
                     </dd>
+                    <template v-if="expectedFieldText">
+                        <dt>{{ $t("magCalibrationExpectedFieldLabel") }}</dt>
+                        <dd>{{ expectedFieldText }}</dd>
+                    </template>
                 </dl>
             </div>
             <div class="mag-cal-sphere">
@@ -124,7 +137,7 @@ import { ref, computed, reactive, watch } from "vue";
 import Dialog from "../elements/Dialog.vue";
 import MagSphereView from "./mag-calibration/MagSphereView.vue";
 import MagOrientationDiagram from "./mag-calibration/MagOrientationDiagram.vue";
-import { useMagCalibration } from "../../composables/useMagCalibration";
+import { useMagCalibration, getGeoReference } from "../../composables/useMagCalibration";
 
 const TOTAL_STEPS = 6;
 
@@ -189,6 +202,15 @@ const isCalibrated = computed(() => {
     return fw.x !== 0 || fw.y !== 0 || fw.z !== 0;
 });
 
+const geoRef = ref(null);
+
+const expectedFieldText = computed(() => {
+    if (!geoRef.value) {
+        return null;
+    }
+    return `${geoRef.value.fieldStrength} nT`;
+});
+
 const qualityKey = {
     good: "magCalibrationQualityGood",
     fair: "magCalibrationQualityFair",
@@ -236,12 +258,13 @@ function onClose() {
     currentStep.value = 0;
 }
 
-// Fetch firmware offsets when dialog opens
+// Fetch firmware offsets and geo reference when dialog opens
 watch(
     () => props.modelValue,
     async (open) => {
         if (open) {
             cal.firmwareOffsets = await cal.readFirmwareOffsets();
+            geoRef.value = getGeoReference();
         }
     },
 );
@@ -286,6 +309,12 @@ watch(
     margin-top: 8px;
     font-size: 0.85em;
     color: var(--warning-500);
+}
+
+.mag-cal-geo-hint {
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: var(--surface-400);
 }
 
 .mag-cal-error-msg {
