@@ -46,6 +46,28 @@ function computeQuality(fit, cov) {
  * performs client-side sphere fitting for visualization, and
  * tracks coverage across 6 orientation zones.
  */
+async function readFirmwareOffsets() {
+    if (!isMspCliSupported()) {
+        return null;
+    }
+    try {
+        const lines = await cliSend("get mag_calibration");
+        for (const line of lines) {
+            const match = line.match(/mag_calibration\s*=\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)/);
+            if (match) {
+                return {
+                    x: Number.parseInt(match[1], 10),
+                    y: Number.parseInt(match[2], 10),
+                    z: Number.parseInt(match[3], 10),
+                };
+            }
+        }
+    } catch {
+        // CLI not available or timed out — non-critical
+    }
+    return null;
+}
+
 export function useMagCalibration() {
     const fcStore = useFlightControllerStore();
 
@@ -76,30 +98,6 @@ export function useMagCalibration() {
     let lastMovementTime = 0;
     let lastMag = null;
     let firmwareFlagSeen = false;
-
-    // --- Actions ---
-
-    async function readFirmwareOffsets() {
-        if (!isMspCliSupported()) {
-            return null;
-        }
-        try {
-            const lines = await cliSend("get mag_calibration");
-            for (const line of lines) {
-                const match = line.match(/mag_calibration\s*=\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)/);
-                if (match) {
-                    return {
-                        x: Number.parseInt(match[1], 10),
-                        y: Number.parseInt(match[2], 10),
-                        z: Number.parseInt(match[3], 10),
-                    };
-                }
-            }
-        } catch {
-            // CLI not available or timed out — non-critical
-        }
-        return null;
-    }
 
     async function startCalibration() {
         cleanup();
