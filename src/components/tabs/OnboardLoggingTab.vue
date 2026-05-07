@@ -40,6 +40,20 @@
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
                                 <USelect v-model="blackboxRate" :items="loggingRates" size="sm" class="min-w-40" />
                             </SettingRow>
+                            <SettingRow v-show="flashModeSupported" :label="$t('onboardLoggingFlashMode')">
+                                <USelect
+                                    v-model="flashMode"
+                                    :items="flashModeOptions"
+                                    size="sm"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <div v-show="flashModeSupported && flashMode === 1" class="note">
+                                <p>{{ $t("onboardLoggingFlashModeRingHint") }}</p>
+                            </div>
+                            <div v-show="flashModeMismatch" class="note warning">
+                                <p>{{ $t("onboardLoggingFlashModeMismatch") }}</p>
+                            </div>
                             <SettingRow :label="$t('onboardLoggingDebugMode')">
                                 <USelectMenu
                                     v-model="debugMode"
@@ -286,7 +300,7 @@ import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
 import semver from "semver";
 import { gui_log } from "../../js/gui_log";
@@ -361,6 +375,7 @@ export default defineComponent({
         // State
         const blackboxDevice = ref(0);
         const blackboxRate = ref(0);
+        const flashMode = ref(0); // 0 = LINEAR, 1 = RING (API 1.49+)
         const debugMode = ref(0);
         // Initialize all debug fields as enabled by default (empty array causes issues)
         const debugFieldsEnabled = ref(debugStore.enableFields ? debugStore.enableFields.map(() => true) : []);
@@ -418,6 +433,25 @@ export default defineComponent({
             return "no";
         });
 
+        const flashModeSupported = computed(() => {
+            return (
+                fcStore.config?.apiVersion &&
+                semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) &&
+                dataflashSupported.value &&
+                blackboxDevice.value === 1
+            );
+        });
+
+        // Cap on the effective frame rate that ring mode can sustain on NOR flash.
+        // Mirrors BLACKBOX_RING_MAX_FRAME_HZ in blackbox.c. Higher rates would overrun
+        // the chip's sector-erase throughput, leading to dropped frames in the log.
+        const RING_MAX_FRAME_HZ = 1000;
+
+        const flashModeOptions = computed(() => [
+            { label: i18n.getMessage("onboardLoggingFlashModeLinear"), value: 0 },
+            { label: i18n.getMessage("onboardLoggingFlashModeRing"), value: 1 },
+        ]);
+
         const loggingRates = computed(() => {
             const rates = [];
 
@@ -428,20 +462,43 @@ export default defineComponent({
 
             const pidRate = fcStore.config.sampleRateHz / fcStore.pidAdvancedConfig.pid_process_denom;
             const sampleRateNum = 5;
+            // In ring mode the firmware silently clamps any rate that would exceed the
+            // chip's erase throughput (BLACKBOX_RING_MAX_FRAME_HZ). Disable those entries
+            // in the dropdown so the user sees up front which rates are allowed.
+            const ringActive = flashModeSupported.value && flashMode.value === 1;
 
             for (let i = 0; i < sampleRateNum; i++) {
-                let loggingFrequency = Math.round(pidRate / Math.pow(2, i));
+                const loggingFrequencyHz = Math.round(pidRate / Math.pow(2, i));
+                let loggingFrequency = loggingFrequencyHz;
                 let loggingFrequencyUnit = "Hz";
                 if (gcd(loggingFrequency, 1000) === 1000) {
                     loggingFrequency /= 1000;
                     loggingFrequencyUnit = "kHz";
                 }
+                const overCap = ringActive && loggingFrequencyHz > RING_MAX_FRAME_HZ;
                 rates.push({
                     value: i,
-                    label: `1/${Math.pow(2, i)} (${loggingFrequency}${loggingFrequencyUnit})`,
+                    label: `1/${Math.pow(2, i)} (${loggingFrequency}${loggingFrequencyUnit})${
+                        overCap ? " — " + i18n.getMessage("onboardLoggingRateRingExceedsCap") : ""
+                    }`,
+                    disabled: overCap,
                 });
             }
             return rates;
+        });
+
+        // True when a stored on-flash format exists and doesn't match the configured
+        // mode — switching modes will require erasing flash before logging works.
+        const flashModeMismatch = computed(() => {
+            if (!flashModeSupported.value) return false;
+            const fmt = fcStore.blackbox?.flashFormat;
+            // 0 = EMPTY (no logs yet, can switch freely)
+            // 1 = LINEAR, 2 = RING — must match flashMode
+            // 3 = UNKNOWN — treat as needing erase to be safe
+            if (fmt === undefined || fmt === 0) return false;
+            if (fmt === 1 && flashMode.value === 0) return false;
+            if (fmt === 2 && flashMode.value === 1) return false;
+            return true;
         });
 
         const debugModes = computed(() => {
@@ -533,6 +590,7 @@ export default defineComponent({
             JSON.stringify({
                 blackboxDevice: blackboxDevice.value,
                 blackboxRate: blackboxRate.value,
+                flashMode: flashMode.value,
                 debugMode: debugMode.value,
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
             });
@@ -557,6 +615,8 @@ export default defineComponent({
             fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
             fcStore.blackbox.blackboxPDenom = blackboxRate.value;
             fcStore.blackbox.blackboxDevice = blackboxDevice.value;
+            // Only sent over the wire when the FC supports API 1.49+; MSPHelper guards.
+            fcStore.blackbox.flashMode = flashMode.value;
 
             // Update disabled mask from checkboxes
             let mask = 0;
@@ -861,6 +921,7 @@ export default defineComponent({
                 // Populate UI state
                 blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
                 blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
+                flashMode.value = fcStore.blackbox?.flashMode || 0;
                 debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
                 // Initialize debug fields checkboxes
@@ -898,6 +959,10 @@ export default defineComponent({
             savingDialog,
             blackboxDevice,
             blackboxRate,
+            flashMode,
+            flashModeSupported,
+            flashModeOptions,
+            flashModeMismatch,
             debugMode,
             debugFieldsEnabled,
             saveProgress,

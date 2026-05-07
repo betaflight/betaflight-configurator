@@ -465,6 +465,11 @@ const FC = {
             blackboxPDenom: 0,
             blackboxSampleRate: 0,
             blackboxDisabledMask: 0,
+            // API 1.49+: onboard-flash logging mode and detected on-flash format.
+            //   flashMode:   0 = LINEAR (default), 1 = RING
+            //   flashFormat: 0 = EMPTY, 1 = LINEAR, 2 = RING, 3 = UNKNOWN
+            flashMode: 0,
+            flashFormat: 3,
         };
 
         this.RC_DEADBAND_CONFIG = {

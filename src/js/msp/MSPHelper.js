@@ -7,7 +7,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1513,6 +1513,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                         FC.BLACKBOX.blackboxDisabledMask = data.readU32();
                     }
+
+                    // Introduced in API version 1.49: ring-mode flash params.
+                    // flashMode = configured mode (0=LINEAR, 1=RING)
+                    // flashFormat = detected on-flash format (0=EMPTY, 1=LINEAR, 2=RING, 3=UNKNOWN)
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.BLACKBOX.flashMode = data.readU8();
+                        FC.BLACKBOX.flashFormat = data.readU8();
+                    }
                     break;
                 case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
                     console.log("Blackbox config saved");
@@ -2328,6 +2336,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             // Introduced in 1.45
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 buffer.push32(FC.BLACKBOX.blackboxDisabledMask);
+            }
+
+            // Introduced in 1.49: ring-mode flash mode (LINEAR=0, RING=1).
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push8(FC.BLACKBOX.flashMode);
             }
 
             break;
