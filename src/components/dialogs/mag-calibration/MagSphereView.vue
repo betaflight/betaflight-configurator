@@ -83,6 +83,9 @@ let vectorLines = null; // [xLine, yLine, zLine]
 let fieldRefLine = null;
 let fieldRefTip = null;
 
+// Reusable color for HSL→RGB in updatePoints loop
+const _tempColor = new THREE.Color();
+
 // Coverage zone indicators
 let zoneMeshes = null;
 const ZONE_KEYS = ["+X", "-X", "+Y", "-Y", "+Z", "-Z"];
@@ -222,27 +225,20 @@ function initScene() {
     animate();
 }
 
-function animate() {
-    animationId = requestAnimationFrame(animate);
-
-    if (controls) {
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = props.active ? 1.5 : 0.5;
-        controls.update();
+function updateGhostSphere() {
+    if (!ghostGroup) {
+        return;
     }
+    const targetOpacity = props.sphereFit ? 0 : 0.12;
+    ghostGroup.traverse((child) => {
+        if (child.material) {
+            child.material.opacity += (targetOpacity - child.material.opacity) * 0.05;
+        }
+    });
+    ghostGroup.visible = !props.sphereFit || ghostGroup.children[0]?.material?.opacity > 0.01;
+}
 
-    // Fade out ghost sphere once real data arrives
-    if (ghostGroup) {
-        const targetOpacity = props.sphereFit ? 0 : 0.12;
-        ghostGroup.traverse((child) => {
-            if (child.material) {
-                child.material.opacity += (targetOpacity - child.material.opacity) * 0.05;
-            }
-        });
-        ghostGroup.visible = !props.sphereFit || ghostGroup.children[0]?.material?.opacity > 0.01;
-    }
-
-    // Update live mag visualization
+function updateLiveMagOverlay() {
     const mag = props.liveMag;
     const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
     if (liveMarker) {
@@ -264,13 +260,13 @@ function animate() {
             }
         }
     }
+}
 
-    // Update expected field direction arrow
+function updateFieldReferenceArrow() {
     const showRef = fieldRefLine && props.inclination !== null && props.sphereFit;
     if (showRef) {
         const incl = (props.inclination * Math.PI) / 180;
         const { center, radius } = props.sphereFit;
-        // Field direction: horizontal along X, dip along Z (BF sensor Z ≈ down)
         const dx = Math.cos(incl) * radius;
         const dz = Math.sin(incl) * radius;
 
@@ -294,9 +290,13 @@ function animate() {
             fieldRefTip.visible = false;
         }
     }
+}
 
-    // Update coverage zone indicators
-    if (zoneMeshes && props.coverage && props.sphereFit) {
+function updateCoverageZones() {
+    if (!zoneMeshes) {
+        return;
+    }
+    if (props.coverage && props.sphereFit) {
         const { center, radius } = props.sphereFit;
         const target = Math.max(props.coverage.total / 6, 1);
         const discRadius = radius * 0.15;
@@ -305,7 +305,6 @@ function animate() {
         for (let i = 0; i < 6; i++) {
             const count = zones[ZONE_KEYS[i]] || 0;
             const ratio = Math.min(count / target, 1);
-            // HSL: 0 = red, 0.33 = green
             zoneMeshes[i].material.color.setHSL(ratio * 0.33, 1, 0.5);
             zoneMeshes[i].scale.setScalar(discRadius);
             const d = ZONE_DIRS[i];
@@ -317,11 +316,26 @@ function animate() {
             );
             zoneMeshes[i].visible = true;
         }
-    } else if (zoneMeshes) {
+    } else {
         for (const mesh of zoneMeshes) {
             mesh.visible = false;
         }
     }
+}
+
+function animate() {
+    animationId = requestAnimationFrame(animate);
+
+    if (controls) {
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = props.active ? 1.5 : 0.5;
+        controls.update();
+    }
+
+    updateGhostSphere();
+    updateLiveMagOverlay();
+    updateFieldReferenceArrow();
+    updateCoverageZones();
 
     if (renderer && scene && camera) {
         renderer.render(scene, camera);
@@ -433,10 +447,10 @@ function updatePoints(sampleList) {
         // Color gradient: blue (old) → cyan → green → yellow → red (new)
         const t = count > 1 ? i / (count - 1) : 0;
         const hue = (1 - t) * 0.65; // 0.65=blue → 0=red
-        const rgb = hslToRgb(hue, 1, 0.5);
-        colors[idx] = rgb[0];
-        colors[idx + 1] = rgb[1];
-        colors[idx + 2] = rgb[2];
+        _tempColor.setHSL(hue, 1, 0.5);
+        colors[idx] = _tempColor.r;
+        colors[idx + 1] = _tempColor.g;
+        colors[idx + 2] = _tempColor.b;
     }
 
     positionAttr.needsUpdate = true;
@@ -487,37 +501,12 @@ function updateWireframe(fit) {
     scene.add(centerMarker);
 }
 
-function hslToRgb(h, s, l) {
-    let r, g, b;
-    if (s === 0) {
-        r = g = b = l;
-    } else {
-        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        const p = 2 * l - q;
-        r = hueToRgb(p, q, h + 1 / 3);
-        g = hueToRgb(p, q, h);
-        b = hueToRgb(p, q, h - 1 / 3);
+function disposeMesh(mesh) {
+    if (!mesh) {
+        return;
     }
-    return [r, g, b];
-}
-
-function hueToRgb(p, q, t) {
-    if (t < 0) {
-        t += 1;
-    }
-    if (t > 1) {
-        t -= 1;
-    }
-    if (t < 1 / 6) {
-        return p + (q - p) * 6 * t;
-    }
-    if (t < 1 / 2) {
-        return q;
-    }
-    if (t < 2 / 3) {
-        return p + (q - p) * (2 / 3 - t) * 6;
-    }
-    return p;
+    mesh.geometry?.dispose();
+    mesh.material?.dispose();
 }
 
 function disposeScene() {
@@ -536,49 +525,25 @@ function disposeScene() {
         controls = null;
     }
 
-    if (fieldRefLine) {
-        fieldRefLine.geometry.dispose();
-        fieldRefLine.material.dispose();
-        fieldRefLine = null;
-    }
-
-    if (fieldRefTip) {
-        fieldRefTip.geometry.dispose();
-        fieldRefTip.material.dispose();
-        fieldRefTip = null;
-    }
+    disposeMesh(fieldRefLine);
+    fieldRefLine = null;
+    disposeMesh(fieldRefTip);
+    fieldRefTip = null;
 
     if (zoneMeshes) {
-        for (const mesh of zoneMeshes) {
-            mesh.geometry.dispose();
-            mesh.material.dispose();
-        }
+        zoneMeshes.forEach(disposeMesh);
         zoneMeshes = null;
     }
 
-    if (wireframeMesh) {
-        wireframeMesh.geometry.dispose();
-        wireframeMesh.material.dispose();
-        wireframeMesh = null;
-    }
-
-    if (centerMarker) {
-        centerMarker.geometry.dispose();
-        centerMarker.material.dispose();
-        centerMarker = null;
-    }
-
-    if (liveMarker) {
-        liveMarker.geometry.dispose();
-        liveMarker.material.dispose();
-        liveMarker = null;
-    }
+    disposeMesh(wireframeMesh);
+    wireframeMesh = null;
+    disposeMesh(centerMarker);
+    centerMarker = null;
+    disposeMesh(liveMarker);
+    liveMarker = null;
 
     if (vectorLines) {
-        for (const line of vectorLines) {
-            line.geometry.dispose();
-            line.material.dispose();
-        }
+        vectorLines.forEach(disposeMesh);
         vectorLines = null;
     }
 
