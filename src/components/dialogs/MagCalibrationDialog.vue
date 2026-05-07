@@ -51,6 +51,7 @@
                         :sphere-fit="cal.sphereFitResult"
                         :active="true"
                         :live-mag="cal.liveMag"
+                        :inclination="geoRef?.inclination ?? null"
                         show-legend
                         :legend="$t('magCalibrationSphereLegend')"
                     />
@@ -103,7 +104,12 @@
                 </dl>
             </div>
             <div class="mag-cal-sphere">
-                <MagSphereView :samples="cal.samples" :sphere-fit="cal.sphereFitResult" :active="false" />
+                <MagSphereView
+                    :samples="cal.samples"
+                    :sphere-fit="cal.sphereFitResult"
+                    :active="false"
+                    :inclination="geoRef?.inclination ?? null"
+                />
             </div>
         </div>
 

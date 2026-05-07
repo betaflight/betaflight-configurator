@@ -37,6 +37,10 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    inclination: {
+        type: Number,
+        default: null,
+    },
 });
 
 const containerRef = ref(null);
@@ -70,6 +74,10 @@ let ghostGroup = null;
 // Live mag visualization
 let liveMarker = null;
 let vectorLines = null; // [xLine, yLine, zLine]
+
+// Expected field direction reference
+let fieldRefLine = null;
+let fieldRefTip = null;
 
 function initScene() {
     const container = containerRef.value;
@@ -150,6 +158,20 @@ function initScene() {
         return line;
     });
 
+    // Expected field direction arrow (orange, from sphere center at inclination angle)
+    const refGeo = new THREE.BufferGeometry();
+    refGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(6), 3));
+    const refMat = new THREE.LineBasicMaterial({ color: 0xff8800, opacity: 0.7, transparent: true });
+    fieldRefLine = new THREE.Line(refGeo, refMat);
+    fieldRefLine.visible = false;
+    scene.add(fieldRefLine);
+
+    const tipGeo = new THREE.SphereGeometry(8, 8, 8);
+    const tipMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
+    fieldRefTip = new THREE.Mesh(tipGeo, tipMat);
+    fieldRefTip.visible = false;
+    scene.add(fieldRefTip);
+
     // OrbitControls
     controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
@@ -209,6 +231,36 @@ function animate() {
                 pos[3 + i] = vals[i];
                 vectorLines[i].geometry.attributes.position.needsUpdate = true;
             }
+        }
+    }
+
+    // Update expected field direction arrow
+    const showRef = fieldRefLine && props.inclination !== null && props.sphereFit;
+    if (showRef) {
+        const incl = (props.inclination * Math.PI) / 180;
+        const { center, radius } = props.sphereFit;
+        // Field direction: horizontal along X, dip along Z (BF sensor Z ≈ down)
+        const dx = Math.cos(incl) * radius;
+        const dz = Math.sin(incl) * radius;
+
+        const pos = fieldRefLine.geometry.attributes.position.array;
+        pos[0] = center.x;
+        pos[1] = center.y;
+        pos[2] = center.z;
+        pos[3] = center.x + dx;
+        pos[4] = center.y;
+        pos[5] = center.z + dz;
+        fieldRefLine.geometry.attributes.position.needsUpdate = true;
+        fieldRefLine.visible = true;
+
+        fieldRefTip.position.set(center.x + dx, center.y, center.z + dz);
+        fieldRefTip.visible = true;
+    } else {
+        if (fieldRefLine) {
+            fieldRefLine.visible = false;
+        }
+        if (fieldRefTip) {
+            fieldRefTip.visible = false;
         }
     }
 
@@ -423,6 +475,18 @@ function disposeScene() {
     if (controls) {
         controls.dispose();
         controls = null;
+    }
+
+    if (fieldRefLine) {
+        fieldRefLine.geometry.dispose();
+        fieldRefLine.material.dispose();
+        fieldRefLine = null;
+    }
+
+    if (fieldRefTip) {
+        fieldRefTip.geometry.dispose();
+        fieldRefTip.material.dispose();
+        fieldRefTip = null;
     }
 
     if (wireframeMesh) {
