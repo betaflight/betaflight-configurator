@@ -4,6 +4,7 @@ import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { useFlightControllerStore } from "../stores/fc";
 import { fitSphere, computeCoverage } from "../js/utils/sphereFit";
+import { send as cliSend, isMspCliSupported } from "./useMspCliSession";
 
 const POLL_INTERVAL_MS = 100;
 const MONITOR_INTERVAL_MS = 1000;
@@ -61,6 +62,13 @@ export function useMagCalibration() {
 
     const firmwareDone = ref(false);
 
+    // Live mag reading (updated every IMU poll)
+    const liveMag = ref({ x: 0, y: 0, z: 0 });
+    const liveFieldStrength = computed(() => Math.round(Math.hypot(liveMag.value.x, liveMag.value.y, liveMag.value.z)));
+
+    // Firmware calibration offsets read via CLI
+    const firmwareOffsets = ref(null); // { x, y, z } or null
+
     // --- Internal state (non-reactive) ---
     let dataInterval = null;
     let monitorInterval = null;
@@ -71,7 +79,29 @@ export function useMagCalibration() {
 
     // --- Actions ---
 
-    function startCalibration() {
+    async function readFirmwareOffsets() {
+        if (!isMspCliSupported()) {
+            return null;
+        }
+        try {
+            const lines = await cliSend("get mag_calibration");
+            for (const line of lines) {
+                const match = line.match(/mag_calibration\s*=\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)/);
+                if (match) {
+                    return {
+                        x: Number.parseInt(match[1], 10),
+                        y: Number.parseInt(match[2], 10),
+                        z: Number.parseInt(match[3], 10),
+                    };
+                }
+            }
+        } catch {
+            // CLI not available or timed out — non-critical
+        }
+        return null;
+    }
+
+    async function startCalibration() {
         cleanup();
         // Reset state
         samples.value = [];
@@ -84,6 +114,9 @@ export function useMagCalibration() {
         lastMag = null;
         firmwareDone.value = false;
         firmwareFlagSeen = false;
+
+        // Read current firmware offsets before calibration starts
+        firmwareOffsets.value = await readFirmwareOffsets();
 
         phase.value = "waiting";
         statusMessage.value = "magCalibrationWaiting";
@@ -172,6 +205,7 @@ export function useMagCalibration() {
             lastMovementTime = Date.now();
         }
         lastMag = { x: mx, y: my, z: mz };
+        liveMag.value = { x: mx, y: my, z: mz };
 
         // Transition from waiting to collecting on first real sample
         if (phase.value === "waiting") {
@@ -211,12 +245,18 @@ export function useMagCalibration() {
         }
     }
 
-    function completeCalibration() {
+    async function completeCalibration() {
         cleanup();
         progress.value = 100;
         phase.value = "complete";
         statusMessage.value = "magCalibrationComplete";
         updateAnalysis();
+
+        // Re-read firmware offsets after calibration to show actual result
+        const newOffsets = await readFirmwareOffsets();
+        if (newOffsets) {
+            firmwareOffsets.value = newOffsets;
+        }
     }
 
     function retry() {
@@ -241,6 +281,9 @@ export function useMagCalibration() {
         statusMessage,
         sampleCount,
         firmwareDone,
+        liveMag,
+        liveFieldStrength,
+        firmwareOffsets,
 
         // Actions
         startCalibration,
@@ -248,6 +291,7 @@ export function useMagCalibration() {
         completeCalibration,
         cleanup,
         retry,
+        readFirmwareOffsets,
     };
 }
 

@@ -2,7 +2,16 @@
     <Dialog v-model="isOpen" :title="$t('magCalibrationTitle')" :closeable="!isCalibrating" @close="onClose">
         <!-- Idle: intro screen -->
         <div v-if="cal.phase === 'idle'" class="mag-cal-idle">
-            <p>{{ $t("magCalibrationIdle") }}</p>
+            <div>
+                <p>{{ $t("magCalibrationIdle") }}</p>
+                <dl v-if="isCalibrated" class="mag-cal-fw-offsets">
+                    <dt>{{ $t("magCalibrationCurrentOffsets") }}</dt>
+                    <dd>{{ firmwareOffsetsText }}</dd>
+                </dl>
+                <p v-else-if="isCalibrated === false" class="mag-cal-uncalibrated">
+                    {{ $t("magCalibrationUncalibrated") }}
+                </p>
+            </div>
         </div>
 
         <!-- Calibrating: step-by-step wizard -->
@@ -22,13 +31,29 @@
 
             <div class="mag-cal-right">
                 <div class="mag-cal-sphere">
-                    <MagSphereView :samples="cal.samples" :sphere-fit="cal.sphereFitResult" :active="true" />
+                    <MagSphereView
+                        :samples="cal.samples"
+                        :sphere-fit="cal.sphereFitResult"
+                        :active="true"
+                        show-legend
+                        :legend="$t('magCalibrationSphereLegend')"
+                    />
                 </div>
                 <dl class="mag-cal-stats">
                     <dt>{{ $t("magCalibrationSamples") }}</dt>
                     <dd>{{ cal.sampleCount }}</dd>
                     <dt>{{ $t("magCalibrationOffsets") }}</dt>
                     <dd>{{ offsetsText }}</dd>
+                </dl>
+                <dl class="mag-cal-live">
+                    <dt>X</dt>
+                    <dd>{{ cal.liveMag.x }}</dd>
+                    <dt>Y</dt>
+                    <dd>{{ cal.liveMag.y }}</dd>
+                    <dt>Z</dt>
+                    <dd>{{ cal.liveMag.z }}</dd>
+                    <dt>{{ $t("magCalibrationFieldStrength") }}</dt>
+                    <dd>{{ cal.liveFieldStrength }}</dd>
                 </dl>
             </div>
         </div>
@@ -38,10 +63,12 @@
             <div class="mag-cal-results">
                 <p class="mag-cal-complete-msg">{{ $t("magCalibrationComplete") }}</p>
                 <dl class="mag-cal-stats-full">
+                    <dt>{{ $t("magCalibrationFirmwareOffsets") }}</dt>
+                    <dd>{{ firmwareOffsetsText }}</dd>
+                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
+                    <dd>{{ offsetsText }}</dd>
                     <dt>{{ $t("magCalibrationSamples") }}</dt>
                     <dd>{{ cal.sampleCount }}</dd>
-                    <dt>{{ $t("magCalibrationOffsets") }}</dt>
-                    <dd>{{ offsetsText }}</dd>
                     <dt>{{ $t("magCalibrationResidual") }}</dt>
                     <dd>{{ residualText }}</dd>
                     <dt>{{ $t("magCalibrationQuality") }}</dt>
@@ -93,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, watch } from "vue";
 import Dialog from "../elements/Dialog.vue";
 import MagSphereView from "./mag-calibration/MagSphereView.vue";
 import MagOrientationDiagram from "./mag-calibration/MagOrientationDiagram.vue";
@@ -145,6 +172,23 @@ const residualText = computed(() => {
     return fit.residual.toFixed(1);
 });
 
+const firmwareOffsetsText = computed(() => {
+    const fw = cal.firmwareOffsets;
+    if (!fw) {
+        return "\u2014";
+    }
+    return `${fw.x}, ${fw.y}, ${fw.z}`;
+});
+
+// true = has non-zero offsets, false = all zero (uncalibrated), null = unknown
+const isCalibrated = computed(() => {
+    const fw = cal.firmwareOffsets;
+    if (!fw) {
+        return null;
+    }
+    return fw.x !== 0 || fw.y !== 0 || fw.z !== 0;
+});
+
 const qualityKey = {
     good: "magCalibrationQualityGood",
     fair: "magCalibrationQualityFair",
@@ -191,6 +235,16 @@ function onClose() {
     cal.retry();
     currentStep.value = 0;
 }
+
+// Fetch firmware offsets when dialog opens
+watch(
+    () => props.modelValue,
+    async (open) => {
+        if (open) {
+            cal.firmwareOffsets = await cal.readFirmwareOffsets();
+        }
+    },
+);
 </script>
 
 <style scoped>
@@ -208,6 +262,30 @@ function onClose() {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.mag-cal-fw-offsets {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    gap: 2px 10px;
+    font-size: 0.85em;
+    margin-top: 12px;
+    text-align: left;
+}
+
+.mag-cal-fw-offsets dt {
+    color: var(--surface-500);
+}
+
+.mag-cal-fw-offsets dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.mag-cal-uncalibrated {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--warning-500);
 }
 
 .mag-cal-error-msg {
@@ -301,6 +379,30 @@ function onClose() {
     margin: 0;
     font-weight: 600;
     text-align: right;
+}
+
+/* Live mag readout during calibration */
+.mag-cal-live {
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr auto 1fr auto 1fr;
+    gap: 2px 6px;
+    font-size: 0.78em;
+    padding: 4px 8px;
+    background: var(--surface-200);
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+}
+
+.mag-cal-live dt {
+    color: var(--surface-500);
+    font-weight: 500;
+}
+
+.mag-cal-live dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+    min-width: 36px;
 }
 
 /* Results stats (complete screen) */

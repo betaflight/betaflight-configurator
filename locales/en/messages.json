@@ -7578,6 +7578,24 @@
     "magCalibrationStep6": {
         "message": "Inverted — rotate 360°"
     },
+    "magCalibrationCurrentOffsets": {
+        "message": "Current offsets"
+    },
+    "magCalibrationUncalibrated": {
+        "message": "Magnetometer has not been calibrated yet."
+    },
+    "magCalibrationFieldStrength": {
+        "message": "|B|"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Firmware offsets"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Sphere fit offsets"
+    },
+    "magCalibrationSphereLegend": {
+        "message": "Each dot is a mag sample. Even coverage on a sphere = good calibration. Wireframe = fitted sphere; center = hard-iron offset."
+    },
     "magAlignmentTitle": {
         "message": "Detect Magnetometer Alignment"
     },

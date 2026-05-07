@@ -1,6 +1,9 @@
 <template>
     <div ref="containerRef" class="mag-sphere-container">
         <canvas ref="canvasRef"></canvas>
+        <div v-if="showLegend" class="mag-sphere-legend">
+            {{ legend }}
+        </div>
     </div>
 </template>
 
@@ -21,6 +24,14 @@ const props = defineProps({
     active: {
         type: Boolean,
         default: false,
+    },
+    showLegend: {
+        type: Boolean,
+        default: false,
+    },
+    legend: {
+        type: String,
+        default: "",
     },
 });
 
@@ -455,5 +466,16 @@ onBeforeUnmount(() => {
     display: block;
     width: 100% !important;
     height: 100% !important;
+}
+
+.mag-sphere-legend {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    right: 6px;
+    font-size: 0.7em;
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    line-height: 1.3;
 }
 </style>
