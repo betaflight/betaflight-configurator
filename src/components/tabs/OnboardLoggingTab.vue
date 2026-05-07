@@ -479,7 +479,7 @@ export default defineComponent({
                 rates.push({
                     value: i,
                     label: `1/${Math.pow(2, i)} (${loggingFrequency}${loggingFrequencyUnit})${
-                        overCap ? " — " + i18n.getMessage("onboardLoggingRateRingExceedsCap") : ""
+                        overCap ? ` — ${i18n.getMessage("onboardLoggingRateRingExceedsCap")}` : ""
                     }`,
                     disabled: overCap,
                 });
@@ -490,14 +490,22 @@ export default defineComponent({
         // True when a stored on-flash format exists and doesn't match the configured
         // mode — switching modes will require erasing flash before logging works.
         const flashModeMismatch = computed(() => {
-            if (!flashModeSupported.value) return false;
+            if (!flashModeSupported.value) {
+                return false;
+            }
             const fmt = fcStore.blackbox?.flashFormat;
             // 0 = EMPTY (no logs yet, can switch freely)
             // 1 = LINEAR, 2 = RING — must match flashMode
             // 3 = UNKNOWN — treat as needing erase to be safe
-            if (fmt === undefined || fmt === 0) return false;
-            if (fmt === 1 && flashMode.value === 0) return false;
-            if (fmt === 2 && flashMode.value === 1) return false;
+            if (fmt === undefined || fmt === 0) {
+                return false;
+            }
+            if (fmt === 1 && flashMode.value === 0) {
+                return false;
+            }
+            if (fmt === 2 && flashMode.value === 1) {
+                return false;
+            }
             return true;
         });
 
