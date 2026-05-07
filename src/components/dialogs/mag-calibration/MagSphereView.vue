@@ -33,6 +33,10 @@ const props = defineProps({
         type: String,
         default: "",
     },
+    liveMag: {
+        type: Object,
+        default: null,
+    },
 });
 
 const containerRef = ref(null);
@@ -62,6 +66,10 @@ let centerMarker = null;
 
 // Reference ghost sphere (shown before calibration data arrives)
 let ghostGroup = null;
+
+// Live mag visualization
+let liveMarker = null;
+let vectorLines = null; // [xLine, yLine, zLine]
 
 function initScene() {
     const container = containerRef.value;
@@ -123,6 +131,25 @@ function initScene() {
     pointMesh = new THREE.Points(pointGeometry, pointMaterial);
     scene.add(pointMesh);
 
+    // Live mag marker (white dot at current reading)
+    const liveGeo = new THREE.SphereGeometry(10, 8, 8);
+    const liveMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    liveMarker = new THREE.Mesh(liveGeo, liveMat);
+    liveMarker.visible = false;
+    scene.add(liveMarker);
+
+    // XYZ vector lines (from origin along each axis to component value)
+    const VECTOR_COLORS = [0xff4444, 0x44ff44, 0x4444ff];
+    vectorLines = VECTOR_COLORS.map((color) => {
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(6), 3));
+        const mat = new THREE.LineBasicMaterial({ color, opacity: 0.8, transparent: true });
+        const line = new THREE.Line(geo, mat);
+        line.visible = false;
+        scene.add(line);
+        return line;
+    });
+
     // OrbitControls
     controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
@@ -160,6 +187,29 @@ function animate() {
             }
         });
         ghostGroup.visible = !props.sphereFit || ghostGroup.children[0]?.material?.opacity > 0.01;
+    }
+
+    // Update live mag visualization
+    const mag = props.liveMag;
+    const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
+    if (liveMarker) {
+        liveMarker.visible = showLive;
+        if (showLive) {
+            liveMarker.position.set(mag.x, mag.y, mag.z);
+        }
+    }
+    if (vectorLines) {
+        const vals = showLive ? [mag.x, mag.y, mag.z] : [0, 0, 0];
+        for (let i = 0; i < 3; i++) {
+            vectorLines[i].visible = showLive;
+            if (showLive) {
+                const pos = vectorLines[i].geometry.attributes.position.array;
+                pos[0] = pos[1] = pos[2] = 0;
+                pos[3] = pos[4] = pos[5] = 0;
+                pos[3 + i] = vals[i];
+                vectorLines[i].geometry.attributes.position.needsUpdate = true;
+            }
+        }
     }
 
     if (renderer && scene && camera) {
@@ -385,6 +435,20 @@ function disposeScene() {
         centerMarker.geometry.dispose();
         centerMarker.material.dispose();
         centerMarker = null;
+    }
+
+    if (liveMarker) {
+        liveMarker.geometry.dispose();
+        liveMarker.material.dispose();
+        liveMarker = null;
+    }
+
+    if (vectorLines) {
+        for (const line of vectorLines) {
+            line.geometry.dispose();
+            line.material.dispose();
+        }
+        vectorLines = null;
     }
 
     if (ghostGroup) {

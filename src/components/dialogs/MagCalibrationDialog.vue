@@ -50,6 +50,7 @@
                         :samples="cal.samples"
                         :sphere-fit="cal.sphereFitResult"
                         :active="true"
+                        :live-mag="cal.liveMag"
                         show-legend
                         :legend="$t('magCalibrationSphereLegend')"
                     />
