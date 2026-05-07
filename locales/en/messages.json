@@ -7615,6 +7615,18 @@
     "magCalibrationExpectedFieldLabel": {
         "message": "Expected field (WMM)"
     },
+    "magCalibrationUnguided": {
+        "message": "Unguided"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Unguided Calibration"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Rotate your vehicle slowly in all directions. The firmware will collect samples and compute offsets automatically."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Firmware calibration complete!"
+    },
     "magAlignmentTitle": {
         "message": "Detect Magnetometer Alignment"
     },

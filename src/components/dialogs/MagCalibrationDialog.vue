@@ -19,9 +19,10 @@
             </div>
         </div>
 
-        <!-- Calibrating: step-by-step wizard -->
+        <!-- Calibrating: step-by-step wizard or quick mode -->
         <div v-else-if="isCalibrating" class="mag-cal-layout">
-            <div class="mag-cal-step-panel">
+            <!-- Guided mode: step panel -->
+            <div v-if="!unguidedMode" class="mag-cal-step-panel">
                 <div class="mag-cal-step-counter">
                     {{ $t("magCalibrationStepOf", { current: currentStep + 1, total: TOTAL_STEPS }) }}
                 </div>
@@ -32,6 +33,15 @@
                 <div class="mag-cal-progress-bar">
                     <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
                 </div>
+            </div>
+            <!-- Quick mode: simple instruction -->
+            <div v-else class="mag-cal-step-panel">
+                <div class="mag-cal-step-counter">{{ $t("magCalibrationUnguidedTitle") }}</div>
+                <p class="mag-cal-quick-instruction">{{ $t("magCalibrationUnguidedInstruction") }}</p>
+                <div class="mag-cal-progress-bar">
+                    <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
+                </div>
+                <p v-if="cal.firmwareDone" class="mag-cal-quick-done">{{ $t("magCalibrationUnguidedDone") }}</p>
             </div>
 
             <div class="mag-cal-right">
@@ -103,7 +113,13 @@
 
         <template #footer>
             <div class="mag-cal-footer">
-                <UButton v-if="cal.phase === 'idle'" :label="$t('magCalibrationStart')" @click="startCal()" />
+                <UButton v-if="cal.phase === 'idle'" :label="$t('magCalibrationStart')" @click="startCal(false)" />
+                <UButton
+                    v-if="cal.phase === 'idle'"
+                    variant="outline"
+                    :label="$t('magCalibrationUnguided')"
+                    @click="startCal(true)"
+                />
                 <UButton
                     v-if="isCalibrating"
                     variant="outline"
@@ -111,12 +127,12 @@
                     @click="cancelCal()"
                 />
                 <UButton
-                    v-if="isCalibrating && currentStep < TOTAL_STEPS - 1"
+                    v-if="isCalibrating && !unguidedMode && currentStep < TOTAL_STEPS - 1"
                     :label="$t('magCalibrationNextStep')"
                     @click="nextStep()"
                 />
                 <UButton
-                    v-if="isCalibrating && currentStep === TOTAL_STEPS - 1"
+                    v-if="isCalibrating && !unguidedMode && currentStep === TOTAL_STEPS - 1"
                     :label="$t('magCalibrationFinish')"
                     @click="finishCal()"
                 />
@@ -157,6 +173,7 @@ const isOpen = computed({
 
 const cal = reactive(useMagCalibration());
 const currentStep = ref(0);
+const unguidedMode = ref(false);
 
 const orientationSteps = [
     { i18n: "magCalibrationStep1" },
@@ -218,7 +235,8 @@ const qualityKey = {
 };
 const qualityText = computed(() => qualityKey[cal.quality] || null);
 
-function startCal() {
+function startCal(quick = false) {
+    unguidedMode.value = quick;
     currentStep.value = 0;
     cal.startCalibration();
 }
@@ -231,6 +249,7 @@ function nextStep() {
 
 function finishCal() {
     cal.completeCalibration();
+    playCompletionBeep();
 }
 
 function cancelCal() {
@@ -250,6 +269,30 @@ function accept() {
 function retryCal() {
     cal.retry();
     currentStep.value = 0;
+    unguidedMode.value = false;
+}
+
+function playCompletionBeep() {
+    try {
+        const ctx = new AudioContext();
+        const gain = ctx.createGain();
+        gain.connect(ctx.destination);
+        gain.gain.value = 0.1;
+        for (const [freq, start, end] of [
+            [660, 0, 0.1],
+            [880, 0.12, 0.25],
+        ]) {
+            const osc = ctx.createOscillator();
+            osc.connect(gain);
+            osc.frequency.value = freq;
+            osc.start(ctx.currentTime + start);
+            osc.stop(ctx.currentTime + end);
+        }
+        gain.gain.setValueAtTime(0.1, ctx.currentTime + 0.22);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    } catch {
+        // Audio not available — non-critical
+    }
 }
 
 function onClose() {
@@ -265,6 +308,17 @@ watch(
         if (open) {
             cal.firmwareOffsets = await cal.readFirmwareOffsets();
             geoRef.value = getGeoReference();
+        }
+    },
+);
+
+// Quick mode: auto-complete when firmware signals done
+watch(
+    () => cal.firmwareDone,
+    (done) => {
+        if (done && unguidedMode.value) {
+            cal.completeCalibration();
+            playCompletionBeep();
         }
     },
 );
@@ -358,6 +412,20 @@ watch(
     font-weight: 600;
     text-align: center;
     color: var(--surface-900);
+}
+
+.mag-cal-quick-instruction {
+    font-size: 0.95em;
+    text-align: center;
+    color: var(--surface-600);
+    margin: 16px 0;
+}
+
+.mag-cal-quick-done {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #22c55e;
+    text-align: center;
 }
 
 /* Right column */
