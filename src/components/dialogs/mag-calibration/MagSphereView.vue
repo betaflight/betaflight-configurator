@@ -641,6 +641,10 @@ watch(
 
 onMounted(() => {
     initScene();
+    // Hydrate scene from current props — the results-screen instance mounts
+    // with precomputed data that won't trigger the watchers.
+    updatePoints(props.samples);
+    updateWireframe(props.sphereFit);
 });
 
 onBeforeUnmount(() => {

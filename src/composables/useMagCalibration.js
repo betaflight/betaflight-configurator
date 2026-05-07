@@ -1,4 +1,4 @@
-import { ref, computed, shallowRef, triggerRef, onScopeDispose } from "vue";
+import { ref, computed, shallowRef, onScopeDispose } from "vue";
 import geomagnetism from "geomagnetism";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
@@ -213,9 +213,8 @@ export function useMagCalibration() {
             statusMessage.value = "magCalibrationCollecting";
         }
 
-        // Append sample (in-place push with manual trigger for shallowRef reactivity)
-        samples.value.push({ x: mx, y: my, z: mz, timestamp: Date.now() });
-        triggerRef(samples);
+        // New array reference so child component watchers see the change
+        samples.value = [...samples.value, { x: mx, y: my, z: mz, timestamp: Date.now() }];
 
         samplesSinceLastFit++;
         if (samplesSinceLastFit >= SPHERE_FIT_EVERY_N) {
