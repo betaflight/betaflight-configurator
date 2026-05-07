@@ -41,6 +41,10 @@ const props = defineProps({
         type: Number,
         default: null,
     },
+    coverage: {
+        type: Object,
+        default: null,
+    },
 });
 
 const containerRef = ref(null);
@@ -78,6 +82,18 @@ let vectorLines = null; // [xLine, yLine, zLine]
 // Expected field direction reference
 let fieldRefLine = null;
 let fieldRefTip = null;
+
+// Coverage zone indicators
+let zoneMeshes = null;
+const ZONE_KEYS = ["+X", "-X", "+Y", "-Y", "+Z", "-Z"];
+const ZONE_DIRS = [
+    [1, 0, 0],
+    [-1, 0, 0],
+    [0, 1, 0],
+    [0, -1, 0],
+    [0, 0, 1],
+    [0, 0, -1],
+];
 
 function initScene() {
     const container = containerRef.value;
@@ -172,6 +188,21 @@ function initScene() {
     fieldRefTip.visible = false;
     scene.add(fieldRefTip);
 
+    // Coverage zone indicators (6 discs at sphere poles, colored by sample density)
+    zoneMeshes = ZONE_DIRS.map(() => {
+        const geo = new THREE.CircleGeometry(1, 16);
+        const mat = new THREE.MeshBasicMaterial({
+            color: 0x888888,
+            transparent: true,
+            opacity: 0.4,
+            side: THREE.DoubleSide,
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.visible = false;
+        scene.add(mesh);
+        return mesh;
+    });
+
     // OrbitControls
     controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
@@ -261,6 +292,33 @@ function animate() {
         }
         if (fieldRefTip) {
             fieldRefTip.visible = false;
+        }
+    }
+
+    // Update coverage zone indicators
+    if (zoneMeshes && props.coverage && props.sphereFit) {
+        const { center, radius } = props.sphereFit;
+        const target = Math.max(props.coverage.total / 6, 1);
+        const discRadius = radius * 0.15;
+
+        for (let i = 0; i < 6; i++) {
+            const count = props.coverage.zones[ZONE_KEYS[i]];
+            const ratio = Math.min(count / target, 1);
+            // HSL: 0 = red, 0.33 = green
+            zoneMeshes[i].material.color.setHSL(ratio * 0.33, 1, 0.5);
+            zoneMeshes[i].scale.setScalar(discRadius);
+            const d = ZONE_DIRS[i];
+            zoneMeshes[i].position.set(center.x + d[0] * radius, center.y + d[1] * radius, center.z + d[2] * radius);
+            zoneMeshes[i].lookAt(
+                center.x + d[0] * radius * 2,
+                center.y + d[1] * radius * 2,
+                center.z + d[2] * radius * 2,
+            );
+            zoneMeshes[i].visible = true;
+        }
+    } else if (zoneMeshes) {
+        for (const mesh of zoneMeshes) {
+            mesh.visible = false;
         }
     }
 
@@ -487,6 +545,14 @@ function disposeScene() {
         fieldRefTip.geometry.dispose();
         fieldRefTip.material.dispose();
         fieldRefTip = null;
+    }
+
+    if (zoneMeshes) {
+        for (const mesh of zoneMeshes) {
+            mesh.geometry.dispose();
+            mesh.material.dispose();
+        }
+        zoneMeshes = null;
     }
 
     if (wireframeMesh) {

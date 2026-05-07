@@ -52,6 +52,7 @@
                         :active="true"
                         :live-mag="cal.liveMag"
                         :inclination="geoRef?.inclination ?? null"
+                        :coverage="cal.coverage"
                         show-legend
                         :legend="$t('magCalibrationSphereLegend')"
                     />
@@ -109,6 +110,7 @@
                     :sphere-fit="cal.sphereFitResult"
                     :active="false"
                     :inclination="geoRef?.inclination ?? null"
+                    :coverage="cal.coverage"
                 />
             </div>
         </div>
