@@ -94,45 +94,111 @@
                     </div>
                 </UiBox>
 
-                <!-- Servo visualization bars -->
-                <UiBox :title="$t('servosText')" class="mt-4">
-                    <ul class="grid grid-cols-8 gap-2 mb-1">
-                        <li
-                            v-for="i in 8"
-                            :key="'title' + i"
-                            class="text-center text-xs font-bold"
-                            :title="$t(`servoNumber${i}`)"
-                        >
-                            {{ i }}
-                        </li>
-                    </ul>
-                    <ul class="grid grid-cols-8 gap-2">
-                        <li
-                            v-for="i in 8"
-                            :key="'bar' + i"
-                            class="relative h-[100px]"
-                            :style="{ '--bar-opacity': getBarOpacity(servoData[i - 1] ?? 1500) }"
-                        >
-                            <div class="absolute inset-x-0 bottom-[45px] z-10 text-center text-[10px] font-bold">
-                                {{ servoData[i - 1] ?? 1500 }}
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                    <!-- Servo visualization bars -->
+                    <UiBox :title="$t('servosText')">
+                        <ul class="grid grid-cols-8 gap-2 mb-1">
+                            <li
+                                v-for="i in 8"
+                                :key="'title' + i"
+                                class="text-center text-xs font-bold"
+                                :title="$t(`servoNumber${i}`)"
+                            >
+                                {{ i }}
+                            </li>
+                        </ul>
+                        <ul class="grid grid-cols-8 gap-2">
+                            <li
+                                v-for="i in 8"
+                                :key="'bar' + i"
+                                class="relative h-[100px]"
+                                :style="{ '--bar-opacity': getBarOpacity(servoData[i - 1] ?? 1500) }"
+                            >
+                                <div class="absolute inset-x-0 bottom-[45px] z-10 text-center text-[10px] font-bold">
+                                    {{ servoData[i - 1] ?? 1500 }}
+                                </div>
+                                <UProgress
+                                    orientation="vertical"
+                                    inverted
+                                    :model-value="getBarHeight(servoData[i - 1] ?? 1500)"
+                                    :max="100"
+                                    color="warning"
+                                    size="2xl"
+                                    :ui="{
+                                        root: '!w-full',
+                                        base: '!w-full !rounded-md border border-(--ui-border)',
+                                        indicator: '!rounded-none !transition-none opacity-(--bar-opacity)',
+                                    }"
+                                    class="h-full"
+                                />
+                            </li>
+                        </ul>
+                    </UiBox>
+
+                    <!-- Resource Assignments -->
+                    <UiBox :title="$t('servosResourceAssignments')">
+                        <div v-if="!hasResourceData" class="text-sm text-muted">
+                            {{ $t("servosResourceNotAvailable") }}
+                        </div>
+                        <template v-else>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="text-sm font-bold mb-2">{{ $t("servosMotorResources") }}</h4>
+                                    <div
+                                        class="grid items-center gap-y-1"
+                                        style="grid-template-columns: minmax(4rem, auto) 1fr"
+                                    >
+                                        <div class="text-center text-xs font-bold py-1">
+                                            {{ $t("servosResourceIndex") }}
+                                        </div>
+                                        <div class="text-center text-xs font-bold py-1">
+                                            {{ $t("servosResourcePin") }}
+                                        </div>
+                                        <template v-for="motor in motorResources" :key="'motor' + motor.index">
+                                            <div class="text-center text-sm py-1">
+                                                {{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}
+                                            </div>
+                                            <USelect
+                                                :model-value="motor.pin"
+                                                :items="resourcePinOptions"
+                                                size="xs"
+                                                class="w-full"
+                                                @update:model-value="(val) => onMotorPinChange(motor.index, val)"
+                                            />
+                                        </template>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold mb-2">{{ $t("servosServoResources") }}</h4>
+                                    <div
+                                        class="grid items-center gap-y-1"
+                                        style="grid-template-columns: minmax(4rem, auto) 1fr"
+                                    >
+                                        <div class="text-center text-xs font-bold py-1">
+                                            {{ $t("servosResourceIndex") }}
+                                        </div>
+                                        <div class="text-center text-xs font-bold py-1">
+                                            {{ $t("servosResourcePin") }}
+                                        </div>
+                                        <template v-for="servo in servoResources" :key="'servo' + servo.index">
+                                            <div class="text-center text-sm py-1">
+                                                {{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}
+                                            </div>
+                                            <USelect
+                                                :model-value="servo.pin"
+                                                :items="resourcePinOptions"
+                                                size="xs"
+                                                class="w-full"
+                                                @update:model-value="(val) => onServoPinChange(servo.index, val)"
+                                            />
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
-                            <UProgress
-                                orientation="vertical"
-                                inverted
-                                :model-value="getBarHeight(servoData[i - 1] ?? 1500)"
-                                :max="100"
-                                color="warning"
-                                size="2xl"
-                                :ui="{
-                                    root: '!w-full',
-                                    base: '!w-full !rounded-md border border-(--ui-border)',
-                                    indicator: '!rounded-none !transition-none opacity-(--bar-opacity)',
-                                }"
-                                class="h-full"
-                            />
-                        </li>
-                    </ul>
-                </UiBox>
+                            <p class="text-xs text-muted mt-3">{{ $t("servosResourceEditHint") }}</p>
+                        </template>
+                    </UiBox>
+                </div>
             </div>
         </div>
 
@@ -169,6 +235,14 @@ const servoConfigs = reactive([]);
 const servoData = reactive([]);
 const originalConfigs = ref("");
 
+// Resource assignment state
+const motorResources = reactive([]);
+const servoResources = reactive([]);
+const hasResourceData = ref(false);
+const resourcesModified = ref(false);
+// Initial pins from firmware so they remain selectable after edits
+const initialPins = ref([]);
+
 const { addInterval } = useInterval();
 const { addTimeout } = useTimeout();
 
@@ -184,6 +258,28 @@ const rateOptions = computed(() => {
     }
     return opts;
 });
+
+// Stable union of firmware-reported pins plus any currently assigned pins so
+// previously assigned values remain selectable for swaps/reverts.
+const availablePins = computed(() => {
+    const pins = new Set(initialPins.value);
+    for (const motor of motorResources) {
+        if (motor.pin && motor.pin !== "NONE") {
+            pins.add(motor.pin);
+        }
+    }
+    for (const servo of servoResources) {
+        if (servo.pin && servo.pin !== "NONE") {
+            pins.add(servo.pin);
+        }
+    }
+    return Array.from(pins).sort();
+});
+
+const resourcePinOptions = computed(() => [
+    { value: "NONE", label: "NONE" },
+    ...availablePins.value.map((pin) => ({ value: pin, label: pin })),
+]);
 
 // Bar height as percentage (0-100) for UProgress
 function getBarHeight(value) {
@@ -258,6 +354,57 @@ function getServoData() {
     });
 }
 
+// Populate motor/servo resource state from FC and seed initialPins.
+function loadResourceData() {
+    const pins = new Set();
+
+    motorResources.length = 0;
+    if (FC.MOTOR_RESOURCES && FC.MOTOR_RESOURCES.length > 0) {
+        for (const resource of FC.MOTOR_RESOURCES) {
+            motorResources.push({ ...resource });
+            if (resource.pin && resource.pin !== "NONE") {
+                pins.add(resource.pin);
+            }
+        }
+    }
+
+    servoResources.length = 0;
+    if (FC.SERVO_RESOURCES && FC.SERVO_RESOURCES.length > 0) {
+        for (const resource of FC.SERVO_RESOURCES) {
+            servoResources.push({ ...resource });
+            if (resource.pin && resource.pin !== "NONE") {
+                pins.add(resource.pin);
+            }
+        }
+    }
+
+    initialPins.value = Array.from(pins).sort();
+    hasResourceData.value = motorResources.length > 0 || servoResources.length > 0;
+    resourcesModified.value = false;
+}
+
+// Shared handler for motor (resourceType 0) and servo (resourceType 1) pin updates.
+function onResourcePinChange(resourceType, resources, index, newPin) {
+    const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
+
+    resources[index].pin = newPin;
+    resources[index].ioTag = ioTag;
+    resourcesModified.value = true;
+
+    const label = resourceType === 0 ? "Motor" : "Servo";
+    mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
+        console.log(`${label} ${index + 1} pin set to ${newPin}`);
+    });
+}
+
+function onMotorPinChange(index, newPin) {
+    onResourcePinChange(0, motorResources, index, newPin);
+}
+
+function onServoPinChange(index, newPin) {
+    onResourcePinChange(1, servoResources, index, newPin);
+}
+
 async function loadServoData() {
     if (!FC.CONFIG?.apiVersion) {
         isSupported.value = false;
@@ -270,6 +417,16 @@ async function loadServoData() {
         await MSP.promise(MSPCodes.MSP_SERVO_MIX_RULES);
         await MSP.promise(MSPCodes.MSP_RC);
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
+
+        // Resource data is optional - older firmware does not support MSP2_MOTOR_SERVO_RESOURCE.
+        try {
+            await MSP.promise(MSPCodes.MSP2_MOTOR_SERVO_RESOURCE);
+            loadResourceData();
+        } catch {
+            console.log("Resource data not available (firmware may not support MSP2_MOTOR_SERVO_RESOURCE)");
+            hasResourceData.value = false;
+        }
+
         initializeUI();
     } catch (e) {
         console.error("Failed to load servo configs", e);
