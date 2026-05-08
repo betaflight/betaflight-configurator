@@ -8,21 +8,28 @@ const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
 const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 
-// Functions the firmware marks as ADJUSTMENT_MODE_SELECT (no center/scale).
-// Indices match the adjustmentFunction enum in rc_adjustments.h, cross-checked
-// against defaultAdjustmentConfigs[] in rc_adjustments.c:
-//   12: ADJUSTMENT_RATE_PROFILE
-//   24: ADJUSTMENT_HORIZON_STRENGTH
-//   29: ADJUSTMENT_PID_AUDIO
-//   33: ADJUSTMENT_OSD_PROFILE
-//   34: ADJUSTMENT_LED_PROFILE
-//   35: ADJUSTMENT_LED_DIMMER
-//   36: ADJUSTMENT_SIMPLIFIED_MASTER_MULTIPLIER
-//   37: ADJUSTMENT_BATTERY_PROFILE
-// 34-37 are not currently reachable through the function dropdown
-// (adjustmentFunctionCount caps at 34) but are listed for correctness when a
-// future API version raises that cap.
-const SELECT_MODE_FUNCTIONS = new Set([12, 24, 29, 33, 34, 35, 36, 37]);
+// Wire u8 values whose firmware dispatch entry is ADJUSTMENT_MODE_SELECT
+// (i.e. no center/scale).
+//
+// IMPORTANT: these indices are NOT positions in the adjustmentFunction_e enum.
+// Firmware looks up the configured u8 via:
+//   defaultAdjustmentConfigs[adjustmentConfig - 1]   (rc_adjustments.c)
+// and that table was never extended to include the per-axis RC rates / expo
+// (enum values 25-28: ROLL_RC_RATE, PITCH_RC_RATE, ROLL_RC_EXPO, PITCH_RC_EXPO),
+// so dispatch table indices shift up by 4 from enum value 25 onward. The
+// configurator's adjustmentsFunctionN locale labels reflect the dispatch
+// behaviour, not the enum, which is what users actually experience on hardware.
+//
+// What this set means in terms of what the FC actually fires for each u8:
+//   12: RATE_PROFILE
+//   24: HORIZON_STRENGTH
+//   25: PID_AUDIO
+//   29: OSD_PROFILE
+//   30: LED_PROFILE
+//   31: LED_DIMMER
+//   32: SIMPLIFIED_MASTER_MULTIPLIER
+//   33: BATTERY_PROFILE
+const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33]);
 
 export function getAdjustmentMode(adjustmentFunction, adjustmentCenter) {
     if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) {
