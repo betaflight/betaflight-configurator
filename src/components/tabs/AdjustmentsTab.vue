@@ -220,7 +220,7 @@ onMounted(async () => {
 .adjustments-header,
 .adjustment {
     display: grid;
-    grid-template-columns: 3.5rem 5rem 1fr 13rem 5rem 7rem 4.5rem 4.5rem;
+    grid-template-columns: 3.5rem 5rem 1fr 13rem 5rem 7rem 5rem 5rem;
     gap: 12px;
     padding: 12px 16px;
 }
