@@ -8,21 +8,21 @@ const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
 const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 
-// Functions the configurator treats as ADJUSTMENT_MODE_SELECT (no center/scale).
-// Indices map to the adjustmentFunction enum in rc_adjustments.h:
+// Functions the firmware marks as ADJUSTMENT_MODE_SELECT (no center/scale).
+// Indices match the adjustmentFunction enum in rc_adjustments.h, cross-checked
+// against defaultAdjustmentConfigs[] in rc_adjustments.c:
 //   12: ADJUSTMENT_RATE_PROFILE
 //   24: ADJUSTMENT_HORIZON_STRENGTH
-//   25: ADJUSTMENT_ROLL_RC_RATE
 //   29: ADJUSTMENT_PID_AUDIO
-//   30: ADJUSTMENT_PITCH_F
-//   31: ADJUSTMENT_ROLL_F
-//   32: ADJUSTMENT_YAW_F
 //   33: ADJUSTMENT_OSD_PROFILE
-// NOTE: this set's membership does not exactly match the firmware's SELECT-mode
-// list (firmware has 12, 24, 29, 33, 34, 35, 36, 37). Reconciling that — and
-// adding the missing LED/Simplified Master Multiplier/Battery Profile entries
-// — is tracked separately so as not to change behaviour from this PR.
-const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33]);
+//   34: ADJUSTMENT_LED_PROFILE
+//   35: ADJUSTMENT_LED_DIMMER
+//   36: ADJUSTMENT_SIMPLIFIED_MASTER_MULTIPLIER
+//   37: ADJUSTMENT_BATTERY_PROFILE
+// 34-37 are not currently reachable through the function dropdown
+// (adjustmentFunctionCount caps at 34) but are listed for correctness when a
+// future API version raises that cap.
+const SELECT_MODE_FUNCTIONS = new Set([12, 24, 29, 33, 34, 35, 36, 37]);
 
 export function getAdjustmentMode(adjustmentFunction, adjustmentCenter) {
     if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) {
