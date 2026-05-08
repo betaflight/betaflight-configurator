@@ -7,7 +7,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1196,6 +1196,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             FC.FILTER_CONFIG.gyro_rpm_notch_weights.push(data.readU8());
                         }
                     }
+                    // Introduced in 1.49
+                    if (data.remaining() >= 1) {
+                        FC.FILTER_CONFIG.gyro_lowpass_dyn_expo = data.readU8();
+                    }
                     break;
                 case MSPCodes.MSP_SET_PID_ADVANCED:
                     console.log("Advanced PID settings saved");
@@ -2197,6 +2201,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 for (let i = 0; i < 3; i++) {
                     buffer.push8(FC.FILTER_CONFIG.gyro_rpm_notch_weights[i]);
                 }
+            }
+
+            // Introduced in 1.49
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push8(FC.FILTER_CONFIG.gyro_lowpass_dyn_expo);
             }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:

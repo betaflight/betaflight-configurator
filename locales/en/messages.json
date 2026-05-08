@@ -5073,6 +5073,9 @@
     "pidTuningDTermLowpassDynExpo": {
         "message": "Dynamic Curve Expo"
     },
+    "pidTuningGyroLowpassDynExpo": {
+        "message": "Dynamic Curve Expo"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filter"
     },

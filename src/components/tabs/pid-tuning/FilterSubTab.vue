@@ -125,6 +125,19 @@
                                 :disabled="gyroInputsDisabled"
                             />
                         </div>
+                        <div v-if="gyroLowpassMode === 1 && supportsGyroLowpassDynExpo" class="flex flex-col gap-1">
+                            <span class="text-xs text-dimmed">{{ $t("pidTuningGyroLowpassDynExpo") }}</span>
+                            <UInputNumber
+                                size="xs"
+                                orientation="vertical"
+                                class="w-16"
+                                v-model="gyro_lowpass_dyn_expo"
+                                :step="1"
+                                :min="0"
+                                :max="10"
+                                :disabled="gyroInputsDisabled"
+                            />
+                        </div>
                         <div class="flex flex-col gap-1">
                             <span class="text-xs text-dimmed">{{ $t("pidTuningLowpassFilterType") }}</span>
                             <USelect v-model="gyro_lowpass_type" :items="filterTypeItems" class="w-24" />
@@ -578,7 +591,7 @@ import {
     NON_EXPERT_SLIDER_MAX_DTERM,
 } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_48 } from "@/js/data_storage";
+import { API_VERSION_1_48, API_VERSION_1_49 } from "@/js/data_storage";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -932,6 +945,7 @@ const gyro_notch2_cutoff = computed({
 
 // RPM Filter
 const hasExtendedRpmFilter = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48));
+const supportsGyroLowpassDynExpo = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49));
 const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry ?? false);
 
 const rpmFilterEnabled = computed({
@@ -1070,6 +1084,11 @@ const dterm_lowpass_dyn_max_hz = computed({
 const dyn_lpf_curve_expo = computed({
     get: () => FC.FILTER_CONFIG.dyn_lpf_curve_expo ?? 5,
     set: (value) => (FC.FILTER_CONFIG.dyn_lpf_curve_expo = value),
+});
+
+const gyro_lowpass_dyn_expo = computed({
+    get: () => FC.FILTER_CONFIG.gyro_lowpass_dyn_expo ?? 5,
+    set: (value) => (FC.FILTER_CONFIG.gyro_lowpass_dyn_expo = value),
 });
 
 // D-term Lowpass 2
