@@ -22,6 +22,14 @@ export function useAdjustmentsData(adjustments, t) {
         return options;
     });
 
+    // NOTE: the localizations adjustmentsFunction25..adjustmentsFunction33 (and the
+    // 34-entry cap for API >= 1.48) appear to be stale relative to the firmware
+    // adjustmentFunction_e enum, which has had ROLL_RC_RATE/PITCH_RC_RATE/ROLL_RC_EXPO/
+    // PITCH_RC_EXPO at indices 25-28 since 2018 (firmware ee65eba88). The configurator
+    // sends adjustmentFunction over MSP as a raw u8 with no translation, so a user
+    // picking the entry labeled "PID-Audio Selection" (configurator label for index 25)
+    // actually configures ADJUSTMENT_ROLL_RC_RATE on the FC. See the open RFC for the
+    // full analysis and proposed remediation paths.
     const adjustmentFunctionCount = computed(() => {
         return fcStore.isApiVersionSupported(API_VERSION_1_48) ? 34 : 33;
     });
