@@ -10,7 +10,7 @@
             >
                 <div
                     ref="cliWindowRef"
-                    class="cli-window h-full w-full p-[5px] overflow-y-scroll overflow-x-hidden font-mono text-white contain-content"
+                    class="cli-window h-full w-full p-[5px] overflow-y-scroll overflow-x-hidden font-mono text-white [contain:content]"
                 >
                     <div ref="windowWrapperRef" class="cli-wrapper select-text whitespace-pre-wrap h-0"></div>
                 </div>

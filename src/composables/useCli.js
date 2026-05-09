@@ -452,10 +452,10 @@ export function useCli() {
                 }
                 break;
             case 60:
-                cliBuffer += "&lt";
+                cliBuffer += "&lt;";
                 break;
             case 62:
-                cliBuffer += "&gt";
+                cliBuffer += "&gt;";
                 break;
             case backspaceCode:
                 cliBuffer = cliBuffer.slice(0, -1);
