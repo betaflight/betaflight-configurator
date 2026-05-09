@@ -5,6 +5,7 @@ npm-debug.log*
 
 # App Build process
 cache/
+.cache/
 apps/
 dist/
 debug/
