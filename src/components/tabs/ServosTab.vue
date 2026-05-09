@@ -616,13 +616,16 @@ function loadResourceData() {
 // Shared handler for motor (resourceType 0) and servo (resourceType 1) pin updates.
 //
 // Smart-picker dropdowns may emit encoded values like "C06:1" (pin:AF) when
-// an option requires an alt-AF timer remap. We strip down to the bare pin
-// here and write only the ioTag via MSP2 — the matching `timer <pad> AF<n>`
-// CLI write is a follow-up; for now picking an alt-AF option is equivalent
-// to picking the bare pin.
-function onResourcePinChange(resourceType, resources, index, newValue) {
+// an option requires an alt-AF timer remap. We decode here and:
+//   1. If the option specifies an alt AF, send `timer <pad> AF<n>` via CLI
+//      first so the pad is on the correct timer when the new ioTag binds.
+//   2. Write the ioTag via MSP2_SET_MOTOR_SERVO_RESOURCE.
+// Both writes land in firmware RAM immediately; clicking Save persists them
+// to EEPROM via mspHelper.writeConfiguration so they survive reboot.
+async function onResourcePinChange(resourceType, resources, index, newValue) {
     const decoded = parseResourceOptionValue(newValue);
     const newPin = decoded?.pin ?? newValue;
+    const newAf = decoded?.af ?? null;
 
     const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
 
@@ -630,9 +633,18 @@ function onResourcePinChange(resourceType, resources, index, newValue) {
     resources[index].ioTag = ioTag;
     resourcesModified.value = true;
 
+    if (newAf != null && newPin !== "NONE") {
+        try {
+            await readCli(`timer ${newPin} AF${newAf}`);
+        } catch (e) {
+            console.warn(`Servos: timer ${newPin} AF${newAf} write failed`, e);
+            // Continue with MSP write anyway — pad falls back to its default AF.
+        }
+    }
+
     const label = resourceType === 0 ? "Motor" : "Servo";
     mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
-        console.log(`${label} ${index + 1} pin set to ${newPin}`);
+        console.log(`${label} ${index + 1} pin set to ${newPin}${newAf != null ? ` AF${newAf}` : ""}`);
     });
 }
 
