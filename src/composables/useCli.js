@@ -145,6 +145,7 @@ export function useCli() {
 
     let outputBuffer = "";
     let outputFlushRaf = null;
+    let copyResetTimeout = null;
     // true while the user is at (or near) the bottom of the output — maintained by a
     // passive scroll listener so flushOutput never needs to read layout properties.
     let scrollPinned = true;
@@ -300,13 +301,15 @@ export function useCli() {
         const text = formatContentWithSupportId(outputHistory, state.lastSupportId);
 
         function onCopySuccessful() {
-            const origText = state.copyButtonText;
-            const origWidth = state.copyButtonWidth;
+            // Cancel any in-flight reset so a rapid second click cannot leave the
+            // button stuck on the "Copied!" label (origText would capture "Copied!").
+            if (copyResetTimeout) {
+                clearTimeout(copyResetTimeout);
+            }
             state.copyButtonText = i18n.getMessage("cliCopySuccessful");
-            state.copyButtonWidth = origWidth;
-            setTimeout(() => {
-                state.copyButtonText = origText;
-                state.copyButtonWidth = "";
+            copyResetTimeout = setTimeout(() => {
+                state.copyButtonText = i18n.getMessage("cliCopyToClipboardBtn");
+                copyResetTimeout = null;
             }, 1500);
         }
 
@@ -621,6 +624,11 @@ export function useCli() {
             scrollListener = null;
         }
         scrollPinned = true;
+
+        if (copyResetTimeout) {
+            clearTimeout(copyResetTimeout);
+            copyResetTimeout = null;
+        }
 
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
             send(getCliCommand("exit\r", cliBuffer), function () {
