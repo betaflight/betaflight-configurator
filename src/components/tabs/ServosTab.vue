@@ -141,6 +141,30 @@
                             {{ $t("servosResourceNotAvailable") }}
                         </div>
                         <template v-else>
+                            <div v-if="padDefaultsSource" class="flex items-center gap-2 mb-3">
+                                <UTooltip
+                                    :text="
+                                        padDefaultsSource === 'bundle'
+                                            ? $t('servosResourceSrcFirmwareTip')
+                                            : $t('servosResourceSrcHeuristicTip')
+                                    "
+                                >
+                                    <span
+                                        class="text-[10px] uppercase font-bold px-2 py-0.5 rounded"
+                                        :class="
+                                            padDefaultsSource === 'bundle'
+                                                ? 'bg-green-600 text-white'
+                                                : 'bg-amber-500 text-zinc-900'
+                                        "
+                                    >
+                                        {{
+                                            padDefaultsSource === "bundle"
+                                                ? $t("servosResourceSrcFirmware")
+                                                : $t("servosResourceSrcHeuristic")
+                                        }}
+                                    </span>
+                                </UTooltip>
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <h4 class="text-sm font-bold mb-2">{{ $t("servosMotorResources") }}</h4>
@@ -155,8 +179,12 @@
                                             {{ $t("servosResourcePin") }}
                                         </div>
                                         <template v-for="motor in motorResources" :key="'motor' + motor.index">
-                                            <div class="text-center text-sm py-1">
-                                                {{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}
+                                            <div class="text-sm py-1 flex items-center justify-center gap-2">
+                                                <span
+                                                    class="inline-block size-2 rounded-full shrink-0"
+                                                    :style="{ backgroundColor: motorDotColor(motor.index) }"
+                                                />
+                                                <span>{{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}</span>
                                             </div>
                                             <USelect
                                                 :model-value="motor.pin"
@@ -181,8 +209,17 @@
                                             {{ $t("servosResourcePin") }}
                                         </div>
                                         <template v-for="servo in servoResources" :key="'servo' + servo.index">
-                                            <div class="text-center text-sm py-1">
-                                                {{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}
+                                            <div class="text-sm py-1 flex items-center justify-center gap-2">
+                                                <span
+                                                    v-if="servoDotColor(servo.index)"
+                                                    class="inline-block size-2 rounded-full shrink-0"
+                                                    :style="{ backgroundColor: servoDotColor(servo.index) }"
+                                                />
+                                                <span
+                                                    class="opacity-100"
+                                                    :class="{ 'opacity-50': !servoDotColor(servo.index) }"
+                                                    >{{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}</span
+                                                >
                                             </div>
                                             <USelect
                                                 :model-value="servo.pin"
@@ -205,7 +242,13 @@
         <!-- Save button toolbar -->
         <div v-if="isSupported" class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton :label="$t('servosButtonSave')" :disabled="!configHasChanged" @click="saveServoConfig" />
+                <UButton
+                    :label="$t('servosButtonSave')"
+                    :disabled="!configHasChanged"
+                    color="warning"
+                    variant="solid"
+                    @click="saveServoConfig"
+                />
             </div>
         </div>
     </BaseTab>
@@ -226,6 +269,8 @@ import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import { useInterval } from "@/composables/useInterval";
 import { useTimeout } from "@/composables/useTimeout";
+import { lookupTargetDefaults } from "@/js/utils/targetDefaults";
+import { servoOutputColor, pwmSlotToServoIndex } from "@/js/utils/servoMixerModel";
 
 const { t } = useTranslation();
 
@@ -242,6 +287,13 @@ const hasResourceData = ref(false);
 const resourcesModified = ref(false);
 // Initial pins from firmware so they remain selectable after edits
 const initialPins = ref([]);
+
+// Bundled silkscreen defaults (Mx / LED_STRIP labels) keyed off FC.CONFIG.boardName.
+// padDefaultsSource: 'bundle' when target-defaults.json hit; null otherwise.
+// In a future iteration this can chain to a CLI-scan tier, then a localStorage
+// snapshot tier — see src/js/utils/targetDefaults.js for the lookup helper.
+const padDefaults = ref(null);
+const padDefaultsSource = ref(null);
 
 const { addInterval } = useInterval();
 const { addTimeout } = useTimeout();
@@ -276,9 +328,37 @@ const availablePins = computed(() => {
     return Array.from(pins).sort();
 });
 
+// Per-row color cue. Motor rows use a static palette indexed by PWM slot;
+// servo rows are mixer-aware — slot N drives a logical servoIndex_e
+// (FLAPS / FLAPPERON_X / RUDDER / ELEVATOR / THROTTLE) that varies by
+// mixer, so we colour by that logical index to keep the dot consistent
+// with the smix output column on the same servo.
+function motorDotColor(slotIndex) {
+    return servoOutputColor(slotIndex);
+}
+function servoDotColor(slotIndex) {
+    const mixerMode = FC.MIXER_CONFIG?.mixer ?? null;
+    const idx = mixerMode != null ? pwmSlotToServoIndex(slotIndex, mixerMode) : slotIndex;
+    if (idx == null) return null;
+    return servoOutputColor(idx);
+}
+
+// Annotate a pin with its silkscreen label when bundle defaults are loaded.
+// "C06" → "C06 (M1)" when C06 is the target's MOTOR 1 pad; LED_STRIP and
+// other peripheral pads get similar suffixes.
+function silkscreenLabel(pin) {
+    if (!padDefaults.value) return pin;
+    const motors = padDefaults.value.motors ?? [];
+    const motorIdx = motors.indexOf(pin);
+    if (motorIdx >= 0) return `${pin} (M${motorIdx + 1})`;
+    const ledStrips = padDefaults.value.ledStrips ?? [];
+    if (ledStrips.includes(pin)) return `${pin} (LED)`;
+    return pin;
+}
+
 const resourcePinOptions = computed(() => [
     { value: "NONE", label: "NONE" },
-    ...availablePins.value.map((pin) => ({ value: pin, label: pin })),
+    ...availablePins.value.map((pin) => ({ value: pin, label: silkscreenLabel(pin) })),
 ]);
 
 // Bar height as percentage (0-100) for UProgress
@@ -354,6 +434,27 @@ function getServoData() {
     });
 }
 
+// Lookup bundled silkscreen defaults for the connected board. Tier-0 of
+// the padDefaults chain — when the target ships with `betaflight/unified-targets`
+// metadata we use it directly; otherwise the dropdown falls back to bare
+// pin labels (port+pin, no Mx annotation).
+function loadPadDefaults() {
+    const boardName = FC.CONFIG?.boardName;
+    if (!boardName) {
+        padDefaults.value = null;
+        padDefaultsSource.value = null;
+        return;
+    }
+    const bundled = lookupTargetDefaults(boardName);
+    if (bundled) {
+        padDefaults.value = bundled;
+        padDefaultsSource.value = "bundle";
+    } else {
+        padDefaults.value = null;
+        padDefaultsSource.value = null;
+    }
+}
+
 // Populate motor/servo resource state from FC and seed initialPins.
 function loadResourceData() {
     const pins = new Set();
@@ -411,6 +512,8 @@ async function loadServoData() {
         GUI.content_ready();
         return;
     }
+
+    loadPadDefaults();
 
     try {
         await MSP.promise(MSPCodes.MSP_SERVO_CONFIGURATIONS);

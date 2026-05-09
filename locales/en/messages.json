@@ -3139,6 +3139,33 @@
     "servosResourceEditHint": {
         "message": "Select a pin from the dropdown to reassign motor or servo outputs. Changes are applied immediately but require Save and a reboot to take effect."
     },
+    "servosResourceSmartLoading": {
+        "message": "Loading timer and DMA candidates..."
+    },
+    "servosResourceSmartReady": {
+        "message": "Timer-aware pad candidates are available."
+    },
+    "servosResourceSmartUnavailable": {
+        "message": "Timer-aware candidates are unavailable; showing current resource pins."
+    },
+    "servosResourceSrcFirmware": {
+        "message": "firmware-authoritative"
+    },
+    "servosResourceSrcFirmwareTip": {
+        "message": "Pad → silkscreen mapping comes from the firmware build's resource defaults; M1/M2 labels in the dropdown are authoritative."
+    },
+    "servosResourceSrcHeuristic": {
+        "message": "heuristic"
+    },
+    "servosResourceSrcHeuristicTip": {
+        "message": "Pad → silkscreen mapping was inferred from a scan or fallback snapshot, so M1/M2 labels are suppressed in the dropdown to avoid attributing the wrong silkscreen number."
+    },
+    "servosResourceSetOk": {
+        "message": "$t(eeprom_saved_ok.message) {{resource}} {{index}} -> {{pin}}"
+    },
+    "servosResourceSetFailed": {
+        "message": "Resource assignment failed"
+    },
     "gpsHead": {
         "message": "General"
     },
