@@ -954,12 +954,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Place board or frame on <strong>leveled</strong> surface, proceed with calibration, ensure platform is not moving during calibration period"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrate Magnetometer"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Move multirotor at least <strong>360</strong> degrees on all axis of rotation, you have 30 seconds to perform this task"
     },
@@ -1567,12 +1561,6 @@
     "configurationActiveImu": {
         "message": "Active IMU"
     },
-    "configurationSensors": {
-        "message": "Sensor Configuration"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configure additional sensors and advanced features."
-    },
     "configurationMagAlignmentHelp": {
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
     },
@@ -1618,30 +1606,6 @@
     "configurationBoardAlignmentYaw": {
         "message": "Yaw°"
     },
-    "configurationGyroAlignment": {
-        "message": "Gyro Alignment"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Active IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Select which gyro to use as the primary gyro. The primary gyro is used for stabilization and control. If you have only one gyro, it will be selected automatically.<br><br>It is not always possible to enable multiple gyros, when they are of different types or brands."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationMagAlignment": {
         "message": "Magnetometer Alignment"
     },
@@ -1684,14 +1648,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "GYRO Alignment"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Warning: No Gyro/Acc found"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "First"
@@ -1702,29 +1660,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Both"
     },
-    "configurationSensorAlignment": {
-        "message": "Sensor Alignment"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "At least one gyro must remain enabled. If you disable all gyros, the flight controller will not work properly."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "First GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Second GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "ACCEL Alignment"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Default"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Custom"
-    },
-    "configurationAccelTrims": {
-        "message": "Accelerometer Trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Accelerometer Roll Trim"
@@ -7530,12 +7476,6 @@
     },
     "configurationMagHardware": {
         "message": "Magnetometer"
-    },
-    "configurationMagCalibrate": {
-        "message": "Calibrate"
-    },
-    "configurationMagDeclinationAuto": {
-        "message": "Auto"
     },
     "configurationMagDeclinationNoGps": {
         "message": "Could not determine location. Connect a GPS module or allow browser location access."
