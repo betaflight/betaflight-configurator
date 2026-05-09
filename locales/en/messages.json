@@ -7561,6 +7561,9 @@
     "configurationMagFieldStrengthHelp": {
         "message": "The total intensity of the earth's magnetic field at your location in nanotesla (nT). Typical values range from 25,000 to 65,000 nT"
     },
+    "sensorConfigMagDetect": {
+        "message": "Detect"
+    },
     "sensorConfigMagUpdate": {
         "message": "Update"
     },

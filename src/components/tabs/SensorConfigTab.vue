@@ -363,7 +363,7 @@
                             <UButton
                                 size="xs"
                                 variant="outline"
-                                :label="$t('sensorConfigMagUpdate')"
+                                :label="declinationWarning ? $t('sensorConfigMagUpdate') : $t('sensorConfigMagDetect')"
                                 :disabled="isFetchingDeclination"
                                 :loading="isFetchingDeclination"
                                 @click="autoSetDeclination"
