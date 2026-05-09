@@ -199,7 +199,7 @@
                                                 <span>{{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}</span>
                                             </div>
                                             <USelect
-                                                :model-value="motor.pin"
+                                                :model-value="encodedPinValue(motor)"
                                                 :items="buildMotorPinOptions(motor)"
                                                 size="xs"
                                                 class="w-full"
@@ -236,7 +236,7 @@
                                                 >
                                             </div>
                                             <USelect
-                                                :model-value="servo.pin"
+                                                :model-value="encodedPinValue(servo)"
                                                 :items="buildServoPinOptions(servo)"
                                                 size="xs"
                                                 class="w-full"
@@ -296,7 +296,11 @@ import {
 } from "@/js/utils/cliOneShot";
 import { analyzeResources } from "@/js/utils/resourceAnalyzer";
 import { mcuFamilyFromName } from "@/js/utils/mcuFamily";
-import { resourceOptions, parseResourceOptionValue } from "@/js/utils/motorServoResourceCandidates";
+import {
+    resourceOptions,
+    parseResourceOptionValue,
+    encodeResourceOptionValue,
+} from "@/js/utils/motorServoResourceCandidates";
 
 const { t } = useTranslation();
 
@@ -473,6 +477,34 @@ function withNone(items) {
 function isExpertMode() {
     return Boolean(typeof window !== "undefined" && window.vm?.expertMode);
 }
+// A pin can only drive one PWM output at a time. Drop dropdown options
+// whose pin is already bound to another row, UNLESS the option carries a
+// release annotation (motor-release / servo-release / led-strip /
+// uart-release) — those are the smart picker's deliberate "swap with
+// these CLI changes" candidates and should remain selectable.
+function isOptionViable(option, currentResource, kind) {
+    if (option.value === "NONE") return true;
+    if (
+        option.source === "motor-release" ||
+        option.source === "servo-release" ||
+        option.source === "led-strip" ||
+        option.source === "uart-release"
+    ) {
+        return true;
+    }
+    const decoded = parseResourceOptionValue(option.value);
+    const pin = decoded?.pin ?? option.value;
+    if (!pin || pin === "NONE") return true;
+    for (const m of motorResources) {
+        if (kind === "motor" && m.index === currentResource.index) continue;
+        if (m.pin === pin && m.pin !== "NONE") return false;
+    }
+    for (const s of servoResources) {
+        if (kind === "servo" && s.index === currentResource.index) continue;
+        if (s.pin === pin && s.pin !== "NONE") return false;
+    }
+    return true;
+}
 function buildMotorPinOptions(motor) {
     const opts = resourceOptions({
         kind: "motor",
@@ -484,7 +516,9 @@ function buildMotorPinOptions(motor) {
         allowLedStrip: true,
         expertMode: isExpertMode(),
     });
-    return withNone(opts.map((o) => ({ value: o.value, label: o.label })));
+    return withNone(
+        opts.filter((o) => isOptionViable(o, motor, "motor")).map((o) => ({ value: o.value, label: o.label })),
+    );
 }
 function buildServoPinOptions(servo) {
     const opts = resourceOptions({
@@ -497,7 +531,9 @@ function buildServoPinOptions(servo) {
         allowLedStrip: true,
         expertMode: isExpertMode(),
     });
-    return withNone(opts.map((o) => ({ value: o.value, label: o.label })));
+    return withNone(
+        opts.filter((o) => isOptionViable(o, servo, "servo")).map((o) => ({ value: o.value, label: o.label })),
+    );
 }
 
 // Run a one-shot CLI scan after the resource panel has populated. Reads
@@ -633,6 +669,11 @@ async function onResourcePinChange(resourceType, resources, index, newValue) {
     resources[index].ioTag = ioTag;
     resourcesModified.value = true;
 
+    // Track AF on the resource so the dropdown's model-value can match the
+    // alt-AF option after pick (the option's value is encoded as `pin:af`,
+    // matches what encodedPinValue(resource) returns below).
+    resources[index].af = newAf;
+
     if (newAf != null && newPin !== "NONE") {
         try {
             await readCli(`timer ${newPin} AF${newAf}`);
@@ -646,6 +687,15 @@ async function onResourcePinChange(resourceType, resources, index, newValue) {
     mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
         console.log(`${label} ${index + 1} pin set to ${newPin}${newAf != null ? ` AF${newAf}` : ""}`);
     });
+}
+
+// Returns the dropdown value (encoded as `pin:af` for alt-AF entries) so
+// USelect can match the right option after a pick. Without this the dropdown
+// shows the default-AF entry even when the user picked an alt-AF one,
+// because USelect matches by value and motor.pin alone is the bare pin.
+function encodedPinValue(resource) {
+    if (!resource?.pin || resource.pin === "NONE") return "NONE";
+    return resource.af != null ? encodeResourceOptionValue(resource.pin, resource.af) : resource.pin;
 }
 
 function onMotorPinChange(index, newPin) {
