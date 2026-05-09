@@ -145,6 +145,10 @@ export function useCli() {
 
     let outputBuffer = "";
     let outputFlushRaf = null;
+    // true while the user is at (or near) the bottom of the output — maintained by a
+    // passive scroll listener so flushOutput never needs to read layout properties.
+    let scrollPinned = true;
+    let scrollListener = null;
 
     const flushOutput = () => {
         outputFlushRaf = null;
@@ -154,13 +158,10 @@ export function useCli() {
             // every flush re-parsed the entire growing output on each animation frame.
             windowWrapperRef.value.insertAdjacentHTML("beforeend", outputBuffer);
             outputBuffer = "";
-            if (cliWindowRef.value) {
-                const el = cliWindowRef.value;
-                // Only auto-scroll when the user is already at or near the bottom.
-                // Preserves scroll position when the user has scrolled up to review output.
-                if (el.scrollHeight - el.scrollTop - el.clientHeight < 40) {
-                    el.scrollTop = el.scrollHeight;
-                }
+            if (scrollPinned && cliWindowRef.value) {
+                // Writing MAX_SAFE_INTEGER avoids reading scrollHeight (which would force a
+                // synchronous layout recalc). The browser clamps scrollTop to the actual max.
+                cliWindowRef.value.scrollTop = Number.MAX_SAFE_INTEGER;
             }
         }
     };
@@ -195,6 +196,7 @@ export function useCli() {
     const clearHistory = () => {
         outputHistory = "";
         outputBuffer = "";
+        scrollPinned = true;
         if (windowWrapperRef.value) {
             windowWrapperRef.value.innerHTML = "";
         }
@@ -565,6 +567,18 @@ export function useCli() {
         // Wait for DOM to be ready
         await nextTick();
 
+        // Track whether the user is scrolled to the bottom so flushOutput never
+        // needs to read layout-forcing properties (scrollHeight, clientHeight).
+        if (cliWindowRef.value) {
+            scrollListener = () => {
+                const el = cliWindowRef.value;
+                if (el) {
+                    scrollPinned = el.scrollTop + el.clientHeight >= el.scrollHeight - 40;
+                }
+            };
+            cliWindowRef.value.addEventListener("scroll", scrollListener, { passive: true });
+        }
+
         // Initialize CLI autocomplete cache builder
         CliAutoComplete.initialize(sendLine, writeToOutput);
 
@@ -601,6 +615,12 @@ export function useCli() {
             outputFlushRaf = null;
         }
         outputBuffer = "";
+
+        if (cliWindowRef.value && scrollListener) {
+            cliWindowRef.value.removeEventListener("scroll", scrollListener);
+            scrollListener = null;
+        }
+        scrollPinned = true;
 
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
             send(getCliCommand("exit\r", cliBuffer), function () {
