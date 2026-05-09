@@ -24,12 +24,16 @@ const BARE_BOARD_INDEX = (() => {
     const index = new Map();
     for (const [key, entry] of Object.entries(TARGETS)) {
         const board = entry?.boardName;
-        if (typeof board !== "string") continue;
+        if (typeof board !== "string") {
+            continue;
+        }
         // First-write-wins: if multiple manufacturers share a board name
         // (rare; would be an upstream conflict), keep the first occurrence
         // sorted alphabetically by key (Object.entries preserves insertion
         // order, and the bundle is alphabetised by key on write).
-        if (!index.has(board)) index.set(board, key);
+        if (!index.has(board)) {
+            index.set(board, key);
+        }
     }
     return index;
 })();
@@ -38,11 +42,19 @@ const BARE_BOARD_INDEX = (() => {
 // silicon-package suffixes like `(STM32F7X2)`, surrounding whitespace,
 // and uppercases the result.
 export function normaliseBoardName(raw) {
-    if (typeof raw !== "string") return "";
-    return raw
-        .replace(/\s*\([^)]*\)\s*$/, "")
-        .trim()
-        .toUpperCase();
+    if (typeof raw !== "string") {
+        return "";
+    }
+    let cleaned = raw.trim();
+    // Strip trailing silicon-package suffix like "(STM32F7X2)" without a
+    // regex (avoids ReDoS hotspots on adversarial input).
+    if (cleaned.endsWith(")")) {
+        const open = cleaned.lastIndexOf("(");
+        if (open > 0) {
+            cleaned = cleaned.slice(0, open).trim();
+        }
+    }
+    return cleaned.toUpperCase();
 }
 
 // Returns `{ source: "firmware", motors, ledStrips }` when a bundled
@@ -50,7 +62,9 @@ export function normaliseBoardName(raw) {
 // `smartResourceAnalysis.padDefaults`.
 export function lookupTargetDefaults(rawBoardName) {
     const key = normaliseBoardName(rawBoardName);
-    if (!key) return null;
+    if (!key) {
+        return null;
+    }
 
     const direct = TARGETS[key];
     if (direct) {

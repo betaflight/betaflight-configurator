@@ -1,12 +1,14 @@
 // Generic "send CLI command, capture output" helper + parsers for
-// the three introspection commands we lean on: `resource show`,
-// `timer show`, `dma show`. Wraps MSP.send_cli_command (msp.js) in
-// a Promise so callers can await structured output.
+// the introspection commands we lean on: `resource show`, `timer show`,
+// `timer <pad> list`, `dma show`. Wraps MSP.send_cli_command (msp.js)
+// in a Promise so callers can await structured output.
 //
-// Use for READ-ONLY CLI introspection. Write operations (mmix,
-// resource reassignment, save) keep going through wingMixerCli's
-// raw-serial path since `save` / `reboot` mid-MSP-framed-CLI has
-// edge cases.
+// Read AND single-shot write paths route through readCli — ServosTab's
+// applyReleaseLine and applyAfRemap send `resource <peripheral> ... NONE`
+// and `timer <pad> AF<n>` lines this way. The blanket "save / reboot"
+// flow still uses the raw-serial path (wingMixerCli) because `save` /
+// `reboot` mid-MSP-framed-CLI has edge cases that don't show up for
+// individual write commands.
 //
 // Format references below are from a bench-captured BF 4.6 session
 // on SPEEDYBEEF405WING; formats have been stable across BF 4.x.
@@ -18,22 +20,18 @@ const DEFAULT_TIMEOUT_MS = 3000;
 /**
  * Run a single CLI command and resolve with its output.
  *
- * Accumulates lines across multiple cli_callback invocations and settles
- * on a short quiescence window. Older BF firmware (4.5 and below) emits
- * END_OF_TEXT mid-response for long commands like `resource show`, which
- * fires the callback before the full output has arrived. The previous
- * "settle on first callback" behavior truncated those responses — e.g.
- * `resource show` on a stock 8-motor target showed only the first 4
- * motors in the analyzer. Newer BF emits a single END_OF_TEXT at the
- * end so the quiescence path collapses to the same one-shot behavior.
+ * Wraps master's queue-based MSP.send_cli_command, which delivers all
+ * output to its callback in one shot when the FC's END_OF_TEXT fires.
+ * Inter-command pacing (so the FC has time to drain its CLI buffer
+ * between back-to-back calls) is the caller's responsibility — see
+ * loadSmartResourceAnalysis for the throttle pattern this module's
+ * callers use on first-tab-load.
  *
  * @param {string} command - CLI command (no trailing newline)
  * @param {object} [opts]
- * @param {number} [opts.timeoutMs=3000]   - hard ceiling
- * @param {number} [opts.quiescenceMs=250] - settle once no new chunks
- *   arrive for this long. 250ms is conservative enough to span the
- *   inter-chunk gap on slow USB links yet short enough to keep the
- *   Hardware tab snappy.
+ * @param {number} [opts.timeoutMs=3000] - hard ceiling for the FC's
+ *   response. Caller should size this to the slowest command they
+ *   expect (`timer` dump on a busy board can take ~1.5s).
  * @returns {Promise<{lines: string[], raw: string}>}
  */
 export function readCli(command, opts = {}) {
@@ -44,7 +42,9 @@ export function readCli(command, opts = {}) {
         const accumulated = [];
 
         const finish = (err) => {
-            if (settled) return;
+            if (settled) {
+                return;
+            }
             settled = true;
             clearTimeout(hardTimer);
             if (err) {
@@ -52,7 +52,7 @@ export function readCli(command, opts = {}) {
                 return;
             }
             resolve({
-                lines: accumulated.map((l) => l.replace(/\s+$/, "")),
+                lines: accumulated.map((l) => l.trimEnd()),
                 raw: accumulated.join("\n"),
             });
         };
@@ -64,13 +64,17 @@ export function readCli(command, opts = {}) {
         MSP.send_cli_command(
             command,
             (lines, error) => {
-                if (settled) return;
+                if (settled) {
+                    return;
+                }
                 if (error) {
                     finish(error);
                     return;
                 }
                 if (Array.isArray(lines)) {
-                    for (const l of lines) accumulated.push(l);
+                    for (const l of lines) {
+                        accumulated.push(l);
+                    }
                 }
                 // Master's send_cli_command fires the callback once with the
                 // full lines array. Resolve immediately rather than waiting
@@ -87,17 +91,28 @@ export function readCli(command, opts = {}) {
 // Peripheral line body: "FREE" or "NAME" or "NAME INDEX".
 // NAME is upper-case letters and underscores (GYRO_CS, SPI_SDI,
 // LED_STRIP, USB, MOTOR, SERVO, SERIAL_TX, ADC_BATT, ...).
+// Special case: `dma show` emits UART DMA names with the index embedded
+// in the token (e.g. "USART2_TX", "UART6_RX") rather than space-separated.
+// Without unwrapping that, the analyzer drops null-index UART entries and
+// UART DMA disappears for boards that print this form.
 function parsePeripheralBody(body) {
     const trimmed = body.trim();
     if (!trimmed || trimmed === "FREE") {
         return { peripheral: "FREE", index: null };
     }
     const m = /^([A-Z][A-Z0-9_]*)(?:\s+(\d+))?$/.exec(trimmed);
-    if (!m) return null;
-    return {
-        peripheral: m[1],
-        index: m[2] ? Number(m[2]) : null,
-    };
+    if (!m) {
+        return null;
+    }
+    const peripheral = m[1];
+    let index = m[2] ? Number(m[2]) : null;
+    if (index === null) {
+        const uartMatch = /^(?:USART|UART)(\d+)_(?:TX|RX)$/.exec(peripheral);
+        if (uartMatch) {
+            index = Number(uartMatch[1]);
+        }
+    }
+    return { peripheral, index };
 }
 
 /**
@@ -124,28 +139,68 @@ function parsePeripheralBody(body) {
  * @param {string[]|string} input - lines array or raw multi-line string
  * @returns {Array<{pad: string, peripheral: string, index: number|null}>}
  */
+const PAD_RE = /^[A-Z]\d{2}$/i;
+const PERIPHERAL_NAME_RE = /^[A-Z][A-Z0-9_]*$/i;
+const DIGITS_RE = /^\d+$/;
+
+// Classic PAD:BODY format. Split on the first ":" with indexOf rather
+// than regex backtracking against `\s*:\s*`. Returns the parsed entry
+// or null when the line isn't this shape.
+function parseClassicResourceLine(line) {
+    const colonIdx = line.indexOf(":");
+    if (colonIdx <= 0) {
+        return null;
+    }
+    const head = line.slice(0, colonIdx).trim();
+    if (!PAD_RE.test(head)) {
+        return null;
+    }
+    const body = parsePeripheralBody(line.slice(colonIdx + 1).trim());
+    if (!body) {
+        return null;
+    }
+    return { pad: head.toUpperCase(), ...body };
+}
+
+// Dump-style `resource NAME INDEX PAD` format. Tokenise by whitespace
+// and validate each piece; cheaper to reason about than a single multi-
+// group anchored regex. Returns null for unrecognised shapes and for
+// the explicit "NONE" pad (skipping released entries).
+function parseDumpResourceLine(line) {
+    if (!line.toLowerCase().startsWith("resource ")) {
+        return null;
+    }
+    const tokens = line.split(/\s+/);
+    if (
+        tokens.length !== 4 ||
+        !PERIPHERAL_NAME_RE.test(tokens[1]) ||
+        !DIGITS_RE.test(tokens[2]) ||
+        !(tokens[3].toUpperCase() === "NONE" || PAD_RE.test(tokens[3]))
+    ) {
+        return null;
+    }
+    const pad = tokens[3].toUpperCase();
+    if (pad === "NONE") {
+        return null;
+    }
+    return {
+        pad,
+        peripheral: tokens[1].toUpperCase(),
+        index: Number(tokens[2]),
+    };
+}
+
 export function parseResourceShow(input) {
     const lines = Array.isArray(input) ? input : input.split(/\r?\n/);
     const out = [];
-    for (const line of lines) {
-        // Classic PAD:BODY format first.
-        const m = /^\s*([A-Z]\d{2})\s*:\s*(.+?)\s*$/i.exec(line);
-        if (m) {
-            const body = parsePeripheralBody(m[2]);
-            if (!body) continue;
-            out.push({ pad: m[1].toUpperCase(), ...body });
+    for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line) {
             continue;
         }
-        // Dump-style `resource NAME INDEX PAD` format fallback.
-        const dm = /^\s*resource\s+([A-Z][A-Z0-9_]*)\s+(\d+)\s+([A-Z]\d{2}|NONE)\s*$/i.exec(line);
-        if (dm) {
-            const pad = dm[3].toUpperCase();
-            if (pad === "NONE") continue; // released binding — not a live claim
-            out.push({
-                pad,
-                peripheral: dm[1].toUpperCase(),
-                index: Number(dm[2]),
-            });
+        const entry = parseClassicResourceLine(line) ?? parseDumpResourceLine(line);
+        if (entry) {
+            out.push(entry);
         }
     }
     return out;
@@ -173,30 +228,55 @@ export function parseTimerShow(input) {
     const lines = Array.isArray(input) ? input : input.split(/\r?\n/);
     const out = [];
     let currentTimer = null;
-    for (const line of lines) {
-        const timerHeader = /^\s*TIM(\d+)\s*:\s*(.*?)\s*$/i.exec(line);
-        if (timerHeader) {
-            currentTimer = Number(timerHeader[1]);
-            const body = timerHeader[2];
-            if (body.length > 0) {
-                const parsed = parsePeripheralBody(body);
-                if (parsed) {
-                    out.push({ timer: currentTimer, channel: null, ...parsed });
-                    currentTimer = null; // standalone entry, no children expected
-                }
-            }
+    for (const rawLine of lines) {
+        // Detect indent BEFORE trim so child CH lines stay distinguishable
+        // from sibling TIM headers after we strip whitespace.
+        const isIndented = rawLine.length > 0 && (rawLine[0] === " " || rawLine[0] === "\t");
+        const line = rawLine.trim();
+        if (!line) {
             continue;
         }
-        const chMatch = /^\s+CH(\d+)(N?)\s*:\s*(.+?)\s*$/i.exec(line);
-        if (chMatch && currentTimer !== null) {
-            const body = parsePeripheralBody(chMatch[3]);
-            if (!body) continue;
-            out.push({
-                timer: currentTimer,
-                channel: Number(chMatch[1]),
-                complementary: chMatch[2] === "N",
-                ...body,
-            });
+
+        const colonIdx = line.indexOf(":");
+        if (colonIdx <= 0) {
+            continue;
+        }
+        const head = line.slice(0, colonIdx).trim();
+        const tail = line.slice(colonIdx + 1).trim();
+
+        if (!isIndented) {
+            // TIM<digits> header — three-char prefix + digits, fully bounded.
+            if (head.length > 3 && head.slice(0, 3).toUpperCase() === "TIM" && DIGITS_RE.test(head.slice(3))) {
+                currentTimer = Number(head.slice(3));
+                if (tail.length > 0) {
+                    const parsed = parsePeripheralBody(tail);
+                    if (parsed) {
+                        out.push({ timer: currentTimer, channel: null, ...parsed });
+                        currentTimer = null; // standalone entry, no children expected
+                    }
+                }
+                continue;
+            }
+        }
+        // CH<digits> child line, optionally suffixed with N (complementary).
+        if (currentTimer !== null && head.length > 2 && head.slice(0, 2).toUpperCase() === "CH") {
+            let chBody = head.slice(2);
+            const complementary = chBody.endsWith("N") || chBody.endsWith("n");
+            if (complementary) {
+                chBody = chBody.slice(0, -1);
+            }
+            if (DIGITS_RE.test(chBody)) {
+                const parsed = parsePeripheralBody(tail);
+                if (!parsed) {
+                    continue;
+                }
+                out.push({
+                    timer: currentTimer,
+                    channel: Number(chBody),
+                    complementary,
+                    ...parsed,
+                });
+            }
         }
     }
     return out;
@@ -217,14 +297,36 @@ export function parseTimerShow(input) {
 export function parseDmaShow(input) {
     const lines = Array.isArray(input) ? input : input.split(/\r?\n/);
     const out = [];
-    for (const line of lines) {
-        const m = /^\s*DMA(\d+)\s+Stream\s+(\d+)\s*:\s*(.+?)\s*$/i.exec(line);
-        if (!m) continue;
-        const body = parsePeripheralBody(m[3]);
-        if (!body) continue;
+    for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line) {
+            continue;
+        }
+
+        // Format: "DMA<n> Stream <n>: BODY". Split on first ":" then
+        // tokenise the head — avoids backtracking against `\s*:\s*`
+        // patterns in a single regex.
+        const colonIdx = line.indexOf(":");
+        if (colonIdx <= 0) {
+            continue;
+        }
+        const headTokens = line.slice(0, colonIdx).trim().split(/\s+/);
+        if (
+            headTokens.length !== 3 ||
+            !headTokens[0].toUpperCase().startsWith("DMA") ||
+            !DIGITS_RE.test(headTokens[0].slice(3)) ||
+            headTokens[1].toUpperCase() !== "STREAM" ||
+            !DIGITS_RE.test(headTokens[2])
+        ) {
+            continue;
+        }
+        const body = parsePeripheralBody(line.slice(colonIdx + 1).trim());
+        if (!body) {
+            continue;
+        }
         out.push({
-            controller: Number(m[1]),
-            stream: Number(m[2]),
+            controller: Number(headTokens[0].slice(3)),
+            stream: Number(headTokens[2]),
             ...body,
         });
     }
@@ -256,7 +358,9 @@ export function parseTimerDump(input) {
     for (const line of lines) {
         const ti = /^\s*timer\s+(\S+)\s+AF(\d+)/i.exec(line);
         if (ti) {
-            if (pending) out.push(pending);
+            if (pending) {
+                out.push(pending);
+            }
             pending = { pad: ti[1].toUpperCase(), af: Number(ti[2]), timer: null, channel: null };
             continue;
         }
@@ -268,7 +372,9 @@ export function parseTimerDump(input) {
             }
         }
     }
-    if (pending) out.push(pending);
+    if (pending) {
+        out.push(pending);
+    }
     return out;
 }
 
@@ -295,7 +401,9 @@ export function parseTimerOptions(input) {
     const out = [];
     for (const line of lines) {
         const m = /^\s*#\s*AF(\d+):\s*TIM(\d+)\s+CH(\d+)(N?)\s*$/i.exec(line);
-        if (!m) continue;
+        if (!m) {
+            continue;
+        }
         out.push({
             af: Number(m[1]),
             timer: Number(m[2]),
@@ -317,8 +425,19 @@ export function parseTimerOptions(input) {
  * @returns {Promise<Array<{af, timer, channel, complementary}>>}
  */
 export async function readTimerOptionsForPin(pad, opts = {}) {
-    if (typeof pad !== "string" || pad.length === 0) return [];
-    const { lines } = await readCli(`timer ${pad} list`, opts);
+    if (typeof pad !== "string") {
+        return [];
+    }
+    // Strict pad validation. Caller-supplied strings flow into a CLI
+    // command, so anything outside the BF pin shape (single letter +
+    // two digits, e.g. "B07") could turn `timer <pad> list` into an
+    // unintended command — defence-in-depth even though current callers
+    // already feed parseResourceShow output.
+    const trimmed = pad.trim();
+    if (!PAD_RE.test(trimmed)) {
+        return [];
+    }
+    const { lines } = await readCli(`timer ${trimmed} list`, opts);
     return parseTimerOptions(lines);
 }
 
@@ -343,21 +462,58 @@ export async function readTimerOptionsForPin(pad, opts = {}) {
  */
 export async function discoverPadTimerOptions(pads, opts = {}) {
     const out = new Map();
-    if (!Array.isArray(pads)) return out;
+    if (!Array.isArray(pads)) {
+        return out;
+    }
     // Inter-command throttle: master's send_cli_command queues serially
     // but the FC needs a beat to drain its CLI buffer between back-to-back
     // `timer <pad> list` requests. Without this delay, later responses
     // can come back empty (or get mis-attributed to the previous pad).
-    // 100ms matches what the pre-rebase quiescence timer effectively
-    // gave us before we switched to single-shot resolve.
+    // 200ms is the bench-tuned floor — partial responses started showing
+    // up below ~150ms on slower USB links.
     const interCommandDelayMs = opts.interCommandDelayMs ?? 200;
+    // Optional cancellation hook: caller passes `() => isMounted.value` (or
+    // an AbortSignal-style predicate). Checked at top of each pad iteration
+    // AND after the inter-command throttle so a tab-switch mid-scan stops
+    // queueing further `timer <pad> list` commands rather than bleeding
+    // them into the next tab's CLI/MSP traffic. Falsy/missing predicate
+    // means "always continue" — preserves the prior no-cancel behavior.
+    const shouldContinue = typeof opts.shouldContinue === "function" ? opts.shouldContinue : () => true;
     for (const pad of pads) {
-        if (typeof pad !== "string" || pad.length === 0) continue;
-        const upper = pad.toUpperCase();
-        if (out.has(upper)) continue;
-        out.set(upper, await readTimerOptionsForPin(upper, opts));
+        if (!shouldContinue()) {
+            break;
+        }
+        if (typeof pad !== "string" || pad.length === 0) {
+            continue;
+        }
+        // Single normalize+trim pass: callers occasionally pass whitespace-
+        // padded entries (older config-import paths). Without the trim,
+        // " B07 " gets stored under " B07 " and later case-folded lookups
+        // like `padTimerOptions.get("B07")` miss.
+        const normalizedPad = pad.trim().toUpperCase();
+        if (normalizedPad.length === 0 || out.has(normalizedPad)) {
+            continue;
+        }
+        // Per-pad isolation: readCli rejects on timeout, so a single flaky
+        // `timer <pad> list` (slow USB, FC mid-DMA, etc.) would otherwise
+        // unwind the loop and silently drop every pad after it. Catch and
+        // fall through with an empty array — that's the "checked, none
+        // available" state the doc promises and matches the FC-didn't-
+        // recognize-the-pin path.
+        try {
+            out.set(normalizedPad, await readTimerOptionsForPin(normalizedPad, opts));
+        } catch (e) {
+            console.warn(`Servos: timer ${normalizedPad} list failed, skipping pad`, e);
+            out.set(normalizedPad, []);
+        }
         if (interCommandDelayMs > 0) {
             await new Promise((resolve) => setTimeout(resolve, interCommandDelayMs));
+            // Re-check after the throttle wait: cancellation that lands
+            // DURING the 200ms throttle would otherwise still send the next
+            // pad's `timer <pad> list` command before the loop exits.
+            if (!shouldContinue()) {
+                break;
+            }
         }
     }
     return out;

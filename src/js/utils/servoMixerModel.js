@@ -91,8 +91,12 @@ const SERVO_PWM_SLOT_TO_INDEX = {
 // for unknown mixers so unfamiliar builds still get a deterministic color.
 export function pwmSlotToServoIndex(slotIndex, mixerMode) {
     const map = SERVO_PWM_SLOT_TO_INDEX[mixerMode];
-    if (!map) return slotIndex;
-    if (slotIndex < 0 || slotIndex >= map.length) return null;
+    if (!map) {
+        return slotIndex;
+    }
+    if (slotIndex < 0 || slotIndex >= map.length) {
+        return null;
+    }
     return map[slotIndex];
 }
 
@@ -110,16 +114,16 @@ export function servoMixOutputLabel(target /* mixerMode kept for caller compat *
     return Number.isInteger(outputIndex) ? `S${outputIndex + 1}` : `Target ${targetId}`;
 }
 
-export function servoMixTargetOptions(mixerMode, { planeOnly = false } = {}) {
+export function servoMixTargetOptions(_mixerMode, { planeOnly = false } = {}) {
     const start = planeOnly ? 2 : 0;
-    const end = planeOnly ? 7 : 7;
+    const end = 7;
     const options = [];
 
     for (let target = start; target <= end; target += 1) {
         options.push({
             value: target,
-            label: servoMixOutputLabel(target, mixerMode),
-            outputIndex: servoMixOutputIndexForTarget(target, mixerMode),
+            label: servoMixOutputLabel(target),
+            outputIndex: servoMixOutputIndexForTarget(target),
         });
     }
 
@@ -201,7 +205,9 @@ export const AIRCRAFT_SERVO_MIX_TEMPLATES = [
 ];
 
 export function isActiveServoMixRule(rule) {
-    if (!rule) return false;
+    if (!rule) {
+        return false;
+    }
     return rule.rate !== 0 || rule.min !== 0 || rule.max !== 0;
 }
 

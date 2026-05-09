@@ -28,7 +28,12 @@ describe("candidatePadsForSlot", () => {
 
     it("ranks currentPad first (zero-churn) when still safe", () => {
         const a = analysis([{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }], {
-            servos: [{ index: 2, pad: "B01", timer: 3, channel: 4 }],
+            // Servo 2's current pad B01 is on timer 2, disjoint from the
+            // in-use motor's timer 3 — i.e. genuinely safe, no DSHOT/PWM
+            // timer conflict. Zero-churn requires no collision; a colliding
+            // currentPad gets dropped by candidatePadsForSlot rather than
+            // surfaced as a self-conflicting "existing" option.
+            servos: [{ index: 2, pad: "B01", timer: 2, channel: 4 }],
             pwmCapableFreePads: [
                 { pad: "A02", timer: 2, channel: 3 },
                 { pad: "A03", timer: 2, channel: 4 },
@@ -38,6 +43,85 @@ describe("candidatePadsForSlot", () => {
         expect(cands[0].pad).toBe("B01");
         expect(cands[0].source).toBe("existing");
         expect(cands[0].requiresRelease).toEqual([]);
+    });
+
+    it("drops currentPad from the candidate list when its timer collides with an in-use motor", () => {
+        // Servo 2 is currently bound to B01 on timer 3, the same timer as
+        // the in-use motor on B00. Surfacing this as zero-churn would
+        // recommend the user keep a binding that already shares a timer
+        // peripheral with a DSHOT motor (firmware can't run both in
+        // parallel). Drop the existing entry; let the dropdown surface
+        // safer candidates instead.
+        const a = analysis([{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }], {
+            servos: [{ index: 2, pad: "B01", timer: 3, channel: 4 }],
+            pwmCapableFreePads: [
+                { pad: "A02", timer: 2, channel: 3 },
+                { pad: "A03", timer: 2, channel: 4 },
+            ],
+        });
+        const cands = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1], currentPad: "B01" });
+        expect(cands.find((c) => c.source === "existing")).toBeUndefined();
+        expect(cands[0].pad).not.toBe("B01");
+    });
+
+    it("uses padPlannedTimers to claim a motor's post-AF-remap timer (same-pad remap case)", () => {
+        // Scenario: motor 1 currently lives on B00 with timer 3, but the
+        // batch will remap B00 to AF3 which moves it to timer 7. Without
+        // padPlannedTimers, motorTimers contains only timer 3 (the stale
+        // pre-batch value), so a free-PWM candidate on timer 7 looks
+        // safe and a candidate on timer 3 looks unsafe — exactly inverted
+        // from reality. With padPlannedTimers, motorTimers picks up
+        // timer 7 and the rankings flip back to correct.
+        const motors = [{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }];
+        const a = analysis(motors, {
+            pwmCapableFreePads: [
+                { pad: "A02", timer: 7, channel: 1 }, // shares motor's NEW timer (post-remap)
+                { pad: "A03", timer: 3, channel: 2 }, // shares motor's OLD timer (freed by remap)
+            ],
+        });
+
+        // Without padPlannedTimers: motorTimers = {3}, A02(t7) safe, A03(t3) unsafe.
+        const before = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1] });
+        const beforeA02 = before.find((c) => c.pad === "A02");
+        const beforeA03 = before.find((c) => c.pad === "A03");
+        expect(beforeA02?.sharesTimerWithMotor).toBe(false);
+        expect(beforeA03?.sharesTimerWithMotor).toBe(true);
+
+        // With padPlannedTimers: motorTimers = {7}, A02(t7) unsafe, A03(t3) safe.
+        const padPlannedTimers = new Map([["B00", 7]]);
+        const after = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1], padPlannedTimers });
+        const afterA02 = after.find((c) => c.pad === "A02");
+        const afterA03 = after.find((c) => c.pad === "A03");
+        expect(afterA02?.sharesTimerWithMotor).toBe(true);
+        expect(afterA03?.sharesTimerWithMotor).toBe(false);
+    });
+
+    it("padPlannedTimers also covers motors moving to a remapped destination pad", () => {
+        // Motor 1 is on B00 (timer 3 today), but the batch plans both a
+        // pad change (B00 → A02) AND an AF remap on the destination
+        // (A02 moves to timer 9). motorRebinds tells candidatePadsForSlot
+        // about the pad move; padPlannedTimers overlays the new timer.
+        // Result: a servo on timer 9 should be flagged as conflicting,
+        // not a servo on timer 3 (which the motor is vacating).
+        const motors = [{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }];
+        const padTimers = new Map([
+            ["B00", { timer: 3, channel: 3 }],
+            ["A02", { timer: 2, channel: 1 }], // pre-batch AF
+        ]);
+        const a = analysis(motors, {
+            padTimers,
+            pwmCapableFreePads: [
+                { pad: "B01", timer: 9, channel: 4 }, // post-batch motor timer
+                { pad: "B02", timer: 3, channel: 1 }, // freed by motor moving away
+            ],
+        });
+        const motorRebinds = new Map([[1, "A02"]]); // motor 1 → A02
+        const padPlannedTimers = new Map([["A02", 9]]); // A02 will land on timer 9 after AF remap
+        const cands = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1], motorRebinds, padPlannedTimers });
+        const b01 = cands.find((c) => c.pad === "B01");
+        const b02 = cands.find((c) => c.pad === "B02");
+        expect(b01?.sharesTimerWithMotor).toBe(true);
+        expect(b02?.sharesTimerWithMotor).toBe(false);
     });
 
     it("ranks free-PWM pads with no motor-timer conflict above conflicting ones", () => {
@@ -1202,11 +1286,13 @@ describe("candidatePadsForSlot: alt-AF expansion", () => {
             padCurrentAF: new Map([["C06", 2]]),
         };
         const cands = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1], currentPad: null });
-        // Default-AF entry (af === null/undefined, source = 'free-pwm')
-        // and alt-AF entry (af === 3, source = 'alt-af') for C06.
+        // Default-AF entry (af === null/undefined) and alt-AF entry
+        // (af === 3) for C06. Alt-AF entries preserve the base
+        // candidate's source (e.g. "free-pwm") and are identified by
+        // having `af != null`.
         const c06Entries = cands.filter((c) => c.pad === "C06");
         expect(c06Entries).toHaveLength(2);
-        const alt = c06Entries.find((c) => c.source === "alt-af");
+        const alt = c06Entries.find((c) => c.af != null);
         expect(alt).toBeDefined();
         expect(alt.af).toBe(3);
         expect(alt.timer).toBe(8);
@@ -1235,7 +1321,7 @@ describe("candidatePadsForSlot: alt-AF expansion", () => {
             padCurrentAF: new Map([["B07", 2]]),
         };
         const cands = candidatePadsForSlot(a, 1, { motorIndicesInUse: [], currentPad: null });
-        const altRows = cands.filter((c) => c.source === "alt-af");
+        const altRows = cands.filter((c) => c.af != null);
         expect(altRows).toHaveLength(0);
     });
 
@@ -1263,7 +1349,7 @@ describe("candidatePadsForSlot: alt-AF expansion", () => {
             padCurrentAF: new Map([["B00", 2]]),
         };
         const cands = candidatePadsForSlot(a, 1, { motorIndicesInUse: [], currentPad: null });
-        const alt = cands.find((c) => c.source === "alt-af");
+        const alt = cands.find((c) => c.af != null);
         expect(alt).toBeDefined();
         expect(alt.complementary).toBe(true);
     });

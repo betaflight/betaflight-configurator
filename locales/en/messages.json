@@ -3128,10 +3128,10 @@
         "message": "Pin"
     },
     "servosResourceMotorLabel": {
-        "message": "Motor"
+        "message": "Motor {{index}}"
     },
     "servosResourceServoLabel": {
-        "message": "Servo"
+        "message": "Servo {{index}}"
     },
     "servosResourceHint": {
         "message": "To change pin assignments in CLI, use resource MOTOR <index> <pin> or resource SERVO <index> <pin> (e.g., resource MOTOR 1 A08 or resource SERVO 1 A08)."
@@ -3161,7 +3161,7 @@
         "message": "Pad → silkscreen mapping was inferred from a scan or fallback snapshot, so M1/M2 labels are suppressed in the dropdown to avoid attributing the wrong silkscreen number."
     },
     "servosResourceSetOk": {
-        "message": "$t(eeprom_saved_ok.message) {{resource}} {{index}} -> {{pin}}"
+        "message": "Assigned {{resource}} {{index}} -> {{pin}} (click Save to persist and reboot)"
     },
     "servosResourceSetFailed": {
         "message": "Resource assignment failed"

@@ -40,7 +40,9 @@ function ensureClone() {
         return;
     }
     console.log(`[sync] cloning unified-targets to ${CACHE_DIR}`);
-    if (existsSync(CACHE_DIR)) rmSync(CACHE_DIR, { recursive: true, force: true });
+    if (existsSync(CACHE_DIR)) {
+        rmSync(CACHE_DIR, { recursive: true, force: true });
+    }
     mkdirSync(dirname(CACHE_DIR), { recursive: true });
     run("git", ["clone", "--depth=1", REPO_URL, CACHE_DIR]);
 }
@@ -51,7 +53,9 @@ function buildBundle() {
     let skipped = 0;
     const skippedReasons = { noBoardName: 0, noMotors: 0 };
 
-    const files = readdirSync(CONFIGS_DIR).filter((name) => name.endsWith(".config"));
+    const files = readdirSync(CONFIGS_DIR)
+        .filter((name) => name.endsWith(".config"))
+        .sort((a, b) => a.localeCompare(b));
     for (const file of files) {
         const text = readFileSync(join(CONFIGS_DIR, file), "utf8");
         const { boardName, manufacturerId, motors, ledStrips } = parseUnifiedTargetConfig(text);
@@ -80,7 +84,9 @@ function buildBundle() {
             const isBetter =
                 motors.length > prev.motors.length ||
                 (motors.length === prev.motors.length && ledStrips.length > prev.ledStrips.length);
-            if (!isBetter) continue;
+            if (!isBetter) {
+                continue;
+            }
         }
         entries[key] = {
             schemaVersion: 1,
@@ -102,7 +108,7 @@ function buildBundle() {
 function writeBundle(entries) {
     mkdirSync(dirname(OUTPUT_FILE), { recursive: true });
     const sorted = {};
-    for (const key of Object.keys(entries).sort()) {
+    for (const key of Object.keys(entries).sort((a, b) => a.localeCompare(b))) {
         sorted[key] = entries[key];
     }
     const payload = {

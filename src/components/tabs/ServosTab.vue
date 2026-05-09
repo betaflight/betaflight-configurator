@@ -41,7 +41,7 @@
                                         class="inline-block size-2 rounded-full shrink-0"
                                         :style="{ backgroundColor: servoOutputColor(index) }"
                                     />
-                                    <span>Servo {{ index + 1 }}</span>
+                                    <span>{{ $t(`servoNumber${index + 1}`) }}</span>
                                 </div>
                                 <UInputNumber
                                     v-model="servo.min"
@@ -196,7 +196,9 @@
                                                     class="inline-block size-2 rounded-full shrink-0"
                                                     :style="{ backgroundColor: motorDotColor(motor.index) }"
                                                 />
-                                                <span>{{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}</span>
+                                                <span>{{
+                                                    $t("servosResourceMotorLabel", { index: motor.index + 1 })
+                                                }}</span>
                                             </div>
                                             <USelect
                                                 :model-value="encodedPinValue(motor)"
@@ -232,7 +234,9 @@
                                                 <span
                                                     class="opacity-100"
                                                     :class="{ 'opacity-50': !servoDotColor(servo.index) }"
-                                                    >{{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}</span
+                                                    >{{
+                                                        $t("servosResourceServoLabel", { index: servo.index + 1 })
+                                                    }}</span
                                                 >
                                             </div>
                                             <USelect
@@ -258,7 +262,7 @@
             <div class="flex gap-2">
                 <UButton
                     :label="$t('servosButtonSave')"
-                    :disabled="!configHasChanged && !resourcesModified"
+                    :disabled="(!configHasChanged && !resourcesModified) || resourcesWriteInFlight"
                     color="warning"
                     variant="solid"
                     class="!bg-[#ffbb00] !text-zinc-900 hover:!bg-[#e6a800] disabled:!bg-zinc-600 disabled:!text-zinc-400"
@@ -270,7 +274,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -315,6 +319,12 @@ const motorResources = reactive([]);
 const servoResources = reactive([]);
 const hasResourceData = ref(false);
 const resourcesModified = ref(false);
+// onResourcePinChange does several awaited CLI writes (release lines, alt-AF
+// remap) before the MSP bind. While those are in flight, the user must not
+// (a) trigger another pin change on the same row — re-entry would race
+// against a stale `previous` snapshot — or (b) click Save, which would write
+// EEPROM mid-sequence and persist a half-applied state.
+const resourcesWriteInFlight = ref(false);
 // Initial pins from firmware so they remain selectable after edits
 const initialPins = ref([]);
 
@@ -333,6 +343,11 @@ const padDefaultsSource = ref(null);
 // silkscreen labels via padDefaults alone.
 const smartResourceAnalysis = ref(null);
 const smartResourceLoading = ref(false);
+// loadSmartResourceAnalysis runs ~1.25s of CLI scans plus an alt-AF
+// discovery pass. If the user navigates away mid-scan we want to drop the
+// trailing ref writes so we don't poke an unmounted component's reactive
+// state.
+const isMounted = ref(true);
 const smartResourceError = ref(null);
 
 const { addInterval } = useInterval();
@@ -365,7 +380,7 @@ const availablePins = computed(() => {
             pins.add(servo.pin);
         }
     }
-    return Array.from(pins).sort();
+    return Array.from(pins).sort((a, b) => a.localeCompare(b));
 });
 
 // Per-row color cue. Motor rows use a static palette indexed by PWM slot;
@@ -379,7 +394,9 @@ function motorDotColor(slotIndex) {
 function servoDotColor(slotIndex) {
     const mixerMode = FC.MIXER_CONFIG?.mixer ?? null;
     const idx = mixerMode != null ? pwmSlotToServoIndex(slotIndex, mixerMode) : slotIndex;
-    if (idx == null) return null;
+    if (idx == null) {
+        return null;
+    }
     return servoOutputColor(idx);
 }
 
@@ -439,12 +456,24 @@ function updateServos(saveToEeprom) {
             mspHelper.writeConfiguration(false, () => {
                 gui_log(i18n.getMessage("servosEepromSave"));
                 originalConfigs.value = JSON.stringify(servoConfigs);
+                // EEPROM persist is the commit point for the resource binds
+                // we wrote to firmware RAM during onResourcePinChange — clear
+                // the dirty flag so the Save button doesn't stay lit and
+                // re-clicking doesn't pointlessly rewrite the same set.
+                resourcesModified.value = false;
             });
         }
     });
 }
 
 function saveServoConfig() {
+    // Refuse Save while a pin-change CLI sequence is mid-flight; otherwise
+    // writeConfiguration() would persist EEPROM before the release/remap/
+    // bind chain finishes. The Save button's disabled binding already gates
+    // this, but cover the keyboard-shortcut / programmatic path too.
+    if (resourcesWriteInFlight.value) {
+        return;
+    }
     updateServos(true);
 }
 
@@ -463,12 +492,18 @@ function getServoData() {
 //     peripheral annotations and alt-AF entries
 //   - nothing loaded: bare pin pass-through via fallbackPins
 function effectiveAnalysis() {
-    if (smartResourceAnalysis.value) return smartResourceAnalysis.value;
-    if (padDefaults.value) return { padDefaults: padDefaults.value };
+    if (smartResourceAnalysis.value) {
+        return smartResourceAnalysis.value;
+    }
+    if (padDefaults.value) {
+        return { padDefaults: padDefaults.value };
+    }
     return null;
 }
 function withNone(items) {
-    if (items.some((i) => i.value === "NONE")) return items;
+    if (items.some((i) => i.value === "NONE")) {
+        return items;
+    }
     return [{ value: "NONE", label: "NONE" }, ...items];
 }
 // Master stores the global Expert Mode toggle on `window.vm.expertMode`
@@ -479,32 +514,62 @@ function isExpertMode() {
 }
 // A pin can only drive one PWM output at a time. Drop dropdown options
 // whose pin is already bound to another row, UNLESS the option carries a
-// release annotation (motor-release / servo-release / led-strip /
-// uart-release) — those are the smart picker's deliberate "swap with
-// these CLI changes" candidates and should remain selectable.
+// `resource <peripheral> NONE` release line in `requiresRelease` — those
+// are the smart picker's deliberate "swap with these CLI changes"
+// candidates and should remain selectable. We check the release lines
+// rather than the source string so alt-AF entries that ALSO release a
+// peripheral (source === "alt-af") are kept too.
+// True when any row in `resources` already binds `pin`, ignoring the
+// caller's own row (`currentResource`) when its kind matches the row's
+// list. Lets isOptionViable short-circuit to "not viable" without
+// duplicating the same loop body twice.
+function isPinClaimedByOtherResource(pin, resources, kind, currentResource, currentKind) {
+    for (const r of resources) {
+        if (kind === currentKind && r.index === currentResource.index) {
+            continue;
+        }
+        if (r.pin === pin && r.pin !== "NONE") {
+            return true;
+        }
+    }
+    return false;
+}
+
 function isOptionViable(option, currentResource, kind) {
-    if (option.value === "NONE") return true;
-    if (
-        option.source === "motor-release" ||
-        option.source === "servo-release" ||
-        option.source === "led-strip" ||
-        option.source === "uart-release"
-    ) {
+    if (option.value === "NONE") {
+        return true;
+    }
+    const hasReleaseStep = (option.requiresRelease ?? []).some((line) =>
+        /^resource (MOTOR|SERVO|LED_STRIP|SERIAL_)/i.test(line),
+    );
+    if (hasReleaseStep) {
         return true;
     }
     const decoded = parseResourceOptionValue(option.value);
     const pin = decoded?.pin ?? option.value;
-    if (!pin || pin === "NONE") return true;
-    for (const m of motorResources) {
-        if (kind === "motor" && m.index === currentResource.index) continue;
-        if (m.pin === pin && m.pin !== "NONE") return false;
+    if (!pin || pin === "NONE") {
+        return true;
     }
-    for (const s of servoResources) {
-        if (kind === "servo" && s.index === currentResource.index) continue;
-        if (s.pin === pin && s.pin !== "NONE") return false;
+    if (isPinClaimedByOtherResource(pin, motorResources, "motor", currentResource, kind)) {
+        return false;
+    }
+    if (isPinClaimedByOtherResource(pin, servoResources, "servo", currentResource, kind)) {
+        return false;
     }
     return true;
 }
+// Spare UARTs the picker is allowed to release for PWM. We surface the
+// analyzer's "no function assigned" list — UARTs already running MSP, GPS,
+// telemetry, etc. stay off the table. Without this whitelist, the
+// uart-release path in candidatePadsForSlot is unreachable from the UI.
+function spareUartReleaseWhitelist() {
+    const spares = effectiveAnalysis()?.spareUarts;
+    if (!Array.isArray(spares)) {
+        return [];
+    }
+    return spares.map((u) => u?.index).filter((idx) => typeof idx === "number");
+}
+
 function buildMotorPinOptions(motor) {
     const opts = resourceOptions({
         kind: "motor",
@@ -514,6 +579,7 @@ function buildMotorPinOptions(motor) {
         hardwareAnalysis: effectiveAnalysis(),
         fallbackPins: availablePins.value,
         allowLedStrip: true,
+        allowUartRelease: spareUartReleaseWhitelist(),
         expertMode: isExpertMode(),
     });
     return withNone(
@@ -529,6 +595,7 @@ function buildServoPinOptions(servo) {
         hardwareAnalysis: effectiveAnalysis(),
         fallbackPins: availablePins.value,
         allowLedStrip: true,
+        allowUartRelease: spareUartReleaseWhitelist(),
         expertMode: isExpertMode(),
     });
     return withNone(
@@ -541,56 +608,165 @@ function buildServoPinOptions(servo) {
 // the analyzer to produce padTimers, peripheral lists, free-pad inventory,
 // and (via discoverPadTimerOptions) per-pad alt-AF candidates. Result
 // flows through buildMotorPinOptions / buildServoPinOptions next render.
+// Issues the four read-only CLI scans (resource/timer/dma + timer dump) with
+// inter-command throttling and feeds the parsed pieces into analyzeResources.
+// 500ms initial settle + 250ms between commands matches the pre-rebase
+// quiescence-timer budget and gives the FC time to drain its CLI buffer
+// between back-to-back reads.
+// Unmount-aware short-circuit: the scan is four awaited readCli calls plus
+// three throttle waits, then a per-pad discoverPadTimerOptions loop. Without
+// an explicit check between each await, an unmount mid-scan keeps queueing
+// CLI commands that bleed into whatever the next tab is doing on the same
+// MSP/CLI connection. The check returns null on cancel; the caller treats
+// that the same as a hard failure (no analysis published).
+async function runResourceCliScans() {
+    if (!isMounted.value) {
+        return null;
+    }
+    await wait(500);
+    if (!isMounted.value) {
+        return null;
+    }
+    const resourceShow = await readCli("resource show");
+    if (!isMounted.value) {
+        return null;
+    }
+    await wait(250);
+    if (!isMounted.value) {
+        return null;
+    }
+    const timerShow = await readCli("timer show");
+    if (!isMounted.value) {
+        return null;
+    }
+    await wait(250);
+    if (!isMounted.value) {
+        return null;
+    }
+    const dmaShow = await readCli("dma show");
+    if (!isMounted.value) {
+        return null;
+    }
+    await wait(250);
+    if (!isMounted.value) {
+        return null;
+    }
+    const timerDump = await readCli("timer");
+    if (!isMounted.value) {
+        return null;
+    }
+    return analyzeResources({
+        resourceShow: parseResourceShow(resourceShow.lines),
+        timerShow: parseTimerShow(timerShow.lines),
+        dmaShow: parseDmaShow(dmaShow.lines),
+        timerDump: parseTimerDump(timerDump.lines),
+        serialPorts: FC.SERIAL_CONFIG?.ports || [],
+        mcuFamily: mcuFamilyFromName(FC.MCU_INFO?.name),
+    });
+}
+
+// Collects pads the picker can actually surface: bound motor/servo pins,
+// free PWM pads from the analyzer, and the silkscreen pool from padDefaults.
+// Used to filter alt-AF discovery so we don't run `timer <pad> list` against
+// every pad in the timer dump (~30+ on full STM32F7 boards = 6-8s of CLI
+// scan against candidates the user can never pick).
+function collectCandidatePads(analysis) {
+    const pads = new Set();
+    // Expert mode: also feed every pad the analyzer knows a timer for
+    // into the alt-AF discovery pool. The non-expert pool deliberately
+    // stays narrow (current bindings + free + silkscreen) so the CLI
+    // scan stays fast on big boards; Expert Mode users have explicitly
+    // opted into the longer scan in exchange for surfacing alt-AF
+    // variants of peripheral-owned PWM pads (UART/LED/etc) that those
+    // rows would otherwise only see in their default-AF form.
+    if (isExpertMode() && analysis?.padTimers instanceof Map) {
+        for (const pad of analysis.padTimers.keys()) {
+            if (pad) {
+                pads.add(pad);
+            }
+        }
+    }
+    for (const m of motorResources) {
+        if (m.pin && m.pin !== "NONE") {
+            pads.add(m.pin);
+        }
+    }
+    for (const s of servoResources) {
+        if (s.pin && s.pin !== "NONE") {
+            pads.add(s.pin);
+        }
+    }
+    for (const p of analysis.pwmCapableFreePads ?? []) {
+        if (p?.pad) {
+            pads.add(p.pad);
+        }
+    }
+    for (const m of padDefaults.value?.motors ?? []) {
+        if (m?.pad) {
+            pads.add(m.pad);
+        }
+    }
+    for (const ls of padDefaults.value?.ledStrips ?? []) {
+        if (ls?.pad) {
+            pads.add(ls.pad);
+        }
+    }
+    return pads;
+}
+
+// Runs `timer <pad> list` against the candidate pool to discover alt-AF
+// options and merges them into the published analysis. No-op when no
+// candidates have a known timer/AF pool. Returns true if discovery ran
+// (even if empty); false if the component unmounted mid-scan.
+async function runAltAfDiscovery(analysis) {
+    const candidatePads = collectCandidatePads(analysis);
+    const altAfPool =
+        analysis.padTimers instanceof Map ? [...analysis.padTimers.keys()].filter((pad) => candidatePads.has(pad)) : [];
+    if (altAfPool.length === 0) {
+        return true;
+    }
+    try {
+        const padTimerOptions = await discoverPadTimerOptions(altAfPool, {
+            shouldContinue: () => isMounted.value,
+        });
+        if (!isMounted.value) {
+            return false;
+        }
+        smartResourceAnalysis.value = padDefaults.value
+            ? { ...analysis, padDefaults: padDefaults.value, padTimerOptions }
+            : { ...analysis, padTimerOptions };
+    } catch (afErr) {
+        console.warn("Servos: alt-AF discovery failed", afErr);
+    }
+    return true;
+}
+
 async function loadSmartResourceAnalysis() {
-    if (!hasResourceData.value || smartResourceLoading.value) return;
+    if (!hasResourceData.value || smartResourceLoading.value) {
+        return;
+    }
     smartResourceLoading.value = true;
     smartResourceError.value = null;
-    // Throttling: the CLI bridge in master is queue-based but the FC
-    // itself needs a beat to drain its CLI output buffer between
-    // back-to-back commands. On first-tab-load the MSP queue has just
-    // finished pulling MSP_SERVO_CONFIGURATIONS / MSP_RC / MSP_BOXNAMES
-    // and the FC is still settling — without an initial settle wait
-    // the first CLI commands return partial/empty responses (timers
-    // missing, peripherals not annotated). 250ms inter-command was
-    // the effective quiescence in pre-rebase readCli.
-    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     try {
-        await wait(500);
-        const resourceShow = await readCli("resource show");
-        await wait(250);
-        const timerShow = await readCli("timer show");
-        await wait(250);
-        const dmaShow = await readCli("dma show");
-        await wait(250);
-        const timerDump = await readCli("timer");
-
-        const analysis = analyzeResources({
-            resourceShow: parseResourceShow(resourceShow.lines),
-            timerShow: parseTimerShow(timerShow.lines),
-            dmaShow: parseDmaShow(dmaShow.lines),
-            timerDump: parseTimerDump(timerDump.lines),
-            serialPorts: FC.SERIAL_CONFIG?.ports || [],
-            mcuFamily: mcuFamilyFromName(FC.MCU_INFO?.name),
-        });
-
+        const analysis = await runResourceCliScans();
+        // runResourceCliScans returns null when the scan was short-circuited
+        // by an unmount mid-flight. Skip publishing anything and bail cleanly.
+        if (!analysis || !isMounted.value) {
+            return;
+        }
         smartResourceAnalysis.value = padDefaults.value ? { ...analysis, padDefaults: padDefaults.value } : analysis;
-
-        const altAfPool = analysis.padTimers instanceof Map ? [...analysis.padTimers.keys()] : [];
-        if (altAfPool.length > 0) {
-            try {
-                const padTimerOptions = await discoverPadTimerOptions(altAfPool);
-                smartResourceAnalysis.value = padDefaults.value
-                    ? { ...analysis, padDefaults: padDefaults.value, padTimerOptions }
-                    : { ...analysis, padTimerOptions };
-            } catch (afErr) {
-                console.warn("Servos: alt-AF discovery failed", afErr);
-            }
+        if (!(await runAltAfDiscovery(analysis))) {
+            return;
         }
     } catch (e) {
         console.warn("Servos: smart resource analysis failed", e);
-        smartResourceError.value = e?.message ?? String(e);
+        if (isMounted.value) {
+            smartResourceError.value = e?.message ?? String(e);
+        }
     } finally {
-        smartResourceLoading.value = false;
+        if (isMounted.value) {
+            smartResourceLoading.value = false;
+        }
     }
 }
 
@@ -621,72 +797,392 @@ function loadPadDefaults() {
 // real user choice (e.g. a 4-motor airplane with motors 5-8 unused).
 // Silkscreen labels still appear on the dropdown OPTIONS via the smart
 // picker so the user can identify and pick a default pad easily.
+// Drains an FC resource list into a target reactive array, also adding any
+// real (non-"NONE") pins to the seed Set used to build initialPins.
+function drainResources(sourceList, targetArray, pinsSet) {
+    targetArray.length = 0;
+    if (!sourceList || sourceList.length === 0) {
+        return;
+    }
+    for (const resource of sourceList) {
+        targetArray.push({ ...resource });
+        if (resource.pin && resource.pin !== "NONE") {
+            pinsSet.add(resource.pin);
+        }
+    }
+}
+
 function loadResourceData() {
     const pins = new Set();
-
-    motorResources.length = 0;
-    if (FC.MOTOR_RESOURCES && FC.MOTOR_RESOURCES.length > 0) {
-        for (const resource of FC.MOTOR_RESOURCES) {
-            motorResources.push({ ...resource });
-            if (resource.pin && resource.pin !== "NONE") {
-                pins.add(resource.pin);
-            }
-        }
-    }
-
-    servoResources.length = 0;
-    if (FC.SERVO_RESOURCES && FC.SERVO_RESOURCES.length > 0) {
-        for (const resource of FC.SERVO_RESOURCES) {
-            servoResources.push({ ...resource });
-            if (resource.pin && resource.pin !== "NONE") {
-                pins.add(resource.pin);
-            }
-        }
-    }
-
-    initialPins.value = Array.from(pins).sort();
+    drainResources(FC.MOTOR_RESOURCES, motorResources, pins);
+    drainResources(FC.SERVO_RESOURCES, servoResources, pins);
+    initialPins.value = Array.from(pins).sort((a, b) => a.localeCompare(b));
     hasResourceData.value = motorResources.length > 0 || servoResources.length > 0;
     resourcesModified.value = false;
 }
 
 // Shared handler for motor (resourceType 0) and servo (resourceType 1) pin updates.
 //
-// Smart-picker dropdowns may emit encoded values like "C06:1" (pin:AF) when
-// an option requires an alt-AF timer remap. We decode here and:
+// Smart-picker dropdowns may emit encoded values like "C06@AF1" (pin@AF<n>)
+// when an option requires an alt-AF timer remap — same encoding produced by
+// encodeResourceOptionValue / parsed by parseResourceOptionValue in
+// motorServoResourceCandidates.js. We decode here and:
 //   1. If the option specifies an alt AF, send `timer <pad> AF<n>` via CLI
 //      first so the pad is on the correct timer when the new ioTag binds.
 //   2. Write the ioTag via MSP2_SET_MOTOR_SERVO_RESOURCE.
 // Both writes land in firmware RAM immediately; clicking Save persists them
 // to EEPROM via mspHelper.writeConfiguration so they survive reboot.
-async function onResourcePinChange(resourceType, resources, index, newValue) {
-    const decoded = parseResourceOptionValue(newValue);
-    const newPin = decoded?.pin ?? newValue;
-    const newAf = decoded?.af ?? null;
-
-    const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
-
-    resources[index].pin = newPin;
-    resources[index].ioTag = ioTag;
-    resourcesModified.value = true;
-
-    // Track AF on the resource so the dropdown's model-value can match the
-    // alt-AF option after pick (the option's value is encoded as `pin:af`,
-    // matches what encodedPinValue(resource) returns below).
-    resources[index].af = newAf;
-
-    if (newAf != null && newPin !== "NONE") {
-        try {
-            await readCli(`timer ${newPin} AF${newAf}`);
-        } catch (e) {
-            console.warn(`Servos: timer ${newPin} AF${newAf} write failed`, e);
-            // Continue with MSP write anyway — pad falls back to its default AF.
+// Mirrors a `resource MOTOR/SERVO N NONE` release into the matching local
+// reactive row so the UI doesn't claim a binding the FC just dropped.
+// LED_STRIP and SERIAL_TX/RX releases don't have local rows here — the FC
+// state alone is the source of truth for those.
+function mirrorReleaseToLocalRow(line) {
+    const motorRel = /^resource MOTOR (\d+) NONE/i.exec(line);
+    if (motorRel) {
+        const releasedIndex = Number(motorRel[1]) - 1;
+        const target = motorResources.find((m) => m.index === releasedIndex);
+        if (target) {
+            target.pin = "NONE";
+            target.ioTag = 0;
+            target.af = null;
+        }
+        return;
+    }
+    const servoRel = /^resource SERVO (\d+) NONE/i.exec(line);
+    if (servoRel) {
+        const releasedIndex = Number(servoRel[1]) - 1;
+        const target = servoResources.find((s) => s.index === releasedIndex);
+        if (target) {
+            target.pin = "NONE";
+            target.ioTag = 0;
+            target.af = null;
         }
     }
+}
 
-    const label = resourceType === 0 ? "Motor" : "Servo";
-    mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
-        console.log(`${label} ${index + 1} pin set to ${newPin}${newAf != null ? ` AF${newAf}` : ""}`);
-    });
+// Inter-command throttle helper. Master's send_cli_command queue serializes
+// commands but the FC needs a beat to drain its CLI buffer between back-to-
+// back writes; without it, later commands occasionally come back with stale
+// or partial output. Shared by loadSmartResourceAnalysis and the release
+// loop in onResourcePinChange.
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// readCli only rejects on transport timeout. When the FC accepts the
+// round-trip but the COMMAND itself fails (e.g. unknown pin, locked
+// resource), the response comes back with an error line in `lines`/`raw`.
+// We need to inspect the payload before treating the write as successful;
+// otherwise mirrorReleaseToLocalRow runs, the UI shows the row as released,
+// and the FC still holds the binding. BF surfaces these errors with a
+// handful of recognizable prefixes ("Invalid", "Unknown", "ERR", "Cannot",
+// or "syntax error"); match defensively across them.
+const CLI_ERROR_RE = /(?:^|\b)(invalid|unknown|err(?:or)?\b|cannot|syntax error|failed)/i;
+function cliResponseHasError(result) {
+    if (!result || typeof result !== "object") {
+        return false;
+    }
+    const lines = Array.isArray(result.lines) ? result.lines : [];
+    return lines.some((line) => typeof line === "string" && CLI_ERROR_RE.test(line));
+}
+
+// Runs one release line against the FC. Returns true on success.
+async function applyReleaseLine(line) {
+    let result;
+    try {
+        result = await readCli(line);
+    } catch (e) {
+        console.warn(`Servos: ${line} failed`, e);
+        return false;
+    }
+    if (cliResponseHasError(result)) {
+        console.warn(`Servos: ${line} returned a CLI error`, result?.raw ?? result);
+        return false;
+    }
+    mirrorReleaseToLocalRow(line);
+    return true;
+}
+
+// Issues `timer <pad> AF<n>` to remap the pad to its alt timer/channel.
+// Returns true on success.
+async function applyAfRemap(pad, af) {
+    const cmd = `timer ${pad} AF${af}`;
+    let result;
+    try {
+        result = await readCli(cmd);
+    } catch (e) {
+        console.warn(`Servos: ${cmd} write failed`, e);
+        return false;
+    }
+    if (cliResponseHasError(result)) {
+        console.warn(`Servos: ${cmd} returned a CLI error`, result?.raw ?? result);
+        return false;
+    }
+    return true;
+}
+
+async function onResourcePinChange(resourceType, resources, index, newValue) {
+    // Re-entrancy guard. The release/remap chain has multiple awaits; if the
+    // user picks again on the same row before this finishes, the second call
+    // would race against the first's stale `previous` snapshot and leave UI
+    // and FC RAM out of sync. Global flag (rather than per-row) so Save can
+    // also see "any pin change in flight" — see resourcesWriteInFlight gate.
+    // Global connection lock + tab-local in-flight gate together ensure
+    // the release → timer remap → MSP bind sequence runs as an atomic unit:
+    //   - resourcesWriteInFlight prevents re-entry from the same tab
+    //     (rapid dropdown picks on different rows)
+    //   - GUI.connect_lock blocks tab switches and other long-running
+    //     connection work (firmware flasher, OSD font upload, etc.) so
+    //     no other writer can interleave its own CLI/MSP traffic with
+    //     ours mid-sequence
+    if (resourcesWriteInFlight.value || GUI.connect_lock) {
+        return;
+    }
+    resourcesWriteInFlight.value = true;
+    GUI.connect_lock = true;
+    try {
+        // Snapshot the previous binding so we can roll back if any prerequisite
+        // CLI step (release line, alt-AF remap) fails — without rollback the
+        // UI would claim a binding firmware never accepted.
+        const previous = { pin: resources[index].pin, ioTag: resources[index].ioTag, af: resources[index].af };
+
+        const decoded = parseResourceOptionValue(newValue);
+        const newPin = decoded?.pin ?? newValue;
+        const newAf = decoded?.af ?? null;
+        const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
+        // pinToIoTag now returns null (not 0) when the pin name is
+        // unparseable — fail fast rather than silently sending ioTag=0 which
+        // the FC would accept as a NONE release. Should never trip in
+        // practice (the dropdown only emits validated pad names), but it's
+        // the cheap safeguard CR asked for and rules out stale-state regressions.
+        if (newPin !== "NONE" && ioTag == null) {
+            console.warn(`Servos: pinToIoTag rejected "${newPin}" — aborting bind`);
+            return;
+        }
+
+        // Re-resolve the picked option to recover its `requiresRelease` list.
+        // <USelect> sees only {value,label}, so the prerequisite CLI lines
+        // (e.g. `resource MOTOR 3 NONE`, `resource LED_STRIP 1 NONE`,
+        // `resource SERIAL_TX 4 NONE`) need to be looked up here. Without
+        // running them before the bind, picking a "releases MOTOR N" / LED /
+        // UART candidate would leave the old claim dangling and the FC would
+        // either reject the new bind or carry duplicate claims.
+        const allOpts = resourceOptions({
+            kind: resourceType === 0 ? "motor" : "servo",
+            resource: resources[index],
+            motorResources,
+            servoResources,
+            hardwareAnalysis: effectiveAnalysis(),
+            fallbackPins: availablePins.value,
+            allowLedStrip: true,
+            // Match the dropdown builders so UART-release candidates re-resolve
+            // here with their full requiresRelease metadata. Without this, the
+            // handler skipped the `resource SERIAL_TX/RX N NONE` step and bound
+            // onto a pad the serial resource still owned.
+            allowUartRelease: spareUartReleaseWhitelist(),
+            expertMode: isExpertMode(),
+        });
+        const picked = allOpts.find((o) => o.value === newValue);
+        // Filter out timer remap lines from requiresRelease — those are
+        // handled by applyAfRemap below and would otherwise be sent twice.
+        const releaseLines = (picked?.requiresRelease ?? []).filter((line) => !/^timer\s+/i.test(line));
+
+        resources[index].pin = newPin;
+        resources[index].ioTag = ioTag;
+        // Track AF on the resource so the dropdown's model-value can match the
+        // alt-AF option after pick (encoded as `pin@AFn`, matches encodedPinValue).
+        resources[index].af = newAf;
+        // Flip dirty up front. A downstream CLI write that fails and triggers
+        // rollback() may still have left FC RAM in a half-changed state — prior
+        // release lines could have already cleared a MOTOR/SERVO/LED/UART claim
+        // (and mirrorReleaseToLocalRow updated other rows accordingly). Save
+        // should stay enabled so the user knows pending RAM changes need
+        // persisting (or a reboot to clear them).
+        resourcesModified.value = true;
+
+        // selfReleased flips true once the FC has dropped this row's
+        // binding via `resource MOTOR/SERVO N NONE`. After that point a
+        // failure restore can't safely revert to `previous` — the FC
+        // already cleared the row, so re-populating the local snapshot
+        // would put UI and firmware out of sync (next Save would re-write
+        // the released row). Use `safeRollback` instead of `rollback` from
+        // any error path that may run after a self-release succeeded.
+        let selfReleased = false;
+        const rollback = () => {
+            resources[index].pin = previous.pin;
+            resources[index].ioTag = previous.ioTag;
+            resources[index].af = previous.af;
+        };
+        const safeRollback = () => {
+            if (selfReleased) {
+                resources[index].pin = "NONE";
+                resources[index].ioTag = 0;
+                resources[index].af = null;
+            } else {
+                rollback();
+            }
+        };
+
+        for (const line of releaseLines) {
+            if (!(await applyReleaseLine(line))) {
+                rollback();
+                return;
+            }
+            // Give the FC a beat to drain its CLI buffer before the next
+            // command — same throttle pattern as loadSmartResourceAnalysis.
+            // Without this, a tight release+remap+release sequence can land
+            // partial responses.
+            await wait(250);
+        }
+
+        // Moving-away AF restore: the user is sending this row to a NEW
+        // pad while the OLD pad was on an alt-AF (previous.af != null).
+        // The MSP rebind below will free the old pad's resource binding
+        // but leave its `timer <pad> AF<n>` setting active in BF forever.
+        // Release the row (frees the old pad), remap the old pad back to
+        // its captured base AF, then let the rest of the flow continue
+        // (eventually applyAfRemap on newPin and mspHelper.setMotorServoResource).
+        // Mirrors the same-pad bare-pin restore branch below; both share
+        // the selfReleased guard so safeRollback handles failure cleanly.
+        if (newPin !== previous.pin && previous.pin !== "NONE" && previous.af != null) {
+            const baseAf = effectiveAnalysis()?.padCurrentAF?.get(previous.pin);
+            if (baseAf != null && baseAf !== previous.af) {
+                const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
+                const releaseLine = `resource ${resourceName} ${index + 1} NONE`;
+                if (!(await applyReleaseLine(releaseLine))) {
+                    rollback();
+                    return;
+                }
+                selfReleased = true;
+                // mirrorReleaseToLocalRow cleared this row locally; re-apply
+                // the pending bind so the dropdown stays on the new pin.
+                resources[index].pin = newPin;
+                resources[index].ioTag = ioTag;
+                resources[index].af = newAf;
+                await wait(250);
+                if (!(await applyAfRemap(previous.pin, baseAf))) {
+                    safeRollback();
+                    return;
+                }
+                await wait(250);
+            }
+        }
+
+        if (newAf != null && newPin !== "NONE") {
+            // Same-pad AF change: BF ignores `timer <pad> AF<n>` while the
+            // pad is still bound to a peripheral, so the AF write silently
+            // no-ops and the row keeps the old timer mapping after the
+            // mspHelper rebind. Release the current row first (mirrors the
+            // bare-pin restore branch below and the planner's release →
+            // remap → rebind sequence). The pad-change case still releases
+            // via the requiresRelease loop above.
+            if (newPin === previous.pin && newAf !== previous.af) {
+                const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
+                const selfRelease = `resource ${resourceName} ${index + 1} NONE`;
+                if (!(await applyReleaseLine(selfRelease))) {
+                    rollback();
+                    return;
+                }
+                selfReleased = true;
+                // applyReleaseLine→mirrorReleaseToLocalRow just cleared this
+                // row in the local resources array (pin/ioTag/af → 0/NONE/null).
+                // Re-apply the pending bind so the <USelect> doesn't render
+                // "NONE" after the MSP rebind below succeeds — the FC will be
+                // on the new pin/AF, but the UI snapshot would diverge.
+                resources[index].pin = newPin;
+                resources[index].ioTag = ioTag;
+                resources[index].af = newAf;
+                await wait(250);
+            }
+            if (!(await applyAfRemap(newPin, newAf))) {
+                safeRollback();
+                return;
+            }
+        }
+
+        // Switching back to the bare pin after previously picking an alt-AF
+        // ON THE SAME PIN: clear the row's AF locally, but the FC stays on
+        // the old `timer <pad> AF<n>` until we issue a remap back to the
+        // captured base. padCurrentAF is the AF that was active when we
+        // scanned (we never overwrite it on our own remap writes), so it's
+        // the correct restore target. Skip when we don't have a captured
+        // base. CRITICAL: only run this branch when newPin === previous.pin
+        // — otherwise we'd be comparing the previous PIN's override AF
+        // against the new PIN's captured AF and could fire a spurious
+        // remap on a pad the user didn't touch through this UI.
+        //
+        // Sequence the same way the planner does: release → remap → rebind.
+        // The FC won't accept `timer <pad> AF<n>` while the pad is still
+        // bound to a peripheral, so without the release the AF write
+        // silently no-ops and the FC keeps the old timer mapping under the
+        // active resource binding (mspHelper.setMotorServoResource below
+        // handles the rebind).
+        if (newAf == null && newPin !== "NONE" && previous.af != null && newPin === previous.pin) {
+            const baseAf = effectiveAnalysis()?.padCurrentAF?.get(newPin);
+            if (baseAf != null && baseAf !== previous.af) {
+                const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
+                const releaseLine = `resource ${resourceName} ${index + 1} NONE`;
+                if (!(await applyReleaseLine(releaseLine))) {
+                    rollback();
+                    return;
+                }
+                selfReleased = true;
+                // Re-apply pending bind after the self-release cleared the row
+                // locally — see the same-pad alt-AF branch above for context.
+                // baseAf restore means newAf is null, but the pin/ioTag still
+                // need to be put back so the dropdown reflects the live state.
+                resources[index].pin = newPin;
+                resources[index].ioTag = ioTag;
+                resources[index].af = null;
+                await wait(250);
+                if (!(await applyAfRemap(newPin, baseAf))) {
+                    safeRollback();
+                    return;
+                }
+            }
+        }
+
+        // No error callback path: mspHelper.setMotorServoResource (and every
+        // other MSP setter in MSPHelper.js) only invokes the callback on the
+        // FC's response receipt — transport errors don't surface here. We
+        // match that pattern rather than diverge with a one-off rollback.
+        // Await the callback so the in-flight guard stays set until the bind
+        // actually reaches the FC; without this, Save can re-enable and an
+        // EEPROM-write fires before the last MSP response lands.
+        //
+        // Watchdog: if the FC disconnects mid-write or the transport queue
+        // exhausts retries without invoking the callback, the await would
+        // hang forever, the finally below never runs, and the in-flight
+        // gate stays true until tab remount (locks every pin change and
+        // the Save button). 3s race buys the FC plenty of time on a slow
+        // USB link while letting the gate self-recover; the underlying MSP
+        // write still proceeds either way.
+        await new Promise((resolve) => {
+            let settled = false;
+            const done = () => {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                resolve();
+            };
+            const watchdog = setTimeout(() => {
+                console.warn(
+                    `Servos: setMotorServoResource(type=${resourceType} idx=${index} ioTag=${ioTag}) timed out waiting for FC response`,
+                );
+                done();
+            }, 3000);
+            mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
+                clearTimeout(watchdog);
+                done();
+            });
+        });
+    } finally {
+        // Clear on every exit path: rollback returns, AF-remap rollback,
+        // successful MSP send (now awaited above), and any thrown exception.
+        // Save can re-enable now that the chain is settled. Drop the global
+        // lock so other tabs / connection work can resume.
+        GUI.connect_lock = false;
+        resourcesWriteInFlight.value = false;
+    }
 }
 
 // Returns the dropdown value (encoded as `pin:af` for alt-AF entries) so
@@ -694,7 +1190,9 @@ async function onResourcePinChange(resourceType, resources, index, newValue) {
 // shows the default-AF entry even when the user picked an alt-AF one,
 // because USelect matches by value and motor.pin alone is the bare pin.
 function encodedPinValue(resource) {
-    if (!resource?.pin || resource.pin === "NONE") return "NONE";
+    if (!resource?.pin || resource.pin === "NONE") {
+        return "NONE";
+    }
     return resource.af != null ? encodeResourceOptionValue(resource.pin, resource.af) : resource.pin;
 }
 
@@ -773,5 +1271,9 @@ function initializeUI() {
 
 onMounted(() => {
     loadServoData();
+});
+
+onBeforeUnmount(() => {
+    isMounted.value = false;
 });
 </script>
