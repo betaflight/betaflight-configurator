@@ -36,7 +36,13 @@
 
                             <!-- Data rows -->
                             <template v-for="(servo, index) in servoConfigs" :key="index">
-                                <div class="text-center text-sm py-1">Servo {{ index + 1 }}</div>
+                                <div class="text-sm py-1 flex items-center justify-center gap-2">
+                                    <span
+                                        class="inline-block size-2 rounded-full shrink-0"
+                                        :style="{ backgroundColor: servoOutputColor(index) }"
+                                    />
+                                    <span>Servo {{ index + 1 }}</span>
+                                </div>
                                 <UInputNumber
                                     v-model="servo.min"
                                     :min="500"
@@ -101,10 +107,14 @@
                             <li
                                 v-for="i in 8"
                                 :key="'title' + i"
-                                class="text-center text-xs font-bold"
+                                class="text-xs font-bold flex items-center justify-center gap-1.5"
                                 :title="$t(`servoNumber${i}`)"
                             >
-                                {{ i }}
+                                <span
+                                    class="inline-block size-2 rounded-full shrink-0"
+                                    :style="{ backgroundColor: servoOutputColor(i - 1) }"
+                                />
+                                <span>{{ i }}</span>
                             </li>
                         </ul>
                         <ul class="grid grid-cols-8 gap-2">
@@ -188,7 +198,7 @@
                                             </div>
                                             <USelect
                                                 :model-value="motor.pin"
-                                                :items="resourcePinOptions"
+                                                :items="buildMotorPinOptions(motor)"
                                                 size="xs"
                                                 class="w-full"
                                                 @update:model-value="(val) => onMotorPinChange(motor.index, val)"
@@ -223,7 +233,7 @@
                                             </div>
                                             <USelect
                                                 :model-value="servo.pin"
-                                                :items="resourcePinOptions"
+                                                :items="buildServoPinOptions(servo)"
                                                 size="xs"
                                                 class="w-full"
                                                 @update:model-value="(val) => onServoPinChange(servo.index, val)"
@@ -271,6 +281,17 @@ import { useInterval } from "@/composables/useInterval";
 import { useTimeout } from "@/composables/useTimeout";
 import { lookupTargetDefaults } from "@/js/utils/targetDefaults";
 import { servoOutputColor, pwmSlotToServoIndex } from "@/js/utils/servoMixerModel";
+import {
+    readCli,
+    parseResourceShow,
+    parseTimerShow,
+    parseDmaShow,
+    parseTimerDump,
+    discoverPadTimerOptions,
+} from "@/js/utils/cliOneShot";
+import { analyzeResources } from "@/js/utils/resourceAnalyzer";
+import { mcuFamilyFromName } from "@/js/utils/mcuFamily";
+import { resourceOptions, parseResourceOptionValue } from "@/js/utils/motorServoResourceCandidates";
 
 const { t } = useTranslation();
 
@@ -294,6 +315,16 @@ const initialPins = ref([]);
 // snapshot tier — see src/js/utils/targetDefaults.js for the lookup helper.
 const padDefaults = ref(null);
 const padDefaultsSource = ref(null);
+
+// Smart resource analysis from a one-shot CLI scan (resource / timer / dma /
+// per-pad timer AF discovery). Drives the timer-aware dropdown — pads with
+// timer conflicts are dropped, peripherals get annotated, alt-AF candidates
+// surface for the same pad. Loads asynchronously after the MSP2 panel data
+// is ready; until it lands, dropdowns degrade to bare pin options +
+// silkscreen labels via padDefaults alone.
+const smartResourceAnalysis = ref(null);
+const smartResourceLoading = ref(false);
+const smartResourceError = ref(null);
 
 const { addInterval } = useInterval();
 const { addTimeout } = useTimeout();
@@ -342,24 +373,6 @@ function servoDotColor(slotIndex) {
     if (idx == null) return null;
     return servoOutputColor(idx);
 }
-
-// Annotate a pin with its silkscreen label when bundle defaults are loaded.
-// "C06" → "C06 (M1)" when C06 is the target's MOTOR 1 pad; LED_STRIP and
-// other peripheral pads get similar suffixes.
-function silkscreenLabel(pin) {
-    if (!padDefaults.value) return pin;
-    const motors = padDefaults.value.motors ?? [];
-    const motorIdx = motors.indexOf(pin);
-    if (motorIdx >= 0) return `${pin} (M${motorIdx + 1})`;
-    const ledStrips = padDefaults.value.ledStrips ?? [];
-    if (ledStrips.includes(pin)) return `${pin} (LED)`;
-    return pin;
-}
-
-const resourcePinOptions = computed(() => [
-    { value: "NONE", label: "NONE" },
-    ...availablePins.value.map((pin) => ({ value: pin, label: silkscreenLabel(pin) })),
-]);
 
 // Bar height as percentage (0-100) for UProgress
 function getBarHeight(value) {
@@ -434,6 +447,102 @@ function getServoData() {
     });
 }
 
+// Build per-row dropdown options. resourceOptions() degrades gracefully:
+//   - bundle padDefaults only (initial render): silkscreen labels work, no
+//     timer-conflict drop yet (padTimers absent)
+//   - smartResourceAnalysis loaded: full timer-aware candidate pool with
+//     peripheral annotations and alt-AF entries
+//   - nothing loaded: bare pin pass-through via fallbackPins
+function effectiveAnalysis() {
+    if (smartResourceAnalysis.value) return smartResourceAnalysis.value;
+    if (padDefaults.value) return { padDefaults: padDefaults.value };
+    return null;
+}
+function withNone(items) {
+    if (items.some((i) => i.value === "NONE")) return items;
+    return [{ value: "NONE", label: "NONE" }, ...items];
+}
+// Master stores the global Expert Mode toggle on `window.vm.expertMode`
+// (App.vue seeds it from getConfig("expertMode")). When ON, the candidate
+// pool expands beyond silkscreen-labeled pads to all PWM-capable pads.
+function isExpertMode() {
+    return Boolean(typeof window !== "undefined" && window.vm?.expertMode);
+}
+function buildMotorPinOptions(motor) {
+    const opts = resourceOptions({
+        kind: "motor",
+        resource: motor,
+        motorResources,
+        servoResources,
+        hardwareAnalysis: effectiveAnalysis(),
+        fallbackPins: availablePins.value,
+        allowLedStrip: true,
+        expertMode: isExpertMode(),
+    });
+    return withNone(opts.map((o) => ({ value: o.value, label: o.label })));
+}
+function buildServoPinOptions(servo) {
+    const opts = resourceOptions({
+        kind: "servo",
+        resource: servo,
+        motorResources,
+        servoResources,
+        hardwareAnalysis: effectiveAnalysis(),
+        fallbackPins: availablePins.value,
+        allowLedStrip: true,
+        expertMode: isExpertMode(),
+    });
+    return withNone(opts.map((o) => ({ value: o.value, label: o.label })));
+}
+
+// Run a one-shot CLI scan after the resource panel has populated. Reads
+// `resource show`, `timer show`, `dma show`, `timer` and feeds them into
+// the analyzer to produce padTimers, peripheral lists, free-pad inventory,
+// and (via discoverPadTimerOptions) per-pad alt-AF candidates. Result
+// flows through buildMotorPinOptions / buildServoPinOptions next render.
+async function loadSmartResourceAnalysis() {
+    if (!hasResourceData.value || smartResourceLoading.value) return;
+    smartResourceLoading.value = true;
+    smartResourceError.value = null;
+    try {
+        // Use readCli verbatim from the pre-rebase port — this is the path
+        // that worked yesterday on TMTR_TMOTORF7 and exposes timer info,
+        // alt-AF candidates, and the full peripheral picture.
+        const resourceShow = await readCli("resource show");
+        const timerShow = await readCli("timer show");
+        const dmaShow = await readCli("dma show");
+        const timerDump = await readCli("timer");
+
+        const analysis = analyzeResources({
+            resourceShow: parseResourceShow(resourceShow.lines),
+            timerShow: parseTimerShow(timerShow.lines),
+            dmaShow: parseDmaShow(dmaShow.lines),
+            timerDump: parseTimerDump(timerDump.lines),
+            serialPorts: FC.SERIAL_CONFIG?.ports || [],
+            mcuFamily: mcuFamilyFromName(FC.MCU_INFO?.name),
+        });
+
+        smartResourceAnalysis.value = padDefaults.value ? { ...analysis, padDefaults: padDefaults.value } : analysis;
+
+        const altAfPool = analysis.padTimers instanceof Map ? [...analysis.padTimers.keys()] : [];
+        if (altAfPool.length > 0) {
+            try {
+                const padTimerOptions = await discoverPadTimerOptions(altAfPool);
+                smartResourceAnalysis.value = padDefaults.value
+                    ? { ...analysis, padDefaults: padDefaults.value, padTimerOptions }
+                    : { ...analysis, padTimerOptions };
+            } catch (afErr) {
+                console.warn("Servos: alt-AF discovery failed", afErr);
+            }
+        }
+    } catch (e) {
+        console.warn("Servos: smart resource analysis failed", e);
+        smartResourceError.value = e?.message ?? String(e);
+    } finally {
+        smartResourceLoading.value = false;
+    }
+}
+
 // Lookup bundled silkscreen defaults for the connected board. Tier-0 of
 // the padDefaults chain — when the target ships with `betaflight/unified-targets`
 // metadata we use it directly; otherwise the dropdown falls back to bare
@@ -456,6 +565,11 @@ function loadPadDefaults() {
 }
 
 // Populate motor/servo resource state from FC and seed initialPins.
+// Trusts what `MSP2_MOTOR_SERVO_RESOURCE` reports verbatim — slots the
+// firmware says are NONE stay NONE in the dropdown, since "NONE" is a
+// real user choice (e.g. a 4-motor airplane with motors 5-8 unused).
+// Silkscreen labels still appear on the dropdown OPTIONS via the smart
+// picker so the user can identify and pick a default pad easily.
 function loadResourceData() {
     const pins = new Set();
 
@@ -485,7 +599,16 @@ function loadResourceData() {
 }
 
 // Shared handler for motor (resourceType 0) and servo (resourceType 1) pin updates.
-function onResourcePinChange(resourceType, resources, index, newPin) {
+//
+// Smart-picker dropdowns may emit encoded values like "C06:1" (pin:AF) when
+// an option requires an alt-AF timer remap. We strip down to the bare pin
+// here and write only the ioTag via MSP2 — the matching `timer <pad> AF<n>`
+// CLI write is a follow-up; for now picking an alt-AF option is equivalent
+// to picking the bare pin.
+function onResourcePinChange(resourceType, resources, index, newValue) {
+    const decoded = parseResourceOptionValue(newValue);
+    const newPin = decoded?.pin ?? newValue;
+
     const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
 
     resources[index].pin = newPin;
@@ -525,6 +648,9 @@ async function loadServoData() {
         try {
             await MSP.promise(MSPCodes.MSP2_MOTOR_SERVO_RESOURCE);
             loadResourceData();
+            // Fire-and-forget the CLI scan; dropdowns degrade to bare pins
+            // until it resolves, then upgrade to timer-aware candidates.
+            loadSmartResourceAnalysis();
         } catch {
             console.log("Resource data not available (firmware may not support MSP2_MOTOR_SERVO_RESOURCE)");
             hasResourceData.value = false;
