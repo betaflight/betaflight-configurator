@@ -45,7 +45,7 @@ Open the repository in VS Code and use the Dev Containers extension to build and
 
 ```bash
 # Build the container
-docker build -t bf-configurator-dev .devcontainer/
+docker build -f .devcontainer/containerfile -t bf-configurator-dev .devcontainer/
 
 # Run interactively with USB access
 docker run -it --rm \
