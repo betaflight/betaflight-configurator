@@ -82,6 +82,7 @@ const defaultVendorIdNames = {
     1027: "FTDI",
     1155: "STM Electronics",
     4292: "Silicon Labs",
+    6790: "WCH (QinHeng Electronics)",
     11836: "AT32",
     12619: "Geehy Semiconductor",
     11914: "Raspberry Pi Pico",

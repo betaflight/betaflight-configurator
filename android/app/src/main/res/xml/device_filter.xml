@@ -31,4 +31,7 @@
     <!-- Raspberry Pi Pico devices -->
     <usb-device vendor-id="11914" product-id="9" /> <!-- Raspberry Pi Pico VCP -->
     <usb-device vendor-id="11914" product-id="15" /> <!-- Raspberry Pi Pico in Bootloader mode -->
+
+    <!-- WCH (QinHeng Electronics) devices -->
+    <usb-device vendor-id="6790" product-id="29987" /> <!-- CH340 USB-to-Serial -->
 </resources>
