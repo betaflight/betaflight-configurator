@@ -143,6 +143,8 @@ export function useCli() {
     // Support dialog callback
     let supportDialogCallback = null;
 
+    const SCROLL_NEAR_BOTTOM_PX = 40;
+
     let outputBuffer = "";
     let outputFlushRaf = null;
     let copyResetTimeout = null;
@@ -455,10 +457,10 @@ export function useCli() {
                 }
                 break;
             case 60:
-                cliBuffer += "&lt;";
+                cliBuffer += "<";
                 break;
             case 62:
-                cliBuffer += "&gt;";
+                cliBuffer += ">";
                 break;
             case backspaceCode:
                 cliBuffer = cliBuffer.slice(0, -1);
@@ -576,7 +578,7 @@ export function useCli() {
             scrollListener = () => {
                 const el = cliWindowRef.value;
                 if (el) {
-                    scrollPinned = el.scrollTop + el.clientHeight >= el.scrollHeight - 40;
+                    scrollPinned = el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_NEAR_BOTTOM_PX;
                 }
             };
             cliWindowRef.value.addEventListener("scroll", scrollListener, { passive: true });
