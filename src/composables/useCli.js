@@ -80,7 +80,7 @@ function onCopyFailed(ex) {
     console.warn(ex);
 }
 
-async function submitSupportData(data, state, clearHistory, executeCommands, writeToOutput) {
+async function submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, getOutputHistory) {
     clearHistory();
     const api = new BuildApi();
 
@@ -96,7 +96,7 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
         const time = Date.now();
         if (state.lastArrival < time - 250) {
             clearInterval(delay);
-            const text = state.outputHistory;
+            const text = getOutputHistory();
             let key = await api.submitSupportData(text);
             if (!key) {
                 writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", ["** error **"]));
@@ -111,10 +111,10 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
 export function useCli() {
     const autocomplete = useCliAutocomplete();
 
-    // Reactive state
+    // Reactive state — outputHistory and cliBuffer are intentionally kept as plain closure
+    // variables below, not in reactive(), to avoid Vue Proxy overhead in the serial read
+    // hot path where they are updated thousands of times per large paste.
     const state = reactive({
-        outputHistory: "",
-        cliBuffer: "",
         startProcessing: false,
         lastArrival: 0,
         lastSupportId: null,
@@ -127,6 +127,11 @@ export function useCli() {
         copyButtonText: i18n.getMessage("cliCopyToClipboardBtn"),
         copyButtonWidth: "",
     });
+
+    // Plain variables — not reactive because they are never rendered in the template.
+    // Reads only happen on explicit user actions (copy, save, submit support).
+    let outputHistory = "";
+    let cliBuffer = "";
 
     // Refs for DOM elements
     const windowWrapperRef = ref(null);
@@ -144,10 +149,18 @@ export function useCli() {
     const flushOutput = () => {
         outputFlushRaf = null;
         if (outputBuffer && windowWrapperRef.value) {
-            windowWrapperRef.value.innerHTML += outputBuffer;
+            // insertAdjacentHTML only parses the new fragment — it never serializes or
+            // re-parses existing DOM nodes. The previous innerHTML += caused O(N²) slowdown:
+            // every flush re-parsed the entire growing output on each animation frame.
+            windowWrapperRef.value.insertAdjacentHTML("beforeend", outputBuffer);
             outputBuffer = "";
             if (cliWindowRef.value) {
-                cliWindowRef.value.scrollTop = cliWindowRef.value.scrollHeight;
+                const el = cliWindowRef.value;
+                // Only auto-scroll when the user is already at or near the bottom.
+                // Preserves scroll position when the user has scrolled up to review output.
+                if (el.scrollHeight - el.scrollTop - el.clientHeight < 40) {
+                    el.scrollTop = el.scrollHeight;
+                }
             }
         }
     };
@@ -180,7 +193,7 @@ export function useCli() {
     };
 
     const clearHistory = () => {
-        state.outputHistory = "";
+        outputHistory = "";
         outputBuffer = "";
         if (windowWrapperRef.value) {
             windowWrapperRef.value.innerHTML = "";
@@ -218,8 +231,8 @@ export function useCli() {
                 processingDelay = state.profileSwitchDelayMs;
             }
             const isLastCommand = outputArray.length === 0;
-            if (isLastCommand && state.cliBuffer) {
-                line = getCliCommand(line, state.cliBuffer);
+            if (isLastCommand && cliBuffer) {
+                line = getCliCommand(line, cliBuffer);
             }
 
             sendLine(line);
@@ -264,7 +277,7 @@ export function useCli() {
 
     const saveFile = async () => {
         const filename = generateFilename("cli", "txt");
-        const content = formatContentWithSupportId(state.outputHistory, state.lastSupportId);
+        const content = formatContentWithSupportId(outputHistory, state.lastSupportId);
 
         const file = await FileSystem.pickSaveFile(
             filename,
@@ -282,7 +295,7 @@ export function useCli() {
     };
 
     const copyToClipboard = () => {
-        const text = formatContentWithSupportId(state.outputHistory, state.lastSupportId);
+        const text = formatContentWithSupportId(outputHistory, state.lastSupportId);
 
         function onCopySuccessful() {
             const origText = state.copyButtonText;
@@ -300,7 +313,7 @@ export function useCli() {
 
     const submitSupportRequest = async () => {
         showSupportWarningDialog((data) =>
-            submitSupportData(data, state, clearHistory, executeCommands, writeToOutput),
+            submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, () => outputHistory),
         );
     };
 
@@ -348,7 +361,7 @@ export function useCli() {
                 // Native FC autoComplete
                 const outString = state.commandInput;
                 const lastCommand = outString.split("\n").pop();
-                const command = getCliCommand(lastCommand, state.cliBuffer);
+                const command = getCliCommand(lastCommand, cliBuffer);
                 if (command) {
                     sendNativeAutoComplete(command);
                     state.commandInput = "";
@@ -426,34 +439,34 @@ export function useCli() {
         switch (charCode) {
             case lineFeedCode:
                 if (GUI.operating_system === "Windows") {
-                    writeLineToOutput(state.cliBuffer);
-                    state.cliBuffer = "";
+                    writeLineToOutput(cliBuffer);
+                    cliBuffer = "";
                 }
                 break;
             case carriageReturnCode:
                 if (GUI.operating_system !== "Windows") {
-                    writeLineToOutput(state.cliBuffer);
-                    state.cliBuffer = "";
+                    writeLineToOutput(cliBuffer);
+                    cliBuffer = "";
                 }
                 break;
             case 60:
-                state.cliBuffer += "&lt";
+                cliBuffer += "&lt";
                 break;
             case 62:
-                state.cliBuffer += "&gt";
+                cliBuffer += "&gt";
                 break;
             case backspaceCode:
-                state.cliBuffer = state.cliBuffer.slice(0, -1);
-                state.outputHistory = state.outputHistory.slice(0, -1);
+                cliBuffer = cliBuffer.slice(0, -1);
+                outputHistory = outputHistory.slice(0, -1);
                 return true; // signal to continue
             default:
-                state.cliBuffer += currentChar;
+                cliBuffer += currentChar;
         }
         return false;
     };
 
     const checkForReboot = () => {
-        if (state.cliBuffer === "Rebooting") {
+        if (cliBuffer === "Rebooting") {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
             gui_log(i18n.getMessage("cliReboot"));
@@ -468,7 +481,7 @@ export function useCli() {
             // begin output history with the prompt (last line of welcome message)
             // this is to match the content of the history with what the user sees on this tab
             const lastLine = validateText.split("\n").pop();
-            state.outputHistory = lastLine;
+            outputHistory = lastLine;
 
             if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
                 // start building autoComplete
@@ -526,7 +539,7 @@ export function useCli() {
 
             if (!CliAutoComplete.isBuilding()) {
                 // do not include the building dialog into the history
-                state.outputHistory += currentChar;
+                outputHistory += currentChar;
             }
 
             checkForReboot();
@@ -538,13 +551,13 @@ export function useCli() {
 
         // fallback to native autocomplete
         if (!CliAutoComplete.isEnabled()) {
-            setPrompt(removePromptHash(state.cliBuffer));
+            setPrompt(removePromptHash(cliBuffer));
         }
     };
 
     const initialize = async () => {
-        state.outputHistory = "";
-        state.cliBuffer = "";
+        outputHistory = "";
+        cliBuffer = "";
         state.startProcessing = false;
 
         CONFIGURATOR.cliActive = true;
@@ -590,7 +603,7 @@ export function useCli() {
         outputBuffer = "";
 
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
-            send(getCliCommand("exit\r", state.cliBuffer), function () {
+            send(getCliCommand("exit\r", cliBuffer), function () {
                 GUI.reinitializeConnection();
             });
         }
