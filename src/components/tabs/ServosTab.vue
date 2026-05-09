@@ -189,7 +189,9 @@
                                             {{ $t("servosResourcePin") }}
                                         </div>
                                         <template v-for="motor in motorResources" :key="'motor' + motor.index">
-                                            <div class="text-sm py-1 flex items-center justify-center gap-2">
+                                            <div
+                                                class="text-sm py-1 flex items-center justify-center gap-2 whitespace-nowrap"
+                                            >
                                                 <span
                                                     class="inline-block size-2 rounded-full shrink-0"
                                                     :style="{ backgroundColor: motorDotColor(motor.index) }"
@@ -219,7 +221,9 @@
                                             {{ $t("servosResourcePin") }}
                                         </div>
                                         <template v-for="servo in servoResources" :key="'servo' + servo.index">
-                                            <div class="text-sm py-1 flex items-center justify-center gap-2">
+                                            <div
+                                                class="text-sm py-1 flex items-center justify-center gap-2 whitespace-nowrap"
+                                            >
                                                 <span
                                                     v-if="servoDotColor(servo.index)"
                                                     class="inline-block size-2 rounded-full shrink-0"
@@ -254,9 +258,10 @@
             <div class="flex gap-2">
                 <UButton
                     :label="$t('servosButtonSave')"
-                    :disabled="!configHasChanged"
+                    :disabled="!configHasChanged && !resourcesModified"
                     color="warning"
                     variant="solid"
+                    class="!bg-[#ffbb00] !text-zinc-900 hover:!bg-[#e6a800] disabled:!bg-zinc-600 disabled:!text-zinc-400"
                     @click="saveServoConfig"
                 />
             </div>
@@ -504,13 +509,23 @@ async function loadSmartResourceAnalysis() {
     if (!hasResourceData.value || smartResourceLoading.value) return;
     smartResourceLoading.value = true;
     smartResourceError.value = null;
+    // Throttling: the CLI bridge in master is queue-based but the FC
+    // itself needs a beat to drain its CLI output buffer between
+    // back-to-back commands. On first-tab-load the MSP queue has just
+    // finished pulling MSP_SERVO_CONFIGURATIONS / MSP_RC / MSP_BOXNAMES
+    // and the FC is still settling — without an initial settle wait
+    // the first CLI commands return partial/empty responses (timers
+    // missing, peripherals not annotated). 250ms inter-command was
+    // the effective quiescence in pre-rebase readCli.
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     try {
-        // Use readCli verbatim from the pre-rebase port — this is the path
-        // that worked yesterday on TMTR_TMOTORF7 and exposes timer info,
-        // alt-AF candidates, and the full peripheral picture.
+        await wait(500);
         const resourceShow = await readCli("resource show");
+        await wait(250);
         const timerShow = await readCli("timer show");
+        await wait(250);
         const dmaShow = await readCli("dma show");
+        await wait(250);
         const timerDump = await readCli("timer");
 
         const analysis = analyzeResources({

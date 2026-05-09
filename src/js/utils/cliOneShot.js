@@ -344,11 +344,21 @@ export async function readTimerOptionsForPin(pad, opts = {}) {
 export async function discoverPadTimerOptions(pads, opts = {}) {
     const out = new Map();
     if (!Array.isArray(pads)) return out;
+    // Inter-command throttle: master's send_cli_command queues serially
+    // but the FC needs a beat to drain its CLI buffer between back-to-back
+    // `timer <pad> list` requests. Without this delay, later responses
+    // can come back empty (or get mis-attributed to the previous pad).
+    // 100ms matches what the pre-rebase quiescence timer effectively
+    // gave us before we switched to single-shot resolve.
+    const interCommandDelayMs = opts.interCommandDelayMs ?? 200;
     for (const pad of pads) {
         if (typeof pad !== "string" || pad.length === 0) continue;
         const upper = pad.toUpperCase();
         if (out.has(upper)) continue;
         out.set(upper, await readTimerOptionsForPin(upper, opts));
+        if (interCommandDelayMs > 0) {
+            await new Promise((resolve) => setTimeout(resolve, interCommandDelayMs));
+        }
     }
     return out;
 }

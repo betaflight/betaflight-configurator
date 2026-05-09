@@ -258,12 +258,48 @@ function motorOptions({ resource, motorResources, servoResources, hardwareAnalys
     }
     for (const pad of hardwareAnalysis.pwmCapableFreePads ?? []) {
         if (poolFilter && !padPool.has(normalizePin(pad.pad))) continue;
+        const pin = normalizePin(pad.pad);
+        const assignment = describeCurrentAssignment(pin, ctx);
+        if (assignment) {
+            // Pad is bound now (e.g. user just picked it for another row).
+            // Annotate with the binding rather than the stale "free" label
+            // from the captured CLI scan.
+            const head = padDisplayLabel(pin, silkscreenMap);
+            const parts = [head];
+            if (pad.timer != null) {
+                parts.push(`TIM${pad.timer}${pad.channel != null ? ` CH${pad.channel}` : ""}`);
+            }
+            parts.push(assignment);
+            addOption(options, seen, { pin, label: parts.join(" - "), timer: pad.timer, channel: pad.channel });
+        } else {
+            addOption(options, seen, {
+                pin,
+                label: labelForCandidate({ ...pad, source: "free-pwm" }, silkscreenMap),
+                source: "free-pwm",
+                timer: pad.timer,
+                channel: pad.channel,
+            });
+        }
+    }
+    // Always include every silkscreen-motor pad from the bundle as a
+    // candidate. DSHOT motors can share a timer (each on its own
+    // channel), so any motor-labeled pad is a valid swap target for any
+    // motor row. Belt-and-suspenders against partial CLI scans dropping
+    // pads from pwmCapableFreePads.
+    for (const m of hardwareAnalysis?.padDefaults?.motors ?? []) {
+        if (!m?.pad) continue;
+        const pin = normalizePin(m.pad);
+        if (pin === RESOURCE_NONE) continue;
+        const assignment = describeCurrentAssignment(pin, ctx);
+        const timer = timerSuffixForPin(pin, padTimers);
+        const head = padDisplayLabel(pin, silkscreenMap);
+        const parts = [head];
+        if (timer) parts.push(timer);
+        if (assignment) parts.push(assignment);
         addOption(options, seen, {
-            pin: pad.pad,
-            label: labelForCandidate({ ...pad, source: "free-pwm" }, silkscreenMap),
-            source: "free-pwm",
-            timer: pad.timer,
-            channel: pad.channel,
+            pin,
+            label: parts.join(" - "),
+            source: "silkscreen-motor",
         });
     }
     addFallbackOptions(options, seen, fallbackPins, ctx);
