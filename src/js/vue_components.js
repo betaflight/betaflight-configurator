@@ -46,6 +46,7 @@ export const BetaflightComponents = {
         app.component("CliTab", VueTabComponents.cli);
         app.component("PowerTab", VueTabComponents.power);
         app.component("SensorsTab", VueTabComponents.sensors);
+        app.component("SensorConfigTab", VueTabComponents.sensor_config);
         app.component("FlightPlanTab", VueTabComponents.flight_plan);
         app.component("LedStripTab", VueTabComponents.led_strip);
         app.component("FailsafeTab", VueTabComponents.failsafe);

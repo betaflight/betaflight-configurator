@@ -1,4 +1,4 @@
-import { ref, computed, shallowRef, onScopeDispose } from "vue";
+import { ref, computed, shallowRef, triggerRef, onScopeDispose } from "vue";
 import geomagnetism from "geomagnetism";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
@@ -31,10 +31,10 @@ function computeQuality(fit, cov) {
     if (!fit || !cov) {
         return null;
     }
-    if (fit.residual < 50 && cov.uniform > 0.6) {
+    if (fit.residual < 80 && cov.uniform > 0.4) {
         return "good";
     }
-    if (fit.residual < 100) {
+    if (fit.residual < 150) {
         return "fair";
     }
     return "poor";
@@ -211,8 +211,8 @@ export function useMagCalibration() {
             statusMessage.value = "magCalibrationCollecting";
         }
 
-        // New array reference so child component watchers see the change
-        samples.value = [...samples.value, { x: mx, y: my, z: mz, timestamp: Date.now() }];
+        samples.value.push({ x: mx, y: my, z: mz, timestamp: Date.now() });
+        triggerRef(samples);
 
         samplesSinceLastFit++;
         if (samplesSinceLastFit >= SPHERE_FIT_EVERY_N) {
@@ -309,7 +309,7 @@ export function computeDeclination(lat, lon) {
         lastGeoReference = result;
         return result;
     } catch {
-        return { declination: 0, inclination: 0, fieldStrength: 0 };
+        return null;
     }
 }
 

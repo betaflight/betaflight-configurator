@@ -459,22 +459,20 @@ function updatePoints(sampleList) {
     pointGeometry.computeBoundingSphere();
 }
 
-function updateWireframe(fit) {
-    // Remove old wireframe
-    if (wireframeMesh) {
-        scene.remove(wireframeMesh);
-        wireframeMesh.geometry.dispose();
-        wireframeMesh.material.dispose();
-        wireframeMesh = null;
+function removeAndDispose(mesh) {
+    if (!mesh) {
+        return;
     }
+    scene?.remove(mesh);
+    mesh.geometry?.dispose();
+    mesh.material?.dispose();
+}
 
-    // Remove old center marker
-    if (centerMarker) {
-        scene.remove(centerMarker);
-        centerMarker.geometry.dispose();
-        centerMarker.material.dispose();
-        centerMarker = null;
-    }
+function updateWireframe(fit) {
+    removeAndDispose(wireframeMesh);
+    wireframeMesh = null;
+    removeAndDispose(centerMarker);
+    centerMarker = null;
 
     if (!fit || !scene) {
         return;

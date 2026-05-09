@@ -71,6 +71,14 @@ const ALIGNMENT_LABELS = {
 /**
  * Detect the most likely magnetometer alignment.
  *
+ * Uses a two-phase strategy:
+ *   Phase 1 — Resolve flip state by comparing tilt-weighted vertical variance
+ *             between non-flipped (1-4) and flipped (5-8) candidates. Tilted
+ *             samples are weighted higher because they are most discriminative
+ *             for flip detection.
+ *   Phase 2 — Within the winning flip group, resolve CW rotation angle by
+ *             comparing total (vertical + horizontal) variance.
+ *
  * @param {Array<{mag: number[], roll: number, pitch: number}>} samples
  *   Each sample has mag=[x,y,z] (raw from MSP_RAW_IMU, current alignment applied),
  *   roll and pitch in degrees (from MSP_ATTITUDE).
@@ -78,7 +86,7 @@ const ALIGNMENT_LABELS = {
  *   Used to undo the firmware's rotation so we test against the true sensor frame.
  * @param {{ roll: number, pitch: number, yaw: number }} [customAngles] -
  *   Custom alignment angles in degrees, required when currentAlignment === 9.
- * @returns {{ alignment: number, label: string, confidence: number, reliable: boolean } | { error: string }}
+ * @returns {{ alignment: number, label: string, confidence: number, reliable: boolean, tiltCoverage: number } | { error: string }}
  */
 export function detectAlignment(samples, currentAlignment, customAngles) {
     if (samples.length < 30) {
@@ -91,29 +99,41 @@ export function detectAlignment(samples, currentAlignment, customAngles) {
     }
     const currentInv = mat3transpose(currentMat);
 
-    let bestAlignment = 1;
-    let bestVariance = Infinity;
-    let secondBestVariance = Infinity;
-
+    // Evaluate all 8 candidates with separate vertical/horizontal variance
+    const candidates = [];
     for (const [alignStr, candidateMat] of Object.entries(ALIGNMENT_MATRICES)) {
-        const totalVar = evaluateCandidate(candidateMat, currentInv, samples);
-
-        if (totalVar < bestVariance) {
-            secondBestVariance = bestVariance;
-            bestVariance = totalVar;
-            bestAlignment = Number.parseInt(alignStr, 10);
-        } else if (totalVar < secondBestVariance) {
-            secondBestVariance = totalVar;
-        }
+        const align = Number.parseInt(alignStr, 10);
+        const { verticalVar, horizontalVar } = evaluateCandidateDetailed(candidateMat, currentInv, samples);
+        candidates.push({ align, verticalVar, horizontalVar, totalVar: verticalVar + horizontalVar });
     }
 
-    const confidence = computeConfidence(bestVariance, secondBestVariance);
+    // Phase 1 — Resolve flip state
+    // Non-flipped = alignments 1-4 (Z unchanged), flipped = 5-8 (Z negated)
+    const normal = candidates.filter((c) => c.align <= 4);
+    const flipped = candidates.filter((c) => c.align > 4);
+
+    const bestNormalVert = Math.min(...normal.map((c) => c.verticalVar));
+    const bestFlippedVert = Math.min(...flipped.map((c) => c.verticalVar));
+
+    const isFlipped = bestFlippedVert < bestNormalVert;
+    const group = isFlipped ? flipped : normal;
+
+    // Phase 2 — Resolve CW angle within the winning flip group
+    group.sort((a, b) => a.totalVar - b.totalVar);
+    const best = group[0];
+
+    // Confidence: compare best total variance to second-best across ALL candidates
+    const sorted = [...candidates].sort((a, b) => a.totalVar - b.totalVar);
+    const confidence = computeConfidence(sorted[0].totalVar, sorted[1].totalVar);
+
+    const tiltCoverage = computeTiltCoverage(samples);
 
     return {
-        alignment: bestAlignment,
-        label: ALIGNMENT_LABELS[bestAlignment],
+        alignment: best.align,
+        label: ALIGNMENT_LABELS[best.align],
         confidence: Math.round(confidence * 10) / 10,
         reliable: confidence > 2,
+        tiltCoverage,
     };
 }
 
@@ -128,10 +148,16 @@ function buildCurrentMatrix(currentAlignment, customAngles) {
     return ALIGNMENT_MATRICES[curAlign];
 }
 
-function evaluateCandidate(candidateMat, currentInv, samples) {
+/**
+ * Evaluate a candidate alignment, returning separate vertical and horizontal
+ * variance. Uses tilt-weighted variance so tilted samples (which are most
+ * discriminative for flip detection) have more influence.
+ */
+function evaluateCandidateDetailed(candidateMat, currentInv, samples) {
     const combined = mat3mul(candidateMat, currentInv);
     const verticals = [];
     const horizMags = [];
+    const weights = [];
 
     for (const s of samples) {
         const bodyMag = mat3mulVec(combined, s.mag);
@@ -141,9 +167,38 @@ function evaluateCandidate(candidateMat, currentInv, samples) {
 
         verticals.push(level[2]);
         horizMags.push(Math.hypot(level[0], level[1]));
+
+        // Weight by tilt magnitude: level samples get weight 1,
+        // samples tilted 45°+ get weight 3. This breaks the degeneracy
+        // between flipped and non-flipped orientations that occurs
+        // when most samples are near-level.
+        const tilt = Math.hypot(rollRad, pitchRad);
+        const tiltFrac = Math.min(tilt / (Math.PI / 4), 1);
+        weights.push(1 + 2 * tiltFrac);
     }
 
-    return computeVariance(verticals) + computeVariance(horizMags);
+    return {
+        verticalVar: computeWeightedVariance(verticals, weights),
+        horizontalVar: computeWeightedVariance(horizMags, weights),
+    };
+}
+
+/**
+ * Fraction of samples with tilt > 15°. Low coverage means flip detection
+ * may be unreliable.
+ */
+function computeTiltCoverage(samples) {
+    const TILT_THRESHOLD_RAD = (15 * Math.PI) / 180;
+    let tilted = 0;
+    for (const s of samples) {
+        const rollRad = s.roll * (Math.PI / 180);
+        const pitchRad = s.pitch * (Math.PI / 180);
+        const tilt = Math.hypot(rollRad, pitchRad);
+        if (tilt > TILT_THRESHOLD_RAD) {
+            tilted++;
+        }
+    }
+    return tilted / samples.length;
 }
 
 function computeConfidence(bestVariance, secondBestVariance) {
@@ -203,22 +258,24 @@ function undoRollPitch(v, rollRad, pitchRad) {
     return [cp * v[0] + sp * z1, y1, -sp * v[0] + cp * z1];
 }
 
-function computeVariance(values) {
+function computeWeightedVariance(values, weights) {
     if (values.length < 2) {
         return 0;
     }
-    let sum = 0;
-    for (const v of values) {
-        sum += v;
+    let wSum = 0;
+    let wvSum = 0;
+    for (let i = 0; i < values.length; i++) {
+        wSum += weights[i];
+        wvSum += weights[i] * values[i];
     }
-    const mean = sum / values.length;
+    const mean = wvSum / wSum;
 
-    let sumSq = 0;
-    for (const v of values) {
-        const d = v - mean;
-        sumSq += d * d;
+    let wSqSum = 0;
+    for (let i = 0; i < values.length; i++) {
+        const d = values[i] - mean;
+        wSqSum += weights[i] * d * d;
     }
-    return sumSq / values.length;
+    return wSqSum / wSum;
 }
 
 /**

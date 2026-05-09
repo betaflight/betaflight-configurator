@@ -416,6 +416,48 @@
     "tabSetupOSD": {
         "message": "OSD Setup"
     },
+    "tabSensorConfig": {
+        "message": "Sensors"
+    },
+    "sensorConfigHardware": {
+        "message": "Sensor Hardware"
+    },
+    "sensorConfigSaved": {
+        "message": "Sensor configuration saved"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Failed to save sensor configuration"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetometer"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Accelerometer"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Place the craft on a level surface before calibrating"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "Accelerometer has not been calibrated. Please calibrate before flying."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Magnetometer calibration offsets are zero. Please calibrate for accurate heading."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibrate"
+    },
+    "sensorConfig3dPreview": {
+        "message": "3D Attitude Preview"
+    },
+    "sensorConfigLiveData": {
+        "message": "Live Sensor Data"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Show Live Sensor Data"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Stop live data"
+    },
     "tabConfiguration": {
         "message": "Configuration"
     },
@@ -459,7 +501,7 @@
         "message": "LED Strip"
     },
     "tabRawSensorData": {
-        "message": "Sensors"
+        "message": "Sensor Data"
     },
     "tabCLI": {
         "message": "CLI"
@@ -1568,13 +1610,13 @@
         "message": "Board Alignment"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "Roll Degrees"
+        "message": "Roll°"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "Pitch Degrees"
+        "message": "Pitch°"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Yaw Degrees"
+        "message": "Yaw°"
     },
     "configurationGyroAlignment": {
         "message": "Gyro Alignment"
@@ -7484,10 +7526,10 @@
         "message": "Accelerometer"
     },
     "configurationBaroHardware": {
-        "message": "Barometer (if supported)"
+        "message": "Barometer"
     },
     "configurationMagHardware": {
-        "message": "Magnetometer (if supported)"
+        "message": "Magnetometer"
     },
     "configurationMagCalibrate": {
         "message": "Calibrate"
@@ -7502,16 +7544,55 @@
         "message": "Magnetic declination set to {{declination}}° from detected location."
     },
     "configurationMagInclination": {
+        "message": "Inclination"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "The angle between the earth's magnetic field and the horizontal plane at your location. Positive values indicate the field points downward (northern hemisphere)"
+    },
+    "configurationMagInclinationValue": {
         "message": "Inclination: {{value}}°"
     },
     "configurationMagFieldStrength": {
         "message": "Field: {{value}} nT"
     },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Field Strength"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "The total intensity of the earth's magnetic field at your location in nanotesla (nT). Typical values range from 25,000 to 65,000 nT"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Update"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Magnetic declination auto-detected as {{value}}° for your location."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Declination is {{saved}}° but GPS detects {{detected}}° for this location. Click Update to correct."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} samples"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Tilt more!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Detection failed — try with more varied tilting."
+    },
     "magCalibrationTitle": {
         "message": "Magnetometer Calibration"
     },
     "magCalibrationStart": {
-        "message": "Start Calibration"
+        "message": "Guided"
+    },
+    "magCalibrationStartDesc": {
+        "message": "Rotate through 6 orientations step by step"
+    },
+    "magCalibrationStartAuto": {
+        "message": "Auto-Step"
+    },
+    "magCalibrationStartAutoDesc": {
+        "message": "Same as guided but steps advance on a timer"
     },
     "magCalibrationCancel": {
         "message": "Cancel"
@@ -7616,7 +7697,10 @@
         "message": "Expected field (WMM)"
     },
     "magCalibrationUnguided": {
-        "message": "Unguided"
+        "message": "Quick"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Rotate freely in all directions — stops when firmware finishes"
     },
     "magCalibrationUnguidedTitle": {
         "message": "Unguided Calibration"
@@ -7637,10 +7721,16 @@
         "message": "Apply"
     },
     "magAlignmentIdle": {
-        "message": "Slowly rotate the vehicle through various orientations (pitch, roll, yaw) while collecting data. The algorithm will determine the best sensor alignment."
+        "message": "Tilt the vehicle through large angles — nose up, nose down, left side, right side — then rotate 360° while level. Tilting is important for detecting flipped orientations."
     },
     "magAlignmentCollecting": {
-        "message": "Rotate the vehicle slowly through different orientations..."
+        "message": "Tilt and rotate the vehicle through varied orientations..."
+    },
+    "magAlignmentTiltTip": {
+        "message": "Tip: tilt more! Only {{percent}}% of samples have significant tilt."
+    },
+    "magAlignmentLowTiltWarning": {
+        "message": "Low tilt coverage ({{percent}}%) — flip detection may be less reliable. For best results, include nose-up, nose-down, and side tilts."
     },
     "magAlignmentSampleCount": {
         "message": "{{count}} samples collected"
