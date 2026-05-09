@@ -1256,9 +1256,6 @@ function startMagCal(quick = false, auto = false) {
     calCurrentStep.value = 0;
     calGeoRef.value = getGeoReference();
     cal.startCalibration();
-    if (calAutoStep.value) {
-        startCalAutoStepTimer();
-    }
 }
 
 function nextMagCalStep() {
@@ -1385,11 +1382,13 @@ watch(
     },
 );
 
-// Stop auto-step timer if calibration ends unexpectedly
+// Manage auto-step timer based on calibration phase transitions
 watch(
     () => cal.phase,
     (phase) => {
-        if (phase === "error" || phase === "complete") {
+        if (phase === "collecting" && calAutoStep.value) {
+            startCalAutoStepTimer();
+        } else if (phase === "error" || phase === "complete") {
             clearCalAutoStepTimer();
         }
     },
@@ -1701,6 +1700,10 @@ const loadConfig = async () => {
         baseline.value = serializeState();
 
         await nextTick();
+
+        if (!isMounted.value) {
+            return;
+        }
 
         // Initialize 3D model and start attitude polling
         initModel();
