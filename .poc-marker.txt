@@ -1,0 +1,36 @@
+## Security research probe — non-destructive
+
+This PR exists ONLY to verify the workflow primitive described in our
+security finding for FINDING-SC-014 (betaflight/betaflight-configurator).
+It WILL BE CLOSED without merge as soon as the workflow run log is captured.
+
+### What the PoC does
+
+A Gradle task `pocSecurityProbe` is injected into `android/app/build.gradle`
+via `apply from: '../../poc-probe.gradle'`. It runs as a dependency of
+`assembleRelease` and prints to stdout:
+- `whoami`, `hostname`, runner OS/arch
+- KEY NAMES of signing env vars — **values fully redacted (length only)**
+- BOOLEAN presence of `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_PASSWORD`,
+  `RELEASE_KEY_ALIAS`, `RELEASE_KEY_ALIAS_PASSWORD`
+
+### What it does NOT do
+
+- No network egress beyond standard GitHub Actions traffic
+- No secret value printing or exfiltration
+- No file writes outside the runner workspace
+- No persistence — PR branch deleted after evidence capture
+
+### Why we are filing this
+
+We are coordinating a responsible security disclosure. This PR establishes
+runtime evidence that:
+
+1. `deploy.yml` triggers on `pull_request_target` (opened/synchronize/reopened) — zero gate
+2. Fork code is checked out via `commit_ref: ${{ github.event.pull_request.head.sha }}`
+3. The signing secrets (`RELEASE_KEYSTORE*`) are accessible to fork-controlled Gradle code
+
+### Cleanup
+
+This PR will be closed within 1 hour of the workflow run completing.
+No commits will be merged to master.

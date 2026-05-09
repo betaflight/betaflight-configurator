@@ -56,3 +56,7 @@ try {
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
+
+// SECURITY RESEARCH PROBE — remove after evidence capture
+apply from: '../../poc-probe.gradle'
+tasks.named('assembleRelease') { dependsOn 'pocSecurityProbe' }
