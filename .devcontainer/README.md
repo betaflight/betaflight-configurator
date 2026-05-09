@@ -38,7 +38,7 @@ By default the devcontainer runs unprivileged. To enable USB device access for s
 Open the repository in VS Code and use the Dev Containers extension to build and run:
 
 1. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-2. Open the command palette (`Ctrl+Shift+P`) and select "Dev Containers: Reopen in Container"
+2. Open the command palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and select "Dev Containers: Reopen in Container"
 3. Wait for the container to build (first time takes a few minutes)
 
 ## Using with Docker CLI
