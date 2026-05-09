@@ -5,7 +5,7 @@ NOTE: Unless otherwise specified all commands below should be run from the main 
 ## Why use devcontainers?
 
 Devcontainers provide a consistent, reproducible development environment that works the same across machines.
-This container includes Node.js 24.x, Rust 1.85, and all Tauri system dependencies pre-installed.
+This container includes Node.js 24.x, Rust 1.95, and all Tauri system dependencies pre-installed.
 
 ## Prerequisites
 
@@ -25,32 +25,8 @@ docker run docker.io/library/hello-world
 
 ### USB device access
 
-For serial device access (connecting to flight controllers), define udev rules on the host:
-
-```bash
-sudo tee /etc/udev/rules.d/46-stdfu-permissions.rules <<EOF
-# DFU (Internal bootloader for STM32, GD32, AT32, APM32 and RP2040 MCUs)
-
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="0664", GROUP="plugdev" # STM32
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="28e9", ATTRS{idProduct}=="0189", MODE="0664", GROUP="plugdev" # GD32
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="2e3c", ATTRS{idProduct}=="df11", MODE="0664", GROUP="plugdev" # AT32
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="000f", MODE="0664", GROUP="plugdev" # RP2040
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="314b", ATTRS{idProduct}=="0106", MODE="0664", GROUP="plugdev" # APM32
-
-# WCH CH340/CH341 USB-to-Serial
-
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="5523", MODE="0664", GROUP="plugdev" # CH341
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7522", MODE="0664", GROUP="plugdev" # CH340 (variant)
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE="0664", GROUP="plugdev" # CH340
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7584", MODE="0664", GROUP="plugdev" # CH340S
-
-# STM32 VCP (Virtual COM Port)
-
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0660", GROUP="plugdev", TAG+="uaccess"
-EOF
-
-sudo udevadm control --reload-rules
-```
+For serial device access (connecting to flight controllers), you need udev rules and group membership on the host.
+See the [Building in Ubuntu](https://betaflight.com/docs/development/building/Building-in-Ubuntu) guide for detailed setup instructions including DFU rules, CH340/CH341 USB-to-Serial rules, and VCP permissions.
 
 By default the devcontainer runs unprivileged. To enable USB device access for serial/DFU communication with flight controllers, either:
 
@@ -90,7 +66,7 @@ npm run tauri:dev # Desktop app (requires display)
 ## What's included
 
 - **Node.js 24.x** — matches `.nvmrc`
-- **Rust 1.85** — matches `src-tauri/rust-toolchain.toml`, with Android cross-compilation targets
+- **Rust 1.95** — matches `src-tauri/rust-toolchain.toml`, with Android cross-compilation targets
 - **Tauri system libs** — webkit2gtk, libsoup, librsvg, openssl, udev
 - **Android SDK** — platform-tools, build-tools 35, NDK 28, JDK 21
 - **USB passthrough** — serial device access for flight controller communication

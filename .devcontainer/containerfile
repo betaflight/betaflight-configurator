@@ -94,7 +94,7 @@ RUN chown -R $USERNAME:$USERNAME ${ANDROID_HOME}
 
 # Install Rust toolchain as the user (matches src-tauri/rust-toolchain.toml)
 USER $USERNAME
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.85 --profile minimal && \
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.95 --profile minimal && \
     /home/$USERNAME/.cargo/bin/rustup component add rustfmt clippy && \
     /home/$USERNAME/.cargo/bin/rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 
