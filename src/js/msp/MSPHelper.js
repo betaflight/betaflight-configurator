@@ -679,6 +679,34 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         }
                     }
                     break;
+                case MSPCodes.MSP_SERVO_MIX_RULES:
+                    // N rules of 7 bytes each: target, input, rate(i8), speed,
+                    // min(i8), max(i8), box. Firmware returns up to MAX_SERVO_RULES
+                    // entries. Wire format matches the per-rule layout of
+                    // MSP_SET_SERVO_MIX_RULE.
+                    //
+                    // Reset up front so an empty payload (FC has no rules) or a
+                    // malformed payload doesn't leave a stale set in memory that
+                    // would re-render and get written back on the next save.
+                    FC.SERVO_RULES = [];
+                    if (data.byteLength % 7 === 0) {
+                        for (let i = 0; i < data.byteLength; i += 7) {
+                            FC.SERVO_RULES.push({
+                                target: data.readU8(),
+                                input: data.readU8(),
+                                rate: data.read8(),
+                                speed: data.readU8(),
+                                min: data.read8(),
+                                max: data.read8(),
+                                box: data.readU8(),
+                            });
+                        }
+                    } else if (data.byteLength > 0) {
+                        console.warn(
+                            `MSP_SERVO_MIX_RULES: unexpected data length ${data.byteLength} (not a multiple of 7)`,
+                        );
+                    }
+                    break;
                 case MSPCodes.MSP_RC_DEADBAND:
                     FC.RC_DEADBAND_CONFIG.deadband = data.readU8();
                     FC.RC_DEADBAND_CONFIG.yaw_deadband = data.readU8();
@@ -747,6 +775,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     break;
                 case MSPCodes.MSP_SET_SERVO_CONFIGURATION:
                     console.log("Servo Configuration saved");
+                    break;
+                case MSPCodes.MSP_SET_SERVO_MIX_RULE:
+                    console.log("Servo mix rule saved");
                     break;
                 case MSPCodes.MSP_EEPROM_WRITE:
                     console.log("Settings Saved in EEPROM");
@@ -2614,6 +2645,39 @@ MspHelper.prototype.sendServoConfigurations = function (onCompleteCallback) {
 
         MSP.send_message(MSPCodes.MSP_SET_SERVO_CONFIGURATION, buffer, false, nextFunction);
     }
+};
+
+// Sends one MSP_SET_SERVO_MIX_RULE per slot for ALL MAX_SERVO_RULES slots
+// (16 in Betaflight). Slots with a backing entry in FC.SERVO_RULES are sent
+// verbatim; slots beyond the array length (or the whole array if empty) get
+// a cleared rule (zeros) so any stale higher-index rules left over from a
+// previous larger ruleset get explicitly wiped on commit. Callers no longer
+// need to pre-pad FC.SERVO_RULES — the helper guarantees a full sweep.
+MspHelper.prototype.sendServoMixRules = function (onCompleteCallback) {
+    const MAX_SERVO_RULES = 16;
+    const rules = Array.isArray(FC.SERVO_RULES) ? FC.SERVO_RULES : [];
+    let ruleIndex = 0;
+
+    function send_next_rule() {
+        const rule = rules[ruleIndex] ?? { target: 0, input: 0, rate: 0, speed: 0, min: 0, max: 0, box: 0 };
+        const buffer = [];
+
+        buffer
+            .push8(ruleIndex)
+            .push8(rule.target)
+            .push8(rule.input)
+            .push8(rule.rate & 0xff)
+            .push8(rule.speed)
+            .push8(rule.min & 0xff)
+            .push8(rule.max & 0xff)
+            .push8(rule.box);
+
+        ruleIndex++;
+        const nextFunction = ruleIndex >= MAX_SERVO_RULES ? onCompleteCallback : send_next_rule;
+        MSP.send_message(MSPCodes.MSP_SET_SERVO_MIX_RULE, buffer, false, nextFunction);
+    }
+
+    send_next_rule();
 };
 
 MspHelper.prototype.sendModeRanges = function (onCompleteCallback) {

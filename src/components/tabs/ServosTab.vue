@@ -254,6 +254,134 @@
                         </template>
                     </UiBox>
                 </div>
+
+                <!-- Servo Mixer Output (smix rules) -->
+                <UiBox :title="$t('servosMixerRulesTitle')" class="mt-4">
+                    <p class="text-sm text-muted mb-2">{{ $t("servosMixerRulesDesc") }}</p>
+
+                    <div class="overflow-x-auto">
+                        <div
+                            v-if="servoMixRules.length > 0"
+                            class="grid items-center gap-x-2 gap-y-1 min-w-0"
+                            style="
+                                grid-template-columns:
+                                    2rem 9rem 9rem minmax(4rem, 1fr) minmax(4rem, 1fr) minmax(4rem, 1fr)
+                                    minmax(4rem, 1fr) 6rem 2rem;
+                            "
+                        >
+                            <div class="text-center text-xs font-bold py-1">#</div>
+                            <div class="text-center text-xs font-bold py-1">{{ $t("servosMixerOutput") }}</div>
+                            <div class="text-center text-xs font-bold py-1">{{ $t("servosMixerInput") }}</div>
+                            <div class="text-center text-xs font-bold py-1">{{ $t("servosMixerRate") }}</div>
+                            <div class="text-center text-xs font-bold py-1">{{ $t("servosMixerSpeed") }}</div>
+                            <div class="text-center text-xs font-bold py-1">{{ $t("servosMixerMin") }}</div>
+                            <div class="text-center text-xs font-bold py-1">{{ $t("servosMixerMax") }}</div>
+                            <div class="text-center text-xs font-bold py-1" :title="$t('servosMixerBoxHelp')">
+                                {{ $t("servosMixerBox") }}
+                            </div>
+                            <div></div>
+
+                            <template v-for="(rule, idx) in servoMixRules" :key="idx">
+                                <div class="text-center text-sm py-1">{{ idx + 1 }}</div>
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span
+                                        v-if="ruleAccentColor(rule)"
+                                        class="inline-block size-2 rounded-full shrink-0"
+                                        :style="{ backgroundColor: ruleAccentColor(rule) }"
+                                    />
+                                    <USelect
+                                        v-model="rule.target"
+                                        :items="servoMixOutputItems"
+                                        size="xs"
+                                        class="w-full"
+                                        @change="onMixRuleChange"
+                                    />
+                                </div>
+                                <USelect
+                                    v-model="rule.input"
+                                    :items="servoMixInputItems"
+                                    size="xs"
+                                    class="w-full"
+                                    @change="onMixRuleChange"
+                                />
+                                <UInputNumber
+                                    v-model="rule.rate"
+                                    :min="-125"
+                                    :max="125"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
+                                    class="w-full"
+                                    @change="onMixRuleChange"
+                                />
+                                <UInputNumber
+                                    v-model="rule.speed"
+                                    :min="0"
+                                    :max="255"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
+                                    class="w-full"
+                                    @change="onMixRuleChange"
+                                />
+                                <UInputNumber
+                                    v-model="rule.min"
+                                    :min="-100"
+                                    :max="100"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
+                                    class="w-full"
+                                    @change="onMixRuleChange"
+                                />
+                                <UInputNumber
+                                    v-model="rule.max"
+                                    :min="-100"
+                                    :max="100"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
+                                    class="w-full"
+                                    @change="onMixRuleChange"
+                                />
+                                <USelect
+                                    v-model="rule.box"
+                                    :items="servoMixBoxItems"
+                                    size="xs"
+                                    class="w-full"
+                                    @change="onMixRuleChange"
+                                />
+                                <UButton
+                                    icon="i-lucide-x"
+                                    color="error"
+                                    variant="ghost"
+                                    size="xs"
+                                    :title="$t('servosMixerDeleteRule')"
+                                    @click="removeServoMixRule(idx)"
+                                />
+                            </template>
+                        </div>
+                        <div v-else class="text-sm text-muted italic py-2 text-center">
+                            {{ $t("servosMixerNoRules") }}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-1 mt-3">
+                        <UButton
+                            v-for="tpl in servoMixTemplates"
+                            :key="tpl.id"
+                            :label="`+ ${$t(tpl.labelKey)}`"
+                            size="xs"
+                            variant="outline"
+                            :disabled="!canAddTemplate(tpl)"
+                            @click="addServoMixTemplate(tpl.id)"
+                        />
+                        <span class="text-xs text-muted ml-auto">
+                            {{ servoMixRules.length }} / {{ MAX_SERVO_RULES }}
+                        </span>
+                    </div>
+                    <p class="text-xs text-muted mt-2">{{ $t("servosMixerQuickAddHint") }}</p>
+                </UiBox>
             </div>
         </div>
 
@@ -262,7 +390,7 @@
             <div class="flex gap-2">
                 <UButton
                     :label="$t('servosButtonSave')"
-                    :disabled="(!configHasChanged && !resourcesModified) || resourcesWriteInFlight"
+                    :disabled="(!configHasChanged && !resourcesModified && !mixerDirty) || resourcesWriteInFlight"
                     color="warning"
                     variant="solid"
                     class="bg-[#ffbb00]! text-zinc-900! hover:bg-[#e6a800]! disabled:bg-zinc-600! disabled:text-zinc-400!"
@@ -289,7 +417,18 @@ import { i18n } from "@/js/localization";
 import { useInterval } from "@/composables/useInterval";
 import { useTimeout } from "@/composables/useTimeout";
 import { lookupTargetDefaults } from "@/js/utils/targetDefaults";
-import { servoOutputColor, pwmSlotToServoIndex } from "@/js/utils/servoMixerModel";
+import {
+    servoOutputColor,
+    pwmSlotToServoIndex,
+    SERVO_MIX_INPUT_LABELS,
+    SERVO_MIX_BOX_LABELS,
+    MAX_SERVO_RULES,
+    AIRCRAFT_SERVO_MIX_TEMPLATES,
+    servoMixTargetOptions,
+    servoMixOutputIndexForTarget,
+    padServoMixRulesToMax,
+    cloneServoMixRules,
+} from "@/js/utils/servoMixerModel";
 import {
     readCli,
     parseResourceShow,
@@ -334,6 +473,141 @@ const initialPins = ref([]);
 // snapshot tier — see src/js/utils/targetDefaults.js for the lookup helper.
 const padDefaults = ref(null);
 const padDefaultsSource = ref(null);
+
+// Servo mix rules ("Servo Mixer Output" panel). Loaded from FC.SERVO_RULES
+// (parsed by MSPHelper from MSP_SERVO_MIX_RULES on initial fetch). Each rule
+// is { target, input, rate, speed, min, max, box }. Save commits via
+// mspHelper.sendServoMixRules followed by writeConfiguration to EEPROM.
+const servoMixRules = reactive([]);
+const mixerDirty = ref(false);
+const servoMixTemplates = AIRCRAFT_SERVO_MIX_TEMPLATES;
+const mixerMode = computed(() => FC.MIXER_CONFIG?.mixer ?? 0);
+
+const servoMixOutputItems = computed(() =>
+    servoMixTargetOptions(mixerMode.value).map((opt) => ({ value: opt.value, label: opt.label })),
+);
+const servoMixInputItems = computed(() => SERVO_MIX_INPUT_LABELS.map((label, i) => ({ value: i, label })));
+const servoMixBoxItems = computed(() => SERVO_MIX_BOX_LABELS.map((label, i) => ({ value: i, label })));
+
+function canAddTemplate(template) {
+    return servoMixRules.length + template.rules.length <= MAX_SERVO_RULES;
+}
+
+// Templates are defined against firmware servoIndex_e values (e.g.
+// FLAPPERON_1=3, ELEVATOR=6) — these don't correspond 1:1 to the physical
+// servos a pilot has plugged in. Remap each template's unique targets to
+// the user's first N unused PWM slots (Servo 1, 2, 3, ... in the resource
+// panel) and convert to the matching servoIndex_e for the active mixer.
+// Subsequent template adds skip slots that earlier rules already occupy.
+// Returns the set of PWM slots already driven by existing rules under the
+// given mixer mode. Caller threads the TEMPLATE's mixer (not the FC's
+// current one) when staging a template — see addServoMixTemplate. Without
+// the parameter the resolver maps slot→servoIndex_e against the wrong
+// mixer when the FC isn't yet on CUSTOM_AIRPLANE, and the new rules collide
+// with existing ones on slots the user already used.
+function findUsedPwmSlots(targetMixer = mixerMode.value) {
+    const used = new Set();
+    for (const rule of servoMixRules) {
+        for (let slot = 0; slot < 8; slot++) {
+            if (pwmSlotToServoIndex(slot, targetMixer) === rule.target) {
+                used.add(slot);
+                break;
+            }
+        }
+    }
+    return used;
+}
+function addServoMixTemplate(id) {
+    const template = servoMixTemplates.find((tpl) => tpl.id === id);
+    if (!template) {
+        return;
+    }
+    if (servoMixRules.length + template.rules.length > MAX_SERVO_RULES) {
+        gui_log(i18n.getMessage("servosMixerTemplateExceedsLimit", { id, max: MAX_SERVO_RULES }));
+        return;
+    }
+
+    // Remap uses the TEMPLATE's mixer mode (most are CUSTOM_AIRPLANE) — not
+    // the FC's current mixer — because each template's target IDs are picked
+    // for a specific mixer's slot→servoIndex_e mapping. Falling back to the
+    // current mixer here would silently land elevon/v-tail rules on the
+    // wrong servo enum on a board not yet switched to CUSTOM_AIRPLANE. The
+    // user is expected to set the mixer via the Mixer tab; we hard-abort
+    // with a gui_log when the template targets a different mixer than the
+    // FC currently runs (option B per the CodeRabbit ask: hard-block +
+    // surface error rather than auto-persist a mixer change behind the
+    // user's back, AND don't append rows whose `rule.target` would encode
+    // under the wrong enum if the user ignores the warning).
+    if (template.mixerMode != null && template.mixerMode !== mixerMode.value) {
+        gui_log(
+            i18n.getMessage("servosMixerTemplateMixerMismatch", {
+                id,
+                templateMixer: template.mixerMode,
+                activeMixer: mixerMode.value,
+            }),
+        );
+        return;
+    }
+    const targetMixer = template.mixerMode ?? mixerMode.value;
+    const usedSlots = findUsedPwmSlots(targetMixer);
+    const uniqueTargets = [...new Set(template.rules.map((r) => r.target))];
+    const remap = new Map();
+    let nextSlot = 0;
+    for (const target of uniqueTargets) {
+        while (nextSlot < 8 && usedSlots.has(nextSlot)) {
+            nextSlot++;
+        }
+        if (nextSlot >= 8) {
+            gui_log(
+                i18n.getMessage("servosMixerTemplateNoFreeSlots", {
+                    id,
+                    needed: uniqueTargets.length,
+                    mappable: uniqueTargets.length - remap.size,
+                }),
+            );
+            return;
+        }
+        const enumIdx = pwmSlotToServoIndex(nextSlot, targetMixer);
+        if (enumIdx == null) {
+            gui_log(
+                i18n.getMessage("servosMixerTemplateSlotNotDriven", {
+                    id,
+                    slot: nextSlot,
+                    targetMixer,
+                    intendedMixer: template.mixerMode ?? "the template's intended mixer",
+                }),
+            );
+            return;
+        }
+        remap.set(target, enumIdx);
+        usedSlots.add(nextSlot);
+        nextSlot++;
+    }
+
+    for (const rule of template.rules) {
+        servoMixRules.push({ ...rule, target: remap.get(rule.target) });
+    }
+    mixerDirty.value = true;
+}
+function removeServoMixRule(idx) {
+    servoMixRules.splice(idx, 1);
+    mixerDirty.value = true;
+}
+function onMixRuleChange() {
+    mixerDirty.value = true;
+}
+function ruleAccentColor(rule) {
+    const idx = servoMixOutputIndexForTarget(rule.target, mixerMode.value);
+    return idx != null ? servoOutputColor(idx) : null;
+}
+function loadServoMixRules() {
+    servoMixRules.length = 0;
+    const loaded = cloneServoMixRules(FC.SERVO_RULES);
+    for (const rule of loaded) {
+        servoMixRules.push(rule);
+    }
+    mixerDirty.value = false;
+}
 
 // Smart resource analysis from a one-shot CLI scan (resource / timer / dma /
 // per-pad timer AF discovery). Drives the timer-aware dropdown — pads with
@@ -392,8 +666,10 @@ function motorDotColor(slotIndex) {
     return servoOutputColor(slotIndex);
 }
 function servoDotColor(slotIndex) {
-    const mixerMode = FC.MIXER_CONFIG?.mixer ?? null;
-    const idx = mixerMode == null ? slotIndex : pwmSlotToServoIndex(slotIndex, mixerMode);
+    // Reuse the outer `mixerMode` computed (0 fallback). pwmSlotToServoIndex
+    // returns slotIndex for unknown mixer modes, so the 0 case collapses
+    // to the no-mapping pass-through automatically.
+    const idx = pwmSlotToServoIndex(slotIndex, mixerMode.value);
     if (idx == null) {
         return null;
     }
@@ -451,18 +727,37 @@ function updateServos(saveToEeprom) {
         src.max = max;
     }
 
+    // Live-update path (Live Mode toggle, slider-drag preview): push only
+    // servo positions/min/middle/max. Mixer-rule edits MUST stay staged in
+    // local state until the explicit Save flow — otherwise unsaved smix
+    // edits leak into FC RAM the moment the user nudges any servo slider,
+    // and the FC starts driving servos against rules the user never
+    // committed.
+    if (!saveToEeprom) {
+        mspHelper.sendServoConfigurations();
+        return;
+    }
+
+    // Save flow only: stage the full mixer rule set into FC.SERVO_RULES
+    // (padded to MAX_SERVO_RULES so sendServoMixRules also clears trailing
+    // rules the user removed), then push positions → rules → EEPROM.
+    // mixerDirty / resourcesModified clear only on writeConfiguration's
+    // success callback so the dirty indicator survives a transport failure.
+    FC.SERVO_RULES = padServoMixRulesToMax(servoMixRules.map((r) => ({ ...r })));
+
     mspHelper.sendServoConfigurations(() => {
-        if (saveToEeprom) {
+        mspHelper.sendServoMixRules(() => {
             mspHelper.writeConfiguration(false, () => {
                 gui_log(i18n.getMessage("servosEepromSave"));
                 originalConfigs.value = JSON.stringify(servoConfigs);
+                mixerDirty.value = false;
                 // EEPROM persist is the commit point for the resource binds
-                // we wrote to firmware RAM during onResourcePinChange — clear
-                // the dirty flag so the Save button doesn't stay lit and
+                // we wrote to firmware RAM during onResourcePinChange —
+                // clear the dirty flag so Save doesn't stay lit and
                 // re-clicking doesn't pointlessly rewrite the same set.
                 resourcesModified.value = false;
             });
-        }
+        });
     });
 }
 
@@ -1352,6 +1647,8 @@ function initializeUI() {
     }
 
     originalConfigs.value = JSON.stringify(servoConfigs);
+
+    loadServoMixRules();
 
     addInterval("servo_data_pull", getServoData, 50);
     addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
