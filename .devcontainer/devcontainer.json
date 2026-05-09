@@ -4,10 +4,10 @@
     "dockerfile": "containerfile",
     "context": "."
   },
-  "privileged": true,
-  "runArgs": [
-    "--volume=/dev:/dev"
-  ],
   "remoteUser": "devpod",
-  "features": {}
+  "features": {},
+
+  // USB device access (optional — uncomment for serial/DFU access to flight controllers)
+  // "privileged": true,
+  // "runArgs": ["--volume=/dev:/dev"]
 }

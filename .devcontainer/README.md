@@ -46,13 +46,16 @@ ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="758
 
 # STM32 VCP (Virtual COM Port)
 
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0666", TAG+="uaccess"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0660", GROUP="plugdev", TAG+="uaccess"
 EOF
 
 sudo udevadm control --reload-rules
 ```
 
-The container is started with `--volume=/dev:/dev` and `--privileged` to pass through USB devices.
+By default the devcontainer runs unprivileged. To enable USB device access for serial/DFU communication with flight controllers, either:
+
+1. **devcontainer.json** — uncomment the `privileged` and `runArgs` lines
+2. **Docker CLI** — add `--privileged --volume=/dev:/dev` flags (see below)
 
 ## Using with VS Code
 
@@ -89,7 +92,7 @@ npm run tauri:dev # Desktop app (requires display)
 - **Node.js 24.x** — matches `.nvmrc`
 - **Rust 1.85** — matches `src-tauri/rust-toolchain.toml`, with Android cross-compilation targets
 - **Tauri system libs** — webkit2gtk, libsoup, librsvg, openssl, udev
-- **Android SDK** — platform-tools, build-tools 35, NDK 28, JDK 17
+- **Android SDK** — platform-tools, build-tools 35, NDK 28, JDK 21
 - **USB passthrough** — serial device access for flight controller communication
 
 ## Build targets
