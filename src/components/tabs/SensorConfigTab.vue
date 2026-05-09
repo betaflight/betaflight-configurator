@@ -312,9 +312,9 @@
                     </div>
                 </div>
 
-                <!-- Declination auto-set note -->
+                <!-- Declination auto-set note (API >= 1.46) -->
                 <div
-                    v-if="declinationNote"
+                    v-if="isApi146 && declinationNote"
                     class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--primary-500)]/10 text-[var(--primary-700)]"
                 >
                     <UIcon name="i-lucide-info" class="size-4 shrink-0" />
@@ -330,7 +330,7 @@
 
                 <!-- Declination warning -->
                 <div
-                    v-if="declinationWarning"
+                    v-if="isApi146 && declinationWarning"
                     class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--warning-500)]/15 text-[var(--warning-700)]"
                 >
                     <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
@@ -344,8 +344,8 @@
                     />
                 </div>
 
-                <!-- Declination + Inclination + Field Strength -->
-                <div class="flex items-end gap-4 flex-wrap">
+                <!-- Declination + Inclination + Field Strength (API >= 1.46) -->
+                <div v-if="isApi146" class="flex items-end gap-4 flex-wrap">
                     <SettingColumn
                         :label="$t('configurationMagDeclination')"
                         :help="$t('configurationMagDeclinationHelp')"
@@ -1003,7 +1003,9 @@ function onAlignImuData() {
     alignDetectSampleCount.value = alignSamples.length;
 
     const tilt = Math.hypot(alignCurrentRoll, alignCurrentPitch);
-    if (tilt > ALIGN_TILT_THRESHOLD_DEG) alignTiltedCount++;
+    if (tilt > ALIGN_TILT_THRESHOLD_DEG) {
+        alignTiltedCount++;
+    }
     alignDetectTiltPercent.value =
         alignSamples.length > 0 ? Math.round((alignTiltedCount / alignSamples.length) * 100) : 0;
 
@@ -1321,6 +1323,10 @@ function startCalAutoStepTimer() {
     clearCalAutoStepTimer();
     calStepCountdown.value = CAL_AUTO_STEP_SECONDS;
     calAutoStepTimer = setInterval(() => {
+        if (cal.phase === "error" || cal.phase === "complete") {
+            clearCalAutoStepTimer();
+            return;
+        }
         calStepCountdown.value--;
         if (calStepCountdown.value <= 0) {
             clearCalAutoStepTimer();
@@ -1375,6 +1381,16 @@ watch(
             cal.completeCalibration();
             magNeedsCalibration.value = false;
             playCalCompletionBeep();
+        }
+    },
+);
+
+// Stop auto-step timer if calibration ends unexpectedly
+watch(
+    () => cal.phase,
+    (phase) => {
+        if (phase === "error" || phase === "complete") {
+            clearCalAutoStepTimer();
         }
     },
 );
@@ -1603,25 +1619,27 @@ function hydrateAlignment() {
 
 function setupMagSection() {
     hasMagSensor.value = have_sensor(fcStore.config?.activeSensors, "mag");
-    if (!hasMagSensor.value || !isApi146.value) {
+    if (!hasMagSensor.value) {
         showMagSection.value = false;
         showMagAlign.value = false;
         return;
     }
 
     showMagSection.value = true;
-    magDeclination.value = fcStore.compassConfig.mag_declination;
-
-    const cached = getGeoReference();
-    if (cached) {
-        magInclination.value = roundOneDp(cached.inclination);
-        magFieldStrength.value = cached.fieldStrength;
-        applyDetectedDeclination(roundOneDp(cached.declination));
-    } else {
-        tryAutoGeoReference().catch(() => {});
-    }
-
     showMagAlign.value = isApi147.value;
+
+    if (isApi146.value) {
+        magDeclination.value = fcStore.compassConfig.mag_declination;
+
+        const cached = getGeoReference();
+        if (cached) {
+            magInclination.value = roundOneDp(cached.inclination);
+            magFieldStrength.value = cached.fieldStrength;
+            applyDetectedDeclination(roundOneDp(cached.declination));
+        } else {
+            tryAutoGeoReference().catch(() => {});
+        }
+    }
 
     cal.readFirmwareOffsets()
         .then((offsets) => {
