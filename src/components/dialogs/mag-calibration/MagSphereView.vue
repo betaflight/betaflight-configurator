@@ -1,6 +1,7 @@
 <template>
     <div ref="containerRef" class="mag-sphere-container">
         <canvas ref="canvasRef"></canvas>
+        <canvas v-show="vizMode === 'projection'" ref="projCanvasRef" class="mag-sphere-proj-canvas"></canvas>
         <div class="mag-sphere-axis-legend">
             <span class="axis-x">X</span>
             <span class="axis-y">Y</span>
@@ -68,11 +69,12 @@ const props = defineProps({
 
 const containerRef = ref(null);
 const canvasRef = ref(null);
+const projCanvasRef = ref(null);
 
-const IMPLEMENTED_MODES = new Set(["pointcloud", "heatmap"]);
+const IMPLEMENTED_MODES = new Set(["pointcloud", "heatmap", "projection"]);
 const showPlaceholder = computed(() => !IMPLEMENTED_MODES.has(props.vizMode));
 const vizModeLabel = computed(() => {
-    const labels = { projection: "Triple Projection", polar: "Polar Density" };
+    const labels = { polar: "Polar Density" };
     return labels[props.vizMode] ?? "";
 });
 
@@ -539,6 +541,144 @@ function updateHeatmap(sampleList) {
     heatmapMesh.visible = props.vizMode === "heatmap";
 }
 
+// --- Triple Projection (2D canvas) ---
+const PROJ_PLANES = [
+    { label: "XY", a: 0, b: 1, aLabel: "X", bLabel: "Y", aColor: "#ff4444", bColor: "#44ff44" },
+    { label: "XZ", a: 0, b: 2, aLabel: "X", bLabel: "Z", aColor: "#ff4444", bColor: "#4444ff" },
+    { label: "YZ", a: 1, b: 2, aLabel: "Y", bLabel: "Z", aColor: "#44ff44", bColor: "#4444ff" },
+];
+
+function drawProjection(sampleList) {
+    const canvas = projCanvasRef.value;
+    const container = containerRef.value;
+    if (!canvas || !container) {
+        return;
+    }
+
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+
+    // Background
+    ctx.fillStyle = "#1a1a2e";
+    ctx.fillRect(0, 0, w, h);
+
+    if (!sampleList || sampleList.length === 0) {
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.font = "14px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Waiting for data…", w / 2, h / 2);
+        return;
+    }
+
+    // Transform samples to display frame
+    const pts = [];
+    const count = Math.min(sampleList.length, MAX_POINTS);
+    const start = Math.max(0, sampleList.length - MAX_POINTS);
+    for (let i = 0; i < count; i++) {
+        const s = sampleList[start + i];
+        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
+        pts.push([sx, sy, sz]);
+    }
+
+    // Sphere fit center and radius in display frame
+    const fit = props.sphereFit;
+    let cx = 0,
+        cy = 0,
+        cz = 0,
+        radius = 300;
+    if (fit) {
+        [cx, cy, cz] = bfToScene(fit.center.x, fit.center.y, fit.center.z);
+        radius = fit.radius;
+    }
+
+    // Layout: 3 circles in a row
+    const gap = 8;
+    const cellW = (w - gap * 4) / 3;
+    const cellH = h - gap * 2;
+    const cellSize = Math.min(cellW, cellH);
+    const plotR = cellSize / 2 - 16; // leave room for labels
+    const totalW = cellSize * 3 + gap * 2;
+    const offsetX = (w - totalW) / 2;
+
+    for (let p = 0; p < 3; p++) {
+        const plane = PROJ_PLANES[p];
+        const px = offsetX + p * (cellSize + gap) + cellSize / 2;
+        const py = h / 2;
+
+        const centerArr = [cx, cy, cz];
+        const cA = centerArr[plane.a];
+        const cB = centerArr[plane.b];
+
+        // Draw ideal circle (from sphere fit)
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(px, py, plotR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Scale: map sphere radius to plotR
+        const scale = plotR / (radius * 1.3);
+
+        // Draw fitted circle
+        if (fit) {
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.arc(px + cA * scale, py - cB * scale, radius * scale, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw center cross
+            const ccx = px + cA * scale;
+            const ccy = py - cB * scale;
+            ctx.strokeStyle = "#ffff00";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(ccx - 4, ccy);
+            ctx.lineTo(ccx + 4, ccy);
+            ctx.moveTo(ccx, ccy - 4);
+            ctx.lineTo(ccx, ccy + 4);
+            ctx.stroke();
+        }
+
+        // Draw data points
+        for (let i = 0; i < pts.length; i++) {
+            const screenX = px + pts[i][plane.a] * scale;
+            const screenY = py - pts[i][plane.b] * scale;
+            const t = pts.length > 1 ? i / (pts.length - 1) : 0;
+            _tempColor.setHSL(t * 0.33, 1, 0.5);
+            ctx.fillStyle = `rgb(${Math.round(_tempColor.r * 255)},${Math.round(_tempColor.g * 255)},${Math.round(_tempColor.b * 255)})`;
+            ctx.fillRect(screenX - 1, screenY - 1, 2, 2);
+        }
+
+        // Axis labels
+        ctx.font = "bold 11px sans-serif";
+        ctx.textAlign = "center";
+        // Horizontal axis label
+        ctx.fillStyle = plane.aColor;
+        ctx.fillText(plane.aLabel, px, py + plotR + 14);
+        // Vertical axis label
+        ctx.fillStyle = plane.bColor;
+        ctx.save();
+        ctx.translate(px - plotR - 10, py);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText(plane.bLabel, 0, 0);
+        ctx.restore();
+
+        // Plane label
+        ctx.fillStyle = "rgba(255,255,255,0.5)";
+        ctx.font = "11px sans-serif";
+        ctx.fillText(plane.label, px, py - plotR - 6);
+    }
+}
+
 function animate() {
     animationId = requestAnimationFrame(animate);
 
@@ -574,6 +714,10 @@ function onResize() {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
+
+    if (props.vizMode === "projection") {
+        drawProjection(props.samples);
+    }
 }
 
 function addAxisLine(targetScene, from, to, color) {
@@ -896,6 +1040,13 @@ function disposeScene() {
 function applyVizMode(mode) {
     const pc = mode === "pointcloud";
     const hm = mode === "heatmap";
+    const proj = mode === "projection";
+    const use3D = pc || hm;
+
+    // Hide 3D canvas for 2D modes
+    if (canvasRef.value) {
+        canvasRef.value.style.display = use3D ? "block" : "none";
+    }
 
     if (pointMesh) {
         pointMesh.visible = pc;
@@ -931,6 +1082,9 @@ function applyVizMode(mode) {
     if (hm) {
         updateHeatmap(props.samples);
     }
+    if (proj) {
+        drawProjection(props.samples);
+    }
 }
 
 // Watchers
@@ -941,6 +1095,9 @@ watch(
         if (props.vizMode === "heatmap") {
             updateHeatmap(val);
         }
+        if (props.vizMode === "projection") {
+            drawProjection(val);
+        }
     },
 );
 
@@ -950,6 +1107,9 @@ watch(
         updateWireframe(val);
         if (props.vizMode === "heatmap") {
             updateHeatmap(props.samples);
+        }
+        if (props.vizMode === "projection") {
+            drawProjection(props.samples);
         }
     },
 );
@@ -984,6 +1144,12 @@ onBeforeUnmount(() => {
     display: block;
     width: 100% !important;
     height: 100% !important;
+}
+
+.mag-sphere-proj-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
 }
 
 .mag-sphere-axis-legend {
