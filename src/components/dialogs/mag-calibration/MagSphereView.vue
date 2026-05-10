@@ -371,6 +371,33 @@ function orientCylinder(mesh, axis, length) {
     mesh.scale.set(1, Math.abs(length), 1);
 }
 
+function updateAxisCylinders(showLive, mx, my, mz) {
+    const comps = [mx, my, mz];
+    for (let i = 0; i < 3; i++) {
+        vectorLines[i].visible = showLive && Math.abs(comps[i]) > 1;
+        if (vectorLines[i].visible) {
+            _tmpVec.set(0, 0, 0).setComponent(i, Math.sign(comps[i]));
+            orientCylinder(vectorLines[i], _tmpVec, comps[i]);
+            vectorLines[i].position.set(0, 0, 0);
+        }
+    }
+}
+
+function updateTotalVector(showLive, mx, my, mz) {
+    totalVectorLine.visible = showLive;
+    if (!showLive) {
+        return;
+    }
+    const len = Math.hypot(mx, my, mz);
+    if (len > 1) {
+        _tmpVec.set(mx, my, mz);
+        orientCylinder(totalVectorLine, _tmpVec, len);
+        totalVectorLine.position.set(0, 0, 0);
+    } else {
+        totalVectorLine.visible = false;
+    }
+}
+
 function updateLiveMagOverlay() {
     if (props.vizMode !== "pointcloud") {
         return;
@@ -386,34 +413,11 @@ function updateLiveMagOverlay() {
             liveMarker.position.set(mx, my, mz);
         }
     }
-    // XYZ component cylinders along each axis (in display frame)
     if (vectorLines) {
-        const v0 = mx,
-            v1 = my,
-            v2 = mz;
-        const comps = [v0, v1, v2];
-        for (let i = 0; i < 3; i++) {
-            vectorLines[i].visible = showLive && Math.abs(comps[i]) > 1;
-            if (vectorLines[i].visible) {
-                _tmpVec.set(0, 0, 0).setComponent(i, Math.sign(comps[i]));
-                orientCylinder(vectorLines[i], _tmpVec, comps[i]);
-                vectorLines[i].position.set(0, 0, 0);
-            }
-        }
+        updateAxisCylinders(showLive, mx, my, mz);
     }
-    // Orange total field vector (origin → live position)
     if (totalVectorLine) {
-        totalVectorLine.visible = showLive;
-        if (showLive) {
-            const len = Math.hypot(mx, my, mz);
-            if (len > 1) {
-                _tmpVec.set(mx, my, mz);
-                orientCylinder(totalVectorLine, _tmpVec, len);
-                totalVectorLine.position.set(0, 0, 0);
-            } else {
-                totalVectorLine.visible = false;
-            }
-        }
+        updateTotalVector(showLive, mx, my, mz);
     }
 }
 
@@ -770,23 +774,11 @@ function drawProjection(sampleList) {
 const POLAR_SECTORS = 36; // 10° per sector
 const POLAR_RINGS = 6; // elevation bands from pole to pole
 
-function drawPolarDensity(sampleList) {
-    const result = initCanvas2D(sampleList);
-    if (!result) {
-        return;
-    }
-    const { ctx, w, h } = result;
-
-    const centerX = w / 2;
-    const centerY = h / 2;
-    const maxR = Math.min(w, h) / 2 - 30;
-
-    // Build density grid: sectors (azimuth) × rings (elevation)
+function computePolarDensity(sampleList) {
     const density = new Float32Array(POLAR_SECTORS * POLAR_RINGS);
     const count = Math.min(sampleList.length, MAX_POINTS);
     const start = Math.max(0, sampleList.length - MAX_POINTS);
 
-    // Get sphere center in display frame
     let cx = 0,
         cy = 0,
         cz = 0;
@@ -801,12 +793,10 @@ function drawPolarDensity(sampleList) {
         const dy = sy - cy;
         const dz = sz - cz;
 
-        // Azimuth: atan2(Y, X) → [0, 2π]
         let azimuth = Math.atan2(dy, dx);
         if (azimuth < 0) {
             azimuth += Math.PI * 2;
         }
-        // Elevation: asin(Z / r) → [-π/2, π/2] → map to [0, POLAR_RINGS-1]
         const r = Math.hypot(dx, dy, dz) || 1;
         const elevation = Math.asin(Math.max(-1, Math.min(1, dz / r)));
 
@@ -816,7 +806,21 @@ function drawPolarDensity(sampleList) {
         density[clampedRing * POLAR_SECTORS + sector]++;
     }
 
-    const maxDensity = Math.max(1, ...density);
+    return { density, maxDensity: Math.max(1, ...density) };
+}
+
+function drawPolarDensity(sampleList) {
+    const result = initCanvas2D(sampleList);
+    if (!result) {
+        return;
+    }
+    const { ctx, w, h } = result;
+
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const maxR = Math.min(w, h) / 2 - 30;
+
+    const { density, maxDensity } = computePolarDensity(sampleList);
 
     // Draw polar grid segments
     const sectorAngle = (Math.PI * 2) / POLAR_SECTORS;
@@ -1217,16 +1221,7 @@ function disposeScene() {
     camera = null;
 }
 
-function applyVizMode(mode) {
-    const pc = mode === "pointcloud";
-    const hm = mode === "heatmap";
-    const use3D = pc || hm;
-
-    // Hide 3D canvas for 2D modes
-    if (canvasRef.value) {
-        canvasRef.value.style.display = use3D ? "block" : "none";
-    }
-
+function setSceneObjectVisibility(pc, hm) {
     if (pointMesh) {
         pointMesh.visible = pc;
     }
@@ -1258,6 +1253,16 @@ function applyVizMode(mode) {
     if (heatmapMesh) {
         heatmapMesh.visible = hm;
     }
+}
+
+function applyVizMode(mode) {
+    const pc = mode === "pointcloud";
+    const hm = mode === "heatmap";
+
+    if (canvasRef.value) {
+        canvasRef.value.style.display = pc || hm ? "block" : "none";
+    }
+    setSceneObjectVisibility(pc, hm);
     updateActiveViz(props.samples);
 }
 
@@ -1272,11 +1277,13 @@ function updateActiveViz(sampleList) {
 }
 
 // Watchers
+// Watch samples.length — the composable mutates the array in place via push() + triggerRef(),
+// so the array reference never changes; watching length detects new samples.
 watch(
-    () => props.samples,
-    (val) => {
-        updatePoints(val);
-        updateActiveViz(val);
+    () => props.samples.length,
+    () => {
+        updatePoints(props.samples);
+        updateActiveViz(props.samples);
     },
 );
 
@@ -1287,6 +1294,11 @@ watch(
         rebuildFieldReference();
         updateActiveViz(props.samples);
     },
+);
+
+watch(
+    () => props.inclination,
+    () => rebuildFieldReference(),
 );
 
 watch(
