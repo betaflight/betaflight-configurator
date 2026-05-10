@@ -77,11 +77,11 @@ let ghostGroup = null;
 
 // Live mag visualization
 let liveMarker = null;
-let vectorLines = null; // [xLine, yLine, zLine]
+let vectorLines = null; // [xLine, yLine, zLine] — cylinder-based thick axis lines
+let totalVectorLine = null; // orange line from origin to live mag position
 
 // Expected field direction reference
-let fieldRefLine = null;
-let fieldRefTip = null;
+let fieldRefGroup = null; // group containing shaft cylinder + cone arrowhead
 
 // Reusable color for HSL→RGB in updatePoints loop
 const _tempColor = new THREE.Color();
@@ -165,31 +165,39 @@ function initScene() {
     liveMarker.visible = false;
     scene.add(liveMarker);
 
-    // XYZ vector lines (from origin along each axis to component value)
+    // XYZ thick vector lines (cylinders from origin along each axis to component value)
     const VECTOR_COLORS = [0xff4444, 0x44ff44, 0x4444ff];
     vectorLines = VECTOR_COLORS.map((color) => {
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(6), 3));
-        const mat = new THREE.LineBasicMaterial({ color, opacity: 0.8, transparent: true });
-        const line = new THREE.Line(geo, mat);
-        line.visible = false;
-        scene.add(line);
-        return line;
+        const geo = new THREE.CylinderGeometry(3, 3, 1, 6);
+        geo.translate(0, 0.5, 0); // pivot at bottom so scaling works from origin
+        const mat = new THREE.MeshBasicMaterial({ color, opacity: 0.85, transparent: true });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.visible = false;
+        scene.add(mesh);
+        return mesh;
     });
 
-    // Expected field direction arrow (orange, from sphere center at inclination angle)
-    const refGeo = new THREE.BufferGeometry();
-    refGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(6), 3));
-    const refMat = new THREE.LineBasicMaterial({ color: 0xff8800, opacity: 0.7, transparent: true });
-    fieldRefLine = new THREE.Line(refGeo, refMat);
-    fieldRefLine.visible = false;
-    scene.add(fieldRefLine);
+    // Orange total measured field vector (origin → live mag position)
+    const totalGeo = new THREE.CylinderGeometry(2, 2, 1, 6);
+    totalGeo.translate(0, 0.5, 0);
+    const totalMat = new THREE.MeshBasicMaterial({ color: 0xff8800, opacity: 0.9, transparent: true });
+    totalVectorLine = new THREE.Mesh(totalGeo, totalMat);
+    totalVectorLine.visible = false;
+    scene.add(totalVectorLine);
 
-    const tipGeo = new THREE.SphereGeometry(8, 8, 8);
-    const tipMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
-    fieldRefTip = new THREE.Mesh(tipGeo, tipMat);
-    fieldRefTip.visible = false;
-    scene.add(fieldRefTip);
+    // Expected field direction arrow (orange shaft + cone arrowhead)
+    fieldRefGroup = new THREE.Group();
+    fieldRefGroup.visible = false;
+    const shaftGeo = new THREE.CylinderGeometry(3, 3, 1, 8);
+    shaftGeo.translate(0, 0.5, 0);
+    const shaftMat = new THREE.MeshBasicMaterial({ color: 0xff8800, opacity: 0.7, transparent: true });
+    fieldRefGroup.userData.shaft = new THREE.Mesh(shaftGeo, shaftMat);
+    fieldRefGroup.add(fieldRefGroup.userData.shaft);
+    const coneGeo = new THREE.ConeGeometry(8, 24, 8);
+    const coneMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
+    fieldRefGroup.userData.cone = new THREE.Mesh(coneGeo, coneMat);
+    fieldRefGroup.add(fieldRefGroup.userData.cone);
+    scene.add(fieldRefGroup);
 
     // Coverage zone indicators (6 discs at sphere poles, colored by sample density)
     zoneMeshes = ZONE_DIRS.map(() => {
@@ -238,6 +246,19 @@ function updateGhostSphere() {
     ghostGroup.visible = !props.sphereFit || ghostGroup.children[0]?.material?.opacity > 0.01;
 }
 
+// Quaternion helpers for orienting cylinders along arbitrary axes
+const _UP = new THREE.Vector3(0, 1, 0);
+const _orientVec = new THREE.Vector3();
+const _tmpVec = new THREE.Vector3();
+const _tmpQuat = new THREE.Quaternion();
+
+function orientCylinder(mesh, axis, length) {
+    _orientVec.copy(axis).normalize();
+    _tmpQuat.setFromUnitVectors(_UP, _orientVec);
+    mesh.quaternion.copy(_tmpQuat);
+    mesh.scale.set(1, Math.abs(length), 1);
+}
+
 function updateLiveMagOverlay() {
     const mag = props.liveMag;
     const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
@@ -247,48 +268,66 @@ function updateLiveMagOverlay() {
             liveMarker.position.set(mag.x, mag.y, mag.z);
         }
     }
+    // XYZ component cylinders along each axis
     if (vectorLines) {
         const vals = showLive ? [mag.x, mag.y, mag.z] : [0, 0, 0];
         for (let i = 0; i < 3; i++) {
-            vectorLines[i].visible = showLive;
-            if (showLive) {
-                const pos = vectorLines[i].geometry.attributes.position.array;
-                pos[0] = pos[1] = pos[2] = 0;
-                pos[3] = pos[4] = pos[5] = 0;
-                pos[3 + i] = vals[i];
-                vectorLines[i].geometry.attributes.position.needsUpdate = true;
+            vectorLines[i].visible = showLive && Math.abs(vals[i]) > 1;
+            if (vectorLines[i].visible) {
+                _tmpVec.set(0, 0, 0).setComponent(i, Math.sign(vals[i]));
+                orientCylinder(vectorLines[i], _tmpVec, vals[i]);
+                vectorLines[i].position.set(0, 0, 0);
+            }
+        }
+    }
+    // Orange total field vector (origin → live position)
+    if (totalVectorLine) {
+        totalVectorLine.visible = showLive;
+        if (showLive) {
+            const len = Math.hypot(mag.x, mag.y, mag.z);
+            if (len > 1) {
+                _tmpVec.set(mag.x, mag.y, mag.z);
+                orientCylinder(totalVectorLine, _tmpVec, len);
+                totalVectorLine.position.set(0, 0, 0);
+            } else {
+                totalVectorLine.visible = false;
             }
         }
     }
 }
 
 function updateFieldReferenceArrow() {
-    const showRef = fieldRefLine && props.inclination !== null && props.sphereFit;
-    if (showRef) {
-        const incl = (props.inclination * Math.PI) / 180;
-        const { center, radius } = props.sphereFit;
-        const dx = Math.cos(incl) * radius;
-        const dz = Math.sin(incl) * radius;
+    if (!fieldRefGroup) {
+        return;
+    }
+    const showRef = props.inclination !== null && props.sphereFit;
+    fieldRefGroup.visible = showRef;
+    if (!showRef) {
+        return;
+    }
 
-        const pos = fieldRefLine.geometry.attributes.position.array;
-        pos[0] = center.x;
-        pos[1] = center.y;
-        pos[2] = center.z;
-        pos[3] = center.x + dx;
-        pos[4] = center.y;
-        pos[5] = center.z + dz;
-        fieldRefLine.geometry.attributes.position.needsUpdate = true;
-        fieldRefLine.visible = true;
+    const incl = (props.inclination * Math.PI) / 180;
+    const { center, radius } = props.sphereFit;
+    // Field direction: horizontal component along X (forward/north), vertical along Z (down)
+    const dx = Math.cos(incl) * radius;
+    const dz = Math.sin(incl) * radius;
 
-        fieldRefTip.position.set(center.x + dx, center.y, center.z + dz);
-        fieldRefTip.visible = true;
-    } else {
-        if (fieldRefLine) {
-            fieldRefLine.visible = false;
-        }
-        if (fieldRefTip) {
-            fieldRefTip.visible = false;
-        }
+    // Position the group at the sphere center
+    fieldRefGroup.position.set(center.x, center.y, center.z);
+
+    // Orient the shaft cylinder from center toward the field direction
+    const shaft = fieldRefGroup.userData.shaft;
+    const cone = fieldRefGroup.userData.cone;
+    _tmpVec.set(dx, 0, dz);
+    const len = _tmpVec.length();
+    if (len > 1) {
+        orientCylinder(shaft, _tmpVec, len);
+        shaft.position.set(0, 0, 0);
+
+        // Place cone at the tip of the arrow
+        cone.position.set(dx, 0, dz);
+        _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
+        cone.quaternion.copy(_tmpQuat);
     }
 }
 
@@ -523,10 +562,21 @@ function disposeScene() {
         controls = null;
     }
 
-    disposeMesh(fieldRefLine);
-    fieldRefLine = null;
-    disposeMesh(fieldRefTip);
-    fieldRefTip = null;
+    if (fieldRefGroup) {
+        fieldRefGroup.traverse((child) => {
+            if (child.geometry) {
+                child.geometry.dispose();
+            }
+            if (child.material) {
+                child.material.dispose();
+            }
+        });
+        scene?.remove(fieldRefGroup);
+        fieldRefGroup = null;
+    }
+
+    disposeMesh(totalVectorLine);
+    totalVectorLine = null;
 
     if (zoneMeshes) {
         zoneMeshes.forEach(disposeMesh);
