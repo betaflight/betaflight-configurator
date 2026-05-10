@@ -506,6 +506,7 @@
                                 :live-mag="cal.liveMag"
                                 :inclination="calGeoRef?.inclination ?? null"
                                 :coverage="cal.coverage"
+                                :attitude="attitudeRaw"
                             />
                         </div>
                     </div>
@@ -553,6 +554,7 @@
                                 :active="false"
                                 :inclination="calGeoRef?.inclination ?? null"
                                 :coverage="cal.coverage"
+                                :attitude="attitudeRaw"
                             />
                         </div>
                     </div>
@@ -1480,6 +1482,7 @@ const attitudeDisplay = reactive({
     pitch: "0.0",
     roll: "0.0",
 });
+const attitudeRaw = reactive({ roll: 0, pitch: 0, heading: 0 });
 
 function resetYaw() {
     yawFix.value = fcStore.sensorData.kinematics[2] * -1;
@@ -1536,6 +1539,9 @@ function pollAttitude() {
             headingText += ` ${toCardinal(headingDeg)}`;
         }
         attitudeDisplay.heading = headingText;
+        attitudeRaw.roll = k[0];
+        attitudeRaw.pitch = k[1];
+        attitudeRaw.heading = headingDeg;
         if (attitudeIndicator) {
             attitudeIndicator.setRoll(k[0]);
             attitudeIndicator.setPitch(k[1]);

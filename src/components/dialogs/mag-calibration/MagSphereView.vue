@@ -12,6 +12,8 @@ import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+const DEG_TO_RAD = Math.PI / 180;
+
 const props = defineProps({
     samples: {
         type: Array,
@@ -45,6 +47,10 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    attitude: {
+        type: Object,
+        default: null, // { roll, pitch, heading } in degrees
+    },
 });
 
 const containerRef = ref(null);
@@ -71,6 +77,9 @@ let wireframeMesh = null;
 
 // Center marker
 let centerMarker = null;
+
+// Quad icon at origin reflecting real-time attitude
+let quadIcon = null;
 
 // Reference ghost sphere (shown before calibration data arrives)
 let ghostGroup = null;
@@ -139,6 +148,10 @@ function initScene() {
     // Ghost reference sphere — gives visual context before data arrives
     ghostGroup = createGhostSphere(400);
     scene.add(ghostGroup);
+
+    // Quad icon at origin — shows real-time attitude during calibration
+    quadIcon = createQuadIcon(120);
+    scene.add(quadIcon);
 
     // Point cloud (pre-allocated)
     pointGeometry = new THREE.BufferGeometry();
@@ -244,6 +257,16 @@ function updateGhostSphere() {
         }
     });
     ghostGroup.visible = !props.sphereFit || ghostGroup.children[0]?.material?.opacity > 0.01;
+}
+
+function updateQuadAttitude() {
+    if (!quadIcon || !props.attitude) {
+        return;
+    }
+    // Apply Euler angles: roll (X), pitch (Z), heading (Y) — matching Betaflight convention
+    // In this scene: BF X=forward maps to Three.js X, BF Y=right maps to Y, BF Z=down maps to Z
+    const { roll, pitch, heading } = props.attitude;
+    quadIcon.rotation.set(pitch * DEG_TO_RAD, -heading * DEG_TO_RAD, -roll * DEG_TO_RAD, "YXZ");
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
@@ -372,6 +395,7 @@ function animate() {
     }
 
     updateGhostSphere();
+    updateQuadAttitude();
     updateLiveMagOverlay();
     updateFieldReferenceArrow();
     updateCoverageZones();
@@ -421,6 +445,58 @@ function addAxisLabel(targetScene, text, position, color) {
     sprite.position.copy(position);
     sprite.scale.set(80, 80, 1);
     targetScene.add(sprite);
+}
+
+function createQuadIcon(size) {
+    const group = new THREE.Group();
+    const armMat = new THREE.MeshBasicMaterial({ color: 0xcccccc });
+    const motorFrontMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
+    const motorRearMat = new THREE.MeshBasicMaterial({ color: 0x444444 });
+
+    // Two crossed arms (X shape in XZ plane)
+    const armLen = size * 1.4;
+    const armThick = size * 0.12;
+    for (const angle of [Math.PI / 4, -Math.PI / 4]) {
+        const geo = new THREE.BoxGeometry(armLen, armThick * 0.5, armThick);
+        const mesh = new THREE.Mesh(geo, armMat);
+        mesh.rotation.y = angle;
+        group.add(mesh);
+    }
+
+    // Center body (elongated along X = forward)
+    const bodyGeo = new THREE.BoxGeometry(size * 0.5, size * 0.15, size * 0.4);
+    group.add(new THREE.Mesh(bodyGeo, armMat));
+
+    // 4 motors at arm tips — front (+X) two red, rear (-X) two dark
+    const half = (armLen / 2) * 0.7;
+    const motorGeo = new THREE.CylinderGeometry(size * 0.18, size * 0.18, size * 0.1, 8);
+    const motorPositions = [
+        { x: half, z: half, front: true },
+        { x: half, z: -half, front: true },
+        { x: -half, z: half, front: false },
+        { x: -half, z: -half, front: false },
+    ];
+    for (const mp of motorPositions) {
+        const motor = new THREE.Mesh(motorGeo, mp.front ? motorFrontMat : motorRearMat);
+        motor.position.set(mp.x, size * 0.1, mp.z);
+        group.add(motor);
+    }
+
+    // Forward direction indicator (small triangle pointing +X — BF forward axis)
+    const triShape = new THREE.BufferGeometry();
+    const s = size * 0.15;
+    triShape.setAttribute(
+        "position",
+        new THREE.BufferAttribute(
+            new Float32Array([size * 0.35, size * 0.12, 0, size * 0.2, size * 0.12, -s, size * 0.2, size * 0.12, s]),
+            3,
+        ),
+    );
+    triShape.setIndex([0, 1, 2]);
+    triShape.computeVertexNormals();
+    group.add(new THREE.Mesh(triShape, motorFrontMat));
+
+    return group;
 }
 
 function createGhostSphere(radius) {
@@ -593,6 +669,19 @@ function disposeScene() {
     if (vectorLines) {
         vectorLines.forEach(disposeMesh);
         vectorLines = null;
+    }
+
+    if (quadIcon) {
+        quadIcon.traverse((child) => {
+            if (child.geometry) {
+                child.geometry.dispose();
+            }
+            if (child.material) {
+                child.material.dispose();
+            }
+        });
+        scene?.remove(quadIcon);
+        quadIcon = null;
     }
 
     if (ghostGroup) {
