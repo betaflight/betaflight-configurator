@@ -1,6 +1,12 @@
 <template>
     <div ref="containerRef" class="mag-sphere-container">
         <canvas ref="canvasRef"></canvas>
+        <div class="mag-sphere-axis-legend">
+            <span class="axis-x">X</span>
+            <span class="axis-y">Y</span>
+            <span class="axis-z">Z</span>
+            <span class="axis-field">Field</span>
+        </div>
         <div v-if="showLegend" class="mag-sphere-legend">
             {{ legend }}
         </div>
@@ -767,6 +773,33 @@ onBeforeUnmount(() => {
     display: block;
     width: 100% !important;
     height: 100% !important;
+}
+
+.mag-sphere-axis-legend {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: flex;
+    gap: 8px;
+    font-size: 0.75em;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.mag-sphere-axis-legend .axis-x {
+    color: #ff4444;
+}
+
+.mag-sphere-axis-legend .axis-y {
+    color: #44ff44;
+}
+
+.mag-sphere-axis-legend .axis-z {
+    color: #4444ff;
+}
+
+.mag-sphere-axis-legend .axis-field {
+    color: #ff8800;
 }
 
 .mag-sphere-legend {
