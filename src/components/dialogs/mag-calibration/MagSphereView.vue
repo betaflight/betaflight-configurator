@@ -1141,6 +1141,7 @@ function disposeScene() {
                 child.material.dispose();
             }
         });
+        scene?.remove(ghostGroup);
         ghostGroup = null;
     }
 

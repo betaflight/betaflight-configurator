@@ -7489,12 +7489,6 @@
     "configurationMagInclinationHelp": {
         "message": "The angle between the earth's magnetic field and the horizontal plane at your location. Positive values indicate the field points downward (northern hemisphere)"
     },
-    "configurationMagInclinationValue": {
-        "message": "Inclination: {{value}}°"
-    },
-    "configurationMagFieldStrength": {
-        "message": "Field: {{value}} nT"
-    },
     "configurationMagFieldStrengthLabel": {
         "message": "Field Strength"
     },
@@ -7522,9 +7516,6 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Detection failed — try with more varied tilting."
     },
-    "magCalibrationTitle": {
-        "message": "Magnetometer Calibration"
-    },
     "magCalibrationStart": {
         "message": "Guided"
     },
@@ -7540,9 +7531,6 @@
     "magCalibrationCancel": {
         "message": "Cancel"
     },
-    "magCalibrationAccept": {
-        "message": "Accept"
-    },
     "magCalibrationRetry": {
         "message": "Retry"
     },
@@ -7554,9 +7542,6 @@
     },
     "magCalibrationStepOf": {
         "message": "Step {{current}} of {{total}}"
-    },
-    "magCalibrationIdle": {
-        "message": "Place your vehicle in an open area away from metal objects, then click Start."
     },
     "magCalibrationWaiting": {
         "message": "Waiting for movement... Shake the vehicle to begin."
@@ -7575,9 +7560,6 @@
     },
     "magCalibrationSamples": {
         "message": "Samples"
-    },
-    "magCalibrationOffsets": {
-        "message": "Offsets"
     },
     "magCalibrationQuality": {
         "message": "Quality"
@@ -7612,32 +7594,11 @@
     "magCalibrationStep6": {
         "message": "Inverted — rotate 360°"
     },
-    "magCalibrationCurrentOffsets": {
-        "message": "Current offsets"
-    },
-    "magCalibrationUncalibrated": {
-        "message": "Magnetometer has not been calibrated yet."
-    },
-    "magCalibrationFieldStrength": {
-        "message": "|B|"
-    },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offsets"
     },
     "magCalibrationSphereOffsets": {
         "message": "Sphere fit offsets"
-    },
-    "magCalibrationSphereLegend": {
-        "message": "Each dot is a mag sample. Even coverage on a sphere = good calibration. Wireframe = fitted sphere; center = hard-iron offset."
-    },
-    "magCalibrationExpectedField": {
-        "message": "Expected field: {{value}} nT"
-    },
-    "magCalibrationInclination": {
-        "message": "Inclination: {{value}}°"
-    },
-    "magCalibrationExpectedFieldLabel": {
-        "message": "Expected field (WMM)"
     },
     "magCalibrationUnguided": {
         "message": "Quick"
@@ -7666,62 +7627,8 @@
     "magVizPolar": {
         "message": "Polar Density"
     },
-    "magAlignmentTitle": {
-        "message": "Detect Magnetometer Alignment"
-    },
-    "magAlignmentStart": {
-        "message": "Start Detection"
-    },
     "magAlignmentApply": {
         "message": "Apply"
-    },
-    "magAlignmentIdle": {
-        "message": "Tilt the vehicle through large angles — nose up, nose down, left side, right side — then rotate 360° while level. Tilting is important for detecting flipped orientations."
-    },
-    "magAlignmentCollecting": {
-        "message": "Tilt and rotate the vehicle through varied orientations..."
-    },
-    "magAlignmentTiltTip": {
-        "message": "Tip: tilt more! Only {{percent}}% of samples have significant tilt."
-    },
-    "magAlignmentLowTiltWarning": {
-        "message": "Low tilt coverage ({{percent}}%) — flip detection may be less reliable. For best results, include nose-up, nose-down, and side tilts."
-    },
-    "magAlignmentSampleCount": {
-        "message": "{{count}} samples collected"
-    },
-    "magAlignmentDetected": {
-        "message": "Detected Alignment"
-    },
-    "magAlignmentConfidence": {
-        "message": "Confidence"
-    },
-    "magAlignmentSamples": {
-        "message": "Samples"
-    },
-    "magAlignmentConfidenceHigh": {
-        "message": "{{value}}x (high)"
-    },
-    "magAlignmentConfidenceMedium": {
-        "message": "{{value}}x (medium)"
-    },
-    "magAlignmentConfidenceLow": {
-        "message": "{{value}}x (low)"
-    },
-    "magAlignmentLowConfidence": {
-        "message": "Low confidence — try again with more diverse orientations, or verify the result manually."
-    },
-    "magAlignmentError": {
-        "message": "Detection failed. Try again with more movement and varied orientations."
-    },
-    "magAlignmentNoMovement": {
-        "message": "No movement detected. Rotate the vehicle and try again."
-    },
-    "magAlignmentNotEnoughData": {
-        "message": "Not enough valid samples collected. Try again."
-    },
-    "magAlignmentMissingCustomAngles": {
-        "message": "Custom alignment angles are not configured. Set roll, pitch, and yaw before detecting."
     },
     "configurationMagDetectAlignment": {
         "message": "Detect"
