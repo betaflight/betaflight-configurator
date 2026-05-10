@@ -140,9 +140,12 @@ export function useSensorGraph() {
     }
 
     function drawGraph(helpers, sampleNumber) {
-        // Skip if dimensions are not yet available (e.g. SVG not laid out)
+        // Re-measure if dimensions are not yet available (e.g. SVG was hidden via v-show)
         if (!helpers.width || !helpers.height) {
-            return;
+            updateGraphHelperSize(helpers);
+            if (!helpers.width || !helpers.height) {
+                return;
+            }
         }
 
         // Update scales with current dimensions
