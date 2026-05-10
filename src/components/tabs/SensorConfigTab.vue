@@ -499,6 +499,16 @@
                             </div>
                         </div>
                         <div class="mag-cal-inline-sphere">
+                            <div class="mag-viz-mode-selector">
+                                <UDropdownMenu v-slot="{ open }" :items="magVizModeItems" :content="{ align: 'end' }">
+                                    <UButton
+                                        size="xs"
+                                        variant="ghost"
+                                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-eye'"
+                                        square
+                                    />
+                                </UDropdownMenu>
+                            </div>
                             <MagSphereView
                                 :samples="cal.samples"
                                 :sphere-fit="cal.sphereFitResult"
@@ -507,6 +517,7 @@
                                 :inclination="calGeoRef?.inclination ?? null"
                                 :coverage="cal.coverage"
                                 :attitude="attitudeRaw"
+                                :viz-mode="magVizMode"
                             />
                         </div>
                     </div>
@@ -543,6 +554,16 @@
                             </div>
                         </div>
                         <div class="mag-cal-inline-sphere">
+                            <div class="mag-viz-mode-selector">
+                                <UDropdownMenu v-slot="{ open }" :items="magVizModeItems" :content="{ align: 'end' }">
+                                    <UButton
+                                        size="xs"
+                                        variant="ghost"
+                                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-eye'"
+                                        square
+                                    />
+                                </UDropdownMenu>
+                            </div>
                             <MagSphereView
                                 :samples="cal.samples"
                                 :sphere-fit="cal.sphereFitResult"
@@ -550,6 +571,7 @@
                                 :inclination="calGeoRef?.inclination ?? null"
                                 :coverage="cal.coverage"
                                 :attitude="attitudeRaw"
+                                :viz-mode="magVizMode"
                             />
                         </div>
                     </div>
@@ -1290,6 +1312,25 @@ function cancelMagCal() {
     calCurrentStep.value = 0;
 }
 
+const MAG_VIZ_MODES = [
+    { value: "pointcloud", label: "magVizPointCloud", icon: "i-lucide-scatter-chart" },
+    { value: "heatmap", label: "magVizHeatmap", icon: "i-lucide-globe" },
+    { value: "projection", label: "magVizProjection", icon: "i-lucide-circle-dot" },
+    { value: "polar", label: "magVizPolar", icon: "i-lucide-radar" },
+];
+const magVizMode = ref("pointcloud");
+
+const magVizModeItems = computed(() => [
+    MAG_VIZ_MODES.map((m) => ({
+        label: i18n.getMessage(m.label),
+        icon: m.icon,
+        active: magVizMode.value === m.value,
+        onSelect: () => {
+            magVizMode.value = m.value;
+        },
+    })),
+]);
+
 const calModeItems = computed(() => [
     [
         {
@@ -1986,12 +2027,31 @@ onMounted(() => {
     }
 
     .mag-cal-inline-sphere {
+        position: relative;
         aspect-ratio: 1;
         border-radius: 0.5rem;
         overflow: hidden;
         background: #1a1a2e;
         min-height: 200px;
         max-height: 350px;
+    }
+
+    .mag-viz-mode-selector {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        z-index: 10;
+    }
+
+    .mag-viz-mode-selector button {
+        color: rgba(255, 255, 255, 0.7);
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(4px);
+    }
+
+    .mag-viz-mode-selector button:hover {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.5);
     }
 
     .mag-cal-progress-bar {

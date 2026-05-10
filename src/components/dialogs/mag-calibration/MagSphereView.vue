@@ -7,6 +7,9 @@
             <span class="axis-z">Z</span>
             <span class="axis-field">Field</span>
         </div>
+        <div v-if="!isPointCloudMode" class="mag-sphere-mode-placeholder">
+            <span>{{ vizModeLabel }}</span>
+        </div>
         <div v-if="showLegend" class="mag-sphere-legend">
             {{ legend }}
         </div>
@@ -14,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
@@ -57,10 +60,20 @@ const props = defineProps({
         type: Object,
         default: null, // { roll, pitch, heading } in degrees
     },
+    vizMode: {
+        type: String,
+        default: "pointcloud",
+    },
 });
 
 const containerRef = ref(null);
 const canvasRef = ref(null);
+
+const isPointCloudMode = computed(() => props.vizMode === "pointcloud");
+const vizModeLabel = computed(() => {
+    const labels = { heatmap: "Voxel Heatmap", projection: "Triple Projection", polar: "Polar Density" };
+    return labels[props.vizMode] ?? "";
+});
 
 const MAX_POINTS = 5000;
 
@@ -104,14 +117,21 @@ const _tempColor = new THREE.Color();
 // Coverage zone indicators
 let zoneMeshes = null;
 const ZONE_KEYS = ["+X", "-X", "+Y", "-Y", "+Z", "-Z"];
+// Display frame: X=forward, Y=left, Z=up  (BF Y negated, BF Z negated)
 const ZONE_DIRS = [
     [1, 0, 0],
     [-1, 0, 0],
-    [0, 1, 0],
-    [0, -1, 0],
-    [0, 0, 1],
-    [0, 0, -1],
+    [0, -1, 0], // BF +Y (right) → display -Y
+    [0, 1, 0], // BF -Y (left) → display +Y
+    [0, 0, -1], // BF +Z (down) → display -Z
+    [0, 0, 1], // BF -Z (up) → display +Z
 ];
+
+// Coordinate transform: Betaflight sensor frame → display frame
+// BF: X=forward, Y=right, Z=down  →  Display: X=forward, Y=left, Z=up
+function bfToScene(x, y, z) {
+    return [x, -y, -z];
+}
 
 function initScene() {
     const container = containerRef.value;
@@ -132,9 +152,10 @@ function initScene() {
     // Scene
     scene = new THREE.Scene();
 
-    // Camera — pulled back for a nice isometric overview
+    // Camera — Z-up convention, pulled back for isometric overview
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
-    camera.position.set(700, 500, 900);
+    camera.up.set(0, 0, 1);
+    camera.position.set(900, 700, 500);
     camera.lookAt(0, 0, 0);
 
     // Lighting
@@ -269,10 +290,15 @@ function updateQuadAttitude() {
     if (!quadIcon || !props.attitude) {
         return;
     }
-    // Apply Euler angles: roll (X), pitch (Z), heading (Y) — matching Betaflight convention
-    // In this scene: BF X=forward maps to Three.js X, BF Y=right maps to Y, BF Z=down maps to Z
+    // Display frame: X=forward, Y=left, Z=up
+    // BF roll rotates around X → display roll around X (but Y/Z flipped, so negate)
+    // BF pitch rotates around Y → display pitch around -Y
+    // BF heading rotates around Z → display heading around -Z
     const { roll, pitch, heading } = props.attitude;
-    quadIcon.rotation.set(pitch * DEG_TO_RAD, -heading * DEG_TO_RAD, -roll * DEG_TO_RAD, "YXZ");
+    const r = roll * DEG_TO_RAD;
+    const p = pitch * DEG_TO_RAD;
+    const h = heading * DEG_TO_RAD;
+    quadIcon.rotation.set(r, p, h, "ZXY");
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
@@ -291,15 +317,16 @@ function orientCylinder(mesh, axis, length) {
 function updateLiveMagOverlay() {
     const mag = props.liveMag;
     const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
+    const [mx, my, mz] = showLive ? bfToScene(mag.x, mag.y, mag.z) : [0, 0, 0];
     if (liveMarker) {
         liveMarker.visible = showLive;
         if (showLive) {
-            liveMarker.position.set(mag.x, mag.y, mag.z);
+            liveMarker.position.set(mx, my, mz);
         }
     }
-    // XYZ component cylinders along each axis
+    // XYZ component cylinders along each axis (in display frame)
     if (vectorLines) {
-        const vals = showLive ? [mag.x, mag.y, mag.z] : [0, 0, 0];
+        const vals = [mx, my, mz];
         for (let i = 0; i < 3; i++) {
             vectorLines[i].visible = showLive && Math.abs(vals[i]) > 1;
             if (vectorLines[i].visible) {
@@ -313,9 +340,9 @@ function updateLiveMagOverlay() {
     if (totalVectorLine) {
         totalVectorLine.visible = showLive;
         if (showLive) {
-            const len = Math.hypot(mag.x, mag.y, mag.z);
+            const len = Math.hypot(mx, my, mz);
             if (len > 1) {
-                _tmpVec.set(mag.x, mag.y, mag.z);
+                _tmpVec.set(mx, my, mz);
                 orientCylinder(totalVectorLine, _tmpVec, len);
                 totalVectorLine.position.set(0, 0, 0);
             } else {
@@ -337,24 +364,26 @@ function updateFieldReferenceArrow() {
 
     const incl = (props.inclination * Math.PI) / 180;
     const { center, radius } = props.sphereFit;
-    // Field direction: horizontal component along X (forward/north), vertical along Z (down)
-    const dx = Math.cos(incl) * radius;
-    const dz = Math.sin(incl) * radius;
+    // Field direction in BF frame: horizontal along X (north), vertical along Z (down)
+    // In display frame: X stays, Z negated (up = +Z)
+    const fdx = Math.cos(incl) * radius;
+    const fdz = -Math.sin(incl) * radius; // BF Z-down → display Z-up
 
-    // Position the group at the sphere center
-    fieldRefGroup.position.set(center.x, center.y, center.z);
+    // Position the group at the sphere center (remapped)
+    const [scx, scy, scz] = bfToScene(center.x, center.y, center.z);
+    fieldRefGroup.position.set(scx, scy, scz);
 
     // Orient the shaft cylinder from center toward the field direction
     const shaft = fieldRefGroup.userData.shaft;
     const cone = fieldRefGroup.userData.cone;
-    _tmpVec.set(dx, 0, dz);
+    _tmpVec.set(fdx, 0, fdz);
     const len = _tmpVec.length();
     if (len > 1) {
         orientCylinder(shaft, _tmpVec, len);
         shaft.position.set(0, 0, 0);
 
         // Place cone at the tip of the arrow
-        cone.position.set(dx, 0, dz);
+        cone.position.set(fdx, 0, fdz);
         _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
         cone.quaternion.copy(_tmpQuat);
     }
@@ -366,6 +395,7 @@ function updateCoverageZones() {
     }
     if (props.coverage && props.sphereFit) {
         const { center, radius } = props.sphereFit;
+        const [scx, scy, scz] = bfToScene(center.x, center.y, center.z);
         const target = Math.max(props.coverage.total / 6, 1);
         const discRadius = radius * 0.15;
 
@@ -376,12 +406,8 @@ function updateCoverageZones() {
             zoneMeshes[i].material.color.setHSL(ratio * 0.33, 1, 0.5);
             zoneMeshes[i].scale.setScalar(discRadius);
             const d = ZONE_DIRS[i];
-            zoneMeshes[i].position.set(center.x + d[0] * radius, center.y + d[1] * radius, center.z + d[2] * radius);
-            zoneMeshes[i].lookAt(
-                center.x + d[0] * radius * 2,
-                center.y + d[1] * radius * 2,
-                center.z + d[2] * radius * 2,
-            );
+            zoneMeshes[i].position.set(scx + d[0] * radius, scy + d[1] * radius, scz + d[2] * radius);
+            zoneMeshes[i].lookAt(scx + d[0] * radius * 2, scy + d[1] * radius * 2, scz + d[2] * radius * 2);
             zoneMeshes[i].visible = true;
         }
     } else {
@@ -459,32 +485,33 @@ function createQuadIcon(size) {
     const motorFrontMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
     const motorRearMat = new THREE.MeshBasicMaterial({ color: 0x444444 });
 
-    // Two crossed arms (X shape in XZ plane)
+    // Two crossed arms (X shape in XY plane, Z=up)
     const armLen = size * 1.4;
     const armThick = size * 0.12;
     for (const angle of [Math.PI / 4, -Math.PI / 4]) {
-        const geo = new THREE.BoxGeometry(armLen, armThick * 0.5, armThick);
+        const geo = new THREE.BoxGeometry(armLen, armThick, armThick * 0.5);
         const mesh = new THREE.Mesh(geo, armMat);
-        mesh.rotation.y = angle;
+        mesh.rotation.z = angle;
         group.add(mesh);
     }
 
     // Center body (elongated along X = forward)
-    const bodyGeo = new THREE.BoxGeometry(size * 0.5, size * 0.15, size * 0.4);
+    const bodyGeo = new THREE.BoxGeometry(size * 0.5, size * 0.4, size * 0.15);
     group.add(new THREE.Mesh(bodyGeo, armMat));
 
     // 4 motors at arm tips — front (+X) two red, rear (-X) two dark
     const half = (armLen / 2) * 0.7;
     const motorGeo = new THREE.CylinderGeometry(size * 0.18, size * 0.18, size * 0.1, 8);
+    motorGeo.rotateX(Math.PI / 2); // align cylinder axis with Z
     const motorPositions = [
-        { x: half, z: half, front: true },
-        { x: half, z: -half, front: true },
-        { x: -half, z: half, front: false },
-        { x: -half, z: -half, front: false },
+        { x: half, y: half, front: true },
+        { x: half, y: -half, front: true },
+        { x: -half, y: half, front: false },
+        { x: -half, y: -half, front: false },
     ];
     for (const mp of motorPositions) {
         const motor = new THREE.Mesh(motorGeo, mp.front ? motorFrontMat : motorRearMat);
-        motor.position.set(mp.x, size * 0.1, mp.z);
+        motor.position.set(mp.x, mp.y, size * 0.1);
         group.add(motor);
     }
 
@@ -494,7 +521,7 @@ function createQuadIcon(size) {
     triShape.setAttribute(
         "position",
         new THREE.BufferAttribute(
-            new Float32Array([size * 0.35, size * 0.12, 0, size * 0.2, size * 0.12, -s, size * 0.2, size * 0.12, s]),
+            new Float32Array([size * 0.35, 0, size * 0.12, size * 0.2, -s, size * 0.12, size * 0.2, s, size * 0.12]),
             3,
         ),
     );
@@ -532,14 +559,14 @@ function createGhostSphere(radius) {
         group.add(new THREE.Line(geo, ringMat.clone()));
     }
 
-    // Latitude rings at ±45° for more visual depth
+    // Latitude rings at ±45° for more visual depth (Z=up)
     for (const lat of [-Math.PI / 4, Math.PI / 4]) {
         const r = radius * Math.cos(lat);
-        const y = radius * Math.sin(lat);
+        const z = radius * Math.sin(lat);
         const points = [];
         for (let i = 0; i <= segments; i++) {
             const angle = (i / segments) * Math.PI * 2;
-            points.push(new THREE.Vector3(Math.cos(angle) * r, y, Math.sin(angle) * r));
+            points.push(new THREE.Vector3(Math.cos(angle) * r, Math.sin(angle) * r, z));
         }
         const geo = new THREE.BufferGeometry().setFromPoints(points);
         group.add(new THREE.Line(geo, ringMat.clone()));
@@ -561,9 +588,10 @@ function updatePoints(sampleList) {
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
         const idx = i * 3;
-        positions[idx] = s.x;
-        positions[idx + 1] = s.y;
-        positions[idx + 2] = s.z;
+        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
+        positions[idx] = sx;
+        positions[idx + 1] = sy;
+        positions[idx + 2] = sz;
 
         // Color gradient: blue (old) → cyan → green → yellow → red (new)
         const t = count > 1 ? i / (count - 1) : 0;
@@ -608,7 +636,8 @@ function updateWireframe(fit) {
         transparent: true,
     });
     wireframeMesh = new THREE.LineSegments(wireGeo, wireMat);
-    wireframeMesh.position.set(fit.center.x, fit.center.y, fit.center.z);
+    const [cx, cy, cz] = bfToScene(fit.center.x, fit.center.y, fit.center.z);
+    wireframeMesh.position.set(cx, cy, cz);
     scene.add(wireframeMesh);
     sphereGeo.dispose();
 
@@ -616,7 +645,7 @@ function updateWireframe(fit) {
     const markerGeo = new THREE.SphereGeometry(fit.radius * 0.03, 8, 8);
     const markerMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
     centerMarker = new THREE.Mesh(markerGeo, markerMat);
-    centerMarker.position.set(fit.center.x, fit.center.y, fit.center.z);
+    centerMarker.position.set(cx, cy, cz);
     scene.add(centerMarker);
 }
 
@@ -737,6 +766,37 @@ function disposeScene() {
     camera = null;
 }
 
+function setPointCloudVisibility(visible) {
+    if (pointMesh) {
+        pointMesh.visible = visible;
+    }
+    if (wireframeMesh) {
+        wireframeMesh.visible = visible;
+    }
+    if (centerMarker) {
+        centerMarker.visible = visible;
+    }
+    if (liveMarker) {
+        liveMarker.visible = visible && props.active;
+    }
+    if (vectorLines) {
+        for (const v of vectorLines) {
+            v.visible = visible && props.active;
+        }
+    }
+    if (totalVectorLine) {
+        totalVectorLine.visible = visible && props.active;
+    }
+    if (fieldRefGroup) {
+        fieldRefGroup.visible = visible;
+    }
+    if (zoneMeshes) {
+        for (const z of zoneMeshes) {
+            z.visible = visible;
+        }
+    }
+}
+
 // Watchers
 watch(
     () => props.samples,
@@ -746,6 +806,13 @@ watch(
 watch(
     () => props.sphereFit,
     (val) => updateWireframe(val),
+);
+
+watch(
+    () => props.vizMode,
+    (mode) => {
+        setPointCloudVisibility(mode === "pointcloud");
+    },
 );
 
 onMounted(() => {
@@ -811,5 +878,17 @@ onBeforeUnmount(() => {
     color: rgba(255, 255, 255, 0.5);
     pointer-events: none;
     line-height: 1.3;
+}
+
+.mag-sphere-mode-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    z-index: 5;
 }
 </style>

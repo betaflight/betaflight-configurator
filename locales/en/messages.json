@@ -7654,6 +7654,18 @@
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
     },
+    "magVizPointCloud": {
+        "message": "Point Cloud"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Triple Projection"
+    },
+    "magVizPolar": {
+        "message": "Polar Density"
+    },
     "magAlignmentTitle": {
         "message": "Detect Magnetometer Alignment"
     },
