@@ -11,7 +11,9 @@
             <span class="axis-y">Y</span>
             <span class="axis-z">Z</span>
             <span class="axis-field">Field</span>
-            <span v-if="inclination !== null" class="axis-incl">↗{{ Math.round(inclination) }}°</span>
+            <span v-if="inclination !== null" class="axis-incl"
+                >{{ inclination >= 0 ? "↗" : "↘" }}{{ Math.round(inclination) }}°</span
+            >
         </div>
         <div v-if="showLegend" class="mag-sphere-legend">
             {{ legend }}
@@ -1222,38 +1224,26 @@ function disposeScene() {
     camera = null;
 }
 
+function setVisible(obj, visible) {
+    if (obj) {
+        obj.visible = visible;
+    }
+}
+
 function setSceneObjectVisibility(pc, hm) {
-    if (pointMesh) {
-        pointMesh.visible = pc;
-    }
-    if (wireframeMesh) {
-        wireframeMesh.visible = pc || hm;
-    }
-    if (centerMarker) {
-        centerMarker.visible = pc || hm;
-    }
-    if (liveMarker) {
-        liveMarker.visible = pc && props.active;
-    }
-    if (vectorLines) {
-        for (const v of vectorLines) {
-            v.visible = pc && props.active;
-        }
-    }
-    if (totalVectorLine) {
-        totalVectorLine.visible = pc && props.active;
-    }
-    if (fieldRefGroup) {
-        fieldRefGroup.visible = pc || hm;
-    }
-    if (zoneMeshes) {
-        for (const z of zoneMeshes) {
-            z.visible = pc;
-        }
-    }
-    if (heatmapMesh) {
-        heatmapMesh.visible = hm;
-    }
+    setVisible(pointMesh, pc);
+    setVisible(wireframeMesh, pc || hm);
+    setVisible(centerMarker, pc || hm);
+    setVisible(liveMarker, pc && props.active);
+    vectorLines?.forEach((v) => {
+        v.visible = pc && props.active;
+    });
+    setVisible(totalVectorLine, pc && props.active);
+    setVisible(fieldRefGroup, pc || hm);
+    zoneMeshes?.forEach((z) => {
+        z.visible = pc;
+    });
+    setVisible(heatmapMesh, hm);
 }
 
 function applyVizMode(mode) {
