@@ -23,6 +23,7 @@
 import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { i18n } from "../../../js/localization";
 
 const DEG_TO_RAD = Math.PI / 180;
 
@@ -159,7 +160,7 @@ function initCanvas2D(sampleList) {
         ctx.fillStyle = "rgba(255,255,255,0.3)";
         ctx.font = "14px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText("Waiting for data…", w / 2, h / 2);
+        ctx.fillText(i18n.getMessage("magVizWaitingForData"), w / 2, h / 2);
         return null;
     }
 
@@ -1300,6 +1301,7 @@ onMounted(() => {
     updatePoints(props.samples);
     updateWireframe(props.sphereFit);
     rebuildFieldReference();
+    applyVizMode(props.vizMode);
 });
 
 onBeforeUnmount(() => {

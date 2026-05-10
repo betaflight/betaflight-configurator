@@ -507,6 +507,8 @@
                                     variant="ghost"
                                     :icon="m.icon"
                                     :class="{ 'mag-viz-active': magVizMode === m.value }"
+                                    :aria-label="$t(m.label)"
+                                    :title="$t(m.label)"
                                     square
                                     @click="magVizMode = m.value"
                                 />
@@ -564,6 +566,8 @@
                                     variant="ghost"
                                     :icon="m.icon"
                                     :class="{ 'mag-viz-active': magVizMode === m.value }"
+                                    :aria-label="$t(m.label)"
+                                    :title="$t(m.label)"
                                     square
                                     @click="magVizMode = m.value"
                                 />
