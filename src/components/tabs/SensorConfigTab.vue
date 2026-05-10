@@ -47,19 +47,19 @@
                             </template>
                             <USwitch v-model="accHardwareEnabled" />
                         </SettingRow>
-                        <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
-                            <template v-if="baroHwName" #label>
-                                {{ $t("configurationBaroHardware") }}
-                                <span class="text-dimmed font-normal">&mdash; {{ baroHwName }}</span>
-                            </template>
-                            <USwitch v-model="baroHardwareEnabled" />
-                        </SettingRow>
                         <SettingRow :label="magHwName ? '' : $t('configurationMagHardware')">
                             <template v-if="magHwName" #label>
                                 {{ $t("configurationMagHardware") }}
                                 <span class="text-dimmed font-normal">&mdash; {{ magHwName }}</span>
                             </template>
                             <USwitch v-model="magHardwareEnabled" />
+                        </SettingRow>
+                        <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
+                            <template v-if="baroHwName" #label>
+                                {{ $t("configurationBaroHardware") }}
+                                <span class="text-dimmed font-normal">&mdash; {{ baroHwName }}</span>
+                            </template>
+                            <USwitch v-model="baroHardwareEnabled" />
                         </SettingRow>
                         <SettingRow v-if="showRangefinder" :label="$t('configurationRangefinder')" fullWidth>
                             <USwitch v-model="sonarHardwareEnabled" />
@@ -87,15 +87,10 @@
                                 size="xs"
                             />
                         </SettingRow>
-                    </UiBox>
-
-                    <!-- BOARD & SENSOR ALIGNMENT -->
-                    <UiBox
-                        :title="$t('configurationBoardAlignment')"
-                        :help="$t('configurationBoardAlignmentHelp')"
-                        type="neutral"
-                        collapsible
-                    >
+                        <!-- Board Alignment -->
+                        <SettingRow :label="$t('configurationBoardAlignment')" fullWidth>
+                            <HelpIcon :text="$t('configurationBoardAlignmentHelp')" />
+                        </SettingRow>
                         <AlignmentAngles
                             v-model:roll="boardAlignment.roll"
                             v-model:pitch="boardAlignment.pitch"
