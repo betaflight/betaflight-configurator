@@ -539,12 +539,7 @@
                                     :label="$t('magCalibrationRetry')"
                                     @click="retryAndStartMagCal()"
                                 />
-                                <UButton
-                                    size="xs"
-                                    variant="ghost"
-                                    :label="$t('magCalibrationCancel')"
-                                    @click="retryMagCal()"
-                                />
+                                <UButton size="xs" variant="outline" :label="$t('close')" @click="retryMagCal()" />
                             </div>
                         </div>
                         <div class="mag-cal-inline-sphere">
