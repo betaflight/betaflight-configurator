@@ -299,15 +299,11 @@ function updateQuadAttitude() {
     if (!quadIcon || !props.attitude) {
         return;
     }
-    // Display frame: X=forward, Y=left, Z=up
-    // BF roll rotates around X → display roll around X (but Y/Z flipped, so negate)
-    // BF pitch rotates around Y → display pitch around -Y
-    // BF heading rotates around Z → display heading around -Z
+    // BF frame: X=fwd, Y=right, Z=down → Display: X=fwd, Y=left, Z=up
+    // Flipping Y and Z negates all rotation directions.
+    // Euler order ZYX: heading (Z) → pitch (Y) → roll (X)
     const { roll, pitch, heading } = props.attitude;
-    const r = roll * DEG_TO_RAD;
-    const p = pitch * DEG_TO_RAD;
-    const h = heading * DEG_TO_RAD;
-    quadIcon.rotation.set(r, p, h, "ZXY");
+    quadIcon.rotation.set(-roll * DEG_TO_RAD, -pitch * DEG_TO_RAD, -heading * DEG_TO_RAD, "ZYX");
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
