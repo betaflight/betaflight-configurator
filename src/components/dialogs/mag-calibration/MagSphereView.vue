@@ -325,7 +325,9 @@ function updateLiveMagOverlay() {
     }
     const mag = props.liveMag;
     const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
-    const [mx, my, mz] = showLive ? bfToScene(mag.x, mag.y, mag.z) : [0, 0, 0];
+    const mx = showLive ? mag.x : 0;
+    const my = showLive ? -mag.y : 0;
+    const mz = showLive ? -mag.z : 0;
     if (liveMarker) {
         liveMarker.visible = showLive;
         if (showLive) {
@@ -334,12 +336,15 @@ function updateLiveMagOverlay() {
     }
     // XYZ component cylinders along each axis (in display frame)
     if (vectorLines) {
-        const vals = [mx, my, mz];
+        const v0 = mx,
+            v1 = my,
+            v2 = mz;
+        const comps = [v0, v1, v2];
         for (let i = 0; i < 3; i++) {
-            vectorLines[i].visible = showLive && Math.abs(vals[i]) > 1;
+            vectorLines[i].visible = showLive && Math.abs(comps[i]) > 1;
             if (vectorLines[i].visible) {
-                _tmpVec.set(0, 0, 0).setComponent(i, Math.sign(vals[i]));
-                orientCylinder(vectorLines[i], _tmpVec, vals[i]);
+                _tmpVec.set(0, 0, 0).setComponent(i, Math.sign(comps[i]));
+                orientCylinder(vectorLines[i], _tmpVec, comps[i]);
                 vectorLines[i].position.set(0, 0, 0);
             }
         }
@@ -378,9 +383,8 @@ function updateFieldReferenceArrow() {
     const fdx = Math.cos(incl) * radius;
     const fdz = -Math.sin(incl) * radius; // BF Z-down → display Z-up
 
-    // Position the group at the sphere center (remapped)
-    const [scx, scy, scz] = bfToScene(center.x, center.y, center.z);
-    fieldRefGroup.position.set(scx, scy, scz);
+    // Position the group at the sphere center (BF→display inline)
+    fieldRefGroup.position.set(center.x, -center.y, -center.z);
 
     // Orient the shaft cylinder from center toward the field direction
     const shaft = fieldRefGroup.userData.shaft;
@@ -410,7 +414,9 @@ function updateCoverageZones() {
     }
     if (props.coverage && props.sphereFit) {
         const { center, radius } = props.sphereFit;
-        const [scx, scy, scz] = bfToScene(center.x, center.y, center.z);
+        const scx = center.x,
+            scy = -center.y,
+            scz = -center.z;
         const target = Math.max(props.coverage.total / 6, 1);
         const discRadius = radius * 0.15;
 
@@ -657,7 +663,8 @@ function drawProjection(sampleList) {
             const screenX = px + pts[i][plane.a] * scale;
             const screenY = py - pts[i][plane.b] * scale;
             const t = pts.length > 1 ? i / (pts.length - 1) : 0;
-            _tempColor.setHSL(t * 0.33, 1, 0.5);
+            const hue = (1 - t) * 0.65; // blue (old) → red (new), matches 3D point cloud
+            _tempColor.setHSL(hue, 1, 0.5);
             ctx.fillStyle = `rgb(${Math.round(_tempColor.r * 255)},${Math.round(_tempColor.g * 255)},${Math.round(_tempColor.b * 255)})`;
             ctx.fillRect(screenX - 1, screenY - 1, 2, 2);
         }
@@ -830,6 +837,12 @@ function drawPolarDensity(sampleList) {
 
 function animate() {
     animationId = requestAnimationFrame(animate);
+
+    // Skip 3D updates when canvas is hidden (projection/polar modes)
+    const use3D = props.vizMode === "pointcloud" || props.vizMode === "heatmap";
+    if (!use3D) {
+        return;
+    }
 
     if (controls) {
         controls.autoRotate = true;
