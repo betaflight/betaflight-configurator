@@ -7,7 +7,7 @@
             <span class="axis-z">Z</span>
             <span class="axis-field">Field</span>
         </div>
-        <div v-if="!isPointCloudMode" class="mag-sphere-mode-placeholder">
+        <div v-if="showPlaceholder" class="mag-sphere-mode-placeholder">
             <span>{{ vizModeLabel }}</span>
         </div>
         <div v-if="showLegend" class="mag-sphere-legend">
@@ -69,9 +69,10 @@ const props = defineProps({
 const containerRef = ref(null);
 const canvasRef = ref(null);
 
-const isPointCloudMode = computed(() => props.vizMode === "pointcloud");
+const IMPLEMENTED_MODES = new Set(["pointcloud", "heatmap"]);
+const showPlaceholder = computed(() => !IMPLEMENTED_MODES.has(props.vizMode));
 const vizModeLabel = computed(() => {
-    const labels = { heatmap: "Voxel Heatmap", projection: "Triple Projection", polar: "Polar Density" };
+    const labels = { projection: "Triple Projection", polar: "Polar Density" };
     return labels[props.vizMode] ?? "";
 });
 
@@ -126,6 +127,11 @@ const ZONE_DIRS = [
     [0, 0, -1], // BF +Z (down) → display -Z
     [0, 0, 1], // BF -Z (up) → display +Z
 ];
+
+// Voxel heatmap — geodesic sphere with per-face coloring
+let heatmapMesh = null;
+let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
+let heatmapFaceCounts = null; // sample count per face
 
 // Coordinate transform: Betaflight sensor frame → display frame
 // BF: X=forward, Y=right, Z=down  →  Display: X=forward, Y=left, Z=up
@@ -253,6 +259,9 @@ function initScene() {
         scene.add(mesh);
         return mesh;
     });
+
+    // Voxel heatmap sphere (unit radius, scaled at render time)
+    createHeatmapSphere(1);
 
     // OrbitControls
     controls = new OrbitControls(camera, canvas);
@@ -415,6 +424,119 @@ function updateCoverageZones() {
             mesh.visible = false;
         }
     }
+}
+
+// --- Voxel Heatmap ---
+const HEATMAP_DETAIL = 2; // icosahedron subdivision level → 320 faces
+
+function createHeatmapSphere(radius) {
+    const ico = new THREE.IcosahedronGeometry(radius, HEATMAP_DETAIL);
+    // Convert indexed → non-indexed so each face gets its own color
+    const geo = ico.toNonIndexed();
+    ico.dispose();
+
+    const posArr = geo.attributes.position.array;
+    const faceCount = posArr.length / 9;
+    heatmapFaceDirs = new Array(faceCount);
+    heatmapFaceCounts = new Float32Array(faceCount);
+    const colors = new Float32Array(posArr.length); // 3 verts × 3 comps per face
+
+    for (let f = 0; f < faceCount; f++) {
+        const i = f * 9;
+        // Face center direction (average of 3 vertices, normalized)
+        const cx = (posArr[i] + posArr[i + 3] + posArr[i + 6]) / 3;
+        const cy = (posArr[i + 1] + posArr[i + 4] + posArr[i + 7]) / 3;
+        const cz = (posArr[i + 2] + posArr[i + 5] + posArr[i + 8]) / 3;
+        const len = Math.hypot(cx, cy, cz) || 1;
+        heatmapFaceDirs[f] = [cx / len, cy / len, cz / len];
+        // Initial color: dark blue-grey
+        for (let v = 0; v < 3; v++) {
+            colors[f * 9 + v * 3] = 0.1;
+            colors[f * 9 + v * 3 + 1] = 0.1;
+            colors[f * 9 + v * 3 + 2] = 0.15;
+        }
+    }
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+    const mat = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        opacity: 0.85,
+        transparent: true,
+        side: THREE.DoubleSide,
+    });
+    heatmapMesh = new THREE.Mesh(geo, mat);
+    heatmapMesh.visible = false;
+    scene.add(heatmapMesh);
+}
+
+function updateHeatmap(sampleList) {
+    if (!heatmapMesh || !heatmapFaceDirs) {
+        return;
+    }
+    if (!sampleList || sampleList.length === 0 || !props.sphereFit) {
+        heatmapMesh.visible = props.vizMode === "heatmap";
+        return;
+    }
+
+    const { center, radius } = props.sphereFit;
+    const [scx, scy, scz] = bfToScene(center.x, center.y, center.z);
+
+    // Resize heatmap sphere to match fitted sphere
+    heatmapMesh.position.set(scx, scy, scz);
+    heatmapMesh.scale.setScalar(radius / 1); // IcosahedronGeometry default radius = 1
+
+    // Reset counts
+    heatmapFaceCounts.fill(0);
+
+    // Classify each sample into nearest face
+    const count = Math.min(sampleList.length, MAX_POINTS);
+    const start = Math.max(0, sampleList.length - MAX_POINTS);
+    for (let i = 0; i < count; i++) {
+        const s = sampleList[start + i];
+        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
+        // Direction from sphere center to sample
+        const dx = sx - scx;
+        const dy = sy - scy;
+        const dz = sz - scz;
+        const len = Math.hypot(dx, dy, dz) || 1;
+        const nx = dx / len;
+        const ny = dy / len;
+        const nz = dz / len;
+
+        // Find closest face by dot product
+        let bestFace = 0;
+        let bestDot = -2;
+        for (let f = 0; f < heatmapFaceDirs.length; f++) {
+            const d = heatmapFaceDirs[f];
+            const dot = nx * d[0] + ny * d[1] + nz * d[2];
+            if (dot > bestDot) {
+                bestDot = dot;
+                bestFace = f;
+            }
+        }
+        heatmapFaceCounts[bestFace]++;
+    }
+
+    // Color faces by density: dark → red → yellow → green
+    const colorArr = heatmapMesh.geometry.attributes.color.array;
+    const maxCount = Math.max(1, ...heatmapFaceCounts);
+    for (let f = 0; f < heatmapFaceDirs.length; f++) {
+        const n = heatmapFaceCounts[f];
+        const ratio = Math.min(n / Math.max(maxCount * 0.3, 1), 1);
+        if (n === 0) {
+            _tempColor.setRGB(0.1, 0.1, 0.15);
+        } else {
+            // HSL: 0 (red) → 0.33 (green) as ratio increases
+            _tempColor.setHSL(ratio * 0.33, 0.9, 0.35 + ratio * 0.2);
+        }
+        for (let v = 0; v < 3; v++) {
+            colorArr[f * 9 + v * 3] = _tempColor.r;
+            colorArr[f * 9 + v * 3 + 1] = _tempColor.g;
+            colorArr[f * 9 + v * 3 + 2] = _tempColor.b;
+        }
+    }
+    heatmapMesh.geometry.attributes.color.needsUpdate = true;
+    heatmapMesh.visible = props.vizMode === "heatmap";
 }
 
 function animate() {
@@ -739,6 +861,11 @@ function disposeScene() {
         pointMaterial = null;
     }
 
+    disposeMesh(heatmapMesh);
+    heatmapMesh = null;
+    heatmapFaceDirs = null;
+    heatmapFaceCounts = null;
+
     // Dispose remaining scene resources (axis lines, labels, sprites)
     if (scene) {
         scene.traverse((obj) => {
@@ -766,53 +893,70 @@ function disposeScene() {
     camera = null;
 }
 
-function setPointCloudVisibility(visible) {
+function applyVizMode(mode) {
+    const pc = mode === "pointcloud";
+    const hm = mode === "heatmap";
+
     if (pointMesh) {
-        pointMesh.visible = visible;
+        pointMesh.visible = pc;
     }
     if (wireframeMesh) {
-        wireframeMesh.visible = visible;
+        wireframeMesh.visible = pc || hm;
     }
     if (centerMarker) {
-        centerMarker.visible = visible;
+        centerMarker.visible = pc || hm;
     }
     if (liveMarker) {
-        liveMarker.visible = visible && props.active;
+        liveMarker.visible = pc && props.active;
     }
     if (vectorLines) {
         for (const v of vectorLines) {
-            v.visible = visible && props.active;
+            v.visible = pc && props.active;
         }
     }
     if (totalVectorLine) {
-        totalVectorLine.visible = visible && props.active;
+        totalVectorLine.visible = pc && props.active;
     }
     if (fieldRefGroup) {
-        fieldRefGroup.visible = visible;
+        fieldRefGroup.visible = pc || hm;
     }
     if (zoneMeshes) {
         for (const z of zoneMeshes) {
-            z.visible = visible;
+            z.visible = pc;
         }
+    }
+    if (heatmapMesh) {
+        heatmapMesh.visible = hm;
+    }
+    if (hm) {
+        updateHeatmap(props.samples);
     }
 }
 
 // Watchers
 watch(
     () => props.samples,
-    (val) => updatePoints(val),
+    (val) => {
+        updatePoints(val);
+        if (props.vizMode === "heatmap") {
+            updateHeatmap(val);
+        }
+    },
 );
 
 watch(
     () => props.sphereFit,
-    (val) => updateWireframe(val),
+    (val) => {
+        updateWireframe(val);
+        if (props.vizMode === "heatmap") {
+            updateHeatmap(props.samples);
+        }
+    },
 );
 
 watch(
     () => props.vizMode,
-    (mode) => {
-        setPointCloudVisibility(mode === "pointcloud");
-    },
+    (mode) => applyVizMode(mode),
 );
 
 onMounted(() => {
