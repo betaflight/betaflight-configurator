@@ -11,6 +11,7 @@
             <span class="axis-y">Y</span>
             <span class="axis-z">Z</span>
             <span class="axis-field">Field</span>
+            <span v-if="inclination !== null" class="axis-incl">↗{{ Math.round(inclination) }}°</span>
         </div>
         <div v-if="showLegend" class="mag-sphere-legend">
             {{ legend }}
@@ -227,7 +228,7 @@ function initScene() {
     totalVectorLine.visible = false;
     scene.add(totalVectorLine);
 
-    // Expected field direction arrow (orange shaft + cone arrowhead)
+    // Expected field direction arrow (orange shaft + cone arrowhead + inclination arc)
     fieldRefGroup = new THREE.Group();
     fieldRefGroup.visible = false;
     const shaftGeo = new THREE.CylinderGeometry(3, 3, 1, 8);
@@ -239,6 +240,9 @@ function initScene() {
     const coneMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
     fieldRefGroup.userData.cone = new THREE.Mesh(coneGeo, coneMat);
     fieldRefGroup.add(fieldRefGroup.userData.cone);
+    // Inclination arc (updated in updateFieldReferenceArrow)
+    fieldRefGroup.userData.arc = null;
+    fieldRefGroup.userData.arcLabel = null;
     scene.add(fieldRefGroup);
 
     // Coverage zone indicators (6 discs at sphere poles, colored by sample density)
@@ -365,28 +369,32 @@ function updateLiveMagOverlay() {
     }
 }
 
+// Per-frame: just toggle visibility
 function updateFieldReferenceArrow() {
     if (!fieldRefGroup) {
         return;
     }
     const use3D = props.vizMode === "pointcloud" || props.vizMode === "heatmap";
-    const showRef = use3D && props.inclination !== null && props.sphereFit;
-    fieldRefGroup.visible = showRef;
-    if (!showRef) {
+    fieldRefGroup.visible = use3D && props.inclination !== null && props.sphereFit;
+}
+
+// Called from watchers when sphereFit or inclination changes
+function rebuildFieldReference() {
+    if (!fieldRefGroup || props.inclination === null || !props.sphereFit) {
         return;
     }
 
     const incl = (props.inclination * Math.PI) / 180;
     const { center, radius } = props.sphereFit;
-    // Field direction in BF frame: horizontal along X (north), vertical along Z (down)
-    // In display frame: X stays, Z negated (up = +Z)
+    // Field direction: horizontal along X, vertical along Z
+    // Display frame: Z-up, so field dips toward -Z
     const fdx = Math.cos(incl) * radius;
-    const fdz = -Math.sin(incl) * radius; // BF Z-down → display Z-up
+    const fdz = -Math.sin(incl) * radius;
 
-    // Position the group at the sphere center (BF→display inline)
+    // Position at sphere center (BF→display inline)
     fieldRefGroup.position.set(center.x, -center.y, -center.z);
 
-    // Orient the shaft cylinder from center toward the field direction
+    // Orient shaft + cone
     const shaft = fieldRefGroup.userData.shaft;
     const cone = fieldRefGroup.userData.cone;
     _tmpVec.set(fdx, 0, fdz);
@@ -394,12 +402,53 @@ function updateFieldReferenceArrow() {
     if (len > 1) {
         orientCylinder(shaft, _tmpVec, len);
         shaft.position.set(0, 0, 0);
-
-        // Place cone at the tip of the arrow
         cone.position.set(fdx, 0, fdz);
         _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
         cone.quaternion.copy(_tmpQuat);
     }
+
+    // Dispose old arc + label
+    if (fieldRefGroup.userData.arc) {
+        fieldRefGroup.remove(fieldRefGroup.userData.arc);
+        fieldRefGroup.userData.arc.geometry.dispose();
+        fieldRefGroup.userData.arc.material.dispose();
+    }
+    if (fieldRefGroup.userData.arcLabel) {
+        fieldRefGroup.remove(fieldRefGroup.userData.arcLabel);
+        fieldRefGroup.userData.arcLabel.material.map?.dispose();
+        fieldRefGroup.userData.arcLabel.material.dispose();
+    }
+
+    // Inclination arc: curved line from horizontal (+X) down to field direction
+    const arcRadius = radius * 0.35;
+    const arcPoints = [];
+    for (let i = 0; i <= 24; i++) {
+        const a = (-incl * i) / 24;
+        arcPoints.push(new THREE.Vector3(Math.cos(a) * arcRadius, 0, -Math.sin(a) * arcRadius));
+    }
+    const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPoints);
+    const arcMat = new THREE.LineBasicMaterial({ color: 0xff8800, opacity: 0.6, transparent: true });
+    fieldRefGroup.userData.arc = new THREE.Line(arcGeo, arcMat);
+    fieldRefGroup.add(fieldRefGroup.userData.arc);
+
+    // Angle label at arc midpoint
+    const midAngle = -incl / 2;
+    const labelCanvas = document.createElement("canvas");
+    labelCanvas.width = 128;
+    labelCanvas.height = 48;
+    const ctx = labelCanvas.getContext("2d");
+    ctx.fillStyle = "#ff8800";
+    ctx.font = "bold 28px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${Math.round(props.inclination)}°`, 64, 24);
+    const labelTexture = new THREE.CanvasTexture(labelCanvas);
+    const labelMat = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
+    const labelSprite = new THREE.Sprite(labelMat);
+    labelSprite.position.set(Math.cos(midAngle) * arcRadius * 1.4, 0, -Math.sin(midAngle) * arcRadius * 1.4);
+    labelSprite.scale.set(80, 30, 1);
+    fieldRefGroup.userData.arcLabel = labelSprite;
+    fieldRefGroup.add(labelSprite);
 }
 
 function updateCoverageZones() {
@@ -1265,6 +1314,7 @@ watch(
     () => props.sphereFit,
     (val) => {
         updateWireframe(val);
+        rebuildFieldReference();
         updateActiveViz(props.samples);
     },
 );
@@ -1280,6 +1330,7 @@ onMounted(() => {
     // with precomputed data that won't trigger the watchers.
     updatePoints(props.samples);
     updateWireframe(props.sphereFit);
+    rebuildFieldReference();
 });
 
 onBeforeUnmount(() => {
@@ -1333,6 +1384,11 @@ onBeforeUnmount(() => {
 
 .mag-sphere-axis-legend .axis-field {
     color: #ff8800;
+}
+
+.mag-sphere-axis-legend .axis-incl {
+    color: #ff8800;
+    opacity: 0.7;
 }
 
 .mag-sphere-legend {
