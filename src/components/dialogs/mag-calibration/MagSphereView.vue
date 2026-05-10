@@ -1,15 +1,16 @@
 <template>
     <div ref="containerRef" class="mag-sphere-container">
         <canvas ref="canvasRef"></canvas>
-        <canvas v-show="vizMode === 'projection'" ref="projCanvasRef" class="mag-sphere-proj-canvas"></canvas>
+        <canvas
+            v-show="vizMode === 'projection' || vizMode === 'polar'"
+            ref="projCanvasRef"
+            class="mag-sphere-proj-canvas"
+        ></canvas>
         <div class="mag-sphere-axis-legend">
             <span class="axis-x">X</span>
             <span class="axis-y">Y</span>
             <span class="axis-z">Z</span>
             <span class="axis-field">Field</span>
-        </div>
-        <div v-if="showPlaceholder" class="mag-sphere-mode-placeholder">
-            <span>{{ vizModeLabel }}</span>
         </div>
         <div v-if="showLegend" class="mag-sphere-legend">
             {{ legend }}
@@ -18,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
@@ -70,13 +71,6 @@ const props = defineProps({
 const containerRef = ref(null);
 const canvasRef = ref(null);
 const projCanvasRef = ref(null);
-
-const IMPLEMENTED_MODES = new Set(["pointcloud", "heatmap", "projection"]);
-const showPlaceholder = computed(() => !IMPLEMENTED_MODES.has(props.vizMode));
-const vizModeLabel = computed(() => {
-    const labels = { polar: "Polar Density" };
-    return labels[props.vizMode] ?? "";
-});
 
 const MAX_POINTS = 5000;
 
@@ -326,6 +320,9 @@ function orientCylinder(mesh, axis, length) {
 }
 
 function updateLiveMagOverlay() {
+    if (props.vizMode !== "pointcloud") {
+        return;
+    }
     const mag = props.liveMag;
     const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
     const [mx, my, mz] = showLive ? bfToScene(mag.x, mag.y, mag.z) : [0, 0, 0];
@@ -367,7 +364,8 @@ function updateFieldReferenceArrow() {
     if (!fieldRefGroup) {
         return;
     }
-    const showRef = props.inclination !== null && props.sphereFit;
+    const use3D = props.vizMode === "pointcloud" || props.vizMode === "heatmap";
+    const showRef = use3D && props.inclination !== null && props.sphereFit;
     fieldRefGroup.visible = showRef;
     if (!showRef) {
         return;
@@ -402,6 +400,12 @@ function updateFieldReferenceArrow() {
 
 function updateCoverageZones() {
     if (!zoneMeshes) {
+        return;
+    }
+    if (props.vizMode !== "pointcloud") {
+        for (const mesh of zoneMeshes) {
+            mesh.visible = false;
+        }
         return;
     }
     if (props.coverage && props.sphereFit) {
@@ -679,6 +683,151 @@ function drawProjection(sampleList) {
     }
 }
 
+// --- Polar Density Map (2D canvas) ---
+const POLAR_SECTORS = 36; // 10° per sector
+const POLAR_RINGS = 6; // elevation bands from pole to pole
+
+function drawPolarDensity(sampleList) {
+    const canvas = projCanvasRef.value;
+    const container = containerRef.value;
+    if (!canvas || !container) {
+        return;
+    }
+
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+
+    // Background
+    ctx.fillStyle = "#1a1a2e";
+    ctx.fillRect(0, 0, w, h);
+
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const maxR = Math.min(w, h) / 2 - 30;
+
+    if (!sampleList || sampleList.length === 0) {
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.font = "14px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Waiting for data…", centerX, centerY);
+        return;
+    }
+
+    // Build density grid: sectors (azimuth) × rings (elevation)
+    const density = new Float32Array(POLAR_SECTORS * POLAR_RINGS);
+    const count = Math.min(sampleList.length, MAX_POINTS);
+    const start = Math.max(0, sampleList.length - MAX_POINTS);
+
+    // Get sphere center in display frame
+    let cx = 0,
+        cy = 0,
+        cz = 0;
+    if (props.sphereFit) {
+        [cx, cy, cz] = bfToScene(props.sphereFit.center.x, props.sphereFit.center.y, props.sphereFit.center.z);
+    }
+
+    for (let i = 0; i < count; i++) {
+        const s = sampleList[start + i];
+        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
+        const dx = sx - cx;
+        const dy = sy - cy;
+        const dz = sz - cz;
+
+        // Azimuth: atan2(Y, X) → [0, 2π]
+        let azimuth = Math.atan2(dy, dx);
+        if (azimuth < 0) {
+            azimuth += Math.PI * 2;
+        }
+        // Elevation: asin(Z / r) → [-π/2, π/2] → map to [0, POLAR_RINGS-1]
+        const r = Math.hypot(dx, dy, dz) || 1;
+        const elevation = Math.asin(Math.max(-1, Math.min(1, dz / r)));
+
+        const sector = Math.floor((azimuth / (Math.PI * 2)) * POLAR_SECTORS) % POLAR_SECTORS;
+        const ring = Math.floor(((elevation + Math.PI / 2) / Math.PI) * POLAR_RINGS);
+        const clampedRing = Math.max(0, Math.min(POLAR_RINGS - 1, ring));
+        density[clampedRing * POLAR_SECTORS + sector]++;
+    }
+
+    const maxDensity = Math.max(1, ...density);
+
+    // Draw polar grid segments
+    const sectorAngle = (Math.PI * 2) / POLAR_SECTORS;
+    const ringWidth = maxR / POLAR_RINGS;
+
+    for (let ring = 0; ring < POLAR_RINGS; ring++) {
+        const innerR = ring * ringWidth;
+        const outerR = (ring + 1) * ringWidth;
+        for (let sector = 0; sector < POLAR_SECTORS; sector++) {
+            const n = density[ring * POLAR_SECTORS + sector];
+            const ratio = n / maxDensity;
+            const startAngle = sector * sectorAngle - Math.PI / 2;
+            const endAngle = startAngle + sectorAngle;
+
+            if (n === 0) {
+                _tempColor.setRGB(0.12, 0.12, 0.18);
+            } else {
+                _tempColor.setHSL(ratio * 0.33, 0.85, 0.25 + ratio * 0.3);
+            }
+
+            ctx.fillStyle = `rgb(${Math.round(_tempColor.r * 255)},${Math.round(_tempColor.g * 255)},${Math.round(_tempColor.b * 255)})`;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, outerR, startAngle, endAngle);
+            ctx.arc(centerX, centerY, innerR, endAngle, startAngle, true);
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    // Draw grid lines
+    ctx.strokeStyle = "rgba(255,255,255,0.15)";
+    ctx.lineWidth = 0.5;
+    for (let ring = 1; ring <= POLAR_RINGS; ring++) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, ring * ringWidth, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+    for (let sector = 0; sector < POLAR_SECTORS; sector++) {
+        const angle = sector * sectorAngle - Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(centerX + Math.cos(angle) * maxR, centerY + Math.sin(angle) * maxR);
+        ctx.stroke();
+    }
+
+    // Cardinal direction labels
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.font = "bold 12px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const labels = [
+        ["X+", -Math.PI / 2],
+        ["Y+", 0],
+        ["X-", Math.PI / 2],
+        ["Y-", Math.PI],
+    ];
+    const labelColors = ["#ff4444", "#44ff44", "#ff4444", "#44ff44"];
+    for (let i = 0; i < labels.length; i++) {
+        const [text, angle] = labels[i];
+        ctx.fillStyle = labelColors[i];
+        ctx.fillText(text, centerX + Math.cos(angle) * (maxR + 16), centerY + Math.sin(angle) * (maxR + 16));
+    }
+
+    // Ring labels (elevation)
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    ctx.font = "9px sans-serif";
+    ctx.textAlign = "left";
+    for (let ring = 0; ring < POLAR_RINGS; ring++) {
+        const elev = Math.round(-90 + (ring + 0.5) * (180 / POLAR_RINGS));
+        ctx.fillText(`${elev}°`, centerX + 3, centerY - (ring + 0.5) * ringWidth);
+    }
+}
+
 function animate() {
     animationId = requestAnimationFrame(animate);
 
@@ -715,9 +864,7 @@ function onResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
 
-    if (props.vizMode === "projection") {
-        drawProjection(props.samples);
-    }
+    updateActiveViz(props.samples);
 }
 
 function addAxisLine(targetScene, from, to, color) {
@@ -1040,7 +1187,6 @@ function disposeScene() {
 function applyVizMode(mode) {
     const pc = mode === "pointcloud";
     const hm = mode === "heatmap";
-    const proj = mode === "projection";
     const use3D = pc || hm;
 
     // Hide 3D canvas for 2D modes
@@ -1079,11 +1225,16 @@ function applyVizMode(mode) {
     if (heatmapMesh) {
         heatmapMesh.visible = hm;
     }
-    if (hm) {
-        updateHeatmap(props.samples);
-    }
-    if (proj) {
-        drawProjection(props.samples);
+    updateActiveViz(props.samples);
+}
+
+function updateActiveViz(sampleList) {
+    if (props.vizMode === "heatmap") {
+        updateHeatmap(sampleList);
+    } else if (props.vizMode === "projection") {
+        drawProjection(sampleList);
+    } else if (props.vizMode === "polar") {
+        drawPolarDensity(sampleList);
     }
 }
 
@@ -1092,12 +1243,7 @@ watch(
     () => props.samples,
     (val) => {
         updatePoints(val);
-        if (props.vizMode === "heatmap") {
-            updateHeatmap(val);
-        }
-        if (props.vizMode === "projection") {
-            drawProjection(val);
-        }
+        updateActiveViz(val);
     },
 );
 
@@ -1105,12 +1251,7 @@ watch(
     () => props.sphereFit,
     (val) => {
         updateWireframe(val);
-        if (props.vizMode === "heatmap") {
-            updateHeatmap(props.samples);
-        }
-        if (props.vizMode === "projection") {
-            drawProjection(props.samples);
-        }
+        updateActiveViz(props.samples);
     },
 );
 
@@ -1150,6 +1291,7 @@ onBeforeUnmount(() => {
     position: absolute;
     inset: 0;
     z-index: 2;
+    pointer-events: none;
 }
 
 .mag-sphere-axis-legend {
@@ -1188,17 +1330,5 @@ onBeforeUnmount(() => {
     color: rgba(255, 255, 255, 0.5);
     pointer-events: none;
     line-height: 1.3;
-}
-
-.mag-sphere-mode-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1em;
-    color: rgba(255, 255, 255, 0.5);
-    pointer-events: none;
-    z-index: 5;
 }
 </style>

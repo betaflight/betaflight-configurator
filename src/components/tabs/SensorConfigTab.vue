@@ -500,14 +500,16 @@
                         </div>
                         <div class="mag-cal-inline-sphere">
                             <div class="mag-viz-mode-selector">
-                                <UDropdownMenu v-slot="{ open }" :items="magVizModeItems" :content="{ align: 'end' }">
-                                    <UButton
-                                        size="xs"
-                                        variant="ghost"
-                                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-eye'"
-                                        square
-                                    />
-                                </UDropdownMenu>
+                                <UButton
+                                    v-for="m in MAG_VIZ_MODES"
+                                    :key="m.value"
+                                    size="xs"
+                                    variant="ghost"
+                                    :icon="m.icon"
+                                    :class="{ 'mag-viz-active': magVizMode === m.value }"
+                                    square
+                                    @click="magVizMode = m.value"
+                                />
                             </div>
                             <MagSphereView
                                 :samples="cal.samples"
@@ -555,14 +557,16 @@
                         </div>
                         <div class="mag-cal-inline-sphere">
                             <div class="mag-viz-mode-selector">
-                                <UDropdownMenu v-slot="{ open }" :items="magVizModeItems" :content="{ align: 'end' }">
-                                    <UButton
-                                        size="xs"
-                                        variant="ghost"
-                                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-eye'"
-                                        square
-                                    />
-                                </UDropdownMenu>
+                                <UButton
+                                    v-for="m in MAG_VIZ_MODES"
+                                    :key="m.value"
+                                    size="xs"
+                                    variant="ghost"
+                                    :icon="m.icon"
+                                    :class="{ 'mag-viz-active': magVizMode === m.value }"
+                                    square
+                                    @click="magVizMode = m.value"
+                                />
                             </div>
                             <MagSphereView
                                 :samples="cal.samples"
@@ -1320,17 +1324,6 @@ const MAG_VIZ_MODES = [
 ];
 const magVizMode = ref("pointcloud");
 
-const magVizModeItems = computed(() => [
-    MAG_VIZ_MODES.map((m) => ({
-        label: i18n.getMessage(m.label),
-        icon: m.icon,
-        active: magVizMode.value === m.value,
-        onSelect: () => {
-            magVizMode.value = m.value;
-        },
-    })),
-]);
-
 const calModeItems = computed(() => [
     [
         {
@@ -2030,7 +2023,6 @@ onMounted(() => {
         position: relative;
         aspect-ratio: 1;
         border-radius: 0.5rem;
-        overflow: hidden;
         background: #1a1a2e;
         min-height: 200px;
         max-height: 350px;
@@ -2041,17 +2033,24 @@ onMounted(() => {
         top: 6px;
         left: 6px;
         z-index: 10;
+        display: flex;
+        gap: 2px;
+        border-radius: 6px;
+        padding: 2px;
     }
 
     .mag-viz-mode-selector button {
-        color: rgba(255, 255, 255, 0.7);
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(4px);
+        color: rgba(255, 255, 255, 0.5);
     }
 
     .mag-viz-mode-selector button:hover {
         color: #fff;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .mag-viz-mode-selector .mag-viz-active {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.2);
     }
 
     .mag-cal-progress-bar {
