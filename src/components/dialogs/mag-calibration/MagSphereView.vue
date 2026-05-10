@@ -182,6 +182,7 @@ function disposeGroup(group) {
             child.geometry.dispose();
         }
         if (child.material) {
+            child.material.map?.dispose();
             child.material.dispose();
         }
     });
@@ -587,7 +588,7 @@ function updateHeatmap(sampleList) {
         return;
     }
     if (!sampleList || sampleList.length === 0 || !props.sphereFit) {
-        heatmapMesh.visible = props.vizMode === "heatmap";
+        heatmapMesh.visible = false;
         return;
     }
 
