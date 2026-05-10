@@ -187,32 +187,49 @@
                     </UiBox>
                 </div>
 
-                <!-- Right column: 3D Preview -->
-                <UiBox :padding="false" class="mt-3 sensor-model-box">
-                    <div class="model-preview">
-                        <div ref="modelWrapper" class="model-canvas-wrapper background_paper">
-                            <canvas ref="modelCanvas" :aria-label="$t('sensorConfig3dPreview')"></canvas>
-                            <div class="attitude-overlay">
-                                <dl>
-                                    <dt>{{ $t(hasMagSensor ? "initialSetupMagHeading" : "initialSetupHeading") }}</dt>
-                                    <dd>{{ attitudeDisplay.heading }}</dd>
-                                    <dt>{{ $t("initialSetupPitch") }}</dt>
-                                    <dd>{{ attitudeDisplay.pitch }}</dd>
-                                    <dt>{{ $t("initialSetupRoll") }}</dt>
-                                    <dd>{{ attitudeDisplay.roll }}</dd>
-                                </dl>
+                <!-- Right column: 3D Preview + Instruments -->
+                <div class="sensor-right">
+                    <UiBox :padding="false" class="sensor-model-box">
+                        <div class="model-preview">
+                            <div ref="modelWrapper" class="model-canvas-wrapper background_paper">
+                                <canvas ref="modelCanvas" :aria-label="$t('sensorConfig3dPreview')"></canvas>
+                                <div class="attitude-overlay">
+                                    <dl>
+                                        <dt>
+                                            {{ $t(hasMagSensor ? "initialSetupMagHeading" : "initialSetupHeading") }}
+                                        </dt>
+                                        <dd>{{ attitudeDisplay.heading }}</dd>
+                                        <dt>{{ $t("initialSetupPitch") }}</dt>
+                                        <dd>{{ attitudeDisplay.pitch }}</dd>
+                                        <dt>{{ $t("initialSetupRoll") }}</dt>
+                                        <dd>{{ attitudeDisplay.roll }}</dd>
+                                    </dl>
+                                </div>
+                                <UButton
+                                    class="yaw-reset-btn"
+                                    :label="$t('initialSetupButtonResetZaxisValue', { 1: yawFix })"
+                                    color="neutral"
+                                    variant="subtle"
+                                    size="xs"
+                                    @click="resetYaw"
+                                />
                             </div>
-                            <UButton
-                                class="yaw-reset-btn"
-                                :label="$t('initialSetupButtonResetZaxisValue', { 1: yawFix })"
-                                color="neutral"
-                                variant="subtle"
-                                size="xs"
-                                @click="resetYaw"
-                            />
                         </div>
-                    </div>
-                </UiBox>
+                    </UiBox>
+                    <!-- Instruments (same pattern as SetupTab) -->
+                    <UiBox
+                        :title="$t('initialSetupInstrumentsHead')"
+                        :help="$t('initialSetupInstrumentsHeadHelp')"
+                        type="neutral"
+                        collapsible
+                    >
+                        <div class="flex flex-row justify-center gap-2">
+                            <span ref="instrumentAttitude"></span>
+                            <span ref="instrumentHeading"></span>
+                            <span v-if="hasBaroSensor" ref="instrumentAltimeter"></span>
+                        </div>
+                    </UiBox>
+                </div>
             </div>
 
             <!-- MAGNETOMETER (all mag items in one box) -->
@@ -614,6 +631,7 @@ import { useTimeout } from "../../composables/useTimeout";
 import { useInterval } from "../../composables/useInterval";
 import Model from "../../js/model";
 import GUI from "../../js/gui";
+import { flightIndicator } from "../../../libraries/flightIndicators";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -1392,6 +1410,7 @@ watch(
 // --- Accelerometer Calibration ---
 
 const hasAccSensor = computed(() => have_sensor(fcStore.config?.activeSensors, "acc"));
+const hasBaroSensor = computed(() => have_sensor(fcStore.config?.activeSensors, "baro"));
 const accNeedsCalibration = computed(() => {
     const flags = fcStore.config?.configurationProblems;
     if (flags === undefined) {
@@ -1436,8 +1455,14 @@ const showLiveSensors = ref(false);
 
 const modelWrapper = ref(null);
 const modelCanvas = ref(null);
+const instrumentAttitude = ref(null);
+const instrumentHeading = ref(null);
+const instrumentAltimeter = ref(null);
 let modelInstance = null;
 let boundModelResize = null;
+let attitudeIndicator = null;
+let headingIndicator = null;
+let altimeterIndicator = null;
 
 const { addInterval, removeAllIntervals } = useInterval();
 
@@ -1473,6 +1498,19 @@ function initModel() {
     window.addEventListener("resize", boundModelResize);
 }
 
+function initInstruments() {
+    const options = { size: 90, showBox: false, img_directory: "images/flightindicators/" };
+    if (instrumentAttitude.value) {
+        attitudeIndicator = flightIndicator(instrumentAttitude.value, "attitude", options);
+    }
+    if (instrumentHeading.value) {
+        headingIndicator = flightIndicator(instrumentHeading.value, "heading", options);
+    }
+    if (instrumentAltimeter.value) {
+        altimeterIndicator = flightIndicator(instrumentAltimeter.value, "altimeter", options);
+    }
+}
+
 function renderModel() {
     if (!modelInstance) {
         return;
@@ -1498,6 +1536,18 @@ function pollAttitude() {
             headingText += ` ${toCardinal(headingDeg)}`;
         }
         attitudeDisplay.heading = headingText;
+        if (attitudeIndicator) {
+            attitudeIndicator.setRoll(k[0]);
+            attitudeIndicator.setPitch(k[1]);
+        }
+        if (headingIndicator) {
+            headingIndicator.setHeading(headingDeg);
+        }
+        if (altimeterIndicator) {
+            MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, () => {
+                altimeterIndicator.setAltitude(fcStore.sensorData.altitude * 100);
+            });
+        }
         renderModel();
     });
 }
@@ -1700,8 +1750,9 @@ const loadConfig = async () => {
             return;
         }
 
-        // Initialize 3D model and start attitude polling
+        // Initialize 3D model, instruments, and start attitude polling
         initModel();
+        initInstruments();
         addInterval("sensor_config_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
 
         GUI.content_ready();
@@ -1821,7 +1872,8 @@ onMounted(() => {
         align-items: start;
     }
 
-    .sensor-left {
+    .sensor-left,
+    .sensor-right {
         display: flex;
         flex-direction: column;
         gap: 1rem;
@@ -1874,30 +1926,6 @@ onMounted(() => {
         position: absolute;
         top: 0.75rem;
         right: 0.75rem;
-    }
-
-    .alignicon {
-        width: 15px;
-        height: 15px;
-        margin: 3px;
-    }
-
-    .pitch {
-        background-image: url(../../images/icons/cf_icon_pitch.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    .yaw {
-        background-image: url(../../images/icons/cf_icon_yaw.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    .roll {
-        background-image: url(../../images/icons/cf_icon_roll.svg);
-        background-repeat: no-repeat;
-        background-position: center;
     }
 
     .align-detect-inline {
