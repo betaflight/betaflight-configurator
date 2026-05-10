@@ -136,6 +136,57 @@ function bfToScene(x, y, z) {
     return [x, -y, -z];
 }
 
+// Shared 2D canvas init: size, DPR, clear, background, empty-state text
+function initCanvas2D(sampleList) {
+    const canvas = projCanvasRef.value;
+    const container = containerRef.value;
+    if (!canvas || !container) {
+        return null;
+    }
+
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "#1a1a2e";
+    ctx.fillRect(0, 0, w, h);
+
+    if (!sampleList || sampleList.length === 0) {
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.font = "14px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Waiting for data…", w / 2, h / 2);
+        return null;
+    }
+
+    return { ctx, w, h };
+}
+
+// Convert _tempColor (THREE.Color) to CSS rgb() string
+function tempColorCSS() {
+    return `rgb(${Math.round(_tempColor.r * 255)},${Math.round(_tempColor.g * 255)},${Math.round(_tempColor.b * 255)})`;
+}
+
+// Dispose a THREE.Group: traverse children, dispose geometry/material, remove from scene
+function disposeGroup(group) {
+    if (!group) {
+        return;
+    }
+    group.traverse((child) => {
+        if (child.geometry) {
+            child.geometry.dispose();
+        }
+        if (child.material) {
+            child.material.dispose();
+        }
+    });
+    scene?.remove(group);
+}
+
 function initScene() {
     const container = containerRef.value;
     const canvas = canvasRef.value;
@@ -604,32 +655,11 @@ const PROJ_PLANES = [
 ];
 
 function drawProjection(sampleList) {
-    const canvas = projCanvasRef.value;
-    const container = containerRef.value;
-    if (!canvas || !container) {
+    const result = initCanvas2D(sampleList);
+    if (!result) {
         return;
     }
-
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    const dpr = Math.min(window.devicePixelRatio, 2);
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    const ctx = canvas.getContext("2d");
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, w, h);
-
-    // Background
-    ctx.fillStyle = "#1a1a2e";
-    ctx.fillRect(0, 0, w, h);
-
-    if (!sampleList || sampleList.length === 0) {
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
-        ctx.font = "14px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("Waiting for data…", w / 2, h / 2);
-        return;
-    }
+    const { ctx, w, h } = result;
 
     // Transform samples to display frame
     const pts = [];
@@ -710,7 +740,7 @@ function drawProjection(sampleList) {
             const t = pts.length > 1 ? i / (pts.length - 1) : 0;
             const hue = (1 - t) * 0.65; // blue (old) → red (new), matches 3D point cloud
             _tempColor.setHSL(hue, 1, 0.5);
-            ctx.fillStyle = `rgb(${Math.round(_tempColor.r * 255)},${Math.round(_tempColor.g * 255)},${Math.round(_tempColor.b * 255)})`;
+            ctx.fillStyle = tempColorCSS();
             ctx.fillRect(screenX - 1, screenY - 1, 2, 2);
         }
 
@@ -740,36 +770,15 @@ const POLAR_SECTORS = 36; // 10° per sector
 const POLAR_RINGS = 6; // elevation bands from pole to pole
 
 function drawPolarDensity(sampleList) {
-    const canvas = projCanvasRef.value;
-    const container = containerRef.value;
-    if (!canvas || !container) {
+    const result = initCanvas2D(sampleList);
+    if (!result) {
         return;
     }
-
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    const dpr = Math.min(window.devicePixelRatio, 2);
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    const ctx = canvas.getContext("2d");
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, w, h);
-
-    // Background
-    ctx.fillStyle = "#1a1a2e";
-    ctx.fillRect(0, 0, w, h);
+    const { ctx, w, h } = result;
 
     const centerX = w / 2;
     const centerY = h / 2;
     const maxR = Math.min(w, h) / 2 - 30;
-
-    if (!sampleList || sampleList.length === 0) {
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
-        ctx.font = "14px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("Waiting for data…", centerX, centerY);
-        return;
-    }
 
     // Build density grid: sectors (azimuth) × rings (elevation)
     const density = new Float32Array(POLAR_SECTORS * POLAR_RINGS);
@@ -827,7 +836,7 @@ function drawPolarDensity(sampleList) {
                 _tempColor.setHSL(ratio * 0.33, 0.85, 0.25 + ratio * 0.3);
             }
 
-            ctx.fillStyle = `rgb(${Math.round(_tempColor.r * 255)},${Math.round(_tempColor.g * 255)},${Math.round(_tempColor.b * 255)})`;
+            ctx.fillStyle = tempColorCSS();
             ctx.beginPath();
             ctx.arc(centerX, centerY, outerR, startAngle, endAngle);
             ctx.arc(centerX, centerY, innerR, endAngle, startAngle, true);
@@ -1079,19 +1088,21 @@ function updatePoints(sampleList) {
     pointGeometry.computeBoundingSphere();
 }
 
-function removeAndDispose(mesh) {
+function disposeMesh(mesh, removeFromScene = false) {
     if (!mesh) {
         return;
     }
-    scene?.remove(mesh);
+    if (removeFromScene) {
+        scene?.remove(mesh);
+    }
     mesh.geometry?.dispose();
     mesh.material?.dispose();
 }
 
 function updateWireframe(fit) {
-    removeAndDispose(wireframeMesh);
+    disposeMesh(wireframeMesh, true);
     wireframeMesh = null;
-    removeAndDispose(centerMarker);
+    disposeMesh(centerMarker, true);
     centerMarker = null;
 
     if (!fit || !scene) {
@@ -1120,14 +1131,6 @@ function updateWireframe(fit) {
     scene.add(centerMarker);
 }
 
-function disposeMesh(mesh) {
-    if (!mesh) {
-        return;
-    }
-    mesh.geometry?.dispose();
-    mesh.material?.dispose();
-}
-
 function disposeScene() {
     if (animationId !== null) {
         cancelAnimationFrame(animationId);
@@ -1144,18 +1147,8 @@ function disposeScene() {
         controls = null;
     }
 
-    if (fieldRefGroup) {
-        fieldRefGroup.traverse((child) => {
-            if (child.geometry) {
-                child.geometry.dispose();
-            }
-            if (child.material) {
-                child.material.dispose();
-            }
-        });
-        scene?.remove(fieldRefGroup);
-        fieldRefGroup = null;
-    }
+    disposeGroup(fieldRefGroup);
+    fieldRefGroup = null;
 
     disposeMesh(totalVectorLine);
     totalVectorLine = null;
@@ -1177,31 +1170,11 @@ function disposeScene() {
         vectorLines = null;
     }
 
-    if (quadIcon) {
-        quadIcon.traverse((child) => {
-            if (child.geometry) {
-                child.geometry.dispose();
-            }
-            if (child.material) {
-                child.material.dispose();
-            }
-        });
-        scene?.remove(quadIcon);
-        quadIcon = null;
-    }
+    disposeGroup(quadIcon);
+    quadIcon = null;
 
-    if (ghostGroup) {
-        ghostGroup.traverse((child) => {
-            if (child.geometry) {
-                child.geometry.dispose();
-            }
-            if (child.material) {
-                child.material.dispose();
-            }
-        });
-        scene?.remove(ghostGroup);
-        ghostGroup = null;
-    }
+    disposeGroup(ghostGroup);
+    ghostGroup = null;
 
     if (pointMesh) {
         pointGeometry.dispose();
