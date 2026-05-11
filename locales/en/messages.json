@@ -9021,5 +9021,89 @@
     },
     "preflightForecastWeather": {
         "message": "Weather"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM Provider"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Disabled"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (US, API key required)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (Global airspace, API key required)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA API Key (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API Key"
+    },
+    "preflightNotamRadius": {
+        "message": "Search Radius"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Airspace data settings"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Airspace data sends your coordinates to the selected provider. No additional personal data is transmitted."
+    },
+    "preflightNotamLoading": {
+        "message": "Fetching airspace data..."
+    },
+    "preflightNotamEmpty": {
+        "message": "No notices found for this location and radius"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "An API key is required for the selected provider. Enter your key in the settings above."
+    },
+    "preflightNotamFetchError": {
+        "message": "Failed to fetch airspace data"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Active now"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanent"
+    },
+    "preflightNotamExpired": {
+        "message": "Expired"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Lower"
+    },
+    "preflightNotamAltTo": {
+        "message": "Upper"
+    },
+    "preflightNotamShowMore": {
+        "message": "Show more"
+    },
+    "preflightNotamShowLess": {
+        "message": "Show less"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Last fetched"
     }
 }
