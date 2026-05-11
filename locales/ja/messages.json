@@ -547,9 +547,6 @@
     "firmwareTypeNotSupported": {
         "message": "CLIモードを除き、Betaflight以外のファームウェアは<span class=\"message-negative\">サポートされていません<\/span>。"
     },
-    "firmwareUpgradeRequired": {
-        "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書換えする前にCLIを使用してバックアップして下さい。 CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br \/>または、アップグレードする準備ができていない場合は、旧バージョンのアプリをダウンロードして使用して下さい。"
-    },
     "resetToCustomDefaultsDialog": {
         "message": "このFCボードにはカスタムされた初期値が適用されています。通常、カスタム初期値が適用されない場合はFCボードが正常に動作しません。<br \/>このFCボードにカスタム初期値を適用しますか？"
     },

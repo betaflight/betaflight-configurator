@@ -106,11 +106,23 @@
     "portOverrideText": {
         "message": "Порт:"
     },
+    "connectVirtualDescription": {
+        "message": "Симулювати польотний контролер без апаратного забезпечення.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Введіть шлях до серійного порту або URL для підключення.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Автоматичне підключення"
     },
     "close": {
         "message": "Закрити"
+    },
+    "openSidebarMenu": {
+        "message": "Відкрити бічне меню",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "ОК"
@@ -350,6 +362,9 @@
     "tabGPS": {
         "message": "GPS"
     },
+    "tabFlightPlan": {
+        "message": "План польоту"
+    },
     "tabMotorTesting": {
         "message": "Мотори"
     },
@@ -380,8 +395,18 @@
     "logActionShow": {
         "message": "Показати журнал подій"
     },
+    "tabLog": {
+        "message": "Журнал"
+    },
+    "i2cErrorDetected": {
+        "message": "Виявлено помилку I2C (+{{delta}}, всього {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
     "logActionClear": {
         "message": "Очистити"
+    },
+    "logAutoScroll": {
+        "message": "Автоматичне прокручування"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} файли",
@@ -431,6 +456,9 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU не знайдено"
+    },
+    "stm32DfuPermissionRequired": {
+        "message": "Пристрій перезавантажився в режим завантажувача DFU.<br><br>Ваш браузер потребує дозволу на доступ до USB-пристрою DFU. Натисніть кнопку нижче, щоб вибрати його у списку пристроїв."
     },
     "stm32RebootingToBootloader": {
         "message": "Ініціюється перезавантаження до завантажувача..."
@@ -520,7 +548,7 @@
         "message": "Прошивка не Betaflight <span class=\"message-negative\">не підтримується<\/span>, окрім режиму командного рядка."
     },
     "firmwareUpgradeRequired": {
-        "message": "Прошивку цього пристрою потрібно оновити до новішої версії. Використовуйте командний рядок для резервного копіювання перед прошивкою. Процедуру резервного копіювання\/відновлення через командний рядок знайдете в документації.<br \/>Або завантажте та використовуйте стару версію застосунку, якщо не готові до оновлення."
+        "message": "Поточна версія застосунку може не підтримувати версію прошивки на цьому пристрої. Ви можете використати старіші випуски, наприклад <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a> для прошивок до 4.1 або <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> для ще старіших версій.<br><br>Застосунок спробує отримати доступ до CLI на пристрої - якщо це вдасться, ви зможете переглянути поточну версію прошивки, надіславши команду <code>version<\/code> у CLI.<br><br>Як варіант, ви можете оновити прошивку до новішої версії. Перед прошивкою зробіть резервну копію через CLI - процедура описана в <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">документації<\/a>. Але майте на увазі, що резервні копії зі старих версій прошивки можуть некоректно відновлюватися на новіших версіях. Режими, наекранне меню, швидкості обертання та порти зазвичай переносяться безпечно, але будьте обережні з налаштуваннями ПІД регулятора та безаварійності."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Для цієї плати доступні спеціальні параметри за замовчуванням. Як правило, плата не працюватиме належним чином, якщо не будуть застосовані спеціальні параметри за замовчуванням.<br \/>Застосувати спеціальні параметри за замовчуванням для цієї плати?"
@@ -631,6 +659,9 @@
     },
     "versionLabelTarget": {
         "message": "Цільовий пристрій"
+    },
+    "versionLabelFirmware": {
+        "message": "Версія прошивки"
     },
     "versionLabelConfigurator": {
         "message": "Версія застосунку"
@@ -1323,6 +1354,9 @@
     "featureTRANSPONDER": {
         "message": "Перегоновий транспондер"
     },
+    "featureTRANSPONDERTip": {
+        "message": "Увімкнути підтримку прошивки транспондера. Налаштуйте провайдера (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]<\/code>) і дані (<code>set transponder_data = &lt;bytes&gt;<\/code>) через CLI, потім введіть <code>save<\/code>. Використовуйте <code>get transponder<\/code>, щоб переглянути поточні значення."
+    },
     "featureAIRMODE": {
         "message": "Увімкнути AIR режим перманентно"
     },
@@ -1930,6 +1964,9 @@
     "pidTuningSubTabPid": {
         "message": "Налаштування профілю ПІД"
     },
+    "pidTuningSubTabRates": {
+        "message": "Профіль швидкостей обертання"
+    },
     "pidTuningSubTabFilter": {
         "message": "Налаштування фільтру"
     },
@@ -1991,6 +2028,10 @@
     "pidTuningDMaxFeatureTitle": {
         "message": "Динамічне демпфування \/ Д Макс",
         "description": "Title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "Динамічне Демпфування",
+        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "Коефіцієнт",
@@ -2116,6 +2157,9 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Використання переходу заданого значення Д більше 0 і менше 0.1 вкрай не рекомендується. Це може призвести до нестабільності та зниження чутливості стіків, коли вони перетинають центральну точку.<\/span>"
     },
+    "pidTuningFeedforwardGroup": {
+        "message": "Упередження"
+    },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Упередження (анг. - Feedforward) регулює реакцію стіка.<br \/><br \/> Ці опції дають змогу налаштувати його так, щоб забезпечити будь-яку реакцію стіка - від чіткої, миттєвої для перегонів до м'якої і плавної для кінематографічних \/ HD цілей."
     },
@@ -2220,11 +2264,17 @@
     "pidTuningRatesPreview": {
         "message": "Попередній перегляд коефіцієнтів"
     },
+    "pidTuningRatesModelPreview": {
+        "message": "Перегляд швидкостей обертання"
+    },
     "pidTuningRatesTuningHelp": {
         "message": "<b>Коефіцієнти та експоненційність<\/b>: Визначте відчуття стіків на основі цих параметрів. Використовуйте графік і живу 3D-модель, щоб знайти свої улюблені значення коефіцієнтів."
     },
     "pidTuningRcExpo": {
         "message": "RC Експонента"
+    },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
     },
     "pidTuningTPAMode": {
         "message": "TPA Режим"
@@ -2347,6 +2397,9 @@
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Попередження:<\/b><\/span> Кількість фільтрації, яку ви використовуєте, є надто низькою і небезпечною. Це може призвести до ускладнення керування повітряним судном та неконтрольованого польоту. Дуже радимо <b>включити принаймні один з фільтрів Динамічний фільтр низьких частот гіроскопа або Фільтр низьких частот гіроскопа 1, та принаймні один з фільтрів Д-складової: динамічний низьких частот або низьких частот 1<\/b>."
     },
+    "pidTuningSliders": {
+        "message": "Повзунки налаштування ПІД"
+    },
     "pidTuningSliderPidsMode": {
         "message": "Режим:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2371,6 +2424,9 @@
     },
     "receiverThrottleHover": {
         "message": "Точка зависання"
+    },
+    "receiverStickRange": {
+        "message": "Діапазон стіків"
     },
     "receiverStickMin": {
         "message": "Поріг мін. значення стіка"
@@ -2507,6 +2563,9 @@
     "auxiliaryAutoChannelSelect": {
         "message": "АВТО"
     },
+    "auxiliaryLinkNone": {
+        "message": "Відсутній"
+    },
     "auxiliaryModeLogicOR": {
         "message": "АБО"
     },
@@ -2540,6 +2599,10 @@
     "auxiliaryHelpMode_ALTHOLD": {
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Утримання висоти<\/a> активно регулює висоту літального апарату, використовуючи зовнішні датчики у поєднанні з режимом Кут (стабільний режим).",
         "description": "Help text for ALTITUDE HOLD mode"
+    },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "Режим автопілота забезпечує автономне керування польотом, поєднуючи утримання висоти та утримання позиції для стабільного зависання або слідування запланованому маршруту польоту.",
+        "description": "Help text for AUTOPILOT mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включити пищання - корисно для пошуку розбитого дрона",
@@ -2880,6 +2943,15 @@
     "adjustmentsSave": {
         "message": "Зберегти"
     },
+    "adjustmentsShowAll": {
+        "message": "Показати всі слоти"
+    },
+    "adjustmentsHideEmpty": {
+        "message": "Приховати порожні слоти"
+    },
+    "adjustmentsSlotsActive": {
+        "message": "{{active}} з {{total}} слотів активні"
+    },
     "servosFirmwareUpgradeRequired": {
         "message": "Сервоприводи потребують прошивки &gt;= 1.10.0. та підтримки цільовим пристроєм."
     },
@@ -2933,11 +3005,26 @@
     "gpsMapHead": {
         "message": "Поточне розташування"
     },
+    "gpsMapSatelliteView": {
+        "message": "Супутникове представлення"
+    },
+    "gpsMapHybridView": {
+        "message": "Гібридне представлення"
+    },
+    "gpsMapStreetView": {
+        "message": "Перегляд вулиць"
+    },
     "gpsMapZoomIn": {
         "message": "Наблизити"
     },
     "gpsMapZoomOut": {
         "message": "Віддалити"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Повноекранний режим"
+    },
+    "gpsMapRetry": {
+        "message": "Повторити"
     },
     "gpsMapMessage1": {
         "message": "Перевірте інтернет-з'єднання"
@@ -3045,14 +3132,179 @@
     "gnssHealthyUnhealthy": {
         "message": "нездоровий"
     },
+    "flightPlanWaypointList": {
+        "message": "Список точок маршруту"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "Точки маршруту не визначено. Натисніть на мапі або скористайтеся формою, щоб додати точки маршруту."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Додати точку маршруту"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Редагувати точку маршруту"
+    },
     "flightPlanLatitude": {
         "message": "Широта <span class=\"units\">°<\/span>"
     },
     "flightPlanLongitude": {
         "message": "Довгота <span class=\"units\">°<\/span>"
     },
+    "flightPlanAltitude": {
+        "message": "Висота <span class=\"units\">фути AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Швидкість <span class=\"units\">вузлів<\/span>"
+    },
+    "flightPlanType": {
+        "message": "Тип точки маршруту"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Пролетіти над"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Пролетіти біля"
+    },
+    "flightPlanTypeHold": {
+        "message": "Пролетіти з утриманням"
+    },
+    "flightPlanTypeLand": {
+        "message": "Приземлитись"
+    },
+    "flightPlanDuration": {
+        "message": "Тривалість утримання <span class=\"units\">хв<\/span>"
+    },
+    "flightPlanPattern": {
+        "message": "Форма утримання"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Коло"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "У вигляді 8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Орбіта"
+    },
+    "flightPlanMap": {
+        "message": "Карта плану польоту"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Натисніть щоб додати точки маршруту. Перетягніть маркери точок щоб перемістити їх."
+    },
     "flightPlanLoading": {
         "message": "Будь ласка, зачекайте..."
+    },
+    "flightPlanClear": {
+        "message": "Очистити"
+    },
+    "flightPlanLoad": {
+        "message": "Завантажити"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Зберегти до польотного контролера"
+    },
+    "flightPlanLoaded": {
+        "message": "План польоту завантажено успішно"
+    },
+    "flightPlanSaved": {
+        "message": "План польоту збережено успішно"
+    },
+    "flightPlanCleared": {
+        "message": "План польоту очищено"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Завантажити з польотного контролера"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "План польоту завантажено з польотного контролера"
+    },
+    "flightPlanSavedToFC": {
+        "message": "План польоту збережено до польотного контролера"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Не вдалося завантажити план польоту з польотного контролера"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Не вдалося зберегти план польоту до польотного контролера"
+    },
+    "flightPlanFCEmpty": {
+        "message": "Точки маршруту не знайдено на польотному контролері"
+    },
+    "flightPlanClearedFC": {
+        "message": "План польоту очищено на польотному контролері"
+    },
+    "flightPlanLoadError": {
+        "message": "Не вдалося завантажити план польоту"
+    },
+    "flightPlanSaveError": {
+        "message": "Не вдалося зберегти план польоту"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Неприпустима широта (має бути від -90 до 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Неприпустима довгота (має бути від -180 до 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Ви впевнені, що хочете видалити точку маршруту?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Видалити точку маршруту"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Ви впевнені, що хочете видалити цю точку маршруту? Цю дію неможливо скасувати."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Ви впевнені, що хочете очистити всі точки маршруту? Ця дія незворотна."
+    },
+    "flightPlanClearTitle": {
+        "message": "Очистити план польоту"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Завантажити план польоту з польотного контролера?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "Польотний контролер під'єднано. Ви хочете замінити поточний план польоту на той, що збережений у польотному контролері? Якщо обрати Ні, буде збережено ваш поточний план, щоб ви могли записати його на польотний контролер."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Залишити поточний"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Профіль висоти"
+    },
+    "flightPlanDistance": {
+        "message": "Загальна відстань"
+    },
+    "flightPlanFlightTime": {
+        "message": "Час польоту"
+    },
+    "flightPlanMinAlt": {
+        "message": "Мін. висота"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Макс. висота"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Додайте точки маршруту щоб побачити профіль висоти"
+    },
+    "flightPlanGroundElev": {
+        "message": "Сер. висота рельєфу"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Макс. висота рельєфу"
+    },
+    "flightPlanAvgGround": {
+        "message": "Середня висота місцевості"
+    },
+    "flightPlanMaxGround": {
+        "message": "Макс. висота рельєфу"
+    },
+    "flightPlanAlt": {
+        "message": "Висота"
+    },
+    "flightPlanDist": {
+        "message": "Відст."
     },
     "motorsVoltage": {
         "message": "Напруга:"
@@ -3391,6 +3643,12 @@
     },
     "loggingNote": {
         "message": "Дані будуть зберігатися <span class=\"message-negative\">лише<\/span> в цій вкладці, вихід з вкладки призведе до <span class=\"message-negative\">скасування<\/span> логування, а програма повернеться до свого звичайного стану.<br \/> Ви можете вибрати глобальний період оновлення, дані будуть записуватися в журнальний файл кожну <strong>1<\/strong> секунду з міркувань швидкодії."
+    },
+    "loggingPropertiesTitle": {
+        "message": "Властивості журналу"
+    },
+    "loggingSamplingInterval": {
+        "message": "Інтервал логування:"
     },
     "loggingSamplesSaved": {
         "message": "Зразків збережено:"
@@ -3769,6 +4027,12 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Прошивка не завантажена"
     },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "Прошивка"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} байт"
+    },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Завантажено локальну прошивку: {{filename}} ({{bytes}} байт)"
     },
@@ -4135,6 +4399,14 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "Блимати завжди"
     },
+    "ledStripThrottleHue": {
+        "message": "Відтінок LED за тягою",
+        "description": "Label of throttle hue modifier switch on LED Strip tab"
+    },
+    "ledStripThrottleHueChannel": {
+        "message": "Канал керування відтінком (тяга)",
+        "description": "Accessible label for the aux-channel select next to the throttle hue switch"
+    },
     "ledStripRainbowOverlay": {
         "message": "Веселка",
         "description": "Label of rainbow effect switch on LED Strip tab"
@@ -4364,9 +4636,17 @@
         "message": "Більше фільтрації",
         "description": "Filter tuning slider high header"
     },
+    "pidTuningGyroFilterSlider": {
+        "message": "Множник фільтра гіроскопа",
+        "description": "Gyro filter tuning slider label"
+    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Змінює межу фільтра низьких частот гіроскопа.<br \/><br \/>Переміщення повзунка ліворуч забезпечує сильнішу фільтрацію гіроскопа (нижчу частоту відсікання).<br \/><br \/>Переміщення повзунка праворуч зменшує фільтрацію гіроскопа ( вища частота відсікання).<br \/><br \/>Пересуваючи повзунок праворуч, щоб покращити реакцію на самотурбулентність (propwash), БУДЬТЕ ОБЕРЕЖНІ, щоб не стати занадто радикальним. Ви створите більше шуму в P і D регуляторах і можете отримати некеровані відлітання або перегоранням моторів.<br \/><br \/>Можливо, вам доведеться перемістити повзунок ліворуч, якщо у вас проблеми з резонансом рами, погані підшипники, побиті попелери, гарячі мотори тощо.<br \/><br \/>Фільтрація гіроскопа застосовується перед, і додатково до фільтрації D-коефіцієнта.",
         "description": "Gyro filter tuning slider helpicon message"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "Множник фільтра Д-складової",
+        "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Змінює частоту зрізу фільтра нижніх частот Д-складової.<br \/><br \/>Переміщення повзунка ліворуч забезпечує сильнішу фільтрацію Д-складової (нижчу частоту зрізу).<br \/><br \/>Переміщення повзунка праворуч зменшує фільтрацію (вища частота зрізу).<br \/><br \/>Д-складова є найбільш чутливим до шуму та резонансу елементом ПІД-регулятора. Вона може посилювати високочастотний шум у 10-100 разів. Ось чому пороги Д-фільтра набагато нижчі, ніж у фільтра гіроскопа.<br \/><br \/>Фільтрація Д-складової застосовується після та на додачу до фільтрації даних гіроскопа. Фільтрація Д-складової за замовчуванням є оптимальною для більшості повітряних суден і рідко потребує змін.<br \/><br \/>Переміщення цього повзунка ліворуч зменшує нагрів мотора в шумних повітряних суднах з високим значенням Д-коефіцієнта, але ми можемо спостерігати більше самотурбуленції (propwash) і резонансні коливання, спричинені Д-складовою на низьких частотах.<br \/><br \/>Переміщення повзунка вправо не рекомендується, але це може покращити реакцію на самотурбулентність на чистих від шумів збірках. Це може спричинити скрегіт двигуна під час взведення, раптові резонанси під час польоту та серйозний перегрів мотора.",
@@ -4581,6 +4861,9 @@
     "pidTuningDynamicNotchRange": {
         "message": "Діапазон динамічного режекторного фільтру"
     },
+    "pidTuningDynamicNotchQ": {
+        "message": "Добротність (x100)"
+    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Найнижча частота [Hz]"
     },
@@ -4592,6 +4875,9 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамічний нотч фільтр має три діапазони частот, в яких він може працювати: НИЗЬКИЙ (80-330 Гц) для повітряних суден з нижчою швидкістю обертання, наприклад, 6+ дюймів, СЕРЕДНІЙ (140-550 Гц) для звичайного повітряного судна розміром 5 дюймів і ВИСОКИЙ (230-800 Гц) для дуже швидкого повітряного судна розміром 2.5-3 дюйма. Опція \"АВТО\" вибирає діапазон залежно від значення максимальної частоти зрізу фільтра динамічного нижньочастотного фільтра гіроскопа 1."
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "Добротність змінює ширину динамічних зрізових фільтрів. Значення зберігається в сотнях (н-д добротність 300 це Q=3.0). Вищі значення робить їх вужчими і точнішими, а нижчі значення робить їх ширшими і більшими. Дуже низьке значення суттєво збільшить затримку фільтра."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Встановіть це на найнижчу частоту вхідного шуму, яку потрібно контролювати динамічним зрізом."
@@ -4610,13 +4896,33 @@
         "message": "Фільтрація на основі частоти обертання моторів - це набір динамічних режекторних фільтрів для даних від гіроскопа, який використовує дані телеметрії ESC для точного видалення шуму моторів.<br \/><br \/><b><span class=\"message-positive\">ВАЖЛИВО:<\/span> Регулятор швидкості (ESC) повинен підтримувати двосторонній протокол DShot, а значення $t(configurationMotorPoles.message) на вкладці $t(tabMotorTesting.message) повинне бути правильним, щоб цей фільтр працював.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
+    "pidTuningRpmHarmonics": {
+        "message": "Гармоніки",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Кількість гармонік на кожний мотор. Значення 3 (рекомендоване для більшості повітряних суден) створить 3 режекторні фільтри на кожний мотор для кожної осі, загалом 36 зрізів. По одному на основну частоту кожного мотора та на дві гармоніки, на частотах кратних базовій.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmMinHz": {
+        "message": "Мінімальна частота [Гц]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmMinHzHelp": {
         "message": "Мінімальна частота, яка буде використовуватися RPM-фільтром гіроскопа.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Діапазон згасання [Гц]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Добротність",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmWeight": {
+        "message": "Вага {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Налаштування фільтра, залежні від профілю"
@@ -4671,11 +4977,17 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Збільшує значення PID для компенсації, коли напруга батареї знижується. Це дозволяє зберігати більш сталі характеристики протягом усього польоту. Кількість компенсації, яка застосовується, розраховується на основі значення $t(powerBatteryMaximum.message), встановленого на вкладці $t(tabPower.message), тому переконайтеся, що це значення встановлене правильно."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Компенсація падіння напруги батареї %"
+    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Забезпечує стабільність тяги та характеристик ПІД у діапазоні корисної напруги батареї, збільшуючи потужність моторів, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Лінеаризація тяги %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Зменшує інерційність при збільшенні тяги та чутливість. <br><br> Особливо корисно для вупів і 48k електронних регуліторів швидкості (анг. - ESC). Не має жодного ефекту при вищих значеннях тяги.<br><br>Ступінь компенсації може варіюватися від 0 до 150%. Зазвичай достатньо 30-40%."
@@ -5424,11 +5736,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Власне зображення:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Розмір повинен бути {{logoWidthPx}}x{{logoHeightPx}} пікселів"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Має містити зелені, чорні та білі пікселі"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Натисніть <b>$t(osdSetupUploadFont.message)<\/b> щоб зберегти користувацький логотип"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Неправильний розмір зображення: {{width}}x{{height}} (очікується {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Зображення містить неприпустимий піксель: rgb({{valueR}}, {{valueG}}, {{valueB}}) у координатах {{posX}}×{{posY}}"
@@ -5447,6 +5765,9 @@
     },
     "osdSetupSave": {
         "message": "Зберегти"
+    },
+    "osdSetupRefresh": {
+        "message": "Оновити"
     },
     "osdSetupFontManager": {
         "message": "Менеджер шрифтів"
@@ -6654,6 +6975,21 @@
         "message": "Застерігає, якщо навантаження на ЦП польотного контролера зависоке",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Не вдалося утримати позицію",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Показує попередження, коли утримання позиції не спрацювало (напр. в режимі GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Не вдалося утримати позицію",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Не вдалося утримати позицію",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Невідомо $1"
     },
@@ -7226,8 +7562,15 @@
         "message": "Висококонтрастна",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "Масштаб інтерфейсу",
+        "description": "Scale the entire user interface up or down"
+    },
     "pidTuningRatesType": {
         "message": "Тип коефіцієнтів"
+    },
+    "pidTuningRatesTypeTip": {
+        "message": "Зміна типу коефіцієнтів змінить криву коефіцієнтів та спосіб її налаштування<br><br><a href='https:\/\/rates.metamarc.com' target='_blank' rel='noopener noreferrer'>rates.metamarc.com<\/a>"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Коефіцієнт"
@@ -7464,6 +7807,10 @@
         "message": "Будь ласка, зачекайте.",
         "description": "Second label in the progress dialog when applying presets"
     },
+    "presetsCliErrorsWarning": {
+        "message": "<span class='message-negative'>УВАГА!<\/span><br\/>Конфігурація була застосована з помилками інтерфейсу командного рядка CLI.",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
+    },
     "presetsSaveAnyway": {
         "message": "Усе одно зберегти",
         "description": "Save anyway button on the CLI errors presets dialog"
@@ -7503,6 +7850,10 @@
     "presetsVirtualModeCliUnsupported": {
         "message": "Для застосування шаблону і дій з резервного копіювання потрібен командний рядок, що є недоступним у віртуальному режимі.",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
+    },
+    "mspCliFirmwareTooOld": {
+        "message": "Ця дія вимагає версії прошивки Betaflight {{required}} або новішої (зараз приєднано до {{current}}). Будь ласка, оновіть прошивку перед тим, як продовжити.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
     "presetsLoadingDumpAll": {
         "message": "Завантаження поточної конфігурації з польотного контролера",
@@ -7709,6 +8060,20 @@
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
     },
+    "osdTextElementCustomSerialText": {
+        "message": "Користувацький текст з послідовного порту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Виводить користувацький текст, отриманий з послідовного порту"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Профіль: назва профілю батареї",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Показує активну назву профілю батареї або індекс"
+    },
     "osdSetupPreviewCheckRulers": {
         "message": "Лінійки",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
@@ -7764,6 +8129,9 @@
     "userBackupDownloadFailed": {
         "message": "Не вдалося завантажити резервні копії"
     },
+    "userBackupFileEmpty": {
+        "message": "Файл резервної копії порожній"
+    },
     "userBackupUpdateSuccess": {
         "message": "Резервна копія успішно змінена"
     },
@@ -7775,6 +8143,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "Не вдалося видалити резервну копію"
+    },
+    "actionRestore": {
+        "message": "Відновити"
+    },
+    "titleRestoreBackup": {
+        "message": "Відновити резервну копію"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Застосувати резервну копію \"{{name}}\" до під’єднаного польотного контролера? Поточна конфігурація буде перезаписана."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Відновлюємо з резервної копії..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Резервну копію успішно відновлено"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Не вдалося відновити з резервної копії"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>УВАГА!<\/span><br\/>Резервну копію застосовано з помилками CLI."
     },
     "userPasskeyNoPasskeys": {
         "message": "Відсутні ключі доступу"
@@ -7812,6 +8201,36 @@
     "labelUsePasskey": {
         "message": "Використовувати ключ доступу"
     },
+    "labelSignInWithPasskey": {
+        "message": "Увійти з ключем доступу"
+    },
+    "labelSendVerificationCode": {
+        "message": "Надіслати код підтвердження"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Увійти за допомогою коду на email"
+    },
+    "labelBackToPasskey": {
+        "message": "Повернутись до входу з ключем доступу"
+    },
+    "labelBack": {
+        "message": "Назад"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Не маєте ключа доступу?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Налаштувати ключ доступу"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Використовуйте ключ доступу щоб увійти"
+    },
+    "descriptionCodeRequest": {
+        "message": "Ми надішлемо вам код підтвердження"
+    },
+    "descriptionCodeEntered": {
+        "message": "Введіть код, який ми надіслали на $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Введіть код підтвердження"
     },
@@ -7847,6 +8266,15 @@
     },
     "userCreatingPasskey": {
         "message": "Створення ключа доступу..."
+    },
+    "userCodeRequired": {
+        "message": "Необхідно ввести код підтвердження"
+    },
+    "userSendingCode": {
+        "message": "Відправляється код підтвердження..."
+    },
+    "userSendCodeFailed": {
+        "message": "Не вдалося надіслати код підтвердження"
     },
     "dataWaitingForData": {
         "message": "Очікування даних ..."
@@ -7943,6 +8371,15 @@
         "message": "Оберіть позицію",
         "description": "Title for the preset position grid popup in the OSD elements list"
     },
+    "tabPreflight": {
+        "message": "Передпольотна перевірка"
+    },
+    "preflightTitle": {
+        "message": "Перевірка передпольотного середовища"
+    },
+    "preflightLocation": {
+        "message": "Місце польоту"
+    },
     "preflightUseMyLocation": {
         "message": "Використовувати моє розташування"
     },
@@ -7964,6 +8401,18 @@
     "preflightLaunchStatus": {
         "message": "Статус запуску"
     },
+    "preflightStatusGo": {
+        "message": "РУШ"
+    },
+    "preflightStatusCaution": {
+        "message": "УВАГА"
+    },
+    "preflightStatusWarning": {
+        "message": "ПОПЕРЕДЖЕННЯ"
+    },
+    "preflightStatusNoGo": {
+        "message": "ВІДБІЙ"
+    },
     "preflightStatusNoData": {
         "message": "Немає даних"
     },
@@ -7975,6 +8424,9 @@
     },
     "preflightCheckPrecipitation": {
         "message": "Опади"
+    },
+    "preflightCheckSolar": {
+        "message": "Сонячно"
     },
     "preflightLevelUnknown": {
         "message": "Невідомо"
@@ -7988,8 +8440,44 @@
     "preflightWmoPartlyCloudy": {
         "message": "Місцями хмарно"
     },
+    "preflightWmoOvercast": {
+        "message": "Хмарно"
+    },
     "preflightWmoFog": {
         "message": "Туман"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Туман з памороззю"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Слабка мжичка"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Помірна мряка"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Густа мряка"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Легка мряка з ожеледдю"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Щільна мряка, що замерзає"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Невеликий дощ"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Помірний дощ"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Сильний дощ"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Легкий дощ з ожеледдю"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Сильний крижаний дощ"
     },
     "preflightWmoSlightSnow": {
         "message": "Легкий сніг"
@@ -8003,6 +8491,21 @@
     "preflightWmoSnowGrains": {
         "message": "Сніжна крупа"
     },
+    "preflightWmoSlightRainShowers": {
+        "message": "Невелика злива"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Помірні зливи"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Сильні зливові дощі"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Легкий снігопад"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Сильний снігопад"
+    },
     "preflightWmoThunderstorm": {
         "message": "Гроза"
     },
@@ -8012,8 +8515,86 @@
     "preflightWmoThunderstormHeavyHail": {
         "message": "Гроза із сильним градом"
     },
+    "preflightKpLow": {
+        "message": "Низький"
+    },
+    "preflightKpModerate": {
+        "message": "Середній"
+    },
+    "preflightKpElevated": {
+        "message": "Підвищений"
+    },
     "preflightKpStorm": {
         "message": "Буревій"
+    },
+    "preflightWindCalm": {
+        "message": "Штиль"
+    },
+    "preflightWindLight": {
+        "message": "Слабкий"
+    },
+    "preflightWindModerate": {
+        "message": "Середній"
+    },
+    "preflightWindStrong": {
+        "message": "Сильний"
+    },
+    "preflightWindDangerous": {
+        "message": "Небезпечний"
+    },
+    "preflightVisExcellent": {
+        "message": "Відмінна"
+    },
+    "preflightVisGood": {
+        "message": "Добра"
+    },
+    "preflightVisReduced": {
+        "message": "Обмежена"
+    },
+    "preflightVisPoor": {
+        "message": "Низька"
+    },
+    "preflightPrecipNone": {
+        "message": "Відсутні"
+    },
+    "preflightPrecipLight": {
+        "message": "Слабкі"
+    },
+    "preflightPrecipModerate": {
+        "message": "Помірні"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Сильні"
+    },
+    "preflightDewNoRisk": {
+        "message": "Без ризику"
+    },
+    "preflightDewLowRisk": {
+        "message": "Низький ризик"
+    },
+    "preflightDewFogLikely": {
+        "message": "Імовірний туман\/конденсат"
+    },
+    "preflightDewFogExpected": {
+        "message": "Очікується туман, запотівання лінз"
+    },
+    "preflightUvLow": {
+        "message": "Низький"
+    },
+    "preflightUvModerate": {
+        "message": "Середній"
+    },
+    "preflightUvHigh": {
+        "message": "Високий"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Дуже високий"
+    },
+    "preflightBatteryRisk": {
+        "message": "Оцінка ризику батареї"
+    },
+    "preflightBatteryOk": {
+        "message": "Нормальна дальність"
     },
     "preflightBatteryCool": {
         "message": "Знижена продуктивність, зігрійте батареї"
@@ -8030,11 +8611,17 @@
     "preflightCheckBattery": {
         "message": "Батарея"
     },
+    "preflightCheckDensityAlt": {
+        "message": "Висота за густиною повітря"
+    },
     "preflightFeelsLike": {
         "message": "Відчувається як"
     },
     "preflightFogRisk": {
         "message": "Можливий туман"
+    },
+    "preflightFogUnlikely": {
+        "message": "Малоймовірний"
     },
     "preflightFogLow": {
         "message": "Низький ризик"
@@ -8045,8 +8632,26 @@
     "preflightFogHigh": {
         "message": "Високий ризик"
     },
+    "preflightElevation": {
+        "message": "Висота"
+    },
+    "preflightDensityAlt": {
+        "message": "Висота за густиною повітря"
+    },
     "preflightDaNormal": {
         "message": "Продуктивність у нормі"
+    },
+    "preflightDaReduced": {
+        "message": "Трохи знижена підйомна сила"
+    },
+    "preflightDaLow": {
+        "message": "Помітно знижена продуктивність"
+    },
+    "preflightDaPoor": {
+        "message": "Суттєво знижена підйомна сила"
+    },
+    "preflightCivilTwilight": {
+        "message": "Часове вікно цивільних сутінків"
     },
     "preflightRefresh": {
         "message": "Оновити"
@@ -8066,6 +8671,9 @@
     "preflightPrecipitation": {
         "message": "Опади"
     },
+    "preflightCloudCover": {
+        "message": "Хмарність"
+    },
     "preflightHumidity": {
         "message": "Вологість"
     },
@@ -8075,23 +8683,152 @@
     "preflightDewPoint": {
         "message": "Точка роси"
     },
+    "preflightFlightWindow": {
+        "message": "Вікно польоту"
+    },
     "preflightSunrise": {
         "message": "Світанок"
     },
     "preflightSunset": {
         "message": "Захід"
     },
+    "preflightDaylight": {
+        "message": "Тривалість дня"
+    },
+    "preflightUvIndex": {
+        "message": "УФ-індекс"
+    },
+    "preflightTempRange": {
+        "message": "Діапазон температур"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Наразі"
+    },
+    "preflightDaytime": {
+        "message": "Денний час"
+    },
+    "preflightNighttime": {
+        "message": "Нічний час"
+    },
+    "preflightWindForecast": {
+        "message": "Прогноз вітру на висоті"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Швидкість вітру на різних висотах є критично важливою для далеких і висотних FPV польотів. На більших висотах вітер, зазвичай, сильніший."
+    },
     "preflightTime": {
         "message": "Час"
+    },
+    "preflightWind10m": {
+        "message": "10м"
+    },
+    "preflightWind80m": {
+        "message": "80м"
+    },
+    "preflightWind120m": {
+        "message": "120м"
     },
     "preflightGustsShort": {
         "message": "Пориви"
     },
+    "preflightRainProb": {
+        "message": "Дощ %"
+    },
+    "preflightWindUnit": {
+        "message": "Швидкість вітру в м\/с. Висоти над рівнем землі (AGL)."
+    },
     "preflightSolarActivity": {
         "message": "Сонячна активність"
     },
+    "preflightSolarHelp": {
+        "message": "Висока сонячна активність (Kp > 5) викликає іоносферні перешкоди, які можуть погіршити точність GPS та вплинути на надійність GPS порятунку."
+    },
+    "preflightGeoStorm": {
+        "message": "Геомагнітний шторм"
+    },
+    "preflightSolarRadiation": {
+        "message": "Сонячне випромінювання"
+    },
+    "preflightRadioBlackout": {
+        "message": "Радіозатемнення"
+    },
+    "preflightLastMeasurement": {
+        "message": "Останнє вимірювання"
+    },
+    "preflightLoadingSolar": {
+        "message": "Завантаження сонячних даних..."
+    },
+    "preflightGNSS": {
+        "message": "Статус GNSS \/ GPS"
+    },
+    "preflightGNSSHelp": {
+        "message": "На якість сигналу GNSS впливає сонячна активність. Високі значення Kp можуть погіршити точність позиціювання GPS та зменшити надійність GPS порятунку."
+    },
+    "preflightGNSSNote": {
+        "message": "На точність GPS впливають сонячні та геомагнітні умови. Під'єднайте ваш апарат для отримання актуальних даних із супутників на вкладці GPS."
+    },
     "preflightKpEffect": {
         "message": "Вплив іоносфери"
+    },
+    "preflightGPSRescue": {
+        "message": "Статус GPS порятунку"
+    },
+    "preflightMagDeclination": {
+        "message": "Магнітне схилення"
+    },
+    "preflightMagInclination": {
+        "message": "Магнітне нахилення"
+    },
+    "preflightGNSSPlanner": {
+        "message": "Інструмент планування супутників GNSS"
+    },
+    "preflightAirspace": {
+        "message": "Повітряний простір та безпольотні зони"
+    },
+    "preflightAirspaceNote": {
+        "message": "Завжди перевіряйте обмеження повітряного простору та повідомлення NOTAM. Правила відрізняються між країнами та регіонами."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Карта безпеки польотів дронів (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "Карта повітряного простору SkyVector"
+    },
+    "preflightNOTAMs": {
+        "message": "Повідомлення NOTAM FAA (США)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "NOTAM Євроконтроля (ЄС)"
+    },
+    "preflightMap": {
+        "message": "Карта місця запуску"
+    },
+    "preflightNoData": {
+        "message": "Введіть місце для завантаження даних про середовище"
+    },
+    "preflightAttribution": {
+        "message": "Метеодані: Open-Meteo (CC BY 4.0) | Сонячна активність: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Збережені розташування..."
+    },
+    "preflightLoadLocation": {
+        "message": "Завантажити"
+    },
+    "preflightSaveLocation": {
+        "message": "Зберегти"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Досягнуто максимум з 5 збережених розташувань"
+    },
+    "preflightLocationLabel": {
+        "message": "Назва місця (макс 20 символів)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Видалити вибране місце"
+    },
+    "preflightRenameLocation": {
+        "message": "Перейменувати вибране місце"
     },
     "preflightRenameLocationBtn": {
         "message": "Перейменувати"
@@ -8108,17 +8845,62 @@
     "preflightCancel": {
         "message": "Скасувати"
     },
+    "preflightGeolocationFailed": {
+        "message": "Не вдалося визначити місце. Будь ласка, введіть координати вручну."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Не вдалося визначити географічне місце з браузера. Ваше приблизне місце може бути визначене за IP-адресою через ipapi.co, сторонній сервіс."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Дозволити"
+    },
+    "preflightIpConsentDeny": {
+        "message": "Ні, дякую"
+    },
+    "preflightMapSatellite": {
+        "message": "Супутникове представлення"
+    },
+    "preflightMapHybrid": {
+        "message": "Гібрид: супутник і вулиці"
+    },
+    "preflightMapStreet": {
+        "message": "Перегляд вулиць"
+    },
     "preflightMapZoomIn": {
         "message": "Наблизити"
     },
     "preflightMapZoomOut": {
         "message": "Віддалити"
     },
+    "preflightMapFullscreen": {
+        "message": "Повноекранний режим"
+    },
     "preflightKpMinimal": {
         "message": "Мінімальний вплив на GPS"
     },
+    "preflightKpDegraded": {
+        "message": "Можлива деградація точності GPS"
+    },
+    "preflightKpSevere": {
+        "message": "Очікуються суттєві перешкоди GPS"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Спочатку перевірити сонячну активність"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS порятунок працює надійно"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPS порятунок може працювати ненадійно"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "НЕ рекомендуємо GPS порятунок"
+    },
     "preflightForecast": {
         "message": "Прогноз на 5 днів"
+    },
+    "preflightForecastHelp": {
+        "message": "Щоденний огляд погоди для допомоги в попередньому плануванні польотів"
     },
     "preflightForecastDay": {
         "message": "День"

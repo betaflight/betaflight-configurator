@@ -513,9 +513,6 @@
     "firmwareTypeNotSupported": {
         "message": "베타플라이트 펌웨어가 아닌 경우, CLI 모드를 제외하고 <span class=\"message-negative\">지원되지 않습니다.<\/span>"
     },
-    "firmwareUpgradeRequired": {
-        "message": "이 기기의 펌웨어는 최신 버전으로 업그레이드해야합니다. 플래시하기 전에 CLI를 사용하여 백업하십시오. CLI 백업\/복원 절차는 문서를 참고하십시오. <br \/>또는 업그레이드 준비가 되지 않은 경우 이전 버전의 앱을 다운로드하여 사용하십시오."
-    },
     "resetToCustomDefaultsDialog": {
         "message": "이 보드에 대한 사용자 정의 기본값이 있습니다. 일반적으로 보드는 사용자 정의 기본값을 적용하지 않으면 제대로 작동하지 않습니다.<br \/>이 보드에 대한 사용자 정의 기본값을 적용하시겠습니까?"
     },
