@@ -44,7 +44,7 @@
                     :label="$t('sensorsDebugSelect')"
                     @update:model-value="onCheckboxChange"
                 />
-                <UInput :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
+                <UInput v-show="checkboxes[5]" :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
             </div>
         </div>
 
