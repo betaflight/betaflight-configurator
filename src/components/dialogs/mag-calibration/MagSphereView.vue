@@ -115,6 +115,9 @@ let fieldRefGroup = null; // group containing shaft cylinder + cone arrowhead
 // Reusable color for HSL→RGB in updatePoints loop
 const _tempColor = new THREE.Color();
 
+// Compass ring — earth-frame N/S/E/W labels on the horizontal plane
+let compassGroup = null;
+
 // Coverage zone indicators
 let zoneMeshes = null;
 const ZONE_KEYS = ["+X", "-X", "+Y", "-Y", "+Z", "-Z"];
@@ -233,6 +236,10 @@ function initScene() {
     // Ghost reference sphere — gives visual context before data arrives
     ghostGroup = createGhostSphere(400);
     scene.add(ghostGroup);
+
+    // Compass ring — earth-frame N/S/E/W at the equatorial plane
+    compassGroup = createCompassRing(450);
+    scene.add(compassGroup);
 
     // Quad icon at origin — shows real-time attitude during calibration
     quadIcon = createQuadIcon(120);
@@ -1063,6 +1070,54 @@ function createGhostSphere(radius) {
     return group;
 }
 
+// Compass ring: thin equatorial circle + N/S/E/W sprites in the horizontal (Z=0) plane.
+// North = +X (display) — the horizontal projection of Earth's magnetic field.
+// East  = -Y (display) — BF +Y (right of quad when facing North).
+function createCompassRing(radius) {
+    const group = new THREE.Group();
+
+    // Thin equatorial circle at Z=0
+    const segments = 72;
+    const pts = [];
+    for (let i = 0; i <= segments; i++) {
+        const a = (i / segments) * Math.PI * 2;
+        pts.push(new THREE.Vector3(Math.cos(a) * radius, Math.sin(a) * radius, 0));
+    }
+    const ringGeo = new THREE.BufferGeometry().setFromPoints(pts);
+    const ringMat = new THREE.LineBasicMaterial({ color: 0x446688, opacity: 0.35, transparent: true });
+    group.add(new THREE.Line(ringGeo, ringMat));
+
+    // Helper: canvas-texture sprite for a compass label
+    const makeLabel = (text, color) => {
+        const cv = document.createElement("canvas");
+        cv.width = 64;
+        cv.height = 64;
+        const ctx = cv.getContext("2d");
+        ctx.fillStyle = color;
+        ctx.font = "bold 48px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, 32, 32);
+        const tex = new THREE.CanvasTexture(cv);
+        const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+        const sprite = new THREE.Sprite(mat);
+        sprite.scale.set(80, 80, 1);
+        group.add(sprite);
+        return sprite;
+    };
+
+    const r = radius + 60;
+    // N/S on the X axis (red, matching the existing X-axis line colour)
+    makeLabel("N", "#ff6666").position.set(r, 0, 0);
+    makeLabel("S", "#ff6666").position.set(-r, 0, 0);
+    // E/W on the Y axis (green, matching the existing Y-axis line colour)
+    // Display -Y = BF +Y = East when the quad nose faces North
+    makeLabel("E", "#66ff66").position.set(0, -r, 0);
+    makeLabel("W", "#66ff66").position.set(0, r, 0);
+
+    return group;
+}
+
 function updatePoints(sampleList) {
     if (!positionAttr || !colorAttr) {
         return;
@@ -1184,6 +1239,9 @@ function disposeScene() {
     disposeGroup(ghostGroup);
     ghostGroup = null;
 
+    disposeGroup(compassGroup);
+    compassGroup = null;
+
     if (pointMesh) {
         pointGeometry.dispose();
         pointMaterial.dispose();
@@ -1244,6 +1302,7 @@ function setSceneObjectVisibility(pc, hm) {
         z.visible = pc;
     });
     setVisible(heatmapMesh, hm);
+    setVisible(compassGroup, pc || hm);
 }
 
 function applyVizMode(mode) {
