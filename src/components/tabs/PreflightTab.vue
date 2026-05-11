@@ -928,6 +928,19 @@ function getForecastRowClass(day) {
     return "";
 }
 
+function formatNotamTime(dt) {
+    if (!dt) {
+        return "-";
+    }
+    return dt.toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short",
+    });
+}
+
 export default defineComponent({
     name: "PreflightTab",
     components: {
@@ -1550,19 +1563,6 @@ export default defineComponent({
             return null;
         }
 
-        function formatNotamTime(dt) {
-            if (!dt) {
-                return "-";
-            }
-            return dt.toLocaleString([], {
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZoneName: "short",
-            });
-        }
-
         function toggleNotamExpand(item) {
             const key = `${item.id}:${item.source}`;
             const next = new Set(expandedNotams.value);
@@ -1605,6 +1605,13 @@ export default defineComponent({
                     initializeMap();
                     updateMapPosition();
                 });
+            },
+        );
+
+        watch(
+            () => preflight.notams.items,
+            () => {
+                expandedNotams.value = new Set();
             },
         );
 

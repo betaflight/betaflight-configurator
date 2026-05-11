@@ -264,7 +264,7 @@ describe("OpenAIP normalise", () => {
     it("uses name as id when _id is absent", () => {
         const raw = { type: 3, name: "Danger Area D-7" };
         const item = normaliseOpenAip(raw);
-        expect(item.id).toBe("Danger Area D-7".slice(0, 20));
+        expect(item.id).toBe("Danger Area D-7");
     });
 
     it("returns null start and end times (permanent airspace)", () => {

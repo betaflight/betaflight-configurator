@@ -57,6 +57,9 @@ export function extractNotam(properties) {
  * @returns {Promise<object[]>} array of NotamItem
  */
 export async function fetchFromFaa(lat, lon, radiusNm, apiKey) {
+    if (typeof apiKey !== "string" || !apiKey.trim()) {
+        throw new Error("FAA API key must be in format client_id:client_secret");
+    }
     const sep = apiKey.indexOf(":");
     if (sep <= 0 || sep === apiKey.length - 1) {
         throw new Error("FAA API key must be in format client_id:client_secret");

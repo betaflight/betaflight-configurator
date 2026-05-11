@@ -73,7 +73,7 @@ export function normalise(raw) {
     const id = raw._id ?? raw.id ?? name;
 
     return {
-        id: String(id).slice(0, 20),
+        id: String(id),
         type: "SUA",
         location: country ? `${country} — ${name}` : name,
         startTime: null,
