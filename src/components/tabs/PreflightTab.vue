@@ -1476,8 +1476,12 @@ export default defineComponent({
 
         const notamNeedsApiKey = computed(() => {
             const p = preflight.notamSettings.provider;
-            if (p === "faa") return !preflight.notamSettings.faaApiKey.trim();
-            if (p === "openaip") return !preflight.notamSettings.openAipApiKey.trim();
+            if (p === "faa") {
+                return !preflight.notamSettings.faaApiKey?.trim();
+            }
+            if (p === "openaip") {
+                return !preflight.notamSettings.openAipApiKey?.trim();
+            }
             return false;
         });
 
@@ -1526,20 +1530,30 @@ export default defineComponent({
 
         function getNotamStatusBadgeClass(item) {
             const cls = getNotamCardClass(item);
-            if (cls === "notam-card-active") return "notam-status-active";
-            if (cls === "notam-card-future") return "notam-status-future";
+            if (cls === "notam-card-active") {
+                return "notam-status-active";
+            }
+            if (cls === "notam-card-future") {
+                return "notam-status-future";
+            }
             return "notam-status-expired";
         }
 
         function getNotamStatusLabel(item) {
             const cls = getNotamCardClass(item);
-            if (cls === "notam-card-active") return i18n.getMessage("preflightNotamActiveNow");
-            if (cls === "notam-card-expired") return i18n.getMessage("preflightNotamExpired");
+            if (cls === "notam-card-active") {
+                return i18n.getMessage("preflightNotamActiveNow");
+            }
+            if (cls === "notam-card-expired") {
+                return i18n.getMessage("preflightNotamExpired");
+            }
             return null;
         }
 
         function formatNotamTime(dt) {
-            if (!dt) return "-";
+            if (!dt) {
+                return "-";
+            }
             return dt.toLocaleString([], {
                 month: "short",
                 day: "numeric",

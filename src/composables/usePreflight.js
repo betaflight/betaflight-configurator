@@ -831,8 +831,8 @@ async function fetchNotams(lat, lon) {
         return;
     }
     if (
-        (notamSettings.provider === "faa" && !notamSettings.faaApiKey.trim()) ||
-        (notamSettings.provider === "openaip" && !notamSettings.openAipApiKey.trim())
+        (notamSettings.provider === "faa" && !notamSettings.faaApiKey?.trim()) ||
+        (notamSettings.provider === "openaip" && !notamSettings.openAipApiKey?.trim())
     ) {
         notams.items = [];
         notams.error = null;
@@ -856,7 +856,9 @@ async function fetchNotams(lat, lon) {
             default:
                 break;
         }
-        if (requestId !== notamRequestId) return;
+        if (requestId !== notamRequestId) {
+            return;
+        }
         notams.items = sortNotams(items);
         notams.lastFetched = new Date();
     } catch (err) {
