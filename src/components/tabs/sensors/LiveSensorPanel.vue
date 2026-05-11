@@ -36,13 +36,16 @@
                 :label="$t('sensorsSonarSelect')"
                 @update:model-value="onCheckboxChange"
             />
-            <USwitch
-                v-model="checkboxes[5]"
-                :disabled="!hasDebug"
-                size="sm"
-                :label="$t('sensorsDebugSelect')"
-                @update:model-value="onCheckboxChange"
-            />
+            <div class="flex items-center gap-2">
+                <USwitch
+                    v-model="checkboxes[5]"
+                    :disabled="!hasDebug"
+                    size="sm"
+                    :label="$t('sensorsDebugSelect')"
+                    @update:model-value="onCheckboxChange"
+                />
+                <UInput :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
+            </div>
         </div>
 
         <SensorGraph
@@ -178,6 +181,7 @@ const hasAltitude = computed(
 const hasSonar = computed(() => isFcBoard.value && have_sensor(fcStore.config.activeSensors, "sonar"));
 
 const hasDebug = computed(() => fcStore.pidAdvancedConfig.debugMode !== 0);
+const debugModeName = computed(() => debugStore.modes[fcStore.pidAdvancedConfig.debugMode] ?? "DISABLED");
 
 // Debug titles
 const debugTitles = ref(new Array(8).fill("").map((_, i) => `Debug (${i})`));
