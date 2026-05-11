@@ -95,7 +95,7 @@ export async function fetchFromFaa(lat, lon, radiusNm, apiKey) {
         }
         if (err instanceof TypeError) {
             throw new Error(
-                "FAA NOTAM API is not available in browser/PWA builds (CORS). Use Tauri desktop or Android.",
+                "FAA NOTAM API request failed (network error or CORS block). Check connectivity, or use Tauri desktop or Android.",
             );
         }
         throw err;

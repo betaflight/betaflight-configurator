@@ -96,9 +96,10 @@ export function normalise(raw) {
  * @returns {Promise<object[]>} array of NotamItem
  */
 export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
-    if (!apiKey || !apiKey.trim()) {
+    if (typeof apiKey !== "string" || !apiKey.trim()) {
         throw new Error("OpenAIP API key is required");
     }
+    const trimmedApiKey = apiKey.trim();
 
     const radiusKm = nmToKm(radiusNm);
 
@@ -117,7 +118,7 @@ export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
         response = await fetch(`${BASE_URL}?${params}`, {
             signal: controller.signal,
             headers: {
-                "x-openaip-api-key": apiKey.trim(),
+                "x-openaip-api-key": trimmedApiKey,
             },
         });
     } catch (err) {
@@ -125,7 +126,9 @@ export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
             throw new Error("OpenAIP API request timed out");
         }
         if (err instanceof TypeError) {
-            throw new Error("OpenAIP API is not available in browser/PWA builds (CORS). Use Tauri desktop or Android.");
+            throw new Error(
+                "OpenAIP API request failed (network error or CORS block). Check connectivity, or use Tauri desktop or Android.",
+            );
         }
         throw err;
     } finally {
