@@ -1075,6 +1075,12 @@
     "initialSetupBatteryAValue": {
         "message": "$1 A"
     },
+    "initialSetupCpuLoad": {
+        "message": "CPU Load:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Loop Rate:"
+    },
     "initialSetupCpuTemp": {
         "message": "CPU Temperature:"
     },
@@ -1285,6 +1291,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Shows Heading, Pitch and Roll in instruments",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "Board:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Firmware:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"

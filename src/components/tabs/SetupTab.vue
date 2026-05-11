@@ -3,69 +3,29 @@
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabSetup") }}</div>
             <WikiButton docUrl="setup" />
-            <!-- Top: 3D Model + Instruments & Calibration side-by-side -->
+            <!-- Top: 3D Model full-width -->
             <div class="setup-top">
-                <div class="model-and-info">
-                    <div id="interactive_block">
-                        <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
-                            <canvas id="canvas" ref="canvasEl"></canvas>
-                            <div class="attitude_info">
-                                <dl>
-                                    <dt>{{ $t("initialSetupHeading") }}</dt>
-                                    <dd class="heading">{{ state.attitude.heading }}</dd>
-                                    <dt>{{ $t("initialSetupPitch") }}</dt>
-                                    <dd class="pitch">{{ state.attitude.pitch }}</dd>
-                                    <dt>{{ $t("initialSetupRoll") }}</dt>
-                                    <dd class="roll">{{ state.attitude.roll }}</dd>
-                                </dl>
-                            </div>
-                        </div>
-                        <UButton
-                            class="reset-zaxis sm-min"
-                            :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
-                            color="neutral"
-                            variant="subtle"
-                            @click="resetZaxis"
-                        />
-                    </div>
-                </div>
-                <div class="setup-sidebar">
-                    <UiBox
-                        :title="$t('initialSetupInstrumentsHead')"
-                        :help="$t('initialSetupInstrumentsHeadHelp')"
-                        type="neutral"
-                    >
-                        <div class="flex flex-row justify-center gap-2">
-                            <span id="attitude"></span>
-                            <span id="heading"></span>
-                        </div>
-                    </UiBox>
-                    <div class="flex flex-col gap-2">
-                        <div v-show="isExpert">
-                            <UButton
-                                :label="$t('initialSetupButtonReset')"
-                                color="error"
-                                class="w-full justify-center"
-                                @click="showConfirmReset"
-                            >
-                                <template #trailing>
-                                    <HelpIcon :text="$t('initialSetupResetText')" />
-                                </template>
-                            </UButton>
-                        </div>
-                        <div v-show="isExpert">
-                            <UButton
-                                :label="$t('initialSetupButtonRebootBootloader')"
-                                color="error"
-                                class="w-full justify-center"
-                                @click="onRebootBootloader"
-                            >
-                                <template #trailing>
-                                    <HelpIcon :text="$t('initialSetupRebootBootloaderText')" />
-                                </template>
-                            </UButton>
+                <div id="interactive_block">
+                    <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
+                        <canvas id="canvas" ref="canvasEl"></canvas>
+                        <div class="attitude_info">
+                            <dl>
+                                <dt>{{ $t("initialSetupHeading") }}</dt>
+                                <dd class="heading">{{ state.attitude.heading }}</dd>
+                                <dt>{{ $t("initialSetupPitch") }}</dt>
+                                <dd class="pitch">{{ state.attitude.pitch }}</dd>
+                                <dt>{{ $t("initialSetupRoll") }}</dt>
+                                <dd class="roll">{{ state.attitude.roll }}</dd>
+                            </dl>
                         </div>
                     </div>
+                    <UButton
+                        class="reset-zaxis sm-min"
+                        :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
+                        color="neutral"
+                        variant="subtle"
+                        @click="resetZaxis"
+                    />
                 </div>
             </div>
 
@@ -100,6 +60,18 @@
                                 i18n: 'initialSetupMCU',
                                 value: state.mcu,
                                 class: 'mcu',
+                            },
+                            {
+                                id: 'cpu-load',
+                                i18n: 'initialSetupCpuLoad',
+                                value: state.cpuLoad,
+                                class: 'cpu-load',
+                            },
+                            {
+                                id: 'loop-time',
+                                i18n: 'initialSetupLoopTime',
+                                value: state.loopTime,
+                                class: 'loop-time',
                             },
                             {
                                 id: 'cpu-temp',
@@ -150,6 +122,18 @@
                 <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')" type="neutral">
                     <InfoGrid
                         :items="[
+                            {
+                                id: 'board-name',
+                                i18n: 'initialSetupInfoBoardName',
+                                value: state.boardName,
+                                class: 'board-name',
+                            },
+                            {
+                                id: 'firmware-version',
+                                i18n: 'initialSetupInfoFirmwareVersion',
+                                value: state.firmwareVersion,
+                                class: 'firmware-version',
+                            },
                             {
                                 id: 'api-version',
                                 i18n: 'initialSetupInfoAPIversion',
@@ -212,6 +196,38 @@
                             </span>
                         </template>
                     </InfoGrid>
+                    <div v-if="isExpert" class="flex flex-col gap-2 mt-2">
+                        <UButton
+                            :label="$t('initialSetupButtonReset')"
+                            color="error"
+                            class="w-full justify-center"
+                            @click="showConfirmReset"
+                        >
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupResetText')" />
+                            </template>
+                        </UButton>
+                        <UButton
+                            :label="$t('initialSetupButtonRebootBootloader')"
+                            color="error"
+                            class="w-full justify-center"
+                            @click="onRebootBootloader"
+                        >
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupRebootBootloaderText')" />
+                            </template>
+                        </UButton>
+                    </div>
+                </UiBox>
+                <UiBox
+                    :title="$t('initialSetupInstrumentsHead')"
+                    :help="$t('initialSetupInstrumentsHeadHelp')"
+                    type="neutral"
+                >
+                    <div class="flex flex-row justify-center gap-2">
+                        <span id="attitude"></span>
+                        <span id="heading"></span>
+                    </div>
                 </UiBox>
                 <UiBox
                     v-show="state.showSonarBox"
@@ -303,12 +319,16 @@ const state = reactive({
     batMahDrawing: "0 A",
     rssi: "0 %",
     cpuTemp: "0 °C",
+    cpuLoad: "",
+    loopTime: "",
     gpsFix: false,
     gpsSats: 0,
     latitude: "0",
     longitude: "0",
     sonar: "0 cm",
     mcu: "",
+    boardName: "",
+    firmwareVersion: "",
     gpsUrl: "",
     apiVersion: "",
     buildDate: "",
@@ -498,6 +518,7 @@ async function initialize() {
         await MSP.promise(MSPCodes.MSP2_MCU_INFO, false);
         await MSP.promise(MSPCodes.MSP_MIXER_CONFIG, false);
         await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT, false);
+        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG, false);
     } catch (e) {
         // preserve behavior but at least log unexpected errors
         console.warn("Error during Setup initialize sequence:", e);
@@ -587,6 +608,9 @@ function process_html() {
     function showFirmwareInfo() {
         state.apiVersion = fcStore.config.apiVersion;
         state.buildDate = fcStore.config.buildInfo;
+        state.boardName = fcStore.config.boardName || fcStore.config.targetName || "";
+        state.firmwareVersion =
+            `${fcStore.config.flightControllerIdentifier} ${fcStore.config.flightControllerVersion}`.trim();
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             showBuildType();
@@ -625,6 +649,19 @@ function process_html() {
             state.mcu = fcStore.mcuInfo.name;
         } else {
             state.mcu = "";
+        }
+
+        state.cpuLoad = `${fcStore.config.cpuload} %`;
+
+        const cycleTime = fcStore.config.cycleTime;
+        if (cycleTime > 0) {
+            const pidHz = Math.round(1000000 / cycleTime);
+            const pidProcess = fcStore.pidAdvancedConfig?.pid_process_denom || 1;
+            const gyroHz = pidHz * pidProcess;
+            const fmt = (hz) => (hz >= 1000 ? `${(hz / 1000).toFixed(0)}k` : `${hz}`);
+            state.loopTime = `${fmt(gyroHz)} / ${fmt(pidHz)}`;
+        } else {
+            state.loopTime = "";
         }
 
         state.gpsFix = fcStore.gpsData.fix !== 0;
@@ -780,12 +817,7 @@ function openBuildOptionsDialog() {
         }
     }
     .setup-top {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 1rem;
         margin-top: 0.75rem;
-    }
-    .model-and-info {
         #canvas_wrapper {
             position: relative;
             width: 100%;
@@ -796,11 +828,6 @@ function openBuildOptionsDialog() {
             border-radius: 1rem;
         }
     }
-    .setup-sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
     .setup-info-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -808,9 +835,6 @@ function openBuildOptionsDialog() {
         margin-top: 1rem;
     }
     @media only screen and (max-width: 1055px) {
-        .setup-top {
-            grid-template-columns: 1fr;
-        }
         .setup-info-grid {
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         }
