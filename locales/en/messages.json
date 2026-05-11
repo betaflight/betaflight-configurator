@@ -422,6 +422,9 @@
     "sensorConfigHardware": {
         "message": "Sensor Hardware"
     },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
+    },
     "sensorConfigSaved": {
         "message": "Sensor configuration saved"
     },

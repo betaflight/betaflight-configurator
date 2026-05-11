@@ -14,7 +14,7 @@
                         <template v-if="showMultiGyro">
                             <SettingRow v-for="gyro in gyroList" :key="gyro.index" fullWidth>
                                 <template #label>
-                                    {{ `Gyro ${gyro.index + 1}` }}
+                                    {{ $t("sensorConfigGyroLabel", { 1: gyro.index + 1 }) }}
                                     <span v-if="gyro.name" class="text-dimmed font-normal"
                                         >&mdash; {{ gyro.name }}</span
                                     >
@@ -858,7 +858,7 @@ const gyroList = computed(() => {
         return [];
     }
 
-    const types = sensorTypesData.value?.gyro.elements || [];
+    const types = sensorTypesData.value?.gyro?.elements || [];
     const detectedHardware = fcStore.gyroSensor?.gyro_hardware || [];
     const count = detectedHardware.length;
     if (count === 0) {
@@ -1735,9 +1735,9 @@ function setupMagSection() {
 
 function setupPeripherals() {
     if (isApi147.value) {
-        sonarTypesList.value = sensorTypesData.value?.sonar.elements || [];
+        sonarTypesList.value = sensorTypesData.value?.sonar?.elements || [];
         showRangefinder.value = sonarTypesList.value.length > 0;
-        opticalFlowTypesList.value = sensorTypesData.value?.opticalflow.elements || [];
+        opticalFlowTypesList.value = sensorTypesData.value?.opticalflow?.elements || [];
         showOpticalFlow.value = opticalFlowTypesList.value.length > 0;
     }
 }
