@@ -2044,7 +2044,7 @@ onMounted(() => {
     }
 
     .mag-viz-mode-selector button {
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.75);
     }
 
     .mag-viz-mode-selector button:hover {
@@ -2054,7 +2054,7 @@ onMounted(() => {
 
     .mag-viz-mode-selector .mag-viz-active {
         color: #fff;
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.3);
     }
 
     .mag-cal-progress-bar {
