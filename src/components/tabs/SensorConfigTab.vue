@@ -1331,6 +1331,12 @@ const magVizMode = ref("pointcloud");
 const calModeItems = computed(() => [
     [
         {
+            label: i18n.getMessage("magCalibrationUnguided"),
+            description: i18n.getMessage("magCalibrationUnguidedDesc"),
+            icon: "i-lucide-shuffle",
+            onSelect: () => startMagCal(true),
+        },
+        {
             label: i18n.getMessage("magCalibrationStart"),
             description: i18n.getMessage("magCalibrationStartDesc"),
             icon: "i-lucide-compass",
@@ -1341,12 +1347,6 @@ const calModeItems = computed(() => [
             description: i18n.getMessage("magCalibrationStartAutoDesc"),
             icon: "i-lucide-timer",
             onSelect: () => startMagCal(false, true),
-        },
-        {
-            label: i18n.getMessage("magCalibrationUnguided"),
-            description: i18n.getMessage("magCalibrationUnguidedDesc"),
-            icon: "i-lucide-shuffle",
-            onSelect: () => startMagCal(true),
         },
     ],
 ]);
