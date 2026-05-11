@@ -616,8 +616,8 @@
                                         }}</label>
                                         <input
                                             v-model="preflight.notamSettings.faaApiKey"
-                                            type="text"
-                                            autocomplete="off"
+                                            type="password"
+                                            autocomplete="new-password"
                                             class="notam-setting-input"
                                             @change="onNotamSettingChange"
                                         />
@@ -628,8 +628,8 @@
                                         }}</label>
                                         <input
                                             v-model="preflight.notamSettings.openAipApiKey"
-                                            type="text"
-                                            autocomplete="off"
+                                            type="password"
+                                            autocomplete="new-password"
                                             class="notam-setting-input"
                                             @change="onNotamSettingChange"
                                         />
@@ -718,12 +718,12 @@
                                         </div>
                                         <div class="notam-card-body">
                                             <span v-if="!expandedNotams.has(item.id + ':' + item.source)">
-                                                {{ item.body.slice(0, 160)
-                                                }}<template v-if="item.body.length > 160">…</template>
+                                                {{ (item.body ?? "").slice(0, 160)
+                                                }}<template v-if="(item.body ?? '').length > 160">…</template>
                                             </span>
-                                            <span v-else>{{ item.body }}</span>
+                                            <span v-else>{{ item.body ?? "" }}</span>
                                             <a
-                                                v-if="item.body.length > 160"
+                                                v-if="(item.body ?? '').length > 160"
                                                 href="#"
                                                 class="notam-expand-link"
                                                 @click.prevent="toggleNotamExpand(item)"

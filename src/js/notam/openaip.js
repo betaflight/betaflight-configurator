@@ -38,17 +38,26 @@ const TYPE_LABELS = {
     28: "Warning",
 };
 
+const UNIT_LABELS = { 1: "ft", 2: "m", 6: "FL" };
+const REF_LABELS = { 1: " MSL", 2: " AGL" };
+
 /**
  * Format an OpenAIP altitude object into a readable string.
  * @param {object | null} alt
  * @returns {string | null}
  */
 export function formatAlt(alt) {
-    if (!alt) return null;
-    const unit = alt.unit === 6 ? "FL" : alt.unit === 1 ? "ft" : alt.unit === 2 ? "m" : "";
-    const ref = alt.referenceDatum === 1 ? " MSL" : alt.referenceDatum === 2 ? " AGL" : "";
-    if (unit === "FL") return `FL${alt.value}`;
-    if (alt.value === 0 && alt.referenceDatum === 2) return "SFC";
+    if (!alt) {
+        return null;
+    }
+    const unit = UNIT_LABELS[alt.unit] ?? "";
+    const ref = REF_LABELS[alt.referenceDatum] ?? "";
+    if (unit === "FL") {
+        return `FL${alt.value}`;
+    }
+    if (alt.value === 0 && alt.referenceDatum === 2) {
+        return "SFC";
+    }
     return `${alt.value}${unit}${ref}`;
 }
 
@@ -101,18 +110,26 @@ export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
         limit: 100,
     });
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15_000);
     let response;
     try {
         response = await fetch(`${BASE_URL}?${params}`, {
+            signal: controller.signal,
             headers: {
                 "x-openaip-api-key": apiKey.trim(),
             },
         });
     } catch (err) {
+        if (err.name === "AbortError") {
+            throw new Error("OpenAIP API request timed out");
+        }
         if (err instanceof TypeError) {
             throw new Error("OpenAIP API is not available in browser/PWA builds (CORS). Use Tauri desktop or Android.");
         }
         throw err;
+    } finally {
+        clearTimeout(timeoutId);
     }
     if (!response.ok) {
         throw new Error(`OpenAIP API error: ${response.status}`);

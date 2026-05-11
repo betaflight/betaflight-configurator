@@ -75,21 +75,29 @@ export async function fetchFromFaa(lat, lon, radiusNm, apiKey) {
         pageSize: 100,
     });
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15_000);
     let response;
     try {
         response = await fetch(`${BASE_URL}?${params}`, {
+            signal: controller.signal,
             headers: {
                 client_id: clientId,
                 client_secret: clientSecret,
             },
         });
     } catch (err) {
+        if (err.name === "AbortError") {
+            throw new Error("FAA NOTAM API request timed out");
+        }
         if (err instanceof TypeError) {
             throw new Error(
                 "FAA NOTAM API is not available in browser/PWA builds (CORS). Use Tauri desktop or Android.",
             );
         }
         throw err;
+    } finally {
+        clearTimeout(timeoutId);
     }
     if (!response.ok) {
         throw new Error(`FAA NOTAM API error: ${response.status}`);

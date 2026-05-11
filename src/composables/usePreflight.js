@@ -828,6 +828,7 @@ async function fetchNotams(lat, lon) {
         notams.items = [];
         notams.error = null;
         notams.loading = false;
+        notams.lastFetched = null;
         return;
     }
     if (
@@ -837,6 +838,7 @@ async function fetchNotams(lat, lon) {
         notams.items = [];
         notams.error = null;
         notams.loading = false;
+        notams.lastFetched = null;
         return;
     }
     const requestId = ++notamRequestId;
