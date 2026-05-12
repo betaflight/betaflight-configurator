@@ -347,7 +347,9 @@ class WebSerial extends EventTarget {
         this.writer = null;
         this.port = null;
 
-        if (port) port.removeEventListener("disconnect", this.handleDisconnect);
+        if (port) {
+            port.removeEventListener("disconnect", this.handleDisconnect);
+        }
 
         // Mirrors the disconnect() sequence but without awaiting at call-site.
         (async () => {
@@ -356,13 +358,13 @@ class WebSerial extends EventTarget {
             if (reader) {
                 try {
                     await reader.cancel();
-                } catch (_) {}
+                } catch (_e) {}
             }
 
             if (writer) {
                 try {
                     writer.releaseLock();
-                } catch (_) {}
+                } catch (_e) {}
             }
 
             // Close port — Chrome allows this after reader.cancel() even if the
@@ -370,7 +372,7 @@ class WebSerial extends EventTarget {
             if (port) {
                 try {
                     await port.close();
-                } catch (_) {}
+                } catch (_e) {}
             }
         })();
 
