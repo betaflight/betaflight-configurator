@@ -541,7 +541,7 @@ export function useCli() {
                 // try to catch part of valid CLI enter message (firmware message starts with CRLF)
                 state.startProcessing = true;
                 validateText += currentChar;
-                writeToOutput(currentChar);
+                writeToOutput(escapeHtml(currentChar));
                 continue;
             }
 
