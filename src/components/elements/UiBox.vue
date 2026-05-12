@@ -104,7 +104,7 @@ const typeClass = computed(() => {
             },
             error: {
                 box: "border-error bg-error/15",
-                pill: "bg-error text-black",
+                pill: "bg-error text-white",
             },
             neutral: {
                 box: "border-default bg-default/15",
