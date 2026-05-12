@@ -187,6 +187,7 @@ import FlasherBoardSelectionTab from "./firmware-flasher/FlasherBoardSelectionTa
 import FlasherBuildConfigTab from "./firmware-flasher/FlasherBuildConfigTab.vue";
 import FlasherReleaseInfoTab from "./firmware-flasher/FlasherReleaseInfoTab.vue";
 import FlasherFlashingTab from "./firmware-flasher/FlasherFlashingTab.vue";
+import { applyExpertMode } from "../../js/utils/applyExpertMode";
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
 const activeFlasherStep = ref("board");
@@ -1466,7 +1467,7 @@ export default defineComponent({
 
         // UI State change handlers
         const handleExpertModeChange = () => {
-            setConfig({ expertMode: state.expertMode });
+            applyExpertMode(state.expertMode);
             state.expertOptionsVisible = state.expertMode;
 
             // Update build types based on expert mode
