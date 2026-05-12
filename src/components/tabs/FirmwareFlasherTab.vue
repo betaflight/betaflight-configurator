@@ -163,8 +163,6 @@
 import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
-import Multiselect from "vue-multiselect";
-import "vue-multiselect/dist/vue-multiselect.css";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
 import GUI, { TABS } from "../../js/gui";
@@ -185,10 +183,6 @@ import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
-import UiBox from "../elements/UiBox.vue";
-import ProgressRing from "../ProgressRing.vue";
-import SettingRow from "../elements/SettingRow.vue";
-import SettingColumn from "../elements/SettingColumn.vue";
 import FlasherBoardSelectionTab from "./firmware-flasher/FlasherBoardSelectionTab.vue";
 import FlasherBuildConfigTab from "./firmware-flasher/FlasherBuildConfigTab.vue";
 import FlasherReleaseInfoTab from "./firmware-flasher/FlasherReleaseInfoTab.vue";
@@ -203,12 +197,7 @@ export default defineComponent({
     components: {
         BaseTab,
         WikiButton,
-        Multiselect,
         SponsorTile,
-        UiBox,
-        ProgressRing,
-        SettingRow,
-        SettingColumn,
         FlasherBoardSelectionTab,
         FlasherBuildConfigTab,
         FlasherReleaseInfoTab,
@@ -265,8 +254,6 @@ export default defineComponent({
             dfuExitButtonDisabled: true,
             telemetryProtocolDisabled: false,
             // UI State - Visibility flags
-            releaseInfoVisible: false,
-            buildConfigVisible: false,
             flashOnConnectWrapperVisible: false,
             manufacturerInfoVisible: false,
             cloudTargetInfoVisible: false,
@@ -299,25 +286,6 @@ export default defineComponent({
             dialogUnstableFirmwareAcknowledgementCheckbox: false,
             flashingInProgress: false,
         });
-
-        // Template refs for all interactive elements
-        // Buttons
-        const cloudBuildCancelButton = ref(null);
-
-        // Release info elements
-        const releaseInfoContainer = ref(null);
-        const targetSpan = ref(null);
-        const manufacturerInfoDiv = ref(null);
-        const manufacturerSpan = ref(null);
-        const releaseNameLink = ref(null);
-        const targetMCUSpan = ref(null);
-        const releaseDateSpan = ref(null);
-        const configFilenameSpan = ref(null);
-
-        // Cloud build info elements
-        const cloudTargetInfoDiv = ref(null);
-        const cloudTargetLogLink = ref(null);
-        const cloudTargetStatusSpan = ref(null);
 
         // Sponsor component ref
         const sponsorTile = ref(null);
@@ -598,9 +566,6 @@ export default defineComponent({
             } else {
                 state.cloudTargetInfoVisible = false;
             }
-
-            // Note: Don't set releaseInfoVisible or buildConfigVisible here
-            // These will be set when user clicks Load Firmware Online button
         };
 
         const loadFailed = () => {
@@ -882,8 +847,6 @@ export default defineComponent({
         const selectFirmware = async (release) => {
             // Extract release string from object if needed
             const releaseStr = typeof release === "string" ? release : release?.release;
-            // Hide release info when changing firmware (will show when Load Online clicked)
-            state.releaseInfoVisible = false;
 
             if (!state.localFirmwareLoaded) {
                 enableFlashButton(false);
@@ -909,8 +872,6 @@ export default defineComponent({
             };
 
             const handleCloudBuildConfiguration = async (detail) => {
-                state.buildConfigVisible = true;
-
                 const expertMode = state.expertMode;
                 if (expertMode && detail.releaseType === "Unstable") {
                     await loadCommitsForUnstableRelease(detail);
@@ -1066,8 +1027,6 @@ export default defineComponent({
 
             // Setup UI handlers and event bus listeners
             await setupUIHandlers();
-            setupFlashButton();
-            setupLoadRemoteFileButton();
             setupEventBusListeners();
 
             // Register this module for backward compatibility
@@ -1277,9 +1236,6 @@ export default defineComponent({
             }
         };
 
-        // Setup flash firmware button
-        const setupFlashButton = () => {};
-
         // Remote build and firmware loading
         const enforceOSDSelection = async () => {
             // Skip OSD selection enforcement in core build mode
@@ -1312,8 +1268,6 @@ export default defineComponent({
                 return true;
             }
         };
-
-        const setupLoadRemoteFileButton = () => {};
 
         const requestCloudBuild = async (targetDetail) => {
             const additionalParams = {
@@ -1396,7 +1350,6 @@ export default defineComponent({
             if (result) {
                 state.targetSupportUrl = result.targetSupportUrl;
             }
-            state.releaseInfoVisible = false;
         };
 
         const handleDetectBoard = async () => {
@@ -1624,8 +1577,6 @@ export default defineComponent({
             if (state.targetDetail) {
                 flashingMessage($t("firmwareFlasherButtonDownloading"), FLASH_MESSAGE_TYPES.NEUTRAL);
                 showReleaseNotes(state.targetDetail);
-                // Show release info section when Load Firmware Online button is clicked
-                state.releaseInfoVisible = true;
                 await requestCloudBuild(state.targetDetail);
             } else {
                 flashingMessage($t("firmwareFlasherFailedToLoadOnlineFirmware"), FLASH_MESSAGE_TYPES.NEUTRAL);
@@ -1636,7 +1587,6 @@ export default defineComponent({
 
         const processFirmwareFile = async (file, extension, data) => {
             state.localFirmwareLoaded = true;
-            state.releaseInfoVisible = false;
             const result = await firmwareFlashing.processFirmware(data, extension, {
                 flashingMessage,
                 enableFlashButton,
@@ -1867,18 +1817,6 @@ export default defineComponent({
             FLASH_MESSAGE_TYPES,
             // Template refs
             sponsorTile,
-            cloudBuildCancelButton,
-            releaseInfoContainer,
-            targetSpan,
-            manufacturerInfoDiv,
-            manufacturerSpan,
-            releaseNameLink,
-            targetMCUSpan,
-            releaseDateSpan,
-            configFilenameSpan,
-            cloudTargetInfoDiv,
-            cloudTargetLogLink,
-            cloudTargetStatusSpan,
             verifyBoardDialog,
             verifyBoardContent,
             unstableFirmwareDialog,
@@ -1892,8 +1830,6 @@ export default defineComponent({
             resetFlashingState,
             validateBuildKey,
             startFlashing,
-            setupFlashButton,
-            setupLoadRemoteFileButton,
             cleanup,
             onBuildTypeChange,
             onBoardChange,
@@ -1963,149 +1899,6 @@ export default defineComponent({
     }
     .grid-box-spacer {
         height: 1rem;
-    }
-    .build-options-wrapper {
-        .helpicon {
-            margin-top: 8px;
-        }
-
-        // Multiselect styling to match native selects
-        :deep(.multiselect) {
-            width: calc(100% - 2rem) !important;
-            min-height: 28px;
-            font-size: 12px;
-            font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
-            position: relative;
-            z-index: 1001;
-
-            .multiselect__tags {
-                min-height: 28px;
-                padding: 4px 40px 4px 4px;
-                background: var(--surface-100);
-                border: 1px solid var(--border);
-                border-radius: 3px;
-                font-size: 12px;
-                z-index: 1001;
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                gap: 4px;
-            }
-
-            .multiselect__single {
-                font-size: 12px;
-                margin-bottom: 4px;
-                padding: 0 0 0 2px;
-                background: transparent;
-                color: var(--text);
-            }
-
-            .multiselect__input {
-                font-size: 12px;
-                padding: 0 0 0 2px;
-                background: transparent;
-                color: var(--text);
-            }
-
-            .multiselect__placeholder {
-                font-size: 12px;
-                color: var(--subtitle);
-                margin-bottom: 4px;
-                padding-left: 2px;
-            }
-
-            .multiselect__select {
-                height: 28px;
-                width: 35px;
-                z-index: 1002;
-
-                &:before {
-                    border-color: var(--text) transparent transparent;
-                    top: 60%;
-                }
-            }
-
-            .multiselect__content-wrapper {
-                background: var(--surface-100);
-                border: 1px solid var(--border);
-                border-radius: 3px;
-                max-height: 200px;
-                z-index: 9999;
-                position: absolute;
-            }
-
-            .multiselect__content {
-                background: var(--surface-100);
-                z-index: 9999;
-            }
-
-            .multiselect__option {
-                font-size: 12px;
-                padding: 6px 8px;
-                min-height: 28px;
-                color: var(--text);
-                z-index: 1003;
-
-                &--highlight {
-                    background: var(--primary-500);
-                    color: var(--surface-50);
-                }
-
-                &--selected {
-                    background: var(--surface-400);
-                    color: var(--text);
-                    font-weight: normal;
-
-                    &.multiselect__option--highlight {
-                        background: var(--surface-600);
-                        color: var(--surface-50);
-                    }
-                }
-            }
-
-            .multiselect__tag {
-                background: var(--surface-500);
-                color: var(--surface-50);
-                font-size: 11px;
-                padding: 3px 20px 3px 6px;
-                border-radius: 3px;
-                z-index: 1002;
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-
-                .multiselect__tag-icon {
-                    &:after {
-                        color: var(--surface-50);
-                    }
-
-                    &:hover {
-                        background: var(--surface-600);
-                    }
-                }
-            }
-
-            &.multiselect--disabled {
-                opacity: 0.6;
-
-                .multiselect__tags {
-                    background: var(--surface-200);
-                }
-            }
-        }
-    }
-    .buildProgress {
-        border-radius: 4px;
-        appearance: none;
-        -webkit-appearance: none;
-        overflow: hidden;
-        &::-webkit-progress-bar {
-            background-color: var(--surface-500);
-        }
-        &::-webkit-progress-value {
-            background-color: var(--primary-500);
-            border-radius: 0 4px 4px 0;
-        }
     }
     ul {
         li {
