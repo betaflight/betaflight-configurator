@@ -9,10 +9,7 @@
     >
         <div
             v-if="title"
-            :class="[
-                `flex gap-2 items-center absolute top-0 left-4 translate-y-[-50%] p-1 px-3 rounded-full text-black text-[13px] font-semibold ${typeClass.pill}`,
-                collapsible ? 'cursor-pointer select-none' : '',
-            ]"
+            :class="`flex gap-2 items-center absolute top-0 left-4 translate-y-[-50%] p-1 px-3 rounded-full text-[13px] font-semibold ${typeClass.pill} ${collapsible ? 'cursor-pointer select-none' : ''}`"
             :role="collapsible ? 'button' : undefined"
             :tabindex="collapsible ? 0 : undefined"
             :aria-expanded="collapsible ? isOpen : undefined"
@@ -95,19 +92,19 @@ const typeClass = computed(() => {
         {
             default: {
                 box: "border-primary bg-primary/15",
-                pill: "bg-primary",
+                pill: "bg-primary text-black",
             },
             success: {
                 box: "border-success bg-success/15",
-                pill: "bg-success",
+                pill: "bg-success text-black",
             },
             warning: {
                 box: "border-warning bg-warning/15",
-                pill: "bg-warning",
+                pill: "bg-warning text-black",
             },
             error: {
                 box: "border-error bg-error/15",
-                pill: "bg-error",
+                pill: "bg-error text-black",
             },
             neutral: {
                 box: "border-default bg-default/15",
@@ -115,7 +112,7 @@ const typeClass = computed(() => {
             },
         }[props.type] || {
             box: "border-primary bg-primary/15",
-            pill: "bg-primary",
+            pill: "bg-primary text-black",
         }
     );
 });
