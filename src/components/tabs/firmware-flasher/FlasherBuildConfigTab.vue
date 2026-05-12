@@ -43,7 +43,7 @@
                             placeholder="Select protocol"
                             @update:model-value="onOsdProtocolChange"
                             class="w-full"
-                            :color="state.osdProtocolNeedsAttention ? 'error' : 'default'"
+                            :color="state.osdProtocolNeedsAttention ? 'error' : 'neutral'"
                         />
                     </SettingColumn>
                     <SettingColumn
