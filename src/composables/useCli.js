@@ -152,6 +152,7 @@ export function useCli() {
     let scrollListener = null;
     let flushing = false; // true during DOM mutations; prevents spurious scrollPinned flips
     let scrollRaf = null; // deferred scroll; separates DOM writes from scrollTop write (avoids forced reflow)
+    let pastePollInterval = null;
 
     const flushOutput = () => {
         outputFlushRaf = null;
@@ -239,9 +240,11 @@ export function useCli() {
             const t0 = performance.now();
             const startMs = Date.now();
             console.log(`[CLI] paste: ${outputArray.length} lines`);
-            const poll = setInterval(() => {
+            if (pastePollInterval) clearInterval(pastePollInterval);
+            pastePollInterval = setInterval(() => {
                 if (state.lastArrival > startMs && Date.now() - state.lastArrival > 250) {
-                    clearInterval(poll);
+                    clearInterval(pastePollInterval);
+                    pastePollInterval = null;
                     console.log(`[CLI] paste done: ${((performance.now() - t0) / 1000).toFixed(2)}s`);
                 }
             }, 100);
@@ -660,6 +663,11 @@ export function useCli() {
     const cleanup = () => {
         GUI.timeout_remove("CLI_send_slowly");
         GUI.timeout_remove("enter_cli");
+
+        if (pastePollInterval) {
+            clearInterval(pastePollInterval);
+            pastePollInterval = null;
+        }
 
         if (outputFlushRaf) {
             cancelAnimationFrame(outputFlushRaf);
