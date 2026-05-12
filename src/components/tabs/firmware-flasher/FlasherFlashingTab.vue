@@ -130,4 +130,8 @@ defineProps({
     background-color: var(--error-500);
     color: white;
 }
+
+[data-theme="contrast"] .flash-status-error {
+    color: black;
+}
 </style>
