@@ -14,7 +14,7 @@
                             v-model="state.selectedRadioProtocol"
                             :items="state.radioProtocolOptions"
                             @update:model-value="onRadioProtocolChange"
-                            placeholder="Select protocol"
+                            :placeholder="$t('firmwareFlasherSelectProtocol')"
                         />
                     </SettingColumn>
                     <SettingColumn
@@ -25,7 +25,7 @@
                             v-model="state.selectedTelemetryProtocol"
                             :items="state.telemetryProtocolOptions"
                             @update:model-value="onTelemetryProtocolChange"
-                            placeholder="Select protocol"
+                            :placeholder="$t('firmwareFlasherSelectProtocol')"
                             :disabled="state.telemetryProtocolDisabled"
                         />
                     </SettingColumn>
@@ -40,7 +40,7 @@
                         <USelect
                             v-model="state.selectedOsdProtocol"
                             :items="state.osdProtocolOptions"
-                            placeholder="Select protocol"
+                            :placeholder="$t('firmwareFlasherSelectProtocol')"
                             @update:model-value="onOsdProtocolChange"
                             class="w-full"
                             :color="state.osdProtocolNeedsAttention ? 'error' : 'neutral'"
@@ -53,7 +53,7 @@
                         <USelect
                             v-model="state.selectedMotorProtocol"
                             :items="state.motorProtocolOptions"
-                            placeholder="Select protocol"
+                            :placeholder="$t('firmwareFlasherSelectProtocol')"
                             @update:model-value="onMotorProtocolChange"
                             class="w-full"
                         />
@@ -72,7 +72,7 @@
                             multiple
                             by="value"
                             :items="state.optionsListOptions"
-                            placeholder="Select options"
+                            :placeholder="$t('firmwareFlasherSelectOptions')"
                             :search-input="{
                                 placeholder: $t('search'),
                                 icon: 'i-lucide-search',
@@ -144,7 +144,7 @@
                             by="value"
                             :items="state.commitOptions"
                             create-item
-                            placeholder="Select branch or enter PR # / commit hash"
+                            :placeholder="$t('firmwareFlasherSelectBranch')"
                             :search-input="{
                                 placeholder: $t('search'),
                                 icon: 'i-lucide-search',

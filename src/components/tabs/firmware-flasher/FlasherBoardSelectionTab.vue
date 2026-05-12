@@ -33,7 +33,7 @@
                         v-model:search-term="boardSelection.state.boardSelectSearchTerm"
                         :items="boardSelection.getSelectMenuItems()"
                         value-key="value"
-                        placeholder="Search for a board..."
+                        :placeholder="$t('firmwareFlasherSearchBoard')"
                         ignore-filter
                         class="w-full"
                         :virtualize="{

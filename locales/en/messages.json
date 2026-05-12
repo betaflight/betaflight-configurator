@@ -8272,6 +8272,18 @@
         "message": "Remove {{option}}",
         "description": "Accessible label for the remove button on a selected build option badge."
     },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Select protocol"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Select options"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Select branch or enter PR # / commit hash"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Search for a board..."
+    },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio Protocol"
     },
