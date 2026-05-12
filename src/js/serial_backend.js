@@ -91,6 +91,15 @@ export function initializeSerialBackend() {
 
     PortHandler.initialize();
     PortUsage.initialize();
+
+    // On page unload (refresh / tab close) close the serial port so the FC
+    // gets a clean disconnect and reconnection works without a physical replug.
+    window.addEventListener("pagehide", () => {
+        if (isConnected && !GUI.connect_lock) {
+            console.log(`${logHead} Page unloading while connected — force-closing serial port`);
+            serial.forceClose();
+        }
+    });
 }
 
 async function sendConfigTracking() {
