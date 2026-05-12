@@ -1,11 +1,20 @@
 <template>
-    <div class="progress-ring" :style="{ width: `${size}px`, height: `${size}px` }">
+    <div
+        class="progress-ring"
+        :style="{ width: `${size}px`, height: `${size}px` }"
+        role="progressbar"
+        :aria-valuenow="indeterminate ? undefined : progressPercent"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        :aria-label="label || undefined"
+    >
         <svg
             :width="size"
             :height="size"
             :viewBox="`0 0 ${size} ${size}`"
             class="progress-ring__svg"
             :class="{ 'progress-ring__svg--spin': indeterminate }"
+            aria-hidden="true"
         >
             <!-- background track -->
             <circle
@@ -44,6 +53,10 @@
 import { computed } from "vue";
 
 const props = defineProps({
+    label: {
+        type: String,
+        default: null,
+    },
     value: {
         type: Number,
         default: 0,

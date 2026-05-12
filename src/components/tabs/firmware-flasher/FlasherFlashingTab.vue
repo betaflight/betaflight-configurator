@@ -8,6 +8,7 @@
                 :size="80"
                 :stroke-width="6"
                 :color="flashRingColor"
+                :label="$t('firmwareFlasherFlashingProgress')"
             />
             <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
         </div>

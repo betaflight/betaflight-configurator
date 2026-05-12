@@ -4127,6 +4127,10 @@
     "firmwareFlasherFlashFirmware": {
         "message": "Flash Firmware"
     },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Flashing progress",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
+    },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub Firmware Info"
     },
