@@ -4,433 +4,58 @@
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
             <WikiButton docUrl="firmware_flasher" />
             <SponsorTile ref="sponsorTile" sponsor-type="flash" />
-            <div v-if="state.flashingInProgress" class="flashing-wait">
-                <ProgressRing
-                    :value="state.flashProgressValue"
-                    :indeterminate="state.flashProgressValue === 0"
-                    :size="80"
-                    :stroke-width="6"
-                    :color="flashRingColor"
+
+            <!-- Sub-tab navigation -->
+            <div class="subtab-nav">
+                <UTabs
+                    :items="subtabItems"
+                    :model-value="activeFlasherStep"
+                    :content="false"
+                    color="primary"
+                    variant="link"
+                    @update:model-value="activeFlasherStep = $event"
                 />
-                <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
             </div>
-            <div
-                v-else-if="state.progressLabelText && state.progressLabelClass === 'invalid'"
-                class="flash-status-message flash-status-error"
-            >
-                {{ state.progressLabelText }}
-            </div>
-            <div class="grid-box-spacer"></div>
-            <div class="grid-box col2">
-                <UiBox
-                    :title="$t('firmwareFlasherBoardSelectionHead') || $t('firmwareFlasherTargetSelectionHead')"
-                    type="neutral"
-                >
-                    <UiBox
-                        highlight
-                        v-if="state.targetQualificationVisible"
-                        :type="state.targetQualification ? 'success' : 'warning'"
-                    >
-                        {{ state.targetQualificationText }}
-                    </UiBox>
-                    <SettingRow :label="$t('expertMode')" :help="$t('expertModeDescription')" full-width>
-                        <USwitch v-model="state.expertMode" @change="handleExpertModeChange" />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('firmwareFlasherShowDevelopmentReleases')"
-                        :help="$t('firmwareFlasherShowDevelopmentReleasesDescription')"
-                        full-width
-                    >
-                        <USwitch
-                            v-model="state.showDevelopmentReleases"
-                            @change="handleShowDevelopmentReleasesChange"
-                        />
-                    </SettingRow>
-                    <SettingRow
-                        :help="$t('firmwareFlasherOnlineSelectBuildType')"
-                        full-width
-                        v-if="state.buildTypeRowVisible"
-                    >
-                        <USelect
-                            v-model="state.selectedBuildType"
-                            :items="state.buildTypeOptions"
-                            class="min-w-80"
-                            @update:model-value="onBuildTypeChange"
-                        />
-                    </SettingRow>
-                    <SettingRow :help="$t('firmwareFlasherOnlineSelectBoardHint')" full-width>
-                        <div class="flex items-center gap-2">
-                            <UFieldGroup class="min-w-80">
-                                <USelectMenu
-                                    v-model="boardSelection.state.selectedBoard"
-                                    v-model:search-term="boardSelection.state.boardSelectSearchTerm"
-                                    :items="boardSelection.getSelectMenuItems()"
-                                    value-key="value"
-                                    placeholder="Search for a board..."
-                                    ignore-filter
-                                    class="w-full"
-                                    :virtualize="{
-                                        estimateSize: 28,
-                                    }"
-                                    @update:model-value="onBoardChange"
-                                />
-                                <UButton
-                                    :label="$t('firmwareFlasherDetectBoardButton')"
-                                    color="primary"
-                                    :disabled="boardSelection.state.detectingBoard"
-                                    :title="$t('firmwareFlasherOnlineSelectBoardDescription')"
-                                    icon="i-lucide-search"
-                                    :loading="boardSelection.state.detectingBoard"
-                                    @click="handleDetectBoard"
-                                />
-                            </UFieldGroup>
-                        </div>
-                    </SettingRow>
-                    <SettingRow :help="$t('firmwareFlasherOnlineSelectFirmwareVersionDescription')" full-width>
-                        <USelect
-                            v-model="boardSelection.state.selectedFirmwareVersion"
-                            value-key="release"
-                            :items="boardSelection.state.firmwareVersionOptions"
-                            class="min-w-80"
-                            :disabled="
-                                !boardSelection.state.firmwareVersionOptions ||
-                                boardSelection.state.firmwareVersionOptions.length === 0
-                            "
-                            @update:model-value="onFirmwareVersionChange"
-                            :placeholder="$t('firmwareFlasherOptionLabelSelectFirmwareVersion')"
-                        />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('firmwareFlasherNoReboot')"
-                        :help="$t('firmwareFlasherNoRebootDescription')"
-                        full-width
-                        v-if="state.expertOptionsVisible"
-                    >
-                        <USwitch v-model="state.noRebootSequence" @change="handleNoRebootChange" />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('firmwareFlasherFlashOnConnect')"
-                        :help="$t('firmwareFlasherFlashOnConnectDescription')"
-                        full-width
-                        v-if="state.flashOnConnectWrapperVisible"
-                    >
-                        <USwitch v-model="state.flashOnConnect" />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('firmwareFlasherFullChipErase')"
-                        :help="$t('firmwareFlasherFullChipEraseDescription')"
-                        full-width
-                        v-if="state.expertOptionsVisible"
-                    >
-                        <USwitch v-model="state.eraseChip" @change="handleEraseChipChange" />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('firmwareFlasherManualBaud')"
-                        :help="$t('firmwareFlasherManualBaudDescription')"
-                        full-width
-                        v-if="state.expertOptionsVisible"
-                    >
-                        <USwitch v-model="state.flashManualBaud" @change="handleFlashManualBaudChange" />
-                        <USelect
-                            v-model="state.flashManualBaudRate"
-                            :items="[
-                                { value: 921600, label: '921600' },
-                                { value: 460800, label: '460800' },
-                                { value: 256000, label: '256000' },
-                                { value: 230400, label: '230400' },
-                                { value: 115200, label: '115200' },
-                                { value: 57600, label: '57600' },
-                            ]"
-                            class="min-w-24"
-                        />
-                    </SettingRow>
-                </UiBox>
 
-                <UiBox
-                    :title="$t('firmwareFlasherBuildConfigurationHead')"
-                    v-if="state.buildConfigVisible"
-                    class="build_configuration col-span-1"
-                    type="neutral"
-                >
-                    <template v-slot:title>
-                        <SettingRow :label="$t('coreBuild')" :help="$t('coreBuildModeDescription')">
-                            <USwitch v-model="state.coreBuildMode"
-                        /></SettingRow>
-                    </template>
-                    <div class="grid-box col1">
-                        <div v-show="!state.coreBuildMode" class="spacer">
-                            <div class="grid-box col2">
-                                <SettingColumn
-                                    :label="$t('firmwareFlasherBuildRadioProtocols')"
-                                    :help="$t('firmwareFlasherRadioProtocolDescription')"
-                                >
-                                    <USelect
-                                        v-model="state.selectedRadioProtocol"
-                                        :items="state.radioProtocolOptions"
-                                        @update:model-value="onRadioProtocolChange"
-                                        placeholder="Select protocol"
-                                    />
-                                </SettingColumn>
-                                <SettingColumn
-                                    :label="$t('firmwareFlasherBuildTelemetryProtocols')"
-                                    :help="$t('firmwareFlasherTelemetryProtocolDescription')"
-                                >
-                                    <USelect
-                                        v-model="state.selectedTelemetryProtocol"
-                                        :items="state.telemetryProtocolOptions"
-                                        @update:model-value="onTelemetryProtocolChange"
-                                        placeholder="Select protocol"
-                                        :disabled="state.telemetryProtocolDisabled"
-                                    />
-                                </SettingColumn>
-                            </div>
-                        </div>
-                        <div v-show="!state.coreBuildMode" class="spacer">
-                            <div class="grid-box col2">
-                                <SettingColumn
-                                    :label="$t('firmwareFlasherBuildOsdProtocols')"
-                                    :help="$t('firmwareFlasherOsdProtocolDescription')"
-                                >
-                                    <USelect
-                                        v-model="state.selectedOsdProtocol"
-                                        :items="state.osdProtocolOptions"
-                                        placeholder="Select protocol"
-                                        @update:model-value="onOsdProtocolChange"
-                                        class="w-full"
-                                        :color="state.osdProtocolNeedsAttention ? 'error' : 'default'"
-                                    />
-                                </SettingColumn>
-                                <SettingColumn
-                                    :label="$t('firmwareFlasherBuildMotorProtocols')"
-                                    :help="$t('firmwareFlasherMotorProtocolDescription')"
-                                >
-                                    <USelect
-                                        v-model="state.selectedMotorProtocol"
-                                        :items="state.motorProtocolOptions"
-                                        placeholder="Select protocol"
-                                        @update:model-value="onMotorProtocolChange"
-                                        class="w-full"
-                                    />
-                                </SettingColumn>
-                            </div>
-                        </div>
-                        <div v-show="!state.coreBuildMode" class="spacer">
-                            <div class="grid-box col1">
-                                <SettingColumn
-                                    :label="$t('firmwareFlasherBuildOptions')"
-                                    :help="$t('firmwareFlasherOptionsDescription')"
-                                >
-                                    <USelectMenu
-                                        id="optionsInfo"
-                                        v-model="state.selectedOptions"
-                                        multiple
-                                        by="value"
-                                        :items="state.optionsListOptions"
-                                        placeholder="Select options"
-                                        :search-input="{
-                                            placeholder: $t('search'),
-                                            icon: 'i-lucide-search',
-                                        }"
-                                        class="w-full"
-                                        :ui="{ content: 'max-h-96', base: 'pl-1.5' }"
-                                        @update:model-value="onOptionsChange"
-                                    >
-                                        <template #default>
-                                            <div class="flex gap-2 items-center min-h-6 flex-wrap">
-                                                <UBadge
-                                                    v-for="option in state.selectedOptions"
-                                                    :key="option.value"
-                                                    color="neutral"
-                                                    variant="subtle"
-                                                    class="flex gap-2 items-center whitespace-nowrap"
-                                                >
-                                                    {{ option.label }}
-                                                    <UButton
-                                                        type="button"
-                                                        variant="soft"
-                                                        color="neutral"
-                                                        size="xs"
-                                                        icon="i-lucide-x"
-                                                        class="p-0"
-                                                        @click.stop="removeSelectedBuildOption(option)"
-                                                    />
-                                                </UBadge>
-                                            </div>
-                                        </template>
-                                    </USelectMenu>
-                                </SettingColumn>
-                            </div>
-                        </div>
-                        <div v-show="!state.coreBuildMode" class="expertOptions spacer">
-                            <div class="grid-box col1">
-                                <SettingColumn
-                                    :label="$t('firmwareFlasherBuildCustomDefines')"
-                                    :help="$t('firmwareFlasherCustomDefinesDescription')"
-                                >
-                                    <div id="customDefinesInfo">
-                                        <UInputTags
-                                            v-model="state.customDefinesTags"
-                                            name="customDefines"
-                                            delimiter=" "
-                                            add-on-paste
-                                            class="w-full"
-                                            :ui="{
-                                                base: 'pl-1.5',
-                                                input: 'appearance-none min-h-6',
-                                                item: 'py-1 px-2 gap-2',
-                                                itemDelete: 'p-0 rounded-full text-default',
-                                                itemDeleteIcon: 'size-4',
-                                            }"
-                                        />
-                                    </div>
-                                </SettingColumn>
-                                <SettingColumn
-                                    v-show="state.commitSelectionVisible"
-                                    :label="$t('firmwareFlasherBranch')"
-                                    :help="$t('firmwareFlasherBranchDescription')"
-                                >
-                                    <USelectMenu
-                                        id="branchInfo"
-                                        v-model="state.selectedCommit"
-                                        by="value"
-                                        :items="state.commitOptions"
-                                        create-item
-                                        placeholder="Select branch or enter PR # / commit hash"
-                                        :search-input="{
-                                            placeholder: $t('search'),
-                                            icon: 'i-lucide-search',
-                                        }"
-                                        class="w-full"
-                                        :ui="{ content: 'max-h-96' }"
-                                        @update:model-value="onCommitChange"
-                                        @create="onCommitCreate"
-                                    />
-                                </SettingColumn>
-                            </div>
-                        </div>
-                    </div>
-                </UiBox>
-
-                <UiBox
-                    :title="$t('firmwareFlasherReleaseSummaryHead')"
-                    v-if="state.releaseInfoVisible"
-                    class="release_info col-span-1"
-                >
-                    <div class="release_info_grid">
-                        <!-- Target Row -->
-                        <div class="info_row">
-                            <strong>{{ $t("firmwareFlasherReleaseTarget") }}</strong>
-                            <span ref="targetSpan" class="target">{{ state.targetSpanText }}</span>
-                            <div class="board_support">
-                                <UButton size="xs" variant="soft" :to="state.targetSupportUrl" target="_blank">{{
-                                    $t("betaflightSupportButton")
-                                }}</UButton>
-                            </div>
-                        </div>
-
-                        <!-- Manufacturer Row (conditional) -->
-                        <div v-if="state.manufacturerInfoVisible" ref="manufacturerInfoDiv" class="info_row">
-                            <strong>{{ $t("firmwareFlasherReleaseManufacturer") }}</strong>
-                            <span ref="manufacturerSpan" id="manufacturer">{{ state.manufacturerSpanText }}</span>
-                            <div></div>
-                        </div>
-
-                        <!-- Version Row -->
-                        <div class="info_row">
-                            <strong>{{ $t("firmwareFlasherReleaseVersion") }}</strong>
-                            <a
-                                ref="releaseNameLink"
-                                :title="$t('firmwareFlasherReleaseVersionUrl')"
-                                class="name"
-                                :href="state.releaseNameLink"
-                                target="_blank"
-                                >{{ state.releaseNameText }}</a
-                            >
-                            <div></div>
-                        </div>
-
-                        <!-- MCU Row -->
-                        <div class="info_row">
-                            <strong>{{ $t("firmwareFlasherReleaseMCU") }}</strong>
-                            <span ref="targetMCUSpan" id="targetMCU">{{ state.targetMCUText }}</span>
-                            <div></div>
-                        </div>
-
-                        <!-- Date Row -->
-                        <div class="info_row">
-                            <strong>{{ $t("firmwareFlasherReleaseDate") }}</strong>
-                            <span ref="releaseDateSpan" class="date">{{ state.releaseDateText }}</span>
-                            <div></div>
-                        </div>
-
-                        <!-- Configuration File Row -->
-                        <div class="info_row">
-                            <strong>{{ $t("firmwareFlasherConfigurationFile") }}</strong>
-                            <span ref="configFilenameSpan" class="configFilename">{{ state.configFilenameText }}</span>
-                            <div></div>
-                        </div>
-
-                        <!-- Cloud Details Row -->
-                        <div class="info_row">
-                            <strong>{{ $t("firmwareFlasherCloudBuildDetails") }}</strong>
-                            <a
-                                ref="cloudTargetLogLink"
-                                :title="$t('firmwareFlasherCloudBuildLogUrl')"
-                                id="cloudTargetLog"
-                                :href="cloudBuild.state.cloudTargetLogUrl"
-                                target="_blank"
-                                >{{ cloudBuild.state.cloudTargetLogText }}</a
-                            >
-                            <div></div>
-                        </div>
-
-                        <!-- Cloud Status Row -->
-                        <div class="info_row">
-                            <strong>{{ $t("firmwareFlasherCloudBuildStatus") }}</strong>
-                            <div class="status_wrapper">
-                                <progress
-                                    :ref="cloudBuild.buildProgressBar"
-                                    class="buildProgress"
-                                    value="0"
-                                    min="0"
-                                    max="100"
-                                ></progress>
-                            </div>
-                            <div>
-                                <UButton
-                                    v-if="!cloudBuild.state.cancelBuildButtonDisabled"
-                                    ref="cloudBuildCancelButton"
-                                    size="xs"
-                                    variant="soft"
-                                    @click="cloudBuild.handleCancelBuild"
-                                    >{{ $t("cancel") }}</UButton
-                                >
-                                <span v-else ref="cloudTargetStatusSpan" id="cloudTargetStatus">
-                                    {{ cloudBuild.state.cloudTargetStatusText }}
-                                </span>
-                            </div>
-                        </div>
-                        <!-- Firmware Loaded Rows (online only) -->
-                        <div v-if="state.firmwareLoadedName && !state.firmwareLoadedIsLocal" class="info_row">
-                            <strong>{{ $t("firmwareFlasherFirmwareLoaded") }}</strong>
-                            <span>{{ state.firmwareLoadedSize }}</span>
-                            <div>
-                                <UButton size="xs" variant="soft" @click="saveFirmware">{{ $t("save") }}</UButton>
-                            </div>
-                        </div>
-                    </div>
-                </UiBox>
-            </div>
-            <div class="grid-box-spacer"></div>
-            <div class="grid-box col2">
-                <UiBox :title="$t('warningTitle')" type="error" highlight class="note-text-format">
-                    <p v-html="$t('firmwareFlasherWarningText')"></p>
-                    <br />
-                    <p v-html="$t('firmwareFlasherTargetWarning')"></p>
-                </UiBox>
-                <UiBox :title="$t('firmwareFlasherRecoveryHead')" highlight class="note-text-format">
-                    <p v-html="$t('firmwareFlasherRecoveryText')"></p>
-                </UiBox>
+            <!-- Tab content -->
+            <div class="flasher-tab-area">
+                <FlasherBoardSelectionTab
+                    v-if="activeFlasherStep === 'board'"
+                    :state="state"
+                    :board-selection="boardSelection"
+                    :on-build-type-change="onBuildTypeChange"
+                    :on-board-change="onBoardChange"
+                    :on-detect-board="handleDetectBoard"
+                    :on-firmware-version-change="onFirmwareVersionChange"
+                    :on-expert-mode-change="handleExpertModeChange"
+                    :on-show-development-releases-change="handleShowDevelopmentReleasesChange"
+                />
+                <FlasherBuildConfigTab
+                    v-if="activeFlasherStep === 'build-config'"
+                    :state="state"
+                    :on-radio-protocol-change="onRadioProtocolChange"
+                    :on-telemetry-protocol-change="onTelemetryProtocolChange"
+                    :on-osd-protocol-change="onOsdProtocolChange"
+                    :on-motor-protocol-change="onMotorProtocolChange"
+                    :on-options-change="onOptionsChange"
+                    :remove-selected-build-option="removeSelectedBuildOption"
+                    :on-commit-change="onCommitChange"
+                    :on-commit-create="onCommitCreate"
+                />
+                <FlasherReleaseInfoTab
+                    v-if="activeFlasherStep === 'release-info'"
+                    :state="state"
+                    :cloud-build="cloudBuild"
+                    :on-save-firmware="saveFirmware"
+                />
+                <FlasherFlashingTab
+                    v-if="activeFlasherStep === 'flashing'"
+                    :state="state"
+                    :flash-ring-color="flashRingColor"
+                    :on-no-reboot-change="handleNoRebootChange"
+                    :on-erase-chip-change="handleEraseChipChange"
+                    :on-flash-manual-baud-change="handleFlashManualBaudChange"
+                />
             </div>
         </div>
 
@@ -557,6 +182,13 @@ import UiBox from "../elements/UiBox.vue";
 import ProgressRing from "../ProgressRing.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
+import FlasherBoardSelectionTab from "./firmware-flasher/FlasherBoardSelectionTab.vue";
+import FlasherBuildConfigTab from "./firmware-flasher/FlasherBuildConfigTab.vue";
+import FlasherReleaseInfoTab from "./firmware-flasher/FlasherReleaseInfoTab.vue";
+import FlasherFlashingTab from "./firmware-flasher/FlasherFlashingTab.vue";
+
+// Module-scope ref so the active sub-tab persists across component remounts (tab switches).
+const activeFlasherStep = ref("board");
 
 export default defineComponent({
     name: "FirmwareFlasherTab",
@@ -569,6 +201,10 @@ export default defineComponent({
         ProgressRing,
         SettingRow,
         SettingColumn,
+        FlasherBoardSelectionTab,
+        FlasherBuildConfigTab,
+        FlasherReleaseInfoTab,
+        FlasherFlashingTab,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
@@ -1895,6 +1531,10 @@ export default defineComponent({
             setConfig({ flash_manual_baud_rate: baud });
         };
 
+        // DFU permission request — moved here from the global ConnectButton dropdown
+        const showDfuButton = PortHandler.showUsbOption;
+        const handleRequestDfuPermission = () => PortHandler.requestDevicePermission("usb");
+
         // Click event handlers for buttons
         const handleExitDfu = async () => {
             await firmwareFlashing.exitDfu({
@@ -1916,6 +1556,7 @@ export default defineComponent({
             state.progressLabelText = "";
             state.flashingInProgress = true;
             GUI.flashingInProgress = true;
+            activeFlasherStep.value = "flashing";
             await nextTick();
 
             const options = {
@@ -2156,8 +1797,8 @@ export default defineComponent({
             ],
         ]);
 
-        const flashActionMenuItems = computed(() => [
-            [
+        const flashActionMenuItems = computed(() => {
+            const group = [
                 {
                     label: $t("firmwareFlasherFlashFirmware"),
                     icon: "i-lucide-zap",
@@ -2170,8 +1811,16 @@ export default defineComponent({
                     disabled: state.dfuExitButtonDisabled,
                     onSelect: handleExitDfu,
                 },
-            ],
-        ]);
+            ];
+            if (showDfuButton) {
+                group.push({
+                    label: $t("firmwareFlasherFindDfuDevice"),
+                    icon: "i-lucide-cpu",
+                    onSelect: handleRequestDfuPermission,
+                });
+            }
+            return [group];
+        });
 
         const flashRingColor = computed(() => {
             switch (state.progressLabelClass) {
@@ -2188,10 +1837,23 @@ export default defineComponent({
             }
         });
 
+        const subtabItems = computed(() => [
+            { label: $t("firmwareFlasherSubTabBoardSelection"), value: "board", icon: "i-lucide-cpu" },
+            {
+                label: $t("firmwareFlasherSubTabBuildConfig"),
+                value: "build-config",
+                icon: "i-lucide-sliders-horizontal",
+            },
+            { label: $t("firmwareFlasherSubTabReleaseInfo"), value: "release-info", icon: "i-lucide-tag" },
+            { label: $t("firmwareFlasherSubTabFlashing"), value: "flashing", icon: "i-lucide-zap" },
+        ]);
+
         // Return all public methods and state
         return {
             state,
             flashRingColor,
+            activeFlasherStep,
+            subtabItems,
             flashActionMenuItems,
             loadFirmwareMenuItems,
             cloudBuild,
@@ -2249,6 +1911,8 @@ export default defineComponent({
             handleLoadRemoteFile,
             handleLoadFile,
             handleDetectBoard,
+            handleRequestDfuPermission,
+            showDfuButton,
             handleUnstableFirmwareFlash,
             handleUnstableFirmwareCancel,
             handleUnstableFirmwareDialogClose,
@@ -2264,6 +1928,14 @@ export default defineComponent({
 <style scoped lang="less">
 .tab-firmware_flasher {
     min-height: 100%;
+
+    .subtab-nav {
+        margin-bottom: 6px;
+    }
+
+    .flasher-tab-area {
+        min-height: 200px;
+    }
 
     .content_wrapper .flashing-wait {
         min-height: 150px;
