@@ -293,9 +293,6 @@ export default defineComponent({
         });
 
         // Template refs for all interactive elements
-        // Checkboxes
-        const corebuildModeCheckbox = ref(null);
-
         // Buttons
         const cloudBuildCancelButton = ref(null);
 
@@ -914,10 +911,8 @@ export default defineComponent({
                 }
 
                 state.expertOptionsVisible = expertMode;
-                // Need to reset core build mode
-                if (corebuildModeCheckbox.value) {
-                    corebuildModeCheckbox.value.dispatchEvent(new Event("change", { bubbles: true }));
-                }
+                // Reset core build mode when switching to a new cloud build target
+                state.coreBuildMode = false;
             };
 
             const loadTargetDetail = async (detail) => {
