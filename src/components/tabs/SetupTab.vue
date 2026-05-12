@@ -18,6 +18,10 @@
                                 <dd class="roll">{{ state.attitude.roll }}</dd>
                             </dl>
                         </div>
+                        <div class="instruments-right">
+                            <span id="attitude"></span>
+                            <span id="heading"></span>
+                        </div>
                     </div>
                     <UButton
                         class="reset-zaxis sm-min"
@@ -219,16 +223,7 @@
                         </UButton>
                     </div>
                 </UiBox>
-                <UiBox
-                    :title="$t('initialSetupInstrumentsHead')"
-                    :help="$t('initialSetupInstrumentsHeadHelp')"
-                    type="neutral"
-                >
-                    <div class="flex flex-row justify-center gap-2">
-                        <span id="attitude"></span>
-                        <span id="heading"></span>
-                    </div>
-                </UiBox>
+
                 <UiBox
                     v-show="state.showSonarBox"
                     :title="$t('initialSetupSonarHead')"
@@ -873,6 +868,15 @@ function openBuildOptionsDialog() {
     dd {
         white-space: pre;
     }
+}
+.instruments-right {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    pointer-events: none;
 }
 .dialogBuildInfo {
     transition: all 0.2s;
