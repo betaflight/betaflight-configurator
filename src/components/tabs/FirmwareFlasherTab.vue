@@ -65,6 +65,7 @@
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flashing'"
                     :color="state.flashButtonDisabled || activeFlasherStep !== 'flashing' ? 'neutral' : 'success'"
+                    :loading="state.flashingInProgress"
                     @click="handleFlashFirmware"
                 >
                     {{ $t("firmwareFlasherFlashFirmware") }}
