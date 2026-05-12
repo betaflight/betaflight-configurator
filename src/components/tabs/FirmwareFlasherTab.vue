@@ -1720,7 +1720,7 @@ export default defineComponent({
             }
         };
 
-        const handleUnstableFirmwareFlash = () => {
+        const handleUnstableFirmwareFlash = async () => {
             if (!state.dialogUnstableFirmwareAcknowledgementCheckbox) {
                 return;
             }
@@ -1733,7 +1733,9 @@ export default defineComponent({
                 unstableFirmwareAcknowledgementCallback.value();
             }
 
-            startFlashing();
+            await startFlashing().catch((error) => {
+                console.error("Flash error:", error);
+            });
         };
 
         const handleUnstableFirmwareCancel = () => {
