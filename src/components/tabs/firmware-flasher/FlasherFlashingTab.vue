@@ -81,6 +81,7 @@
                         { value: 57600, label: '57600' },
                     ]"
                     class="min-w-24"
+                    @update:model-value="onFlashManualBaudRateChange"
                 />
             </SettingRow>
         </UiBox>
@@ -98,6 +99,7 @@ defineProps({
     onNoRebootChange: { type: Function, required: true },
     onEraseChipChange: { type: Function, required: true },
     onFlashManualBaudChange: { type: Function, required: true },
+    onFlashManualBaudRateChange: { type: Function, required: true },
 });
 </script>
 

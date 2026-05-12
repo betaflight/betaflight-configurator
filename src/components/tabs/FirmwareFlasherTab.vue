@@ -55,6 +55,7 @@
                     :on-no-reboot-change="handleNoRebootChange"
                     :on-erase-chip-change="handleEraseChipChange"
                     :on-flash-manual-baud-change="handleFlashManualBaudChange"
+                    :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
                 />
             </div>
         </div>
