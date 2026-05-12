@@ -183,7 +183,7 @@ onUnmounted(() => {
     justify-content: center;
     gap: 0.25rem;
     padding: 0.5rem 0.25rem;
-    border-top: 1px solid var(--color-border, rgba(128, 128, 128, 0.2));
+    border-top: 1px solid var(--surface-400);
 }
 
 .sidebar-footer--compact {
