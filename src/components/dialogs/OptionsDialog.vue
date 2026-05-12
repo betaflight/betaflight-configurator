@@ -28,7 +28,7 @@
                         <USwitch v-model="settings.showDevToolsOnStartup" size="sm" />
                     </SettingRow>
                     <SettingRow :label="$t('showNotifications')">
-                        <USwitch v-model="settings.showNotifications" @change="handleNotificationsChange" size="sm" />
+                        <USwitch v-model="settings.showNotifications" size="sm" />
                     </SettingRow>
                     <SettingRow :label="$t('firmwareBackupOnFlash')">
                         <USelect
@@ -314,42 +314,44 @@ watch(
     },
 );
 
-function handleNotificationsChange() {
-    const enabled = settings.showNotifications;
-    if (enabled) {
-        const informationDialog = {
-            title: i18n.getMessage("notificationsDeniedTitle"),
-            text: i18n.getMessage("notificationsDenied"),
-            buttonConfirmText: i18n.getMessage("OK"),
-        };
-        switch (NotificationManager.checkPermission()) {
-            case "granted":
-                setConfig({ showNotifications: enabled });
-                break;
-            case "denied":
-                dialog.openInfo(informationDialog.title, informationDialog.text, {
-                    confirmText: informationDialog.buttonConfirmText,
-                });
-                settings.showNotifications = false;
-                break;
-            case "default":
-                settings.showNotifications = false;
-                NotificationManager.requestPermission().then((permission) => {
-                    if (permission === "granted") {
-                        setConfig({ showNotifications: true });
-                        settings.showNotifications = true;
-                    } else {
-                        dialog.openInfo(informationDialog.title, informationDialog.text, {
-                            confirmText: informationDialog.buttonConfirmText,
-                        });
-                    }
-                });
-                break;
+watch(
+    () => settings.showNotifications,
+    (enabled) => {
+        if (enabled) {
+            const informationDialog = {
+                title: i18n.getMessage("notificationsDeniedTitle"),
+                text: i18n.getMessage("notificationsDenied"),
+                buttonConfirmText: i18n.getMessage("OK"),
+            };
+            switch (NotificationManager.checkPermission()) {
+                case "granted":
+                    setConfig({ showNotifications: enabled });
+                    break;
+                case "denied":
+                    dialog.openInfo(informationDialog.title, informationDialog.text, {
+                        confirmText: informationDialog.buttonConfirmText,
+                    });
+                    settings.showNotifications = false;
+                    break;
+                case "default":
+                    settings.showNotifications = false;
+                    NotificationManager.requestPermission().then((permission) => {
+                        if (permission === "granted") {
+                            setConfig({ showNotifications: true });
+                            settings.showNotifications = true;
+                        } else {
+                            dialog.openInfo(informationDialog.title, informationDialog.text, {
+                                confirmText: informationDialog.buttonConfirmText,
+                            });
+                        }
+                    });
+                    break;
+            }
+        } else {
+            setConfig({ showNotifications: false });
         }
-    } else {
-        setConfig({ showNotifications: false });
-    }
-}
+    },
+);
 </script>
 
 <style scoped>
