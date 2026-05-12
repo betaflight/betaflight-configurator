@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('firmwareFlasherReleaseSummaryHead')" class="release_info col-span-1 mt-6">
+    <UiBox class="release_info col-span-1 mt-6">
         <div class="release_info_grid">
             <!-- Target Row -->
             <div class="info_row">
