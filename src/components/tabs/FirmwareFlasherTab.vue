@@ -1048,6 +1048,7 @@ export default defineComponent({
             }
 
             // Reset state on tab initialization
+            activeFlasherStep.value = "board";
             boardSelection.resetBoardSelection();
             cloudBuild.resetCloudBuildState();
             firmwareFlashing.clearFirmwareState();
