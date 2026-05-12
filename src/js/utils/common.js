@@ -50,6 +50,7 @@ export function getTextWidth(text) {
  * @param {string} s
  * @returns {string}
  */
+const HTML_ESCAPE = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" };
 export function escapeHtml(s) {
-    return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    return String(s).replace(/[&<>"]/g, (c) => HTML_ESCAPE[c]);
 }

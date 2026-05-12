@@ -111,9 +111,7 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
 export function useCli() {
     const autocomplete = useCliAutocomplete();
 
-    // Reactive state — outputHistory and cliBuffer are intentionally kept as plain closure
-    // variables below, not in reactive(), to avoid Vue Proxy overhead in the serial read
-    // hot path where they are updated thousands of times per large paste.
+    // outputHistory/cliBuffer are plain vars (not reactive) — avoids Vue Proxy overhead in the serial read hot path.
     const state = reactive({
         startProcessing: false,
         lastArrival: 0,
@@ -128,8 +126,6 @@ export function useCli() {
         copyButtonWidth: "",
     });
 
-    // Plain variables — not reactive because they are never rendered in the template.
-    // Reads only happen on explicit user actions (copy, save, submit support).
     let outputHistory = "";
     let cliBuffer = "";
 
@@ -143,28 +139,43 @@ export function useCli() {
     // Support dialog callback
     let supportDialogCallback = null;
 
-    const SCROLL_NEAR_BOTTOM_PX = 40;
+    let scrollNearBottomPx = 40; // fallback; updated dynamically via ResizeObserver
+    let cliResizeObserver = null;
+
+    const MAX_OUTPUT_NODES = 4000; // ~4 nodes/line → ≈1000 rendered lines max
+    const PRUNE_TO_NODES = 2500;
 
     let outputBuffer = "";
     let outputFlushRaf = null;
     let copyResetTimeout = null;
-    // true while the user is at (or near) the bottom of the output — maintained by a
-    // passive scroll listener so flushOutput never needs to read layout properties.
     let scrollPinned = true;
     let scrollListener = null;
+    let flushing = false; // true during DOM mutations; prevents spurious scrollPinned flips
+    let scrollRaf = null; // deferred scroll; separates DOM writes from scrollTop write (avoids forced reflow)
 
     const flushOutput = () => {
         outputFlushRaf = null;
         if (outputBuffer && windowWrapperRef.value) {
-            // insertAdjacentHTML only parses the new fragment — it never serializes or
-            // re-parses existing DOM nodes. The previous innerHTML += caused O(N²) slowdown:
-            // every flush re-parsed the entire growing output on each animation frame.
+            flushing = true;
             windowWrapperRef.value.insertAdjacentHTML("beforeend", outputBuffer);
             outputBuffer = "";
-            if (scrollPinned && cliWindowRef.value) {
-                // Writing MAX_SAFE_INTEGER avoids reading scrollHeight (which would force a
-                // synchronous layout recalc). The browser clamps scrollTop to the actual max.
-                cliWindowRef.value.scrollTop = Number.MAX_SAFE_INTEGER;
+            // Prune oldest nodes to keep the DOM bounded and rendering fast.
+            const wrapper = windowWrapperRef.value;
+            if (wrapper.childNodes.length > MAX_OUTPUT_NODES) {
+                const toRemove = wrapper.childNodes.length - PRUNE_TO_NODES;
+                const range = document.createRange();
+                range.setStartBefore(wrapper.firstChild);
+                range.setEndBefore(wrapper.childNodes[toRemove]);
+                range.deleteContents();
+            }
+            flushing = false;
+            if (scrollPinned && cliWindowRef.value && !scrollRaf) {
+                scrollRaf = requestAnimationFrame(() => {
+                    scrollRaf = null;
+                    if (scrollPinned && cliWindowRef.value) {
+                        cliWindowRef.value.scrollTop = Number.MAX_SAFE_INTEGER;
+                    }
+                });
             }
         }
     };
@@ -213,47 +224,56 @@ export function useCli() {
         send(`${line}\t`, callback);
     };
 
+    const encoder = new TextEncoder();
     const send = (line, callback) => {
-        const bufferOut = new ArrayBuffer(line.length);
-        const bufView = new Uint8Array(bufferOut);
-
-        for (let cKey = 0; cKey < line.length; cKey++) {
-            bufView[cKey] = line.codePointAt(cKey);
-        }
-
-        serial.send(bufferOut, callback);
+        serial.send(encoder.encode(line), callback);
     };
 
     const executeCommands = async (outString) => {
         history.add(outString.trim());
 
+        const outputArray = outString.split("\n");
+
+        // Wall-clock timer: logs "[CLI] paste: N lines" and "paste done: X.XXs" to the browser console.
+        if (outputArray.length > 1) {
+            const t0 = performance.now();
+            const startMs = Date.now();
+            console.log(`[CLI] paste: ${outputArray.length} lines`);
+            const poll = setInterval(() => {
+                if (state.lastArrival > startMs && Date.now() - state.lastArrival > 250) {
+                    clearInterval(poll);
+                    console.log(`[CLI] paste done: ${((performance.now() - t0) / 1000).toFixed(2)}s`);
+                }
+            }, 100);
+        }
+
+        const COMMANDS_PER_TICK = 3; // lines per tick; profile commands always get their own tick
+
         function sendCommandIterative(commandArray) {
-            const command = commandArray.shift();
-
-            let line = command.trim();
             let processingDelay = state.lineDelayMs;
-            if (line.toLowerCase().startsWith("profile")) {
-                processingDelay = state.profileSwitchDelayMs;
-            }
-            const isLastCommand = outputArray.length === 0;
-            if (isLastCommand && cliBuffer) {
-                line = getCliCommand(line, cliBuffer);
+
+            for (let n = 0; n < COMMANDS_PER_TICK && commandArray.length > 0; n++) {
+                const command = commandArray.shift();
+                let line = command.trim();
+                const isLast = commandArray.length === 0;
+
+                if (isLast && cliBuffer) {
+                    line = getCliCommand(line, cliBuffer);
+                }
+
+                const isProfile = line.toLowerCase().startsWith("profile");
+                if (isProfile) processingDelay = state.profileSwitchDelayMs;
+
+                sendLine(line);
+
+                if (isLast || isProfile) break;
             }
 
-            sendLine(line);
-
-            if (!isLastCommand) {
-                GUI.timeout_add(
-                    "CLI_send_slowly",
-                    function () {
-                        sendCommandIterative(commandArray);
-                    },
-                    processingDelay,
-                );
+            if (commandArray.length > 0) {
+                GUI.timeout_add("CLI_send_slowly", () => sendCommandIterative(commandArray), processingDelay);
             }
         }
 
-        const outputArray = outString.split("\n");
         sendCommandIterative(outputArray);
     };
 
@@ -512,10 +532,10 @@ export function useCli() {
         let validateText = "";
         let sequenceCharsToSkip = 0;
 
-        for (const byte of data) {
+        for (let i = 0; i < data.length; i++) {
+            const byte = data[i];
             const currentChar = String.fromCodePoint(byte);
-            const currentCode = currentChar.codePointAt(0);
-            const isCRLF = currentCode === lineFeedCode || currentCode === carriageReturnCode;
+            const isCRLF = byte === lineFeedCode || byte === carriageReturnCode;
 
             if (!CONFIGURATOR.cliValid && (isCRLF || state.startProcessing)) {
                 // try to catch part of valid CLI enter message (firmware message starts with CRLF)
@@ -572,13 +592,41 @@ export function useCli() {
         // Wait for DOM to be ready
         await nextTick();
 
-        // Track whether the user is scrolled to the bottom so flushOutput never
-        // needs to read layout-forcing properties (scrollHeight, clientHeight).
+        // ResizeObserver keeps the scroll threshold in sync with the rendered line height,
+        // making the near-bottom detection zoom-level and UI-scale independent.
         if (cliWindowRef.value) {
-            scrollListener = () => {
+            const updateThreshold = () => {
+                const lh = parseFloat(getComputedStyle(cliWindowRef.value).lineHeight);
+                if (!isNaN(lh) && lh > 0) {
+                    scrollNearBottomPx = lh;
+                }
+                // Post-layout: recheck pin state (resize changes scrollHeight; no scroll event fires).
                 const el = cliWindowRef.value;
                 if (el) {
-                    scrollPinned = el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_NEAR_BOTTOM_PX;
+                    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - scrollNearBottomPx;
+                    if (scrollPinned || atBottom) {
+                        scrollPinned = true;
+                        if (!scrollRaf) {
+                            scrollRaf = requestAnimationFrame(() => {
+                                scrollRaf = null;
+                                if (scrollPinned && cliWindowRef.value) {
+                                    cliWindowRef.value.scrollTop = Number.MAX_SAFE_INTEGER;
+                                }
+                            });
+                        }
+                    }
+                }
+            };
+            updateThreshold();
+            cliResizeObserver = new ResizeObserver(updateThreshold);
+            cliResizeObserver.observe(cliWindowRef.value);
+
+            scrollListener = () => {
+                if (flushing || scrollRaf) return;
+
+                const el = cliWindowRef.value;
+                if (el) {
+                    scrollPinned = el.scrollTop + el.clientHeight >= el.scrollHeight - scrollNearBottomPx;
                 }
             };
             cliWindowRef.value.addEventListener("scroll", scrollListener, { passive: true });
@@ -610,16 +658,24 @@ export function useCli() {
     };
 
     const cleanup = () => {
-        // Remove any pending CLI timeouts
         GUI.timeout_remove("CLI_send_slowly");
         GUI.timeout_remove("enter_cli");
 
-        // Cancel any pending output flush
         if (outputFlushRaf) {
             cancelAnimationFrame(outputFlushRaf);
             outputFlushRaf = null;
         }
         outputBuffer = "";
+
+        if (scrollRaf) {
+            cancelAnimationFrame(scrollRaf);
+            scrollRaf = null;
+        }
+
+        if (cliResizeObserver) {
+            cliResizeObserver.disconnect();
+            cliResizeObserver = null;
+        }
 
         if (cliWindowRef.value && scrollListener) {
             cliWindowRef.value.removeEventListener("scroll", scrollListener);

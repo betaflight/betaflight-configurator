@@ -57,24 +57,15 @@ export function highlightCliLine(line) {
     return prefix + highlightTokens(tokens);
 }
 
+const TOKEN_RE = /(\b[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)/g;
+
 /**
  * Highlight labels (WORD:), hex literals, and decimal numbers
  * within a text fragment.
  */
 function highlightTokens(text) {
-    return text.replace(
-        /(\b[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)/g,
-        (match, label, hex, num) => {
-            if (label) {
-                return `<span class="cli-label">${label}</span>`;
-            }
-            if (hex) {
-                return `<span class="cli-num">${hex}</span>`;
-            }
-            if (num) {
-                return `<span class="cli-num">${num}</span>`;
-            }
-            return match;
-        },
-    );
+    return text.replace(TOKEN_RE, (match, label) => {
+        if (label) return `<span class="cli-label">${match}</span>`;
+        return `<span class="cli-num">${match}</span>`;
+    });
 }
