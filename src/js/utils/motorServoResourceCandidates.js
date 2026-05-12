@@ -329,9 +329,15 @@ function addFallbackOptions(options, seen, fallbackPins, ctx) {
         if (assignment) {
             parts.push(assignment);
         }
+        // Same rationale as the silkscreen-motor block above: LED/UART-owned
+        // fallback pads need requiresRelease metadata so onResourcePinChange
+        // emits the `resource <peripheral> N NONE` line before binding.
+        // Without this, fallback rows pointing at LED_STRIP or a UART pad
+        // surface the option but the FC bind silently no-ops.
         addOption(options, seen, {
             pin: normalized,
             label: parts.join(" - "),
+            requiresRelease: releaseLinesForAssignment(assignment),
         });
     }
 }

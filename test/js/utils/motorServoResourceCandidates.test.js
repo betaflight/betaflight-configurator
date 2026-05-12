@@ -146,13 +146,23 @@ describe("motor/servo resource candidates", () => {
             fallbackPins: ["B00", "A08", "B05", "B07", "C09"],
         });
 
-        const findLabel = (pin) => options.find((option) => option.pin === pin)?.label;
+        const findOption = (pin) => options.find((option) => option.pin === pin);
+        const findLabel = (pin) => findOption(pin)?.label;
         expect(findLabel("B00")).toContain("MOTOR 1");
         expect(findLabel("A08")).toContain("LED_STRIP");
         expect(findLabel("B05")).toContain("UART6 TX");
         expect(findLabel("B07")).toContain("UART6 RX");
         // Unbound pad keeps the bare label — no spurious annotation.
         expect(findLabel("C09")).toBe("C09");
+        // LED/UART fallback pads must surface release lines so
+        // onResourcePinChange clears the peripheral before binding.
+        // MOTOR/SERVO assignments stay empty (filtered upstream by
+        // isOptionViable); free pads have nothing to release.
+        expect(findOption("A08")?.requiresRelease).toEqual(["resource LED_STRIP 1 NONE"]);
+        expect(findOption("B05")?.requiresRelease).toEqual(["resource SERIAL_TX 6 NONE"]);
+        expect(findOption("B07")?.requiresRelease).toEqual(["resource SERIAL_RX 6 NONE"]);
+        expect(findOption("B00")?.requiresRelease).toEqual([]);
+        expect(findOption("C09")?.requiresRelease).toEqual([]);
     });
 
     it("filters servo candidates outside the silkscreen pad pool by default", () => {
