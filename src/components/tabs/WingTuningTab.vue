@@ -572,6 +572,9 @@
 <script>
 import { defineComponent, reactive, ref, computed, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
+import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
+import { useWingTuningStore } from "@/stores/wingTuning";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -653,7 +656,7 @@ export default defineComponent({
 
     setup() {
         const fields = reactive(defaultFields());
-        const initialFields = ref({ ...fields });
+        const wingTuningStore = useWingTuningStore();
 
         const loading = ref(false);
         const saving = ref(false);
@@ -667,7 +670,11 @@ export default defineComponent({
             }
         });
 
-        const dirty = computed(() => FIELD_DEFS.some((def) => fields[def.name] !== initialFields.value[def.name]));
+        // hasChanges is owned by the Pinia store; mirror it as `dirty`
+        // so the template binding stays unchanged.
+        const dirty = computed(() => wingTuningStore.hasChanges);
+
+        watch(fields, () => wingTuningStore.checkForChanges(fields), { deep: true });
 
         // Capability check — tab requires a USE_WING firmware build.
         // The MSP codes (MSP2_WING_TUNING / MSP2_SET_WING_TUNING) ship
@@ -779,7 +786,7 @@ export default defineComponent({
                         fields[def.name] = FC.WING_TUNING[def.name];
                     }
                 }
-                initialFields.value = { ...fields };
+                wingTuningStore.storeOriginals();
             } catch (e) {
                 console.error("[WingTuning] reload failed:", e);
                 error.value = e.message || String(e);
@@ -800,7 +807,7 @@ export default defineComponent({
                 }
                 await MSP.promise(MSPCodes.MSP2_SET_WING_TUNING, mspHelper.crunch(MSPCodes.MSP2_SET_WING_TUNING));
                 await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-                initialFields.value = { ...fields };
+                wingTuningStore.storeOriginals();
             } catch (e) {
                 console.error("[WingTuning] save failed:", e);
                 error.value = e.message || String(e);
