@@ -213,7 +213,7 @@
                         </UButton>
                         <UButton
                             :label="$t('initialSetupButtonRebootBootloader')"
-                            color="error"
+                            color="neutral"
                             class="w-full justify-center"
                             @click="onRebootBootloader"
                         >
