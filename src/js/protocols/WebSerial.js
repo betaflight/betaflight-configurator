@@ -358,13 +358,17 @@ class WebSerial extends EventTarget {
             if (reader) {
                 try {
                     await reader.cancel();
-                } catch (_e) {}
+                } catch (error) {
+                    console.debug(`${logHead} forceClose: reader.cancel() failed during unload`, error);
+                }
             }
 
             if (writer) {
                 try {
                     writer.releaseLock();
-                } catch (_e) {}
+                } catch (error) {
+                    console.debug(`${logHead} forceClose: writer.releaseLock() failed during unload`, error);
+                }
             }
 
             // Close port — Chrome allows this after reader.cancel() even if the
@@ -372,7 +376,9 @@ class WebSerial extends EventTarget {
             if (port) {
                 try {
                     await port.close();
-                } catch (_e) {}
+                } catch (error) {
+                    console.debug(`${logHead} forceClose: port.close() failed during unload`, error);
+                }
             }
         })();
 
