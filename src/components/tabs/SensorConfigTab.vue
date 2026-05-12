@@ -213,20 +213,12 @@
                                     size="xs"
                                     @click="resetYaw"
                                 />
+                                <div class="instruments-right">
+                                    <span ref="instrumentAttitude"></span>
+                                    <span ref="instrumentHeading"></span>
+                                    <span v-if="hasBaroSensor" ref="instrumentAltimeter"></span>
+                                </div>
                             </div>
-                        </div>
-                    </UiBox>
-                    <!-- Instruments (same pattern as SetupTab) -->
-                    <UiBox
-                        :title="$t('initialSetupInstrumentsHead')"
-                        :help="$t('initialSetupInstrumentsHeadHelp')"
-                        type="neutral"
-                        collapsible
-                    >
-                        <div class="flex flex-row justify-center gap-2">
-                            <span ref="instrumentAttitude"></span>
-                            <span ref="instrumentHeading"></span>
-                            <span v-if="hasBaroSensor" ref="instrumentAltimeter"></span>
                         </div>
                     </UiBox>
                 </div>
@@ -1932,13 +1924,23 @@ onMounted(() => {
         position: relative;
         width: 100%;
         height: 100%;
-        min-height: 20rem;
+        min-height: 32rem;
         max-height: 500px;
         border-radius: 0.5rem;
 
         canvas {
             width: 100% !important;
             height: 100% !important;
+        }
+
+        .instruments-right {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            pointer-events: none;
         }
     }
 
@@ -2118,7 +2120,7 @@ onMounted(() => {
         }
 
         .model-canvas-wrapper {
-            min-height: 16rem;
+            min-height: 20rem;
         }
 
         .mag-cal-inline-layout {
