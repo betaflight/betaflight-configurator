@@ -213,7 +213,7 @@
                         </UButton>
                         <UButton
                             :label="$t('initialSetupButtonRebootBootloader')"
-                            color="neutral"
+                            color="primary"
                             class="w-full justify-center"
                             @click="onRebootBootloader"
                         >
@@ -247,7 +247,7 @@
         <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
             <h3>{{ $t("dialogConfirmResetTitle") }}</h3>
             <div class="content">
-                <div style="margin-top: 10px">{{ $t("dialogConfirmResetNote") }}</div>
+                <div style="margin-top: 10px" v-html="$t('dialogConfirmResetNote')"></div>
             </div>
             <div class="buttons">
                 <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
