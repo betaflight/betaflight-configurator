@@ -110,7 +110,7 @@
                     </SettingColumn>
                 </div>
             </div>
-            <div v-show="!state.coreBuildMode" class="expertOptions spacer">
+            <div v-show="!state.coreBuildMode && state.expertOptionsVisible" class="expertOptions spacer">
                 <div class="grid-box col1">
                     <SettingColumn
                         :label="$t('firmwareFlasherBuildCustomDefines')"
