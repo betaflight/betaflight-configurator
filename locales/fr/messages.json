@@ -467,9 +467,6 @@
     "firmwareTypeNotSupported": {
         "message": "Les firmwares autres que Betaflight <span class=\"message-negative\">ne sont pas supportés<\/span>, à part en mode CLI."
     },
-    "firmwareUpgradeRequired": {
-        "message": "Le micrologiciel de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde\/restauration par le CLI sont décrites dans l'aide.<br \/>Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
-    },
     "resetToCustomDefaultsDialog": {
         "message": "Des valeurs de réglage par défaut sont disponibles pour cette carte. Avec des valeurs par défaut propres à cette carte, celle-ci devrait fonctionner correctement.<br\/>Souhaitez vous appliquer les réglages par défaut propres à cette carte ?"
     },

@@ -555,9 +555,6 @@
     "firmwareTypeNotSupported": {
         "message": "Oprogramowanie inne niż Betaflight <span class=\"message-negative\">nie jest wspierane<\/span>, z wyjątkiem trybu CLI."
     },
-    "firmwareUpgradeRequired": {
-        "message": "Oprogramowanie na tym urządzeniu wymaga aktualizacji do nowszej wersji. Użyj CLI do tworzenia kopii zapasowych przed wgraniem. Procedura tworzenia kopii zapasowej\/przywracania CLI znajduje się w dokumentacji.<br \/>Alternatywnie pobierz i użyj starej wersji aplikacji, jeśli nie jesteś gotowy do aktualizacji."
-    },
     "resetToCustomDefaultsDialog": {
         "message": "Dostępne są wstępne ustawienia domyślne dla tego kontrolera lotu. Zwykle kontroler lotu będzie działał  nie prawidłowo, jeśli nie zostaną one zastosowane.<br \/> Czy chcesz zastosować wstępne ustawienia domyślne dla tego kontrolera?"
     },

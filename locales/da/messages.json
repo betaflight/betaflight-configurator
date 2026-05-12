@@ -556,7 +556,7 @@
         "message": "Kun Cleanflight\/-Betaflight firmware image <span class=\"message-negative\">kan anvendes<\/span>, dog gælder det ikke i CLI tilstand."
     },
     "firmwareUpgradeRequired": {
-        "message": "Denne FC har firmware som skal opgraderes til en nyere version. Benyt inden brænding CLI til sikkerhedskopiering. CLI-sikkerhedskopierings-\/-gendannelsesproceduren findes i dokumentationen.<br \/>Download og benyt evt. en ældre version af Configurator, hvis du ikke er klar til at opgradere."
+        "message": "Den aktuelle version af appen understøtter muligvis ikke firmwareversionen på FC. Du kan bruge ældre versioner såsom <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10. .0<\/a> for firmware ned til version 4.1 eller <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> for endnu ældre firmware versioner.<br><br>Appen vil forsøge at få adgang til CLI på enheden - hvis det lykkes, kan du se den aktuelle firmware version ved at sende kommandoen <code>version<\/code> i CLI.<br><br>Alternativt kan du opgradere til en nyere firmware version. Brug CLI til backup før flashing, proceduren er dokumenteret i <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentation<\/a>. Men husk, at sikkerhedskopier fra ældre versioner af firmware kan ikke overføres korrekt til indlæsning i en nyere version. Tilstande, OSD, satser og porte bør overføres, men vær forsigtig omkring PID og indstilinger af fejlsikring."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Der findes tilpassede standarder for denne FC. Normalt vil en FC ikke fungere korrekt, medmindre tilpassede standarder anvendes.<br \/>Vil du anvende de tilpassede standarder?"
@@ -2419,7 +2419,7 @@
         "message": "ID til Model Match"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\\\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !<\/a><\/strong><\/b> Indstillingerne på fanen Fejlsikring kræver Configurator er i Eksperttilstand.<br> &#8226; <b>Brug den seneste firmware i din sender \/ transmitter  !<\/b>&nbsp<strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Deaktiver altid ADC filter<\/a><\/strong> i senderen, hvis du bruger fx OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">dokumentationen<\/a><\/strong>."
+        "message": "Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. For mere information, læs <strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">dokumentationen<\/a><\/strong>.<br>&#8226;  <b><strong><a href=\\\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !<\/a><\/strong><\/b> Indstillingerne på fanen Fejlsikring kræver App er i eksperttilstand (se under Indstillinger).<br> &#8226; <b>Brug den seneste firmware i din sender \/ transmitter  !<\/b>&nbsp<strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Deaktiver altid ADC filter<\/a><\/strong> i senderen, hvis du bruger fx OpenTx eller EdgeTx."
     },
     "receiverThrottleMid": {
         "message": "Gas MID"
@@ -4276,7 +4276,7 @@
         "description": "One of the modes of the Led Strip"
     },
     "ledStripFunctionGPSBarOption": {
-        "message": "Gps bjælke",
+        "message": "GPS bjælke",
         "description": "One of the modes of the Led Strip"
     },
     "ledStripFunctionBatteryBarOption": {
@@ -4314,7 +4314,7 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeMag": {
-        "message": "Kompas retning (Mag)",
+        "message": "Kompas retning",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeBaro": {
@@ -4415,6 +4415,14 @@
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink altid"
+    },
+    "ledStripThrottleHue": {
+        "message": "Gas kontrolleret",
+        "description": "Label of throttle hue modifier switch on LED Strip tab"
+    },
+    "ledStripThrottleHueChannel": {
+        "message": "Input kanal for Gas kontrolleret",
+        "description": "Accessible label for the aux-channel select next to the throttle hue switch"
     },
     "ledStripRainbowOverlay": {
         "message": "Regnbue",
@@ -7464,7 +7472,7 @@
         "message": "Blackbox lognings hastighed"
     },
     "onboardLoggingDebugFields": {
-        "message": "Debug logning inkluderet"
+        "message": "Debug logning indeholder"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox logger med debug for ..."

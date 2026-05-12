@@ -414,6 +414,9 @@
     "stm32UsbDfuNotFound": {
         "message": "USB DFU no encontrado"
     },
+    "stm32DfuPermissionRequired": {
+        "message": "El dispositivo se ha reiniciado en modo DFU.<br><br>Tu navegador requiere permiso USB para acceder al dispositivo DFU. Pulsa en el botón de abajo para seleccionarlo del selector de dispositivos."
+    },
     "stm32RebootingToBootloader": {
         "message": "Iniciando reinicio a gestor de arranque..."
     },
@@ -500,9 +503,6 @@
     },
     "firmwareTypeNotSupported": {
         "message": "No-Betaflight firmware <span class=\"message-negative\"> no soportado<\/span>, excepto modo CLI."
-    },
-    "firmwareUpgradeRequired": {
-        "message": "El firmware de este dispositivo necesita actualizarse a una nueva versión. Use CLI para hacer una copia de seguridad antes de flashear. El proceso de copia\/restauración con CLI está en la documentación.<br \/>Alternativamente puede descargar y usar una versión anterior de la aplicación si no está preparado para actualizar."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Hay valores por defecto personalizados disponibles para esta placa. Normalmente, una placa no funcionará correctamente a menos que se apliquen valores por defecto personalizados.<br \/>¿Quieres aplicar los valores por defecto personalizados para esta placa?"

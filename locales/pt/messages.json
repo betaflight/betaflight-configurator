@@ -555,9 +555,6 @@
     "firmwareTypeNotSupported": {
         "message": "Firmware que não seja o Betaflight <span class=\"message-negative\">não é suportado<\/span>, exceto no modo CLI."
     },
-    "firmwareUpgradeRequired": {
-        "message": "O firmware deste dispositivo precisa ser atualizado para uma versão mais recente. Use o CLI para realizar uma cópia de segurança antes da atualização. O procedimento para fazer uma cópia de segurança\/restauro encontra-se na documentação.<br \/>Como alternativa faça o download e use uma versão antiga do configurador, caso não esteja preparado para efetuar a atualização."
-    },
     "resetToCustomDefaultsDialog": {
         "message": "Um padrão personalizado está disponível para esta placa. Normalmente a placa não irá funcionar corretamente a menos que esses padrões sejam aplicados.<br \/>Deseja aplicar os padrões personalizados nesta placa?"
     },
