@@ -21,7 +21,7 @@
                 :name="isOpen ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
                 class="size-4"
             />
-            <div v-html="title"></div>
+            <span>{{ title }}</span>
             <slot name="title"></slot>
             <HelpIcon v-if="help" :text="help" />
             <UIcon
