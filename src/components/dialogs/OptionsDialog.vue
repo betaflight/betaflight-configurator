@@ -169,6 +169,15 @@ const settings = reactive({
 
 const availableLanguages = i18n.getLanguagesAvailables();
 
+// Re-sync settings that the sidebar quick-toggle buttons can change externally while the dialog is closed.
+watch(open, (isOpen) => {
+    if (isOpen) {
+        settings.darkTheme = DarkTheme.configSetting;
+        settings.expertMode = !!getConfig("expertMode").expertMode;
+        settings.colorTheme = getConfig("colorTheme", "yellow").colorTheme ?? "yellow";
+    }
+});
+
 watch(
     () => settings.rememberLastTab,
     (value) => setConfig({ rememberLastTab: value }),
