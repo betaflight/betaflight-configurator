@@ -1,10 +1,10 @@
 <template>
     <div
-        class="relative border-2 rounded-lg"
+        class="relative rounded-lg"
         :class="[
-            highlight ? typeClass.box : 'border-neutral-500/30',
+            !collapsible || isOpen ? 'border-2' : '',
+            !collapsible || isOpen ? (highlight ? typeClass.box : 'border-neutral-500/30') : '',
             title ? 'mt-3' : '',
-            collapsible && !isOpen ? 'pb-3' : '',
         ]"
     >
         <div
@@ -27,6 +27,12 @@
             <div v-html="title"></div>
             <slot name="title"></slot>
             <HelpIcon v-if="help" :text="help" />
+            <UIcon
+                v-if="collapsible"
+                name="i-lucide-chevron-down"
+                class="transition-transform duration-200"
+                :class="{ 'rotate-180': isOpen }"
+            />
         </div>
         <div
             v-show="!collapsible || isOpen"
