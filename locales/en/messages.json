@@ -4127,6 +4127,12 @@
     "firmwareFlasherFlashFirmware": {
         "message": "Flash Firmware"
     },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Flash Firmware options"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Load Firmware options"
+    },
     "firmwareFlasherFlashingProgress": {
         "message": "Flashing progress",
         "description": "Accessible label for the circular progress ring shown during firmware flashing."

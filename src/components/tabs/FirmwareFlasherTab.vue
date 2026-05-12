@@ -73,6 +73,7 @@
                     <UButton
                         :color="state.flashButtonDisabled || activeFlasherStep !== 'flashing' ? 'neutral' : 'success'"
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('firmwareFlasherFlashFirmwareOptions')"
                         square
                     />
                 </UDropdownMenu>
@@ -86,7 +87,11 @@
                     :items="loadFirmwareMenuItems"
                     :content="{ align: 'end', side: 'top' }"
                 >
-                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square />
+                    <UButton
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('firmwareFlasherLoadFirmwareOptions')"
+                        square
+                    />
                 </UDropdownMenu>
             </UFieldGroup>
         </div>
