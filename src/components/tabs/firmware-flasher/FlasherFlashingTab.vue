@@ -57,14 +57,6 @@
                 <USwitch v-model="state.noRebootSequence" @change="onNoRebootChange" />
             </SettingRow>
             <SettingRow
-                :label="$t('firmwareFlasherFlashOnConnect')"
-                :help="$t('firmwareFlasherFlashOnConnectDescription')"
-                full-width
-                v-if="state.flashOnConnectWrapperVisible"
-            >
-                <USwitch v-model="state.flashOnConnect" />
-            </SettingRow>
-            <SettingRow
                 :label="$t('firmwareFlasherFullChipErase')"
                 :help="$t('firmwareFlasherFullChipEraseDescription')"
                 full-width
