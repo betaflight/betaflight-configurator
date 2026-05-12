@@ -71,7 +71,11 @@
                 <strong>{{ $t("firmwareFlasherCloudBuildStatus") }}</strong>
                 <div class="status_wrapper">
                     <progress
-                        :ref="cloudBuild.buildProgressBar"
+                        :ref="
+                            (el) => {
+                                cloudBuild.buildProgressBar.value = el;
+                            }
+                        "
                         class="buildProgress"
                         value="0"
                         min="0"
