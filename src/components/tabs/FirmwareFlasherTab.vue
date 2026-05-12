@@ -62,15 +62,15 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup size="sm" orientation="horizontal" class="flex!">
                 <UButton
-                    :disabled="state.flashButtonDisabled"
-                    :color="state.flashButtonDisabled ? 'neutral' : 'success'"
+                    :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flashing'"
+                    :color="state.flashButtonDisabled || activeFlasherStep !== 'flashing' ? 'neutral' : 'success'"
                     @click="handleFlashFirmware"
                 >
                     {{ $t("firmwareFlasherFlashFirmware") }}
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="flashActionMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton
-                        :color="state.flashButtonDisabled ? 'neutral' : 'success'"
+                        :color="state.flashButtonDisabled || activeFlasherStep !== 'flashing' ? 'neutral' : 'success'"
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         square
                     />
