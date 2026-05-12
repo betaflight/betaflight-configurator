@@ -98,6 +98,9 @@
                                             size="xs"
                                             icon="i-lucide-x"
                                             class="p-0"
+                                            :aria-label="
+                                                $t('firmwareFlasherRemoveBuildOption', { option: option.label })
+                                            "
                                             @click.stop="removeSelectedBuildOption(option)"
                                         />
                                     </UBadge>

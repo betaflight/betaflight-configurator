@@ -8264,6 +8264,10 @@
     "firmwareFlasherBuildOptions": {
         "message": "Other Options"
     },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Remove {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio Protocol"
     },
