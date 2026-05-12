@@ -2,7 +2,7 @@
     <UModal v-model:open="open" :title="$t('tabOptions')" :ui="{ content: 'max-w-2xl' }">
         <template #body>
             <div class="content_wrapper grid-box col1 options-dialog-body">
-                <UiBox :title="$t('tabOptions')">
+                <UiBox>
                     <SettingRow :label="$t('expertMode')">
                         <USwitch v-model="settings.expertMode" size="sm" />
                     </SettingRow>
