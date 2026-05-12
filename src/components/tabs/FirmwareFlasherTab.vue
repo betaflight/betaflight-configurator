@@ -287,7 +287,7 @@ export default defineComponent({
             flashProgressValue: 0,
             osdProtocolNeedsAttention: false, // True if OSD protocol is empty (shows red)
             // UI State - Input values
-            flashManualBaudRate: "256000",
+            flashManualBaudRate: 256000,
             // Dialog states
             dialogUnstableFirmwareAcknowledgementCheckbox: false,
             flashingInProgress: false,
@@ -852,7 +852,7 @@ export default defineComponent({
             state.flashManualBaud = result.flash_manual_baud;
 
             result = getConfig("flash_manual_baud_rate");
-            state.flashManualBaudRate = String(result.flash_manual_baud_rate || 256000);
+            state.flashManualBaudRate = result.flash_manual_baud_rate || 256000;
 
             // Setup expert options visibility
             state.expertOptionsVisible = state.expertMode;
