@@ -37,9 +37,14 @@ import loginManager from "../../src/js/LoginManager";
 import { i18n } from "../../src/js/localization";
 
 // ---------------------------------------------------------------------------
-// Helper: run a composable inside a minimal Vue app so that onMounted /
-// onUnmounted lifecycle hooks fire correctly.
+// Helpers
 // ---------------------------------------------------------------------------
+function stubWindowHeight(value) {
+    Object.defineProperty(window, "innerHeight", { value, configurable: true });
+}
+
+// Run a composable inside a minimal Vue app so that onMounted /
+// onUnmounted lifecycle hooks fire correctly.
 function withSetup(composable) {
     let result;
     const app = createApp(
@@ -90,8 +95,7 @@ describe("useUserSession", () => {
             // Simulate a Vue component instance with a $el property
             result.menuTriggerRef.value = { $el: mockEl };
 
-            // Stub window.innerHeight
-            Object.defineProperty(window, "innerHeight", { value: 768, configurable: true });
+            stubWindowHeight(768);
 
             result.toggleMenu(); // opens menu and calls updateMenuPosition
 
@@ -118,7 +122,7 @@ describe("useUserSession", () => {
             // No $el property — plain DOM element
             result.menuTriggerRef.value = mockEl;
 
-            Object.defineProperty(window, "innerHeight", { value: 600, configurable: true });
+            stubWindowHeight(600);
 
             result.toggleMenu();
 
