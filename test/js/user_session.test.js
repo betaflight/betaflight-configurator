@@ -40,7 +40,7 @@ import { i18n } from "../../src/js/localization";
 // Helpers
 // ---------------------------------------------------------------------------
 function stubWindowHeight(value) {
-    Object.defineProperty(window, "innerHeight", { value, configurable: true });
+    Object.defineProperty(globalThis, "innerHeight", { value, configurable: true });
 }
 
 // Run a composable inside a minimal Vue app so that onMounted /
