@@ -177,8 +177,8 @@ describe("UiBox collapsible behaviour", () => {
         expect(spacer).toBeNull();
     });
 
-    it("renders chevron icon only when collapsible", async () => {
-        // collapsible=true: chevron should be present (UIcon renders as an element with the icon class)
+    it("renders collapsible pill (role=button) only when collapsible", async () => {
+        // collapsible=true: the pill div gets role="button" and aria-expanded
         wrapper = mountWithProps(UiBox, {
             title: "With Chevron",
             collapsible: true,
@@ -186,24 +186,21 @@ describe("UiBox collapsible behaviour", () => {
         });
         await nextTick();
 
-        // UIcon for chevron-down renders with data attribute or class containing the icon name
-        const chevron = wrapper.container.querySelector(
-            "[class*='chevron-down'], [name*='chevron'], .i-lucide-chevron-down",
-        );
-        // UIcon may render as a span; check that something with the chevron reference exists
-        // The v-if="collapsible" means the element is only in DOM when collapsible=true
-        // We can confirm by checking a non-collapsible box has no such element
+        const collapsiblePill = wrapper.container.querySelector("[role='button']");
+        expect(collapsiblePill).toBeTruthy();
+        expect(collapsiblePill.getAttribute("aria-expanded")).toBe("true");
         wrapper.unmount();
         wrapper = null;
 
+        // collapsible=false: no role="button" on the pill
         const wrapper2 = mountWithProps(UiBox, {
             title: "No Chevron",
             collapsible: false,
         });
         await nextTick();
 
-        const chevronNone = wrapper2.container.querySelector("[class*='chevron-down'], .i-lucide-chevron-down");
-        expect(chevronNone).toBeNull();
+        const nonCollapsiblePill = wrapper2.container.querySelector("[role='button']");
+        expect(nonCollapsiblePill).toBeNull();
         wrapper2.unmount();
     });
 });

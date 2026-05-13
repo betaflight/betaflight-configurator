@@ -24,7 +24,9 @@ vi.mock("../../src/js/LoginManager", () => ({
 vi.mock("../../src/js/localization", () => ({
     i18n: {
         getMessage: vi.fn((key, args) => {
-            if (args) return `${key}(${args.join(",")})`;
+            if (args) {
+                return `${key}(${args.join(",")})`;
+            }
             return key;
         }),
     },
@@ -67,7 +69,9 @@ describe("useUserSession", () => {
         loginManager.onLogin.mockReturnValue(() => {});
         loginManager.onLogout.mockReturnValue(() => {});
         i18n.getMessage.mockImplementation((key, args) => {
-            if (args) return `${key}(${args.join(",")})`;
+            if (args) {
+                return `${key}(${args.join(",")})`;
+            }
             return key;
         });
     });

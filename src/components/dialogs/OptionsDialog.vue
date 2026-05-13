@@ -169,12 +169,30 @@ const settings = reactive({
 
 const availableLanguages = i18n.getLanguagesAvailables();
 
-// Re-sync settings that the sidebar quick-toggle buttons can change externally while the dialog is closed.
+// Re-sync all config-backed settings when the dialog opens, so values changed
+// externally (e.g. sidebar quick-toggles for dark/expert mode) are reflected.
+const syncSettingsFromStorage = () => {
+    settings.rememberLastTab = !!getConfig("rememberLastTab").rememberLastTab;
+    settings.meteredConnection = !!getConfig("meteredConnection").meteredConnection;
+    settings.analyticsOptOut = !!getConfig("analyticsOptOut").analyticsOptOut;
+    settings.showManualMode = !!getConfig("showManualMode").showManualMode;
+    settings.showVirtualMode = !!getConfig("showVirtualMode").showVirtualMode;
+    settings.expertMode = !!getConfig("expertMode").expertMode;
+    settings.useLegacyRenderingModel = !!getConfig("useLegacyRenderingModel").useLegacyRenderingModel;
+    settings.darkTheme = DarkTheme.configSetting;
+    settings.colorTheme = getConfig("colorTheme", "yellow").colorTheme ?? "yellow";
+    settings.showDevToolsOnStartup = !!getConfig("showDevToolsOnStartup").showDevToolsOnStartup;
+    settings.showNotifications = !!getConfig("showNotifications").showNotifications;
+    settings.backupOnFlash = getConfig("backupOnFlash", 1).backupOnFlash ?? 1;
+    settings.showAllSerialDevices = !!getConfig("showAllSerialDevices").showAllSerialDevices;
+    settings.cliOnlyMode = !!getConfig("cliOnlyMode", false).cliOnlyMode;
+    settings.showPresetsWarningBackup = !!getConfig("showPresetsWarningBackup").showPresetsWarningBackup;
+    settings.automaticDevOptions = !!getConfig("automaticDevOptions", true).automaticDevOptions;
+};
+
 watch(open, (isOpen) => {
     if (isOpen) {
-        settings.darkTheme = DarkTheme.configSetting;
-        settings.expertMode = !!getConfig("expertMode").expertMode;
-        settings.colorTheme = getConfig("colorTheme", "yellow").colorTheme ?? "yellow";
+        syncSettingsFromStorage();
     }
 });
 
