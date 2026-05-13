@@ -330,6 +330,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         }
                     }
                     break;
+                case MSPCodes.MSP2_SET_MOTOR_SERVO_RESOURCE:
+                    // SET ACK has no payload to parse; explicit case keeps
+                    // the dispatcher from logging "Unknown code" on success.
+                    break;
                 case MSPCodes.MSP2_GET_VTX_DEVICE_STATUS:
                     FC.VTX_DEVICE_STATUS = null;
                     const dataLength = data.byteLength;
