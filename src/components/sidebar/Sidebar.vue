@@ -48,6 +48,7 @@ import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
+import { useNavigationStore } from "@/stores/navigation";
 import { useAuthStore } from "@/stores/auth";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";
@@ -128,6 +129,16 @@ const visibleItems = computed(() =>
 
 // Options dialog
 const optionsOpen = ref(false);
+const navigationStore = useNavigationStore();
+watch(
+    () => navigationStore.optionsDialogOpen,
+    (val) => {
+        if (val) {
+            optionsOpen.value = true;
+            navigationStore.optionsDialogOpen = false;
+        }
+    },
+);
 
 // Re-sync isDark when the options dialog closes (user may have changed dark theme there).
 watch(optionsOpen, (open) => {

@@ -18,6 +18,10 @@ export const useNavigationStore = defineStore("navigation", () => {
 
     const expertMode = ref(false);
 
+    // Set to true to imperatively open the OptionsDialog (e.g. on first run).
+    // Sidebar.vue consumes and resets this flag.
+    const optionsDialogOpen = ref(false);
+
     function cleanup(callback) {
         GUI.tab_switch_cleanup(callback);
     }
@@ -26,6 +30,7 @@ export const useNavigationStore = defineStore("navigation", () => {
         activeTab,
         tabSwitchInProgress,
         expertMode,
+        optionsDialogOpen,
         cleanup,
     };
 });

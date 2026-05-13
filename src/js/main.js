@@ -17,6 +17,8 @@ import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 import { loadDeviceFilters } from "./protocols/devices.js";
+import { pinia } from "./pinia_instance.js";
+import { useNavigationStore } from "../stores/navigation.js";
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
@@ -90,6 +92,15 @@ function appReady() {
         });
 
         initializeSerialBackend();
+
+        // Open OptionsDialog on first launch so new users can set language / theme
+        const firstRunCfg = getConfig("firstRun") ?? {};
+        if (firstRunCfg.firstRun === undefined) {
+            setConfig({ firstRun: true });
+            setTimeout(() => {
+                useNavigationStore(pinia).optionsDialogOpen = true;
+            }, 100);
+        }
     });
 
     const showNotifications = getConfig("showNotifications", false).showNotifications;
