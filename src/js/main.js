@@ -10,7 +10,6 @@ import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
 import { loadUiScale } from "./UiScale.js";
 import { applyExpertMode } from "./utils/applyExpertMode.js";
-import { mountVueTab } from "./vue_tab_mounter.js";
 import { switchTab } from "./tab_switch.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
@@ -91,17 +90,6 @@ function appReady() {
         });
 
         initializeSerialBackend();
-
-        // Open options tab on first run (Vue)
-        const firstRunCfg = getConfig("firstRun") ?? {};
-        if (firstRunCfg.firstRun === undefined) {
-            setConfig({ firstRun: true });
-            // Open the options tab after a short delay to ensure UI is ready
-            setTimeout(() => {
-                // Select the root-mounted Vue tab directly, no DOM injection.
-                mountVueTab("options", () => {});
-            }, 100);
-        }
     });
 
     const showNotifications = getConfig("showNotifications", false).showNotifications;

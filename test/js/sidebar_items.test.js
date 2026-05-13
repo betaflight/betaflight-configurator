@@ -10,9 +10,10 @@ describe("sidebarItems ordering", () => {
 
     it("lists all required disconnected tabs in the correct relative order", () => {
         const disconnected = sidebarItems.filter((item) => item.mode === "disconnected").map((item) => item.key);
-        // firmware_flasher must come before help and options
+        // firmware_flasher must come before help
         expect(disconnected.indexOf("firmware_flasher")).toBeLessThan(disconnected.indexOf("help"));
-        expect(disconnected.indexOf("firmware_flasher")).toBeLessThan(disconnected.indexOf("options"));
+        // options tab is superseded by OptionsDialog — must not appear in sidebar
+        expect(disconnected).not.toContain("options");
     });
 });
 
