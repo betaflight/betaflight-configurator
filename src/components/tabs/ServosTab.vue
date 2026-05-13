@@ -723,6 +723,22 @@ function collectCandidatePads(analysis) {
             pads.add(ls.pad);
         }
     }
+    // UART TX/RX pads — let alt-AF discovery scan them so pads currently
+    // owned by a USART AF can surface their latent timer AF options.
+    // Without this a UART pad with no timer AF in `timer show` (e.g. PA9
+    // USART1_TX on TMOTORF7, ~22/48 F4 UART pads) is invisible to the
+    // picker even when `timer <pad> list` would report a usable PWM AF.
+    // The downstream PWM-capability filter in padRecommender accepts any
+    // pad that has padTimerOptions entries, so this single union unlocks
+    // alt-AF rescue for UART release across F4/F7/H7/G4 fleets.
+    for (const srl of analysis?.serials ?? []) {
+        if (srl?.txPad) {
+            pads.add(srl.txPad);
+        }
+        if (srl?.rxPad) {
+            pads.add(srl.rxPad);
+        }
+    }
     return pads;
 }
 
