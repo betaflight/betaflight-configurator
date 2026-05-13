@@ -3,101 +3,39 @@
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabSetup") }}</div>
             <WikiButton docUrl="setup" />
-            <!-- Top: 3D Model + Instruments & Calibration side-by-side -->
+            <!-- Top: 3D Model full-width -->
             <div class="setup-top">
-                <UiBox :padding="false" class="mt-3 setup-model-box">
-                    <div class="relative bg-muted h-full min-h-0">
-                        <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
-                            <canvas id="canvas" ref="canvasEl"></canvas>
-                            <div class="attitude_info">
-                                <dl>
-                                    <dt>{{ $t("initialSetupHeading") }}</dt>
-                                    <dd class="heading">{{ state.attitude.heading }}</dd>
-                                    <dt>{{ $t("initialSetupPitch") }}</dt>
-                                    <dd class="pitch">{{ state.attitude.pitch }}</dd>
-                                    <dt>{{ $t("initialSetupRoll") }}</dt>
-                                    <dd class="roll">{{ state.attitude.roll }}</dd>
-                                </dl>
-                            </div>
+                <div id="interactive_block">
+                    <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
+                        <canvas id="canvas" ref="canvasEl"></canvas>
+                        <div class="attitude_info">
+                            <dl>
+                                <dt>{{ $t("initialSetupHeading") }}</dt>
+                                <dd class="heading">{{ state.attitude.heading }}</dd>
+                                <dt>{{ $t("initialSetupPitch") }}</dt>
+                                <dd class="pitch">{{ state.attitude.pitch }}</dd>
+                                <dt>{{ $t("initialSetupRoll") }}</dt>
+                                <dd class="roll">{{ state.attitude.roll }}</dd>
+                            </dl>
                         </div>
-                        <UButton
-                            class="absolute top-3 right-3"
-                            :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
-                            color="neutral"
-                            variant="subtle"
-                            @click="resetZaxis"
-                        />
-                    </div>
-                </UiBox>
-                <div class="setup-sidebar">
-                    <UiBox :title="$t('initialSetupInstrumentsHead')" :help="$t('initialSetupInstrumentsHeadHelp')">
-                        <div class="flex flex-row justify-center gap-2">
+                        <div class="instruments-right">
                             <span id="attitude"></span>
                             <span id="heading"></span>
                         </div>
-                    </UiBox>
-                    <div class="flex flex-col gap-2">
-                        <UButton
-                            :label="
-                                state.calibratingAccel
-                                    ? $t('initialSetupButtonCalibratingText')
-                                    : $t('initialSetupButtonCalibrateAccel')
-                            "
-                            :disabled="state.disabledAccel"
-                            :loading="state.calibratingAccel"
-                            class="w-full justify-center"
-                            @click="onCalibrateAccel"
-                        >
-                            <template #trailing>
-                                <HelpIcon :text="$t('initialSetupCalibrateAccelText')" />
-                            </template>
-                        </UButton>
-                        <UButton
-                            :label="
-                                state.calibratingMag
-                                    ? $t('initialSetupButtonCalibratingText')
-                                    : $t('initialSetupButtonCalibrateMag')
-                            "
-                            :disabled="state.disabledMag"
-                            :loading="state.calibratingMag"
-                            class="w-full justify-center"
-                            @click="onCalibrateMag"
-                        >
-                            <template #trailing>
-                                <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
-                            </template>
-                        </UButton>
-                        <div v-show="isExpert">
-                            <UButton
-                                :label="$t('initialSetupButtonReset')"
-                                color="error"
-                                class="w-full justify-center"
-                                @click="showConfirmReset"
-                            >
-                                <template #trailing>
-                                    <HelpIcon :text="$t('initialSetupResetText')" />
-                                </template>
-                            </UButton>
-                        </div>
-                        <div v-show="isExpert">
-                            <UButton
-                                :label="$t('initialSetupButtonRebootBootloader')"
-                                color="error"
-                                class="w-full justify-center"
-                                @click="onRebootBootloader"
-                            >
-                                <template #trailing>
-                                    <HelpIcon :text="$t('initialSetupRebootBootloaderText')" />
-                                </template>
-                            </UButton>
-                        </div>
                     </div>
+                    <UButton
+                        class="reset-zaxis sm-min"
+                        :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
+                        color="neutral"
+                        variant="subtle"
+                        @click="resetZaxis"
+                    />
                 </div>
             </div>
 
             <!-- Info panels in responsive multi-column grid -->
             <div class="setup-info-grid">
-                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')">
+                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')" type="neutral">
                     <InfoGrid
                         :items="[
                             {
@@ -128,6 +66,18 @@
                                 class: 'mcu',
                             },
                             {
+                                id: 'cpu-load',
+                                i18n: 'initialSetupCpuLoad',
+                                value: state.cpuLoad,
+                                class: 'cpu-load',
+                            },
+                            {
+                                id: 'loop-time',
+                                i18n: 'initialSetupLoopTime',
+                                value: state.loopTime,
+                                class: 'loop-time',
+                            },
+                            {
                                 id: 'cpu-temp',
                                 i18n: 'initialSetupCpuTemp',
                                 value: state.cpuTemp,
@@ -137,60 +87,21 @@
                         gridClass="system_info"
                     >
                         <template #arming-disable-flag>
-                            <template v-for="flag in fcStore.armingFlags" :key="flag.id">
-                                <UTooltip v-if="flag.visible" :text="flag.tooltip">
-                                    <span class="disarm-flag">{{ flag.name }}</span>
-                                </UTooltip>
-                            </template>
+                            <span
+                                v-for="flag in fcStore.armingFlags"
+                                :key="flag.id"
+                                v-show="flag.visible"
+                                class="cf_tip disarm-flag"
+                                :title="flag.tooltip"
+                                >{{ flag.name }}</span
+                            >
                             <span v-show="fcStore.isReadyToArm" id="initialSetupArmingAllowed">{{
                                 $t("initialSetupArmingAllowed")
                             }}</span>
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox :title="$t('initialSensorInfoHead')" :help="$t('initialSensorInfoHeadHelp')" id="sensorInfoBox">
-                    <InfoGrid
-                        :items="[
-                            {
-                                id: 'sensor_gyro_hw',
-                                i18n: 'initialSetupSensorGyro',
-                                value: state.sensorGyro,
-                                class: 'sensor_gyro_hw',
-                            },
-                            {
-                                id: 'sensor_acc_hw',
-                                i18n: 'initialSetupSensorAcc',
-                                value: state.sensorAcc,
-                                class: 'sensor_acc_hw',
-                            },
-                            {
-                                id: 'sensor-mag-hw',
-                                i18n: 'initialSetupSensorMag',
-                                value: state.sensorMag,
-                                class: 'sensor_mag_hw',
-                            },
-                            {
-                                id: 'sensor_baro_hw',
-                                i18n: 'initialSetupSensorBaro',
-                                value: state.sensorBaro,
-                                class: 'sensor_baro_hw',
-                            },
-                            {
-                                id: 'sensor-sonar-hw',
-                                i18n: 'initialSetupSensorSonar',
-                                value: state.sensorSonar,
-                                class: 'sensor_sonar_hw',
-                            },
-                            {
-                                id: 'sensor-opticalflow-hw',
-                                i18n: 'initialSetupSensorOpticalflow',
-                                value: state.sensorOpticalflow,
-                                class: 'sensor_opticalflow_hw',
-                            },
-                        ]"
-                    />
-                </UiBox>
-                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')">
+                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')" type="neutral">
                     <InfoGrid
                         :items="[
                             { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
@@ -212,9 +123,21 @@
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')">
+                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')" type="neutral">
                     <InfoGrid
                         :items="[
+                            {
+                                id: 'board-name',
+                                i18n: 'initialSetupInfoBoardName',
+                                value: state.boardName,
+                                class: 'board-name',
+                            },
+                            {
+                                id: 'firmware-version',
+                                i18n: 'initialSetupInfoFirmwareVersion',
+                                value: state.firmwareVersion,
+                                class: 'firmware-version',
+                            },
                             {
                                 id: 'api-version',
                                 i18n: 'initialSetupInfoAPIversion',
@@ -277,11 +200,35 @@
                             </span>
                         </template>
                     </InfoGrid>
+                    <div v-if="isExpert" class="flex flex-col gap-2 mt-2">
+                        <UButton
+                            :label="$t('initialSetupButtonReset')"
+                            color="error"
+                            class="w-full justify-center"
+                            @click="showConfirmReset"
+                        >
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupResetText')" />
+                            </template>
+                        </UButton>
+                        <UButton
+                            :label="$t('initialSetupButtonRebootBootloader')"
+                            color="primary"
+                            class="w-full justify-center"
+                            @click="onRebootBootloader"
+                        >
+                            <template #trailing>
+                                <HelpIcon :text="$t('initialSetupRebootBootloaderText')" />
+                            </template>
+                        </UButton>
+                    </div>
                 </UiBox>
+
                 <UiBox
                     v-show="state.showSonarBox"
                     :title="$t('initialSetupSonarHead')"
                     :help="$t('initialSetupSonarHeadHelp')"
+                    type="neutral"
                 >
                     <InfoGrid
                         :items="[
@@ -300,7 +247,7 @@
         <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
             <h3>{{ $t("dialogConfirmResetTitle") }}</h3>
             <div class="content">
-                <div style="margin-top: 10px">{{ $t("dialogConfirmResetNote") }}</div>
+                <div style="margin-top: 10px" v-html="$t('dialogConfirmResetNote')"></div>
             </div>
             <div class="buttons">
                 <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
@@ -344,7 +291,6 @@ import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
 import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
-import { useTimeout } from "../../composables/useTimeout";
 import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
@@ -353,7 +299,6 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
-import { sensorTypes } from "../../js/sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
 import { flightIndicator } from "../../../libraries/flightIndicators";
 
@@ -369,31 +314,25 @@ const state = reactive({
     batMahDrawing: "0 A",
     rssi: "0 %",
     cpuTemp: "0 °C",
+    cpuLoad: "",
+    loopTime: "",
     gpsFix: false,
     gpsSats: 0,
     latitude: "0",
     longitude: "0",
     sonar: "0 cm",
     mcu: "",
-    sensorGyro: "",
-    sensorAcc: "",
-    sensorMag: "",
-    sensorBaro: "",
-    sensorSonar: "",
-    sensorOpticalflow: "",
+    boardName: "",
+    firmwareVersion: "",
+    gpsUrl: "",
     apiVersion: "",
     buildDate: "",
     buildType: "",
-    buildInfo: "",
-    buildFirmware: "",
 
     attitude: { roll: 0, pitch: 0, heading: 0 },
-    calibratingAccel: false,
-    calibratingMag: false,
-    disabledAccel: false,
-    disabledMag: false,
     showSonarBox: true,
     buildInfoHtml: "",
+    buildInfoButtons: [],
     buildOptionsValid: false,
     buildKeyValid: false,
     buildRoot: "",
@@ -508,7 +447,6 @@ if (fcStore.config.armingDisableCount > 0) {
 }
 
 const { addInterval, removeAllIntervals } = useInterval();
-const { addTimeout, removeTimeout } = useTimeout();
 
 const updateExpertMode = (enabled) => {
     isExpert.value = enabled;
@@ -530,87 +468,6 @@ function onRebootBootloader() {
         fcStore.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER,
     );
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
-}
-
-function onCalibrateAccel() {
-    if (state.calibratingAccel || state.disabledAccel) {
-        return;
-    }
-    state.calibratingAccel = true;
-    // Pause both fast and slow setup data polling so calibration gets uninterrupted data
-    GUI.interval_pause("setup_data_pull_fast");
-    GUI.interval_pause("setup_data_pull_slow");
-    MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
-        if (mountedFlag) {
-            gui_log(t("initialSetupAccelCalibStarted"));
-            state.calibratingAccel = true;
-            state.accelRunning = true;
-        }
-    });
-
-    addTimeout(
-        "button_reset",
-        function () {
-            if (mountedFlag) {
-                // Resume both polling intervals after calibration completes
-                GUI.interval_resume("setup_data_pull_fast");
-                GUI.interval_resume("setup_data_pull_slow");
-                gui_log(t("initialSetupAccelCalibEnded"));
-                state.calibratingAccel = false;
-                state.accelRunning = false;
-            }
-        },
-        2000,
-    );
-}
-
-function onCalibrateMag() {
-    if (state.calibratingMag || state.disabledMag) {
-        return;
-    }
-    state.calibratingMag = true;
-    MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
-        if (mountedFlag) {
-            gui_log(t("initialSetupMagCalibStarted"));
-            state.calibratingMag = true;
-            state.magRunning = true;
-        }
-    });
-
-    function magCalibResetButton() {
-        // clear any running mag calibration timers
-        if (magCalibInterval) {
-            clearInterval(magCalibInterval);
-            magCalibInterval = null;
-        }
-        if (magCalibTimeoutName) {
-            removeTimeout(magCalibTimeoutName);
-            magCalibTimeoutName = null;
-        }
-
-        gui_log(t("initialSetupMagCalibEnded"));
-        state.calibratingMag = false;
-        state.magRunning = false;
-    }
-
-    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-        let cycle = 0;
-        const cycleMax = 45;
-        const interval = 1000;
-        // store the interval id so it can be cleared if the component unmounts
-        magCalibInterval = setInterval(function () {
-            if (cycle >= cycleMax || (fcStore.config.armingDisableFlags & (1 << 12)) === 0) {
-                clearInterval(magCalibInterval);
-                magCalibInterval = null;
-                magCalibResetButton();
-            }
-            cycle++;
-        }, interval);
-    } else {
-        // use a dedicated name so we can remove it safely on unmount
-        magCalibTimeoutName = "mag_button_reset";
-        addTimeout(magCalibTimeoutName, magCalibResetButton, 30000);
-    }
 }
 
 function showConfirmReset() {
@@ -647,9 +504,6 @@ function closeBuildInfo() {
 const canvasWrapper = ref(null);
 const canvasEl = ref(null);
 let boundModelResize = null;
-// mag calibration timers (kept across handler scope so they can be cleared on unmount)
-let magCalibInterval = null;
-let magCalibTimeoutName = null;
 
 async function initialize() {
     cleanup();
@@ -659,6 +513,7 @@ async function initialize() {
         await MSP.promise(MSPCodes.MSP2_MCU_INFO, false);
         await MSP.promise(MSPCodes.MSP_MIXER_CONFIG, false);
         await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT, false);
+        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG, false);
     } catch (e) {
         // preserve behavior but at least log unexpected errors
         console.warn("Error during Setup initialize sequence:", e);
@@ -679,119 +534,10 @@ function process_html() {
     state.attitude.pitch = t("initialSetupAttitude", { 1: (0).toFixed(1) });
     state.attitude.heading = t("initialSetupAttitude", { 1: (0).toFixed(1) });
 
-    // set disabled state from sensors
-    state.disabledAccel = !have_sensor(fcStore.config.activeSensors, "acc");
-    state.disabledMag = !have_sensor(fcStore.config.activeSensors, "mag");
-
     initializeInstruments();
 
     // set expert mode visibility
     isExpert.value = isExpertModeEnabled();
-
-    // no direct DOM dialog wiring here; dialogs use Vue refs and methods
-
-    const displaySensorInfo = async function () {
-        const types = await sensorTypes();
-
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-            let gyroInfoList = [];
-            for (let i = 0; i < fcStore.gyroSensor.gyro_count; i++) {
-                if ((fcStore.sensorAlignment.gyro_enable_mask & (1 << i)) !== 0) {
-                    gyroInfoList.push(types.gyro.elements[fcStore.gyroSensor.gyro_hardware[i]]);
-                }
-            }
-            state.sensorGyro = gyroInfoList.join(" ");
-        } else {
-            const g = fcStore.sensorConfigActive.gyro_hardware;
-            state.sensorGyro =
-                g === 0xff
-                    ? t("initialSetupNotInBuild")
-                    : have_sensor(fcStore.config.activeSensors, "gyro")
-                        ? types.gyro.elements[g]
-                        : t("initialSetupNotDetected");
-        }
-
-        const a = fcStore.sensorConfigActive.acc_hardware;
-        if (a === 0xff) {
-            state.sensorAcc = t("initialSetupNotInBuild");
-        } else if (!have_sensor(fcStore.config.activeSensors, "acc")) {
-            state.sensorAcc = t("initialSetupNotDetected");
-        } else {
-            let name = types.acc.elements[a] || "AUTO";
-            if (
-                (name === "AUTO" || name === "DEFAULT") &&
-                fcStore.sensorNames &&
-                fcStore.sensorNames.acc &&
-                fcStore.sensorNames.acc[a]
-            ) {
-                name = fcStore.sensorNames.acc[a];
-            }
-            state.sensorAcc = name;
-        }
-
-        const b = fcStore.sensorConfigActive.baro_hardware;
-        if (b === 0xff) {
-            state.sensorBaro = t("initialSetupNotInBuild");
-        } else if (!have_sensor(fcStore.config.activeSensors, "baro")) {
-            state.sensorBaro = t("initialSetupNotDetected");
-        } else {
-            let nameB = types.baro.elements[b] || "DEFAULT";
-            if (
-                (nameB === "AUTO" || nameB === "DEFAULT") &&
-                fcStore.sensorNames &&
-                fcStore.sensorNames.baro &&
-                fcStore.sensorNames.baro[b]
-            ) {
-                nameB = fcStore.sensorNames.baro[b];
-            }
-            state.sensorBaro = nameB;
-        }
-
-        const m = fcStore.sensorConfigActive.mag_hardware;
-        state.sensorMag =
-            m === 0xff
-                ? t("initialSetupNotInBuild")
-                : have_sensor(fcStore.config.activeSensors, "mag")
-                    ? types.mag.elements[m]
-                    : t("initialSetupNotDetected");
-
-        const s = fcStore.sensorConfigActive.sonar_hardware;
-        state.sensorSonar =
-            s === 0xff
-                ? t("initialSetupNotInBuild")
-                : have_sensor(fcStore.config.activeSensors, "sonar")
-                    ? types.sonar.elements[s]
-                    : t("initialSetupNotDetected");
-
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-            const o = fcStore.sensorConfigActive.opticalflow_hardware;
-            state.sensorOpticalflow =
-                o === 0xff
-                    ? t("initialSetupNotInBuild")
-                    : have_sensor(fcStore.config.activeSensors, "opticalflow")
-                        ? types.opticalflow.elements[o]
-                        : t("initialSetupNotDetected");
-        } else {
-            state.sensorOpticalflow = t("initialSetupNotInBuild");
-        }
-    };
-
-    const showSensorInfo = async function () {
-        await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false);
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-            await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR, false);
-        }
-        await displaySensorInfo();
-    };
-
-    const hideSensorInfo = function () {
-        state.sensorGyro = t("initialSetupNotInBuild");
-        state.sensorAcc = t("initialSetupNotInBuild");
-        state.sensorBaro = t("initialSetupNotInBuild");
-        state.sensorMag = t("initialSetupNotInBuild");
-        state.sensorSonar = t("initialSetupNotInBuild");
-        state.sensorOpticalflow = t("initialSetupNotInBuild");
-    };
 
     const showBuildType = function () {
         state.buildType =
@@ -857,6 +603,9 @@ function process_html() {
     function showFirmwareInfo() {
         state.apiVersion = fcStore.config.apiVersion;
         state.buildDate = fcStore.config.buildInfo;
+        state.boardName = fcStore.config.boardName || fcStore.config.targetName || "";
+        state.firmwareVersion =
+            `${fcStore.config.flightControllerIdentifier} ${fcStore.config.flightControllerVersion}`.trim();
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             showBuildType();
@@ -871,11 +620,6 @@ function process_html() {
     }
 
     prepareDisarmFlags();
-    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-        showSensorInfo();
-    } else {
-        hideSensorInfo();
-    }
     showFirmwareInfo();
 
     if (!have_sensor(fcStore.config.activeSensors, "sonar")) {
@@ -900,6 +644,19 @@ function process_html() {
             state.mcu = fcStore.mcuInfo.name;
         } else {
             state.mcu = "";
+        }
+
+        state.cpuLoad = `${fcStore.config.cpuload} %`;
+
+        const cycleTime = fcStore.config.cycleTime;
+        if (cycleTime > 0) {
+            const pidHz = Math.round(1000000 / cycleTime);
+            const pidProcess = fcStore.pidAdvancedConfig?.pid_process_denom || 1;
+            const gyroHz = pidHz * pidProcess;
+            const fmt = (hz) => (hz >= 1000 ? `${(hz / 1000).toFixed(0)}k` : `${hz}`);
+            state.loopTime = `${fmt(gyroHz)} / ${fmt(pidHz)}`;
+        } else {
+            state.loopTime = "";
         }
 
         state.gpsFix = fcStore.gpsData.fix !== 0;
@@ -1004,19 +761,6 @@ function cleanup(callback) {
     // clear intervals used by this tab
     removeAllIntervals();
 
-    // clear accel calibration timeout to prevent it firing after unmount
-    removeTimeout("button_reset");
-
-    // ensure mag calibration timers are cleared to avoid callbacks after unmount
-    if (magCalibInterval) {
-        clearInterval(magCalibInterval);
-        magCalibInterval = null;
-    }
-    if (magCalibTimeoutName) {
-        removeTimeout(magCalibTimeoutName);
-        magCalibTimeoutName = null;
-    }
-
     callback?.();
 }
 
@@ -1068,28 +812,16 @@ function openBuildOptionsDialog() {
         }
     }
     .setup-top {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 1rem;
         margin-top: 0.75rem;
-    }
-    .setup-model-box :deep(> div) {
-        height: 100%;
-        min-height: 0;
-    }
-    #canvas_wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        max-height: 32rem;
-        top: 0;
-        left: 0;
-        border-radius: 1rem;
-    }
-    .setup-sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        #canvas_wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-height: 32rem;
+            top: 0;
+            left: 0;
+            border-radius: 1rem;
+        }
     }
     .setup-info-grid {
         display: grid;
@@ -1098,9 +830,6 @@ function openBuildOptionsDialog() {
         margin-top: 1rem;
     }
     @media only screen and (max-width: 1055px) {
-        .setup-top {
-            grid-template-columns: 1fr;
-        }
         .setup-info-grid {
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         }
@@ -1139,6 +868,15 @@ function openBuildOptionsDialog() {
     dd {
         white-space: pre;
     }
+}
+.instruments-right {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    pointer-events: none;
 }
 .dialogBuildInfo {
     transition: all 0.2s;

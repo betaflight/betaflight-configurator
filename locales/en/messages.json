@@ -416,6 +416,51 @@
     "tabSetupOSD": {
         "message": "OSD Setup"
     },
+    "tabSensorConfig": {
+        "message": "Sensors"
+    },
+    "sensorConfigHardware": {
+        "message": "Sensor Hardware"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Sensor configuration saved"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Failed to save sensor configuration"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetometer"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Accelerometer"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Place the craft on a level surface before calibrating"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "Accelerometer has not been calibrated. Please calibrate before flying."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Magnetometer calibration offsets are zero. Please calibrate for accurate heading."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibrate"
+    },
+    "sensorConfig3dPreview": {
+        "message": "3D Attitude Preview"
+    },
+    "sensorConfigLiveData": {
+        "message": "Live Sensor Data"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Show Live Sensor Data"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Stop live data"
+    },
     "tabConfiguration": {
         "message": "Configuration"
     },
@@ -457,9 +502,6 @@
     },
     "tabLedStrip": {
         "message": "LED Strip"
-    },
-    "tabRawSensorData": {
-        "message": "Sensors"
     },
     "tabCLI": {
         "message": "CLI"
@@ -912,12 +954,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Place board or frame on <strong>leveled</strong> surface, proceed with calibration, ensure platform is not moving during calibration period"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrate Magnetometer"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Move multirotor at least <strong>360</strong> degrees on all axis of rotation, you have 30 seconds to perform this task"
     },
@@ -956,7 +992,11 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+    },
+    "initialSetupMagHeading": {
+        "message": "Mag Heading:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
@@ -1034,6 +1074,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "CPU Load:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Loop Rate:"
     },
     "initialSetupCpuTemp": {
         "message": "CPU Temperature:"
@@ -1245,6 +1291,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Shows Heading, Pitch and Roll in instruments",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "Board:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Firmware:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1521,12 +1573,6 @@
     "configurationActiveImu": {
         "message": "Active IMU"
     },
-    "configurationSensors": {
-        "message": "Sensor Configuration"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configure additional sensors and advanced features."
-    },
     "configurationMagAlignmentHelp": {
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
     },
@@ -1564,37 +1610,13 @@
         "message": "Board Alignment"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "Roll Degrees"
+        "message": "Roll°"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "Pitch Degrees"
+        "message": "Pitch°"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Yaw Degrees"
-    },
-    "configurationGyroAlignment": {
-        "message": "Gyro Alignment"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Active IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Select which gyro to use as the primary gyro. The primary gyro is used for stabilization and control. If you have only one gyro, it will be selected automatically.<br><br>It is not always possible to enable multiple gyros, when they are of different types or brands."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
+        "message": "Yaw°"
     },
     "configurationMagAlignment": {
         "message": "Magnetometer Alignment"
@@ -1638,14 +1660,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "GYRO Alignment"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Warning: No Gyro/Acc found"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "First"
@@ -1656,29 +1672,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Both"
     },
-    "configurationSensorAlignment": {
-        "message": "Sensor Alignment"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "At least one gyro must remain enabled. If you disable all gyros, the flight controller will not work properly."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "First GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Second GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "ACCEL Alignment"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Default"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Custom"
-    },
-    "configurationAccelTrims": {
-        "message": "Accelerometer Trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Accelerometer Roll Trim"
@@ -7480,10 +7484,172 @@
         "message": "Accelerometer"
     },
     "configurationBaroHardware": {
-        "message": "Barometer (if supported)"
+        "message": "Barometer"
     },
     "configurationMagHardware": {
-        "message": "Magnetometer (if supported)"
+        "message": "Magnetometer"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Could not determine location. Connect a GPS module or allow browser location access."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Magnetic declination set to {{declination}}° from detected location."
+    },
+    "configurationMagInclination": {
+        "message": "Inclination"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "The angle between the earth's magnetic field and the horizontal plane at your location. Positive values indicate the field points downward (northern hemisphere)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Field Strength"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "The total intensity of the earth's magnetic field at your location in nanotesla (nT). Typical values range from 25,000 to 65,000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detect"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Update"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Magnetic declination auto-detected as {{value}}° for your location."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Declination is {{saved}}° but GPS detects {{detected}}° for this location. Click Update to correct."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} samples"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Tilt more!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Detection failed — try with more varied tilting."
+    },
+    "magCalibrationStart": {
+        "message": "Guided"
+    },
+    "magCalibrationStartDesc": {
+        "message": "Rotate through 6 orientations step by step"
+    },
+    "magCalibrationStartAuto": {
+        "message": "Auto-Step"
+    },
+    "magCalibrationStartAutoDesc": {
+        "message": "Same as guided but steps advance on a timer"
+    },
+    "magCalibrationCancel": {
+        "message": "Cancel"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Calibration mode options"
+    },
+    "magCalibrationRetry": {
+        "message": "Retry"
+    },
+    "magCalibrationNextStep": {
+        "message": "Next Step"
+    },
+    "magCalibrationFinish": {
+        "message": "Finish"
+    },
+    "magCalibrationStepOf": {
+        "message": "Step {{current}} of {{total}}"
+    },
+    "magCalibrationWaiting": {
+        "message": "Waiting for movement... Shake the vehicle to begin."
+    },
+    "magCalibrationCollecting": {
+        "message": "Rotate the vehicle slowly through all orientations."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibration complete."
+    },
+    "magCalibrationError": {
+        "message": "Calibration failed. Try again in an area with less magnetic interference."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No movement detected for 30 seconds. Calibration cancelled."
+    },
+    "magCalibrationSamples": {
+        "message": "Samples"
+    },
+    "magCalibrationQuality": {
+        "message": "Quality"
+    },
+    "magCalibrationResidual": {
+        "message": "Fit Residual"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Good"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Fair"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Poor"
+    },
+    "magCalibrationStep1": {
+        "message": "Level — rotate 360° in yaw"
+    },
+    "magCalibrationStep2": {
+        "message": "Nose down — rotate 360°"
+    },
+    "magCalibrationStep3": {
+        "message": "Nose up — rotate 360°"
+    },
+    "magCalibrationStep4": {
+        "message": "Left side down — rotate 360°"
+    },
+    "magCalibrationStep5": {
+        "message": "Right side down — rotate 360°"
+    },
+    "magCalibrationStep6": {
+        "message": "Inverted — rotate 360°"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Firmware offsets"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Sphere fit offsets"
+    },
+    "magCalibrationUnguided": {
+        "message": "Quick"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Rotate freely in all directions — stops when firmware finishes"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Unguided Calibration"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Rotate your vehicle slowly in all directions. The firmware will collect samples and compute offsets automatically."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Firmware calibration complete!"
+    },
+    "magVizPointCloud": {
+        "message": "Point Cloud"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Triple Projection"
+    },
+    "magVizPolar": {
+        "message": "Polar Density"
+    },
+    "magVizWaitingForData": {
+        "message": "Waiting for data…"
+    },
+    "magAlignmentApply": {
+        "message": "Apply"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Detect"
     },
     "configurationSmallAngle": {
         "message": "Maximum ARM Angle [degrees]"
