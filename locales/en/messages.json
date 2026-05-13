@@ -503,9 +503,6 @@
     "tabLedStrip": {
         "message": "LED Strip"
     },
-    "tabRawSensorData": {
-        "message": "Sensor Data"
-    },
     "tabCLI": {
         "message": "CLI"
     },

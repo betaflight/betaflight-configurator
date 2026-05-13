@@ -50,7 +50,6 @@ class GuiControl {
             "presets",
             "cli",
             "configuration",
-            "sensor_config",
             "logging",
             "onboard_logging",
             "modes",
