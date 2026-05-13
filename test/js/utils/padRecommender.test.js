@@ -201,6 +201,13 @@ describe("candidatePadsForSlot", () => {
         const a = analysis([{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }], {
             serials: [{ index: 3, txPad: "B10", rxPad: "B11", txDma: null, rxDma: null }],
             spareUarts: [{ index: 3, txPad: "B10", rxPad: "B11" }],
+            // UART pads must be PWM-capable to surface — picker drops UART
+            // pads with no timer mapping so the dropdown can't recommend
+            // something that won't drive PWM.
+            padTimers: new Map([
+                ["B10", { timer: 5, channel: 1 }],
+                ["B11", { timer: 5, channel: 2 }],
+            ]),
         });
         const cands = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1], allowUartRelease: [3] });
         const tx = cands.find((c) => c.pad === "B10");
@@ -208,6 +215,35 @@ describe("candidatePadsForSlot", () => {
         expect(tx.source).toBe("uart-release");
         expect(tx.requiresRelease).toEqual(["resource SERIAL_TX 3 NONE"]);
         expect(rx.requiresRelease).toEqual(["resource SERIAL_RX 3 NONE"]);
+    });
+
+    it("drops UART TX/RX pads that have no PWM-capable timer (e.g. A09/USART1_TX on TMOTORF7)", () => {
+        // Brian's TMOTORF7 case: A09 is bound as USART1_TX in `resource show`
+        // but `timer show` has no entry for it — no timer AF on the pin in
+        // this firmware build. Surfacing the pad and letting the user pick
+        // it would emit `resource SERIAL_TX 1 NONE` + bind, but the new
+        // resource would never produce PWM.
+        const a = analysis([{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }], {
+            serials: [{ index: 1, txPad: "A09", rxPad: null, txDma: null, rxDma: null }],
+            spareUarts: [{ index: 1, txPad: "A09", rxPad: null }],
+            // No padTimers entry for A09, no padTimerOptions either.
+        });
+        const cands = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1], allowUartRelease: [1] });
+        expect(cands.find((c) => c.pad === "A09")).toBeUndefined();
+    });
+
+    it("keeps UART pads whose only PWM capability is via an alt AF (padTimerOptions)", () => {
+        // Pad with no current timer (UART AF active) but an alt AF that
+        // would give it a timer. The alt-AF expansion at padTimerOptions
+        // picks up the rescue path; the base candidate must survive the
+        // PWM-capability filter to reach that expansion.
+        const a = analysis([{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }], {
+            serials: [{ index: 3, txPad: "B10", rxPad: null, txDma: null, rxDma: null }],
+            spareUarts: [{ index: 3, txPad: "B10", rxPad: null }],
+            padTimerOptions: new Map([["B10", [{ timer: 8, channel: 4, af: 3 }]]]),
+        });
+        const cands = candidatePadsForSlot(a, 2, { motorIndicesInUse: [1], allowUartRelease: [3] });
+        expect(cands.find((c) => c.pad === "B10" && c.source === "uart-release")).toBeDefined();
     });
 
     it("filters out pads claimed by another SERVO (collision defense)", () => {
@@ -270,6 +306,8 @@ describe("candidatePadsForSlot", () => {
                 ledStrips: [{ pad: "A09", timer: 1, channel: 2, dmaStream: null }],
                 serials: [{ index: 3, txPad: "B10", rxPad: null, txDma: null, rxDma: null }],
                 spareUarts: [{ index: 3, txPad: "B10", rxPad: null }],
+                // B10 must be PWM-capable for the picker to surface it.
+                padTimers: new Map([["B10", { timer: 5, channel: 1 }]]),
             },
         );
         const cands = candidatePadsForSlot(a, 2, {

@@ -393,6 +393,26 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
     //    an in-use motor still ranks like a safe non-conflicting option
     //    and the picker may land a SERVO on a timer-conflicting pad on
     //    tight targets.
+    // A UART pad reaches us when the analyzer's serials/spareUarts list
+    // includes it, but the firmware build may have NO PWM-capable timer AF
+    // on that physical pin (e.g. A09/USART1_TX on TMOTORF7 — no entry in
+    // `timer show` and nothing in alt-AF discovery either). Releasing
+    // such a UART would never produce a working servo PWM line, so we
+    // drop it before it can surface in the dropdown. PWM-capable means:
+    //   - pad is in padTimers (its current AF IS a timer), OR
+    //   - pad has at least one entry in padTimerOptions (alt AF could
+    //     give it one — the alt-AF expansion below would then surface it).
+    const padTimerOptionsMap = analysis.padTimerOptions instanceof Map ? analysis.padTimerOptions : null;
+    const padHasPwmCapability = (pad) => {
+        if (!pad) {
+            return false;
+        }
+        if (motorTimerLookup?.has(pad)) {
+            return true;
+        }
+        const opts = padTimerOptionsMap?.get(pad);
+        return Array.isArray(opts) && opts.length > 0;
+    };
     for (const uartIndex of allowUartRelease) {
         // Check the full `serials` list before falling back to `spareUarts`.
         // spareUarts is the analyzer's "no function assigned" subset; an
@@ -406,7 +426,7 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
         if (!serial) {
             continue;
         }
-        if (serial.txPad && !claimedPads.has(serial.txPad)) {
+        if (serial.txPad && !claimedPads.has(serial.txPad) && padHasPwmCapability(serial.txPad)) {
             const fallback = motorTimerLookup?.get(serial.txPad);
             const resolvedTimer = fallback?.timer ?? null;
             push({
@@ -419,7 +439,7 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
                 sharesTimerWithMotor: resolvedTimer != null && motorTimers.has(resolvedTimer),
             });
         }
-        if (serial.rxPad && !claimedPads.has(serial.rxPad)) {
+        if (serial.rxPad && !claimedPads.has(serial.rxPad) && padHasPwmCapability(serial.rxPad)) {
             const fallback = motorTimerLookup?.get(serial.rxPad);
             const resolvedTimer = fallback?.timer ?? null;
             push({
