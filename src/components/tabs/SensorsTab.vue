@@ -1,5 +1,5 @@
 <template>
-    <BaseTab tab-name="sensor_config">
+    <BaseTab tab-name="sensors">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabSensorConfig") }}</div>
             <WikiButton docUrl="sensors" />
@@ -1784,7 +1784,7 @@ const loadConfig = async () => {
         // Initialize 3D model, instruments, and start attitude polling
         initModel();
         initInstruments();
-        addInterval("sensor_config_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
+        addInterval("sensors_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
 
         GUI.content_ready();
     } catch (e) {
@@ -1894,7 +1894,7 @@ onMounted(() => {
 </script>
 
 <style lang="less">
-.tab-sensor_config {
+.tab-sensors {
     .sensor-top {
         display: grid;
         grid-template-columns: 1fr 1fr;
