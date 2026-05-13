@@ -416,7 +416,9 @@ watch(
                     settings.showNotifications = false;
                     const reqId = ++notificationRequestId;
                     NotificationManager.requestPermission().then((permission) => {
-                        if (reqId !== notificationRequestId) return;
+                        if (reqId !== notificationRequestId) {
+                            return;
+                        }
                         if (permission === "granted") {
                             setConfig({ showNotifications: true });
                             settings.showNotifications = true;
