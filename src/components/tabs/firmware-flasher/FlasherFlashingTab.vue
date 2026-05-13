@@ -48,8 +48,6 @@
         <UiBox
             v-if="state.expertOptionsVisible"
             :title="$t('firmwareFlasherAdvancedTitle')"
-            collapsible
-            :default-open="false"
             type="neutral"
             class="mt-2"
         >
