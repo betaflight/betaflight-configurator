@@ -421,6 +421,8 @@
                                 <UButton
                                     size="xs"
                                     :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                                    :aria-label="$t('magCalibrationModeOptions')"
+                                    :title="$t('magCalibrationModeOptions')"
                                     square
                                 />
                             </UDropdownMenu>
