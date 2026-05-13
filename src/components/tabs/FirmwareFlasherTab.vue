@@ -479,6 +479,7 @@ export default defineComponent({
                 );
             }
             enableFlashButton(true);
+            activeFlasherStep.value = "flashing";
 
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
                 firmwareSize: bytes,
@@ -1575,6 +1576,8 @@ export default defineComponent({
             }
 
             if (state.targetDetail) {
+                activeFlasherStep.value = "release-info";
+                await nextTick();
                 flashingMessage($t("firmwareFlasherButtonDownloading"), FLASH_MESSAGE_TYPES.NEUTRAL);
                 showReleaseNotes(state.targetDetail);
                 await requestCloudBuild(state.targetDetail);
