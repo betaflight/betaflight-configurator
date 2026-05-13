@@ -82,7 +82,7 @@
                                 :key="preset"
                                 type="button"
                                 :aria-pressed="settings.uiScale === preset"
-                                class="px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors"
+                                class="px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--primary-500)"
                                 :class="
                                     settings.uiScale === preset
                                         ? 'bg-(--primary-500) border-(--primary-600) text-black font-semibold'
