@@ -71,13 +71,8 @@
                 <strong>{{ $t("firmwareFlasherCloudBuildStatus") }}</strong>
                 <div class="status_wrapper">
                     <progress
-                        :ref="
-                            (el) => {
-                                cloudBuild.buildProgressBar.value = el;
-                            }
-                        "
                         class="buildProgress"
-                        value="0"
+                        :value="cloudBuild.state.cloudBuildProgress"
                         min="0"
                         max="100"
                         :aria-label="$t('firmwareFlasherCloudBuildStatus')"

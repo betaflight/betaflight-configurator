@@ -1,4 +1,4 @@
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 
 /**
  * A composable for handling cloud build requests and polling.
@@ -32,10 +32,8 @@ export function useCloudBuild(params) {
         cloudTargetLogUrl: "",
         cancelBuild: false,
         cancelBuildButtonDisabled: true,
+        cloudBuildProgress: 0,
     });
-
-    // Ref for progress bar element
-    const buildProgressBar = ref(null);
 
     // Polling timer reference
     let pollingTimer = null;
@@ -45,8 +43,8 @@ export function useCloudBuild(params) {
      */
     const updateCloudBuildStatus = (statusText, progressValue) => {
         state.cloudTargetStatusText = statusText;
-        if (progressValue !== undefined && buildProgressBar.value) {
-            buildProgressBar.value.value = progressValue;
+        if (progressValue !== undefined) {
+            state.cloudBuildProgress = progressValue;
         }
     };
 
@@ -120,9 +118,7 @@ export function useCloudBuild(params) {
         state.cloudTargetLogText = $t(`firmwareFlasherCloudBuildLogUrl`);
         state.cloudTargetLogUrl = logUrl;
         state.cloudTargetStatusText = $t(`firmwareFlasherCloudBuildSuccess${suffix}`);
-        if (buildProgressBar.value) {
-            buildProgressBar.value.value = 100;
-        }
+        state.cloudBuildProgress = 100;
 
         if (statusResponse.configuration !== undefined && !isConfigLocal) {
             setBoardConfig(statusResponse.configuration);
@@ -362,10 +358,8 @@ export function useCloudBuild(params) {
         state.cloudTargetLogUrl = "";
         state.cancelBuild = false;
         state.cancelBuildButtonDisabled = true;
+        state.cloudBuildProgress = 0;
         stopPolling();
-        if (buildProgressBar.value) {
-            buildProgressBar.value.value = 0;
-        }
     };
 
     /**
@@ -378,7 +372,6 @@ export function useCloudBuild(params) {
     return {
         // State
         state,
-        buildProgressBar,
 
         // Methods
         requestCloudBuild,
