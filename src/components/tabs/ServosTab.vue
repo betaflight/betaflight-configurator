@@ -564,6 +564,16 @@ function isOptionViable(option, currentResource, kind) {
 // accidentally unbind them. Expert Mode widens to every UART the analyzer
 // reports; release is gated on the user opting in. Without this whitelist
 // the uart-release path in candidatePadsForSlot is unreachable from the UI.
+//
+// Caveat: the analyzer's `serials` list is built from CLI `resource show`
+// parsing, so it only includes UARTs whose pin is currently bound (either
+// by user config in Ports tab or by the firmware target's defaults). A
+// "fresh" board with every UART unbound shows nothing here even in expert
+// mode — to surface every hardware UART unconditionally we'd need to merge
+// in `target-defaults.json` serial pads, which the unified-targets bundle
+// doesn't carry today. Deferred since most STM32F7 UART pins lack a
+// PWM-capable alt AF anyway and the picker's PWM-capability filter would
+// drop them.
 function spareUartReleaseWhitelist() {
     const source = isExpertMode() ? effectiveAnalysis()?.serials : effectiveAnalysis()?.spareUarts;
     if (!Array.isArray(source)) {
