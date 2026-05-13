@@ -72,6 +72,41 @@
                             class="min-w-40"
                         />
                     </SettingRow>
+                    <div class="flex flex-col gap-2 py-2">
+                        <label for="options-dialog-ui-scale-slider" class="text-sm font-semibold">{{
+                            $t("uiScale")
+                        }}</label>
+                        <div class="flex gap-1.5 flex-wrap">
+                            <button
+                                v-for="preset in [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5]"
+                                :key="preset"
+                                type="button"
+                                class="px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors"
+                                :class="
+                                    settings.uiScale === preset
+                                        ? 'bg-(--primary-500) border-(--primary-600) text-black font-semibold'
+                                        : 'bg-(--surface-200) border-(--surface-400) text-(--text) hover:bg-(--surface-300)'
+                                "
+                                @click="settings.uiScale = preset"
+                            >
+                                {{ Math.round(preset * 100) }}%
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input
+                                id="options-dialog-ui-scale-slider"
+                                type="range"
+                                v-model.number="settings.uiScale"
+                                :min="MIN_UI_SCALE"
+                                :max="MAX_UI_SCALE"
+                                step="0.01"
+                                class="flex-1 accent-(--primary-500)"
+                            />
+                            <span class="text-sm font-semibold min-w-12 text-right"
+                                >{{ Math.round(settings.uiScale * 100) }}%</span
+                            >
+                        </div>
+                    </div>
                     <SettingRow :label="$t('userLanguageSelect')">
                         <USelectMenu
                             v-model="settings.userLanguage"
@@ -119,9 +154,10 @@
 </template>
 
 <script setup>
-import { computed, reactive, watch } from "vue";
+import { computed, onUnmounted, reactive, watch } from "vue";
 import { useDialog } from "@/composables/useDialog";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
+import { applyUiScale, sanitizeUiScale, DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE } from "../../js/UiScale";
 import { i18n } from "../../js/localization";
 import PortHandler from "../../js/port_handler";
 import CliAutoComplete from "../../js/CliAutoComplete";
@@ -165,6 +201,7 @@ const settings = reactive({
     cliOnlyMode: !!getConfig("cliOnlyMode", false).cliOnlyMode,
     showPresetsWarningBackup: !!getConfig("showPresetsWarningBackup").showPresetsWarningBackup,
     automaticDevOptions: !!getConfig("automaticDevOptions", true).automaticDevOptions,
+    uiScale: sanitizeUiScale(getConfig("uiScale", DEFAULT_UI_SCALE).uiScale),
 });
 
 const availableLanguages = i18n.getLanguagesAvailables();
@@ -188,6 +225,7 @@ const syncSettingsFromStorage = () => {
     settings.cliOnlyMode = !!getConfig("cliOnlyMode", false).cliOnlyMode;
     settings.showPresetsWarningBackup = !!getConfig("showPresetsWarningBackup").showPresetsWarningBackup;
     settings.automaticDevOptions = !!getConfig("automaticDevOptions", true).automaticDevOptions;
+    settings.uiScale = sanitizeUiScale(getConfig("uiScale", DEFAULT_UI_SCALE).uiScale);
 };
 
 watch(open, (isOpen) => {
@@ -331,6 +369,26 @@ watch(
         }
     },
 );
+
+let uiScalePersistTimer = null;
+
+watch(
+    () => settings.uiScale,
+    (value) => {
+        const uiScale = sanitizeUiScale(value);
+        if (settings.uiScale !== uiScale) {
+            settings.uiScale = uiScale;
+            return;
+        }
+        applyUiScale(uiScale);
+        clearTimeout(uiScalePersistTimer);
+        uiScalePersistTimer = setTimeout(() => {
+            setConfig({ uiScale });
+        }, 150);
+    },
+);
+
+onUnmounted(() => clearTimeout(uiScalePersistTimer));
 
 watch(
     () => settings.showNotifications,
