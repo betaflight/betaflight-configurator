@@ -1683,14 +1683,14 @@ function hydrateAlignment() {
     hasSecondGyro.value = (flags & GYRO_DETECTION_FLAGS.DETECTED_GYRO_2) !== 0;
     hasDualGyros.value = (flags & GYRO_DETECTION_FLAGS.DETECTED_DUAL_GYROS) !== 0;
 
-    if (!isApi147.value) {
-        showGyro1Align.value = true;
-        showGyro2Align.value = hasSecondGyro.value;
-        showMultiGyro.value = false;
-    } else {
+    if (isApi147.value) {
         showGyro1Align.value = false;
         showGyro2Align.value = false;
         showMultiGyro.value = true;
+    } else {
+        showGyro1Align.value = true;
+        showGyro2Align.value = hasSecondGyro.value;
+        showMultiGyro.value = false;
     }
 }
 
@@ -1829,19 +1829,19 @@ const saveConfig = async () => {
         fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
         fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
 
-        if (!isApi147.value) {
+        if (isApi147.value) {
+            fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
+            fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
+            fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
+            fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
+            fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
+        } else {
             fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
             fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
             fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
             fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
             fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
             fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
-        } else {
-            fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
-            fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
-            fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
-            fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
-            fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
         }
 
         if (isApi147.value) {
@@ -2048,17 +2048,17 @@ onMounted(() => {
     }
 
     .mag-viz-mode-selector button {
-        color: rgba(255, 255, 255, 0.75);
+        color: #c6c6cb; /* rgba(255,255,255,0.75) over #1a1a2e — contrast 10:1 */
     }
 
     .mag-viz-mode-selector button:hover {
         color: #fff;
-        background: rgba(255, 255, 255, 0.1);
+        background: #313143; /* rgba(255,255,255,0.1) over #1a1a2e */
     }
 
     .mag-viz-mode-selector .mag-viz-active {
         color: #fff;
-        background: rgba(255, 255, 255, 0.3);
+        background: #5f5f6d; /* rgba(255,255,255,0.3) over #1a1a2e — contrast 5.5:1 */
     }
 
     .mag-cal-progress-bar {

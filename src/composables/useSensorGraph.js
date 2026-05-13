@@ -220,34 +220,33 @@ export function useSensorGraph() {
         }
     }
 
+    function drawIfDirty(helpers, sampleIndex) {
+        if (!helpers) {
+            return false;
+        }
+        return drawGraph(helpers, sampleIndex) !== false;
+    }
+
     function updateGraphs() {
-        if (gyroHelpers && dirty_gyro) {
-            if (drawGraph(gyroHelpers, samples_gyro_i) !== false) {
-                dirty_gyro = false;
-            }
+        if (dirty_gyro && drawIfDirty(gyroHelpers, samples_gyro_i)) {
+            dirty_gyro = false;
         }
-        if (accelHelpers && dirty_accel) {
-            if (drawGraph(accelHelpers, samples_accel_i) !== false) {
-                dirty_accel = false;
-            }
+        if (dirty_accel && drawIfDirty(accelHelpers, samples_accel_i)) {
+            dirty_accel = false;
         }
-        if (magHelpers && dirty_mag) {
-            if (drawGraph(magHelpers, samples_mag_i) !== false) {
-                dirty_mag = false;
-            }
+        if (dirty_mag && drawIfDirty(magHelpers, samples_mag_i)) {
+            dirty_mag = false;
         }
-        if (altitudeHelpers && dirty_altitude) {
-            if (drawGraph(altitudeHelpers, samples_altitude_i) !== false) {
-                dirty_altitude = false;
-            }
+        if (dirty_altitude && drawIfDirty(altitudeHelpers, samples_altitude_i)) {
+            dirty_altitude = false;
         }
-        if (sonarHelpers && dirty_sonar) {
-            if (drawGraph(sonarHelpers, samples_sonar_i) !== false) {
-                dirty_sonar = false;
-            }
+        if (dirty_sonar && drawIfDirty(sonarHelpers, samples_sonar_i)) {
+            dirty_sonar = false;
         }
         if (dirty_debug) {
-            debugHelpers.forEach((helper) => drawGraph(helper, samples_debug_i));
+            for (const helper of debugHelpers) {
+                drawGraph(helper, samples_debug_i);
+            }
             dirty_debug = false;
         }
     }
