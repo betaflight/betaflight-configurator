@@ -373,6 +373,7 @@ watch(
 );
 
 let uiScalePersistTimer = null;
+let notificationRequestId = 0;
 
 watch(
     () => settings.uiScale,
@@ -411,9 +412,11 @@ watch(
                     });
                     settings.showNotifications = false;
                     break;
-                case "default":
+                case "default": {
                     settings.showNotifications = false;
+                    const reqId = ++notificationRequestId;
                     NotificationManager.requestPermission().then((permission) => {
+                        if (reqId !== notificationRequestId) return;
                         if (permission === "granted") {
                             setConfig({ showNotifications: true });
                             settings.showNotifications = true;
@@ -424,8 +427,10 @@ watch(
                         }
                     });
                     break;
+                }
             }
         } else {
+            notificationRequestId++;
             setConfig({ showNotifications: false });
         }
     },
