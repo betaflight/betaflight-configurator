@@ -1,16 +1,19 @@
 <template>
     <div class="flashing-tab-content">
-        <!-- Flash progress / spinner -->
-        <div v-if="state.flashingInProgress" class="flashing-wait">
+        <!-- Flash progress / spinner — remains visible after flash completes -->
+        <div v-if="state.flashingInProgress || state.flashProgressValue > 0" class="flashing-wait">
             <ProgressRing
                 :value="state.flashProgressValue"
-                :indeterminate="state.flashProgressValue === 0"
+                :indeterminate="state.flashingInProgress && state.flashProgressValue === 0"
                 :size="80"
                 :stroke-width="6"
                 :color="flashRingColor"
                 :label="$t('firmwareFlasherFlashingProgress')"
             />
-            <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
+            <p>
+                {{ state.progressLabelText
+                }}<template v-if="state.flashingInProgress"> {{ $t("firmwareFlasherPleaseWait") }}</template>
+            </p>
         </div>
         <div
             v-else-if="state.progressLabelText && state.progressLabelClass === 'invalid'"
