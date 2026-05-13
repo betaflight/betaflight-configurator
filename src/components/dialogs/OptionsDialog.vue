@@ -81,6 +81,7 @@
                                 v-for="preset in [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5]"
                                 :key="preset"
                                 type="button"
+                                :aria-pressed="settings.uiScale === preset"
                                 class="px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors"
                                 :class="
                                     settings.uiScale === preset
@@ -100,6 +101,7 @@
                                 :min="MIN_UI_SCALE"
                                 :max="MAX_UI_SCALE"
                                 step="0.01"
+                                :aria-valuetext="`${Math.round(settings.uiScale * 100)}%`"
                                 class="flex-1 accent-(--primary-500)"
                             />
                             <span class="text-sm font-semibold min-w-12 text-right"
