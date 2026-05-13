@@ -558,16 +558,18 @@ function isOptionViable(option, currentResource, kind) {
     }
     return true;
 }
-// Spare UARTs the picker is allowed to release for PWM. We surface the
-// analyzer's "no function assigned" list — UARTs already running MSP, GPS,
-// telemetry, etc. stay off the table. Without this whitelist, the
-// uart-release path in candidatePadsForSlot is unreachable from the UI.
+// UARTs the picker is allowed to release for PWM. Default surfaces the
+// analyzer's "no function assigned" list only — UARTs already running MSP,
+// GPS, telemetry, etc. stay off the table so non-expert pilots can't
+// accidentally unbind them. Expert Mode widens to every UART the analyzer
+// reports; release is gated on the user opting in. Without this whitelist
+// the uart-release path in candidatePadsForSlot is unreachable from the UI.
 function spareUartReleaseWhitelist() {
-    const spares = effectiveAnalysis()?.spareUarts;
-    if (!Array.isArray(spares)) {
+    const source = isExpertMode() ? effectiveAnalysis()?.serials : effectiveAnalysis()?.spareUarts;
+    if (!Array.isArray(source)) {
         return [];
     }
-    return spares.map((u) => u?.index).filter((idx) => typeof idx === "number");
+    return source.map((u) => u?.index).filter((idx) => typeof idx === "number");
 }
 
 function buildMotorPinOptions(motor) {
