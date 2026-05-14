@@ -1871,11 +1871,17 @@ export function computePresetResourcePlan(analysis, preset, options = {}) {
     }
 
     // Expose ALL planned timer remaps to callers, not just optimizer-driven
-    // ones. cliLines above already merges optimizerRemaps + manual alt-AF
-    // picks (via pickTimerRemapLines) so the returned set must match what
-    // gets sent; without this merge a caller using `timerRemaps` to
-    // preview/UI-render the plan would miss manual alt-AF rows.
-    const mergedTimerRemaps = new Map(optimizerRemaps);
+    // ones. cliLines above merges optimizerRemaps (filtered to finalPickPads)
+    // + manual alt-AF picks (via pickTimerRemapLines) so the returned set
+    // must match what gets sent: filter optimizerRemaps the same way here,
+    // otherwise a caller using `timerRemaps` to preview/UI-render the plan
+    // would show remaps for pads that never made it into cliLines.
+    const mergedTimerRemaps = new Map();
+    for (const [pad, remap] of optimizerRemaps) {
+        if (finalPickPads.has(pad)) {
+            mergedTimerRemaps.set(pad, remap);
+        }
+    }
     for (const [, pick] of picks) {
         if (pick.af != null) {
             mergedTimerRemaps.set(pick.pad, {

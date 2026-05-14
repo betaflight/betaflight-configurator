@@ -29,7 +29,11 @@ export function parseResourceOptionValue(value) {
 }
 
 function normalizePin(pin) {
-    return typeof pin === "string" && pin.length > 0 ? pin.toUpperCase() : RESOURCE_NONE;
+    if (typeof pin !== "string") {
+        return RESOURCE_NONE;
+    }
+    const trimmed = pin.trim();
+    return trimmed.length > 0 ? trimmed.toUpperCase() : RESOURCE_NONE;
 }
 
 // Build a Map<1-based index, newPad> from the live edited resources vs the
