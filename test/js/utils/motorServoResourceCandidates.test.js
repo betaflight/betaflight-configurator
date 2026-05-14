@@ -132,7 +132,9 @@ describe("motor/servo resource candidates", () => {
     it("annotates fallback pins with their current peripheral binding", () => {
         // Fallback pins resolve through addFallbackOptions, which has to
         // surface each pad's release cost: motor/servo numbers were already
-        // there; LED_STRIP and UART <n> TX/RX get added by #1.5.
+        // there; LED_STRIP and UART <n> TX/RX get added by #1.5. The caller
+        // must opt into LED/UART release via allowLedStrip / allowUartRelease
+        // — see the "honors release whitelist" test below for the gate.
         const options = resourceOptions({
             kind: "servo",
             resource: { index: 0, pin: "NONE" },
@@ -144,6 +146,8 @@ describe("motor/servo resource candidates", () => {
                 serials: [{ index: 6, txPad: "B05", rxPad: "B07", txDma: null, rxDma: null }],
             }),
             fallbackPins: ["B00", "A08", "B05", "B07", "C09"],
+            allowLedStrip: true,
+            allowUartRelease: [6],
         });
 
         const findOption = (pin) => options.find((option) => option.pin === pin);
@@ -163,6 +167,38 @@ describe("motor/servo resource candidates", () => {
         expect(findOption("B07")?.requiresRelease).toEqual(["resource SERIAL_RX 6 NONE"]);
         expect(findOption("B00")?.requiresRelease).toEqual([]);
         expect(findOption("C09")?.requiresRelease).toEqual([]);
+    });
+
+    it("drops LED/UART fallback pads when the caller hasn't whitelisted release", () => {
+        // Same fixture as above but with allowLedStrip: false and
+        // allowUartRelease left at its [] default. addFallbackOptions must
+        // not surface an LED_STRIP or UART-owned pad — picking one would
+        // emit a `resource <peripheral> N NONE` line outside the guards the
+        // main candidate builders enforce. MOTOR-owned and free pads are
+        // unaffected.
+        const options = resourceOptions({
+            kind: "servo",
+            resource: { index: 0, pin: "NONE" },
+            motorResources: [{ index: 0, pin: "B00" }],
+            servoResources: [],
+            hardwareAnalysis: analysis({
+                motors: [{ index: 1, pad: "B00", timer: 3, channel: 3, dmaStream: null, bidirBurst: true }],
+                ledStrips: [{ pad: "A08", timer: 1, channel: 1, dmaStream: null }],
+                serials: [{ index: 6, txPad: "B05", rxPad: "B07", txDma: null, rxDma: null }],
+            }),
+            fallbackPins: ["B00", "A08", "B05", "B07", "C09"],
+            allowLedStrip: false,
+            // allowUartRelease left at default []
+        });
+
+        const pins = options.map((option) => option.pin);
+        // LED + UART fallback pads gated out — no release line can leak.
+        expect(pins).not.toContain("A08");
+        expect(pins).not.toContain("B05");
+        expect(pins).not.toContain("B07");
+        // MOTOR-owned and unbound fallback pads still surface.
+        expect(pins).toContain("B00");
+        expect(pins).toContain("C09");
     });
 
     it("filters servo candidates outside the silkscreen pad pool by default", () => {

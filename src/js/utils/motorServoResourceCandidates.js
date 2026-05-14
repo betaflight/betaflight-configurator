@@ -324,6 +324,19 @@ function addFallbackOptions(options, seen, fallbackPins, ctx) {
     for (const pin of fallbackPins ?? []) {
         const normalized = normalizePin(pin);
         const assignment = describeCurrentAssignment(normalized, ctx);
+        // Honor caller release whitelists — same guards as the silkscreen-
+        // motor loop. A fallback pad owned by LED_STRIP or a UART must not
+        // surface a release line unless the caller opted into releasing it
+        // (allowLedStrip / allowUartRelease); otherwise picking the row
+        // could emit `resource LED_STRIP 1 NONE` / `resource SERIAL_* NONE`
+        // outside the guards the main candidate builders enforce.
+        const uartMatch = /^UART(\d+)\s+(TX|RX)$/i.exec(assignment ?? "");
+        if (uartMatch && !(ctx?.allowUartRelease ?? []).includes(Number(uartMatch[1]))) {
+            continue;
+        }
+        if (assignment === "LED_STRIP" && !ctx?.allowLedStrip) {
+            continue;
+        }
         const timer = timerSuffixForPin(normalized, ctx?.padTimers);
         const head = padDisplayLabel(normalized, ctx?.silkscreenMap);
         const parts = [head];
@@ -380,6 +393,8 @@ function motorOptions({
         silkscreenMap,
         ledStrips,
         serials,
+        allowLedStrip,
+        allowUartRelease,
     };
     const options = [];
     const seen = new Set();
@@ -511,6 +526,8 @@ function servoOptions({
         silkscreenMap,
         ledStrips,
         serials,
+        allowLedStrip,
+        allowUartRelease,
     };
     const options = [];
     const seen = new Set();
