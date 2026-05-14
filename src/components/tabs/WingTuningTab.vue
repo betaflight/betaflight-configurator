@@ -44,7 +44,7 @@
                             </div>
                             <div class="grid grid-cols-[180px_100px_1fr] gap-2 items-center">
                                 <span
-                                    title="Trims pitch attitude in Angle mode. Units of 0.1°. Negative pitches the nose down. See BF PR #14009."
+                                    title="Trims pitch attitude in Angle mode. Units of 0.1°. Positive pitches the nose down, negative pitches the nose up. See BF PR #14009."
                                 >
                                     angle_pitch_offset (0.1°)
                                 </span>
@@ -570,11 +570,11 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, computed, watch } from "vue";
+import { defineComponent, ref, computed, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
-import { useWingTuningStore } from "@/stores/wingTuning";
+import { useWingTuningStore, FIELD_DEFS } from "@/stores/wingTuning";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -605,58 +605,16 @@ const ENUM_OPTIONS = Object.fromEntries(
 
 const PID_GAIN_MAX = 200;
 
-// Field definitions: name → parse/format type. "int" and "string" only.
-// Enums (lookup tables) are strings; everything else is int.
-const FIELD_DEFS = [
-    // S-term
-    { name: "s_pitch", type: "int" },
-    { name: "s_roll", type: "int" },
-    { name: "s_yaw", type: "int" },
-    // Yaw type
-    { name: "yaw_type", type: "string" },
-    // Angle mode
-    { name: "angle_pitch_offset", type: "int" },
-    { name: "angle_earth_ref", type: "int" },
-    // TPA mode + airspeed
-    { name: "tpa_mode", type: "string" },
-    { name: "tpa_speed_type", type: "string" },
-    { name: "tpa_speed_basic_delay", type: "int" },
-    { name: "tpa_speed_basic_gravity", type: "int" },
-    { name: "tpa_speed_max_voltage", type: "int" },
-    { name: "tpa_speed_pitch_offset", type: "int" },
-    // TPA curve
-    { name: "tpa_curve_type", type: "string" },
-    { name: "tpa_curve_stall_throttle", type: "int" },
-    { name: "tpa_curve_pid_thr0", type: "int" },
-    { name: "tpa_curve_pid_thr100", type: "int" },
-    { name: "tpa_curve_expo", type: "int" },
-    // SPA
-    { name: "spa_roll_center", type: "int" },
-    { name: "spa_roll_width", type: "int" },
-    { name: "spa_roll_mode", type: "string" },
-    { name: "spa_pitch_center", type: "int" },
-    { name: "spa_pitch_width", type: "int" },
-    { name: "spa_pitch_mode", type: "string" },
-    { name: "spa_yaw_center", type: "int" },
-    { name: "spa_yaw_width", type: "int" },
-    { name: "spa_yaw_mode", type: "string" },
-];
-
-function defaultFields() {
-    const f = {};
-    for (const def of FIELD_DEFS) {
-        f[def.name] = def.type === "string" ? "" : 0;
-    }
-    return f;
-}
-
 export default defineComponent({
     name: "WingTuningTab",
     components: { BaseTab, UiBox, SettingRow },
 
     setup() {
-        const fields = reactive(defaultFields());
         const wingTuningStore = useWingTuningStore();
+        // `fields` is owned by the Pinia store so other code (presets,
+        // wizards, etc.) can read/write through a single SSoT. MSP I/O
+        // remains in this tab.
+        const fields = wingTuningStore.fields;
 
         const loading = ref(false);
         const saving = ref(false);
@@ -674,7 +632,7 @@ export default defineComponent({
         // so the template binding stays unchanged.
         const dirty = computed(() => wingTuningStore.hasChanges);
 
-        watch(fields, () => wingTuningStore.checkForChanges(fields), { deep: true });
+        watch(fields, () => wingTuningStore.checkForChanges(), { deep: true });
 
         // Capability check — tab requires a USE_WING firmware build.
         // The MSP codes (MSP2_WING_TUNING / MSP2_SET_WING_TUNING) ship
