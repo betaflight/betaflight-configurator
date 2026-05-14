@@ -10,7 +10,7 @@
                     <div class="location-inputs">
                         <div class="default_btn">
                             <a href="#" @click.prevent="detectLocation" :class="{ disabled: detectingLocation }">
-                                <em class="fas fa-crosshairs"></em>
+                                <UIcon name="i-lucide-crosshair" class="size-4" />
                                 {{ detectingLocation ? $t("preflightDetecting") : $t("preflightUseMyLocation") }}
                             </a>
                         </div>
@@ -49,7 +49,7 @@
                             class="default_btn"
                         >
                             <a href="#" @click.prevent="showSaveDialog" :title="$t('preflightSaveLocation')">
-                                <em class="fas fa-bookmark"></em>
+                                <UIcon name="i-lucide-bookmark" class="size-4" />
                                 {{ $t("preflightSaveLocation") }}
                             </a>
                         </div>
@@ -71,7 +71,7 @@
                                     :class="{ disabled: selectedSavedIndex < 0 }"
                                     :title="$t('preflightRenameLocation')"
                                 >
-                                    <em class="fas fa-pencil-alt"></em>
+                                    <UIcon name="i-lucide-pencil" class="size-4" />
                                 </a>
                             </div>
                             <div class="default_btn saved-loc-btn">
@@ -81,7 +81,7 @@
                                     :class="{ disabled: selectedSavedIndex < 0 }"
                                     :title="$t('preflightDeleteLocation')"
                                 >
-                                    <em class="fas fa-trash-alt"></em>
+                                    <UIcon name="i-lucide-trash-2" class="size-4" />
                                 </a>
                             </div>
                             <div class="default_btn saved-loc-btn">
@@ -99,7 +99,7 @@
                                             : $t('preflightSaveLocation')
                                     "
                                 >
-                                    <em class="fas fa-bookmark"></em>
+                                    <UIcon name="i-lucide-bookmark" class="size-4" />
                                 </a>
                             </div>
                         </template>
@@ -135,7 +135,7 @@
                                 </div>
                                 <div class="default_btn saved-loc-btn">
                                     <a href="#" @click.prevent="cancelEditMode">
-                                        <em class="fas fa-times"></em>
+                                        <UIcon name="i-lucide-x" class="size-4" />
                                     </a>
                                 </div>
                             </div>
@@ -143,17 +143,17 @@
                     </div>
 
                     <div class="location-status" v-if="preflight.location.latitude !== null">
-                        <em class="fas fa-map-marker-alt"></em>
+                        <UIcon name="i-lucide-map-pin" class="size-4" />
                         {{ preflight.location.name }}
                         <span v-if="preflight.location.source" class="location-source"
                             >({{ preflight.location.source }})</span
                         >
                     </div>
                     <div class="location-error" v-if="locationError">
-                        <em class="fas fa-exclamation-triangle"></em> {{ locationError }}
+                        <UIcon name="i-lucide-triangle-alert" class="size-4" /> {{ locationError }}
                     </div>
                     <div class="ip-consent-prompt" v-if="showIpConsent">
-                        <em class="fas fa-shield-alt"></em>
+                        <UIcon name="i-lucide-shield" class="size-4" />
                         <span>{{ $t("preflightIpConsentMessage") }}</span>
                         <div class="ip-consent-actions">
                             <div class="default_btn">
@@ -181,7 +181,7 @@
                 <div class="launch-status-value">{{ $t(preflight.launchStatus.label) }}</div>
                 <div class="default_btn refresh-btn">
                     <a href="#" @click.prevent="refreshData" :class="{ disabled: preflight.isLoading }">
-                        <em class="fas fa-sync-alt" :class="{ 'fa-spin': preflight.isLoading }"></em>
+                        <UIcon name="i-lucide-refresh-cw" class="size-4" :class="{ 'animate-spin': preflight.isLoading }" />
                         {{ $t("preflightRefresh") }}
                     </a>
                 </div>
@@ -195,16 +195,16 @@
                     class="launch-check-item"
                     :class="chk.cssClass"
                 >
-                    <em
-                        class="fas"
-                        :class="
+                    <UIcon
+                        class="size-4"
+                        :name="
                             chk.level === 'good'
-                                ? 'fa-check-circle'
+                                ? 'i-lucide-circle-check'
                                 : chk.level === 'danger'
-                                  ? 'fa-times-circle'
-                                  : 'fa-exclamation-circle'
+                                  ? 'i-lucide-circle-x'
+                                  : 'i-lucide-circle-alert'
                         "
-                    ></em>
+                    />
                     {{ $t(chk.nameKey) }}
                 </span>
             </div>
@@ -214,14 +214,15 @@
                 <!-- Left Column: Weather -->
                 <div class="flex flex-col gap-4 md:col-span-3">
                     <!-- Current Weather -->
-                    <UiBox :title="`<em class='fas fa-cloud-sun'></em> ${$t('preflightCurrentWeather')}`">
+                    <UiBox :title="$t('preflightCurrentWeather')">
                         <template #title>
+                            <UIcon name="i-lucide-cloud-sun" class="size-4" />
                             <div v-if="preflight.weather.loading" class="text-primary">
-                                <em class="fas fa-spinner fa-spin"></em>
+                                <UIcon name="i-lucide-loader-circle" class="size-4 animate-spin" />
                             </div>
                         </template>
                         <div v-if="preflight.weather.error" class="error-message">
-                            <em class="fas fa-exclamation-circle"></em> {{ preflight.weather.error }}
+                            <UIcon name="i-lucide-circle-alert" class="size-4" /> {{ preflight.weather.error }}
                         </div>
                         <div v-else-if="preflight.weather.current" class="weather-grid">
                             <div class="weather-main">
@@ -295,8 +296,11 @@
                     <!-- Flight Window -->
                     <UiBox
                         v-if="preflight.weather.daily"
-                        :title="`<em class='fas fa-clock'></em> ${$t('preflightFlightWindow')}`"
+                        :title="$t('preflightFlightWindow')"
                     >
+                        <template #title>
+                            <UIcon name="i-lucide-clock" class="size-4" />
+                        </template>
                         <div class="flight-window-grid">
                             <div class="flight-window-item">
                                 <div class="fw-label">{{ $t("preflightSunrise") }}</div>
@@ -364,9 +368,12 @@
 
                     <!-- Wind at Altitude (Hourly) -->
                     <UiBox
-                        :title="`<em class='fas fa-wind'></em> ${$t('preflightWindForecast')}`"
+                        :title="$t('preflightWindForecast')"
                         :help="$t('preflightWindForecastHelp')"
                     >
+                        <template #title>
+                            <UIcon name="i-lucide-wind" class="size-4" />
+                        </template>
                         <UTable
                             :data="preflight.weather.hourly ?? []"
                             :columns="hourlyColumns"
@@ -418,9 +425,12 @@
                     <!-- 5-Day Forecast -->
                     <UiBox
                         v-if="preflight.weather.forecast && preflight.weather.forecast.length > 0"
-                        :title="`<em class='fas fa-calendar-alt'></em> ${$t('preflightForecast')}`"
+                        :title="$t('preflightForecast')"
                         :help="$t('preflightForecastHelp')"
                     >
+                        <template #title>
+                            <UIcon name="i-lucide-calendar" class="size-4" />
+                        </template>
                         <UTable
                             :data="preflight.weather.forecast"
                             :columns="forecastColumns"
@@ -474,11 +484,14 @@
                 <div class="flex flex-col gap-4 md:col-span-2">
                     <!-- Solar Activity -->
                     <UiBox
-                        :title="`<em class='fas fa-sun'></em> ${$t('preflightSolarActivity')}`"
+                        :title="$t('preflightSolarActivity')"
                         :help="$t('preflightSolarHelp')"
                     >
+                        <template #title>
+                            <UIcon name="i-lucide-sun" class="size-4" />
+                        </template>
                         <div v-if="preflight.solar.error" class="error-message">
-                            <em class="fas fa-exclamation-circle"></em> {{ preflight.solar.error }}
+                            <UIcon name="i-lucide-circle-alert" class="size-4" /> {{ preflight.solar.error }}
                         </div>
                         <div v-else-if="preflight.solar.kpIndex !== null" class="solar-info">
                             <div class="kp-display">
@@ -523,16 +536,19 @@
                             </div>
                         </div>
                         <div v-else-if="preflight.solar.loading" class="loading-placeholder">
-                            <em class="fas fa-spinner fa-spin"></em> {{ $t("preflightLoadingSolar") }}
+                            <UIcon name="i-lucide-loader-circle" class="size-4 animate-spin" /> {{ $t("preflightLoadingSolar") }}
                         </div>
                         <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
                     </UiBox>
 
                     <!-- GNSS Info -->
                     <UiBox
-                        :title="`<em class='fas fa-satellite'></em> ${$t('preflightGNSS')}`"
+                        :title="$t('preflightGNSS')"
                         :help="$t('preflightGNSSHelp')"
                     >
+                        <template #title>
+                            <UIcon name="i-lucide-satellite" class="size-4" />
+                        </template>
                         <div class="gnss-info">
                             <p>{{ $t("preflightGNSSNote") }}</p>
                             <UTable
@@ -548,14 +564,17 @@
                             </UTable>
                             <div class="gnss-links">
                                 <a href="https://www.gnssplanning.com/" target="_blank" rel="noopener noreferrer">
-                                    <em class="fas fa-external-link-alt"></em> {{ $t("preflightGNSSPlanner") }}
+                                    <UIcon name="i-lucide-external-link" class="size-4" /> {{ $t("preflightGNSSPlanner") }}
                                 </a>
                             </div>
                         </div>
                     </UiBox>
 
                     <!-- Airspace / No-Fly Zones -->
-                    <UiBox :title="`<em class='fas fa-ban'></em> ${$t('preflightAirspace')}`">
+                    <UiBox :title="$t('preflightAirspace')">
+                        <template #title>
+                            <UIcon name="i-lucide-circle-off" class="size-4" />
+                        </template>
                         <div class="airspace-info">
                             <p>{{ $t("preflightAirspaceNote") }}</p>
                             <div class="airspace-links">
@@ -566,7 +585,7 @@
                                     rel="noopener noreferrer"
                                     class="airspace-link"
                                 >
-                                    <em class="fas fa-shield-alt"></em> {{ $t("preflightDroneSafetyMap") }}
+                                    <UIcon name="i-lucide-shield" class="size-4" /> {{ $t("preflightDroneSafetyMap") }}
                                 </a>
                                 <a
                                     v-if="preflight.location.latitude !== null"
@@ -575,7 +594,7 @@
                                     rel="noopener noreferrer"
                                     class="airspace-link"
                                 >
-                                    <em class="fas fa-map"></em> {{ $t("preflightAirspaceExplorer") }}
+                                    <UIcon name="i-lucide-map" class="size-4" /> {{ $t("preflightAirspaceExplorer") }}
                                 </a>
                                 <a
                                     v-if="preflight.location.latitude !== null"
@@ -584,7 +603,7 @@
                                     rel="noopener noreferrer"
                                     class="airspace-link"
                                 >
-                                    <em class="fas fa-exclamation-triangle"></em> {{ $t("preflightNOTAMs") }}
+                                    <UIcon name="i-lucide-triangle-alert" class="size-4" /> {{ $t("preflightNOTAMs") }}
                                 </a>
                                 <a
                                     v-if="preflight.location.latitude !== null"
@@ -593,7 +612,7 @@
                                     rel="noopener noreferrer"
                                     class="airspace-link"
                                 >
-                                    <em class="fas fa-exclamation-triangle"></em> {{ $t("preflightNOTAMsEU") }}
+                                    <UIcon name="i-lucide-triangle-alert" class="size-4" /> {{ $t("preflightNOTAMsEU") }}
                                 </a>
                             </div>
                         </div>
@@ -601,9 +620,12 @@
 
                     <!-- Map -->
                     <UiBox
-                        :title="`<em class='fas fa-map-marked-alt'></em> ${$t('preflightMap')}`"
+                        :title="$t('preflightMap')"
                         class="preflight-map-box"
                     >
+                        <template #title>
+                            <UIcon name="i-lucide-map-pinned" class="size-4" />
+                        </template>
                         <div class="preflight-map-container" ref="mapContainerRef">
                             <div id="preflight-map" class="preflight-map" ref="mapRef"></div>
                             <div class="controls">

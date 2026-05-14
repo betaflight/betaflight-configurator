@@ -2527,9 +2527,6 @@ export default defineComponent({
         z-index: auto;
         pointer-events: all;
         display: flex;
-        .fa-search::before {
-            font-size: 11px;
-        }
         span {
             padding: 0 0.5rem;
             background-color: var(--primary-500);
