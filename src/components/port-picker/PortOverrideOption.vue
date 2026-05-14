@@ -2,13 +2,13 @@
     <div v-if="isManual" id="port-override-option">
         <label for="port-override">
             <span>{{ $t("portOverrideText") }}</span>
-            <input id="port-override" type="text" :value="modelValue" @input="inputValueChanged($event.target.value)" />
+            <UInput v-model="localValue" @update:modelValue="inputValueChanged" size="sm" />
         </label>
     </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { set as setConfig } from "../../js/ConfigStorage";
 
 export default defineComponent({
@@ -24,12 +24,22 @@ export default defineComponent({
     },
     emits: ["update:modelValue"],
     setup(props, { emit }) {
+        const localValue = ref(props.modelValue);
+
+        watch(
+            () => props.modelValue,
+            (v) => {
+                localValue.value = v;
+            },
+        );
+
         const inputValueChanged = (newValue) => {
             setConfig({ portOverride: newValue });
             emit("update:modelValue", newValue);
         };
 
         return {
+            localValue,
             inputValueChanged,
         };
     },

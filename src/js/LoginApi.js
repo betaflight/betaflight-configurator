@@ -274,6 +274,42 @@ export default class LoginApi {
         }
     }
 
+    /**
+     * Verify an emailed code and obtain a refresh token without using a passkey.
+     * Intended for browsers where passkey authentication is unreliable.
+     */
+    async verifyLogin(email, code) {
+        const response = await fetch(`${this._url}/api/user/verify/${encodeURIComponent(email)}/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, key: code }),
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            let errorMsg = text || response.statusText;
+            try {
+                const body = JSON.parse(text);
+                if (body?.error) {
+                    errorMsg = body.error;
+                }
+            } catch {
+                // not JSON — use text as-is
+            }
+            throw new Error(errorMsg);
+        }
+
+        const result = await response.json();
+        if (!result.token) {
+            throw new Error("Server did not return a valid token");
+        }
+
+        setConfig({ userToken: result.token });
+        await this.checkToken();
+    }
+
     async isSignedIn() {
         try {
             return await this.checkToken();

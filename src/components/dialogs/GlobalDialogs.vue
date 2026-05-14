@@ -16,6 +16,13 @@ import YesNoDialog from "./YesNoDialog.vue";
 import InformationDialog from "./InformationDialog.vue";
 import WaitDialog from "./WaitDialog.vue";
 import RebootDialog from "./RebootDialog.vue";
+import EscDshotDirectionDialog from "./EscDshotDirectionDialog.vue";
+import MotorOutputReorderingDialog from "./MotorOutputReorderingDialog.vue";
+import ProfileSelectionDialog from "./ProfileSelectionDialog.vue";
+import RatesTypeDialog from "./RatesTypeDialog.vue";
+import CopyProfileDialog from "./CopyProfileDialog.vue";
+import ReportProblemsDialog from "./ReportProblemsDialog.vue";
+import InteractiveDialog from "./InteractiveDialog.vue";
 
 const dialogStore = useDialogStore();
 const currentDialogRef = ref(null);
@@ -25,6 +32,13 @@ const dialogComponents = {
     InformationDialog,
     WaitDialog,
     RebootDialog,
+    EscDshotDirectionDialog,
+    MotorOutputReorderingDialog,
+    ProfileSelectionDialog,
+    RatesTypeDialog,
+    CopyProfileDialog,
+    ReportProblemsDialog,
+    InteractiveDialog,
 };
 
 watch(

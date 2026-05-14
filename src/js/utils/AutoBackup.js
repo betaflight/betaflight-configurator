@@ -246,6 +246,12 @@ class AutoBackup {
             this.boundHandleConnect = this.handleConnect.bind(this);
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.connect(port, { baudRate: baud });
+        } else if (port.startsWith("capacitor-")) {
+            // Skip backup on Android (serial disconnect causes device loss), proceed with flashing
+            console.log("AutoBackup: Skipping backup on Android capacitor port");
+            if (this.callback) {
+                this.callback(true);
+            }
         } else {
             gui_log(i18n.getMessage("firmwareFlasherNoPortSelected"));
         }

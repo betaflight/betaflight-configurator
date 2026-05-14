@@ -7,10 +7,30 @@ on:
     types: [published]
 
 jobs:
+  check_tag:
+    name: Check Modern Tag Format
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check if tag starts with 20
+        id: check
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [[ "$RELEASE_TAG" == 20* ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "✓ Tag format is valid: $RELEASE_TAG"
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "✗ Tag does not start with '20': $RELEASE_TAG"
+          fi
+
   modern_build:
     name: Build
+    needs: check_tag
+    if: needs.check_tag.outputs.should_run == 'true'
     uses: ./.github/workflows/build.yml
-    if: startsWith(github.event.release.tag_name, '20')
     with:
       debug_build: false
       commit_ref: ${{ github.event.release.target_commitish }}
@@ -24,7 +44,6 @@ jobs:
     name: Attach Release Artifacts
     needs: modern_build
     runs-on: ubuntu-latest
-    if: startsWith(github.event.release.tag_name, '20')
     steps:
       - name: Code Checkout
         uses: actions/checkout@v5
@@ -44,3 +63,87 @@ jobs:
           gh release upload "${TAG_NAME}" "${ASSETS[@]}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  prepare_environment:
+    name: Prepare Environment Name
+    needs: check_tag
+    if: needs.check_tag.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      env_name: ${{ steps.version.outputs.env_name }}
+    steps:
+      - name: Extract version for environment
+        id: version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          # Extract first two parts (e.g., 2025.12.1 -> 2025.12)
+          VERSION=$(echo "$RELEASE_TAG" | cut -d. -f1,2)
+          # Append -maintenance
+          ENV_NAME="${VERSION}-maintenance"
+          echo "env_name=${ENV_NAME}" >> $GITHUB_OUTPUT
+          echo "Environment will be: ${ENV_NAME}"
+
+  check_latest:
+    name: Check if Latest Release (with retry)
+    needs: [check_tag, modern_build]
+    if: needs.check_tag.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      is_latest: ${{ steps.check.outputs.is_latest }}
+    steps:
+      - name: Check if this is the latest release with retry
+        id: check
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MAX_RETRIES=5
+          RETRY_DELAY=10
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i/$MAX_RETRIES: Checking latest release..."
+
+            # Get the latest release tag from GitHub API
+            LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name')
+
+            echo "Current: $RELEASE_TAG, Latest from API: $LATEST_TAG"
+
+            if [ "$RELEASE_TAG" = "$LATEST_TAG" ]; then
+              echo "is_latest=true" >> $GITHUB_OUTPUT
+              echo "✓ This is the latest release: $RELEASE_TAG (confirmed after $i attempt(s))"
+              exit 0
+            elif [ $i -lt $MAX_RETRIES ]; then
+              echo "⏳ Tags don't match yet, waiting ${RETRY_DELAY}s before retry..."
+              sleep $RETRY_DELAY
+            fi
+          done
+
+          # After all retries, it's not the latest
+          echo "is_latest=false" >> $GITHUB_OUTPUT
+          echo "✗ Not the latest release after $MAX_RETRIES attempts. Current: $RELEASE_TAG, Latest: $LATEST_TAG"
+
+  # Deploy to versioned maintenance branch
+  modern_deploy:
+    name: Deploy to Maintenance Branch
+    needs: [modern_build, prepare_environment]
+    uses: ./.github/workflows/deploy_cloudflare.yml
+    with:
+      branch_name: ${{ needs.prepare_environment.outputs.env_name }}
+      environment_name: ${{ needs.prepare_environment.outputs.env_name }}
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  # Deploy to https://app.betaflight.com if latest release
+  modern_deploy_latest:
+    name: Deploy Latest to Production
+    needs: [modern_build, check_latest]
+    if: needs.check_latest.outputs.is_latest == 'true'
+    uses: ./.github/workflows/deploy_cloudflare.yml
+    with:
+      branch_name: "release"
+      environment_name: "release"
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

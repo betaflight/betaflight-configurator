@@ -5,36 +5,34 @@ export default class MotorOutputReorderCanvas {
         this._spinMotorCallback = spinMotorCallback;
         this._canvas = canvas;
         this._motorClickCallback = motorClickCallback;
-        this._width = this._canvas.width();
-        this._height = this._canvas.height();
+        this._width = this._canvas.clientWidth;
+        this._height = this._canvas.clientHeight;
         this._screenSize = Math.min(this._width, this._height);
 
         this._config = new MotorOutputReorderConfig(this._screenSize);
 
         // no component resize allowing yet
-        this._canvas.prop({
-            width: this._width,
-            height: this._height,
-        });
+        this._canvas.width = this._width;
+        this._canvas.height = this._height;
 
         this._droneConfiguration = droneConfiguration;
 
-        this._ctx = this._canvas[0].getContext("2d");
+        this._ctx = this._canvas.getContext("2d");
         this._ctx.translate(this._width / 2, this._height / 2);
 
-        this._canvas.mousemove((event) => {
+        this._canvas.addEventListener("mousemove", (event) => {
             this._onMouseMove(event);
         });
-        this._canvas.mouseleave(() => {
+        this._canvas.addEventListener("mouseleave", () => {
             this._onMouseLeave();
         });
-        this._canvas.mousedown(() => {
+        this._canvas.addEventListener("mousedown", () => {
             this._onMouseDown();
         });
-        this._canvas.mouseup(() => {
-            this._onMouseUp(event);
+        this._canvas.addEventListener("mouseup", () => {
+            this._onMouseUp();
         });
-        this._canvas.click(() => {
+        this._canvas.addEventListener("click", () => {
             this._onMouseClick();
         });
 
@@ -101,7 +99,7 @@ export default class MotorOutputReorderCanvas {
     }
 
     _onMouseMove(event) {
-        const boundingRect = this._canvas[0].getBoundingClientRect();
+        const boundingRect = this._canvas.getBoundingClientRect();
         this._mouse.x = event.clientX - boundingRect.left - this._width / 2;
         this._mouse.y = event.clientY - boundingRect.top - this._height / 2;
     }

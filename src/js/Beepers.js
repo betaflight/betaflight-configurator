@@ -1,5 +1,4 @@
 import { bit_check, bit_clear, bit_set } from "./bit";
-import $ from "jquery";
 
 class Beepers {
     constructor(config, supportedConditions) {
@@ -73,34 +72,41 @@ class Beepers {
 
         for (let i = 0; i < self._beepers.length; i++) {
             if (self._beepers[i].visible) {
-                const element = template.clone();
-                destination.append(element);
+                const element = template.cloneNode(true);
+                destination.appendChild(element);
 
-                const inputElement = $(element).find("input");
-                const labelElement = $(element).find("div");
-                const spanElement = $(element).find("span");
+                const inputElement = element.querySelector("input");
+                const labelElement = element.querySelector("div");
+                const spanElement = element.querySelector("span");
 
-                inputElement.attr("id", `beeper-${i}`);
-                inputElement.attr("name", self._beepers[i].name);
-                inputElement.attr("title", self._beepers[i].name);
-                inputElement.prop("checked", !bit_check(self._beeperDisabledMask, self._beepers[i].bit));
-                inputElement.data("bit", self._beepers[i].bit);
+                if (inputElement) {
+                    inputElement.id = `beeper-${i}`;
+                    inputElement.name = self._beepers[i].name;
+                    inputElement.title = self._beepers[i].name;
+                    inputElement.checked = !bit_check(self._beeperDisabledMask, self._beepers[i].bit);
+                    inputElement.dataset.bit = self._beepers[i].bit;
+                }
 
-                labelElement.text(self._beepers[i].name);
+                if (labelElement) {
+                    labelElement.textContent = self._beepers[i].name;
+                }
+                if (spanElement) {
+                    spanElement.setAttribute("i18n", `beeper${self._beepers[i].name}`);
+                }
 
-                spanElement.attr("i18n", `beeper${self._beepers[i].name}`);
-
-                element.show();
+                element.style.display = "";
             }
         }
     }
     updateData(beeperElement) {
         const self = this;
 
-        if (beeperElement.attr("type") === "checkbox") {
-            const bit = beeperElement.data("bit");
+        const type = beeperElement.type ?? beeperElement.getAttribute?.("type");
 
-            if (beeperElement.is(":checked")) {
+        if (type === "checkbox") {
+            const bit = Number.parseInt(beeperElement.dataset?.bit ?? beeperElement.getAttribute?.("data-bit"), 10);
+
+            if (beeperElement.checked) {
                 self._beeperDisabledMask = bit_clear(self._beeperDisabledMask, bit);
             } else {
                 self._beeperDisabledMask = bit_set(self._beeperDisabledMask, bit);

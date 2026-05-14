@@ -56,7 +56,7 @@ defineExpose({
     transform: translate(-50%, -50%);
     margin: 0;
     border: none;
-    padding: 0;
+    padding: 1rem;
     /* Reset default dialog styles if needed, though scoped styles usually suffice */
 }
 

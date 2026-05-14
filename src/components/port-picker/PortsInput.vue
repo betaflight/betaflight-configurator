@@ -1,85 +1,62 @@
 <template>
     <div id="portsinput">
-        <div class="dropdown dropdown-dark">
-            <select
-                id="port"
-                :value="modelValue.selectedPort"
-                class="dropdown-select"
-                :title="$t('firmwareFlasherManualPort')"
-                :disabled="disabled"
-                @change="onChangePort"
-            >
-                <option value="noselection" disabled>
-                    {{ $t("portsSelectNoSelection") }}
-                </option>
-                <option v-if="showManualOption" value="manual">
-                    {{ $t("portsSelectManual") }}
-                </option>
-                <option v-if="showVirtualOption" value="virtual">
-                    {{ $t("portsSelectVirtual") }}
-                </option>
-                <option
-                    v-if="showBluetoothOption"
-                    v-for="connectedBluetoothDevice in connectedBluetoothDevices"
-                    :key="connectedBluetoothDevice.path"
-                    :value="connectedBluetoothDevice.path"
-                >
-                    {{ connectedBluetoothDevice.displayName }}
-                </option>
-                <option
-                    v-if="showSerialOption"
-                    v-for="connectedSerialDevice in connectedSerialDevices"
-                    :key="connectedSerialDevice.path"
-                    :value="connectedSerialDevice.path"
-                >
-                    {{ connectedSerialDevice.displayName }}
-                </option>
-                <option
-                    v-if="showUsbOption"
-                    v-for="connectedUsbDevice in connectedUsbDevices"
-                    :key="connectedUsbDevice.path"
-                    :value="connectedUsbDevice.path"
-                >
-                    {{ connectedUsbDevice.displayName }}
-                </option>
-                <option v-if="showSerialOption" value="requestpermissionserial">
-                    {{ $t("portsSelectPermission") }}
-                </option>
-                <option v-if="showBluetoothOption" value="requestpermissionbluetooth">
-                    {{ $t("portsSelectPermissionBluetooth") }}
-                </option>
-                <option v-if="showUsbOption" value="requestpermissionusb">
-                    {{ $t("portsSelectPermissionDFU") }}
-                </option>
-            </select>
-        </div>
+        <USelect
+            :items="[
+                { label: $t('portsSelectNoSelection'), value: 'noselection', disabled: true },
+                ...(showManualOption ? [{ label: $t('portsSelectManual'), value: 'manual' }] : []),
+                ...(showVirtualOption ? [{ label: $t('portsSelectVirtual'), value: 'virtual' }] : []),
+                ...(showBluetoothOption
+                    ? connectedBluetoothDevices.map((device) => ({
+                          label: device.displayName,
+                          value: device.path,
+                          icon: 'i-lucide-bluetooth',
+                      }))
+                    : []),
+                ...(showSerialOption
+                    ? connectedSerialDevices.map((device) => ({
+                          label: device.displayName,
+                          value: device.path,
+                          icon: 'i-lucide-usb',
+                      }))
+                    : []),
+                ...(showUsbOption
+                    ? connectedUsbDevices.map((device) => ({
+                          label: device.displayName,
+                          value: device.path,
+                          icon: 'i-lucide-cpu',
+                      }))
+                    : []),
+                { type: 'separator' },
+                ...(showSerialOption ? [{ label: $t('portsSelectPermission'), value: 'requestpermissionserial' }] : []),
+                ...(showBluetoothOption
+                    ? [{ label: $t('portsSelectPermissionBluetooth'), value: 'requestpermissionbluetooth' }]
+                    : []),
+                ...(showUsbOption ? [{ label: $t('portsSelectPermissionDFU'), value: 'requestpermissionusb' }] : []),
+            ]"
+            v-model="selectedPort"
+            :disabled="disabled"
+            size="sm"
+            class="sm:min-w-64 min-w-full"
+            @change="onChangePort"
+            :ui="{
+                content: 'max-h-96',
+            }"
+        />
         <div id="auto-connect-and-baud">
-            <div
-                id="auto-connect-switch"
-                :title="modelValue.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
-            >
-                <input id="auto-connect" v-model="autoConnect" class="auto_connect togglesmall" type="checkbox" />
-                <span class="auto_connect">
-                    {{ $t("autoConnect") }}
-                </span>
+            <div :title="modelValue.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')">
+                <USwitch :label="$t('autoConnect')" v-model="autoConnect" :disabled="disabled" size="xs" />
             </div>
-            <div
-                v-if="modelValue.selectedPort !== 'virtual' && modelValue.selectedPort !== 'noselection'"
-                id="baudselect"
-            >
-                <div class="dropdown dropdown-dark">
-                    <select
-                        id="baud"
-                        v-model="selectedBauds"
-                        class="dropdown-select"
-                        :title="$t('firmwareFlasherBaudRate')"
-                        :disabled="disabled"
-                    >
-                        <option v-for="baudRate in baudRates" :key="baudRate.value" :value="baudRate.value">
-                            {{ baudRate.label }}
-                        </option>
-                    </select>
-                </div>
+            <div v-if="selectedPort !== 'virtual' && selectedPort !== 'noselection'" id="baudselect">
+                <USelect
+                    :items="baudRates"
+                    v-model="selectedBauds"
+                    :disabled="disabled"
+                    size="xs"
+                    class="min-w-24"
+                    :ui="{
+                        content: 'max-h-96',
+                    }"
+                />
             </div>
         </div>
     </div>
@@ -158,6 +135,14 @@ export default defineComponent({
             { value: "1200", label: "1200" },
         ]);
 
+        // Keep UI in sync when PortHandler (or parent) updates selectedPort, e.g. after WebUSB permission dialog
+        watch(
+            () => props.modelValue.selectedPort,
+            (v) => {
+                selectedPort.value = v;
+            },
+        );
+
         watch(selectedPort, (newValue) => {
             emit("update:modelValue", { ...props.modelValue, selectedPort: newValue });
         });
@@ -171,15 +156,15 @@ export default defineComponent({
             setConfig({ autoConnect: newValue });
         });
 
-        const onChangePort = (event) => {
-            const value = event.target.value;
+        const onChangePort = () => {
+            const value = selectedPort.value;
 
             if (value.startsWith("requestpermission")) {
                 // Extract "serial", "bluetooth", etc., and format the event name
                 const type = value.replace("requestpermission", "");
                 EventBus.$emit(`ports-input:request-permission-${type}`);
-                // Reset selection to "No Selection"
-                emit("update:modelValue", { ...props.modelValue, selectedPort: "noselection" });
+                // Reset selection to "No Selection" (watch(selectedPort) emits update:modelValue)
+                selectedPort.value = "noselection";
             } else {
                 EventBus.$emit("ports-input:change", value);
             }

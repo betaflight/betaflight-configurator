@@ -1,11 +1,27 @@
 import { defineStore } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import FC from "../js/fc";
 import semver from "semver";
 
 export const useFlightControllerStore = defineStore("flightController", () => {
     // Proxy state directly to legacy reactive objects
     // FC is already reactive (export default reactive(FC)), so we just need to expose it
+
+    const armingFlags = ref([]);
+
+    function setArmingFlags(flags) {
+        armingFlags.value = flags;
+    }
+
+    function updateArmingFlags(bitmask) {
+        if (armingFlags.value.length) {
+            armingFlags.value.forEach((flag, index) => {
+                // Bitwise AND: Check if the i-th bit is set
+                // (1 << index) creates a mask like 0001, 0010, 0100, etc.
+                flag.visible = (bitmask & (1 << index)) !== 0;
+            });
+        }
+    }
 
     const config = computed({
         get: () => FC.CONFIG,
@@ -82,6 +98,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.SENSOR_CONFIG = val),
     });
 
+    const sensorConfigActive = computed({
+        get: () => FC.SENSOR_CONFIG_ACTIVE,
+        set: (val) => (FC.SENSOR_CONFIG_ACTIVE = val),
+    });
+
     const rxConfig = computed({
         get: () => FC.RX_CONFIG,
         set: (val) => (FC.RX_CONFIG = val),
@@ -122,6 +143,21 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.RSSI_CONFIG = val),
     });
 
+    const failsafeConfig = computed({
+        get: () => FC.FAILSAFE_CONFIG,
+        set: (val) => (FC.FAILSAFE_CONFIG = val),
+    });
+
+    const gpsRescue = computed({
+        get: () => FC.GPS_RESCUE,
+        set: (val) => (FC.GPS_RESCUE = val),
+    });
+
+    const rxFailConfig = computed({
+        get: () => FC.RXFAIL_CONFIG,
+        set: (val) => (FC.RXFAIL_CONFIG = val),
+    });
+
     const blackbox = computed({
         get: () => FC.BLACKBOX,
         set: (val) => (FC.BLACKBOX = val),
@@ -137,16 +173,146 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.SDCARD = val),
     });
 
-    // Computed Getters
+    const mixerConfig = computed({
+        get: () => FC.MIXER_CONFIG,
+        set: (val) => (FC.MIXER_CONFIG = val),
+    });
+
+    const motorConfig = computed({
+        get: () => FC.MOTOR_CONFIG,
+        set: (val) => (FC.MOTOR_CONFIG = val),
+    });
+
+    const motor3dConfig = computed({
+        get: () => FC.MOTOR_3D_CONFIG,
+        set: (val) => (FC.MOTOR_3D_CONFIG = val),
+    });
+
+    const motorOutputOrder = computed({
+        get: () => FC.MOTOR_OUTPUT_ORDER,
+        set: (val) => (FC.MOTOR_OUTPUT_ORDER = val),
+    });
+
+    const motorTelemetryData = computed({
+        get: () => FC.MOTOR_TELEMETRY_DATA,
+        set: (val) => (FC.MOTOR_TELEMETRY_DATA = val),
+    });
+
+    const advancedTuning = computed({
+        get: () => FC.ADVANCED_TUNING,
+        set: (val) => (FC.ADVANCED_TUNING = val),
+    });
+
+    const filterConfig = computed({
+        get: () => FC.FILTER_CONFIG,
+        set: (val) => (FC.FILTER_CONFIG = val),
+    });
+
+    const rcDeadbandConfig = computed({
+        get: () => FC.RC_DEADBAND_CONFIG,
+        set: (val) => (FC.RC_DEADBAND_CONFIG = val),
+    });
+
+    const rcMap = computed({
+        get: () => FC.RC_MAP,
+        set: (val) => (FC.RC_MAP = val),
+    });
+
+    const rcTuning = computed({
+        get: () => FC.RC_TUNING,
+        set: (val) => (FC.RC_TUNING = val),
+    });
+
+    const pids = computed({
+        get: () => FC.PIDS,
+        set: (val) => (FC.PIDS = val),
+    });
+
+    const pidNames = computed({
+        get: () => FC.PID_NAMES,
+        set: (val) => (FC.PID_NAMES = val),
+    });
+
+    const tuningSliders = computed({
+        get: () => FC.TUNING_SLIDERS,
+        set: (val) => (FC.TUNING_SLIDERS = val),
+    });
+
+    const defaultTuningSliders = computed(() => FC.DEFAULT_TUNING_SLIDERS);
+
+    const copyProfile = computed({
+        get: () => FC.COPY_PROFILE,
+        set: (val) => (FC.COPY_PROFILE = val),
+    });
+
+    const serialConfig = computed({
+        get: () => FC.SERIAL_CONFIG,
+        set: (val) => (FC.SERIAL_CONFIG = val),
+    });
+
+    const servoConfig = computed({
+        get: () => FC.SERVO_CONFIG,
+        set: (val) => (FC.SERVO_CONFIG = val),
+    });
+
+    const servoData = computed({
+        get: () => FC.SERVO_DATA,
+        set: (val) => (FC.SERVO_DATA = val),
+    });
+
+    const ledStrip = computed({
+        get: () => FC.LED_STRIP,
+        set: (val) => (FC.LED_STRIP = val),
+    });
+
+    const vtxConfig = computed({
+        get: () => FC.VTX_CONFIG,
+        set: (val) => (FC.VTX_CONFIG = val),
+    });
+
+    // Computed getters
     const apiVersion = computed(() => config.value.apiVersion);
+
+    const sensorNames = computed(() => FC.SENSOR_NAMES);
+
+    const mcuInfo = computed(() => FC.MCU_INFO);
+
+    const isReadyToArm = computed(() => {
+        // Arming is disabled if any flag is visible,
+        // EXCEPT for the very last bit (ARM_SWITCH), which is usually expected.
+        return armingFlags.value.filter((f) => f.name !== "ARM_SWITCH").every((f) => !f.visible);
+    });
+
+    const activeFlagNames = computed(() => {
+        return armingFlags.value.filter((f) => f.visible).map((f) => f.name);
+    });
+
+    // Constants (delegated from FC)
+    const TARGET_CAPABILITIES_FLAGS = FC.TARGET_CAPABILITIES_FLAGS;
 
     // Helpers
     function isApiVersionSupported(version) {
-        return semver.gte(apiVersion.value, version);
+        return semver.gte(config.value.apiVersion, version);
     }
 
     function isApiVersionLessThan(version) {
-        return semver.lt(apiVersion.value, version);
+        return semver.lt(config.value.apiVersion, version);
+    }
+
+    function boardHasFlashBootloader() {
+        return FC.boardHasFlashBootloader();
+    }
+
+    function getFilterDefaults() {
+        return FC.getFilterDefaults();
+    }
+
+    function getSerialRxTypes() {
+        return FC.getSerialRxTypes();
+    }
+
+    function getSupportedSerialRxTypes() {
+        return FC.getSupportedSerialRxTypes();
     }
 
     return {
@@ -165,6 +331,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         motorData,
         pidAdvancedConfig,
         sensorConfig,
+        sensorConfigActive,
         rxConfig,
         armingConfig,
         auxConfig,
@@ -173,11 +340,46 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         modeRangesExtra,
         adjustmentRanges,
         rssiConfig,
+        failsafeConfig,
+        gpsRescue,
+        rxFailConfig,
         blackbox,
         dataflash,
         sdcard,
+        mixerConfig,
+        motorConfig,
+        motor3dConfig,
+        motorOutputOrder,
+        motorTelemetryData,
+        advancedTuning,
+        filterConfig,
+        rcDeadbandConfig,
+        rcMap,
+        rcTuning,
+        pids,
+        pidNames,
+        tuningSliders,
+        defaultTuningSliders,
+        copyProfile,
+        serialConfig,
+        servoConfig,
+        servoData,
+        ledStrip,
+        vtxConfig,
         apiVersion,
+        sensorNames,
+        mcuInfo,
+        armingFlags,
+        setArmingFlags,
+        updateArmingFlags,
+        isReadyToArm,
+        activeFlagNames,
         isApiVersionSupported,
         isApiVersionLessThan,
+        TARGET_CAPABILITIES_FLAGS,
+        boardHasFlashBootloader,
+        getFilterDefaults,
+        getSerialRxTypes,
+        getSupportedSerialRxTypes,
     };
 });

@@ -1,5 +1,5 @@
 <template>
-    <div class="web-port-picker">
+    <div class="web-port-picker" :class="{ 'virtual-layout': modelValue.selectedPort === 'virtual' && !isConnected }">
         <PortOverrideOption
             v-if="modelValue.selectedPort === 'manual'"
             :model-value="modelValue.portOverride"
@@ -31,7 +31,7 @@ import { defineComponent, computed } from "vue";
 import PortOverrideOption from "./PortOverrideOption.vue";
 import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
 import PortsInput from "./PortsInput.vue";
-import CONFIGURATOR from "../../js/data_storage";
+import { useConnectionStore } from "../../stores/connection";
 
 export default defineComponent({
     components: {
@@ -86,7 +86,8 @@ export default defineComponent({
     emits: ["update:modelValue"],
 
     setup(props, { emit }) {
-        const isConnected = computed(() => CONFIGURATOR.connectionValid);
+        const connectionStore = useConnectionStore();
+        const isConnected = computed(() => connectionStore.connectionValid);
 
         const updateModelValue = (key, value) => {
             if (key) {

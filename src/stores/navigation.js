@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import GUI from "../js/gui";
 
 export const useNavigationStore = defineStore("navigation", () => {
@@ -16,6 +16,8 @@ export const useNavigationStore = defineStore("navigation", () => {
         set: (val) => (GUI.tab_switch_in_progress = val),
     });
 
+    const expertMode = ref(false);
+
     function cleanup(callback) {
         GUI.tab_switch_cleanup(callback);
     }
@@ -23,6 +25,7 @@ export const useNavigationStore = defineStore("navigation", () => {
     return {
         activeTab,
         tabSwitchInProgress,
+        expertMode,
         cleanup,
     };
 });

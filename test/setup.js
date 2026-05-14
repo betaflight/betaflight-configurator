@@ -1,12 +1,7 @@
 import { JSDOM } from "jsdom";
-import $ from "jquery";
 import { vi } from "vitest";
 
-// Note: this can go away once jquery is used as module everywhere
 const { window } = new JSDOM("");
-$(window);
-globalThis.$ = $;
-globalThis.jQuery = $;
 
 Object.defineProperty(window, "matchMedia", {
     writable: true,
@@ -21,3 +16,16 @@ Object.defineProperty(window, "matchMedia", {
         dispatchEvent: vi.fn(),
     })),
 });
+
+if (globalThis.HTMLDialogElement && !globalThis.HTMLDialogElement.prototype.showModal) {
+    globalThis.HTMLDialogElement.prototype.showModal = function showModal() {
+        this.open = true;
+    };
+}
+
+if (globalThis.HTMLDialogElement && !globalThis.HTMLDialogElement.prototype.close) {
+    globalThis.HTMLDialogElement.prototype.close = function close() {
+        this.open = false;
+        this.dispatchEvent(new Event("close"));
+    };
+}

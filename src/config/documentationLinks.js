@@ -27,6 +27,7 @@ export const documentationLinks = {
     logging: `${BASE_DOCS_URL}logging-tab`,
     blackbox: `${BASE_DOCS_URL}blackbox-tab`,
     cli: `${BASE_DOCS_URL}cli-tab`,
+    preflight: `${BASE_DOCS_URL}preflight-tab`,
 };
 
 export default documentationLinks;

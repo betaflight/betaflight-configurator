@@ -1,15 +1,15 @@
 import { get as getConfig } from "./ConfigStorage";
 import { reactive } from "vue";
 import MSP from "./msp";
-import Switchery from "switchery-latest";
-import tippy from "tippy.js";
-import $ from "jquery";
 import { getOS } from "./utils/checkCompatibility";
 import PortHandler from "./port_handler";
 import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization";
 import MSPCodes from "./msp/MSPCodes";
 import { gui_log } from "./gui_log";
+import { useDialogStore } from "../stores/dialog";
+import { pinia } from "./pinia_instance";
+import { EventBus } from "../components/eventBus";
 
 const TABS = {};
 
@@ -32,10 +32,13 @@ class GuiControl {
         this.defaultAllowedTabsWhenDisconnected = [
             "landing",
             "firmware_flasher",
+            "preflight",
             "options",
             "help",
             "user_profile",
             "backups",
+            "flight_plan",
+            "log",
         ];
 
         this.defaultAllowedTabs = [
@@ -55,9 +58,10 @@ class GuiControl {
             "ports",
             "receiver",
             "sensors",
+            "log",
         ];
 
-        this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "transponder", "vtx"];
+        this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "vtx", "flight_plan"];
 
         this.defaultAllowedFCTabsWhenConnected = [...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
 
@@ -259,70 +263,14 @@ class GuiControl {
             callback();
         }
     }
-    switchery() {
-        const COLOR_ACCENT = "var(--primary-500)";
-        const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
-
-        $(".togglesmall").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) return;
-            const switchery = new Switchery(elem, {
-                size: "small",
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
-            });
-            $(elem).on("change", function () {
-                switchery.setPosition();
-            });
-            $(elem).removeClass("togglesmall");
-        });
-
-        $(".toggle").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) return;
-            const switchery = new Switchery(elem, {
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
-            });
-            $(elem).on("change", function () {
-                switchery.setPosition();
-            });
-            $(elem).removeClass("toggle");
-        });
-
-        $(".togglemedium").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) return;
-            const switchery = new Switchery(elem, {
-                className: "switcherymid",
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
-            });
-            $(elem).on("change", function () {
-                switchery.setPosition();
-            });
-            $(elem).removeClass("togglemedium");
-        });
-    }
     content_ready(callback) {
-        this.switchery();
-
         const tRex = GUI.active_tab.replaceAll("_", "-").toLowerCase();
 
-        $("div#content #button-documentation")
-            .html(i18n.getMessage("betaflightSupportButton"))
-            .attr("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
-
-        // loading tooltip
-        $(function () {
-            $(".cf_tip, .cf_tip_wide").each((_, element) => {
-                const jQueryElement = $(element);
-                const attrTitle = jQueryElement.attr("title");
-                if (attrTitle && !element._tippy) {
-                    tippy(element, {
-                        content: attrTitle,
-                    });
-                    jQueryElement.removeAttr("title");
-                }
-            });
-        });
+        const docButton = document.querySelector("div#content #button-documentation");
+        if (docButton) {
+            docButton.innerHTML = i18n.getMessage("betaflightSupportButton");
+            docButton.setAttribute("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
+        }
 
         if (callback) {
             callback();
@@ -330,58 +278,58 @@ class GuiControl {
     }
     selectDefaultTabWhenConnected() {
         const result = getConfig(["rememberLastTab", "lastTab"]);
-        const tab =
+        const tabClass =
             result.rememberLastTab && result.lastTab && this.allowedTabs.includes(result.lastTab.substring(4))
                 ? result.lastTab
                 : "tab_setup";
+        const tabKey = tabClass.substring(4);
 
-        $(`#tabs ul.mode-connected .${tab} a`).trigger("click");
+        import("./tab_switch.js").then(({ switchTab }) => {
+            if (!switchTab(tabKey, { mode: "connected" })) {
+                switchTab("setup", { mode: "connected" });
+            }
+        });
     }
     showYesNoDialog(yesNoDialogSettings) {
         // yesNoDialogSettings:
         // title, text, buttonYesText, buttonNoText, buttonYesCallback, buttonNoCallback
-        const dialog = $(".dialogYesNo");
-        const title = dialog.find(".dialogYesNoTitle");
-        const content = dialog.find(".dialogYesNoContent");
-        const buttonYes = dialog.find(".dialogYesNo-yesButton");
-        const buttonNo = dialog.find(".dialogYesNo-noButton");
+        const dialog = document.querySelector(".dialogYesNo");
+        const title = dialog.querySelector(".dialogYesNoTitle");
+        const content = dialog.querySelector(".dialogYesNoContent");
+        const buttonYes = dialog.querySelector(".dialogYesNo-yesButton");
+        const buttonNo = dialog.querySelector(".dialogYesNo-noButton");
 
-        title.html(yesNoDialogSettings.title);
-        content.html(yesNoDialogSettings.text);
-        buttonYes.html(yesNoDialogSettings.buttonYesText);
-        buttonNo.html(yesNoDialogSettings.buttonNoText);
+        title.innerHTML = yesNoDialogSettings.title;
+        content.innerHTML = yesNoDialogSettings.text;
+        buttonYes.innerHTML = yesNoDialogSettings.buttonYesText;
+        buttonNo.innerHTML = yesNoDialogSettings.buttonNoText;
 
-        buttonYes.off("click");
-        buttonNo.off("click");
-
-        buttonYes.on("click", () => {
-            dialog[0].close();
+        buttonYes.onclick = () => {
+            dialog.close();
             yesNoDialogSettings.buttonYesCallback?.();
-        });
+        };
 
-        buttonNo.on("click", () => {
-            dialog[0].close();
+        buttonNo.onclick = () => {
+            dialog.close();
             yesNoDialogSettings.buttonNoCallback?.();
-        });
+        };
 
-        dialog[0].showModal();
+        dialog.showModal();
     }
     showWaitDialog(waitDialogSettings) {
         // waitDialogSettings:
         // title, buttonCancelCallback
-        const dialog = $(".dialogWait")[0];
-        const title = $(".dialogWaitTitle");
-        const buttonCancel = $(".dialogWait-cancelButton");
+        const dialog = document.querySelector(".dialogWait");
+        const title = dialog.querySelector(".dialogWaitTitle");
+        const buttonCancel = dialog.querySelector(".dialogWait-cancelButton");
 
-        title.html(waitDialogSettings.title);
-        buttonCancel.toggle(!!waitDialogSettings.buttonCancelCallback);
+        title.innerHTML = waitDialogSettings.title;
+        buttonCancel.style.display = waitDialogSettings.buttonCancelCallback ? "" : "none";
 
-        buttonCancel.off("click");
-
-        buttonCancel.on("click", () => {
+        buttonCancel.onclick = () => {
             dialog.close();
             waitDialogSettings.buttonCancelCallback?.();
-        });
+        };
 
         dialog.showModal();
         return dialog;
@@ -390,46 +338,42 @@ class GuiControl {
         // informationDialogSettings:
         // title, text, buttonConfirmText
         return new Promise((resolve) => {
-            const dialog = $(".dialogInformation");
-            const title = dialog.find(".dialogInformationTitle");
-            const content = dialog.find(".dialogInformationContent");
-            const buttonConfirm = dialog.find(".dialogInformation-confirmButton");
+            const dialog = document.querySelector(".dialogInformation");
+            const title = dialog.querySelector(".dialogInformationTitle");
+            const content = dialog.querySelector(".dialogInformationContent");
+            const buttonConfirm = dialog.querySelector(".dialogInformation-confirmButton");
 
-            title.html(informationDialogSettings.title);
-            content.html(informationDialogSettings.text);
-            buttonConfirm.html(informationDialogSettings.buttonConfirmText);
+            title.innerHTML = informationDialogSettings.title;
+            content.innerHTML = informationDialogSettings.text;
+            buttonConfirm.innerHTML = informationDialogSettings.buttonConfirmText;
 
-            buttonConfirm.off("click");
-
-            buttonConfirm.on("click", () => {
-                dialog[0].close();
+            buttonConfirm.onclick = () => {
+                dialog.close();
                 resolve();
-            });
+            };
 
-            dialog[0].showModal();
+            dialog.showModal();
         });
     }
     showInteractiveDialog(interactiveDialogSettings) {
         // interactiveDialogSettings:
         // title, text, buttonCloseText
+        const dialogStore = useDialogStore(pinia);
         return new Promise((resolve) => {
-            const dialog = $(".dialogInteractive");
-            const title = dialog.find(".dialogInteractiveTitle");
-            const content = dialog.find(".dialogInteractiveContent");
-            const buttonClose = dialog.find(".dialogInteractive-closeButton");
-
-            title.html(interactiveDialogSettings.title);
-            content.html(interactiveDialogSettings.text);
-            buttonClose.html(interactiveDialogSettings.buttonCloseText);
-
-            buttonClose.off("click");
-
-            buttonClose.on("click", () => {
-                dialog[0].close();
-                resolve();
-            });
-
-            dialog[0].showModal();
+            dialogStore.open(
+                "InteractiveDialog",
+                {
+                    title: interactiveDialogSettings.title ?? "",
+                    buttonCloseText: interactiveDialogSettings.buttonCloseText ?? "",
+                    commandPlaceholder: i18n.getMessage("cliCommand"),
+                },
+                {
+                    close: () => {
+                        dialogStore.close();
+                        resolve();
+                    },
+                },
+            );
         });
     }
     escapeHtml(unsafe) {
@@ -441,18 +385,20 @@ class GuiControl {
             .replace(/'/g, "&#039;");
     }
     addLinksTargetBlank(element) {
-        element.find("a").each(function () {
-            $(this).attr("target", "_blank");
-        });
+        for (const a of element.querySelectorAll("a")) {
+            a.setAttribute("target", "_blank");
+        }
     }
     reinitializeConnection() {
+        // Emit via EventBus so gui.js doesn't have to import serial_backend
+        // (which already imports gui.js — this would create a module cycle).
+        const emitToggle = () => EventBus.$emit("connection:toggle");
+
         if (CONFIGURATOR.virtualMode) {
             this.reboot_timestamp = Date.now();
-            $("a.connection_button__link").trigger("click");
+            emitToggle();
             if (PortHandler.portPicker.autoConnect) {
-                return setTimeout(function () {
-                    $("a.connection_button__link").trigger("click");
-                }, 500);
+                return setTimeout(emitToggle, 500);
             }
             return;
         }
@@ -469,9 +415,7 @@ class GuiControl {
         CONFIGURATOR.connectionValid = false;
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-            return setTimeout(function () {
-                $("a.connection_button__link").trigger("click");
-            }, 1500);
+            return setTimeout(emitToggle, 1500);
         }
 
         // Show reboot progress modal except for cli and presets tab
@@ -612,39 +556,44 @@ class GuiControl {
             for (const line of response) {
                 output += `${line}${eol}`;
             }
-            // gui_log(output.split(eol).join('<br>'));
-            $("#cli-command").val("");
-            $("#cli-response").text(output);
-        }
-
-        // cli-command button hook
-        $("input#cli-command").change(function () {
-            const _self = $(this);
-            const command = _self.val();
-            if (!command) {
-                return;
+            const cliCommand = document.getElementById("cli-command");
+            if (cliCommand) {
+                cliCommand.value = "";
             }
-            MSP.send_cli_command(command, function (response) {
-                set_cli_response(response);
-            });
-        });
+            const cliResponse = document.getElementById("cli-response");
+            if (cliResponse) {
+                cliResponse.textContent = output;
+            }
+        }
 
         const cliPanelDialog = {
             title: i18n.getMessage("cliPanelTitle"),
             buttonCloseText: i18n.getMessage("close"),
         };
 
-        // clear response from previous session
-        $("#cli-response").text("");
-
         this.showInteractiveDialog(cliPanelDialog);
 
-        // Set focus on the CLI command input when dialog opens
-        // Use timeout to ensure dialog is fully rendered
+        // Wait for dialog to render before hooking up DOM elements
         setTimeout(() => {
-            const cliInput = $("#cli-command");
-            if (cliInput.length > 0 && cliInput.is(":visible")) {
-                cliInput.focus();
+            // clear response from previous session
+            const cliResponse = document.getElementById("cli-response");
+            if (cliResponse) {
+                cliResponse.textContent = "";
+            }
+
+            // cli-command input hook
+            const cliCommandInput = document.querySelector("input#cli-command");
+            if (cliCommandInput) {
+                cliCommandInput.onchange = function () {
+                    const command = this.value;
+                    if (!command) {
+                        return;
+                    }
+                    MSP.send_cli_command(command, function (response) {
+                        set_cli_response(response);
+                    });
+                };
+                cliCommandInput.focus();
             }
         }, 100);
     }

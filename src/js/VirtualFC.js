@@ -3,7 +3,7 @@ import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
 import CONFIGURATOR, { API_VERSION_1_47 } from "./data_storage";
-import { OSD } from "./tabs/osd";
+import { OSD } from "../components/tabs/osd/osd";
 import semver from "semver";
 import { addArrayElement, addArrayElementAfter } from "./utils/array";
 
@@ -95,6 +95,8 @@ const VirtualFC = {
                 },
                 adjustmentFunction: 0,
                 auxSwitchChannelIndex: 0,
+                adjustmentCenter: 0,
+                adjustmentScale: 0,
             };
         }
 
@@ -247,12 +249,13 @@ const VirtualFC = {
         if (semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)) {
             addArrayElementAfter(virtualFC.AUX_CONFIG, "HORIZON", "ALT_HOLD");
             addArrayElementAfter(virtualFC.AUX_CONFIG, "CAMSTAB", "POS_HOLD");
+            addArrayElementAfter(virtualFC.AUX_CONFIG, "GPS RESCUE", "AUTOPILOT");
             addArrayElement(virtualFC.AUX_CONFIG, "CHIRP");
         }
 
         FC.AUX_CONFIG_IDS = [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 15, 17, 19, 20, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-            36, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55,
+            36, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
         ];
 
         for (let i = 0; i < 16; i++) {
@@ -307,6 +310,7 @@ const VirtualFC = {
 
         virtualOSD.data.state = {
             haveMax7456Configured: true,
+            haveMax7456Video: true,
             haveOsdFeature: true,
             haveMax7456FontDeviceConfigured: true,
             isMax7456FontDeviceDetected: true,

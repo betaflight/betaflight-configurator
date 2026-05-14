@@ -1,18 +1,14 @@
 <template>
-    <div class="logo">
-        <div class="logo_text">
-            <span> {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }} </span>
-            <span v-if="firmwareVersion && firmwareId">
-                {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
-                {{ firmwareId }}
-            </span>
-            <span v-if="hardwareId"> {{ $t("versionLabelTarget") }}: {{ hardwareId }} </span>
-        </div>
+    <div class="logo" :title="tooltip">
+        <div class="logo_image" aria-hidden="true"></div>
     </div>
 </template>
 
 <script>
-export default {
+import { computed, defineComponent } from "vue";
+import { i18n } from "../../js/localization";
+
+export default defineComponent({
     props: {
         configuratorVersion: {
             type: String,
@@ -31,84 +27,63 @@ export default {
             default: "",
         },
     },
-};
+    setup(props) {
+        const tooltip = computed(() => {
+            const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${props.configuratorVersion}`];
+            if (props.firmwareVersion && props.firmwareId) {
+                lines.push(`${i18n.getMessage("versionLabelFirmware")}: ${props.firmwareVersion} ${props.firmwareId}`);
+            }
+            if (props.hardwareId) {
+                lines.push(`${i18n.getMessage("versionLabelTarget")}: ${props.hardwareId}`);
+            }
+            return lines.join("\n");
+        });
+
+        return { tooltip };
+    },
+});
 </script>
 
 <style>
-.logo {
-    height: 70px;
-    width: 240px;
-    background-image: url(../../images/dark-wide-2.svg);
+.tab_container .logo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0.25rem 0 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tab_container .logo_image {
+    width: 100%;
+    height: 48px;
+    background-image: url(../../images/bf_logo_white.svg);
     background-repeat: no-repeat;
     background-position: left center;
     background-size: contain;
-    position: relative;
 }
 
-.dark-theme .logo {
-    background-image: url(../../images/light-wide-2.svg);
+.dark .tab_container .logo_image {
+    background-image: url(../../images/bf_logo_black.svg);
 }
 
-.logo_text {
-    position: absolute;
-    left: 80px;
-    top: 49px;
-    color: var(--text);
-    font-size: 10px;
-    display: flex;
-    flex-direction: column;
-}
-
-.tab_container .logo {
-    display: none;
-}
-
-@media all and (max-width: 575px) {
-    .logo {
-        height: 24px;
-        width: 150px;
-        background-image: url(../../images/dark-wide-2-compact.svg);
-        background-position: left center;
-        order: 2;
-        margin-top: 0;
-    }
-    .dark-theme .logo {
-        background-image: url(../../images/light-wide-2-compact.svg);
-    }
-    .logo_text {
-        display: none !important;
-    }
+@media (max-width: 1055px) {
     .tab_container .logo {
-        display: flex;
-        background-image: url(../../images/dark-wide-2.svg);
-        background-repeat: no-repeat;
-        background-position: center 20px;
-        background-position-x: 12px;
-        background-size: 80%;
-        height: 120px;
-        width: 100%;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-        flex: 0 0 120px;
-        margin-bottom: 20px;
+        align-items: center;
     }
-    .dark-theme .tab_container .logo {
-        background-image: url(../../images/light-wide-2.svg);
+    .tab_container .logo_image {
+        width: 48px;
+        background-image: url(../../images/bf_logo_short_white.svg);
+        background-position: center;
+        background-size: contain;
     }
-    .tab_container .logo .logo_text {
-        display: flex !important;
-        left: 82px;
-        top: 62px;
+    .dark .tab_container .logo_image {
+        background-image: url(../../images/bf_logo_short_black.svg);
     }
 }
 
-@media all and (min-width: 1125px) {
-    .logo {
-        width: 340px;
-    }
-
-    .logo_text {
-        font-size: inherit;
-        position: relative;
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .tab_container .logo {
+        display: none;
     }
 }
 </style>

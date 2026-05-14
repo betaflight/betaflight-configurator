@@ -1,17 +1,32 @@
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
-import WEBUSBDFU from "./protocols/webusbdfu";
+import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
+import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
+import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
 import { reactive } from "vue";
 import {
     checkCompatibility,
     checkBluetoothSupport,
     checkSerialSupport,
     checkUsbSupport,
+    isAndroid,
 } from "./utils/checkCompatibility.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
+
+// Create the platform-appropriate DFU protocol instance.
+// On Android, use the Capacitor DFU transport with the native plugin.
+// On desktop, use the default WEBUSBDFU singleton (WebUSB transport).
+function createDfuProtocol() {
+    if (isAndroid()) {
+        return new UsbDfuProtocol(new CapacitorDfuTransport());
+    }
+    return defaultDfu;
+}
+
+const dfuProtocol = createDfuProtocol();
 
 const PortHandler = new (function () {
     this.logHead = "[PORTHANDLER]";
@@ -24,7 +39,7 @@ const PortHandler = new (function () {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
         portOverride: getConfig("portOverride", "/dev/rfcomm0").portOverride,
-        virtualMspVersion: "1.46.0",
+        virtualMspVersion: getConfig("virtualMspVersion", "1.46.0").virtualMspVersion,
         autoConnect: getConfig("autoConnect", false).autoConnect,
     };
 
@@ -47,6 +62,9 @@ const PortHandler = new (function () {
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
     this.showAllSerialDevices = getConfig("showAllSerialDevices", false).showAllSerialDevices;
+
+    // Expose the DFU protocol instance for other modules
+    this.dfuProtocol = dfuProtocol;
 })();
 
 PortHandler.initialize = function () {
@@ -71,8 +89,8 @@ PortHandler.initialize = function () {
     });
 
     // Keep USB listener separate as it's not part of the serial protocols
-    WEBUSBDFU.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
-    WEBUSBDFU.addEventListener("removedDevice", (event) => this.removedUsbDevice(event.detail));
+    dfuProtocol.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
+    dfuProtocol.addEventListener("removedDevice", (event) => this.removedUsbDevice(event.detail));
 
     // Initial device discovery using the serial facade
     this.refreshAllDeviceLists();
@@ -181,7 +199,7 @@ PortHandler.onChangeSelectedPort = function (port) {
 PortHandler.requestDevicePermission = async function (protocol) {
     try {
         const port = await (protocol === "usb"
-            ? WEBUSBDFU.requestPermission()
+            ? dfuProtocol.requestPermission()
             : serial.requestPermissionDevice(this.showAllSerialDevices, protocol));
 
         if (port) {
@@ -218,9 +236,10 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         selectedPort = this.currentSerialPorts.find((device) => device === serial.getConnectedPort());
     }
 
-    // Return the same that is connected to WEBUSBDFU (dfu mode)
-    if (WEBUSBDFU.usbDevice) {
-        selectedPort = this.currentUsbPorts.find((device) => device === WEBUSBDFU.getConnectedPort());
+    // Return the same that is connected to DFU
+    if (dfuProtocol.usbDevice) {
+        const connectedPortPath = dfuProtocol.getConnectedPort();
+        selectedPort = this.currentUsbPorts.find((device) => device.path === connectedPortPath);
     }
 
     // If there is a connection, return it
@@ -265,13 +284,14 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         }
     }
 
-    // Return the virtual port
-    if (!selectedPort && this.showVirtualMode) {
+    // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
+    const expertMode = isExpertModeEnabled();
+
+    if (!selectedPort && expertMode && this.showVirtualMode) {
         selectedPort = "virtual";
     }
 
-    // Return the manual port
-    if (!selectedPort && this.showManualMode) {
+    if (!selectedPort && expertMode && this.showManualMode) {
         selectedPort = "manual";
     }
 
@@ -325,7 +345,7 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 break;
             case "usb":
                 if (this.showUsbOption) {
-                    ports = await WEBUSBDFU.getDevices();
+                    ports = await dfuProtocol.getDevices();
                 }
                 break;
             case "serial":

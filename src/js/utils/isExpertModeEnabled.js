@@ -1,5 +1,8 @@
-import $ from "jquery";
+import { get as getConfig } from "../ConfigStorage";
 
 export function isExpertModeEnabled() {
-    return $('input[name="expertModeCheckbox"]').is(":checked");
+    if (globalThis.vm && "expertMode" in globalThis.vm) {
+        return Boolean(globalThis.vm.expertMode);
+    }
+    return Boolean(getConfig("expertMode").expertMode);
 }

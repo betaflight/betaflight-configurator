@@ -99,7 +99,7 @@ class CapacitorTcp extends EventTarget {
         return [];
     }
 
-    async connect(path, options) {
+    async connect(path, _options) {
         try {
             const url = new URL(path);
             const host = url.hostname;

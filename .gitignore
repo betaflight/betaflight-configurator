@@ -2,8 +2,6 @@
 
 node_modules/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # App Build process
 cache/
@@ -51,5 +49,11 @@ build
 # Ignore Capacitor Android build output directories for local plugins
 capacitor-plugins/*/android/bin/
 
+# Auto-generated type declarations for Nuxt UI
+auto-imports.d.ts
+components.d.ts
 
 /*.pem
+/CLAUDE.md
+/.claude
+/AGENTS.md

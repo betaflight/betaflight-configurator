@@ -44,27 +44,14 @@ jobs:
       RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
       RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
-  # Deploy with secrets (no PR code checkout)
-  deploy:
-    name: Deploy
+  # Prepare branch name for deployment
+  prepare_branch:
+    name: Prepare Branch Name
     needs: build
-    permissions:
-      actions: read
-      contents: read
-      deployments: write
-      issues: write
-      pull-requests: write
-
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.ref_name }}
+    outputs:
+      branch_name: ${{ steps.branch_name.outputs.BRANCH }}
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: dist-files
-          path: src/dist
-
       - name: Set alias branch name for Cloudflare
         id: branch_name
         run: |
@@ -78,22 +65,35 @@ jobs:
           # Set a simple output to confirm the value
           echo "EVENT: ${{ github.event_name }}, BRANCH: $BRANCH"
 
-      - name: Deploy to Cloudflare
-        id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ steps.branch_name.outputs.BRANCH }} --commit-dirty=true
+  # Deploy with secrets (no PR code checkout)
+  deploy:
+    name: Deploy
+    needs: [build, prepare_branch]
+    uses: ./.github/workflows/deploy_cloudflare.yml
+    with:
+      branch_name: ${{ needs.prepare_branch.outputs.branch_name }}
+      environment_name: ${{ github.ref_name }}
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
+  # Add PR comment with deployment links
+  pr_comment:
+    name: Add PR Comment
+    needs: [build, deploy]
+    if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
       - name: Add deployment comment
-        if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
             🎉 Do you want to test this code? 🎉
 
-            - 🌐 **[Progressive Web Application (PWA)](${{ steps.deploy.outputs.pages-deployment-alias-url }})**
+            - 🌐 **[Progressive Web Application (PWA)](${{ needs.deploy.outputs.deployment_alias_url }})**
             - 🤖 **[Android APK](${{ needs.build.outputs.apk_url }})**
 
             ⚠️ **CAUTION**: The build may be unstable and result in corrupted configurations or data loss. Use only for testing! ⚠️

@@ -12,7 +12,6 @@ export default defineConfig([
             sourceType: "module",
             globals: {
                 ol: "readonly",
-                wNumb: "readonly",
                 ConfigStorage: "readonly",
                 // globals for vite
                 __APP_PRODUCTNAME__: "readonly",
@@ -47,7 +46,7 @@ export default defineConfig([
                 },
             ],
         },
-        ignores: ["dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
+        ignores: ["dist/", "src/dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
     },
     {
         files: ["**/*.vue"],

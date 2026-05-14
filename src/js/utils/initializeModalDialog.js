@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { i18n } from "../localization";
 
 /**
@@ -6,11 +5,11 @@ import { i18n } from "../localization";
  * @param {string} messageId Localized message identifier.
  * @param {object} [messageParameters] Localized message parameters
  * @param {() => void} onClose Function invoked by the close button.
- * @returns {JQuery<HTMLElement>} Dialog title bar.
+ * @returns {HTMLElement} Dialog title bar.
  */
 function getDialogTitleBar(messageId, messageParameters, onClose) {
-    // HTML structure
-    const dialogTitleBar = $(`
+    const template = document.createElement("template");
+    template.innerHTML = `
         <div style="display: flex; height: 47px; background: var(--surface-300); border-bottom: 1px solid var(--surface-950);">
             <div style="flex: 1; display: flex; align-items: center;">
                 <div style="padding: 15px;">${i18n.getMessage(messageId, messageParameters || undefined)}</div>
@@ -22,40 +21,39 @@ function getDialogTitleBar(messageId, messageParameters, onClose) {
                 </svg>
             </div>
         </div>
-    `);
-    // Handle close button
-    dialogTitleBar.find("#dialogclose").on("click", onClose);
-    // Return title bar
-    return dialogTitleBar;
+    `.trim();
+    const titleBar = template.content.firstElementChild;
+    titleBar.querySelector("#dialogclose").addEventListener("click", onClose);
+    return titleBar;
 }
 
 /**
  * Initializes a modal dialog from an HTML dialog element.
- * @param {JQuery.Selector|null} activationSelector JQuery selector for the activation element.
- * @param {JQuery.Selector} dialogSelector JQuery selector for the dialog element.
+ * @param {string|null} activationSelector CSS selector for the activation element.
+ * @param {string} dialogSelector CSS selector for the dialog element.
  * @param {string} messageId Localized message identifier.
  * @param {object} [messageParameters] Localized message parameters
  * @param {() => void} [onClose] Function invoked when the dialog is closed.
  * @returns {HTMLDialogElement} HTML dialog element.
  */
 export function initializeModalDialog(activationSelector, dialogSelector, messageId, messageParameters, onClose) {
-    // Get dialog references
-    const dialog = $(dialogSelector);
-    const dialogElement = dialog.get(0);
-    const dialogContainerElement = dialog.children().first().get(0);
+    const dialogElement = document.querySelector(dialogSelector);
+    const dialogContainerElement = dialogElement?.firstElementChild;
+
     // Add dialog title bar
-    dialog.prepend(
-        getDialogTitleBar(messageId, messageParameters, () => {
-            dialogElement.close();
-        }),
-    );
+    const titleBar = getDialogTitleBar(messageId, messageParameters, () => {
+        dialogElement.close();
+    });
+    dialogElement.prepend(titleBar);
+
     // Handle close event
     dialogElement.addEventListener("close", () => {
         onClose && onClose();
     });
+
     // Handle activation button click
     if (activationSelector) {
-        $(activationSelector).on("click", () => {
+        document.querySelector(activationSelector)?.addEventListener("click", () => {
             dialogElement.showModal();
             // Reset any previous scrolling
             if (dialogContainerElement) {
@@ -63,6 +61,6 @@ export function initializeModalDialog(activationSelector, dialogSelector, messag
             }
         });
     }
-    // Return dialog element
+
     return dialogElement;
 }

@@ -2,7 +2,7 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import os from 'os';
 
-const VITE_SERVER_PORT = 8000;
+const VITE_SERVER_PORT = 8080;
 
 async function getIpList() {
   const nets = os.networkInterfaces();

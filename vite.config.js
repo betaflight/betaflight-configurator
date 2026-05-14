@@ -8,18 +8,28 @@ import pkg from "./package.json";
 import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
+import ui from "@nuxt/ui/vite";
+import nuxtUiViteOptions from "./nuxt-ui.vite.js";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
 
-// Check if SSL certificates exist
+const devHostname = process.env.BF_DEV_HOSTNAME || "local.betaflight.com";
+
+// Check if SSL certificates exist. Skipped when running under `tauri dev`
+// because the native webview needs a predictable HTTP endpoint and won't
+// trust the mkcert root out of the box.
 const certPath = "./local.betaflight.com.pem";
 const keyPath = "./local.betaflight.com-key.pem";
-const certsExist = existsSync(certPath) && existsSync(keyPath);
+const tauriDev = process.env.TAURI_DEV === "1";
+const certsExist = !tauriDev && existsSync(certPath) && existsSync(keyPath);
 const serverPort = certsExist ? 8443 : 8080;
 
-if (certsExist) {
+if (tauriDev) {
+    console.log("⚙ TAURI_DEV=1 — forcing HTTP mode for the Tauri shell");
+    console.log(`  Server will be available at: http://localhost:${serverPort}`);
+} else if (certsExist) {
     console.log("✓ SSL certificates found - HTTPS enabled");
-    console.log("  Server will be available at: https://local.betaflight.com:8443");
+    console.log(`  Server will be available at: https://${devHostname}:8443`);
 } else {
     console.log("⚠ SSL certificates not found - Running in HTTP mode");
     console.log("  WebAuthn features will not be available without HTTPS");
@@ -33,8 +43,51 @@ function serveFileFromDirectory(directory) {
         const absolutePath = path.resolve(process.cwd(), directory, filePath);
 
         try {
-            const fileContents = readFileSync(absolutePath, "utf-8");
+            // Define binary file extensions that should not be read as UTF-8
+            const binaryExtensions = [
+                ".png",
+                ".jpg",
+                ".jpeg",
+                ".gif",
+                ".webp",
+                ".ico",
+                ".bmp",
+                ".tiff",
+                ".tif",
+                ".svg",
+                ".woff",
+                ".woff2",
+                ".ttf",
+                ".eot",
+            ];
+            const isBinary = binaryExtensions.some((ext) => filePath.toLowerCase().endsWith(ext));
+
+            // Read file with appropriate encoding
+            const fileContents = isBinary ? readFileSync(absolutePath) : readFileSync(absolutePath, "utf-8");
+
+            // Set Content-Type based on file extension
+            if (filePath.endsWith(".svg")) {
+                res.setHeader("Content-Type", "image/svg+xml");
+            } else if (filePath.endsWith(".png")) {
+                res.setHeader("Content-Type", "image/png");
+            } else if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg")) {
+                res.setHeader("Content-Type", "image/jpeg");
+            } else if (filePath.endsWith(".gif")) {
+                res.setHeader("Content-Type", "image/gif");
+            } else if (filePath.endsWith(".webp")) {
+                res.setHeader("Content-Type", "image/webp");
+            } else if (filePath.endsWith(".ico")) {
+                res.setHeader("Content-Type", "image/x-icon");
+            } else if (filePath.endsWith(".json")) {
+                res.setHeader("Content-Type", "application/json");
+            } else if (filePath.endsWith(".css")) {
+                res.setHeader("Content-Type", "text/css");
+            } else if (filePath.endsWith(".js")) {
+                res.setHeader("Content-Type", "application/javascript");
+            }
+
             res.end(fileContents);
+            // eslint-disable-next-line unused-imports/no-unused-vars
         } catch (e) {
             // If file not found or any other error, pass to the next middleware
             next();
@@ -76,7 +129,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, "src/index.html"),
-                receiver_msp: resolve(__dirname, "src/receiver_msp/receiver_msp.html"),
+                receiver_msp: resolve(__dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
             },
         },
     },
@@ -85,15 +138,18 @@ export default defineConfig({
         environment: "jsdom",
         setupFiles: ["test/setup.js"],
         root: ".",
+        alias: {
+            "/images/": `${path.resolve(__dirname, "src/images")}/`,
+        },
     },
     plugins: [
         vue(),
+        ui(nuxtUiViteOptions),
         serveLocalesPlugin(),
         copy({
             targets: [
                 { src: "locales/**/*", dest: "src/dist/locales" },
                 { src: "resources/**/*", dest: "src/dist/resources" },
-                { src: "src/tabs/**/*", dest: "src/dist/tabs" },
                 { src: "src/images/**/*", dest: "src/dist/images" },
                 { src: "src/components/**/*", dest: "src/dist/components" },
             ],
@@ -102,7 +158,7 @@ export default defineConfig({
         VitePWA({
             registerType: "prompt",
             workbox: {
-                globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm}"],
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm,gltf}"],
                 // 5MB
                 maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
             },
@@ -127,7 +183,9 @@ export default defineConfig({
             },
         }),
     ],
-    root: "./src",
+    // Absolute root so @nuxt/ui's template aliases (#build/ui.css, etc.) resolve to
+    // absolute paths; a relative root yields relative aliases and Vite warns about duplicated modules.
+    root: path.resolve(__dirname, "src"),
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),
@@ -145,7 +203,7 @@ export default defineConfig({
             },
         }),
         host: "0.0.0.0", // Listen on all network interfaces for Android device access
-        allowedHosts: certsExist ? ["local.betaflight.com"] : ["localhost"],
+        allowedHosts: certsExist ? [devHostname] : ["localhost"],
     },
     preview: {
         port: serverPort,

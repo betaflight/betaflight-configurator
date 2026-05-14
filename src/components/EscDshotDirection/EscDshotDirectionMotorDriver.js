@@ -2,6 +2,7 @@ import EscDshotCommandQueue from "./EscDshotCommandQueue.js";
 import DshotCommand from "../../js/utils/DshotCommand.js";
 import MSPCodes from "../../js/msp/MSPCodes.js";
 import { gui_log } from "../../js/gui_log";
+import { i18n } from "../../js/localization";
 
 class EscDshotDirectionMotorDriver {
     constructor(motorConfig, motorDriverQueueIntervalMs, motorDriverStopMotorsPauseMs) {

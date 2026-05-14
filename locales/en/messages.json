@@ -113,11 +113,23 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Simulate a flight controller without hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Enter the serial path or URL to connect to.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },
     "close": {
         "message": "Close"
+    },
+    "openSidebarMenu": {
+        "message": "Open sidebar menu",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -127,6 +139,21 @@
     },
     "submit": {
         "message": "Submit"
+    },
+    "delete": {
+        "message": "Delete"
+    },
+    "edit": {
+        "message": "Edit"
+    },
+    "add": {
+        "message": "Add"
+    },
+    "update": {
+        "message": "Update"
+    },
+    "save": {
+        "message": "Save"
     },
     "autoConnectEnabled": {
         "message": "Auto-Connect: Enabled - App automatically tries to connect when new port is detected"
@@ -156,6 +183,10 @@
     "connectionTimeout": {
         "message": "Set connection timeout to allow longer initialisation on device plugin or reboot",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
+    "languageAndAppearanceSettings": {
+        "message": "Language and Appearance",
+        "description": "Title for the language and appearance settings section"
     },
     "developmentSettings": {
         "message": "Development Settings",
@@ -281,7 +312,6 @@
         "message": "\u7e41\u9ad4\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
-
     "sensorDataFlashNotFound": {
         "message": "No dataflash <br>chip found",
         "description": "Text of the dataflash image in the header of the page."
@@ -380,12 +410,56 @@
     "tabOptions": {
         "message": "Options"
     },
-
     "tabSetup": {
         "message": "Setup"
     },
     "tabSetupOSD": {
         "message": "OSD Setup"
+    },
+    "tabSensorConfig": {
+        "message": "Sensors"
+    },
+    "sensorConfigHardware": {
+        "message": "Sensor Hardware"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Sensor configuration saved"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Failed to save sensor configuration"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetometer"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Accelerometer"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Place the craft on a level surface before calibrating"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "Accelerometer has not been calibrated. Please calibrate before flying."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Magnetometer calibration offsets are zero. Please calibrate for accurate heading."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibrate"
+    },
+    "sensorConfig3dPreview": {
+        "message": "3D Attitude Preview"
+    },
+    "sensorConfigLiveData": {
+        "message": "Live Sensor Data"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Show Live Sensor Data"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Stop live data"
     },
     "tabConfiguration": {
         "message": "Configuration"
@@ -408,9 +482,6 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
-    "tabTransponder": {
-        "message": "Race Transponder"
-    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -423,14 +494,14 @@
     "tabGPS": {
         "message": "GPS"
     },
+    "tabFlightPlan": {
+        "message": "Flight Plan"
+    },
     "tabMotorTesting": {
         "message": "Motors"
     },
     "tabLedStrip": {
         "message": "LED Strip"
-    },
-    "tabRawSensorData": {
-        "message": "Sensors"
     },
     "tabCLI": {
         "message": "CLI"
@@ -447,12 +518,24 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-
     "logActionHide": {
         "message": "Hide Log"
     },
     "logActionShow": {
         "message": "Show Log"
+    },
+    "tabLog": {
+        "message": "Log"
+    },
+    "i2cErrorDetected": {
+        "message": "I2C error detected (+{{delta}}, total {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "Clear"
+    },
+    "logAutoScroll": {
+        "message": "Auto-scroll"
     },
     "fileSystemPickerFiles": {
         "message": "{{typeof}} files",
@@ -467,7 +550,6 @@
     "serialErrorParityError": {
         "message": "Serial connection error: bad parity"
     },
-
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> opened with ID: $1"
     },
@@ -480,10 +562,10 @@
     "serialPortClosedFail": {
         "message": "<span class=\"message-negative\">Failed</span> to close serial port"
     },
-    "serialUnrecoverable" : {
+    "serialUnrecoverable": {
         "message": "Unrecoverable <span class=\"message-negative\">failure</span> of serial connection, disconnecting..."
     },
-    "serialPortLoading" : {
+    "serialPortLoading": {
         "message": "Loading ..."
     },
     "usbDeviceOpened": {
@@ -503,6 +585,9 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU not found"
+    },
+    "stm32DfuPermissionRequired": {
+        "message": "The device has rebooted to DFU mode.<br><br>Your browser requires USB permission to access the DFU device. Click the button below to select it from the device picker."
     },
     "stm32RebootingToBootloader": {
         "message": "Initiating reboot to bootloader ..."
@@ -592,7 +677,7 @@
         "message": "Non - Betaflight firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
     },
     "firmwareUpgradeRequired": {
-        "message": "The firmware on this device needs upgrading to a newer version. Use CLI for backup before flashing. CLI backup/restore procedure is in the documentation.<br />Alternatively download and use an old version of the app if you are not ready to upgrade."
+        "message": "The current version of the app may not support the firmware version on this device. You can use older releases such as <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0</a> for firmware down to 4.1 or <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1</a> for even older firmware versions.<br><br>The app will try to access the CLI on the device - if it succeeds, you can see the current firmware version by sending the <code>version</code> command in the CLI.<br><br>Alternatively, you can upgrade to a newer firmware version. Use CLI for backup before flashing, the procedure is in the <a href=\"https://betaflight.com/docs/wiki/getting-started/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a>. But keep in mind that backups from older versions of the firmware may not carry over correctly when restoring to a newer version. Modes, OSD, rates and ports should transfer safely, but be careful around the PID and failsafe settings."
     },
     "resetToCustomDefaultsDialog": {
         "message": "There are custom defaults for this board available. Normally, a board will not work properly unless custom defaults are applied.<br />Do you want to apply the custom defaults for this board?"
@@ -616,21 +701,21 @@
         "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>.<br>If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the aircraft will be disabled until the accelerometer has been calibrated.<br>If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
     },
     "infoVersionOs": {
-        "message" : "OS: <strong>{{operatingSystem}}</strong>",
+        "message": "OS: <strong>{{operatingSystem}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message" : "App Version: <strong>{{configuratorVersion}}</strong>",
+        "message": "App Version: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
-        "message" : "Success: $1"
+        "message": "Success: $1"
     },
     "buildServerFailure": {
-        "message" : "<b>Build server failure: $1 <code>$2</code></b>"
+        "message": "<b>Build server failure: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
-        "message" : "Using cached builds information for $1."
+        "message": "Using cached builds information for $1."
     },
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Support data submitted *** <br>ID: $1<br><br><br># copy ID and provide to the betaflight team."
@@ -648,16 +733,16 @@
         "message": "Describe the problem"
     },
     "releaseCheckLoaded": {
-        "message" : "Loaded release information for $1 from GitHub."
+        "message": "Loaded release information for $1 from GitHub."
     },
     "releaseCheckFailed": {
-        "message" : "<b>GitHub query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
+        "message": "<b>GitHub query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
     },
     "releaseCheckCached": {
-        "message" : "Using cached release information for $1 releases."
+        "message": "Using cached release information for $1 releases."
     },
     "releaseCheckNoInfo": {
-        "message" : "No release information available for $1."
+        "message": "No release information available for $1."
     },
     "tabSwitchConnectionRequired": {
         "message": "You need to <strong>connect</strong> before you can view any of the tabs."
@@ -705,7 +790,7 @@
         "message": "Target"
     },
     "versionLabelFirmware": {
-        "message": "Firmware"
+        "message": "Firmware Version"
     },
     "versionLabelConfigurator": {
         "message": "App Version"
@@ -773,7 +858,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://impulserc.com/pages/downloads\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -869,12 +954,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Place board or frame on <strong>leveled</strong> surface, proceed with calibration, ensure platform is not moving during calibration period"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrate Magnetometer"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Move multirotor at least <strong>360</strong> degrees on all axis of rotation, you have 30 seconds to perform this task"
     },
@@ -913,7 +992,11 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+    },
+    "initialSetupMagHeading": {
+        "message": "Mag Heading:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
@@ -991,6 +1074,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "CPU Load:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Loop Rate:"
     },
     "initialSetupCpuTemp": {
         "message": "CPU Temperature:"
@@ -1203,6 +1292,12 @@
         "message": "Shows Heading, Pitch and Roll in instruments",
         "description": "Message that pops up to describe the Instruments section"
     },
+    "initialSetupInfoBoardName": {
+        "message": "Board:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
     },
@@ -1403,7 +1498,7 @@
         "message": "Race Transponder"
     },
     "featureTRANSPONDERTip": {
-        "message": "Configure via the Race Transponder tab after enabling."
+        "message": "Enable transponder firmware support. Configure the provider (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]</code>) and data (<code>set transponder_data = &lt;bytes&gt;</code>) via the CLI, then <code>save</code>. Run <code>get transponder</code> to inspect current values."
     },
     "featureAIRMODE": {
         "message": "Permanently enable Airmode"
@@ -1458,7 +1553,7 @@
         "message": "Telemetry output from receiver"
     },
     "configurationRSSI": {
-        "message": "RSSI (Signal Strength)"
+        "message": "RSSI"
     },
     "configurationRSSIHelp": {
         "message": "RSSI is a measurement of signal strength and is very handy so you know when your aircraft is going out of range or if it is suffering RF interference."
@@ -1477,12 +1572,6 @@
     },
     "configurationActiveImu": {
         "message": "Active IMU"
-    },
-    "configurationSensors": {
-        "message": "Sensor Configuration"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configure additional sensors and advanced features."
     },
     "configurationMagAlignmentHelp": {
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
@@ -1521,37 +1610,13 @@
         "message": "Board Alignment"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "Roll Degrees"
+        "message": "Roll°"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "Pitch Degrees"
+        "message": "Pitch°"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Yaw Degrees"
-    },
-    "configurationGyroAlignment": {
-        "message": "Gyro Alignment"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Active IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Select which gyro to use as the primary gyro. The primary gyro is used for stabilization and control. If you have only one gyro, it will be selected automatically.<br><br>It is not always possible to enable multiple gyros, when they are of different types or brands."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
+        "message": "Yaw°"
     },
     "configurationMagAlignment": {
         "message": "Magnetometer Alignment"
@@ -1595,14 +1660,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "GYRO Alignment"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Warning: No Gyro/Acc found"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "First"
@@ -1613,30 +1672,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Both"
     },
-    "configurationSensorAlignment": {
-        "message": "Sensor Alignment"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "At least one gyro must remain enabled. If you disable all gyros, the flight controller will not work properly."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "First GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Second GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "ACCEL Alignment"
-    },
     "configurationSensorAlignmentDefaultOption": {
-       "message": "Default"
+        "message": "Default"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Custom"
-    },
-
-    "configurationAccelTrims": {
-        "message": "Accelerometer Trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Accelerometer Roll Trim"
@@ -1653,7 +1699,7 @@
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"
     },
-       "configurationReverseMotorSwitchHelp": {
+    "configurationReverseMotorSwitchHelp": {
         "message": "This option configures the mixer to expect the motor direction to be reversed and the propellers to be on accordingly. <strong>Warning:</strong> This does not reverse the motor direction. Use the configuration tool for your ESCs or switch the ESC - motor wiring order to achieve this. Also, make sure to check with propellers off that your motors are rotating in the directions shown in the diagram above before attempting to arm."
     },
     "configurationAutoDisarmDelay": {
@@ -1686,7 +1732,7 @@
         "message": "The pole count is the number of magnets on the bell of the motor. Do NOT count the stators where the windings are located. 5\" motors usually have 14 magnets, 3\" or smaller often have 12 magnets.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
-    "configurationMotorIdleRpmHelp" : {
+    "configurationMotorIdleRpmHelp": {
         "message": "This is the dynamic idle value from the active PID profile. When Dynamic Idle is set to zero, only static motor idle will apply. Change the Dynamic Idle settings on the PID tuning tab.",
         "description": "Help text for dynamic idle setting"
     },
@@ -1897,6 +1943,9 @@
     "configurationButtonSave": {
         "message": "Save and Reboot"
     },
+    "dialogClose": {
+        "message": "Close"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Dynamic Notch values change"
     },
@@ -2018,7 +2067,7 @@
         "message": "PID Profile Settings"
     },
     "pidTuningSubTabRates": {
-        "message": "Rateprofile Settings"
+        "message": "Rate Profile Settings"
     },
     "pidTuningSubTabFilter": {
         "message": "Filter Settings"
@@ -2044,7 +2093,6 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Profile independent PID Controller Settings"
     },
-
     "pidTuningAntiGravity": {
         "message": "Anti Gravity"
     },
@@ -2084,7 +2132,7 @@
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
-        "message": "Dynamic<br>Damping",
+        "message": "Dynamic Damping",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
@@ -2212,7 +2260,7 @@
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Feed-<br>forward"
+        "message": "Feedforward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward adjusts stick responsiveness.<br /><br /> These options let you adjust it to provide anything from crisp, immediate stick responses for racing, or soft smooth responses for cinematic / HD purposes."
@@ -2318,11 +2366,17 @@
     "pidTuningRatesPreview": {
         "message": "Rates Preview"
     },
+    "pidTuningRatesModelPreview": {
+        "message": "Rates Model Preview"
+    },
     "pidTuningRatesTuningHelp": {
         "message": "<b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting."
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
+    },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
     },
     "pidTuningTPAMode": {
         "message": "TPA Mode"
@@ -2449,6 +2503,9 @@
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the aircraft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D-Term Dynamic Lowpass or D Term Lowpass 1</b>."
     },
+    "pidTuningSliders": {
+        "message": "PID Tuning Sliders"
+    },
     "pidTuningSliderPidsMode": {
         "message": "Mode:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2473,6 +2530,9 @@
     },
     "receiverThrottleHover": {
         "message": "Hover Point"
+    },
+    "receiverStickRange": {
+        "message": "Stick Range"
     },
     "receiverStickMin": {
         "message": "'Stick Low' Threshold"
@@ -2611,13 +2671,16 @@
         "message": "Save"
     },
     "auxiliaryAutoChannelSelect": {
-      "message": "AUTO"
+        "message": "AUTO"
+    },
+    "auxiliaryLinkNone": {
+        "message": "None"
     },
     "auxiliaryModeLogicOR": {
-      "message": "OR"
+        "message": "OR"
     },
     "auxiliaryModeLogicAND": {
-      "message": "AND"
+        "message": "AND"
     },
     "auxiliaryHelpMode_3DDISABLE": {
         "message": "Enables reversible motor direction to provide negative thrust and allow inverted flight. Throttle becomes -100 to +100 instead of 0 to 100",
@@ -2646,6 +2709,10 @@
     "auxiliaryHelpMode_ALTHOLD": {
         "message": "<a href=\"https://betaflight.com/docs/wiki/guides/current/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold</a> actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
         "description": "Help text for ALTITUDE HOLD mode"
+    },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "Autopilot mode enables autonomous flight control, combining altitude hold and position hold to maintain a stable hover or follow a planned flight path.",
+        "description": "Help text for AUTOPILOT mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Enable beeping - useful for locating a crashed aircraft",
@@ -2694,6 +2761,10 @@
     "auxiliaryHelpMode_CAMSTAB": {
         "message": "Enables Camera Stabilisation mode",
         "description": "Help text to CAMSTAB mode"
+    },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Enables Chirp mode",
+        "description": "Help text for CHIRP mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Enter failsafe stage 2 manually",
@@ -2844,6 +2915,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "via channel"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "w/ center (val.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "and range|scale (val.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controls the scaling or range of the adjustment; higher values increase the adjustment range or sensitivity.<br /><br /><strong>Slider Adjustments:</strong><br />For Slider adjustments, Adjustment Scale controls the scaling/sensitivity of the adjustment. A value of 50 equals 50% of the slider range. Setting to 0 utilizes the default scale for sliders.<br /><br /><strong>Selection Adjustments:</strong><br />For Selection adjustments, set Adjustment Scale to 0 for default behavior, or specify a microsecond (uS) value to limit the range. For example: Set Adjustment Center to 1000 (uS) and Adjustment Scale to 500 (uS) to utilize a 3-position switch as a 2-position switch.<br /><br /><strong>Stepped and Absolute Adjustments:</strong><br />For Stepped and Absolute adjustments, Adjustment Scale defines the range above and below the Adjustment Center. For example, a value of 25 creates an adjustment range of ±25 from the Adjustment Center value, or from the current value if Adjustment Center is set to 0.<br /><strong>Note:</strong> To use the Absolute adjustment method with a potentiometer, an Adjustment Scale value must be specified.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
@@ -2955,8 +3040,15 @@
     "adjustmentsFunction30": {
         "message": "LED Profile Selection"
     },
-	"adjustmentsFunction31": {
+    "adjustmentsFunction31": {
         "message": "LED Brightness Adjust"
+    },
+    "adjustmentsFunction32": {
+        "message": "Slider Master Multiplier"
+    },
+    "adjustmentsFunction33": {
+        "message": "Battery Profile Selection",
+        "description": "Allows switching battery profiles via RC channel"
     },
     "adjustmentsSave": {
         "message": "Save"
@@ -2965,68 +3057,14 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "transponderNotSupported": {
-        "message": "Your flight controller's firmware does not support transponder functionality."
+    "adjustmentsShowAll": {
+        "message": "Show all slots"
     },
-    "transponderInformation": {
-        "message": "Transponders systems allow race organizers to time your laps.  The transponder is fitted to your aircraft and when your aircraft passes the timing gate the track-side receiver registers your code and records your laptime.  When fitting an IR based transponder your should ensure that it points outward from your aircraft towards the track-side receivers and that the light beam is not obstructed by your airframe, battery-straps, cables, propellers, etc."
+    "adjustmentsHideEmpty": {
+        "message": "Hide empty slots"
     },
-    "transponderConfigurationType": {
-        "message": "Transponder type"
-    },
-    "transponderType0": {
-        "message": "None"
-    },
-    "transponderType1": {
-        "message": "iLap"
-    },
-    "transponderType2": {
-        "message": "aRCiTimer"
-    },
-    "transponderType3": {
-        "message": "ERLT"
-    },
-    "transponderConfiguration1": {
-        "message": "Configuration iLap"
-    },
-    "transponderConfiguration2": {
-        "message": "Configuration aRCiTimer"
-    },
-    "transponderConfiguration3": {
-        "message": "Configuration ERLT"
-    },
-    "transponderData1": {
-        "message": "Data"
-    },
-    "transponderData2": {
-        "message": "Transponder ID"
-    },
-    "transponderData3": {
-        "message": "Transponder ID"
-    },
-    "transponderDataHelp1": {
-        "message": "Hexadecimal digits only, 0-9, A-F"
-    },
-    "transponderHelp1": {
-        "message": "Configure your transponder code here.  Note: Only valid codes will be recognised by race timing systems.  Valid transponder codes can be obtained from <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro</a>."
-    },
-    "transponderHelp2": {
-        "message": "For more information please visit <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer site</a>"
-    },
-    "transponderDataHelp3": {
-        "message": "Choose ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "For more information please visit <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer site</a>"
-    },
-    "transponderButtonSave": {
-        "message": "Save"
-    },
-    "transponderButtonSaveReboot": {
-        "message": "Save and Reboot"
-    },
-    "transponderDataInvalid": {
-        "message": "Transponder data is <span class=\"message-negative\">invalid</span>"
+    "adjustmentsSlotsActive": {
+        "message": "{{active}} of {{total}} slots active"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requires firmware &gt;= 1.10.0. and target support."
@@ -3084,6 +3122,27 @@
     },
     "gpsMapHead": {
         "message": "Current location"
+    },
+    "gpsMapSatelliteView": {
+        "message": "Satellite view"
+    },
+    "gpsMapHybridView": {
+        "message": "Hybrid view"
+    },
+    "gpsMapStreetView": {
+        "message": "Street view"
+    },
+    "gpsMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "gpsMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "gpsMapToggleFullscreen": {
+        "message": "Toggle fullscreen"
+    },
+    "gpsMapRetry": {
+        "message": "Retry"
     },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
@@ -3191,6 +3250,180 @@
     "gnssHealthyUnhealthy": {
         "message": "unhealthy"
     },
+    "flightPlanWaypointList": {
+        "message": "Waypoint List"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "No waypoints defined. Click on the map or use the form to add waypoints."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Add Waypoint"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Edit Waypoint"
+    },
+    "flightPlanLatitude": {
+        "message": "Latitude <span class=\"units\">°</span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Longitude <span class=\"units\">°</span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Altitude <span class=\"units\">ft AMSL</span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Speed <span class=\"units\">knots</span>"
+    },
+    "flightPlanType": {
+        "message": "Waypoint Type"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Fly Over"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Fly By"
+    },
+    "flightPlanTypeHold": {
+        "message": "Fly Hold"
+    },
+    "flightPlanTypeLand": {
+        "message": "Land"
+    },
+    "flightPlanDuration": {
+        "message": "Hold Duration <span class=\"units\">min</span>"
+    },
+    "flightPlanPattern": {
+        "message": "Hold Pattern"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Circle"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Figure-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Orbit"
+    },
+    "flightPlanMap": {
+        "message": "Flight Plan Map"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Click to add waypoints. Drag waypoint markers to move them."
+    },
+    "flightPlanLoading": {
+        "message": "Please wait..."
+    },
+    "flightPlanClear": {
+        "message": "Clear"
+    },
+    "flightPlanLoad": {
+        "message": "Load"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Save to FC"
+    },
+    "flightPlanLoaded": {
+        "message": "Flight plan loaded successfully"
+    },
+    "flightPlanSaved": {
+        "message": "Flight plan saved successfully"
+    },
+    "flightPlanCleared": {
+        "message": "Flight plan cleared"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Load from FC"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Flight plan loaded from flight controller"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Flight plan saved to flight controller"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Failed to load flight plan from flight controller"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Failed to save flight plan to flight controller"
+    },
+    "flightPlanFCEmpty": {
+        "message": "No waypoints found on flight controller"
+    },
+    "flightPlanClearedFC": {
+        "message": "Flight plan cleared on flight controller"
+    },
+    "flightPlanLoadError": {
+        "message": "Failed to load flight plan"
+    },
+    "flightPlanSaveError": {
+        "message": "Failed to save flight plan"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Invalid latitude (must be between -90 and 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Invalid longitude (must be between -180 and 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Are you sure you want to delete this waypoint?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Delete Waypoint"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Are you sure you want to delete this waypoint? This action cannot be undone."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Are you sure you want to clear all waypoints? This action cannot be undone."
+    },
+    "flightPlanClearTitle": {
+        "message": "Clear Flight Plan"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "Load Flight Plan from Flight Controller?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "A flight controller is connected. Do you want to replace the current flight plan with the one stored on the flight controller? Choosing No keeps your current plan so you can save it to the flight controller."
+    },
+    "flightPlanKeepLocal": {
+        "message": "Keep current"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Elevation Profile"
+    },
+    "flightPlanDistance": {
+        "message": "Total Distance"
+    },
+    "flightPlanFlightTime": {
+        "message": "Flight Time"
+    },
+    "flightPlanMinAlt": {
+        "message": "Min Altitude"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Max Altitude"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Add waypoints to see the elevation profile"
+    },
+    "flightPlanGroundElev": {
+        "message": "Ground Elev"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Max Ground Elev"
+    },
+    "flightPlanAvgGround": {
+        "message": "Avg Ground"
+    },
+    "flightPlanMaxGround": {
+        "message": "Max Ground"
+    },
+    "flightPlanAlt": {
+        "message": "Alt"
+    },
+    "flightPlanDist": {
+        "message": "Dist"
+    },
     "motorsVoltage": {
         "message": "Voltage:"
     },
@@ -3209,71 +3442,71 @@
     "motorsmAhDrawnValue": {
         "message": "$1 mAh"
     },
-    "motorsText":{
+    "motorsText": {
         "message": "Motors"
     },
-    "motorNumber1":{
+    "motorNumber1": {
         "message": "Motor - 1"
     },
-    "motorNumber2":{
+    "motorNumber2": {
         "message": "Motor - 2"
     },
-    "motorNumber3":{
+    "motorNumber3": {
         "message": "Motor - 3"
     },
-    "motorNumber4":{
+    "motorNumber4": {
         "message": "Motor - 4"
     },
-    "motorNumber5":{
+    "motorNumber5": {
         "message": "Motor - 5"
     },
-    "motorNumber6":{
+    "motorNumber6": {
         "message": "Motor - 6"
     },
-    "motorNumber7":{
+    "motorNumber7": {
         "message": "Motor - 7"
     },
-    "motorNumber8":{
+    "motorNumber8": {
         "message": "Motor - 8"
     },
-    "servosText":{
+    "servosText": {
         "message": "Servos"
     },
-    "servoNumber1":{
+    "servoNumber1": {
         "message": "Servo - 1"
     },
-    "servoNumber2":{
+    "servoNumber2": {
         "message": "Servo - 2"
     },
-    "servoNumber3":{
+    "servoNumber3": {
         "message": "Servo - 3"
     },
-    "servoNumber4":{
+    "servoNumber4": {
         "message": "Servo - 4"
     },
-    "servoNumber5":{
+    "servoNumber5": {
         "message": "Servo - 5"
     },
-    "servoNumber6":{
+    "servoNumber6": {
         "message": "Servo - 6"
     },
-    "servoNumber7":{
+    "servoNumber7": {
         "message": "Servo - 7"
     },
-    "servoNumber8":{
+    "servoNumber8": {
         "message": "Servo - 8"
     },
-    "motorsResetMaximumButton":{
+    "motorsResetMaximumButton": {
         "message": "Reset"
     },
-    "motorsResetMaximum":{
+    "motorsResetMaximum": {
         "message": "Reset overtime maximum"
     },
-    "motorsSensorGyroSelect":{
+    "motorsSensorGyroSelect": {
         "message": "$t(sensorStatusGyroShort.message)",
         "description": "Don't translate!!!"
     },
-    "motorsSensorAccelSelect":{
+    "motorsSensorAccelSelect": {
         "message": "accel"
     },
     "motorsTelemetryHelp": {
@@ -3529,6 +3762,12 @@
     "loggingNote": {
         "message": "Data will be logged in this tab <span class=\"message-negative\">only</span>. Leaving the tab will <span class=\"message-negative\">cancel</span> logging and the application will return to its normal state.<br /> You can select the global update period; data will be written to the log file every <strong>1</strong> second for performance reasons."
     },
+    "loggingPropertiesTitle": {
+        "message": "Log Properties"
+    },
+    "loggingSamplingInterval": {
+        "message": "Sampling Interval:"
+    },
     "loggingSamplesSaved": {
         "message": "Samples Saved:"
     },
@@ -3613,9 +3852,6 @@
     "dataflashNotPresentNote": {
         "message": "Your flight controller does not have a compatible dataflash chip available."
     },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": "Dataflash requires firmware &gt;= 1.8.0."
-    },
     "dataflashButtonSaveFile": {
         "message": "Save flash to file..."
     },
@@ -3684,7 +3920,7 @@
         "message": "Please wait"
     },
     "firmwareFlasherBoardSelectionHead": {
-    "message": "Board Selection"
+        "message": "Board Selection"
     },
     "firmwareFlasherBranch": {
         "message": "Select Pull Request or Commit"
@@ -3825,10 +4061,10 @@
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
     },
-    "firmwareFlasherShowDevelopmentReleases":{
+    "firmwareFlasherShowDevelopmentReleases": {
         "message": "Show release candidates"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription":{
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Show release candidates in addition to stable releases"
     },
     "firmwareFlasherOptionLoading": {
@@ -3909,6 +4145,12 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware not loaded"
     },
+    "firmwareFlasherFirmwareLoaded": {
+        "message": "Firmware"
+    },
+    "firmwareFlasherFirmwareSize": {
+        "message": "{{bytes}} bytes"
+    },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes)"
     },
@@ -3932,6 +4174,9 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "Failed to save (flash) UF2"
+    },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Click to connect to DFU device"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",
@@ -4272,6 +4517,14 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink always"
     },
+    "ledStripThrottleHue": {
+        "message": "Throttle hue",
+        "description": "Label of throttle hue modifier switch on LED Strip tab"
+    },
+    "ledStripThrottleHueChannel": {
+        "message": "Throttle hue channel",
+        "description": "Accessible label for the aux-channel select next to the throttle hue switch"
+    },
     "ledStripRainbowOverlay": {
         "message": "Rainbow",
         "description": "Label of rainbow effect switch on LED Strip tab"
@@ -4502,28 +4755,20 @@
         "description": "Filter tuning slider high header"
     },
     "pidTuningGyroFilterSlider": {
-        "message": "Gyro Filter Multiplier:",
+        "message": "Gyro Filter Multiplier",
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Changes the Gyro Lowpass filter cutoffs.<br /><br />Moving the slider to the left gives stronger Gyro filtering (lower cutoff frequency).<br /><br />Moving the slider to the right gives less Gyro filtering (higher cutoff frequency).<br /><br />When moving the slider to the right to improve propwash handling, BE CAREFUL to not get too radical.  You will allow more noise into both P and D and may get fly-aways or burnt out motors.<br /><br />You may need  to move the slider to left if you have frame resonance issues, bad bearings, beat up props, hot motors, etc.<br /><br />Gyro filtering is applied before, and in addition to, D filtering.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningGyroSliderEnabled": {
-        "message": "Use Gyro Slider",
-        "description": "Disable or enable Gyro Filter Tuning Slider"
-    },
     "pidTuningDTermFilterSlider": {
-        "message": "D Term Filter Multiplier:",
+        "message": "D Term Filter Multiplier",
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Changes the D-term Lowpass Filter cutoffs.<br /><br />Moving the slider to the left gives stronger D filtering (lower cutoff frequency).<br /><br />Moving the slider to the right gives less filtering (higher cutoff frequency).<br /><br />D-term is the most sensitive PID element to noise and resonance. It can amplify high frequency noise by 10x to 100x. That's why D filter cutoffs are much lower than the gyro filters.<br /><br />D-term filtering is applied after, and in addition to, the gyro filtering. The default D filtering is optimal for most aircraft and rarely needs changing.<br /><br />Moving this slider to the left reduces motor heat in noisy aircraft and with high PID 'D' tunes, but we may see more propwash and lower frequency D resonances.<br /><br />Moving the slider to the right is not recommended, but may improve propwash on clean builds.  It may cause motor grinding on arming, sudden resonances in-flight, and serious motor overheating.",
         "description": "D Term filter tuning slider helpicon message"
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "Use D Term Slider",
-        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Sliders to adjust the aircraft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enhances the responsiveness of the aircraft; if too high, may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the aircraft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strength on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or lowers all the PID gains, keeping their proportions constant.",
@@ -4735,7 +4980,7 @@
         "message": "Dynamic Notch Filter Range"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "Q factor"
+        "message": "Q factor (x100)"
     },
     "pidTuningDynamicNotchMinHz": {
         "message": "Min Frequency [Hz]"
@@ -4750,7 +4995,7 @@
         "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving aircraft like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch aircraft, HIGH(230-800hz) for very high revving 2.5-3 inch aircraft. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
     },
     "pidTuningDynamicNotchQHelp": {
-        "message": "Q factor adjust how narrow or wide the dynamic notch filters are. Higher value makes it narrower and more precise and lower value makes it wider and broader. Having a really low value will greatly increase filter delay."
+        "message": "Q factor adjusts how narrow or wide the dynamic notch filters are. The stored value is Q factor × 100 (e.g., 300 = Q 3.0). Higher value makes it narrower and more precise, and lower value makes it wider and broader. Having a really low value will greatly increase filter delay."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Set this to the lowest incoming noise frequency that is needed to be controlled by the dynamic notch."
@@ -4770,7 +5015,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "Gyro RPM Filter Harmonics Number",
+        "message": "Harmonics",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -4778,12 +5023,24 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Gyro RPM Filter Min Frequency [Hz]",
+        "message": "Min Frequency [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Minimum frequency that will be used by the RPM Filter.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Fade Range [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Q Factor",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmWeight": {
+        "message": "Weight {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profile dependent Filter Settings"
@@ -4839,7 +5096,7 @@
         "message": "Increases the PID values to compensate when Vbat gets lower. This will give more constant flight characteristics throughout the flight. The amount of compensation that is applied is calculated from the $t(powerBatteryMaximum.message) set in the $t(tabPower.message) page, so make sure that is set to something appropriate."
     },
     "pidTuningVbatSagCompensation": {
-        "message": "Vbat Sag Compensation"
+        "message": "Vbat Sag Compensation %"
     },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/tuning/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
@@ -4848,7 +5105,7 @@
         "message": "%"
     },
     "pidTuningThrustLinearization": {
-        "message": "Thrust Linearization"
+        "message": "Thrust Linearization %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Improves low throttle authority and responsiveness. <br><br> Especially useful for whoops and 48k ESCs.  Has no effect at higher throttle.<br><br>The amount of compensation can be varied between 0 and 150%. Usually 30-40% is enough."
@@ -4861,12 +5118,6 @@
     },
     "pidTuningItermRotationHelp": {
         "message": "Rotates the current I Term vector properly to other axes as the aircraft rotates when yawing continuously during rolls and when performing funnels and other tricks. Very appreciated by LOS acro pilots."
-    },
-    "pidTuningSmartFeedforward": {
-        "message": "Smart Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reduces the effect of the F Term in the PID. When both the P Term and the F Term are active at the same moment, it only uses the larger of the two, avoiding overshoots without the needing to raise D, but also reduces the responsiveness effect produced by the F term when added to P."
     },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
@@ -5067,7 +5318,7 @@
     "failsafeGpsRescueDescendRateHelp": {
         "message": "The initial descent rate is set to 3 times this value, decreasing to the set value at the landing altitude."
     },
-    "failsafeGpsRescueItemMinStartDistHelp" : {
+    "failsafeGpsRescueItemMinStartDistHelp": {
         "message": "If the rescue starts too close to home (within this minimum distance), the aircraft will fly away, on its current heading, until at least this distance from home, and then start normal rescue behaviour",
         "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
     },
@@ -5389,6 +5640,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Calibrated Amperage Scale:"
     },
+    "powerBatteryProfile": {
+        "message": "Battery Profile"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Battery Profile $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "e.g. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Profile Name"
+    },
     "powerBatteryHead": {
         "message": "Battery"
     },
@@ -5592,7 +5855,7 @@
         "message": "Custom image:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "Size must be $t(logoWidthPx)x$t(logoHeightPx) pixels"
+        "message": "Size must be {{logoWidthPx}}x{{logoHeightPx}} pixels"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Must contain green, black and white pixels"
@@ -5601,7 +5864,7 @@
         "message": "Click <b>$t(osdSetupUploadFont.message)</b> to persist custom logo"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Invalid image size: {{width}}x{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Invalid image size: {{width}}x{{height}} (expected {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "The image contains an invalid pixel: rgb({{valueR}}, {{valueG}}, {{valueB}}) at coordinates {{posX}}×{{posY}}"
@@ -5615,9 +5878,14 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
     },
-
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload failed"
+    },
     "osdSetupSave": {
         "message": "Save"
+    },
+    "osdSetupRefresh": {
+        "message": "Refresh"
     },
     "osdSetupFontManager": {
         "message": "Font Manager"
@@ -6153,7 +6421,7 @@
         "message": "Timer: remaining time estimate",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemainingTimeEstimate" : {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Estimate of flight time remaining"
     },
     "osdTextElementRtcDateTime": {
@@ -6186,14 +6454,14 @@
         "message": "Timer 1",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementTimer1" : {
+    "osdDescElementTimer1": {
         "message": "Shows the value of timer 1"
     },
     "osdTextElementTimer2": {
         "message": "Timer 2",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementTimer2" : {
+    "osdDescElementTimer2": {
         "message": "Shows the value of timer 2"
     },
     "osdTextElementCoreTemperature": {
@@ -6375,7 +6643,7 @@
         "message": "Unknown $1",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementUnknown" : {
+    "osdDescElementUnknown": {
         "message": "Unknown element (details to be added in a future release)"
     },
     "osdTextStatMaxSpeed": {
@@ -6626,72 +6894,71 @@
         "message": "Font version: user provided"
     },
     "osdTimerSource": {
-      "message": "Source:"
+        "message": "Source:"
     },
     "osdTimerSourceTooltip": {
         "message": "Select the timer source, this controls the duration/event that the timer measures"
     },
     "osdTimerSourceOptionOnTime": {
-      "message": "On time",
-      "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
+        "message": "On time",
+        "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
     },
     "osdTimerSourceOptionTotalArmedTime": {
-      "message": "Total armed time",
-      "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
+        "message": "Total armed time",
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
-      "message": "Last armed time",
-      "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
+        "message": "Last armed time",
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
-      "message": "On/Armed time",
-      "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
+        "message": "On/Armed time",
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
-      "message": "Precision:"
+        "message": "Precision:"
     },
     "osdTimerPrecisionTooltip": {
         "message": "Select the timer precision, this controls to what precision the time is reported in"
     },
     "osdTimerPrecisionOptionSecond": {
-      "message": "Second",
-      "description": "Selectable option for the precision of the timer in the OSD"
+        "message": "Second",
+        "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerPrecisionOptionHundredth": {
-      "message": "Hundredth",
-      "description": "Selectable option for the precision of the timer in the OSD"
+        "message": "Hundredth",
+        "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerPrecisionOptionTenth": {
-      "message": "Tenth",
-      "description": "Selectable option for the precision of the timer in the OSD"
+        "message": "Tenth",
+        "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerAlarm": {
-      "message": "Alarm:"
+        "message": "Alarm:"
     },
     "osdTimerAlarmTooltip": {
         "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"
     },
     "osdTimerAlarmOptionRssi": {
-      "message": "RSSI",
-      "description": "Text of the RSSI alarm"
+        "message": "RSSI",
+        "description": "Text of the RSSI alarm"
     },
     "osdTimerAlarmOptionCapacity": {
-      "message": "Capacity",
-      "description": "Text of the capacity alarm"
+        "message": "Capacity",
+        "description": "Text of the capacity alarm"
     },
     "osdTimerAlarmOptionAltitude": {
-      "message": "Altitude",
-      "description": "Text of the altitude alarm"
+        "message": "Altitude",
+        "description": "Text of the altitude alarm"
     },
     "osdTimerAlarmOptionLinkQuality": {
         "message": "Link Quality",
         "description": "Text of the link quality alarm"
-      },
-      "osdTimerAlarmOptionRssiDbm": {
+    },
+    "osdTimerAlarmOptionRssiDbm": {
         "message": "RSSI dBm",
         "description": "Text of the RSSI dBm alarm"
-      },
-
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6826,14 +7093,27 @@
         "message": "Warns if the CPU LOAD of the flight controller is too high",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
-
+    "osdTextElementPosHoldFailed": {
+        "message": "Position hold failed",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Shows a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Position hold failed",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Position hold failed",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
     },
     "osdWarningUnknown": {
         "message": "Unknown warning (details to be added in a future release)"
     },
-
     "osdSectionHelpElements": {
         "message": "Enable or disable OSD elements."
     },
@@ -7128,7 +7408,7 @@
         "message": "Save Lua Script",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxLuaFileHelp" :{
+    "vtxLuaFileHelp": {
         "message": "The '$t(vtxButtonSaveLua.message)' button will allow you to save a <i>mcuid</i>.lua file containing the VTX table configuration that can be used with the <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>Version 1.6.0 and above can use the file as is, but for older versions of the scripts it should be renamed to match the modelname on the TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
@@ -7185,7 +7465,6 @@
         "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
-
     "configurationGyroFrequency": {
         "message": "Gyro update frequency"
     },
@@ -7205,10 +7484,172 @@
         "message": "Accelerometer"
     },
     "configurationBaroHardware": {
-        "message": "Barometer (if supported)"
+        "message": "Barometer"
     },
     "configurationMagHardware": {
-        "message": "Magnetometer (if supported)"
+        "message": "Magnetometer"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Could not determine location. Connect a GPS module or allow browser location access."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Magnetic declination set to {{declination}}° from detected location."
+    },
+    "configurationMagInclination": {
+        "message": "Inclination"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "The angle between the earth's magnetic field and the horizontal plane at your location. Positive values indicate the field points downward (northern hemisphere)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Field Strength"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "The total intensity of the earth's magnetic field at your location in nanotesla (nT). Typical values range from 25,000 to 65,000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detect"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Update"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Magnetic declination auto-detected as {{value}}° for your location."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Declination is {{saved}}° but GPS detects {{detected}}° for this location. Click Update to correct."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} samples"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Tilt more!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Detection failed — try with more varied tilting."
+    },
+    "magCalibrationStart": {
+        "message": "Guided"
+    },
+    "magCalibrationStartDesc": {
+        "message": "Rotate through 6 orientations step by step"
+    },
+    "magCalibrationStartAuto": {
+        "message": "Auto-Step"
+    },
+    "magCalibrationStartAutoDesc": {
+        "message": "Same as guided but steps advance on a timer"
+    },
+    "magCalibrationCancel": {
+        "message": "Cancel"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Calibration mode options"
+    },
+    "magCalibrationRetry": {
+        "message": "Retry"
+    },
+    "magCalibrationNextStep": {
+        "message": "Next Step"
+    },
+    "magCalibrationFinish": {
+        "message": "Finish"
+    },
+    "magCalibrationStepOf": {
+        "message": "Step {{current}} of {{total}}"
+    },
+    "magCalibrationWaiting": {
+        "message": "Waiting for movement... Shake the vehicle to begin."
+    },
+    "magCalibrationCollecting": {
+        "message": "Rotate the vehicle slowly through all orientations."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibration complete."
+    },
+    "magCalibrationError": {
+        "message": "Calibration failed. Try again in an area with less magnetic interference."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No movement detected for 30 seconds. Calibration cancelled."
+    },
+    "magCalibrationSamples": {
+        "message": "Samples"
+    },
+    "magCalibrationQuality": {
+        "message": "Quality"
+    },
+    "magCalibrationResidual": {
+        "message": "Fit Residual"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Good"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Fair"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Poor"
+    },
+    "magCalibrationStep1": {
+        "message": "Level — rotate 360° in yaw"
+    },
+    "magCalibrationStep2": {
+        "message": "Nose down — rotate 360°"
+    },
+    "magCalibrationStep3": {
+        "message": "Nose up — rotate 360°"
+    },
+    "magCalibrationStep4": {
+        "message": "Left side down — rotate 360°"
+    },
+    "magCalibrationStep5": {
+        "message": "Right side down — rotate 360°"
+    },
+    "magCalibrationStep6": {
+        "message": "Inverted — rotate 360°"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Firmware offsets"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Sphere fit offsets"
+    },
+    "magCalibrationUnguided": {
+        "message": "Quick"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Rotate freely in all directions — stops when firmware finishes"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Unguided Calibration"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Rotate your vehicle slowly in all directions. The firmware will collect samples and compute offsets automatically."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Firmware calibration complete!"
+    },
+    "magVizPointCloud": {
+        "message": "Point Cloud"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Triple Projection"
+    },
+    "magVizPolar": {
+        "message": "Polar Density"
+    },
+    "magVizWaitingForData": {
+        "message": "Waiting for data…"
+    },
+    "magAlignmentApply": {
+        "message": "Apply"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Detect"
     },
     "configurationSmallAngle": {
         "message": "Maximum ARM Angle [degrees]"
@@ -7385,11 +7826,31 @@
     "darkTheme": {
         "message": "Enable dark theme"
     },
+    "colorTheme": {
+        "message": "Color Theme",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Yellow (default)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Amber",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "High Contrast",
+        "description": "Contrast color theme"
+    },
+    "uiScale": {
+        "message": "UI Scale",
+        "description": "Scale the entire user interface up or down"
+    },
     "pidTuningRatesType": {
         "message": "Rates Type"
     },
     "pidTuningRatesTypeTip": {
-        "message": "Changing rates type will change the rates curve and the way you can set it"
+        "message": "Changing rates type will change the rates curve and the way you can set it<br><br><a href='https://rates.metamarc.com' target='_blank' rel='noopener noreferrer'>rates.metamarc.com</a>"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"
@@ -7626,7 +8087,7 @@
         "message": "Please wait.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>WARNING!</span><br/>Configuration has been applied with CLI errors.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
@@ -7646,6 +8107,14 @@
         "message": "Cancel",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Add favorite preset",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Remove favorite preset",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Presets Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7657,6 +8126,14 @@
     "presetsBackupLoad": {
         "message": "Load backup",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Preset apply and backup actions require the CLI, which is not available in Virtual Mode.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
+    },
+    "mspCliFirmwareTooOld": {
+        "message": "This action requires Betaflight firmware {{required}} or newer (currently connected to {{current}}). Please update your flight controller firmware before continuing.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",
@@ -7863,6 +8340,20 @@
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
     },
+    "osdTextElementCustomSerialText": {
+        "message": "Custom serial text",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Displays custom text received from a serial port"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profile: Battery profile name",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Shows the active battery profile name or index"
+    },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
@@ -7918,6 +8409,9 @@
     "userBackupDownloadFailed": {
         "message": "Failed to download backup"
     },
+    "userBackupFileEmpty": {
+        "message": "Backup file is empty"
+    },
     "userBackupUpdateSuccess": {
         "message": "Backup updated successfully"
     },
@@ -7929,6 +8423,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "Failed to delete backup"
+    },
+    "actionRestore": {
+        "message": "Restore"
+    },
+    "titleRestoreBackup": {
+        "message": "Restore backup"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Apply the backup \"{{name}}\" to the connected flight controller? The current configuration will be overwritten."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Restoring backup..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Backup restored successfully"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Failed to restore backup"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>WARNING!</span><br/>Backup applied with CLI errors."
     },
     "userPasskeyNoPasskeys": {
         "message": "No passkeys available"
@@ -7966,6 +8481,36 @@
     "labelUsePasskey": {
         "message": "Use Passkey"
     },
+    "labelSignInWithPasskey": {
+        "message": "Sign in with Passkey"
+    },
+    "labelSendVerificationCode": {
+        "message": "Send Verification Code"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Sign in with email code instead"
+    },
+    "labelBackToPasskey": {
+        "message": "Back to passkey sign in"
+    },
+    "labelBack": {
+        "message": "Back"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Don't have a passkey?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Set one up"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Use your passkey to sign in"
+    },
+    "descriptionCodeRequest": {
+        "message": "We'll email you a verification code"
+    },
+    "descriptionCodeEntered": {
+        "message": "Enter the code we sent to $1"
+    },
     "titleEnterVerificationCode": {
         "message": "Enter Verification Code"
     },
@@ -8001,6 +8546,15 @@
     },
     "userCreatingPasskey": {
         "message": "Creating passkey..."
+    },
+    "userCodeRequired": {
+        "message": "Verification code is required"
+    },
+    "userSendingCode": {
+        "message": "Sending verification code..."
+    },
+    "userSendCodeFailed": {
+        "message": "Failed to send verification code"
     },
     "dataWaitingForData": {
         "message": "Waiting for data ..."
@@ -8088,5 +8642,550 @@
     },
     "sectionUserPasskeys": {
         "message": "User Passkeys"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Align to position",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Choose Position",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Pre-Flight"
+    },
+    "preflightTitle": {
+        "message": "Pre-Flight Environment Check"
+    },
+    "preflightLocation": {
+        "message": "Flight Location"
+    },
+    "preflightUseMyLocation": {
+        "message": "Use My Location"
+    },
+    "preflightDetecting": {
+        "message": "Detecting..."
+    },
+    "preflightOr": {
+        "message": "or enter coordinates:"
+    },
+    "preflightLatitude": {
+        "message": "Latitude"
+    },
+    "preflightLongitude": {
+        "message": "Longitude"
+    },
+    "preflightApply": {
+        "message": "Apply"
+    },
+    "preflightLaunchStatus": {
+        "message": "Launch Status"
+    },
+    "preflightStatusGo": {
+        "message": "GO"
+    },
+    "preflightStatusCaution": {
+        "message": "CAUTION"
+    },
+    "preflightStatusWarning": {
+        "message": "WARNING"
+    },
+    "preflightStatusNoGo": {
+        "message": "NO-GO"
+    },
+    "preflightStatusNoData": {
+        "message": "No Data"
+    },
+    "preflightCheckWind": {
+        "message": "Wind"
+    },
+    "preflightCheckVisibility": {
+        "message": "Visibility"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Precipitation"
+    },
+    "preflightCheckSolar": {
+        "message": "Solar"
+    },
+    "preflightLevelUnknown": {
+        "message": "Unknown"
+    },
+    "preflightWmoClearSky": {
+        "message": "Clear sky"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Mainly clear"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Partly cloudy"
+    },
+    "preflightWmoOvercast": {
+        "message": "Overcast"
+    },
+    "preflightWmoFog": {
+        "message": "Fog"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Depositing rime fog"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Light drizzle"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Moderate drizzle"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Dense drizzle"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Light freezing drizzle"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Dense freezing drizzle"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Slight rain"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Moderate rain"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Heavy rain"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Light freezing rain"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Heavy freezing rain"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Slight snow"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Moderate snow"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Heavy snow"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Snow grains"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Slight rain showers"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Moderate rain showers"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Violent rain showers"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Slight snow showers"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Heavy snow showers"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Thunderstorm"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Thunderstorm with slight hail"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Thunderstorm with heavy hail"
+    },
+    "preflightKpLow": {
+        "message": "Low"
+    },
+    "preflightKpModerate": {
+        "message": "Moderate"
+    },
+    "preflightKpElevated": {
+        "message": "Elevated"
+    },
+    "preflightKpStorm": {
+        "message": "Storm"
+    },
+    "preflightWindCalm": {
+        "message": "Calm"
+    },
+    "preflightWindLight": {
+        "message": "Light"
+    },
+    "preflightWindModerate": {
+        "message": "Moderate"
+    },
+    "preflightWindStrong": {
+        "message": "Strong"
+    },
+    "preflightWindDangerous": {
+        "message": "Dangerous"
+    },
+    "preflightVisExcellent": {
+        "message": "Excellent"
+    },
+    "preflightVisGood": {
+        "message": "Good"
+    },
+    "preflightVisReduced": {
+        "message": "Reduced"
+    },
+    "preflightVisPoor": {
+        "message": "Poor"
+    },
+    "preflightPrecipNone": {
+        "message": "None"
+    },
+    "preflightPrecipLight": {
+        "message": "Light"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderate"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Heavy"
+    },
+    "preflightDewNoRisk": {
+        "message": "No risk"
+    },
+    "preflightDewLowRisk": {
+        "message": "Low risk"
+    },
+    "preflightDewFogLikely": {
+        "message": "Fog/condensation likely"
+    },
+    "preflightDewFogExpected": {
+        "message": "Fog/lens fogging expected"
+    },
+    "preflightUvLow": {
+        "message": "Low"
+    },
+    "preflightUvModerate": {
+        "message": "Moderate"
+    },
+    "preflightUvHigh": {
+        "message": "High"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Very High"
+    },
+    "preflightBatteryRisk": {
+        "message": "Battery Risk"
+    },
+    "preflightBatteryOk": {
+        "message": "Normal range"
+    },
+    "preflightBatteryCool": {
+        "message": "Reduced performance, warm batteries"
+    },
+    "preflightBatteryCold": {
+        "message": "Severely reduced capacity"
+    },
+    "preflightBatteryHot": {
+        "message": "Risk of swelling, keep shaded"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Do not fly, extreme heat"
+    },
+    "preflightCheckBattery": {
+        "message": "Battery"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Density Alt"
+    },
+    "preflightFeelsLike": {
+        "message": "Feels Like"
+    },
+    "preflightFogRisk": {
+        "message": "Fog Risk"
+    },
+    "preflightFogUnlikely": {
+        "message": "Unlikely"
+    },
+    "preflightFogLow": {
+        "message": "Low risk"
+    },
+    "preflightFogModerate": {
+        "message": "Moderate risk"
+    },
+    "preflightFogHigh": {
+        "message": "High risk"
+    },
+    "preflightElevation": {
+        "message": "Elevation"
+    },
+    "preflightDensityAlt": {
+        "message": "Density Altitude"
+    },
+    "preflightDaNormal": {
+        "message": "Normal performance"
+    },
+    "preflightDaReduced": {
+        "message": "Slightly reduced lift"
+    },
+    "preflightDaLow": {
+        "message": "Noticeably reduced performance"
+    },
+    "preflightDaPoor": {
+        "message": "Significant lift reduction"
+    },
+    "preflightCivilTwilight": {
+        "message": "Civil Twilight Window"
+    },
+    "preflightRefresh": {
+        "message": "Refresh"
+    },
+    "preflightCurrentWeather": {
+        "message": "Current Weather"
+    },
+    "preflightWind": {
+        "message": "Wind Speed"
+    },
+    "preflightGusts": {
+        "message": "Wind Gusts"
+    },
+    "preflightVisibility": {
+        "message": "Visibility"
+    },
+    "preflightPrecipitation": {
+        "message": "Precipitation"
+    },
+    "preflightCloudCover": {
+        "message": "Cloud Cover"
+    },
+    "preflightHumidity": {
+        "message": "Humidity"
+    },
+    "preflightPressure": {
+        "message": "Pressure"
+    },
+    "preflightDewPoint": {
+        "message": "Dew Point"
+    },
+    "preflightFlightWindow": {
+        "message": "Flight Window"
+    },
+    "preflightSunrise": {
+        "message": "Sunrise"
+    },
+    "preflightSunset": {
+        "message": "Sunset"
+    },
+    "preflightDaylight": {
+        "message": "Daylight"
+    },
+    "preflightUvIndex": {
+        "message": "UV Index"
+    },
+    "preflightTempRange": {
+        "message": "Temp Range"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Currently"
+    },
+    "preflightDaytime": {
+        "message": "Daytime"
+    },
+    "preflightNighttime": {
+        "message": "Nighttime"
+    },
+    "preflightWindForecast": {
+        "message": "Wind at Altitude Forecast"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Wind speeds at different altitudes are critical for long-range and high-altitude FPV flights. Higher altitudes typically have stronger winds."
+    },
+    "preflightTime": {
+        "message": "Time"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Gusts"
+    },
+    "preflightRainProb": {
+        "message": "Rain %"
+    },
+    "preflightWindUnit": {
+        "message": "Wind speeds in m/s. Altitudes above ground level (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Solar Activity"
+    },
+    "preflightSolarHelp": {
+        "message": "High solar activity (Kp > 5) causes ionospheric interference, which can degrade GPS accuracy and affect GPS Rescue reliability."
+    },
+    "preflightGeoStorm": {
+        "message": "Geomagnetic Storm"
+    },
+    "preflightSolarRadiation": {
+        "message": "Solar Radiation"
+    },
+    "preflightRadioBlackout": {
+        "message": "Radio Blackout"
+    },
+    "preflightLastMeasurement": {
+        "message": "Last measurement"
+    },
+    "preflightLoadingSolar": {
+        "message": "Loading solar data..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS / GPS Status"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS satellite signal quality is affected by solar activity. High Kp values can degrade GPS position accuracy and reduce GPS Rescue reliability."
+    },
+    "preflightGNSSNote": {
+        "message": "GPS accuracy is affected by solar/geomagnetic conditions. Connect your quad for live satellite data on the GPS tab."
+    },
+    "preflightKpEffect": {
+        "message": "Ionospheric Impact"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS Rescue Status"
+    },
+    "preflightMagDeclination": {
+        "message": "Magnetic Declination"
+    },
+    "preflightMagInclination": {
+        "message": "Magnetic Inclination"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS Satellite Planning Tool"
+    },
+    "preflightAirspace": {
+        "message": "Airspace & No-Fly Zones"
+    },
+    "preflightAirspaceNote": {
+        "message": "Always check local airspace restrictions and NOTAMs before flying. Rules vary by country and region."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Drone Safety Map (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector Airspace Chart"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Location Map"
+    },
+    "preflightNoData": {
+        "message": "Set a location to load environment data"
+    },
+    "preflightAttribution": {
+        "message": "Weather data: Open-Meteo.com (CC BY 4.0) | Solar data: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Saved locations..."
+    },
+    "preflightLoadLocation": {
+        "message": "Load"
+    },
+    "preflightSaveLocation": {
+        "message": "Save"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Maximum of 5 saved locations reached"
+    },
+    "preflightLocationLabel": {
+        "message": "Location name (max 20 chars)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Delete selected location"
+    },
+    "preflightRenameLocation": {
+        "message": "Rename selected location"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Rename"
+    },
+    "preflightCoordinates": {
+        "message": "Coordinates"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Save Location"
+    },
+    "preflightConfirmSave": {
+        "message": "Save"
+    },
+    "preflightCancel": {
+        "message": "Cancel"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Could not detect location. Please enter coordinates manually."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Browser location failed. Your approximate location can be detected using your IP address via ipapi.co, a third-party service."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Allow"
+    },
+    "preflightIpConsentDeny": {
+        "message": "No thanks"
+    },
+    "preflightMapSatellite": {
+        "message": "Satellite view"
+    },
+    "preflightMapHybrid": {
+        "message": "Hybrid satellite and street view"
+    },
+    "preflightMapStreet": {
+        "message": "Street map view"
+    },
+    "preflightMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "preflightMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "preflightMapFullscreen": {
+        "message": "Toggle fullscreen"
+    },
+    "preflightKpMinimal": {
+        "message": "Minimal impact on GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Possible GPS accuracy degradation"
+    },
+    "preflightKpSevere": {
+        "message": "Significant GPS interference expected"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Check solar activity first"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS Rescue reliable"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPS Rescue may be unreliable"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPS Rescue NOT recommended"
+    },
+    "preflightForecast": {
+        "message": "5-Day Forecast"
+    },
+    "preflightForecastHelp": {
+        "message": "Daily weather overview to help plan flight sessions ahead"
+    },
+    "preflightForecastDay": {
+        "message": "Day"
+    },
+    "preflightForecastWeather": {
+        "message": "Weather"
     }
 }

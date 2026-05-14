@@ -3,6 +3,8 @@ import { reactive } from "vue";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
 
+const MAX_BATTERY_PROFILES = 3;
+
 const INITIAL_CONFIG = {
     apiVersion: "0.0.0",
     flightControllerIdentifier: "",
@@ -51,6 +53,9 @@ const INITIAL_CONFIG = {
     sampleRateHz: 0,
     configurationProblems: 0,
     hardwareName: "",
+    batteryProfile: 0,
+    numberOfBatteryProfiles: 0,
+    batteryProfileNames: Array(MAX_BATTERY_PROFILES).fill(""),
 };
 
 const INITIAL_ANALOG = {
@@ -127,6 +132,9 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_WING: 16424,
     USE_POSITION_HOLD: 16425,
     USE_CHIRP: 16426,
+    USE_FLIGHT_PLAN: 16427,
+    USE_OPTICALFLOW: 16428,
+    USE_RANGEFINDER: 16429,
 };
 
 const FC = {
@@ -161,16 +169,17 @@ const FC = {
     FC_CONFIG: null,
     FEATURE_CONFIG: null,
     FILTER_CONFIG: null,
-    GYRO_SENSOR: null,
+    GYRO_SENSOR: {},
+    SENSOR_NAMES: {},
     GPS_CONFIG: null,
     COMPASS_CONFIG: null,
-    GPS_DATA: null,
+    GPS_DATA: { fix: 0, numSat: 0, latitude: 0, longitude: 0 },
     GPS_RESCUE: null,
     LED_COLORS: null,
     LED_MODE_COLORS: null,
     LED_STRIP: null,
     LED_CONFIG_VALUES: [],
-    MCU_INFO: null,
+    MCU_INFO: {},
     MISC: null, // DEPRECATED
     MIXER_CONFIG: null,
     MODE_RANGES: null,
@@ -194,15 +203,14 @@ const FC = {
     RXFAIL_CONFIG: null,
     RX_CONFIG: null,
     SDCARD: null,
-    SENSOR_ALIGNMENT: null,
+    SENSOR_ALIGNMENT: {},
     SENSOR_CONFIG: null,
-    SENSOR_CONFIG_ACTIVE: null,
+    SENSOR_CONFIG_ACTIVE: {},
     SENSOR_DATA: null,
     SERIAL_CONFIG: null,
     SERVO_CONFIG: null,
     SERVO_DATA: null,
     SERVO_RULES: null,
-    TRANSPONDER: null,
     TUNING_SLIDERS: null,
     VOLTAGE_METERS: null,
     VOLTAGE_METER_CONFIGS: null,
@@ -459,13 +467,6 @@ const FC = {
             blackboxDisabledMask: 0,
         };
 
-        this.TRANSPONDER = {
-            supported: false,
-            data: [],
-            provider: 0,
-            providers: [],
-        };
-
         this.RC_DEADBAND_CONFIG = {
             deadband: 0,
             yaw_deadband: 0,
@@ -535,6 +536,9 @@ const FC = {
             dyn_notch_count: 0,
             gyro_rpm_notch_harmonics: 0,
             gyro_rpm_notch_min_hz: 0,
+            gyro_rpm_notch_fade_range_hz: 0,
+            gyro_rpm_notch_q: 0,
+            gyro_rpm_notch_weights: [0, 0, 0],
         };
 
         this.ADVANCED_TUNING = {
@@ -608,6 +612,15 @@ const FC = {
         this.GYRO_SENSOR = {
             gyro_count: 0,
             gyro_hardware: [],
+        };
+
+        this.SENSOR_NAMES = {
+            acc: [],
+            gyro: [],
+            baro: [],
+            mag: [],
+            sonar: [],
+            opticalflow: [],
         };
 
         this.RX_CONFIG = {

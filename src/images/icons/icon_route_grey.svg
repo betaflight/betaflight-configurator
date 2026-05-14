@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Flight Plan Route Icon -->
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 141.7 141.7" enable-background="new 0 0 141.7 141.7" xml:space="preserve">
+<g>
+	<!-- Waypoint 1 (start) -->
+	<circle fill="#818181" cx="25" cy="35" r="15"/>
+
+	<!-- Waypoint 2 -->
+	<circle fill="#818181" cx="55" cy="70" r="15"/>
+
+	<!-- Waypoint 3 -->
+	<circle fill="#818181" cx="95" cy="55" r="15"/>
+
+	<!-- Waypoint 4 (end) -->
+	<circle fill="#818181" cx="115" cy="105" r="15"/>
+
+	<!-- Path line connecting waypoints -->
+	<path fill="none" stroke="#818181" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"
+		d="M25,35 L55,70 L95,55 L115,105"/>
+
+	<!-- Small arrow at the end to show direction -->
+	<path fill="#818181" d="M115,105 L108,100 L110,105 L108,110 Z"/>
+</g>
+</svg>
