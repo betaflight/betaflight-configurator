@@ -1112,7 +1112,8 @@ export function pickOptimalPadLayout(analysis, motorCount, usedServoIndices, opt
  *   path keeps its old behavior.
  * @returns {{cliLines: string[], picks: Map, motorPicks: Map,
  *   usedMotorIndices: number[], usedServoIndices: number[],
- *   motorsToRelease: Array, servosToRelease: Array, warnings: Array}}
+ *   motorsToRelease: Array, servosToRelease: Array, timerRemaps: Map,
+ *   warnings: Array}}
  */
 export function computePresetResourcePlan(analysis, preset, options = {}) {
     const warnings = [];
@@ -1125,6 +1126,9 @@ export function computePresetResourcePlan(analysis, preset, options = {}) {
             usedServoIndices: [],
             motorsToRelease: [],
             servosToRelease: [],
+            // Match the normal path's Map shape so callers can iterate
+            // result.timerRemaps unconditionally.
+            timerRemaps: new Map(),
             warnings: [{ code: "invalid_input", message: "missing analysis or preset data" }],
         };
     }

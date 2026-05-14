@@ -68,11 +68,15 @@ function buildDmaLookup(dmaShow) {
 function buildUartDmaLookup(dmaShow) {
     const m = new Map();
     for (const e of dmaShow) {
-        if (e.peripheral === "FREE" || e.index === null) continue;
+        if (e.peripheral === "FREE" || e.index === null) {
+            continue;
+        }
         const p = e.peripheral;
         const tx = /^(?:U?S?ART|SERIAL|UART)_?TX$|_TX$/i.test(p) && p.includes("TX");
         const rx = /^(?:U?S?ART|SERIAL|UART)_?RX$|_RX$/i.test(p) && p.includes("RX");
-        if (!tx && !rx) continue;
+        if (!tx && !rx) {
+            continue;
+        }
         m.set(`${tx ? "tx" : "rx"}:${e.index}`, {
             controller: e.controller,
             stream: e.stream,
@@ -84,7 +88,9 @@ function buildUartDmaLookup(dmaShow) {
 function collectTimupStreams(dmaShow) {
     const s = new Set();
     for (const e of dmaShow) {
-        if (e.peripheral === "TIMUP" && e.index !== null) s.add(e.index);
+        if (e.peripheral === "TIMUP" && e.index !== null) {
+            s.add(e.index);
+        }
     }
     return s;
 }

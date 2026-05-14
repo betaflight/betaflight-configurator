@@ -36,7 +36,8 @@ describe("lookupTargetDefaults", () => {
             index: expect.any(Number),
             pad: expect.any(String),
         });
-        expect(result.ledStrips.length).toBeGreaterThanOrEqual(0);
+        expect(Array.isArray(result.ledStrips)).toBe(true);
+        expect(result.ledStrips.length).toBeGreaterThan(0);
     });
 
     it("strips silicon suffix before lookup", () => {

@@ -33,7 +33,9 @@ export function parseUnifiedTargetConfig(text) {
     }
     for (const rawLine of text.split(/\r?\n/)) {
         const line = rawLine.trim();
-        if (!line || line.startsWith("#")) continue;
+        if (!line || line.startsWith("#")) {
+            continue;
+        }
 
         const boardMatch = BOARD_NAME_LINE.exec(line);
         if (boardMatch) {
@@ -48,7 +50,9 @@ export function parseUnifiedTargetConfig(text) {
         }
 
         const resourceMatch = RESOURCE_LINE.exec(line);
-        if (!resourceMatch) continue;
+        if (!resourceMatch) {
+            continue;
+        }
         const peripheral = resourceMatch[1].toUpperCase();
         const index = Number(resourceMatch[2]);
         const pad = resourceMatch[3].toUpperCase();

@@ -135,9 +135,9 @@
                                     color="warning"
                                     size="2xl"
                                     :ui="{
-                                        root: '!w-full',
-                                        base: '!w-full !rounded-md border border-(--ui-border)',
-                                        indicator: '!rounded-none !transition-none opacity-(--bar-opacity)',
+                                        root: 'w-full!',
+                                        base: 'w-full! rounded-md! border border-(--ui-border)',
+                                        indicator: 'rounded-none! transition-none! opacity-(--bar-opacity)',
                                     }"
                                     class="h-full"
                                 />
@@ -265,7 +265,7 @@
                     :disabled="(!configHasChanged && !resourcesModified) || resourcesWriteInFlight"
                     color="warning"
                     variant="solid"
-                    class="!bg-[#ffbb00] !text-zinc-900 hover:!bg-[#e6a800] disabled:!bg-zinc-600 disabled:!text-zinc-400"
+                    class="bg-[#ffbb00]! text-zinc-900! hover:bg-[#e6a800]! disabled:bg-zinc-600! disabled:text-zinc-400!"
                     @click="saveServoConfig"
                 />
             </div>
@@ -748,8 +748,12 @@ function collectCandidatePads(analysis) {
 // (even if empty); false if the component unmounted mid-scan.
 async function runAltAfDiscovery(analysis) {
     const candidatePads = collectCandidatePads(analysis);
-    const altAfPool =
-        analysis.padTimers instanceof Map ? [...analysis.padTimers.keys()].filter((pad) => candidatePads.has(pad)) : [];
+    // Scan every pad collectCandidatePads surfaced — including UART/LED pads
+    // whose CURRENT AF isn't a timer (so they're absent from padTimers).
+    // `timer <pad> list` is exactly what reveals their latent timer AFs;
+    // intersecting with padTimers.keys() here would drop them and defeat
+    // the UART alt-AF discovery entirely.
+    const altAfPool = [...candidatePads];
     if (altAfPool.length === 0) {
         return true;
     }
