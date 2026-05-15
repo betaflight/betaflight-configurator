@@ -39,7 +39,9 @@ function key(peripheral, index) {
 function buildTimerLookup(timerShow) {
     const m = new Map();
     for (const e of timerShow) {
-        if (e.channel === null || e.peripheral === "FREE") continue;
+        if (e.channel === null || e.peripheral === "FREE") {
+            continue;
+        }
         m.set(key(e.peripheral, e.index), {
             timer: e.timer,
             channel: e.channel,
@@ -52,7 +54,9 @@ function buildTimerLookup(timerShow) {
 function buildDmaLookup(dmaShow) {
     const m = new Map();
     for (const e of dmaShow) {
-        if (e.peripheral === "FREE" || e.peripheral === "TIMUP") continue;
+        if (e.peripheral === "FREE" || e.peripheral === "TIMUP") {
+            continue;
+        }
         m.set(key(e.peripheral, e.index), {
             controller: e.controller,
             stream: e.stream,
@@ -296,9 +300,13 @@ export function analyzeResources({
                 dmaStream: dmaHit,
             });
         } else if (p === "SERIAL_TX") {
-            if (entry.index !== null) serialTx.set(entry.index, entry.pad);
+            if (entry.index !== null) {
+                serialTx.set(entry.index, entry.pad);
+            }
         } else if (p === "SERIAL_RX") {
-            if (entry.index !== null) serialRx.set(entry.index, entry.pad);
+            if (entry.index !== null) {
+                serialRx.set(entry.index, entry.pad);
+            }
         } else if (HARDWARE_FIXED_PERIPHERALS.has(p)) {
             hardwareFixedPads.push({
                 pad: entry.pad,
@@ -332,16 +340,26 @@ export function analyzeResources({
     const spareUarts = [];
     if (Array.isArray(serialPorts)) {
         for (const port of serialPorts) {
-            if (!port) continue;
+            if (!port) {
+                continue;
+            }
             const fns = Array.isArray(port.functions) ? port.functions : [];
-            if (fns.length > 0) continue;
+            if (fns.length > 0) {
+                continue;
+            }
             const uartIndex = (port.identifier ?? -1) + 1;
-            if (uartIndex <= 0) continue;
+            if (uartIndex <= 0) {
+                continue;
+            }
             const serial = serials.find((s) => s.index === uartIndex);
-            if (!serial) continue;
+            if (!serial) {
+                continue;
+            }
             const txPwm = serial.txPad && pwmPadSet.has(serial.txPad);
             const rxPwm = serial.rxPad && pwmPadSet.has(serial.rxPad);
-            if (!txPwm && !rxPwm) continue;
+            if (!txPwm && !rxPwm) {
+                continue;
+            }
             spareUarts.push({
                 index: uartIndex,
                 txPad: txPwm ? serial.txPad : null,
