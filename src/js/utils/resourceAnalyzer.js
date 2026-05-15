@@ -276,43 +276,50 @@ function processResourceEntries(resourceShow, timerByKey, dmaByKey, timerDump, d
     return { motors, servos, ledStrips, serialTx, serialRx, hardwareFixedPads, freePadsCount };
 }
 
+function isSpareSerialPort(port) {
+    if (!port) {
+        return false;
+    }
+    const fns = Array.isArray(port.functions) ? port.functions : [];
+    return fns.length === 0;
+}
+
+function serialForPort(port, serials) {
+    const uartIndex = (port?.identifier ?? -1) + 1;
+    if (uartIndex <= 0) {
+        return null;
+    }
+    return serials.find((s) => s.index === uartIndex) ?? null;
+}
+
+function buildSpareUartEntry(serial, pwmPadSet) {
+    const txPwm = serial.txPad && pwmPadSet.has(serial.txPad);
+    const rxPwm = serial.rxPad && pwmPadSet.has(serial.rxPad);
+    if (!txPwm && !rxPwm) {
+        return null;
+    }
+    return {
+        index: serial.index,
+        txPad: txPwm ? serial.txPad : null,
+        rxPad: rxPwm ? serial.rxPad : null,
+    };
+}
+
 // Spare UARTs: ports that exist (resource bound) but have no serial
 // function assigned. For each, check whether the TX/RX pad is on a
 // PWM-capable timer (timerDump cross-ref). Released UART pads can
 // become servo outputs. UART# = identifier + 1 (BF SERIAL_PORT_USART1=0).
 function buildSpareUarts(serialPorts, serials, timerDump) {
-    const pwmPadSet = new Set((Array.isArray(timerDump) ? timerDump : []).map((t) => t.pad));
-    const spareUarts = [];
-    if (Array.isArray(serialPorts)) {
-        for (const port of serialPorts) {
-            if (!port) {
-                continue;
-            }
-            const fns = Array.isArray(port.functions) ? port.functions : [];
-            if (fns.length > 0) {
-                continue;
-            }
-            const uartIndex = (port.identifier ?? -1) + 1;
-            if (uartIndex <= 0) {
-                continue;
-            }
-            const serial = serials.find((s) => s.index === uartIndex);
-            if (!serial) {
-                continue;
-            }
-            const txPwm = serial.txPad && pwmPadSet.has(serial.txPad);
-            const rxPwm = serial.rxPad && pwmPadSet.has(serial.rxPad);
-            if (!txPwm && !rxPwm) {
-                continue;
-            }
-            spareUarts.push({
-                index: uartIndex,
-                txPad: txPwm ? serial.txPad : null,
-                rxPad: rxPwm ? serial.rxPad : null,
-            });
-        }
+    if (!Array.isArray(serialPorts)) {
+        return [];
     }
-    return spareUarts;
+    const pwmPadSet = new Set((Array.isArray(timerDump) ? timerDump : []).map((t) => t.pad));
+    return serialPorts
+        .filter(isSpareSerialPort)
+        .map((port) => serialForPort(port, serials))
+        .filter((serial) => serial !== null)
+        .map((serial) => buildSpareUartEntry(serial, pwmPadSet))
+        .filter((entry) => entry !== null);
 }
 
 // Pad-keyed lookups the padRecommender optimizer consumes: timer/channel

@@ -252,30 +252,36 @@ function addCurrentOption(options, seen, currentPin, padTimers, silkscreenMap = 
     }
 }
 
-// Returns "MOTOR N" / "SERVO N" / "LED_STRIP" / "UARTn TX|RX" if `pin` is
-// currently bound to that peripheral (excluding the resource being edited
-// so we don't shadow the "- current" label). Used to annotate fallback
-// options so pilots see what they'd be releasing if they pick that pad.
-function describeCurrentAssignment(pin, ctx) {
-    if (!ctx) {
-        return null;
-    }
+function describeMotorAssignment(pin, ctx) {
     const editingMotor = ctx.kind === "motor";
     for (const m of ctx.motorResources ?? []) {
         if (normalizePin(m?.pin) === pin && !(editingMotor && m.index === ctx.resource?.index)) {
             return `MOTOR ${m.index + 1}`;
         }
     }
+    return null;
+}
+
+function describeServoAssignment(pin, ctx) {
+    const editingServo = ctx.kind !== "motor";
     for (const s of ctx.servoResources ?? []) {
-        if (normalizePin(s?.pin) === pin && !(!editingMotor && s.index === ctx.resource?.index)) {
+        if (normalizePin(s?.pin) === pin && !(editingServo && s.index === ctx.resource?.index)) {
             return `SERVO ${s.index + 1}`;
         }
     }
+    return null;
+}
+
+function describeLedAssignment(pin, ctx) {
     for (const led of ctx.ledStrips ?? []) {
         if (normalizePin(led?.pad) === pin) {
             return "LED_STRIP";
         }
     }
+    return null;
+}
+
+function describeSerialAssignment(pin, ctx) {
     for (const serial of ctx.serials ?? []) {
         if (normalizePin(serial?.txPad) === pin) {
             return `UART${serial.index} TX`;
@@ -285,6 +291,22 @@ function describeCurrentAssignment(pin, ctx) {
         }
     }
     return null;
+}
+
+// Returns "MOTOR N" / "SERVO N" / "LED_STRIP" / "UARTn TX|RX" if `pin` is
+// currently bound to that peripheral (excluding the resource being edited
+// so we don't shadow the "- current" label). Used to annotate fallback
+// options so pilots see what they'd be releasing if they pick that pad.
+function describeCurrentAssignment(pin, ctx) {
+    if (!ctx) {
+        return null;
+    }
+    return (
+        describeMotorAssignment(pin, ctx) ??
+        describeServoAssignment(pin, ctx) ??
+        describeLedAssignment(pin, ctx) ??
+        describeSerialAssignment(pin, ctx)
+    );
 }
 
 // Maps a describeCurrentAssignment() string ("LED_STRIP", "UART2 TX",

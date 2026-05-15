@@ -224,6 +224,52 @@ export function parseResourceShow(input) {
  *   - For FREE timers with no channels declared: channel=null, peripheral="FREE"
  *   - For active timers: one entry per active channel
  */
+// Returns { timer, standaloneEntry } if `head` is a TIM<digits> header
+// (three-char prefix + digits, fully bounded), else null. `standaloneEntry`
+// is the row to push immediately when the header carries an inline body
+// (e.g. `TIM3: FREE`); null when the header only sets context for indented
+// CH children below it.
+function parseTimerHeader(head, tail) {
+    if (head.length <= 3 || head.slice(0, 3).toUpperCase() !== "TIM" || !DIGITS_RE.test(head.slice(3))) {
+        return null;
+    }
+    const timer = Number(head.slice(3));
+    if (tail.length === 0) {
+        return { timer, standaloneEntry: null };
+    }
+    const parsed = parsePeripheralBody(tail);
+    if (!parsed) {
+        return { timer, standaloneEntry: null };
+    }
+    return { timer, standaloneEntry: { timer, channel: null, ...parsed } };
+}
+
+// Returns the channel entry for a CH<digits>[N] line under `currentTimer`,
+// or null if `head` isn't a valid channel line or `tail` doesn't parse.
+function parseTimerChannelLine(currentTimer, head, tail) {
+    if (head.length <= 2 || head.slice(0, 2).toUpperCase() !== "CH") {
+        return null;
+    }
+    let chBody = head.slice(2);
+    const complementary = chBody.endsWith("N") || chBody.endsWith("n");
+    if (complementary) {
+        chBody = chBody.slice(0, -1);
+    }
+    if (!DIGITS_RE.test(chBody)) {
+        return null;
+    }
+    const parsed = parsePeripheralBody(tail);
+    if (!parsed) {
+        return null;
+    }
+    return {
+        timer: currentTimer,
+        channel: Number(chBody),
+        complementary,
+        ...parsed,
+    };
+}
+
 export function parseTimerShow(input) {
     const lines = Array.isArray(input) ? input : input.split(/\r?\n/);
     const out = [];
@@ -245,37 +291,21 @@ export function parseTimerShow(input) {
         const tail = line.slice(colonIdx + 1).trim();
 
         if (!isIndented) {
-            // TIM<digits> header — three-char prefix + digits, fully bounded.
-            if (head.length > 3 && head.slice(0, 3).toUpperCase() === "TIM" && DIGITS_RE.test(head.slice(3))) {
-                currentTimer = Number(head.slice(3));
-                if (tail.length > 0) {
-                    const parsed = parsePeripheralBody(tail);
-                    if (parsed) {
-                        out.push({ timer: currentTimer, channel: null, ...parsed });
-                        currentTimer = null; // standalone entry, no children expected
-                    }
+            const header = parseTimerHeader(head, tail);
+            if (header) {
+                if (header.standaloneEntry) {
+                    out.push(header.standaloneEntry);
+                    currentTimer = null;
+                } else {
+                    currentTimer = header.timer;
                 }
                 continue;
             }
         }
-        // CH<digits> child line, optionally suffixed with N (complementary).
-        if (currentTimer !== null && head.length > 2 && head.slice(0, 2).toUpperCase() === "CH") {
-            let chBody = head.slice(2);
-            const complementary = chBody.endsWith("N") || chBody.endsWith("n");
-            if (complementary) {
-                chBody = chBody.slice(0, -1);
-            }
-            if (DIGITS_RE.test(chBody)) {
-                const parsed = parsePeripheralBody(tail);
-                if (!parsed) {
-                    continue;
-                }
-                out.push({
-                    timer: currentTimer,
-                    channel: Number(chBody),
-                    complementary,
-                    ...parsed,
-                });
+        if (currentTimer !== null) {
+            const channelEntry = parseTimerChannelLine(currentTimer, head, tail);
+            if (channelEntry) {
+                out.push(channelEntry);
             }
         }
     }
@@ -460,6 +490,36 @@ export async function readTimerOptionsForPin(pad, opts = {}) {
  * @param {object} [opts] - passed through to readCli
  * @returns {Promise<Map<string, Array<{af, timer, channel, complementary}>>>}
  */
+// Per-pad worker for discoverPadTimerOptions. Returns true if a CLI
+// command was issued (caller should apply the inter-command throttle),
+// false when the pad was skipped (invalid string or already discovered).
+async function discoverOnePadTimerOptions(out, pad, opts) {
+    if (typeof pad !== "string" || pad.length === 0) {
+        return false;
+    }
+    // Single normalize+trim pass: callers occasionally pass whitespace-
+    // padded entries (older config-import paths). Without the trim,
+    // " B07 " gets stored under " B07 " and later case-folded lookups
+    // like `padTimerOptions.get("B07")` miss.
+    const normalizedPad = pad.trim().toUpperCase();
+    if (normalizedPad.length === 0 || out.has(normalizedPad)) {
+        return false;
+    }
+    // Per-pad isolation: readCli rejects on timeout, so a single flaky
+    // `timer <pad> list` (slow USB, FC mid-DMA, etc.) would otherwise
+    // unwind the loop and silently drop every pad after it. Catch and
+    // fall through with an empty array — that's the "checked, none
+    // available" state the doc promises and matches the FC-didn't-
+    // recognize-the-pin path.
+    try {
+        out.set(normalizedPad, await readTimerOptionsForPin(normalizedPad, opts));
+    } catch (e) {
+        console.warn(`Servos: timer ${normalizedPad} list failed, skipping pad`, e);
+        out.set(normalizedPad, []);
+    }
+    return true;
+}
+
 export async function discoverPadTimerOptions(pads, opts = {}) {
     const out = new Map();
     if (!Array.isArray(pads)) {
@@ -483,30 +543,8 @@ export async function discoverPadTimerOptions(pads, opts = {}) {
         if (!shouldContinue()) {
             break;
         }
-        if (typeof pad !== "string" || pad.length === 0) {
-            continue;
-        }
-        // Single normalize+trim pass: callers occasionally pass whitespace-
-        // padded entries (older config-import paths). Without the trim,
-        // " B07 " gets stored under " B07 " and later case-folded lookups
-        // like `padTimerOptions.get("B07")` miss.
-        const normalizedPad = pad.trim().toUpperCase();
-        if (normalizedPad.length === 0 || out.has(normalizedPad)) {
-            continue;
-        }
-        // Per-pad isolation: readCli rejects on timeout, so a single flaky
-        // `timer <pad> list` (slow USB, FC mid-DMA, etc.) would otherwise
-        // unwind the loop and silently drop every pad after it. Catch and
-        // fall through with an empty array — that's the "checked, none
-        // available" state the doc promises and matches the FC-didn't-
-        // recognize-the-pin path.
-        try {
-            out.set(normalizedPad, await readTimerOptionsForPin(normalizedPad, opts));
-        } catch (e) {
-            console.warn(`Servos: timer ${normalizedPad} list failed, skipping pad`, e);
-            out.set(normalizedPad, []);
-        }
-        if (interCommandDelayMs > 0) {
+        const issued = await discoverOnePadTimerOptions(out, pad, opts);
+        if (issued && interCommandDelayMs > 0) {
             await new Promise((resolve) => setTimeout(resolve, interCommandDelayMs));
             // Re-check after the throttle wait: cancellation that lands
             // DURING the 200ms throttle would otherwise still send the next
