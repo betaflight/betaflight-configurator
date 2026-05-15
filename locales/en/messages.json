@@ -3289,8 +3289,29 @@
     "flightPlanTypeLand": {
         "message": "Land"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Take Off"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Change Altitude",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Delay",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Yaw Rate Cap",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Hold Duration <span class=\"units\">min</span>"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Delay Duration <span class=\"units\">min</span>"
+    },
+    "flightPlanYawRate": {
+        "message": "Yaw Rate <span class=\"units\">°/s</span>"
     },
     "flightPlanPattern": {
         "message": "Hold Pattern"

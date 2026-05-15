@@ -27,8 +27,12 @@ import { Style, Stroke, Circle, Fill, Text } from "ol/style";
 import { DragPan } from "ol/interaction";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 
-const { waypoints, sortedWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
+const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
     useFlightPlan();
+
+// Map renders only positional waypoints (lat/lon meaningful); modifier types
+// have no horizontal position and would otherwise be plotted at (0, 0).
+const sortedWaypoints = positionalWaypoints;
 
 const mapRef = ref(null);
 const mapInstance = ref(null);

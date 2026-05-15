@@ -20,6 +20,10 @@ const TYPE_TO_CLI = {
     flyby: "FLYBY",
     hold: "HOLD",
     land: "LAND",
+    takeoff: "TAKEOFF",
+    alt_change: "ALT_CHANGE",
+    delay: "DELAY",
+    yaw_rate: "YAW_RATE",
 };
 
 // Type mapping (firmware → configurator)
@@ -28,7 +32,17 @@ const CLI_TO_TYPE = {
     FLYBY: "flyby",
     HOLD: "hold",
     LAND: "land",
+    TAKEOFF: "takeoff",
+    ALT_CHANGE: "alt_change",
+    DELAY: "delay",
+    YAW_RATE: "yaw_rate",
 };
+
+// Modifier types carry no horizontal position; they mutate executor state and
+// then drain onto the next positional waypoint. Map/profile views skip these.
+const MODIFIER_TYPES = new Set(["alt_change", "delay", "yaw_rate"]);
+
+export const isModifierWaypointType = (type) => MODIFIER_TYPES.has(type);
 
 // Pattern mapping (configurator → firmware)
 const PATTERN_TO_CLI = {
@@ -56,6 +70,12 @@ const sortedWaypoints = computed(() => {
     return [...state.waypoints].sort((a, b) => a.order - b.order);
 });
 
+// Positional waypoints only — used by map and elevation profile, which both
+// rely on lat/lon and would otherwise plot modifier waypoints at (0,0).
+const positionalWaypoints = computed(() => {
+    return sortedWaypoints.value.filter((wp) => !isModifierWaypointType(wp.type));
+});
+
 const selectedWaypoint = computed(() => {
     return state.waypoints.find((wp) => wp.uid === state.selectedWaypointUid);
 });
@@ -67,6 +87,10 @@ const editingWaypoint = computed(() => {
 export function useFlightPlan() {
     // Validate waypoint data
     const validateWaypoint = (waypointData) => {
+        // Modifier types carry no horizontal position — skip coord/alt checks.
+        if (isModifierWaypointType(waypointData.type)) {
+            return true;
+        }
         if (waypointData.latitude < -90 || waypointData.latitude > 90) {
             gui_log(i18n.getMessage("flightPlanInvalidLatitude"));
             return false;
@@ -308,18 +332,20 @@ export function useFlightPlan() {
         }
 
         const altCm = Number.parseInt(parts[5], 10);
-        const speedCms = Number.parseInt(parts[6], 10);
+        const speedRaw = Number.parseInt(parts[6], 10);
         const durationDs = Number.parseInt(parts[8], 10);
         const typeName = parts[7].toUpperCase();
         const patternName = parts[9].toUpperCase();
+        const type = CLI_TO_TYPE[typeName] ?? DEFAULT_TYPE;
 
         return {
             uid: crypto.randomUUID(),
             latitude: Number.parseFloat(parts[3]),
             longitude: Number.parseFloat(parts[4]),
             altitude: Math.round(altCm / FEET_TO_CM),
-            speed: Math.round((speedCms / KNOTS_TO_CMS) * 10) / 10,
-            type: CLI_TO_TYPE[typeName] ?? DEFAULT_TYPE,
+            // YAW_RATE stores degrees/sec in the speed slot, not cm/s.
+            speed: type === "yaw_rate" ? speedRaw : Math.round((speedRaw / KNOTS_TO_CMS) * 10) / 10,
+            type,
             duration: Math.round((durationDs / MINUTES_TO_DECISECONDS) * 10) / 10,
             pattern: CLI_TO_PATTERN[patternName] ?? "orbit",
             order: Number.parseInt(parts[2], 10),
@@ -331,12 +357,12 @@ export function useFlightPlan() {
         const lat = wp.latitude.toFixed(7);
         const lon = wp.longitude.toFixed(7);
         const altCm = Math.round(wp.altitude * FEET_TO_CM);
-        const speedCms = Math.round(wp.speed * KNOTS_TO_CMS);
+        const speedRaw = wp.type === "yaw_rate" ? Math.round(wp.speed) : Math.round(wp.speed * KNOTS_TO_CMS);
         const typeCli = TYPE_TO_CLI[wp.type] ?? "FLYOVER";
         const durationDs = Math.round(wp.duration * MINUTES_TO_DECISECONDS);
         const patternCli = PATTERN_TO_CLI[wp.pattern] ?? "ORBIT";
 
-        return `waypoint insert ${index} ${lat} ${lon} ${altCm} ${speedCms} ${typeCli} ${durationDs} ${patternCli}`;
+        return `waypoint insert ${index} ${lat} ${lon} ${altCm} ${speedRaw} ${typeCli} ${durationDs} ${patternCli}`;
     };
 
     // Load waypoints from flight controller via CLI
@@ -420,6 +446,10 @@ export function useFlightPlan() {
             flyby: i18n.getMessage("flightPlanTypeFlyby"),
             hold: i18n.getMessage("flightPlanTypeHold"),
             land: i18n.getMessage("flightPlanTypeLand"),
+            takeoff: i18n.getMessage("flightPlanTypeTakeoff"),
+            alt_change: i18n.getMessage("flightPlanTypeAltChange"),
+            delay: i18n.getMessage("flightPlanTypeDelay"),
+            yaw_rate: i18n.getMessage("flightPlanTypeYawRate"),
         };
         return labels[type] || type;
     };
@@ -428,6 +458,7 @@ export function useFlightPlan() {
         // State (as computed for read-only access)
         waypoints: computed(() => state.waypoints),
         sortedWaypoints, // Already a computed property
+        positionalWaypoints, // Already a computed property
         selectedWaypointUid: computed(() => state.selectedWaypointUid),
         editingWaypointUid: computed(() => state.editingWaypointUid),
         showEditorDialog: computed({
@@ -456,5 +487,6 @@ export function useFlightPlan() {
         openAddWaypoint,
         cancelEdit,
         getWaypointTypeLabel,
+        isModifierWaypointType,
     };
 }

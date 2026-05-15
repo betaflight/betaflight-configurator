@@ -1,7 +1,11 @@
 <template>
     <Dialog v-model="showEditorDialog" :title="editMode ? $t('flightPlanEditWaypoint') : $t('flightPlanAddWaypoint')">
         <form ref="formElement" class="editor-form flex flex-col gap-3" @submit.prevent="handleSave">
-            <SettingRow :label="$t('flightPlanLatitude')" full-width>
+            <SettingRow :label="$t('flightPlanType')" full-width>
+                <USelect v-model="form.type" :items="typeItems" :aria-label="$t('flightPlanType')" class="w-48" />
+            </SettingRow>
+
+            <SettingRow v-if="showPosition" :label="$t('flightPlanLatitude')" full-width>
                 <UInputNumber
                     v-model="form.latitude"
                     :step="0.000001"
@@ -13,7 +17,7 @@
                 />
             </SettingRow>
 
-            <SettingRow :label="$t('flightPlanLongitude')" full-width>
+            <SettingRow v-if="showPosition" :label="$t('flightPlanLongitude')" full-width>
                 <UInputNumber
                     v-model="form.longitude"
                     :step="0.000001"
@@ -25,7 +29,7 @@
                 />
             </SettingRow>
 
-            <SettingRow :label="$t('flightPlanAltitude')" full-width>
+            <SettingRow v-if="showAltitude" :label="$t('flightPlanAltitude')" full-width>
                 <UInputNumber
                     v-model="form.altitude"
                     :step="1"
@@ -37,7 +41,7 @@
                 />
             </SettingRow>
 
-            <SettingRow :label="$t('flightPlanSpeed')" full-width>
+            <SettingRow v-if="showSpeed" :label="$t('flightPlanSpeed')" full-width>
                 <UInputNumber
                     v-model="form.speed"
                     :step="0.1"
@@ -49,17 +53,25 @@
                 />
             </SettingRow>
 
-            <SettingRow :label="$t('flightPlanType')" full-width>
-                <USelect v-model="form.type" :items="typeItems" :aria-label="$t('flightPlanType')" class="w-48" />
+            <SettingRow v-if="showYawRate" :label="$t('flightPlanYawRate')" full-width>
+                <UInputNumber
+                    v-model="form.speed"
+                    :step="1"
+                    :min="0"
+                    :max="720"
+                    required
+                    :aria-label="$t('flightPlanYawRate')"
+                    class="w-48"
+                />
             </SettingRow>
 
-            <SettingRow v-if="form.type === 'hold'" :label="$t('flightPlanDuration')" full-width>
+            <SettingRow v-if="showDuration" :label="durationLabel" full-width>
                 <UInputNumber
                     v-model="form.duration"
                     :step="0.1"
                     :min="0"
                     :max="60"
-                    :aria-label="$t('flightPlanDuration')"
+                    :aria-label="durationLabel"
                     class="w-48"
                 />
             </SettingRow>
@@ -95,8 +107,15 @@ import SettingRow from "@/components/elements/SettingRow.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 
 const { t } = useTranslation();
-const { editingWaypointUid, editingWaypoint, showEditorDialog, addWaypoint, updateWaypoint, cancelEdit } =
-    useFlightPlan();
+const {
+    editingWaypointUid,
+    editingWaypoint,
+    showEditorDialog,
+    addWaypoint,
+    updateWaypoint,
+    cancelEdit,
+    isModifierWaypointType,
+} = useFlightPlan();
 
 // Form element ref for validation
 const formElement = ref(null);
@@ -123,6 +142,10 @@ const typeItems = computed(() => [
     { label: t("flightPlanTypeFlyby"), value: "flyby" },
     { label: t("flightPlanTypeHold"), value: "hold" },
     { label: t("flightPlanTypeLand"), value: "land" },
+    { label: t("flightPlanTypeTakeoff"), value: "takeoff" },
+    { label: t("flightPlanTypeAltChange"), value: "alt_change" },
+    { label: t("flightPlanTypeDelay"), value: "delay" },
+    { label: t("flightPlanTypeYawRate"), value: "yaw_rate" },
 ]);
 
 const patternItems = computed(() => [
@@ -130,6 +153,16 @@ const patternItems = computed(() => [
     { label: t("flightPlanPatternFigure8"), value: "figure8" },
     { label: t("flightPlanPatternOrbit"), value: "orbit" },
 ]);
+
+// Field visibility per waypoint type. Modifier types ignore lat/lon, and each
+// modifier uses just one storage slot (alt, duration or speed-as-deg/s).
+const isModifier = computed(() => isModifierWaypointType(form.type));
+const showPosition = computed(() => !isModifier.value);
+const showAltitude = computed(() => !isModifier.value || form.type === "alt_change");
+const showSpeed = computed(() => !isModifier.value);
+const showYawRate = computed(() => form.type === "yaw_rate");
+const showDuration = computed(() => form.type === "hold" || form.type === "delay");
+const durationLabel = computed(() => (form.type === "delay" ? t("flightPlanDelayDuration") : t("flightPlanDuration")));
 
 // Watch for editing waypoint changes and populate form
 watch(editingWaypoint, (waypoint) => {
@@ -194,36 +227,22 @@ const handleSave = () => {
         return;
     }
 
-    if (editMode.value) {
-        // Update existing waypoint
-        const success = updateWaypoint(editingWaypointUid.value, {
-            latitude: form.latitude,
-            longitude: form.longitude,
-            altitude: form.altitude,
-            speed: form.speed,
-            type: form.type,
-            duration: form.duration,
-            pattern: form.pattern,
-        });
-        if (success) {
-            resetForm();
-            showEditorDialog.value = false;
-        }
-    } else {
-        // Add new waypoint
-        const success = addWaypoint({
-            latitude: form.latitude,
-            longitude: form.longitude,
-            altitude: form.altitude,
-            speed: form.speed,
-            type: form.type,
-            duration: form.duration,
-            pattern: form.pattern,
-        });
-        if (success) {
-            resetForm();
-            showEditorDialog.value = false;
-        }
+    // Modifier waypoints have no horizontal position; firmware ignores lat/lon.
+    const payload = {
+        latitude: isModifier.value ? 0 : form.latitude,
+        longitude: isModifier.value ? 0 : form.longitude,
+        altitude: form.altitude,
+        speed: form.speed,
+        type: form.type,
+        duration: form.duration,
+        pattern: form.pattern,
+    };
+
+    const success = editMode.value ? updateWaypoint(editingWaypointUid.value, payload) : addWaypoint(payload);
+
+    if (success) {
+        resetForm();
+        showEditorDialog.value = false;
     }
 };
 

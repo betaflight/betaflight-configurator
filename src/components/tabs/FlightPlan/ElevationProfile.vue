@@ -200,8 +200,9 @@ import { ref, computed, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 
-const { sortedWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
-const waypoints = sortedWaypoints;
+const { positionalWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
+// Modifier waypoints (lat/lon = 0) would otherwise skew distance and altitude.
+const waypoints = positionalWaypoints;
 
 const chartSvg = ref(null);
 const hoveredPoint = ref(null);
