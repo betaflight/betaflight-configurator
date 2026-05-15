@@ -277,7 +277,10 @@
                             class="flex flex-wrap items-end gap-3 pl-8"
                         >
                             <div class="flex flex-col gap-1">
-                                <span class="text-xs text-dimmed">{{ $t("pidTuningRpmQ") }}</span>
+                                <div class="flex items-center gap-1">
+                                    <span class="text-xs text-dimmed">{{ $t("pidTuningRpmQ") }}</span>
+                                    <HelpIcon :text="$t('pidTuningRpmQHelp')" />
+                                </div>
                                 <UInputNumber
                                     size="xs"
                                     orientation="vertical"
