@@ -27,7 +27,6 @@
                     ></betaflight-logo>
                     <ConnectButton />
                     <Sidebar />
-                    <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
                 <div id="content" @scroll.passive="onContentScroll">

@@ -12,6 +12,7 @@ export function useUserSession() {
     const profile = ref(null);
     const menuOpen = ref(false);
     const menuStyle = ref({});
+    const menuTriggerRef = ref(null);
 
     // Unified login dialog state
     const loginMode = ref(MODE_PASSKEY);
@@ -62,9 +63,9 @@ export function useUserSession() {
     };
 
     const updateMenuPosition = () => {
-        const trigger = document.getElementById("user-menu-trigger");
-        if (trigger) {
-            const rect = trigger.getBoundingClientRect();
+        const el = menuTriggerRef.value?.$el ?? menuTriggerRef.value;
+        if (el) {
+            const rect = el.getBoundingClientRect();
             menuStyle.value = {
                 position: "fixed",
                 left: `${rect.left}px`,
@@ -96,14 +97,13 @@ export function useUserSession() {
     };
 
     const handleClickOutside = (event) => {
-        const userLoggedIn = document.getElementById("user-logged-in");
+        const triggerEl = menuTriggerRef.value?.$el ?? menuTriggerRef.value;
         const popup = document.getElementById("user-menu-popup");
 
-        // Check if click is inside either the user-logged-in container or the popup menu
-        const clickInsideSession = userLoggedIn?.contains(event.target);
+        const clickInsideTrigger = triggerEl?.contains(event.target);
         const clickInsidePopup = popup?.contains(event.target);
 
-        if (!clickInsideSession && !clickInsidePopup) {
+        if (!clickInsideTrigger && !clickInsidePopup) {
             menuOpen.value = false;
         }
     };
@@ -318,6 +318,7 @@ export function useUserSession() {
         avatarUrl,
         menuOpen,
         menuStyle,
+        menuTriggerRef,
         loginMode,
         loginEmail,
         loginCode,

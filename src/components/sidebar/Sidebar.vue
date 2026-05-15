@@ -7,18 +7,59 @@
         :ui="navMenuUi"
         class="sidebar-nav pb-2"
     />
+    <div class="sidebar-footer" :class="{ 'sidebar-footer--compact': isCompact }">
+        <UTooltip :text="$t('sidebarOpenOptions')" :delay-duration="300">
+            <UButton
+                icon="i-lucide-settings"
+                variant="ghost"
+                color="neutral"
+                square
+                :aria-label="$t('sidebarOpenOptions')"
+                @click="optionsOpen = true"
+            />
+        </UTooltip>
+        <UTooltip :text="$t('sidebarToggleDarkMode')" :delay-duration="300">
+            <UButton
+                :icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'"
+                variant="ghost"
+                color="neutral"
+                square
+                :aria-label="$t('sidebarToggleDarkMode')"
+                @click="toggleDarkMode"
+            />
+        </UTooltip>
+        <UTooltip :text="$t('sidebarToggleExpertMode')" :delay-duration="300">
+            <UButton
+                icon="i-lucide-wrench"
+                variant="ghost"
+                :color="expertModeOn ? 'primary' : 'neutral'"
+                square
+                :aria-label="$t('sidebarToggleExpertMode')"
+                @click="toggleExpertMode"
+            />
+        </UTooltip>
+        <user-session></user-session>
+    </div>
+    <OptionsDialog v-model="optionsOpen" />
 </template>
 
 <script setup>
-import { computed, inject, ref } from "vue";
+import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
+import { useNavigationStore } from "@/stores/navigation";
 import { useAuthStore } from "@/stores/auth";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";
 import GUI from "@/js/gui.js";
 import FCModule from "@/js/fc.js";
+import DarkTheme, { setDarkTheme } from "@/js/DarkTheme.js";
+import { get as getConfig, set as setConfig } from "@/js/ConfigStorage.js";
+import { applyExpertMode } from "@/js/utils/applyExpertMode.js";
+import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled.js";
+import { EventBus } from "@/components/eventBus.js";
+import OptionsDialog from "@/components/dialogs/OptionsDialog.vue";
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
@@ -85,10 +126,79 @@ const visibleItems = computed(() =>
         },
     })),
 );
+
+// Options dialog
+const optionsOpen = ref(false);
+const navigationStore = useNavigationStore();
+watch(
+    () => navigationStore.optionsDialogOpen,
+    (val) => {
+        if (val) {
+            optionsOpen.value = true;
+            navigationStore.optionsDialogOpen = false;
+        }
+    },
+);
+
+// Re-sync isDark when the options dialog closes (user may have changed dark theme there).
+watch(optionsOpen, (open) => {
+    if (!open) {
+        isDark.value = DarkTheme.enabled;
+    }
+});
+
+// Dark mode toggle — seed from DarkTheme.configSetting (not reactive, update explicitly)
+const isDark = ref(DarkTheme.enabled);
+
+function toggleDarkMode() {
+    const colorTheme = getConfig("colorTheme", "yellow").colorTheme ?? "yellow";
+    if (colorTheme === "contrast") {
+        return;
+    }
+    const newValue = isDark.value ? 1 : 0;
+    isDark.value = !isDark.value;
+    setDarkTheme(newValue);
+    setConfig({ darkTheme: newValue });
+}
+
+// Expert mode toggle — reactive via EventBus
+const expertModeOn = ref(isExpertModeEnabled());
+
+const onExpertModeChange = (enabled) => {
+    expertModeOn.value = enabled;
+};
+
+function toggleExpertMode() {
+    applyExpertMode(!expertModeOn.value);
+}
+
+onMounted(() => {
+    expertModeOn.value = isExpertModeEnabled();
+    isDark.value = DarkTheme.enabled;
+    EventBus.$on("expert-mode-change", onExpertModeChange);
+});
+
+onUnmounted(() => {
+    EventBus.$off("expert-mode-change", onExpertModeChange);
+});
 </script>
 
 <style scoped>
 .sidebar-nav {
     width: 100%;
+}
+
+.sidebar-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.25rem;
+    border-top: 1px solid var(--surface-400);
+}
+
+.sidebar-footer--compact {
+    flex-direction: column;
+    align-items: center;
 }
 </style>

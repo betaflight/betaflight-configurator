@@ -410,6 +410,18 @@
     "tabOptions": {
         "message": "Options"
     },
+    "sidebarOpenOptions": {
+        "message": "Options",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Toggle dark / light mode",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Toggle expert mode",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Setup"
     },
@@ -4109,8 +4121,21 @@
     "firmwareFlasherExitDfu": {
         "message": "Exit DFU Mode"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Find DFU device"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Flash Firmware"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Flash Firmware options"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Load Firmware options"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Flashing progress",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub Firmware Info"
@@ -4133,11 +4158,35 @@
     "firmwareFlasherWarningText": {
         "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-Betaflight</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed</li></ul>"
     },
+    "firmwareFlasherWarningShort": {
+        "message": "Do not flash non-Betaflight hardware. Do not disconnect during flashing. STM32 bootloader is in ROM and cannot be bricked. Always backup your configuration before upgrading."
+    },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recovery / Lost communication</strong>"
+        "message": "Recovery / Lost communication"
     },
     "firmwareFlasherRecoveryText": {
         "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "If you have lost communication: power off, enable No Reboot Sequence and Full Chip Erase, jumper the BOOT pins, then power on. Install drivers if needed."
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Read more →"
+    },
+    "firmwareFlasherSubTabBoardSelection": {
+        "message": "Board Selection"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Advanced"
+    },
+    "firmwareFlasherSubTabBuildConfig": {
+        "message": "Build Configuration"
+    },
+    "firmwareFlasherSubTabReleaseInfo": {
+        "message": "Release & Build Info"
+    },
+    "firmwareFlasherSubTabFlashing": {
+        "message": "Flashing"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
@@ -8227,6 +8276,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "Other Options"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Remove {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Select protocol"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Select options"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Select branch or enter PR # / commit hash"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Search for a board..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio Protocol"

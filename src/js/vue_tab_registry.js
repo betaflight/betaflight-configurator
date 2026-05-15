@@ -1,6 +1,5 @@
 import HelpTab from "../components/tabs/HelpTab.vue";
 import LandingTab from "../components/tabs/LandingTab.vue";
-import OptionsTab from "../components/tabs/OptionsTab.vue";
 import PortsTab from "../components/tabs/PortsTab.vue";
 import ServosTab from "../components/tabs/ServosTab.vue";
 import ConfigurationTab from "../components/tabs/ConfigurationTab.vue";
@@ -31,7 +30,6 @@ import LogTab from "../components/tabs/LogTab.vue";
 export const VueTabComponents = {
     help: HelpTab,
     landing: LandingTab,
-    options: OptionsTab,
     ports: PortsTab,
     servos: ServosTab,
     configuration: ConfigurationTab,

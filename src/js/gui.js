@@ -33,7 +33,6 @@ class GuiControl {
             "landing",
             "firmware_flasher",
             "preflight",
-            "options",
             "help",
             "user_profile",
             "backups",
