@@ -25,9 +25,13 @@ const FAMILY_PATTERNS = [
 ];
 
 export function mcuFamilyFromName(name) {
-    if (typeof name !== "string" || name.length === 0) return null;
+    if (typeof name !== "string" || name.length === 0) {
+        return null;
+    }
     for (const p of FAMILY_PATTERNS) {
-        if (p.re.test(name)) return p.family;
+        if (p.re.test(name)) {
+            return p.family;
+        }
     }
     return null;
 }

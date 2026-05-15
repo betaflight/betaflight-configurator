@@ -328,7 +328,7 @@ describe("candidatePadsForSlot", () => {
 
 // Plane preset fixtures — same shape planePresets.js exports.
 const _FLYING_WING = {
-    mmix: [{ throttle: 1.0, roll: 0, pitch: 0, yaw: 0 }],
+    mmix: [{ throttle: 1, roll: 0, pitch: 0, yaw: 0 }],
     rules: [
         { target: 3 /* FLAPPERON_L → SERVO 2 */, input: 0, rate: 50 },
         { target: 3, input: 1, rate: 50 },
@@ -337,7 +337,7 @@ const _FLYING_WING = {
     ],
 };
 const _STANDARD_PLANE = {
-    mmix: [{ throttle: 1.0, roll: 0, pitch: 0, yaw: 0 }],
+    mmix: [{ throttle: 1, roll: 0, pitch: 0, yaw: 0 }],
     rules: [
         { target: 2 /* ELEVATOR → SERVO 1 */, input: 1, rate: 100 },
         { target: 3, input: 0, rate: 100 },
@@ -347,8 +347,8 @@ const _STANDARD_PLANE = {
 };
 const _DIFF_THRUST = {
     mmix: [
-        { throttle: 1.0, roll: 0, pitch: 0, yaw: 0.4 },
-        { throttle: 1.0, roll: 0, pitch: 0, yaw: -0.4 },
+        { throttle: 1, roll: 0, pitch: 0, yaw: 0.4 },
+        { throttle: 1, roll: 0, pitch: 0, yaw: -0.4 },
     ],
     rules: [
         { target: 3, input: 0, rate: 50 },
@@ -515,7 +515,7 @@ describe("computePresetResourcePlan", () => {
         });
         expect(plan.cliLines).toContain("resource LED_STRIP 1 NONE");
         const ledIdx = plan.cliLines.indexOf("resource LED_STRIP 1 NONE");
-        const s3Idx = plan.cliLines.findIndex((l) => /^resource SERVO 3 /.test(l));
+        const s3Idx = plan.cliLines.findIndex((l) => l.startsWith("resource SERVO 3 "));
         expect(ledIdx).toBeLessThan(s3Idx);
     });
 });
@@ -535,7 +535,7 @@ describe("computePresetResourcePlan: effectiveRules override", () => {
         const effectiveRules = [..._FLYING_WING.rules, { target: 6 /* RUDDER → SERVO 5 */, input: 2, rate: 100 }];
         const plan = computePresetResourcePlan(a, _FLYING_WING, { effectiveRules });
         expect(plan.usedServoIndices).toEqual([2, 3, 5]);
-        expect(plan.cliLines.some((l) => /^resource SERVO 5 /.test(l))).toBe(true);
+        expect(plan.cliLines.some((l) => l.startsWith("resource SERVO 5 "))).toBe(true);
     });
 
     it("drops SERVO rows when the user removed the preset rule", () => {
@@ -596,7 +596,7 @@ describe("computePresetResourcePlan: motorCount override", () => {
         const plan = computePresetResourcePlan(a, _FLYING_WING, { motorCount: 2 });
         expect(plan.usedMotorIndices).toEqual([1, 2]);
         // MOTOR 2 had no existing binding, so a bind line is emitted.
-        expect(plan.cliLines.some((l) => /^resource MOTOR 2 /.test(l))).toBe(true);
+        expect(plan.cliLines.some((l) => l.startsWith("resource MOTOR 2 "))).toBe(true);
     });
 
     // Two-motor preset run with motorCount=1 — MOTOR 2 gets released.
@@ -1396,7 +1396,7 @@ describe("candidatePadsForSlot: alt-AF expansion", () => {
 describe("computePresetResourcePlan: padAfOverrides", () => {
     it("emits `timer <pad> AF<n>` for pilot-supplied AF override on a final-pick pad", () => {
         const preset = {
-            mmix: [{ throttle: 1.0, roll: 0, pitch: 0, yaw: 0 }],
+            mmix: [{ throttle: 1, roll: 0, pitch: 0, yaw: 0 }],
             rules: [
                 // target=3 → servoIndex = target-1 = 2 (SERVO 2 resource).
                 { target: 3, input: 1, rate: 100, speed: 0, min: -100, max: 100, box: 0 },
@@ -1460,7 +1460,7 @@ describe("computePresetResourcePlan: padAfOverrides", () => {
         // result in NO `timer ... AF...` line — same as picking the
         // default row.
         const preset = {
-            mmix: [{ throttle: 1.0, roll: 0, pitch: 0, yaw: 0 }],
+            mmix: [{ throttle: 1, roll: 0, pitch: 0, yaw: 0 }],
             rules: [{ target: 3, input: 1, rate: 100, speed: 0, min: -100, max: 100, box: 0 }],
         };
         const a = {

@@ -231,7 +231,7 @@ export function parseTimerShow(input) {
     for (const rawLine of lines) {
         // Detect indent BEFORE trim so child CH lines stay distinguishable
         // from sibling TIM headers after we strip whitespace.
-        const isIndented = rawLine.length > 0 && (rawLine[0] === " " || rawLine[0] === "\t");
+        const isIndented = rawLine.startsWith(" ") || rawLine.startsWith("\t");
         const line = rawLine.trim();
         if (!line) {
             continue;
@@ -366,7 +366,7 @@ export function parseTimerDump(input) {
         }
         if (pending) {
             const pm = /^\s*#\s*pin\s+(\S+)\s*:\s*TIM(\d+)\s+CH(\d+)N?/i.exec(line);
-            if (pm && pm[1].toUpperCase() === pending.pad) {
+            if (pm?.[1].toUpperCase() === pending.pad) {
                 pending.timer = Number(pm[2]);
                 pending.channel = Number(pm[3]);
             }

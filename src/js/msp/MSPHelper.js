@@ -3058,7 +3058,7 @@ MspHelper.prototype.ioTagToPin = function (ioTag) {
     if (portId < 0 || portId > 14) {
         return "INVALID";
     }
-    const portLetter = String.fromCharCode("A".charCodeAt(0) + portId);
+    const portLetter = String.fromCodePoint("A".codePointAt(0) + portId);
     return `${portLetter}${pinNumber.toString().padStart(2, "0")}`;
 };
 
@@ -3086,8 +3086,8 @@ MspHelper.prototype.pinToIoTag = function (pinName) {
         // accept as a NONE release.
         return null;
     }
-    const portId = match[1].toUpperCase().charCodeAt(0) - "A".charCodeAt(0);
-    const pinNumber = parseInt(match[2], 10);
+    const portId = match[1].toUpperCase().codePointAt(0) - "A".codePointAt(0);
+    const pinNumber = Number.parseInt(match[2], 10);
     // ioTag is sent over MSP as a single byte: ((portId + 1) << 4) | pinNumber.
     // Pins on ports beyond `O` (portId 14) would overflow the byte and
     // round-trip through readU8 as a different pin.

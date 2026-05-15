@@ -52,7 +52,7 @@ export function predictDmaConflict({ mcuFamily = null, motorPicks = [] } = {}) {
 
     const motorsByTimer = new Map();
     for (const m of motorPicks) {
-        if (m == null || m.timer == null) {
+        if (m?.timer == null) {
             continue;
         }
         const list = motorsByTimer.get(m.timer) ?? [];

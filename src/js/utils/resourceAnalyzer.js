@@ -129,10 +129,7 @@ function deriveWarnings({ motors, servos, ledStrips, freeDmaStreams, padDmaDefau
         // so `m.dmaStream` was null even when DMA was actually fine.
         // Bench-confirmed on TMOTORF7X2 where motors had clean DMA
         // via pin defaults but the warning fired anyway.
-        const hasPinDefault =
-            padDmaDefaults instanceof Map &&
-            padDmaDefaults.get(m.pad) != null &&
-            padDmaDefaults.get(m.pad).stream != null;
+        const hasPinDefault = padDmaDefaults instanceof Map && padDmaDefaults.get(m.pad)?.stream != null;
         if (!m.bidirBurst && !m.dmaStream && !hasPinDefault) {
             w.push({
                 severity: "warn",
@@ -165,7 +162,10 @@ function deriveWarnings({ motors, servos, ledStrips, freeDmaStreams, padDmaDefau
         w.push({
             severity: "info",
             code: "led_strip_cost",
-            message: `LED_STRIP on ${ls.pad} claims TIM${ls.timer ?? "?"} + DMA${ls.dmaStream ? `${ls.dmaStream.controller}/S${ls.dmaStream.stream}` : "?"}. Release it if you need headroom.`,
+            message: (() => {
+                const dmaLabel = ls.dmaStream ? `${ls.dmaStream.controller}/S${ls.dmaStream.stream}` : "?";
+                return `LED_STRIP on ${ls.pad} claims TIM${ls.timer ?? "?"} + DMA${dmaLabel}. Release it if you need headroom.`;
+            })(),
         });
     }
 
@@ -205,7 +205,7 @@ function processResourceEntries(resourceShow, timerByKey, dmaByKey, timerDump, d
         // reports DSHOT_BITBANG 2 on TIM8.
         if (!timerHit && Array.isArray(timerDump)) {
             const dumpHit = timerDump.find((t) => t.pad === entry.pad);
-            if (dumpHit && dumpHit.timer != null) {
+            if (dumpHit?.timer != null) {
                 timerHit = { timer: dumpHit.timer, channel: dumpHit.channel, complementary: false };
             }
         }

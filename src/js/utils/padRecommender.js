@@ -88,12 +88,11 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
     // should NOT block us as if still claimed. Without this, picking a
     // released servo's pad for another row would fail the candidate
     // filter even though the release happens before our bind.
+    const releasedServoArray = Array.isArray(options.releasedServoIndices)
+        ? new Set(options.releasedServoIndices)
+        : null;
     const releasedServoIndices =
-        options.releasedServoIndices instanceof Set
-            ? options.releasedServoIndices
-            : Array.isArray(options.releasedServoIndices)
-                ? new Set(options.releasedServoIndices)
-                : null;
+        options.releasedServoIndices instanceof Set ? options.releasedServoIndices : releasedServoArray;
     // padPlannedTimers: pad → planned timer AFTER the batch's `timer <pad>
     // AF<n>` lines apply. Without this hint, a motor whose pad stays the
     // same but whose AF (and therefore timer) changes still contributes
@@ -667,7 +666,7 @@ export function pickSilkscreenOrderLayout(analysis, motorCount, usedServoIndices
         servos.set(usedServoIndices[i], pad);
         if (padTimers) {
             const t = padTimers.get(pad);
-            if (t && t.timer != null) {
+            if (t?.timer != null) {
                 servoTimers.add(t.timer);
             }
         }
@@ -725,7 +724,7 @@ export function pickSilkscreenOrderLayout(analysis, motorCount, usedServoIndices
                 break;
             }
             const t = padTimers.get(pad);
-            if (!t || t.timer == null) {
+            if (t?.timer == null) {
                 claimedPad = pad;
                 break;
             }
@@ -820,7 +819,7 @@ export function pickOptimalPadLayout(analysis, motorCount, usedServoIndices, opt
             continue;
         }
         const t = padTimers.get(m.pad);
-        if (!t || t.timer == null) {
+        if (t?.timer == null) {
             continue;
         }
         poolSeen.add(m.pad);
@@ -836,7 +835,7 @@ export function pickOptimalPadLayout(analysis, motorCount, usedServoIndices, opt
                 continue;
             }
             const t = padTimers.get(ls.pad);
-            if (!t || t.timer == null) {
+            if (t?.timer == null) {
                 continue;
             }
             poolSeen.add(ls.pad);
@@ -1586,7 +1585,7 @@ export function computePresetResourcePlan(analysis, preset, options = {}) {
         if (override) {
             const overridePad = pickPad(override);
             const overrideAf = typeof override === "string" ? null : (override?.af ?? null);
-            const overrideLabel = overrideAf != null ? `${overridePad}@AF${overrideAf}` : overridePad;
+            const overrideLabel = overrideAf == null ? overridePad : `${overridePad}@AF${overrideAf}`;
             pick = cands.find((c) => {
                 if (c.pad !== overridePad || alreadyPicked.has(c.pad)) {
                     return false;
@@ -1867,11 +1866,7 @@ export function computePresetResourcePlan(analysis, preset, options = {}) {
         for (const i of defensiveServoReleases) {
             cliLines.push(`resource SERVO ${i} NONE`);
         }
-        cliLines.push(...realWork);
-        cliLines.push(...motorRebindReleases);
-        cliLines.push(...servoRebindReleases);
-        cliLines.push(...timerRemapLines);
-        cliLines.push(...bindLines);
+        cliLines.push(...realWork, ...motorRebindReleases, ...servoRebindReleases, ...timerRemapLines, ...bindLines);
     }
 
     // Expose ALL planned timer remaps to callers, not just optimizer-driven

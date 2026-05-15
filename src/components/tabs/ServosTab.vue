@@ -510,7 +510,7 @@ function withNone(items) {
 // (App.vue seeds it from getConfig("expertMode")). When ON, the candidate
 // pool expands beyond silkscreen-labeled pads to all PWM-capable pads.
 function isExpertMode() {
-    return Boolean(typeof window !== "undefined" && window.vm?.expertMode);
+    return Boolean(typeof globalThis.window !== "undefined" && globalThis.vm?.expertMode);
 }
 // A pin can only drive one PWM output at a time. Drop dropdown options
 // whose pin is already bound to another row, UNLESS the option carries a

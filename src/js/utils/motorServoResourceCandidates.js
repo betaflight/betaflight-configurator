@@ -24,7 +24,7 @@ export function parseResourceOptionValue(value) {
     }
     return {
         pin: match[1].toUpperCase(),
-        af: match[2] != null ? Number(match[2]) : null,
+        af: match[2] == null ? null : Number(match[2]),
     };
 }
 
@@ -73,7 +73,8 @@ function addOption(options, seen, option) {
     const af = option.af != null && Number.isFinite(Number(option.af)) ? Number(option.af) : null;
     // Dedup by pin+af so default-AF and each alt-AF entry for the same
     // pad each get their own dropdown row.
-    const dedupKey = `${pin}|${af == null ? "default" : `af${af}`}`;
+    const afKey = `af${af}`;
+    const dedupKey = `${pin}|${af == null ? "default" : afKey}`;
     if (seen.has(dedupKey)) {
         return;
     }
@@ -168,7 +169,7 @@ export function candidateSourceLabel(candidate) {
 function buildSilkscreenMap(hardwareAnalysis) {
     const map = new Map();
     const padDefaults = hardwareAnalysis?.padDefaults;
-    if (!padDefaults || padDefaults.source !== "firmware") {
+    if (padDefaults?.source !== "firmware") {
         return map;
     }
     for (const motor of padDefaults.motors ?? []) {
@@ -220,7 +221,8 @@ function padDisplayLabel(pin, silkscreenMap) {
 function labelForCandidate(candidate, silkscreenMap = null) {
     const parts = [padDisplayLabel(candidate.pad, silkscreenMap)];
     if (candidate.timer != null) {
-        parts.push(`TIM${candidate.timer}${candidate.channel != null ? ` CH${candidate.channel}` : ""}`);
+        const channelSuffix = candidate.channel == null ? "" : ` CH${candidate.channel}`;
+        parts.push(`TIM${candidate.timer}${channelSuffix}`);
     }
     const source = candidateSourceLabel(candidate);
     if (source) {
@@ -314,10 +316,10 @@ function timerSuffixForPin(pin, padTimers) {
         return null;
     }
     const entry = padTimers.get(pin);
-    if (!entry || entry.timer == null) {
+    if (entry?.timer == null) {
         return null;
     }
-    return entry.channel != null ? `TIM${entry.timer} CH${entry.channel}` : `TIM${entry.timer}`;
+    return entry.channel == null ? `TIM${entry.timer}` : `TIM${entry.timer} CH${entry.channel}`;
 }
 
 function addFallbackOptions(options, seen, fallbackPins, ctx) {
@@ -431,7 +433,8 @@ function motorOptions({
             const head = padDisplayLabel(pin, silkscreenMap);
             const parts = [head];
             if (pad.timer != null) {
-                parts.push(`TIM${pad.timer}${pad.channel != null ? ` CH${pad.channel}` : ""}`);
+                const channelSuffix = pad.channel == null ? "" : ` CH${pad.channel}`;
+                parts.push(`TIM${pad.timer}${channelSuffix}`);
             }
             parts.push(assignment);
             addOption(options, seen, { pin, label: parts.join(" - "), timer: pad.timer, channel: pad.channel });
