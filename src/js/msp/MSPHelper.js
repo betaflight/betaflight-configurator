@@ -1228,7 +1228,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.smartFeedforward = data.readU8();
                     FC.ADVANCED_TUNING.itermRelax = data.readU8();
                     FC.ADVANCED_TUNING.itermRelaxType = data.readU8();
-                    FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+                    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                        FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+                    } else {
+                        data.readU8();
+                    }
                     FC.ADVANCED_TUNING.throttleBoost = data.readU8();
                     FC.ADVANCED_TUNING.acroTrainerAngleLimit = data.readU8();
                     FC.ADVANCED_TUNING.feedforwardRoll = data.readU16();
@@ -2228,8 +2232,13 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.ADVANCED_TUNING.itermRotation)
                 .push8(FC.ADVANCED_TUNING.smartFeedforward)
                 .push8(FC.ADVANCED_TUNING.itermRelax)
-                .push8(FC.ADVANCED_TUNING.itermRelaxType)
-                .push8(FC.ADVANCED_TUNING.absoluteControlGain)
+                .push8(FC.ADVANCED_TUNING.itermRelaxType);
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                buffer.push8(FC.ADVANCED_TUNING.absoluteControlGain);
+            } else {
+                buffer.push8(0);
+            }
+            buffer
                 .push8(FC.ADVANCED_TUNING.throttleBoost)
                 .push8(FC.ADVANCED_TUNING.acroTrainerAngleLimit)
                 .push16(FC.ADVANCED_TUNING.feedforwardRoll)

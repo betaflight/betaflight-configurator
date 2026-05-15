@@ -1023,7 +1023,11 @@
                     ></span>
                 </div>
 
-                <SettingRow :label="$t('pidTuningAbsoluteControlGain')" :help="$t('pidTuningAbsoluteControlGainHelp')">
+                <SettingRow
+                    v-if="isPreApi148"
+                    :label="$t('pidTuningAbsoluteControlGain')"
+                    :help="$t('pidTuningAbsoluteControlGainHelp')"
+                >
                     <UInputNumber
                         v-model="advancedTuning.absoluteControlGain"
                         :step="1"
@@ -1050,7 +1054,7 @@ import {
     readPidSliderPositions,
 } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48 } from "@/js/data_storage";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -1123,6 +1127,8 @@ const cellCountItems = computed(() => [
 const isPreApi145 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
 // For API < 1.47, derivative and dmax column headers are swapped (PR #4173)
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
+// Absolute Control was removed from firmware in API 1.48
+const isPreApi148 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48));
 const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
 const derivativeHelp = computed(() => (isPreApi147.value ? "pidTuningDMaxHelp" : "pidTuningDerivativeHelp"));
 const dMaxLabel = computed(() => (isPreApi147.value ? "pidTuningDerivative" : "pidTuningDMax"));
@@ -1360,9 +1366,7 @@ const itermRelaxEnabled = computed({
 
 const antiGravityEnabled = computed({
     get: () =>
-        isPreApi145.value
-            ? FC.ADVANCED_TUNING.itermAcceleratorGain !== 0
-            : FC.ADVANCED_TUNING.antiGravityGain !== 0,
+        isPreApi145.value ? FC.ADVANCED_TUNING.itermAcceleratorGain !== 0 : FC.ADVANCED_TUNING.antiGravityGain !== 0,
     set: (val) => {
         if (isPreApi145.value) {
             FC.ADVANCED_TUNING.itermAcceleratorGain = val ? FC.ADVANCED_TUNING.itermAcceleratorGain || 1000 : 0;
@@ -1375,9 +1379,7 @@ const antiGravityEnabled = computed({
 // Anti-gravity gain display value (divided by 10 for API 1.45+, divided by 1000 for older)
 const antiGravityGainValue = computed({
     get: () =>
-        isPreApi145.value
-            ? FC.ADVANCED_TUNING.itermAcceleratorGain / 1000
-            : FC.ADVANCED_TUNING.antiGravityGain / 10,
+        isPreApi145.value ? FC.ADVANCED_TUNING.itermAcceleratorGain / 1000 : FC.ADVANCED_TUNING.antiGravityGain / 10,
     set: (val) => {
         const parsed = Number.parseFloat(val);
         if (isPreApi145.value) {
