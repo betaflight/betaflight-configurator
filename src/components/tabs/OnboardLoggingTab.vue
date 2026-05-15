@@ -222,6 +222,7 @@
                                         <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
                                     </a>
                                     <p v-html="$t('dataflashSavetoFileNote')"></p>
+                                    <p v-if="flashFormatIsRing" class="note warning" v-html="$t('onboardLoggingSaveToFileRingNote')"></p>
                                 </div>
                             </div>
 
@@ -486,6 +487,17 @@ export default defineComponent({
                 });
             }
             return rates;
+        });
+
+        // True when the on-flash format is ring (regardless of currently-configured
+        // mode). Save-to-file does a raw partition dump via MSP_DATAFLASH_READ, which
+        // captures the physical ring layout (data → trailer → header per session) —
+        // the blackbox decoder expects header at the start of the file, so the dump
+        // won't decode cleanly. We show a hint directing the user to USB MSC where
+        // the on-device emfat layer presents the proper header || data per session.
+        const flashFormatIsRing = computed(() => {
+            // 0 = EMPTY, 1 = LINEAR, 2 = RING, 3 = UNKNOWN
+            return fcStore.blackbox?.flashFormat === 2;
         });
 
         // True when a stored on-flash format exists and doesn't match the configured
@@ -972,6 +984,7 @@ export default defineComponent({
             flashModeSupported,
             flashModeOptions,
             flashModeMismatch,
+            flashFormatIsRing,
             debugMode,
             debugFieldsEnabled,
             saveProgress,

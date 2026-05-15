@@ -7609,6 +7609,9 @@
     "onboardLoggingFlashModeMismatch": {
         "message": "The selected flash mode doesn't match the format currently on the chip. Erase the onboard flash before logging — existing logs in the other format will not be readable."
     },
+    "onboardLoggingSaveToFileRingNote": {
+        "message": "Ring-mode flash uses a different on-disk layout (data → trailer → header per session) that the blackbox decoder does not parse directly from a raw flash dump. <b>Use USB Mass Storage Mode (below) instead</b> — it presents each log as a properly-formatted <code>.BBL</code> file."
+    },
     "onboardLoggingRateRingExceedsCap": {
         "message": "exceeds ring-mode rate cap"
     },
