@@ -172,55 +172,12 @@ function deriveWarnings({ motors, servos, ledStrips, freeDmaStreams, padDmaDefau
     return w;
 }
 
-/**
- * @param {object} input
- * @param {Array} input.resourceShow
- * @param {Array} input.timerShow
- * @param {Array} input.dmaShow
- * @param {Array} [input.timerDump] - optional `timer` (dump) output;
- *   when present, the analyzer returns pwmCapableFreePads (pads that
- *   have a PWM timer but currently show as FREE in resourceShow).
- *   Used by the AIO remap recommender to find servo-eligible pads
- *   without reassigning motor pads that are soldered to ESCs.
- * @param {Array} [input.serialPorts] - optional FC.SERIAL_CONFIG.ports
- *   ([{identifier, functions: string[]}]). When present, surfaces
- *   spareUarts: UARTs with no function assigned AND with at least one
- *   PWM-capable pad (TX or RX). Recommender's UART-release flow can
- *   repurpose those pads as servo outputs.
- * @param {Map<string, Array<{af, timer, channel, complementary}>>} [input.padTimerOptions]
- *   - optional pre-discovered AF options per pad (built by caller via
- *   `readTimerOptionsForPin` from cliOneShot). When present, surfaces
- *   `padTimerOptions` so the optimizer can plan `timer <pin> AF<n>`
- *   remaps. Discovery is a per-pad serial CLI roundtrip (~100ms each)
- *   so callers populate it lazily for the optimizer's candidate pool,
- *   not for every pad on the board.
- * @param {string|null} [input.mcuFamily] - optional MCU family tag
- *   ('F4'/'F7'/'H7'/'G4'/'AT32'/null) from `mcuFamilyFromName`.
- *   Required by the optimizer's F4 burst-DMA reject path.
- * @param {{resources: Array, pads: Array}|null} [input.dmaDump] -
- *   optional parsed bare `dma` (no args) dump output (from
- *   `parseDmaPinDefaults`). When present, the analyzer builds
- *   `padDmaDefaults: Map<pad, {controller, stream, channel} | null>`
- *   surfacing each pad's default DMA stream. Null payload means the
- *   pin has no DMA option (e.g. F7 TIM11 channel) — motor candidates
- *   should reject it. Source-of-truth for the optimizer's DMA
- *   collision check + the motor_no_dma warning's correctness fix.
- */
-export function analyzeResources({
-    resourceShow,
-    timerShow,
-    dmaShow,
-    timerDump = [],
-    serialPorts = [],
-    padTimerOptions = null,
-    mcuFamily = null,
-    dmaDump = null,
-}) {
-    const timerByKey = buildTimerLookup(timerShow);
-    const dmaByKey = buildDmaLookup(dmaShow);
-    const uartDmaByDirIndex = buildUartDmaLookup(dmaShow);
-    const timupStreams = collectTimupStreams(dmaShow);
-
+// Classify each `resource show` entry into motors / servos / ledStrips,
+// the serial TX/RX index→pad maps, and hardware-fixed pads — resolving
+// each entry's timer + DMA hit (with timerDump / dmaDump fallbacks for
+// the bitbang and default-DMA cases documented inline). Extracted from
+// analyzeResources to keep that function's cognitive complexity down.
+function processResourceEntries(resourceShow, timerByKey, dmaByKey, timerDump, dmaDump, timupStreams) {
     const motors = [];
     const servos = [];
     const ledStrips = [];
@@ -316,26 +273,14 @@ export function analyzeResources({
         }
     }
 
-    const serials = collectSerials(serialTx, serialRx, uartDmaByDirIndex);
-    const freeDmaStreams = dmaShow
-        .filter((e) => e.peripheral === "FREE")
-        .map(({ controller, stream }) => ({ controller, stream }));
+    return { motors, servos, ledStrips, serialTx, serialRx, hardwareFixedPads, freePadsCount };
+}
 
-    motors.sort((a, b) => a.index - b.index);
-    servos.sort((a, b) => a.index - b.index);
-
-    // Cross-reference timer dump with resource show to find
-    // PWM-capable pads that are currently unclaimed — the pool the
-    // AIO remap recommender picks from when assigning servos.
-    const freePads = new Set(resourceShow.filter((e) => e.peripheral === "FREE").map((e) => e.pad));
-    const pwmCapableFreePads = Array.isArray(timerDump)
-        ? timerDump.filter((t) => freePads.has(t.pad)).map((t) => ({ pad: t.pad, timer: t.timer, channel: t.channel }))
-        : [];
-
-    // Spare UARTs: ports that exist (resource bound) but have no serial
-    // function assigned. For each, check whether the TX/RX pad is on a
-    // PWM-capable timer (timerDump cross-ref). Released UART pads can
-    // become servo outputs. UART# = identifier + 1 (BF SERIAL_PORT_USART1=0).
+// Spare UARTs: ports that exist (resource bound) but have no serial
+// function assigned. For each, check whether the TX/RX pad is on a
+// PWM-capable timer (timerDump cross-ref). Released UART pads can
+// become servo outputs. UART# = identifier + 1 (BF SERIAL_PORT_USART1=0).
+function buildSpareUarts(serialPorts, serials, timerDump) {
     const pwmPadSet = new Set((Array.isArray(timerDump) ? timerDump : []).map((t) => t.pad));
     const spareUarts = [];
     if (Array.isArray(serialPorts)) {
@@ -367,6 +312,20 @@ export function analyzeResources({
             });
         }
     }
+    return spareUarts;
+}
+
+// Pad-keyed lookups the padRecommender optimizer consumes: timer/channel
+// for every pad in the `timer` dump, each pad's currently-bound AF, the
+// firmware's default DMA option per pad, and the subset of timer-capable
+// pads currently FREE in `resource show`.
+function buildPadMaps(timerDump, dmaDump, freePads) {
+    // Cross-reference timer dump with resource show to find
+    // PWM-capable pads that are currently unclaimed — the pool the
+    // AIO remap recommender picks from when assigning servos.
+    const pwmCapableFreePads = Array.isArray(timerDump)
+        ? timerDump.filter((t) => freePads.has(t.pad)).map((t) => ({ pad: t.pad, timer: t.timer, channel: t.channel }))
+        : [];
 
     // padTimers: pad → {timer, channel} for EVERY pad that appears in
     // `timer` dump output, regardless of current claim state. The joint
@@ -411,6 +370,83 @@ export function analyzeResources({
             }
         }
     }
+
+    return { padTimers, padCurrentAF, padDmaDefaults, pwmCapableFreePads };
+}
+
+/**
+ * @param {object} input
+ * @param {Array} input.resourceShow
+ * @param {Array} input.timerShow
+ * @param {Array} input.dmaShow
+ * @param {Array} [input.timerDump] - optional `timer` (dump) output;
+ *   when present, the analyzer returns pwmCapableFreePads (pads that
+ *   have a PWM timer but currently show as FREE in resourceShow).
+ *   Used by the AIO remap recommender to find servo-eligible pads
+ *   without reassigning motor pads that are soldered to ESCs.
+ * @param {Array} [input.serialPorts] - optional FC.SERIAL_CONFIG.ports
+ *   ([{identifier, functions: string[]}]). When present, surfaces
+ *   spareUarts: UARTs with no function assigned AND with at least one
+ *   PWM-capable pad (TX or RX). Recommender's UART-release flow can
+ *   repurpose those pads as servo outputs.
+ * @param {Map<string, Array<{af, timer, channel, complementary}>>} [input.padTimerOptions]
+ *   - optional pre-discovered AF options per pad (built by caller via
+ *   `readTimerOptionsForPin` from cliOneShot). When present, surfaces
+ *   `padTimerOptions` so the optimizer can plan `timer <pin> AF<n>`
+ *   remaps. Discovery is a per-pad serial CLI roundtrip (~100ms each)
+ *   so callers populate it lazily for the optimizer's candidate pool,
+ *   not for every pad on the board.
+ * @param {string|null} [input.mcuFamily] - optional MCU family tag
+ *   ('F4'/'F7'/'H7'/'G4'/'AT32'/null) from `mcuFamilyFromName`.
+ *   Required by the optimizer's F4 burst-DMA reject path.
+ * @param {{resources: Array, pads: Array}|null} [input.dmaDump] -
+ *   optional parsed bare `dma` (no args) dump output (from
+ *   `parseDmaPinDefaults`). When present, the analyzer builds
+ *   `padDmaDefaults: Map<pad, {controller, stream, channel} | null>`
+ *   surfacing each pad's default DMA stream. Null payload means the
+ *   pin has no DMA option (e.g. F7 TIM11 channel) — motor candidates
+ *   should reject it. Source-of-truth for the optimizer's DMA
+ *   collision check + the motor_no_dma warning's correctness fix.
+ */
+export function analyzeResources({
+    resourceShow,
+    timerShow,
+    dmaShow,
+    timerDump = [],
+    serialPorts = [],
+    padTimerOptions = null,
+    mcuFamily = null,
+    dmaDump = null,
+}) {
+    const timerByKey = buildTimerLookup(timerShow);
+    const dmaByKey = buildDmaLookup(dmaShow);
+    const uartDmaByDirIndex = buildUartDmaLookup(dmaShow);
+    const timupStreams = collectTimupStreams(dmaShow);
+
+    const { motors, servos, ledStrips, serialTx, serialRx, hardwareFixedPads, freePadsCount } = processResourceEntries(
+        resourceShow,
+        timerByKey,
+        dmaByKey,
+        timerDump,
+        dmaDump,
+        timupStreams,
+    );
+
+    const serials = collectSerials(serialTx, serialRx, uartDmaByDirIndex);
+    const freeDmaStreams = dmaShow
+        .filter((e) => e.peripheral === "FREE")
+        .map(({ controller, stream }) => ({ controller, stream }));
+
+    motors.sort((a, b) => a.index - b.index);
+    servos.sort((a, b) => a.index - b.index);
+
+    // Set<pad> of pads currently FREE. Feeds buildPadMaps' pwmCapableFreePads
+    // cross-reference and is surfaced unchanged in the return object.
+    const freePads = new Set(resourceShow.filter((e) => e.peripheral === "FREE").map((e) => e.pad));
+
+    const { padTimers, padCurrentAF, padDmaDefaults, pwmCapableFreePads } = buildPadMaps(timerDump, dmaDump, freePads);
+
+    const spareUarts = buildSpareUarts(serialPorts, serials, timerDump);
 
     const warnings = deriveWarnings({ motors, servos, ledStrips, freeDmaStreams, padDmaDefaults });
 
