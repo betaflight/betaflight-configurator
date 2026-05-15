@@ -1,18 +1,11 @@
 <template>
-    <div id="user-session-container" class="justify-self-end-auto">
+    <div class="justify-self-end-auto">
         <UDropdownMenu :items="getMenuItems()" v-if="isLoggedIn">
-            <UButton variant="ghost" color="neutral" size="xs" class="pr-3">
-                <UUser
-                    :name="displayName"
-                    :avatar="{
-                        src: avatarUrl,
-                        icon: 'i-lucide-user',
-                    }"
-                    size="sm"
-                />
+            <UButton variant="ghost" color="neutral" size="xs" class="py-1">
+                <UAvatar :src="avatarUrl" icon="i-lucide-user" size="sm" />
             </UButton>
         </UDropdownMenu>
-        <UButton v-else variant="ghost" color="neutral" size="xs" class="pr-3" @click="handleLoginClick">
+        <UButton v-else variant="ghost" color="neutral" size="xs" @click="handleLoginClick">
             <UUser
                 :name="$t('labelLogin')"
                 :avatar="{
@@ -212,34 +205,51 @@ import { switchTab } from "@/js/tab_switch.js";
 import { sidebarItems } from "@/components/sidebar/sidebar_items.js";
 import { i18n } from "@/js/localization";
 
-function getMenuItems() {
-    const items = ["backups", "user_profile"];
-    const trailingItems = [
-        { type: "separator" },
-        {
-            label: i18n.getMessage("labelSignOut"),
-            icon: "i-lucide-log-out",
-            color: "error",
-            onSelect: () => useUserSession().handleSignOut(),
-        },
-    ];
-
-    return sidebarItems
-        .filter((item) => items.includes(item.key))
-        .map((item) => ({
-            label: i18n.getMessage(item.i18n),
-            icon: item.icon,
-            onSelect: () => switchTab(item.key),
-        }))
-        .concat(trailingItems);
-}
-
 export default defineComponent({
     name: "UserSession",
 
     setup() {
+        const session = useUserSession();
+
+        function getMenuItems() {
+            const name = session.displayName.value || i18n.getMessage("tabUserProfile");
+            const src = session.avatarUrl.value;
+            const leadingItems = [
+                {
+                    label: name,
+                    avatar: {
+                        ...(src ? { src } : {}),
+                        icon: "i-lucide-user",
+                    },
+                    type: "label",
+                },
+                { type: "separator" },
+            ];
+            const tabKeys = ["backups", "user_profile"];
+            const trailingItems = [
+                { type: "separator" },
+                {
+                    label: i18n.getMessage("labelSignOut"),
+                    icon: "i-lucide-log-out",
+                    color: "error",
+                    onSelect: () => session.handleSignOut(),
+                },
+            ];
+
+            return leadingItems.concat(
+                sidebarItems
+                    .filter((item) => tabKeys.includes(item.key))
+                    .map((item) => ({
+                        label: i18n.getMessage(item.i18n),
+                        icon: item.icon,
+                        onSelect: () => switchTab(item.key),
+                    })),
+                trailingItems,
+            );
+        }
+
         return {
-            ...useUserSession(),
+            ...session,
             getMenuItems,
         };
     },
