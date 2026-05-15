@@ -172,11 +172,106 @@ function deriveWarnings({ motors, servos, ledStrips, freeDmaStreams, padDmaDefau
     return w;
 }
 
+// Bitbang fallback: when motors fall back to DSHOT bit-bang,
+// `timer show` reports the pin's slot under DSHOT_BITBANG <n>
+// instead of MOTOR <n>, so the (MOTOR, index) keyed lookup
+// returns null even though the pin DOES have a timer assignment.
+// The bare `timer` dump (timerDump) is pin-keyed and authoritative
+// regardless of bitbang state — fall back to it so the Hardware tab's
+// Motor/Servo rows show the actual TIMx CHy instead of `—`.
+// Bench-confirmed on TMOTORF7X2 where M1-M4 land on TIM3 but
+// `timer show` reports DSHOT_BITBANG 2 on TIM8.
+function resolveTimerHit(p, entry, timerByKey, timerDump) {
+    const direct = timerByKey.get(key(p, entry.index));
+    if (direct) {
+        return direct;
+    }
+    if (!Array.isArray(timerDump)) {
+        return null;
+    }
+    const dumpHit = timerDump.find((t) => t.pad === entry.pad);
+    if (dumpHit?.timer == null) {
+        return null;
+    }
+    return { timer: dumpHit.timer, channel: dumpHit.channel, complementary: false };
+}
+
+// dmaStream fallback: BF only emits `dma MOTOR N <opt>` entries
+// (which dmaHit reads) when a non-default option is set. Default-DMA
+// motors get DMA via their pin's option-0 binding, surfaced via
+// `dma pin <pad>` queries into `padDmaDefaults` upstream. When the
+// resource-keyed dmaHit is null but the pin has a default, expose
+// THAT as the motor's dmaStream so the Hardware tab "DMA / Mode"
+// column shows the real stream instead of "no DMA". Pre-fix: every
+// default-DMA motor showed "no DMA"; post-fix: shows DMA1/S0 etc.
+// matching the Pin Assignment badge.
+function resolveMotorDma(entry, dmaHit, dmaDump) {
+    if (dmaHit) {
+        return dmaHit;
+    }
+    if (!dmaDump || !Array.isArray(dmaDump.pads)) {
+        return null;
+    }
+    const pinDma = dmaDump.pads.find((p2) => p2.pad === entry.pad);
+    if (!pinDma || pinDma.opt === null || pinDma.stream === null) {
+        return null;
+    }
+    return { controller: pinDma.controller, stream: pinDma.stream };
+}
+
+function classifyMotorEntry(entry, timerHit, dmaHit, dmaDump, timupStreams) {
+    return {
+        index: entry.index ?? 0,
+        pad: entry.pad,
+        timer: timerHit?.timer ?? null,
+        channel: timerHit?.channel ?? null,
+        dmaStream: resolveMotorDma(entry, dmaHit, dmaDump),
+        bidirBurst: timerHit?.timer != null && timupStreams.has(timerHit.timer),
+    };
+}
+
+function classifyServoEntry(entry, timerHit) {
+    return {
+        index: entry.index ?? 0,
+        pad: entry.pad,
+        timer: timerHit?.timer ?? null,
+        channel: timerHit?.channel ?? null,
+    };
+}
+
+function classifyLedStripEntry(entry, timerHit, dmaHit) {
+    return {
+        pad: entry.pad,
+        timer: timerHit?.timer ?? null,
+        channel: timerHit?.channel ?? null,
+        dmaStream: dmaHit,
+    };
+}
+
+function classifySerialEntry(p, entry, serialTx, serialRx) {
+    if (entry.index === null) {
+        return;
+    }
+    if (p === "SERIAL_TX") {
+        serialTx.set(entry.index, entry.pad);
+    } else if (p === "SERIAL_RX") {
+        serialRx.set(entry.index, entry.pad);
+    }
+}
+
+function classifyHardwareFixedEntry(entry) {
+    return {
+        pad: entry.pad,
+        peripheral: entry.peripheral,
+        index: entry.index,
+    };
+}
+
 // Classify each `resource show` entry into motors / servos / ledStrips,
 // the serial TX/RX index→pad maps, and hardware-fixed pads — resolving
 // each entry's timer + DMA hit (with timerDump / dmaDump fallbacks for
-// the bitbang and default-DMA cases documented inline). Extracted from
-// analyzeResources to keep that function's cognitive complexity down.
+// the bitbang and default-DMA cases). Extracted from analyzeResources
+// to keep that function's cognitive complexity down.
 function processResourceEntries(resourceShow, timerByKey, dmaByKey, timerDump, dmaDump, timupStreams) {
     const motors = [];
     const servos = [];
@@ -192,84 +287,19 @@ function processResourceEntries(resourceShow, timerByKey, dmaByKey, timerDump, d
             continue;
         }
         const p = entry.peripheral;
-        let timerHit = timerByKey.get(key(p, entry.index)) || null;
-        // Bitbang fallback: when motors fall back to DSHOT bit-bang,
-        // `timer show` reports the pin's slot under DSHOT_BITBANG <n>
-        // instead of MOTOR <n>, so the (MOTOR, index) keyed lookup
-        // above returns null even though the pin DOES have a timer
-        // assignment. The bare `timer` dump (timerDump) is pin-keyed
-        // and authoritative regardless of bitbang state — fall back
-        // to it so the Hardware tab's Motor/Servo rows show the
-        // actual TIMx CHy instead of `—`. Bench-confirmed on
-        // TMOTORF7X2 where M1-M4 land on TIM3 but `timer show`
-        // reports DSHOT_BITBANG 2 on TIM8.
-        if (!timerHit && Array.isArray(timerDump)) {
-            const dumpHit = timerDump.find((t) => t.pad === entry.pad);
-            if (dumpHit?.timer != null) {
-                timerHit = { timer: dumpHit.timer, channel: dumpHit.channel, complementary: false };
-            }
-        }
+        const timerHit = resolveTimerHit(p, entry, timerByKey, timerDump);
         const dmaHit = dmaByKey.get(key(p, entry.index)) || null;
 
         if (p === "MOTOR") {
-            const bidirBurst = timerHit?.timer != null && timupStreams.has(timerHit.timer);
-            // dmaStream fallback: BF only emits `dma MOTOR N <opt>`
-            // entries (which dmaHit reads) when a non-default option
-            // is set. Default-DMA motors get DMA via their pin's
-            // option-0 binding, surfaced via `dma pin <pad>` queries
-            // into `padDmaDefaults` upstream. When the resource-keyed
-            // dmaHit is null but the pin has a default, expose THAT
-            // as the motor's dmaStream so the Hardware tab "DMA /
-            // Mode" column shows the real stream instead of "no DMA".
-            // Pre-fix: every default-DMA motor showed "no DMA";
-            // post-fix: shows DMA1/S0 etc. matching the Pin
-            // Assignment badge.
-            let resolvedDma = dmaHit;
-            if (!resolvedDma && dmaDump && Array.isArray(dmaDump.pads)) {
-                const pinDma = dmaDump.pads.find((p2) => p2.pad === entry.pad);
-                if (pinDma && pinDma.opt !== null && pinDma.stream !== null) {
-                    resolvedDma = {
-                        controller: pinDma.controller,
-                        stream: pinDma.stream,
-                    };
-                }
-            }
-            motors.push({
-                index: entry.index ?? 0,
-                pad: entry.pad,
-                timer: timerHit?.timer ?? null,
-                channel: timerHit?.channel ?? null,
-                dmaStream: resolvedDma,
-                bidirBurst,
-            });
+            motors.push(classifyMotorEntry(entry, timerHit, dmaHit, dmaDump, timupStreams));
         } else if (p === "SERVO") {
-            servos.push({
-                index: entry.index ?? 0,
-                pad: entry.pad,
-                timer: timerHit?.timer ?? null,
-                channel: timerHit?.channel ?? null,
-            });
+            servos.push(classifyServoEntry(entry, timerHit));
         } else if (p === "LED_STRIP") {
-            ledStrips.push({
-                pad: entry.pad,
-                timer: timerHit?.timer ?? null,
-                channel: timerHit?.channel ?? null,
-                dmaStream: dmaHit,
-            });
-        } else if (p === "SERIAL_TX") {
-            if (entry.index !== null) {
-                serialTx.set(entry.index, entry.pad);
-            }
-        } else if (p === "SERIAL_RX") {
-            if (entry.index !== null) {
-                serialRx.set(entry.index, entry.pad);
-            }
+            ledStrips.push(classifyLedStripEntry(entry, timerHit, dmaHit));
+        } else if (p === "SERIAL_TX" || p === "SERIAL_RX") {
+            classifySerialEntry(p, entry, serialTx, serialRx);
         } else if (HARDWARE_FIXED_PERIPHERALS.has(p)) {
-            hardwareFixedPads.push({
-                pad: entry.pad,
-                peripheral: p,
-                index: entry.index,
-            });
+            hardwareFixedPads.push(classifyHardwareFixedEntry(entry));
         }
     }
 

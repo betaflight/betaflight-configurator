@@ -391,48 +391,13 @@ function genericOptions(currentPin, fallbackPins, ctx) {
     return options;
 }
 
-function motorOptions({
-    resource,
-    motorResources,
-    servoResources,
-    hardwareAnalysis,
-    fallbackPins,
-    expertMode,
-    allowLedStrip = true,
-    allowUartRelease = [],
-}) {
-    const currentPin = normalizePin(resource?.pin);
-    const padTimers = hardwareAnalysis?.padTimers instanceof Map ? hardwareAnalysis.padTimers : null;
-    const silkscreenMap = buildSilkscreenMap(hardwareAnalysis);
-    const padPool = buildPadPool(hardwareAnalysis);
-    const poolFilter = !expertMode && padPool.size > 0;
-    const ledStrips = hardwareAnalysis?.ledStrips ?? [];
-    const serials = hardwareAnalysis?.serials ?? [];
-    const ctx = {
-        kind: "motor",
-        resource,
-        motorResources,
-        servoResources,
-        padTimers,
-        silkscreenMap,
-        ledStrips,
-        serials,
-        allowLedStrip,
-        allowUartRelease,
-    };
-    const options = [];
-    const seen = new Set();
-    addCurrentOption(options, seen, currentPin, padTimers, silkscreenMap);
-    if (!hardwareAnalysis) {
-        return genericOptions(currentPin, fallbackPins, ctx);
-    }
-
+// Only add the analyzer-snapshot pad as an "existing" option when it
+// still matches the row's live value. After a local edit the live pin
+// has already been emitted by addCurrentOption() above; re-adding the
+// stale snapshot here would surface the old FC pad as a second
+// "current" entry alongside the user's pending pick.
+function addExistingMotorOption(options, seen, hardwareAnalysis, resource, currentPin, silkscreenMap) {
     const existing = (hardwareAnalysis.motors ?? []).find((motor) => motor.index === (resource?.index ?? -1) + 1);
-    // Only add the analyzer-snapshot pad as an "existing" option when it
-    // still matches the row's live value. After a local edit the live pin
-    // has already been emitted by addCurrentOption() above; re-adding the
-    // stale snapshot here would surface the old FC pad as a second
-    // "current" entry alongside the user's pending pick.
     if (existing?.pad && normalizePin(existing.pad) === currentPin) {
         addOption(options, seen, {
             pin: existing.pad,
@@ -442,6 +407,9 @@ function motorOptions({
             channel: existing.channel,
         });
     }
+}
+
+function addFreePwmMotorOptions(options, seen, hardwareAnalysis, ctx, { padPool, poolFilter, silkscreenMap }) {
     for (const pad of hardwareAnalysis.pwmCapableFreePads ?? []) {
         if (poolFilter && !padPool.has(normalizePin(pad.pad))) {
             continue;
@@ -470,11 +438,23 @@ function motorOptions({
             });
         }
     }
-    // Always include every silkscreen-motor pad from the bundle as a
-    // candidate. DSHOT motors can share a timer (each on its own
-    // channel), so any motor-labeled pad is a valid swap target for any
-    // motor row. Belt-and-suspenders against partial CLI scans dropping
-    // pads from pwmCapableFreePads.
+}
+
+// Always include every silkscreen-motor pad from the bundle as a
+// candidate. DSHOT motors can share a timer (each on its own
+// channel), so any motor-labeled pad is a valid swap target for any
+// motor row. Belt-and-suspenders against partial CLI scans dropping
+// pads from pwmCapableFreePads. Honors caller-supplied release
+// whitelists (allowLedStrip / allowUartRelease) so we never surface a
+// pad whose `resource <peripheral> N NONE` release the caller didn't
+// opt into.
+function addSilkscreenMotorOptions(
+    options,
+    seen,
+    hardwareAnalysis,
+    ctx,
+    { padTimers, silkscreenMap, allowLedStrip, allowUartRelease },
+) {
     for (const m of hardwareAnalysis?.padDefaults?.motors ?? []) {
         if (!m?.pad) {
             continue;
@@ -484,11 +464,6 @@ function motorOptions({
             continue;
         }
         const assignment = describeCurrentAssignment(pin, ctx);
-        // Honor caller-supplied release whitelists. LED_STRIP releases need
-        // allowLedStrip; UART releases need the UART's index in
-        // allowUartRelease. Without these guards the silkscreen-motor pad
-        // loop could silently emit `resource SERIAL_TX 3 NONE` for an
-        // MSP/GPS/telemetry port the caller never opted to release.
         const uartMatch = /^UART(\d+)\s+(TX|RX)$/i.exec(assignment ?? "");
         if (uartMatch && !allowUartRelease.includes(Number(uartMatch[1]))) {
             continue;
@@ -513,24 +488,62 @@ function motorOptions({
         // onResourcePinChange runs the `resource <peripheral> N NONE` step
         // before binding. Without this, picking an LED/UART-owned silkscreen
         // pad surfaced the entry but the FC bind silently no-op'd.
-        const requiresRelease = releaseLinesForAssignment(assignment);
         addOption(options, seen, {
             pin,
             label: parts.join(" - "),
             source: "silkscreen-motor",
-            requiresRelease,
+            requiresRelease: releaseLinesForAssignment(assignment),
         });
     }
-    addFallbackOptions(options, seen, fallbackPins, ctx);
-    return options;
 }
 
-function servoOptions({
+function motorOptions({
     resource,
     motorResources,
     servoResources,
     hardwareAnalysis,
     fallbackPins,
+    expertMode,
+    allowLedStrip = true,
+    allowUartRelease = [],
+}) {
+    const { currentPin, padTimers, silkscreenMap, padPool, poolFilter, ctx } = buildResourceOptionContext({
+        kind: "motor",
+        resource,
+        motorResources,
+        servoResources,
+        hardwareAnalysis,
+        allowLedStrip,
+        allowUartRelease,
+        expertMode,
+    });
+    const options = [];
+    const seen = new Set();
+    addCurrentOption(options, seen, currentPin, padTimers, silkscreenMap);
+    if (!hardwareAnalysis) {
+        return genericOptions(currentPin, fallbackPins, ctx);
+    }
+    addExistingMotorOption(options, seen, hardwareAnalysis, resource, currentPin, silkscreenMap);
+    addFreePwmMotorOptions(options, seen, hardwareAnalysis, ctx, { padPool, poolFilter, silkscreenMap });
+    addSilkscreenMotorOptions(options, seen, hardwareAnalysis, ctx, {
+        padTimers,
+        silkscreenMap,
+        allowLedStrip,
+        allowUartRelease,
+    });
+    addFallbackOptions(options, seen, fallbackPins, ctx);
+    return options;
+}
+
+// Shared option-context builder for servo/motor option entry points.
+// Centralises the FC-analysis lookups (padTimers/silkscreenMap/padPool)
+// and bundles the per-fallback `ctx` describeCurrentAssignment uses.
+function buildResourceOptionContext({
+    kind,
+    resource,
+    motorResources,
+    servoResources,
+    hardwareAnalysis,
     allowLedStrip,
     allowUartRelease,
     expertMode,
@@ -543,7 +556,7 @@ function servoOptions({
     const ledStrips = hardwareAnalysis?.ledStrips ?? [];
     const serials = hardwareAnalysis?.serials ?? [];
     const ctx = {
-        kind: "servo",
+        kind,
         resource,
         motorResources,
         servoResources,
@@ -554,27 +567,27 @@ function servoOptions({
         allowLedStrip,
         allowUartRelease,
     };
-    const options = [];
-    const seen = new Set();
-    addCurrentOption(options, seen, currentPin, padTimers, silkscreenMap);
-    if (!hardwareAnalysis) {
-        return genericOptions(currentPin, fallbackPins, ctx);
-    }
+    return { currentPin, padTimers, silkscreenMap, padPool, poolFilter, ctx };
+}
 
-    const servoIndex = (resource?.index ?? -1) + 1;
-    // Build rebind maps from the live edited resources vs the FC analysis
-    // snapshot. Without these, candidatePadsForSlot's claimedPads check
-    // sees the FC's old SERVO/MOTOR positions and blocks pads that have
-    // been freed in the live UI but not yet committed (e.g. user moved
-    // SERVO 2 to a new pad — its old pad shouldn't block SERVO 1's
-    // candidate list).
+// Build rebind maps from the live edited resources vs the FC analysis
+// snapshot. Without these, candidatePadsForSlot's claimedPads check
+// sees the FC's old SERVO/MOTOR positions and blocks pads that have
+// been freed in the live UI but not yet committed (e.g. user moved
+// SERVO 2 to a new pad — its old pad shouldn't block SERVO 1's
+// candidate list).
+function buildServoCandidateRebinds(motorResources, servoResources, hardwareAnalysis, servoIndex) {
     const motorRebinds = buildRebindsMap(motorResources, hardwareAnalysis?.motors);
     const servoRebinds = buildRebindsMap(servoResources, hardwareAnalysis?.servos, servoIndex);
-    // Servo rows the user has set to NONE in the dropdown. The release will
-    // run before any new bind, so candidatePadsForSlot must NOT treat their
-    // FC-snapshot pads as still claimed; without this, a freed servo pad
-    // remains blocked from other rows' candidate lists. Only count rows
-    // that actually had an FC binding to release.
+    return { motorRebinds, servoRebinds };
+}
+
+// Servo rows the user has set to NONE in the dropdown. The release will
+// run before any new bind, so candidatePadsForSlot must NOT treat their
+// FC-snapshot pads as still claimed; without this, a freed servo pad
+// remains blocked from other rows' candidate lists. Only count rows
+// that actually had an FC binding to release.
+function collectReleasedServoIndices(servoResources, hardwareAnalysis, servoIndex) {
     const releasedServoIndices = new Set();
     for (const live of servoResources ?? []) {
         const liveIndex = (live?.index ?? -1) + 1;
@@ -589,16 +602,10 @@ function servoOptions({
             releasedServoIndices.add(liveIndex);
         }
     }
-    const candidates = candidatePadsForSlot(hardwareAnalysis, servoIndex, {
-        motorIndicesInUse: motorIndicesInUse(motorResources),
-        currentPad: currentPin === RESOURCE_NONE ? null : currentPin,
-        allowLedStrip: allowLedStrip === true,
-        allowUartRelease: Array.isArray(allowUartRelease) ? allowUartRelease : [],
-        motorRebinds,
-        servoRebinds,
-        releasedServoIndices,
-    });
+    return releasedServoIndices;
+}
 
+function addServoCandidateOptions(options, seen, candidates, { expertMode, padPool, poolFilter, silkscreenMap }) {
     for (const candidate of candidates) {
         // Drop candidates that share a timer with an in-use motor unless
         // expert mode is on. Saving such a pick silently steals the timer
@@ -627,6 +634,53 @@ function servoOptions({
             requiresRelease: candidate.requiresRelease,
         });
     }
+}
+
+function servoOptions({
+    resource,
+    motorResources,
+    servoResources,
+    hardwareAnalysis,
+    fallbackPins,
+    allowLedStrip,
+    allowUartRelease,
+    expertMode,
+}) {
+    const { currentPin, padTimers, silkscreenMap, padPool, poolFilter, ctx } = buildResourceOptionContext({
+        kind: "servo",
+        resource,
+        motorResources,
+        servoResources,
+        hardwareAnalysis,
+        allowLedStrip,
+        allowUartRelease,
+        expertMode,
+    });
+    const options = [];
+    const seen = new Set();
+    addCurrentOption(options, seen, currentPin, padTimers, silkscreenMap);
+    if (!hardwareAnalysis) {
+        return genericOptions(currentPin, fallbackPins, ctx);
+    }
+
+    const servoIndex = (resource?.index ?? -1) + 1;
+    const { motorRebinds, servoRebinds } = buildServoCandidateRebinds(
+        motorResources,
+        servoResources,
+        hardwareAnalysis,
+        servoIndex,
+    );
+    const releasedServoIndices = collectReleasedServoIndices(servoResources, hardwareAnalysis, servoIndex);
+    const candidates = candidatePadsForSlot(hardwareAnalysis, servoIndex, {
+        motorIndicesInUse: motorIndicesInUse(motorResources),
+        currentPad: currentPin === RESOURCE_NONE ? null : currentPin,
+        allowLedStrip: allowLedStrip === true,
+        allowUartRelease: Array.isArray(allowUartRelease) ? allowUartRelease : [],
+        motorRebinds,
+        servoRebinds,
+        releasedServoIndices,
+    });
+    addServoCandidateOptions(options, seen, candidates, { expertMode, padPool, poolFilter, silkscreenMap });
     addFallbackOptions(options, seen, fallbackPins, ctx);
     return options;
 }

@@ -677,27 +677,25 @@ async function runResourceCliScans() {
     });
 }
 
-// Collects pads the picker can actually surface: bound motor/servo pins,
-// free PWM pads from the analyzer, and the silkscreen pool from padDefaults.
-// Used to filter alt-AF discovery so we don't run `timer <pad> list` against
-// every pad in the timer dump (~30+ on full STM32F7 boards = 6-8s of CLI
-// scan against candidates the user can never pick).
-function collectCandidatePads(analysis) {
-    const pads = new Set();
-    // Expert mode: also feed every pad the analyzer knows a timer for
-    // into the alt-AF discovery pool. The non-expert pool deliberately
-    // stays narrow (current bindings + free + silkscreen) so the CLI
-    // scan stays fast on big boards; Expert Mode users have explicitly
-    // opted into the longer scan in exchange for surfacing alt-AF
-    // variants of peripheral-owned PWM pads (UART/LED/etc) that those
-    // rows would otherwise only see in their default-AF form.
-    if (isExpertMode() && analysis?.padTimers instanceof Map) {
-        for (const pad of analysis.padTimers.keys()) {
-            if (pad) {
-                pads.add(pad);
-            }
+// Expert mode: also feed every pad the analyzer knows a timer for
+// into the alt-AF discovery pool. The non-expert pool deliberately
+// stays narrow (current bindings + free + silkscreen) so the CLI
+// scan stays fast on big boards; Expert Mode users have explicitly
+// opted into the longer scan in exchange for surfacing alt-AF
+// variants of peripheral-owned PWM pads (UART/LED/etc) that those
+// rows would otherwise only see in their default-AF form.
+function addExpertTimerPads(pads, analysis) {
+    if (!isExpertMode() || !(analysis?.padTimers instanceof Map)) {
+        return;
+    }
+    for (const pad of analysis.padTimers.keys()) {
+        if (pad) {
+            pads.add(pad);
         }
     }
+}
+
+function addBoundResourcePads(pads) {
     for (const m of motorResources) {
         if (m.pin && m.pin !== "NONE") {
             pads.add(m.pin);
@@ -708,29 +706,54 @@ function collectCandidatePads(analysis) {
             pads.add(s.pin);
         }
     }
+}
+
+function addFreePwmPads(pads, analysis) {
     for (const p of analysis.pwmCapableFreePads ?? []) {
         if (p?.pad) {
             pads.add(p.pad);
         }
     }
+}
+
+function addDefaultMotorPads(pads) {
     for (const m of padDefaults.value?.motors ?? []) {
         if (m?.pad) {
             pads.add(m.pad);
         }
     }
+}
+
+function addDefaultLedPads(pads) {
     for (const ls of padDefaults.value?.ledStrips ?? []) {
         if (ls?.pad) {
             pads.add(ls.pad);
         }
     }
-    // UART TX/RX pads — let alt-AF discovery scan them so pads currently
-    // owned by a USART AF can surface their latent timer AF options.
-    // Without this a UART pad with no timer AF in `timer show` (e.g. PA9
-    // USART1_TX on TMOTORF7, ~22/48 F4 UART pads) is invisible to the
-    // picker even when `timer <pad> list` would report a usable PWM AF.
-    // The downstream PWM-capability filter in padRecommender accepts any
-    // pad that has padTimerOptions entries, so this single union unlocks
-    // alt-AF rescue for UART release across F4/F7/H7/G4 fleets.
+}
+
+// Runtime LED_STRIP bindings from `resource show` (analysis.ledStrips)
+// can land on pads that aren't in the silkscreen-default pool — e.g.
+// boards with no padDefaults bundle, or users who've remapped LED_STRIP
+// off its default pad. Without this loop those LED pads are invisible
+// to alt-AF discovery and can't surface latent timer AFs after release.
+function addRuntimeLedPads(pads, analysis) {
+    for (const ls of analysis?.ledStrips ?? []) {
+        if (ls?.pad) {
+            pads.add(ls.pad);
+        }
+    }
+}
+
+// UART TX/RX pads — let alt-AF discovery scan them so pads currently
+// owned by a USART AF can surface their latent timer AF options.
+// Without this a UART pad with no timer AF in `timer show` (e.g. PA9
+// USART1_TX on TMOTORF7, ~22/48 F4 UART pads) is invisible to the
+// picker even when `timer <pad> list` would report a usable PWM AF.
+// The downstream PWM-capability filter in padRecommender accepts any
+// pad that has padTimerOptions entries, so this single union unlocks
+// alt-AF rescue for UART release across F4/F7/H7/G4 fleets.
+function addSerialPads(pads, analysis) {
     for (const srl of analysis?.serials ?? []) {
         if (srl?.txPad) {
             pads.add(srl.txPad);
@@ -739,6 +762,22 @@ function collectCandidatePads(analysis) {
             pads.add(srl.rxPad);
         }
     }
+}
+
+// Collects pads the picker can actually surface: bound motor/servo pins,
+// free PWM pads from the analyzer, and the silkscreen pool from padDefaults.
+// Used to filter alt-AF discovery so we don't run `timer <pad> list` against
+// every pad in the timer dump (~30+ on full STM32F7 boards = 6-8s of CLI
+// scan against candidates the user can never pick).
+function collectCandidatePads(analysis) {
+    const pads = new Set();
+    addExpertTimerPads(pads, analysis);
+    addBoundResourcePads(pads);
+    addFreePwmPads(pads, analysis);
+    addDefaultMotorPads(pads);
+    addDefaultLedPads(pads);
+    addRuntimeLedPads(pads, analysis);
+    addSerialPads(pads, analysis);
     return pads;
 }
 
