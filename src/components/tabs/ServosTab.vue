@@ -393,7 +393,7 @@ function motorDotColor(slotIndex) {
 }
 function servoDotColor(slotIndex) {
     const mixerMode = FC.MIXER_CONFIG?.mixer ?? null;
-    const idx = mixerMode != null ? pwmSlotToServoIndex(slotIndex, mixerMode) : slotIndex;
+    const idx = mixerMode == null ? slotIndex : pwmSlotToServoIndex(slotIndex, mixerMode);
     if (idx == null) {
         return null;
     }
@@ -510,7 +510,7 @@ function withNone(items) {
 // (App.vue seeds it from getConfig("expertMode")). When ON, the candidate
 // pool expands beyond silkscreen-labeled pads to all PWM-capable pads.
 function isExpertMode() {
-    return Boolean(typeof globalThis.window !== "undefined" && globalThis.vm?.expertMode);
+    return Boolean(globalThis.window !== undefined && globalThis.vm?.expertMode);
 }
 // A pin can only drive one PWM output at a time. Drop dropdown options
 // whose pin is already bound to another row, UNLESS the option carries a
@@ -1225,7 +1225,7 @@ function encodedPinValue(resource) {
     if (!resource?.pin || resource.pin === "NONE") {
         return "NONE";
     }
-    return resource.af != null ? encodeResourceOptionValue(resource.pin, resource.af) : resource.pin;
+    return resource.af == null ? resource.pin : encodeResourceOptionValue(resource.pin, resource.af);
 }
 
 function onMotorPinChange(index, newPin) {
