@@ -1,28 +1,26 @@
 <template>
-    <div id="user-session-container">
-        <div v-if="!isLoggedIn" id="user-logged-out" class="session-view">
-            <a href="#" id="open-login" class="tabicon" @click.prevent="handleLoginClick">
-                <img
-                    id="user-default-gravatar"
-                    src="/images/default-user-avatar.png"
-                    alt="User Default Avatar"
-                    class="user-avatar-icon"
+    <div id="user-session-container" class="justify-self-end-auto">
+        <UDropdownMenu :items="getMenuItems()" v-if="isLoggedIn">
+            <UButton variant="ghost" color="neutral" size="xs" class="pr-3">
+                <UUser
+                    :name="displayName"
+                    :avatar="{
+                        src: avatarUrl,
+                        icon: 'i-lucide-user',
+                    }"
+                    size="sm"
                 />
-                <span id="user-login-display" class="username">{{ $t("labelLogin") }}</span>
-            </a>
-        </div>
-
-        <div v-else id="user-logged-in" class="session-view">
-            <a href="#" id="user-menu-trigger" class="tabicon" @click.prevent="toggleMenu">
-                <img
-                    id="user-gravatar"
-                    :src="avatarUrl || '/images/default-user-avatar-loggedin.png'"
-                    alt="User Avatar"
-                    class="user-avatar-icon"
-                />
-                <span id="username-display" class="username">{{ displayName }}</span>
-            </a>
-        </div>
+            </UButton>
+        </UDropdownMenu>
+        <UButton v-else variant="ghost" color="neutral" size="xs" class="pr-3" @click="handleLoginClick">
+            <UUser
+                :name="$t('labelLogin')"
+                :avatar="{
+                    icon: 'i-lucide-log-in',
+                }"
+                size="sm"
+            />
+        </UButton>
         <Teleport to="#main-wrapper">
             <div v-show="menuOpen" id="user-menu-popup" class="user-popup-menu" :style="menuStyle">
                 <div id="menu-username" class="menu-username">{{ displayName }}</div>
@@ -210,12 +208,40 @@
 <script>
 import { defineComponent } from "vue";
 import { useUserSession } from "./UserSession";
+import { switchTab } from "@/js/tab_switch.js";
+import { sidebarItems } from "@/components/sidebar/sidebar_items.js";
+import { i18n } from "@/js/localization";
+
+function getMenuItems() {
+    const items = ["backups", "user_profile"];
+    const trailingItems = [
+        { type: "separator" },
+        {
+            label: i18n.getMessage("labelSignOut"),
+            icon: "i-lucide-log-out",
+            color: "error",
+            onSelect: () => useUserSession().handleSignOut(),
+        },
+    ];
+
+    return sidebarItems
+        .filter((item) => items.includes(item.key))
+        .map((item) => ({
+            label: i18n.getMessage(item.i18n),
+            icon: item.icon,
+            onSelect: () => switchTab(item.key),
+        }))
+        .concat(trailingItems);
+}
 
 export default defineComponent({
     name: "UserSession",
 
     setup() {
-        return useUserSession();
+        return {
+            ...useUserSession(),
+            getMenuItems,
+        };
     },
 });
 </script>
@@ -223,11 +249,8 @@ export default defineComponent({
 <style scoped>
 #user-session-container {
     background-color: transparent;
-    border-top: 1px solid var(--surface-300);
-    padding-top: 0.5rem;
     font-size: 13px;
     position: relative;
-    margin-top: auto;
 
     #open-login,
     #user-menu-trigger {
@@ -251,8 +274,8 @@ export default defineComponent({
     }
 
     .user-avatar-icon {
-        width: 48px;
-        height: 48px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         object-fit: cover;
         flex-shrink: 0;
