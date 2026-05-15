@@ -27,7 +27,7 @@
             <div v-show="menuOpen" id="user-menu-popup" class="user-popup-menu" :style="menuStyle">
                 <div id="menu-username" class="menu-username">{{ displayName }}</div>
                 <a href="#" id="menu-signout" class="menu-item" @click.prevent="handleSignOut">
-                    <i class="fas fa-sign-out-alt"></i>
+                    <UIcon name="i-lucide-log-out" class="size-4" />
                     <span>{{ $t("labelSignOut") }}</span>
                 </a>
             </div>

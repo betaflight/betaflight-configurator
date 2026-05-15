@@ -3,7 +3,6 @@ import "../../libraries/flightindicators.css";
 import "../css/theme.css";
 import "../css/main.less";
 import "../css/opensans_webfontkit/fonts.css";
-import "@fortawesome/fontawesome-free/css/all.css";
 import "../components/MotorOutputReordering/Styles.css";
 import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
