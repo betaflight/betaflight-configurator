@@ -54,66 +54,18 @@ import { predictDmaConflict } from "./dmaTopology.js";
  *   dmaStream: object|null, source: string,
  *   requiresRelease: string[], sharesTimerWithMotor: boolean}>}
  */
-export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
-    if (!analysis || typeof servoIndex !== "number") {
-        return [];
-    }
-
-    const motorIndicesInUse = new Set(
-        Array.isArray(options.motorIndicesInUse)
-            ? options.motorIndicesInUse
-            : (analysis.motors ?? []).map((m) => m.index),
-    );
-    const currentPad = options.currentPad ?? null;
-    const allowLedStrip = options.allowLedStrip === true;
-    const allowUartRelease = Array.isArray(options.allowUartRelease) ? options.allowUartRelease : [];
-    // motorRebinds: motorIndex → newPad. Lets the caller signal that an
-    // in-use motor is moving to a different pad as part of the same plan
-    // (its CURRENT pad becomes releasable; its NEW pad becomes claimed).
-    // Without this, a SERVO override targeting the moved-from pad would
-    // be rejected as "not a valid candidate" and the plan would silently
-    // fall back to a different pad. Bench-observed 2026-04-22 on TMOTORF7
-    // when staging MOTOR 1 → A08 + SERVO 1 → C06 in the same Pin
-    // Assignment edit.
-    const motorRebinds = options.motorRebinds instanceof Map ? options.motorRebinds : null;
-    // servoRebinds: servoIndex → newPad. Mirror of motorRebinds for the
-    // servo side — when another SERVO N in the same plan is moving to a
-    // different pad, its CURRENT pad is releasable in this batch and
-    // shouldn't block our candidate. Without this, servo↔servo swaps in
-    // the same plan get filtered down to "no valid candidate".
-    const servoRebinds = options.servoRebinds instanceof Map ? options.servoRebinds : null;
-    // releasedServoIndices: servo indices the caller is dropping in this
-    // batch (e.g. usedServoIndices shrank). Their pads will be cleared by
-    // the release CLI lines computePresetResourcePlan emits, so they
-    // should NOT block us as if still claimed. Without this, picking a
-    // released servo's pad for another row would fail the candidate
-    // filter even though the release happens before our bind.
-    const releasedServoArray = Array.isArray(options.releasedServoIndices)
-        ? new Set(options.releasedServoIndices)
-        : null;
-    const releasedServoIndices =
-        options.releasedServoIndices instanceof Set ? options.releasedServoIndices : releasedServoArray;
-    // padPlannedTimers: pad → planned timer AFTER the batch's `timer <pad>
-    // AF<n>` lines apply. Without this hint, a motor whose pad stays the
-    // same but whose AF (and therefore timer) changes still contributes
-    // its CURRENT timer to motorTimers — so servos get filtered against
-    // the freed timer and allowed onto the timer the motor just claimed.
-    // Built by the planner from optimizerRemaps; Vue-side dropdown caller
-    // doesn't have planned-remap info and omits this option.
-    const padPlannedTimers = options.padPlannedTimers instanceof Map ? options.padPlannedTimers : null;
-
-    // Partition motors three ways:
-    //   - in-use & static:   pad off-limits (inUseMotorPads)
-    //   - in-use & moving:   old pad releasable as motor-release (real
-    //                        cost, label "releases MOTOR N"); new pad
-    //                        claimed
-    //   - not in MSP2 use:   firmware-bound but dormant. Emit as a
-    //                        free-pwm candidate (label "free") with
-    //                        a requiresRelease line so save still
-    //                        clears the firmware-level resource entry.
-    //                        Avoids the foot-gun where the dropdown
-    //                        suggests "releases MOTOR N" for a motor
-    //                        that isn't even active.
+// Partition motors three ways:
+//   - in-use & static:   pad off-limits (inUseMotorPads)
+//   - in-use & moving:   old pad releasable as motor-release (real
+//                        cost, label "releases MOTOR N"); new pad
+//                        claimed (added to inUseMotorPads)
+//   - not in MSP2 use:   firmware-bound but dormant. Emit as a
+//                        free-pwm candidate (label "free") with a
+//                        requiresRelease line so save still clears
+//                        the firmware-level resource entry. Avoids
+//                        the foot-gun where the dropdown suggests
+//                        "releases MOTOR N" for an inactive motor.
+function buildMotorClaimContext(analysis, motorIndicesInUse, motorRebinds) {
     const inUseMotorPads = new Set();
     const activeReleasableMotors = [];
     const dormantMotors = [];
@@ -130,30 +82,24 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
             dormantMotors.push(m);
         }
     }
+    return { inUseMotorPads, activeReleasableMotors, dormantMotors };
+}
 
-    // Timers used by in-use motors — for sharesTimerWithMotor flag.
-    // Rebind-aware: when an in-use motor is moving to a different pad in
-    // the same plan (motorRebinds), the relevant timer is the destination
-    // pad's, not the original. Without this, a servo candidate on the
-    // motor's *new* timer slips past sharesTimerWithMotor and we end up
-    // back on a colliding timer.
-    const motorTimerLookup = analysis.padTimers instanceof Map ? analysis.padTimers : null;
+// Timers used by in-use motors — for sharesTimerWithMotor flag.
+// Rebind-aware: when an in-use motor is moving to a different pad in
+// the same plan (motorRebinds), the relevant timer is the destination
+// pad's, not the original. PadPlannedTimers takes priority so an AF
+// remap (whether driven by user override or the silkscreen optimizer)
+// shifts the motor's timer claim to the new value, not the stale
+// pre-batch one.
+function buildMotorTimerSet(analysis, motorIndicesInUse, motorRebinds, padPlannedTimers, motorTimerLookup) {
     const motorTimers = new Set();
     for (const m of analysis.motors ?? []) {
         if (!motorIndicesInUse.has(m.index)) {
             continue;
         }
         const rebindPad = motorRebinds?.get(m.index) ?? null;
-        // The pad this motor will occupy AFTER the batch lands. Equal to
-        // rebindPad on motor↔motor swaps; equal to m.pad for same-pad
-        // motors (including same-pad AF remaps).
         const effectivePad = rebindPad && rebindPad !== m.pad ? rebindPad : m.pad;
-        // Prefer the planned post-batch timer for this pad. The planner
-        // populates padPlannedTimers from optimizerRemaps so an AF remap
-        // (whether driven by user override or the silkscreen optimizer)
-        // shifts the motor's timer claim to the new value, not the stale
-        // pre-batch one. Fallback chain matches the prior behavior for
-        // callers that don't pass padPlannedTimers (Vue dropdown).
         const resolvedTimer =
             padPlannedTimers?.get(effectivePad) ??
             (rebindPad && rebindPad !== m.pad
@@ -163,8 +109,15 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
             motorTimers.add(resolvedTimer);
         }
     }
+    return motorTimers;
+}
 
-    // Claimed-pad set: everything off-limits without a release step.
+// Claimed-pad set: everything off-limits without a release step.
+// Skips this slot's own servo so it never blocks itself; skips servos
+// moving in the same plan (their old pad becomes free); skips servos
+// being released in this same batch.
+function buildClaimedPadsForServo(analysis, servoIndex, ctx) {
+    const { inUseMotorPads, servoRebinds, releasedServoIndices, allowLedStrip, allowUartRelease } = ctx;
     const claimedPads = new Set();
     for (const f of analysis.hardwareFixedPads ?? []) {
         claimedPads.add(f.pad);
@@ -173,15 +126,10 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
         if (s.index === servoIndex) {
             continue;
         }
-        // Servo is moving to a different pad in this same plan — its
-        // current pad becomes releasable, so don't block on it.
         const rebindPad = servoRebinds?.get(s.index) ?? null;
         if (rebindPad && rebindPad !== s.pad) {
             continue;
         }
-        // Servo is being released in this same plan (its index is no
-        // longer in usedServoIndices). The release line will clear the
-        // pad before our bind runs, so it isn't a real claim.
         if (releasedServoIndices?.has(s.index)) {
             continue;
         }
@@ -206,14 +154,16 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
             claimedPads.add(srl.rxPad);
         }
     }
+    return claimedPads;
+}
 
+// Dedup key includes AF so the same pad can appear once per viable
+// alternate function. Default-AF entries use the pad alone (af === null).
+// Alt-AF entries from the post-pass key by `pad:af`, letting
+// `B00 — TIM3 CH3` (default) coexist with `B00 — TIM1 CH2N (alt AF1)`.
+function createCandidateAccumulator() {
     const results = [];
     const seen = new Set();
-    // Dedup key includes AF so the same pad can appear once per
-    // viable alternate function. Default-AF entries use the pad
-    // alone (af === null). Alt-AF entries from the post-pass below
-    // key by `pad:af`, letting `B00 — TIM3 CH3` (default) coexist
-    // with `B00 — TIM1 CH2N (alt AF1)` in the dropdown.
     const keyFor = (pad, af) => (af == null ? pad : `${pad}:${af}`);
     const push = (entry) => {
         const k = keyFor(entry.pad, entry.af ?? null);
@@ -223,70 +173,58 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
         seen.add(k);
         results.push(entry);
     };
+    return { results, push };
+}
 
-    // 1. Existing binding — zero-churn.
-    //    Resolve the row's timer with the same padTimers fallback the
-    //    motor-release / dormant-motor branches use below: on targets
-    //    where `timer show` omits the row's entry, `existing?.timer` is
-    //    null and the bare flag would silently say "no motor conflict"
-    //    even when the pad shares a timer with an in-use motor. Skip
-    //    altogether on collision so the dropdown doesn't surface a
-    //    self-conflicting "current" entry alongside safer candidates.
-    // Pads that are otherwise too unsafe to surface but still deserve
-    // alt-AF rescue entries (so the user has a same-pad path out of a
-    // timer conflict). Populated below when currentPad is dropped for
-    // collision; consumed by the alt-AF expansion pass at the bottom of
-    // this function alongside the regular results[] iteration.
-    const altAfRescuePads = new Set();
-    if (currentPad && !claimedPads.has(currentPad)) {
-        // existing is keyed by servoIndex, so existing.pad is the analyzer
-        // snapshot's pad for THIS slot — which may differ from the live
-        // currentPad if the Vue layer has already moved the row to a new
-        // pad. Only inherit existing.timer/existing.channel when the
-        // snapshot still matches currentPad; otherwise fall back entirely
-        // to padTimers for the live pad, so we don't carry the OLD pad's
-        // timer onto the new pad's "existing" entry.
-        const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
-        const existingMatchesCurrent = existing?.pad === currentPad;
-        const fallback = motorTimerLookup?.get(currentPad);
-        const resolvedTimer = (existingMatchesCurrent ? existing?.timer : null) ?? fallback?.timer ?? null;
-        const resolvedChannel = (existingMatchesCurrent ? existing?.channel : null) ?? fallback?.channel ?? null;
-        if (resolvedTimer == null || !motorTimers.has(resolvedTimer)) {
-            push({
-                pad: currentPad,
-                timer: resolvedTimer,
-                channel: resolvedChannel,
-                dmaStream: null,
-                source: "existing",
-                requiresRelease: [],
-                sharesTimerWithMotor: resolvedTimer != null && motorTimers.has(resolvedTimer),
-            });
-        } else {
-            // Conflicted current pad: drop the base entry from results so
-            // the dropdown doesn't recommend keeping a colliding binding,
-            // but remember it for the alt-AF pass — switching to a safe
-            // alternate AF on the same physical pad is the user's no-churn
-            // rescue path.
-            altAfRescuePads.add(currentPad);
-        }
+// 1. Existing binding — zero-churn. Resolve the row's timer with the
+// same padTimers fallback the motor-release / dormant-motor branches
+// use: on targets where `timer show` omits the row's entry, existing
+// timer info is null and the bare flag would silently say "no motor
+// conflict" even when the pad shares a timer with an in-use motor.
+// On collision, drop the base entry but record the pad in
+// altAfRescuePads so the alt-AF expansion still covers it (same-pad
+// path out of timer conflict).
+function addExistingCandidate(push, altAfRescuePads, ctx) {
+    const { currentPad, claimedPads, analysis, servoIndex, motorTimerLookup, motorTimers } = ctx;
+    if (!currentPad || claimedPads.has(currentPad)) {
+        return;
     }
+    // existing.pad is the analyzer snapshot's pad for THIS slot — may
+    // differ from the live currentPad if the Vue layer has already
+    // moved the row to a new pad. Only inherit existing.timer/channel
+    // when snapshot still matches currentPad.
+    const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
+    const existingMatchesCurrent = existing?.pad === currentPad;
+    const fallback = motorTimerLookup?.get(currentPad);
+    const resolvedTimer = (existingMatchesCurrent ? existing?.timer : null) ?? fallback?.timer ?? null;
+    const resolvedChannel = (existingMatchesCurrent ? existing?.channel : null) ?? fallback?.channel ?? null;
+    if (resolvedTimer == null || !motorTimers.has(resolvedTimer)) {
+        push({
+            pad: currentPad,
+            timer: resolvedTimer,
+            channel: resolvedChannel,
+            dmaStream: null,
+            source: "existing",
+            requiresRelease: [],
+            sharesTimerWithMotor: resolvedTimer != null && motorTimers.has(resolvedTimer),
+        });
+        return;
+    }
+    altAfRescuePads.add(currentPad);
+}
 
-    // 2. Motor-release candidates — preferred so silkscreen labels stay
-    //    intuitive (S1 → MOTOR 2 pad → silkscreen "M2" on the board).
-    //    Iterated in motor-index order from the analyzer's sorted list.
-    //
-    //    Timer/channel fallback: on some targets (observed on TMOTORF7X2)
-    //    the `timer show` output doesn't surface entries for currently-
-    //    bound but not-in-use motors, so `m.timer` / `m.channel` arrive
-    //    null. Falling back to `analysis.padTimers` (the full timer_dump)
-    //    keeps the dropdown's "— TIMn CHn" suffix present regardless of
-    //    which CLI view gave us the pad.
-    const padTimers = analysis.padTimers instanceof Map ? analysis.padTimers : null;
+// 2. Motor-release candidates — preferred so silkscreen labels stay
+// intuitive (S1 → MOTOR 2 pad → silkscreen "M2" on the board).
+// Iterated in motor-index order from the analyzer's sorted list.
+// Timer/channel fallback to padTimers since some targets (e.g.
+// TMOTORF7X2) don't surface dormant motors in `timer show`.
+function addMotorReleaseCandidates(push, activeReleasableMotors, ctx) {
+    const { claimedPads, motorTimerLookup, motorTimers } = ctx;
     for (const m of activeReleasableMotors) {
         if (claimedPads.has(m.pad)) {
             continue;
         }
-        const fallback = padTimers?.get(m.pad);
+        const fallback = motorTimerLookup?.get(m.pad);
         const resolvedTimer = m.timer ?? fallback?.timer ?? null;
         push({
             pad: m.pad,
@@ -295,25 +233,23 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
             dmaStream: m.dmaStream ?? null,
             source: "motor-release",
             requiresRelease: [`resource MOTOR ${m.index} NONE`],
-            // Use the resolved (fallback-aware) timer for the safety flag too —
-            // on targets where `timer show` omits the dormant entry, m.timer is
-            // null but the pad really does share an in-use motor's timer
-            // (visible in `timer` dump). Without this, the pad slips past the
-            // non-Expert filter and a save would silently steal the motor's timer.
             sharesTimerWithMotor: resolvedTimer != null && motorTimers.has(resolvedTimer),
         });
     }
+}
 
-    // 2.5. Dormant-motor pads — pads firmware-bound to motors that aren't
-    //      active in the MSP2 motor list. Functionally free; emit as
-    //      free-pwm with a release line so save clears the firmware-level
-    //      binding. Label reads "free" instead of "releases MOTOR N"
-    //      since there's no real motor to lose.
+// 2.5. Dormant-motor pads — pads firmware-bound to motors that aren't
+// active in the MSP2 motor list. Functionally free; emit as free-pwm
+// with a release line so save clears the firmware-level binding.
+// Label reads "free" instead of "releases MOTOR N" since there's no
+// real motor to lose.
+function addDormantMotorCandidates(push, dormantMotors, ctx) {
+    const { claimedPads, motorTimerLookup, motorTimers } = ctx;
     for (const m of dormantMotors) {
         if (claimedPads.has(m.pad)) {
             continue;
         }
-        const fallback = padTimers?.get(m.pad);
+        const fallback = motorTimerLookup?.get(m.pad);
         const resolvedTimer = m.timer ?? fallback?.timer ?? null;
         push({
             pad: m.pad,
@@ -325,8 +261,13 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
             sharesTimerWithMotor: resolvedTimer != null && motorTimers.has(resolvedTimer),
         });
     }
+}
 
-    // 3 + 4. Free PWM pads — partition by timer conflict.
+// 3 + 4. Free PWM pads — partition by timer conflict. Non-conflict
+// pads first so the dropdown ranks safe options higher than ones that
+// share a timer with an in-use motor.
+function addFreePwmCandidates(push, ctx) {
+    const { analysis, claimedPads, motorTimers } = ctx;
     const freePwm = Array.isArray(analysis.pwmCapableFreePads) ? analysis.pwmCapableFreePads : [];
     const freeNonConflict = [];
     const freeConflict = [];
@@ -362,46 +303,45 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
             sharesTimerWithMotor: true,
         });
     }
+}
 
-    // 5. LED_STRIP pad (opt-in). Same padTimers fallback as the motor-
-    // release tier — `timer show` may not emit a CH line for LED_STRIP
-    // (it's in WS2812 DMA mode, not PWM), but the pad is still in the
-    // timer_dump and we want the dropdown to label it with TIMn.
-    if (allowLedStrip) {
-        for (const ls of analysis.ledStrips ?? []) {
-            if (claimedPads.has(ls.pad)) {
-                continue;
-            }
-            const fallback = padTimers?.get(ls.pad);
-            const resolvedTimer = ls.timer ?? fallback?.timer ?? null;
-            push({
-                pad: ls.pad,
-                timer: resolvedTimer,
-                channel: ls.channel ?? fallback?.channel ?? null,
-                dmaStream: ls.dmaStream ?? null,
-                source: "led-strip",
-                requiresRelease: ["resource LED_STRIP 1 NONE"],
-                sharesTimerWithMotor: resolvedTimer != null && motorTimers.has(resolvedTimer),
-            });
-        }
+// 5. LED_STRIP pad (opt-in). Same padTimers fallback as motor-release —
+// `timer show` may not emit a CH line for LED_STRIP (it's in WS2812
+// DMA mode, not PWM), but the pad is still in the timer_dump and we
+// want the dropdown to label it with TIMn.
+function addLedStripCandidates(push, ctx) {
+    const { analysis, allowLedStrip, claimedPads, motorTimerLookup, motorTimers } = ctx;
+    if (!allowLedStrip) {
+        return;
     }
+    for (const ls of analysis.ledStrips ?? []) {
+        if (claimedPads.has(ls.pad)) {
+            continue;
+        }
+        const fallback = motorTimerLookup?.get(ls.pad);
+        const resolvedTimer = ls.timer ?? fallback?.timer ?? null;
+        push({
+            pad: ls.pad,
+            timer: resolvedTimer,
+            channel: ls.channel ?? fallback?.channel ?? null,
+            dmaStream: ls.dmaStream ?? null,
+            source: "led-strip",
+            requiresRelease: ["resource LED_STRIP 1 NONE"],
+            sharesTimerWithMotor: resolvedTimer != null && motorTimers.has(resolvedTimer),
+        });
+    }
+}
 
-    // 6. UART TX/RX pads (opt-in per UART).
-    //    Carry the pad's real timer/channel from the analyzer's padTimers
-    //    map. Without this, a UART pad that happens to share a timer with
-    //    an in-use motor still ranks like a safe non-conflicting option
-    //    and the picker may land a SERVO on a timer-conflicting pad on
-    //    tight targets.
-    // A UART pad reaches us when the analyzer's serials/spareUarts list
-    // includes it, but the firmware build may have NO PWM-capable timer AF
-    // on that physical pin (e.g. A09/USART1_TX on TMOTORF7 — no entry in
-    // `timer show` and nothing in alt-AF discovery either). Releasing
-    // such a UART would never produce a working servo PWM line, so we
-    // drop it before it can surface in the dropdown. PWM-capable means:
-    //   - pad is in padTimers (its current AF IS a timer), OR
-    //   - pad has at least one entry in padTimerOptions (alt AF could
-    //     give it one — the alt-AF expansion below would then surface it).
-    const padTimerOptionsMap = analysis.padTimerOptions instanceof Map ? analysis.padTimerOptions : null;
+// 6. UART TX/RX pads (opt-in per UART). A UART pad reaches us when
+// the analyzer's serials/spareUarts list includes it, but the firmware
+// build may have NO PWM-capable timer AF on that physical pin (e.g.
+// A09/USART1_TX on TMOTORF7). Releasing such a UART would never
+// produce a working servo PWM line, so drop it before it can surface.
+// PWM-capable means: pad is in padTimers (current AF IS a timer), OR
+// pad has at least one entry in padTimerOptions (alt AF could give it
+// one — alt-AF expansion below would surface it).
+function addUartReleaseCandidates(push, ctx) {
+    const { analysis, allowUartRelease, claimedPads, motorTimerLookup, padTimerOptionsMap, motorTimers } = ctx;
     const padHasPwmCapability = (pad) => {
         if (!pad) {
             return false;
@@ -414,11 +354,8 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
     };
     for (const uartIndex of allowUartRelease) {
         // Check the full `serials` list before falling back to `spareUarts`.
-        // spareUarts is the analyzer's "no function assigned" subset; an
-        // opt-in release for a UART that DOES have a function (caller has
-        // explicitly OK'd releasing it) was previously invisible here and
-        // its pads never surfaced as candidates, even though the save path
-        // knew how to emit the release line.
+        // An opt-in release for a UART that DOES have a function (caller
+        // explicitly OK'd releasing it) was previously invisible here.
         const serial =
             (analysis.serials ?? []).find((u) => u.index === uartIndex) ??
             (analysis.spareUarts ?? []).find((u) => u.index === uartIndex);
@@ -452,71 +389,153 @@ export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
             });
         }
     }
+}
 
-    // 7. Alt-AF expansion. For each pad already in results, emit
-    // additional entries for every alternate AF the firmware reports
-    // (via `analysis.padTimerOptions`). Lets the pilot manually park
-    // a pad on a different (timer, channel) — useful when the
-    // optimizer's automatic AF remap doesn't fire (e.g. tight DMA
-    // boards) but the pilot knows a specific alt AF would help.
-    // Each alt entry inherits the base pad's source/requiresRelease,
-    // but carries the alt AF's (timer, channel, af) so the caller
-    // can emit `timer <pad> AF<n>` ahead of the resource bind.
+// 7. Alt-AF expansion. For each pad already in results, emit
+// additional entries for every alternate AF the firmware reports
+// (via analysis.padTimerOptions). Lets the pilot manually park a pad
+// on a different (timer, channel) — useful when the optimizer's
+// automatic AF remap doesn't fire (e.g. tight DMA boards) but the
+// pilot knows a specific alt AF would help. Each alt entry inherits
+// the base pad's source/requiresRelease but adds a `timer <pad>
+// AF<n>` step.
+function addAltAfCandidates(push, results, altAfRescuePads, ctx) {
+    const { analysis, motorTimers } = ctx;
     const padTimerOptions = analysis.padTimerOptions instanceof Map ? analysis.padTimerOptions : null;
+    if (!padTimerOptions) {
+        return;
+    }
     const padCurrentAF = analysis.padCurrentAF instanceof Map ? analysis.padCurrentAF : null;
-    if (padTimerOptions) {
-        const altEntries = [];
-        // Synthesize a minimal "base" for rescue pads that were dropped
-        // from results (e.g. currentPad with a timer collision) so the
-        // alt-AF expansion still covers them. The synthetic base has no
-        // requiresRelease — we're staying on the same pad, just retargeting
-        // its AF.
-        const expansionBases = [
-            ...results,
-            ...[...altAfRescuePads]
-                .filter((pad) => !results.some((r) => r.pad === pad))
-                .map((pad) => ({ pad, requiresRelease: [] })),
-        ];
-        for (const base of expansionBases) {
-            const opts = padTimerOptions.get(base.pad);
-            if (!Array.isArray(opts) || opts.length === 0) {
+    // Synthesize a minimal "base" for rescue pads dropped from results
+    // (e.g. currentPad with timer collision) so alt-AF expansion still
+    // covers them. Synthetic base has no requiresRelease — staying on
+    // same pad, just retargeting AF.
+    const expansionBases = [
+        ...results,
+        ...[...altAfRescuePads]
+            .filter((pad) => !results.some((r) => r.pad === pad))
+            .map((pad) => ({ pad, requiresRelease: [] })),
+    ];
+    const altEntries = [];
+    for (const base of expansionBases) {
+        const opts = padTimerOptions.get(base.pad);
+        if (!Array.isArray(opts) || opts.length === 0) {
+            continue;
+        }
+        const currentAf = padCurrentAF?.get(base.pad);
+        for (const opt of opts) {
+            if (opt.af === currentAf) {
                 continue;
             }
-            const currentAf = padCurrentAF?.get(base.pad);
-            for (const opt of opts) {
-                if (opt.af === currentAf) {
-                    continue;
-                }
-                altEntries.push({
-                    pad: base.pad,
-                    timer: opt.timer,
-                    channel: opt.channel,
-                    af: opt.af,
-                    complementary: !!opt.complementary,
-                    dmaStream: null,
-                    // Preserve the base candidate's source so downstream
-                    // labelers can still surface the underlying side-effect
-                    // ("releases MOTOR N", "releases UART2 TX", etc.). The
-                    // `af` field flags the row as an alternate-AF variant;
-                    // labels layer "(alt AF)" on top of the base source. The
-                    // bare "alt-af" fallback covers synthetic rescue bases
-                    // (currentPad dropped for collision) that have no
-                    // underlying source.
-                    source: base.source ?? "alt-af",
-                    // Alt-AF requires a `timer <pad> AF <n>` CLI step in
-                    // addition to whatever the base entry already needed.
-                    // The caller (UI) must run requiresRelease[] commands
-                    // before the resource bind so the FC re-routes the
-                    // pad to the chosen alternate timer/channel.
-                    requiresRelease: [...(base.requiresRelease ?? []), `timer ${base.pad} AF${opt.af}`],
-                    sharesTimerWithMotor: opt.timer != null && motorTimers.has(opt.timer),
-                });
-            }
-        }
-        for (const e of altEntries) {
-            push(e);
+            altEntries.push({
+                pad: base.pad,
+                timer: opt.timer,
+                channel: opt.channel,
+                af: opt.af,
+                complementary: !!opt.complementary,
+                dmaStream: null,
+                // Preserve the base candidate's source so downstream
+                // labelers can still surface the underlying side-effect
+                // ("releases MOTOR N", "releases UART2 TX", etc.). The
+                // `af` field flags the row as an alt-AF variant; labels
+                // layer "(alt AF)" on top of the base source. The bare
+                // "alt-af" fallback covers synthetic rescue bases that
+                // have no underlying source.
+                source: base.source ?? "alt-af",
+                requiresRelease: [...(base.requiresRelease ?? []), `timer ${base.pad} AF${opt.af}`],
+                sharesTimerWithMotor: opt.timer != null && motorTimers.has(opt.timer),
+            });
         }
     }
+    for (const e of altEntries) {
+        push(e);
+    }
+}
+
+export function candidatePadsForSlot(analysis, servoIndex, options = {}) {
+    if (!analysis || typeof servoIndex !== "number") {
+        return [];
+    }
+
+    const motorIndicesInUse = new Set(
+        Array.isArray(options.motorIndicesInUse)
+            ? options.motorIndicesInUse
+            : (analysis.motors ?? []).map((m) => m.index),
+    );
+    const currentPad = options.currentPad ?? null;
+    const allowLedStrip = options.allowLedStrip === true;
+    const allowUartRelease = Array.isArray(options.allowUartRelease) ? options.allowUartRelease : [];
+    // motorRebinds: motorIndex → newPad. Lets the caller signal that an
+    // in-use motor is moving to a different pad as part of the same plan
+    // (its CURRENT pad becomes releasable; its NEW pad becomes claimed).
+    // Without this, a SERVO override targeting the moved-from pad would
+    // be rejected as "not a valid candidate" and the plan would silently
+    // fall back to a different pad.
+    const motorRebinds = options.motorRebinds instanceof Map ? options.motorRebinds : null;
+    // servoRebinds: servoIndex → newPad. Mirror of motorRebinds for the
+    // servo side — when another SERVO N in the same plan is moving to a
+    // different pad, its CURRENT pad is releasable in this batch.
+    const servoRebinds = options.servoRebinds instanceof Map ? options.servoRebinds : null;
+    // releasedServoIndices: servo indices the caller is dropping in this
+    // batch. Their pads will be cleared by release CLI lines, so they
+    // should NOT block as if still claimed.
+    const releasedServoArray = Array.isArray(options.releasedServoIndices)
+        ? new Set(options.releasedServoIndices)
+        : null;
+    const releasedServoIndices =
+        options.releasedServoIndices instanceof Set ? options.releasedServoIndices : releasedServoArray;
+    // padPlannedTimers: pad → planned timer AFTER the batch's
+    // `timer <pad> AF<n>` lines apply. Built by the planner from
+    // optimizerRemaps; Vue-side dropdown caller doesn't have planned-
+    // remap info and omits this option.
+    const padPlannedTimers = options.padPlannedTimers instanceof Map ? options.padPlannedTimers : null;
+
+    const motorTimerLookup = analysis.padTimers instanceof Map ? analysis.padTimers : null;
+    const padTimerOptionsMap = analysis.padTimerOptions instanceof Map ? analysis.padTimerOptions : null;
+
+    const { inUseMotorPads, activeReleasableMotors, dormantMotors } = buildMotorClaimContext(
+        analysis,
+        motorIndicesInUse,
+        motorRebinds,
+    );
+    const motorTimers = buildMotorTimerSet(
+        analysis,
+        motorIndicesInUse,
+        motorRebinds,
+        padPlannedTimers,
+        motorTimerLookup,
+    );
+    const claimedPads = buildClaimedPadsForServo(analysis, servoIndex, {
+        inUseMotorPads,
+        servoRebinds,
+        releasedServoIndices,
+        allowLedStrip,
+        allowUartRelease,
+    });
+
+    const { results, push } = createCandidateAccumulator();
+    // Pads dropped from results for timer collision but still deserving
+    // alt-AF rescue entries (same-pad path out of timer conflict).
+    const altAfRescuePads = new Set();
+
+    const ctx = {
+        analysis,
+        servoIndex,
+        currentPad,
+        claimedPads,
+        motorTimers,
+        motorTimerLookup,
+        padTimerOptionsMap,
+        allowLedStrip,
+        allowUartRelease,
+    };
+    addExistingCandidate(push, altAfRescuePads, ctx);
+    addMotorReleaseCandidates(push, activeReleasableMotors, ctx);
+    addDormantMotorCandidates(push, dormantMotors, ctx);
+    addFreePwmCandidates(push, ctx);
+    addLedStripCandidates(push, ctx);
+    addUartReleaseCandidates(push, ctx);
+    addAltAfCandidates(push, results, altAfRescuePads, ctx);
 
     return results;
 }
