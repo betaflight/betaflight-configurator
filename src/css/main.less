@@ -306,6 +306,8 @@ td [role="group"] {
     min-width: 0;
     min-height: 0;
     transition: all 0.2s;
+    /* Scope tab-internal z-index values so they can't paint above teleported modals */
+    isolation: isolate;
     overflow-x: hidden;
     overflow-y: auto;
     /* Avoid horizontal jump when scrollbar appears/disappears (e.g. toggling long tab lists) */
