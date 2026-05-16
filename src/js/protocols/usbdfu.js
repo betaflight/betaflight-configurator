@@ -173,12 +173,12 @@ export class UsbDfuProtocol extends EventTarget {
             this.options.erase_chip = true;
         }
 
-        // Calculate progress weight based on whether erase is enabled
-        // If erase: 0-33% erase, 33-66% flash, 66-100% verify
-        // If no erase: 0-50% flash, 50-100% verify
+        // Calculate progress weight based on whether full-chip erase is enabled
+        // Full chip erase: 0-33% erase, 33-66% flash, 66-100% verify
+        // Selective erase: 0-10% erase, 10-50% flash, 50-100% verify
         this.progressWeights = this.options.erase_chip
             ? { erase: [0, 33], flash: [33, 66], verify: [66, 100] }
-            : { erase: null, flash: [0, 50], verify: [50, 100] };
+            : { erase: [0, 10], flash: [10, 50], verify: [50, 100] };
 
         // reset and set some variables before we start
         this.upload_time_start = new Date().getTime();
@@ -912,7 +912,7 @@ export class UsbDfuProtocol extends EventTarget {
                 let total_erased = 0; // bytes
 
                 const erase_page_next = () => {
-                    // Calculate progress within erase phase (0-33%)
+                    // Calculate progress within erase phase
                     const eraseStart = this.progressWeights.erase[0];
                     const eraseRange = this.progressWeights.erase[1] - this.progressWeights.erase[0];
                     const eraseProgress = ((page + 1) / erase_pages.length) * eraseRange;
