@@ -1231,34 +1231,18 @@ export function pickOptimalPadLayout(analysis, motorCount, usedServoIndices, opt
 // pads not on the allowUartRelease whitelist. Extracted from
 // computePresetResourcePlan; ctx carries the closure-borrowed deps so
 // the helper sits at module scope.
-function buildMotorClaimedPads(forMotorIndex, ctx) {
-    const {
-        analysis,
-        usedMotorIndices,
-        usedServoIndices,
-        effectiveMotorPicks,
-        effectiveServoPicks,
-        motorClaimedPadsForExemption,
-        servoClaimedPadsForReservation,
-        pickPad,
-        allowLedStrip,
-        allowUartRelease,
-    } = ctx;
-
-    const claimed = new Set();
-    for (const f of analysis.hardwareFixedPads ?? []) {
-        claimed.add(f.pad);
-    }
+// Kept-servo pads block motor claims, but skip:
+//   - servos vacating their current pad in this plan (their s.pad will
+//     be free by bind time; without skip a servo↔motor swap where
+//     SERVO N moves OFF its pad gets rejected)
+//   - pads the motor pass has explicitly been told to use (motor↔servo
+//     swap the override logic already validated)
+function addKeptServoMotorClaims(claimed, analysis, ctx) {
+    const { usedServoIndices, effectiveServoPicks, motorClaimedPadsForExemption } = ctx;
     for (const s of analysis.servos ?? []) {
         if (!usedServoIndices.includes(s.index)) {
             continue;
         }
-        // Skip servos vacating their current pad as part of this
-        // plan — their s.pad will be free by the time we bind, so
-        // it's a valid target for the motor pass. Mirrors the
-        // motor-rebind exemption a few blocks below; without it,
-        // a servo↔motor swap where SERVO N moves OFF its pad gets
-        // rejected because the motor sees the old s.pad as claimed.
         const plannedServoPad = pickPad(effectiveServoPicks[s.index]);
         if (plannedServoPad && plannedServoPad !== s.pad) {
             continue;
@@ -1268,6 +1252,36 @@ function buildMotorClaimedPads(forMotorIndex, ctx) {
         }
         claimed.add(s.pad);
     }
+}
+
+// Other in-use motors' pads block motor claims, but skip motors
+// vacating their current pad in this plan — their `m.pad` will be
+// free by bind time, so it's a valid target for forMotorIndex.
+// Without this exemption, legitimate motor↔motor swaps fall into
+// "no_pad_for_motor".
+function addOtherKeptMotorClaims(claimed, forMotorIndex, analysis, ctx) {
+    const { usedMotorIndices, effectiveMotorPicks } = ctx;
+    for (const m of analysis.motors ?? []) {
+        if (m.index === forMotorIndex || !usedMotorIndices.includes(m.index)) {
+            continue;
+        }
+        const planned = effectiveMotorPicks[m.index];
+        if (planned && planned !== m.pad) {
+            continue;
+        }
+        claimed.add(m.pad);
+    }
+}
+
+function buildMotorClaimedPads(forMotorIndex, ctx) {
+    const { analysis, motorClaimedPadsForExemption, servoClaimedPadsForReservation, allowLedStrip, allowUartRelease } =
+        ctx;
+
+    const claimed = new Set();
+    for (const f of analysis.hardwareFixedPads ?? []) {
+        claimed.add(f.pad);
+    }
+    addKeptServoMotorClaims(claimed, analysis, ctx);
     // Reserve planned servo destinations. Skip pads the motor pass has
     // explicitly been told to use (effectiveMotorPicks) — that's a
     // motor↔servo swap the override logic already validated.
@@ -1276,71 +1290,62 @@ function buildMotorClaimedPads(forMotorIndex, ctx) {
             claimed.add(pad);
         }
     }
-    for (const m of analysis.motors ?? []) {
-        if (m.index === forMotorIndex || !usedMotorIndices.includes(m.index)) {
-            continue;
-        }
-        // Skip motors that are vacating their current pad as part of this
-        // plan — their `m.pad` will be free by the time we bind, so it's
-        // a valid target for `forMotorIndex`. Without this exemption,
-        // legitimate motor↔motor swaps fall into "no_pad_for_motor".
-        const planned = effectiveMotorPicks[m.index];
-        if (planned && planned !== m.pad) {
-            continue;
-        }
-        claimed.add(m.pad);
-    }
+    addOtherKeptMotorClaims(claimed, forMotorIndex, analysis, ctx);
     if (!allowLedStrip) {
         for (const ls of analysis.ledStrips ?? []) {
             claimed.add(ls.pad);
         }
     }
-    for (const srl of analysis.serials ?? []) {
-        if (allowUartRelease.includes(srl.index)) {
-            continue;
-        }
-        if (srl.txPad) {
-            claimed.add(srl.txPad);
-        }
-        if (srl.rxPad) {
-            claimed.add(srl.rxPad);
-        }
-    }
+    addProtectedSerialClaims(claimed, analysis, allowUartRelease);
     return claimed;
 }
 
-export function computePresetResourcePlan(analysis, preset, options = {}) {
-    const warnings = [];
-    if (!analysis || !preset || !Array.isArray(preset.rules) || !Array.isArray(preset.mmix)) {
-        return {
-            cliLines: [],
-            picks: new Map(),
-            motorPicks: new Map(),
-            usedMotorIndices: [],
-            usedServoIndices: [],
-            motorsToRelease: [],
-            servosToRelease: [],
-            // Match the normal path's Map shape so callers can iterate
-            // result.timerRemaps unconditionally.
-            timerRemaps: new Map(),
-            warnings: [{ code: "invalid_input", message: "missing analysis or preset data" }],
-        };
+// Override values may be bare pad strings ("B07") or {pad, af}
+// objects ("B07@AF3") for AF-aware picks. Centralizes extraction so
+// the legacy string path keeps working alongside the AF object form
+// without duplicating null/typeof checks at every call site.
+function pickPad(override) {
+    if (override == null) {
+        return null;
     }
+    return typeof override === "string" ? override : (override.pad ?? null);
+}
 
-    // usedMotorIndices: 1..motorCount (BF CLI uses 1-based MOTOR N).
-    // motorCount defaults to preset.mmix.length; override lets the
-    // diff-thrust toggle bump a single-motor preset up to 2 motors without
-    // editing the preset itself.
+// Returned when computePresetResourcePlan is called with missing or
+// malformed inputs (no analysis / no preset / no rules / no mmix).
+// Match the normal path's Map shape so callers can iterate
+// result.timerRemaps unconditionally without a typeof guard.
+function invalidPresetPlanResult() {
+    return {
+        cliLines: [],
+        picks: new Map(),
+        motorPicks: new Map(),
+        usedMotorIndices: [],
+        usedServoIndices: [],
+        motorsToRelease: [],
+        servosToRelease: [],
+        timerRemaps: new Map(),
+        warnings: [{ code: "invalid_input", message: "missing analysis or preset data" }],
+    };
+}
+
+// usedMotorIndices: 1..motorCount (BF CLI uses 1-based MOTOR N).
+// motorCount defaults to preset.mmix.length; override lets the
+// diff-thrust toggle bump a single-motor preset up to 2 motors
+// without editing the preset itself.
+function deriveUsedMotorIndices(preset, options) {
     const motorCount =
         typeof options.motorCount === "number" && options.motorCount > 0 ? options.motorCount : preset.mmix.length;
-    const usedMotorIndices = Array.from({ length: motorCount }, (_, i) => i + 1);
+    return { motorCount, usedMotorIndices: Array.from({ length: motorCount }, (_, i) => i + 1) };
+}
 
-    // usedServoIndices: unique {rule.target - 1 : rule in rules}.
-    // BF airplane slot → SERVO resource index: slot - 1 (slot 3 = SERVO 2).
-    // effectiveRules override lets the Pin Assignment panel track the live
-    // Function→Output Mapping state, including rules the user has added /
-    // removed post-preset-apply. rate=0 rules are placeholders / deletions
-    // in the editor; filter them out before computing indices.
+// usedServoIndices: unique {rule.target - 1 : rule in rules}.
+// BF airplane slot → SERVO resource index: slot - 1 (slot 3 = SERVO 2).
+// effectiveRules override lets the Pin Assignment panel track the live
+// Function→Output Mapping state, including rules the user has added /
+// removed post-preset-apply. rate=0 rules are placeholders / deletions
+// in the editor; filter them out before computing indices.
+function deriveUsedServoIndices(preset, options) {
     const rulesSource = Array.isArray(options.effectiveRules) ? options.effectiveRules : preset.rules;
     const usedServoIndicesSet = new Set();
     for (const rule of rulesSource) {
@@ -1355,7 +1360,690 @@ export function computePresetResourcePlan(analysis, preset, options = {}) {
             usedServoIndicesSet.add(servoIndex);
         }
     }
-    const usedServoIndices = [...usedServoIndicesSet].sort((a, b) => a - b);
+    return [...usedServoIndicesSet].sort((a, b) => a - b);
+}
+
+// Folds the joint optimizer's motor/servo picks into the effective
+// pick maps, but only where the user hasn't already specified an
+// override. Real user overrides keep priority.
+function mergeOptimizerPicks(optimized, effectiveMotorPicks, effectiveServoPicks) {
+    if (!optimized) {
+        return;
+    }
+    for (const [idx, pad] of optimized.motors) {
+        if (effectiveMotorPicks[idx] == null) {
+            effectiveMotorPicks[idx] = pad;
+        }
+    }
+    for (const [idx, pad] of optimized.servos) {
+        if (effectiveServoPicks[idx] == null) {
+            effectiveServoPicks[idx] = pad;
+        }
+    }
+}
+
+// User-supplied AF overrides win over optimizer auto-picks. Pilot
+// selects an alt-AF row from the Mixer-tab dropdown → caller passes
+// padAfOverrides Map<pad, af>. Each entry produces a `timer <pad>
+// AF<af>` line ahead of the resource bind, identical to the
+// optimizer's automatic remap path. Mutates optimizerRemaps and
+// pushes warnings for AFs that don't exist on the current target.
+function applyUserAfOverrides(options, analysis, optimizerRemaps, warnings) {
+    const userAfOverrides = options.padAfOverrides instanceof Map ? options.padAfOverrides : null;
+    if (!userAfOverrides) {
+        return;
+    }
+    const padCurrentAF = analysis?.padCurrentAF instanceof Map ? analysis.padCurrentAF : null;
+    const padTimerOptions = analysis?.padTimerOptions instanceof Map ? analysis.padTimerOptions : null;
+    for (const [pad, af] of userAfOverrides) {
+        if (typeof af !== "number") {
+            continue;
+        }
+        const currentAf = padCurrentAF?.get(pad);
+        if (currentAf === af) {
+            // Override matches current — no remap needed; remove any
+            // optimizer-auto remap for this pad too.
+            optimizerRemaps.delete(pad);
+            continue;
+        }
+        // Look up timer/channel for the chosen AF. If the override names
+        // an AF that doesn't exist (stale dropdown after a board swap, or
+        // hand-edited config), skip the remap rather than emit `timer
+        // <pad> AF<n>` with null timer/channel — that would partially
+        // apply on save and leave the FC in an inconsistent state.
+        const opts = padTimerOptions?.get(pad);
+        const opt = Array.isArray(opts) ? opts.find((o) => o.af === af) : null;
+        if (!opt) {
+            // Skip with a warning, but DON'T delete an existing
+            // optimizer-auto remap — that remap was validated against
+            // padTimerOptions earlier and may still represent a useful
+            // planned change. Falling back to the optimizer pick is
+            // safer than reverting to the pad's current (potentially
+            // conflicting) AF.
+            warnings.push({
+                code: "invalid_pad_af_override",
+                message: `Ignoring AF${af} override for ${pad}; that AF isn't available on this target.`,
+            });
+            continue;
+        }
+        optimizerRemaps.set(pad, { af, timer: opt.timer, channel: opt.channel });
+    }
+}
+
+// Motor binding pass setup. Builds the context the per-motor target
+// resolver needs:
+//   - defaultPadForMotor: silkscreen-MOTOR pad lookup (preferred target)
+//   - existingMotorByIndex: zero-churn fallback source
+//   - motorClaimedPadsCtx: arg for buildMotorClaimedPads (which pads
+//     are off-limits for THIS motor — exempts the motor's own pad,
+//     planned servo destinations, and other in-use motors)
+//   - freePoolForFallback: free PWM pads sorted to favor pads sharing
+//     a timer with already-bound kept motors (keeps bidir DSHOT
+//     grouped). Last-resort fallback when silkscreen + zero-churn fail.
+//
+// motorClaimedPadsForExemption: motor picks (user OR optimizer) win
+// over "currently bound to a kept servo". The servo will get
+// reassigned in the servo binding pass; without this, picking a
+// servo's pad for MOTOR 1 then adding a SERVO pin caused the motor's
+// pick to fail padIsAvailable (bench TMOTORF7, 2026-04-29). Filter
+// by usedMotorIndices: stale dropdown picks for motor rows not in the
+// active plan would otherwise leak in and permanently exempt their
+// pads from servo claim.
+//
+// servoClaimedPadsForReservation: pads the servo binding pass plans
+// to claim. Reserve them so motor target selection doesn't steal a
+// pad the servo is heading for. Filter by usedServoIndices: leftover
+// dropdown state for inactive rows would otherwise make motors see
+// those pads as permanently claimed.
+function buildMotorSelectionContext(analysis, options, ctx) {
+    const {
+        usedMotorIndices,
+        usedServoIndices,
+        effectiveMotorPicks,
+        effectiveServoPicks,
+        allowLedStrip,
+        allowUartRelease,
+    } = ctx;
+    const padDefaultsMotors = Array.isArray(options.padDefaults?.motors) ? options.padDefaults.motors : [];
+    const defaultPadForMotor = (idx) => padDefaultsMotors.find((m) => m.index === idx)?.pad ?? null;
+    const existingMotorByIndex = new Map();
+    for (const m of analysis.motors ?? []) {
+        existingMotorByIndex.set(m.index, m);
+    }
+
+    const motorClaimedPadsForExemption = new Set();
+    for (const [idx, pad] of Object.entries(effectiveMotorPicks)) {
+        if (pad && usedMotorIndices.includes(Number(idx))) {
+            motorClaimedPadsForExemption.add(pad);
+        }
+    }
+    const servoClaimedPadsForReservation = new Set();
+    for (const [idx, override] of Object.entries(effectiveServoPicks)) {
+        const pad = pickPad(override);
+        if (pad && usedServoIndices.includes(Number(idx))) {
+            servoClaimedPadsForReservation.add(pad);
+        }
+    }
+    const motorClaimedPadsCtx = {
+        analysis,
+        usedMotorIndices,
+        usedServoIndices,
+        effectiveMotorPicks,
+        effectiveServoPicks,
+        motorClaimedPadsForExemption,
+        servoClaimedPadsForReservation,
+        pickPad,
+        allowLedStrip,
+        allowUartRelease,
+    };
+
+    const keptMotorTimers = new Set(
+        (analysis.motors ?? [])
+            .filter((m) => usedMotorIndices.includes(m.index))
+            .map((m) => m.timer)
+            .filter((t) => t !== null && t !== undefined),
+    );
+    const freePoolForFallback = (analysis.pwmCapableFreePads ?? []).slice().sort((a, b) => {
+        const aShared = keptMotorTimers.has(a.timer) ? 0 : 1;
+        const bShared = keptMotorTimers.has(b.timer) ? 0 : 1;
+        return aShared - bShared;
+    });
+
+    return { defaultPadForMotor, existingMotorByIndex, motorClaimedPadsCtx, freePoolForFallback };
+}
+
+// Resolve the target pad for ONE motor in priority order:
+//   1. user override (effectiveMotorPicks; optimizer picks merged here)
+//   2. silkscreen default — preferred so MOTOR N lands on pad "M N"
+//   3. existing binding — zero-churn fallback
+//   4. first-fit from free-PWM pool
+// Returns the chosen pad, or null when no pad is available (caller
+// emits a no_pad_for_motor warning). Pushes a motor_override_unavailable
+// warning when the user named a pad that's currently claimed.
+function resolveMotorTarget(motorIndex, padIsAvailable, ctx, warnings) {
+    const { effectiveMotorPicks, defaultPadForMotor, existingMotorByIndex, freePoolForFallback } = ctx;
+    const override = effectiveMotorPicks[motorIndex];
+    if (override && padIsAvailable(override)) {
+        return override;
+    }
+    if (override) {
+        warnings.push({
+            code: "motor_override_unavailable",
+            message: `User picked ${override} for MOTOR ${motorIndex} but it isn't safe (claimed by another resource).`,
+        });
+    }
+    const def = defaultPadForMotor(motorIndex);
+    if (def && padIsAvailable(def)) {
+        return def;
+    }
+    const existing = existingMotorByIndex.get(motorIndex);
+    if (existing && padIsAvailable(existing.pad)) {
+        return existing.pad;
+    }
+    for (const p of freePoolForFallback) {
+        if (padIsAvailable(p.pad)) {
+            return p.pad;
+        }
+    }
+    return null;
+}
+
+// Records side-effect releases the motor target may have triggered.
+// Optimizer may park a motor on the LED_STRIP pad (allowLedStrip case);
+// servo-side LED releases come from candidatePadsForSlot's
+// requiresRelease bubbling into extraReleaseLines, but motor side has
+// no candidate helper so detect the collision here. Mirror for UART
+// pads: when a motor override (or optimizer pick) lands on a spare-
+// UART TX/RX pad, padIsAvailable passes because the UART is on
+// allowUartRelease, but no SERIAL_TX/RX release line gets emitted
+// unless we add it here — bind would fail at runtime with the serial
+// resource still owning the pad.
+function addMotorTargetReleaseLines(target, analysis, allowUartRelease, extraReleaseLines) {
+    if ((analysis.ledStrips ?? []).some((ls) => ls.pad === target)) {
+        extraReleaseLines.add("resource LED_STRIP 1 NONE");
+    }
+    for (const srl of analysis.serials ?? []) {
+        if (!allowUartRelease.includes(srl.index)) {
+            continue;
+        }
+        if (srl.txPad === target) {
+            extraReleaseLines.add(`resource SERIAL_TX ${srl.index} NONE`);
+        }
+        if (srl.rxPad === target) {
+            extraReleaseLines.add(`resource SERIAL_RX ${srl.index} NONE`);
+        }
+    }
+}
+
+// Motor binding pass — runs the per-motor target resolution loop.
+// Mutates the accumulator's motorPicks (motorIndex → {pad}),
+// alreadyPicked, and extraReleaseLines. Pushes warnings on
+// no_pad_for_motor and motor_override_unavailable.
+//
+// motorPicks stays scoped to motors that need an explicit bind line
+// (i.e. either no current binding or a different pad than current).
+function selectMotorPicks(
+    analysis,
+    usedMotorIndices,
+    effectiveMotorPicks,
+    allowUartRelease,
+    accumulator,
+    setupCtx,
+    warnings,
+) {
+    const { motorPicks, alreadyPicked, extraReleaseLines } = accumulator;
+    const { defaultPadForMotor, existingMotorByIndex, motorClaimedPadsCtx, freePoolForFallback } = setupCtx;
+    const resolverCtx = { effectiveMotorPicks, defaultPadForMotor, existingMotorByIndex, freePoolForFallback };
+
+    for (const motorIndex of usedMotorIndices) {
+        const claimedForThis = buildMotorClaimedPads(motorIndex, motorClaimedPadsCtx);
+        const padIsAvailable = (pad) => Boolean(pad) && !alreadyPicked.has(pad) && !claimedForThis.has(pad);
+
+        const target = resolveMotorTarget(motorIndex, padIsAvailable, resolverCtx, warnings);
+        if (!target) {
+            warnings.push({
+                code: "no_pad_for_motor",
+                message: `No free PWM pad available for MOTOR ${motorIndex}. Preset's motor count exceeds what this board can bind — the user must pick a pad in the Mixer tab's Pin Assignment panel or reset resources first.`,
+            });
+            continue;
+        }
+
+        alreadyPicked.add(target);
+        addMotorTargetReleaseLines(target, analysis, allowUartRelease, extraReleaseLines);
+        const existing = existingMotorByIndex.get(motorIndex);
+        if (!existing || existing.pad !== target) {
+            motorPicks.set(motorIndex, { pad: target });
+        }
+    }
+}
+
+// Builds the per-pass context the servo binding loop needs:
+//   - motorRebindsForServos: motorIndex → newPad (from motor pass).
+//     Threaded into candidatePadsForSlot so SERVO overrides targeting a
+//     moved-from motor pad pass the validity check.
+//   - servoRebindsForOthers: servoIndex → plannedPad. Lets
+//     candidatePadsForSlot exempt servos vacating their current pad in
+//     the same plan (avoids servo↔servo swap rejection).
+//   - releasedServoIndices: servos currently bound but not in the kept
+//     set. Their pads must not block other rows' candidates.
+//   - padPlannedTimers: pad → planned timer AFTER `timer <pad> AF<n>`
+//     lines apply. Covers (1) motor stays on pad but AF changes, and
+//     (2) motor moves to a new pad whose AF is also being remapped.
+//     candidatePadsForSlot's motorTimers conflict set consults this
+//     first so servos see the post-batch timer landscape.
+function buildServoSelectionContext(analysis, optimizerRemaps, motorPicks, effectiveServoPicks, usedServoIndices) {
+    const motorRebindsForServos = new Map();
+    for (const [motorIndex, pick] of motorPicks) {
+        motorRebindsForServos.set(motorIndex, pick.pad);
+    }
+
+    const servoRebindsForOthers = new Map();
+    for (const [idx, override] of Object.entries(effectiveServoPicks)) {
+        const plannedPad = pickPad(override);
+        if (!plannedPad) {
+            continue;
+        }
+        const existing = (analysis.servos ?? []).find((s) => s.index === Number(idx));
+        if (existing && existing.pad !== plannedPad) {
+            servoRebindsForOthers.set(Number(idx), plannedPad);
+        }
+    }
+
+    const releasedServoIndices = new Set();
+    for (const s of analysis.servos ?? []) {
+        if (!usedServoIndices.includes(s.index)) {
+            releasedServoIndices.add(s.index);
+        }
+    }
+
+    const padPlannedTimers = new Map();
+    for (const [pad, remap] of optimizerRemaps) {
+        if (remap?.timer != null) {
+            padPlannedTimers.set(pad, remap.timer);
+        }
+    }
+
+    return { motorRebindsForServos, servoRebindsForOthers, releasedServoIndices, padPlannedTimers };
+}
+
+// Match a user/optimizer override against the candidate list. Override
+// can be a bare pad string ("B07" — match any AF row for that pad) or
+// a {pad, af} object ("B07@AF3" — match the specific AF row). Without
+// the AF-aware match, an alt-AF override silently lands on the
+// default-AF row and the user's `pad@AFn` selection collapses back to
+// `pad` on save. alreadyPicked stays keyed by pad alone — BF can only
+// bind one row per pad regardless of AF. Returns the matched candidate
+// or null; pushes override_unavailable warning on miss.
+function resolveServoOverridePick(override, cands, alreadyPicked, servoIndex, warnings) {
+    const overridePad = pickPad(override);
+    const overrideAf = typeof override === "string" ? null : (override?.af ?? null);
+    const pick = cands.find((c) => {
+        if (c.pad !== overridePad || alreadyPicked.has(c.pad)) {
+            return false;
+        }
+        if (overrideAf != null) {
+            return c.af === overrideAf;
+        }
+        return true;
+    });
+    if (pick) {
+        return pick;
+    }
+    const overrideLabel = overrideAf == null ? overridePad : `${overridePad}@AF${overrideAf}`;
+    warnings.push({
+        code: "override_unavailable",
+        message: `User picked ${overrideLabel} for SERVO ${servoIndex} but it isn't a valid candidate — falling back to default.`,
+    });
+    return null;
+}
+
+// Records the side-effect releases bundled with this servo pick.
+// LED_STRIP / UART-release lines fold into the early release block.
+// Motor-release hints are dropped here — motorsToRelease handles them
+// below to avoid double-emit. `timer <pad> AF<n>` remap lines route
+// into pickTimerRemapLines so they emit AFTER motor/servo rebind
+// releases (alongside optimizerRemaps' timer remap lines), otherwise
+// a pad sharing a timer with a motor being moved gets retargeted
+// before the motor releases its old pad.
+function addServoPickSideEffects(pick, extraReleaseLines, pickTimerRemapLines) {
+    for (const line of pick.requiresRelease) {
+        if (line.startsWith("resource MOTOR ")) {
+            continue;
+        }
+        if (/^timer\s+\S+\s+AF/i.test(line)) {
+            pickTimerRemapLines.add(line);
+            continue;
+        }
+        extraReleaseLines.add(line);
+    }
+}
+
+// Servo binding pass — runs the per-servo candidate-and-pick loop.
+// For each used servo: ask candidatePadsForSlot for a ranked candidate
+// list, pick best (override → top-ranked-available), accumulate the
+// pick + side-effect releases. Mutates the accumulator's picks /
+// alreadyPicked / extraReleaseLines / pickTimerRemapLines and pushes
+// override_unavailable / no_pad_for_slot warnings.
+function selectServoPicks(analysis, ctx, accumulator, warnings) {
+    const {
+        usedMotorIndices,
+        usedServoIndices,
+        effectiveServoPicks,
+        allowLedStrip,
+        allowUartRelease,
+        motorRebindsForServos,
+        servoRebindsForOthers,
+        releasedServoIndices,
+        padPlannedTimers,
+    } = ctx;
+    const { picks, alreadyPicked, extraReleaseLines, pickTimerRemapLines } = accumulator;
+
+    for (const servoIndex of usedServoIndices) {
+        const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
+        const currentPad = existing?.pad ?? null;
+        const cands = candidatePadsForSlot(analysis, servoIndex, {
+            motorIndicesInUse: usedMotorIndices,
+            currentPad,
+            allowLedStrip,
+            allowUartRelease,
+            motorRebinds: motorRebindsForServos,
+            servoRebinds: servoRebindsForOthers,
+            releasedServoIndices,
+            padPlannedTimers,
+        });
+
+        let pick = null;
+        const override = effectiveServoPicks[servoIndex];
+        if (override) {
+            pick = resolveServoOverridePick(override, cands, alreadyPicked, servoIndex, warnings);
+        }
+        if (!pick) {
+            pick = cands.find((c) => !alreadyPicked.has(c.pad));
+        }
+        if (!pick) {
+            warnings.push({
+                code: "no_pad_for_slot",
+                message: `No candidate pad available for SERVO ${servoIndex}. Preset rules targeting this slot will have no physical output.`,
+            });
+            continue;
+        }
+
+        alreadyPicked.add(pick.pad);
+        picks.set(servoIndex, pick);
+        addServoPickSideEffects(pick, extraReleaseLines, pickTimerRemapLines);
+    }
+}
+
+// Returns motorsToRelease + servosToRelease (currently-bound slots not
+// in usedIndices — observed-release source for realWork) and defensive
+// {motor,servo} release index lists. Defensive set covers slots BF
+// keeps a silkscreen default pad map for that *weren't* in
+// `resource show` but can still hold a phantom pad claim (seen on
+// FLYWOOF405NANO where MOTOR 5–8 default to B05/C09/B04/C08). Without
+// the defensive prefix, binding SERVO 3 → B05 silently conflicts with
+// the phantom MOTOR 5 → B05 claim and the bind no-ops, leaving
+// duplicate pad claims in `dump`. BF treats `resource MOTOR N NONE`
+// against an already-empty slot as a harmless no-op so over-emitting
+// is cheap.
+function collectReleaseLines(analysis, usedMotorIndices, usedServoIndices) {
+    const motorsToRelease = (analysis.motors ?? []).filter((m) => !usedMotorIndices.includes(m.index));
+    const servosToRelease = (analysis.servos ?? []).filter((s) => !usedServoIndices.includes(s.index));
+
+    const MAX_MOTOR_SLOTS = 8;
+    const MAX_SERVO_SLOTS = 8;
+    const observedMotorReleaseIdx = new Set(motorsToRelease.map((m) => m.index));
+    const observedServoReleaseIdx = new Set(servosToRelease.map((s) => s.index));
+    const defensiveMotorReleases = [];
+    for (let i = 1; i <= MAX_MOTOR_SLOTS; i++) {
+        if (usedMotorIndices.includes(i) || observedMotorReleaseIdx.has(i)) {
+            continue;
+        }
+        defensiveMotorReleases.push(i);
+    }
+    const defensiveServoReleases = [];
+    for (let i = 1; i <= MAX_SERVO_SLOTS; i++) {
+        if (usedServoIndices.includes(i) || observedServoReleaseIdx.has(i)) {
+            continue;
+        }
+        defensiveServoReleases.push(i);
+    }
+    return { motorsToRelease, servosToRelease, defensiveMotorReleases, defensiveServoReleases };
+}
+
+// Rebind pre-release lines + AF-rebind tracking. Pad-changing
+// motors/servos need their old pad freed before any new bind lands on
+// it. AF-only rebinds (pad stays, AF changes) ALSO need release+rebind:
+// BF won't accept the `timer pad AFn` write while the pad is still
+// bound to a peripheral, so without the release the FC silently drops
+// the timer remap and the row keeps the old AF after save.
+//
+// Two flavors of "AF changed":
+//   1. Optimizer-driven — optimizerRemaps has the pad (the
+//      `optimizerRemaps.delete(pad)` path upstream removes pads whose
+//      current AF already matches, so anything still in the map
+//      genuinely needs to change).
+//   2. User-driven — pick.af is set on the chosen alt-AF row.
+//      candidatePadsForSlot's alt-AF expansion already filters out
+//      entries matching current AF, so a non-null pick.af means a
+//      real change.
+function collectRebindReleaseLines(
+    analysis,
+    motorPicks,
+    picks,
+    usedMotorIndices,
+    existingMotorByIndex,
+    optimizerRemaps,
+) {
+    const motorRebindReleases = [];
+    for (const [motorIndex] of motorPicks) {
+        const existing = existingMotorByIndex.get(motorIndex);
+        if (existing) {
+            motorRebindReleases.push(`resource MOTOR ${motorIndex} NONE`);
+        }
+    }
+
+    const motorsNeedingAfRebind = new Map();
+    for (const motorIndex of usedMotorIndices) {
+        if (motorPicks.has(motorIndex)) {
+            continue;
+        }
+        const existing = existingMotorByIndex.get(motorIndex);
+        if (!existing || !optimizerRemaps.has(existing.pad)) {
+            continue;
+        }
+        motorsNeedingAfRebind.set(motorIndex, existing.pad);
+        motorRebindReleases.push(`resource MOTOR ${motorIndex} NONE`);
+    }
+
+    const servoRebindReleases = [];
+    const servosNeedingAfRebind = new Map();
+    for (const [servoIndex, pick] of picks) {
+        const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
+        if (!existing) {
+            continue;
+        }
+        // Pad-changing servo: free old binding before motors rebind.
+        // Without this, motor/servo and servo/servo swaps fail because
+        // the destination pad is still owned by the old servo when
+        // motors run their bind step. The new pad's bind comes via
+        // bindLines, so this loop only emits the release here.
+        if (existing.pad !== pick.pad) {
+            servoRebindReleases.push(`resource SERVO ${servoIndex} NONE`);
+            continue;
+        }
+        const needsAfRebind = optimizerRemaps.has(pick.pad) || pick.af != null;
+        if (!needsAfRebind) {
+            continue;
+        }
+        servosNeedingAfRebind.set(servoIndex, pick.pad);
+        servoRebindReleases.push(`resource SERVO ${servoIndex} NONE`);
+    }
+
+    return { motorRebindReleases, motorsNeedingAfRebind, servoRebindReleases, servosNeedingAfRebind };
+}
+
+// Bind phase. Motors first so their timer groupings are set before any
+// servo lands on a shared timer. Servos whose pad didn't change AND
+// don't need an AF rebind are skipped (no bind line needed).
+function collectBindLines(analysis, motorPicks, motorsNeedingAfRebind, picks, servosNeedingAfRebind) {
+    const bindLines = [];
+    for (const [motorIndex, pick] of motorPicks) {
+        bindLines.push(`resource MOTOR ${motorIndex} ${pick.pad}`);
+    }
+    for (const [motorIndex, pad] of motorsNeedingAfRebind) {
+        bindLines.push(`resource MOTOR ${motorIndex} ${pad}`);
+    }
+    for (const [servoIndex, pick] of picks) {
+        const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
+        if (existing && existing.pad === pick.pad && !servosNeedingAfRebind.has(servoIndex)) {
+            continue;
+        }
+        bindLines.push(`resource SERVO ${servoIndex} ${pick.pad}`);
+    }
+    return bindLines;
+}
+
+// Timer-remap phase. Emit `timer <pad> AF<n>` AFTER releases and
+// BEFORE binds: pad must be free for the remap to apply cleanly, and
+// the new (timer, channel) needs to be in place before the resource
+// bind so BF wires up the right timer driver. Filter to pads that
+// ended up in the final layout — picks the user explicitly overrode
+// might land on the same pad (in which case the remap is still
+// needed) but pads NOT in the final layout would be remapped for no
+// reason if we didn't filter.
+//
+// motorPicks covers pad-changing motors; motorsNeedingAfRebind covers
+// motors staying on the same pad with a changed AF; the union is
+// exactly the motors whose layout actually survived selection. A
+// previous version added every entry from effectiveMotorPicks, which
+// leaked rejected user-overrides into finalPickPads.
+function collectTimerRemapLines(motorPicks, picks, motorsNeedingAfRebind, optimizerRemaps, pickTimerRemapLines) {
+    const finalPickPads = new Set();
+    for (const [, pick] of motorPicks) {
+        finalPickPads.add(pick.pad);
+    }
+    for (const [, pick] of picks) {
+        finalPickPads.add(pick.pad);
+    }
+    for (const pad of motorsNeedingAfRebind.values()) {
+        if (pad) {
+            finalPickPads.add(pad);
+        }
+    }
+    const timerRemapLines = [];
+    const timerLinesEmitted = new Set();
+    for (const [pad, remap] of optimizerRemaps) {
+        if (!finalPickPads.has(pad)) {
+            continue;
+        }
+        const line = `timer ${pad} AF${remap.af}`;
+        if (timerLinesEmitted.has(line)) {
+            continue;
+        }
+        timerLinesEmitted.add(line);
+        timerRemapLines.push(line);
+    }
+    // Alt-AF picks from candidatePadsForSlot (already routed away from
+    // realWork upstream). Dedup against optimizer-driven lines so a
+    // pad claimed by both paths isn't remapped twice.
+    for (const line of pickTimerRemapLines) {
+        if (timerLinesEmitted.has(line)) {
+            continue;
+        }
+        timerLinesEmitted.add(line);
+        timerRemapLines.push(line);
+    }
+    return { timerRemapLines, finalPickPads };
+}
+
+// Assemble the final CLI batch. Order matters: BF rejects `resource X
+// N PAD` while PAD is still claimed elsewhere, so all releases precede
+// all binds.
+//
+// Two-phase construction:
+//   (1) realWork: observed releases + LED/UART extras + motor/servo
+//       rebinds. If empty, the plan is a true no-op and we return an
+//       empty cliLines (preserves the zero-churn case).
+//   (2) Defensive-release prefix: only prepended when real work
+//       exists. Clears phantom MOTOR/SERVO claims the analyzer
+//       missed before any new bind line lands on their pads.
+function assembleCliLines(parts) {
+    const {
+        defensiveMotorReleases,
+        defensiveServoReleases,
+        motorsToRelease,
+        servosToRelease,
+        extraReleaseLines,
+        motorRebindReleases,
+        servoRebindReleases,
+        timerRemapLines,
+        bindLines,
+    } = parts;
+
+    const realWork = [];
+    for (const m of motorsToRelease) {
+        realWork.push(`resource MOTOR ${m.index} NONE`);
+    }
+    for (const s of servosToRelease) {
+        realWork.push(`resource SERVO ${s.index} NONE`);
+    }
+    for (const line of extraReleaseLines) {
+        realWork.push(line);
+    }
+
+    const cliLines = [];
+    const hasRealWork =
+        realWork.length > 0 ||
+        motorRebindReleases.length > 0 ||
+        servoRebindReleases.length > 0 ||
+        bindLines.length > 0 ||
+        timerRemapLines.length > 0;
+    if (!hasRealWork) {
+        return cliLines;
+    }
+    for (const i of defensiveMotorReleases) {
+        cliLines.push(`resource MOTOR ${i} NONE`);
+    }
+    for (const i of defensiveServoReleases) {
+        cliLines.push(`resource SERVO ${i} NONE`);
+    }
+    cliLines.push(...realWork, ...motorRebindReleases, ...servoRebindReleases, ...timerRemapLines, ...bindLines);
+    return cliLines;
+}
+
+// Expose ALL planned timer remaps to callers, not just optimizer-driven
+// ones. cliLines (above) merges optimizerRemaps (filtered to
+// finalPickPads) + manual alt-AF picks, so the returned set must match
+// what gets sent: filter optimizerRemaps the same way here, otherwise
+// a caller using `timerRemaps` to preview/UI-render the plan would
+// show remaps for pads that never made it into cliLines.
+function mergeReturnedTimerRemaps(optimizerRemaps, finalPickPads, picks) {
+    const mergedTimerRemaps = new Map();
+    for (const [pad, remap] of optimizerRemaps) {
+        if (finalPickPads.has(pad)) {
+            mergedTimerRemaps.set(pad, remap);
+        }
+    }
+    for (const [, pick] of picks) {
+        if (pick.af != null) {
+            mergedTimerRemaps.set(pick.pad, {
+                af: pick.af,
+                timer: pick.timer ?? null,
+                channel: pick.channel ?? null,
+            });
+        }
+    }
+    return mergedTimerRemaps;
+}
+
+export function computePresetResourcePlan(analysis, preset, options = {}) {
+    const warnings = [];
+    if (!analysis || !preset || !Array.isArray(preset.rules) || !Array.isArray(preset.mmix)) {
+        return invalidPresetPlanResult();
+    }
+
+    const { motorCount, usedMotorIndices } = deriveUsedMotorIndices(preset, options);
+    const usedServoIndices = deriveUsedServoIndices(preset, options);
 
     // Picks: pad per needed SERVO N, honoring overrides + zero-churn.
     const userPicks = options.picks ?? {};
@@ -1383,69 +2071,8 @@ export function computePresetResourcePlan(analysis, preset, options = {}) {
     // Pads whose final AF differs from current binding. Caller emits
     // `timer <pad> AF<af>` for each, BEFORE the resource binds.
     const optimizerRemaps = optimized?.remaps instanceof Map ? optimized.remaps : new Map();
-    // User-supplied AF overrides win over optimizer auto-picks. Pilot
-    // selects an alt-AF row from the Mixer-tab dropdown → caller passes
-    // padAfOverrides Map<pad, af> here. Each entry produces a
-    // `timer <pad> AF<af>` line ahead of the resource bind, identical
-    // to the optimizer's automatic remap path.
-    const userAfOverrides = options.padAfOverrides instanceof Map ? options.padAfOverrides : null;
-    if (userAfOverrides) {
-        const padCurrentAF = analysis?.padCurrentAF instanceof Map ? analysis.padCurrentAF : null;
-        const padTimerOptions = analysis?.padTimerOptions instanceof Map ? analysis.padTimerOptions : null;
-        for (const [pad, af] of userAfOverrides) {
-            if (typeof af !== "number") {
-                continue;
-            }
-            const currentAf = padCurrentAF?.get(pad);
-            if (currentAf === af) {
-                // Override matches current — no remap needed; remove
-                // any optimizer-auto remap for this pad too.
-                optimizerRemaps.delete(pad);
-                continue;
-            }
-            // Look up timer/channel for the chosen AF so the planned
-            // remap entry carries full info for downstream consumers.
-            // If the override names an AF that doesn't exist in the
-            // current target's padTimerOptions (stale dropdown state
-            // after a board swap, or a hand-edited config), skip the
-            // remap rather than emit `timer <pad> AF<n>` with null
-            // timer/channel — that would partially apply on save and
-            // leave the FC in an inconsistent state.
-            const opts = padTimerOptions?.get(pad);
-            const opt = Array.isArray(opts) ? opts.find((o) => o.af === af) : null;
-            if (!opt) {
-                // The override names an AF that doesn't exist on this
-                // target. Skip with a warning, but DON'T delete an
-                // existing optimizer-auto remap — that remap was
-                // validated against padTimerOptions earlier and may
-                // still represent a useful planned change. Falling back
-                // to the optimizer pick is safer than reverting to the
-                // pad's current (potentially conflicting) AF.
-                warnings.push({
-                    code: "invalid_pad_af_override",
-                    message: `Ignoring AF${af} override for ${pad}; that AF isn't available on this target.`,
-                });
-                continue;
-            }
-            optimizerRemaps.set(pad, {
-                af,
-                timer: opt.timer,
-                channel: opt.channel,
-            });
-        }
-    }
-    if (optimized) {
-        for (const [idx, pad] of optimized.motors) {
-            if (effectiveMotorPicks[idx] == null) {
-                effectiveMotorPicks[idx] = pad;
-            }
-        }
-        for (const [idx, pad] of optimized.servos) {
-            if (effectiveServoPicks[idx] == null) {
-                effectiveServoPicks[idx] = pad;
-            }
-        }
-    }
+    applyUserAfOverrides(options, analysis, optimizerRemaps, warnings);
+    mergeOptimizerPicks(optimized, effectiveMotorPicks, effectiveServoPicks);
 
     const picks = new Map();
     const motorPicks = new Map(); // motorIndex → {pad, timer, channel, source}
@@ -1456,583 +2083,76 @@ export function computePresetResourcePlan(analysis, preset, options = {}) {
     // rebind releases (same ordering as optimizerRemaps' timerRemapLines).
     const pickTimerRemapLines = new Set();
 
-    // ---- Motor binding pass (for ALL motors in usedMotorIndices) ----
-    // Targets each used motor toward its silkscreen-default pad (from the
-    // optional `padDefaults` snapshot) when that pad is free. Falls back to
-    // existing binding (zero-churn) and finally to a free-PWM first-fit.
-    // Handles both "motor never bound" (post-Flying-Wing-then-Diff-thrust)
-    // and "motor bound but at wrong pad" (user wants M2 back at silkscreen
-    // M2 even though it currently sits at B05).
-    const padDefaultsMotors = Array.isArray(options.padDefaults?.motors) ? options.padDefaults.motors : [];
-    const defaultPadForMotor = (idx) => padDefaultsMotors.find((m) => m.index === idx)?.pad ?? null;
-    const existingMotorByIndex = new Map();
-    for (const m of analysis.motors ?? []) {
-        existingMotorByIndex.set(m.index, m);
-    }
+    const { defaultPadForMotor, existingMotorByIndex, motorClaimedPadsCtx, freePoolForFallback } =
+        buildMotorSelectionContext(analysis, options, {
+            usedMotorIndices,
+            usedServoIndices,
+            effectiveMotorPicks,
+            effectiveServoPicks,
+            allowLedStrip,
+            allowUartRelease,
+        });
 
-    // Pads off-limits for motor binding. Computed per-motor below so we can
-    // exclude the current motor's own pad from its own claim set (that's
-    // zero-churn territory, not a collision).
-    //
-    // Motor picks (user OR optimizer) win over "currently bound to a kept
-    // servo": if anything in the planned motor target set lands on a pad
-    // that's currently a servo, the recommender must NOT count that pad
-    // as claimed by a servo. The servo will get reassigned in the servo
-    // binding pass. Without this, picking a servo's pad for MOTOR 1 then
-    // adding a SERVO pin (which expands usedServoIndices) caused the
-    // motor's pick to fail padIsAvailable — observed on bench TMTR/TMOTORF7
-    // (Brian, 2026-04-29). Includes optimizer entries so motor↔servo swaps
-    // the optimizer proposes don't fall into motor_override_unavailable.
-    // Filter by usedMotorIndices: stale dropdown picks for motor rows
-    // not in the active plan would otherwise leak into the exemption set
-    // and let inactive motor entries permanently exempt their pads from
-    // servo claim. Mirror of the same fix on servoClaimedPadsForReservation.
-    const motorClaimedPadsForExemption = new Set();
-    for (const [idx, pad] of Object.entries(effectiveMotorPicks)) {
-        if (pad && usedMotorIndices.includes(Number(idx))) {
-            motorClaimedPadsForExemption.add(pad);
-        }
-    }
-    // Pads the servo binding pass plans to claim (user override OR optimizer
-    // pick). Reserve them up front so motor target selection doesn't steal a
-    // pad the servo is heading for — without this, picking servo overrides
-    // would later fail with "no pad available" because the motor pass had
-    // already grabbed their planned destination.
-    // Only reserve pads for servos this plan will actually bind. Without
-    // the usedServoIndices filter, any leftover dropdown state for an
-    // inactive row leaks into the reservation and makes motors see those
-    // pads as permanently claimed even though no servo will use them.
-    // Override values may be bare pad strings ("B07") or {pad, af} objects
-    // ("B07@AF3") once the AF-aware picker lands. Centralize extraction so
-    // the legacy string path keeps working alongside the new object form
-    // without duplicating null/typeof checks at every call site.
-    const pickPad = (override) => {
-        if (override == null) {
-            return null;
-        }
-        return typeof override === "string" ? override : (override.pad ?? null);
-    };
+    selectMotorPicks(
+        analysis,
+        usedMotorIndices,
+        effectiveMotorPicks,
+        allowUartRelease,
+        { motorPicks, alreadyPicked, extraReleaseLines },
+        { defaultPadForMotor, existingMotorByIndex, motorClaimedPadsCtx, freePoolForFallback },
+        warnings,
+    );
 
-    const servoClaimedPadsForReservation = new Set();
-    for (const [idx, override] of Object.entries(effectiveServoPicks)) {
-        const pad = pickPad(override);
-        if (pad && usedServoIndices.includes(Number(idx))) {
-            servoClaimedPadsForReservation.add(pad);
-        }
-    }
-    const motorClaimedPadsCtx = {
+    const servoSelectCtx = buildServoSelectionContext(
+        analysis,
+        optimizerRemaps,
+        motorPicks,
+        effectiveServoPicks,
+        usedServoIndices,
+    );
+    selectServoPicks(
+        analysis,
+        {
+            usedMotorIndices,
+            usedServoIndices,
+            effectiveServoPicks,
+            allowLedStrip,
+            allowUartRelease,
+            ...servoSelectCtx,
+        },
+        { picks, alreadyPicked, extraReleaseLines, pickTimerRemapLines },
+        warnings,
+    );
+
+    const { motorsToRelease, servosToRelease, defensiveMotorReleases, defensiveServoReleases } = collectReleaseLines(
         analysis,
         usedMotorIndices,
         usedServoIndices,
-        effectiveMotorPicks,
-        effectiveServoPicks,
-        motorClaimedPadsForExemption,
-        servoClaimedPadsForReservation,
-        pickPad,
-        allowLedStrip,
-        allowUartRelease,
-    };
-
-    // First-fit free-PWM pool, sorted "shared timer with already-bound kept
-    // motor first" so bidir DSHOT stays grouped.
-    const keptMotorTimers = new Set(
-        (analysis.motors ?? [])
-            .filter((m) => usedMotorIndices.includes(m.index))
-            .map((m) => m.timer)
-            .filter((t) => t !== null && t !== undefined),
     );
-    const freePoolForFallback = (analysis.pwmCapableFreePads ?? []).slice().sort((a, b) => {
-        const aShared = keptMotorTimers.has(a.timer) ? 0 : 1;
-        const bShared = keptMotorTimers.has(b.timer) ? 0 : 1;
-        return aShared - bShared;
+    const { motorRebindReleases, motorsNeedingAfRebind, servoRebindReleases, servosNeedingAfRebind } =
+        collectRebindReleaseLines(analysis, motorPicks, picks, usedMotorIndices, existingMotorByIndex, optimizerRemaps);
+    const bindLines = collectBindLines(analysis, motorPicks, motorsNeedingAfRebind, picks, servosNeedingAfRebind);
+    const { timerRemapLines, finalPickPads } = collectTimerRemapLines(
+        motorPicks,
+        picks,
+        motorsNeedingAfRebind,
+        optimizerRemaps,
+        pickTimerRemapLines,
+    );
+
+    const cliLines = assembleCliLines({
+        defensiveMotorReleases,
+        defensiveServoReleases,
+        motorsToRelease,
+        servosToRelease,
+        extraReleaseLines,
+        motorRebindReleases,
+        servoRebindReleases,
+        timerRemapLines,
+        bindLines,
     });
 
-    // Subsequent motor + servo picks read `alreadyPicked` to avoid claiming
-    // the same pad twice — see `alreadyPicked.add(target)` below.
-    for (const motorIndex of usedMotorIndices) {
-        const claimedForThis = buildMotorClaimedPads(motorIndex, motorClaimedPadsCtx);
-        const existing = existingMotorByIndex.get(motorIndex) ?? null;
-        const padIsAvailable = (pad) => {
-            if (!pad) {
-                return false;
-            }
-            if (alreadyPicked.has(pad)) {
-                return false;
-            }
-            if (claimedForThis.has(pad)) {
-                return false;
-            }
-            return true;
-        };
-
-        let target = null;
-
-        // 1. User override (optimizer picks folded in here too — the
-        //    effective map merges user overrides atop optimizer output).
-        const override = effectiveMotorPicks[motorIndex];
-        if (override && padIsAvailable(override)) {
-            target = override;
-        } else if (override) {
-            warnings.push({
-                code: "motor_override_unavailable",
-                message: `User picked ${override} for MOTOR ${motorIndex} but it isn't safe (claimed by another resource).`,
-            });
-        }
-
-        // 2. Silkscreen default — strongly preferred so MOTOR N lands on
-        //    the pad labeled "M N" on the board.
-        if (!target) {
-            const def = defaultPadForMotor(motorIndex);
-            if (def && padIsAvailable(def)) {
-                target = def;
-            }
-        }
-
-        // 3. Existing binding — zero-churn fallback.
-        if (!target && existing && padIsAvailable(existing.pad)) {
-            target = existing.pad;
-        }
-
-        // 4. First-fit from free-PWM pool.
-        if (!target) {
-            for (const p of freePoolForFallback) {
-                if (padIsAvailable(p.pad)) {
-                    target = p.pad;
-                    break;
-                }
-            }
-        }
-
-        if (!target) {
-            warnings.push({
-                code: "no_pad_for_motor",
-                message: `No free PWM pad available for MOTOR ${motorIndex}. Preset's motor count exceeds what this board can bind — the user must pick a pad in the Mixer tab's Pin Assignment panel or reset resources first.`,
-            });
-            continue;
-        }
-
-        alreadyPicked.add(target);
-        // Optimizer may park a motor on the LED_STRIP pad (allowLedStrip
-        // case). Servo-side LED releases come from candidatePadsForSlot's
-        // requiresRelease bubbling into extraReleaseLines; motor side has
-        // no candidate helper, so detect the collision here explicitly.
-        if ((analysis.ledStrips ?? []).some((ls) => ls.pad === target)) {
-            extraReleaseLines.add("resource LED_STRIP 1 NONE");
-        }
-        // Mirror for UART pads: when a motor override (or optimizer pick)
-        // lands on a spare-UART TX/RX pad, padIsAvailable passes because
-        // the UART is on allowUartRelease, but no SERIAL_TX/SERIAL_RX
-        // release line gets emitted — so the bind fails at runtime with
-        // the serial resource still owning the pad. Drop the matching
-        // release into extraReleaseLines (mirrors candidatePadsForSlot's
-        // requiresRelease on the servo side).
-        for (const srl of analysis.serials ?? []) {
-            if (!allowUartRelease.includes(srl.index)) {
-                continue;
-            }
-            if (srl.txPad === target) {
-                extraReleaseLines.add(`resource SERIAL_TX ${srl.index} NONE`);
-            }
-            if (srl.rxPad === target) {
-                extraReleaseLines.add(`resource SERIAL_RX ${srl.index} NONE`);
-            }
-        }
-        // motorPicks stays scoped to motors that need an explicit bind line
-        // (i.e. either no current binding or a different one than the target).
-        if (!existing || existing.pad !== target) {
-            motorPicks.set(motorIndex, { pad: target });
-        }
-    }
-
-    // Distill motor rebinds (motorIndex → newPad) from the motor pass
-    // above. Threaded into candidatePadsForSlot so SERVO overrides
-    // targeting a moved-from motor pad pass the validity check (the
-    // pad's current motor is releasing it, so it IS a valid candidate).
-    const motorRebindsForServos = new Map();
-    for (const [motorIndex, pick] of motorPicks) {
-        motorRebindsForServos.set(motorIndex, pick.pad);
-    }
-
-    // Build a servoRebinds Map (servoIndex → plannedPad) from the
-    // effective picks so candidatePadsForSlot can exempt servos that are
-    // vacating their current pad in this same plan. Without this,
-    // servo↔servo swaps in one batch get rejected as "no valid candidate"
-    // because the other servo's pad is still in claimedPads.
-    const servoRebindsForOthers = new Map();
-    for (const [idx, override] of Object.entries(effectiveServoPicks)) {
-        const plannedPad = pickPad(override);
-        if (!plannedPad) {
-            continue;
-        }
-        const existing = (analysis.servos ?? []).find((s) => s.index === Number(idx));
-        if (existing && existing.pad !== plannedPad) {
-            servoRebindsForOthers.set(Number(idx), plannedPad);
-        }
-    }
-
-    // Servos currently bound but not in the kept index set will be
-    // released by the CLI batch. Their pads must not block other rows'
-    // candidates — without this hint, picking a released servo's pad for
-    // SERVO N gets rejected as "claimed" even though the release lands
-    // before the bind.
-    const releasedServoIndices = new Set();
-    for (const s of analysis.servos ?? []) {
-        if (!usedServoIndices.includes(s.index)) {
-            releasedServoIndices.add(s.index);
-        }
-    }
-
-    // Project every pending AF remap into a flat `pad → planned timer`
-    // map for candidatePadsForSlot. Covers two cases the old m.timer
-    // fallback missed:
-    //   1. motor stays on its pad but its AF changes (same-pad remap)
-    //   2. motor moves to a new pad whose AF is ALSO being remapped
-    // The motorTimers conflict set inside candidatePadsForSlot consults
-    // this first so servos see the post-batch timer landscape, not the
-    // pre-batch one.
-    const padPlannedTimers = new Map();
-    for (const [pad, remap] of optimizerRemaps) {
-        if (remap?.timer != null) {
-            padPlannedTimers.set(pad, remap.timer);
-        }
-    }
-
-    for (const servoIndex of usedServoIndices) {
-        const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
-        const currentPad = existing?.pad ?? null;
-
-        const cands = candidatePadsForSlot(analysis, servoIndex, {
-            motorIndicesInUse: usedMotorIndices,
-            currentPad,
-            allowLedStrip,
-            allowUartRelease,
-            motorRebinds: motorRebindsForServos,
-            servoRebinds: servoRebindsForOthers,
-            releasedServoIndices,
-            padPlannedTimers,
-        });
-
-        let pick = null;
-
-        // User-supplied override (optimizer picks also merge in via
-        // effectiveServoPicks) takes priority if it's a valid candidate.
-        // Override can be a bare pad string ("B07" — match any AF row for
-        // that pad) or a {pad, af} object ("B07@AF3" — match the specific
-        // AF row). Without the AF-aware match, an alt-AF override silently
-        // landed on the default-AF cand row, so the user's `pad@AFn`
-        // selection collapsed back to `pad` on save.
-        // alreadyPicked stays keyed by pad alone — BF can only bind one
-        // row per pad regardless of AF, so a second pick on the same pad
-        // (even at a different AF) is invalid.
-        const override = effectiveServoPicks[servoIndex];
-        if (override) {
-            const overridePad = pickPad(override);
-            const overrideAf = typeof override === "string" ? null : (override?.af ?? null);
-            const overrideLabel = overrideAf == null ? overridePad : `${overridePad}@AF${overrideAf}`;
-            pick = cands.find((c) => {
-                if (c.pad !== overridePad || alreadyPicked.has(c.pad)) {
-                    return false;
-                }
-                // Match the specific AF row only when the override supplies
-                // an AF; otherwise accept the first cand for the pad
-                // (default-AF row, or whichever the recommender ranked first).
-                if (overrideAf != null) {
-                    return c.af === overrideAf;
-                }
-                return true;
-            });
-            if (!pick) {
-                warnings.push({
-                    code: "override_unavailable",
-                    message: `User picked ${overrideLabel} for SERVO ${servoIndex} but it isn't a valid candidate — falling back to default.`,
-                });
-            }
-        }
-        // Default: top-ranked candidate not already taken by another slot.
-        if (!pick) {
-            pick = cands.find((c) => !alreadyPicked.has(c.pad));
-        }
-
-        if (!pick) {
-            warnings.push({
-                code: "no_pad_for_slot",
-                message: `No candidate pad available for SERVO ${servoIndex}. Preset rules targeting this slot will have no physical output.`,
-            });
-            continue;
-        }
-
-        alreadyPicked.add(pick.pad);
-        picks.set(servoIndex, pick);
-        // Any non-motor release hints (LED_STRIP / UART) fold into the batch
-        // ahead of the servo bind. Motor releases are handled by
-        // motorsToRelease below (so we don't double-emit). Alt-AF candidates
-        // also carry a `timer pad AFn` remap line; those must NOT land in the
-        // early release block — they need to run AFTER motor/servo rebind
-        // releases (alongside optimizer-driven remaps), otherwise a pad
-        // sharing a timer with a motor being moved gets retargeted before the
-        // motor releases its old pad. Route them into pickTimerRemapLines
-        // and merge with timerRemapLines below.
-        for (const line of pick.requiresRelease) {
-            if (line.startsWith("resource MOTOR ")) {
-                continue;
-            }
-            if (/^timer\s+\S+\s+AF/i.test(line)) {
-                pickTimerRemapLines.add(line);
-                continue;
-            }
-            extraReleaseLines.add(line);
-        }
-    }
-
-    // motorsToRelease: any currently-bound motor not in usedMotorIndices.
-    const motorsToRelease = (analysis.motors ?? []).filter((m) => !usedMotorIndices.includes(m.index));
-
-    // servosToRelease: currently-bound SERVO N not in usedServoIndices (orphan cleanup).
-    const servosToRelease = (analysis.servos ?? []).filter((s) => !usedServoIndices.includes(s.index));
-
-    // Defensive release set: every MOTOR/SERVO slot 1..MAX not in used
-    // indices gets a `resource ... NONE` line, even if the analyzer didn't
-    // see it bound. BF keeps a silkscreen default pad map per target, and
-    // slots that *weren't* shown in `resource show` can still hold a pad
-    // claim (seen on FLYWOOF405NANO where MOTOR 5–8 default to B05/C09/
-    // B04/C08 but don't always surface in `resource show`). Without the
-    // defensive release, binding SERVO 3 → B05 silently conflicts with
-    // the phantom MOTOR 5 → B05 claim and the servo bind no-ops, leaving
-    // the user with duplicate pad claims in `dump`.
-    //
-    // BF treats `resource MOTOR N NONE` against an already-empty slot as
-    // a harmless no-op, so over-emitting is cheap.
-    const MAX_MOTOR_SLOTS = 8;
-    const MAX_SERVO_SLOTS = 8;
-    const observedMotorReleaseIdx = new Set(motorsToRelease.map((m) => m.index));
-    const observedServoReleaseIdx = new Set(servosToRelease.map((s) => s.index));
-    const defensiveMotorReleases = [];
-    for (let i = 1; i <= MAX_MOTOR_SLOTS; i++) {
-        if (usedMotorIndices.includes(i)) {
-            continue;
-        }
-        if (observedMotorReleaseIdx.has(i)) {
-            continue;
-        }
-        defensiveMotorReleases.push(i);
-    }
-    const defensiveServoReleases = [];
-    for (let i = 1; i <= MAX_SERVO_SLOTS; i++) {
-        if (usedServoIndices.includes(i)) {
-            continue;
-        }
-        if (observedServoReleaseIdx.has(i)) {
-            continue;
-        }
-        defensiveServoReleases.push(i);
-    }
-
-    // Build CLI batch. Order matters: BF rejects `resource X N PAD`
-    // while PAD is still claimed elsewhere, so all releases precede all binds.
-    //
-    // Two-phase construction:
-    //   (1) "real work" lines: observed releases + LED/UART extras + motor/
-    //       servo rebinds. If this list is empty, the plan is a true no-op
-    //       and we return an empty cliLines (preserves the zero-churn case).
-    //   (2) Defensive-release prefix: only prepended when real work exists.
-    //       Clears phantom MOTOR/SERVO claims the analyzer missed before
-    //       any new bind line lands on their pads.
-    const realWork = [];
-    for (const m of motorsToRelease) {
-        realWork.push(`resource MOTOR ${m.index} NONE`);
-    }
-    for (const s of servosToRelease) {
-        realWork.push(`resource SERVO ${s.index} NONE`);
-    }
-    for (const line of extraReleaseLines) {
-        realWork.push(line);
-    }
-
-    // Rebind pre-release: any USED motor whose current pad differs from the
-    // chosen target needs to be released first so its old pad becomes free
-    // (for whichever resource is moving in there next, often a SERVO).
-    const motorRebindReleases = [];
-    for (const [motorIndex] of motorPicks) {
-        const existing = existingMotorByIndex.get(motorIndex);
-        if (existing) {
-            motorRebindReleases.push(`resource MOTOR ${motorIndex} NONE`);
-        }
-    }
-    // AF-only motor changes: motorPicks excludes motors whose pad didn't
-    // change, but optimizerRemaps may still need to retarget the timer for
-    // those pads (e.g., motor stays on M1 but moves from TIM3 to TIM8 to
-    // free up TIM3 for a servo). BF won't apply the AF unless the resource
-    // is released before the `timer pad AFn` line and re-bound after, so
-    // synthesise the release+bind here. Without this, the saved layout
-    // silently retains the old timer mapping.
-    const motorsNeedingAfRebind = new Map(); // motorIndex -> pad
-    for (const motorIndex of usedMotorIndices) {
-        if (motorPicks.has(motorIndex)) {
-            continue;
-        }
-        const existing = existingMotorByIndex.get(motorIndex);
-        if (!existing || !optimizerRemaps.has(existing.pad)) {
-            continue;
-        }
-        motorsNeedingAfRebind.set(motorIndex, existing.pad);
-        motorRebindReleases.push(`resource MOTOR ${motorIndex} NONE`);
-    }
-
-    // Same logic for servos that stay on their current pad but need an
-    // alt-AF retarget. Two flavors of "AF changed":
-    //   1. Optimizer-driven — optimizerRemaps has the pad (the
-    //      `optimizerRemaps.delete(pad)` path upstream removes pads whose
-    //      current AF already matches, so anything still in the map
-    //      genuinely needs to change).
-    //   2. User-driven — the user picked an alt-AF dropdown row, so
-    //      pick.af is set. candidatePadsForSlot's alt-AF expansion already
-    //      filters out entries matching current AF, so a non-null pick.af
-    //      means a real change.
-    // Both paths need the release/rebind cycle around the `timer pad AFn`
-    // line: BF won't accept the AF write while the pad is still bound to
-    // a peripheral, so without the release the FC silently drops the
-    // timer remap and the row keeps the old AF after save.
-    const servoRebindReleases = [];
-    const servosNeedingAfRebind = new Map(); // servoIndex -> pad
-    for (const [servoIndex, pick] of picks) {
-        const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
-        if (!existing) {
-            continue;
-        }
-        // Pad-changing servo: free the old binding before motors rebind.
-        // Without this release line, motor/servo and servo/servo swaps fail
-        // because the destination pad is still owned by the old servo when
-        // motors run their bind step. The new pad's bind comes via the
-        // bindLines pass below, so this loop only needs the release here.
-        if (existing.pad !== pick.pad) {
-            servoRebindReleases.push(`resource SERVO ${servoIndex} NONE`);
-            continue;
-        }
-        const needsAfRebind = optimizerRemaps.has(pick.pad) || pick.af != null;
-        if (!needsAfRebind) {
-            continue;
-        }
-        servosNeedingAfRebind.set(servoIndex, pick.pad);
-        servoRebindReleases.push(`resource SERVO ${servoIndex} NONE`);
-    }
-
-    // Bind phase. Motors first so their timer groupings are set before any
-    // servo lands on a shared timer.
-    const bindLines = [];
-    for (const [motorIndex, pick] of motorPicks) {
-        bindLines.push(`resource MOTOR ${motorIndex} ${pick.pad}`);
-    }
-    for (const [motorIndex, pad] of motorsNeedingAfRebind) {
-        bindLines.push(`resource MOTOR ${motorIndex} ${pad}`);
-    }
-    for (const [servoIndex, pick] of picks) {
-        const existing = (analysis.servos ?? []).find((s) => s.index === servoIndex);
-        // Skip servos whose pad didn't change AND don't need an AF rebind.
-        if (existing && existing.pad === pick.pad && !servosNeedingAfRebind.has(servoIndex)) {
-            continue;
-        }
-        bindLines.push(`resource SERVO ${servoIndex} ${pick.pad}`);
-    }
-
-    // Timer-remap phase. The optimizer's `pickSilkscreenOrderLayout` may
-    // have planned an AF change for a motor pad whose current timer
-    // collides with a servo's. Emit `timer <pad> AF<n>` AFTER releases
-    // and BEFORE binds: pad must be free for the remap to apply cleanly,
-    // and the new (timer, channel) needs to be in place before the
-    // resource bind so BF wires up the right timer driver. We only
-    // emit remaps for pads that ended up in final motor or servo picks
-    // — picks the user explicitly overrode might land on the same pad
-    // (in which case the remap is still needed) but pads NOT in the
-    // final layout would be remapped for no reason if we didn't filter.
-    const finalPickPads = new Set();
-    for (const [, pick] of motorPicks) {
-        finalPickPads.add(pick.pad);
-    }
-    for (const [, pick] of picks) {
-        finalPickPads.add(pick.pad);
-    }
-    // AF-only motor rebinds — motors staying on the same pad but with a
-    // changed AF. They don't appear in motorPicks (pad didn't change), but
-    // the optimizerRemaps filter below needs their pad in finalPickPads or
-    // the `timer <pad> AFn` line gets dropped and the saved layout
-    // silently retains the old AF.
-    //
-    // motorPicks (above) covers pad-changing motors; the union of both
-    // sets is exactly the motors whose layout actually survived selection.
-    // A previous version of this block also added every entry from
-    // effectiveMotorPicks, but that leaked rejected user-overrides into
-    // finalPickPads — if an override was rejected and the motor fell back
-    // to a different pad, the old override pad still got a timer remap
-    // line for a pad NOT in the final layout.
-    for (const pad of motorsNeedingAfRebind.values()) {
-        if (pad) {
-            finalPickPads.add(pad);
-        }
-    }
-    const timerRemapLines = [];
-    const timerLinesEmitted = new Set();
-    for (const [pad, remap] of optimizerRemaps) {
-        if (!finalPickPads.has(pad)) {
-            continue;
-        }
-        const line = `timer ${pad} AF${remap.af}`;
-        if (timerLinesEmitted.has(line)) {
-            continue;
-        }
-        timerLinesEmitted.add(line);
-        timerRemapLines.push(line);
-    }
-    // Alt-AF picks from candidatePadsForSlot (already routed away from
-    // realWork above). Dedup against optimizer-driven lines so a pad
-    // claimed by both paths isn't remapped twice.
-    for (const line of pickTimerRemapLines) {
-        if (timerLinesEmitted.has(line)) {
-            continue;
-        }
-        timerLinesEmitted.add(line);
-        timerRemapLines.push(line);
-    }
-
-    const cliLines = [];
-    const hasRealWork =
-        realWork.length > 0 ||
-        motorRebindReleases.length > 0 ||
-        servoRebindReleases.length > 0 ||
-        bindLines.length > 0 ||
-        timerRemapLines.length > 0;
-    if (hasRealWork) {
-        // Defensive prefix goes first so phantom slot claims are cleared
-        // before any observed release / rebind / bind line runs.
-        for (const i of defensiveMotorReleases) {
-            cliLines.push(`resource MOTOR ${i} NONE`);
-        }
-        for (const i of defensiveServoReleases) {
-            cliLines.push(`resource SERVO ${i} NONE`);
-        }
-        cliLines.push(...realWork, ...motorRebindReleases, ...servoRebindReleases, ...timerRemapLines, ...bindLines);
-    }
-
-    // Expose ALL planned timer remaps to callers, not just optimizer-driven
-    // ones. cliLines above merges optimizerRemaps (filtered to finalPickPads)
-    // + manual alt-AF picks (via pickTimerRemapLines) so the returned set
-    // must match what gets sent: filter optimizerRemaps the same way here,
-    // otherwise a caller using `timerRemaps` to preview/UI-render the plan
-    // would show remaps for pads that never made it into cliLines.
-    const mergedTimerRemaps = new Map();
-    for (const [pad, remap] of optimizerRemaps) {
-        if (finalPickPads.has(pad)) {
-            mergedTimerRemaps.set(pad, remap);
-        }
-    }
-    for (const [, pick] of picks) {
-        if (pick.af != null) {
-            mergedTimerRemaps.set(pick.pad, {
-                af: pick.af,
-                timer: pick.timer ?? null,
-                channel: pick.channel ?? null,
-            });
-        }
-    }
+    const mergedTimerRemaps = mergeReturnedTimerRemaps(optimizerRemaps, finalPickPads, picks);
 
     return {
         cliLines,
