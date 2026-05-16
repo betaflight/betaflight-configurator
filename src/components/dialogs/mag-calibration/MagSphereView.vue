@@ -1090,30 +1090,29 @@ function createCompassRing(radius) {
     // Helper: canvas-texture sprite for a compass label
     const makeLabel = (text, color) => {
         const cv = document.createElement("canvas");
-        cv.width = 64;
-        cv.height = 64;
+        cv.width = 128;
+        cv.height = 128;
         const ctx = cv.getContext("2d");
         ctx.fillStyle = color;
-        ctx.font = "bold 48px sans-serif";
+        ctx.font = "bold 96px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(text, 32, 32);
+        ctx.fillText(text, 64, 64);
         const tex = new THREE.CanvasTexture(cv);
         const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
         const sprite = new THREE.Sprite(mat);
-        sprite.scale.set(80, 80, 1);
+        sprite.scale.set(140, 140, 1);
         group.add(sprite);
         return sprite;
     };
 
     const r = radius + 60;
-    // N/S on the X axis (red, matching the existing X-axis line colour)
-    makeLabel("N", "#ff6666").position.set(r, 0, 0);
-    makeLabel("S", "#ff6666").position.set(-r, 0, 0);
-    // E/W on the Y axis (green, matching the existing Y-axis line colour)
+    // N highlighted red (navigation convention); E/S/W neutral
+    makeLabel("N", "#ff4444").position.set(r, 0, 0);
+    makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
     // Display -Y = BF +Y = East when the quad nose faces North
-    makeLabel("E", "#66ff66").position.set(0, -r, 0);
-    makeLabel("W", "#66ff66").position.set(0, r, 0);
+    makeLabel("E", "#aabbcc").position.set(0, -r, 0);
+    makeLabel("W", "#aabbcc").position.set(0, r, 0);
 
     return group;
 }
