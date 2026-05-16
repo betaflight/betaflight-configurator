@@ -598,7 +598,7 @@ function onMixRuleChange() {
 }
 function ruleAccentColor(rule) {
     const idx = servoMixOutputIndexForTarget(rule.target, mixerMode.value);
-    return idx != null ? servoOutputColor(idx) : null;
+    return idx == null ? null : servoOutputColor(idx);
 }
 function loadServoMixRules() {
     servoMixRules.length = 0;
