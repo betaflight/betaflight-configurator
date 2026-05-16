@@ -1,18 +1,32 @@
 <template>
     <div class="justify-self-end-auto">
-        <UDropdownMenu :items="getMenuItems()" v-if="isLoggedIn">
-            <UButton variant="ghost" color="neutral" size="xs" class="py-1">
-                <UAvatar :src="avatarUrl" icon="i-lucide-user" size="sm" />
+        <UDropdownMenu :items="getMenuItems()" v-if="isLoggedIn" :ui="{ content: 'z-3001' }">
+            <UButton
+                variant="ghost"
+                color="neutral"
+                size="xs"
+                class="py-1"
+                :aria-label="$t('tabUserProfile')"
+                square
+                :avatar="{
+                    icon: 'i-lucide-user',
+                    src: avatarUrl,
+                    size: 'xs',
+                }"
+            >
             </UButton>
         </UDropdownMenu>
-        <UButton v-else variant="ghost" color="neutral" size="xs" @click="handleLoginClick">
-            <UUser
-                :name="$t('labelLogin')"
-                :avatar="{
-                    icon: 'i-lucide-log-in',
-                }"
-                size="sm"
-            />
+        <UButton
+            v-else
+            variant="ghost"
+            color="neutral"
+            :size="isCompact ? 'xs' : 'sm'"
+            :class="{ 'py-2': !isCompact }"
+            :square="isCompact"
+            @click="handleLoginClick"
+            icon="i-lucide-log-in"
+        >
+            {{ isCompact ? "" : $t("labelLogin") }}
         </UButton>
         <Teleport to="#main-wrapper">
             <div v-show="menuOpen" id="user-menu-popup" class="user-popup-menu" :style="menuStyle">
@@ -24,7 +38,7 @@
             </div>
 
             <!-- Login Dialog -->
-            <UModal v-model:open="loginDialogOpen" :ui="{ content: 'max-w-sm' }">
+            <UModal v-model:open="loginDialogOpen" :ui="{ overlay: 'z-3000', content: 'max-w-sm z-3001' }">
                 <template #header="{ close }">
                     <div class="flex items-start justify-between gap-2 w-full">
                         <div class="dialog-header-stack">
@@ -150,7 +164,7 @@
             </UModal>
 
             <!-- Verification Code Dialog -->
-            <UModal v-model:open="verificationDialogOpen" :ui="{ content: 'max-w-sm' }">
+            <UModal v-model:open="verificationDialogOpen" :ui="{ overlay: 'z-3000', content: 'max-w-sm z-3001' }">
                 <template #header="{ close }">
                     <div class="flex items-start justify-between gap-2 w-full">
                         <div class="dialog-header-stack">
@@ -186,7 +200,13 @@
             </UModal>
 
             <!-- Waiting Dialog -->
-            <UModal v-model:open="waitingDialogOpen" :close="false" :dismissible="false" title="">
+            <UModal
+                v-model:open="waitingDialogOpen"
+                :close="false"
+                :dismissible="false"
+                title=""
+                :ui="{ overlay: 'z-3000', content: 'z-3001' }"
+            >
                 <template #body>
                     <div class="waiting-container">
                         <div class="waiting-spinner" aria-hidden="true"></div>
@@ -207,7 +227,12 @@ import { i18n } from "@/js/localization";
 
 export default defineComponent({
     name: "UserSession",
-
+    props: {
+        isCompact: {
+            type: Boolean,
+            default: false,
+        },
+    },
     setup() {
         const session = useUserSession();
 
@@ -256,79 +281,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-#user-session-container {
-    background-color: transparent;
-    font-size: 13px;
-    position: relative;
-
-    #open-login,
-    #user-menu-trigger {
-        position: relative;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        padding: 0.25rem;
-        color: var(--text);
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        z-index: 0;
-
-        &:hover {
-            background-color: var(--surface-200);
-            border-radius: 0.5rem;
-        }
-    }
-
-    .user-avatar-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-        flex-shrink: 0;
-    }
-
-    .username {
-        font-size: 11px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        flex: 1;
-    }
-
-    @media (max-width: 1055px) {
-        #open-login,
-        #user-menu-trigger {
-            justify-content: center;
-        }
-        .username {
-            display: none;
-        }
-    }
-
-    @media (max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-        margin-bottom: 0.25rem;
-        .user-avatar-icon {
-            width: 32px;
-            height: 32px;
-        }
-    }
-}
-</style>
-
 <style>
-/* Show username when the compact navigation drawer is revealed — unscoped so the external .tab_container.reveal selector matches. */
-.tab_container.reveal #user-session-container #open-login,
-.tab_container.reveal #user-session-container #user-menu-trigger {
-    justify-content: flex-start !important;
-}
-.tab_container.reveal #user-session-container .username {
-    display: inline !important;
-}
-
 /* Unscoped styles for teleported popup menu */
 .user-popup-menu {
     position: fixed;

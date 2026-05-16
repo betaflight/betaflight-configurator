@@ -53,10 +53,10 @@
                 :aria-label="$t('logActionShow')"
                 @click="logOpen = true"
                 size="xs"
-                class="mr-auto"
+                :class="{ 'mr-auto': !isCompact }"
             />
         </UTooltip>
-        <user-session></user-session>
+        <UserSession :is-compact="isCompact" />
     </div>
     <OptionsDialog v-model="optionsOpen" />
     <LogDialog v-model="logOpen" />
@@ -65,6 +65,7 @@
 <script setup>
 import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
+import UserSession from "@/components/user-session/UserSession.vue";
 import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
