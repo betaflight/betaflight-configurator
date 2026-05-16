@@ -112,37 +112,21 @@ function buildMotorTimerSet(analysis, motorIndicesInUse, motorRebinds, padPlanne
     return motorTimers;
 }
 
-// Claimed-pad set: everything off-limits without a release step.
-// Skips this slot's own servo so it never blocks itself; skips servos
-// moving in the same plan (their old pad becomes free); skips servos
-// being released in this same batch.
-function buildClaimedPadsForServo(analysis, servoIndex, ctx) {
-    const { inUseMotorPads, servoRebinds, releasedServoIndices, allowLedStrip, allowUartRelease } = ctx;
-    const claimedPads = new Set();
-    for (const f of analysis.hardwareFixedPads ?? []) {
-        claimedPads.add(f.pad);
+// True if this servo entry should NOT contribute to the claimed-pad
+// set: it's the slot we're picking for, OR it's moving to a different
+// pad in the same plan, OR it's being released in this batch.
+function isServoClaimSkippable(s, servoIndex, servoRebinds, releasedServoIndices) {
+    if (s.index === servoIndex) {
+        return true;
     }
-    for (const s of analysis.servos ?? []) {
-        if (s.index === servoIndex) {
-            continue;
-        }
-        const rebindPad = servoRebinds?.get(s.index) ?? null;
-        if (rebindPad && rebindPad !== s.pad) {
-            continue;
-        }
-        if (releasedServoIndices?.has(s.index)) {
-            continue;
-        }
-        claimedPads.add(s.pad);
+    const rebindPad = servoRebinds?.get(s.index) ?? null;
+    if (rebindPad && rebindPad !== s.pad) {
+        return true;
     }
-    for (const pad of inUseMotorPads) {
-        claimedPads.add(pad);
-    }
-    if (!allowLedStrip) {
-        for (const ls of analysis.ledStrips ?? []) {
-            claimedPads.add(ls.pad);
-        }
-    }
+    return releasedServoIndices?.has(s.index) === true;
+}
+
+function addProtectedSerialClaims(claimedPads, analysis, allowUartRelease) {
     for (const srl of analysis.serials ?? []) {
         if (allowUartRelease.includes(srl.index)) {
             continue;
@@ -154,6 +138,29 @@ function buildClaimedPadsForServo(analysis, servoIndex, ctx) {
             claimedPads.add(srl.rxPad);
         }
     }
+}
+
+// Claimed-pad set: everything off-limits without a release step.
+function buildClaimedPadsForServo(analysis, servoIndex, ctx) {
+    const { inUseMotorPads, servoRebinds, releasedServoIndices, allowLedStrip, allowUartRelease } = ctx;
+    const claimedPads = new Set();
+    for (const f of analysis.hardwareFixedPads ?? []) {
+        claimedPads.add(f.pad);
+    }
+    for (const s of analysis.servos ?? []) {
+        if (!isServoClaimSkippable(s, servoIndex, servoRebinds, releasedServoIndices)) {
+            claimedPads.add(s.pad);
+        }
+    }
+    for (const pad of inUseMotorPads) {
+        claimedPads.add(pad);
+    }
+    if (!allowLedStrip) {
+        for (const ls of analysis.ledStrips ?? []) {
+            claimedPads.add(ls.pad);
+        }
+    }
+    addProtectedSerialClaims(claimedPads, analysis, allowUartRelease);
     return claimedPads;
 }
 
