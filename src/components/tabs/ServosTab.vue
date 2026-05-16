@@ -990,267 +990,286 @@ async function applyAfRemap(pad, af) {
     return true;
 }
 
+// Re-resolve the picked dropdown option to recover its requiresRelease
+// list. <USelect> sees only {value, label}, so the prerequisite CLI
+// lines (e.g. `resource MOTOR 3 NONE`, `resource LED_STRIP 1 NONE`,
+// `resource SERIAL_TX 4 NONE`) need to be looked up here. Without
+// running them before the bind, picking a "releases MOTOR N" / LED /
+// UART candidate would leave the old claim dangling and the FC would
+// either reject the new bind or carry duplicate claims. Filters out
+// timer remap lines — those are handled by applyAfRemap and would
+// otherwise be sent twice.
+function resolvePickedResourceOption(resourceType, resources, index, newValue) {
+    const allOpts = resourceOptions({
+        kind: resourceType === 0 ? "motor" : "servo",
+        resource: resources[index],
+        motorResources,
+        servoResources,
+        hardwareAnalysis: effectiveAnalysis(),
+        fallbackPins: availablePins.value,
+        allowLedStrip: true,
+        // Match the dropdown builders so UART-release candidates re-resolve
+        // here with their full requiresRelease metadata. Without this, the
+        // handler skipped the `resource SERIAL_TX/RX N NONE` step and bound
+        // onto a pad the serial resource still owned.
+        allowUartRelease: spareUartReleaseWhitelist(),
+        expertMode: isExpertMode(),
+    });
+    const picked = allOpts.find((o) => o.value === newValue);
+    return (picked?.requiresRelease ?? []).filter((line) => !/^timer\s+/i.test(line));
+}
+
+// Builds the pair of rollback closures bound to this resource row.
+// rollback restores the pre-pick snapshot wholesale. safeRollback
+// downgrades to "NONE" when the FC has already self-released this row
+// (selfReleased guard) — re-populating the original snapshot in that
+// case would put UI and firmware out of sync (next Save would re-write
+// the released row).
+function makeRollbackHelpers(resources, index, previous, state) {
+    const rollback = () => {
+        resources[index].pin = previous.pin;
+        resources[index].ioTag = previous.ioTag;
+        resources[index].af = previous.af;
+    };
+    const safeRollback = () => {
+        if (state.selfReleased) {
+            resources[index].pin = "NONE";
+            resources[index].ioTag = 0;
+            resources[index].af = null;
+        } else {
+            rollback();
+        }
+    };
+    return { rollback, safeRollback };
+}
+
+// Run prerequisite CLI release lines (LED_STRIP / UART / motor-release
+// candidates) before the bind. 250ms throttle between lines mirrors
+// loadSmartResourceAnalysis — without it a tight release+remap+release
+// sequence can land partial responses on slower USB links.
+async function runPrerequisiteReleaseLines(releaseLines, rollback) {
+    for (const line of releaseLines) {
+        if (!(await applyReleaseLine(line))) {
+            rollback();
+            return false;
+        }
+        await wait(250);
+    }
+    return true;
+}
+
+// Moving-away AF restore: the user is sending this row to a NEW pad
+// while the OLD pad was on an alt-AF (previous.af != null). The MSP
+// rebind below will free the old pad's resource binding but leave its
+// `timer <pad> AF<n>` setting active in BF forever. Release the row
+// (frees the old pad), remap the old pad back to its captured base AF,
+// then let the rest of the flow continue. Mirrors the same-pad
+// bare-pin restore branch; both share the selfReleased guard so
+// safeRollback handles failure cleanly.
+async function restorePreviousPadAfIfNeeded(ctx) {
+    const { resourceType, resources, index, previous, newPin, newAf, ioTag, state, rollback, safeRollback } = ctx;
+    if (newPin === previous.pin || previous.pin === "NONE" || previous.af == null) {
+        return true;
+    }
+    const baseAf = effectiveAnalysis()?.padCurrentAF?.get(previous.pin);
+    if (baseAf == null || baseAf === previous.af) {
+        return true;
+    }
+    const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
+    const releaseLine = `resource ${resourceName} ${index + 1} NONE`;
+    if (!(await applyReleaseLine(releaseLine))) {
+        rollback();
+        return false;
+    }
+    state.selfReleased = true;
+    // mirrorReleaseToLocalRow cleared this row locally; re-apply the
+    // pending bind so the dropdown stays on the new pin.
+    resources[index].pin = newPin;
+    resources[index].ioTag = ioTag;
+    resources[index].af = newAf;
+    await wait(250);
+    if (!(await applyAfRemap(previous.pin, baseAf))) {
+        safeRollback();
+        return false;
+    }
+    await wait(250);
+    return true;
+}
+
+// Same-pad AF change: BF ignores `timer <pad> AF<n>` while the pad is
+// still bound to a peripheral, so the AF write silently no-ops and the
+// row keeps the old timer mapping after the MSP rebind. Release the
+// current row first (mirrors the bare-pin restore branch and the
+// planner's release → remap → rebind sequence). The pad-change case
+// still releases via the requiresRelease loop upstream.
+async function applySamePadAfChangeIfNeeded(ctx) {
+    const { resourceType, resources, index, previous, newPin, newAf, ioTag, state, rollback, safeRollback } = ctx;
+    if (newAf == null || newPin === "NONE") {
+        return true;
+    }
+    if (newPin === previous.pin && newAf !== previous.af) {
+        const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
+        const selfRelease = `resource ${resourceName} ${index + 1} NONE`;
+        if (!(await applyReleaseLine(selfRelease))) {
+            rollback();
+            return false;
+        }
+        state.selfReleased = true;
+        // Re-apply the pending bind so the <USelect> doesn't render
+        // "NONE" after the MSP rebind succeeds — the FC will be on the
+        // new pin/AF, but the UI snapshot would diverge.
+        resources[index].pin = newPin;
+        resources[index].ioTag = ioTag;
+        resources[index].af = newAf;
+        await wait(250);
+    }
+    if (!(await applyAfRemap(newPin, newAf))) {
+        safeRollback();
+        return false;
+    }
+    return true;
+}
+
+// Switching back to the bare pin after previously picking an alt-AF
+// ON THE SAME PIN: clear the row's AF locally, but the FC stays on the
+// old `timer <pad> AF<n>` until we issue a remap back to the captured
+// base. padCurrentAF is the AF that was active when we scanned (we
+// never overwrite it on our own remap writes), so it's the correct
+// restore target. CRITICAL: only fires when newPin === previous.pin —
+// otherwise we'd be comparing the previous PIN's override AF against
+// the new PIN's captured AF and could fire a spurious remap on a pad
+// the user didn't touch through this UI. Same release → remap → rebind
+// sequence as the planner.
+async function restoreSamePadBaseAfIfNeeded(ctx) {
+    const { resourceType, resources, index, previous, newPin, newAf, ioTag, state, rollback, safeRollback } = ctx;
+    if (newAf != null || newPin === "NONE" || previous.af == null || newPin !== previous.pin) {
+        return true;
+    }
+    const baseAf = effectiveAnalysis()?.padCurrentAF?.get(newPin);
+    if (baseAf == null || baseAf === previous.af) {
+        return true;
+    }
+    const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
+    const releaseLine = `resource ${resourceName} ${index + 1} NONE`;
+    if (!(await applyReleaseLine(releaseLine))) {
+        rollback();
+        return false;
+    }
+    state.selfReleased = true;
+    // baseAf restore means newAf is null, but pin/ioTag still need to
+    // be put back so the dropdown reflects the live state.
+    resources[index].pin = newPin;
+    resources[index].ioTag = ioTag;
+    resources[index].af = null;
+    await wait(250);
+    if (!(await applyAfRemap(newPin, baseAf))) {
+        safeRollback();
+        return false;
+    }
+    return true;
+}
+
+// Watchdog-bounded MSP setMotorServoResource. mspHelper only invokes
+// the callback on FC response receipt — transport errors don't surface.
+// 3s race ensures the in-flight gate self-recovers if the FC disconnects
+// mid-write or the transport queue exhausts retries; the underlying MSP
+// write still proceeds either way.
+function awaitSetMotorServoResource(resourceType, index, ioTag) {
+    return new Promise((resolve) => {
+        let settled = false;
+        const done = () => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            resolve();
+        };
+        const watchdog = setTimeout(() => {
+            console.warn(
+                `Servos: setMotorServoResource(type=${resourceType} idx=${index} ioTag=${ioTag}) timed out waiting for FC response`,
+            );
+            done();
+        }, 3000);
+        mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
+            clearTimeout(watchdog);
+            done();
+        });
+    });
+}
+
 async function onResourcePinChange(resourceType, resources, index, newValue) {
-    // Re-entrancy guard. The release/remap chain has multiple awaits; if the
-    // user picks again on the same row before this finishes, the second call
-    // would race against the first's stale `previous` snapshot and leave UI
-    // and FC RAM out of sync. Global flag (rather than per-row) so Save can
-    // also see "any pin change in flight" — see resourcesWriteInFlight gate.
-    // Global connection lock + tab-local in-flight gate together ensure
-    // the release → timer remap → MSP bind sequence runs as an atomic unit:
+    // Re-entrancy + connection guards. The release/remap chain has
+    // multiple awaits; if the user picks again on the same row before
+    // this finishes, the second call would race against the first's
+    // stale `previous` snapshot and leave UI and FC RAM out of sync.
     //   - resourcesWriteInFlight prevents re-entry from the same tab
-    //     (rapid dropdown picks on different rows)
     //   - GUI.connect_lock blocks tab switches and other long-running
-    //     connection work (firmware flasher, OSD font upload, etc.) so
-    //     no other writer can interleave its own CLI/MSP traffic with
-    //     ours mid-sequence
+    //     connection work (firmware flasher, OSD font upload, etc.)
     if (resourcesWriteInFlight.value || GUI.connect_lock) {
         return;
     }
     resourcesWriteInFlight.value = true;
     GUI.connect_lock = true;
     try {
-        // Snapshot the previous binding so we can roll back if any prerequisite
-        // CLI step (release line, alt-AF remap) fails — without rollback the
-        // UI would claim a binding firmware never accepted.
+        // Snapshot the previous binding so we can roll back if any
+        // prerequisite CLI step fails — without rollback the UI would
+        // claim a binding firmware never accepted.
         const previous = { pin: resources[index].pin, ioTag: resources[index].ioTag, af: resources[index].af };
 
         const decoded = parseResourceOptionValue(newValue);
         const newPin = decoded?.pin ?? newValue;
         const newAf = decoded?.af ?? null;
         const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
-        // pinToIoTag now returns null (not 0) when the pin name is
-        // unparseable — fail fast rather than silently sending ioTag=0 which
-        // the FC would accept as a NONE release. Should never trip in
-        // practice (the dropdown only emits validated pad names), but it's
-        // the cheap safeguard CR asked for and rules out stale-state regressions.
+        // pinToIoTag returns null (not 0) when the pin name is
+        // unparseable — fail fast rather than silently sending ioTag=0
+        // which the FC would accept as a NONE release.
         if (newPin !== "NONE" && ioTag == null) {
             console.warn(`Servos: pinToIoTag rejected "${newPin}" — aborting bind`);
             return;
         }
 
-        // Re-resolve the picked option to recover its `requiresRelease` list.
-        // <USelect> sees only {value,label}, so the prerequisite CLI lines
-        // (e.g. `resource MOTOR 3 NONE`, `resource LED_STRIP 1 NONE`,
-        // `resource SERIAL_TX 4 NONE`) need to be looked up here. Without
-        // running them before the bind, picking a "releases MOTOR N" / LED /
-        // UART candidate would leave the old claim dangling and the FC would
-        // either reject the new bind or carry duplicate claims.
-        const allOpts = resourceOptions({
-            kind: resourceType === 0 ? "motor" : "servo",
-            resource: resources[index],
-            motorResources,
-            servoResources,
-            hardwareAnalysis: effectiveAnalysis(),
-            fallbackPins: availablePins.value,
-            allowLedStrip: true,
-            // Match the dropdown builders so UART-release candidates re-resolve
-            // here with their full requiresRelease metadata. Without this, the
-            // handler skipped the `resource SERIAL_TX/RX N NONE` step and bound
-            // onto a pad the serial resource still owned.
-            allowUartRelease: spareUartReleaseWhitelist(),
-            expertMode: isExpertMode(),
-        });
-        const picked = allOpts.find((o) => o.value === newValue);
-        // Filter out timer remap lines from requiresRelease — those are
-        // handled by applyAfRemap below and would otherwise be sent twice.
-        const releaseLines = (picked?.requiresRelease ?? []).filter((line) => !/^timer\s+/i.test(line));
+        const releaseLines = resolvePickedResourceOption(resourceType, resources, index, newValue);
 
         resources[index].pin = newPin;
         resources[index].ioTag = ioTag;
-        // Track AF on the resource so the dropdown's model-value can match the
-        // alt-AF option after pick (encoded as `pin@AFn`, matches encodedPinValue).
+        // Track AF on the resource so the dropdown's model-value can
+        // match the alt-AF option after pick (encoded as `pin@AFn`).
         resources[index].af = newAf;
-        // Flip dirty up front. A downstream CLI write that fails and triggers
-        // rollback() may still have left FC RAM in a half-changed state — prior
-        // release lines could have already cleared a MOTOR/SERVO/LED/UART claim
-        // (and mirrorReleaseToLocalRow updated other rows accordingly). Save
-        // should stay enabled so the user knows pending RAM changes need
-        // persisting (or a reboot to clear them).
+        // Flip dirty up front. A downstream CLI write that fails and
+        // triggers rollback() may still have left FC RAM in a half-
+        // changed state — Save should stay enabled so the user knows
+        // pending RAM changes need persisting (or a reboot to clear).
         resourcesModified.value = true;
 
         // selfReleased flips true once the FC has dropped this row's
         // binding via `resource MOTOR/SERVO N NONE`. After that point a
         // failure restore can't safely revert to `previous` — the FC
         // already cleared the row, so re-populating the local snapshot
-        // would put UI and firmware out of sync (next Save would re-write
-        // the released row). Use `safeRollback` instead of `rollback` from
-        // any error path that may run after a self-release succeeded.
-        let selfReleased = false;
-        const rollback = () => {
-            resources[index].pin = previous.pin;
-            resources[index].ioTag = previous.ioTag;
-            resources[index].af = previous.af;
-        };
-        const safeRollback = () => {
-            if (selfReleased) {
-                resources[index].pin = "NONE";
-                resources[index].ioTag = 0;
-                resources[index].af = null;
-            } else {
-                rollback();
-            }
-        };
+        // would put UI and firmware out of sync (next Save would
+        // re-write the released row). Use safeRollback from any error
+        // path that may run after a self-release succeeded.
+        const state = { selfReleased: false };
+        const { rollback, safeRollback } = makeRollbackHelpers(resources, index, previous, state);
+        const ctx = { resourceType, resources, index, previous, newPin, newAf, ioTag, state, rollback, safeRollback };
 
-        for (const line of releaseLines) {
-            if (!(await applyReleaseLine(line))) {
-                rollback();
-                return;
-            }
-            // Give the FC a beat to drain its CLI buffer before the next
-            // command — same throttle pattern as loadSmartResourceAnalysis.
-            // Without this, a tight release+remap+release sequence can land
-            // partial responses.
-            await wait(250);
+        if (!(await runPrerequisiteReleaseLines(releaseLines, rollback))) {
+            return;
+        }
+        if (!(await restorePreviousPadAfIfNeeded(ctx))) {
+            return;
+        }
+        if (!(await applySamePadAfChangeIfNeeded(ctx))) {
+            return;
+        }
+        if (!(await restoreSamePadBaseAfIfNeeded(ctx))) {
+            return;
         }
 
-        // Moving-away AF restore: the user is sending this row to a NEW
-        // pad while the OLD pad was on an alt-AF (previous.af != null).
-        // The MSP rebind below will free the old pad's resource binding
-        // but leave its `timer <pad> AF<n>` setting active in BF forever.
-        // Release the row (frees the old pad), remap the old pad back to
-        // its captured base AF, then let the rest of the flow continue
-        // (eventually applyAfRemap on newPin and mspHelper.setMotorServoResource).
-        // Mirrors the same-pad bare-pin restore branch below; both share
-        // the selfReleased guard so safeRollback handles failure cleanly.
-        if (newPin !== previous.pin && previous.pin !== "NONE" && previous.af != null) {
-            const baseAf = effectiveAnalysis()?.padCurrentAF?.get(previous.pin);
-            if (baseAf != null && baseAf !== previous.af) {
-                const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
-                const releaseLine = `resource ${resourceName} ${index + 1} NONE`;
-                if (!(await applyReleaseLine(releaseLine))) {
-                    rollback();
-                    return;
-                }
-                selfReleased = true;
-                // mirrorReleaseToLocalRow cleared this row locally; re-apply
-                // the pending bind so the dropdown stays on the new pin.
-                resources[index].pin = newPin;
-                resources[index].ioTag = ioTag;
-                resources[index].af = newAf;
-                await wait(250);
-                if (!(await applyAfRemap(previous.pin, baseAf))) {
-                    safeRollback();
-                    return;
-                }
-                await wait(250);
-            }
-        }
-
-        if (newAf != null && newPin !== "NONE") {
-            // Same-pad AF change: BF ignores `timer <pad> AF<n>` while the
-            // pad is still bound to a peripheral, so the AF write silently
-            // no-ops and the row keeps the old timer mapping after the
-            // mspHelper rebind. Release the current row first (mirrors the
-            // bare-pin restore branch below and the planner's release →
-            // remap → rebind sequence). The pad-change case still releases
-            // via the requiresRelease loop above.
-            if (newPin === previous.pin && newAf !== previous.af) {
-                const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
-                const selfRelease = `resource ${resourceName} ${index + 1} NONE`;
-                if (!(await applyReleaseLine(selfRelease))) {
-                    rollback();
-                    return;
-                }
-                selfReleased = true;
-                // applyReleaseLine→mirrorReleaseToLocalRow just cleared this
-                // row in the local resources array (pin/ioTag/af → 0/NONE/null).
-                // Re-apply the pending bind so the <USelect> doesn't render
-                // "NONE" after the MSP rebind below succeeds — the FC will be
-                // on the new pin/AF, but the UI snapshot would diverge.
-                resources[index].pin = newPin;
-                resources[index].ioTag = ioTag;
-                resources[index].af = newAf;
-                await wait(250);
-            }
-            if (!(await applyAfRemap(newPin, newAf))) {
-                safeRollback();
-                return;
-            }
-        }
-
-        // Switching back to the bare pin after previously picking an alt-AF
-        // ON THE SAME PIN: clear the row's AF locally, but the FC stays on
-        // the old `timer <pad> AF<n>` until we issue a remap back to the
-        // captured base. padCurrentAF is the AF that was active when we
-        // scanned (we never overwrite it on our own remap writes), so it's
-        // the correct restore target. Skip when we don't have a captured
-        // base. CRITICAL: only run this branch when newPin === previous.pin
-        // — otherwise we'd be comparing the previous PIN's override AF
-        // against the new PIN's captured AF and could fire a spurious
-        // remap on a pad the user didn't touch through this UI.
-        //
-        // Sequence the same way the planner does: release → remap → rebind.
-        // The FC won't accept `timer <pad> AF<n>` while the pad is still
-        // bound to a peripheral, so without the release the AF write
-        // silently no-ops and the FC keeps the old timer mapping under the
-        // active resource binding (mspHelper.setMotorServoResource below
-        // handles the rebind).
-        if (newAf == null && newPin !== "NONE" && previous.af != null && newPin === previous.pin) {
-            const baseAf = effectiveAnalysis()?.padCurrentAF?.get(newPin);
-            if (baseAf != null && baseAf !== previous.af) {
-                const resourceName = resourceType === 0 ? "MOTOR" : "SERVO";
-                const releaseLine = `resource ${resourceName} ${index + 1} NONE`;
-                if (!(await applyReleaseLine(releaseLine))) {
-                    rollback();
-                    return;
-                }
-                selfReleased = true;
-                // Re-apply pending bind after the self-release cleared the row
-                // locally — see the same-pad alt-AF branch above for context.
-                // baseAf restore means newAf is null, but the pin/ioTag still
-                // need to be put back so the dropdown reflects the live state.
-                resources[index].pin = newPin;
-                resources[index].ioTag = ioTag;
-                resources[index].af = null;
-                await wait(250);
-                if (!(await applyAfRemap(newPin, baseAf))) {
-                    safeRollback();
-                    return;
-                }
-            }
-        }
-
-        // No error callback path: mspHelper.setMotorServoResource (and every
-        // other MSP setter in MSPHelper.js) only invokes the callback on the
-        // FC's response receipt — transport errors don't surface here. We
-        // match that pattern rather than diverge with a one-off rollback.
-        // Await the callback so the in-flight guard stays set until the bind
-        // actually reaches the FC; without this, Save can re-enable and an
-        // EEPROM-write fires before the last MSP response lands.
-        //
-        // Watchdog: if the FC disconnects mid-write or the transport queue
-        // exhausts retries without invoking the callback, the await would
-        // hang forever, the finally below never runs, and the in-flight
-        // gate stays true until tab remount (locks every pin change and
-        // the Save button). 3s race buys the FC plenty of time on a slow
-        // USB link while letting the gate self-recover; the underlying MSP
-        // write still proceeds either way.
-        await new Promise((resolve) => {
-            let settled = false;
-            const done = () => {
-                if (settled) {
-                    return;
-                }
-                settled = true;
-                resolve();
-            };
-            const watchdog = setTimeout(() => {
-                console.warn(
-                    `Servos: setMotorServoResource(type=${resourceType} idx=${index} ioTag=${ioTag}) timed out waiting for FC response`,
-                );
-                done();
-            }, 3000);
-            mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
-                clearTimeout(watchdog);
-                done();
-            });
-        });
+        await awaitSetMotorServoResource(resourceType, index, ioTag);
     } finally {
-        // Clear on every exit path: rollback returns, AF-remap rollback,
-        // successful MSP send (now awaited above), and any thrown exception.
-        // Save can re-enable now that the chain is settled. Drop the global
-        // lock so other tabs / connection work can resume.
+        // Clear on every exit path. Save can re-enable now that the
+        // chain is settled; drop the global lock so other tabs /
+        // connection work can resume.
         GUI.connect_lock = false;
         resourcesWriteInFlight.value = false;
     }
