@@ -25,13 +25,17 @@ docker run docker.io/library/hello-world
 
 ### USB device access
 
-For serial device access (connecting to flight controllers), you need udev rules and group membership on the host.
+For serial device access (connecting to flight controllers), you need udev rules and group membership on the **host** machine.
 See the [Building in Ubuntu](https://betaflight.com/docs/development/building/Building-in-Ubuntu) guide for detailed setup instructions including DFU rules, CH340/CH341 USB-to-Serial rules, and VCP permissions.
 
-By default the devcontainer runs unprivileged. To enable USB device access for serial/DFU communication with flight controllers, either:
+Inside the container, the `devpod` user is already a member of the `dialout` and `plugdev` groups for serial and USB device access.
+
+By default the devcontainer runs unprivileged (no hardware access). To enable USB device access for serial/DFU communication with flight controllers, either:
 
 1. **devcontainer.json** — uncomment the `privileged` and `runArgs` lines
 2. **Docker CLI** — add `--privileged --volume=/dev:/dev` flags (see below)
+
+> **Note:** Enabling `--privileged` with `--volume=/dev:/dev` grants the container access to **all** host devices. This is standard for hardware development but should only be used on trusted, single-user machines.
 
 ## Using with VS Code
 

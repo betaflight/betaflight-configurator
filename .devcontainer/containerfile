@@ -89,6 +89,9 @@ RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME --shell /bin/bash && \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+# Add user to hardware access groups for USB serial devices
+RUN usermod -aG dialout,plugdev $USERNAME
+
 # Give user ownership of Android SDK
 RUN chown -R $USERNAME:$USERNAME ${ANDROID_HOME}
 
