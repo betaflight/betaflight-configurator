@@ -270,44 +270,51 @@ function parseTimerChannelLine(currentTimer, head, tail) {
     };
 }
 
+// Process one line of `timer show` output. Mutates `state.currentTimer`
+// when the line opens a new TIM header without a body, and pushes to
+// `out` for standalone TIM rows or CH child rows. Detect indent BEFORE
+// trim so child CH lines stay distinguishable from sibling TIM headers
+// after whitespace is stripped.
+function parseTimerShowLine(rawLine, state, out) {
+    const isIndented = rawLine.startsWith(" ") || rawLine.startsWith("\t");
+    const line = rawLine.trim();
+    if (!line) {
+        return;
+    }
+    const colonIdx = line.indexOf(":");
+    if (colonIdx <= 0) {
+        return;
+    }
+    const head = line.slice(0, colonIdx).trim();
+    const tail = line.slice(colonIdx + 1).trim();
+
+    if (!isIndented) {
+        const header = parseTimerHeader(head, tail);
+        if (header) {
+            if (header.standaloneEntry) {
+                out.push(header.standaloneEntry);
+                state.currentTimer = null;
+            } else {
+                state.currentTimer = header.timer;
+            }
+            return;
+        }
+    }
+    if (state.currentTimer === null) {
+        return;
+    }
+    const channelEntry = parseTimerChannelLine(state.currentTimer, head, tail);
+    if (channelEntry) {
+        out.push(channelEntry);
+    }
+}
+
 export function parseTimerShow(input) {
     const lines = Array.isArray(input) ? input : input.split(/\r?\n/);
     const out = [];
-    let currentTimer = null;
+    const state = { currentTimer: null };
     for (const rawLine of lines) {
-        // Detect indent BEFORE trim so child CH lines stay distinguishable
-        // from sibling TIM headers after we strip whitespace.
-        const isIndented = rawLine.startsWith(" ") || rawLine.startsWith("\t");
-        const line = rawLine.trim();
-        if (!line) {
-            continue;
-        }
-
-        const colonIdx = line.indexOf(":");
-        if (colonIdx <= 0) {
-            continue;
-        }
-        const head = line.slice(0, colonIdx).trim();
-        const tail = line.slice(colonIdx + 1).trim();
-
-        if (!isIndented) {
-            const header = parseTimerHeader(head, tail);
-            if (header) {
-                if (header.standaloneEntry) {
-                    out.push(header.standaloneEntry);
-                    currentTimer = null;
-                } else {
-                    currentTimer = header.timer;
-                }
-                continue;
-            }
-        }
-        if (currentTimer !== null) {
-            const channelEntry = parseTimerChannelLine(currentTimer, head, tail);
-            if (channelEntry) {
-                out.push(channelEntry);
-            }
-        }
+        parseTimerShowLine(rawLine, state, out);
     }
     return out;
 }
@@ -521,10 +528,10 @@ async function discoverOnePadTimerOptions(out, pad, opts) {
 }
 
 export async function discoverPadTimerOptions(pads, opts = {}) {
-    const out = new Map();
     if (!Array.isArray(pads)) {
-        return out;
+        return new Map();
     }
+    const out = new Map();
     // Inter-command throttle: master's send_cli_command queues serially
     // but the FC needs a beat to drain its CLI buffer between back-to-back
     // `timer <pad> list` requests. Without this delay, later responses

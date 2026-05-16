@@ -706,6 +706,23 @@ function claimNextMotorPad(pool, startIdx, padTimers, servoTimers, padTimerOptio
     return null;
 }
 
+// Records a successful per-motor claim into the running maps. Splits
+// out of pickSilkscreenOrderLayout's motor for-loop so the parent reads
+// as a flat sequence of claim → record steps instead of nested ifs.
+function applyMotorClaim(motors, motorTimerByPad, remaps, claim, motorIndex, padCurrentAF) {
+    motors.set(motorIndex, claim.pad);
+    if (claim.timer != null) {
+        motorTimerByPad.set(claim.pad, { timer: claim.timer, channel: claim.channel });
+    }
+    if (claim.af == null) {
+        return;
+    }
+    const currentAf = padCurrentAF?.get(claim.pad);
+    if (currentAf !== claim.af) {
+        remaps.set(claim.pad, { af: claim.af, timer: claim.timer, channel: claim.channel });
+    }
+}
+
 // F4 burst-DMA reject: STM32F4xx routes DSHOT through timer-burst DMA,
 // and burst owns the stream across all of a timer's channels. Two
 // motors on the same timer can't both run independent DSHOT. Caller
@@ -782,16 +799,7 @@ export function pickSilkscreenOrderLayout(analysis, motorCount, usedServoIndices
             return null;
         }
         nextPoolIdx = claim.nextIdx;
-        motors.set(m + 1, claim.pad);
-        if (claim.timer != null) {
-            motorTimerByPad.set(claim.pad, { timer: claim.timer, channel: claim.channel });
-        }
-        if (claim.af != null) {
-            const currentAf = padCurrentAF?.get(claim.pad);
-            if (currentAf !== claim.af) {
-                remaps.set(claim.pad, { af: claim.af, timer: claim.timer, channel: claim.channel });
-            }
-        }
+        applyMotorClaim(motors, motorTimerByPad, remaps, claim, m + 1, padCurrentAF);
     }
 
     if (rejectF4BurstDmaConflict(analysis, motors, motorTimerByPad)) {
@@ -848,6 +856,80 @@ function buildTimedSilkscreenPool(padDefaults, padTimers, allowLedStrip) {
     return pool;
 }
 
+// +10 per motor placed on its silkscreen MOTOR index.
+function scoreSilkscreenBonus(motorSet, motorCount) {
+    let s = 0;
+    for (const m of motorSet) {
+        if (m.silkscreenKind === "MOTOR" && m.silkscreenIndex >= 1 && m.silkscreenIndex <= motorCount) {
+            s += 10;
+        }
+    }
+    return s;
+}
+
+// +15 per motor pad already bound to that motor + per servo pad already
+// bound to a used servo on the FC. Weighted HIGHER than silkscreen so
+// a currently-valid layout wins over aesthetically-preferred re-shuffling.
+function scoreZeroChurnBonus(motorSet, servoSet, currentMotorPads, currentServoPads) {
+    let s = 0;
+    for (const m of motorSet) {
+        if (currentMotorPads.has(m.pad)) {
+            s += 15;
+        }
+    }
+    for (const x of servoSet) {
+        if (currentServoPads.has(x.pad)) {
+            s += 15;
+        }
+    }
+    return s;
+}
+
+// +35 when the servo bank fits on a single timer; +10 for two timers;
+// 3+ distinct timers earns no bonus (fragmented servo bank).
+function scoreServoBankBonus(servoSet) {
+    if (servoSet.length === 0) {
+        return 0;
+    }
+    const distinctTimers = new Set(servoSet.map((s) => s.timer)).size;
+    if (distinctTimers === 1) {
+        return 35;
+    }
+    if (distinctTimers === 2) {
+        return 10;
+    }
+    return 0;
+}
+
+// +8 when all motors share a single timer (bidir DSHOT grouping).
+// Capped low so zero-churn still dominates.
+function scoreMotorGroupingBonus(motorSet, motorTimers) {
+    return motorSet.length > 1 && motorTimers.size === 1 ? 8 : 0;
+}
+
+// -1 per motor-timer channel left unused by this layout. Motor pads
+// on a timer reserved for motors block ALL other channels of that
+// timer from being servos (timer isolation). Penalize so the optimizer
+// prefers placing motors on smaller timer groups when feasible,
+// freeing the bigger timers for servos. Critical for 2-motor wings on
+// quad-default boards where motors silkscreen on TIM3's full 4-channel
+// block.
+function scoreWastedChannelPenalty(pool, motorSet, motorTimers) {
+    let count = 0;
+    for (const p of pool) {
+        if (motorTimers.has(p.timer) && !motorSet.includes(p)) {
+            count += 1;
+        }
+    }
+    return count;
+}
+
+// -0.01 * avg(motorSet silkscreenIndex). Deterministic tiebreaker
+// among equally-scored layouts: prefer low silkscreen indices.
+function scoreTiebreakAvgMotorIdx(motorSet) {
+    return (motorSet.reduce((s, m) => s + m.silkscreenIndex, 0) / motorSet.length) * 0.01;
+}
+
 // Score a candidate layout. Higher = better. Weights are bench-tuned —
 // do not alter without re-validating against existing wing setups.
 //
@@ -861,9 +943,6 @@ function buildTimedSilkscreenPool(padDefaults, padTimers, allowLedStrip) {
 //   +8  if all motors  share a single timer (bidir DSHOT grouping)
 //   -1/wasted channel  motor-timer channels left unused by this layout
 //   -0.01*avgMotorIdx  deterministic tiebreaker (prefer low silkscreen idx)
-//
-// Zero-churn weight is HIGHER than silkscreen so a currently-valid layout
-// wins over aesthetically-preferred re-shuffling.
 function scoreLayoutCandidate({
     motorSet,
     servoSet,
@@ -873,51 +952,15 @@ function scoreLayoutCandidate({
     currentMotorPads,
     currentServoPads,
 }) {
-    let score = servoSet.length * 100;
-    for (const m of motorSet) {
-        if (m.silkscreenKind === "MOTOR" && m.silkscreenIndex >= 1 && m.silkscreenIndex <= motorCount) {
-            score += 10;
-        }
-    }
-    for (const m of motorSet) {
-        if (currentMotorPads.has(m.pad)) {
-            score += 15;
-        }
-    }
-    for (const s of servoSet) {
-        if (currentServoPads.has(s.pad)) {
-            score += 15;
-        }
-    }
-    const servoTimerCount = new Set(servoSet.map((s) => s.timer)).size;
-    if (servoSet.length > 0) {
-        if (servoTimerCount === 1) {
-            score += 35;
-        } else if (servoTimerCount === 2) {
-            score += 10;
-        }
-        // 3+ distinct timers: no bonus (fragmented servo bank)
-    }
-    if (motorSet.length > 1 && motorTimers.size === 1) {
-        score += 8;
-    }
-    // Wasted-channel penalty: motor pads on a timer reserved for
-    // motors block ALL other channels of that timer from being
-    // servos (timer isolation). Penalize so the optimizer prefers
-    // placing motors on smaller timer groups when feasible, freeing
-    // the bigger timers for servos. Critical for 2-motor wings on
-    // quad-default boards where motors silkscreen on TIM3's full
-    // 4-channel block.
-    let wastedChannels = 0;
-    for (const p of pool) {
-        if (motorTimers.has(p.timer) && !motorSet.includes(p)) {
-            wastedChannels += 1;
-        }
-    }
-    score -= wastedChannels * 1;
-    const avgMotorIdx = motorSet.reduce((s, m) => s + m.silkscreenIndex, 0) / motorSet.length;
-    score -= avgMotorIdx * 0.01;
-    return score;
+    return (
+        servoSet.length * 100 +
+        scoreSilkscreenBonus(motorSet, motorCount) +
+        scoreZeroChurnBonus(motorSet, servoSet, currentMotorPads, currentServoPads) +
+        scoreServoBankBonus(servoSet) +
+        scoreMotorGroupingBonus(motorSet, motorTimers) -
+        scoreWastedChannelPenalty(pool, motorSet, motorTimers) -
+        scoreTiebreakAvgMotorIdx(motorSet)
+    );
 }
 
 // Enumerate motor combinations, build the corresponding zero-churn-first
@@ -960,68 +1003,80 @@ function selectBestLayout(pool, motorCount, servoCount, currentMotorPads, curren
     return best;
 }
 
-// Three-pass motor index assignment (each pass preserves earlier picks):
-//   Pass 0 — zero-churn: motor index N keeps its current pad when that
-//            pad is in motorSet. Skipped on freshStart so the Plane Setup
-//            Wizard genuinely starts from silkscreen convention rather
-//            than inheriting factory-default MOTOR N→pad bindings.
-//   Pass 1 — silkscreen: remaining pads land on their natural silkscreen
-//            motor index.
-//   Pass 2 — fill: leftover motor indices get leftover pads in ascending
-//            silkscreen order.
-function assignMotorIndices(motorSet, motorCount, analysisMotors, freshStart) {
-    const motors = new Map();
-    const assignedIdx = new Set();
-    const takenPads = new Set();
-    if (!freshStart) {
-        for (const m of analysisMotors ?? []) {
-            if (m.index < 1 || m.index > motorCount) {
-                continue;
-            }
-            const match = motorSet.find((p) => p.pad === m.pad);
-            if (match && !assignedIdx.has(m.index) && !takenPads.has(match.pad)) {
-                motors.set(m.index, match.pad);
-                assignedIdx.add(m.index);
-                takenPads.add(match.pad);
-            }
+// Pass 0 — zero-churn: motor index N keeps its current pad when that
+// pad is in motorSet. Skipped on freshStart so the Plane Setup Wizard
+// genuinely starts from silkscreen convention rather than inheriting
+// factory-default MOTOR N→pad bindings.
+function applyMotorZeroChurnPass(state, motorSet, motorCount, analysisMotors) {
+    for (const m of analysisMotors ?? []) {
+        if (m.index < 1 || m.index > motorCount) {
+            continue;
+        }
+        const match = motorSet.find((p) => p.pad === m.pad);
+        if (match && !state.assignedIdx.has(m.index) && !state.takenPads.has(match.pad)) {
+            state.motors.set(m.index, match.pad);
+            state.assignedIdx.add(m.index);
+            state.takenPads.add(match.pad);
         }
     }
-    const motorSetSorted = motorSet.slice().sort((a, b) => a.silkscreenIndex - b.silkscreenIndex);
-    const leftoverPads = [];
-    for (const p of motorSetSorted) {
-        if (takenPads.has(p.pad)) {
+}
+
+// Pass 1 — silkscreen: remaining pads land on their natural silkscreen
+// motor index. Returns pads that didn't fit silkscreen convention so
+// the fill pass can place them.
+function applyMotorSilkscreenPass(state, motorSet, motorCount) {
+    const sorted = motorSet.slice().sort((a, b) => a.silkscreenIndex - b.silkscreenIndex);
+    const leftover = [];
+    for (const p of sorted) {
+        if (state.takenPads.has(p.pad)) {
             continue;
         }
         if (
             p.silkscreenKind === "MOTOR" &&
             p.silkscreenIndex >= 1 &&
             p.silkscreenIndex <= motorCount &&
-            !assignedIdx.has(p.silkscreenIndex)
+            !state.assignedIdx.has(p.silkscreenIndex)
         ) {
-            motors.set(p.silkscreenIndex, p.pad);
-            assignedIdx.add(p.silkscreenIndex);
-            takenPads.add(p.pad);
+            state.motors.set(p.silkscreenIndex, p.pad);
+            state.assignedIdx.add(p.silkscreenIndex);
+            state.takenPads.add(p.pad);
         } else {
-            leftoverPads.push(p);
+            leftover.push(p);
         }
     }
+    return leftover;
+}
+
+// Pass 2 — fill: leftover motor indices get leftover pads in ascending
+// silkscreen order.
+function applyMotorFillPass(state, leftoverPads, motorCount) {
     let nextIdx = 1;
     for (const p of leftoverPads) {
-        if (takenPads.has(p.pad)) {
+        if (state.takenPads.has(p.pad)) {
             continue;
         }
-        while (nextIdx <= motorCount && assignedIdx.has(nextIdx)) {
+        while (nextIdx <= motorCount && state.assignedIdx.has(nextIdx)) {
             nextIdx++;
         }
         if (nextIdx > motorCount) {
             break;
         }
-        motors.set(nextIdx, p.pad);
-        assignedIdx.add(nextIdx);
-        takenPads.add(p.pad);
+        state.motors.set(nextIdx, p.pad);
+        state.assignedIdx.add(nextIdx);
+        state.takenPads.add(p.pad);
         nextIdx++;
     }
-    return motors;
+}
+
+// Three-pass motor index assignment (each pass preserves earlier picks).
+function assignMotorIndices(motorSet, motorCount, analysisMotors, freshStart) {
+    const state = { motors: new Map(), assignedIdx: new Set(), takenPads: new Set() };
+    if (!freshStart) {
+        applyMotorZeroChurnPass(state, motorSet, motorCount, analysisMotors);
+    }
+    const leftover = applyMotorSilkscreenPass(state, motorSet, motorCount);
+    applyMotorFillPass(state, leftover, motorCount);
+    return state.motors;
 }
 
 // Two-pass servo index assignment — same zero-churn-first logic as
