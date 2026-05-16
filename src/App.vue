@@ -116,15 +116,15 @@ const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback)
 const activeTabInstance = ref(null);
 
 const isRevealed = ref(false);
-const sidebarCompact = useMediaQuery("(max-width: 1055px)");
-const compactHeaderLayout = useMediaQuery(
+const sidebarNarrow = useMediaQuery("(max-width: 1055px)");
+const isCompactBreakpoint = useMediaQuery(
     "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",
 );
-const isMobileSidebarOpen = computed(() => compactHeaderLayout.value && isRevealed.value);
-const isSidebarExpanded = computed(() => !sidebarCompact.value || isRevealed.value);
+const isMobileSidebarOpen = computed(() => isCompactBreakpoint.value && isRevealed.value);
+const isSidebarExpanded = computed(() => !sidebarNarrow.value || isRevealed.value);
 
 // Auto-close the drawer when leaving the mobile drawer breakpoint.
-watch(compactHeaderLayout, (compact) => {
+watch(isCompactBreakpoint, (compact) => {
     if (!compact) {
         isRevealed.value = false;
     }

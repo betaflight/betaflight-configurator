@@ -16,18 +16,20 @@
             >
             </UButton>
         </UDropdownMenu>
-        <UButton
-            v-else
-            variant="ghost"
-            color="neutral"
-            :size="isCompact ? 'xs' : 'sm'"
-            :class="{ 'py-2': !isCompact }"
-            :square="isCompact"
-            @click="handleLoginClick"
-            icon="i-lucide-log-in"
-        >
-            {{ isCompact ? "" : $t("labelLogin") }}
-        </UButton>
+        <UTooltip :text="$t('labelLogin')" v-else :disabled="!isCompact">
+            <UButton
+                variant="ghost"
+                color="neutral"
+                :size="isCompact ? 'xs' : 'sm'"
+                :class="{ 'py-2': !isCompact }"
+                :square="isCompact"
+                @click="handleLoginClick"
+                icon="i-lucide-log-in"
+                :aria-label="$t('labelLogin')"
+            >
+                {{ isCompact ? "" : $t("labelLogin") }}
+            </UButton>
+        </UTooltip>
         <Teleport to="#main-wrapper">
             <div v-show="menuOpen" id="user-menu-popup" class="user-popup-menu" :style="menuStyle">
                 <div id="menu-username" class="menu-username">{{ displayName }}</div>
