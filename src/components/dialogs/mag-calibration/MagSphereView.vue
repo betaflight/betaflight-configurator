@@ -28,6 +28,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { i18n } from "../../../js/localization";
 
 const DEG_TO_RAD = Math.PI / 180;
+const DEFAULT_SPHERE_RADIUS = 400;
 
 const props = defineProps({
     samples: {
@@ -234,7 +235,7 @@ function initScene() {
     addAxisLabel(scene, "Z", new THREE.Vector3(0, 0, axisLength + 40), 0x4444ff);
 
     // Ghost reference sphere — gives visual context before data arrives
-    ghostGroup = createGhostSphere(400);
+    ghostGroup = createGhostSphere(DEFAULT_SPHERE_RADIUS);
     scene.add(ghostGroup);
 
     // Compass ring — earth-frame N/S/E/W at the equatorial plane
@@ -453,17 +454,22 @@ function updateFieldReferenceArrow() {
         return;
     }
     const use3D = props.vizMode === "pointcloud" || props.vizMode === "heatmap";
-    fieldRefGroup.visible = use3D && props.inclination !== null && props.sphereFit;
+    fieldRefGroup.visible = use3D && props.inclination !== null;
 }
 
 // Called from watchers when sphereFit or inclination changes
 function rebuildFieldReference() {
-    if (!fieldRefGroup || props.inclination === null || !props.sphereFit) {
+    if (!fieldRefGroup || props.inclination === null) {
         return;
     }
 
     const incl = (props.inclination * Math.PI) / 180;
-    const { center, radius } = props.sphereFit;
+    // Three-tier fallback: fitted sphere > live mag magnitude > default
+    const liveMagRadius = props.liveMag
+        ? Math.hypot(props.liveMag.x, props.liveMag.y, props.liveMag.z)
+        : 0;
+    const radius = props.sphereFit?.radius ?? (liveMagRadius > 50 ? liveMagRadius : DEFAULT_SPHERE_RADIUS);
+    const center = props.sphereFit?.center ?? { x: 0, y: 0, z: 0 };
     // Field direction: horizontal along X, vertical along Z
     // Display frame: Z-up, so field dips toward -Z
     const fdx = Math.cos(incl) * radius;
@@ -493,6 +499,20 @@ function rebuildFieldReference() {
         southCone.position.set(-fdx, 0, -fdz);
         _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
         southCone.quaternion.copy(_tmpQuat);
+
+        // Hemisphere-aware thickness: dominant pole gets thicker shaft + larger cone
+        // Must run after orientCylinder() which resets scale.x/z to 1
+        const dominantNorth = props.inclination > 0;
+        const dominantSouth = props.inclination < 0;
+        const THICK = 5 / 3;
+        const northScale = dominantNorth ? THICK : 1;
+        const southScale = dominantSouth ? THICK : 1;
+        shaft.scale.x = northScale;
+        shaft.scale.z = northScale;
+        cone.scale.setScalar(dominantNorth ? 1.3 : 1);
+        southShaft.scale.x = southScale;
+        southShaft.scale.z = southScale;
+        southCone.scale.setScalar(dominantSouth ? 1.3 : 1);
     }
 
     // Dispose old arc + label
@@ -1324,7 +1344,7 @@ function setSceneObjectVisibility(pc, hm) {
         v.visible = pc && props.active;
     });
     setVisible(totalVectorLine, pc && props.active);
-    setVisible(fieldRefGroup, pc || hm);
+    setVisible(fieldRefGroup, (pc || hm) && props.inclination !== null);
     zoneMeshes?.forEach((z) => {
         z.visible = pc;
     });
