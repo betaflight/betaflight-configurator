@@ -211,7 +211,7 @@ function extractMetrics(tf, targetBandwidthHz) {
 // 1. Bandwidth: frequency where closed-loop magnitude crosses -3dB
 function findBandwidth(frequencies, magnitude, coherence, targetBandwidthHz) {
     for (let k = 1; k < frequencies.length; k++) {
-        if (coherence[k] < 0.3) {
+        if (coherence[k - 1] < 0.3 || coherence[k] < 0.3) {
             continue;
         }
         if (magnitude[k] <= -3 && magnitude[k - 1] > -3) {
@@ -250,7 +250,7 @@ function findResonantPeak(frequencies, magnitude, coherence) {
 // 3. Gain crossover: where magnitude crosses 0 dB
 function findGainCrossover(frequencies, magnitude, coherence) {
     for (let k = 1; k < frequencies.length; k++) {
-        if (coherence[k] < 0.3) {
+        if (coherence[k - 1] < 0.3 || coherence[k] < 0.3) {
             continue;
         }
         if (magnitude[k] <= 0 && magnitude[k - 1] > 0) {
@@ -276,7 +276,10 @@ function isFrequencyCoherent(frequencies, coherence, targetHz, threshold) {
     return false;
 }
 
-// 4. Phase at a chosen crossover frequency (linear interpolation)
+// 4. Phase at a chosen crossover frequency (wrap-aware linear interpolation).
+// Adjacent bins from atan2() can jump ±360° at the wrap (e.g. 179 → -179);
+// normalise the delta into (-180, 180] so the interpolation follows the
+// shortest angular path instead of crossing the wrap as a 358° slope.
 function interpolatePhase(frequencies, phase, crossoverHz) {
     if (crossoverHz <= 0) {
         return 0;
@@ -284,7 +287,13 @@ function interpolatePhase(frequencies, phase, crossoverHz) {
     for (let k = 1; k < frequencies.length; k++) {
         if (frequencies[k] >= crossoverHz) {
             const frac = (crossoverHz - frequencies[k - 1]) / (frequencies[k] - frequencies[k - 1]);
-            return phase[k - 1] + frac * (phase[k] - phase[k - 1]);
+            let delta = phase[k] - phase[k - 1];
+            if (delta > 180) {
+                delta -= 360;
+            } else if (delta < -180) {
+                delta += 360;
+            }
+            return phase[k - 1] + frac * delta;
         }
     }
     return 0;

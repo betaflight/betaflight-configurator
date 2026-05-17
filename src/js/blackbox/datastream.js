@@ -77,7 +77,9 @@ ArrayDataStream.prototype.readS8 = function () {
 };
 
 ArrayDataStream.prototype.unreadChar = function () {
-    this.pos--;
+    if (this.pos > this.start) {
+        this.pos--;
+    }
 };
 
 ArrayDataStream.prototype.peekChar = function () {
@@ -138,7 +140,7 @@ ArrayDataStream.prototype.readU32 = function () {
     const b2 = this.readByte();
     const b3 = this.readByte();
     const b4 = this.readByte();
-    return b1 | (b2 << 8) | (b3 << 16) | (b4 << 24);
+    return (b1 | (b2 << 8) | (b3 << 16) | (b4 << 24)) >>> 0;
 };
 
 ArrayDataStream.prototype.nextOffsetOf = function (needle) {

@@ -110,7 +110,7 @@ function getSensitivityTraces() {
     if (!store.analysisResult?.axes) {
         return [];
     }
-    return AXES.filter((a) => store.visibleAxes[a.key] && store.analysisResult.axes[a.key]).map((a) => {
+    return AXES.filter((a) => store.visibleAxes[a.key] && store.analysisResult.axes[a.key]?.sensitivity).map((a) => {
         const s = store.analysisResult.axes[a.key].sensitivity;
         const tf = store.analysisResult.axes[a.key].transferFunction;
         const points = [];
@@ -131,7 +131,7 @@ function getStepTraces() {
     if (!store.analysisResult?.axes) {
         return [];
     }
-    return AXES.filter((a) => store.visibleAxes[a.key] && store.analysisResult.axes[a.key]).map((a) => {
+    return AXES.filter((a) => store.visibleAxes[a.key] && store.analysisResult.axes[a.key]?.stepResponse).map((a) => {
         const sr = store.analysisResult.axes[a.key].stepResponse;
         const points = [];
         for (let i = 0; i < sr.timeMs.length; i++) {
