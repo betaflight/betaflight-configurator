@@ -1787,11 +1787,11 @@ export default defineComponent({
                 case "invalid":
                 case "erasing":
                     return "error";
-                case "valid":
                 case "flashing":
-                    return "success";
+                    return "warning";
+                case "valid":
                 case "verifying":
-                    return "primary";
+                    return "success";
                 default:
                     return "primary";
             }

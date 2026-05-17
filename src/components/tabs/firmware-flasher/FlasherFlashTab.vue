@@ -55,7 +55,10 @@
             </div>
 
             <!-- Cloud Details Row -->
-            <div v-if="state.cloudTargetInfoVisible && cloudBuild.state.cloudTargetLogText" class="info_row">
+            <div
+                v-if="state.cloudTargetInfoVisible && !flashStatusLive && cloudBuild.state.cloudTargetLogText"
+                class="info_row"
+            >
                 <strong>{{ $t("firmwareFlasherCloudBuildDetails") }}</strong>
                 <a
                     :title="$t('firmwareFlasherCloudBuildLogUrl')"
@@ -69,7 +72,7 @@
             </div>
 
             <!-- Cloud Build Status Row -->
-            <div v-if="state.cloudTargetInfoVisible" class="info_row">
+            <div v-if="state.cloudTargetInfoVisible && !flashStatusLive" class="info_row">
                 <strong>{{ $t("firmwareFlasherCloudBuildStatus") }}</strong>
                 <div class="status_ring_wrapper">
                     <ProgressRing
@@ -238,11 +241,11 @@ const flashResultRingColor = computed(() => {
         case "invalid":
         case "erasing":
             return "error";
-        case "valid":
         case "flashing":
-            return "success";
+            return "warning";
+        case "valid":
         case "verifying":
-            return "primary";
+            return "success";
         default:
             return "primary";
     }
