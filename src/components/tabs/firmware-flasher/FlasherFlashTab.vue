@@ -1,5 +1,5 @@
 <template>
-    <UiBox class="release_info col-span-1 mt-6">
+    <UiBox class="release_info col-span-1 mt-4">
         <div class="release_info_grid">
             <!-- Target Row -->
             <div class="info_row">
@@ -98,7 +98,7 @@
 
             <!-- Flash Status Row — live during flash, preserved result after -->
             <div v-if="flashStatusVisible" class="info_row">
-                <strong>{{ $t("firmwareFlasherSubTabFlash") }}</strong>
+                <strong>{{ $t("firmwareFlasherFlashStatus") }}</strong>
                 <div class="status_ring_wrapper">
                     <ProgressRing
                         :value="flashStatusLive ? state.flashProgressValue : 100"
@@ -131,7 +131,7 @@
         </div>
     </UiBox>
 
-    <div class="flash-extras mt-6">
+    <div class="flash-extras mt-4">
         <!-- Warning and Recovery panes -->
         <div class="grid-box col2 mt-2">
             <UiBox :title="$t('warningTitle')" type="error" highlight class="note-text-format">
@@ -253,7 +253,7 @@ const flashResultRingColor = computed(() => {
 .release_info_grid {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: 1rem 2rem;
+    gap: 0.5rem 1rem;
     align-items: center;
 }
 
@@ -264,7 +264,6 @@ const flashResultRingColor = computed(() => {
 .release_info_grid strong {
     text-align: right;
     white-space: nowrap;
-    padding-right: 1rem;
 }
 
 .release_info_grid span,

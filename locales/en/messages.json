@@ -4020,7 +4020,10 @@
         "message": "Show Log"
     },
     "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
+        "message": "Cloud build status:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Flash status:"
     },
     "firmwareFlasherCloudBuildQueued": {
         "message": "queued"
