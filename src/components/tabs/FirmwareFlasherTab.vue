@@ -1504,7 +1504,7 @@ export default defineComponent({
         };
 
         const handleFlashFirmware = async () => {
-            if (state.flashButtonDisabled) {
+            if (state.flashButtonDisabled || activeFlasherStep.value !== "flash") {
                 return;
             }
 
@@ -1760,7 +1760,7 @@ export default defineComponent({
                 {
                     label: $t("firmwareFlasherFlashFirmware"),
                     icon: "i-lucide-zap",
-                    disabled: state.flashButtonDisabled,
+                    disabled: state.flashButtonDisabled || activeFlasherStep.value !== "flash",
                     onSelect: handleFlashFirmware,
                 },
                 {

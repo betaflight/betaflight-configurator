@@ -27,6 +27,7 @@
                     class="name"
                     :href="state.releaseNameLink"
                     target="_blank"
+                    rel="noopener noreferrer"
                     >{{ state.releaseNameText }}</a
                 >
                 <div></div>
@@ -61,6 +62,7 @@
                     id="cloudTargetLog"
                     :href="cloudBuild.state.cloudTargetLogUrl"
                     target="_blank"
+                    rel="noopener noreferrer"
                     >{{ cloudBuild.state.cloudTargetLogText }}</a
                 >
                 <div></div>
