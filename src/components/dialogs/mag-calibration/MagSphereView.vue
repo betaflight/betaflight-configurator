@@ -302,7 +302,21 @@ function initScene() {
     const coneMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
     fieldRefGroup.userData.cone = new THREE.Mesh(coneGeo, coneMat);
     fieldRefGroup.add(fieldRefGroup.userData.cone);
-    // Inclination arc (updated in updateFieldReferenceArrow)
+
+    // South-pole shaft (grey, same geometry as north shaft)
+    const southShaftGeo = new THREE.CylinderGeometry(3, 3, 1, 8);
+    southShaftGeo.translate(0, 0.5, 0);
+    const southShaftMat = new THREE.MeshBasicMaterial({ color: 0x888888, opacity: 0.7, transparent: true });
+    fieldRefGroup.userData.southShaft = new THREE.Mesh(southShaftGeo, southShaftMat);
+    fieldRefGroup.add(fieldRefGroup.userData.southShaft);
+
+    // South-pole cone (grey, tip points outward along south pole)
+    const southConeGeo = new THREE.ConeGeometry(8, 24, 8);
+    const southConeMat = new THREE.MeshBasicMaterial({ color: 0x888888 });
+    fieldRefGroup.userData.southCone = new THREE.Mesh(southConeGeo, southConeMat);
+    fieldRefGroup.add(fieldRefGroup.userData.southCone);
+
+    // Inclination arc (updated in rebuildFieldReference)
     fieldRefGroup.userData.arc = null;
     fieldRefGroup.userData.arcLabel = null;
     scene.add(fieldRefGroup);
@@ -364,6 +378,8 @@ function updateQuadAttitude() {
     // BF frame: X=fwd, Y=right, Z=down → Display: X=fwd, Y=left, Z=up
     // Flipping Y and Z negates all rotation directions.
     // Euler order ZYX: heading (Z) → pitch (Y) → roll (X)
+    // TODO: Euler ZYX has gimbal lock at +/-90 pitch. Upgrade to
+    // MSP_ATTITUDE_QUATERNION (code 167) when configurator support is added.
     const { roll, pitch, heading } = props.attitude;
     quadIcon.rotation.set(-roll * DEG_TO_RAD, -pitch * DEG_TO_RAD, -heading * DEG_TO_RAD, "ZYX");
 }
@@ -467,6 +483,16 @@ function rebuildFieldReference() {
         cone.position.set(fdx, 0, fdz);
         _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
         cone.quaternion.copy(_tmpQuat);
+
+        // South pole: negate the field direction
+        const southShaft = fieldRefGroup.userData.southShaft;
+        const southCone = fieldRefGroup.userData.southCone;
+        _tmpVec.set(-fdx, 0, -fdz);
+        orientCylinder(southShaft, _tmpVec, len);
+        southShaft.position.set(0, 0, 0);
+        southCone.position.set(-fdx, 0, -fdz);
+        _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
+        southCone.quaternion.copy(_tmpQuat);
     }
 
     // Dispose old arc + label
@@ -1073,6 +1099,8 @@ function createGhostSphere(radius) {
 // Compass ring: thin equatorial circle + N/S/E/W sprites in the horizontal (Z=0) plane.
 // North = +X (display) — the horizontal projection of Earth's magnetic field.
 // East  = -Y (display) — BF +Y (right of quad when facing North).
+// Cardinal markers represent magnetic north, not geographic north.
+// The compass ring is not rotated by declination.
 function createCompassRing(radius) {
     const group = new THREE.Group();
 
@@ -1090,30 +1118,29 @@ function createCompassRing(radius) {
     // Helper: canvas-texture sprite for a compass label
     const makeLabel = (text, color) => {
         const cv = document.createElement("canvas");
-        cv.width = 64;
-        cv.height = 64;
+        cv.width = 128;
+        cv.height = 128;
         const ctx = cv.getContext("2d");
         ctx.fillStyle = color;
-        ctx.font = "bold 48px sans-serif";
+        ctx.font = "bold 96px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(text, 32, 32);
+        ctx.fillText(text, 64, 64);
         const tex = new THREE.CanvasTexture(cv);
         const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
         const sprite = new THREE.Sprite(mat);
-        sprite.scale.set(80, 80, 1);
+        sprite.scale.set(140, 140, 1);
         group.add(sprite);
         return sprite;
     };
 
     const r = radius + 60;
-    // N/S on the X axis (red, matching the existing X-axis line colour)
-    makeLabel("N", "#ff6666").position.set(r, 0, 0);
-    makeLabel("S", "#ff6666").position.set(-r, 0, 0);
-    // E/W on the Y axis (green, matching the existing Y-axis line colour)
+    // N highlighted red (navigation convention); E/S/W neutral
+    makeLabel("N", "#ff4444").position.set(r, 0, 0);
+    makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
     // Display -Y = BF +Y = East when the quad nose faces North
-    makeLabel("E", "#66ff66").position.set(0, -r, 0);
-    makeLabel("W", "#66ff66").position.set(0, r, 0);
+    makeLabel("E", "#aabbcc").position.set(0, -r, 0);
+    makeLabel("W", "#aabbcc").position.set(0, r, 0);
 
     return group;
 }
