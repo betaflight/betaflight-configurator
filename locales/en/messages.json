@@ -4020,7 +4020,10 @@
         "message": "Show Log"
     },
     "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
+        "message": "Build status:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Flash status:"
     },
     "firmwareFlasherCloudBuildQueued": {
         "message": "queued"
@@ -4221,20 +4224,14 @@
     "firmwareFlasherReadMore": {
         "message": "Read more →"
     },
-    "firmwareFlasherSubTabBoardSelection": {
-        "message": "Board Selection"
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "Board & Build"
     },
     "firmwareFlasherAdvancedTitle": {
         "message": "Advanced"
     },
-    "firmwareFlasherSubTabBuildConfig": {
-        "message": "Build Configuration"
-    },
-    "firmwareFlasherSubTabReleaseInfo": {
-        "message": "Release & Build Info"
-    },
-    "firmwareFlasherSubTabFlashing": {
-        "message": "Flashing"
+    "firmwareFlasherSubTabFlash": {
+        "message": "Flash"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
