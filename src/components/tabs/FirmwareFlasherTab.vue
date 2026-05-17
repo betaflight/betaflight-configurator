@@ -19,8 +19,8 @@
 
             <!-- Tab content -->
             <div class="flasher-tab-area">
-                <FlasherBoardSelectionTab
-                    v-if="activeFlasherStep === 'board'"
+                <FlasherBoardBuildTab
+                    v-if="activeFlasherStep === 'board-build'"
                     :state="state"
                     :board-selection="boardSelection"
                     :on-build-type-change="onBuildTypeChange"
@@ -29,10 +29,6 @@
                     :on-firmware-version-change="onFirmwareVersionChange"
                     :on-expert-mode-change="handleExpertModeChange"
                     :on-show-development-releases-change="handleShowDevelopmentReleasesChange"
-                />
-                <FlasherBuildConfigTab
-                    v-if="activeFlasherStep === 'build-config'"
-                    :state="state"
                     :on-radio-protocol-change="onRadioProtocolChange"
                     :on-telemetry-protocol-change="onTelemetryProtocolChange"
                     :on-osd-protocol-change="onOsdProtocolChange"
@@ -42,15 +38,11 @@
                     :on-commit-change="onCommitChange"
                     :on-commit-create="onCommitCreate"
                 />
-                <FlasherReleaseInfoTab
-                    v-if="activeFlasherStep === 'release-info'"
+                <FlasherFlashTab
+                    v-if="activeFlasherStep === 'flash'"
                     :state="state"
                     :cloud-build="cloudBuild"
                     :on-save-firmware="saveFirmware"
-                />
-                <FlasherFlashingTab
-                    v-if="activeFlasherStep === 'flashing'"
-                    :state="state"
                     :flash-ring-color="flashRingColor"
                     :on-no-reboot-change="handleNoRebootChange"
                     :on-erase-chip-change="handleEraseChipChange"
@@ -63,8 +55,8 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup size="sm" orientation="horizontal" class="flex!">
                 <UButton
-                    :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flashing'"
-                    :color="state.flashButtonDisabled || activeFlasherStep !== 'flashing' ? 'neutral' : 'success'"
+                    :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
+                    :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
                     :loading="state.flashingInProgress"
                     @click="handleFlashFirmware"
                 >
@@ -72,7 +64,7 @@
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="flashActionMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton
-                        :color="state.flashButtonDisabled || activeFlasherStep !== 'flashing' ? 'neutral' : 'success'"
+                        :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :aria-label="$t('firmwareFlasherFlashFirmwareOptions')"
                         square
@@ -183,14 +175,12 @@ import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
-import FlasherBoardSelectionTab from "./firmware-flasher/FlasherBoardSelectionTab.vue";
-import FlasherBuildConfigTab from "./firmware-flasher/FlasherBuildConfigTab.vue";
-import FlasherReleaseInfoTab from "./firmware-flasher/FlasherReleaseInfoTab.vue";
-import FlasherFlashingTab from "./firmware-flasher/FlasherFlashingTab.vue";
+import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
+import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
-const activeFlasherStep = ref("board");
+const activeFlasherStep = ref("board-build");
 
 export default defineComponent({
     name: "FirmwareFlasherTab",
@@ -198,10 +188,8 @@ export default defineComponent({
         BaseTab,
         WikiButton,
         SponsorTile,
-        FlasherBoardSelectionTab,
-        FlasherBuildConfigTab,
-        FlasherReleaseInfoTab,
-        FlasherFlashingTab,
+        FlasherBoardBuildTab,
+        FlasherFlashTab,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
@@ -285,6 +273,8 @@ export default defineComponent({
             // Dialog states
             dialogUnstableFirmwareAcknowledgementCheckbox: false,
             flashingInProgress: false,
+            lastFlashResultText: "",
+            lastFlashResultClass: "",
         });
 
         // Sponsor component ref
@@ -383,6 +373,18 @@ export default defineComponent({
             if (message !== null) {
                 state.progressLabelText = message;
             }
+
+            // Capture terminal flash results for persistence (VALID = success, INVALID = failure)
+            // Must check flashProgressValue because flashProgress(100) clears flashingInProgress
+            // before the final flashingMessage call arrives.
+            if (
+                (state.flashingInProgress || state.flashProgressValue > 0) &&
+                (type === FLASH_MESSAGE_TYPES.VALID || type === FLASH_MESSAGE_TYPES.INVALID)
+            ) {
+                state.lastFlashResultText = state.progressLabelText;
+                state.lastFlashResultClass = state.progressLabelClass;
+            }
+
             return TABS.firmware_flasher;
         };
 
@@ -479,7 +481,7 @@ export default defineComponent({
                 );
             }
             enableFlashButton(true);
-            activeFlasherStep.value = "flashing";
+            activeFlasherStep.value = "flash";
 
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
                 firmwareSize: bytes,
@@ -559,14 +561,7 @@ export default defineComponent({
             state.targetMCUText = summary.mcu || "";
             state.configFilenameText = state.isConfigLocal ? state.configFilename : "[default]";
 
-            if (summary.cloudBuild) {
-                state.cloudTargetInfoVisible = true;
-                cloudBuild.state.cloudTargetLogText = "";
-                cloudBuild.state.cloudTargetLogUrl = "";
-                cloudBuild.state.cloudTargetStatusText = "pending";
-            } else {
-                state.cloudTargetInfoVisible = false;
-            }
+            state.cloudTargetInfoVisible = !!summary.cloudBuild;
         };
 
         const loadFailed = () => {
@@ -1017,7 +1012,7 @@ export default defineComponent({
             }
 
             // Reset state on tab initialization
-            activeFlasherStep.value = "board";
+            activeFlasherStep.value = "board-build";
             boardSelection.resetBoardSelection();
             cloudBuild.resetCloudBuildState();
             firmwareFlashing.clearFirmwareState();
@@ -1025,6 +1020,8 @@ export default defineComponent({
             state.localFirmwareLoaded = false;
             state.isConfigLocal = false;
             state.customDefinesTags = [];
+            state.lastFlashResultText = "";
+            state.lastFlashResultClass = "";
 
             // Setup UI handlers and event bus listeners
             await setupUIHandlers();
@@ -1512,9 +1509,11 @@ export default defineComponent({
             }
 
             state.progressLabelText = "";
+            state.lastFlashResultText = "";
+            state.lastFlashResultClass = "";
             state.flashingInProgress = true;
             GUI.flashingInProgress = true;
-            activeFlasherStep.value = "flashing";
+            activeFlasherStep.value = "flash";
             await nextTick();
 
             const options = {
@@ -1576,7 +1575,7 @@ export default defineComponent({
             }
 
             if (state.targetDetail) {
-                activeFlasherStep.value = "release-info";
+                activeFlasherStep.value = "flash";
                 await nextTick();
                 flashingMessage($t("firmwareFlasherButtonDownloading"), FLASH_MESSAGE_TYPES.NEUTRAL);
                 showReleaseNotes(state.targetDetail);
@@ -1797,14 +1796,8 @@ export default defineComponent({
         });
 
         const subtabItems = computed(() => [
-            { label: $t("firmwareFlasherSubTabBoardSelection"), value: "board", icon: "i-lucide-cpu" },
-            {
-                label: $t("firmwareFlasherSubTabBuildConfig"),
-                value: "build-config",
-                icon: "i-lucide-sliders-horizontal",
-            },
-            { label: $t("firmwareFlasherSubTabReleaseInfo"), value: "release-info", icon: "i-lucide-tag" },
-            { label: $t("firmwareFlasherSubTabFlashing"), value: "flashing", icon: "i-lucide-zap" },
+            { label: $t("firmwareFlasherSubTabBoardBuild"), value: "board-build", icon: "i-lucide-cpu" },
+            { label: $t("firmwareFlasherSubTabFlash"), value: "flash", icon: "i-lucide-zap" },
         ]);
 
         // Return all public methods and state
