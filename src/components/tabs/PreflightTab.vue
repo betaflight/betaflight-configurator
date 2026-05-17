@@ -181,7 +181,11 @@
                 <div class="launch-status-value">{{ $t(preflight.launchStatus.label) }}</div>
                 <div class="default_btn refresh-btn">
                     <a href="#" @click.prevent="refreshData" :class="{ disabled: preflight.isLoading }">
-                        <UIcon name="i-lucide-refresh-cw" class="size-4" :class="{ 'animate-spin': preflight.isLoading }" />
+                        <UIcon
+                            name="i-lucide-refresh-cw"
+                            class="size-4"
+                            :class="{ 'animate-spin': preflight.isLoading }"
+                        />
                         {{ $t("preflightRefresh") }}
                     </a>
                 </div>
@@ -294,10 +298,7 @@
                     </UiBox>
 
                     <!-- Flight Window -->
-                    <UiBox
-                        v-if="preflight.weather.daily"
-                        :title="$t('preflightFlightWindow')"
-                    >
+                    <UiBox v-if="preflight.weather.daily" :title="$t('preflightFlightWindow')">
                         <template #title>
                             <UIcon name="i-lucide-clock" class="size-4" />
                         </template>
@@ -367,10 +368,7 @@
                     </UiBox>
 
                     <!-- Wind at Altitude (Hourly) -->
-                    <UiBox
-                        :title="$t('preflightWindForecast')"
-                        :help="$t('preflightWindForecastHelp')"
-                    >
+                    <UiBox :title="$t('preflightWindForecast')" :help="$t('preflightWindForecastHelp')">
                         <template #title>
                             <UIcon name="i-lucide-wind" class="size-4" />
                         </template>
@@ -483,10 +481,7 @@
                 <!-- Right Column: Solar, GNSS, Airspace -->
                 <div class="flex flex-col gap-4 md:col-span-2">
                     <!-- Solar Activity -->
-                    <UiBox
-                        :title="$t('preflightSolarActivity')"
-                        :help="$t('preflightSolarHelp')"
-                    >
+                    <UiBox :title="$t('preflightSolarActivity')" :help="$t('preflightSolarHelp')">
                         <template #title>
                             <UIcon name="i-lucide-sun" class="size-4" />
                         </template>
@@ -536,16 +531,14 @@
                             </div>
                         </div>
                         <div v-else-if="preflight.solar.loading" class="loading-placeholder">
-                            <UIcon name="i-lucide-loader-circle" class="size-4 animate-spin" /> {{ $t("preflightLoadingSolar") }}
+                            <UIcon name="i-lucide-loader-circle" class="size-4 animate-spin" />
+                            {{ $t("preflightLoadingSolar") }}
                         </div>
                         <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
                     </UiBox>
 
                     <!-- GNSS Info -->
-                    <UiBox
-                        :title="$t('preflightGNSS')"
-                        :help="$t('preflightGNSSHelp')"
-                    >
+                    <UiBox :title="$t('preflightGNSS')" :help="$t('preflightGNSSHelp')">
                         <template #title>
                             <UIcon name="i-lucide-satellite" class="size-4" />
                         </template>
@@ -564,7 +557,8 @@
                             </UTable>
                             <div class="gnss-links">
                                 <a href="https://www.gnssplanning.com/" target="_blank" rel="noopener noreferrer">
-                                    <UIcon name="i-lucide-external-link" class="size-4" /> {{ $t("preflightGNSSPlanner") }}
+                                    <UIcon name="i-lucide-external-link" class="size-4" />
+                                    {{ $t("preflightGNSSPlanner") }}
                                 </a>
                             </div>
                         </div>
@@ -612,17 +606,15 @@
                                     rel="noopener noreferrer"
                                     class="airspace-link"
                                 >
-                                    <UIcon name="i-lucide-triangle-alert" class="size-4" /> {{ $t("preflightNOTAMsEU") }}
+                                    <UIcon name="i-lucide-triangle-alert" class="size-4" />
+                                    {{ $t("preflightNOTAMsEU") }}
                                 </a>
                             </div>
                         </div>
                     </UiBox>
 
                     <!-- Map -->
-                    <UiBox
-                        :title="$t('preflightMap')"
-                        class="preflight-map-box"
-                    >
+                    <UiBox :title="$t('preflightMap')" class="preflight-map-box">
                         <template #title>
                             <UIcon name="i-lucide-map-pinned" class="size-4" />
                         </template>
