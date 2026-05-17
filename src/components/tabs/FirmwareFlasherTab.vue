@@ -466,6 +466,8 @@ export default defineComponent({
         const showLoadedFirmware = (filename, bytes) => {
             state.filename = filename;
             state.firmwareLoadedName = filename;
+            state.lastFlashResultText = "";
+            state.lastFlashResultClass = "";
             state.firmwareLoadedSize = $t("firmwareFlasherFirmwareSize", { bytes });
             state.firmwareLoadedIsLocal = state.localFirmwareLoaded;
 
