@@ -22,7 +22,7 @@ vi.mock("../../src/js/utils/sphereFit", () => ({
 vi.mock("geomagnetism", () => ({
     default: {
         model: () => ({
-            point: () => ({ decl: 5.0, incl: 60.0, f: 50000 }),
+            point: () => ({ decl: 5, incl: 60, f: 50000 }),
         }),
     },
 }));
@@ -35,13 +35,12 @@ import { useFlightControllerStore } from "../../src/stores/fc";
 describe("useMagCalibration", () => {
     let scope;
     let cal;
-    let fcStore;
 
     beforeEach(() => {
         vi.useFakeTimers();
         setActivePinia(createPinia());
         FC.resetState();
-        fcStore = useFlightControllerStore();
+        useFlightControllerStore();
 
         // Set up mag data on the store
         FC.SENSOR_DATA.magnetometer = [100, 200, 300];
@@ -167,7 +166,7 @@ describe("useMagCalibration", () => {
 
         it("rejects non-finite center values (Number.isFinite guard)", async () => {
             cal.sphereFitResult.value = {
-                center: { x: NaN, y: 100, z: 200 },
+                center: { x: Number.NaN, y: 100, z: 200 },
                 radius: 300,
                 residual: 50,
             };

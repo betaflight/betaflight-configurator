@@ -122,9 +122,9 @@ describe("MspHelper", () => {
         it("handles MSP_ATTITUDE_QUATERNION correctly", () => {
             // Encode known quaternion values as int16 (value * 32767)
             const qw = 0.7071;
-            const qx = 0.0;
+            const qx = 0;
             const qy = -0.7071;
-            const qz = 0.0;
+            const qz = 0;
 
             const buffer = new ArrayBuffer(8);
             const view = new DataView(buffer);
@@ -164,10 +164,10 @@ describe("MspHelper", () => {
             });
 
             const q = FC.SENSOR_DATA.quaternion;
-            expect(q.w).toBeCloseTo(1.0, 3);
-            expect(q.x).toBeCloseTo(-1.0, 3);
-            expect(q.y).toBeCloseTo(0.0, 3);
-            expect(q.z).toBeCloseTo(16384 / 32767.0, 3);
+            expect(q.w).toBeCloseTo(1, 3);
+            expect(q.x).toBeCloseTo(-1, 3);
+            expect(q.y).toBeCloseTo(0, 3);
+            expect(q.z).toBeCloseTo(16384 / 32767, 3);
         });
     });
 });

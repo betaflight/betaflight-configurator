@@ -358,10 +358,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     break;
                 case MSPCodes.MSP_ATTITUDE_QUATERNION:
                     FC.SENSOR_DATA.quaternion = {
-                        w: data.read16() / 32767.0,
-                        x: data.read16() / 32767.0,
-                        y: data.read16() / 32767.0,
-                        z: data.read16() / 32767.0,
+                        w: data.read16() / 32767,
+                        x: data.read16() / 32767,
+                        y: data.read16() / 32767,
+                        z: data.read16() / 32767,
                     };
                     break;
                 case MSPCodes.MSP_ALTITUDE:
