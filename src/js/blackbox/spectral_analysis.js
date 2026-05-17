@@ -261,6 +261,21 @@ function findGainCrossover(frequencies, magnitude, coherence) {
     return 0;
 }
 
+// Whether the two frequency bins bracketing `targetHz` both have coherence
+// above `threshold`. Used to suppress predictions that fall outside the
+// trustworthy range of the measurement.
+function isFrequencyCoherent(frequencies, coherence, targetHz, threshold) {
+    if (!coherence || targetHz <= 0 || targetHz > frequencies[frequencies.length - 1]) {
+        return false;
+    }
+    for (let k = 1; k < frequencies.length; k++) {
+        if (frequencies[k] >= targetHz) {
+            return coherence[k - 1] >= threshold && coherence[k] >= threshold;
+        }
+    }
+    return false;
+}
+
 // 4. Phase at a chosen crossover frequency (linear interpolation)
 function interpolatePhase(frequencies, phase, crossoverHz) {
     if (crossoverHz <= 0) {
@@ -321,10 +336,12 @@ function computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg)
     // Changing P shifts the gain crossover; the phase at the new crossover
     // determines the actual phase margin the system will have after the P
     // adjustment, so D must compensate from *that* predicted margin rather
-    // than the currently measured one.
+    // than the currently measured one. Skip the prediction if the predicted
+    // crossover falls outside the coherent frequency range — phase samples
+    // there are noise, not signal, and would push D toward bogus values.
     let dScale = 1;
     const predictedCrossoverHz = gainCrossoverHz * piScale;
-    if (predictedCrossoverHz > 0) {
+    if (predictedCrossoverHz > 0 && isFrequencyCoherent(tf.frequencies, tf.coherence, predictedCrossoverHz, 0.3)) {
         const predictedPhase = interpolatePhase(tf.frequencies, tf.phase, predictedCrossoverHz);
         const predictedPhaseMargin = 180 + predictedPhase;
         if (predictedPhaseMargin > 0 && predictedPhaseMargin < 180) {
@@ -528,13 +545,13 @@ function peakValue(response, len) {
 }
 
 function riseTime(timeMs, response, len, ss) {
-    let start = 0;
+    let start = null;
     for (let i = 0; i < len; i++) {
-        if (start === 0 && response[i] >= 0.1 * ss) {
+        if (start === null && response[i] >= 0.1 * ss) {
             start = timeMs[i];
         }
         if (response[i] >= 0.9 * ss) {
-            return Math.max(0, timeMs[i] - start);
+            return start === null ? 0 : Math.max(0, timeMs[i] - start);
         }
     }
     return 0;

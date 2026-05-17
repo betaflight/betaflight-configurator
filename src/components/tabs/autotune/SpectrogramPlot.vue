@@ -212,16 +212,25 @@ function drawAxes(ctx, spec, maxFreq, plotW, plotH) {
     const tMin = spec.timeMs[0];
     const tMax = spec.timeMs[spec.numSegments - 1];
     const tRange = tMax - tMin;
-    const xTicks = niceTicksLinear(tMin, tMax, 8);
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    for (const t of xTicks) {
-        const x = MARGIN.left + ((t - tMin) / tRange) * plotW;
+    if (tRange <= 0) {
+        const x = MARGIN.left + plotW / 2;
         ctx.beginPath();
         ctx.moveTo(x, MARGIN.top + plotH);
         ctx.lineTo(x, MARGIN.top + plotH + 4);
         ctx.stroke();
-        ctx.fillText(formatTickMs(t), x, MARGIN.top + plotH + 5);
+        ctx.fillText(formatTickMs(tMin), x, MARGIN.top + plotH + 5);
+    } else {
+        const xTicks = niceTicksLinear(tMin, tMax, 8);
+        for (const t of xTicks) {
+            const x = MARGIN.left + ((t - tMin) / tRange) * plotW;
+            ctx.beginPath();
+            ctx.moveTo(x, MARGIN.top + plotH);
+            ctx.lineTo(x, MARGIN.top + plotH + 4);
+            ctx.stroke();
+            ctx.fillText(formatTickMs(t), x, MARGIN.top + plotH + 5);
+        }
     }
 
     // X label

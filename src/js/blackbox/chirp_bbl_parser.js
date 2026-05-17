@@ -362,6 +362,14 @@ function parseSpecialHeader(key, value, sysConfig) {
         }
         return;
     }
+    if (key === "Firmware API version") {
+        sysConfig.firmwareApiVersion = value.trim();
+        return;
+    }
+    if (key === "Firmware revision") {
+        sysConfig.firmwareRevision = value.trim();
+        return;
+    }
     if (CSV_NUMBER_HEADERS.has(key)) {
         sysConfig[key] = value.split(",").map(Number);
     }
@@ -776,12 +784,23 @@ function skipToNextFrame(stream) {
  * CHIRP's current index via the shared debug-modes table (kept in sync
  * with firmware/debug.h via src/js/utils/debugModes.js).
  *
- * If no apiVersion is provided, or the caller passed the "no FC connected"
- * sentinel ("0.0.0"), assume the minimum firmware that supports chirp.
+ * Prefer the API version embedded in the log header — it always matches the
+ * firmware that produced this file. Fall back to the caller-supplied version
+ * (e.g. from a connected FC) only when the header doesn't carry one, and
+ * finally to the minimum supported version.
  */
 function validateDebugModeIsChirp(sysConfig, apiVersion) {
+    const logApiVersion = sysConfig.firmwareApiVersion;
+    const hasLogApiVersion = logApiVersion && logApiVersion !== "0.0.0";
     const hasApiVersion = apiVersion && apiVersion !== "0.0.0";
-    const effectiveApiVersion = hasApiVersion ? apiVersion : API_VERSION_1_47;
+    let effectiveApiVersion;
+    if (hasLogApiVersion) {
+        effectiveApiVersion = logApiVersion;
+    } else if (hasApiVersion) {
+        effectiveApiVersion = apiVersion;
+    } else {
+        effectiveApiVersion = API_VERSION_1_47;
+    }
     const debugChirpIndex = getDebugModeIndex("CHIRP", effectiveApiVersion);
     if (debugChirpIndex < 0) {
         throw new Error(

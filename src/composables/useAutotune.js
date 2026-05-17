@@ -1,5 +1,4 @@
 import { useAutotuneStore } from "@/stores/autotune";
-import { useFlightControllerStore } from "@/stores/fc";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -21,7 +20,6 @@ const AXIS_NAMES = ["roll", "pitch", "yaw"];
  */
 export function useAutotune() {
     const store = useAutotuneStore();
-    const fcStore = useFlightControllerStore();
 
     async function importAndAnalyze() {
         store.analysisState = "importing";
@@ -44,8 +42,7 @@ export function useAutotune() {
                 throw new Error("No log segments found in the file.");
             }
 
-            const apiVersion = fcStore.config?.apiVersion;
-            const result = tryParseLogs(data, logs, file.name, store, apiVersion);
+            const result = tryParseLogs(data, logs, file.name, store);
             if (!result) {
                 throw new Error("No chirp data found in any log segment.");
             }
@@ -84,12 +81,12 @@ async function pickFileOrSetError(store) {
     }
 }
 
-function tryParseLogs(data, logs, filename, store, apiVersion) {
+function tryParseLogs(data, logs, filename, store) {
     let lastError = null;
     for (let idx = 0; idx < logs.length; idx++) {
         store.progressMessage = `Parsing log ${idx + 1} of ${logs.length}...`;
         try {
-            const parsed = analyzeLog(data, logs[idx], apiVersion);
+            const parsed = analyzeLog(data, logs[idx]);
             if (parsed) {
                 return { filename, ...parsed };
             }
@@ -103,8 +100,8 @@ function tryParseLogs(data, logs, filename, store, apiVersion) {
     return null;
 }
 
-function analyzeLog(data, log, apiVersion) {
-    const { sysConfig, chirpData } = parseChirpLog(data, log.start, log.end, apiVersion);
+function analyzeLog(data, log) {
+    const { sysConfig, chirpData } = parseChirpLog(data, log.start, log.end);
     if (chirpData.sampleCount === 0 || chirpData.segments.length === 0) {
         return null;
     }
