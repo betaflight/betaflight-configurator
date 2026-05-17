@@ -1,5 +1,5 @@
 <template>
-    <UiBox class="mt-6">
+    <UiBox :title="$t('firmwareFlasherBoardSelectionHead')" type="neutral" class="mt-4">
         <UiBox
             highlight
             v-if="state.targetQualificationVisible"
@@ -77,8 +77,12 @@
         </SettingRow>
     </UiBox>
 
-    <UiBox class="build_configuration col-span-1 mt-6">
-        <SettingRow :label="$t('coreBuild')" :help="$t('coreBuildModeDescription')" full-width>
+    <UiBox
+        :title="$t('firmwareFlasherBuildConfigurationHead')"
+        type="neutral"
+        class="build_configuration col-span-1 mt-4"
+    >
+        <SettingRow :label="$t('coreBuild')" :help="$t('coreBuildModeDescription')">
             <USwitch v-model="state.coreBuildMode" />
         </SettingRow>
         <div class="grid-box col1">
