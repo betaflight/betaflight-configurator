@@ -146,7 +146,7 @@
                             class="waypoint-label"
                             text-anchor="middle"
                         >
-                            WP{{ index + 1 }}
+                            WP{{ point.order + 1 }}
                         </text>
                     </g>
 
@@ -166,7 +166,7 @@
                             class="tooltip-text"
                             text-anchor="middle"
                         >
-                            WP{{ hoveredPoint.index + 1 }}
+                            WP{{ hoveredPoint.order + 1 }}
                         </text>
                         <text
                             :x="hoveredPoint.tooltipX"
@@ -311,6 +311,7 @@ const profilePoints = computed(() => {
 
         return {
             uid: wp.uid,
+            order: wp.order,
             altitude: wp.altitude,
             distance: cumulativeDistance,
             latitude: wp.latitude,

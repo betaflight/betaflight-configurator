@@ -3307,11 +3307,23 @@
     "flightPlanDuration": {
         "message": "Hold Duration <span class=\"units\">min</span>"
     },
+    "flightPlanDurationAria": {
+        "message": "Hold Duration in minutes",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
     "flightPlanDelayDuration": {
         "message": "Delay Duration <span class=\"units\">min</span>"
     },
+    "flightPlanDelayDurationAria": {
+        "message": "Delay Duration in minutes",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
     "flightPlanYawRate": {
         "message": "Yaw Rate <span class=\"units\">°/s</span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Yaw Rate in degrees per second",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Hold Pattern"
@@ -3384,6 +3396,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Invalid longitude (must be between -180 and 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Invalid altitude (must be zero or positive)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Invalid duration (must be zero or positive)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "Invalid yaw rate (must be zero or positive)"
     },
     "flightPlanConfirmDelete": {
         "message": "Are you sure you want to delete this waypoint?"

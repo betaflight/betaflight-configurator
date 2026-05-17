@@ -87,8 +87,25 @@ const editingWaypoint = computed(() => {
 export function useFlightPlan() {
     // Validate waypoint data
     const validateWaypoint = (waypointData) => {
-        // Modifier types carry no horizontal position — skip coord/alt checks.
+        // Modifier types carry no horizontal position — skip coord checks but
+        // still validate the slot that's meaningful for each modifier type.
         if (isModifierWaypointType(waypointData.type)) {
+            if (waypointData.type === "alt_change") {
+                if (!Number.isFinite(waypointData.altitude) || waypointData.altitude < 0) {
+                    gui_log(i18n.getMessage("flightPlanInvalidAltitude") || "Altitude must be positive");
+                    return false;
+                }
+            } else if (waypointData.type === "delay") {
+                if (!Number.isFinite(waypointData.duration) || waypointData.duration < 0) {
+                    gui_log(i18n.getMessage("flightPlanInvalidDuration") || "Duration must be positive");
+                    return false;
+                }
+            } else if (waypointData.type === "yaw_rate") {
+                if (!Number.isFinite(waypointData.speed) || waypointData.speed < 0) {
+                    gui_log(i18n.getMessage("flightPlanInvalidYawRate") || "Yaw rate must be positive");
+                    return false;
+                }
+            }
             return true;
         }
         if (waypointData.latitude < -90 || waypointData.latitude > 90) {
@@ -192,16 +209,10 @@ export function useFlightPlan() {
             return false;
         }
 
-        // Validate if coordinates are being updated
-        if (updates.latitude !== undefined || updates.longitude !== undefined || updates.altitude !== undefined) {
-            const testData = {
-                latitude: updates.latitude ?? waypoint.latitude,
-                longitude: updates.longitude ?? waypoint.longitude,
-                altitude: updates.altitude ?? waypoint.altitude,
-            };
-            if (!validateWaypoint(testData)) {
-                return false;
-            }
+        // Validate against the merged state so modifier-specific guards see
+        // their relevant slot (altitude/duration/speed), not just lat/lon/alt.
+        if (!validateWaypoint({ ...waypoint, ...updates })) {
+            return false;
         }
 
         Object.assign(waypoint, updates);

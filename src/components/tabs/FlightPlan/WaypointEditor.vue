@@ -60,7 +60,7 @@
                     :min="0"
                     :max="720"
                     required
-                    :aria-label="$t('flightPlanYawRate')"
+                    :aria-label="$t('flightPlanYawRateAria')"
                     class="w-48"
                 />
             </SettingRow>
@@ -71,7 +71,7 @@
                     :step="0.1"
                     :min="0"
                     :max="60"
-                    :aria-label="durationLabel"
+                    :aria-label="durationAriaLabel"
                     class="w-48"
                 />
             </SettingRow>
@@ -163,6 +163,10 @@ const showSpeed = computed(() => !isModifier.value);
 const showYawRate = computed(() => form.type === "yaw_rate");
 const showDuration = computed(() => form.type === "hold" || form.type === "delay");
 const durationLabel = computed(() => (form.type === "delay" ? t("flightPlanDelayDuration") : t("flightPlanDuration")));
+// Aria labels avoid the `<span class="units">` markup that the visual labels carry.
+const durationAriaLabel = computed(() =>
+    form.type === "delay" ? t("flightPlanDelayDurationAria") : t("flightPlanDurationAria"),
+);
 
 // Watch for editing waypoint changes and populate form
 watch(editingWaypoint, (waypoint) => {
@@ -208,6 +212,38 @@ watch(
     },
 );
 
+// Build a save payload, zeroing slots that aren't meaningful for the type so
+// modifier waypoints don't leak stale form values into CLI/FC round-trips.
+const buildPayload = () => {
+    const base = { type: form.type, latitude: 0, longitude: 0, altitude: 0, speed: 0, duration: 0, pattern: "circle" };
+    switch (form.type) {
+        case "alt_change":
+            return { ...base, altitude: form.altitude };
+        case "delay":
+            return { ...base, duration: form.duration };
+        case "yaw_rate":
+            return { ...base, speed: form.speed };
+        case "hold":
+            return {
+                ...base,
+                latitude: form.latitude,
+                longitude: form.longitude,
+                altitude: form.altitude,
+                speed: form.speed,
+                duration: form.duration,
+                pattern: form.pattern,
+            };
+        default:
+            return {
+                ...base,
+                latitude: form.latitude,
+                longitude: form.longitude,
+                altitude: form.altitude,
+                speed: form.speed,
+            };
+    }
+};
+
 // Reset form to defaults
 const resetForm = () => {
     form.latitude = 0;
@@ -227,16 +263,9 @@ const handleSave = () => {
         return;
     }
 
-    // Modifier waypoints have no horizontal position; firmware ignores lat/lon.
-    const payload = {
-        latitude: isModifier.value ? 0 : form.latitude,
-        longitude: isModifier.value ? 0 : form.longitude,
-        altitude: form.altitude,
-        speed: form.speed,
-        type: form.type,
-        duration: form.duration,
-        pattern: form.pattern,
-    };
+    // Each modifier type uses just one storage slot; zero the rest so the CLI
+    // round-trip and FC executor only see meaningful values for that type.
+    const payload = buildPayload();
 
     const success = editMode.value ? updateWaypoint(editingWaypointUid.value, payload) : addWaypoint(payload);
 
