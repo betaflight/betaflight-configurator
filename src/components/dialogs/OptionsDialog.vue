@@ -44,6 +44,7 @@
                             size="sm"
                             v-model="settings.backupOnFlash"
                             class="min-w-40"
+                            :ui="{ content: 'z-3002' }"
                         />
                     </SettingRow>
                 </UiBox>
@@ -62,6 +63,7 @@
                             size="sm"
                             v-model="settings.darkTheme"
                             class="min-w-40"
+                            :ui="{ content: 'z-3002' }"
                         />
                     </SettingRow>
                     <SettingRow :label="$t('colorTheme')">
@@ -74,6 +76,7 @@
                             size="sm"
                             v-model="settings.colorTheme"
                             class="min-w-40"
+                            :ui="{ content: 'z-3002' }"
                         />
                     </SettingRow>
                     <div class="flex flex-col gap-2 py-2">
@@ -132,7 +135,7 @@
                                 icon: 'i-lucide-search',
                             }"
                             class="min-w-48"
-                            :ui="{ content: 'max-h-72' }"
+                            :ui="{ content: 'max-h-72 z-3002' }"
                         />
                     </SettingRow>
                 </UiBox>
