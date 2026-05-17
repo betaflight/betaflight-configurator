@@ -1679,10 +1679,17 @@ OSD.msp = {
             if (bit_check(d.flags, 0)) {
                 d.unit_mode = view.readU8();
                 d.alarms = {};
-                d.alarms["rssi"] = { display_name: i18n.getMessage("osdTimerAlarmOptionRssi"), value: view.readU8() };
+                d.alarms["rssi"] = {
+                    display_name: i18n.getMessage("osdTimerAlarmOptionRssi"),
+                    value: view.readU8(),
+                    min: 0,
+                    max: 100,
+                };
                 d.alarms["cap"] = {
                     display_name: i18n.getMessage("osdTimerAlarmOptionCapacity"),
                     value: view.readU16(),
+                    min: 0,
+                    max: 20000,
                 };
                 // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
                 view.readU8();
@@ -1691,6 +1698,8 @@ OSD.msp = {
                 d.alarms["alt"] = {
                     display_name: i18n.getMessage("osdTimerAlarmOptionAltitude"),
                     value: view.readU16(),
+                    min: 0,
+                    max: 10000,
                 };
             }
         }
@@ -1817,6 +1826,8 @@ OSD.msp = {
             d.alarms["link_quality"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionLinkQuality"),
                 value: view.readU16(),
+                min: 0,
+                max: 100,
             };
         }
 
@@ -1824,6 +1835,8 @@ OSD.msp = {
             d.alarms["rssi_dbm"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionRssiDbm"),
                 value: view.read16(),
+                min: -130,
+                max: 0,
             };
         }
 

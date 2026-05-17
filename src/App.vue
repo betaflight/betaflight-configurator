@@ -1,7 +1,7 @@
 <template>
-    <UApp :tooltip="{ delayDuration: 100 }">
+    <UApp :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
         <div class="app-wrapper">
-            <div id="background" v-show="isRevealed" @click="isRevealed = false"></div>
+            <div id="background" v-if="isMobileSidebarOpen" aria-hidden="true" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
             <div class="mobile-topbar" :class="{ 'mobile-topbar--hidden': topbarHidden }">
                 <UButton
@@ -18,7 +18,7 @@
                 <div class="mobile-topbar__spacer" aria-hidden="true"></div>
             </div>
             <div id="tab-content-container">
-                <div class="tab_container" :class="{ reveal: isRevealed }">
+                <div class="tab_container" :class="{ reveal: isMobileSidebarOpen }">
                     <betaflight-logo
                         :configurator-version="CONFIGURATOR.getDisplayVersion()"
                         :firmware-version="FC.CONFIG.flightControllerVersion"
@@ -27,7 +27,6 @@
                     ></betaflight-logo>
                     <ConnectButton />
                     <Sidebar />
-                    <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
                 <div id="content" @scroll.passive="onContentScroll">
@@ -117,11 +116,15 @@ const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback)
 const activeTabInstance = ref(null);
 
 const isRevealed = ref(false);
-const sidebarCompact = useMediaQuery("(max-width: 1055px)");
-const isSidebarExpanded = computed(() => !sidebarCompact.value || isRevealed.value);
+const sidebarNarrow = useMediaQuery("(max-width: 1055px)");
+const isCompactBreakpoint = useMediaQuery(
+    "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",
+);
+const isMobileSidebarOpen = computed(() => isCompactBreakpoint.value && isRevealed.value);
+const isSidebarExpanded = computed(() => !sidebarNarrow.value || isRevealed.value);
 
-// Auto-close the drawer when leaving the compact breakpoint.
-watch(sidebarCompact, (compact) => {
+// Auto-close the drawer when leaving the mobile drawer breakpoint.
+watch(isCompactBreakpoint, (compact) => {
     if (!compact) {
         isRevealed.value = false;
     }
@@ -210,7 +213,7 @@ watch(
 .app-wrapper {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     min-height: 0; /* Allow flex children to shrink below content size */
 }
 

@@ -414,6 +414,9 @@
     "stm32UsbDfuNotFound": {
         "message": "USB DFU no encontrado"
     },
+    "stm32DfuPermissionRequired": {
+        "message": "El dispositivo se ha reiniciado en modo DFU.<br><br>Tu navegador requiere permiso USB para acceder al dispositivo DFU. Pulsa en el botón de abajo para seleccionarlo del selector de dispositivos."
+    },
     "stm32RebootingToBootloader": {
         "message": "Iniciando reinicio a gestor de arranque..."
     },
@@ -500,9 +503,6 @@
     },
     "firmwareTypeNotSupported": {
         "message": "No-Betaflight firmware <span class=\"message-negative\"> no soportado<\/span>, excepto modo CLI."
-    },
-    "firmwareUpgradeRequired": {
-        "message": "El firmware de este dispositivo necesita actualizarse a una nueva versión. Use CLI para hacer una copia de seguridad antes de flashear. El proceso de copia\/restauración con CLI está en la documentación.<br \/>Alternativamente puede descargar y usar una versión anterior de la aplicación si no está preparado para actualizar."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Hay valores por defecto personalizados disponibles para esta placa. Normalmente, una placa no funcionará correctamente a menos que se apliquen valores por defecto personalizados.<br \/>¿Quieres aplicar los valores por defecto personalizados para esta placa?"
@@ -4543,17 +4543,9 @@
         "message": "El filtrado RPM es un banco de filtros notch en el giro que usan los datos de la telemetría RPM para eliminar el ruido del motor con precisión quirúrgica.<br \/><br \/><b><span class=\"message-positive\">IMPORTANTE<\/span>: El ESC debe soportar el protocolo DShot Bidireccional y el valor de $t(configurationMotorPoles.message) en la pestaña $t(tabMotorTesting.message) debe ser correcto para que este filtro funcione.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Número de armónicos",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Número de armónicos por motor. Un valor de 3 (recomendado para la mayoría de aeronaves) generará 3 filtros notch por motor, por cada eje, totalizando 36 filtros notch. Uno en la frecuencia base del motor y dos armónicos en múltiplos de esa frecuencia base.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Frecuencia mínima de corte [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Frecuencia mínima que será usada por el Filtro RPM.",

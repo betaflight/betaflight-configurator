@@ -8,8 +8,8 @@ import { initializeSerialBackend } from "./serial_backend.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
+import { loadUiScale } from "./UiScale.js";
 import { applyExpertMode } from "./utils/applyExpertMode.js";
-import { mountVueTab } from "./vue_tab_mounter.js";
 import { switchTab } from "./tab_switch.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
@@ -17,6 +17,8 @@ import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 import { loadDeviceFilters } from "./protocols/devices.js";
+import { pinia } from "./pinia_instance.js";
+import { useNavigationStore } from "../stores/navigation.js";
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
@@ -91,14 +93,12 @@ function appReady() {
 
         initializeSerialBackend();
 
-        // Open options tab on first run (Vue)
+        // Open OptionsDialog on first launch so new users can set language / theme
         const firstRunCfg = getConfig("firstRun") ?? {};
         if (firstRunCfg.firstRun === undefined) {
             setConfig({ firstRun: true });
-            // Open the options tab after a short delay to ensure UI is ready
             setTimeout(() => {
-                // Select the root-mounted Vue tab directly, no DOM injection.
-                mountVueTab("options", () => {});
+                useNavigationStore(pinia).optionsDialogOpen = true;
             }, 100);
         }
     });
@@ -166,6 +166,9 @@ async function startProcess() {
             enableDevelopmentOptions();
         }
     }
+
+    // Apply persisted UI scale before initial tab mount to avoid flicker.
+    loadUiScale();
 
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
     switchTab("landing", { mode: "disconnected" });

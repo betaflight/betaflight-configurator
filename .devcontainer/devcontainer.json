@@ -1,0 +1,13 @@
+{
+  "name": "betaflight-configurator devcontainer",
+  "build": {
+    "dockerfile": "containerfile",
+    "context": "."
+  },
+  "remoteUser": "devpod",
+  "features": {},
+
+  // USB device access (optional — uncomment for serial/DFU access to flight controllers)
+  // "privileged": true,
+  // "runArgs": ["--volume=/dev:/dev"]
+}

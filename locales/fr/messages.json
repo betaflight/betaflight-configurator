@@ -467,9 +467,6 @@
     "firmwareTypeNotSupported": {
         "message": "Les firmwares autres que Betaflight <span class=\"message-negative\">ne sont pas supportés<\/span>, à part en mode CLI."
     },
-    "firmwareUpgradeRequired": {
-        "message": "Le micrologiciel de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde\/restauration par le CLI sont décrites dans l'aide.<br \/>Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
-    },
     "resetToCustomDefaultsDialog": {
         "message": "Des valeurs de réglage par défaut sont disponibles pour cette carte. Avec des valeurs par défaut propres à cette carte, celle-ci devrait fonctionner correctement.<br\/>Souhaitez vous appliquer les réglages par défaut propres à cette carte ?"
     },
@@ -3593,14 +3590,6 @@
     "pidTuningRpmFilterHelp": {
         "message": "Le filtrage RPM est une banque de filtres coupe bande s'appliquant au gyro, qui utilisent les données de télémétrie RPM pour retirer le bruit des moteurs avec une précision chirurgicale.<br \/><br \/><b><span class=\"message-positive\">IMPORTANT<\/span> : Les ESC doivent être compatibles avec le protocole DShot Bidirectionnel et la valeur de $t(configurationMotorPoles.message) dans l'onglet $t(tabMotorTesting.message) doit être correcte pour que ce filtre fonctionne.<\/b>",
         "description": "Header text for the RPM Filter group"
-    },
-    "pidTuningRpmHarmonics": {
-        "message": "Nombre d'Harmoniques du Filtre Gyro RPM",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Fréquence min [Hz] du filtre gyro RPM",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Fréquence minimum qui sera utilisée par le Filtre RPM.",

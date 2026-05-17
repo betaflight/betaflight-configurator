@@ -410,11 +410,68 @@
     "tabOptions": {
         "message": "Options"
     },
+    "sidebarOpenOptions": {
+        "message": "Options",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Toggle dark / light mode",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Toggle expert mode",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Setup"
     },
     "tabSetupOSD": {
         "message": "OSD Setup"
+    },
+    "tabSensorConfig": {
+        "message": "Sensors"
+    },
+    "sensorConfigHardware": {
+        "message": "Sensor Hardware"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Sensor configuration saved"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Failed to save sensor configuration"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetometer"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Accelerometer"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Place the craft on a level surface before calibrating"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "Accelerometer has not been calibrated. Please calibrate before flying."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Magnetometer calibration offsets are zero. Please calibrate for accurate heading."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibrate"
+    },
+    "sensorConfig3dPreview": {
+        "message": "3D Attitude Preview"
+    },
+    "sensorConfigLiveData": {
+        "message": "Live Sensor Data"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Show Live Sensor Data"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Stop live data"
     },
     "tabConfiguration": {
         "message": "Configuration"
@@ -505,9 +562,6 @@
     },
     "tabLedStrip": {
         "message": "LED Strip"
-    },
-    "tabRawSensorData": {
-        "message": "Sensors"
     },
     "tabCLI": {
         "message": "CLI"
@@ -683,7 +737,7 @@
         "message": "Non - Betaflight firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
     },
     "firmwareUpgradeRequired": {
-        "message": "The firmware on this device needs upgrading to a newer version. Use CLI for backup before flashing. CLI backup/restore procedure is in the documentation.<br />Alternatively download and use an old version of the app if you are not ready to upgrade."
+        "message": "The current version of the app may not support the firmware version on this device. You can use older releases such as <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0</a> for firmware down to 4.1 or <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1</a> for even older firmware versions.<br><br>The app will try to access the CLI on the device - if it succeeds, you can see the current firmware version by sending the <code>version</code> command in the CLI.<br><br>Alternatively, you can upgrade to a newer firmware version. Use CLI for backup before flashing, the procedure is in the <a href=\"https://betaflight.com/docs/wiki/getting-started/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a>. But keep in mind that backups from older versions of the firmware may not carry over correctly when restoring to a newer version. Modes, OSD, rates and ports should transfer safely, but be careful around the PID and failsafe settings."
     },
     "resetToCustomDefaultsDialog": {
         "message": "There are custom defaults for this board available. Normally, a board will not work properly unless custom defaults are applied.<br />Do you want to apply the custom defaults for this board?"
@@ -960,12 +1014,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Place board or frame on <strong>leveled</strong> surface, proceed with calibration, ensure platform is not moving during calibration period"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrate Magnetometer"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Move multirotor at least <strong>360</strong> degrees on all axis of rotation, you have 30 seconds to perform this task"
     },
@@ -1004,7 +1052,11 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+    },
+    "initialSetupMagHeading": {
+        "message": "Mag Heading:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
@@ -1082,6 +1134,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "CPU Load:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Loop Rate:"
     },
     "initialSetupCpuTemp": {
         "message": "CPU Temperature:"
@@ -1293,6 +1351,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Shows Heading, Pitch and Roll in instruments",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "Board:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Firmware:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1569,12 +1633,6 @@
     "configurationActiveImu": {
         "message": "Active IMU"
     },
-    "configurationSensors": {
-        "message": "Sensor Configuration"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configure additional sensors and advanced features."
-    },
     "configurationMagAlignmentHelp": {
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
     },
@@ -1612,37 +1670,13 @@
         "message": "Board Alignment"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "Roll Degrees"
+        "message": "Roll°"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "Pitch Degrees"
+        "message": "Pitch°"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Yaw Degrees"
-    },
-    "configurationGyroAlignment": {
-        "message": "Gyro Alignment"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Active IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Select which gyro to use as the primary gyro. The primary gyro is used for stabilization and control. If you have only one gyro, it will be selected automatically.<br><br>It is not always possible to enable multiple gyros, when they are of different types or brands."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
+        "message": "Yaw°"
     },
     "configurationMagAlignment": {
         "message": "Magnetometer Alignment"
@@ -1686,14 +1720,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "GYRO Alignment"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Warning: No Gyro/Acc found"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "First"
@@ -1704,29 +1732,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Both"
     },
-    "configurationSensorAlignment": {
-        "message": "Sensor Alignment"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "At least one gyro must remain enabled. If you disable all gyros, the flight controller will not work properly."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "First GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Second GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "ACCEL Alignment"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Default"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Custom"
-    },
-    "configurationAccelTrims": {
-        "message": "Accelerometer Trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Accelerometer Roll Trim"
@@ -4153,8 +4169,21 @@
     "firmwareFlasherExitDfu": {
         "message": "Exit DFU Mode"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Find DFU device"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Flash Firmware"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Flash Firmware options"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Load Firmware options"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Flashing progress",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub Firmware Info"
@@ -4177,11 +4206,35 @@
     "firmwareFlasherWarningText": {
         "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-Betaflight</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed</li></ul>"
     },
+    "firmwareFlasherWarningShort": {
+        "message": "Do not flash non-Betaflight hardware. Do not disconnect during flashing. STM32 bootloader is in ROM and cannot be bricked. Always backup your configuration before upgrading."
+    },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recovery / Lost communication</strong>"
+        "message": "Recovery / Lost communication"
     },
     "firmwareFlasherRecoveryText": {
         "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "If you have lost communication: power off, enable No Reboot Sequence and Full Chip Erase, jumper the BOOT pins, then power on. Install drivers if needed."
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Read more →"
+    },
+    "firmwareFlasherSubTabBoardSelection": {
+        "message": "Board Selection"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Advanced"
+    },
+    "firmwareFlasherSubTabBuildConfig": {
+        "message": "Build Configuration"
+    },
+    "firmwareFlasherSubTabReleaseInfo": {
+        "message": "Release & Build Info"
+    },
+    "firmwareFlasherSubTabFlashing": {
+        "message": "Flashing"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
@@ -5059,7 +5112,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "Gyro RPM Filter Harmonics Number",
+        "message": "Harmonics",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -5067,12 +5120,27 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Gyro RPM Filter Min Frequency [Hz]",
+        "message": "Min Frequency [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Minimum frequency that will be used by the RPM Filter.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Fade Range [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Q factor (x100)",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Q factor adjusts how narrow or wide the RPM notch filters are. The stored value is Q factor × 100, allowed range 250–3000 (Q 2.5 to Q 30.0), default 500 (Q 5.0). Higher values make each notch narrower and more precise; lower values make them wider. Very low values significantly increase filter delay."
+    },
+    "pidTuningRpmWeight": {
+        "message": "Weight {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profile dependent Filter Settings"
@@ -7516,10 +7584,172 @@
         "message": "Accelerometer"
     },
     "configurationBaroHardware": {
-        "message": "Barometer (if supported)"
+        "message": "Barometer"
     },
     "configurationMagHardware": {
-        "message": "Magnetometer (if supported)"
+        "message": "Magnetometer"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Could not determine location. Connect a GPS module or allow browser location access."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Magnetic declination set to {{declination}}° from detected location."
+    },
+    "configurationMagInclination": {
+        "message": "Inclination"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "The angle between the earth's magnetic field and the horizontal plane at your location. Positive values indicate the field points downward (northern hemisphere)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Field Strength"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "The total intensity of the earth's magnetic field at your location in nanotesla (nT). Typical values range from 25,000 to 65,000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detect"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Update"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Magnetic declination auto-detected as {{value}}° for your location."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Declination is {{saved}}° but GPS detects {{detected}}° for this location. Click Update to correct."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} samples"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Tilt more!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Detection failed — try with more varied tilting."
+    },
+    "magCalibrationStart": {
+        "message": "Guided"
+    },
+    "magCalibrationStartDesc": {
+        "message": "Rotate through 6 orientations step by step"
+    },
+    "magCalibrationStartAuto": {
+        "message": "Auto-Step"
+    },
+    "magCalibrationStartAutoDesc": {
+        "message": "Same as guided but steps advance on a timer"
+    },
+    "magCalibrationCancel": {
+        "message": "Cancel"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Calibration mode options"
+    },
+    "magCalibrationRetry": {
+        "message": "Retry"
+    },
+    "magCalibrationNextStep": {
+        "message": "Next Step"
+    },
+    "magCalibrationFinish": {
+        "message": "Finish"
+    },
+    "magCalibrationStepOf": {
+        "message": "Step {{current}} of {{total}}"
+    },
+    "magCalibrationWaiting": {
+        "message": "Waiting for movement... Shake the vehicle to begin."
+    },
+    "magCalibrationCollecting": {
+        "message": "Rotate the vehicle slowly through all orientations."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibration complete."
+    },
+    "magCalibrationError": {
+        "message": "Calibration failed. Try again in an area with less magnetic interference."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No movement detected for 30 seconds. Calibration cancelled."
+    },
+    "magCalibrationSamples": {
+        "message": "Samples"
+    },
+    "magCalibrationQuality": {
+        "message": "Quality"
+    },
+    "magCalibrationResidual": {
+        "message": "Fit Residual"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Good"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Fair"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Poor"
+    },
+    "magCalibrationStep1": {
+        "message": "Level — rotate 360° in yaw"
+    },
+    "magCalibrationStep2": {
+        "message": "Nose down — rotate 360°"
+    },
+    "magCalibrationStep3": {
+        "message": "Nose up — rotate 360°"
+    },
+    "magCalibrationStep4": {
+        "message": "Left side down — rotate 360°"
+    },
+    "magCalibrationStep5": {
+        "message": "Right side down — rotate 360°"
+    },
+    "magCalibrationStep6": {
+        "message": "Inverted — rotate 360°"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Firmware offsets"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Sphere fit offsets"
+    },
+    "magCalibrationUnguided": {
+        "message": "Quick"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Rotate freely in all directions — stops when firmware finishes"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Unguided Calibration"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Rotate your vehicle slowly in all directions. The firmware will collect samples and compute offsets automatically."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Firmware calibration complete!"
+    },
+    "magVizPointCloud": {
+        "message": "Point Cloud"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Triple Projection"
+    },
+    "magVizPolar": {
+        "message": "Polar Density"
+    },
+    "magVizWaitingForData": {
+        "message": "Waiting for data…"
+    },
+    "magAlignmentApply": {
+        "message": "Apply"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Detect"
     },
     "configurationSmallAngle": {
         "message": "Maximum ARM Angle [degrees]"
@@ -7711,6 +7941,10 @@
     "colorThemeContrast": {
         "message": "High Contrast",
         "description": "Contrast color theme"
+    },
+    "uiScale": {
+        "message": "UI Scale",
+        "description": "Scale the entire user interface up or down"
     },
     "pidTuningRatesType": {
         "message": "Rates Type"
@@ -8090,6 +8324,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "Other Options"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Remove {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Select protocol"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Select options"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Select branch or enter PR # / commit hash"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Search for a board..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio Protocol"

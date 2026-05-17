@@ -140,9 +140,12 @@ export function useSensorGraph() {
     }
 
     function drawGraph(helpers, sampleNumber) {
-        // Skip if dimensions are not yet available (e.g. SVG not laid out)
+        // Re-measure if dimensions are not yet available (e.g. SVG was hidden via v-show)
         if (!helpers.width || !helpers.height) {
-            return;
+            updateGraphHelperSize(helpers);
+            if (!helpers.width || !helpers.height) {
+                return false;
+            }
         }
 
         // Update scales with current dimensions
@@ -217,29 +220,33 @@ export function useSensorGraph() {
         }
     }
 
+    function drawIfDirty(helpers, sampleIndex) {
+        if (!helpers) {
+            return false;
+        }
+        return drawGraph(helpers, sampleIndex) !== false;
+    }
+
     function updateGraphs() {
-        if (gyroHelpers && dirty_gyro) {
-            drawGraph(gyroHelpers, samples_gyro_i);
+        if (dirty_gyro && drawIfDirty(gyroHelpers, samples_gyro_i)) {
             dirty_gyro = false;
         }
-        if (accelHelpers && dirty_accel) {
-            drawGraph(accelHelpers, samples_accel_i);
+        if (dirty_accel && drawIfDirty(accelHelpers, samples_accel_i)) {
             dirty_accel = false;
         }
-        if (magHelpers && dirty_mag) {
-            drawGraph(magHelpers, samples_mag_i);
+        if (dirty_mag && drawIfDirty(magHelpers, samples_mag_i)) {
             dirty_mag = false;
         }
-        if (altitudeHelpers && dirty_altitude) {
-            drawGraph(altitudeHelpers, samples_altitude_i);
+        if (dirty_altitude && drawIfDirty(altitudeHelpers, samples_altitude_i)) {
             dirty_altitude = false;
         }
-        if (sonarHelpers && dirty_sonar) {
-            drawGraph(sonarHelpers, samples_sonar_i);
+        if (dirty_sonar && drawIfDirty(sonarHelpers, samples_sonar_i)) {
             dirty_sonar = false;
         }
         if (dirty_debug) {
-            debugHelpers.forEach((helper) => drawGraph(helper, samples_debug_i));
+            for (const helper of debugHelpers) {
+                drawGraph(helper, samples_debug_i);
+            }
             dirty_debug = false;
         }
     }

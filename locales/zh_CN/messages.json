@@ -1,6 +1,6 @@
 {
     "yes": {
-        "message": "是",
+        "message": "是\n",
         "description": "General Yes message to be used across the application"
     },
     "no": {
@@ -548,7 +548,7 @@
         "message": "<span class=\"message-negative\">不支持<\/span>非 Betaflight 固件，只能使用 CLI 模式"
     },
     "firmwareUpgradeRequired": {
-        "message": "该设备上的固件需要升级到新的版本。使用 CLI 在刷写前备份 。CLI 备份\/恢复的步骤在文档中有说明。<br \/>如果你不准备升级固件，也可以下载使用旧版本的应用程序。"
+        "message": "当前版本的地面站可能不支持此设备上的固件版本。您可以使用旧版本地面站，例如 <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a> 用于飞控固件版本低至4.1或 <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> 用于更老的飞控固件版本。<br><br>地面站将尝试访问设备上的 CLI ——如果成功， 您可以通过在 CLI 中发送 <code>version<\/code> 命令查看当前固件版本。<br><br>或者，您可以升级飞控到较新的固件版本。刷写固件前使用 CLI 备份设置，备份流程记载于 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">文档<\/a>但要注意，旧版本的设置备份在应用到较新版本时可能无法正确恢复。模式、OSD、rates 和端口应该会正确恢复，但要注意PID和失控保护设置。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "有适用于此飞控板的特定预设值。通常来说，只有在设定了这些定制的预设值后，飞控板才能正常工作。<br \/>你是否要为此飞控板应用这些预设值？"
@@ -1064,7 +1064,7 @@
         "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
-        "message": "CLI (命令行) 已激活",
+        "message": "CLI 已激活",
         "description": "Message that pops up to describe the CLI arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
@@ -4893,7 +4893,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "陀螺仪 RPM 滤波器谐波数量",
+        "message": "谐波",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -4901,12 +4901,24 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "陀螺仪 RPM 滤波器最低频率 [Hz]",
+        "message": "最低频率 [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "RPM 滤波器所使用的最小频率。",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "淡化范围 [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Q 因子",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmWeight": {
+        "message": "权重 {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "配置文件关联的滤波器设置"
@@ -7542,6 +7554,10 @@
         "message": "高对比度",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "用户界面缩放",
+        "description": "Scale the entire user interface up or down"
+    },
     "pidTuningRatesType": {
         "message": "Rate 类型"
     },
@@ -7827,6 +7843,10 @@
         "message": "预设应用和备份操作需要 CLI ，这在虚拟模式中不可用。",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
+    "mspCliFirmwareTooOld": {
+        "message": "此操作需要 Betaflight 固件版本 {{required}} 或更新（当前连接的版本是 {{current}}）。在继续前请升级您的飞控固件。",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
     "presetsLoadingDumpAll": {
         "message": "从飞控加载当前配置",
         "description": "Title for the waiting dialog when loading dump all into a file"
@@ -8111,6 +8131,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "删除备份失败"
+    },
+    "actionRestore": {
+        "message": "恢复"
+    },
+    "titleRestoreBackup": {
+        "message": "恢复备份"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "要对已连接的飞控应用备份 \"{{name}}\" 吗？当前的设置会被覆盖。"
+    },
+    "userBackupRestoreInProgress": {
+        "message": "正在恢复备份……"
+    },
+    "userBackupRestoreSuccess": {
+        "message": "备份恢复成功"
+    },
+    "userBackupRestoreFailed": {
+        "message": "备份恢复失败"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>警告！<\/span><br\/>备份已在存在 CLI 错误的情况下应用。"
     },
     "userPasskeyNoPasskeys": {
         "message": "没有可用的密码"

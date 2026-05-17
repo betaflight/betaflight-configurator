@@ -125,7 +125,7 @@ defineExpose({ svgElement });
 </script>
 
 <style>
-/* D3 runtime-generated elements — cannot use Tailwind */
+/* D3 runtime-generated elements — cannot use Tailwind. */
 .tab-sensors svg g.grid .tick {
     stroke: silver;
     stroke-width: 1px;

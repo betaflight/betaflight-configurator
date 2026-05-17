@@ -158,14 +158,10 @@ jobs:
           STRIPPED="${PKG_VERSION%%-*}"
           SHA_SHORT="${COMMIT_SHA:0:8}"
           NIGHTLY_VERSION="${PKG_VERSION}-${SHA_SHORT}"
-          for f in staging/*; do
-            base=$(basename "$f")
-            new=${base//Betaflight App/betaflight-app}
-            new=${new/${STRIPPED}/${NIGHTLY_VERSION}}
-            if [[ "$new" != "$base" ]]; then
-              mv -- "$f" "staging/${new}"
-            fi
-          done
+          node scripts/rename-tauri-bundles.mjs \
+            --dir staging \
+            --from-version "${STRIPPED}" \
+            --to-version "${NIGHTLY_VERSION}"
           ls -la staging
 
       - name: Sync desktop bundles to R2
@@ -252,9 +248,8 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - run: npm install yarn -g
-      - run: yarn install
-      - run: yarn build
+      - run: npm ci
+      - run: npm run build
       - run: node capacitor.config.generator.mjs
       - run: npx cap sync android
 

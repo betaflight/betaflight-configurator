@@ -501,9 +501,6 @@
     "firmwareTypeNotSupported": {
         "message": "Прошивка не Betaflight <span class=\"message-negative\">не поддерживается<\/span>, за исключением режима CLI."
     },
-    "firmwareUpgradeRequired": {
-        "message": "Прошивка на этом устройстве требует обновления до новой версии. Используйте CLI для резервного копирования перед прошивкой.<br \/>Или скачайте и используйте старую версию приложения, если вы не готовы к обновлению."
-    },
     "resetToCustomDefaultsDialog": {
         "message": "Для этой платы есть особые параметры по умолчанию. Обычно, плата не будет работать должным образом, если не будут применены такие настройки.<br\/>Хотите применить пользовательские настройки по умолчанию для этой платы?"
     },
@@ -4570,17 +4567,9 @@
         "message": "Фильтрация RPM – это набор режекторных фильтров для гироскопа, использующий телеметрические данные RPM для высокоточного удаления шума двигателей.<br \/><br \/><b><span class=\"message-positive\">ВАЖНО<\/span>: ESC должны поддерживать протокол двунаправленного DShot и значение $t(configurationMotorPoles.message) во вкладке $t(tabMotorTesting.message) должно быть правильным для работы этого фильтра.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmHarmonics": {
-        "message": "Число гармоник Gyro RPM фильтра",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "<b>Количество гармоник на каждый мотор.<\/b> Значение 3 (рекомендуется для большинства аппаратов) создаст 3 режекторных фильтра на мотор для каждой оси, всего 36 фильтров. Один фильтр на основной частоте мотора и два - на кратных этой частоте гармониках.",
         "description": "Help text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmMinHz": {
-        "message": "Минимальная частота Gyro RPM фильтра [Гц]",
-        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Минимальная частота, которая будет использоваться RPM фильтром.",

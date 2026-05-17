@@ -32,7 +32,11 @@ export default {
         },
         tooltip: {
             slots: {
-                content: "ring-2 ring-primary max-w-sm lg:max-w-lg h-fit",
+                // z-[2500]: slot overrides replace the full class string, dropping Nuxt UI's default
+                // z-50. Without an explicit z-index, tooltips render behind the sticky header (z-10)
+                // due to the stacking context created by #main-wrapper's transform:scale(). 2500
+                // clears all app dialogs (z-1000–2001) and the ConnectButton dropdown (z-2100).
+                content: "ring-2 ring-primary max-w-sm lg:max-w-lg h-fit z-[2500]",
                 arrow: "fill-primary stroke-primary",
                 text: "whitespace-normal",
             },

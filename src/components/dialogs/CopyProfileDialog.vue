@@ -7,20 +7,14 @@
             <div v-if="profileOptions && profileOptions.length" class="contentProfile">
                 <div>
                     <span>{{ profileText }}</span>
-                    <select v-model.number="selectedProfile">
-                        <option v-for="opt in profileOptions" :key="opt.value" :value="opt.value">
-                            {{ opt.label }}
-                        </option>
-                    </select>
+                    <USelect v-model="selectedProfile" :items="profileOptions" class="min-w-40" />
                 </div>
             </div>
 
             <div v-if="rateOptions && rateOptions.length" class="contentRateProfile">
                 <div>
                     <span>{{ rateProfileText }}</span>
-                    <select v-model.number="selectedRateProfile">
-                        <option v-for="opt in rateOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                    </select>
+                    <USelect v-model="selectedRateProfile" :items="rateOptions" class="min-w-40" />
                 </div>
             </div>
         </div>
@@ -96,11 +90,6 @@ defineExpose({
 .contentProfile,
 .contentRateProfile {
     margin-top: 20px;
-}
-
-.contentProfile select,
-.contentRateProfile select {
-    margin-left: 8px;
 }
 
 .dialogCopyProfile-confirmbtn {

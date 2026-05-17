@@ -1187,6 +1187,15 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     // Introduced in 1.44
                     FC.FILTER_CONFIG.dyn_lpf_curve_expo = data.readU8();
                     FC.FILTER_CONFIG.dyn_notch_count = data.readU8();
+                    // Introduced in 1.48
+                    if (data.remaining() >= 7) {
+                        FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz = data.readU16();
+                        FC.FILTER_CONFIG.gyro_rpm_notch_q = data.readU16();
+                        FC.FILTER_CONFIG.gyro_rpm_notch_weights = [];
+                        for (let i = 0; i < 3; i++) {
+                            FC.FILTER_CONFIG.gyro_rpm_notch_weights.push(data.readU8());
+                        }
+                    }
                     break;
                 case MSPCodes.MSP_SET_PID_ADVANCED:
                     console.log("Advanced PID settings saved");
@@ -1219,7 +1228,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.smartFeedforward = data.readU8();
                     FC.ADVANCED_TUNING.itermRelax = data.readU8();
                     FC.ADVANCED_TUNING.itermRelaxType = data.readU8();
-                    FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+                    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                        FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+                    } else {
+                        data.readU8();
+                    }
                     FC.ADVANCED_TUNING.throttleBoost = data.readU8();
                     FC.ADVANCED_TUNING.acroTrainerAngleLimit = data.readU8();
                     FC.ADVANCED_TUNING.feedforwardRoll = data.readU16();
@@ -2181,6 +2194,14 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
             // Introduced in 1.44
             buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo).push8(FC.FILTER_CONFIG.dyn_notch_count);
+
+            // Introduced in 1.48
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                buffer.push16(FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz).push16(FC.FILTER_CONFIG.gyro_rpm_notch_q);
+                for (let i = 0; i < 3; i++) {
+                    buffer.push8(FC.FILTER_CONFIG.gyro_rpm_notch_weights[i]);
+                }
+            }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:
             buffer
@@ -2211,8 +2232,13 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.ADVANCED_TUNING.itermRotation)
                 .push8(FC.ADVANCED_TUNING.smartFeedforward)
                 .push8(FC.ADVANCED_TUNING.itermRelax)
-                .push8(FC.ADVANCED_TUNING.itermRelaxType)
-                .push8(FC.ADVANCED_TUNING.absoluteControlGain)
+                .push8(FC.ADVANCED_TUNING.itermRelaxType);
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                buffer.push8(FC.ADVANCED_TUNING.absoluteControlGain);
+            } else {
+                buffer.push8(0);
+            }
+            buffer
                 .push8(FC.ADVANCED_TUNING.throttleBoost)
                 .push8(FC.ADVANCED_TUNING.acroTrainerAngleLimit)
                 .push16(FC.ADVANCED_TUNING.feedforwardRoll)

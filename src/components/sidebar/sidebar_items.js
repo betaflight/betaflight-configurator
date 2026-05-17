@@ -1,13 +1,13 @@
 export const sidebarItems = [
     { key: "landing", mode: "disconnected", i18n: "tabLanding", icon: "i-lucide-home" },
-    { key: "help", mode: "disconnected", i18n: "tabHelp", icon: "i-lucide-help-circle" },
-    { key: "options", mode: "disconnected", i18n: "tabOptions", icon: "i-lucide-settings" },
     { key: "firmware_flasher", mode: "disconnected", i18n: "tabFirmwareFlasher", icon: "i-lucide-zap" },
+    { key: "help", mode: "disconnected", i18n: "tabHelp", icon: "i-lucide-help-circle" },
     { key: "preflight", mode: "disconnected", i18n: "tabPreflight", icon: "i-lucide-clipboard-check" },
     { key: "flight_plan", mode: "disconnected", i18n: "tabFlightPlan", icon: "i-lucide-route", expert: true },
     { key: "autotune", mode: "shared", i18n: "tabAutotune", icon: "i-lucide-gauge" },
 
     { key: "setup", mode: "connected", i18n: "tabSetup", icon: "i-lucide-sliders-horizontal" },
+    { key: "sensors", mode: "connected", i18n: "tabSensorConfig", icon: "i-lucide-cpu" },
     { key: "ports", mode: "connected", i18n: "tabPorts", icon: "i-lucide-cable" },
     { key: "configuration", mode: "connected", i18n: "tabConfiguration", icon: "i-lucide-settings" },
     { key: "power", mode: "connected", i18n: "tabPower", icon: "i-lucide-battery" },
@@ -29,7 +29,6 @@ export const sidebarItems = [
     { key: "osd", mode: "connected", i18n: "tabOsd", icon: "i-lucide-monitor", feature: "OSD" },
     { key: "vtx", mode: "connected", i18n: "tabVtx", icon: "i-lucide-radio-tower" },
     { key: "led_strip", mode: "connected", i18n: "tabLedStrip", icon: "i-lucide-lightbulb", feature: "LED_STRIP" },
-    { key: "sensors", mode: "connected", i18n: "tabRawSensorData", icon: "i-lucide-activity", expert: true },
     {
         key: "flight_plan_connected",
         tab: "flight_plan",
@@ -43,10 +42,10 @@ export const sidebarItems = [
 
     { key: "cli", mode: "cli", i18n: "tabCLI", icon: "i-lucide-terminal" },
 
-    { key: "log", mode: "shared", i18n: "tabLog", icon: "i-lucide-file-text", expert: true },
+    { key: "log", mode: "shared", i18n: "tabLog", icon: "i-lucide-file-text", expert: true, hideInSidebar: true },
 
-    { key: "backups", mode: "loggedin", i18n: "tabBackups", icon: "i-lucide-database" },
-    { key: "user_profile", mode: "loggedin", i18n: "tabUserProfile", icon: "i-lucide-user" },
+    { key: "backups", mode: "loggedin", i18n: "tabBackups", icon: "i-lucide-database", hideInSidebar: true },
+    { key: "user_profile", mode: "loggedin", i18n: "tabUserProfile", icon: "i-lucide-user", hideInSidebar: true },
 ];
 
 export function isItemVisible(item, ctx) {

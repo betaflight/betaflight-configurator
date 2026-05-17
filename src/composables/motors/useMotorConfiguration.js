@@ -102,9 +102,9 @@ export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMot
             (newVal, oldVal) => handleChange("dshotbidir", newVal, oldVal),
         );
 
-        // ESC Sensor
+        // ESC Sensor feature
         watch(
-            () => fcStore.motorConfig.use_esc_sensor,
+            () => fcStore.features?.features?.isEnabled?.("ESC_SENSOR") ?? false,
             (newVal, oldVal) => handleChange("ESC_SENSOR", newVal, oldVal),
         );
 

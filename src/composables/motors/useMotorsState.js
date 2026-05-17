@@ -47,7 +47,7 @@ export function useMotorsState() {
             mincommand: fcStore.motorConfig.mincommand,
             motorPoles: fcStore.motorConfig.motor_poles,
             dshotbidir: fcStore.motorConfig.use_dshot_telemetry,
-            ESC_SENSOR: fcStore.motorConfig.use_esc_sensor,
+            ESC_SENSOR: fcStore.features.features.isEnabled("ESC_SENSOR"),
             use_unsyncedPwm: fcStore.pidAdvancedConfig.use_unsyncedPwm,
             motor_pwm_rate: fcStore.pidAdvancedConfig.motor_pwm_rate,
             motorIdle: fcStore.pidAdvancedConfig.motorIdle,

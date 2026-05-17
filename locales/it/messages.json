@@ -552,7 +552,7 @@
         "message": "Firmware diversi da Betaflight <span class=\"message-negative\">non sono supportati<\/span>, ad eccezione della modalità CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "Il firmware su questo dispositivo deve essere aggiornato a una versione più recente. Usare CLI per il backup prima di flashare. La procedura di backup\/ripristino con CLI è nella documentazione.<br \/>In alternativa, scarica e usa una vecchia versione dell'app se non sei pronto per l'aggiornamento."
+        "message": "La versione corrente dell'app potrebbe non supportare la versione del firmware su questo dispositivo. È possibile utilizzare versioni più vecchie come <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a> per il firmware fino a 4,1 o <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> per versioni firmware ancora più vecchie.<br><br>L'app cercherà di accedere alla CLI sul dispositivo - se ha successo, puoi vedere la versione attuale del firmware inviando il comando <code>versione<\/code> nella CLI.<br><br>In alternativa, è possibile aggiornare a una nuova versione del firmware. Utilizzare CLI per il backup prima di flashare, la procedura è nella <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\"> documentazione<\/a>. Tenere presente che i backup da versioni più vecchie del firmware possono essere non corrette quando si ripristina su una versione più recente. Modalità, OSD, rates e porte dovrebbero trasferirsi in modo sicuro, ma stare attenti intorno alle impostazioni PID e failsafe."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Ci sono impostazioni di fabbrica personalizzate disponibili per questa scheda. Di solito una scheda non funzionerà a dovere a meno che le impostazioni personalizzate non siano applicate.<br\/> Vuoi applicare le impostazioni personalizzate di questa scheda?"
@@ -4925,7 +4925,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "Numero armoniche filtro RPM",
+        "message": "Armoniche",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -4933,12 +4933,24 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Frequenza minima [Hz] del filtro del giroscopio",
+        "message": "Frequenza Min [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "La frequenza minima che verrà utilizzata dal filtro RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Intervallo Di Dissolvenza [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Fattore Q",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmWeight": {
+        "message": "Peso {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Impostazioni filtro dipendenti dal profilo"
@@ -7578,6 +7590,10 @@
         "message": "Alto Contrasto",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "Scala UI",
+        "description": "Scale the entire user interface up or down"
+    },
     "pidTuningRatesType": {
         "message": "Tipo di rates"
     },
@@ -7862,6 +7878,10 @@
     "presetsVirtualModeCliUnsupported": {
         "message": "L'applicazione di preset e di backup richiedono la CLI, che non è disponibile in Modalità Virtuale.",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
+    },
+    "mspCliFirmwareTooOld": {
+        "message": "Questa azione richiede il firmware Betaflight {{required}} o più recente (attualmente connesso a {{current}}). Si prega di aggiornare il firmware del controller di volo prima di continuare.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
     "presetsLoadingDumpAll": {
         "message": "Caricamento della configurazione attuale dal controllore di volo",
@@ -8151,6 +8171,27 @@
     },
     "userBackupDeleteFailed": {
         "message": "Impossibile cancellare il backup"
+    },
+    "actionRestore": {
+        "message": "Ripristino"
+    },
+    "titleRestoreBackup": {
+        "message": "Ripristino backup"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Applicare il backup \"{{name}}\" al controller di volo connesso? La configurazione corrente verrà sovrascritta."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Ripristino backup..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Backup ripristinato con successo"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Ripristino del backup fallito"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>ATTENZIONE!<\/span><br\/>Backup applicato con errori CLI."
     },
     "userPasskeyNoPasskeys": {
         "message": "Nessuna passkey disponibile"

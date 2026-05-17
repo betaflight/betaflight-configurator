@@ -208,6 +208,14 @@ class Serial extends EventTarget {
         return result;
     }
 
+    forceClose() {
+        try {
+            this._protocol?.forceClose?.();
+        } catch (error) {
+            console.error(`${this.logHead} Error during force close:`, error);
+        }
+    }
+
     /**
      * Get the currently connected port
      */

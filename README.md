@@ -110,35 +110,34 @@ If you prefer to have the application in English or any other language, you can 
 
 ### Technical details
 
-The next versions of the App will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, Yarn, Vite and Vue for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
+The next versions of the App will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, npm, Vite and Vue for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
 
 ### Prepare your environment
 
 1. Install [node.js](https://nodejs.org/) (refer to [.nvmrc](./.nvmrc) for minimum required version)
-2. Install yarn: `npm install yarn -g`
 
 ### PWA version
 
 #### Run development version
 
-1. Change to project folder and run `yarn install`.
-2. Run `yarn dev`.
+1. Change to project folder and run `npm install`.
+2. Run `npm run dev`.
 
-The web app will be available at http://localhost:8000 with full HMR.
+The web app will be available at http://localhost:8080 with full HMR.
 
 #### Run production version
 
-1. Change to project folder and run `yarn install`.
-2. Run `yarn build`.
-3. Run `yarn preview` after build has finished.
+1. Change to project folder and run `npm install`.
+2. Run `npm run build`.
+3. Run `npm run preview` after build has finished.
 
-Alternatively you can run `yarn review` to build and preview in one step.
+Alternatively you can run `npm run review` to build and preview in one step.
 
 The web app should behave directly as in production, available at http://localhost:8080.
 
 ### Android version
 
-NOTE: The Android version is not fully functional yet. It is in development.
+The Android version uses Capacitor as the native wrapper with custom plugins to bridge the PWA to native capabilities.
 
 #### Prerequisites
 
@@ -146,25 +145,25 @@ You need to install [Android Studio](https://developer.android.com/studio) as Ca
 
 #### Run development version
 
-1. Change to project folder and run `yarn install`.
-2. Run `yarn android:run`.
+1. Change to project folder and run `npm install`.
+2. Run `npm run android:run`.
 
 The command will ask for the device to run the app. You need to have some Android virtual machine created or some Android phone [connected using ADB](https://developer.android.com/tools/adb).
 
-As alternative to the step 2, you can execute a `yarn android:open` to open de project into Android Studio and run or debug the app from there.
+As alternative to the step 2, you can execute a `npm run android:open` to open de project into Android Studio and run or debug the app from there.
 
 #### Run development version with live reload
 
-1. Change to project folder and run `yarn install`.
-2. Run `yarn dev --host`. It will start the vite server and will show you the IP address where the server is listening.
-3. Run `yarn android:dev` 
+1. Change to project folder and run `npm install`.
+2. Run `npm run dev -- --host`. It will start the vite server and will show you the IP address where the server is listening.
+3. Run `npm run android:dev`
 
 This will ask for the IP where the server is running (if there are more than one network interfaces). You need to have some Android virtual machine created or some Android phone [connected using ADB](https://developer.android.com/tools/adb).
 Any change make in the code will reload the app in the Android device.
 
 ### Running tests
 
-`yarn test`
+`npm test`
 
 ## Support and Developers Channel
 
