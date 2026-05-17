@@ -1,7 +1,11 @@
 <template>
-    <UModal v-model:open="open" :title="$t('tabOptions')" :ui="{ content: 'max-w-2xl' }">
+    <UModal
+        v-model:open="open"
+        :title="$t('tabOptions')"
+        :ui="{ overlay: 'z-3000', content: 'max-w-4xl h-full z-3001' }"
+    >
         <template #body>
-            <div class="content_wrapper grid-box col1 options-dialog-body">
+            <div class="flex flex-col gap-4">
                 <UiBox>
                     <SettingRow :label="$t('expertMode')">
                         <USwitch v-model="settings.expertMode" size="sm" />
@@ -438,11 +442,3 @@ watch(
     },
 );
 </script>
-
-<style scoped>
-.options-dialog-body {
-    max-height: 70vh;
-    overflow-y: auto;
-    padding-top: 0.5rem;
-}
-</style>

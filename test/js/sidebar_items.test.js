@@ -97,4 +97,15 @@ describe("isItemVisible", () => {
         };
         expect(isItemVisible(item, { expertMode: false, buildOptions: ["USE_FOO"] })).toBe(false);
     });
+
+    it("does not treat hideInSidebar as a visibility constraint for expert/build/feature checks", () => {
+        const item = {
+            key: "hidden_nav",
+            mode: "connected",
+            i18n: "tabHiddenNav",
+            icon: "i-lucide-eye-off",
+            hideInSidebar: true,
+        };
+        expect(isItemVisible(item, { expertMode: false })).toBe(true);
+    });
 });

@@ -37,7 +37,6 @@ class GuiControl {
             "user_profile",
             "backups",
             "flight_plan",
-            "log",
         ];
 
         this.defaultAllowedTabs = [
@@ -57,7 +56,6 @@ class GuiControl {
             "ports",
             "receiver",
             "sensors",
-            "log",
         ];
 
         this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "vtx", "flight_plan"];

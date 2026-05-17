@@ -7,7 +7,10 @@
         :ui="navMenuUi"
         class="sidebar-nav pb-2"
     />
-    <div class="sidebar-footer" :class="{ 'sidebar-footer--compact': isCompact }">
+    <div
+        class="flex flex-row gap-1 border-t border-default pt-2 mt-auto items-center flex-wrap"
+        :class="{ 'sidebar-footer--compact': isCompact }"
+    >
         <UTooltip :text="$t('sidebarOpenOptions')" :delay-duration="300">
             <UButton
                 icon="i-lucide-settings"
@@ -16,6 +19,7 @@
                 square
                 :aria-label="$t('sidebarOpenOptions')"
                 @click="optionsOpen = true"
+                size="xs"
             />
         </UTooltip>
         <UTooltip :text="$t('sidebarToggleDarkMode')" :delay-duration="300">
@@ -26,26 +30,42 @@
                 square
                 :aria-label="$t('sidebarToggleDarkMode')"
                 @click="toggleDarkMode"
+                size="xs"
             />
         </UTooltip>
         <UTooltip :text="$t('sidebarToggleExpertMode')" :delay-duration="300">
             <UButton
                 icon="i-lucide-wrench"
-                variant="ghost"
+                :variant="expertModeOn ? 'soft' : 'ghost'"
                 :color="expertModeOn ? 'primary' : 'neutral'"
                 square
                 :aria-label="$t('sidebarToggleExpertMode')"
                 @click="toggleExpertMode"
+                size="xs"
             />
         </UTooltip>
-        <user-session></user-session>
+        <UTooltip :text="$t('logActionShow')" :delay-duration="300">
+            <UButton
+                :icon="sidebarItems.find((item) => item.key === 'log').icon"
+                variant="ghost"
+                color="neutral"
+                square
+                :aria-label="$t('logActionShow')"
+                @click="logOpen = true"
+                size="xs"
+                :class="{ 'mr-auto': !isCompact }"
+            />
+        </UTooltip>
+        <UserSession :is-compact="isCompact" />
     </div>
     <OptionsDialog v-model="optionsOpen" />
+    <LogDialog v-model="logOpen" />
 </template>
 
 <script setup>
 import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
+import UserSession from "@/components/user-session/UserSession.vue";
 import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
@@ -60,6 +80,7 @@ import { applyExpertMode } from "@/js/utils/applyExpertMode.js";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled.js";
 import { EventBus } from "@/components/eventBus.js";
 import OptionsDialog from "@/components/dialogs/OptionsDialog.vue";
+import LogDialog from "@/components/dialogs/LogDialog.vue";
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
@@ -110,6 +131,7 @@ const isAllowed = (item) => {
 const activeItems = computed(() =>
     sidebarItems
         .filter((item) => isModeVisible(item.mode))
+        .filter((item) => !item.hideInSidebar)
         .filter((item) => isAllowed(item))
         .filter((item) => isItemVisible(item, ctx.value)),
 );
@@ -136,6 +158,18 @@ watch(
         if (val) {
             optionsOpen.value = true;
             navigationStore.optionsDialogOpen = false;
+        }
+    },
+);
+
+// Log dialog
+const logOpen = ref(false);
+watch(
+    () => navigationStore.logDialogOpen,
+    (val) => {
+        if (val) {
+            logOpen.value = true;
+            navigationStore.logDialogOpen = false;
         }
     },
 );
@@ -186,15 +220,6 @@ onUnmounted(() => {
 <style scoped>
 .sidebar-nav {
     width: 100%;
-}
-
-.sidebar-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.5rem 0.25rem;
-    border-top: 1px solid var(--surface-400);
 }
 
 .sidebar-footer--compact {
