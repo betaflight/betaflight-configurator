@@ -7769,6 +7769,24 @@
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
     },
+    "magCalibrationGuided": {
+        "message": "Guided (Client)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Collect samples and compute offsets in the configurator"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Guided Calibration"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Rotate your vehicle slowly in all directions. When coverage is sufficient, accept the calibration to save offsets."
+    },
+    "magCalibrationAccept": {
+        "message": "Accept Calibration"
+    },
+    "magCalibrationDiscard": {
+        "message": "Discard"
+    },
     "magVizPointCloud": {
         "message": "Point Cloud"
     },

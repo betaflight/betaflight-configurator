@@ -449,6 +449,18 @@
                                     {{ $t(CAL_ORIENTATION_STEPS[calCurrentStep].i18n) }}
                                 </div>
                             </template>
+                            <template v-else-if="cal.mode === 'guided'">
+                                <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
+                                <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                    {{ $t("magCalibrationGuidedInstruction") }}
+                                </p>
+                                <dl v-if="cal.sphereFitResult" class="mag-cal-stats-inline">
+                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
+                                    <dd>{{ calOffsetsText }}</dd>
+                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
+                                    <dd>{{ calResidualText }}</dd>
+                                </dl>
+                            </template>
                             <template v-else>
                                 <div class="mag-cal-step-counter">{{ $t("magCalibrationUnguidedTitle") }}</div>
                                 <p class="text-sm text-[var(--surface-600)] text-center my-2">
@@ -466,6 +478,7 @@
                             </div>
                             <div class="flex gap-2 justify-center mt-1">
                                 <UButton
+                                    v-if="cal.mode !== 'guided'"
                                     size="xs"
                                     variant="outline"
                                     :label="$t('magCalibrationCancel')"
@@ -482,6 +495,22 @@
                                     size="xs"
                                     :label="$t('magCalibrationFinish')"
                                     @click="finishMagCal()"
+                                />
+                                <UButton
+                                    v-if="cal.mode === 'guided'"
+                                    size="xs"
+                                    variant="outline"
+                                    :label="$t('magCalibrationDiscard')"
+                                    :disabled="isAcceptingCal"
+                                    @click="discardGuidedMagCal()"
+                                />
+                                <UButton
+                                    v-if="cal.mode === 'guided'"
+                                    size="xs"
+                                    :loading="isAcceptingCal"
+                                    :disabled="!cal.quality"
+                                    :label="$t('magCalibrationAccept')"
+                                    @click="acceptGuidedMagCal()"
                                 />
                             </div>
                             <div class="mag-cal-live-inline">
@@ -515,6 +544,7 @@
                                 :inclination="calGeoRef?.inclination ?? null"
                                 :coverage="cal.coverage"
                                 :attitude="attitudeRaw"
+                                :quaternion="attitudeQuaternion"
                                 :viz-mode="magVizMode"
                             />
                         </div>
@@ -573,6 +603,7 @@
                                 :inclination="calGeoRef?.inclination ?? null"
                                 :coverage="cal.coverage"
                                 :attitude="attitudeRaw"
+                                :quaternion="attitudeQuaternion"
                                 :viz-mode="magVizMode"
                             />
                         </div>
@@ -641,11 +672,12 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
-import { API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { sensorTypes } from "../../js/sensor_types";
 import { useMagCalibration, computeDeclination, getGeoReference } from "../../composables/useMagCalibration";
+import { isMspCliSupported } from "../../composables/useMspCliSession";
 import { detectAlignment } from "../../js/utils/magAlignment";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { useTimeout } from "../../composables/useTimeout";
@@ -685,6 +717,7 @@ const ALIGN_TILT_WARN_PERCENT = 30;
 const ALIGN_TILT_WARN_MIN_SAMPLES = 20;
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
+const isApi148 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_48));
 const isApi147 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47));
 const isApi146 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
 
@@ -1322,8 +1355,10 @@ const MAG_VIZ_MODES = [
 ];
 const magVizMode = ref("pointcloud");
 
-const calModeItems = computed(() => [
-    [
+const calGuidedAvailable = computed(() => isMspCliSupported());
+
+const calModeItems = computed(() => {
+    const items = [
         {
             label: i18n.getMessage("magCalibrationUnguided"),
             description: i18n.getMessage("magCalibrationUnguidedDesc"),
@@ -1342,8 +1377,43 @@ const calModeItems = computed(() => [
             icon: "i-lucide-timer",
             onSelect: () => startMagCal(false, true),
         },
-    ],
-]);
+    ];
+    if (calGuidedAvailable.value) {
+        items.push({
+            label: i18n.getMessage("magCalibrationGuided"),
+            description: i18n.getMessage("magCalibrationGuidedDesc"),
+            icon: "i-lucide-crosshair",
+            onSelect: () => startGuidedMagCal(),
+        });
+    }
+    return [items];
+});
+
+function startGuidedMagCal() {
+    calUnguidedMode.value = true;
+    calAutoStep.value = false;
+    calCurrentStep.value = 0;
+    calGeoRef.value = getGeoReference();
+    cal.startCalibration("guided");
+}
+
+const isAcceptingCal = ref(false);
+
+async function acceptGuidedMagCal() {
+    isAcceptingCal.value = true;
+    try {
+        const result = await cal.acceptCalibration();
+        if (result?.ok) {
+            magNeedsCalibration.value = false;
+        }
+    } finally {
+        isAcceptingCal.value = false;
+    }
+}
+
+function discardGuidedMagCal() {
+    cal.discardCalibration();
+}
 
 function retryAndStartMagCal() {
     retryMagCal();
@@ -1510,6 +1580,7 @@ const attitudeDisplay = reactive({
     roll: "0.0",
 });
 const attitudeRaw = reactive({ roll: 0, pitch: 0, heading: 0 });
+const attitudeQuaternion = ref(null);
 
 function resetYaw() {
     yawFix.value = fcStore.sensorData.kinematics[2] * -1;
@@ -1583,6 +1654,13 @@ function pollAttitude() {
         }
         renderModel();
     });
+
+    // Poll quaternion alongside Euler for gimbal-lock-free sphere view rotation
+    if (isApi148.value) {
+        MSP.send_message(MSPCodes.MSP_ATTITUDE_QUATERNION, false, false, function () {
+            attitudeQuaternion.value = fcStore.sensorData.quaternion;
+        });
+    }
 }
 
 function disposeModel() {

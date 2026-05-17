@@ -336,6 +336,7 @@ const FC = {
             altitude: 0,
             sonar: 0,
             kinematics: [0.0, 0.0, 0.0],
+            quaternion: null,
             debug: [0, 0, 0, 0, 0, 0, 0, 0],
         };
 

@@ -67,6 +67,10 @@ const props = defineProps({
         type: Object,
         default: null, // { roll, pitch, heading } in degrees
     },
+    quaternion: {
+        type: Object,
+        default: null, // { w, x, y, z } unit quaternion from MSP_ATTITUDE_QUATERNION
+    },
     vizMode: {
         type: String,
         default: "pointcloud",
@@ -373,14 +377,24 @@ function updateGhostSphere() {
 }
 
 function updateQuadAttitude() {
-    if (!quadIcon || !props.attitude) {
+    if (!quadIcon) {
         return;
     }
-    // BF frame: X=fwd, Y=right, Z=down → Display: X=fwd, Y=left, Z=up
-    // Flipping Y and Z negates all rotation directions.
-    // Euler order ZYX: heading (Z) → pitch (Y) → roll (X)
-    // TODO: Euler ZYX has gimbal lock at +/-90 pitch. Upgrade to
-    // MSP_ATTITUDE_QUATERNION (code 167) when configurator support is added.
+
+    // Prefer quaternion (gimbal-lock-free) when available
+    if (props.quaternion) {
+        const { w, x, y, z } = props.quaternion;
+        // BF frame: X=fwd, Y=right, Z=down → Display: X=fwd, Y=left, Z=up
+        // Negate Y and Z imaginary components for frame conversion
+        // Three.js Quaternion.set() takes (x, y, z, w)
+        quadIcon.quaternion.set(x, -y, -z, w);
+        return;
+    }
+
+    // Fallback to Euler angles (has gimbal lock at +/-90 pitch)
+    if (!props.attitude) {
+        return;
+    }
     const { roll, pitch, heading } = props.attitude;
     quadIcon.rotation.set(-roll * DEG_TO_RAD, -pitch * DEG_TO_RAD, -heading * DEG_TO_RAD, "ZYX");
 }
@@ -465,9 +479,7 @@ function rebuildFieldReference() {
 
     const incl = (props.inclination * Math.PI) / 180;
     // Three-tier fallback: fitted sphere > live mag magnitude > default
-    const liveMagRadius = props.liveMag
-        ? Math.hypot(props.liveMag.x, props.liveMag.y, props.liveMag.z)
-        : 0;
+    const liveMagRadius = props.liveMag ? Math.hypot(props.liveMag.x, props.liveMag.y, props.liveMag.z) : 0;
     const radius = props.sphereFit?.radius ?? (liveMagRadius > 50 ? liveMagRadius : DEFAULT_SPHERE_RADIUS);
     const center = props.sphereFit?.center ?? { x: 0, y: 0, z: 0 };
     // Field direction: horizontal along X, vertical along Z
