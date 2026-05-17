@@ -1410,6 +1410,16 @@ watch(
     () => rebuildFieldReference(),
 );
 
+// liveMag is the tier-2 radius fallback before a sphere fit exists
+watch(
+    () => props.liveMag,
+    () => {
+        if (!props.sphereFit) {
+            rebuildFieldReference();
+        }
+    },
+);
+
 watch(
     () => props.vizMode,
     (mode) => applyVizMode(mode),
