@@ -341,9 +341,6 @@
     "tabLedStrip": {
         "message": "Tiras LED"
     },
-    "tabRawSensorData": {
-        "message": "Sensores"
-    },
     "tabCLI": {
         "message": "CLI"
     },
@@ -776,12 +773,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerómetro"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Sitúa la placa o chasis en una superficie <strong>nivelada<\/strong>, ejecuta la calibración, asegúrate de que la plataforma no se mueve durante el período de calibración"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrar Magnetómetro"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Mueve el multirotor al menos <strong>360<\/strong> grados en todos los ejes de rotación, dispones de 30 segundos para realizar esta tarea"
     },
@@ -820,7 +811,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
@@ -1375,12 +1366,6 @@
     "configurationActiveImu": {
         "message": "Activar IMU"
     },
-    "configurationSensors": {
-        "message": "Configuración del sensor"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configurar sensores adicionales y características avanzadas."
-    },
     "configurationMagAlignmentHelp": {
         "message": "La alineación del magnetómetro es la orientación del magnetómetro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del magnetómetro, puede que necesites ajustar esta configuración."
     },
@@ -1417,39 +1402,6 @@
     "configurationBoardAlignment": {
         "message": "Alineación de la Placa"
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "Grados Roll"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Grados Pitch"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Grados Yaw"
-    },
-    "configurationGyroAlignment": {
-        "message": "Alineación del Giro"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "La alineación del giro es la orientación del giro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del giro, puede que necesites ajustar esta configuración."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Activar IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Selecciona qué giro usar como giro primario. El giro primario se utiliza para estabilizar y controlar. Si sólo tienes un giro, se seleccionará automáticamente.<br><br>No siempre es posible activar múltiples giros, cuando son de diferentes tipos o marcas."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationMagAlignment": {
         "message": "Alineación de Magnetómetro"
     },
@@ -1468,14 +1420,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Alineación GIRO"
-    },
     "configurationSensorGyroToUse": {
         "message": "Giro\/Acel"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Atención: Giro\/Acel no encontrado"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primero"
@@ -1486,29 +1432,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Ambos"
     },
-    "configurationSensorAlignment": {
-        "message": "Alineación del sensor"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Al menos un giro debe permanecer activado. Si desactivas todos los giros, el controlador de vuelo no funcionará correctamente."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primer Giro"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Segundo Giro"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Alineación ACEL"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predeterminado"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Personalizado"
-    },
-    "configurationAccelTrims": {
-        "message": "Trimado Acelerómetro"
     },
     "configurationAccelTrimRoll": {
         "message": "Trimado Roll Acelerómetro"
@@ -3516,9 +3450,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Mostrar registro"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Estado:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "en cola"
     },
@@ -3689,9 +3620,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "Por favor <span class=\"message-negative\">no<\/span> intentes usar este instalador de firmware en hardware <strong>no-Betaflight<\/strong>.<br \/><span class=\"message-negative\">No<\/span> <strong>desconectes<\/strong> la placa o <strong>apagues<\/strong> tu ordenador mientras se está instalando.<br \/><br \/><strong>Nota: <\/strong>El gestor de arranque del STM32 está almacenado en ROM, por lo que no puede quedarse inutilizado.<br \/><strong>Nota: <\/strong><span class=\"message-negative\">Auto-Conectar<\/span> siempre está desactivado mientras estés dentro del instalador de firmware.<br \/><strong>Nota: <\/strong>Asegúrate de que tienes una copia de seguridad; algunas actualizaciones borrarán tu configuración.<br \/><strong>Nota:<\/strong> Si tienes problemas al instalar <strong>intenta desconectar todos los cable de tu FC<\/strong> primero, intenta reiniciar, actualizar drivers.<br \/><strong>Nota:<\/strong> Al instalar en placas que tienen directamente conectados puertos USB (la mayoría de placas nuevas) asegúrate de que has leído la sección de Instalación por USB del manual de Betaflight y tienes el software y drivers correctos instalados"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recuperación \/ Pérdida de comunicación<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Si has perdido la comunicación con tu placa sigue estos pasos para restaurar la comunicación: <ul><li>Apagar.<\/li><li>Activar 'No reiniciar', activar 'Borrado completo del chip'.<\/li><li>Unir los pins BOOT o pulsar el botón BOOT.<\/li><li>Encender (el LED de actividad NO parpadeará si se hace correctamente).<\/li><li>Instalar todos los drivers para STM32 y Zadig si es necesario (ver sección <a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Instalación por USB<\/a> del manual).<\/li><li>Cerrar la aplicación, reiniciar la aplicación.<\/li><li>Soltar botón BOOT si tu FC tiene uno.<\/li><li>Instalar el firmware correcto (configurando la velocidad de transmisión si viene especificada en el manual de tu FC).<\/li><li>Apagar.<\/li><li>Liberar pins BOOT.<\/li><li>Encender (el LED de actividad debe parpadear).<\/li><li>Conectar normalmente.<\/li><\/ul>"
@@ -6949,12 +6877,6 @@
     },
     "configurationAccHardware": {
         "message": "Acelerómetro"
-    },
-    "configurationBaroHardware": {
-        "message": "Barómetro (si está soportado)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetómetro (si está soportado)"
     },
     "configurationSmallAngle": {
         "message": "Ángulo de armado máximo [grados]"

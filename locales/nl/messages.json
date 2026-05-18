@@ -235,9 +235,6 @@
     "tabLedStrip": {
         "message": "LED-Strip"
     },
-    "tabRawSensorData": {
-        "message": "Sensoren"
-    },
     "tabCLI": {
         "message": "CLI"
     },
@@ -559,12 +556,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Kalibreer Versnellingsmeter"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Plaats de FC of het frame op een <strong>platte<\/strong> ondergrond. Ga daarna door met de kalibratie en zorg er voor dat deze niet beweegt gedurende de kalibratie periode"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Kalibreer Magnetometer"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Draai multirotor tenminste <strong>360<\/strong> graden om alle axisen van rotatie, je hebt 30 seconden om dit te doen"
     },
@@ -856,23 +847,8 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Opmerking:<\/strong> De SPI RX provider werkt alleen als de vereiste hardware aan boord is of verbonden is met een SPI bus."
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "Roll Graden"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Pitch Graden"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Yaw Graden"
-    },
-    "configurationSensorAlignmentGyro": {
-        "message": "GYRO Uitlijning"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Waarschuwing: Geen Gyro\/Acc gevonden"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Eerste"
@@ -889,14 +865,8 @@
     "configurationSensorAlignmentGyro2": {
         "message": "Tweede GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Uitlijning Versnellingsmeter"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standaard"
-    },
-    "configurationAccelTrims": {
-        "message": "Versnellingsmeter Trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Versnellingsmeter Roll Trim"
@@ -2297,9 +2267,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Bericht:"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Herstellen \/ Communicatie verloren<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasher verlaten"
@@ -4557,12 +4524,6 @@
     },
     "configurationAccHardware": {
         "message": "Versnellingsmeter"
-    },
-    "configurationBaroHardware": {
-        "message": "Barometer (indien ondersteund)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetometer (indien ondersteund)"
     },
     "configurationSmallAngle": {
         "message": "Maximale ARM-hoek [degrees]"

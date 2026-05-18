@@ -310,9 +310,6 @@
     "tabLedStrip": {
         "message": "LED Leiste"
     },
-    "tabRawSensorData": {
-        "message": "Sensoren"
-    },
     "tabCLI": {
         "message": "Kommandozeile"
     },
@@ -680,12 +677,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Beschleunigungssensor kalibieren"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Bitte den Flightcontroller <strong>waagerecht<\/strong> ausrichten und sicherstellen, dass der Copter während des Kalibrierungsprozesses nicht bewegt wird"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Magnetometer kalibrieren"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Copter mindestens <strong>360<\/strong> Grad um alle Achsen, innerhalb von 30 Sekunden, drehen"
     },
@@ -724,7 +715,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Mixer-Typ"
@@ -1252,35 +1243,14 @@
     "configurationBoardAlignment": {
         "message": "Board-Ausrichtung"
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "Roll Grad\/s"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Pitch Grad\/s"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Yaw Grad\/s"
-    },
-    "configurationGyroAlignment": {
-        "message": "Gyro-Ausrichtung"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "Die Gyroausrichtung bestimmt die Position des Gyrosensors auf dem FC. Die Standardeinstellung ist normalerweise korrekt, bei einem FC mit einer anderen Gyroausrichtung muss diese Einstellung aber eventuell angepasst werden."
-    },
     "configurationMagAlignment": {
         "message": "Magnetometer-Ausrichtung"
     },
     "configurationBoardAlignmentHelp": {
         "message": "Abweichender FC-Orientierung in Grad, falls der FC anders als vorgesehen (gedreht, verkehrt, seitwärts, usw.) eingebaut wurde. Wenn externe Sensoren verwendet werden, sollte deren Orientierung einzeln (unabhängig vom FC) konfiguriert werden. "
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Gyro Ausrichtung"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Warnung: Kein Gyro\/Acc gefunden"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Erster"
@@ -1291,26 +1261,14 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Beide"
     },
-    "configurationSensorAlignment": {
-        "message": "Sensorausrichtung"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Mindestens ein Gyro muss aktiviert bleiben. Wenn alle Gyros deaktiviert sind, funktioniert der Flugcontroller nicht richtig."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Erster Gyro"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Zweiter Gyro"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "ACCEL Ausrichtung"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
-    },
-    "configurationAccelTrims": {
-        "message": "Beschleunigungssensor Trimmung"
     },
     "configurationAccelTrimRoll": {
         "message": "Beschleunigungssensor Trimmung Roll"
@@ -3103,9 +3061,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Cloud-Build Details:"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
-    },
     "firmwareFlasherCloudBuildPending": {
         "message": "ausstehend"
     },
@@ -3264,9 +3219,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Nachricht:"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Wiederherstellung \/ abgebrochene Kommunikation<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware-Flasher verlassen"
@@ -6301,12 +6253,6 @@
     },
     "configurationAccHardware": {
         "message": "Beschleunigungssensor"
-    },
-    "configurationBaroHardware": {
-        "message": "Barometer (falls verbaut)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetometer (falls verbaut)"
     },
     "configurationSmallAngle": {
         "message": "Zum Armen maximal zulässiger Winkel"

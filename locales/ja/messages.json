@@ -371,9 +371,6 @@
     "tabLedStrip": {
         "message": "LEDストリップ"
     },
-    "tabRawSensorData": {
-        "message": "センサー"
-    },
     "tabCLI": {
         "message": "CLI コマンドライン"
     },
@@ -822,12 +819,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "水平 キャリブレーション"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "<strong>水平な場所<\/strong>に機体を置き、キャリブレーションを実行してください。キャリブレーションが終了するまで動かさないでください。"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "コンパス キャリブレーション"
-    },
     "initialSetupCalibrateMagText": {
         "message": "マルチローター機を最低でも<strong>360度<\/strong>、すべての軸にて回転させてください。この作業に30秒程度かかります。"
     },
@@ -866,7 +857,7 @@
     },
     "initialSetupHeading": {
         "message": "ヨー:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "ミキサータイプ"
@@ -1427,12 +1418,6 @@
     "configurationActiveImu": {
         "message": "IMU 有効"
     },
-    "configurationSensors": {
-        "message": "センサー設定"
-    },
-    "configurationSensorsHelp": {
-        "message": "追加センサーや高度な機能を設定します。"
-    },
     "configurationMagAlignmentHelp": {
         "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
@@ -1468,39 +1453,6 @@
     },
     "configurationBoardAlignment": {
         "message": "FCボード アライメント"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "ロール角度"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "ピッチ角度"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "ヨー角度"
-    },
-    "configurationGyroAlignment": {
-        "message": "ジャイロ アライメント"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "ジャイロ アライメントは、FCボード上のジャイロセンサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きのジャイロセンサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
-    },
-    "configurationGyroActiveIMU": {
-        "message": "IMU 有効"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "どのジャイロを一次ジャイロとして使用するかを選択してください。一次ジャイロは安定化および制御に使用されます。ジャイロが1つしかない場合は、自動的に選択されます。<br><br>ジャイロの種類やメーカーが異なる場合、複数のジャイロを有効化できないことがあります。"
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "コンパス アライメント"
@@ -1544,14 +1496,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "ジャイロ アライメント"
-    },
     "configurationSensorGyroToUse": {
         "message": "ジャイロ\/加速度"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "警告: ジャイロ\/加速度センサーが確認できません"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "第1"
@@ -1562,29 +1508,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "両方"
     },
-    "configurationSensorAlignment": {
-        "message": "センサー アライメント"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "少なくとも1つのジャイロセンサーを有効にしておく必要があります。すべてのジャイロセンサーを無効にすると、フライトコントローラが正常に動作しません。"
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "第1ジャイロ"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "第2ジャイロ"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Accel アライメント"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "デフォルト値"
     },
     "configurationSensorAlignmentCustom": {
         "message": "カスタム"
-    },
-    "configurationAccelTrims": {
-        "message": "加速度センサー トリム"
     },
     "configurationAccelTrimRoll": {
         "message": "加速度センサー ロールトリム"
@@ -3838,9 +3772,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "ログを表示"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "状態:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "処理待ち"
     },
@@ -4011,9 +3942,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "<span class=\"message-negative\">やらないで！<\/span> このファームフラッシャーを使用して、<strong>Betaflight 非対応<\/strong>のハードウェアへ書き込みはしないでください。<br \/><span class=\"message-negative\">やらないで！<\/span>書き込み中はコンピュータからFCボードを<strong>取り外したり<\/strong>、<strong>電源を切ったり<\/strong>しないでください。<br \/><br \/><strong>注: <\/strong><ul><li>STM32ブートローダーはROMに格納されているため、致命的な故障となることはありません。<\/li><li><span class=\"message-negative\">自動接続<\/span> は、ファームフラッシャー使用中は常に無効になります。<\/li><li>必ずバックアップを作成してください。アップグレード \/ ダウングレードによっては設定が消去される場合があります。<\/li><li>書き込みに問題がある場合は、まず <strong>FC からすべてのケーブルを取り外し<\/strong>、再起動やドライバの更新を試してください。<\/li><li>USBコネクタが基板に直接実装されているボード（近年の多くのFCボード）を書き込む場合は、Betaflightマニュアルの『USB Flashing』の章を確認し、正しいソフトウェアおよびドライバがインストールされていることを確認してください。<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>リカバリー \/ 通信ロスト<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。<\/li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。<\/li><li>BOOTピンをジャンパさせるか、またはBOOTボタンを長押ししてください。<\/li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません) <\/li><li>すべてのSTM32ドライバと、必要あればZadigをインストールします。(Betaflightマニュアルの [<a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a>] 章を参照) <\/li><li>Betaflight Appを一度閉じ、Appを再起動します。<\/li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。<\/li><li>正常なファームウェアをフラッシュしてください。(FCのボードのマニュアルに指定されている場合は、手動で伝送速度を調整してください) <\/li><li>電源をオフにします。<\/li>\n<li>BOOTピンのジャンパを取り外します。<\/li><li>電源をオンにします。(アクティビティLEDが点滅するはずです) <\/li><li>再度、通常通り接続してください。<\/li><\/ul>"
@@ -7341,12 +7269,6 @@
     },
     "configurationAccHardware": {
         "message": "加速度センサー"
-    },
-    "configurationBaroHardware": {
-        "message": "気圧センサー (サポート時)"
-    },
-    "configurationMagHardware": {
-        "message": "コンパス (サポート時)"
     },
     "configurationSmallAngle": {
         "message": "アーム最大角 [degrees]"

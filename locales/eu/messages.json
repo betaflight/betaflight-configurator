@@ -211,9 +211,6 @@
     "tabLedStrip": {
         "message": "LED Zerrenda"
     },
-    "tabRawSensorData": {
-        "message": "Sensoreak"
-    },
     "tabCLI": {
         "message": "CLI"
     },
@@ -528,12 +525,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Azelerometroa kalibratu"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Kontroladoreak edo markoa gainazale <strong>berdintutan<\/strong> jarri, jarraitu kalibrazioarekin, ziurtatu plataforma ez dela kalibrazio aldian mugitzen"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Magnetometroa kalibratu"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Mugi multirotorea gutxienez <strong>360<\/strong> gradu rotazio eje guztietan, 30 segundu dituzu hau egiteko"
     },
@@ -825,23 +816,8 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Oharra:<\/strong> SPI RX hornitzaileak funtzionatuko du beharrezko hardwarea taula gainean badago edo SPI bus batera konektatuta badago."
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "Roll graduak"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Pitch graduak"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Yaw graduak"
-    },
-    "configurationSensorAlignmentGyro": {
-        "message": "GIRO Lerrokatzea"
-    },
     "configurationSensorGyroToUse": {
         "message": "GIRO\/AZEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Abisua: ez da Giro\/Azel aurkitu"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Lehen"
@@ -858,14 +834,8 @@
     "configurationSensorAlignmentGyro2": {
         "message": "Bigarren GIRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "AZEL Lerrokatzea"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Lehenetsia"
-    },
-    "configurationAccelTrims": {
-        "message": "Trimatu azelerometroa"
     },
     "configurationAccelTrimRoll": {
         "message": "Azelerometroaren Roll Trim"
@@ -2152,9 +2122,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Mezua:"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Berreskuratutako\/Galdutako komunikazioa<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasheatzailea Utzi"
@@ -4329,12 +4296,6 @@
     },
     "configurationAccHardware": {
         "message": "Azelerometroa"
-    },
-    "configurationBaroHardware": {
-        "message": "Barometroa (onartzen bada)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetometroa (onartzen bada)"
     },
     "configurationSmallAngle": {
         "message": "Gehieneko ARM Angelua [degrees]"

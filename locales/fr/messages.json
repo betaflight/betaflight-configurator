@@ -310,9 +310,6 @@
     "tabLedStrip": {
         "message": "Bandeau LED"
     },
-    "tabRawSensorData": {
-        "message": "Capteurs"
-    },
     "tabCLI": {
         "message": "Ligne de commande (CLI)"
     },
@@ -696,12 +693,6 @@
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrer l'accéléromètre"
-    },
-    "initialSetupCalibrateAccelText": {
-        "message": "Positionner la carte de vol ou le châssis <strong>à plat<\/strong>, calibrer, s'assurer que rien ne bouge pendant le calibrage."
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrer le magnétomètre"
     },
     "initialSetupCalibrateMagText": {
         "message": "Faire tourner le multirotor à <strong>360° minimum<\/strong> sur les 3 axes, vous avez 30 secondes pour le faire."
@@ -1170,29 +1161,11 @@
     "configurationBoardAlignment": {
         "message": "Alignement de la carte"
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "Degrés sur le Roll"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Degrés sur le Pitch"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Degrés sur le Yaw"
-    },
-    "configurationGyroAlignment": {
-        "message": "Alignement du Gyro"
-    },
     "configurationMagAlignment": {
         "message": "Alignement du magnétomètre"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Alignement du Gyro"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Avertissement: Aucun Gyroscope\/Accéléromètre détecté"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Premier"
@@ -1203,26 +1176,14 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Les deux"
     },
-    "configurationSensorAlignment": {
-        "message": "Alignement du capteur"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Au moins un gyro doit rester activé. Si vous désactivez tous les gyros, le contrôleur de vol ne fonctionnera pas correctement."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Premier GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Deuxième GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Alignement de l'accéléromètre"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Défaut"
-    },
-    "configurationAccelTrims": {
-        "message": "Correction de l'accéléromètre"
     },
     "configurationAccelTrimRoll": {
         "message": "Correction de l'accéléromètre sur le Roll"
@@ -2744,9 +2705,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Détails de la Construction du Cloud:"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
-    },
     "firmwareFlasherCloudBuildPending": {
         "message": "en attente"
     },
@@ -2893,9 +2851,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Message:"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Récupération \/ Communication coupée<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Quitter le firmware flasheur"
@@ -5684,12 +5639,6 @@
     },
     "configurationAccHardware": {
         "message": "Accéléromètre"
-    },
-    "configurationBaroHardware": {
-        "message": "Baromètre (si supporté)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnétomètre (si supporté)"
     },
     "configurationSmallAngle": {
         "message": "Angle maximum pour armer [degrés]"
