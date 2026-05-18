@@ -379,9 +379,6 @@
     "tabLedStrip": {
         "message": "Fita de LED"
     },
-    "tabRawSensorData": {
-        "message": "Sensores"
-    },
     "tabCLI": {
         "message": "Linha de comandos"
     },
@@ -830,12 +827,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerómetro"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Coloque a placa ou o frame numa superfície <strong>nivelada<\/strong> e prossiga com a calibração, cuidado para não mover a plataforma durante o período de calibração"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrar Magnetómetro"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Mova o multirotor pelo menos <strong>360<\/strong> graus em todos os eixos de rotação, tem 30 segundos para executar esta tarefa"
     },
@@ -874,7 +865,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
@@ -1439,12 +1430,6 @@
     "configurationActiveImu": {
         "message": "IMU ativo"
     },
-    "configurationSensors": {
-        "message": "Configuração do Sensor"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configure sensores adicionais e recursos avançados."
-    },
     "configurationMagAlignmentHelp": {
         "message": "O alinhamento do magnetómetro é a orientação do sensor do magnetómetro na placa da controladora de voo. O pré-definido está habitualmente, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação de magnetómetro diferente, pode precisar de ajustar esta configuração."
     },
@@ -1480,39 +1465,6 @@
     },
     "configurationBoardAlignment": {
         "message": "Alinhamento da Placa"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "Graus do Roll"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Graus do Pitch"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Graus do Yaw"
-    },
-    "configurationGyroAlignment": {
-        "message": "Alinhamento do Gyro"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "O alinhamento do gyro é a orientação do sensor gyro na placa da controladora de voo. O pré-definido está normalmente correto, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação gyro diferente, pode precisar de ajustar esta configuração."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "IMU ativo"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Selecione qual gyro usar como gyro primário. O gyro primário é usado para estabilização e controle. Se tiver apenas um Gyro, ele será selecionado automaticamente.<br><br>Nem sempre é possível ativar vários gyros, quando eles são de diferentes tipos ou marcas."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Alinhamento do Magnetómetro"
@@ -1556,14 +1508,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Alinhamento do GYRO"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Aviso: Nenhum Gyro\/Accel encontrado"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primeiro"
@@ -1574,29 +1520,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Ambos"
     },
-    "configurationSensorAlignment": {
-        "message": "Alinhamento do Sensor"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Pelo menos um gyro deve permanecer ativo. Se desativar todos os gyros, a controladora de voo não funcionará corretamente."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primeiro GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Segundo GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Alinhamento ACCEL"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Padrão"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Personalizado"
-    },
-    "configurationAccelTrims": {
-        "message": "Ajustes do acelerómetro"
     },
     "configurationAccelTrimRoll": {
         "message": "Ajuste Roll do Acelerómetro"
@@ -3870,9 +3804,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Mostrar Log"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Estado:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "em fila"
     },
@@ -4043,9 +3974,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "Por favor <span class=\"message-negative\">não<\/span> tente flashar <strong>hardware não-Betaflight<\/strong> com este flasher de firmware.<br \/><span class=\"message-negative\">Não<\/span> <strong>desconete<\/strong> a placa ou <strong>desligue<\/strong> o computador enquanto flasha.<br \/><br \/><strong>Nota:<\/strong><ul><li>STM32 bootloader é guardado na ROM, não pode sofrer brick.<\/li><li><span class=\"message-negative\">Auto-Conetar<\/span> está sempre desabilitado enqanto estiver no flasher de firmware.<\/li><li>Assegure-se que tem um backup; alguns upgrades\/downgrades vão apagar a sua configuração.<\/li><li>Se tem problemas a flashar <strong>tente desconetar todos os cabos da sua FC<\/strong> primeiro, tente fazer reboot, atualize drivers.<\/li><li>Quando flashar placas com conetores USB diretamente conetados (maioria das placas recentes) assegure-se que leu a secção de Flash via USB do manual do Betaflight e tem o software e drivers corretamente instalados.<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recuperação \/ Comunicação perdida<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Se perdeu comunicação com a placa, siga estes passos para recuperá-la:<ul><li>Desligue a placa<\/li><li>Ative 'Sem sequência de reinicialização', ative 'Apagar completo do chip'.<\/li><li>Faça Jump aos pins de BOOT ou pressione o botão de BOOT.<\/li><li>Ligue a placa (o LED de atividade não vai piscar se for feito corretamente).<\/li><li>Instale todos os drivers STM32 e Zadig se necessário (consulte <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">secção USB Flashing<\/a> do manual do Betaflight).<\/li><li>Feche a App, depois reinicie-a.<\/li><li>Solte o botão de BOOT se a sua FC o tiver.<\/li><li>Flash o firmware correto (usando baud rate manual se especificado no manual da sua FC).<\/li><li>Desligue a FC.<\/li><li>Remova o jump no BOOT.<\/li><li>Ligue a FC (o LED de atividade deve piscar).<\/li><li>Conecte normalmente.<\/li><\/ul>"
@@ -7373,12 +7301,6 @@
     },
     "configurationAccHardware": {
         "message": "Acelerómetro"
-    },
-    "configurationBaroHardware": {
-        "message": "Barómetro (se suportado)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetómetro (se suportado)"
     },
     "configurationSmallAngle": {
         "message": "Ângulo máximo permitido para Armar [degrees]"

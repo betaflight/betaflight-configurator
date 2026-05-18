@@ -353,9 +353,6 @@
     "tabLedStrip": {
         "message": "LED 스트립"
     },
-    "tabRawSensorData": {
-        "message": "센서"
-    },
     "tabCLI": {
         "message": "CLI"
     },
@@ -785,12 +782,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "가속도계 교정"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "보드 또는 프레임을 <strong>수평의<\/strong> 표면 위에 두고 교정을 진행하십시오. 교정이 진행되는 동안 플랫폼을 절대 움직이지 마십시오."
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "자력계 교정"
-    },
     "initialSetupCalibrateMagText": {
         "message": "멀티로터를 최소한 모든 방향에 대하여 <strong>360<\/strong>도 회전시키십시오. 이 작업을 수행하는 데 30초의 시간이 주어집니다."
     },
@@ -829,7 +820,7 @@
     },
     "initialSetupHeading": {
         "message": "요:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "믹서 형식"
@@ -1388,12 +1379,6 @@
     "configurationActiveImu": {
         "message": "IMU 활성"
     },
-    "configurationSensors": {
-        "message": "센서 환경설정"
-    },
-    "configurationSensorsHelp": {
-        "message": "추가 센서와 고급 기능을 구성합니다."
-    },
     "configurationMagAlignmentHelp": {
         "message": "자력계 정렬은 비행 컨트롤러 보드에 있는 자력계 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자력계 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
     },
@@ -1429,39 +1414,6 @@
     },
     "configurationBoardAlignment": {
         "message": "보드 정렬"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "롤 각도"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "피치 각도"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "요 각도"
-    },
-    "configurationGyroAlignment": {
-        "message": "자이로 정렬"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "자이로 정렬은 비행 컨트롤러 보드에 있는 자이로 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자이로 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "IMU 활성"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "기본 자이로로 사용할 자이로를 선택합니다. 기본 자이로는 안정화 및 제어에 사용됩니다. 자이로가 하나만 있는 경우 자동으로 선택됩니다.<br><br>다양한 종류나 브랜드의 자이로를 항상 활성화할 수 있는 것은 아닙니다."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "자력계 정렬"
@@ -1505,14 +1457,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "자이로 정렬"
-    },
     "configurationSensorGyroToUse": {
         "message": "자이로\/가속도계"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "경고: 자이로\/가속도계 발견 안됨"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "첫번째"
@@ -1523,29 +1469,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "모두"
     },
-    "configurationSensorAlignment": {
-        "message": "센서 정렬"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "자이로를 하나 이상 활성화한 상태로 유지해야 합니다. 모든 자이로를 비활성화하면 비행 컨트롤러가 제대로 작동하지 않습니다."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "첫번째 자이로"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "두번째 자이로"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "가속도계 정렬"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "기본값"
     },
     "configurationSensorAlignmentCustom": {
         "message": "사용자정의"
-    },
-    "configurationAccelTrims": {
-        "message": "가속도계 트림"
     },
     "configurationAccelTrimRoll": {
         "message": "가속도계 롤 트림"
@@ -3559,9 +3493,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "로그 보기"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "상태:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "대기중"
     },
@@ -3732,9 +3663,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "이 펌웨어 플래시 도구로 <strong>베타플라이트가 아닌<\/strong> 하드웨어를 플래시하지 <span class=\"message-negative\">마십시오<\/span>.<br \/>플래시하는 중에 보드의 <strong>연결을 끊거나<\/strong> 컴퓨터의 <strong>전원을 끄지<\/strong> <span class=\"message-negative\">마십시오<\/span>.<br \/><br \/><strong>노트<\/strong><ul><li>STM32 부트로더는 ROM에 저장되어 있어, 벽돌상태가 될 수 없습니다.<\/li><li><span class=\"message-negative\">자동-연결<\/span>은 당신이 펌웨어 플래시 도구에 있는 동안 항상 비활성화됩니다.<\/li><li>반드시 백업을 하십시오; 일부 업그레이드\/다운그레이드는 당신의 환경설정을 지워질 것입니다.<\/li><li>플래시하는 데 문제가 있는 경우 먼저 <strong>FC에서 모든 케이블의 연결을 끊고<\/strong>, 재부팅, 드라이브 업그레이드를 시도하십시오.<\/li><li>직접 연결된 USB 소켓(대부분의 새로운 보드들) 이 있는 보드를 플래시할 경우, 베타플라이트 매뉴얼의 USB 플래싱 섹션을 읽고 올바른 소프트웨어 및 드라이버를 설치했는지 확인하십시오<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>통신 복구 \/ 손실<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오; <ul><li>전원을 끄십시오.<\/li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.<\/li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.<\/li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)<\/li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱<\/a> 섹션을 보십시오.)<\/li><li>앱을 닫고, 다시 시작하십시오.<\/li><li>FC에 BOOT 버튼이 있으면 해제하십시오.<\/li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).<\/li><li>전원을 끄십시오.<\/li><li>BOOT 점퍼를 제거하십시오.<\/li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).<\/li><li>정상적으로 연결하십시오.<\/li><\/ul>"
@@ -6986,12 +6914,6 @@
     },
     "configurationAccHardware": {
         "message": "가속도계"
-    },
-    "configurationBaroHardware": {
-        "message": "기압계 (지원할 경우)"
-    },
-    "configurationMagHardware": {
-        "message": "자력계 (지원할 경우)"
     },
     "configurationSmallAngle": {
         "message": "최대 아밍 각도 [도]"

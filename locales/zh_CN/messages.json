@@ -371,9 +371,6 @@
     "tabLedStrip": {
         "message": "LED 灯带"
     },
-    "tabRawSensorData": {
-        "message": "传感器"
-    },
     "tabCLI": {
         "message": "CLI"
     },
@@ -825,12 +822,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "校准加速度计"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "把飞控或者飞机<strong>水平<\/strong>放置，再执行加速度计校准。校准过程中切勿移动飞控或者飞机。"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "校准磁力计"
-    },
     "initialSetupCalibrateMagText": {
         "message": "将飞行器在所有轴向上都移动至少<strong>360<\/strong>度，你有30秒的时间可供进行这项操作。"
     },
@@ -869,7 +860,7 @@
     },
     "initialSetupHeading": {
         "message": "偏航：",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "混控类型"
@@ -1430,12 +1421,6 @@
     "configurationActiveImu": {
         "message": "启用 IMU"
     },
-    "configurationSensors": {
-        "message": "传感器配置"
-    },
-    "configurationSensorsHelp": {
-        "message": "配置额外的传感器和高级功能。"
-    },
     "configurationMagAlignmentHelp": {
         "message": "磁力计对齐是指飞控板上磁力计传感器的方向。默认设置通常是正确的，但如果你使用了定制的固件或飞控板与其安装的磁力计方向不同，则可能需要调整该设置。"
     },
@@ -1471,39 +1456,6 @@
     },
     "configurationBoardAlignment": {
         "message": "飞控板对齐"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "横滚 度"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "俯仰 度"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "偏航 度"
-    },
-    "configurationGyroAlignment": {
-        "message": "陀螺仪对齐"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "陀螺仪对齐是指飞控板上陀螺仪传感器的方向。默认设置通常是正确的，但如果你使用了定制的固件或飞控板与其安装的陀螺仪方向不同，则可能需要调整该设置。"
-    },
-    "configurationGyroActiveIMU": {
-        "message": "启用 IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "选择一个陀螺仪作为主陀螺仪。主陀螺仪将用于稳定与控制。如果仅有一个陀螺仪，它将被自动选定。<br><br>当同时启用多个不同类型或品牌的陀螺仪时，有可能不会起效。"
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "磁力计对齐"
@@ -1547,14 +1499,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "陀螺仪方向"
-    },
     "configurationSensorGyroToUse": {
         "message": "陀螺仪\/加速度计"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "警告：未检测到陀螺仪\/加速度计"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "第一个"
@@ -1565,29 +1511,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "同时启用"
     },
-    "configurationSensorAlignment": {
-        "message": "传感器方向"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "至少要启用一个陀螺仪。如果您禁用所有陀螺仪，飞行控制器将无法正常工作。"
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "第一个陀螺仪"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "第二个陀螺仪"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "加速度计方向"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "默认"
     },
     "configurationSensorAlignmentCustom": {
         "message": "自定义"
-    },
-    "configurationAccelTrims": {
-        "message": "加速度计微调"
     },
     "configurationAccelTrimRoll": {
         "message": "加速度计横滚微调"
@@ -3837,9 +3771,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "显示日志"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "状态："
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "已排队"
     },
@@ -4010,9 +3941,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "请<span class=\"message-negative\">不要<\/span>使用此固件刷写器刷写<strong>非 Betaflight<\/strong>硬件。<br \/>刷写时，<span class=\"message-negative\">不要<\/span><strong>断开<\/strong>飞控板或<strong>关闭电脑<\/strong>。<br \/><br \/><strong>注意：<\/strong><ul><li>STM32 的引导程序储存在 ROM 区域，所以不会有变砖可能。<\/li><li><span class=\"message-negative\">自动连接<\/span>在固件刷写器内始终被禁用。<\/li><li>确保您有备份，因为一些升级\/降级会抹除您的设置<\/li><li>如果您刷写遇到问题，首先<strong>尝试断开您的飞控连接的所有线缆<\/strong>，接着尝试重启和升级驱动。<\/li><li>当刷写有直连 USB 接口的飞控时（多数新的飞控都是如此），确保您已经阅读 Betaflight 手册中 USB Flashing这一部分，并确保驱动和软件已正确安装。<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong> 恢复\/丢失通信 <\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "如果您与飞控板断开连接，您可以按照如下步骤来恢复：<ul><li>断电<\/li><li>，启用「无重启序列」、启用「全盘擦除」。<\/li><li>短接 BOOT 引脚，或者按住 BOOT 按键。<\/li><li>上电(如果操作正确，飞控的「活动」灯不会闪烁)。<\/li><li>如果有必要，安装完整 STM32 驱动和 Zadig（参阅 Betaflight 手册<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> 部分）。<\/li><li>关闭此应用，并重新打开。<\/li><li>如果存在 BOOT 按钮，将原本按住的 BOOT 按键松开。<\/li><li>烧写正确的固件（使用飞控制造商所规定的波特率）。<\/li><li>断电。<\/li><li>移除 BOOT 引脚的短接。<\/li><li>上电（飞控「活动」灯应该会闪烁）。<\/li><li>正常连接。<\/li><\/ul>"
@@ -4910,10 +4838,6 @@
     },
     "pidTuningRpmFadeRangeHz": {
         "message": "淡化范围 [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmQ": {
-        "message": "Q 因子",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmWeight": {
@@ -7356,12 +7280,6 @@
     },
     "configurationAccHardware": {
         "message": "加速度计"
-    },
-    "configurationBaroHardware": {
-        "message": "气压计 （如有）"
-    },
-    "configurationMagHardware": {
-        "message": "磁力计 （如有）"
     },
     "configurationSmallAngle": {
         "message": "最大允许解锁角度 [degrees]"

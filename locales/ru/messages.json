@@ -341,9 +341,6 @@
     "tabLedStrip": {
         "message": "LED лента"
     },
-    "tabRawSensorData": {
-        "message": "Датчики"
-    },
     "tabCLI": {
         "message": "Командная строка"
     },
@@ -773,12 +770,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Калибровать Акселерометр"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Положите плату или раму на <strong>ровную<\/strong> поверхность и запустите калибровку, не двигая её в процессе калибровки"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Калибровать Магнитометр"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Покрутите мультикоптер по крайней мере на <strong>360<\/strong> градусов по всем 3-м осям вращения, у Вас есть 30 секунд для этой операции"
     },
@@ -817,7 +808,7 @@
     },
     "initialSetupHeading": {
         "message": "Рыскание:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Тип микшера"
@@ -1372,12 +1363,6 @@
     "configurationActiveImu": {
         "message": "Активный IMU"
     },
-    "configurationSensors": {
-        "message": "Настройка датчиков"
-    },
-    "configurationSensorsHelp": {
-        "message": "Настройте дополнительные датчики и расширенные функции."
-    },
     "configurationMagAlignmentHelp": {
         "message": "Выравнивание магнитометра — это ориентация датчика магнитометра на плате полётного контроллера. По умолчанию обычно задано верное значение, но если у вас кастомная сборка или полётный контроллер с другой ориентацией магнитометра, вам может потребоваться изменить эту настройку."
     },
@@ -1413,39 +1398,6 @@
     },
     "configurationBoardAlignment": {
         "message": "Выравнивание платы"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "Roll градусы"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Pitch градусы"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Yaw градусы"
-    },
-    "configurationGyroAlignment": {
-        "message": "Калибровка гироскопа"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "Выравнивание гироскопа — ориентация датчика гироскопа на плате полётного контроллера. По умолчанию обычно задано верное значение, но если у вас кастомная сборка или полётный контроллер с другой ориентацией гироскопа, вам может потребоваться изменить этот параметр."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Активный IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Выберите гироскоп, чтобы использовать его как основной. Основной гироскоп используется для стабилизации и управления. Если у вас только один гироскоп, он будет выбран автоматически.<br><br>Не всегда возможно выбрать несколько гироскопов, когда они разных видов или брендов."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Калибровка магнитометра"
@@ -1489,14 +1441,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Положение Гиро."
-    },
     "configurationSensorGyroToUse": {
         "message": "ГИРО\/АКСЕЛ"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Предупреждение: Не найден Гиро\/Акксел"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Первый"
@@ -1507,29 +1453,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Оба"
     },
-    "configurationSensorAlignment": {
-        "message": "Выравнивание датчика"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "По крайней мере один гироскоп должен оставаться включенным. Если вы отключите все гироскопы, контроллер полета не будет работать должным образом."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Первый ГИРО"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Второй ГИРО"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Положение Аксел."
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "По умолчанию"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Пользовательское"
-    },
-    "configurationAccelTrims": {
-        "message": "Триммирование акселерометра"
     },
     "configurationAccelTrimRoll": {
         "message": "Триммирование акселерометра по Roll"
@@ -3540,9 +3474,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Показать журнал"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Статус:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "в очереди"
     },
@@ -3713,9 +3644,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать <\/span> <strong>не поддерживаемые<\/strong> Betaflight-ом контроллеры этим программатором.<br \/><span class=\"message-negative\">Не <\/span><strong>отключайте<\/strong> кабель от полётного контроллера и <strong>не выключайте<\/strong> ваш компьютер во время прошивки.<br \/><br \/><strong>Примечание:<\/strong><ul><li> STM32-загрузчик хранится в ROM-памяти, его нельзя затереть.<\/li><li><span class=\"message-negative\"> Подключаться автоматически<\/span> всегда выключено во вкладке \"Программатор\".<\/li><li>Убедитесь, что Вы сделали резервную копию, т.к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки.<\/li><li>Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера<\/strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<\/li><li> При прошивке полётных контроллеров непосредственно через USB кабель (большинство новых плат) обязательно ознакомьтесь с разделом \"Прошивка по USB\" в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйвера<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Потеря связи \/ Восстановление связи<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Если вы потеряли связь с вашей платой, выполните следующие шаги для её восстановления:<ul><li>Отключите питание.<\/li><li>Включите «Без перезагрузки» и «Полное стирание чипа».<\/li><li>Замкните BOOT-пины или удерживайте кнопку BOOT.<\/li><li>Включите питание (светодиод активности НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите все драйверы STM32 и Zadig при необходимости (см. раздел <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивка USB<\/a> в руководстве Betaflight).<\/li><li>Закройте приложение, затем перезапустите его.<\/li><li>Отпустите кнопку BOOT, если она есть на вашем FC.<\/li><li>Прошейте правильную прошивку (используя ручную скорость передачи данных, если указано в руководстве к вашему FC).<\/li><li>Выключите питание.<\/li><li>Снимите перемычку BOOT.<\/li><li>Включите питание (светодиод активности должен мигать).<\/li><li>Подключитесь в обычном режиме.<\/li><\/ul>"
@@ -6973,12 +6901,6 @@
     },
     "configurationAccHardware": {
         "message": "Акселерометр"
-    },
-    "configurationBaroHardware": {
-        "message": "Барометр (если поддерживается)"
-    },
-    "configurationMagHardware": {
-        "message": "Магнитометр (если поддерживается)"
     },
     "configurationSmallAngle": {
         "message": "Максимальный наклон коптера (в градусах) при котором разрешён arming"

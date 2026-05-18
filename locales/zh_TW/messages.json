@@ -208,9 +208,6 @@
     "tabLedStrip": {
         "message": "LED 燈帶"
     },
-    "tabRawSensorData": {
-        "message": "傳感器"
-    },
     "tabCLI": {
         "message": "命令列"
     },
@@ -510,12 +507,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "校準加速度計"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "把飛控或者飛機<strong>水平<\/strong>放置，再執行加速度計校準。校準過程中切勿移動飛控或者飛機。"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "校準磁力計"
-    },
     "initialSetupCalibrateMagText": {
         "message": "將飛行器在所有軸向上都移動至少<strong>360<\/strong>度，你有三十秒的時間可供進行這項操作。"
     },
@@ -807,23 +798,8 @@
     "configurationSpiRxHelp": {
         "message": "<strong>注意:<\/strong> SPI 接收機只有通過 SPI 總線連接到飛控或板載了相應硬體時才能工作。"
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "橫滾 度"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "俯仰 度"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "偏航 度"
-    },
-    "configurationSensorAlignmentGyro": {
-        "message": "陀螺儀反向"
-    },
     "configurationSensorGyroToUse": {
         "message": "陀螺儀\/加速度計"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "警告：未檢測到陀螺儀\/加速度計"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "第一個"
@@ -840,14 +816,8 @@
     "configurationSensorAlignmentGyro2": {
         "message": "第二個陀螺儀"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "加速度計方向"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "默認"
-    },
-    "configurationAccelTrims": {
-        "message": "加速度計微調"
     },
     "configurationAccelTrimRoll": {
         "message": "角速度計橫滾微調"
@@ -2092,9 +2062,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "訊息："
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong> 恢復\/丟失通訊<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "關閉固件燒寫"
@@ -4255,12 +4222,6 @@
     },
     "configurationAccHardware": {
         "message": "加速度計"
-    },
-    "configurationBaroHardware": {
-        "message": "氣壓計 （如有）"
-    },
-    "configurationMagHardware": {
-        "message": "磁力计 （如有）"
     },
     "configurationSmallAngle": {
         "message": "最大允許解鎖角度 [degrees]"

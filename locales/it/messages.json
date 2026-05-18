@@ -375,9 +375,6 @@
     "tabLedStrip": {
         "message": "Striscia LED"
     },
-    "tabRawSensorData": {
-        "message": "Sensori"
-    },
     "tabCLI": {
         "message": "CLI"
     },
@@ -829,12 +826,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibra Accelerometro"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Posiziona la scheda o il modello su una superficie <strong>a livello<\/strong>, procedi con la calibrazione, assicurati che nulla si muova durante la calibrazione"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibra Magnetometro"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Muovi il multi rotore di almeno <strong>360<\/strong> gradi su tutti gli assi di rotazione, hai 30 secondi per completare l'operazione"
     },
@@ -873,7 +864,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Tipo Mixer"
@@ -1438,12 +1429,6 @@
     "configurationActiveImu": {
         "message": "IMU Attiva"
     },
-    "configurationSensors": {
-        "message": "Configurazione Sensore"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configura sensori aggiuntivi e funzionalità avanzate."
-    },
     "configurationMagAlignmentHelp": {
         "message": "L'allineamento del magnetometro è l'orientamento del sensore magnetometro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
     },
@@ -1479,39 +1464,6 @@
     },
     "configurationBoardAlignment": {
         "message": "Allineamento Scheda"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "Gradi Roll"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Gradi Pitch"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Gradi Yaw"
-    },
-    "configurationGyroAlignment": {
-        "message": "Allineamento Gyro"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "L'allineamento del gyro è l'orientamento del sensore gyro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "IMU Attiva"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Seleziona quale giroscopio usare come giroscopio primario. Il giroscopio primario viene utilizzato per la stabilizzazione e il controllo. Se è disponibile un solo giroscopio, verrà selezionato automaticamente.<br><br>Non sempre è possibile abilitare più giroscopi, se sono di tipi o marche diversi."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Allineamento Magnetometro"
@@ -1555,14 +1507,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Allinea GYRO"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Attenzione: Nessun Gyro\/Acc trovato"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primo"
@@ -1573,29 +1519,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Entrambi"
     },
-    "configurationSensorAlignment": {
-        "message": "Allineamento Sensore"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Almeno un giroscopio deve rimanere abilitato. Se disabiliti tutti i giroscopi, il controllore di volo non funzionerà correttamente."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primo Gyro"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Secondo Gyro"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Allinea ACCEL"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predefinito"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Personalizzato"
-    },
-    "configurationAccelTrims": {
-        "message": "Trim Accelerometro"
     },
     "configurationAccelTrimRoll": {
         "message": "Trim Roll Accelerometro"
@@ -3869,9 +3803,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Mostra Log"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Stato:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "in coda"
     },
@@ -4042,9 +3973,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "Si prega di <span class=\"message-negative\">non<\/span> provare a flashare hardware <strong>non-Betaflight<\/strong> con questo firmware flasher.<br \/><span class=\"message-negative\">Non<\/span> <strong>disconnettere<\/strong> la scheda e <strong>non spegnere<\/strong> il tuo computer mentre stai flashando. <br \/> <br \/><strong>Nota:<\/strong><ul><li>Il bootloader STM32 è memorizzato nella ROM, non può essere corrotto.<\/li><li><span class=\"message-negative\">La connessione automatica<\/span> è sempre disabilitata mentre ci si trova all'interno del firmware flasher.<\/li><\/li>Assicurati di avere un backup; alcuni upgrade\/downgrade cancelleranno la tua configurazione.<\/li><\/li>Se hai problemi a flashare il controllore di volo<strong> prova prima a scollegare prima tutti i cavi dalla scheda<\/strong>, prima prova a riavviare e ad aggiornare i driver.<\/li><li>Quando provi a flashare schede con connessione diretta USB (le schede più recenti) assicurati di aver letto la sezione USB Flashing del manuale Betaflight e di avere il software e i driver corretti<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong> Recupero \/ comunicazione persa <\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Se hai perso la comunicazione con la tua scheda segui questi passaggi per ripristinare la comunicazione: <ul><li>Spegnimento<\/li><li>Abilita 'Nessuna sequenza di riavvio', abilita 'Cancellazione completa del chip'.<\/li><li>Ponticellare i pin del BOOT o tenere premuto il pulsante BOOT.<\/li><li>Accensione (il LED NON lampeggia se non eseguito correttamente).<\/li><li>Installare tutti i driver STM32 e Zadig se necessario (vedere la sezione <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash con USB<\/a> del manuale di Betaflight).<\/li><li>Chiudere l'App, quindi riavviarla.<\/li><li>Rilascia il pulsante BOOT se il tuo FC ne ha uno.<\/li><li>Flash con firmware corretto (utilizzando la velocità di baud manuale se specificato nel manuale dell' FC).<\/li><li>Spegnimento.<\/li><li>Rimuovere il ponticello BOOT.<\/li><li>Accensione (LED d'attività dovrebbe lampeggiare).<\/li><li>Connetti normalmente.<\/li><\/ul>"
@@ -4942,10 +4870,6 @@
     },
     "pidTuningRpmFadeRangeHz": {
         "message": "Intervallo Di Dissolvenza [Hz]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmQ": {
-        "message": "Fattore Q",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmWeight": {
@@ -7392,12 +7316,6 @@
     },
     "configurationAccHardware": {
         "message": "Accelerometro"
-    },
-    "configurationBaroHardware": {
-        "message": "Barometro (se supportato)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetometro (se supportato)"
     },
     "configurationSmallAngle": {
         "message": "Angolo massimo di armamento [gradi]"

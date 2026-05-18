@@ -371,9 +371,6 @@
     "tabLedStrip": {
         "message": "LED стрічка"
     },
-    "tabRawSensorData": {
-        "message": "Датчики"
-    },
     "tabCLI": {
         "message": "Командний рядок"
     },
@@ -825,12 +822,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Відкалібрувати акселерометр"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Розмістіть плату або раму на <strong>рівній<\/strong> поверхні, розпочніть калібрування, переконайтеся, що платформа не рухається протягом періоду калібрування"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Калібрувати Магнітометр"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Покрутіть мультиротор принаймні <strong>360<\/strong> градусів по всіх 3-х осях обертання, у вас є 30 секунд, щоб виконати це завдання"
     },
@@ -869,7 +860,7 @@
     },
     "initialSetupHeading": {
         "message": "Рискання:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Тип Мікшеру"
@@ -1430,12 +1421,6 @@
     "configurationActiveImu": {
         "message": "Активний ІВП"
     },
-    "configurationSensors": {
-        "message": "Конфігурація датчиків"
-    },
-    "configurationSensorsHelp": {
-        "message": "Налаштувати додаткові датчики та розширені функції."
-    },
     "configurationMagAlignmentHelp": {
         "message": "Вирівнювання магнітометра — це орієнтація датчика магнітометра на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією магнітометра, можливо потрібно буде змінити це налаштування."
     },
@@ -1471,39 +1456,6 @@
     },
     "configurationBoardAlignment": {
         "message": "Вирівнювання плати"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "Крен, градусів"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Тангаж, градусів"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Рискання, градусів"
-    },
-    "configurationGyroAlignment": {
-        "message": "Вирівнювання гіроскопа"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "Вирівнювання гіроскопа — це орієнтація датчика гіроскопа на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією гіроскопа, можливо потрібно буде змінити це налаштування."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Активний ІВП"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Виберіть, який гіроскоп використовувати як основний. Основний гіроскоп використовується для стабілізації та керування. Якщо у вас лише один гіроскоп, він буде вибраний автоматично.<br><br>Не завжди можливо ввімкнути кілька гіроскопів, якщо вони різних типів або виробників."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Вирівнювання магнітометра"
@@ -1547,14 +1499,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Вирівнювання гіроскопа"
-    },
     "configurationSensorGyroToUse": {
         "message": "Гіроскоп\/Акселерометр"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Попередження: Не знайдено жодного гіроскопа\/акселерометра"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Перший"
@@ -1565,29 +1511,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Обидва"
     },
-    "configurationSensorAlignment": {
-        "message": "Вирівнювання сенсора"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Щонайменше один гіроскоп повинен лишатись увімкненим. Якщо ви вимкнете всі гіроскопи, польотний контролер не працюватиме належним чином."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Перший гіроскоп"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Другий гіроскоп"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Вирівнювання акселерометра"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "За замовчуванням"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Користувацьке"
-    },
-    "configurationAccelTrims": {
-        "message": "Корекція акселерометра"
     },
     "configurationAccelTrimRoll": {
         "message": "Корекція акселерометра по крену"
@@ -3841,9 +3775,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Показати журнал"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Стан:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "у черзі"
     },
@@ -4014,9 +3945,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "Будь-ласка, <span class=\"message-negative\">не<\/span> намагайтесь прошивати <strong>не Betaflight<\/strong> обладнання за допомогою цього програматора.<br \/><span class=\"message-negative\">Не<\/span> <strong>від'єднуйте<\/strong> плату та <strong>не вимикайте<\/strong> комп'ютер під-час прошивки.<br \/><br \/><strong>Примітка:<\/strong><ul><li>Завантажувач STM32 зберігається в ППЗ, він не може бути пошкоджений.<\/li><li><span class=\"message-negative\">Автоматичне підключення<\/span> завжди вимкнене, доки ви знаходитесь в програматорі.<\/li><li>Переконайтесь, що у вас є резервна копія; деякі оновлення\/пониження зітруть вашу конфігурацію.<\/li><li>Якщо у вас є проблеми з прошиванням, <strong>спробуйте спочатку від'єднати всі дроти від вашого польотного контролера<\/strong>, спробуйте перезавантаження, оновлення драйверів.<\/li><li>При прошивці плат, які мають пряме підключення USB роз'ємів (більшість сучасних плат), переконайтесь, що ви прочитали розділ USB Flashing у посібнику Betaflight і маєте правильне програмне забезпечення та встановлені драйвери<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Відновлення \/ Втрата зв'язку<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Якщо зв’язок із платою втрачено, виконайте такі кроки, щоб відновити зв’язок: <ul><li>Вимкніть живлення.<\/li><li>Увімкніть «Польотник уже в режимі завантажувача», увімкніть «Повністю очистити мікроконтролер».<\/li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.<\/li><li>Увімкніть живлення (індикатор активності НЕ блимає, якщо все зроблено правильно).<\/li><li>Установіть усі драйвери STM32 і Zadig, якщо потрібно (див. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB<\/a> у посібнику Betaflight).<\/li><li>Закрийте застосунок, перезапустіть його.<\/li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотнику.<\/li><li>Прошийте правильною прошивкою (з використанням ручної швидкості передачі даних, якщо вказано у посібнику коритувача до вашого польотного контролера).<\/li><li>Вимкніть живлення.<\/li><li>Зніміть перемичку BOOT.<\/li><li>Увімкніть живлення (світлодіод активності має блимати).<\/li><li>Підключіться нормально.<\/li><\/ul>"
@@ -4914,10 +4842,6 @@
     },
     "pidTuningRpmFadeRangeHz": {
         "message": "Діапазон згасання [Гц]",
-        "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmQ": {
-        "message": "Добротність",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmWeight": {
@@ -7364,12 +7288,6 @@
     },
     "configurationAccHardware": {
         "message": "Акселерометр"
-    },
-    "configurationBaroHardware": {
-        "message": "Барометр (якщо підтримується)"
-    },
-    "configurationMagHardware": {
-        "message": "Магнітометр (якщо підтримується)"
     },
     "configurationSmallAngle": {
         "message": "Макс. кут взведення [degrees]"

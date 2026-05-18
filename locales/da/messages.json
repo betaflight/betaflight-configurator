@@ -331,11 +331,56 @@
     "tabOptions": {
         "message": "Configurator indstillinger"
     },
+    "sidebarOpenOptions": {
+        "message": "Indstillinger",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Slå mørk \/ lys til\/fra",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Ekspert tilstand til\/fra",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Initiel indstilling"
     },
     "tabSetupOSD": {
         "message": "OSD opsætning"
+    },
+    "tabSensorConfig": {
+        "message": "Sensorer"
+    },
+    "sensorConfigHardware": {
+        "message": "Sensor"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Sensor konfiguration gemt"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Kunne ikke gemme sensor konfiguration"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Kompas (hvis understøttet)"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Accelerometer (hvis understøttet)"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Placer fartøj på en plan overflade før kalibrering"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "Accelerometer er ikke kalibreret. Kalibrér venligst inden flyvning."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Kompas kalibering offset er nul, Kalibrer for at få præcis kurs."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Kalibrer"
     },
     "tabConfiguration": {
         "message": "Opsætning"
@@ -345,6 +390,9 @@
     },
     "tabPidTuning": {
         "message": "PID-tuning"
+    },
+    "autotuneBandwidth": {
+        "message": "Båndbredde"
     },
     "tabReceiver": {
         "message": "Modtager"
@@ -378,9 +426,6 @@
     },
     "tabLedStrip": {
         "message": "LED-strimmel"
-    },
-    "tabRawSensorData": {
-        "message": "Sensorer"
     },
     "tabCLI": {
         "message": "CLI"
@@ -833,12 +878,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Kalibrering af Accelerometer"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Anbring FC\/drone på en <strong>plan og ret<\/strong> overflade, fortsæt kalibreringen, tjek at overfladen\/FC\/dronen ikke bevæges under kalibreringen"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Kalibrering af kompas"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Bevæg indenfor 30 sek. dronen <strong>360<\/strong> grader i alle dens rotationsakser"
     },
@@ -858,7 +897,7 @@
         "message": "Gendan via JSON"
     },
     "initialSetupButtonRebootBootloader": {
-        "message": "Aktivér Boot Loader\/DFU"
+        "message": "Start Boot Loader\/DFU"
     },
     "initialSetupBackupRestoreHeader": {
         "message": "Eksperimentel sikkerhedskopiering og gendannelse"
@@ -877,7 +916,11 @@
     },
     "initialSetupHeading": {
         "message": "Sideror:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+    },
+    "initialSetupMagHeading": {
+        "message": "Kompas kurs:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Mixertype"
@@ -955,6 +998,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "CPU belastning:"
     },
     "initialSetupCpuTemp": {
         "message": "CPU temperatur:"
@@ -1166,6 +1212,9 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Viser kurs, stigning og krængning",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Firmware version:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1442,12 +1491,6 @@
     "configurationActiveImu": {
         "message": "Aktiv IMU"
     },
-    "configurationSensors": {
-        "message": "Sensor konfirguration"
-    },
-    "configurationSensorsHelp": {
-        "message": "Konfiguration af flere sensorer og avancerede funktioner."
-    },
     "configurationMagAlignmentHelp": {
         "message": "Kompas indstilling er orienteringen af kompas retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret byg eller en FC med en anden kompas retning, det kan være nødvendigt at ændre denne indstilling."
     },
@@ -1485,37 +1528,13 @@
         "message": "Gyro justering"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "Krængror grader"
+        "message": "Krængror°"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "Højderor grader"
+        "message": "Højderor°"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Sideror grader"
-    },
-    "configurationGyroAlignment": {
-        "message": "Gyro justering"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "Gyro indstilling er orienteringen af gyro retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret build eller en FC med en anden gyro retning, det kan være nødvendigt at ændre denne indstilling."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Aktiv IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Vælg den gyro, der skal være den primære gyro. Den primære gyro bruges til stabilisering og kontrol. Hvis du kun har et gyro, vælges den automatisk.<br><br>Det er ikke altid muligt at aktivere flere gyroer, hvis de har forskellig type eller fabrikant."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
+        "message": "Sideror°"
     },
     "configurationMagAlignment": {
         "message": "Kompas justering"
@@ -1559,14 +1578,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "GYRO-justering"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Advarsel: Ingen Gyro\/Acc fundet"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Første"
@@ -1577,29 +1590,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Begge"
     },
-    "configurationSensorAlignment": {
-        "message": "Sensor justering"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Mindst én gyro skal være aktiveret. Hvis du deaktiverer alle gyroer, vil FC ikke fungere korrekt."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Første GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Sekundære GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "ACCEL-justering"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Brugerdefineret"
-    },
-    "configurationAccelTrims": {
-        "message": "Accelerometer trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Accelerometer krængror trim"
@@ -3858,9 +3859,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Vis log"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "sat i kø"
     },
@@ -4032,11 +4030,17 @@
     "firmwareFlasherWarningText": {
         "message": "Du bør <span class=\"message-negative\">ikke<\/span> forsøge at brænde <strong>ikke-Betaflight \/ kompatibel<\/strong> hardware med denne firmware brænder.<br \/>Du må <span class=\"message-negative\">ikke<\/span> <strong>frakoble<\/strong> FC eller <strong>slukke<\/strong> din pc under brænding.<br \/><br \/><strong>Bemærk:<\/strong><ul style=\"margin-top: 2px;\"><li>STM32 bootloader er gemt i ROM og kan derfor ikke ændres.<\/li><li><span class=\"message-negative\">Autotilslut<\/span> er altid deaktiveret, mens du brænder firmware.<\/li><li>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger\/nedgraderinger vil slette hele\/ændre dele af din konfiguration.<\/li><li>Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC<\/strong>, prøv genstart, prøv at genindstallere\/opgradere drivere.<\/li><li>Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere.<\/li><\/ul>"
     },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Gendannelse \/ tabt kommunikation<\/strong>"
-    },
     "firmwareFlasherRecoveryText": {
         "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart app (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Læs mere →"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Avanceret"
+    },
+    "firmwareFlasherSubTabFlash": {
+        "message": "Brænd firmware"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -4918,7 +4922,7 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmQ": {
-        "message": "Q faktor",
+        "message": "Q faktor (x100)",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
@@ -5572,7 +5576,7 @@
         "description": "Description of the header of the OSD elements column associated to each profile"
     },
     "osdSetupElementsTitle": {
-        "message": "Element"
+        "message": "Elementer"
     },
     "osdSetupPreviewTitle": {
         "message": "Træk i elementer for at ændre position",
@@ -5670,7 +5674,7 @@
         "description": "Option for the video format in the OSD"
     },
     "osdSetupUnitsTitle": {
-        "message": "Enheder"
+        "message": "Enhed"
     },
     "osdSetupUnitsOptionImperial": {
         "message": "Imperiel",
@@ -5685,7 +5689,7 @@
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
-        "message": "Tidtagning"
+        "message": "Tidtagninger"
     },
     "osdSetupAlarmsTitle": {
         "message": "Alarmer"
@@ -7357,10 +7361,94 @@
         "message": "Accelerometer (hvis understøttet)"
     },
     "configurationBaroHardware": {
-        "message": "Barometer (hvis understøttet)"
+        "message": "Barometer \/ Højde"
     },
     "configurationMagHardware": {
         "message": "Kompas (hvis understøttet)"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Kunne ikke afgøre placering. Forbind et GPS-modul eller tillad adgang til browser registreret placering."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Magnetisk afvigelse\/declination indstillet til {{declination}}° fra registreret placering."
+    },
+    "configurationMagInclinationHelp": {
+        "message": "Vinklen mellem jordens magnetfelt og det vandrette plan på din placering. Positive værdier angiver feltpunkterne nedad (nord-halvkugle)"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "Den samlede intensitet af jordens magnetfelt på din placering i nanotesla (nT). Typiske værdier varierer fra 25.000 til 65.000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Registrer"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Opdater"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Magnetisk afvigelse\/declination auto-registreret som {{value}}° for din placering."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Afvigelse\/deklination er {{saved}}° men GPS registrerer {{detected}}° for denne placering. Klik på Opdater for at korrigere."
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Vip mere !"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
+    },
+    "magCalibrationStartDesc": {
+        "message": "Roter gennem 6 retninger trin for trin"
+    },
+    "magCalibrationCancel": {
+        "message": "Fortryd"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Indstillinger for kalibrering"
+    },
+    "magCalibrationRetry": {
+        "message": "Forsøg igen"
+    },
+    "magCalibrationNextStep": {
+        "message": "Næste trin"
+    },
+    "magCalibrationFinish": {
+        "message": "Færdig"
+    },
+    "magCalibrationStepOf": {
+        "message": "Trin {{current}} af {{total}}"
+    },
+    "magCalibrationStep2": {
+        "message": "Næse ned — roter 360°"
+    },
+    "magCalibrationStep3": {
+        "message": "Næse op — roter 360°"
+    },
+    "magCalibrationStep4": {
+        "message": "Venstre side ned — roter 360°"
+    },
+    "magCalibrationStep5": {
+        "message": "Højre side ned — roter 360°"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Roter frit i alle retninger — stop, når firmware melder klar"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Kalibrering uden guide"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Roter dit fartøj langsomt i alle retninger. Firmware vil indsamle data og beregne forskydning automatisk."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Firmware kalibrering fuldført!"
+    },
+    "magVizWaitingForData": {
+        "message": "Venter på data …"
+    },
+    "magAlignmentApply": {
+        "message": "Anvend"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Registrer"
     },
     "configurationSmallAngle": {
         "message": "Maksimal vinkel [grader] hvorunder fartøj kan aktiveres"
@@ -7552,6 +7640,10 @@
     "colorThemeContrast": {
         "message": "Stor kontrast",
         "description": "Contrast color theme"
+    },
+    "uiScale": {
+        "message": "Zoom",
+        "description": "Scale the entire user interface up or down"
     },
     "pidTuningRatesType": {
         "message": "Hastighed type"
@@ -7932,6 +8024,16 @@
     "firmwareFlasherBuildOptions": {
         "message": "Andre indstillinger"
     },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Fjern {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Vælg protokol"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Vælg indstilling"
+    },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio protokol"
     },
@@ -8081,7 +8183,7 @@
         "message": "Log ind for at se din profil."
     },
     "tabBackups": {
-        "message": "Sikkerhedskopier"
+        "message": "Sikkerhedskopi"
     },
     "userPasskeyDeleteSuccess": {
         "message": "Adgangsnøgle blev slettet"
