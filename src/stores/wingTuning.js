@@ -75,7 +75,11 @@ export const useWingTuningStore = defineStore("wingTuning", () => {
      * MSP load (reload) and after every successful save.
      */
     function storeOriginals() {
-        originalWingTuning.value = JSON.parse(JSON.stringify(fields));
+        // structuredClone over a toRaw'd snapshot — bypasses the reactive
+        // proxy and avoids the JSON.parse(JSON.stringify(...)) Sonar smell
+        // (javascript:S7784). All fields are primitives so structuredClone
+        // is a strict superset of the prior behavior.
+        originalWingTuning.value = structuredClone(toRaw(fields));
         originalsReady.value = true;
         hasChanges.value = false;
     }
