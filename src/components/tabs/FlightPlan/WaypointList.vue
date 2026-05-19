@@ -32,14 +32,30 @@
                 <div class="waypoint-order">{{ waypoint.order + 1 }}</div>
                 <div class="waypoint-info">
                     <div class="waypoint-coords">
-                        {{ waypoint.latitude.toFixed(6) }}°, {{ waypoint.longitude.toFixed(6) }}°
+                        <template v-if="isModifierWaypointType(waypoint.type)">
+                            {{ getWaypointTypeLabel(waypoint.type) }}
+                        </template>
+                        <template v-else>
+                            {{ waypoint.latitude.toFixed(6) }}°, {{ waypoint.longitude.toFixed(6) }}°
+                        </template>
                     </div>
                     <div class="waypoint-details">
-                        {{ waypoint.altitude }}ft AMSL - {{ waypoint.speed }}kts -
-                        {{ getWaypointTypeLabel(waypoint.type) }}
-                        <span v-if="waypoint.type === 'hold'" class="hold-details">
-                            ({{ waypoint.duration }}min, {{ getPatternLabel(waypoint.pattern) }})
-                        </span>
+                        <template v-if="waypoint.type === 'alt_change'">
+                            {{ $t("flightPlanTypeAltChange") }} → {{ waypoint.altitude }}ft AMSL
+                        </template>
+                        <template v-else-if="waypoint.type === 'delay'">
+                            {{ $t("flightPlanTypeDelay") }}: {{ waypoint.duration }}min
+                        </template>
+                        <template v-else-if="waypoint.type === 'yaw_rate'">
+                            {{ $t("flightPlanTypeYawRate") }}: {{ waypoint.speed }}°/s
+                        </template>
+                        <template v-else>
+                            {{ waypoint.altitude }}ft AMSL - {{ waypoint.speed }}kts -
+                            {{ getWaypointTypeLabel(waypoint.type) }}
+                            <span v-if="waypoint.type === 'hold'" class="hold-details">
+                                ({{ waypoint.duration }}min, {{ getPatternLabel(waypoint.pattern) }})
+                            </span>
+                        </template>
                     </div>
                 </div>
                 <div class="flex gap-1 flex-shrink-0">
@@ -98,6 +114,7 @@ const {
     removeWaypoint,
     reorderWaypoints,
     getWaypointTypeLabel,
+    isModifierWaypointType,
 } = useFlightPlan();
 
 const showDeleteDialog = ref(false);
