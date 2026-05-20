@@ -1414,12 +1414,18 @@ watch(
     () => rebuildFieldReference(),
 );
 
-// liveMag is the tier-2 radius fallback before a sphere fit exists
+// liveMag is the tier-2 radius fallback before a sphere fit exists.
+// Throttle to 1 Hz — liveMag updates at 10 Hz but field arrow rebuild is expensive.
+let lastFieldRebuildTime = 0;
 watch(
     () => props.liveMag,
     () => {
         if (!props.sphereFit) {
-            rebuildFieldReference();
+            const now = performance.now();
+            if (now - lastFieldRebuildTime > 1000) {
+                lastFieldRebuildTime = now;
+                rebuildFieldReference();
+            }
         }
     },
 );

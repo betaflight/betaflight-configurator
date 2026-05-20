@@ -72,6 +72,15 @@
 ### What works well
 - X axis projected line length correctly represents mag field strength on X axis (just orientation is wrong)
 
+## Preview Findings — 2026-05-20
+
+<!-- Added by /preview. Run /ralph to address these items. -->
+
+- [x] `src/components/dialogs/mag-calibration/MagSphereView.vue:1414` — [sonar-cfg, coderabbit-cfg] liveMag watcher triggers `rebuildFieldReference()` at 10Hz before sphere fit — done: throttled to 1Hz using `performance.now()` timestamp guard in MagSphereView.vue
+- [ ] `src/components/tabs/SensorsTab.vue:1402` — [ux-patterns] No user-visible error feedback when Accept calibration fails — surface `result.error` as a toast or inline message
+
+<!-- /preview PASS — 2026-05-20 -->
+
 ## PRs
 
 - https://github.com/betaflight/betaflight-configurator/pull/5123
