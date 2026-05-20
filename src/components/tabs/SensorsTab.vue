@@ -1406,7 +1406,7 @@ async function acceptGuidedMagCal() {
         if (result?.ok) {
             magNeedsCalibration.value = false;
         } else {
-            gui_log(i18n.t("magCalibrationError"));
+            gui_log(i18n.getMessage("magCalibrationError"));
         }
     } finally {
         isAcceptingCal.value = false;
