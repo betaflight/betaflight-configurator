@@ -60,7 +60,7 @@ export function isIOS() {
  * The host signals this by injecting a meta tag into the served HTML:
  *   <meta name="bf-transport" content="websocket">
  *
- * When present, Serial/Bluetooth/USB and the Chromium browser gate are
+ * When present, Serial/Bluetooth/USB browser API checks are
  * irrelevant — only WebSocket transport is needed.
  */
 export function isEmbeddedDeployment() {
@@ -80,7 +80,7 @@ export function checkCompatibility() {
     const hasSerialSupport = checkSerialSupport();
     const hasBluetoothSupport = checkBluetoothSupport();
     const hasUsbSupport = checkUsbSupport();
-    const isChromium = isChromiumBrowser();
+    const hasWebTransport = hasSerialSupport || hasBluetoothSupport || hasUsbSupport;
 
     const isNative = Capacitor.isNativePlatform();
     const isTauriShell = isTauri();
@@ -89,15 +89,11 @@ export function checkCompatibility() {
     const isTestEnvironment =
         typeof process !== "undefined" && (process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined);
 
-    const compatible =
-        isTestEnvironment ||
-        isNative ||
-        isTauriShell ||
-        (isChromium && (hasSerialSupport || hasBluetoothSupport || hasUsbSupport));
+    const compatible = isTestEnvironment || isNative || isTauriShell || hasWebTransport;
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
-    console.log("Chromium: ", isChromium);
+    console.log("Chromium: ", isChromiumBrowser());
     console.log("Serial: ", hasSerialSupport);
     console.log("Bluetooth: ", hasBluetoothSupport);
     console.log("USB: ", hasUsbSupport);
@@ -110,21 +106,19 @@ export function checkCompatibility() {
         return true;
     }
 
-    let errorMessage = "";
-    if (!isChromium) {
-        errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).<br/>";
+    let errorMessage =
+        "Betaflight requires a browser with at least one of: Web Serial, Web Bluetooth, or Web USB.<br/>";
+
+    if (!hasSerialSupport) {
+        errorMessage += "<br/>- Serial API support is not available.";
     }
 
     if (!hasBluetoothSupport) {
-        errorMessage += "<br/>- Bluetooth API support is disabled.";
-    }
-
-    if (!hasSerialSupport) {
-        errorMessage += "<br/>- Serial API support is disabled.";
+        errorMessage += "<br/>- Bluetooth API support is not available.";
     }
 
     if (!hasUsbSupport) {
-        errorMessage += "<br/>- USB API support is disabled.";
+        errorMessage += "<br/>- USB API support is not available.";
     }
 
     const body = document.body;
