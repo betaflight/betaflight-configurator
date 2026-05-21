@@ -216,11 +216,11 @@ function initScene() {
     // Axis lines — sized to frame typical mag readings (200-500 range)
     // Positive halves are bold (full opacity), negative halves are faded
     const axisLength = 700;
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 1.0);
+    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 1);
     addAxisLine(scene, new THREE.Vector3(-axisLength, 0, 0), new THREE.Vector3(0, 0, 0), 0xff4444, 0.15);
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 1.0);
+    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 1);
     addAxisLine(scene, new THREE.Vector3(0, -axisLength, 0), new THREE.Vector3(0, 0, 0), 0x44ff44, 0.15);
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), 0x4444ff, 1.0);
+    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), 0x4444ff, 1);
     addAxisLine(scene, new THREE.Vector3(0, 0, -axisLength), new THREE.Vector3(0, 0, 0), 0x4444ff, 0.15);
 
     // Axis labels
@@ -932,7 +932,7 @@ function onResize() {
 
 function addAxisLine(targetScene, from, to, color, opacity = 0.5) {
     const geometry = new THREE.BufferGeometry().setFromPoints([from, to]);
-    const material = new THREE.LineBasicMaterial({ color, opacity, transparent: opacity < 1.0 });
+    const material = new THREE.LineBasicMaterial({ color, opacity, transparent: opacity < 1 });
     targetScene.add(new THREE.Line(geometry, material));
 }
 
