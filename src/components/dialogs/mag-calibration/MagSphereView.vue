@@ -106,10 +106,12 @@ let quadIcon = null;
 // Reference ghost sphere (shown before calibration data arrives)
 let ghostGroup = null;
 
-// Live mag visualization
+// Live mag visualization (children of quadIcon — body frame)
 let liveMarker = null;
 let vectorLines = null; // [xLine, yLine, zLine] — cylinder-based thick axis lines
-let totalVectorLine = null; // orange line from origin to live mag position
+
+// Sphere center marker (grey dot at fitted sphere center)
+let sphereCenterMarker = null;
 
 // Expected field direction reference
 let fieldRefGroup = null; // group containing shaft cylinder + cone arrowhead
@@ -256,14 +258,14 @@ function initScene() {
     pointMesh = new THREE.Points(pointGeometry, pointMaterial);
     scene.add(pointMesh);
 
-    // Live mag marker (white dot at current reading)
+    // Live mag marker (white dot on +X axis at total field distance — body frame)
     const liveGeo = new THREE.SphereGeometry(10, 8, 8);
     const liveMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     liveMarker = new THREE.Mesh(liveGeo, liveMat);
     liveMarker.visible = false;
-    scene.add(liveMarker);
+    quadIcon.add(liveMarker);
 
-    // XYZ thick vector lines (cylinders from origin along each axis to component value)
+    // XYZ thick vector lines — body frame (children of quadIcon, move with quad)
     const VECTOR_COLORS = [0xff4444, 0x44ff44, 0x4444ff];
     vectorLines = VECTOR_COLORS.map((color) => {
         const geo = new THREE.CylinderGeometry(3, 3, 1, 6);
@@ -271,17 +273,16 @@ function initScene() {
         const mat = new THREE.MeshBasicMaterial({ color, opacity: 0.85, transparent: true });
         const mesh = new THREE.Mesh(geo, mat);
         mesh.visible = false;
-        scene.add(mesh);
+        quadIcon.add(mesh);
         return mesh;
     });
 
-    // Orange total measured field vector (origin → live mag position)
-    const totalGeo = new THREE.CylinderGeometry(2, 2, 1, 6);
-    totalGeo.translate(0, 0.5, 0);
-    const totalMat = new THREE.MeshBasicMaterial({ color: 0xff8800, opacity: 0.9, transparent: true });
-    totalVectorLine = new THREE.Mesh(totalGeo, totalMat);
-    totalVectorLine.visible = false;
-    scene.add(totalVectorLine);
+    // Sphere center marker (grey dot at fitted sphere center — scene frame)
+    const centerGeo = new THREE.SphereGeometry(8, 8, 8);
+    const centerMat = new THREE.MeshBasicMaterial({ color: 0x888888 });
+    sphereCenterMarker = new THREE.Mesh(centerGeo, centerMat);
+    sphereCenterMarker.visible = false;
+    scene.add(sphereCenterMarker);
 
     // Expected field direction arrow (orange shaft + cone arrowhead + inclination arc)
     fieldRefGroup = new THREE.Group();
@@ -399,41 +400,26 @@ function updateAxisCylinders(showLive, mx, my, mz) {
     }
 }
 
-function updateTotalVector(showLive, mx, my, mz) {
-    totalVectorLine.visible = showLive;
-    if (!showLive) {
-        return;
-    }
-    const len = Math.hypot(mx, my, mz);
-    if (len > 1) {
-        _tmpVec.set(mx, my, mz);
-        orientCylinder(totalVectorLine, _tmpVec, len);
-        totalVectorLine.position.set(0, 0, 0);
-    } else {
-        totalVectorLine.visible = false;
-    }
-}
-
 function updateLiveMagOverlay() {
     if (props.vizMode !== "pointcloud") {
         return;
     }
     const mag = props.liveMag;
     const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
-    const mx = showLive ? mag.x : 0;
-    const my = showLive ? -mag.y : 0;
-    const mz = showLive ? -mag.z : 0;
+    // Body-frame components in quad's local display frame (BF: X=fwd,Y=right,Z=down → Display: X=fwd,Y=left,Z=up)
+    const bx = showLive ? mag.x : 0;
+    const by = showLive ? -mag.y : 0;
+    const bz = showLive ? -mag.z : 0;
     if (liveMarker) {
         liveMarker.visible = showLive;
         if (showLive) {
-            liveMarker.position.set(mx, my, mz);
+            // White dot on +X axis at total field distance (body frame)
+            const totalField = Math.hypot(mag.x, mag.y, mag.z);
+            liveMarker.position.set(totalField, 0, 0);
         }
     }
     if (vectorLines) {
-        updateAxisCylinders(showLive, mx, my, mz);
-    }
-    if (totalVectorLine) {
-        updateTotalVector(showLive, mx, my, mz);
+        updateAxisCylinders(showLive, bx, by, bz);
     }
 }
 
@@ -1201,21 +1187,17 @@ function disposeScene() {
     disposeGroup(fieldRefGroup);
     fieldRefGroup = null;
 
-    disposeMesh(totalVectorLine);
-    totalVectorLine = null;
-
     disposeMesh(wireframeMesh);
     wireframeMesh = null;
-    disposeMesh(liveMarker);
-    liveMarker = null;
 
-    if (vectorLines) {
-        vectorLines.forEach(disposeMesh);
-        vectorLines = null;
-    }
+    disposeMesh(sphereCenterMarker);
+    sphereCenterMarker = null;
 
+    // liveMarker and vectorLines are children of quadIcon — disposed by disposeGroup
     disposeGroup(quadIcon);
     quadIcon = null;
+    liveMarker = null;
+    vectorLines = null;
 
     disposeGroup(ghostGroup);
     ghostGroup = null;
@@ -1276,7 +1258,7 @@ function setSceneObjectVisibility(pc, hm) {
     vectorLines?.forEach((v) => {
         v.visible = pc && props.active;
     });
-    setVisible(totalVectorLine, pc && props.active);
+    setVisible(sphereCenterMarker, (pc || hm) && !!props.sphereFit);
     setVisible(fieldRefGroup, (pc || hm) && props.inclination !== null);
     setVisible(heatmapMesh, hm);
     setVisible(compassGroup, pc || hm);
@@ -1320,6 +1302,16 @@ watch(
         updateWireframe(val);
         rebuildFieldReference();
         updateActiveViz(props.samples);
+        // Update grey sphere center marker
+        if (sphereCenterMarker) {
+            if (val) {
+                const [cx, cy, cz] = bfToScene(val.center.x, val.center.y, val.center.z);
+                sphereCenterMarker.position.set(cx, cy, cz);
+                sphereCenterMarker.visible = true;
+            } else {
+                sphereCenterMarker.visible = false;
+            }
+        }
     },
 );
 
