@@ -100,9 +100,6 @@ let colorAttr = null;
 // Wireframe sphere
 let wireframeMesh = null;
 
-// Center marker
-let centerMarker = null;
-
 // Quad icon at origin reflecting real-time attitude
 let quadIcon = null;
 
@@ -122,19 +119,6 @@ const _tempColor = new THREE.Color();
 
 // Compass ring — earth-frame N/S/E/W labels on the horizontal plane
 let compassGroup = null;
-
-// Coverage zone indicators
-let zoneMeshes = null;
-const ZONE_KEYS = ["+X", "-X", "+Y", "-Y", "+Z", "-Z"];
-// Display frame: X=forward, Y=left, Z=up  (BF Y negated, BF Z negated)
-const ZONE_DIRS = [
-    [1, 0, 0],
-    [-1, 0, 0],
-    [0, -1, 0], // BF +Y (right) → display -Y
-    [0, 1, 0], // BF -Y (left) → display +Y
-    [0, 0, -1], // BF +Z (down) → display -Z
-    [0, 0, 1], // BF -Z (up) → display +Z
-];
 
 // Voxel heatmap — geodesic sphere with per-face coloring
 let heatmapMesh = null;
@@ -230,12 +214,12 @@ function initScene() {
     // Axis lines — sized to frame typical mag readings (200-500 range)
     // Positive halves are bold (full opacity), negative halves are faded
     const axisLength = 700;
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 0.9);
-    addAxisLine(scene, new THREE.Vector3(-axisLength, 0, 0), new THREE.Vector3(0, 0, 0), 0xff4444, 0.25);
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 0.9);
-    addAxisLine(scene, new THREE.Vector3(0, -axisLength, 0), new THREE.Vector3(0, 0, 0), 0x44ff44, 0.25);
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), 0x4444ff, 0.9);
-    addAxisLine(scene, new THREE.Vector3(0, 0, -axisLength), new THREE.Vector3(0, 0, 0), 0x4444ff, 0.25);
+    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 1.0);
+    addAxisLine(scene, new THREE.Vector3(-axisLength, 0, 0), new THREE.Vector3(0, 0, 0), 0xff4444, 0.15);
+    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 1.0);
+    addAxisLine(scene, new THREE.Vector3(0, -axisLength, 0), new THREE.Vector3(0, 0, 0), 0x44ff44, 0.15);
+    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), 0x4444ff, 1.0);
+    addAxisLine(scene, new THREE.Vector3(0, 0, -axisLength), new THREE.Vector3(0, 0, 0), 0x4444ff, 0.15);
 
     // Axis labels
     addAxisLabel(scene, "X", new THREE.Vector3(axisLength + 40, 0, 0), 0xff4444);
@@ -247,7 +231,7 @@ function initScene() {
     scene.add(ghostGroup);
 
     // Compass ring — earth-frame N/S/E/W at the equatorial plane
-    compassGroup = createCompassRing(450);
+    compassGroup = createCompassRing(DEFAULT_SPHERE_RADIUS);
     scene.add(compassGroup);
 
     // Quad icon at origin — shows real-time attitude during calibration
@@ -312,16 +296,16 @@ function initScene() {
     fieldRefGroup.userData.cone = new THREE.Mesh(coneGeo, coneMat);
     fieldRefGroup.add(fieldRefGroup.userData.cone);
 
-    // South-pole shaft (grey, same geometry as north shaft)
+    // South-pole shaft (orange, thinner — same color as north, differentiated by thickness)
     const southShaftGeo = new THREE.CylinderGeometry(3, 3, 1, 8);
     southShaftGeo.translate(0, 0.5, 0);
-    const southShaftMat = new THREE.MeshBasicMaterial({ color: 0x888888, opacity: 0.7, transparent: true });
+    const southShaftMat = new THREE.MeshBasicMaterial({ color: 0xff8800, opacity: 0.7, transparent: true });
     fieldRefGroup.userData.southShaft = new THREE.Mesh(southShaftGeo, southShaftMat);
     fieldRefGroup.add(fieldRefGroup.userData.southShaft);
 
-    // South-pole cone (grey, tip points outward along south pole)
+    // South-pole cone (orange, tip points outward along south pole)
     const southConeGeo = new THREE.ConeGeometry(8, 24, 8);
-    const southConeMat = new THREE.MeshBasicMaterial({ color: 0x888888 });
+    const southConeMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
     fieldRefGroup.userData.southCone = new THREE.Mesh(southConeGeo, southConeMat);
     fieldRefGroup.add(fieldRefGroup.userData.southCone);
 
@@ -329,21 +313,6 @@ function initScene() {
     fieldRefGroup.userData.arc = null;
     fieldRefGroup.userData.arcLabel = null;
     scene.add(fieldRefGroup);
-
-    // Coverage zone indicators (6 discs at sphere poles, colored by sample density)
-    zoneMeshes = ZONE_DIRS.map(() => {
-        const geo = new THREE.CircleGeometry(1, 16);
-        const mat = new THREE.MeshBasicMaterial({
-            color: 0x888888,
-            transparent: true,
-            opacity: 0.4,
-            side: THREE.DoubleSide,
-        });
-        const mesh = new THREE.Mesh(geo, mat);
-        mesh.visible = false;
-        scene.add(mesh);
-        return mesh;
-    });
 
     // Voxel heatmap sphere (unit radius, scaled at render time)
     createHeatmapSphere(1);
@@ -388,10 +357,10 @@ function updateQuadAttitude() {
     // Prefer quaternion (gimbal-lock-free) when available
     if (props.quaternion) {
         const { w, x, y, z } = props.quaternion;
-        // BF frame: X=fwd, Y=right, Z=down → Display: X=fwd, Y=left, Z=up
-        // Negate Y and Z imaginary components for frame conversion
-        // Three.js Quaternion.set() takes (x, y, z, w)
-        quadIcon.quaternion.set(x, -y, -z, w);
+        // BF quaternion is body-to-earth; Three.js needs earth-to-body (conjugate).
+        // Conjugate: (w, -x, -y, -z), then BF→Display frame (negate Y and Z):
+        // Result: (w, -x, y, z) → Three.js Quaternion.set(x, y, z, w)
+        quadIcon.quaternion.set(-x, y, z, w);
         return;
     }
 
@@ -400,7 +369,9 @@ function updateQuadAttitude() {
         return;
     }
     const { roll, pitch, heading } = props.attitude;
-    quadIcon.rotation.set(-roll * DEG_TO_RAD, -pitch * DEG_TO_RAD, -heading * DEG_TO_RAD, "ZYX");
+    // BF body-to-earth Euler (ZYX): invert to earth-to-body, then convert to display frame.
+    // Display axes: X=BF_X, Y=-BF_Y, Z=-BF_Z → pitch & heading signs cancel with inversion.
+    quadIcon.rotation.set(-roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
@@ -485,14 +456,13 @@ function rebuildFieldReference() {
     // Three-tier fallback: fitted sphere > live mag magnitude > default
     const liveMagRadius = props.liveMag ? Math.hypot(props.liveMag.x, props.liveMag.y, props.liveMag.z) : 0;
     const radius = props.sphereFit?.radius ?? (liveMagRadius > 50 ? liveMagRadius : DEFAULT_SPHERE_RADIUS);
-    const center = props.sphereFit?.center ?? { x: 0, y: 0, z: 0 };
     // Field direction: horizontal along X, vertical along Z
     // Display frame: Z-up, so field dips toward -Z
     const fdx = Math.cos(incl) * radius;
     const fdz = -Math.sin(incl) * radius;
 
-    // Position at sphere center (BF→display inline)
-    fieldRefGroup.position.set(center.x, -center.y, -center.z);
+    // Always positioned at origin — the field line passes through 0,0,0
+    fieldRefGroup.position.set(0, 0, 0);
 
     // Orient shaft + cone
     const shaft = fieldRefGroup.userData.shaft;
@@ -573,42 +543,6 @@ function rebuildFieldReference() {
     labelSprite.scale.set(80, 30, 1);
     fieldRefGroup.userData.arcLabel = labelSprite;
     fieldRefGroup.add(labelSprite);
-}
-
-function updateCoverageZones() {
-    if (!zoneMeshes) {
-        return;
-    }
-    if (props.vizMode !== "pointcloud") {
-        for (const mesh of zoneMeshes) {
-            mesh.visible = false;
-        }
-        return;
-    }
-    if (props.coverage && props.sphereFit) {
-        const { center, radius } = props.sphereFit;
-        const scx = center.x,
-            scy = -center.y,
-            scz = -center.z;
-        const target = Math.max(props.coverage.total / 6, 1);
-        const discRadius = radius * 0.15;
-
-        const zones = props.coverage.zones || {};
-        for (let i = 0; i < 6; i++) {
-            const count = zones[ZONE_KEYS[i]] || 0;
-            const ratio = Math.min(count / target, 1);
-            zoneMeshes[i].material.color.setHSL(ratio * 0.33, 1, 0.5);
-            zoneMeshes[i].scale.setScalar(discRadius);
-            const d = ZONE_DIRS[i];
-            zoneMeshes[i].position.set(scx + d[0] * radius, scy + d[1] * radius, scz + d[2] * radius);
-            zoneMeshes[i].lookAt(scx + d[0] * radius * 2, scy + d[1] * radius * 2, scz + d[2] * radius * 2);
-            zoneMeshes[i].visible = true;
-        }
-    } else {
-        for (const mesh of zoneMeshes) {
-            mesh.visible = false;
-        }
-    }
 }
 
 // --- Voxel Heatmap ---
@@ -985,7 +919,6 @@ function animate() {
     updateQuadAttitude();
     updateLiveMagOverlay();
     updateFieldReferenceArrow();
-    updateCoverageZones();
 
     if (renderer && scene && camera) {
         renderer.render(scene, camera);
@@ -1013,7 +946,7 @@ function onResize() {
 
 function addAxisLine(targetScene, from, to, color, opacity = 0.5) {
     const geometry = new THREE.BufferGeometry().setFromPoints([from, to]);
-    const material = new THREE.LineBasicMaterial({ color, opacity, transparent: true });
+    const material = new THREE.LineBasicMaterial({ color, opacity, transparent: opacity < 1.0 });
     targetScene.add(new THREE.Line(geometry, material));
 }
 
@@ -1039,8 +972,8 @@ function addAxisLabel(targetScene, text, position, color) {
 function createQuadIcon(size) {
     const group = new THREE.Group();
     const armMat = new THREE.MeshBasicMaterial({ color: 0xcccccc });
-    const motorFrontMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
-    const motorRearMat = new THREE.MeshBasicMaterial({ color: 0x444444 });
+    const motorFrontMat = new THREE.MeshBasicMaterial({ color: 0x44ff44 });
+    const motorRearMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
 
     // Two crossed arms (X shape in XY plane, Z=up)
     const armLen = size * 1.4;
@@ -1170,7 +1103,8 @@ function createCompassRing(radius) {
         return sprite;
     };
 
-    const r = radius + 60;
+    // Place labels right at the sphere edge (radius) so they visually touch the celestial sphere
+    const r = radius;
     // N highlighted red (navigation convention); E/S/W neutral
     makeLabel("N", "#ff4444").position.set(r, 0, 0);
     makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
@@ -1228,8 +1162,6 @@ function disposeMesh(mesh, removeFromScene = false) {
 function updateWireframe(fit) {
     disposeMesh(wireframeMesh, true);
     wireframeMesh = null;
-    disposeMesh(centerMarker, true);
-    centerMarker = null;
 
     if (!fit || !scene) {
         return;
@@ -1248,13 +1180,6 @@ function updateWireframe(fit) {
     wireframeMesh.position.set(cx, cy, cz);
     scene.add(wireframeMesh);
     sphereGeo.dispose();
-
-    // Center marker (small sphere)
-    const markerGeo = new THREE.SphereGeometry(fit.radius * 0.03, 8, 8);
-    const markerMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-    centerMarker = new THREE.Mesh(markerGeo, markerMat);
-    centerMarker.position.set(cx, cy, cz);
-    scene.add(centerMarker);
 }
 
 function disposeScene() {
@@ -1279,15 +1204,8 @@ function disposeScene() {
     disposeMesh(totalVectorLine);
     totalVectorLine = null;
 
-    if (zoneMeshes) {
-        zoneMeshes.forEach(disposeMesh);
-        zoneMeshes = null;
-    }
-
     disposeMesh(wireframeMesh);
     wireframeMesh = null;
-    disposeMesh(centerMarker);
-    centerMarker = null;
     disposeMesh(liveMarker);
     liveMarker = null;
 
@@ -1354,16 +1272,12 @@ function setVisible(obj, visible) {
 function setSceneObjectVisibility(pc, hm) {
     setVisible(pointMesh, pc);
     setVisible(wireframeMesh, pc || hm);
-    setVisible(centerMarker, pc || hm);
     setVisible(liveMarker, pc && props.active);
     vectorLines?.forEach((v) => {
         v.visible = pc && props.active;
     });
     setVisible(totalVectorLine, pc && props.active);
     setVisible(fieldRefGroup, (pc || hm) && props.inclination !== null);
-    zoneMeshes?.forEach((z) => {
-        z.visible = pc;
-    });
     setVisible(heatmapMesh, hm);
     setVisible(compassGroup, pc || hm);
 }
