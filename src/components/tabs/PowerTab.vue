@@ -193,6 +193,14 @@
                             <span v-html="$t('powerBatteryAmperage')"></span>
                             <span>{{ $t("powerAmperageValue", { 1: batteryState.amperage.toFixed(2) }) }}</span>
                         </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('powerBatteryPowerDraw')"></span>
+                            <span>{{ $t("powerWattValue", { 1: powerDraw.toFixed(1) }) }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span v-html="$t('powerBatteryVoltageDrop')"></span>
+                            <span>{{ $t("powerVoltageValue", { 1: voltageDrop.toFixed(2) }) }}</span>
+                        </div>
                     </UiBox>
 
                     <!-- Amperage Configuration -->
@@ -386,6 +394,8 @@ export default defineComponent({
             activeBatteryProfile,
             batteryProfileName,
             batteryState,
+            powerDraw,
+            voltageDrop,
             voltageMeters,
             currentMeters,
             batteryConfig,
@@ -519,6 +529,8 @@ export default defineComponent({
             currentMeterTypeItems,
             onBatteryProfileChange,
             batteryState,
+            powerDraw,
+            voltageDrop,
             voltageMeters,
             currentMeters,
             batteryConfig,

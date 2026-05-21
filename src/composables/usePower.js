@@ -84,6 +84,14 @@ export function usePower() {
     const amperagecalibrationValue = ref(0);
 
     // Visibility computed properties
+    const powerDraw = computed(() => batteryState.voltage * batteryState.amperage);
+    const voltageDrop = computed(() => {
+        if (batteryState.cellCount <= 0) {
+            return 0;
+        }
+        return batteryConfig.vbatmaxcellvoltage * batteryState.cellCount - batteryState.voltage;
+    });
+
     const showVoltageConfiguration = computed(() => batteryConfig.voltageMeterSource !== 0);
     const showAmperageConfiguration = computed(() => batteryConfig.currentMeterSource !== 0);
     const showCalibration = computed(() => {
@@ -495,6 +503,8 @@ export function usePower() {
         activeBatteryProfile,
         batteryProfileName,
         batteryState,
+        powerDraw,
+        voltageDrop,
         voltageMeters,
         currentMeters,
         batteryConfig,
