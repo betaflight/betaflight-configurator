@@ -636,8 +636,11 @@ function parseFrame( // NOSONAR S107,S3776 — ported frame decoder; signature f
         // --- Grouped encodings read multiple values at once ---
         let groupSize = encodingGroupSize(encoding);
         if (encoding === ENCODING_TAG8_8SVB) {
-            // Variable-length group: span all consecutive TAG8_8SVB fields.
-            groupSize = consecutiveEncodingRun(frameDef, i, ENCODING_TAG8_8SVB);
+            // Variable-length group. A single TAG8_8SVB tag carries at most 8
+            // values (one bit per value in its header byte). Longer runs mean
+            // the firmware emitted back-to-back TAG8_8SVB tags — cap to 8 here
+            // and let the outer loop pick up the next tag on the next pass.
+            groupSize = Math.min(consecutiveEncodingRun(frameDef, i, ENCODING_TAG8_8SVB), 8);
         }
 
         if (groupSize > 1) {
