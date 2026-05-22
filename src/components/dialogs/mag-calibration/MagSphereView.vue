@@ -1091,8 +1091,8 @@ function createCompassRing(radius) {
         return sprite;
     };
 
-    // Place labels right at the sphere edge (radius) so they visually touch the celestial sphere
-    const r = radius;
+    // Place labels well outside the sphere so they're clearly visible even when fitted sphere grows
+    const r = radius * 1.5;
     // N highlighted red (navigation convention); E/S/W neutral
     makeLabel("N", "#ff4444").position.set(r, 0, 0);
     makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
