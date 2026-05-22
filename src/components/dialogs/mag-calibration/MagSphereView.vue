@@ -393,9 +393,15 @@ function updateAxisCylinders(showLive, mx, my, mz) {
     for (let i = 0; i < 3; i++) {
         vectorLines[i].visible = showLive && Math.abs(comps[i]) > 1;
         if (vectorLines[i].visible) {
+            const positive = comps[i] > 0;
             _tmpVec.set(0, 0, 0).setComponent(i, Math.sign(comps[i]));
             orientCylinder(vectorLines[i], _tmpVec, comps[i]);
             vectorLines[i].position.set(0, 0, 0);
+            // Bold for positive component, thin for negative — must run after orientCylinder which resets scale
+            const thickness = positive ? 1.5 : 0.6;
+            vectorLines[i].scale.x = thickness;
+            vectorLines[i].scale.z = thickness;
+            vectorLines[i].material.opacity = positive ? 0.9 : 0.35;
         }
     }
 }
