@@ -80,7 +80,14 @@ function signExtend14Bit(word) {
 
 /**
  * Determine the "group size" for a grouped encoding type.
- * Grouped encodings read multiple field values from a single tag structure.
+ *
+ * TAG2_3S32, TAG2_3SVARIABLE and TAG8_4S16 are fixed-size group encodings
+ * (3 or 4 values per tag invocation). TAG8_8SVB is variable: the firmware
+ * calls `blackboxWriteTag8_8SVB(values, valueCount)` with a `valueCount`
+ * equal to the number of consecutive fields in the frame definition that
+ * share the TAG8_8SVB encoding, and the consumer must use that same run
+ * length when reading. Returning 0 here signals the caller to compute the
+ * run length from the surrounding frame definition.
  */
 function encodingGroupSize(encoding) {
     switch (encoding) {
@@ -91,10 +98,22 @@ function encodingGroupSize(encoding) {
         case ENCODING_TAG8_4S16:
             return 4;
         case ENCODING_TAG8_8SVB:
-            return 8;
+            return 0;
         default:
             return 1;
     }
+}
+
+/**
+ * Count how many consecutive fields starting at index `i` share the same
+ * encoding. Used to determine the variable group size for TAG8_8SVB runs.
+ */
+function consecutiveEncodingRun(frameDef, i, encoding) {
+    let n = 0;
+    while (i + n < frameDef.count && frameDef.encoding[i + n] === encoding) {
+        n++;
+    }
+    return n;
 }
 
 /**
@@ -615,7 +634,11 @@ function parseFrame( // NOSONAR S107,S3776 — ported frame decoder; signature f
         }
 
         // --- Grouped encodings read multiple values at once ---
-        const groupSize = encodingGroupSize(encoding);
+        let groupSize = encodingGroupSize(encoding);
+        if (encoding === ENCODING_TAG8_8SVB) {
+            // Variable-length group: span all consecutive TAG8_8SVB fields.
+            groupSize = consecutiveEncodingRun(frameDef, i, ENCODING_TAG8_8SVB);
+        }
 
         if (groupSize > 1) {
             // How many values remain in the frame
