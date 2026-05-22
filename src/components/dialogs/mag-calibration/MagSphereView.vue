@@ -406,10 +406,12 @@ function updateLiveMagOverlay() {
     }
     const mag = props.liveMag;
     const showLive = props.active && mag && (mag.x !== 0 || mag.y !== 0 || mag.z !== 0);
-    // Body-frame components in quad's local display frame (BF: X=fwd,Y=right,Z=down → Display: X=fwd,Y=left,Z=up)
+    // Body-frame components for vector lines in quad's local display frame.
+    // BF mag convention: X=fwd, Y=right, Z=up (Z is positive upward, opposite to gyro/accel Z=down).
+    // Display local frame: X=fwd, Y=left, Z=up → negate only Y.
     const bx = showLive ? mag.x : 0;
     const by = showLive ? -mag.y : 0;
-    const bz = showLive ? -mag.z : 0;
+    const bz = showLive ? mag.z : 0;
     if (liveMarker) {
         liveMarker.visible = showLive;
         if (showLive) {
