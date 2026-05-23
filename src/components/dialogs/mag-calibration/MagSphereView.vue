@@ -127,10 +127,20 @@ let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
 let heatmapFaceCounts = null; // sample count per face
 
-// Coordinate transform: Betaflight sensor frame → display frame
-// BF: X=forward, Y=right, Z=down  →  Display: X=forward, Y=left, Z=up
-function bfToScene(x, y, z) {
-    return [x, -y, -z];
+// Attitude-based sample position: place dot at total field strength distance
+// from origin, positioned by pitch (latitude) and heading (longitude).
+// The nose of the quad acts like a torch illuminating an invisible sphere.
+function sampleToScene(s) {
+    const totalField = Math.hypot(s.x, s.y, s.z);
+    const pitchRad = (s.pitch ?? 0) * DEG_TO_RAD;
+    const headingRad = (s.heading ?? 0) * DEG_TO_RAD;
+    const cosP = Math.cos(pitchRad);
+    // Display frame: X=north, Y=west(left), Z=up
+    return [
+        totalField * cosP * Math.cos(headingRad),
+        -totalField * cosP * Math.sin(headingRad),
+        totalField * Math.sin(pitchRad),
+    ];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -591,11 +601,13 @@ function updateHeatmap(sampleList) {
         return;
     }
 
-    const { center, radius } = props.sphereFit;
-    const [scx, scy, scz] = bfToScene(center.x, center.y, center.z);
+    const { radius } = props.sphereFit;
 
-    // Resize heatmap sphere to match fitted sphere
-    heatmapMesh.position.set(scx, scy, scz);
+    // In attitude-based view, sphere is centered at origin
+    const scx = 0,
+        scy = 0,
+        scz = 0;
+    heatmapMesh.position.set(0, 0, 0);
     heatmapMesh.scale.setScalar(radius / 1); // IcosahedronGeometry default radius = 1
 
     // Reset counts
@@ -606,7 +618,7 @@ function updateHeatmap(sampleList) {
     const start = Math.max(0, sampleList.length - MAX_POINTS);
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
-        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
+        const [sx, sy, sz] = sampleToScene(s);
         // Direction from sphere center to sample
         const dx = sx - scx;
         const dy = sy - scy;
@@ -672,20 +684,15 @@ function drawProjection(sampleList) {
     const start = Math.max(0, sampleList.length - MAX_POINTS);
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
-        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
-        pts.push([sx, sy, sz]);
+        pts.push(sampleToScene(s));
     }
 
-    // Sphere fit center and radius in display frame
+    // In attitude-based view, sphere is centered at origin
     const fit = props.sphereFit;
-    let cx = 0,
+    const cx = 0,
         cy = 0,
-        cz = 0,
-        radius = 300;
-    if (fit) {
-        [cx, cy, cz] = bfToScene(fit.center.x, fit.center.y, fit.center.z);
-        radius = fit.radius;
-    }
+        cz = 0;
+    const radius = fit?.radius ?? 300;
 
     // Layout: 3 circles in a row
     const gap = 8;
@@ -779,16 +786,14 @@ function computePolarDensity(sampleList) {
     const count = Math.min(sampleList.length, MAX_POINTS);
     const start = Math.max(0, sampleList.length - MAX_POINTS);
 
-    let cx = 0,
+    // In attitude-based view, sphere is centered at origin
+    const cx = 0,
         cy = 0,
         cz = 0;
-    if (props.sphereFit) {
-        [cx, cy, cz] = bfToScene(props.sphereFit.center.x, props.sphereFit.center.y, props.sphereFit.center.z);
-    }
 
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
-        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
+        const [sx, sy, sz] = sampleToScene(s);
         const dx = sx - cx;
         const dy = sy - cy;
         const dz = sz - cz;
@@ -1122,7 +1127,7 @@ function updatePoints(sampleList) {
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
         const idx = i * 3;
-        const [sx, sy, sz] = bfToScene(s.x, s.y, s.z);
+        const [sx, sy, sz] = sampleToScene(s);
         positions[idx] = sx;
         positions[idx + 1] = sy;
         positions[idx + 2] = sz;
@@ -1170,8 +1175,8 @@ function updateWireframe(fit) {
         transparent: true,
     });
     wireframeMesh = new THREE.LineSegments(wireGeo, wireMat);
-    const [cx, cy, cz] = bfToScene(fit.center.x, fit.center.y, fit.center.z);
-    wireframeMesh.position.set(cx, cy, cz);
+    // In attitude-based view, dots form a sphere centered at origin
+    wireframeMesh.position.set(0, 0, 0);
     scene.add(wireframeMesh);
     sphereGeo.dispose();
 }
@@ -1312,13 +1317,8 @@ watch(
         updateActiveViz(props.samples);
         // Update grey sphere center marker
         if (sphereCenterMarker) {
-            if (val) {
-                const [cx, cy, cz] = bfToScene(val.center.x, val.center.y, val.center.z);
-                sphereCenterMarker.position.set(cx, cy, cz);
-                sphereCenterMarker.visible = true;
-            } else {
-                sphereCenterMarker.visible = false;
-            }
+            sphereCenterMarker.position.set(0, 0, 0);
+            sphereCenterMarker.visible = !!val;
         }
     },
 );

@@ -233,7 +233,9 @@ export function useMagCalibration() {
             statusMessage.value = "magCalibrationCollecting";
         }
 
-        samples.value.push({ x: mx, y: my, z: mz, timestamp: Date.now() });
+        // Store attitude alongside mag data for attitude-based dot placement
+        const k = fcStore.sensorData.kinematics;
+        samples.value.push({ x: mx, y: my, z: mz, pitch: k[1], heading: k[2], timestamp: Date.now() });
         triggerRef(samples);
 
         samplesSinceLastFit++;
