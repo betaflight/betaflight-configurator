@@ -546,6 +546,7 @@
                                 :attitude="attitudeRaw"
                                 :quaternion="attitudeQuaternion"
                                 :viz-mode="magVizMode"
+                                :cal-offsets="cal.firmwareOffsets"
                             />
                         </div>
                     </div>
@@ -605,6 +606,7 @@
                                 :attitude="attitudeRaw"
                                 :quaternion="attitudeQuaternion"
                                 :viz-mode="magVizMode"
+                                :cal-offsets="cal.firmwareOffsets"
                             />
                         </div>
                     </div>

@@ -75,6 +75,10 @@ const props = defineProps({
         type: String,
         default: "pointcloud",
     },
+    calOffsets: {
+        type: Object,
+        default: null, // { x, y, z } — current firmware mag calibration offsets
+    },
 });
 
 const containerRef = ref(null);
@@ -112,6 +116,9 @@ let vectorLines = null; // [xPos, xNeg, yPos, yNeg, zPos, zNeg] — bold/thin ax
 
 // Sphere center marker (grey dot at fitted sphere center)
 let sphereCenterMarker = null;
+
+// Cal offset marker (green dot showing current firmware calibration offset)
+let calOffsetMarker = null;
 
 // Expected field direction reference
 let fieldRefGroup = null; // group containing shaft cylinder + cone arrowhead
@@ -306,6 +313,13 @@ function initScene() {
     sphereCenterMarker = new THREE.Mesh(centerGeo, centerMat);
     sphereCenterMarker.visible = false;
     scene.add(sphereCenterMarker);
+
+    // Cal offset marker (green dot at current firmware calibration offset)
+    const calGeo = new THREE.SphereGeometry(10, 10, 10);
+    const calMat = new THREE.MeshBasicMaterial({ color: 0x44ff44, opacity: 0.8, transparent: true });
+    calOffsetMarker = new THREE.Mesh(calGeo, calMat);
+    calOffsetMarker.visible = false;
+    scene.add(calOffsetMarker);
 
     // Expected field direction arrow (orange shaft + cone arrowhead + inclination arc)
     fieldRefGroup = new THREE.Group();
@@ -1239,6 +1253,9 @@ function disposeScene() {
     disposeMesh(sphereCenterMarker);
     sphereCenterMarker = null;
 
+    disposeMesh(calOffsetMarker);
+    calOffsetMarker = null;
+
     // liveMarker and vectorLines are children of quadIcon — disposed by disposeGroup
     disposeGroup(quadIcon);
     quadIcon = null;
@@ -1305,6 +1322,7 @@ function setSceneObjectVisibility(pc, hm) {
         v.visible = pc && props.active;
     });
     setVisible(sphereCenterMarker, (pc || hm) && !!props.sphereFit);
+    setVisible(calOffsetMarker, (pc || hm) && !!props.calOffsets);
     setVisible(fieldRefGroup, (pc || hm) && props.inclination !== null);
     setVisible(heatmapMesh, hm);
     setVisible(compassGroup, pc || hm);
@@ -1357,6 +1375,23 @@ watch(
             sphereCenterMarker.visible = !!val;
         }
     },
+);
+
+watch(
+    () => props.calOffsets,
+    (offsets) => {
+        if (!calOffsetMarker) {
+            return;
+        }
+        if (offsets && (offsets.x !== 0 || offsets.y !== 0 || offsets.z !== 0)) {
+            const s = magScale();
+            calOffsetMarker.position.set(offsets.x * s, -offsets.y * s, -offsets.z * s);
+            calOffsetMarker.visible = true;
+        } else {
+            calOffsetMarker.visible = false;
+        }
+    },
+    { immediate: true },
 );
 
 watch(
