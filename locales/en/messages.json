@@ -5815,6 +5815,15 @@
     "powerBatteryAmperage": {
         "message": "Amperage"
     },
+    "powerBatteryPowerDraw": {
+        "message": "Power Draw"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Voltage Drop"
+    },
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
