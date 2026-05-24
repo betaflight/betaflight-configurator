@@ -108,7 +108,7 @@ let ghostGroup = null;
 
 // Live mag visualization (children of quadIcon — body frame)
 let liveMarker = null;
-let vectorLines = null; // [xLine, yLine, zLine] — cylinder-based thick axis lines
+let vectorLines = null; // [xPos, xNeg, yPos, yNeg, zPos, zNeg] — bold/thin axis pairs
 
 // Sphere center marker (grey dot at fitted sphere center)
 let sphereCenterMarker = null;
@@ -122,6 +122,13 @@ const _tempColor = new THREE.Color();
 // Compass ring — earth-frame N/S/E/W labels on the horizontal plane
 let compassGroup = null;
 
+// Auto-scaling: track max observed field strength so vectors fill ~half the celestial sphere
+let maxFieldStrength = 0;
+
+function magScale() {
+    return maxFieldStrength > 0 ? (DEFAULT_SPHERE_RADIUS * 0.5) / maxFieldStrength : 1;
+}
+
 // Voxel heatmap — geodesic sphere with per-face coloring
 let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
@@ -132,15 +139,12 @@ let heatmapFaceCounts = null; // sample count per face
 // The nose of the quad acts like a torch illuminating an invisible sphere.
 function sampleToScene(s) {
     const totalField = Math.hypot(s.x, s.y, s.z);
+    const r = totalField * magScale();
     const pitchRad = (s.pitch ?? 0) * DEG_TO_RAD;
     const headingRad = (s.heading ?? 0) * DEG_TO_RAD;
     const cosP = Math.cos(pitchRad);
     // Display frame: X=north, Y=west(left), Z=up
-    return [
-        totalField * cosP * Math.cos(headingRad),
-        -totalField * cosP * Math.sin(headingRad),
-        totalField * Math.sin(pitchRad),
-    ];
+    return [r * cosP * Math.cos(headingRad), -r * cosP * Math.sin(headingRad), r * Math.sin(pitchRad)];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -275,17 +279,26 @@ function initScene() {
     liveMarker.visible = false;
     quadIcon.add(liveMarker);
 
-    // XYZ thick vector lines — body frame (children of quadIcon, move with quad)
+    // XYZ vector lines — body frame (children of quadIcon, move with quad)
+    // 6 meshes: [xPos, xNeg, yPos, yNeg, zPos, zNeg]
+    // Positive halves are always bold, negative halves always thin
     const VECTOR_COLORS = [0xff4444, 0x44ff44, 0x4444ff];
-    vectorLines = VECTOR_COLORS.map((color) => {
-        const geo = new THREE.CylinderGeometry(3, 3, 1, 6);
-        geo.translate(0, 0.5, 0); // pivot at bottom so scaling works from origin
-        const mat = new THREE.MeshBasicMaterial({ color, opacity: 0.85, transparent: true });
-        const mesh = new THREE.Mesh(geo, mat);
-        mesh.visible = false;
-        quadIcon.add(mesh);
-        return mesh;
-    });
+    vectorLines = [];
+    for (const color of VECTOR_COLORS) {
+        for (const positive of [true, false]) {
+            const geo = new THREE.CylinderGeometry(3, 3, 1, 6);
+            geo.translate(0, 0.5, 0);
+            const mat = new THREE.MeshBasicMaterial({
+                color,
+                opacity: positive ? 0.9 : 0.35,
+                transparent: true,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.visible = false;
+            quadIcon.add(mesh);
+            vectorLines.push(mesh);
+        }
+    }
 
     // Sphere center marker (grey dot at fitted sphere center — scene frame)
     const centerGeo = new THREE.SphereGeometry(8, 8, 8);
@@ -400,18 +413,25 @@ function orientCylinder(mesh, axis, length) {
 
 function updateAxisCylinders(showLive, mx, my, mz) {
     const comps = [mx, my, mz];
-    for (let i = 0; i < 3; i++) {
-        vectorLines[i].visible = showLive && Math.abs(comps[i]) > 1;
-        if (vectorLines[i].visible) {
-            const positive = comps[i] > 0;
-            _tmpVec.set(0, 0, 0).setComponent(i, Math.sign(comps[i]));
-            orientCylinder(vectorLines[i], _tmpVec, comps[i]);
-            vectorLines[i].position.set(0, 0, 0);
-            // Bold for positive component, thin for negative — must run after orientCylinder which resets scale
-            const thickness = positive ? 1.5 : 0.6;
-            vectorLines[i].scale.x = thickness;
-            vectorLines[i].scale.z = thickness;
-            vectorLines[i].material.opacity = positive ? 0.9 : 0.35;
+    const s = magScale();
+    for (let axis = 0; axis < 3; axis++) {
+        const len = Math.abs(comps[axis]) * s;
+        const vis = showLive && len > 1;
+        const posIdx = axis * 2;
+        const negIdx = axis * 2 + 1;
+        vectorLines[posIdx].visible = vis;
+        vectorLines[negIdx].visible = vis;
+        if (vis) {
+            // Positive half: always bold, points in +axis direction
+            _tmpVec.set(0, 0, 0).setComponent(axis, 1);
+            orientCylinder(vectorLines[posIdx], _tmpVec, len);
+            vectorLines[posIdx].position.set(0, 0, 0);
+            vectorLines[posIdx].scale.x = 1.5;
+            vectorLines[posIdx].scale.z = 1.5;
+            // Negative half: always thin, points in -axis direction
+            _tmpVec.set(0, 0, 0).setComponent(axis, -1);
+            orientCylinder(vectorLines[negIdx], _tmpVec, len);
+            vectorLines[negIdx].position.set(0, 0, 0);
         }
     }
 }
@@ -431,9 +451,11 @@ function updateLiveMagOverlay() {
     if (liveMarker) {
         liveMarker.visible = showLive;
         if (showLive) {
-            // White dot on +X axis at total field distance (body frame)
             const totalField = Math.hypot(mag.x, mag.y, mag.z);
-            liveMarker.position.set(totalField, 0, 0);
+            if (totalField > maxFieldStrength) {
+                maxFieldStrength = totalField;
+            }
+            liveMarker.position.set(totalField * magScale(), 0, 0);
         }
     }
     if (vectorLines) {
@@ -458,8 +480,10 @@ function rebuildFieldReference() {
 
     const incl = (props.inclination * Math.PI) / 180;
     // Three-tier fallback: fitted sphere > live mag magnitude > default
+    // Apply magScale() only to raw mag values, not to the display-unit DEFAULT_SPHERE_RADIUS
     const liveMagRadius = props.liveMag ? Math.hypot(props.liveMag.x, props.liveMag.y, props.liveMag.z) : 0;
-    const radius = props.sphereFit?.radius ?? (liveMagRadius > 50 ? liveMagRadius : DEFAULT_SPHERE_RADIUS);
+    const rawRadius = props.sphereFit?.radius ?? (liveMagRadius > 50 ? liveMagRadius : 0);
+    const radius = rawRadius > 0 ? rawRadius * magScale() : DEFAULT_SPHERE_RADIUS;
     // Field direction: horizontal along X, vertical along Z
     // Display frame: Z-up, so field dips toward -Z
     const fdx = Math.cos(incl) * radius;
@@ -608,7 +632,7 @@ function updateHeatmap(sampleList) {
         scy = 0,
         scz = 0;
     heatmapMesh.position.set(0, 0, 0);
-    heatmapMesh.scale.setScalar(radius / 1); // IcosahedronGeometry default radius = 1
+    heatmapMesh.scale.setScalar(radius * magScale());
 
     // Reset counts
     heatmapFaceCounts.fill(0);
@@ -692,7 +716,7 @@ function drawProjection(sampleList) {
     const cx = 0,
         cy = 0,
         cz = 0;
-    const radius = fit?.radius ?? 300;
+    const radius = fit ? fit.radius * magScale() : 300;
 
     // Layout: 3 circles in a row
     const gap = 8;
@@ -1124,6 +1148,15 @@ function updatePoints(sampleList) {
     const positions = positionAttr.array;
     const colors = colorAttr.array;
 
+    // Update max field strength from all samples so scale is consistent
+    for (let i = 0; i < count; i++) {
+        const s = sampleList[start + i];
+        const f = Math.hypot(s.x, s.y, s.z);
+        if (f > maxFieldStrength) {
+            maxFieldStrength = f;
+        }
+    }
+
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
         const idx = i * 3;
@@ -1166,8 +1199,8 @@ function updateWireframe(fit) {
         return;
     }
 
-    // Wireframe sphere at fitted center/radius
-    const sphereGeo = new THREE.SphereGeometry(fit.radius, 24, 16);
+    // Wireframe sphere scaled to match dot positions
+    const sphereGeo = new THREE.SphereGeometry(fit.radius * magScale(), 24, 16);
     const wireGeo = new THREE.WireframeGeometry(sphereGeo);
     const wireMat = new THREE.LineBasicMaterial({
         color: 0x44aaff,
@@ -1303,7 +1336,10 @@ function updateActiveViz(sampleList) {
 // so the array reference never changes; watching length detects new samples.
 watch(
     () => props.samples.length,
-    () => {
+    (len) => {
+        if (len === 0) {
+            maxFieldStrength = 0;
+        }
         updatePoints(props.samples);
         updateActiveViz(props.samples);
     },
