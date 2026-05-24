@@ -7802,6 +7802,9 @@
     "magVizWaitingForData": {
         "message": "Waiting for data…"
     },
+    "magVizAxisField": {
+        "message": "Field"
+    },
     "magAlignmentApply": {
         "message": "Apply"
     },

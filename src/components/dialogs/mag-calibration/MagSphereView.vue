@@ -10,7 +10,7 @@
             <span class="axis-x">X</span>
             <span class="axis-y">Y</span>
             <span class="axis-z">Z</span>
-            <span class="axis-field">Field</span>
+            <span class="axis-field">{{ $t("magVizAxisField") }}</span>
             <span v-if="inclination !== null" class="axis-incl"
                 >{{ inclination >= 0 ? "↗" : "↘" }}{{ Math.round(inclination) }}°</span
             >
