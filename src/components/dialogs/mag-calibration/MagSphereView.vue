@@ -1385,7 +1385,7 @@ watch(
         }
         if (offsets && (offsets.x !== 0 || offsets.y !== 0 || offsets.z !== 0)) {
             const s = magScale();
-            calOffsetMarker.position.set(offsets.x * s, -offsets.y * s, -offsets.z * s);
+            calOffsetMarker.position.set(offsets.x * s, -offsets.y * s, offsets.z * s);
             calOffsetMarker.visible = true;
         } else {
             calOffsetMarker.visible = false;
@@ -1428,6 +1428,15 @@ onMounted(() => {
     updateWireframe(props.sphereFit);
     rebuildFieldReference();
     applyVizMode(props.vizMode);
+    // Hydrate calOffsetMarker — the immediate watcher ran before initScene created it
+    if (calOffsetMarker && props.calOffsets) {
+        const offsets = props.calOffsets;
+        if (offsets.x !== 0 || offsets.y !== 0 || offsets.z !== 0) {
+            const s = magScale();
+            calOffsetMarker.position.set(offsets.x * s, -offsets.y * s, offsets.z * s);
+            calOffsetMarker.visible = true;
+        }
+    }
 });
 
 onBeforeUnmount(() => {
