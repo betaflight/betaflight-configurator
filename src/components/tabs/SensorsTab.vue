@@ -1391,12 +1391,12 @@ const calModeItems = computed(() => {
     return [items];
 });
 
-function startGuidedMagCal() {
+async function startGuidedMagCal() {
     calUnguidedMode.value = true;
     calAutoStep.value = false;
     calCurrentStep.value = 0;
     calGeoRef.value = getGeoReference();
-    cal.startCalibration("guided");
+    await cal.startCalibration("guided");
 }
 
 const isAcceptingCal = ref(false);
