@@ -131,9 +131,22 @@ let compassGroup = null;
 
 // Auto-scaling: track max observed field strength so vectors fill ~half the celestial sphere
 let maxFieldStrength = 0;
+let celestialScale = 1;
 
 function magScale() {
     return maxFieldStrength > 0 ? (DEFAULT_SPHERE_RADIUS * 0.5) / maxFieldStrength : 1;
+}
+
+function updateCelestialSize() {
+    const targetRadius = maxFieldStrength > 0 ? maxFieldStrength * magScale() : DEFAULT_SPHERE_RADIUS;
+    const target = targetRadius / DEFAULT_SPHERE_RADIUS;
+    celestialScale += (target - celestialScale) * 0.08;
+    if (ghostGroup) {
+        ghostGroup.scale.setScalar(celestialScale);
+    }
+    if (compassGroup) {
+        compassGroup.scale.setScalar(celestialScale);
+    }
 }
 
 // Voxel heatmap — geodesic sphere with per-face coloring
@@ -980,6 +993,7 @@ function animate() {
         controls.update();
     }
 
+    updateCelestialSize();
     updateGhostSphere();
     updateQuadAttitude();
     updateLiveMagOverlay();
@@ -1366,6 +1380,7 @@ watch(
     (len) => {
         if (len === 0) {
             maxFieldStrength = 0;
+            celestialScale = 1;
         }
         updatePoints(props.samples);
         updateActiveViz(props.samples);
