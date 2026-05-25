@@ -327,11 +327,68 @@
     "tabOptions": {
         "message": "Opzioni"
     },
+    "sidebarOpenOptions": {
+        "message": "Opzioni",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Commuta la modalità scura \/ chiara",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Attiva\/Disattiva modalità esperto",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Impostazioni"
     },
     "tabSetupOSD": {
         "message": "Impostazioni OSD"
+    },
+    "tabSensorConfig": {
+        "message": "Sensori"
+    },
+    "sensorConfigHardware": {
+        "message": "Hardware Sensore"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Configurazione sensore salvata"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Impossibile salvare la configurazione del sensore"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetometro"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Accelerometro"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Posizionare il modello su una superficie piana prima di calibrare"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "L'accelerometro non è stato calibrato. Calibrare prima di volare."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Gli offset di taratura del magnetometro sono zero. Calibrare per una direzione accurata."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibra"
+    },
+    "sensorConfig3dPreview": {
+        "message": "Anteprima dell'Attitudine 3D"
+    },
+    "sensorConfigLiveData": {
+        "message": "Dati Live Del Sensore"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Mostra Dati Live Sensore"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Ferma i dati live"
     },
     "tabConfiguration": {
         "message": "Configurazione"
@@ -341,6 +398,150 @@
     },
     "tabPidTuning": {
         "message": "Regolazione PID"
+    },
+    "tabAutotune": {
+        "message": "Autotune"
+    },
+    "autotuneImportTitle": {
+        "message": "Analisi Chirp Blackbox"
+    },
+    "autotuneImportButton": {
+        "message": "Importa Registro Blackbox"
+    },
+    "autotuneImportDescription": {
+        "message": "Importa un log blackbox registrato con debug_mode = CHIRP per analizzare la risposta in frequenza e calcolare le raccomandazioni PID."
+    },
+    "autotuneSelectingFile": {
+        "message": "Selezione file..."
+    },
+    "autotuneAnalyzing": {
+        "message": "Analizzando i dati del chirp..."
+    },
+    "autotuneBandwidth": {
+        "message": "Larghezza di banda"
+    },
+    "autotunePhaseMargin": {
+        "message": "Margine Di Fase"
+    },
+    "autotuneResonantPeak": {
+        "message": "Picco di Risonanza"
+    },
+    "autotuneCoherence": {
+        "message": "Coerenza"
+    },
+    "autotuneParameter": {
+        "message": "Parametro"
+    },
+    "autotuneCurrent": {
+        "message": "Corrente"
+    },
+    "autotuneProposed": {
+        "message": "Proposto"
+    },
+    "autotuneChange": {
+        "message": "Cambia"
+    },
+    "autotuneApplying": {
+        "message": "Applicando..."
+    },
+    "autotuneApplied": {
+        "message": "Guadagni applicati e salvati."
+    },
+    "autotuneApplyFailed": {
+        "message": "Impossibile applicare i guadagni"
+    },
+    "autotuneConnectRequired": {
+        "message": "Connetti il controllore di volo per applicare i guadagni."
+    },
+    "autotuneNoLogs": {
+        "message": "Nessun log blackbox valido trovato in questo file."
+    },
+    "autotuneNoChirpData": {
+        "message": "Nessun dato del chirp trovato. Assicurati che il log sia stato registrato con debug_mode = CHIRP e la modalità chirp sia stata attivata."
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} esempi"
+    },
+    "autotuneSampleRate": {
+        "message": "Frequenza di campionamento: {{rate}} Hz"
+    },
+    "autotuneImportAnother": {
+        "message": "Importa Un Altro"
+    },
+    "autotuneImportRetry": {
+        "message": "Riprova"
+    },
+    "autotuneFile": {
+        "message": "File"
+    },
+    "autotuneAxesDetected": {
+        "message": "Assi Rilevati"
+    },
+    "autotuneApplyGains": {
+        "message": "Applica Guadagni"
+    },
+    "autotuneGainTitle": {
+        "message": "Guadagno Raccomandato"
+    },
+    "autotuneAxisSelector": {
+        "message": "Seleziona Assi"
+    },
+    "autotuneAxisRoll": {
+        "message": "Rollio"
+    },
+    "autotuneAxisPitch": {
+        "message": "Beccheggio"
+    },
+    "autotuneAxisYaw": {
+        "message": "Imbardata"
+    },
+    "autotuneBodePlotTitle": {
+        "message": "Risposta Frequenza"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "PID attuali (dal log)"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "Analisi"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "Cursori Proposti"
+    },
+    "autotuneSliderMasterMultiplier": {
+        "message": "Moltiplicatore Master"
+    },
+    "autotuneSliderPIGain": {
+        "message": "Guadagno P \/ I"
+    },
+    "autotuneSliderIGain": {
+        "message": "Guadagno I"
+    },
+    "autotuneSliderDGain": {
+        "message": "Guadagno D"
+    },
+    "autotuneSliderFeedforward": {
+        "message": "Feedforward"
+    },
+    "autotuneSliderDTermFilter": {
+        "message": "Filtro D-Term"
+    },
+    "autotuneApplyFromAxis": {
+        "message": "Applica guadagni dall'asse"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "Picco Di Sensibilità"
+    },
+    "autotuneOvershoot": {
+        "message": "Overshoot"
+    },
+    "autotuneRiseTime": {
+        "message": "Tempo Di Aumento"
+    },
+    "autotuneSettlingTime": {
+        "message": "Tempo Di Regolazione"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "Spettrogramma (Gyro)"
     },
     "tabReceiver": {
         "message": "Ricevente"
@@ -866,6 +1067,10 @@
         "message": "Yaw:",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
+    "initialSetupMagHeading": {
+        "message": "Direzione Mag:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
+    },
     "initialSetupMixerHead": {
         "message": "Tipo Mixer"
     },
@@ -942,6 +1147,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "Carico CPU:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Velocità ciclica:"
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura CPU:"
@@ -1153,6 +1364,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Mostra Direzione, Pitch e Roll negli strumenti",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "Board:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Firmware:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1464,6 +1681,15 @@
     },
     "configurationBoardAlignment": {
         "message": "Allineamento Scheda"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Rollio°"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Beccheggio°"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Imbardata°"
     },
     "configurationMagAlignment": {
         "message": "Allineamento Magnetometro"
@@ -3133,8 +3359,41 @@
     "flightPlanTypeLand": {
         "message": "Atterra"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Decollo"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Cambia Altitudine",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Ritardo",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Limite velocità Yaw",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Durata Attesa <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Tempo di attesa in minuti",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Durata del ritardo <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "Durata del ritardo in minuti",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Velocità Imbardata <span class=\"units\">°\/s<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Velocità di imbardata in gradi al secondo",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Tipo Attesa"
@@ -3207,6 +3466,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Longitudine invalida (deve essere compresa tra -180 e 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Altitudine non valida (deve essere zero o positivo)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Durata non valida (deve essere zero o positivo)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "Velocità di imbardata (deve essere zero o positivo)"
     },
     "flightPlanConfirmDelete": {
         "message": "Sei sicuro di voler cancellare questi waypoint?"
@@ -3803,6 +4071,12 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Mostra Log"
     },
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Stato di compilazione:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Stato flash:"
+    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "in coda"
     },
@@ -3950,8 +4224,21 @@
     "firmwareFlasherExitDfu": {
         "message": "Esci dalla modalità DFU"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Trova dispositivo DFU"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Flash Firmware"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Opzioni di installazione del firmware"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Carica opzioni firmware"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Flash in progresso",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "Informazioni firmware su GitHub"
@@ -3974,8 +4261,29 @@
     "firmwareFlasherWarningText": {
         "message": "Si prega di <span class=\"message-negative\">non<\/span> provare a flashare hardware <strong>non-Betaflight<\/strong> con questo firmware flasher.<br \/><span class=\"message-negative\">Non<\/span> <strong>disconnettere<\/strong> la scheda e <strong>non spegnere<\/strong> il tuo computer mentre stai flashando. <br \/> <br \/><strong>Nota:<\/strong><ul><li>Il bootloader STM32 è memorizzato nella ROM, non può essere corrotto.<\/li><li><span class=\"message-negative\">La connessione automatica<\/span> è sempre disabilitata mentre ci si trova all'interno del firmware flasher.<\/li><\/li>Assicurati di avere un backup; alcuni upgrade\/downgrade cancelleranno la tua configurazione.<\/li><\/li>Se hai problemi a flashare il controllore di volo<strong> prova prima a scollegare prima tutti i cavi dalla scheda<\/strong>, prima prova a riavviare e ad aggiornare i driver.<\/li><li>Quando provi a flashare schede con connessione diretta USB (le schede più recenti) assicurati di aver letto la sezione USB Flashing del manuale Betaflight e di avere il software e i driver corretti<\/li><\/ul>"
     },
+    "firmwareFlasherWarningShort": {
+        "message": "Non flashare su hardware non-Betaflight. Non disconnetterti durante il flash. Il bootloader STM32 è nella ROM e non può essere corrotto. Esegui sempre il backup della configurazione prima di aggiornare."
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "Recupero \/ Comunicazione persa"
+    },
     "firmwareFlasherRecoveryText": {
         "message": "Se hai perso la comunicazione con la tua scheda segui questi passaggi per ripristinare la comunicazione: <ul><li>Spegnimento<\/li><li>Abilita 'Nessuna sequenza di riavvio', abilita 'Cancellazione completa del chip'.<\/li><li>Ponticellare i pin del BOOT o tenere premuto il pulsante BOOT.<\/li><li>Accensione (il LED NON lampeggia se non eseguito correttamente).<\/li><li>Installare tutti i driver STM32 e Zadig se necessario (vedere la sezione <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash con USB<\/a> del manuale di Betaflight).<\/li><li>Chiudere l'App, quindi riavviarla.<\/li><li>Rilascia il pulsante BOOT se il tuo FC ne ha uno.<\/li><li>Flash con firmware corretto (utilizzando la velocità di baud manuale se specificato nel manuale dell' FC).<\/li><li>Spegnimento.<\/li><li>Rimuovere il ponticello BOOT.<\/li><li>Accensione (LED d'attività dovrebbe lampeggiare).<\/li><li>Connetti normalmente.<\/li><\/ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "Se hai perso la comunicazione: spegni, abilita nessuna sequenza di riavvio e la cancellazione completa del chip, unire i pin BOOT, quindi accendere. Installare i driver se necessario."
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Per saperne di più →"
+    },
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "Board & Build"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Avanzato"
+    },
+    "firmwareFlasherSubTabFlash": {
+        "message": "Flash"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Lascia il firmware flasher"
@@ -4871,6 +5179,13 @@
     "pidTuningRpmFadeRangeHz": {
         "message": "Intervallo Di Dissolvenza [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Fattore Q (x100)",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Il fattore Q regola quanto sono stretti o larghi i filtri notch RPM. Il valore memorizzato è il fattore Q × 100, con intervallo consentito 250–3000 (Q da 2,5 a 30,0), valore predefinito 500 (Q 5,0). Valori più alti rendono ogni notch più stretto e preciso; valori più bassi li rendono più larghi. Valori molto bassi aumentano significativamente il ritardo del filtro."
     },
     "pidTuningRpmWeight": {
         "message": "Peso {{index}}",
@@ -7317,6 +7632,174 @@
     "configurationAccHardware": {
         "message": "Accelerometro"
     },
+    "configurationBaroHardware": {
+        "message": "Barometro"
+    },
+    "configurationMagHardware": {
+        "message": "Magnetometro"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Impossibile determinare la posizione. Collegare un modulo GPS o consentire l'accesso del browser per la posizione."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Declinazione magnetica impostata su {{declination}}° dalla posizione rilevata."
+    },
+    "configurationMagInclination": {
+        "message": "Inclinazione"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "L'angolo tra il campo magnetico terrestre e il piano orizzontale nella vostra posizione. Valori positivi indicano i punti di campo verso il basso (emisfero settentrionale)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Intensità di campo"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "L'intensità totale del campo magnetico terrestre nella tua posizione in nanotesla (nT). I valori tipici vanno da 25.000 a 65.000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Rileva"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Aggiorna"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Declinazione magnetica auto rilevata come {{value}}° per la tua posizione."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "La declinazione è {{saved}}° ma il GPS rileva {{detected}}° per questa posizione. Fare clic su Aggiorna per correggere."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} esempi"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Inclinare di più!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Rilevamento fallito — prova con inclinazione più varia."
+    },
+    "magCalibrationStart": {
+        "message": "Guidato"
+    },
+    "magCalibrationStartDesc": {
+        "message": "Ruota attraverso 6 orientamenti passo dopo passo"
+    },
+    "magCalibrationStartAuto": {
+        "message": "Passo-auto"
+    },
+    "magCalibrationStartAutoDesc": {
+        "message": "Come guidato, ma i passi avanzano su un timer"
+    },
+    "magCalibrationCancel": {
+        "message": "Cancella"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Opzioni modalità calibrazione"
+    },
+    "magCalibrationRetry": {
+        "message": "Riprova"
+    },
+    "magCalibrationNextStep": {
+        "message": "Fase Successiva"
+    },
+    "magCalibrationFinish": {
+        "message": "Fine"
+    },
+    "magCalibrationStepOf": {
+        "message": "Passaggio {{current}} di {{total}}"
+    },
+    "magCalibrationWaiting": {
+        "message": "In attesa di movimento... Muovere il veicolo per iniziare."
+    },
+    "magCalibrationCollecting": {
+        "message": "Ruota lentamente il veicolo attraverso tutti gli orientamenti."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibrazione completata."
+    },
+    "magCalibrationError": {
+        "message": "Calibrazione fallita. Riprova in un'area con meno interferenze magnetiche."
+    },
+    "magCalibrationNoMovement": {
+        "message": "Nessun movimento rilevato per 30 secondi. Calibrazione annullata."
+    },
+    "magCalibrationSamples": {
+        "message": "Esempi"
+    },
+    "magCalibrationQuality": {
+        "message": "Qualità"
+    },
+    "magCalibrationResidual": {
+        "message": "Adatta Residua"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Buono"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Sufficiente"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Scarso"
+    },
+    "magCalibrationStep1": {
+        "message": "Livellato — ruotare 360° di imbardata"
+    },
+    "magCalibrationStep2": {
+        "message": "Muso giù — ruotare 360°"
+    },
+    "magCalibrationStep3": {
+        "message": "Muso sù — ruotare 360°"
+    },
+    "magCalibrationStep4": {
+        "message": "Lato sinistro in basso — ruotare 360°"
+    },
+    "magCalibrationStep5": {
+        "message": "Lato destro in basso — ruotare 360°"
+    },
+    "magCalibrationStep6": {
+        "message": "Invertito — ruotare 360°"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Offset firmware"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Offset di adattamento sferico"
+    },
+    "magCalibrationUnguided": {
+        "message": "Veloce"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Ruota in tutte le direzioni — si ferma quando il firmware finisce"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Calibrazione Non Guidata"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Ruota lentamente il tuo veicolo in tutte le direzioni. Il firmware raccoglierà campioni e calcolerà automaticamente le differenze."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Calibrazione firmware completata!"
+    },
+    "magVizPointCloud": {
+        "message": "Nuvola di punti"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Proiezione Tripla"
+    },
+    "magVizPolar": {
+        "message": "Densità Polare"
+    },
+    "magVizWaitingForData": {
+        "message": "In attesa dei dati…"
+    },
+    "magAlignmentApply": {
+        "message": "Applica"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Rileva"
+    },
     "configurationSmallAngle": {
         "message": "Angolo massimo di armamento [gradi]"
     },
@@ -7890,6 +8373,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "Altre Opzioni"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Rimuovi {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Seleziona protocollo"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Seleziona opzioni"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Seleziona un branch oppure inserisci il numero della PR o l’hash del commit"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Cerca una scheda..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Protocollo Radio"
@@ -8738,7 +9237,7 @@
         "message": "Mappa Sicurezza Droni (Altitudine Sicura)"
     },
     "preflightAirspaceExplorer": {
-        "message": "Grafico SkyVector Spazio Aereo"
+        "message": "SkyVector Grafico Spazio Aereo"
     },
     "preflightNOTAMs": {
         "message": "FAA NOTAMs (US)"

@@ -331,6 +331,10 @@
     "tabOptions": {
         "message": "Ustawienia"
     },
+    "sidebarOpenOptions": {
+        "message": "Opcje",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
     "sidebarToggleDarkMode": {
         "message": "Przełącz tryb ciemny \/ jasny",
         "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
@@ -3097,6 +3101,9 @@
     "flightPlanSaveToFC": {
         "message": "Zapisz w FC"
     },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Usuń waypoint"
+    },
     "flightPlanLoadPromptTitle": {
         "message": "Załadować plan lotu z kontrolera lotu?"
     },
@@ -4742,6 +4749,9 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Zwiększa wartości PID, aby zrekompensować spadek Vbat. Zapewni to bardziej stałą charakterystykę podczas całego lotu. Zastosowana rekompensata jest obliczana na podstawie wartości $t(powerBatteryMaximum.message) ustawionej na stronie $t(tabPower.message), więc upewnij się, że jest ustawiona tak jak byś tego chciał."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Kompensacja spadku napięcia baterii %"
+    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br \/><br \/>Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br \/><br \/>Odwiedź <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki<\/a>, aby uzyskać więcej informacji."
     },
@@ -5521,6 +5531,9 @@
     },
     "osdSetupSave": {
         "message": "Zapisz"
+    },
+    "osdSetupRefresh": {
+        "message": "Odśwież"
     },
     "osdSetupFontManager": {
         "message": "Menedżer czcionek"
@@ -7107,6 +7120,36 @@
     "configurationAccHardware": {
         "message": "Akcelerometr"
     },
+    "configurationBaroHardware": {
+        "message": "Barometr"
+    },
+    "configurationMagHardware": {
+        "message": "Magnetometr"
+    },
+    "configurationMagInclination": {
+        "message": "Inklinacja"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Wykryj"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Aktualizuj"
+    },
+    "magCalibrationCancel": {
+        "message": "Anuluj"
+    },
+    "magCalibrationRetry": {
+        "message": "Ponów"
+    },
+    "magCalibrationFinish": {
+        "message": "Zakończ"
+    },
+    "magAlignmentApply": {
+        "message": "Zastosuj"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Wykryj"
+    },
     "configurationSmallAngle": {
         "message": "Maksymalny kąt uzbrojenia [w stopniach]"
     },
@@ -7670,6 +7713,16 @@
     "firmwareFlasherBuildOptions": {
         "message": "Inne opcje"
     },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Usuń {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Wybierz protokół"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Wybierz opcje"
+    },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Protokół radia"
     },
@@ -7869,6 +7922,15 @@
     "userBackupDeleteFailed": {
         "message": "Nie udało się usunąć kopii zapasowej"
     },
+    "actionRestore": {
+        "message": "Przywróć"
+    },
+    "titleRestoreBackup": {
+        "message": "Przywróć kopię zapasową"
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Przywracanie kopii zapasowej..."
+    },
     "userPasskeyNoPasskeys": {
         "message": "Brak dostępnych kluczy dostępu"
     },
@@ -7904,6 +7966,9 @@
     },
     "labelUsePasskey": {
         "message": "Użyj klucza"
+    },
+    "labelBack": {
+        "message": "Powrót"
     },
     "titleEnterVerificationCode": {
         "message": "Wprowadź kod weryfikacyjny"
