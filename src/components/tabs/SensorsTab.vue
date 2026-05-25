@@ -554,6 +554,7 @@
                             </div>
                             <MagSphereView
                                 :samples="cal.samples"
+                                :sample-count="cal.sampleCount"
                                 :sphere-fit="cal.sphereFitResult"
                                 :active="true"
                                 :live-mag="cal.liveMag"
@@ -615,6 +616,7 @@
                             </div>
                             <MagSphereView
                                 :samples="cal.samples"
+                                :sample-count="cal.sampleCount"
                                 :sphere-fit="cal.sphereFitResult"
                                 :active="false"
                                 :inclination="calGeoRef?.inclination ?? null"

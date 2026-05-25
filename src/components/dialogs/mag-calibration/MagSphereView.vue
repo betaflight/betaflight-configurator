@@ -35,6 +35,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    sampleCount: {
+        type: Number,
+        default: 0,
+    },
     sphereFit: {
         type: Object,
         default: null,
@@ -1394,12 +1398,12 @@ function updateActiveViz(sampleList) {
 }
 
 // Watchers
-// Watch samples.length — the composable mutates the array in place via push() + triggerRef(),
-// so the array reference never changes; watching length detects new samples.
+// sampleCount is a primitive prop (number) so Vue detects changes reliably,
+// unlike samples.length which doesn't update when the array is mutated in place.
 watch(
-    () => props.samples.length,
-    (len) => {
-        if (len === 0) {
+    () => props.sampleCount,
+    (count) => {
+        if (count === 0) {
             maxFieldStrength = 0;
         }
         updatePoints(props.samples);
