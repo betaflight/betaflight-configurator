@@ -520,11 +520,7 @@ function rebuildFieldReference() {
     }
 
     const incl = (props.inclination * Math.PI) / 180;
-    // Three-tier fallback: fitted sphere > live mag magnitude > default
-    // Apply magScale() only to raw mag values, not to the display-unit DEFAULT_SPHERE_RADIUS
-    const liveMagRadius = props.liveMag ? Math.hypot(props.liveMag.x, props.liveMag.y, props.liveMag.z) : 0;
-    const rawRadius = props.sphereFit?.radius ?? (liveMagRadius > 50 ? liveMagRadius : 0);
-    const radius = rawRadius > 0 ? rawRadius * magScale() : DEFAULT_SPHERE_RADIUS;
+    const radius = DEFAULT_SPHERE_RADIUS;
     // Field direction: horizontal along X, vertical along Z
     // Display frame: Z-up, so field dips toward -Z
     const fdx = Math.cos(incl) * radius;
@@ -1443,22 +1439,6 @@ watch(
 watch(
     () => props.inclination,
     () => rebuildFieldReference(),
-);
-
-// liveMag is the tier-2 radius fallback before a sphere fit exists.
-// Throttle to 1 Hz — liveMag updates at 10 Hz but field arrow rebuild is expensive.
-let lastFieldRebuildTime = 0;
-watch(
-    () => props.liveMag,
-    () => {
-        if (!props.sphereFit) {
-            const now = performance.now();
-            if (now - lastFieldRebuildTime > 1000) {
-                lastFieldRebuildTime = now;
-                rebuildFieldReference();
-            }
-        }
-    },
 );
 
 watch(
