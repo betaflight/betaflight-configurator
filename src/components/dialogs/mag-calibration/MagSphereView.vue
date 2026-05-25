@@ -1345,7 +1345,9 @@ function setSceneObjectVisibility(pc, hm) {
         v.visible = pc && props.active;
     });
     setVisible(sphereCenterMarker, (pc || hm) && !!props.sphereFit);
-    setVisible(calOffsetMarker, (pc || hm) && !!props.calOffsets);
+    const hasNonZeroCalOffsets =
+        !!props.calOffsets && (props.calOffsets.x !== 0 || props.calOffsets.y !== 0 || props.calOffsets.z !== 0);
+    setVisible(calOffsetMarker, (pc || hm) && hasNonZeroCalOffsets);
     setVisible(fieldRefGroup, (pc || hm) && props.inclination !== null);
     setVisible(heatmapMesh, hm);
     setVisible(compassGroup, pc || hm);
