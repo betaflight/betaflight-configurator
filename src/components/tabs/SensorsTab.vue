@@ -1411,12 +1411,12 @@ const calFirmwareOffsetsText = computed(() => {
     return `${fw.x}, ${fw.y}, ${fw.z}`;
 });
 
-function startMagCal(quick = false, auto = false) {
+async function startMagCal(quick = false, auto = false) {
     calUnguidedMode.value = quick;
     calAutoStep.value = !quick && auto;
     calCurrentStep.value = 0;
     calGeoRef.value = getGeoReference();
-    cal.startCalibration();
+    await cal.startCalibration();
 }
 
 function nextMagCalStep() {
