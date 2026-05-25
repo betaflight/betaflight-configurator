@@ -1598,6 +1598,7 @@ function onCalibrateAccel() {
             }
             gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
             calibratingAccel.value = false;
+            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         },
         ACC_CALIBRATION_TIMEOUT_MS,
     );
