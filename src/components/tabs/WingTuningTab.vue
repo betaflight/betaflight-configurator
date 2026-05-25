@@ -620,13 +620,12 @@ export default defineComponent({
         const saving = ref(false);
         const error = ref(null);
 
+        // In DIFF_THRUST mode the firmware ignores s_yaw, and the
+        // `s_yaw` input is disabled in the template when this is true.
+        // Don't mutate `fields.s_yaw` here — a user who toggles
+        // RUDDER → DIFF_THRUST → RUDDER would otherwise silently lose
+        // their tuned value.
         const diffThrustMode = computed(() => fields.yaw_type === "DIFF_THRUST");
-
-        watch(diffThrustMode, (isDiff) => {
-            if (isDiff && fields.s_yaw !== 0) {
-                fields.s_yaw = 0;
-            }
-        });
 
         // hasChanges is owned by the Pinia store; mirror it as `dirty`
         // so the template binding stays unchanged.
@@ -637,9 +636,17 @@ export default defineComponent({
         // Capability check — tab requires a USE_WING firmware build.
         // The MSP codes (MSP2_WING_TUNING / MSP2_SET_WING_TUNING) ship
         // in the same firmware PR as USE_WING, so the build-option flag
-        // is sufficient. Per BF convention, API_VERSION_MINOR is bumped
-        // by release maintainers at release-cut time, not per feature
-        // PR — so we don't gate on apiVersion here.
+        // is sufficient at merge time. Per BF convention,
+        // API_VERSION_MINOR is bumped by release maintainers at
+        // release-cut time, not per feature PR — so we don't gate on
+        // apiVersion here yet.
+        //
+        // TODO: once the firmware side (betaflight/betaflight#15124)
+        // allocates a minor API version, tighten this gate with a
+        // `semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_xx)` check so
+        // custom firmware builds that flip USE_WING without picking up
+        // the MSP handlers fall back to the stub instead of hanging on
+        // reload. Suggested by limonspb on PR #5015.
         //
         // Safe-by-default: if FC.CONFIG.buildOptions is undefined/empty
         // (MSP_BUILD_INFO failed or truncated), .includes returns false

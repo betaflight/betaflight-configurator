@@ -3,7 +3,7 @@
 // match firmware `.plan/WIRE_FORMAT.md`. Append-only: new fields may
 // only be added at the end; type change or removal requires a new
 // MSP2 code slot (e.g. MSP2_WING_TUNING_V2).
-import { enumIndexToString, enumStringToIndex } from "../utils/wingEnumLookups.js";
+import { enumIndexToString, enumStringToIndex } from "../utils/wingEnumLookups";
 
 export const WING_TUNING_SCHEMA = [
     { name: "s_roll", type: "u8" },

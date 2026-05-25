@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref } from "vue";
+import { reactive, ref, toRaw } from "vue";
 
 /**
  * Field definitions for the Wing Tuning tab. Type "int" defaults to 0,
