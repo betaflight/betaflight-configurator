@@ -157,17 +157,12 @@ let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
 let heatmapFaceCounts = null; // sample count per face
 
-// Attitude-based sample position: place dot at total field strength distance
-// from origin, positioned by pitch (latitude) and heading (longitude).
-// The nose of the quad acts like a torch illuminating an invisible sphere.
+// Plot raw magnetometer readings directly — (mx, my, mz) naturally forms a
+// sphere in sensor frame, offset from origin by calibration bias.
 function sampleToScene(s) {
-    const totalField = Math.hypot(s.x, s.y, s.z);
-    const r = totalField * magScale();
-    const pitchRad = (s.pitch ?? 0) * DEG_TO_RAD;
-    const headingRad = (s.heading ?? 0) * DEG_TO_RAD;
-    const cosP = Math.cos(pitchRad);
-    // Display frame: X=north, Y=west(left), Z=up
-    return [r * cosP * Math.cos(headingRad), -r * cosP * Math.sin(headingRad), r * Math.sin(pitchRad)];
+    const scale = magScale();
+    // BF body frame: X=fwd, Y=right, Z=up. Display: negate Y for left-hand convention.
+    return [s.x * scale, -s.y * scale, s.z * scale];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -496,7 +491,8 @@ function updateLiveMagOverlay() {
                 maxFieldStrength = totalField;
                 repositionCalOffsetMarker();
             }
-            liveMarker.position.set(totalField * magScale(), 0, 0);
+            const s = magScale();
+            liveMarker.position.set(mag.x * s, -mag.y * s, mag.z * s);
         }
     }
     if (vectorLines) {
