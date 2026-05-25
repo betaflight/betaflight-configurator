@@ -203,6 +203,19 @@ describe("useMagCalibration", () => {
             expect(cal.progress.value).toBe(100);
         });
 
+        it("restores collecting state when saveAndReconnect returns ok:false", async () => {
+            cal.sphereFitResult.value = {
+                center: { x: 10, y: 20, z: 30 },
+                radius: 300,
+                residual: 50,
+            };
+            saveAndReconnect.mockResolvedValueOnce({ ok: false, error: "EEPROM write failed" });
+
+            const result = await cal.acceptCalibration();
+            expect(result.ok).toBe(false);
+            expect(cal.phase.value).toBe("collecting");
+        });
+
         it("restores collecting state when CLI command throws (allows retry)", async () => {
             cal.sphereFitResult.value = {
                 center: { x: 10, y: 20, z: 30 },

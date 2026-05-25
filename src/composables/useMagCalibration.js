@@ -305,6 +305,12 @@ export function useMagCalibration() {
             cleanup();
             await cliSend(`set mag_calibration = ${Math.round(x)},${Math.round(y)},${Math.round(z)}`);
             const result = await saveAndReconnect();
+            if (!result?.ok) {
+                startDataPolling();
+                phase.value = "collecting";
+                statusMessage.value = "magCalibrationError";
+                return result;
+            }
             phase.value = "complete";
             statusMessage.value = "magCalibrationComplete";
             progress.value = 100;
