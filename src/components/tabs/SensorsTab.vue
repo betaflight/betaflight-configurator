@@ -407,6 +407,14 @@
                     <span>{{ $t("sensorConfigMagNeedsCalibration") }}</span>
                 </div>
 
+                <!-- Editable cal offset values (always visible) -->
+                <MagCalOffsetEditor
+                    :offsets="cal.firmwareOffsets"
+                    :saving="isSavingCal"
+                    :show-save="isMspCliSupported()"
+                    @save="saveCalValues"
+                />
+
                 <!-- Calibrate Magnetometer (inline) -->
                 <div class="mag-cal-section">
                     <!-- Idle: calibrate button with mode dropdown -->
@@ -429,12 +437,6 @@
                                 </UDropdownMenu>
                             </UFieldGroup>
                         </div>
-                        <MagCalOffsetEditor
-                            :offsets="cal.firmwareOffsets"
-                            :saving="isSavingCal"
-                            :show-save="isMspCliSupported()"
-                            @save="saveCalValues"
-                        />
                     </div>
 
                     <!-- Calibrating -->
@@ -462,13 +464,6 @@
                                 <p class="text-sm text-[var(--surface-600)] text-center my-2">
                                     {{ $t("magCalibrationCheckInstruction") }}
                                 </p>
-                                <MagCalOffsetEditor
-                                    :offsets="cal.firmwareOffsets"
-                                    :saving="isSavingCal"
-                                    :show-save="isMspCliSupported()"
-                                    centered
-                                    @save="saveCalValues"
-                                />
                             </template>
                             <template v-else-if="cal.mode === 'guided'">
                                 <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
