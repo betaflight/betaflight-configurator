@@ -280,13 +280,14 @@ function initScene() {
     pointGeometry.setDrawRange(0, 0);
 
     pointMaterial = new THREE.PointsMaterial({
-        size: 3,
+        size: 4,
         vertexColors: true,
         sizeAttenuation: false,
         depthWrite: false,
     });
     pointMesh = new THREE.Points(pointGeometry, pointMaterial);
-    pointMesh.renderOrder = 0;
+    pointMesh.frustumCulled = false;
+    pointMesh.renderOrder = 5;
     scene.add(pointMesh);
 
     // Live mag marker (white dot on +X axis at total field distance — body frame)
