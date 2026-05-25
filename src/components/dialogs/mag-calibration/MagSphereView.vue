@@ -538,16 +538,17 @@ function rebuildFieldReference() {
         southCone.scale.setScalar(dominantSouth ? 1.3 : 1);
     }
 
-    // Dispose old arc + label
-    if (fieldRefGroup.userData.arc) {
-        fieldRefGroup.remove(fieldRefGroup.userData.arc);
-        fieldRefGroup.userData.arc.geometry.dispose();
-        fieldRefGroup.userData.arc.material.dispose();
-    }
-    if (fieldRefGroup.userData.arcLabel) {
-        fieldRefGroup.remove(fieldRefGroup.userData.arcLabel);
-        fieldRefGroup.userData.arcLabel.material.map?.dispose();
-        fieldRefGroup.userData.arcLabel.material.dispose();
+    // Dispose old arc + labels
+    for (const key of ["arc", "arcLabel", "magNorthLabel", "magSouthLabel", "inclLabel"]) {
+        const obj = fieldRefGroup.userData[key];
+        if (!obj) {
+            continue;
+        }
+        fieldRefGroup.remove(obj);
+        obj.geometry?.dispose();
+        obj.material?.map?.dispose();
+        obj.material?.dispose();
+        fieldRefGroup.userData[key] = null;
     }
 
     // Inclination arc: curved line from horizontal (+X) down to field direction
@@ -580,6 +581,38 @@ function rebuildFieldReference() {
     labelSprite.scale.set(80, 30, 1);
     fieldRefGroup.userData.arcLabel = labelSprite;
     fieldRefGroup.add(labelSprite);
+
+    // Helper: small orange sprite label
+    function makeFieldLabel(text, x, z, size = 60) {
+        const cv = document.createElement("canvas");
+        cv.width = 128;
+        cv.height = 64;
+        const c = cv.getContext("2d");
+        c.fillStyle = "#ff8800";
+        c.font = "bold 48px sans-serif";
+        c.textAlign = "center";
+        c.textBaseline = "middle";
+        c.fillText(text, 64, 32);
+        const tex = new THREE.CanvasTexture(cv);
+        const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+        const s = new THREE.Sprite(mat);
+        s.position.set(x, 0, z);
+        s.scale.set(size, size * 0.5, 1);
+        fieldRefGroup.add(s);
+        return s;
+    }
+
+    // Magnetic N/S labels just past the arrow tips
+    // North pole = positive inclination end, South = negative
+    const tipOffset = 1.15;
+    fieldRefGroup.userData.magNorthLabel = makeFieldLabel("N", fdx * tipOffset, fdz * tipOffset);
+    fieldRefGroup.userData.magSouthLabel = makeFieldLabel("S", -fdx * tipOffset, -fdz * tipOffset);
+
+    // Inclination angle at the dominant pole end (just outside the sphere)
+    const sign = props.inclination >= 0 ? "+" : "";
+    const inclText = `${sign}${Math.round(props.inclination)}°`;
+    const inclPos = props.inclination >= 0 ? 1.25 : -1.25;
+    fieldRefGroup.userData.inclLabel = makeFieldLabel(inclText, fdx * inclPos, fdz * inclPos, 80);
 }
 
 // --- Voxel Heatmap ---
@@ -1116,8 +1149,8 @@ function createCompassRing(radius) {
         return sprite;
     };
 
-    // Place labels well outside the sphere so they're clearly visible even when fitted sphere grows
-    const r = radius * 1.5;
+    // Place labels just outside the sphere surface (5% past edge)
+    const r = radius * 1.05;
     // N highlighted red (navigation convention); E/S/W neutral
     makeLabel("N", "#ff4444").position.set(r, 0, 0);
     makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
