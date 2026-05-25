@@ -129,24 +129,11 @@ const _tempColor = new THREE.Color();
 // Compass ring — earth-frame N/S/E/W labels on the horizontal plane
 let compassGroup = null;
 
-// Auto-scaling: track max observed field strength so vectors fill ~half the celestial sphere
+// Auto-scaling: track max observed field strength so dots fill the celestial sphere
 let maxFieldStrength = 0;
-let celestialScale = 1;
 
 function magScale() {
-    return maxFieldStrength > 0 ? (DEFAULT_SPHERE_RADIUS * 0.5) / maxFieldStrength : 1;
-}
-
-function updateCelestialSize() {
-    const targetRadius = maxFieldStrength > 0 ? maxFieldStrength * magScale() : DEFAULT_SPHERE_RADIUS;
-    const target = targetRadius / DEFAULT_SPHERE_RADIUS;
-    celestialScale += (target - celestialScale) * 0.08;
-    if (ghostGroup) {
-        ghostGroup.scale.setScalar(celestialScale);
-    }
-    if (compassGroup) {
-        compassGroup.scale.setScalar(celestialScale);
-    }
+    return maxFieldStrength > 0 ? DEFAULT_SPHERE_RADIUS / maxFieldStrength : 1;
 }
 
 // Voxel heatmap — geodesic sphere with per-face coloring
@@ -247,9 +234,8 @@ function initScene() {
     // Lighting
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
 
-    // Axis lines — sized to frame typical mag readings (200-500 range)
-    // Positive halves are bold (full opacity), negative halves are faded
-    const axisLength = 700;
+    // Axis lines — extend to celestial sphere edge, positive bold / negative faded
+    const axisLength = DEFAULT_SPHERE_RADIUS;
     addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 1);
     addAxisLine(scene, new THREE.Vector3(-axisLength, 0, 0), new THREE.Vector3(0, 0, 0), 0xff4444, 0.15);
     addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 1);
@@ -993,7 +979,6 @@ function animate() {
         controls.update();
     }
 
-    updateCelestialSize();
     updateGhostSphere();
     updateQuadAttitude();
     updateLiveMagOverlay();
@@ -1382,7 +1367,6 @@ watch(
     (len) => {
         if (len === 0) {
             maxFieldStrength = 0;
-            celestialScale = 1;
         }
         updatePoints(props.samples);
         updateActiveViz(props.samples);
