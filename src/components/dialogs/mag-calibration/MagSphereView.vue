@@ -228,7 +228,7 @@ function initScene() {
     // Camera — Z-up convention, pulled back for isometric overview
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
     camera.up.set(0, 0, 1);
-    camera.position.set(500, 400, 300);
+    camera.position.set(350, 280, 210);
     camera.lookAt(0, 0, 0);
 
     // Lighting
