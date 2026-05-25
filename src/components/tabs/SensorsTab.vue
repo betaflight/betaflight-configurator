@@ -449,6 +449,12 @@
                                     {{ $t(CAL_ORIENTATION_STEPS[calCurrentStep].i18n) }}
                                 </div>
                             </template>
+                            <template v-else-if="cal.mode === 'check'">
+                                <div class="mag-cal-step-counter">{{ $t("magCalibrationCheckTitle") }}</div>
+                                <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                    {{ $t("magCalibrationCheckInstruction") }}
+                                </p>
+                            </template>
                             <template v-else-if="cal.mode === 'guided'">
                                 <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
                                 <p class="text-sm text-[var(--surface-600)] text-center my-2">
@@ -1380,6 +1386,12 @@ const calModeItems = computed(() => {
             onSelect: () => startMagCal(false, true),
         },
     ];
+    items.push({
+        label: i18n.getMessage("magCalibrationCheck"),
+        description: i18n.getMessage("magCalibrationCheckDesc"),
+        icon: "i-lucide-eye",
+        onSelect: () => startCheckMode(),
+    });
     if (calGuidedAvailable.value) {
         items.push({
             label: i18n.getMessage("magCalibrationGuided"),
@@ -1390,6 +1402,14 @@ const calModeItems = computed(() => {
     }
     return [items];
 });
+
+async function startCheckMode() {
+    calUnguidedMode.value = true;
+    calAutoStep.value = false;
+    calCurrentStep.value = 0;
+    calGeoRef.value = getGeoReference();
+    await cal.startCalibration("check");
+}
 
 async function startGuidedMagCal() {
     calUnguidedMode.value = true;
@@ -1800,7 +1820,7 @@ function setupMagSection() {
         }
     }
 
-    cal.readFirmwareOffsets()
+    cal.refreshFirmwareOffsets()
         .then((offsets) => {
             if (offsets && offsets.x === 0 && offsets.y === 0 && offsets.z === 0) {
                 magNeedsCalibration.value = true;

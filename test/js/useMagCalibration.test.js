@@ -111,6 +111,41 @@ describe("useMagCalibration", () => {
             expect(send).toHaveBeenCalledWith("get mag_calibration");
             expect(cal.firmwareOffsets.value).toEqual({ x: 10, y: 20, z: 30 });
         });
+
+        it("starts check mode without triggering MSP_MAG_CALIBRATION", async () => {
+            await cal.startCalibration("check");
+
+            expect(cal.mode.value).toBe("check");
+            expect(cal.phase.value).toBe("collecting");
+            const magCalCalls = MSP.send_message.mock.calls.filter((c) => c[0] === MSPCodes.MSP_MAG_CALIBRATION);
+            expect(magCalCalls).toHaveLength(0);
+        });
+
+        it("check mode does not add offsets to samples", async () => {
+            send.mockResolvedValueOnce(["mag_calibration = 50,60,70"]);
+            await cal.startCalibration("check");
+
+            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            await vi.advanceTimersByTimeAsync(100);
+
+            expect(cal.samples.value.length).toBeGreaterThanOrEqual(1);
+            const sample = cal.samples.value[0];
+            expect(sample.x).toBe(100);
+            expect(sample.y).toBe(200);
+            expect(sample.z).toBe(300);
+        });
+
+        it("check mode does not run sphere fit analysis", async () => {
+            await cal.startCalibration("check");
+
+            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            // Advance enough to trigger sphere fit (SPHERE_FIT_EVERY_N = 10 samples)
+            for (let i = 0; i < 15; i++) {
+                await vi.advanceTimersByTimeAsync(100);
+            }
+
+            expect(fitSphere).not.toHaveBeenCalled();
+        });
     });
 
     describe("onImuData (guided mode offset reconstruction)", () => {
@@ -287,6 +322,59 @@ describe("useMagCalibration", () => {
             expect(cal.sphereFitResult.value).toBeNull();
             expect(cal.progress.value).toBe(0);
             expect(cal.firmwareDone.value).toBe(false);
+        });
+    });
+
+    describe("refreshFirmwareOffsets", () => {
+        it("reads and stores firmware offsets", async () => {
+            send.mockResolvedValueOnce(["mag_calibration = 10,20,30"]);
+
+            const result = await cal.refreshFirmwareOffsets();
+
+            expect(result).toEqual({ x: 10, y: 20, z: 30 });
+            expect(cal.firmwareOffsets.value).toEqual({ x: 10, y: 20, z: 30 });
+        });
+
+        it("sets firmwareOffsets to null when CLI returns no data", async () => {
+            send.mockResolvedValueOnce([]);
+
+            const result = await cal.refreshFirmwareOffsets();
+
+            expect(result).toBeNull();
+            expect(cal.firmwareOffsets.value).toBeNull();
+        });
+    });
+
+    describe("writeCalValues", () => {
+        it("rejects non-finite values", async () => {
+            const result = await cal.writeCalValues(Number.NaN, 10, 20);
+            expect(result.ok).toBe(false);
+            expect(result.error).toMatch(/Invalid/);
+        });
+
+        it("rejects out-of-range values", async () => {
+            const result = await cal.writeCalValues(40000, 10, 20);
+            expect(result.ok).toBe(false);
+            expect(result.error).toMatch(/out of range/);
+        });
+
+        it("sends CLI command and saves on valid values", async () => {
+            saveAndReconnect.mockResolvedValueOnce({ ok: true });
+
+            const result = await cal.writeCalValues(100, -200, 300);
+
+            expect(result.ok).toBe(true);
+            expect(send).toHaveBeenCalledWith("set mag_calibration = 100,-200,300");
+            expect(saveAndReconnect).toHaveBeenCalled();
+            expect(cal.firmwareOffsets.value).toEqual({ x: 100, y: -200, z: 300 });
+        });
+
+        it("rounds decimal values to integers", async () => {
+            saveAndReconnect.mockResolvedValueOnce({ ok: true });
+
+            await cal.writeCalValues(10.7, -20.3, 30.5);
+
+            expect(send).toHaveBeenCalledWith("set mag_calibration = 11,-20,31");
         });
     });
 

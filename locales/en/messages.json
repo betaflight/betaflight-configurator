@@ -7781,6 +7781,18 @@
     "magCalibrationGuidedInstruction": {
         "message": "Rotate your vehicle slowly in all directions. When coverage is sufficient, accept the calibration to save offsets."
     },
+    "magCalibrationCheck": {
+        "message": "Check"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "View live mag data with current calibration"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Checking Calibration"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Rotate the quad to fill the sphere. A centered sphere confirms good calibration."
+    },
     "magCalibrationAccept": {
         "message": "Accept Calibration"
     },

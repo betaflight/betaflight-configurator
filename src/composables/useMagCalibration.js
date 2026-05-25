@@ -13,6 +13,8 @@ const ARMING_DISABLE_BIT_CALIBRATING = 12;
 const NO_MOVEMENT_TIMEOUT_MS = 30000;
 const MOVEMENT_THRESHOLD = 5;
 const PROGRESS_TARGET_SAMPLES = 300;
+const MAG_CAL_MIN = -32768;
+const MAG_CAL_MAX = 32767;
 
 function centroid(pts) {
     let sx = 0,
@@ -124,7 +126,12 @@ export function useMagCalibration() {
         // Read current firmware offsets before calibration starts
         firmwareOffsets.value = await readFirmwareOffsets();
 
-        if (calMode === "guided") {
+        if (calMode === "check") {
+            // Check mode: display calibrated data as-is, no firmware trigger, no sphere fit
+            phase.value = "collecting";
+            statusMessage.value = "magCalibrationCheckTitle";
+            startDataPolling();
+        } else if (calMode === "guided") {
             // Guided mode: store offsets for raw reconstruction, skip firmware trigger
             guidedOffsets = firmwareOffsets.value ?? { x: 0, y: 0, z: 0 };
             phase.value = "collecting";
@@ -239,7 +246,7 @@ export function useMagCalibration() {
         triggerRef(samples);
 
         samplesSinceLastFit++;
-        if (samplesSinceLastFit >= SPHERE_FIT_EVERY_N) {
+        if (mode.value !== "check" && samplesSinceLastFit >= SPHERE_FIT_EVERY_N) {
             updateAnalysis();
             samplesSinceLastFit = 0;
         }
@@ -324,6 +331,39 @@ export function useMagCalibration() {
         }
     }
 
+    async function refreshFirmwareOffsets() {
+        const offsets = await readFirmwareOffsets();
+        firmwareOffsets.value = offsets;
+        return offsets;
+    }
+
+    async function writeCalValues(x, y, z) {
+        const rx = Math.round(x);
+        const ry = Math.round(y);
+        const rz = Math.round(z);
+        if (!Number.isFinite(rx) || !Number.isFinite(ry) || !Number.isFinite(rz)) {
+            return { ok: false, error: "Invalid calibration values" };
+        }
+        if (
+            rx < MAG_CAL_MIN ||
+            rx > MAG_CAL_MAX ||
+            ry < MAG_CAL_MIN ||
+            ry > MAG_CAL_MAX ||
+            rz < MAG_CAL_MIN ||
+            rz > MAG_CAL_MAX
+        ) {
+            return { ok: false, error: "Calibration values out of range (-32768 to 32767)" };
+        }
+        try {
+            await cliSend(`set mag_calibration = ${rx},${ry},${rz}`);
+            firmwareOffsets.value = { x: rx, y: ry, z: rz };
+            const result = await saveAndReconnect();
+            return result ?? { ok: false, error: "Save failed" };
+        } catch (error) {
+            return { ok: false, error };
+        }
+    }
+
     function discardCalibration() {
         cleanup();
         samples.value = [];
@@ -360,7 +400,8 @@ export function useMagCalibration() {
         discardCalibration,
         cleanup,
         retry,
-        readFirmwareOffsets,
+        refreshFirmwareOffsets,
+        writeCalValues,
     };
 }
 
