@@ -136,6 +136,18 @@ function magScale() {
     return maxFieldStrength > 0 ? DEFAULT_SPHERE_RADIUS / maxFieldStrength : 1;
 }
 
+function repositionCalOffsetMarker() {
+    if (!calOffsetMarker || maxFieldStrength <= 0) {
+        return;
+    }
+    const offsets = props.calOffsets;
+    if (offsets && (offsets.x !== 0 || offsets.y !== 0 || offsets.z !== 0)) {
+        const s = magScale();
+        calOffsetMarker.position.set(offsets.x * s, -offsets.y * s, offsets.z * s);
+        calOffsetMarker.visible = true;
+    }
+}
+
 // Voxel heatmap — geodesic sphere with per-face coloring
 let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
@@ -471,6 +483,7 @@ function updateLiveMagOverlay() {
             const totalField = Math.hypot(mag.x, mag.y, mag.z);
             if (totalField > maxFieldStrength) {
                 maxFieldStrength = totalField;
+                repositionCalOffsetMarker();
             }
             liveMarker.position.set(totalField * magScale(), 0, 0);
         }
@@ -1180,12 +1193,16 @@ function updatePoints(sampleList) {
     const colors = colorAttr.array;
 
     // Update max field strength from all samples so scale is consistent
+    const prevMax = maxFieldStrength;
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
         const f = Math.hypot(s.x, s.y, s.z);
         if (f > maxFieldStrength) {
             maxFieldStrength = f;
         }
+    }
+    if (maxFieldStrength > prevMax) {
+        repositionCalOffsetMarker();
     }
 
     for (let i = 0; i < count; i++) {
@@ -1402,10 +1419,8 @@ watch(
         if (!calOffsetMarker) {
             return;
         }
-        if (offsets && (offsets.x !== 0 || offsets.y !== 0 || offsets.z !== 0)) {
-            const s = magScale();
-            calOffsetMarker.position.set(offsets.x * s, -offsets.y * s, offsets.z * s);
-            calOffsetMarker.visible = true;
+        if (offsets && (offsets.x !== 0 || offsets.y !== 0 || offsets.z !== 0) && maxFieldStrength > 0) {
+            repositionCalOffsetMarker();
         } else {
             calOffsetMarker.visible = false;
         }
