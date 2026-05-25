@@ -106,6 +106,10 @@ let wireframeMesh = null;
 
 // Quad icon at origin reflecting real-time attitude
 let quadIcon = null;
+const ATTITUDE_SMOOTH = 0.12;
+const _smoothQuat = new THREE.Quaternion();
+const _targetQuat = new THREE.Quaternion();
+let smoothQuatInitialized = false;
 
 // Reference ghost sphere (shown before calibration data arrives)
 let ghostGroup = null;
@@ -413,18 +417,25 @@ function updateQuadAttitude() {
         // BF quaternion is body-to-earth; Three.js needs earth-to-body (conjugate).
         // Conjugate: (w, -x, -y, -z), then BF→Display frame (negate Y and Z):
         // Result: (w, -x, y, z) → Three.js Quaternion.set(x, y, z, w)
-        quadIcon.quaternion.set(-x, y, z, w);
+        _targetQuat.set(-x, y, z, w);
+    } else if (props.attitude) {
+        // Fallback to Euler angles (has gimbal lock at +/-90 pitch)
+        const { roll, pitch, heading } = props.attitude;
+        // BF body-to-earth Euler (ZYX): invert to earth-to-body, then convert to display frame.
+        // Display axes: X=BF_X, Y=-BF_Y, Z=-BF_Z → pitch & heading signs cancel with inversion.
+        const euler = new THREE.Euler(-roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
+        _targetQuat.setFromEuler(euler);
+    } else {
         return;
     }
 
-    // Fallback to Euler angles (has gimbal lock at +/-90 pitch)
-    if (!props.attitude) {
-        return;
+    if (!smoothQuatInitialized) {
+        _smoothQuat.copy(_targetQuat);
+        smoothQuatInitialized = true;
+    } else {
+        _smoothQuat.slerp(_targetQuat, ATTITUDE_SMOOTH);
     }
-    const { roll, pitch, heading } = props.attitude;
-    // BF body-to-earth Euler (ZYX): invert to earth-to-body, then convert to display frame.
-    // Display axes: X=BF_X, Y=-BF_Y, Z=-BF_Z → pitch & heading signs cancel with inversion.
-    quadIcon.rotation.set(-roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
+    quadIcon.quaternion.copy(_smoothQuat);
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
@@ -1295,6 +1306,7 @@ function disposeScene() {
     quadIcon = null;
     liveMarker = null;
     vectorLines = null;
+    smoothQuatInitialized = false;
 
     disposeGroup(ghostGroup);
     ghostGroup = null;
