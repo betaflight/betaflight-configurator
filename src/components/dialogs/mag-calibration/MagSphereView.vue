@@ -244,11 +244,6 @@ function initScene() {
     addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), 0x4444ff, 1);
     addAxisLine(scene, new THREE.Vector3(0, 0, -axisLength), new THREE.Vector3(0, 0, 0), 0x4444ff, 0.15);
 
-    // Axis labels
-    addAxisLabel(scene, "X", new THREE.Vector3(axisLength + 40, 0, 0), 0xff4444);
-    addAxisLabel(scene, "Y", new THREE.Vector3(0, axisLength + 40, 0), 0x44ff44);
-    addAxisLabel(scene, "Z", new THREE.Vector3(0, 0, axisLength + 40), 0x4444ff);
-
     // Ghost reference sphere — gives visual context before data arrives
     ghostGroup = createGhostSphere(DEFAULT_SPHERE_RADIUS);
     scene.add(ghostGroup);
@@ -985,25 +980,6 @@ function addAxisLine(targetScene, from, to, color, opacity = 0.5) {
     const geometry = new THREE.BufferGeometry().setFromPoints([from, to]);
     const material = new THREE.LineBasicMaterial({ color, opacity, transparent: opacity < 1 });
     targetScene.add(new THREE.Line(geometry, material));
-}
-
-function addAxisLabel(targetScene, text, position, color) {
-    const canvas = document.createElement("canvas");
-    canvas.width = 64;
-    canvas.height = 64;
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
-    ctx.font = "bold 48px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, 32, 32);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
-    const sprite = new THREE.Sprite(spriteMaterial);
-    sprite.position.copy(position);
-    sprite.scale.set(80, 80, 1);
-    targetScene.add(sprite);
 }
 
 function createQuadIcon(size) {
