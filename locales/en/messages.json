@@ -576,7 +576,7 @@
         "message": "Yaw Type"
     },
     "wingYawTypeDesc": {
-        "message": "Select how the aircraft yaws. RUDDER uses a rudder servo. DIFF_THRUST uses differential motor thrust; s_yaw is forced to 0 in this mode."
+        "message": "Select how the aircraft yaws. RUDDER uses a rudder servo. DIFF_THRUST uses differential motor thrust; the firmware ignores s_yaw in this mode (your stored value is preserved)."
     },
     "wingAxis": {
         "message": "Axis"
@@ -591,7 +591,7 @@
         "message": "Slider"
     },
     "wingSYawForcedZero": {
-        "message": "Yaw type is DIFF_THRUST, so s_yaw is forced to 0."
+        "message": "Yaw type is DIFF_THRUST — the firmware ignores s_yaw in this mode. Your stored value is preserved for when you switch back to RUDDER."
     },
     "wingAngleModeTitle": {
         "message": "Angle Mode"
