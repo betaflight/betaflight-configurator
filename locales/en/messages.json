@@ -3226,6 +3226,12 @@
     "servosMixerSaveFailed": {
         "message": "Servo mixer save failed"
     },
+    "servosMixerLoadFailed": {
+        "message": "Couldn't read the FC's servo mixer rules (malformed MSP response). Save is disabled to avoid overwriting your mix. Reconnect to retry."
+    },
+    "servosMixerTemplateUnknown": {
+        "message": "Servo mix template \"{{id}}\" not found."
+    },
     "servosMixerTemplateExceedsLimit": {
         "message": "Servo mix template \"{{id}}\" not applied: would exceed {{max}} total rules."
     },

@@ -25,12 +25,66 @@ export const MIXER_IDS = {
     FLYING_WING: 8,
     AIRPLANE: 14,
     HELI_120_CCPM: 15,
+    HELI_90_DEG: 16,
     PPM_TO_SERVO: 19,
     DUALCOPTER: 20,
     SINGLECOPTER: 21,
     CUSTOM_AIRPLANE: 24,
     CUSTOM_TRI: 25,
 };
+
+// Firmware servoIndex_e names per mixer family (mirrors enum in
+// src/main/flight/servos.h). Indices 0..7 reuse the same numeric ID
+// across mixer families for different roles (e.g. 4 = FLAPPERON_2 on
+// airplane, BICOPTER_LEFT on bicopter), so the mapping is mixer-aware.
+// The plane family map (used by AIRPLANE / CUSTOM_AIRPLANE / FLYING_WING)
+// is the default; other mixers override only the entries that differ.
+const SERVO_ENUM_NAMES_PLANE = {
+    0: "GIMBAL_PITCH",
+    1: "GIMBAL_ROLL",
+    2: "FLAPS",
+    3: "FLAPPERON_1",
+    4: "FLAPPERON_2",
+    5: "RUDDER",
+    6: "ELEVATOR",
+    7: "THROTTLE",
+};
+
+const SERVO_ENUM_NAMES_BY_MIXER = {
+    [MIXER_IDS.TRI]: { 5: "RUDDER" },
+    [MIXER_IDS.CUSTOM_TRI]: { 5: "RUDDER" },
+    [MIXER_IDS.BICOPTER]: { 4: "BICOPTER_LEFT", 5: "BICOPTER_RIGHT" },
+    [MIXER_IDS.DUALCOPTER]: { 4: "DUALCOPTER_LEFT", 5: "DUALCOPTER_RIGHT" },
+    [MIXER_IDS.SINGLECOPTER]: {
+        3: "SINGLECOPTER_1",
+        4: "SINGLECOPTER_2",
+        5: "SINGLECOPTER_3",
+        6: "SINGLECOPTER_4",
+    },
+    [MIXER_IDS.GIMBAL]: { 0: "GIMBAL_PITCH", 1: "GIMBAL_ROLL" },
+    [MIXER_IDS.HELI_120_CCPM]: { 0: "HELI_LEFT", 1: "HELI_RIGHT", 2: "HELI_TOP", 3: "HELI_RUD" },
+    [MIXER_IDS.HELI_90_DEG]: { 0: "HELI_LEFT", 1: "HELI_RIGHT", 2: "HELI_TOP", 3: "HELI_RUD" },
+};
+
+// Returns the firmware servoIndex_e name (e.g. "FLAPPERON_1", "ELEVATOR")
+// for a given target ID under the active mixer, or null when the target
+// has no named role under that mixer. Surfaced in the Output dropdown
+// labels so the bare S{n+1} stays the primary identifier (pilot wires
+// their plane, picks the output whose bar physically moves) while the
+// firmware enum name is still discoverable for users coming from CLI.
+export function servoMixOutputEnumName(target, mixerMode) {
+    const targetId = Number(target);
+    if (!Number.isInteger(targetId) || targetId < 0 || targetId > 7) {
+        return null;
+    }
+    const overrides = SERVO_ENUM_NAMES_BY_MIXER[mixerMode];
+    if (overrides && overrides[targetId] != null) {
+        return overrides[targetId];
+    }
+    // Plane-family default — applies to AIRPLANE/CUSTOM_AIRPLANE/FLYING_WING
+    // and any unknown mixer (best-effort fallback rather than hiding the hint).
+    return SERVO_ENUM_NAMES_PLANE[targetId] ?? null;
+}
 
 export const SERVO_OUTPUT_COLORS = [
     "#f5b700",
@@ -114,7 +168,7 @@ export function servoMixOutputLabel(target /* mixerMode kept for caller compat *
     return Number.isInteger(outputIndex) ? `S${outputIndex + 1}` : `Target ${targetId}`;
 }
 
-export function servoMixTargetOptions(_mixerMode, { planeOnly = false } = {}) {
+export function servoMixTargetOptions(mixerMode, { planeOnly = false } = {}) {
     const start = planeOnly ? 2 : 0;
     const end = 7;
     const options = [];
@@ -124,6 +178,7 @@ export function servoMixTargetOptions(_mixerMode, { planeOnly = false } = {}) {
             value: target,
             label: servoMixOutputLabel(target),
             outputIndex: servoMixOutputIndexForTarget(target),
+            enumName: servoMixOutputEnumName(target, mixerMode),
         });
     }
 
@@ -204,11 +259,24 @@ export const AIRCRAFT_SERVO_MIX_TEMPLATES = [
     },
 ];
 
+// A rule is "active" unless every byte matches the all-zero default-shape
+// row sendServoMixRules emits for empty slots. Only filtering on
+// rate/min/max would drop a user-authored rule with rate=0 but non-zero
+// speed or box (e.g. "disabled-but-state-preserved" rows), so the check
+// covers all seven fields — anything non-zero anywhere keeps the rule.
 export function isActiveServoMixRule(rule) {
     if (!rule) {
         return false;
     }
-    return rule.rate !== 0 || rule.min !== 0 || rule.max !== 0;
+    return (
+        rule.target !== 0 ||
+        rule.input !== 0 ||
+        rule.rate !== 0 ||
+        rule.speed !== 0 ||
+        rule.min !== 0 ||
+        rule.max !== 0 ||
+        rule.box !== 0
+    );
 }
 
 export function cloneServoMixRules(rules) {
@@ -221,4 +289,102 @@ export function padServoMixRulesToMax(rules, maxRules = MAX_SERVO_RULES) {
         padded.push({ target: 0, input: 0, rate: 0, speed: 0, min: 0, max: 0, box: 0 });
     }
     return padded;
+}
+
+// Returns the set of PWM slots already driven by `currentRules` under
+// `targetMixer`. Pure helper — caller threads the template's own mixer
+// (not the FC's current one) when staging a template, so the slot→servo
+// resolver maps against the mixer the rule targets will encode under.
+function findUsedPwmSlotsForRules(currentRules, targetMixer) {
+    const used = new Set();
+    for (const rule of currentRules || []) {
+        for (let slot = 0; slot < 8; slot += 1) {
+            if (pwmSlotToServoIndex(slot, targetMixer) === rule.target) {
+                used.add(slot);
+                break;
+            }
+        }
+    }
+    return used;
+}
+
+// Pure planner for the quick-add aircraft templates. Returns either
+//   { ok: true, rules: [...] }                      — rules to append
+//   { ok: false, errorKey: "...", errorParams: {} } — caller surfaces via gui_log
+// Splitting this out of ServosTab.vue keeps the four abort conditions
+// (unknown template, exceeds-limit, mixer mismatch, slot exhausted)
+// testable without spinning up the full Vue component, and matches the
+// "split helpers early" workspace rule for Cog growth.
+//
+// Templates are defined against firmware servoIndex_e values (e.g.
+// FLAPPERON_1=3, ELEVATOR=6) which don't correspond 1:1 to the physical
+// servos a pilot has plugged in. Each unique template target is remapped
+// to the first unused PWM slot, then converted to the matching
+// servoIndex_e under the TEMPLATE's mixer (not the FC's current one) —
+// otherwise an elevon rule staged before the user switches mixers would
+// land on the wrong servo enum. When the template names a different
+// mixer than the FC currently runs, we hard-abort (option B from the
+// CodeRabbit ask) rather than silently flipping the FC's mixer.
+export function applyServoMixTemplate(currentRules, templateId, activeMixer, options = {}) {
+    const templates = options.templates ?? AIRCRAFT_SERVO_MIX_TEMPLATES;
+    const maxRules = options.maxRules ?? MAX_SERVO_RULES;
+    const template = templates.find((tpl) => tpl.id === templateId);
+    if (!template) {
+        return { ok: false, errorKey: "servosMixerTemplateUnknown", errorParams: { id: templateId } };
+    }
+    const rules = currentRules || [];
+    if (rules.length + template.rules.length > maxRules) {
+        return {
+            ok: false,
+            errorKey: "servosMixerTemplateExceedsLimit",
+            errorParams: { id: templateId, max: maxRules },
+        };
+    }
+    if (template.mixerMode != null && template.mixerMode !== activeMixer) {
+        return {
+            ok: false,
+            errorKey: "servosMixerTemplateMixerMismatch",
+            errorParams: { id: templateId, templateMixer: template.mixerMode, activeMixer },
+        };
+    }
+    const targetMixer = template.mixerMode ?? activeMixer;
+    const usedSlots = findUsedPwmSlotsForRules(rules, targetMixer);
+    const uniqueTargets = [...new Set(template.rules.map((r) => r.target))];
+    const remap = new Map();
+    let nextSlot = 0;
+    for (const target of uniqueTargets) {
+        while (nextSlot < 8 && usedSlots.has(nextSlot)) {
+            nextSlot += 1;
+        }
+        if (nextSlot >= 8) {
+            return {
+                ok: false,
+                errorKey: "servosMixerTemplateNoFreeSlots",
+                errorParams: {
+                    id: templateId,
+                    needed: uniqueTargets.length,
+                    mappable: uniqueTargets.length - remap.size,
+                },
+            };
+        }
+        const enumIdx = pwmSlotToServoIndex(nextSlot, targetMixer);
+        if (enumIdx == null) {
+            return {
+                ok: false,
+                errorKey: "servosMixerTemplateSlotNotDriven",
+                errorParams: {
+                    id: templateId,
+                    slot: nextSlot,
+                    targetMixer,
+                    intendedMixer: template.mixerMode ?? "the template's intended mixer",
+                },
+            };
+        }
+        remap.set(target, enumIdx);
+        usedSlots.add(nextSlot);
+        nextSlot += 1;
+    }
+
+    const newRules = template.rules.map((rule) => ({ ...rule, target: remap.get(rule.target) }));
+    return { ok: true, rules: newRules };
 }

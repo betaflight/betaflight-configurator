@@ -16,6 +16,7 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../../components/tabs/osd/osd";
 import { reinitializeConnection } from "../serial_backend";
+import { MAX_SERVO_RULES } from "../utils/servoMixerModel";
 
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
@@ -688,7 +689,15 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     // Reset up front so an empty payload (FC has no rules) or a
                     // malformed payload doesn't leave a stale set in memory that
                     // would re-render and get written back on the next save.
+                    //
+                    // SERVO_RULES_PARSE_OK flips to false on a malformed payload
+                    // so the Servos tab can refuse to overwrite the FC's mix on
+                    // the next Save — without this gate an empty FC.SERVO_RULES
+                    // (the reset value) is indistinguishable from "FC has 0
+                    // rules" and the chained sendServoMixRules would write 16
+                    // zero rules to EEPROM, silently destroying the pilot's mix.
                     FC.SERVO_RULES = [];
+                    FC.SERVO_RULES_PARSE_OK = true;
                     if (data.byteLength % 7 === 0) {
                         for (let i = 0; i < data.byteLength; i += 7) {
                             FC.SERVO_RULES.push({
@@ -702,6 +711,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             });
                         }
                     } else if (data.byteLength > 0) {
+                        FC.SERVO_RULES_PARSE_OK = false;
                         console.warn(
                             `MSP_SERVO_MIX_RULES: unexpected data length ${data.byteLength} (not a multiple of 7)`,
                         );
@@ -2654,7 +2664,6 @@ MspHelper.prototype.sendServoConfigurations = function (onCompleteCallback) {
 // previous larger ruleset get explicitly wiped on commit. Callers no longer
 // need to pre-pad FC.SERVO_RULES — the helper guarantees a full sweep.
 MspHelper.prototype.sendServoMixRules = function (onCompleteCallback) {
-    const MAX_SERVO_RULES = 16;
     const rules = Array.isArray(FC.SERVO_RULES) ? FC.SERVO_RULES : [];
     let ruleIndex = 0;
 

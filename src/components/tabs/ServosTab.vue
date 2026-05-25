@@ -259,6 +259,17 @@
                 <UiBox :title="$t('servosMixerRulesTitle')" class="mt-4">
                     <p class="text-sm text-muted mb-2">{{ $t("servosMixerRulesDesc") }}</p>
 
+                    <!-- Surfaced when MSP_SERVO_MIX_RULES returned a payload
+                         the parser couldn't interpret. Save is disabled in
+                         this state so a Save click can't overwrite the FC's
+                         actual rules with 16 zero rows. -->
+                    <div
+                        v-if="mixerLoadFailed"
+                        class="text-xs rounded p-2 mb-2 bg-red-500/10 text-red-400 border border-red-500/30"
+                    >
+                        {{ $t("servosMixerLoadFailed") }}
+                    </div>
+
                     <div class="overflow-x-auto">
                         <div
                             v-if="servoMixRules.length > 0"
@@ -390,7 +401,11 @@
             <div class="flex gap-2">
                 <UButton
                     :label="$t('servosButtonSave')"
-                    :disabled="(!configHasChanged && !resourcesModified && !mixerDirty) || resourcesWriteInFlight"
+                    :disabled="
+                        (!configHasChanged && !resourcesModified && !mixerDirty) ||
+                        resourcesWriteInFlight ||
+                        mixerLoadFailed
+                    "
                     color="warning"
                     variant="solid"
                     class="bg-[#ffbb00]! text-zinc-900! hover:bg-[#e6a800]! disabled:bg-zinc-600! disabled:text-zinc-400!"
@@ -424,6 +439,7 @@ import {
     SERVO_MIX_BOX_LABELS,
     MAX_SERVO_RULES,
     AIRCRAFT_SERVO_MIX_TEMPLATES,
+    applyServoMixTemplate,
     servoMixTargetOptions,
     servoMixOutputIndexForTarget,
     padServoMixRulesToMax,
@@ -480,11 +496,25 @@ const padDefaultsSource = ref(null);
 // mspHelper.sendServoMixRules followed by writeConfiguration to EEPROM.
 const servoMixRules = reactive([]);
 const mixerDirty = ref(false);
+// True when MSP_SERVO_MIX_RULES returned a malformed payload (length not
+// a multiple of 7 bytes) — surfaced by MSPHelper via FC.SERVO_RULES_PARSE_OK.
+// In that case the FC's actual rules are unknown to us, so a Save would
+// blow them away with 16 zero rules. We disable the Save button and show
+// an error banner until the user reconnects and the next fetch succeeds.
+const mixerLoadFailed = ref(false);
 const servoMixTemplates = AIRCRAFT_SERVO_MIX_TEMPLATES;
 const mixerMode = computed(() => FC.MIXER_CONFIG?.mixer ?? 0);
 
+// Dropdown label = "S{n+1} — ENUM_NAME" when the active mixer has a
+// firmware role for that target (e.g. "S4 — FLAPPERON_2"), bare "S{n+1}"
+// otherwise. The role name is documentation, not the primary identifier:
+// pilots still pick the output whose bar physically moves their servo
+// (see comment on servoMixOutputLabel in servoMixerModel.js).
 const servoMixOutputItems = computed(() =>
-    servoMixTargetOptions(mixerMode.value).map((opt) => ({ value: opt.value, label: opt.label })),
+    servoMixTargetOptions(mixerMode.value).map((opt) => ({
+        value: opt.value,
+        label: opt.enumName ? `${opt.label} — ${opt.enumName}` : opt.label,
+    })),
 );
 const servoMixInputItems = computed(() => SERVO_MIX_INPUT_LABELS.map((label, i) => ({ value: i, label })));
 const servoMixBoxItems = computed(() => SERVO_MIX_BOX_LABELS.map((label, i) => ({ value: i, label })));
@@ -493,99 +523,17 @@ function canAddTemplate(template) {
     return servoMixRules.length + template.rules.length <= MAX_SERVO_RULES;
 }
 
-// Templates are defined against firmware servoIndex_e values (e.g.
-// FLAPPERON_1=3, ELEVATOR=6) — these don't correspond 1:1 to the physical
-// servos a pilot has plugged in. Remap each template's unique targets to
-// the user's first N unused PWM slots (Servo 1, 2, 3, ... in the resource
-// panel) and convert to the matching servoIndex_e for the active mixer.
-// Subsequent template adds skip slots that earlier rules already occupy.
-// Returns the set of PWM slots already driven by existing rules under the
-// given mixer mode. Caller threads the TEMPLATE's mixer (not the FC's
-// current one) when staging a template — see addServoMixTemplate. Without
-// the parameter the resolver maps slot→servoIndex_e against the wrong
-// mixer when the FC isn't yet on CUSTOM_AIRPLANE, and the new rules collide
-// with existing ones on slots the user already used.
-function findUsedPwmSlots(targetMixer = mixerMode.value) {
-    const used = new Set();
-    for (const rule of servoMixRules) {
-        for (let slot = 0; slot < 8; slot++) {
-            if (pwmSlotToServoIndex(slot, targetMixer) === rule.target) {
-                used.add(slot);
-                break;
-            }
-        }
-    }
-    return used;
-}
 function addServoMixTemplate(id) {
-    const template = servoMixTemplates.find((tpl) => tpl.id === id);
-    if (!template) {
+    // Pure planner — see applyServoMixTemplate in servoMixerModel.js for
+    // the remap / mixer-mismatch / slot-exhaustion logic and the rationale
+    // for hard-aborting on mixer mismatch instead of auto-flipping the FC.
+    const result = applyServoMixTemplate(servoMixRules, id, mixerMode.value);
+    if (!result.ok) {
+        gui_log(i18n.getMessage(result.errorKey, result.errorParams));
         return;
     }
-    if (servoMixRules.length + template.rules.length > MAX_SERVO_RULES) {
-        gui_log(i18n.getMessage("servosMixerTemplateExceedsLimit", { id, max: MAX_SERVO_RULES }));
-        return;
-    }
-
-    // Remap uses the TEMPLATE's mixer mode (most are CUSTOM_AIRPLANE) — not
-    // the FC's current mixer — because each template's target IDs are picked
-    // for a specific mixer's slot→servoIndex_e mapping. Falling back to the
-    // current mixer here would silently land elevon/v-tail rules on the
-    // wrong servo enum on a board not yet switched to CUSTOM_AIRPLANE. The
-    // user is expected to set the mixer via the Mixer tab; we hard-abort
-    // with a gui_log when the template targets a different mixer than the
-    // FC currently runs (option B per the CodeRabbit ask: hard-block +
-    // surface error rather than auto-persist a mixer change behind the
-    // user's back, AND don't append rows whose `rule.target` would encode
-    // under the wrong enum if the user ignores the warning).
-    if (template.mixerMode != null && template.mixerMode !== mixerMode.value) {
-        gui_log(
-            i18n.getMessage("servosMixerTemplateMixerMismatch", {
-                id,
-                templateMixer: template.mixerMode,
-                activeMixer: mixerMode.value,
-            }),
-        );
-        return;
-    }
-    const targetMixer = template.mixerMode ?? mixerMode.value;
-    const usedSlots = findUsedPwmSlots(targetMixer);
-    const uniqueTargets = [...new Set(template.rules.map((r) => r.target))];
-    const remap = new Map();
-    let nextSlot = 0;
-    for (const target of uniqueTargets) {
-        while (nextSlot < 8 && usedSlots.has(nextSlot)) {
-            nextSlot++;
-        }
-        if (nextSlot >= 8) {
-            gui_log(
-                i18n.getMessage("servosMixerTemplateNoFreeSlots", {
-                    id,
-                    needed: uniqueTargets.length,
-                    mappable: uniqueTargets.length - remap.size,
-                }),
-            );
-            return;
-        }
-        const enumIdx = pwmSlotToServoIndex(nextSlot, targetMixer);
-        if (enumIdx == null) {
-            gui_log(
-                i18n.getMessage("servosMixerTemplateSlotNotDriven", {
-                    id,
-                    slot: nextSlot,
-                    targetMixer,
-                    intendedMixer: template.mixerMode ?? "the template's intended mixer",
-                }),
-            );
-            return;
-        }
-        remap.set(target, enumIdx);
-        usedSlots.add(nextSlot);
-        nextSlot++;
-    }
-
-    for (const rule of template.rules) {
-        servoMixRules.push({ ...rule, target: remap.get(rule.target) });
+    for (const rule of result.rules) {
+        servoMixRules.push(rule);
     }
     mixerDirty.value = true;
 }
@@ -602,6 +550,16 @@ function ruleAccentColor(rule) {
 }
 function loadServoMixRules() {
     servoMixRules.length = 0;
+    // FC.SERVO_RULES_PARSE_OK defaults to true; MSPHelper flips it false when
+    // MSP_SERVO_MIX_RULES returned a payload whose length isn't a multiple of
+    // 7. When that happens we can't trust FC.SERVO_RULES (which got reset to
+    // []), so we leave the panel empty and gate Save off until reconnect.
+    mixerLoadFailed.value = FC.SERVO_RULES_PARSE_OK === false;
+    if (mixerLoadFailed.value) {
+        gui_log(i18n.getMessage("servosMixerLoadFailed"));
+        mixerDirty.value = false;
+        return;
+    }
     const loaded = cloneServoMixRules(FC.SERVO_RULES);
     for (const rule of loaded) {
         servoMixRules.push(rule);
@@ -743,21 +701,33 @@ function updateServos(saveToEeprom) {
     // rules the user removed), then push positions → rules → EEPROM.
     // mixerDirty / resourcesModified clear only on writeConfiguration's
     // success callback so the dirty indicator survives a transport failure.
-    FC.SERVO_RULES = padServoMixRulesToMax(servoMixRules.map((r) => ({ ...r })));
+    //
+    // sendServoMixRules is only invoked when the user actually touched the
+    // mix table (mixerDirty). Skipping it on a clean mix avoids 16
+    // round-trip MSP_SET_SERVO_MIX_RULE writes that just re-state the
+    // existing rules — measurable latency on slow links — and, more
+    // importantly, keeps us from rewriting a stale FC.SERVO_RULES if the
+    // user lands here via a non-rule path (e.g. resource panel changes only).
+    const persistConfig = () => {
+        mspHelper.writeConfiguration(false, () => {
+            gui_log(i18n.getMessage("servosEepromSave"));
+            originalConfigs.value = JSON.stringify(servoConfigs);
+            mixerDirty.value = false;
+            // EEPROM persist is the commit point for the resource binds
+            // we wrote to firmware RAM during onResourcePinChange —
+            // clear the dirty flag so Save doesn't stay lit and
+            // re-clicking doesn't pointlessly rewrite the same set.
+            resourcesModified.value = false;
+        });
+    };
 
     mspHelper.sendServoConfigurations(() => {
-        mspHelper.sendServoMixRules(() => {
-            mspHelper.writeConfiguration(false, () => {
-                gui_log(i18n.getMessage("servosEepromSave"));
-                originalConfigs.value = JSON.stringify(servoConfigs);
-                mixerDirty.value = false;
-                // EEPROM persist is the commit point for the resource binds
-                // we wrote to firmware RAM during onResourcePinChange —
-                // clear the dirty flag so Save doesn't stay lit and
-                // re-clicking doesn't pointlessly rewrite the same set.
-                resourcesModified.value = false;
-            });
-        });
+        if (mixerDirty.value) {
+            FC.SERVO_RULES = padServoMixRulesToMax(servoMixRules.map((r) => ({ ...r })));
+            mspHelper.sendServoMixRules(persistConfig);
+        } else {
+            persistConfig();
+        }
     });
 }
 
@@ -767,6 +737,12 @@ function saveServoConfig() {
     // bind chain finishes. The Save button's disabled binding already gates
     // this, but cover the keyboard-shortcut / programmatic path too.
     if (resourcesWriteInFlight.value) {
+        return;
+    }
+    // Same defense-in-depth for the malformed-MSP_SERVO_MIX_RULES case:
+    // disabled button blocks the mouse path, this blocks programmatic /
+    // shortcut paths from wiping the FC's mix when we couldn't parse it.
+    if (mixerLoadFailed.value) {
         return;
     }
     updateServos(true);
