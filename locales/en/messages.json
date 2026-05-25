@@ -590,7 +590,7 @@
     "wingSlider": {
         "message": "Slider"
     },
-    "wingSYawForcedZero": {
+    "wingSYawIgnored": {
         "message": "Yaw type is DIFF_THRUST — the firmware ignores s_yaw in this mode. Your stored value is preserved for when you switch back to RUDDER."
     },
     "wingAngleModeTitle": {

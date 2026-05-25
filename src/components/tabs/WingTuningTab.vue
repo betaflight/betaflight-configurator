@@ -113,7 +113,7 @@
                             />
                         </div>
                     </div>
-                    <p v-if="diffThrustMode" class="mt-2 text-warning">{{ $t("wingSYawForcedZero") }}</p>
+                    <p v-if="diffThrustMode" class="mt-2 text-warning">{{ $t("wingSYawIgnored") }}</p>
                 </UiBox>
 
                 <!-- TPA Mode + Airspeed -->
