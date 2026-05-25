@@ -2333,13 +2333,13 @@ onMounted(() => {
     }
 
     .quality-good {
-        color: #22c55e;
+        color: var(--success-500);
     }
     .quality-fair {
-        color: #eab308;
+        color: var(--warning-500);
     }
     .quality-poor {
-        color: #ef4444;
+        color: var(--error-500);
     }
 
     @media only screen and (max-width: 900px) {
