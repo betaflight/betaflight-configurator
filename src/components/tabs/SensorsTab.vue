@@ -430,7 +430,7 @@
                             </UFieldGroup>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs text-[var(--surface-500)]">{{ $t("magCalibrationCalValues") }}</span>
+                            <span class="text-xs text-[var(--surface-700)]">{{ $t("magCalibrationCalValues") }}</span>
                             <UInputNumber
                                 v-model="editX"
                                 :step="1"
