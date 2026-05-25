@@ -354,12 +354,17 @@ export function useMagCalibration() {
         ) {
             return { ok: false, error: "Calibration values out of range (-32768 to 32767)" };
         }
+        const previous = firmwareOffsets.value;
         try {
             await cliSend(`set mag_calibration = ${rx},${ry},${rz}`);
             firmwareOffsets.value = { x: rx, y: ry, z: rz };
             const result = await saveAndReconnect();
+            if (!result?.ok) {
+                firmwareOffsets.value = previous;
+            }
             return result ?? { ok: false, error: "Save failed" };
         } catch (error) {
+            firmwareOffsets.value = previous;
             return { ok: false, error };
         }
     }

@@ -376,6 +376,26 @@ describe("useMagCalibration", () => {
 
             expect(send).toHaveBeenCalledWith("set mag_calibration = 11,-20,31");
         });
+
+        it("restores previous firmwareOffsets when saveAndReconnect fails", async () => {
+            cal.firmwareOffsets.value = { x: 1, y: 2, z: 3 };
+            saveAndReconnect.mockResolvedValueOnce({ ok: false, error: "EEPROM write failed" });
+
+            const result = await cal.writeCalValues(100, -200, 300);
+
+            expect(result.ok).toBe(false);
+            expect(cal.firmwareOffsets.value).toEqual({ x: 1, y: 2, z: 3 });
+        });
+
+        it("restores previous firmwareOffsets when CLI throws", async () => {
+            cal.firmwareOffsets.value = { x: 5, y: 6, z: 7 };
+            send.mockRejectedValueOnce(new Error("CLI timeout"));
+
+            const result = await cal.writeCalValues(100, -200, 300);
+
+            expect(result.ok).toBe(false);
+            expect(cal.firmwareOffsets.value).toEqual({ x: 5, y: 6, z: 7 });
+        });
     });
 
     describe("fc.js resetState", () => {
