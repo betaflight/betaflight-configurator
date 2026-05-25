@@ -3023,7 +3023,7 @@ MspHelper.prototype.ioTagToPin = function (ioTag) {
     if (portId < 0 || portId > 25) {
         return "INVALID";
     }
-    const portLetter = String.fromCharCode("A".charCodeAt(0) + portId);
+    const portLetter = String.fromCodePoint("A".codePointAt(0) + portId);
     return `${portLetter}${pinNumber.toString().padStart(2, "0")}`;
 };
 
@@ -3038,7 +3038,7 @@ MspHelper.prototype.pinToIoTag = function (pinName) {
     if (!match) {
         return 0;
     }
-    const portId = match[1].toUpperCase().charCodeAt(0) - "A".charCodeAt(0);
+    const portId = match[1].toUpperCase().codePointAt(0) - "A".codePointAt(0);
     const pinNumber = parseInt(match[2], 10);
     // Validate bounds: portId 0-25 (A-Z), pinNumber 0-15 (4-bit encoding)
     if (portId < 0 || portId > 25 || pinNumber < 0 || pinNumber > 15) {
