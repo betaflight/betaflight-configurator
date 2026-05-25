@@ -3039,7 +3039,7 @@ MspHelper.prototype.pinToIoTag = function (pinName) {
         return 0;
     }
     const portId = match[1].toUpperCase().codePointAt(0) - "A".codePointAt(0);
-    const pinNumber = parseInt(match[2], 10);
+    const pinNumber = Number.parseInt(match[2], 10);
     // Validate bounds: portId 0-25 (A-Z), pinNumber 0-15 (4-bit encoding)
     if (portId < 0 || portId > 25 || pinNumber < 0 || pinNumber > 15) {
         return 0;
