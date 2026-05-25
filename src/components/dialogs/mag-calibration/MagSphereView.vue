@@ -253,6 +253,9 @@ function initScene() {
 
     // Quad icon at origin — shows real-time attitude during calibration
     quadIcon = createQuadIcon(120);
+    quadIcon.traverse((child) => {
+        child.renderOrder = 10;
+    });
     scene.add(quadIcon);
 
     // Point cloud (pre-allocated)
@@ -269,8 +272,10 @@ function initScene() {
         size: 4,
         vertexColors: true,
         sizeAttenuation: true,
+        depthWrite: false,
     });
     pointMesh = new THREE.Points(pointGeometry, pointMaterial);
+    pointMesh.renderOrder = 0;
     scene.add(pointMesh);
 
     // Live mag marker (white dot on +X axis at total field distance — body frame)
@@ -278,6 +283,7 @@ function initScene() {
     const liveMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     liveMarker = new THREE.Mesh(liveGeo, liveMat);
     liveMarker.visible = false;
+    liveMarker.renderOrder = 10;
     quadIcon.add(liveMarker);
 
     // XYZ vector lines — body frame (children of quadIcon, move with quad)
@@ -296,6 +302,7 @@ function initScene() {
             });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.visible = false;
+            mesh.renderOrder = 10;
             quadIcon.add(mesh);
             vectorLines.push(mesh);
         }
@@ -306,6 +313,7 @@ function initScene() {
     const centerMat = new THREE.MeshBasicMaterial({ color: 0x888888 });
     sphereCenterMarker = new THREE.Mesh(centerGeo, centerMat);
     sphereCenterMarker.visible = false;
+    sphereCenterMarker.renderOrder = 10;
     scene.add(sphereCenterMarker);
 
     // Cal offset marker (green dot at current firmware calibration offset)
@@ -313,6 +321,7 @@ function initScene() {
     const calMat = new THREE.MeshBasicMaterial({ color: 0x44ff44, opacity: 0.8, transparent: true });
     calOffsetMarker = new THREE.Mesh(calGeo, calMat);
     calOffsetMarker.visible = false;
+    calOffsetMarker.renderOrder = 10;
     scene.add(calOffsetMarker);
 
     // Expected field direction arrow (orange shaft + cone arrowhead + inclination arc)
