@@ -354,29 +354,26 @@ function getServoData() {
     });
 }
 
+// Copy a single FC resource list into the local reactive array, collecting assigned pins.
+function populateResourceList(target, source, pins) {
+    target.length = 0;
+    if (!source || source.length === 0) {
+        return;
+    }
+    for (const resource of source) {
+        target.push({ ...resource });
+        if (resource.pin && resource.pin !== "NONE") {
+            pins.add(resource.pin);
+        }
+    }
+}
+
 // Populate motor/servo resource state from FC and seed initialPins.
 function loadResourceData() {
     const pins = new Set();
 
-    motorResources.length = 0;
-    if (FC.MOTOR_RESOURCES && FC.MOTOR_RESOURCES.length > 0) {
-        for (const resource of FC.MOTOR_RESOURCES) {
-            motorResources.push({ ...resource });
-            if (resource.pin && resource.pin !== "NONE") {
-                pins.add(resource.pin);
-            }
-        }
-    }
-
-    servoResources.length = 0;
-    if (FC.SERVO_RESOURCES && FC.SERVO_RESOURCES.length > 0) {
-        for (const resource of FC.SERVO_RESOURCES) {
-            servoResources.push({ ...resource });
-            if (resource.pin && resource.pin !== "NONE") {
-                pins.add(resource.pin);
-            }
-        }
-    }
+    populateResourceList(motorResources, FC.MOTOR_RESOURCES, pins);
+    populateResourceList(servoResources, FC.SERVO_RESOURCES, pins);
 
     initialPins.value = Array.from(pins).sort();
     hasResourceData.value = motorResources.length > 0 || servoResources.length > 0;
