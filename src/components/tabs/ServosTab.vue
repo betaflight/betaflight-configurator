@@ -125,9 +125,9 @@
                                     color="warning"
                                     size="2xl"
                                     :ui="{
-                                        root: '!w-full',
-                                        base: '!w-full !rounded-md border border-(--ui-border)',
-                                        indicator: '!rounded-none !transition-none opacity-(--bar-opacity)',
+                                        root: 'w-full!',
+                                        base: 'w-full! rounded-md! border border-(--ui-border)',
+                                        indicator: 'rounded-none! transition-none! opacity-(--bar-opacity)',
                                     }"
                                     class="h-full"
                                 />
@@ -248,7 +248,9 @@ const { addTimeout } = useTimeout();
 
 const totalChannels = computed(() => FC.RC?.active_channels || 8);
 const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
-const configHasChanged = computed(() => originalConfigs.value !== JSON.stringify(servoConfigs));
+const configHasChanged = computed(
+    () => resourcesModified.value || originalConfigs.value !== JSON.stringify(servoConfigs),
+);
 
 // Rate options: 100% down to -100%, as {value, label} for USelect
 const rateOptions = computed(() => {
@@ -337,6 +339,7 @@ function updateServos(saveToEeprom) {
             mspHelper.writeConfiguration(false, () => {
                 gui_log(i18n.getMessage("servosEepromSave"));
                 originalConfigs.value = JSON.stringify(servoConfigs);
+                resourcesModified.value = false;
             });
         }
     });
