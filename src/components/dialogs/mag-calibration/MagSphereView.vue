@@ -235,6 +235,8 @@ function initScene() {
 
     // Scene
     scene = new THREE.Scene();
+    maxFieldStrength = 0;
+    smoothQuatInitialized = false;
 
     // Camera — Z-up convention, pulled back for isometric overview
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
