@@ -7793,6 +7793,18 @@
     "magCalibrationCheckInstruction": {
         "message": "Rotate the quad to fill the sphere. A centered sphere confirms good calibration."
     },
+    "magCalibrationCalValues": {
+        "message": "Cal Values"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Save Values"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Calibration values saved"
+    },
+    "magCalibrationSaveError": {
+        "message": "Failed to save calibration values"
+    },
     "magCalibrationAccept": {
         "message": "Accept Calibration"
     },

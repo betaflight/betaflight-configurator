@@ -410,23 +410,66 @@
                 <!-- Calibrate Magnetometer (inline) -->
                 <div class="mag-cal-section">
                     <!-- Idle: calibrate button with mode dropdown -->
-                    <div v-if="cal.phase === 'idle'" class="flex items-center gap-2">
-                        <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                            <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startMagCal(false)">
-                                <template #trailing>
-                                    <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
-                                </template>
-                            </UButton>
-                            <UDropdownMenu v-slot="{ open }" :items="calModeItems" :content="{ align: 'start' }">
-                                <UButton
-                                    size="xs"
-                                    :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                                    :aria-label="$t('magCalibrationModeOptions')"
-                                    :title="$t('magCalibrationModeOptions')"
-                                    square
-                                />
-                            </UDropdownMenu>
-                        </UFieldGroup>
+                    <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+                                <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startMagCal(false)">
+                                    <template #trailing>
+                                        <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
+                                    </template>
+                                </UButton>
+                                <UDropdownMenu v-slot="{ open }" :items="calModeItems" :content="{ align: 'start' }">
+                                    <UButton
+                                        size="xs"
+                                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                                        :aria-label="$t('magCalibrationModeOptions')"
+                                        :title="$t('magCalibrationModeOptions')"
+                                        square
+                                    />
+                                </UDropdownMenu>
+                            </UFieldGroup>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-[var(--surface-500)]">{{ $t("magCalibrationCalValues") }}</span>
+                            <UInputNumber
+                                v-model="editX"
+                                :step="1"
+                                :min="-32768"
+                                :max="32767"
+                                :disabled="!cal.firmwareOffsets"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-20"
+                            />
+                            <UInputNumber
+                                v-model="editY"
+                                :step="1"
+                                :min="-32768"
+                                :max="32767"
+                                :disabled="!cal.firmwareOffsets"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-20"
+                            />
+                            <UInputNumber
+                                v-model="editZ"
+                                :step="1"
+                                :min="-32768"
+                                :max="32767"
+                                :disabled="!cal.firmwareOffsets"
+                                orientation="vertical"
+                                size="xs"
+                                class="w-20"
+                            />
+                            <UButton
+                                v-if="isMspCliSupported()"
+                                size="xs"
+                                :label="$t('magCalibrationSaveValues')"
+                                :disabled="!calValuesDirty || !cal.firmwareOffsets"
+                                :loading="isSavingCal"
+                                @click="saveCalValues()"
+                            />
+                        </div>
                     </div>
 
                     <!-- Calibrating -->
@@ -454,6 +497,49 @@
                                 <p class="text-sm text-[var(--surface-600)] text-center my-2">
                                     {{ $t("magCalibrationCheckInstruction") }}
                                 </p>
+                                <div class="flex items-center gap-2 justify-center">
+                                    <span class="text-xs text-[var(--surface-500)]">{{
+                                        $t("magCalibrationCalValues")
+                                    }}</span>
+                                    <UInputNumber
+                                        v-model="editX"
+                                        :step="1"
+                                        :min="-32768"
+                                        :max="32767"
+                                        :disabled="!cal.firmwareOffsets"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-20"
+                                    />
+                                    <UInputNumber
+                                        v-model="editY"
+                                        :step="1"
+                                        :min="-32768"
+                                        :max="32767"
+                                        :disabled="!cal.firmwareOffsets"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-20"
+                                    />
+                                    <UInputNumber
+                                        v-model="editZ"
+                                        :step="1"
+                                        :min="-32768"
+                                        :max="32767"
+                                        :disabled="!cal.firmwareOffsets"
+                                        orientation="vertical"
+                                        size="xs"
+                                        class="w-20"
+                                    />
+                                    <UButton
+                                        v-if="isMspCliSupported()"
+                                        size="xs"
+                                        :label="$t('magCalibrationSaveValues')"
+                                        :disabled="!calValuesDirty || !cal.firmwareOffsets"
+                                        :loading="isSavingCal"
+                                        @click="saveCalValues()"
+                                    />
+                                </div>
                             </template>
                             <template v-else-if="cal.mode === 'guided'">
                                 <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
@@ -1437,6 +1523,44 @@ async function acceptGuidedMagCal() {
 
 function discardGuidedMagCal() {
     cal.discardCalibration();
+}
+
+const editX = ref(0);
+const editY = ref(0);
+const editZ = ref(0);
+const isSavingCal = ref(false);
+
+watch(
+    () => cal.firmwareOffsets,
+    (offsets) => {
+        editX.value = offsets?.x ?? 0;
+        editY.value = offsets?.y ?? 0;
+        editZ.value = offsets?.z ?? 0;
+    },
+    { immediate: true },
+);
+
+const calValuesDirty = computed(() => {
+    const fw = cal.firmwareOffsets;
+    if (!fw) {
+        return editX.value !== 0 || editY.value !== 0 || editZ.value !== 0;
+    }
+    return editX.value !== fw.x || editY.value !== fw.y || editZ.value !== fw.z;
+});
+
+async function saveCalValues() {
+    isSavingCal.value = true;
+    try {
+        const result = await cal.writeCalValues(editX.value, editY.value, editZ.value);
+        if (result?.ok) {
+            gui_log(i18n.getMessage("magCalibrationSaveSuccess"));
+            magNeedsCalibration.value = editX.value === 0 && editY.value === 0 && editZ.value === 0;
+        } else {
+            gui_log(i18n.getMessage("magCalibrationSaveError"));
+        }
+    } finally {
+        isSavingCal.value = false;
+    }
 }
 
 function retryAndStartMagCal() {
