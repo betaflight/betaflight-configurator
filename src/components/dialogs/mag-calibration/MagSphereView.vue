@@ -492,7 +492,7 @@ function updateLiveMagOverlay() {
         liveMarker.visible = showLive;
         if (showLive) {
             const totalField = Math.hypot(mag.x, mag.y, mag.z);
-            if (totalField > maxFieldStrength) {
+            if (totalField > maxFieldStrength * 1.02 || maxFieldStrength === 0) {
                 maxFieldStrength = totalField;
                 repositionCalOffsetMarker();
             }
@@ -1199,16 +1199,17 @@ function updatePoints(sampleList) {
     const positions = positionAttr.array;
     const colors = colorAttr.array;
 
-    // Update max field strength from all samples so scale is consistent
-    const prevMax = maxFieldStrength;
+    // Update max field strength with 2% hysteresis to avoid constant rescaling
+    let newMax = maxFieldStrength;
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
         const f = Math.hypot(s.x, s.y, s.z);
-        if (f > maxFieldStrength) {
-            maxFieldStrength = f;
+        if (f > newMax) {
+            newMax = f;
         }
     }
-    if (maxFieldStrength > prevMax) {
+    if (newMax > maxFieldStrength * 1.02 || maxFieldStrength === 0) {
+        maxFieldStrength = newMax;
         repositionCalOffsetMarker();
     }
 
