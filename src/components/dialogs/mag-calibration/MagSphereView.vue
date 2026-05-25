@@ -280,9 +280,9 @@ function initScene() {
     pointGeometry.setDrawRange(0, 0);
 
     pointMaterial = new THREE.PointsMaterial({
-        size: 4,
+        size: 3,
         vertexColors: true,
-        sizeAttenuation: true,
+        sizeAttenuation: false,
         depthWrite: false,
     });
     pointMesh = new THREE.Points(pointGeometry, pointMaterial);
