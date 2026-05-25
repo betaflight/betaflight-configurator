@@ -183,7 +183,7 @@ describe("applyServoMixTemplate", () => {
         expect(result.rules).toHaveLength(4);
         const targets = new Set(result.rules.map((r) => r.target));
         expect(targets.size).toBe(2);
-        expect([...targets].sort()).toEqual([2, 3]);
+        expect([...targets].sort((a, b) => a - b)).toEqual([2, 3]);
     });
 
     it("skips PWM slots already used by existing rules when remapping", () => {
@@ -193,7 +193,7 @@ describe("applyServoMixTemplate", () => {
         // Slot 0 → servoIndex 2 is taken; planner skips it and lands the two
         // unique elevon targets on slots 1,2 → servoIndex 3,4.
         const targets = new Set(result.rules.map((r) => r.target));
-        expect([...targets].sort()).toEqual([3, 4]);
+        expect([...targets].sort((a, b) => a - b)).toEqual([3, 4]);
     });
 
     it("hard-aborts on mixer mismatch instead of auto-flipping the FC mixer", () => {
