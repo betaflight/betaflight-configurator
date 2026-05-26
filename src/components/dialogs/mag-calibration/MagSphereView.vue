@@ -166,15 +166,20 @@ let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
 let heatmapFaceCounts = null; // sample count per face
 
-// Place dot at totalField distance along the nose direction (pitch/heading).
-// The white dot tracks this position live; dropped dots accumulate here.
-function sampleToScene(s) {
+// World-space nose direction captured from liveMarker each frame.
+// Stored as unit vectors (nx, ny, nz) per sample — multiplied by
+// totalField * magScale() in updatePoints so dots rescale correctly.
+let noseDirections = [];
+const _worldPosVec = new THREE.Vector3();
+
+function sampleToScene(s, sampleIndex) {
     const totalField = Math.hypot(s.x, s.y, s.z);
     const r = totalField * magScale();
-    const pitchRad = (s.pitch ?? 0) * DEG_TO_RAD;
-    const headingRad = (s.heading ?? 0) * DEG_TO_RAD;
-    const cosP = Math.cos(pitchRad);
-    return [r * cosP * Math.cos(headingRad), -r * cosP * Math.sin(headingRad), r * Math.sin(pitchRad)];
+    const dIdx = sampleIndex * 3;
+    if (dIdx + 2 < noseDirections.length) {
+        return [noseDirections[dIdx] * r, noseDirections[dIdx + 1] * r, noseDirections[dIdx + 2] * r];
+    }
+    return [0, 0, 0];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -249,6 +254,7 @@ function initScene() {
     scene = new THREE.Scene();
     maxFieldStrength = 0;
     smoothQuatInitialized = false;
+    noseDirections = [];
 
     // Camera — Z-up convention, pulled back for isometric overview
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
@@ -507,6 +513,23 @@ function updateLiveMagOverlay() {
                 repositionCalOffsetMarker();
             }
             liveMarker.position.set(totalField * magScale(), 0, 0);
+
+            // Capture nose direction for dot placement — uses the same
+            // transform chain as the liveMarker so dots always match.
+            quadIcon.updateWorldMatrix(true, false);
+            liveMarker.getWorldPosition(_worldPosVec);
+            const r = totalField * magScale();
+            if (r > 0) {
+                const invR = 1 / r;
+                const nx = _worldPosVec.x * invR;
+                const ny = _worldPosVec.y * invR;
+                const nz = _worldPosVec.z * invR;
+                const target = props.sampleCount;
+                const have = noseDirections.length / 3;
+                for (let i = have; i < target; i++) {
+                    noseDirections.push(nx, ny, nz);
+                }
+            }
         }
     }
     if (vectorLines) {
@@ -722,7 +745,7 @@ function updateHeatmap(sampleList) {
     const start = Math.max(0, sampleList.length - MAX_POINTS);
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
-        const [sx, sy, sz] = sampleToScene(s);
+        const [sx, sy, sz] = sampleToScene(s, start + i);
         // Direction from sphere center to sample
         const dx = sx - scx;
         const dy = sy - scy;
@@ -788,7 +811,7 @@ function drawProjection(sampleList) {
     const start = Math.max(0, sampleList.length - MAX_POINTS);
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
-        pts.push(sampleToScene(s));
+        pts.push(sampleToScene(s, start + i));
     }
 
     // In attitude-based view, sphere is centered at origin
@@ -897,7 +920,7 @@ function computePolarDensity(sampleList) {
 
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
-        const [sx, sy, sz] = sampleToScene(s);
+        const [sx, sy, sz] = sampleToScene(s, start + i);
         const dx = sx - cx;
         const dy = sy - cy;
         const dz = sz - cz;
@@ -1223,16 +1246,22 @@ function updatePoints(sampleList) {
         repositionCalOffsetMarker();
     }
 
-    for (let i = 0; i < count; i++) {
+    // Only render dots that have captured nose directions
+    const dirCount = Math.floor(noseDirections.length / 3);
+    const renderCount = Math.min(count, Math.max(0, dirCount - start));
+
+    for (let i = 0; i < renderCount; i++) {
         const s = sampleList[start + i];
         const idx = i * 3;
-        const [sx, sy, sz] = sampleToScene(s);
-        positions[idx] = sx;
-        positions[idx + 1] = sy;
-        positions[idx + 2] = sz;
+        const dIdx = (start + i) * 3;
+        const totalField = Math.hypot(s.x, s.y, s.z);
+        const r = totalField * magScale();
+        positions[idx] = noseDirections[dIdx] * r;
+        positions[idx + 1] = noseDirections[dIdx + 1] * r;
+        positions[idx + 2] = noseDirections[dIdx + 2] * r;
 
         // Color gradient: blue (old) → cyan → green → yellow → red (new)
-        const t = count > 1 ? i / (count - 1) : 0;
+        const t = renderCount > 1 ? i / (renderCount - 1) : 0;
         const hue = (1 - t) * 0.65; // 0.65=blue → 0=red
         _tempColor.setHSL(hue, 1, 0.5);
         colors[idx] = _tempColor.r;
@@ -1242,7 +1271,7 @@ function updatePoints(sampleList) {
 
     positionAttr.needsUpdate = true;
     colorAttr.needsUpdate = true;
-    pointGeometry.setDrawRange(0, count);
+    pointGeometry.setDrawRange(0, renderCount);
     pointGeometry.computeBoundingSphere();
 }
 
@@ -1314,6 +1343,7 @@ function disposeScene() {
     liveMarker = null;
     vectorLines = null;
     smoothQuatInitialized = false;
+    noseDirections = [];
 
     disposeGroup(ghostGroup);
     ghostGroup = null;
@@ -1412,6 +1442,7 @@ watch(
     (count) => {
         if (count === 0) {
             maxFieldStrength = 0;
+            noseDirections = [];
         }
         updatePoints(props.samples);
         updateActiveViz(props.samples);
