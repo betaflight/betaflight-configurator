@@ -391,8 +391,53 @@
     "tabPidTuning": {
         "message": "PID-tuning"
     },
+    "tabAutotune": {
+        "message": "Auto tuning"
+    },
+    "autotuneImportTitle": {
+        "message": "Blackbox CHRIP analyse"
+    },
+    "autotuneImportButton": {
+        "message": "Importer Blackbox log"
+    },
+    "autotuneImportDescription": {
+        "message": "Importer en blackbox log optaget med debug_mode = CHIRP for analyse af frekvenser og beregne PID anbefalinger."
+    },
     "autotuneBandwidth": {
         "message": "Båndbredde"
+    },
+    "autotuneParameter": {
+        "message": "Parametre"
+    },
+    "autotuneProposed": {
+        "message": "Foreslået"
+    },
+    "autotuneApplying": {
+        "message": "Anvender..."
+    },
+    "autotuneImportAnother": {
+        "message": "Importer anden fil"
+    },
+    "autotuneImportRetry": {
+        "message": "Prøv igen"
+    },
+    "autotuneFile": {
+        "message": "Fil"
+    },
+    "autotuneAxisSelector": {
+        "message": "Vælg akse"
+    },
+    "autotuneAxisRoll": {
+        "message": "Krængror"
+    },
+    "autotuneAxisPitch": {
+        "message": "Højderor"
+    },
+    "autotuneAxisYaw": {
+        "message": "Sideror"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "Analyser"
     },
     "tabReceiver": {
         "message": "Modtager"
@@ -1981,6 +2026,9 @@
     "pidTuningSubTabPid": {
         "message": "PID profiler"
     },
+    "pidTuningSubTabRates": {
+        "message": "Hastighed profiler"
+    },
     "pidTuningSubTabFilter": {
         "message": "Filter indstillinger"
     },
@@ -2274,6 +2322,9 @@
     },
     "pidTuningRatesPreview": {
         "message": "Forhåndsvisning bevægelse"
+    },
+    "pidTuningRatesModelPreview": {
+        "message": "Forhåndsvisning hastighedsmodel"
     },
     "pidTuningRatesTuningHelp": {
         "message": "<b>Maksinal sats og Expo<\/b>: Bestemmer din pind bevægelse baseret på disse parametre. Brug kurve og forhåndsvisning til at finde din foretrukne kursindstilling."
@@ -3189,6 +3240,17 @@
     "flightPlanTypeLand": {
         "message": "Land"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Start"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Skift højde",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Forsinkelse",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
     "flightPlanDuration": {
         "message": "Hold varighed <span class=\"units\">min<\/span>"
     },
@@ -4006,8 +4068,17 @@
     "firmwareFlasherExitDfu": {
         "message": "Afslut DFU tilstand"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Find DFU enhed"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Brænd firmware image"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Brænd firmware indstillinger"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Indlæs firmware indstillinger"
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub Firmware info"
@@ -7396,6 +7467,9 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
     },
+    "magCalibrationStart": {
+        "message": "Guidet"
+    },
     "magCalibrationStartDesc": {
         "message": "Roter gennem 6 retninger trin for trin"
     },
@@ -7417,6 +7491,33 @@
     "magCalibrationStepOf": {
         "message": "Trin {{current}} af {{total}}"
     },
+    "magCalibrationWaiting": {
+        "message": "Venter på bevægelse... Bevæg fartøj for at begynde."
+    },
+    "magCalibrationCollecting": {
+        "message": "Drej fartøjet langsomt gennem alle retninger."
+    },
+    "magCalibrationComplete": {
+        "message": "Kalibrering fuldført."
+    },
+    "magCalibrationError": {
+        "message": "Kalibrering mislykkedes. Prøv igen i et område med mindre magnetisk interferens."
+    },
+    "magCalibrationNoMovement": {
+        "message": "Ingen bevægelse registreret indenfor 30 sekunder. Kalibrering afbrudt."
+    },
+    "magCalibrationQuality": {
+        "message": "Kvalitet"
+    },
+    "magCalibrationQualityGood": {
+        "message": "God"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Rimelig"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Dårlig"
+    },
     "magCalibrationStep2": {
         "message": "Næse ned — roter 360°"
     },
@@ -7428,6 +7529,9 @@
     },
     "magCalibrationStep5": {
         "message": "Højre side ned — roter 360°"
+    },
+    "magCalibrationUnguided": {
+        "message": "Hurtig"
     },
     "magCalibrationUnguidedDesc": {
         "message": "Roter frit i alle retninger — stop, når firmware melder klar"

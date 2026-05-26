@@ -3371,8 +3371,41 @@
     "flightPlanTypeLand": {
         "message": "Aterra"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Enlairar-se"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Canvi altitud",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Retard",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Yaw rate endavant",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Durada del manteniment <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Durada del manteniment en minuts",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Durada del retard <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "Durada del retard en minuts",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Yaw Rate <span class=\"units\">°\/s<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Yaw Rate en graus per segon",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Patró de manteniment"
@@ -3445,6 +3478,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Longitud no vàlida (ha d'estar entre -180 i 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Altitud invàlida (o zero o positiva)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Durada invàlida (o zero o positiva)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "Yaw rate invàlida (o zero o positiva)"
     },
     "flightPlanConfirmDelete": {
         "message": "Està segur que vols esborrar aquest punt de pas?"
