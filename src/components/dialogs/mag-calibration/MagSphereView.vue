@@ -15,6 +15,11 @@
                 >{{ inclination >= 0 ? "↗" : "↘" }}{{ Math.round(inclination) }}°</span
             >
         </div>
+        <div v-if="sampleCount > 0" class="mag-sphere-age-legend">
+            <span>Old</span>
+            <span class="age-gradient"></span>
+            <span>New</span>
+        </div>
         <div v-if="showLegend" class="mag-sphere-legend">
             {{ legend }}
         </div>
@@ -1527,6 +1532,33 @@ onBeforeUnmount(() => {
 .mag-sphere-axis-legend .axis-incl {
     color: #ff8800;
     opacity: 0.7;
+}
+
+.mag-sphere-age-legend {
+    position: absolute;
+    top: 26px;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.65em;
+    color: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+}
+
+.mag-sphere-age-legend .age-gradient {
+    display: inline-block;
+    width: 48px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(
+        to right,
+        hsl(234, 100%, 50%),
+        hsl(180, 100%, 50%),
+        hsl(120, 100%, 50%),
+        hsl(60, 100%, 50%),
+        hsl(0, 100%, 50%)
+    );
 }
 
 .mag-sphere-legend {
