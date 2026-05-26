@@ -39,7 +39,6 @@ let liveDataRefreshTimerId = false;
 let isConnected = false;
 
 const REBOOT_CONNECT_MAX_TIME_MS = 10000;
-const REBOOT_GRACE_PERIOD_MS = 2000;
 let rebootTimestamp = 0;
 
 function isCliOnlyMode() {
@@ -67,13 +66,12 @@ export function initializeSerialBackend() {
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
-            (!GUI.connected_to &&
-                !GUI.connecting_to &&
-                !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
-                PortHandler.portPicker.autoConnect &&
-                !isCliOnlyMode() &&
-                (connectionTimestamp === null || connectionTimestamp > 0)) ||
-            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
+            !GUI.connected_to &&
+            !GUI.connecting_to &&
+            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+            PortHandler.portPicker.autoConnect &&
+            !isCliOnlyMode() &&
+            (connectionTimestamp === null || connectionTimestamp > 0)
         ) {
             connectDisconnect();
         }
@@ -147,12 +145,6 @@ function canStartConnectionAction(selectedPort) {
 function beginConnect(selectedPort) {
     // prevent connection when we do not have permission
     if (selectedPort.startsWith("requestpermission")) {
-        return;
-    }
-
-    // When rebooting, adhere to the auto-connect setting
-    if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
-        console.log(`${logHead} Rebooting, not connecting`);
         return;
     }
 
@@ -810,9 +802,11 @@ export function reinitializeConnection(suppressDialog = false) {
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-        setTimeout(function () {
-            connectDisconnect();
-        }, 1500);
+        if (PortHandler.portPicker.autoConnect) {
+            setTimeout(function () {
+                connectDisconnect();
+            }, 1500);
+        }
         return rebootTimestamp;
     }
 

@@ -414,7 +414,10 @@ class GuiControl {
         CONFIGURATOR.connectionValid = false;
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-            return setTimeout(emitToggle, 1500);
+            if (PortHandler.portPicker.autoConnect) {
+                return setTimeout(emitToggle, 1500);
+            }
+            return;
         }
 
         // Show reboot progress modal except for cli and presets tab
