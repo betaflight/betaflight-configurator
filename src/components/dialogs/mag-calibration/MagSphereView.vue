@@ -161,12 +161,15 @@ let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
 let heatmapFaceCounts = null; // sample count per face
 
-// Plot raw magnetometer readings directly — (mx, my, mz) naturally forms a
-// sphere in sensor frame, offset from origin by calibration bias.
+// Place dot at totalField distance along the nose direction (pitch/heading).
+// The white dot tracks this position live; dropped dots accumulate here.
 function sampleToScene(s) {
-    const scale = magScale();
-    // BF body frame: X=fwd, Y=right, Z=up. Display: negate Y for left-hand convention.
-    return [s.x * scale, -s.y * scale, s.z * scale];
+    const totalField = Math.hypot(s.x, s.y, s.z);
+    const r = totalField * magScale();
+    const pitchRad = (s.pitch ?? 0) * DEG_TO_RAD;
+    const headingRad = (s.heading ?? 0) * DEG_TO_RAD;
+    const cosP = Math.cos(pitchRad);
+    return [r * cosP * Math.cos(headingRad), -r * cosP * Math.sin(headingRad), r * Math.sin(pitchRad)];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -498,8 +501,7 @@ function updateLiveMagOverlay() {
                 maxFieldStrength = totalField;
                 repositionCalOffsetMarker();
             }
-            const s = magScale();
-            liveMarker.position.set(mag.x * s, -mag.y * s, mag.z * s);
+            liveMarker.position.set(totalField * magScale(), 0, 0);
         }
     }
     if (vectorLines) {
