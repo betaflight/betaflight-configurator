@@ -729,14 +729,12 @@ function updateHeatmap(sampleList) {
         return;
     }
 
-    const { radius } = props.sphereFit;
-
     // In attitude-based view, sphere is centered at origin
     const scx = 0,
         scy = 0,
         scz = 0;
     heatmapMesh.position.set(0, 0, 0);
-    heatmapMesh.scale.setScalar(radius * magScale());
+    heatmapMesh.scale.setScalar(DEFAULT_SPHERE_RADIUS);
 
     // Reset counts
     heatmapFaceCounts.fill(0);
@@ -820,7 +818,7 @@ function drawProjection(sampleList) {
     const cx = 0,
         cy = 0,
         cz = 0;
-    const radius = fit ? fit.radius * magScale() : 300;
+    const radius = DEFAULT_SPHERE_RADIUS;
 
     // Layout: 3 circles in a row
     const gap = 8;
@@ -1295,8 +1293,7 @@ function updateWireframe(fit) {
         return;
     }
 
-    // Wireframe sphere scaled to match dot positions
-    const sphereGeo = new THREE.SphereGeometry(fit.radius * magScale(), 24, 16);
+    const sphereGeo = new THREE.SphereGeometry(DEFAULT_SPHERE_RADIUS, 24, 16);
     const wireGeo = new THREE.WireframeGeometry(sphereGeo);
     const wireMat = new THREE.LineBasicMaterial({
         color: 0x44aaff,
