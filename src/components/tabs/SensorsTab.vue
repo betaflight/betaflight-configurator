@@ -470,12 +470,6 @@
                                 <p class="text-sm text-[var(--surface-600)] text-center my-2">
                                     {{ $t("magCalibrationGuidedInstruction") }}
                                 </p>
-                                <dl v-if="cal.sphereFitResult" class="mag-cal-stats-inline">
-                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
-                                    <dd>{{ calOffsetsText }}</dd>
-                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
-                                    <dd>{{ calResidualText }}</dd>
-                                </dl>
                             </template>
                             <template v-else>
                                 <div class="mag-cal-step-counter">{{ $t("magCalibrationUnguidedTitle") }}</div>
@@ -486,6 +480,12 @@
                                     {{ $t("magCalibrationUnguidedDone") }}
                                 </p>
                             </template>
+                            <dl v-if="cal.mode !== 'check' && cal.sphereFitResult" class="mag-cal-stats-inline">
+                                <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
+                                <dd>{{ calOffsetsText }}</dd>
+                                <dt>{{ $t("magCalibrationResidual") }}</dt>
+                                <dd>{{ calResidualText }}</dd>
+                            </dl>
                             <div class="mag-cal-progress-bar">
                                 <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
                             </div>
