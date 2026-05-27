@@ -490,7 +490,9 @@
                                 <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
                             </div>
                             <div v-if="cal.quality" class="text-xs font-semibold text-center">
-                                <span :class="'quality-' + cal.quality">{{ $t(CAL_QUALITY_KEY[cal.quality]) }}</span>
+                                <span :class="'quality-' + cal.quality"
+                                    >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
+                                >
                             </div>
                             <div class="flex gap-2 justify-center mt-1">
                                 <UButton
@@ -583,9 +585,9 @@
                                 <dd>{{ calResidualText }}</dd>
                                 <dt>{{ $t("magCalibrationQuality") }}</dt>
                                 <dd>
-                                    <span v-if="cal.quality" :class="'quality-' + cal.quality">{{
-                                        $t(CAL_QUALITY_KEY[cal.quality])
-                                    }}</span>
+                                    <span v-if="cal.quality" :class="'quality-' + cal.quality"
+                                        >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
+                                    >
                                     <span v-else>&mdash;</span>
                                 </dd>
                             </dl>

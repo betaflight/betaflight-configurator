@@ -33,13 +33,24 @@ function computeQuality(fit, cov) {
     if (!fit || !cov) {
         return null;
     }
-    if (fit.residual < 80 && cov.uniform > 0.4) {
+    const relResidual = fit.radius > 0 ? fit.residual / fit.radius : 1;
+    if (relResidual < 0.08 && cov.uniform > 0.3) {
         return "good";
     }
-    if (fit.residual < 150) {
+    if (relResidual < 0.15) {
         return "fair";
     }
     return "poor";
+}
+
+function computeQualityScore(fit, cov) {
+    if (!fit || !cov) {
+        return 0;
+    }
+    const relResidual = fit.radius > 0 ? fit.residual / fit.radius : 1;
+    const fitPart = Math.max(0, Math.min(100, Math.round((1 - relResidual / 0.2) * 100)));
+    const covPart = Math.round(Math.min(1, cov.uniform / 0.5) * 100);
+    return Math.round(fitPart * 0.6 + covPart * 0.4);
 }
 
 /**
@@ -80,6 +91,7 @@ export function useMagCalibration() {
     const sphereFitResult = ref(null);
     const coverage = ref(null);
     const quality = ref(null);
+    const qualityScore = ref(0);
     const progress = ref(0);
     const statusMessage = ref("");
 
@@ -115,6 +127,7 @@ export function useMagCalibration() {
         sphereFitResult.value = null;
         coverage.value = null;
         quality.value = null;
+        qualityScore.value = 0;
         progress.value = 0;
         samplesSinceLastFit = 0;
         lastMovementTime = Date.now();
@@ -270,6 +283,7 @@ export function useMagCalibration() {
         if (fit) {
             sphereFitResult.value = fit;
             quality.value = computeQuality(fit, cov);
+            qualityScore.value = computeQualityScore(fit, cov);
         }
     }
 
@@ -294,6 +308,7 @@ export function useMagCalibration() {
         sphereFitResult.value = null;
         coverage.value = null;
         quality.value = null;
+        qualityScore.value = 0;
         progress.value = 0;
         firmwareDone.value = false;
         guidedOffsets = null;
@@ -375,6 +390,7 @@ export function useMagCalibration() {
         sphereFitResult.value = null;
         coverage.value = null;
         quality.value = null;
+        qualityScore.value = 0;
         progress.value = 0;
         phase.value = "idle";
         statusMessage.value = "";
@@ -389,6 +405,7 @@ export function useMagCalibration() {
         sphereFitResult,
         coverage,
         quality,
+        qualityScore,
         progress,
         statusMessage,
         sampleCount,
