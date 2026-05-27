@@ -496,7 +496,6 @@
                             </div>
                             <div class="flex gap-2 justify-center mt-1">
                                 <UButton
-                                    v-if="cal.mode !== 'guided'"
                                     size="xs"
                                     variant="outline"
                                     :label="$t('magCalibrationCancel')"
@@ -520,14 +519,6 @@
                                     size="xs"
                                     :label="$t('magCalibrationFinish')"
                                     @click="finishMagCal()"
-                                />
-                                <UButton
-                                    v-if="cal.mode === 'guided'"
-                                    size="xs"
-                                    variant="outline"
-                                    :label="$t('magCalibrationDiscard')"
-                                    :disabled="isAcceptingCal"
-                                    @click="discardGuidedMagCal()"
                                 />
                                 <UButton
                                     v-if="cal.mode === 'guided'"
@@ -1455,10 +1446,6 @@ async function acceptGuidedMagCal() {
     } finally {
         isAcceptingCal.value = false;
     }
-}
-
-function discardGuidedMagCal() {
-    cal.discardCalibration();
 }
 
 const isSavingCal = ref(false);
