@@ -16,9 +16,9 @@
             >
         </div>
         <div v-if="sampleCount > 0" class="mag-sphere-age-legend">
-            <span>Old</span>
+            <span>{{ $t("magVizAgeLegendOld") }}</span>
             <span class="age-gradient"></span>
-            <span>New</span>
+            <span>{{ $t("magVizAgeLegendNew") }}</span>
         </div>
         <div v-if="showLegend" class="mag-sphere-legend">
             {{ legend }}

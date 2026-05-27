@@ -7832,6 +7832,12 @@
     "magVizAxisField": {
         "message": "Field"
     },
+    "magVizAgeLegendOld": {
+        "message": "Old"
+    },
+    "magVizAgeLegendNew": {
+        "message": "New"
+    },
     "magAlignmentApply": {
         "message": "Apply"
     },
