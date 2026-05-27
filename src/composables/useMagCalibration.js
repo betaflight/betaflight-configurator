@@ -318,6 +318,7 @@ export function useMagCalibration() {
         qualityScore.value = 0;
         progress.value = 0;
         firmwareDone.value = false;
+        firmwareFlagSeen = false;
         guidedOffsets = null;
     }
 
@@ -400,6 +401,9 @@ export function useMagCalibration() {
         progress.value = 0;
         samplesSinceLastFit = 0;
         lastMovementTime = Date.now();
+        lastMag = null;
+        firmwareDone.value = false;
+        firmwareFlagSeen = false;
     }
 
     function discardCalibration() {

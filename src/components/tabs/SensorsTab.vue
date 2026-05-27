@@ -1471,6 +1471,8 @@ function retryAndStartMagCal() {
 }
 
 function clearMagCalSamples() {
+    clearCalAutoStepTimer();
+    calCurrentStep.value = 0;
     cal.clearSamples();
 }
 
