@@ -7743,10 +7743,10 @@
         "message": "Nose up — rotate 360°"
     },
     "magCalibrationStep4": {
-        "message": "Left side down — rotate 360°"
+        "message": "Nose 45° down — rotate 360°"
     },
     "magCalibrationStep5": {
-        "message": "Right side down — rotate 360°"
+        "message": "Nose 45° up — rotate 360°"
     },
     "magCalibrationStep6": {
         "message": "Inverted — rotate 360°"

@@ -57,8 +57,8 @@ const transforms = [
     "perspective(400px) rotateX(30deg)", // Level
     "perspective(400px) rotateX(70deg)", // Nose down
     "perspective(400px) rotateX(-15deg)", // Nose up
-    "perspective(400px) rotateX(20deg) rotateY(50deg)", // Left side down
-    "perspective(400px) rotateX(20deg) rotateY(-50deg)", // Right side down
+    "perspective(400px) rotateX(52deg)", // Nose 45° down
+    "perspective(400px) rotateX(5deg)", // Nose 45° up
     "perspective(400px) rotateX(30deg) rotateZ(180deg)", // Inverted
 ];
 </script>
