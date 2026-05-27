@@ -265,12 +265,13 @@ function initScene() {
     // Lighting
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
 
-    // Axis lines — extend to celestial sphere edge, positive bold / negative faded
+    // Axis lines — thin lines connecting opposite cardinal points through origin
     const axisLength = DEFAULT_SPHERE_RADIUS;
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 1);
-    addAxisLine(scene, new THREE.Vector3(-axisLength, 0, 0), new THREE.Vector3(0, 0, 0), 0xff4444, 0.15);
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 1);
-    addAxisLine(scene, new THREE.Vector3(0, -axisLength, 0), new THREE.Vector3(0, 0, 0), 0x44ff44, 0.15);
+    // Red: N–S in horizontal plane (full span)
+    addAxisLine(scene, new THREE.Vector3(-axisLength, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 0.35);
+    // Green: W–E in horizontal plane (full span)
+    addAxisLine(scene, new THREE.Vector3(0, -axisLength, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 0.35);
+    // Blue: vertical axis — bold upward, faded downward
     addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), 0x4444ff, 1);
     addAxisLine(scene, new THREE.Vector3(0, 0, -axisLength), new THREE.Vector3(0, 0, 0), 0x4444ff, 0.15);
 
