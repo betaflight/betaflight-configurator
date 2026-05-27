@@ -7682,6 +7682,9 @@
     "magCalibrationCancel": {
         "message": "Cancel"
     },
+    "magCalibrationClear": {
+        "message": "Clear"
+    },
     "magCalibrationModeOptions": {
         "message": "Calibration mode options"
     },

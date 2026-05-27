@@ -391,6 +391,17 @@ export function useMagCalibration() {
         }
     }
 
+    function clearSamples() {
+        samples.value = [];
+        sphereFitResult.value = null;
+        coverage.value = null;
+        quality.value = null;
+        qualityScore.value = 0;
+        progress.value = 0;
+        samplesSinceLastFit = 0;
+        lastMovementTime = Date.now();
+    }
+
     function discardCalibration() {
         cleanup();
         starting = false;
@@ -428,6 +439,7 @@ export function useMagCalibration() {
         completeCalibration,
         acceptCalibration,
         discardCalibration,
+        clearSamples,
         cleanup,
         retry,
         refreshFirmwareOffsets,

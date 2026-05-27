@@ -503,6 +503,13 @@
                                     @click="cancelMagCal()"
                                 />
                                 <UButton
+                                    size="xs"
+                                    variant="ghost"
+                                    :label="$t('magCalibrationClear')"
+                                    :disabled="cal.sampleCount === 0"
+                                    @click="clearMagCalSamples()"
+                                />
+                                <UButton
                                     v-if="!calUnguidedMode && calCurrentStep < CAL_TOTAL_STEPS - 1"
                                     size="xs"
                                     :label="$t('magCalibrationNextStep')"
@@ -1474,6 +1481,10 @@ async function saveCalValues({ x, y, z }) {
 function retryAndStartMagCal() {
     retryMagCal();
     startMagCal(false);
+}
+
+function clearMagCalSamples() {
+    cal.clearSamples();
 }
 
 function retryMagCal() {
