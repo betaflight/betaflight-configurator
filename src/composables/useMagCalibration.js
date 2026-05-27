@@ -114,30 +114,34 @@ export function useMagCalibration() {
     let lastMag = null;
     let firmwareFlagSeen = false;
     let guidedOffsets = null; // offsets to add back in guided mode
+    let starting = false;
 
     async function startCalibration(calMode = "quick") {
-        if (phase.value !== "idle") {
-            return; // concurrent calibration guard
+        if (phase.value !== "idle" || starting) {
+            return;
         }
 
-        cleanup();
-        // Reset state
-        mode.value = calMode;
-        samples.value = [];
-        sphereFitResult.value = null;
-        coverage.value = null;
-        quality.value = null;
-        qualityScore.value = 0;
-        progress.value = 0;
-        samplesSinceLastFit = 0;
-        lastMovementTime = Date.now();
-        lastMag = null;
-        firmwareDone.value = false;
-        firmwareFlagSeen = false;
-        guidedOffsets = null;
+        starting = true;
+        try {
+            cleanup();
+            mode.value = calMode;
+            samples.value = [];
+            sphereFitResult.value = null;
+            coverage.value = null;
+            quality.value = null;
+            qualityScore.value = 0;
+            progress.value = 0;
+            samplesSinceLastFit = 0;
+            lastMovementTime = Date.now();
+            lastMag = null;
+            firmwareDone.value = false;
+            firmwareFlagSeen = false;
+            guidedOffsets = null;
 
-        // Read current firmware offsets before calibration starts
-        firmwareOffsets.value = await readFirmwareOffsets();
+            firmwareOffsets.value = await readFirmwareOffsets();
+        } finally {
+            starting = false;
+        }
 
         if (calMode === "check") {
             // Check mode: display calibrated data as-is, no firmware trigger, no sphere fit
@@ -162,6 +166,7 @@ export function useMagCalibration() {
 
     function cancelCalibration() {
         cleanup();
+        starting = false;
         phase.value = "idle";
         statusMessage.value = "";
     }
@@ -302,6 +307,8 @@ export function useMagCalibration() {
     }
 
     function retry() {
+        cleanup();
+        starting = false;
         phase.value = "idle";
         statusMessage.value = "";
         samples.value = [];
@@ -386,6 +393,7 @@ export function useMagCalibration() {
 
     function discardCalibration() {
         cleanup();
+        starting = false;
         samples.value = [];
         sphereFitResult.value = null;
         coverage.value = null;
