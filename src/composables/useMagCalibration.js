@@ -402,8 +402,6 @@ export function useMagCalibration() {
         samplesSinceLastFit = 0;
         lastMovementTime = Date.now();
         lastMag = null;
-        firmwareDone.value = false;
-        firmwareFlagSeen = false;
     }
 
     function discardCalibration() {
