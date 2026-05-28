@@ -56,7 +56,7 @@ export default {
                 // data-[state=checked] is set by Reka UI on the selected item; itemTrailingIcon
                 // only renders inside SelectItemIndicator so colouring it never affects other icons.
                 item: "cursor-pointer data-[state=checked]:before:bg-success/15 data-[state=checked]:text-highlighted data-[state=checked]:font-medium",
-                itemTrailingIcon: "text-success",
+                itemTrailingIcon: "text-success-600 dark:text-success",
             },
             defaultVariants: {
                 size: "sm",
@@ -66,7 +66,7 @@ export default {
             slots: {
                 base: "cursor-pointer",
                 item: "cursor-pointer data-[state=checked]:before:bg-success/15 data-[state=checked]:text-highlighted data-[state=checked]:font-medium",
-                itemTrailingIcon: "text-success",
+                itemTrailingIcon: "text-success-600 dark:text-success",
             },
             defaultVariants: {
                 size: "sm",
