@@ -125,6 +125,7 @@ let ghostGroup = null;
 
 // Live mag visualization (children of quadIcon — body frame)
 let liveMarker = null;
+let noseLine = null;
 let vectorLines = null; // [xPos, xNeg, yPos, yNeg, zPos, zNeg] — bold/thin axis pairs
 
 // Sphere center marker (grey dot at fitted sphere center)
@@ -319,6 +320,15 @@ function initScene() {
     liveMarker.renderOrder = 10;
     quadIcon.add(liveMarker);
 
+    // White nose-direction line from quad center to live marker
+    const noseGeo = new THREE.CylinderGeometry(1.5, 1.5, 1, 6);
+    noseGeo.translate(0, 0.5, 0);
+    const noseMat = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.6, transparent: true });
+    noseLine = new THREE.Mesh(noseGeo, noseMat);
+    noseLine.visible = false;
+    noseLine.renderOrder = 9;
+    quadIcon.add(noseLine);
+
     // XYZ vector lines — body frame (children of quadIcon, move with quad)
     // 6 meshes: [xPos, xNeg, yPos, yNeg, zPos, zNeg]
     // Positive halves are always bold, negative halves always thin
@@ -507,6 +517,9 @@ function updateLiveMagOverlay() {
     const bz = showLive ? mag.z : 0;
     if (liveMarker) {
         liveMarker.visible = showLive;
+        if (noseLine) {
+            noseLine.visible = showLive;
+        }
         if (showLive) {
             const totalField = Math.hypot(mag.x, mag.y, mag.z);
             if (totalField > maxFieldStrength * 1.02 || maxFieldStrength === 0) {
@@ -514,6 +527,13 @@ function updateLiveMagOverlay() {
                 repositionCalOffsetMarker();
             }
             liveMarker.position.set(totalField * magScale(), 0, 0);
+
+            if (noseLine) {
+                noseLine.visible = true;
+                _tmpVec.set(1, 0, 0);
+                orientCylinder(noseLine, _tmpVec, totalField * magScale());
+                noseLine.position.set(0, 0, 0);
+            }
 
             // Capture nose direction for dot placement — uses the same
             // transform chain as the liveMarker so dots always match.
@@ -1398,6 +1418,7 @@ function setSceneObjectVisibility(pc, hm) {
     setVisible(pointMesh, pc);
     setVisible(wireframeMesh, pc || hm);
     setVisible(liveMarker, pc && props.active);
+    setVisible(noseLine, pc && props.active);
     vectorLines?.forEach((v) => {
         v.visible = pc && props.active;
     });
