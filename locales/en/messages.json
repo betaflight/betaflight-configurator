@@ -7668,7 +7668,7 @@
         "message": "Detection failed — try with more varied tilting."
     },
     "magCalibrationGuidedFw": {
-        "message": "Guided"
+        "message": "Client Cal (Guided)"
     },
     "magCalibrationGuidedFwDesc": {
         "message": "Auto-prompting 60s calibration"
@@ -7761,7 +7761,7 @@
         "message": "Firmware calibration complete!"
     },
     "magCalibrationGuided": {
-        "message": "Client Cal"
+        "message": "Client Cal (Free)"
     },
     "magCalibrationGuidedDesc": {
         "message": "Rotate freely — configurator computes offsets"
