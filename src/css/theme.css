@@ -79,8 +79,14 @@ html {
     --success-transparent-3: rgba(112, 226, 18, 0.3);
     --success-transparent-4: rgba(112, 226, 18, 0.4);
 
+    --warning-400: #ff8533;
     --warning-500: #ff6600;
     --warning-600: #e65c00;
+
+    --warning-transparent-1: rgba(255, 102, 0, 0.1);
+    --warning-transparent-2: rgba(255, 102, 0, 0.2);
+    --warning-transparent-3: rgba(255, 102, 0, 0.3);
+    --warning-transparent-4: rgba(255, 102, 0, 0.4);
 
     --primary-action: var(--success-500);
     --primary-action-border: var(--success-600);
@@ -149,6 +155,10 @@ body[data-theme="contrast"] {
     --error-400: #ff7575;
     --error-500: #ff3333;
     --error-600: #cc0000;
+
+    --warning-400: #ffaa66;
+    --warning-500: #ff8800;
+    --warning-600: #cc6600;
 
     #tabs li.active a {
         color: #000;
