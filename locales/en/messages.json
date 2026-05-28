@@ -7773,13 +7773,13 @@
         "message": "Firmware calibration complete!"
     },
     "magCalibrationGuided": {
-        "message": "Guided (Client)"
+        "message": "Client Cal"
     },
     "magCalibrationGuidedDesc": {
-        "message": "Collect samples and compute offsets in the configurator"
+        "message": "Rotate freely — configurator computes offsets"
     },
     "magCalibrationGuidedTitle": {
-        "message": "Guided Calibration"
+        "message": "Client Calibration"
     },
     "magCalibrationGuidedInstruction": {
         "message": "Rotate your vehicle in all directions. Aim to make a complete sphere of dots over about one or two minutes. Save the result when the calibration values have stabilised."
