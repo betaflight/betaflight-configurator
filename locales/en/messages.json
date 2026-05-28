@@ -7758,16 +7758,16 @@
         "message": "Sphere fit offsets"
     },
     "magCalibrationUnguided": {
-        "message": "Quick"
+        "message": "Firmware Cal (Legacy)"
     },
     "magCalibrationUnguidedDesc": {
-        "message": "Rotate freely in all directions — stops when firmware finishes"
+        "message": "Rotate freely — firmware auto-saves after 30s"
     },
     "magCalibrationUnguidedTitle": {
-        "message": "Unguided Calibration"
+        "message": "Firmware Calibration"
     },
     "magCalibrationUnguidedInstruction": {
-        "message": "Rotate your vehicle slowly in all directions. The firmware will collect samples and compute offsets automatically."
+        "message": "You have 30 seconds to rotate the vehicle in all directions. The firmware will automatically save the calibration values when the time is up."
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
