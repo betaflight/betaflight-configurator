@@ -107,7 +107,7 @@ const dashOffset = computed(() => {
 const colorMap = {
     primary: "var(--primary-500)",
     success: "var(--success-500)",
-    warning: "var(--warning-500)",
+    warning: "var(--warning-700)",
     error: "var(--error-500)",
 };
 
