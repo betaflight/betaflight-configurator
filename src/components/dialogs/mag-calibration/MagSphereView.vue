@@ -1470,11 +1470,10 @@ watch(
 
 watch(
     () => props.sphereFit,
-    () => {
+    (val) => {
         ensureWireframe();
         rebuildFieldReference();
         updateActiveViz(props.samples);
-        // Update grey sphere center marker
         if (sphereCenterMarker) {
             sphereCenterMarker.position.set(0, 0, 0);
             sphereCenterMarker.visible = !!val;
