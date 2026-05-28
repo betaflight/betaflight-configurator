@@ -21,6 +21,7 @@ Status legend: 🚧 guidance-only · 🔧 partially tooled · 📐 stays as guid
 Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent below): indentation, semicolons, trailing commas, import order, basic naming.
 
 ### #4800 — Pinia as single source of truth
+
 | Rule | Status | Enforcement target |
 |---|---|---|
 | No MSP calls from Vue components — wrap in a store action or composable | 🚧 | ESLint `no-restricted-imports`: ban `src/js/msp/**` from `src/components/**` (Phase 0) |
@@ -30,6 +31,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 | New MSP codes: `src/js/msp/MSPCodes.js` + encode/decode in `MSPHelper.js`, aligned with firmware `msp_protocol.h` | 🚧 | CI script diffing `MSPCodes.js` against `msp_protocol.h` (Phase 1) |
 
 ### #4995 — Nuxt UI v4 + Tailwind conversion
+
 | Rule | Status | Enforcement target |
 |---|---|---|
 | Reach for `@nuxt/ui` v4 first: `UButton`, `UInput`, `UInputNumber`, `USelect`, `USwitch`, `UModal`, … | 📐 | Taste call |
@@ -39,6 +41,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 | Respect light/dark (`.dark`) and color themes (`data-theme`) | 📐 | Visual review |
 
 ### TypeScript migration (next phase)
+
 | Rule | Status | Enforcement target |
 |---|---|---|
 | New files as `.ts` or `<script setup lang="ts">` | 🚧 | `tsconfig` `allowJs: false` on `src/components/**` (Phase 2) |
@@ -46,6 +49,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 | Strict mode in converted folders | 🚧 | `tsconfig` `"strict": true` via per-folder overrides (Phase 2) |
 
 ### Always-on
+
 | Rule | Status | Enforcement target |
 |---|---|---|
 | `.vue` filenames and component names: `PascalCase` | 🔧 | `eslint-plugin-unicorn/filename-case` (Phase 0) |
