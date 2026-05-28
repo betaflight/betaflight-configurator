@@ -417,9 +417,16 @@
 
                 <!-- Calibrate Magnetometer (inline) -->
                 <div class="mag-cal-section">
-                    <!-- Idle: calibrate button with mode dropdown -->
+                    <!-- Idle: check + calibrate buttons -->
                     <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
                         <div class="flex items-center gap-2">
+                            <UButton
+                                size="xs"
+                                variant="outline"
+                                icon="i-lucide-eye"
+                                :label="$t('magCalibrationCheck')"
+                                @click="startCheckMode()"
+                            />
                             <UFieldGroup size="xs" orientation="horizontal" class="flex!">
                                 <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startGuidedCal()">
                                     <template #trailing>
@@ -1367,14 +1374,7 @@ const magVizMode = ref("pointcloud");
 const calGuidedAvailable = computed(() => isMspCliSupported());
 
 const calModeItems = computed(() => {
-    const items = [
-        {
-            label: i18n.getMessage("magCalibrationCheck"),
-            description: i18n.getMessage("magCalibrationCheckDesc"),
-            icon: "i-lucide-eye",
-            onSelect: () => startCheckMode(),
-        },
-    ];
+    const items = [];
     if (calGuidedAvailable.value) {
         items.push({
             label: i18n.getMessage("magCalibrationGuidedFw"),
