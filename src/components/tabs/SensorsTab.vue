@@ -1329,6 +1329,10 @@ const calFirmwareOffsetsText = computed(() => {
 });
 
 async function startGuidedCal() {
+    if (!calGuidedAvailable.value) {
+        await startLegacyFirmwareCal();
+        return;
+    }
     calIsGuided.value = true;
     calCurrentPrompt.value = 0;
     calGeoRef.value = getGeoReference();
@@ -1367,14 +1371,14 @@ const calModeItems = computed(() => {
             icon: "i-lucide-eye",
             onSelect: () => startCheckMode(),
         },
-        {
+    ];
+    if (calGuidedAvailable.value) {
+        items.push({
             label: i18n.getMessage("magCalibrationGuidedFw"),
             description: i18n.getMessage("magCalibrationGuidedFwDesc"),
             icon: "i-lucide-compass",
             onSelect: () => startGuidedCal(),
-        },
-    ];
-    if (calGuidedAvailable.value) {
+        });
         items.push({
             label: i18n.getMessage("magCalibrationGuided"),
             description: i18n.getMessage("magCalibrationGuidedDesc"),
