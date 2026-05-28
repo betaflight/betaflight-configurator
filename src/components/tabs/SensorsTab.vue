@@ -1381,10 +1381,10 @@ const calGuidedAvailable = computed(() => isMspCliSupported());
 const calModeItems = computed(() => {
     const items = [
         {
-            label: i18n.getMessage("magCalibrationUnguided"),
-            description: i18n.getMessage("magCalibrationUnguidedDesc"),
-            icon: "i-lucide-shuffle",
-            onSelect: () => startMagCal(true),
+            label: i18n.getMessage("magCalibrationCheck"),
+            description: i18n.getMessage("magCalibrationCheckDesc"),
+            icon: "i-lucide-eye",
+            onSelect: () => startCheckMode(),
         },
         {
             label: i18n.getMessage("magCalibrationStart"),
@@ -1399,12 +1399,6 @@ const calModeItems = computed(() => {
             onSelect: () => startMagCal(false, true),
         },
     ];
-    items.push({
-        label: i18n.getMessage("magCalibrationCheck"),
-        description: i18n.getMessage("magCalibrationCheckDesc"),
-        icon: "i-lucide-eye",
-        onSelect: () => startCheckMode(),
-    });
     if (calGuidedAvailable.value) {
         items.push({
             label: i18n.getMessage("magCalibrationGuided"),
@@ -1413,6 +1407,12 @@ const calModeItems = computed(() => {
             onSelect: () => startGuidedMagCal(),
         });
     }
+    items.push({
+        label: i18n.getMessage("magCalibrationUnguided"),
+        description: i18n.getMessage("magCalibrationUnguidedDesc"),
+        icon: "i-lucide-shuffle",
+        onSelect: () => startMagCal(true),
+    });
     return [items];
 });
 
