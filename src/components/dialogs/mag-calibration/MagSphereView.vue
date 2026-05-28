@@ -563,26 +563,29 @@ function rebuildFieldReference() {
     // Always positioned at origin — the field line passes through 0,0,0
     fieldRefGroup.position.set(0, 0, 0);
 
-    // Orient shaft + cone
+    // Orient shaft + cone — pull cone inward so its tip sits at the sphere surface
     const shaft = fieldRefGroup.userData.shaft;
     const cone = fieldRefGroup.userData.cone;
     _tmpVec.set(fdx, 0, fdz);
     const len = _tmpVec.length();
+    const coneHalfH = 12;
     if (len > 1) {
-        orientCylinder(shaft, _tmpVec, len);
+        orientCylinder(shaft, _tmpVec, len - coneHalfH);
         shaft.position.set(0, 0, 0);
-        cone.position.set(fdx, 0, fdz);
-        _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
+        const dir = _tmpVec.clone().normalize();
+        cone.position.copy(dir.clone().multiplyScalar(len - coneHalfH));
+        _tmpQuat.setFromUnitVectors(_UP, dir);
         cone.quaternion.copy(_tmpQuat);
 
         // South pole: negate the field direction
         const southShaft = fieldRefGroup.userData.southShaft;
         const southCone = fieldRefGroup.userData.southCone;
+        const sDir = dir.clone().negate();
         _tmpVec.set(-fdx, 0, -fdz);
-        orientCylinder(southShaft, _tmpVec, len);
+        orientCylinder(southShaft, _tmpVec, len - coneHalfH);
         southShaft.position.set(0, 0, 0);
-        southCone.position.set(-fdx, 0, -fdz);
-        _tmpQuat.setFromUnitVectors(_UP, _tmpVec.normalize());
+        southCone.position.copy(sDir.clone().multiplyScalar(len - coneHalfH));
+        _tmpQuat.setFromUnitVectors(_UP, sDir);
         southCone.quaternion.copy(_tmpQuat);
 
         // Hemisphere-aware thickness: dominant pole gets thicker shaft + larger cone
