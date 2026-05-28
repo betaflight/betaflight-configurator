@@ -11,6 +11,7 @@ const MONITOR_INTERVAL_MS = 1000;
 const SPHERE_FIT_EVERY_N = 10;
 const ARMING_DISABLE_BIT_CALIBRATING = 12;
 const NO_MOVEMENT_TIMEOUT_MS = 30000;
+const FIRMWARE_CAL_DURATION_S = 30;
 const MOVEMENT_THRESHOLD = 5;
 const PROGRESS_TARGET_SAMPLES = 300;
 const MAG_CAL_MIN = -32768;
@@ -98,6 +99,7 @@ export function useMagCalibration() {
     const sampleCount = computed(() => samples.value.length);
 
     const firmwareDone = ref(false);
+    const firmwareSecondsRemaining = ref(-1);
 
     // Live mag reading (updated every IMU poll)
     const liveMag = ref({ x: 0, y: 0, z: 0 });
@@ -109,6 +111,8 @@ export function useMagCalibration() {
     // --- Internal state (non-reactive) ---
     let dataInterval = null;
     let monitorInterval = null;
+    let countdownInterval = null;
+    let firmwareCollectingStartTime = 0;
     let samplesSinceLastFit = 0;
     let lastMovementTime = 0;
     let lastMag = null;
@@ -171,6 +175,25 @@ export function useMagCalibration() {
         statusMessage.value = "";
     }
 
+    function startCountdown() {
+        firmwareCollectingStartTime = Date.now();
+        firmwareSecondsRemaining.value = FIRMWARE_CAL_DURATION_S;
+        countdownInterval = setInterval(() => {
+            const elapsed = (Date.now() - firmwareCollectingStartTime) / 1000;
+            const remaining = Math.max(0, Math.ceil(FIRMWARE_CAL_DURATION_S - elapsed));
+            firmwareSecondsRemaining.value = remaining;
+        }, 1000);
+    }
+
+    function stopCountdown() {
+        if (countdownInterval !== null) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+        firmwareSecondsRemaining.value = -1;
+        firmwareCollectingStartTime = 0;
+    }
+
     function cleanup() {
         if (dataInterval !== null) {
             clearInterval(dataInterval);
@@ -180,6 +203,7 @@ export function useMagCalibration() {
             clearInterval(monitorInterval);
             monitorInterval = null;
         }
+        stopCountdown();
     }
 
     onScopeDispose(cleanup);
@@ -213,6 +237,7 @@ export function useMagCalibration() {
                 if (phase.value === "waiting" && flagSet) {
                     phase.value = "collecting";
                     statusMessage.value = "magCalibrationCollecting";
+                    startCountdown();
                 }
 
                 // Track when firmware finishes (flag was set, now cleared)
@@ -431,6 +456,7 @@ export function useMagCalibration() {
         statusMessage,
         sampleCount,
         firmwareDone,
+        firmwareSecondsRemaining,
         liveMag,
         liveFieldStrength,
         firmwareOffsets,

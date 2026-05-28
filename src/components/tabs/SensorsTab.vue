@@ -476,6 +476,12 @@
                                 <p class="text-sm text-[var(--surface-600)] text-center my-2">
                                     {{ $t("magCalibrationUnguidedInstruction") }}
                                 </p>
+                                <p
+                                    v-if="cal.firmwareSecondsRemaining >= 0 && !cal.firmwareDone"
+                                    class="text-lg font-bold text-center tabular-nums"
+                                >
+                                    {{ cal.firmwareSecondsRemaining }}s
+                                </p>
                                 <p v-if="cal.firmwareDone" class="text-xs font-semibold quality-good text-center">
                                     {{ $t("magCalibrationUnguidedDone") }}
                                 </p>
