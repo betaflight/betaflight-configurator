@@ -7667,17 +7667,23 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Detection failed — try with more varied tilting."
     },
-    "magCalibrationStart": {
+    "magCalibrationGuidedFw": {
         "message": "Guided"
     },
-    "magCalibrationStartDesc": {
-        "message": "Rotate through 6 orientations step by step"
+    "magCalibrationGuidedFwDesc": {
+        "message": "Auto-prompting 30s calibration"
     },
-    "magCalibrationStartAuto": {
-        "message": "Auto-Step"
+    "magCalibrationGuidedFwTitle": {
+        "message": "Guided Calibration"
     },
-    "magCalibrationStartAutoDesc": {
-        "message": "Same as guided but steps advance on a timer"
+    "magCalibrationPrompt1": {
+        "message": "Rotate slowly — point the nose in all directions"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Tilt the nose up and down while continuing to rotate"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Try sideways and upside down — fill the gaps in the sphere"
     },
     "magCalibrationCancel": {
         "message": "Cancel"
@@ -7690,15 +7696,6 @@
     },
     "magCalibrationRetry": {
         "message": "Retry"
-    },
-    "magCalibrationNextStep": {
-        "message": "Next Step"
-    },
-    "magCalibrationFinish": {
-        "message": "Finish"
-    },
-    "magCalibrationStepOf": {
-        "message": "Step {{current}} of {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "Waiting for movement... Shake the vehicle to begin."
@@ -7732,24 +7729,6 @@
     },
     "magCalibrationQualityPoor": {
         "message": "Poor"
-    },
-    "magCalibrationStep1": {
-        "message": "Level — rotate 360° in yaw"
-    },
-    "magCalibrationStep2": {
-        "message": "Nose down — rotate 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "Nose up — rotate 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "Nose 45° down — rotate 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "Nose 45° up — rotate 360°"
-    },
-    "magCalibrationStep6": {
-        "message": "Inverted — rotate 360°"
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offsets"

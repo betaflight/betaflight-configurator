@@ -421,7 +421,11 @@
                     <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
                         <div class="flex items-center gap-2">
                             <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                                <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startMagCal(false)">
+                                <UButton
+                                    size="xs"
+                                    :label="$t('sensorConfigCalibrate')"
+                                    @click="startGuidedFirmwareCal()"
+                                >
                                     <template #trailing>
                                         <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                                     </template>
@@ -442,22 +446,20 @@
                     <!-- Calibrating -->
                     <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
                         <div class="mag-cal-inline-steps">
-                            <template v-if="!calUnguidedMode">
-                                <div class="mag-cal-step-counter">
-                                    {{
-                                        $t("magCalibrationStepOf", {
-                                            current: calCurrentStep + 1,
-                                            total: CAL_TOTAL_STEPS,
-                                        })
-                                    }}
-                                    <span v-if="calAutoStep" class="text-[var(--surface-400)]"
-                                        >({{ calStepCountdown }}s)</span
-                                    >
-                                </div>
-                                <MagOrientationDiagram :step="calCurrentStep" />
-                                <div class="text-sm font-semibold text-center">
-                                    {{ $t(CAL_ORIENTATION_STEPS[calCurrentStep].i18n) }}
-                                </div>
+                            <template v-if="calIsGuidedFirmware">
+                                <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedFwTitle") }}</div>
+                                <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                    {{ $t(CAL_PROMPTS[calCurrentPrompt].i18n) }}
+                                </p>
+                                <p
+                                    v-if="cal.firmwareSecondsRemaining >= 0 && !cal.firmwareDone"
+                                    class="text-lg font-bold text-center tabular-nums"
+                                >
+                                    {{ cal.firmwareSecondsRemaining }}s
+                                </p>
+                                <p v-if="cal.firmwareDone" class="text-xs font-semibold quality-good text-center">
+                                    {{ $t("magCalibrationUnguidedDone") }}
+                                </p>
                             </template>
                             <template v-else-if="cal.mode === 'check'">
                                 <div class="mag-cal-step-counter">{{ $t("magCalibrationCheckTitle") }}</div>
@@ -513,18 +515,6 @@
                                     :label="$t('magCalibrationClear')"
                                     :disabled="cal.sampleCount === 0"
                                     @click="clearMagCalSamples()"
-                                />
-                                <UButton
-                                    v-if="!calUnguidedMode && calCurrentStep < CAL_TOTAL_STEPS - 1"
-                                    size="xs"
-                                    :label="$t('magCalibrationNextStep')"
-                                    @click="nextMagCalStep()"
-                                />
-                                <UButton
-                                    v-if="!calUnguidedMode && calCurrentStep === CAL_TOTAL_STEPS - 1"
-                                    size="xs"
-                                    :label="$t('magCalibrationFinish')"
-                                    @click="finishMagCal()"
                                 />
                                 <UButton
                                     v-if="cal.mode === 'guided'"
@@ -719,7 +709,6 @@ import AlignmentAngles from "../elements/AlignmentAngles.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
-import MagOrientationDiagram from "../dialogs/mag-calibration/MagOrientationDiagram.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 
@@ -758,7 +747,7 @@ onUnmounted(() => {
     disposeModel();
     alignDetectPhase.value = "idle";
     cleanupAlignDetection();
-    clearCalAutoStepTimer();
+    clearPromptTimer();
     if (calIsCalibrating.value) {
         cal.cancelCalibration();
     }
@@ -1293,23 +1282,16 @@ async function autoSetDeclination() {
 // --- Inline Mag Calibration (replaces dialog) ---
 
 const cal = reactive(useMagCalibration());
-const calCurrentStep = ref(0);
-const calUnguidedMode = ref(false);
-const calAutoStep = ref(false);
-const calStepCountdown = ref(0);
-let calAutoStepTimer = null;
+const calIsGuidedFirmware = ref(false);
+const calCurrentPrompt = ref(0);
+let promptTimer = null;
 const calGeoRef = ref(null);
 
-const CAL_AUTO_STEP_SECONDS = 10;
-const CAL_TOTAL_STEPS = 6;
-
-const CAL_ORIENTATION_STEPS = [
-    { i18n: "magCalibrationStep1" },
-    { i18n: "magCalibrationStep2" },
-    { i18n: "magCalibrationStep3" },
-    { i18n: "magCalibrationStep4" },
-    { i18n: "magCalibrationStep5" },
-    { i18n: "magCalibrationStep6" },
+const PROMPT_INTERVAL_S = 12;
+const CAL_PROMPTS = [
+    { i18n: "magCalibrationPrompt1" },
+    { i18n: "magCalibrationPrompt2" },
+    { i18n: "magCalibrationPrompt3" },
 ];
 
 const CAL_QUALITY_KEY = {
@@ -1344,34 +1326,23 @@ const calFirmwareOffsetsText = computed(() => {
     return `${fw.x}, ${fw.y}, ${fw.z}`;
 });
 
-async function startMagCal(quick = false, auto = false) {
-    calUnguidedMode.value = quick;
-    calAutoStep.value = !quick && auto;
-    calCurrentStep.value = 0;
+async function startGuidedFirmwareCal() {
+    calIsGuidedFirmware.value = true;
+    calCurrentPrompt.value = 0;
+    calGeoRef.value = getGeoReference();
+    await cal.startCalibration();
+    startPromptTimer();
+}
+
+async function startLegacyFirmwareCal() {
     calGeoRef.value = getGeoReference();
     await cal.startCalibration();
 }
 
-function nextMagCalStep() {
-    if (calCurrentStep.value < CAL_TOTAL_STEPS - 1) {
-        calCurrentStep.value++;
-        if (calAutoStep.value) {
-            startCalAutoStepTimer();
-        }
-    }
-}
-
-function finishMagCal() {
-    clearCalAutoStepTimer();
-    cal.completeCalibration();
-    magNeedsCalibration.value = false;
-    playCalCompletionBeep();
-}
-
 function cancelMagCal() {
-    clearCalAutoStepTimer();
+    clearPromptTimer();
+    calIsGuidedFirmware.value = false;
     cal.cancelCalibration();
-    calCurrentStep.value = 0;
 }
 
 const MAG_VIZ_MODES = [
@@ -1393,16 +1364,10 @@ const calModeItems = computed(() => {
             onSelect: () => startCheckMode(),
         },
         {
-            label: i18n.getMessage("magCalibrationStart"),
-            description: i18n.getMessage("magCalibrationStartDesc"),
+            label: i18n.getMessage("magCalibrationGuidedFw"),
+            description: i18n.getMessage("magCalibrationGuidedFwDesc"),
             icon: "i-lucide-compass",
-            onSelect: () => startMagCal(false),
-        },
-        {
-            label: i18n.getMessage("magCalibrationStartAuto"),
-            description: i18n.getMessage("magCalibrationStartAutoDesc"),
-            icon: "i-lucide-timer",
-            onSelect: () => startMagCal(false, true),
+            onSelect: () => startGuidedFirmwareCal(),
         },
     ];
     if (calGuidedAvailable.value) {
@@ -1410,30 +1375,24 @@ const calModeItems = computed(() => {
             label: i18n.getMessage("magCalibrationGuided"),
             description: i18n.getMessage("magCalibrationGuidedDesc"),
             icon: "i-lucide-crosshair",
-            onSelect: () => startGuidedMagCal(),
+            onSelect: () => startClientCal(),
         });
     }
     items.push({
         label: i18n.getMessage("magCalibrationUnguided"),
         description: i18n.getMessage("magCalibrationUnguidedDesc"),
         icon: "i-lucide-shuffle",
-        onSelect: () => startMagCal(true),
+        onSelect: () => startLegacyFirmwareCal(),
     });
     return [items];
 });
 
 async function startCheckMode() {
-    calUnguidedMode.value = true;
-    calAutoStep.value = false;
-    calCurrentStep.value = 0;
     calGeoRef.value = getGeoReference();
     await cal.startCalibration("check");
 }
 
-async function startGuidedMagCal() {
-    calUnguidedMode.value = true;
-    calAutoStep.value = false;
-    calCurrentStep.value = 0;
+async function startClientCal() {
     calGeoRef.value = getGeoReference();
     await cal.startCalibration("guided");
 }
@@ -1473,49 +1432,40 @@ async function saveCalValues({ x, y, z }) {
 
 function retryAndStartMagCal() {
     retryMagCal();
-    startMagCal(false);
+    startGuidedFirmwareCal();
 }
 
 function clearMagCalSamples() {
-    clearCalAutoStepTimer();
-    calCurrentStep.value = 0;
+    clearPromptTimer();
+    calCurrentPrompt.value = 0;
     cal.clearSamples();
 }
 
 function retryMagCal() {
-    clearCalAutoStepTimer();
+    clearPromptTimer();
+    calIsGuidedFirmware.value = false;
     cal.retry();
-    calCurrentStep.value = 0;
-    calUnguidedMode.value = false;
-    calAutoStep.value = false;
 }
 
-function startCalAutoStepTimer() {
-    clearCalAutoStepTimer();
-    calStepCountdown.value = CAL_AUTO_STEP_SECONDS;
-    calAutoStepTimer = setInterval(() => {
+function startPromptTimer() {
+    clearPromptTimer();
+    calCurrentPrompt.value = 0;
+    promptTimer = setInterval(() => {
         if (cal.phase === "error" || cal.phase === "complete") {
-            clearCalAutoStepTimer();
+            clearPromptTimer();
             return;
         }
-        calStepCountdown.value--;
-        if (calStepCountdown.value <= 0) {
-            clearCalAutoStepTimer();
-            if (calCurrentStep.value < CAL_TOTAL_STEPS - 1) {
-                nextMagCalStep();
-            } else {
-                finishMagCal();
-            }
+        if (calCurrentPrompt.value < CAL_PROMPTS.length - 1) {
+            calCurrentPrompt.value++;
         }
-    }, 1000);
+    }, PROMPT_INTERVAL_S * 1000);
 }
 
-function clearCalAutoStepTimer() {
-    if (calAutoStepTimer !== null) {
-        clearInterval(calAutoStepTimer);
-        calAutoStepTimer = null;
+function clearPromptTimer() {
+    if (promptTimer !== null) {
+        clearInterval(promptTimer);
+        promptTimer = null;
     }
-    calStepCountdown.value = 0;
 }
 
 const BEEP_NOTES = [
@@ -1544,11 +1494,13 @@ function playCalCompletionBeep() {
     }
 }
 
-// Auto-complete unguided calibration when firmware signals done
+// Auto-complete firmware calibration when firmware signals done
 watch(
     () => cal.firmwareDone,
     (done) => {
-        if (done && calUnguidedMode.value) {
+        if (done && cal.mode === "quick") {
+            clearPromptTimer();
+            calIsGuidedFirmware.value = false;
             cal.completeCalibration();
             magNeedsCalibration.value = false;
             playCalCompletionBeep();
@@ -1556,14 +1508,12 @@ watch(
     },
 );
 
-// Manage auto-step timer based on calibration phase transitions
 watch(
     () => cal.phase,
     (phase) => {
-        if (phase === "collecting" && calAutoStep.value) {
-            startCalAutoStepTimer();
-        } else if (phase === "error" || phase === "complete") {
-            clearCalAutoStepTimer();
+        if (phase === "error" || phase === "complete") {
+            clearPromptTimer();
+            calIsGuidedFirmware.value = false;
         }
     },
 );
