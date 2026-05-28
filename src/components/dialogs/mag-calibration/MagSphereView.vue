@@ -1285,11 +1285,8 @@ function disposeMesh(mesh, removeFromScene = false) {
     mesh.material?.dispose();
 }
 
-function updateWireframe(fit) {
-    disposeMesh(wireframeMesh, true);
-    wireframeMesh = null;
-
-    if (!fit || !scene) {
+function ensureWireframe() {
+    if (wireframeMesh || !scene) {
         return;
     }
 
@@ -1301,7 +1298,6 @@ function updateWireframe(fit) {
         transparent: true,
     });
     wireframeMesh = new THREE.LineSegments(wireGeo, wireMat);
-    // In attitude-based view, dots form a sphere centered at origin
     wireframeMesh.position.set(0, 0, 0);
     scene.add(wireframeMesh);
     sphereGeo.dispose();
@@ -1442,6 +1438,7 @@ watch(
             maxFieldStrength = 0;
             noseDirections = [];
         }
+        ensureWireframe();
         updatePoints(props.samples);
         updateActiveViz(props.samples);
     },
@@ -1449,8 +1446,8 @@ watch(
 
 watch(
     () => props.sphereFit,
-    (val) => {
-        updateWireframe(val);
+    () => {
+        ensureWireframe();
         rebuildFieldReference();
         updateActiveViz(props.samples);
         // Update grey sphere center marker
@@ -1491,7 +1488,7 @@ onMounted(() => {
     // Hydrate scene from current props — the results-screen instance mounts
     // with precomputed data that won't trigger the watchers.
     updatePoints(props.samples);
-    updateWireframe(props.sphereFit);
+    ensureWireframe();
     rebuildFieldReference();
     applyVizMode(props.vizMode);
     // Hydrate calOffsetMarker — the immediate watcher ran before initScene created it
