@@ -1285,6 +1285,7 @@ const guidedSecondsRemaining = ref(-1);
 let promptTimer = null;
 let guidedCountdownTimer = null;
 const calGeoRef = ref(null);
+let lastCalStarter = null;
 
 const GUIDED_DURATION_S = 60;
 const PROMPT_INTERVAL_S = 12;
@@ -1333,6 +1334,7 @@ async function startGuidedCal() {
         await startLegacyFirmwareCal();
         return;
     }
+    lastCalStarter = startGuidedCal;
     calIsGuided.value = true;
     calCurrentPrompt.value = 0;
     calGeoRef.value = getGeoReference();
@@ -1342,6 +1344,7 @@ async function startGuidedCal() {
 }
 
 async function startLegacyFirmwareCal() {
+    lastCalStarter = startLegacyFirmwareCal;
     calGeoRef.value = getGeoReference();
     await cal.startCalibration();
 }
@@ -1396,11 +1399,13 @@ const calModeItems = computed(() => {
 });
 
 async function startCheckMode() {
+    lastCalStarter = startCheckMode;
     calGeoRef.value = getGeoReference();
     await cal.startCalibration("check");
 }
 
 async function startClientCal() {
+    lastCalStarter = startClientCal;
     calGeoRef.value = getGeoReference();
     await cal.startCalibration("guided");
 }
@@ -1439,8 +1444,9 @@ async function saveCalValues({ x, y, z }) {
 }
 
 function retryAndStartMagCal() {
+    const starter = lastCalStarter ?? startGuidedCal;
     retryMagCal();
-    startGuidedCal();
+    starter();
 }
 
 function clearMagCalSamples() {
