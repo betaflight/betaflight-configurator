@@ -41,9 +41,9 @@
                             <span
                                 class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
                                 :class="{
-                                    'bg-[#1fb1f0]': axis === 'x',
-                                    'bg-[#97d800]': axis === 'y',
-                                    'bg-[#e24761]': axis === 'z',
+                                    'bg-[#e24761]': axis === 'x',
+                                    'bg-[#49c747]': axis === 'y',
+                                    'bg-[#477ac7]': axis === 'z',
                                 }"
                                 >{{ displayValues[i] }}</span
                             >
@@ -52,7 +52,7 @@
                     <template v-else>
                         <div class="flex justify-between py-0.5">
                             <span>X:</span>
-                            <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#1fb1f0]">{{
+                            <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#e24761]">{{
                                 displayValues[0]
                             }}</span>
                         </div>
@@ -84,7 +84,7 @@
                     </div>
                     <div class="flex justify-between py-0.5">
                         <span>Value:</span>
-                        <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#1fb1f0]">{{
+                        <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#e24761]">{{
                             displayValues[0]
                         }}</span>
                     </div>

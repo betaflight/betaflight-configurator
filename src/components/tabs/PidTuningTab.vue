@@ -1258,10 +1258,10 @@ onUnmounted(() => {
     background-color: #e24761;
 }
 .pid_pitch {
-    background-color: #97d800;
+    background-color: #49c747;
 }
 .pid_yaw {
-    background-color: #1fb1f0;
+    background-color: #477ac7;
 }
 .pid_roll,
 .pid_pitch,

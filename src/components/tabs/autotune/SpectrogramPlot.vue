@@ -26,9 +26,9 @@ const container = ref(null);
 const canvasRefs = {};
 
 const AXIS_DEFS = [
-    { key: "roll", labelKey: "autotuneAxisRoll", color: "#e74c3c" },
-    { key: "pitch", labelKey: "autotuneAxisPitch", color: "#2ecc71" },
-    { key: "yaw", labelKey: "autotuneAxisYaw", color: "#3498db" },
+    { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761" },
+    { key: "pitch", labelKey: "autotuneAxisPitch", color: "#49c747" },
+    { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7" },
 ];
 
 const MARGIN = { top: 4, right: 10, bottom: 24, left: 55 };
