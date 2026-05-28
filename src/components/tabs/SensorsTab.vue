@@ -421,11 +421,7 @@
                     <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
                         <div class="flex items-center gap-2">
                             <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                                <UButton
-                                    size="xs"
-                                    :label="$t('sensorConfigCalibrate')"
-                                    @click="startGuidedFirmwareCal()"
-                                >
+                                <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startGuidedCal()">
                                     <template #trailing>
                                         <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                                     </template>
@@ -446,19 +442,19 @@
                     <!-- Calibrating -->
                     <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
                         <div class="mag-cal-inline-steps">
-                            <template v-if="calIsGuidedFirmware">
+                            <template v-if="calIsGuided">
                                 <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedFwTitle") }}</div>
                                 <p class="text-sm text-[var(--surface-600)] text-center my-2">
                                     {{ $t(CAL_PROMPTS[calCurrentPrompt].i18n) }}
                                 </p>
-                                <p
-                                    v-if="cal.firmwareSecondsRemaining >= 0 && !cal.firmwareDone"
-                                    class="text-lg font-bold text-center tabular-nums"
-                                >
-                                    {{ cal.firmwareSecondsRemaining }}s
+                                <p v-if="guidedSecondsRemaining > 0" class="text-lg font-bold text-center tabular-nums">
+                                    {{ guidedSecondsRemaining }}s
                                 </p>
-                                <p v-if="cal.firmwareDone" class="text-xs font-semibold quality-good text-center">
-                                    {{ $t("magCalibrationUnguidedDone") }}
+                                <p
+                                    v-if="guidedSecondsRemaining === 0"
+                                    class="text-xs font-semibold quality-good text-center"
+                                >
+                                    {{ $t("magCalibrationGuidedDone") }}
                                 </p>
                             </template>
                             <template v-else-if="cal.mode === 'check'">
@@ -748,6 +744,7 @@ onUnmounted(() => {
     alignDetectPhase.value = "idle";
     cleanupAlignDetection();
     clearPromptTimer();
+    clearGuidedCountdown();
     if (calIsCalibrating.value) {
         cal.cancelCalibration();
     }
@@ -1282,16 +1279,21 @@ async function autoSetDeclination() {
 // --- Inline Mag Calibration (replaces dialog) ---
 
 const cal = reactive(useMagCalibration());
-const calIsGuidedFirmware = ref(false);
+const calIsGuided = ref(false);
 const calCurrentPrompt = ref(0);
+const guidedSecondsRemaining = ref(-1);
 let promptTimer = null;
+let guidedCountdownTimer = null;
 const calGeoRef = ref(null);
 
+const GUIDED_DURATION_S = 60;
 const PROMPT_INTERVAL_S = 12;
 const CAL_PROMPTS = [
     { i18n: "magCalibrationPrompt1" },
     { i18n: "magCalibrationPrompt2" },
     { i18n: "magCalibrationPrompt3" },
+    { i18n: "magCalibrationPrompt4" },
+    { i18n: "magCalibrationPrompt5" },
 ];
 
 const CAL_QUALITY_KEY = {
@@ -1326,12 +1328,13 @@ const calFirmwareOffsetsText = computed(() => {
     return `${fw.x}, ${fw.y}, ${fw.z}`;
 });
 
-async function startGuidedFirmwareCal() {
-    calIsGuidedFirmware.value = true;
+async function startGuidedCal() {
+    calIsGuided.value = true;
     calCurrentPrompt.value = 0;
     calGeoRef.value = getGeoReference();
-    await cal.startCalibration();
+    await cal.startCalibration("guided");
     startPromptTimer();
+    startGuidedCountdown();
 }
 
 async function startLegacyFirmwareCal() {
@@ -1341,7 +1344,8 @@ async function startLegacyFirmwareCal() {
 
 function cancelMagCal() {
     clearPromptTimer();
-    calIsGuidedFirmware.value = false;
+    clearGuidedCountdown();
+    calIsGuided.value = false;
     cal.cancelCalibration();
 }
 
@@ -1367,7 +1371,7 @@ const calModeItems = computed(() => {
             label: i18n.getMessage("magCalibrationGuidedFw"),
             description: i18n.getMessage("magCalibrationGuidedFwDesc"),
             icon: "i-lucide-compass",
-            onSelect: () => startGuidedFirmwareCal(),
+            onSelect: () => startGuidedCal(),
         },
     ];
     if (calGuidedAvailable.value) {
@@ -1432,18 +1436,23 @@ async function saveCalValues({ x, y, z }) {
 
 function retryAndStartMagCal() {
     retryMagCal();
-    startGuidedFirmwareCal();
+    startGuidedCal();
 }
 
 function clearMagCalSamples() {
     clearPromptTimer();
     calCurrentPrompt.value = 0;
+    if (calIsGuided.value) {
+        startPromptTimer();
+        restartGuidedCountdown();
+    }
     cal.clearSamples();
 }
 
 function retryMagCal() {
     clearPromptTimer();
-    calIsGuidedFirmware.value = false;
+    clearGuidedCountdown();
+    calIsGuided.value = false;
     cal.retry();
 }
 
@@ -1466,6 +1475,33 @@ function clearPromptTimer() {
         clearInterval(promptTimer);
         promptTimer = null;
     }
+}
+
+function startGuidedCountdown() {
+    clearGuidedCountdown();
+    const startTime = Date.now();
+    guidedSecondsRemaining.value = GUIDED_DURATION_S;
+    guidedCountdownTimer = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        const remaining = Math.max(0, Math.ceil(GUIDED_DURATION_S - elapsed));
+        guidedSecondsRemaining.value = remaining;
+        if (remaining <= 0) {
+            clearGuidedCountdown();
+            playCalCompletionBeep();
+        }
+    }, 1000);
+}
+
+function restartGuidedCountdown() {
+    startGuidedCountdown();
+}
+
+function clearGuidedCountdown() {
+    if (guidedCountdownTimer !== null) {
+        clearInterval(guidedCountdownTimer);
+        guidedCountdownTimer = null;
+    }
+    guidedSecondsRemaining.value = -1;
 }
 
 const BEEP_NOTES = [
@@ -1500,7 +1536,7 @@ watch(
     (done) => {
         if (done && cal.mode === "quick") {
             clearPromptTimer();
-            calIsGuidedFirmware.value = false;
+            calIsGuided.value = false;
             cal.completeCalibration();
             magNeedsCalibration.value = false;
             playCalCompletionBeep();
@@ -1513,7 +1549,8 @@ watch(
     (phase) => {
         if (phase === "error" || phase === "complete") {
             clearPromptTimer();
-            calIsGuidedFirmware.value = false;
+            clearGuidedCountdown();
+            calIsGuided.value = false;
         }
     },
 );

@@ -7671,7 +7671,7 @@
         "message": "Guided"
     },
     "magCalibrationGuidedFwDesc": {
-        "message": "Auto-prompting 30s calibration"
+        "message": "Auto-prompting 60s calibration"
     },
     "magCalibrationGuidedFwTitle": {
         "message": "Guided Calibration"
@@ -7684,6 +7684,15 @@
     },
     "magCalibrationPrompt3": {
         "message": "Try sideways and upside down — fill the gaps in the sphere"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Point the nose at any remaining gaps in the dot cloud"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Almost done — keep rotating to fill the last gaps"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Data collection complete — review and save"
     },
     "magCalibrationCancel": {
         "message": "Cancel"
