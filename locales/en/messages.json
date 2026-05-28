@@ -7782,7 +7782,7 @@
         "message": "Guided Calibration"
     },
     "magCalibrationGuidedInstruction": {
-        "message": "Rotate your vehicle slowly in all directions. When coverage is sufficient, accept the calibration to save offsets."
+        "message": "Rotate your vehicle in all directions. Aim to make a complete sphere of dots over about one or two minutes. Save the result when the calibration values have stabilised."
     },
     "magCalibrationCheck": {
         "message": "Check"
