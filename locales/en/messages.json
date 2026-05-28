@@ -7809,7 +7809,7 @@
         "message": "Failed to save calibration values"
     },
     "magCalibrationAccept": {
-        "message": "Accept Calibration"
+        "message": "Save Calibration"
     },
     "magCalibrationDiscard": {
         "message": "Discard"
