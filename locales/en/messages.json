@@ -7782,7 +7782,7 @@
         "message": "Checking Calibration"
     },
     "magCalibrationCheckInstruction": {
-        "message": "Rotate the quad to fill the sphere. A centered sphere confirms good calibration."
+        "message": "Confirm the orientation and calibration of the Magnetometer. Set your craft flat to the horizon, point the nose to a known point on the compass (a phone may be used to figure out which way is North), and confirm that new dots appear at the expected location in the 3D display. The field strength values for each axis and the sphericity of the dots indicate the accuracy of the calibration. If the points go to completely wrong places, the orientation of the Mag is likely to be wrong."
     },
     "magCalibrationCalValues": {
         "message": "Cal Values"
