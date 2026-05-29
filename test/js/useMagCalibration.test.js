@@ -9,7 +9,6 @@ import MSPCodes from "../../src/js/msp/MSPCodes";
 vi.mock("../../src/composables/useMspCliSession", () => ({
     send: vi.fn().mockResolvedValue([]),
     isMspCliSupported: vi.fn().mockReturnValue(true),
-    saveAndReconnect: vi.fn().mockResolvedValue({ ok: true }),
 }));
 
 // Mock sphereFit utilities
@@ -28,7 +27,7 @@ vi.mock("geomagnetism", () => ({
 }));
 
 import { useMagCalibration } from "../../src/composables/useMagCalibration";
-import { send, isMspCliSupported, saveAndReconnect } from "../../src/composables/useMspCliSession";
+import { send, isMspCliSupported } from "../../src/composables/useMspCliSession";
 import { fitSphere } from "../../src/js/utils/sphereFit";
 import { useFlightControllerStore } from "../../src/stores/fc";
 
@@ -55,7 +54,6 @@ describe("useMagCalibration", () => {
         // Default: CLI returns no offsets
         send.mockResolvedValue([]);
         isMspCliSupported.mockReturnValue(true);
-        saveAndReconnect.mockResolvedValue({ ok: true });
         fitSphere.mockReturnValue(null);
 
         // Create composable in an effect scope so onScopeDispose works
@@ -223,7 +221,7 @@ describe("useMagCalibration", () => {
             expect(result.error).toMatch(/Invalid calibration offsets/);
         });
 
-        it("sends CLI set command and calls saveAndReconnect on valid fit", async () => {
+        it("sends CLI set command and updates firmwareOffsets on valid fit", async () => {
             cal.sphereFitResult.value = {
                 center: { x: 123.7, y: -45.3, z: 67.9 },
                 radius: 300,
@@ -233,22 +231,9 @@ describe("useMagCalibration", () => {
             const result = await cal.acceptCalibration();
             expect(result.ok).toBe(true);
             expect(send).toHaveBeenCalledWith("set mag_calibration = 124,-45,68");
-            expect(saveAndReconnect).toHaveBeenCalled();
+            expect(cal.firmwareOffsets.value).toEqual({ x: 124, y: -45, z: 68 });
             expect(cal.phase.value).toBe("complete");
             expect(cal.progress.value).toBe(100);
-        });
-
-        it("restores collecting state when saveAndReconnect returns ok:false", async () => {
-            cal.sphereFitResult.value = {
-                center: { x: 10, y: 20, z: 30 },
-                radius: 300,
-                residual: 50,
-            };
-            saveAndReconnect.mockResolvedValueOnce({ ok: false, error: "EEPROM write failed" });
-
-            const result = await cal.acceptCalibration();
-            expect(result.ok).toBe(false);
-            expect(cal.phase.value).toBe("collecting");
         });
 
         it("restores collecting state when CLI command throws (allows retry)", async () => {
@@ -358,33 +343,18 @@ describe("useMagCalibration", () => {
             expect(result.error).toMatch(/out of range/);
         });
 
-        it("sends CLI command and saves on valid values", async () => {
-            saveAndReconnect.mockResolvedValueOnce({ ok: true });
-
+        it("sends CLI command and updates firmwareOffsets on valid values", async () => {
             const result = await cal.writeCalValues(100, -200, 300);
 
             expect(result.ok).toBe(true);
             expect(send).toHaveBeenCalledWith("set mag_calibration = 100,-200,300");
-            expect(saveAndReconnect).toHaveBeenCalled();
             expect(cal.firmwareOffsets.value).toEqual({ x: 100, y: -200, z: 300 });
         });
 
         it("rounds decimal values to integers", async () => {
-            saveAndReconnect.mockResolvedValueOnce({ ok: true });
-
             await cal.writeCalValues(10.7, -20.3, 30.5);
 
             expect(send).toHaveBeenCalledWith("set mag_calibration = 11,-20,31");
-        });
-
-        it("restores previous firmwareOffsets when saveAndReconnect fails", async () => {
-            cal.firmwareOffsets.value = { x: 1, y: 2, z: 3 };
-            saveAndReconnect.mockResolvedValueOnce({ ok: false, error: "EEPROM write failed" });
-
-            const result = await cal.writeCalValues(100, -200, 300);
-
-            expect(result.ok).toBe(false);
-            expect(cal.firmwareOffsets.value).toEqual({ x: 1, y: 2, z: 3 });
         });
 
         it("restores previous firmwareOffsets when CLI throws", async () => {

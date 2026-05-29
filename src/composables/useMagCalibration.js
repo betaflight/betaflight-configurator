@@ -4,7 +4,7 @@ import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { useFlightControllerStore } from "../stores/fc";
 import { fitSphere, computeCoverage } from "../js/utils/sphereFit";
-import { send as cliSend, isMspCliSupported, saveAndReconnect } from "./useMspCliSession";
+import { send as cliSend, isMspCliSupported } from "./useMspCliSession";
 
 const POLL_INTERVAL_MS = 100;
 const MONITOR_INTERVAL_MS = 1000;
@@ -358,20 +358,16 @@ export function useMagCalibration() {
         }
         try {
             cleanup();
-            await cliSend(`set mag_calibration = ${Math.round(x)},${Math.round(y)},${Math.round(z)}`);
-            const result = await saveAndReconnect();
-            if (!result?.ok) {
-                startDataPolling();
-                phase.value = "collecting";
-                statusMessage.value = "magCalibrationError";
-                return result;
-            }
+            const rx = Math.round(x);
+            const ry = Math.round(y);
+            const rz = Math.round(z);
+            await cliSend(`set mag_calibration = ${rx},${ry},${rz}`);
+            firmwareOffsets.value = { x: rx, y: ry, z: rz };
             phase.value = "complete";
             statusMessage.value = "magCalibrationComplete";
             progress.value = 100;
-            return result;
+            return { ok: true };
         } catch (error) {
-            // Restart polling so the user can retry without losing samples
             startDataPolling();
             phase.value = "collecting";
             statusMessage.value = "magCalibrationError";
@@ -406,11 +402,7 @@ export function useMagCalibration() {
         try {
             await cliSend(`set mag_calibration = ${rx},${ry},${rz}`);
             firmwareOffsets.value = { x: rx, y: ry, z: rz };
-            const result = await saveAndReconnect();
-            if (!result?.ok) {
-                firmwareOffsets.value = previous;
-            }
-            return result ?? { ok: false, error: "Save failed" };
+            return { ok: true };
         } catch (error) {
             firmwareOffsets.value = previous;
             return { ok: false, error };
