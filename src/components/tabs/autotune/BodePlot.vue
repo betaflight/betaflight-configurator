@@ -42,7 +42,7 @@ const phaseSvg = ref(null);
 const sensitivitySvg = ref(null);
 const stepSvg = ref(null);
 
-const AXIS_COLORS = { roll: "#e74c3c", pitch: "#2ecc71", yaw: "#3498db" };
+const AXIS_COLORS = { roll: "#e24761", pitch: "#49c747", yaw: "#477ac7" };
 const AXES = [
     { key: "roll", labelKey: "autotuneAxisRoll", colorClass: "toggle-roll" },
     { key: "pitch", labelKey: "autotuneAxisPitch", colorClass: "toggle-pitch" },

@@ -1300,22 +1300,22 @@ onUnmounted(() => {
         gap: 0.5rem;
         &:nth-of-type(1) {
             :deep([data-slot="indicator"]) {
-                background-color: #f1453d;
+                background-color: #e24761;
             }
         }
         &:nth-of-type(2) {
             :deep([data-slot="indicator"]) {
-                background-color: #673fb4;
+                background-color: #49c747;
             }
         }
         &:nth-of-type(3) {
             :deep([data-slot="indicator"]) {
-                background-color: #2b98f0;
+                background-color: #477ac7;
             }
         }
         &:nth-of-type(4) {
             :deep([data-slot="indicator"]) {
-                background-color: #1fbcd2;
+                background-color: #f5a623;
             }
         }
         &:nth-of-type(5) {
@@ -1437,16 +1437,16 @@ onUnmounted(() => {
         border-radius: 3px;
     }
     .ch1 {
-        background-color: #f1453d;
+        background-color: #e24761;
     }
     .ch2 {
-        background-color: #673fb4;
+        background-color: #49c747;
     }
     .ch3 {
-        background-color: #2b98f0;
+        background-color: #477ac7;
     }
     .ch4 {
-        background-color: #1fbcd2;
+        background-color: #f5a623;
     }
 }
 
@@ -1455,16 +1455,16 @@ onUnmounted(() => {
     color: var(--text);
     .line {
         &:nth-child(1) {
-            stroke: #f1453d;
+            stroke: #e24761;
         }
         &:nth-child(2) {
-            stroke: #673fb4;
+            stroke: #49c747;
         }
         &:nth-child(3) {
-            stroke: #2b98f0;
+            stroke: #477ac7;
         }
         &:nth-child(4) {
-            stroke: #1fbcd2;
+            stroke: #f5a623;
         }
         &:nth-child(5) {
             stroke: #159588;

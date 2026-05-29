@@ -101,9 +101,9 @@ const selectedAxisKey = ref(null);
 const isConnected = computed(() => connectionStore.connectionValid);
 
 const AXIS_DEFS = [
-    { key: "roll", labelKey: "autotuneAxisRoll", color: "#e74c3c", pidKey: "rollPID" },
-    { key: "pitch", labelKey: "autotuneAxisPitch", color: "#2ecc71", pidKey: "pitchPID" },
-    { key: "yaw", labelKey: "autotuneAxisYaw", color: "#3498db", pidKey: "yawPID" },
+    { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },
+    { key: "pitch", labelKey: "autotuneAxisPitch", color: "#49c747", pidKey: "pitchPID" },
+    { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7", pidKey: "yawPID" },
 ];
 
 const PID_ROWS = [
