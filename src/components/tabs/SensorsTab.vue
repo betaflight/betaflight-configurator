@@ -1297,13 +1297,14 @@ const calGeoRef = ref(null);
 let lastCalStarter = null;
 
 const GUIDED_DURATION_S = 60;
-const PROMPT_INTERVAL_S = 12;
+const PROMPT_INTERVAL_S = 10;
 const CAL_PROMPTS = [
     { i18n: "magCalibrationPrompt1" },
     { i18n: "magCalibrationPrompt2" },
     { i18n: "magCalibrationPrompt3" },
     { i18n: "magCalibrationPrompt4" },
     { i18n: "magCalibrationPrompt5" },
+    { i18n: "magCalibrationPrompt6" },
 ];
 
 const CAL_QUALITY_KEY = {

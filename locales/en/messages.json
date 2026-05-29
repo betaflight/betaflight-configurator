@@ -7677,19 +7677,22 @@
         "message": "Guided Calibration"
     },
     "magCalibrationPrompt1": {
-        "message": "Rotate slowly — point the nose in all directions"
+        "message": "Step 1/6 — Hold flat, yaw 360°"
     },
     "magCalibrationPrompt2": {
-        "message": "Tilt the nose up and down while continuing to rotate"
+        "message": "Step 2/6 — Flip inverted, yaw 360°"
     },
     "magCalibrationPrompt3": {
-        "message": "Try sideways and upside down — fill the gaps in the sphere"
+        "message": "Step 3/6 — Nose straight up, yaw 360°"
     },
     "magCalibrationPrompt4": {
-        "message": "Point the nose at any remaining gaps in the dot cloud"
+        "message": "Step 4/6 — Nose straight down, yaw 360°"
     },
     "magCalibrationPrompt5": {
-        "message": "Almost done — keep rotating to fill the last gaps"
+        "message": "Step 5/6 — Left side up, yaw 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Step 6/6 — Right side up, yaw 360°"
     },
     "magCalibrationGuidedDone": {
         "message": "Data collection complete — review and save"
