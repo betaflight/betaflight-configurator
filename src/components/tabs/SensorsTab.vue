@@ -497,7 +497,7 @@
                                 <dt>{{ $t("magCalibrationResidual") }}</dt>
                                 <dd>{{ calResidualText }}</dd>
                             </dl>
-                            <div class="mag-cal-progress-bar">
+                            <div v-if="cal.mode !== 'check'" class="mag-cal-progress-bar">
                                 <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
                             </div>
                             <div v-if="cal.quality" class="text-xs font-semibold text-center">
