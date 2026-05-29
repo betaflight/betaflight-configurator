@@ -1399,7 +1399,7 @@ const MAG_VIZ_MODES = [
 ];
 const magVizMode = ref("pointcloud");
 
-const calGuidedAvailable = computed(() => isMspCliSupported());
+const calGuidedAvailable = computed(() => isApi147.value && isMspCliSupported());
 
 const calModeItems = computed(() => {
     const items = [];
