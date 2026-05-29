@@ -2221,7 +2221,7 @@ onMounted(() => {
         gap: 0.75rem;
         font-size: 0.75rem;
         font-variant-numeric: tabular-nums;
-        color: var(--surface-600);
+        color: var(--surface-900);
         padding: 4px 8px;
         background: var(--surface-200);
         border-radius: 4px;
