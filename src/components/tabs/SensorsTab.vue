@@ -316,335 +316,358 @@
                     </div>
                 </div>
 
-                <!-- Declination auto-set note (API >= 1.46) -->
-                <div
-                    v-if="isApi146 && declinationNote"
-                    class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--primary-500)]/10 text-[var(--primary-700)]"
-                >
-                    <UIcon name="i-lucide-info" class="size-4 shrink-0" />
-                    <span>{{ declinationNote }}</span>
-                    <UButton
-                        size="2xs"
-                        variant="ghost"
-                        icon="i-lucide-x"
-                        :aria-label="$t('close')"
-                        @click="dismissDeclinationNote"
-                    />
-                </div>
-
-                <!-- Declination warning -->
-                <div
-                    v-if="isApi146 && declinationWarning"
-                    class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--warning-500)]/15 text-[var(--warning-700)]"
-                >
-                    <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
-                    <span>{{ declinationWarning }}</span>
-                    <UButton
-                        size="2xs"
-                        variant="ghost"
-                        icon="i-lucide-x"
-                        :aria-label="$t('close')"
-                        @click="dismissDeclinationWarning"
-                    />
-                </div>
-
-                <!-- Declination + Inclination + Field Strength (API >= 1.46) -->
-                <div v-if="isApi146" class="flex items-end gap-4 flex-wrap">
-                    <SettingColumn
-                        :label="$t('configurationMagDeclination')"
-                        :help="$t('configurationMagDeclinationHelp')"
+                <!-- API >= 1.47: full mag cal UI (declination, cal editor, check, guided modes) -->
+                <template v-if="calGuidedAvailable">
+                    <!-- Declination auto-set note (API >= 1.46) -->
+                    <div
+                        v-if="isApi146 && declinationNote"
+                        class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--primary-500)]/10 text-[var(--primary-700)]"
                     >
-                        <div class="flex items-center gap-2">
-                            <UInputNumber
-                                v-model="magDeclination"
-                                :step="0.1"
-                                :min="-180"
-                                :max="180"
-                                orientation="vertical"
+                        <UIcon name="i-lucide-info" class="size-4 shrink-0" />
+                        <span>{{ declinationNote }}</span>
+                        <UButton
+                            size="2xs"
+                            variant="ghost"
+                            icon="i-lucide-x"
+                            :aria-label="$t('close')"
+                            @click="dismissDeclinationNote"
+                        />
+                    </div>
+
+                    <!-- Declination warning -->
+                    <div
+                        v-if="isApi146 && declinationWarning"
+                        class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--warning-500)]/15 text-[var(--warning-700)]"
+                    >
+                        <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
+                        <span>{{ declinationWarning }}</span>
+                        <UButton
+                            size="2xs"
+                            variant="ghost"
+                            icon="i-lucide-x"
+                            :aria-label="$t('close')"
+                            @click="dismissDeclinationWarning"
+                        />
+                    </div>
+
+                    <!-- Declination + Inclination + Field Strength (API >= 1.46) -->
+                    <div v-if="isApi146" class="flex items-end gap-4 flex-wrap">
+                        <SettingColumn
+                            :label="$t('configurationMagDeclination')"
+                            :help="$t('configurationMagDeclinationHelp')"
+                        >
+                            <div class="flex items-center gap-2">
+                                <UInputNumber
+                                    v-model="magDeclination"
+                                    :step="0.1"
+                                    :min="-180"
+                                    :max="180"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-20"
+                                />
+                                <UButton
+                                    size="xs"
+                                    variant="outline"
+                                    :label="
+                                        declinationWarning ? $t('sensorConfigMagUpdate') : $t('sensorConfigMagDetect')
+                                    "
+                                    :disabled="isFetchingDeclination"
+                                    :loading="isFetchingDeclination"
+                                    @click="autoSetDeclination"
+                                />
+                            </div>
+                        </SettingColumn>
+                        <SettingColumn
+                            :label="$t('configurationMagInclination')"
+                            :help="$t('configurationMagInclinationHelp')"
+                        >
+                            <UInput
+                                :model-value="magInclination !== null ? magInclination + '°' : '—'"
+                                disabled
                                 size="xs"
                                 class="w-20"
                             />
-                            <UButton
+                        </SettingColumn>
+                        <SettingColumn
+                            :label="$t('configurationMagFieldStrengthLabel')"
+                            :help="$t('configurationMagFieldStrengthHelp')"
+                        >
+                            <UInput
+                                :model-value="magFieldStrength !== null ? magFieldStrength + ' nT' : '—'"
+                                disabled
                                 size="xs"
-                                variant="outline"
-                                :label="declinationWarning ? $t('sensorConfigMagUpdate') : $t('sensorConfigMagDetect')"
-                                :disabled="isFetchingDeclination"
-                                :loading="isFetchingDeclination"
-                                @click="autoSetDeclination"
+                                class="w-24"
                             />
-                        </div>
-                    </SettingColumn>
-                    <SettingColumn
-                        :label="$t('configurationMagInclination')"
-                        :help="$t('configurationMagInclinationHelp')"
-                    >
-                        <UInput
-                            :model-value="magInclination !== null ? magInclination + '°' : '—'"
-                            disabled
-                            size="xs"
-                            class="w-20"
-                        />
-                    </SettingColumn>
-                    <SettingColumn
-                        :label="$t('configurationMagFieldStrengthLabel')"
-                        :help="$t('configurationMagFieldStrengthHelp')"
-                    >
-                        <UInput
-                            :model-value="magFieldStrength !== null ? magFieldStrength + ' nT' : '—'"
-                            disabled
-                            size="xs"
-                            class="w-24"
-                        />
-                    </SettingColumn>
-                </div>
-
-                <!-- Mag calibration needed note -->
-                <div
-                    v-if="magNeedsCalibration"
-                    class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--warning-500)]/15 text-[var(--warning-700)]"
-                >
-                    <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
-                    <span>{{ $t("sensorConfigMagNeedsCalibration") }}</span>
-                </div>
-
-                <!-- Editable cal offset values (always visible) -->
-                <MagCalOffsetEditor
-                    :offsets="cal.firmwareOffsets"
-                    :saving="isSavingCal"
-                    :show-save="isMspCliSupported()"
-                    @save="saveCalValues"
-                />
-
-                <!-- Calibrate Magnetometer (inline) -->
-                <div class="mag-cal-section">
-                    <!-- Idle: check + calibrate buttons -->
-                    <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
-                        <div class="flex items-center gap-2">
-                            <UButton
-                                v-if="calGuidedAvailable"
-                                size="xs"
-                                variant="outline"
-                                icon="i-lucide-eye"
-                                :label="$t('magCalibrationCheck')"
-                                @click="startCheckMode()"
-                            />
-                            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                                <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startGuidedCal()">
-                                    <template #trailing>
-                                        <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
-                                    </template>
-                                </UButton>
-                                <UDropdownMenu v-slot="{ open }" :items="calModeItems" :content="{ align: 'start' }">
-                                    <UButton
-                                        size="xs"
-                                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                                        :aria-label="$t('magCalibrationModeOptions')"
-                                        :title="$t('magCalibrationModeOptions')"
-                                        square
-                                    />
-                                </UDropdownMenu>
-                            </UFieldGroup>
-                        </div>
+                        </SettingColumn>
                     </div>
 
-                    <!-- Calibrating -->
-                    <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
-                        <div class="mag-cal-inline-steps">
-                            <template v-if="calIsGuided">
-                                <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedFwTitle") }}</div>
-                                <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                    {{ $t(CAL_PROMPTS[calCurrentPrompt].i18n) }}
-                                </p>
-                                <p v-if="guidedSecondsRemaining > 0" class="text-lg font-bold text-center tabular-nums">
-                                    {{ guidedSecondsRemaining }}s
-                                </p>
-                                <p
-                                    v-if="guidedSecondsRemaining === 0"
-                                    class="text-xs font-semibold quality-good text-center"
-                                >
-                                    {{ $t("magCalibrationGuidedDone") }}
-                                </p>
-                            </template>
-                            <template v-else-if="cal.mode === 'check'">
-                                <div class="mag-cal-step-counter">{{ $t("magCalibrationCheckTitle") }}</div>
-                                <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                    {{ $t("magCalibrationCheckInstruction") }}
-                                </p>
-                            </template>
-                            <template v-else-if="cal.mode === 'guided'">
-                                <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
-                                <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                    {{ $t("magCalibrationGuidedInstruction") }}
-                                </p>
-                            </template>
-                            <template v-else>
-                                <div class="mag-cal-step-counter">{{ $t("magCalibrationUnguidedTitle") }}</div>
-                                <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                    {{ $t("magCalibrationUnguidedInstruction") }}
-                                </p>
-                                <p
-                                    v-if="cal.firmwareSecondsRemaining >= 0 && !cal.firmwareDone"
-                                    class="text-lg font-bold text-center tabular-nums"
-                                >
-                                    {{ cal.firmwareSecondsRemaining }}s
-                                </p>
-                                <p v-if="cal.firmwareDone" class="text-xs font-semibold quality-good text-center">
-                                    {{ $t("magCalibrationUnguidedDone") }}
-                                </p>
-                            </template>
-                            <dl v-if="cal.mode !== 'check' && cal.sphereFitResult" class="mag-cal-stats-inline">
-                                <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
-                                <dd>{{ calOffsetsText }}</dd>
-                                <dt>{{ $t("magCalibrationResidual") }}</dt>
-                                <dd>{{ calResidualText }}</dd>
-                            </dl>
-                            <div v-if="cal.mode !== 'check'" class="mag-cal-progress-bar">
-                                <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
-                            </div>
-                            <div v-if="cal.quality" class="text-xs font-semibold text-center">
-                                <span :class="'quality-' + cal.quality"
-                                    >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
-                                >
-                            </div>
-                            <div class="flex gap-2 justify-center mt-1">
+                    <!-- Mag calibration needed note -->
+                    <div
+                        v-if="magNeedsCalibration"
+                        class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--warning-500)]/15 text-[var(--warning-700)]"
+                    >
+                        <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
+                        <span>{{ $t("sensorConfigMagNeedsCalibration") }}</span>
+                    </div>
+
+                    <!-- Editable cal offset values -->
+                    <MagCalOffsetEditor
+                        :offsets="cal.firmwareOffsets"
+                        :saving="isSavingCal"
+                        show-save
+                        @save="saveCalValues"
+                    />
+
+                    <!-- Calibrate Magnetometer (inline) -->
+                    <div class="mag-cal-section">
+                        <!-- Idle: check + calibrate buttons -->
+                        <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
+                            <div class="flex items-center gap-2">
                                 <UButton
                                     size="xs"
                                     variant="outline"
-                                    :label="$t('magCalibrationCancel')"
-                                    @click="cancelMagCal()"
+                                    icon="i-lucide-eye"
+                                    :label="$t('magCalibrationCheck')"
+                                    @click="startCheckMode()"
                                 />
-                                <UButton
-                                    size="xs"
-                                    variant="ghost"
-                                    :label="$t('magCalibrationClear')"
-                                    :disabled="cal.sampleCount === 0"
-                                    @click="clearMagCalSamples()"
-                                />
-                                <UButton
-                                    v-if="cal.mode === 'guided'"
-                                    size="xs"
-                                    :loading="isAcceptingCal"
-                                    :disabled="!cal.quality"
-                                    :label="$t('magCalibrationAccept')"
-                                    @click="acceptGuidedMagCal()"
-                                />
-                            </div>
-                            <div class="mag-cal-live-inline">
-                                <span v-if="cal.mode !== 'check'"
-                                    >{{ $t("magCalibrationSamples") }}: {{ cal.sampleCount }}</span
-                                >
-                                <span>X: {{ cal.liveMag.x }}</span>
-                                <span>Y: {{ cal.liveMag.y }}</span>
-                                <span>Z: {{ cal.liveMag.z }}</span>
-                                <span>Field: {{ cal.liveFieldStrength }}</span>
+                                <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+                                    <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startGuidedCal()">
+                                        <template #trailing>
+                                            <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
+                                        </template>
+                                    </UButton>
+                                    <UDropdownMenu
+                                        v-slot="{ open }"
+                                        :items="calModeItems"
+                                        :content="{ align: 'start' }"
+                                    >
+                                        <UButton
+                                            size="xs"
+                                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                                            :aria-label="$t('magCalibrationModeOptions')"
+                                            :title="$t('magCalibrationModeOptions')"
+                                            square
+                                        />
+                                    </UDropdownMenu>
+                                </UFieldGroup>
                             </div>
                         </div>
-                        <div class="mag-cal-inline-sphere">
-                            <div class="mag-viz-mode-selector">
-                                <UButton
-                                    v-for="m in MAG_VIZ_MODES"
-                                    :key="m.value"
-                                    size="xs"
-                                    variant="ghost"
-                                    :icon="m.icon"
-                                    :class="{ 'mag-viz-active': magVizMode === m.value }"
-                                    :aria-label="$t(m.label)"
-                                    :title="$t(m.label)"
-                                    square
-                                    @click="magVizMode = m.value"
-                                />
-                            </div>
-                            <MagSphereView
-                                :samples="cal.samples"
-                                :sample-count="cal.sampleCount"
-                                :sphere-fit="cal.sphereFitResult"
-                                :active="true"
-                                :live-mag="cal.liveMag"
-                                :inclination="calGeoRef?.inclination ?? null"
-                                :coverage="cal.coverage"
-                                :attitude="attitudeRaw"
-                                :quaternion="attitudeQuaternion"
-                                :viz-mode="magVizMode"
-                                :cal-offsets="cal.firmwareOffsets"
-                            />
-                        </div>
-                    </div>
 
-                    <!-- Complete -->
-                    <div v-else-if="cal.phase === 'complete'" class="mag-cal-inline-layout">
-                        <div class="mag-cal-inline-steps">
-                            <p class="text-sm font-semibold quality-good mb-2">{{ $t("magCalibrationComplete") }}</p>
-                            <dl class="mag-cal-stats-inline">
-                                <dt>{{ $t("magCalibrationFirmwareOffsets") }}</dt>
-                                <dd>{{ calFirmwareOffsetsText }}</dd>
-                                <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
-                                <dd>{{ calOffsetsText }}</dd>
-                                <dt>{{ $t("magCalibrationSamples") }}</dt>
-                                <dd>{{ cal.sampleCount }}</dd>
-                                <dt>{{ $t("magCalibrationResidual") }}</dt>
-                                <dd>{{ calResidualText }}</dd>
-                                <dt>{{ $t("magCalibrationQuality") }}</dt>
-                                <dd>
-                                    <span v-if="cal.quality" :class="'quality-' + cal.quality"
+                        <!-- Calibrating -->
+                        <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
+                            <div class="mag-cal-inline-steps">
+                                <template v-if="calIsGuided">
+                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedFwTitle") }}</div>
+                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                        {{ $t(CAL_PROMPTS[calCurrentPrompt].i18n) }}
+                                    </p>
+                                    <p
+                                        v-if="guidedSecondsRemaining > 0"
+                                        class="text-lg font-bold text-center tabular-nums"
+                                    >
+                                        {{ guidedSecondsRemaining }}s
+                                    </p>
+                                    <p
+                                        v-if="guidedSecondsRemaining === 0"
+                                        class="text-xs font-semibold quality-good text-center"
+                                    >
+                                        {{ $t("magCalibrationGuidedDone") }}
+                                    </p>
+                                </template>
+                                <template v-else-if="cal.mode === 'check'">
+                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationCheckTitle") }}</div>
+                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                        {{ $t("magCalibrationCheckInstruction") }}
+                                    </p>
+                                </template>
+                                <template v-else-if="cal.mode === 'guided'">
+                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
+                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                        {{ $t("magCalibrationGuidedInstruction") }}
+                                    </p>
+                                </template>
+                                <template v-else>
+                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationUnguidedTitle") }}</div>
+                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                        {{ $t("magCalibrationUnguidedInstruction") }}
+                                    </p>
+                                    <p
+                                        v-if="cal.firmwareSecondsRemaining >= 0 && !cal.firmwareDone"
+                                        class="text-lg font-bold text-center tabular-nums"
+                                    >
+                                        {{ cal.firmwareSecondsRemaining }}s
+                                    </p>
+                                    <p v-if="cal.firmwareDone" class="text-xs font-semibold quality-good text-center">
+                                        {{ $t("magCalibrationUnguidedDone") }}
+                                    </p>
+                                </template>
+                                <dl v-if="cal.mode !== 'check' && cal.sphereFitResult" class="mag-cal-stats-inline">
+                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
+                                    <dd>{{ calOffsetsText }}</dd>
+                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
+                                    <dd>{{ calResidualText }}</dd>
+                                </dl>
+                                <div v-if="cal.mode !== 'check'" class="mag-cal-progress-bar">
+                                    <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
+                                </div>
+                                <div v-if="cal.quality" class="text-xs font-semibold text-center">
+                                    <span :class="'quality-' + cal.quality"
                                         >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
                                     >
-                                    <span v-else>&mdash;</span>
-                                </dd>
-                            </dl>
-                            <div class="flex gap-2 justify-center mt-3">
-                                <UButton
-                                    size="xs"
-                                    variant="outline"
-                                    :label="$t('magCalibrationRetry')"
-                                    @click="retryAndStartMagCal()"
+                                </div>
+                                <div class="flex gap-2 justify-center mt-1">
+                                    <UButton
+                                        size="xs"
+                                        variant="outline"
+                                        :label="$t('magCalibrationCancel')"
+                                        @click="cancelMagCal()"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        variant="ghost"
+                                        :label="$t('magCalibrationClear')"
+                                        :disabled="cal.sampleCount === 0"
+                                        @click="clearMagCalSamples()"
+                                    />
+                                    <UButton
+                                        v-if="cal.mode === 'guided'"
+                                        size="xs"
+                                        :loading="isAcceptingCal"
+                                        :disabled="!cal.quality"
+                                        :label="$t('magCalibrationAccept')"
+                                        @click="acceptGuidedMagCal()"
+                                    />
+                                </div>
+                                <div class="mag-cal-live-inline">
+                                    <span v-if="cal.mode !== 'check'"
+                                        >{{ $t("magCalibrationSamples") }}: {{ cal.sampleCount }}</span
+                                    >
+                                    <span>X: {{ cal.liveMag.x }}</span>
+                                    <span>Y: {{ cal.liveMag.y }}</span>
+                                    <span>Z: {{ cal.liveMag.z }}</span>
+                                    <span>Field: {{ cal.liveFieldStrength }}</span>
+                                </div>
+                            </div>
+                            <div class="mag-cal-inline-sphere">
+                                <div class="mag-viz-mode-selector">
+                                    <UButton
+                                        v-for="m in MAG_VIZ_MODES"
+                                        :key="m.value"
+                                        size="xs"
+                                        variant="ghost"
+                                        :icon="m.icon"
+                                        :class="{ 'mag-viz-active': magVizMode === m.value }"
+                                        :aria-label="$t(m.label)"
+                                        :title="$t(m.label)"
+                                        square
+                                        @click="magVizMode = m.value"
+                                    />
+                                </div>
+                                <MagSphereView
+                                    :samples="cal.samples"
+                                    :sample-count="cal.sampleCount"
+                                    :sphere-fit="cal.sphereFitResult"
+                                    :active="true"
+                                    :live-mag="cal.liveMag"
+                                    :inclination="calGeoRef?.inclination ?? null"
+                                    :coverage="cal.coverage"
+                                    :attitude="attitudeRaw"
+                                    :quaternion="attitudeQuaternion"
+                                    :viz-mode="magVizMode"
+                                    :cal-offsets="cal.firmwareOffsets"
                                 />
-                                <UButton size="xs" variant="outline" :label="$t('close')" @click="retryMagCal()" />
                             </div>
                         </div>
-                        <div class="mag-cal-inline-sphere">
-                            <div class="mag-viz-mode-selector">
-                                <UButton
-                                    v-for="m in MAG_VIZ_MODES"
-                                    :key="m.value"
-                                    size="xs"
-                                    variant="ghost"
-                                    :icon="m.icon"
-                                    :class="{ 'mag-viz-active': magVizMode === m.value }"
-                                    :aria-label="$t(m.label)"
-                                    :title="$t(m.label)"
-                                    square
-                                    @click="magVizMode = m.value"
+
+                        <!-- Complete -->
+                        <div v-else-if="cal.phase === 'complete'" class="mag-cal-inline-layout">
+                            <div class="mag-cal-inline-steps">
+                                <p class="text-sm font-semibold quality-good mb-2">
+                                    {{ $t("magCalibrationComplete") }}
+                                </p>
+                                <dl class="mag-cal-stats-inline">
+                                    <dt>{{ $t("magCalibrationFirmwareOffsets") }}</dt>
+                                    <dd>{{ calFirmwareOffsetsText }}</dd>
+                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
+                                    <dd>{{ calOffsetsText }}</dd>
+                                    <dt>{{ $t("magCalibrationSamples") }}</dt>
+                                    <dd>{{ cal.sampleCount }}</dd>
+                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
+                                    <dd>{{ calResidualText }}</dd>
+                                    <dt>{{ $t("magCalibrationQuality") }}</dt>
+                                    <dd>
+                                        <span v-if="cal.quality" :class="'quality-' + cal.quality"
+                                            >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
+                                        >
+                                        <span v-else>&mdash;</span>
+                                    </dd>
+                                </dl>
+                                <div class="flex gap-2 justify-center mt-3">
+                                    <UButton
+                                        size="xs"
+                                        variant="outline"
+                                        :label="$t('magCalibrationRetry')"
+                                        @click="retryAndStartMagCal()"
+                                    />
+                                    <UButton size="xs" variant="outline" :label="$t('close')" @click="retryMagCal()" />
+                                </div>
+                            </div>
+                            <div class="mag-cal-inline-sphere">
+                                <div class="mag-viz-mode-selector">
+                                    <UButton
+                                        v-for="m in MAG_VIZ_MODES"
+                                        :key="m.value"
+                                        size="xs"
+                                        variant="ghost"
+                                        :icon="m.icon"
+                                        :class="{ 'mag-viz-active': magVizMode === m.value }"
+                                        :aria-label="$t(m.label)"
+                                        :title="$t(m.label)"
+                                        square
+                                        @click="magVizMode = m.value"
+                                    />
+                                </div>
+                                <MagSphereView
+                                    :samples="cal.samples"
+                                    :sample-count="cal.sampleCount"
+                                    :sphere-fit="cal.sphereFitResult"
+                                    :active="false"
+                                    :inclination="calGeoRef?.inclination ?? null"
+                                    :coverage="cal.coverage"
+                                    :attitude="attitudeRaw"
+                                    :quaternion="attitudeQuaternion"
+                                    :viz-mode="magVizMode"
+                                    :cal-offsets="cal.firmwareOffsets"
                                 />
                             </div>
-                            <MagSphereView
-                                :samples="cal.samples"
-                                :sample-count="cal.sampleCount"
-                                :sphere-fit="cal.sphereFitResult"
-                                :active="false"
-                                :inclination="calGeoRef?.inclination ?? null"
-                                :coverage="cal.coverage"
-                                :attitude="attitudeRaw"
-                                :quaternion="attitudeQuaternion"
-                                :viz-mode="magVizMode"
-                                :cal-offsets="cal.firmwareOffsets"
+                        </div>
+
+                        <!-- Error -->
+                        <div v-else-if="cal.phase === 'error'" class="flex items-center gap-3">
+                            <span class="text-sm text-[var(--error-500)] font-semibold">{{
+                                $t(cal.statusMessage || "magCalibrationError")
+                            }}</span>
+                            <UButton
+                                size="xs"
+                                variant="outline"
+                                :label="$t('magCalibrationRetry')"
+                                @click="retryAndStartMagCal()"
+                            />
+                            <UButton
+                                size="xs"
+                                variant="ghost"
+                                :label="$t('magCalibrationCancel')"
+                                @click="retryMagCal()"
                             />
                         </div>
                     </div>
+                </template>
 
-                    <!-- Error -->
-                    <div v-else-if="cal.phase === 'error'" class="flex items-center gap-3">
-                        <span class="text-sm text-[var(--error-500)] font-semibold">{{
-                            $t(cal.statusMessage || "magCalibrationError")
-                        }}</span>
-                        <UButton
-                            size="xs"
-                            variant="outline"
-                            :label="$t('magCalibrationRetry')"
-                            @click="retryAndStartMagCal()"
-                        />
-                        <UButton size="xs" variant="ghost" :label="$t('magCalibrationCancel')" @click="retryMagCal()" />
-                    </div>
-                </div>
+                <!-- API < 1.47: legacy firmware calibrate button only -->
+                <template v-else>
+                    <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startLegacyFirmwareCal()" />
+                </template>
             </UiBox>
 
             <!-- LIVE SENSOR DATA -->
