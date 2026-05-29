@@ -1094,8 +1094,10 @@ function onResize() {
 
 function addAxisLine(targetScene, from, to, color, opacity = 0.5) {
     const geometry = new THREE.BufferGeometry().setFromPoints([from, to]);
-    const material = new THREE.LineBasicMaterial({ color, opacity, transparent: opacity < 1 });
-    targetScene.add(new THREE.Line(geometry, material));
+    const material = new THREE.LineBasicMaterial({ color, opacity, transparent: opacity < 1, depthTest: false });
+    const line = new THREE.Line(geometry, material);
+    line.renderOrder = 1;
+    targetScene.add(line);
 }
 
 function createQuadIcon(size) {
