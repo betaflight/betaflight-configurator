@@ -119,6 +119,71 @@ describe("MspHelper", () => {
             expect(FC.CONFIG.sampleRateHz).toEqual(0xbaab);
             expect(FC.CONFIG.configurationProblems).toEqual(0xdeadbeef);
         });
+        it("handles MSP_SERVO_MIX_RULES with a valid payload", () => {
+            // Two rules × 7 bytes. The signed fields (rate, min, max) need
+            // to round-trip as i8 — using -50 / -100 / +100 exercises both
+            // the negative wraparound on the wire and the read8 sign-extend.
+            const payload = [3, 0, +100, 5, -100, +100, 0, 4, 0, -50, 0, -100, +100, 1].map((v) => v & 0xff);
+
+            mspHelper.process_data({
+                code: MSPCodes.MSP_SERVO_MIX_RULES,
+                dataView: new DataView(new Uint8Array(payload).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            expect(FC.SERVO_RULES_PARSE_OK).toBe(true);
+            expect(FC.SERVO_RULES).toHaveLength(2);
+            expect(FC.SERVO_RULES[0]).toEqual({
+                target: 3,
+                input: 0,
+                rate: 100,
+                speed: 5,
+                min: -100,
+                max: 100,
+                box: 0,
+            });
+            expect(FC.SERVO_RULES[1]).toEqual({
+                target: 4,
+                input: 0,
+                rate: -50,
+                speed: 0,
+                min: -100,
+                max: 100,
+                box: 1,
+            });
+        });
+        it("handles empty MSP_SERVO_MIX_RULES payload as zero rules", () => {
+            // FC with no servo mixer rules legitimately returns a 0-byte
+            // payload. Must NOT trip the malformed-parse flag — that would
+            // disable Save on a perfectly valid empty-mix board.
+            mspHelper.process_data({
+                code: MSPCodes.MSP_SERVO_MIX_RULES,
+                dataView: new DataView(new Uint8Array([]).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            expect(FC.SERVO_RULES).toEqual([]);
+            expect(FC.SERVO_RULES_PARSE_OK).toBe(true);
+        });
+        it("flags malformed MSP_SERVO_MIX_RULES so Save can't wipe the FC mix", () => {
+            // Payload length not a multiple of 7 bytes (firmware bug or
+            // corrupted frame). The previous code silently logged a warning
+            // and left FC.SERVO_RULES = [], so the next Save would push 16
+            // zero rows and persist them to EEPROM — destroying the pilot's
+            // mix. The SERVO_RULES_PARSE_OK flag is the gate ServosTab uses
+            // to disable Save in this case.
+            mspHelper.process_data({
+                code: MSPCodes.MSP_SERVO_MIX_RULES,
+                dataView: new DataView(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9]).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            expect(FC.SERVO_RULES).toEqual([]);
+            expect(FC.SERVO_RULES_PARSE_OK).toBe(false);
+        });
     });
 });
 

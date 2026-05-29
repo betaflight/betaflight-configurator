@@ -3173,6 +3173,141 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
+    "servosResourceAssignments": {
+        "message": "Resource Assignments"
+    },
+    "servosResourceNotAvailable": {
+        "message": "Resource data not available. Your firmware may not support the MSP2_MOTOR_SERVO_RESOURCE command."
+    },
+    "servosMotorResources": {
+        "message": "Motor Pins"
+    },
+    "servosServoResources": {
+        "message": "Servo Pins"
+    },
+    "servosResourceIndex": {
+        "message": "Index"
+    },
+    "servosResourcePin": {
+        "message": "Pin"
+    },
+    "servosResourceMotorLabel": {
+        "message": "Motor {{index}}"
+    },
+    "servosResourceServoLabel": {
+        "message": "Servo {{index}}"
+    },
+    "servosResourceHint": {
+        "message": "To change pin assignments in CLI, use resource MOTOR <index> <pin> or resource SERVO <index> <pin> (e.g., resource MOTOR 1 A08 or resource SERVO 1 A08)."
+    },
+    "servosResourceEditHint": {
+        "message": "Select a pin from the dropdown to reassign motor or servo outputs. Changes are applied immediately but require Save and a reboot to take effect."
+    },
+    "servosResourceSmartLoading": {
+        "message": "Loading timer and DMA candidates..."
+    },
+    "servosResourceSmartReady": {
+        "message": "Timer-aware pad candidates are available."
+    },
+    "servosResourceSmartUnavailable": {
+        "message": "Timer-aware candidates are unavailable; showing current resource pins."
+    },
+    "servosResourceSrcFirmware": {
+        "message": "firmware-authoritative"
+    },
+    "servosResourceSrcFirmwareTip": {
+        "message": "Pad → silkscreen mapping comes from the firmware build's resource defaults; M1/M2 labels in the dropdown are authoritative."
+    },
+    "servosResourceSrcHeuristic": {
+        "message": "heuristic"
+    },
+    "servosResourceSrcHeuristicTip": {
+        "message": "Pad → silkscreen mapping was inferred from a scan or fallback snapshot, so M1/M2 labels are suppressed in the dropdown to avoid attributing the wrong silkscreen number."
+    },
+    "servosResourceSetOk": {
+        "message": "Assigned {{resource}} {{index}} -> {{pin}} (click Save to persist and reboot)"
+    },
+    "servosResourceSetFailed": {
+        "message": "Resource assignment failed"
+    },
+    "servosMixerRulesTitle": {
+        "message": "Servo Mixer Output"
+    },
+    "servosMixerRulesDesc": {
+        "message": "Each row maps a servo input source onto an output. Multiple rules targeting the same output sum together."
+    },
+    "servosMixerOutput": {
+        "message": "Output"
+    },
+    "servosMixerInput": {
+        "message": "Input"
+    },
+    "servosMixerRate": {
+        "message": "Rate"
+    },
+    "servosMixerSpeed": {
+        "message": "Speed"
+    },
+    "servosMixerMin": {
+        "message": "Min"
+    },
+    "servosMixerMax": {
+        "message": "Max"
+    },
+    "servosMixerBox": {
+        "message": "Box"
+    },
+    "servosMixerBoxHelp": {
+        "message": "Flight-mode gate. 0 = always applied. 1-3 = rule only applies when the corresponding BOXSERVO1/2/3 mode is active."
+    },
+    "servosMixerDeleteRule": {
+        "message": "Delete rule"
+    },
+    "servosMixerNoRules": {
+        "message": "No servo mix rules. Add a rule to start."
+    },
+    "servosMixerQuickAileron": {
+        "message": "Aileron pair"
+    },
+    "servosMixerQuickElevator": {
+        "message": "Elevator"
+    },
+    "servosMixerQuickRudder": {
+        "message": "Rudder"
+    },
+    "servosMixerQuickElevons": {
+        "message": "Elevons (pair)"
+    },
+    "servosMixerQuickVTail": {
+        "message": "V-Tail (pair)"
+    },
+    "servosMixerQuickRaw": {
+        "message": "Raw rule"
+    },
+    "servosMixerQuickAddHint": {
+        "message": "Function buttons append pre-configured smix rules. Aircraft helpers switch the mixer to Custom Airplane on save."
+    },
+    "servosMixerSaveFailed": {
+        "message": "Servo mixer save failed"
+    },
+    "servosMixerLoadFailed": {
+        "message": "Couldn't read the FC's servo mixer rules (malformed MSP response). Save is disabled to avoid overwriting your mix. Reconnect to retry."
+    },
+    "servosMixerTemplateUnknown": {
+        "message": "Servo mix template \"{{id}}\" not found."
+    },
+    "servosMixerTemplateExceedsLimit": {
+        "message": "Servo mix template \"{{id}}\" not applied: would exceed {{max}} total rules."
+    },
+    "servosMixerTemplateMixerMismatch": {
+        "message": "Servo mix template \"{{id}}\" not applied: it assumes mixer {{templateMixer}} but the FC is currently on mixer {{activeMixer}}. Switch the FC's mixer via the Mixer tab and try again."
+    },
+    "servosMixerTemplateNoFreeSlots": {
+        "message": "Servo mix template \"{{id}}\" not applied: out of free PWM slots (template needs {{needed}} unique targets, only {{mappable}} mappable). Remove an existing rule or pick a smaller template."
+    },
+    "servosMixerTemplateSlotNotDriven": {
+        "message": "Servo mix template \"{{id}}\" not applied: PWM slot {{slot}} isn't driven under mixer {{targetMixer}}. Switch the FC's mixer to {{intendedMixer}} via the Mixer tab and try again."
+    },
     "gpsHead": {
         "message": "General"
     },
