@@ -243,6 +243,7 @@
                         :ui="{ viewport: 'max-h-none' }"
                     />
                     <UButton
+                        v-if="calGuidedAvailable"
                         size="xs"
                         variant="outline"
                         :label="$t('configurationMagDetectAlignment')"
@@ -1868,7 +1869,7 @@ function setupMagSection() {
     }
 
     showMagSection.value = true;
-    showMagAlign.value = isApi147.value;
+    showMagAlign.value = true;
 
     if (isApi146.value) {
         magDeclination.value = fcStore.compassConfig.mag_declination;
