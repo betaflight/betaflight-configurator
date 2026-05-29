@@ -529,7 +529,9 @@
                                 />
                             </div>
                             <div class="mag-cal-live-inline">
-                                <span>{{ $t("magCalibrationSamples") }}: {{ cal.sampleCount }}</span>
+                                <span v-if="cal.mode !== 'check'"
+                                    >{{ $t("magCalibrationSamples") }}: {{ cal.sampleCount }}</span
+                                >
                                 <span>X: {{ cal.liveMag.x }}</span>
                                 <span>Y: {{ cal.liveMag.y }}</span>
                                 <span>Z: {{ cal.liveMag.z }}</span>
