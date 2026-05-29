@@ -667,7 +667,16 @@
 
                 <!-- API < 1.47: legacy firmware calibrate button only -->
                 <template v-else>
-                    <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startLegacyFirmwareCal()" />
+                    <UButton
+                        size="xs"
+                        class="w-fit"
+                        :label="$t('sensorConfigCalibrate')"
+                        @click="startLegacyFirmwareCal()"
+                    >
+                        <template #trailing>
+                            <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
+                        </template>
+                    </UButton>
                 </template>
             </UiBox>
 
