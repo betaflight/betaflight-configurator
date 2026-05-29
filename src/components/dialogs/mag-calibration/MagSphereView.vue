@@ -143,11 +143,15 @@ const _tempColor = new THREE.Color();
 // Compass ring — earth-frame N/S/E/W labels on the horizontal plane
 let compassGroup = null;
 
-// Auto-scaling: track max observed field strength so dots fill the celestial sphere
+// Auto-scaling: use average field strength so outliers go outside the sphere
+// while the majority of dots sit on the sphere surface
 let maxFieldStrength = 0;
+let fieldStrengthSum = 0;
+let fieldStrengthCount = 0;
 
 function magScale() {
-    return maxFieldStrength > 0 ? DEFAULT_SPHERE_RADIUS / maxFieldStrength : 1;
+    const avg = fieldStrengthCount > 0 ? fieldStrengthSum / fieldStrengthCount : 0;
+    return avg > 0 ? DEFAULT_SPHERE_RADIUS / avg : 1;
 }
 
 function repositionCalOffsetMarker() {
@@ -254,6 +258,8 @@ function initScene() {
     // Scene
     scene = new THREE.Scene();
     maxFieldStrength = 0;
+    fieldStrengthSum = 0;
+    fieldStrengthCount = 0;
     smoothQuatInitialized = false;
     noseDirections = [];
 
@@ -1256,19 +1262,23 @@ function updatePoints(sampleList) {
     const positions = positionAttr.array;
     const colors = colorAttr.array;
 
-    // Update max field strength with 2% hysteresis to avoid constant rescaling
-    let newMax = maxFieldStrength;
+    // Recompute average and max field strength from all visible samples
+    let newMax = 0;
+    let sum = 0;
     for (let i = 0; i < count; i++) {
         const s = sampleList[start + i];
         const f = Math.hypot(s.x, s.y, s.z);
+        sum += f;
         if (f > newMax) {
             newMax = f;
         }
     }
+    fieldStrengthSum = sum;
+    fieldStrengthCount = count;
     if (newMax > maxFieldStrength * 1.02 || maxFieldStrength === 0) {
         maxFieldStrength = newMax;
-        repositionCalOffsetMarker();
     }
+    repositionCalOffsetMarker();
 
     // Only render dots that have captured nose directions
     const dirCount = Math.floor(noseDirections.length / 3);
@@ -1462,6 +1472,8 @@ watch(
     (count) => {
         if (count === 0) {
             maxFieldStrength = 0;
+            fieldStrengthSum = 0;
+            fieldStrengthCount = 0;
             noseDirections = [];
         }
         ensureWireframe();
