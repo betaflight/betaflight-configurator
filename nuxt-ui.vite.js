@@ -53,7 +53,10 @@ export default {
         select: {
             slots: {
                 base: "cursor-pointer",
-                item: "cursor-pointer",
+                // data-[state=checked] is set by Reka UI on the selected item; itemTrailingIcon
+                // only renders inside SelectItemIndicator so colouring it never affects other icons.
+                item: "cursor-pointer data-[state=checked]:before:bg-primary/15 data-[state=checked]:text-highlighted data-[state=checked]:font-medium data-[state=checked]:data-highlighted:before:bg-primary/25",
+                itemTrailingIcon: "text-primary-700 dark:text-primary",
             },
             defaultVariants: {
                 size: "sm",
@@ -62,7 +65,8 @@ export default {
         selectMenu: {
             slots: {
                 base: "cursor-pointer",
-                item: "cursor-pointer",
+                item: "cursor-pointer data-[state=checked]:before:bg-primary/15 data-[state=checked]:text-highlighted data-[state=checked]:font-medium data-[state=checked]:data-highlighted:before:bg-primary/25",
+                itemTrailingIcon: "text-primary-700 dark:text-primary",
             },
             defaultVariants: {
                 size: "sm",
