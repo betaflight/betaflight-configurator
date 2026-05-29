@@ -535,7 +535,7 @@
                                 <span>X: {{ cal.liveMag.x }}</span>
                                 <span>Y: {{ cal.liveMag.y }}</span>
                                 <span>Z: {{ cal.liveMag.z }}</span>
-                                <span>RSS: {{ cal.liveFieldStrength }}</span>
+                                <span>Field: {{ cal.liveFieldStrength }}</span>
                             </div>
                         </div>
                         <div class="mag-cal-inline-sphere">
