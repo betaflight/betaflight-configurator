@@ -421,6 +421,7 @@
                     <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
                         <div class="flex items-center gap-2">
                             <UButton
+                                v-if="calGuidedAvailable"
                                 size="xs"
                                 variant="outline"
                                 icon="i-lucide-eye"
