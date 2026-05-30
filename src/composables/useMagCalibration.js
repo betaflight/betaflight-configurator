@@ -11,8 +11,11 @@ const MONITOR_INTERVAL_MS = 1000;
 const SPHERE_FIT_EVERY_N = 10;
 const ARMING_DISABLE_BIT_CALIBRATING = 12;
 const NO_MOVEMENT_TIMEOUT_MS = 30000;
+const FIRMWARE_CAL_DURATION_S = 30;
 const MOVEMENT_THRESHOLD = 5;
 const PROGRESS_TARGET_SAMPLES = 300;
+const MAG_CAL_MIN = -32768;
+const MAG_CAL_MAX = 32767;
 
 function centroid(pts) {
     let sx = 0,
@@ -31,13 +34,24 @@ function computeQuality(fit, cov) {
     if (!fit || !cov) {
         return null;
     }
-    if (fit.residual < 80 && cov.uniform > 0.4) {
+    const relResidual = fit.radius > 0 ? fit.residual / fit.radius : 1;
+    if (relResidual < 0.08 && cov.uniform > 0.3) {
         return "good";
     }
-    if (fit.residual < 150) {
+    if (relResidual < 0.15) {
         return "fair";
     }
     return "poor";
+}
+
+function computeQualityScore(fit, cov) {
+    if (!fit || !cov) {
+        return 0;
+    }
+    const relResidual = fit.radius > 0 ? fit.residual / fit.radius : 1;
+    const fitPart = Math.max(0, Math.min(100, Math.round((1 - relResidual / 0.2) * 100)));
+    const covPart = Math.round(Math.min(1, cov.uniform / 0.5) * 100);
+    return Math.round(fitPart * 0.6 + covPart * 0.4);
 }
 
 /**
@@ -73,16 +87,19 @@ export function useMagCalibration() {
 
     // --- Reactive state ---
     const phase = ref("idle"); // 'idle' | 'waiting' | 'collecting' | 'complete' | 'error'
+    const mode = ref("quick"); // 'quick' | 'guided'
     const samples = shallowRef([]);
     const sphereFitResult = ref(null);
     const coverage = ref(null);
     const quality = ref(null);
+    const qualityScore = ref(0);
     const progress = ref(0);
     const statusMessage = ref("");
 
     const sampleCount = computed(() => samples.value.length);
 
     const firmwareDone = ref(false);
+    const firmwareSecondsRemaining = ref(-1);
 
     // Live mag reading (updated every IMU poll)
     const liveMag = ref({ x: 0, y: 0, z: 0 });
@@ -94,41 +111,87 @@ export function useMagCalibration() {
     // --- Internal state (non-reactive) ---
     let dataInterval = null;
     let monitorInterval = null;
+    let countdownInterval = null;
+    let firmwareCollectingStartTime = 0;
     let samplesSinceLastFit = 0;
     let lastMovementTime = 0;
     let lastMag = null;
     let firmwareFlagSeen = false;
+    let guidedOffsets = null; // offsets to add back in guided mode
+    let starting = false;
 
-    async function startCalibration() {
-        cleanup();
-        // Reset state
-        samples.value = [];
-        sphereFitResult.value = null;
-        coverage.value = null;
-        quality.value = null;
-        progress.value = 0;
-        samplesSinceLastFit = 0;
-        lastMovementTime = Date.now();
-        lastMag = null;
-        firmwareDone.value = false;
-        firmwareFlagSeen = false;
+    async function startCalibration(calMode = "quick") {
+        if (phase.value !== "idle" || starting) {
+            return;
+        }
 
-        // Read current firmware offsets before calibration starts
-        firmwareOffsets.value = await readFirmwareOffsets();
+        starting = true;
+        try {
+            cleanup();
+            mode.value = calMode;
+            samples.value = [];
+            sphereFitResult.value = null;
+            coverage.value = null;
+            quality.value = null;
+            qualityScore.value = 0;
+            progress.value = 0;
+            samplesSinceLastFit = 0;
+            lastMovementTime = Date.now();
+            lastMag = null;
+            firmwareDone.value = false;
+            firmwareFlagSeen = false;
+            guidedOffsets = null;
 
-        phase.value = "waiting";
-        statusMessage.value = "magCalibrationWaiting";
+            firmwareOffsets.value = await readFirmwareOffsets();
+        } finally {
+            starting = false;
+        }
 
-        // Trigger firmware calibration and start polling immediately
-        MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false);
-        startDataPolling();
-        startCompletionMonitor();
+        if (calMode === "check") {
+            // Check mode: display calibrated data as-is, no firmware trigger, no sphere fit
+            phase.value = "collecting";
+            statusMessage.value = "magCalibrationCheckTitle";
+            startDataPolling();
+        } else if (calMode === "guided") {
+            // Guided mode: store offsets for raw reconstruction, skip firmware trigger
+            guidedOffsets = firmwareOffsets.value ?? { x: 0, y: 0, z: 0 };
+            phase.value = "collecting";
+            statusMessage.value = "magCalibrationCollecting";
+            startDataPolling();
+        } else {
+            // Quick mode: trigger firmware calibration
+            phase.value = "waiting";
+            statusMessage.value = "magCalibrationWaiting";
+            MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+            startDataPolling();
+            startCompletionMonitor();
+        }
     }
 
     function cancelCalibration() {
         cleanup();
+        starting = false;
         phase.value = "idle";
         statusMessage.value = "";
+    }
+
+    function startCountdown() {
+        firmwareCollectingStartTime = Date.now();
+        firmwareSecondsRemaining.value = FIRMWARE_CAL_DURATION_S;
+        countdownInterval = setInterval(() => {
+            const elapsed = (Date.now() - firmwareCollectingStartTime) / 1000;
+            const remaining = Math.max(0, Math.ceil(FIRMWARE_CAL_DURATION_S - elapsed));
+            firmwareSecondsRemaining.value = remaining;
+        }, 1000);
+    }
+
+    function stopCountdown() {
+        if (countdownInterval !== null) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+        firmwareSecondsRemaining.value = -1;
+        firmwareCollectingStartTime = 0;
     }
 
     function cleanup() {
@@ -140,6 +203,7 @@ export function useMagCalibration() {
             clearInterval(monitorInterval);
             monitorInterval = null;
         }
+        stopCountdown();
     }
 
     onScopeDispose(cleanup);
@@ -173,6 +237,7 @@ export function useMagCalibration() {
                 if (phase.value === "waiting" && flagSet) {
                     phase.value = "collecting";
                     statusMessage.value = "magCalibrationCollecting";
+                    startCountdown();
                 }
 
                 // Track when firmware finishes (flag was set, now cleared)
@@ -184,13 +249,20 @@ export function useMagCalibration() {
     }
 
     function onImuData() {
-        const mx = fcStore.sensorData.magnetometer[0];
-        const my = fcStore.sensorData.magnetometer[1];
-        const mz = fcStore.sensorData.magnetometer[2];
+        let mx = fcStore.sensorData.magnetometer[0];
+        let my = fcStore.sensorData.magnetometer[1];
+        let mz = fcStore.sensorData.magnetometer[2];
 
         // Skip zero readings (no data)
         if (mx === 0 && my === 0 && mz === 0) {
             return;
+        }
+
+        // In guided mode, reconstruct raw samples by adding back firmware offsets
+        if (mode.value === "guided" && guidedOffsets) {
+            mx += guidedOffsets.x;
+            my += guidedOffsets.y;
+            mz += guidedOffsets.z;
         }
 
         // Track movement for stale-data timeout
@@ -211,11 +283,13 @@ export function useMagCalibration() {
             statusMessage.value = "magCalibrationCollecting";
         }
 
-        samples.value.push({ x: mx, y: my, z: mz, timestamp: Date.now() });
+        // Store attitude alongside mag data for attitude-based dot placement
+        const k = fcStore.sensorData.kinematics;
+        samples.value.push({ x: mx, y: my, z: mz, pitch: k[1], heading: k[2], timestamp: Date.now() });
         triggerRef(samples);
 
         samplesSinceLastFit++;
-        if (samplesSinceLastFit >= SPHERE_FIT_EVERY_N) {
+        if (mode.value !== "check" && samplesSinceLastFit >= SPHERE_FIT_EVERY_N) {
             updateAnalysis();
             samplesSinceLastFit = 0;
         }
@@ -239,6 +313,7 @@ export function useMagCalibration() {
         if (fit) {
             sphereFitResult.value = fit;
             quality.value = computeQuality(fit, cov);
+            qualityScore.value = computeQualityScore(fit, cov);
         }
     }
 
@@ -257,27 +332,123 @@ export function useMagCalibration() {
     }
 
     function retry() {
+        cleanup();
+        starting = false;
         phase.value = "idle";
         statusMessage.value = "";
         samples.value = [];
         sphereFitResult.value = null;
         coverage.value = null;
         quality.value = null;
+        qualityScore.value = 0;
         progress.value = 0;
         firmwareDone.value = false;
+        firmwareFlagSeen = false;
+        guidedOffsets = null;
+    }
+
+    async function acceptCalibration() {
+        const fit = sphereFitResult.value;
+        if (!fit) {
+            return { ok: false, error: "No sphere fit result" };
+        }
+        const { x, y, z } = fit.center;
+        if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
+            return { ok: false, error: "Invalid calibration offsets" };
+        }
+        try {
+            cleanup();
+            const rx = Math.round(x);
+            const ry = Math.round(y);
+            const rz = Math.round(z);
+            await cliSend(`set mag_calibration = ${rx},${ry},${rz}`);
+            firmwareOffsets.value = { x: rx, y: ry, z: rz };
+            phase.value = "complete";
+            statusMessage.value = "magCalibrationComplete";
+            progress.value = 100;
+            return { ok: true };
+        } catch (error) {
+            startDataPolling();
+            phase.value = "collecting";
+            statusMessage.value = "magCalibrationError";
+            return { ok: false, error };
+        }
+    }
+
+    async function refreshFirmwareOffsets() {
+        const offsets = await readFirmwareOffsets();
+        firmwareOffsets.value = offsets;
+        return offsets;
+    }
+
+    async function writeCalValues(x, y, z) {
+        const rx = Math.round(x);
+        const ry = Math.round(y);
+        const rz = Math.round(z);
+        if (!Number.isFinite(rx) || !Number.isFinite(ry) || !Number.isFinite(rz)) {
+            return { ok: false, error: "Invalid calibration values" };
+        }
+        if (
+            rx < MAG_CAL_MIN ||
+            rx > MAG_CAL_MAX ||
+            ry < MAG_CAL_MIN ||
+            ry > MAG_CAL_MAX ||
+            rz < MAG_CAL_MIN ||
+            rz > MAG_CAL_MAX
+        ) {
+            return { ok: false, error: "Calibration values out of range (-32768 to 32767)" };
+        }
+        const previous = firmwareOffsets.value;
+        try {
+            await cliSend(`set mag_calibration = ${rx},${ry},${rz}`);
+            firmwareOffsets.value = { x: rx, y: ry, z: rz };
+            return { ok: true };
+        } catch (error) {
+            firmwareOffsets.value = previous;
+            return { ok: false, error };
+        }
+    }
+
+    function clearSamples() {
+        samples.value = [];
+        sphereFitResult.value = null;
+        coverage.value = null;
+        quality.value = null;
+        qualityScore.value = 0;
+        progress.value = 0;
+        samplesSinceLastFit = 0;
+        lastMovementTime = Date.now();
+        lastMag = null;
+    }
+
+    function discardCalibration() {
+        cleanup();
+        starting = false;
+        samples.value = [];
+        sphereFitResult.value = null;
+        coverage.value = null;
+        quality.value = null;
+        qualityScore.value = 0;
+        progress.value = 0;
+        phase.value = "idle";
+        statusMessage.value = "";
+        guidedOffsets = null;
     }
 
     return {
         // State
         phase,
+        mode,
         samples,
         sphereFitResult,
         coverage,
         quality,
+        qualityScore,
         progress,
         statusMessage,
         sampleCount,
         firmwareDone,
+        firmwareSecondsRemaining,
         liveMag,
         liveFieldStrength,
         firmwareOffsets,
@@ -286,9 +457,13 @@ export function useMagCalibration() {
         startCalibration,
         cancelCalibration,
         completeCalibration,
+        acceptCalibration,
+        discardCalibration,
+        clearSamples,
         cleanup,
         retry,
-        readFirmwareOffsets,
+        refreshFirmwareOffsets,
+        writeCalValues,
     };
 }
 

@@ -119,6 +119,56 @@ describe("MspHelper", () => {
             expect(FC.CONFIG.sampleRateHz).toEqual(0xbaab);
             expect(FC.CONFIG.configurationProblems).toEqual(0xdeadbeef);
         });
+        it("handles MSP_ATTITUDE_QUATERNION correctly", () => {
+            // Encode known quaternion values as int16 (value * 32767)
+            const qw = 0.7071;
+            const qx = 0;
+            const qy = -0.7071;
+            const qz = 0;
+
+            const buffer = new ArrayBuffer(8);
+            const view = new DataView(buffer);
+            view.setInt16(0, Math.round(qw * 32767), true);
+            view.setInt16(2, Math.round(qx * 32767), true);
+            view.setInt16(4, Math.round(qy * 32767), true);
+            view.setInt16(6, Math.round(qz * 32767), true);
+
+            mspHelper.process_data({
+                code: MSPCodes.MSP_ATTITUDE_QUATERNION,
+                dataView: new DataView(buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            const q = FC.SENSOR_DATA.quaternion;
+            expect(q).not.toBeNull();
+            expect(q.w).toBeCloseTo(qw, 3);
+            expect(q.x).toBeCloseTo(qx, 3);
+            expect(q.y).toBeCloseTo(qy, 3);
+            expect(q.z).toBeCloseTo(qz, 3);
+        });
+        it("handles MSP_ATTITUDE_QUATERNION with extreme values", () => {
+            // Mixed extreme values: w=1.0, x=-1.0, y=0.0, z≈0.5
+            const buffer = new ArrayBuffer(8);
+            const view = new DataView(buffer);
+            view.setInt16(0, 32767, true); // w = 32767/32767 = 1.0
+            view.setInt16(2, -32767, true); // x = -32767/32767 = -1.0
+            view.setInt16(4, 0, true); // y = 0/32767 = 0.0
+            view.setInt16(6, 16384, true); // z = 16384/32767 ~= 0.5
+
+            mspHelper.process_data({
+                code: MSPCodes.MSP_ATTITUDE_QUATERNION,
+                dataView: new DataView(buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            const q = FC.SENSOR_DATA.quaternion;
+            expect(q.w).toBeCloseTo(1, 3);
+            expect(q.x).toBeCloseTo(-1, 3);
+            expect(q.y).toBeCloseTo(0, 3);
+            expect(q.z).toBeCloseTo(16384 / 32767, 3);
+        });
     });
 });
 

@@ -356,6 +356,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_DATA.kinematics[1] = data.read16() / 10.0; // y
                     FC.SENSOR_DATA.kinematics[2] = data.read16(); // z
                     break;
+                case MSPCodes.MSP_ATTITUDE_QUATERNION:
+                    FC.SENSOR_DATA.quaternion = {
+                        w: data.read16() / 32767,
+                        x: data.read16() / 32767,
+                        y: data.read16() / 32767,
+                        z: data.read16() / 32767,
+                    };
+                    break;
                 case MSPCodes.MSP_ALTITUDE:
                     FC.SENSOR_DATA.altitude = parseFloat((data.read32() / 100.0).toFixed(2)); // correct scale factor
                     break;
