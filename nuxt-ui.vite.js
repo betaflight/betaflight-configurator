@@ -25,8 +25,9 @@ export default {
                     variant: "solid",
                     // Primary is yellow (#ffbb00); Nuxt UI defaults text-inverted to #fff in light
                     // mode. Override with black text for both light and dark modes — yellow always
-                    // needs dark text regardless of theme.
-                    class: "!text-black disabled:bg-accented disabled:text-toned",
+                    // needs dark text regardless of theme. disabled:!text-toned restores the muted
+                    // disabled appearance which !text-black would otherwise override.
+                    class: "!text-black disabled:bg-accented disabled:!text-toned",
                 },
             ],
             defaultVariants: {
