@@ -68,6 +68,10 @@
     "disconnect": {
         "message": "Disconnect"
     },
+    "disconnectVirtual": {
+        "message": "Disconnect (Virtual)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
     "portsSelectNoSelection": {
         "message": "Select your device",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -116,6 +120,10 @@
     "connectVirtualDescription": {
         "message": "Simulate a flight controller without hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Virtual",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Enter the serial path or URL to connect to.",
