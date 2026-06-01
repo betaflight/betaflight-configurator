@@ -1684,6 +1684,108 @@
     "configurationBoardAlignmentHelp": {
         "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Auto-detect board alignment..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Board Alignment Wizard"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "This wizard detects how your flight controller is mounted by guiding you through four simple movements. Place the drone on a flat surface with the camera facing away from you (toward the screen), then follow the prompts."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Start"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Step"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Place the drone flat with the camera facing away from you (toward the screen)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Tilt the nose up by about 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Tilt the right side down by about 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Rotate the drone about 45° clockwise (as seen from above)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Return the drone to a level position."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Hold steady..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Settling"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Keep tilting"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Return to level"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Axis detected — hold steady"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotation"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Computing alignment..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Detected alignment"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "Your board alignment looks correct — no changes needed."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Current"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Detected"
+    },
+    "boardAlignmentWizard-Test": {
+        "message": "Test"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Back"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Apply"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Cancel"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Try again"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Capture now"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "Detection confidence is reduced — please verify the result against the live attitude before applying."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "An accelerometer is required to run this wizard."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Please calibrate the accelerometer before running this wizard."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Some samples were not collected. Please retry."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "The accelerometer is not reading gravity. Make sure the FC is connected and not in motion."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Pitch gesture was not detected. Please retry and tilt the nose up further."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Roll gesture was not detected. Please retry and tilt the right side down further."
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
