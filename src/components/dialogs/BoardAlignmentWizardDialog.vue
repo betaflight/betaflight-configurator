@@ -12,12 +12,6 @@
                     <!-- Intro -->
                     <div v-if="phase === 'intro'">
                         <p v-html="i18nMessage('boardAlignmentWizard-Intro')"></p>
-                        <ol class="wizard-steps">
-                            <li v-html="i18nMessage('boardAlignmentWizard-StepFlat')"></li>
-                            <li v-html="i18nMessage('boardAlignmentWizard-StepPitchUp')"></li>
-                            <li v-html="i18nMessage('boardAlignmentWizard-StepRollRight')"></li>
-                            <li v-html="i18nMessage('boardAlignmentWizard-StepYawCW')"></li>
-                        </ol>
                         <div v-if="!hasAccSensor" class="wizard-warning">
                             {{ i18nMessage("boardAlignmentWizard-NoAccelerometer") }}
                         </div>
