@@ -72,6 +72,14 @@
         "message": "Disconnect (Virtual)",
         "description": "Disconnect button label shown when connected in virtual mode."
     },
+    "disconnectManual": {
+        "message": "Disconnect (Manual)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Disconnect (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Select your device",
         "description": "Text for the option to select a device in the port selection dropdown"

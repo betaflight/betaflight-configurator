@@ -94,10 +94,21 @@ export default defineComponent({
         const isConnected = computed(() => connectionStore.connectionValid);
         const connecting = computed(() => Boolean(connectionStore.connectingTo));
         const isVirtualMode = computed(() => connectionStore.virtualMode);
+        const connectedTo = computed(() => connectionStore.connectedTo);
 
-        const disconnectLabel = computed(() =>
-            isVirtualMode.value ? i18n.getMessage("disconnectVirtual") : i18n.getMessage("disconnect"),
-        );
+        const disconnectLabel = computed(() => {
+            if (isVirtualMode.value) {
+                return i18n.getMessage("disconnectVirtual");
+            }
+            const path = connectedTo.value ?? "";
+            if (path.startsWith("bluetooth")) {
+                return i18n.getMessage("disconnectBluetooth");
+            }
+            if (/^(tcp|ws|wss):\/\//.test(path)) {
+                return i18n.getMessage("disconnectManual");
+            }
+            return i18n.getMessage("disconnect");
+        });
         const portPickerDisabled = computed(() => PortHandler.portPickerDisabled);
 
         const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
