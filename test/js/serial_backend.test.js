@@ -409,9 +409,33 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
             // User hits Disconnect before/while the reboot reconnect is pending — it must be
             // cancelled, not resurrect the connection on a later tick.
             disconnect();
+            // Complete the disconnect (the mocked setArmingEnabled doesn't auto-invoke its
+            // callback) so module-private isConnected resets and doesn't leak into later tests.
+            mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
 
             serial.connect.mockClear();
             vi.advanceTimersByTime(15000); // cover flush + the full retry window
+            expect(serial.connect).not.toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("stops reconnect retries when Auto-Connect is turned off mid-reboot", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_1";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush -> disconnectForReboot, retry armed
+
+            // User turns Auto-Connect off before the first retry tick.
+            PortHandler.portPicker.autoConnect = false;
+            serial.connect.mockClear();
+
+            vi.advanceTimersByTime(5000); // several retry ticks
             expect(serial.connect).not.toHaveBeenCalled();
         } finally {
             vi.useRealTimers();

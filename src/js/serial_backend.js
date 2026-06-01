@@ -39,6 +39,10 @@ let liveDataRefreshTimerId = false;
 // Tracked so an intentional disconnect during the reboot window can cancel it — otherwise the
 // retry would resurrect a connection the user just cancelled.
 let rebootReconnectTimerId = false;
+// Handles for the reboot progress modal's intervals, tracked so closeRebootDialog() can dismiss
+// the modal (and stop its timers) when a user disconnect cancels the reboot.
+let rebootDialogProgressTimerId = false;
+let rebootDialogCheckTimerId = false;
 
 let isConnected = false;
 
@@ -148,6 +152,21 @@ function stopRebootReconnect() {
     }
 }
 
+// Dismiss the reboot progress modal and stop its timers. Called when a user disconnect cancels
+// the reboot (otherwise the modal would linger until its own 10s timeout), and at the start of
+// showRebootDialog() to clear any stale modal/intervals from a prior reboot.
+function closeRebootDialog() {
+    if (rebootDialogProgressTimerId !== false) {
+        clearInterval(rebootDialogProgressTimerId);
+        rebootDialogProgressTimerId = false;
+    }
+    if (rebootDialogCheckTimerId !== false) {
+        clearInterval(rebootDialogCheckTimerId);
+        rebootDialogCheckTimerId = false;
+    }
+    document.getElementById("rebootProgressDialog")?.close();
+}
+
 function prepareDisconnect() {
     // Mark this as an intentional disconnect so the later protocol "disconnect" event
     // (handled by onClosed) does not run the unexpected-disconnect teardown on top of
@@ -167,6 +186,11 @@ function prepareDisconnect() {
 
 function beginDisconnect() {
     prepareDisconnect();
+
+    // A user-initiated disconnect during the reboot window must also dismiss the reboot modal —
+    // prepareDisconnect() only stops the reconnect timers. (disconnectForReboot does NOT close it:
+    // the modal must stay up while the reboot's own reconnect runs.)
+    closeRebootDialog();
 
     mspHelper?.setArmingEnabled(true, false, function () {
         finishClose(toggleStatus);
@@ -933,8 +957,6 @@ export function reinitializeConnection(suppressDialog = false) {
 // as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
 // reboot dialog is shown.
 function rebootReconnect() {
-    const reconnect = PortHandler.portPicker.autoConnect;
-
     // Cancel any prior reboot cycle (e.g. a second Save-and-Reboot within the window) so we
     // never run two overlapping retry loops.
     stopRebootReconnect();
@@ -947,20 +969,22 @@ function rebootReconnect() {
             disconnectForReboot();
         }
 
-        // Honor Auto-Connect: when it is off, stay on the landing tab and let the user reconnect
-        // manually (the reboot dialog closes via its no-reconnect check).
-        if (!reconnect) {
+        // Honor Auto-Connect — read it live (not snapshotted at reboot start) so toggling it off
+        // during the reboot window takes effect. When off, stay on the landing tab and let the
+        // user reconnect manually (the reboot dialog closes via its no-reconnect check).
+        if (!PortHandler.portPicker.autoConnect) {
             rebootReconnectTimerId = false;
             return;
         }
 
-        // Retry connecting until the rebooted FC answers (connectionValid) or the reboot window
-        // closes. Early attempts may connect to a still-booting FC and get dropped; the device
-        // stays listed (we never remove it on disconnect), so a later attempt succeeds once the
-        // FC is stable. connectDisconnect here takes the connect branch (isConnected is false).
+        // Retry connecting until the rebooted FC answers (connectionValid), the reboot window
+        // closes, or Auto-Connect is turned off mid-window. Early attempts may connect to a
+        // still-booting FC and get dropped; the device stays listed (we never remove it on
+        // disconnect), so a later attempt succeeds once the FC is stable. connectDisconnect here
+        // takes the connect branch (isConnected is false).
         rebootReconnectTimerId = setInterval(() => {
             const timedOut = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
-            if (CONFIGURATOR.connectionValid || timedOut) {
+            if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
                 return;
             }
@@ -974,6 +998,9 @@ function rebootReconnect() {
 function showRebootDialog() {
     gui_log(i18n.getMessage("deviceRebooting"));
 
+    // Clear any leftover modal/intervals from a prior reboot before starting a new one.
+    closeRebootDialog();
+
     // Show reboot progress modal
     const rebootDialog = document.getElementById("rebootProgressDialog") || createRebootProgressDialog();
     rebootDialog.querySelector(".reboot-progress-bar").style.width = "0%";
@@ -985,7 +1012,7 @@ function showRebootDialog() {
     // Calculate increment to reach 100% when the timeout elapses (runs every 100ms)
     const progressIncrement = 100 / (REBOOT_CONNECT_MAX_TIME_MS / 100);
 
-    const progressInterval = setInterval(() => {
+    rebootDialogProgressTimerId = setInterval(() => {
         progress += progressIncrement;
         if (progress <= 100) {
             rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
@@ -993,13 +1020,15 @@ function showRebootDialog() {
     }, 100);
 
     // Check for successful connection every 100ms with a timeout
-    const connectionCheckInterval = setInterval(() => {
+    rebootDialogCheckTimerId = setInterval(() => {
         const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
         const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
 
         if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
-            clearInterval(connectionCheckInterval);
-            clearInterval(progressInterval);
+            clearInterval(rebootDialogCheckTimerId);
+            clearInterval(rebootDialogProgressTimerId);
+            rebootDialogCheckTimerId = false;
+            rebootDialogProgressTimerId = false;
 
             rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
             rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
