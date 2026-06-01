@@ -122,7 +122,7 @@
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
     },
     "connectVirtual": {
-        "message": "Virtual",
+        "message": "Connect (Virtual)",
         "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
