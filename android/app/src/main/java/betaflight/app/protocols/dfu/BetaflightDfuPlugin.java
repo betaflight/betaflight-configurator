@@ -61,6 +61,7 @@ public class BetaflightDfuPlugin extends Plugin {
         {0x2E3C, 0xDF11},  // AT32F435 DFU Bootloader
         {0x314B, 0x0106},  // APM32 DFU Bootloader
         {0x2E8A, 0x000F},  // Raspberry Pi Pico Bootloader
+        {0x3997, 0xDF11},  // X32 DFU Bootloader
     };
 
     // USB recipient bits not exposed by Android's UsbConstants
