@@ -1895,10 +1895,10 @@
         "message": "当处于反乌龟模式时鸣叫"
     },
     "beeperCAM_CONNECTION_OPEN": {
-        "message": "当进入5键相机控制模式时鸣叫"
+        "message": "当进入 5 键相机控制模式时鸣叫"
     },
     "beeperCAM_CONNECTION_CLOSE": {
-        "message": "当退出5键相机控制模式时鸣叫"
+        "message": "当退出 5 键相机控制模式时鸣叫"
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "当已解锁且 RC 平滑尚未完成滤波器初始化时鸣叫"
@@ -2696,7 +2696,7 @@
         "message": "启用控制"
     },
     "auxiliaryHelp": {
-        "message": "在此处通过使用范围和\/或链接到其他模式的组合配置飞行模式(BF4.0及更高版本支持链接) 。使用 <strong>范围<\/strong> 来定义遥控器上的开关和分配相应的模式。当接收机给出的通道值在最小\/最大范围内将激活该模式。当一个模式被激活时，使用<strong>链接<\/strong>来激活另一个模式。<strong>例外:<\/strong> 解锁不能链接或者被链接到其他的模式，当一个模式已被链接则无法被再次链接(多重链接) 。多个范围\/链接可以用于激活任何模式。如果为一个模式定义了多个范围\/链接，则可以将每个范围\/链接设置为<strong>和<\/strong> 或是 <strong>或<\/strong>。模式将在以下情况下被激活：<br \/>- 全部的<strong>和<\/strong> 范围\/链接都激活; 或者是<br \/>- 至少有一个 <strong>或<\/strong> 范围\/链接激活。<br \/><br \/>记得使用保存按钮来保存您的设置。"
+        "message": "在此处通过使用范围和\/或链接到其他模式的组合配置飞行模式（BF4.0及更高版本支持链接）。使用 <strong>范围<\/strong> 来定义遥控器上的开关和分配相应的模式。当接收机给出的通道值在最小\/最大范围内将激活该模式。当一个模式被激活时，使用<strong>链接<\/strong>来激活另一个模式。<strong>例外:<\/strong> 解锁不能链接或者被链接到其他的模式，当一个模式已被链接则无法被再次链接（多重链接）。多个范围\/链接可以用于激活任何模式。如果为一个模式定义了多个范围\/链接，则可以将每个范围\/链接设置为<strong>「与」<\/strong> 或是 <strong>「或」<\/strong>。模式将在以下情况被激活：<br \/>- 全部的<strong>「与」<\/strong> 范围\/链接都激活; <br \/>- 或者至少有一个 <strong>「或」<\/strong> 范围\/链接激活。<br \/><br \/>记得用保存按钮来保存您的设置。"
     },
     "auxiliaryToggleUnused": {
         "message": "隐藏未使用的模式"
@@ -2777,7 +2777,7 @@
         "description": "Help text to BEEPER ON mode"
     },
     "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
-        "message": "启用鸣叫GPS卫星数模式",
+        "message": "启用鸣叫 GPS 卫星数模式",
         "description": "Help text to BEEP GPS SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
@@ -2797,23 +2797,23 @@
         "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
-        "message": "用于切换到自定义的 CAMERA CONTROL 1，请查看供应商手册",
+        "message": "用于切换到自定义的「摄像头控制 1」，请查看供应商手册",
         "description": "Help text to customized CAMERA CONTROL 1 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL2": {
-        "message": "用于切换到自定义的 CAMERA CONTROL 2，请查看供应商手册",
+        "message": "用于切换到自定义的「摄像头控制 2」，请查看供应商手册",
         "description": "Help text to customized CAMERA CONTROL 2 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL3": {
-        "message": "用于切换到自定义的 CAMERA CONTROL 3，请查看供应商手册",
+        "message": "用于切换到自定义的「摄像头控制 3」，请查看供应商手册",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
     "auxiliaryHelpMode_CAMSTAB": {
-        "message": "启用摄像头稳定模式",
+        "message": "启用「摄像头稳定模式」",
         "description": "Help text to CAMSTAB mode"
     },
     "auxiliaryHelpMode_CHIRP": {
-        "message": "启用啁啾模式",
+        "message": "启用「啁啾模式」",
         "description": "Help text for CHIRP mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
@@ -2833,7 +2833,7 @@
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "启用 'GPS 救援' 返回它最后解锁的位置",
+        "message": "启用「GPS 救援」返回它最后解锁的位置",
         "description": "Help text to GPS RESCUE mode"
     },
     "auxiliaryHelpMode_HEADADJ": {
@@ -2853,7 +2853,7 @@
         "description": "Help text to LAUNCH CONTROL mode"
     },
     "auxiliaryHelpMode_LEDLOW": {
-        "message": "关闭 LED 灯带输出",
+        "message": "关闭「LED 灯带」输出",
         "description": "Help text to LEDLOW mode"
     },
     "auxiliaryHelpMode_MAG": {
@@ -2861,7 +2861,7 @@
         "description": "Help text to MAG mode"
     },
     "auxiliaryHelpMode_MSPOVERRIDE": {
-        "message": "启用 MSP 覆盖模式",
+        "message": "启用「MSP 覆盖」模式",
         "description": "Help text to MSP OVERRIDE mode"
     },
     "auxiliaryHelpMode_OSDDISABLE": {
@@ -2877,7 +2877,7 @@
         "description": "Help text to PARALYZE mode"
     },
     "auxiliaryHelpMode_PIDAUDIO": {
-        "message": "用于切换 PIDAUDIO",
+        "message": "用于切换「PID 音频」",
         "description": "Help text to PIDAUDIO mode"
     },
     "auxiliaryHelpMode_POSHOLD": {
@@ -2897,15 +2897,15 @@
         "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_SERVO1": {
-        "message": "用于触发舵机1",
+        "message": "用于触发「舵机 1」",
         "description": "Help text to SERVO1 mode"
     },
     "auxiliaryHelpMode_SERVO2": {
-        "message": "用于触发舵机2",
+        "message": "用于触发「舵机 2」",
         "description": "Help text to SERVO2 mode"
     },
     "auxiliaryHelpMode_SERVO3": {
-        "message": "用于触发舵机3",
+        "message": "用于触发「舵机 3」",
         "description": "Help text to SERVO3 mode"
     },
     "auxiliaryHelpMode_TELEMETRY": {
@@ -2913,19 +2913,19 @@
         "description": "Help text to TELEMETRY mode"
     },
     "auxiliaryHelpMode_USER1": {
-        "message": "用于触发自定义的用户1。通过 PINIO 控制任意输出",
+        "message": "用于触发自定义的「用户 1」。通过 PINIO 控制任意输出",
         "description": "Help text to customized USER1 mode"
     },
     "auxiliaryHelpMode_USER2": {
-        "message": "用于触发自定义的用户2。通过 PINIO 控制任意输出",
+        "message": "用于触发自定义的「用户 2」。通过 PINIO 控制任意输出",
         "description": "Help text to customized USER2 mode"
     },
     "auxiliaryHelpMode_USER3": {
-        "message": "用于触发自定义的用户3。通过 PINIO 控制任意输出",
+        "message": "用于触发自定义的「用户 3」。通过 PINIO 控制任意输出",
         "description": "Help text to customized USER3 mode"
     },
     "auxiliaryHelpMode_USER4": {
-        "message": "用于触发自定义的用户4。通过 PINIO 控制任意输出",
+        "message": "用于触发自定义的「用户 4」。通过 PINIO 控制任意输出",
         "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
@@ -5333,7 +5333,7 @@
         "message": "阶段 1 - 通道默认值设置"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "当进入一阶失控保护时，这些设置将会应用于单独无效的AUX 通道，或者是所有通道。<strong>注意：<\/strong>数值应是25us的整数倍，小于25us的设置会被上下取整。"
+        "message": "当进入一阶失控保护时，这些设置将会应用于单独无效的 AUX 通道，或者是所有通道。<strong>注意：<\/strong>数值应是 25us 的整数倍，小于 25us 的设置会被上下取整"
     },
     "failsafeChannelFallbackSettingsAuto": {
         "message": "<strong>自动<\/strong> 指的是 横滚、俯仰、方向都回中，油门最低。 <strong>保持<\/strong> 指的是 所有通道保持最后从接收机接收到的有效的数值。"
@@ -5788,6 +5788,15 @@
     },
     "powerBatteryAmperage": {
         "message": "电流"
+    },
+    "powerBatteryPowerDraw": {
+        "message": "消耗电流"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "压降"
     },
     "powerBatteryCapacity": {
         "message": "容量 (mAh)"
@@ -7438,7 +7447,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "该表展示了可用于图传的不同功率。它分为两部分: <br><b>- $t(vtxTablePowerLevelsValue.message):<\/b>每个功率级别都需要有一个由硬件制造商定义的值。请您联系制造商以获取正确的值，或使用Betaflight的wiki说明 VTX Table 的内容来取得一些使用样例。<br><b>-$t(vtxTablePowerLevelsLabel.message):<\/b>您可以在此为您的图传的每个功率级别都设置标签。可以是数字(25, 200, 600, 1.2), 字母(OFF, MIN, MAX) 或者是数字与字母混用。<br \/><br \/>您必须<b>仅<\/b>配置符合当地法律法规的功率级别。",
+        "message": "该表展示了可用于图传的不同功率。它分为两部分: <br><b>- $t(vtxTablePowerLevelsValue.message):<\/b>每个功率级别都需要有一个由硬件制造商定义的值。请您联系制造商以获取正确的值，或使用 Betaflight 的 wiki 说明 VTX Table 的内容来取得一些使用样例。<br><b>-$t(vtxTablePowerLevelsLabel.message):<\/b>您可以在此为您的图传的每个功率级别都设置标签。可以是数字 (25, 200, 600, 1.2), 字母 (OFF, MIN, MAX) 或者是数字与字母混用。<br \/><br \/>您必须<b>仅<\/b>配置符合当地法律法规的功率级别。",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -7641,18 +7650,6 @@
     "sensorConfigAlignDetectFailed": {
         "message": "检测失败 — 尝试向更多不同方向倾斜。"
     },
-    "magCalibrationStart": {
-        "message": "引导流程"
-    },
-    "magCalibrationStartDesc": {
-        "message": "逐个在6个方向上旋转"
-    },
-    "magCalibrationStartAuto": {
-        "message": "自动步进"
-    },
-    "magCalibrationStartAutoDesc": {
-        "message": "与引导流程相同，但是步骤会定时自动推进"
-    },
     "magCalibrationCancel": {
         "message": "取消"
     },
@@ -7661,15 +7658,6 @@
     },
     "magCalibrationRetry": {
         "message": "重试"
-    },
-    "magCalibrationNextStep": {
-        "message": "下一步"
-    },
-    "magCalibrationFinish": {
-        "message": "完成"
-    },
-    "magCalibrationStepOf": {
-        "message": "步骤 {{current}} \/ {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "正在等待移动……晃动飞机以开始。"
@@ -7704,41 +7692,11 @@
     "magCalibrationQualityPoor": {
         "message": "差"
     },
-    "magCalibrationStep1": {
-        "message": "平放——在偏航方向上旋转 360°"
-    },
-    "magCalibrationStep2": {
-        "message": "机头向下——旋转 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "机头向上——旋转 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "左舷向下——旋转 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "右舷向下——旋转 360°"
-    },
-    "magCalibrationStep6": {
-        "message": "倒置——旋转 360°"
-    },
     "magCalibrationFirmwareOffsets": {
         "message": "固件偏移"
     },
     "magCalibrationSphereOffsets": {
         "message": "球体拟合偏移"
-    },
-    "magCalibrationUnguided": {
-        "message": "快速"
-    },
-    "magCalibrationUnguidedDesc": {
-        "message": "在所有方向自由旋转——固件完成校准后自动停止"
-    },
-    "magCalibrationUnguidedTitle": {
-        "message": "无引导校准"
-    },
-    "magCalibrationUnguidedInstruction": {
-        "message": "向所有方向缓慢旋转您的飞机。固件将自动收集样本和计算偏移。"
     },
     "magCalibrationUnguidedDone": {
         "message": "固件校准完成！"

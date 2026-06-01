@@ -7141,9 +7141,6 @@
     "magCalibrationRetry": {
         "message": "Ponów"
     },
-    "magCalibrationFinish": {
-        "message": "Zakończ"
-    },
     "magAlignmentApply": {
         "message": "Zastosuj"
     },

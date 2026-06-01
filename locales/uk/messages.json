@@ -323,11 +323,36 @@
     "tabOptions": {
         "message": "Опції"
     },
+    "sidebarToggleDarkMode": {
+        "message": "Перемкнути темний \/ світлий режим",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Налаштування"
     },
     "tabSetupOSD": {
         "message": "Налаштування наекранного меню"
+    },
+    "tabSensorConfig": {
+        "message": "Датчики"
+    },
+    "sensorConfigSaved": {
+        "message": "Налаштування датчика збережено"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Не вдалося зберегти налаштування датчика"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Магнітометр"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Акселерометр"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "Акселерометр не було відкалібровано. Будь ласка, відкалібруйте перед польотом."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Калібрувати"
     },
     "tabConfiguration": {
         "message": "Конфігурація"
@@ -337,6 +362,24 @@
     },
     "tabPidTuning": {
         "message": "Налаштування ПІД"
+    },
+    "autotuneApplying": {
+        "message": "Застосування..."
+    },
+    "autotuneApplied": {
+        "message": "Коефіцієнти застосовані й збережені."
+    },
+    "autotuneApplyFailed": {
+        "message": "Не вдалося застосувати коефіцієнти"
+    },
+    "autotuneConnectRequired": {
+        "message": "Під'єднайтесь до польотного контролера для застосування коефіцієнтів."
+    },
+    "autotuneApplyGains": {
+        "message": "Застосувати коефіцієнти"
+    },
+    "autotuneApplyFromAxis": {
+        "message": "Застосувати коефіцієнти з вісі"
     },
     "tabReceiver": {
         "message": "Приймач"
@@ -3921,6 +3964,9 @@
     },
     "firmwareFlasherExitDfu": {
         "message": "Вийти з режиму DFU"
+    },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Знайти пристрій DFU"
     },
     "firmwareFlasherFlashFirmware": {
         "message": "Прошити прошивку"

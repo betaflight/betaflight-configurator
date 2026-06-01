@@ -7681,18 +7681,6 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Falha na deteção — tente com inclinação mais variada."
     },
-    "magCalibrationStart": {
-        "message": "Guiado"
-    },
-    "magCalibrationStartDesc": {
-        "message": "Girar através de 6 orientações passo a passo"
-    },
-    "magCalibrationStartAuto": {
-        "message": "Passo-Auto"
-    },
-    "magCalibrationStartAutoDesc": {
-        "message": "O mesmo que guiado mas os passos avançam num temporizador"
-    },
     "magCalibrationCancel": {
         "message": "Cancelar"
     },
@@ -7701,15 +7689,6 @@
     },
     "magCalibrationRetry": {
         "message": "Voltar a tentar"
-    },
-    "magCalibrationNextStep": {
-        "message": "Próximo Passo"
-    },
-    "magCalibrationFinish": {
-        "message": "Concluir"
-    },
-    "magCalibrationStepOf": {
-        "message": "Passo {{current}} de {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "Esperando o movimento... Agite o veículo para começar."
@@ -7744,41 +7723,11 @@
     "magCalibrationQualityPoor": {
         "message": "Fraca"
     },
-    "magCalibrationStep1": {
-        "message": "Nível — gire 360° em yaw"
-    },
-    "magCalibrationStep2": {
-        "message": "Nariz para baixo — gire 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "Nariz para cima — gire 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "Lado esquerdo para baixo — gire 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "Lado direito para baixo — gire 360°"
-    },
-    "magCalibrationStep6": {
-        "message": "Invertido — gire 360°"
-    },
     "magCalibrationFirmwareOffsets": {
         "message": "Offsets de Firmware"
     },
     "magCalibrationSphereOffsets": {
         "message": "Offsets da esfera"
-    },
-    "magCalibrationUnguided": {
-        "message": "Rápido"
-    },
-    "magCalibrationUnguidedDesc": {
-        "message": "Girar livremente em todas as direções - pára quando o firmware terminar"
-    },
-    "magCalibrationUnguidedTitle": {
-        "message": "Calibração não guiada"
-    },
-    "magCalibrationUnguidedInstruction": {
-        "message": "Gire lentamente o seu veículo em todas as direções. O firmware irá recolher amostras e calcular os offsets automaticamente."
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibração de firmware completa!"
