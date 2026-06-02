@@ -7467,12 +7467,6 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
     },
-    "magCalibrationStart": {
-        "message": "Guidet"
-    },
-    "magCalibrationStartDesc": {
-        "message": "Roter gennem 6 retninger trin for trin"
-    },
     "magCalibrationCancel": {
         "message": "Fortryd"
     },
@@ -7481,15 +7475,6 @@
     },
     "magCalibrationRetry": {
         "message": "Forsøg igen"
-    },
-    "magCalibrationNextStep": {
-        "message": "Næste trin"
-    },
-    "magCalibrationFinish": {
-        "message": "Færdig"
-    },
-    "magCalibrationStepOf": {
-        "message": "Trin {{current}} af {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "Venter på bevægelse... Bevæg fartøj for at begynde."
@@ -7518,32 +7503,11 @@
     "magCalibrationQualityPoor": {
         "message": "Dårlig"
     },
-    "magCalibrationStep2": {
-        "message": "Næse ned — roter 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "Næse op — roter 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "Venstre side ned — roter 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "Højre side ned — roter 360°"
-    },
-    "magCalibrationUnguided": {
-        "message": "Hurtig"
-    },
-    "magCalibrationUnguidedDesc": {
-        "message": "Roter frit i alle retninger — stop, når firmware melder klar"
-    },
-    "magCalibrationUnguidedTitle": {
-        "message": "Kalibrering uden guide"
-    },
-    "magCalibrationUnguidedInstruction": {
-        "message": "Roter dit fartøj langsomt i alle retninger. Firmware vil indsamle data og beregne forskydning automatisk."
-    },
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
+    },
+    "magVizProjection": {
+        "message": "Tredobbelt projektion"
     },
     "magVizWaitingForData": {
         "message": "Venter på data …"

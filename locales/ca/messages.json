@@ -5837,6 +5837,15 @@
     "powerBatteryAmperage": {
         "message": "Amperatge"
     },
+    "powerBatteryPowerDraw": {
+        "message": "Consum d'energia"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Caiguda de voltatge"
+    },
     "powerBatteryCapacity": {
         "message": "Capacitat (mAh)"
     },
@@ -7689,35 +7698,47 @@
     "sensorConfigAlignDetectFailed": {
         "message": "La detecció ha fallat - intenta-ho amb una inclinació més variada."
     },
-    "magCalibrationStart": {
-        "message": "Guiada"
+    "magCalibrationGuidedFw": {
+        "message": "Calibratge del client (guiat)"
     },
-    "magCalibrationStartDesc": {
-        "message": "Gira-ho en 6 direccions diferent-es pas a pas"
+    "magCalibrationGuidedFwDesc": {
+        "message": "Calibratge automàtic de 60 segons"
     },
-    "magCalibrationStartAuto": {
-        "message": "Auto-pas"
+    "magCalibrationGuidedFwTitle": {
+        "message": "Calibratge guiat"
     },
-    "magCalibrationStartAutoDesc": {
-        "message": "Igual que el guiat però els passos avancen amb un temporitzador"
+    "magCalibrationPrompt1": {
+        "message": "Pas 1\/6 — Mantingueu la posició plana, gireu 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Pas 2\/6 — Gir cap enrere, girar 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Pas 3\/6 — Morro recte cap amunt, yaw de 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Pas 4\/6 — Morro recte cap avall, yaw de 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Pas 5\/6 — Costat esquerre cap amunt, gir de 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Pas 6\/6 — Costat dret cap amunt, gir de 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Recopilació de dades completada: reviseu-la i deseu-la"
     },
     "magCalibrationCancel": {
         "message": "Canceŀlar"
+    },
+    "magCalibrationClear": {
+        "message": "Esborrar"
     },
     "magCalibrationModeOptions": {
         "message": "Opcions del mode de calibratge"
     },
     "magCalibrationRetry": {
         "message": "Reintenta"
-    },
-    "magCalibrationNextStep": {
-        "message": "Pas següent"
-    },
-    "magCalibrationFinish": {
-        "message": "Acabar"
-    },
-    "magCalibrationStepOf": {
-        "message": "Pas {{current}} de {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "Esperant moviment... Sacseja el vehicle per començar."
@@ -7752,24 +7773,6 @@
     "magCalibrationQualityPoor": {
         "message": "Pobre"
     },
-    "magCalibrationStep1": {
-        "message": "Nivell — girar-ho 360° en Yaw"
-    },
-    "magCalibrationStep2": {
-        "message": "Nas avall - gira-ho 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "Nas amint - gira-ho 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "Costat esquerre avall - gira-ho 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "Costat dret avall - gira-ho 360°"
-    },
-    "magCalibrationStep6": {
-        "message": "Invertit - gira-ho 360°"
-    },
     "magCalibrationFirmwareOffsets": {
         "message": "Òfsets del programari"
     },
@@ -7777,19 +7780,61 @@
         "message": "Desplaçaments d'ajust d'esfera"
     },
     "magCalibrationUnguided": {
-        "message": "Ràpid"
+        "message": "Calibració programari (Guiat)"
     },
     "magCalibrationUnguidedDesc": {
-        "message": "Gira lliurement en totes direccions: s'atura quan finalitza el programari"
+        "message": "Gira lliurement: el programari es desa automàticament després de 30 segons"
     },
     "magCalibrationUnguidedTitle": {
-        "message": "Calibratge no guiat"
+        "message": "Calibratge del programari"
     },
     "magCalibrationUnguidedInstruction": {
-        "message": "Gireu el vehicle lentament en totes direccions. El programari recopilarà mostres i calcularà els desplaçaments automàticament."
+        "message": "Tens 30 segons per girar el vehicle en totes direccions. El programari desarà automàticament els valors de calibratge quan s'acabi el temps."
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibratge del programari completat!"
+    },
+    "magCalibrationGuided": {
+        "message": "Calibratge del client (lliure)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Gira lliurement: el configurador calcula els desplaçaments"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Calibratge client"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Gira el vehicle en totes direccions. Intenta crear una esfera completa de punts en un o dos minuts aproximadament. Desa el resultat quan els valors de calibratge s'hagin estabilitzat."
+    },
+    "magCalibrationCheck": {
+        "message": "Comprova"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Visualitza dades de mag en directe amb calibratge actual"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Comprovació del calibratge"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirmeu l'orientació i el calibratge del magnetòmetre. Col·loqueu la vostra nau plana respecte a l'horitzó, apunteu el morro cap a un punt conegut de la brúixola (es pot utilitzar un telèfon per esbrinar on és el nord) i confirmeu que apareixen punts nous a la ubicació esperada a la pantalla 3D. Els valors de la intensitat del camp per a cada eix i l'esfericitat dels punts indiquen la precisió del calibratge. Si els punts van a llocs completament equivocats, és probable que l'orientació del magnetòmetre sigui incorrecta."
+    },
+    "magCalibrationCalValues": {
+        "message": "Valors de Calibració"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Desa valors"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Valors de calibratge desats"
+    },
+    "magCalibrationSaveError": {
+        "message": "No s'han pogut desar els valors de calibratge"
+    },
+    "magCalibrationAccept": {
+        "message": "Desa el calibratge"
+    },
+    "magCalibrationDiscard": {
+        "message": "Descarta"
     },
     "magVizPointCloud": {
         "message": "Núvol de punts"
@@ -7805,6 +7850,15 @@
     },
     "magVizWaitingForData": {
         "message": "Esperant dades…"
+    },
+    "magVizAxisField": {
+        "message": "Camp"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Vell"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Nou"
     },
     "magAlignmentApply": {
         "message": "Aplicar"

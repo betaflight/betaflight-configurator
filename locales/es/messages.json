@@ -106,11 +106,23 @@
     "portOverrideText": {
         "message": "Puerto:"
     },
+    "connectVirtualDescription": {
+        "message": "Simula un controlador de vuelo sin hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectManualDescription": {
+        "message": "Introduce la ruta del puerto serie o URL a la que conectar.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
     "autoConnect": {
         "message": "Auto-Conectar"
     },
     "close": {
         "message": "Cerrar"
+    },
+    "openSidebarMenu": {
+        "message": "Abrir menú lateral",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "Aceptar"
@@ -120,6 +132,21 @@
     },
     "submit": {
         "message": "Enviar"
+    },
+    "delete": {
+        "message": "Borrar"
+    },
+    "edit": {
+        "message": "Editar"
+    },
+    "add": {
+        "message": "Añadir"
+    },
+    "update": {
+        "message": "Actualizar"
+    },
+    "save": {
+        "message": "Guardar"
     },
     "autoConnectEnabled": {
         "message": "Auto-Conectar: Activado - La aplicación intenta conectar automáticamente cuando detecta un nuevo puerto"
@@ -296,11 +323,68 @@
     "tabOptions": {
         "message": "Opciones"
     },
+    "sidebarOpenOptions": {
+        "message": "Opciones",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Cambiar modo oscuro \/ claro",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Cambiar modo experto",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Ajuste"
     },
     "tabSetupOSD": {
         "message": "Configurar OSD"
+    },
+    "tabSensorConfig": {
+        "message": "Sensores"
+    },
+    "sensorConfigHardware": {
+        "message": "Sensores Hardware"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Giro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Configuración del sensor guardada"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Error al guardar la configuración del sensor"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetómetro"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Acelerómetro"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Coloca la aeronave en una superficie nivelada antes de iniciar la calibración"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "El acelerómetro no ha sido calibrado. Por favor, calíbralo antes de volar."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Las compensaciones de calibración del magnetómetro son cero. Calíbralo para obtener un direccionamiento preciso."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibrar"
+    },
+    "sensorConfig3dPreview": {
+        "message": "Vista previa de posicionamiento 3D"
+    },
+    "sensorConfigLiveData": {
+        "message": "Datos de los sensores en tiempo real"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Mostrar datos de los sensores en tiempo real"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Detener datos de sensores en tiempo real"
     },
     "tabConfiguration": {
         "message": "Configuración"
@@ -310,6 +394,93 @@
     },
     "tabPidTuning": {
         "message": "Ajustar PID"
+    },
+    "tabAutotune": {
+        "message": "Auto-ajuste"
+    },
+    "autotuneImportTitle": {
+        "message": "Análisis CHIRP de la caja negra"
+    },
+    "autotuneImportButton": {
+        "message": "Importar registro de caja negra"
+    },
+    "autotuneImportDescription": {
+        "message": "Importar un registro de la caja negra grabado con debug_mode = CHIRP para analizar la respuesta de frecuencia y calcular las recomendaciones de PID."
+    },
+    "autotuneSelectingFile": {
+        "message": "Seleccionando archivo..."
+    },
+    "autotuneAnalyzing": {
+        "message": "Analizando datos CHIRP..."
+    },
+    "autotuneBandwidth": {
+        "message": "Ancho de banda"
+    },
+    "autotunePhaseMargin": {
+        "message": "Margen de fase"
+    },
+    "autotuneResonantPeak": {
+        "message": "Pico resonante"
+    },
+    "autotuneCoherence": {
+        "message": "Coherencia"
+    },
+    "autotuneParameter": {
+        "message": "Parámetro"
+    },
+    "autotuneCurrent": {
+        "message": "Actual"
+    },
+    "autotuneProposed": {
+        "message": "Propuesto"
+    },
+    "autotuneChange": {
+        "message": "Cambiar"
+    },
+    "autotuneApplying": {
+        "message": "Aplicando..."
+    },
+    "autotuneApplied": {
+        "message": "Ganancias aplicadas y guardadas."
+    },
+    "autotuneApplyFailed": {
+        "message": "Error al aplicar ganancias"
+    },
+    "autotuneConnectRequired": {
+        "message": "Conéctate al controlador de vuelo para aplicar ganancias."
+    },
+    "autotuneNoLogs": {
+        "message": "No se encontraron registros de caja negra válidos en este archivo."
+    },
+    "autotuneNoChirpData": {
+        "message": "No se han encontrado datos CHIRP. Asegúrate de que el registro ha sido realizado con debug_mode = CHIRP y el modo CHIRP fue activado."
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} muestras"
+    },
+    "autotuneSampleRate": {
+        "message": "Tasa de muestreo: {{rate}} Hz"
+    },
+    "autotuneImportAnother": {
+        "message": "Importar otro"
+    },
+    "autotuneImportRetry": {
+        "message": "Intentar de nuevo"
+    },
+    "autotuneFile": {
+        "message": "Archivo"
+    },
+    "autotuneAxesDetected": {
+        "message": "Ejes detectados"
+    },
+    "autotuneApplyGains": {
+        "message": "Aplicar ganancias"
+    },
+    "autotuneGainTitle": {
+        "message": "Recomendación de ganancias"
+    },
+    "autotuneAxisSelector": {
+        "message": "Seleccionar eje"
     },
     "tabReceiver": {
         "message": "Receptor"
@@ -334,6 +505,9 @@
     },
     "tabGPS": {
         "message": "GPS"
+    },
+    "tabFlightPlan": {
+        "message": "Plan de vuelo"
     },
     "tabMotorTesting": {
         "message": "Motores"
@@ -361,6 +535,19 @@
     },
     "logActionShow": {
         "message": "Mostrar registro"
+    },
+    "tabLog": {
+        "message": "Registro"
+    },
+    "i2cErrorDetected": {
+        "message": "Se ha detectado un error I2C (+{{delta}}, total {{total}})",
+        "description": "Logged when the flight controller reports new I2C bus errors. {{delta}} is how many errors since the last poll; {{total}} is the running total."
+    },
+    "logActionClear": {
+        "message": "Limpiar"
+    },
+    "logAutoScroll": {
+        "message": "Desplazamiento automático"
     },
     "fileSystemPickerFiles": {
         "message": "Archivos {{typeof}}",
@@ -2815,6 +3002,12 @@
     "gpsMapHead": {
         "message": "Ubicación actual"
     },
+    "gpsMapToggleFullscreen": {
+        "message": "Alternar pantalla completa"
+    },
+    "gpsMapRetry": {
+        "message": "Reintentar"
+    },
     "gpsMapMessage1": {
         "message": "Por favor verifica tu conexión a internet"
     },
@@ -2920,6 +3113,156 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "no saludable"
+    },
+    "flightPlanWaypointList": {
+        "message": "Lista de puntos de ruta"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "No hay puntos de ruta definidos. Pulsa en el mapa o utiliza el formulario para añadir puntos de ruta."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Añadir punto de ruta"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Editar punto de ruta"
+    },
+    "flightPlanLatitude": {
+        "message": "Latitud <span class=\"units\">°<\/span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Longitud <span class=\"units\">°<\/span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Altitud <span class=\"units\">pies AMSL<\/span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Velocidad <span class=\"units\">nudos<\/span>"
+    },
+    "flightPlanType": {
+        "message": "Tipo de punto de ruta"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Volar por encima"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Volar por"
+    },
+    "flightPlanTypeHold": {
+        "message": "Mantener posición"
+    },
+    "flightPlanTypeLand": {
+        "message": "Aterrizar"
+    },
+    "flightPlanTypeTakeoff": {
+        "message": "Despegar"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Cambiar altitud",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Espera",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Límite de tasa de Yaw",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
+    "flightPlanDuration": {
+        "message": "Tiempo de la posición <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Tiempo que mantiene la posición en minutos",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Duración de la espera <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "Duración de la espera en minutos",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Tasa de Yaw <span class=\"units\">°\/s<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Tasa de Yaw en grados por segundo",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
+    },
+    "flightPlanPattern": {
+        "message": "Patrón de mantener"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Círculo"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Figura-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Orbitar"
+    },
+    "flightPlanMap": {
+        "message": "Mapa del plan de vuelo"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Pulsa para añadir puntos de ruta. Arrastra los marcadores de puntos de ruta para moverlos."
+    },
+    "flightPlanLoading": {
+        "message": "Espera por favor..."
+    },
+    "flightPlanClear": {
+        "message": "Limpiar"
+    },
+    "flightPlanLoad": {
+        "message": "Cargar"
+    },
+    "flightPlanSaveToFC": {
+        "message": "Guardar en controladora"
+    },
+    "flightPlanLoaded": {
+        "message": "Plan de vuelo cargado correctamente"
+    },
+    "flightPlanSaved": {
+        "message": "Plan de vuelo guardado correctamente"
+    },
+    "flightPlanCleared": {
+        "message": "Plan de vuelo borrado"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Cargar desde controladora"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Plan de vuelo cargado desde la controladora de vuelo"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Plan de vuelo guardado en la controladora de vuelo"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Error al cargar el plan de vuelo desde la controladora de vuelo"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Error al guardar el plan de vuelo en la controladora de vuelo"
+    },
+    "flightPlanFCEmpty": {
+        "message": "No hay puntos de ruta en la controladora de vuelo"
+    },
+    "flightPlanClearedFC": {
+        "message": "Plan de vuelo borrado de la controladora de vuelo"
+    },
+    "flightPlanLoadError": {
+        "message": "Error al cargar el plan de vuelo"
+    },
+    "flightPlanSaveError": {
+        "message": "Error al guardar el plan de vuelo"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Latitud no válida (debe estar entre -90 y 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Longitud no válida (debe estar entre -180 y 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Altitud no válida (debe ser cero o positivo)"
     },
     "motorsVoltage": {
         "message": "Voltaje:"
@@ -4479,6 +4822,10 @@
         "message": "Frecuencia mínima que será usada por el Filtro RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmWeight": {
+        "message": "Peso {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
+    },
     "pidTuningFilterSettings": {
         "message": "Ajustes de Filtros dependientes del Perfil"
     },
@@ -4532,11 +4879,17 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Incrementa los valores del PID para compensar cuando la Vbat está baja. Esto proporciona características de vuelo más constantes durante el vuelo. La cantidad de compensación que se aplica se calcula a partir del $t(powerBatteryMaximum.message) indicado en la página de $t(tabPower.message), así que asegúrate de que tiene un valor apropiado."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Compensación de caida de voltage de la bateria %"
+    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Proporciona un rendimiento consistente del acelerador y del PID sobre el rango de voltaje de la batería utilizable incrementando la salida del motor según el voltaje de la batería va cayendo.<br \/><br \/> La cantidad de compensación puede variar entre el 0 y el 100 %. Se recomienda compensación completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki<\/a> para más información."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Linearización de empuje %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Mejora la autoridad con acelerador bajo y la capacidad de respuesta.<br><br> Especialmente útil para whoops y ESCs de 48kHz. No tiene efecto con acelerador alto.<br><br>La cantidad de compensación puede variar entre 0 y 150 %. Generalmente el 30-40 % es suficiente."
@@ -5071,6 +5424,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Escala de Corriente Calibrada:"
     },
+    "powerBatteryProfile": {
+        "message": "Perfil de batería"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Perfil de batería $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "ej. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Nombre de perfil"
+    },
     "powerBatteryHead": {
         "message": "Batería"
     },
@@ -5094,6 +5459,15 @@
     },
     "powerBatteryAmperage": {
         "message": "Amperaje"
+    },
+    "powerBatteryPowerDraw": {
+        "message": "Consumo de energía"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Caída de voltaje"
     },
     "powerBatteryCapacity": {
         "message": "Capacidad (mAh)"
@@ -5273,11 +5647,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Imagen personalizada:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Tamaño debe ser de {{logoWidthPx}}x{{logoHeightPx}} píxeles"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Debe contener píxeles verdes, blancos y negros"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Pulse <b>$t(osdSetupUploadFont.message)<\/b> para persistir logo personalizado"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Tamaño de imagen no válido: {{width}}x{{height}} (esperado {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "La imagen contiene un pixel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) en las coordenadas {{posX}}×{{posY}}"
@@ -5296,6 +5676,9 @@
     },
     "osdSetupSave": {
         "message": "Guardar"
+    },
+    "osdSetupRefresh": {
+        "message": "Refrescar"
     },
     "osdSetupFontManager": {
         "message": "Cargar Fuente"
@@ -6503,6 +6886,21 @@
         "message": "Avisa si la carga de la CPU del controlador de vuelo es demasiado alta",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Error al mantener posición",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Muestra una advertencia cuando el mantener posición falla (ej. en modo GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Error al mantener posición",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Error al mantener posición",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
     "osdWarningTextUnknown": {
         "message": "Desconocido $1"
     },
@@ -6877,6 +7275,21 @@
     },
     "configurationAccHardware": {
         "message": "Acelerómetro"
+    },
+    "configurationBaroHardware": {
+        "message": "Barómetro"
+    },
+    "configurationMagHardware": {
+        "message": "Magnetómetro"
+    },
+    "configurationMagInclination": {
+        "message": "Inclinación"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detectar"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Actualizar"
     },
     "configurationSmallAngle": {
         "message": "Ángulo de armado máximo [grados]"
