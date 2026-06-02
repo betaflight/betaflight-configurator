@@ -7,11 +7,13 @@ const DEG_TO_RAD = Math.PI / 180;
 // --- Synthetic sample generation ---
 //
 // Convention used here (must match the algorithm):
-//   - World/body frame is the "intended" body orientation (forward = drone's
-//     camera direction = toward the user during calibration).
-//   - At flat, accel in world frame = (0, 0, 1) (gravity-opposite, normalized).
-//   - Pitch up 45° = drone rotates -45° around world-Y axis (Ry world).
-//   - Roll right 45° (right wing down) = -45° around world-X axis (Rx world).
+//   - Betaflight body frame: X=forward, Y=left, Z=up (right-handed, Y=LEFT convention).
+//   - Drone nose faces AWAY from the user during calibration (+X = forward).
+//   - At flat, accel in body frame = (0, 0, 1) (gravity-opposite, normalized).
+//   - Pitch up 45° = drone nose tilts up = body rotates Ry(-45°).
+//     Accel = Ry(-45°)^T · (0,0,1) = Ry(+45°) · (0,0,1) = (sin45, 0, cos45).
+//   - Roll right 45° (right wing = −Y side down) = body rotates Rx(+45°) in Y=LEFT frame.
+//     Accel = Rx(+45°)^T · (0,0,1) = Rx(-45°) · (0,0,1) = (0, sin45, cos45).
 //   - Yaw CW 45° = -45° around world-Z (right-hand rule, thumb up gives CCW).
 //   - R_mount = rotation FC frame → world frame.
 //   - accel_fc = R_mount^T · (rotated gravity vector).
@@ -57,9 +59,11 @@ function matVec(m, v) {
  * configured alignment. Reproduces what the FC would report via MSP_RAW_IMU after
  * board-alignment correction.
  */
+// mountYaw and currentAlignment.yaw use Betaflight's CW-positive convention (same as the wizard output).
+// eulerToMatrix uses CCW-positive (standard math), so we negate yaw when building the matrices.
 function makeSamples(mountRoll, mountPitch, mountYaw, currentAlignment = { roll: 0, pitch: 0, yaw: 0 }, noise = 0) {
-    const rMount = eulerToMatrix(mountRoll, mountPitch, mountYaw);
-    const rCurrent = eulerToMatrix(currentAlignment.roll, currentAlignment.pitch, currentAlignment.yaw);
+    const rMount = eulerToMatrix(mountRoll, mountPitch, -mountYaw);
+    const rCurrent = eulerToMatrix(currentAlignment.roll, currentAlignment.pitch, -currentAlignment.yaw);
 
     // Raw FC accel = R_mount^T · accel_world
     // Post-alignment accel (what MSP_RAW_IMU returns) = R_current · raw_fc
@@ -68,13 +72,14 @@ function makeSamples(mountRoll, mountPitch, mountYaw, currentAlignment = { roll:
     const pitchUp = 45 * DEG_TO_RAD;
     const rollRight = 45 * DEG_TO_RAD;
 
-    // Gravity-opposite vector in world frame after each user gesture:
+    // Gravity-opposite vector in drone body frame after each user gesture.
+    // Betaflight uses Y=LEFT frame (X=fwd, Y=left, Z=up — right-handed).
     //   flat:        (0, 0, 1)
-    //   pitch up:    Pitch up 45° = Ry(-45°). So R^T = Ry(+45°). Ry(+45°) · (0,0,1) = (sin45, 0, cos45)
-    //   roll right:  Rx(-45°)^T · (0,0,1) = Rx(+45°) · (0,0,1) = (0, -sin45, cos45)
+    //   pitch up:    Ry(-45°) applied to body → world-up in body = Ry(+45°)·(0,0,1) = (sin45, 0, cos45)
+    //   roll right:  Right wing (−Y) down = Rx(+45°) applied to body → Rx(-45°)·(0,0,1) = (0, sin45, cos45)
     const accelFlatWorld = [0, 0, 1];
     const accelPitchWorld = matVec(rotY(pitchUp), [0, 0, 1]);
-    const accelRollWorld = matVec(rotX(rollRight), [0, 0, 1]);
+    const accelRollWorld = matVec(rotX(-rollRight), [0, 0, 1]);
 
     const jitter = () => (noise > 0 ? (Math.random() - 0.5) * 2 * noise : 0);
     const addNoise = (v) => [v[0] + jitter(), v[1] + jitter(), v[2] + jitter()];
@@ -141,12 +146,18 @@ describe("snapTo45", () => {
     });
 });
 
+// Helper: convert Betaflight CW-positive yaw to internal CCW-positive for matrix comparison.
+function internalYaw(displayYaw) {
+    return -displayYaw;
+}
+
 describe("detectBoardAlignment - cardinal mounts", () => {
+    // yaw values use Betaflight's CW-positive convention (same as wizard output).
     const cardinals = [
         { name: "identity", roll: 0, pitch: 0, yaw: 0 },
-        { name: "CW 90°", roll: 0, pitch: 0, yaw: -90 },
+        { name: "CW 90°", roll: 0, pitch: 0, yaw: 90 },
         { name: "CW 180°", roll: 0, pitch: 0, yaw: 180 },
-        { name: "CW 270°", roll: 0, pitch: 0, yaw: 90 },
+        { name: "CW 270°", roll: 0, pitch: 0, yaw: 270 },
         { name: "roll 180° (upside down)", roll: 180, pitch: 0, yaw: 0 },
         { name: "pitch 90° (nose up vertical)", roll: 0, pitch: 90, yaw: 0 },
     ];
@@ -156,9 +167,10 @@ describe("detectBoardAlignment - cardinal mounts", () => {
             const samples = makeSamples(mount.roll, mount.pitch, mount.yaw);
             const result = detectBoardAlignment({ ...samples, currentAlignment: { roll: 0, pitch: 0, yaw: 0 } });
             expect(result.error).toBeUndefined();
-            // Compare via matrix to handle Euler-angle equivalence (e.g., 180/-180).
-            const expected = eulerToMatrix(mount.roll, mount.pitch, mount.yaw);
-            const got = eulerToMatrix(result.roll, result.pitch, result.yaw);
+            // Compare via matrix (handles 180/-180 equivalence).
+            // Both sides negate yaw to convert from CW-positive display back to CCW-positive math.
+            const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
+            const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < 3; j++) {
                     expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
@@ -170,8 +182,8 @@ describe("detectBoardAlignment - cardinal mounts", () => {
 
 describe("detectBoardAlignment - 45° cinewhoop mounts", () => {
     const cinewhoops = [
-        { name: "CW 45°", roll: 0, pitch: 0, yaw: -45 },
-        { name: "CW 135°", roll: 0, pitch: 0, yaw: -135 },
+        { name: "CW 45°", roll: 0, pitch: 0, yaw: 45 },
+        { name: "CW 135°", roll: 0, pitch: 0, yaw: 135 },
     ];
 
     for (const mount of cinewhoops) {
@@ -179,8 +191,8 @@ describe("detectBoardAlignment - 45° cinewhoop mounts", () => {
             const samples = makeSamples(mount.roll, mount.pitch, mount.yaw);
             const result = detectBoardAlignment({ ...samples, currentAlignment: { roll: 0, pitch: 0, yaw: 0 } });
             expect(result.error).toBeUndefined();
-            const expected = eulerToMatrix(mount.roll, mount.pitch, mount.yaw);
-            const got = eulerToMatrix(result.roll, result.pitch, result.yaw);
+            const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
+            const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < 3; j++) {
                     expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
@@ -192,14 +204,13 @@ describe("detectBoardAlignment - 45° cinewhoop mounts", () => {
 
 describe("detectBoardAlignment - delta from current alignment", () => {
     it("returns the same alignment when no change is needed", () => {
-        // FC physically mounted CW 90°, user already configured yaw = -90°. Post-alignment data
-        // looks identity to the wizard, so the algorithm reports M = identity. After composing
-        // with current alignment, the result equals the current alignment (no change).
-        const current = { roll: 0, pitch: 0, yaw: -90 };
-        const samples = makeSamples(0, 0, -90, current);
+        // FC physically mounted CW 90° (display yaw=90). Post-alignment data looks like identity,
+        // so M = identity. After composing with current alignment, result = current (no change).
+        const current = { roll: 0, pitch: 0, yaw: 90 };
+        const samples = makeSamples(0, 0, 90, current);
         const result = detectBoardAlignment({ ...samples, currentAlignment: current });
-        const expected = eulerToMatrix(current.roll, current.pitch, current.yaw);
-        const got = eulerToMatrix(result.roll, result.pitch, result.yaw);
+        const expected = eulerToMatrix(current.roll, current.pitch, internalYaw(current.yaw));
+        const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
@@ -209,12 +220,13 @@ describe("detectBoardAlignment - delta from current alignment", () => {
 
     it("composes the residual rotation with current alignment", () => {
         // FC physically mounted CW 180°, user has configured CW 90° (incomplete correction).
-        // Wizard should output CW 180° (= 180° yaw).
-        const current = { roll: 0, pitch: 0, yaw: -90 };
+        // Wizard should output CW 180° (display yaw = 180).
+        const current = { roll: 0, pitch: 0, yaw: 90 };
         const samples = makeSamples(0, 0, 180, current);
         const result = detectBoardAlignment({ ...samples, currentAlignment: current });
-        const expected = eulerToMatrix(0, 0, 180);
-        const got = eulerToMatrix(result.roll, result.pitch, result.yaw);
+        expect(result.yaw).toBe(180);
+        const expected = eulerToMatrix(0, 0, internalYaw(180));
+        const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
@@ -235,12 +247,13 @@ describe("detectBoardAlignment - noise robustness", () => {
             return ((counter * 9301 + 49297) % 233280) / 233280;
         };
         try {
-            const samples = makeSamples(0, 0, -90, { roll: 0, pitch: 0, yaw: 0 }, 0.03);
+            // CW 90° mount (display yaw = 90) with 0.03g noise.
+            const samples = makeSamples(0, 0, 90, { roll: 0, pitch: 0, yaw: 0 }, 0.03);
             const result = detectBoardAlignment({ ...samples, currentAlignment: { roll: 0, pitch: 0, yaw: 0 } });
             expect(result.error).toBeUndefined();
+            expect(result.yaw).toBe(90);
             expect(result.roll).toBe(0);
             expect(result.pitch).toBe(0);
-            expect(result.yaw).toBe(-90);
         } finally {
             Math.random = origRandom;
         }
@@ -251,8 +264,8 @@ describe("detectBoardAlignment - input validation", () => {
     it("errors when flat sample has no gravity reading", () => {
         const result = detectBoardAlignment({
             flatAccel: [0, 0, 0],
-            pitchAccel: [-0.7, 0, 0.7],
-            rollAccel: [0, -0.7, 0.7],
+            pitchAccel: [0.7, 0, 0.7],
+            rollAccel: [0, 0.7, 0.7],
             yawIntegral: -45,
             currentAlignment: { roll: 0, pitch: 0, yaw: 0 },
         });
@@ -263,7 +276,7 @@ describe("detectBoardAlignment - input validation", () => {
         const result = detectBoardAlignment({
             flatAccel: [0, 0, 1],
             pitchAccel: [0, 0, 1],
-            rollAccel: [0, -0.7, 0.7],
+            rollAccel: [0, 0.7, 0.7],
             yawIntegral: -45,
             currentAlignment: { roll: 0, pitch: 0, yaw: 0 },
         });

@@ -8,21 +8,23 @@
  * The algorithm:
  *   1. At flat, the normalized accelerometer vector is world-up expressed in
  *      the FC frame (call it `upAxis`).
- *   2. When the user pitches up 45°, the horizontal component of the accel
- *      vector (perpendicular to upAxis) points opposite world-forward in FC
- *      frame, so `forwardAxis = -normalize(h_pitch)`.
- *   3. Same trick for roll right: `rightAxis = -normalize(h_roll)`.
+ *   2. When the user pitches up 45° (drone facing away), the horizontal accel
+ *      component shifts toward the nose, so `forwardAxis = +normalize(h_pitch)`.
+ *   3. For roll right (right wing down, = −Y side in Betaflight's Y=LEFT frame),
+ *      the horizontal accel component shifts toward +Y (left/rising side).
+ *      Betaflight uses a right-handed X=fwd, Y=left, Z=up body frame, so the
+ *      body-Y direction from the roll gesture matches cross(upAxis, forwardAxis).
  *   4. The yaw-CW gesture is used only for confidence (the integrated gyro
  *      should have a large component along upAxis).
  *   5. Gram-Schmidt orthogonalize (upAxis fixed, forward projected perpendicular,
- *      right derived as up × forward). Build a rotation matrix `M` with these
+ *      body-Y derived as up × forward). Build a rotation matrix `M` with these
  *      world basis vectors as rows. `M · v_fc = v_world`.
  *   6. If a non-zero current alignment exists, MSP_RAW_IMU is already rotated
  *      by it. Our M is the residual; compose with `eulerToMatrix(currentAlignment)`
  *      to get the absolute new alignment.
  *   7. Decode `M_total` into roll/pitch/yaw using Betaflight's ZYX convention
- *      (inverse of `eulerToMatrix`). Snap each angle to the nearest multiple
- *      of 45° and normalize to (-180, 180].
+ *      (inverse of `eulerToMatrix`). Snap all axes to multiples of 45°. Convert
+ *      yaw from internal CCW-positive to Betaflight's CW-positive [0, 360).
  */
 
 import { eulerToMatrix } from "./magAlignment.js";
@@ -199,23 +201,24 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
     }
     const forwardRaw = normalize(hPitch);
 
-    // Derive world-right in FC frame from the roll-right gesture.
-    // When rolled right, the gravity horizontal component shifts toward the right wing,
-    // so the accel (gravity-opposite) shifts toward the left wing. Thus we negate it to get right.
+    // Derive the body-Y axis from the roll-right gesture.
+    // Betaflight uses a Y=LEFT body frame (X=forward, Y=left, Z=up — right-handed).
+    // When rolling right (right wing = −Y side going down), the world-up horizontal
+    // component in the body frame shifts toward +Y (the left/rising side), which is
+    // the same direction that cross(upAxis, forwardAxis) produces. Take it directly.
     const hRoll = perpComponent(rollAccel, upAxis);
     if (Math.hypot(hRoll[0], hRoll[1], hRoll[2]) < 0.05) {
         return { error: "no_roll_tilt" };
     }
-    const rightRaw = scale(normalize(hRoll), -1);
+    const rightRaw = normalize(hRoll);
 
     // Gram-Schmidt: keep upAxis, orthogonalize forward, derive right = up × forward.
     let forwardAxis = normalize(perpComponent(forwardRaw, upAxis));
     let rightAxis = cross(upAxis, forwardAxis);
 
-    // Cross-check derived right against measured right. They should align (positive dot).
-    // If they don't, the user's roll gesture went the opposite direction relative to
-    // their pitch gesture (uncommon, but possible). Trust the measured right and recompute
-    // forward to keep the basis right-handed.
+    // Cross-check: both rightAxis (cross product) and rightRaw (measured from roll gesture)
+    // should point in the same body-Y direction (+Y = left in Betaflight's frame).
+    // If they disagree, the user's roll gesture was the wrong direction.
     if (dot(rightAxis, rightRaw) < 0) {
         rightAxis = scale(rightAxis, -1);
         forwardAxis = scale(forwardAxis, -1);
@@ -230,15 +233,28 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
 
     let mTotal = m;
     if (currentAlignment) {
-        const cur = eulerToMatrix(currentAlignment.roll || 0, currentAlignment.pitch || 0, currentAlignment.yaw || 0);
+        // Betaflight stores yaw as CW-positive (e.g. 90 = board rotated 90° clockwise).
+        // eulerToMatrix uses standard math (CCW-positive), so negate yaw on input.
+        const cur = eulerToMatrix(
+            currentAlignment.roll || 0,
+            currentAlignment.pitch || 0,
+            -(currentAlignment.yaw || 0),
+        );
         mTotal = matMul(m, cur);
     }
 
     const euler = matrixToEuler(mTotal);
+    // Snap all axes to nearest 45° (standard board mount increments).
+    const snappedRoll = snapTo45(euler.roll);
+    const snappedPitch = snapTo45(euler.pitch);
+    // Internal yaw is CCW-positive; convert to Betaflight's CW-positive [0, 360).
+    const snappedInternalYaw = snapTo45(euler.yaw);
+    const displayYaw = ((-snappedInternalYaw % 360) + 360) % 360;
+
     const snapped = {
-        roll: snapTo45(euler.roll),
-        pitch: snapTo45(euler.pitch),
-        yaw: snapTo45(euler.yaw),
+        roll: snappedRoll,
+        pitch: snappedPitch,
+        yaw: displayYaw,
     };
 
     // Confidence: high if the measured right matches the derived right closely AND the

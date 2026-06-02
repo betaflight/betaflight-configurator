@@ -41,8 +41,8 @@
                         </div>
                     </div>
 
-                    <!-- Result -->
-                    <div v-else-if="phase === 'result'">
+                    <!-- Test phase: live attitude with detected alignment applied -->
+                    <div v-else-if="phase === 'test'">
                         <h4 v-html="i18nMessage('boardAlignmentWizard-ResultTitle')"></h4>
                         <table class="wizard-result-table">
                             <thead>
@@ -71,15 +71,7 @@
                         <div v-if="confidence !== 'high'" class="wizard-warning">
                             {{ i18nMessage("boardAlignmentWizard-LowConfidence") }}
                         </div>
-                    </div>
-
-                    <!-- Test phase: live attitude -->
-                    <div v-else-if="phase === 'test'">
-                        <h4 v-html="i18nMessage('boardAlignmentWizard-Test')"></h4>
-                        <div class="wizard-detail">
-                            {{ i18nMessage("boardAlignmentWizard-ResultDetected") }}: {{ detected.roll }}° /
-                            {{ detected.pitch }}° / {{ detected.yaw }}°
-                        </div>
+                        <p class="wizard-substep" v-html="i18nMessage('boardAlignmentWizard-Test')"></p>
                     </div>
 
                     <!-- Error -->
@@ -96,17 +88,7 @@
                         >
                             {{ i18nMessage("boardAlignmentWizard-Start") }}
                         </button>
-                        <button v-if="phase === 'result'" class="regular-button" @click.prevent="enterTestPhase">
-                            {{ i18nMessage("boardAlignmentWizard-Test") }}
-                        </button>
-                        <button v-if="phase === 'test'" class="regular-button" @click.prevent="phase = 'result'">
-                            {{ i18nMessage("boardAlignmentWizard-Back") }}
-                        </button>
-                        <button
-                            v-if="phase === 'result' || phase === 'test'"
-                            class="regular-button primary"
-                            @click.prevent="onApply"
-                        >
+                        <button v-if="phase === 'test'" class="regular-button primary" @click.prevent="onApply">
                             {{ i18nMessage("boardAlignmentWizard-Apply") }}
                         </button>
                         <button
@@ -152,7 +134,8 @@ import Model from "@/js/model";
 import { i18n } from "@/js/localization";
 import { have_sensor } from "@/js/sensor_helpers";
 import { bit_check } from "@/js/bit";
-import { detectBoardAlignment, meanVec3, tiltAngleDeg } from "@/js/utils/boardAlignment";
+import { detectBoardAlignment, meanVec3, tiltAngleDeg, matrixToEuler } from "@/js/utils/boardAlignment";
+import { eulerToMatrix } from "@/js/utils/magAlignment";
 
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 
@@ -177,9 +160,10 @@ const DEG_TO_RAD = Math.PI / 180;
 const ANIMATION_PERIOD_MS = 2400;
 
 // Flat capture: require the accel direction to stop wandering and the gyro to be
-// reasonably calm, then hold for ~1.5 s. Thresholds are deliberately loose so that
-// hand-held capture and slightly vibrating surfaces still settle.
-const FLAT_GYRO_THRESHOLD_DPS = 30;
+// reasonably calm, then hold for ~1.5 s.
+// Note: gyro values from MSP_RAW_IMU are in raw scaled units (not deg/s). ~500 raw ≈ 125 deg/s,
+// which is only triggered by fast active rotation, not by normal placement vibrations.
+const FLAT_GYRO_THRESHOLD_DPS = 500;
 const FLAT_DRIFT_DEG = 10;
 const FLAT_HOLD_MS = 1500;
 
@@ -391,12 +375,20 @@ function startPhaseAnimation() {
     animationFrameId = requestAnimationFrame(tick);
 }
 
+// Correction matrix pre-computed when entering the test phase:
+// R_new · R_old^T — transforms the live attitude (reported under the old
+// alignment) into what it would look like under the newly detected alignment.
+let testCorrectionMatrix = null;
+
 function startLiveAttitudeRender() {
     stopAnimation();
     const tick = () => {
         const k = fcStore.sensorData?.kinematics;
         if (k) {
-            setModelRotation(k[0], k[1], 0); // ignore heading for the test view
+            const rAtt = eulerToMatrix(k[0], k[1], 0);
+            const rDisplay = testCorrectionMatrix ? mat3Mul(testCorrectionMatrix, rAtt) : rAtt;
+            const { roll, pitch } = matrixToEuler(rDisplay);
+            setModelRotation(roll, pitch, 0);
         }
         animationFrameId = requestAnimationFrame(tick);
     };
@@ -483,11 +475,25 @@ function handleFlat(meanAccel, gyroMag, dwellMs) {
     // Require BOTH: very low gyro AND accel direction drifting < FLAT_DRIFT_DEG over
     // the rolling buffer. Both must hold continuously for FLAT_HOLD_MS — which also
     // gives the user time to read the instruction before the wizard auto-advances.
+
+    // Guard: if the gravity signal is near-zero the accelerometer isn't sending data.
+    // Show the raw values so we can diagnose scale/unit issues.
+    const gravity = Math.hypot(meanAccel[0], meanAccel[1], meanAccel[2]);
+    if (gravity < 0.001) {
+        flatStableSince = 0;
+        phaseDetail.value = `No accel signal (${meanAccel.map((v) => v.toFixed(4)).join(", ")}) — acc disabled?`;
+        return;
+    }
+
     const drift = accelDriftDeg(accelBuf);
 
     if (gyroMag > FLAT_GYRO_THRESHOLD_DPS || drift > FLAT_DRIFT_DEG) {
         flatStableSince = 0;
-        phaseDetail.value = i18nMessage("boardAlignmentWizard-HoldSteady");
+        const why =
+            gyroMag > FLAT_GYRO_THRESHOLD_DPS
+                ? `gyro ${gyroMag.toFixed(1)} > ${FLAT_GYRO_THRESHOLD_DPS}`
+                : `drift ${drift.toFixed(1)}° > ${FLAT_DRIFT_DEG}°`;
+        phaseDetail.value = `${i18nMessage("boardAlignmentWizard-HoldSteady")} (${why})`;
         return;
     }
     if (flatStableSince === 0) {
@@ -575,18 +581,21 @@ function handleYaw() {
 
 /**
  * Largest angular deviation (degrees) of any normalized accel sample from the buffer's
- * mean direction. Using the mean (rather than the oldest sample) keeps noise that
- * symmetrically bounces around an axis from looking like drift.
+ * mean direction. Zero-magnitude samples (e.g. uninitialized sensor data) are skipped;
+ * if fewer than 2 valid samples remain, returns 0 so the gravity-magnitude guard in
+ * handleFlat catches the bad-data case instead.
  */
 function accelDriftDeg(buf) {
     if (buf.length < 2) return 0;
-    const dirs = buf.map(normalize);
+    const valid = buf.filter((s) => Math.hypot(s[0], s[1], s[2]) > 0.01);
+    if (valid.length < 2) return 0;
+    const dirs = valid.map(normalize);
     const mean = normalize(meanVec3(dirs));
+    if (Math.hypot(mean[0], mean[1], mean[2]) < 0.5) return 0;
     let maxAngle = 0;
     for (const d of dirs) {
         const c = Math.max(-1, Math.min(1, dot(mean, d)));
-        const ang = Math.acos(c) * (180 / Math.PI);
-        if (ang > maxAngle) maxAngle = ang;
+        maxAngle = Math.max(maxAngle, Math.acos(c) * (180 / Math.PI));
     }
     return maxAngle;
 }
@@ -634,9 +643,8 @@ function finishCollecting() {
         if (result.roll === current.roll && result.pitch === current.pitch && result.yaw === current.yaw) {
             phase.value = "result_nochange";
         } else {
-            phase.value = "result";
+            enterTestPhase();
         }
-        setModelRotation(0, 0, 0);
     });
 }
 
@@ -652,9 +660,15 @@ function startWizard() {
 }
 
 function enterTestPhase() {
+    const rOld = eulerToMatrix(
+        props.currentAlignment.roll || 0,
+        props.currentAlignment.pitch || 0,
+        props.currentAlignment.yaw || 0,
+    );
+    const rNew = eulerToMatrix(detected.roll, detected.pitch, detected.yaw);
+    testCorrectionMatrix = mat3Mul(rNew, mat3Transpose(rOld));
     phase.value = "test";
     startLiveAttitudeRender();
-    // Poll attitude to keep kinematics fresh.
     startAttitudePolling();
 }
 
@@ -741,6 +755,23 @@ function normalize(v) {
     const m = Math.hypot(v[0], v[1], v[2]);
     return m > 1e-9 ? [v[0] / m, v[1] / m, v[2] / m] : [0, 0, 0];
 }
+function mat3Transpose(m) {
+    return [
+        [m[0][0], m[1][0], m[2][0]],
+        [m[0][1], m[1][1], m[2][1]],
+        [m[0][2], m[1][2], m[2][2]],
+    ];
+}
+function mat3Mul(a, b) {
+    const r = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+    ];
+    for (let i = 0; i < 3; i++)
+        for (let j = 0; j < 3; j++) r[i][j] = a[i][0] * b[0][j] + a[i][1] * b[1][j] + a[i][2] * b[2][j];
+    return r;
+}
 
 // --- Lifecycle ---
 const show = () => {
@@ -770,7 +801,6 @@ watch(phase, (newPhase) => {
     } else if (
         newPhase === "intro" ||
         newPhase === "computing" ||
-        newPhase === "result" ||
         newPhase === "result_nochange" ||
         newPhase === "error"
     ) {
