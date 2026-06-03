@@ -71,7 +71,6 @@
                         <div v-if="confidence !== 'high'" class="wizard-warning">
                             {{ i18nMessage("boardAlignmentWizard-LowConfidence") }}
                         </div>
-                        <p class="wizard-substep" v-html="i18nMessage('boardAlignmentWizard-Test')"></p>
                     </div>
 
                     <!-- Error -->
@@ -376,8 +375,9 @@ function startPhaseAnimation() {
 }
 
 // Correction matrix pre-computed when entering the test phase:
-// R_new · R_old^T — transforms the live attitude (reported under the old
-// alignment) into what it would look like under the newly detected alignment.
+// R_new · R_old^T — rotates the gravity vector from the old-alignment body frame
+// to the new-alignment body frame, giving the attitude the FC would report with
+// the new alignment applied.
 let testCorrectionMatrix = null;
 
 function startLiveAttitudeRender() {
@@ -385,10 +385,19 @@ function startLiveAttitudeRender() {
     const tick = () => {
         const k = fcStore.sensorData?.kinematics;
         if (k) {
-            const rAtt = eulerToMatrix(k[0], k[1], 0);
-            const rDisplay = testCorrectionMatrix ? mat3Mul(testCorrectionMatrix, rAtt) : rAtt;
-            const { roll, pitch } = matrixToEuler(rDisplay);
-            setModelRotation(roll, pitch, 0);
+            let roll, pitch, yaw;
+            if (testCorrectionMatrix) {
+                // The corrected attitude matrix is: R_att_new = R_att_old · R_correction^T
+                // (R_correction applied from the right, not the left).
+                const rAtt = eulerToMatrix(k[0], k[1], k[2]);
+                const rDisplay = mat3Mul(rAtt, mat3Transpose(testCorrectionMatrix));
+                ({ roll, pitch, yaw } = matrixToEuler(rDisplay));
+            } else {
+                roll = k[0];
+                pitch = k[1];
+                yaw = k[2];
+            }
+            setModelRotation(roll, pitch, yaw);
         }
         animationFrameId = requestAnimationFrame(tick);
     };
@@ -660,12 +669,14 @@ function startWizard() {
 }
 
 function enterTestPhase() {
+    // Yaw values are in Betaflight's CW-positive convention; negate before eulerToMatrix
+    // (which uses standard CCW-positive) to get the correct rotation matrices.
     const rOld = eulerToMatrix(
         props.currentAlignment.roll || 0,
         props.currentAlignment.pitch || 0,
-        props.currentAlignment.yaw || 0,
+        -(props.currentAlignment.yaw || 0),
     );
-    const rNew = eulerToMatrix(detected.roll, detected.pitch, detected.yaw);
+    const rNew = eulerToMatrix(detected.roll, detected.pitch, -detected.yaw);
     testCorrectionMatrix = mat3Mul(rNew, mat3Transpose(rOld));
     phase.value = "test";
     startLiveAttitudeRender();
