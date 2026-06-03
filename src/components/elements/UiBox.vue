@@ -24,12 +24,6 @@
             <span>{{ title }}</span>
             <slot name="title"></slot>
             <HelpIcon v-if="help" :text="help" />
-            <UIcon
-                v-if="collapsible"
-                name="i-lucide-chevron-down"
-                class="transition-transform duration-200"
-                :class="{ 'rotate-180': isOpen }"
-            />
         </div>
         <div
             v-show="!collapsible || isOpen"
