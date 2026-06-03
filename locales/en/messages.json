@@ -1783,6 +1783,21 @@
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Roll gesture was not detected. Please retry and tilt the right side down further."
     },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Flat"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Captured!"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"

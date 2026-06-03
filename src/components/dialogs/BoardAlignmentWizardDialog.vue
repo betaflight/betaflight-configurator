@@ -20,12 +20,40 @@
                         </div>
                     </div>
 
-                    <!-- Collecting phases share the same hint+capture layout -->
-                    <div v-else-if="isCollectingPhase">
-                        <h4 v-html="phaseHintText"></h4>
-                        <p class="wizard-substep">{{ phaseProgressText }}</p>
-                        <div v-if="phaseDetail" class="wizard-detail">{{ phaseDetail }}</div>
-                    </div>
+                    <!-- Step timeline — visible during all data collection phases -->
+                    <template v-else-if="showTimeline">
+                        <div class="wizard-timeline">
+                            <div
+                                v-for="(step, i) in timelineData"
+                                :key="step.key"
+                                class="wizard-timeline-step"
+                                :class="timelineStepStates[i]"
+                            >
+                                <div class="step-node">
+                                    <span
+                                        v-if="timelineStepStates[i] === 'done' || timelineStepStates[i] === 'confirmed'"
+                                        >✓</span
+                                    >
+                                    <span v-else>{{ i + 1 }}</span>
+                                </div>
+                                <div class="step-label">{{ i18nMessage(step.labelKey) }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Collecting: hint + live detail -->
+                        <div v-if="isCollectingPhase">
+                            <h4 v-html="phaseHintText"></h4>
+                            <div v-if="phaseDetail" class="wizard-detail">{{ phaseDetail }}</div>
+                        </div>
+
+                        <!-- Confirmed: brief green flash before auto-advancing -->
+                        <div v-else-if="isConfirmedPhase" class="wizard-confirmed">
+                            <h4 v-html="phaseHintText"></h4>
+                            <div class="wizard-confirmed-badge">
+                                {{ i18nMessage("boardAlignmentWizard-Confirmed") }}
+                            </div>
+                        </div>
+                    </template>
 
                     <!-- Computing -->
                     <div v-else-if="phase === 'computing'">
@@ -205,6 +233,7 @@ const LEVEL_RETURN_DEG = 12;
 const LEVEL_HOLD_MS = 400;
 
 const YAW_DETECT_DEG = 25;
+const CONFIRM_HOLD_MS = 800;
 
 const COLLECTING_PHASES = new Set([
     "await_flat",
@@ -214,6 +243,24 @@ const COLLECTING_PHASES = new Set([
     "await_level_2",
     "await_yaw",
 ]);
+
+const CONFIRMED_PHASES = new Set(["confirmed_flat", "confirmed_pitch", "confirmed_roll", "confirmed_yaw"]);
+
+// Maps each confirmed phase → the next collecting phase (or '__compute__').
+const CONFIRMED_NEXT = {
+    confirmed_flat: "await_pitch",
+    confirmed_pitch: "await_roll",
+    confirmed_roll: "await_yaw",
+    confirmed_yaw: "__compute__",
+};
+
+// Metadata for the step timeline.
+const timelineData = [
+    { key: "flat", labelKey: "boardAlignmentWizard-StepFlat" },
+    { key: "pitch", labelKey: "boardAlignmentWizard-StepPitch" },
+    { key: "roll", labelKey: "boardAlignmentWizard-StepRoll" },
+    { key: "yaw", labelKey: "boardAlignmentWizard-StepYaw" },
+];
 
 // --- State ---
 const phase = ref("intro");
@@ -243,49 +290,48 @@ const accNeedsCalibration = computed(() => {
 const canStartWizard = computed(() => hasAccSensor.value && !accNeedsCalibration.value);
 
 const isCollectingPhase = computed(() => COLLECTING_PHASES.has(phase.value));
+const isConfirmedPhase = computed(() => CONFIRMED_PHASES.has(phase.value));
+const showTimeline = computed(() => isCollectingPhase.value || isConfirmedPhase.value);
+
+// Visual state of each timeline step: 'pending' | 'active' | 'confirmed' | 'done'.
+const PHASE_STEP_STATES = {
+    await_flat: ["active", "pending", "pending", "pending"],
+    confirmed_flat: ["confirmed", "pending", "pending", "pending"],
+    await_pitch: ["done", "active", "pending", "pending"],
+    await_level_1: ["done", "confirmed", "pending", "pending"], // tilt captured, returning to level
+    confirmed_pitch: ["done", "confirmed", "pending", "pending"],
+    await_roll: ["done", "done", "active", "pending"],
+    await_level_2: ["done", "done", "confirmed", "pending"], // tilt captured, returning to level
+    confirmed_roll: ["done", "done", "confirmed", "pending"],
+    await_yaw: ["done", "done", "done", "active"],
+    confirmed_yaw: ["done", "done", "done", "confirmed"],
+};
+const timelineStepStates = computed(
+    () => PHASE_STEP_STATES[phase.value] ?? ["pending", "pending", "pending", "pending"],
+);
 
 const phaseHintText = computed(() => {
     switch (phase.value) {
         case "await_flat":
+        case "confirmed_flat":
             return i18nMessage("boardAlignmentWizard-HintFlat");
         case "await_pitch":
-            return i18nMessage("boardAlignmentWizard-HintPitchUp");
         case "await_level_1":
-        case "await_level_2":
-            return i18nMessage("boardAlignmentWizard-HintLevel");
+        case "confirmed_pitch":
+            return i18nMessage("boardAlignmentWizard-HintPitchUp");
         case "await_roll":
+        case "await_level_2":
+        case "confirmed_roll":
             return i18nMessage("boardAlignmentWizard-HintRollRight");
         case "await_yaw":
+        case "confirmed_yaw":
             return i18nMessage("boardAlignmentWizard-HintYawCW");
         default:
             return "";
     }
 });
 
-const phaseProgressText = computed(() => {
-    const step = phaseStepNumber.value;
-    if (step <= 0) return "";
-    return `${i18nMessage("boardAlignmentWizard-Step")} ${step} / 4`;
-});
-
 const phaseDetail = ref("");
-
-const phaseStepNumber = computed(() => {
-    switch (phase.value) {
-        case "await_flat":
-            return 1;
-        case "await_pitch":
-        case "await_level_1":
-            return 2;
-        case "await_roll":
-        case "await_level_2":
-            return 3;
-        case "await_yaw":
-            return 4;
-        default:
-            return 0;
-    }
-});
 
 // --- Sample buffers ---
 let accelBuf = []; // rolling buffer of recent accel vectors
@@ -307,6 +353,7 @@ let modelInstance = null;
 let animationFrameId = null;
 let animationStartTime = 0;
 let boundResize = null;
+let confirmTimer = null;
 
 function initModel() {
     if (!modelWrapper.value || !modelCanvas.value) {
@@ -558,7 +605,7 @@ function handleFlat(meanAccel, gyroMag, dwellMs) {
     if (stableMs >= FLAT_HOLD_MS && dwellMs >= FLAT_HOLD_MS) {
         captured.flatAccel = meanAccel;
         captured.upAxis = normalize(meanAccel);
-        advanceTo("await_pitch");
+        advanceTo("confirmed_flat");
     }
 }
 
@@ -593,10 +640,10 @@ function handleTilt(meanAccel, dwellMs, kind) {
 
     if (kind === "pitch") {
         captured.pitchAccel = meanAccel;
-        advanceTo("await_level_1");
+        advanceTo("await_level_1"); // return-to-level then confirmed_pitch
     } else {
         captured.rollAccel = meanAccel;
-        advanceTo("await_level_2");
+        advanceTo("await_level_2"); // return-to-level then confirmed_roll
     }
 }
 
@@ -618,7 +665,8 @@ function handleLevel(meanAccel, dwellMs) {
     if (maxTilt > LEVEL_RETURN_DEG) return;
     if (dwellMs < LEVEL_HOLD_MS) return;
 
-    const next = phase.value === "await_level_1" ? "await_roll" : "await_yaw";
+    // Confirm the preceding pitch/roll gesture before advancing.
+    const next = phase.value === "await_level_1" ? "confirmed_pitch" : "confirmed_roll";
     advanceTo(next);
 }
 
@@ -626,7 +674,8 @@ function handleYaw() {
     const mag = Math.abs(captured.yawIntegralDeg);
     phaseDetail.value = `${i18nMessage("boardAlignmentWizard-YawProgress")}: ${mag.toFixed(0)}°`;
     if (mag >= YAW_DETECT_DEG) {
-        finishCollecting();
+        stopPolling();
+        advanceTo("confirmed_yaw");
     }
 }
 
@@ -662,13 +711,27 @@ function advanceTo(nextPhase) {
     phaseEnteredAt = Date.now();
     phaseDetail.value = "";
     phase.value = nextPhase;
-    if (COLLECTING_PHASES.has(nextPhase)) {
+
+    if (CONFIRMED_PHASES.has(nextPhase)) {
+        // Freeze the model at its current position (don't snap to a new pose — the model
+        // is already at level after the return-to-level phase, which is the natural state
+        // to show during the confirmation flash).
+        stopAnimation();
+        confirmTimer = setTimeout(() => {
+            confirmTimer = null;
+            const next = CONFIRMED_NEXT[nextPhase];
+            if (next === "__compute__") {
+                runComputation();
+            } else {
+                advanceTo(next);
+            }
+        }, CONFIRM_HOLD_MS);
+    } else if (COLLECTING_PHASES.has(nextPhase)) {
         startPhaseAnimation();
     }
 }
 
-function finishCollecting() {
-    stopPolling();
+function runComputation() {
     phase.value = "computing";
     stopAnimation();
     // Defer slightly so the "computing" frame can paint.
@@ -778,6 +841,7 @@ function resetToIntro() {
     stopPolling();
     stopAttitudePolling();
     stopAnimation();
+    clearConfirmTimer();
     resetCaptured();
     phase.value = "intro";
     errorMessage.value = "";
@@ -798,10 +862,18 @@ function resetCaptured() {
     phaseDetail.value = "";
 }
 
+function clearConfirmTimer() {
+    if (confirmTimer !== null) {
+        clearTimeout(confirmTimer);
+        confirmTimer = null;
+    }
+}
+
 function cleanup() {
     stopPolling();
     stopAttitudePolling();
     stopAnimation();
+    clearConfirmTimer();
 }
 
 function closeDialog() {
@@ -1024,6 +1096,118 @@ defineExpose({ show, close });
 .regular-button:disabled {
     opacity: 0.45;
     cursor: not-allowed;
+}
+
+/* ---- Step timeline ---- */
+.wizard-timeline {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.wizard-timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+
+/* Connector line between steps */
+.wizard-timeline-step:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: -50%;
+    right: 50%;
+    top: 11px;
+    height: 2px;
+    background: var(--surface-300);
+    z-index: 0;
+}
+
+.wizard-timeline-step.done:not(:first-child)::before,
+.wizard-timeline-step.confirmed:not(:first-child)::before,
+.wizard-timeline-step.active:not(:first-child)::before {
+    background: var(--primary-500);
+}
+
+.step-node {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    border: 2px solid var(--surface-400);
+    background: var(--surface-100);
+    color: var(--surface-500);
+    position: relative;
+    z-index: 1;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+}
+
+.wizard-timeline-step.active .step-node {
+    border-color: var(--primary-500);
+    background: var(--primary-500);
+    color: #fff;
+}
+
+.wizard-timeline-step.confirmed .step-node {
+    border-color: #22c55e;
+    background: #22c55e;
+    color: #fff;
+    animation: pulse-confirm 0.4s ease-out;
+}
+
+.wizard-timeline-step.done .step-node {
+    border-color: #22c55e;
+    background: #22c55e;
+    color: #fff;
+}
+
+.step-label {
+    font-size: 10px;
+    margin-top: 3px;
+    color: var(--surface-500);
+    text-align: center;
+}
+
+.wizard-timeline-step.active .step-label,
+.wizard-timeline-step.confirmed .step-label,
+.wizard-timeline-step.done .step-label {
+    color: var(--text);
+    font-weight: 600;
+}
+
+@keyframes pulse-confirm {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ---- Confirmed-phase flash ---- */
+.wizard-confirmed-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 10px;
+    background: #22c55e22;
+    border: 1px solid #22c55e;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #16a34a;
 }
 
 .wizard-model {
