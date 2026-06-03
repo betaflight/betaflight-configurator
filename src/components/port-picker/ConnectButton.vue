@@ -100,7 +100,7 @@ export default defineComponent({
             if (isVirtualMode.value) {
                 return i18n.getMessage("disconnectVirtual");
             }
-            const path = connectedTo.value ?? "";
+            const path = connectedTo.value || "";
             if (path.startsWith("bluetooth")) {
                 return i18n.getMessage("disconnectBluetooth");
             }
