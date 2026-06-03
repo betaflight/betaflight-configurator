@@ -117,7 +117,8 @@ describe("UiBox collapsible behaviour", () => {
         });
         await nextTick();
 
-        const pill = wrapper.container.querySelector("div[class*='absolute']");
+        // Collapsible pill is a button regardless of open/closed state.
+        const pill = wrapper.container.querySelector("[role='button']");
         pill.click();
         await nextTick();
 
@@ -134,6 +135,8 @@ describe("UiBox collapsible behaviour", () => {
         });
         await nextTick();
 
+        // Non-collapsible pills carry no role="button", so select by the
+        // (always-absolute) positioning class here.
         const pill = wrapper.container.querySelector("div[class*='absolute']");
         pill.click();
         await nextTick();
