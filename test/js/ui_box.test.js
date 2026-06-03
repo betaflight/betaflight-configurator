@@ -96,8 +96,9 @@ describe("UiBox collapsible behaviour", () => {
         );
         expect(hiddenBodies.length).toBeGreaterThan(0);
 
-        // Click the pill (first div with absolute positioning — the title pill)
-        const pill = wrapper.container.querySelector("div[class*='absolute']");
+        // Click the title pill. When collapsed it is rendered in normal flow
+        // (relative, not absolute) so it stays visible, hence select by role.
+        const pill = wrapper.container.querySelector("[role='button']");
         expect(pill).toBeTruthy();
         pill.click();
         await nextTick();
@@ -160,8 +161,8 @@ describe("UiBox collapsible behaviour", () => {
         // No spacer div should exist
         expect(wrapper.container.querySelector("div.pb-2")).toBeNull();
 
-        // Open it
-        const pill = wrapper.container.querySelector("div[class*='absolute']");
+        // Open it (collapsed pill is in normal flow, so select by role)
+        const pill = wrapper.container.querySelector("[role='button']");
         pill.click();
         await nextTick();
 

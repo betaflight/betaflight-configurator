@@ -9,7 +9,12 @@
     >
         <div
             v-if="title"
-            :class="`flex gap-2 items-center absolute top-0 left-4 translate-y-[-50%] p-1 px-3 rounded-full text-[13px] font-semibold ${typeClass.pill} ${collapsible ? 'cursor-pointer select-none' : ''}`"
+            :class="[
+                'flex gap-2 items-center w-fit p-1 px-3 rounded-full text-[13px] font-semibold',
+                typeClass.pill,
+                collapsible ? 'cursor-pointer select-none' : '',
+                !collapsible || isOpen ? 'absolute top-0 left-4 translate-y-[-50%]' : 'relative ml-4 my-2',
+            ]"
             :role="collapsible ? 'button' : undefined"
             :tabindex="collapsible ? 0 : undefined"
             :aria-expanded="collapsible ? isOpen : undefined"
