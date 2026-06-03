@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <UButton
-                        class="reset-zaxis sm-min"
+                        class="reset-zaxis"
                         :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
                         color="neutral"
                         variant="subtle"
