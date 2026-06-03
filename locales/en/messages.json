@@ -6084,7 +6084,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Instantaneous RSSI value (flashes when below alarm threshold)"
+        "message": "Instantaneous RSSI value (flashes when below alarm threshold). For modern protocols, use RSSI dBm instead."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm value",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Received Signal Strength Indicator, this value indicates how loud the reception is in dBm"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -6675,7 +6682,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Alternative indicator for 'link quality' based on frame loss - use with caution"
+        "message": "Link quality indicator based on the percentage of successfully received uncorrupted data packets"
     },
     "osdTextElementFlightDist": {
         "message": "Flight distance",
@@ -6739,13 +6746,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD profile name as set in the \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\" CLI variables"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm value",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Value in dBm of the RSSI signal if available"
     },
     "osdTextElementRcChannels": {
         "message": "RC Channels",
