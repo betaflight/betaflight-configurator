@@ -102,7 +102,6 @@
                             :label="$t('boardAlignmentWizard-Launch')"
                             :disabled="!hasAccSensor || accNeedsCalibration"
                             size="xs"
-                            variant="outline"
                             class="w-fit"
                             @click="openBoardAlignmentWizard"
                         />

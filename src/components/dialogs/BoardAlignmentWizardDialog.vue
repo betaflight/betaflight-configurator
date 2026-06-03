@@ -79,34 +79,41 @@
                     </div>
 
                     <div class="wizard-buttons">
-                        <button
+                        <UButton
                             v-if="phase === 'intro'"
-                            class="regular-button primary"
+                            :label="i18nMessage('boardAlignmentWizard-Start')"
                             :disabled="!canStartWizard"
+                            size="sm"
                             @click.prevent="startWizard"
-                        >
-                            {{ i18nMessage("boardAlignmentWizard-Start") }}
-                        </button>
-                        <button v-if="phase === 'test'" class="regular-button primary" @click.prevent="onApply">
-                            {{ i18nMessage("boardAlignmentWizard-Apply") }}
-                        </button>
-                        <button
+                        />
+                        <UButton
+                            v-if="phase === 'test'"
+                            :label="i18nMessage('boardAlignmentWizard-Apply')"
+                            size="sm"
+                            @click.prevent="onApply"
+                        />
+                        <UButton
                             v-if="phase === 'result_nochange'"
-                            class="regular-button primary"
+                            :label="i18nMessage('close')"
+                            size="sm"
                             @click.prevent="onCancel"
-                        >
-                            {{ i18nMessage("close") }}
-                        </button>
-                        <button v-if="phase === 'error'" class="regular-button" @click.prevent="resetToIntro">
-                            {{ i18nMessage("boardAlignmentWizard-Retry") }}
-                        </button>
-                        <button
+                        />
+                        <UButton
+                            v-if="phase === 'error'"
+                            :label="i18nMessage('boardAlignmentWizard-Retry')"
+                            color="neutral"
+                            variant="outline"
+                            size="sm"
+                            @click.prevent="resetToIntro"
+                        />
+                        <UButton
                             v-if="phase !== 'intro' && phase !== 'result_nochange'"
-                            class="regular-button"
+                            :label="i18nMessage('boardAlignmentWizard-Cancel')"
+                            color="neutral"
+                            variant="outline"
+                            size="sm"
                             @click.prevent="onCancel"
-                        >
-                            {{ i18nMessage("boardAlignmentWizard-Cancel") }}
-                        </button>
+                        />
                     </div>
                 </div>
 
@@ -117,6 +124,25 @@
                             ref="modelCanvas"
                             :aria-label="i18nMessage('boardAlignmentWizard-DialogTitle')"
                         ></canvas>
+                        <div v-if="phase === 'test'" class="attitude-overlay">
+                            <dl>
+                                <dt>{{ i18nMessage("configurationBoardAlignmentRoll") }}</dt>
+                                <dd>{{ liveAttitude.roll }}</dd>
+                                <dt>{{ i18nMessage("configurationBoardAlignmentPitch") }}</dt>
+                                <dd>{{ liveAttitude.pitch }}</dd>
+                                <dt>{{ i18nMessage("configurationBoardAlignmentYaw") }}</dt>
+                                <dd>{{ liveAttitude.yaw }}</dd>
+                            </dl>
+                        </div>
+                        <UButton
+                            v-if="phase === 'test'"
+                            class="yaw-reset-btn"
+                            :label="yawResetLabel"
+                            color="neutral"
+                            variant="subtle"
+                            size="xs"
+                            @click="resetYaw"
+                        />
                     </div>
                 </div>
             </div>
@@ -196,6 +222,7 @@ const detected = reactive({ roll: 0, pitch: 0, yaw: 0 });
 const confidence = ref("high");
 
 const i18nMessage = (key) => i18n.getMessage(key);
+const yawResetLabel = computed(() => i18n.getMessage("initialSetupButtonResetZaxisValue", [yawFix.value.toFixed(1)]));
 
 const hasAccSensor = computed(() => {
     const sensors = fcStore.config?.activeSensors;
@@ -375,10 +402,21 @@ function startPhaseAnimation() {
 }
 
 // Correction matrix pre-computed when entering the test phase:
-// R_new · R_old^T — rotates the gravity vector from the old-alignment body frame
-// to the new-alignment body frame, giving the attitude the FC would report with
-// the new alignment applied.
+// R_new · R_old^T — transforms the old-alignment attitude into what the FC
+// would report with the new alignment applied.
 let testCorrectionMatrix = null;
+
+// Yaw reference offset so the model starts at a neutral heading in the test phase.
+const yawFix = ref(0);
+const liveAttitude = reactive({ roll: "0.0", pitch: "0.0", yaw: "0.0" });
+
+function resetYaw() {
+    const k = fcStore.sensorData?.kinematics;
+    if (!k || !testCorrectionMatrix) return;
+    // k[2] is CW-positive (compass heading); negate to convert to CCW-positive for math.
+    const rAtt = eulerToMatrix(k[0], k[1], -k[2]);
+    yawFix.value = matrixToEuler(mat3Mul(rAtt, mat3Transpose(testCorrectionMatrix))).yaw;
+}
 
 function startLiveAttitudeRender() {
     stopAnimation();
@@ -389,15 +427,19 @@ function startLiveAttitudeRender() {
             if (testCorrectionMatrix) {
                 // The corrected attitude matrix is: R_att_new = R_att_old · R_correction^T
                 // (R_correction applied from the right, not the left).
-                const rAtt = eulerToMatrix(k[0], k[1], k[2]);
+                // k[2] is CW-positive; negate to convert to CCW-positive for eulerToMatrix.
+                const rAtt = eulerToMatrix(k[0], k[1], -k[2]);
                 const rDisplay = mat3Mul(rAtt, mat3Transpose(testCorrectionMatrix));
                 ({ roll, pitch, yaw } = matrixToEuler(rDisplay));
             } else {
                 roll = k[0];
                 pitch = k[1];
-                yaw = k[2];
+                yaw = -k[2]; // same negation for consistency
             }
-            setModelRotation(roll, pitch, yaw);
+            liveAttitude.roll = roll.toFixed(1);
+            liveAttitude.pitch = pitch.toFixed(1);
+            liveAttitude.yaw = yaw.toFixed(1);
+            setModelRotation(roll, pitch, yaw - yawFix.value);
         }
         animationFrameId = requestAnimationFrame(tick);
     };
@@ -678,9 +720,19 @@ function enterTestPhase() {
     );
     const rNew = eulerToMatrix(detected.roll, detected.pitch, -detected.yaw);
     testCorrectionMatrix = mat3Mul(rNew, mat3Transpose(rOld));
+    yawFix.value = 0; // will be set to first real sample in startLiveAttitudeRender
     phase.value = "test";
-    startLiveAttitudeRender();
     startAttitudePolling();
+    // Poll one frame then auto-reset yaw so the model starts at a neutral heading.
+    const autoReset = () => {
+        if (fcStore.sensorData?.kinematics) {
+            resetYaw();
+        } else {
+            requestAnimationFrame(autoReset);
+        }
+    };
+    requestAnimationFrame(autoReset);
+    startLiveAttitudeRender();
 }
 
 let attitudePollTimer = null;
@@ -984,7 +1036,6 @@ defineExpose({ show, close });
     width: 100%;
     height: 260px;
     position: relative;
-    background: var(--surface-50, var(--surface-100));
     border-radius: 4px;
     overflow: hidden;
 }
@@ -993,5 +1044,33 @@ defineExpose({ show, close });
     width: 100% !important;
     height: 100% !important;
     display: block;
+}
+
+.attitude-overlay {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--surface-950);
+    pointer-events: none;
+
+    dl {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 0 0.4rem;
+        margin: 0;
+    }
+
+    dd {
+        white-space: pre;
+        margin: 0;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.yaw-reset-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
 }
 </style>
