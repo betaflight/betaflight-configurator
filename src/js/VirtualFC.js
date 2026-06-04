@@ -72,6 +72,11 @@ const DEFAULT_BETAFLIGHT_FILTER_CONFIG = {
     gyro_rpm_notch_weights: [100, 100, 100],
 };
 
+// rx.h SERIALRX_CRSF, pg/rx.c pgResetFn_rxConfig
+const DEFAULT_BETAFLIGHT_RX_CONFIG = {
+    serialrx_provider: 9,
+};
+
 const DEFAULT_BETAFLIGHT_ADVANCED_TUNING = {
     antiGravityGain: 80,
     itermRotation: 0,
@@ -131,6 +136,8 @@ const VirtualFC = {
             "USE_TELEMETRY",
             "USE_SERVOS",
             "USE_TRANSPONDER",
+            "USE_SERIALRX_CRSF",
+            "USE_SERIALRX_SBUS",
         ];
 
         virtualFC.CONFIG.craftName = "BetaFlight";
@@ -145,6 +152,7 @@ const VirtualFC = {
         virtualFC.FEATURE_CONFIG.features.enable("SONAR");
         virtualFC.FEATURE_CONFIG.features.enable("TELEMETRY");
         virtualFC.FEATURE_CONFIG.features.enable("TRANSPONDER");
+        virtualFC.FEATURE_CONFIG.features.enable("RX_SERIAL");
 
         virtualFC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         virtualFC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
@@ -264,6 +272,10 @@ const VirtualFC = {
             ...DEFAULT_BETAFLIGHT_ADVANCED_TUNING,
         };
         virtualFC.ADVANCED_TUNING_ACTIVE = { ...virtualFC.ADVANCED_TUNING };
+        virtualFC.RX_CONFIG = {
+            ...virtualFC.RX_CONFIG,
+            ...DEFAULT_BETAFLIGHT_RX_CONFIG,
+        };
 
         virtualFC.BLACKBOX.supported = true;
 
