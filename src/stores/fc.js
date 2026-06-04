@@ -2,6 +2,25 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import FC from "../js/fc";
 import semver from "semver";
+import { bit_check } from "../js/bit";
+
+// Failsafe / RX-loss detection from CONFIG.armingDisableFlags.
+// NOTE: these are BIT POSITIONS (the `bit` arg to bit_check), NOT the firmware
+// mask values. They deliberately do NOT mirror the firmware enum literals
+// (ARMING_DISABLED_FAILSAFE = 1<<1, RX_FAILSAFE = 1<<2, BOXFAILSAFE = 1<<4).
+// Naming them `*_BIT` prevents a "correction" to mask values that would silently
+// break detection. Positions match SetupTab disarmFlagElements ordering (idx
+// 1/2/4) and are stable across all API versions (only bits >=20 get remapped).
+export const FAILSAFE_BIT = 1; // ARMING_DISABLED_FAILSAFE
+export const RX_FAILSAFE_BIT = 2; // ARMING_DISABLED_RX_FAILSAFE (shown elsewhere as RXLOSS)
+export const BOXFAILSAFE_BIT = 4; // ARMING_DISABLED_BOXFAILSAFE (failsafe aux switch)
+
+// Pure detector — true when failsafe/RX-loss is asserted by the FC. Exported so
+// it can be unit-tested directly against the same logic the store/getter uses.
+export function isFailsafeActive(armingDisableFlags) {
+    const flags = armingDisableFlags ?? 0;
+    return bit_check(flags, FAILSAFE_BIT) || bit_check(flags, RX_FAILSAFE_BIT) || bit_check(flags, BOXFAILSAFE_BIT);
+}
 
 export const useFlightControllerStore = defineStore("flightController", () => {
     // Proxy state directly to legacy reactive objects
@@ -287,6 +306,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         return armingFlags.value.filter((f) => f.visible).map((f) => f.name);
     });
 
+    // Failsafe / RX-loss indicator. Reads the raw armingDisableFlags bitmask
+    // (NOT activeFlagNames, which is only populated by the Setup tab), so it is
+    // valid on any tab and while disarmed on the bench.
+    const failsafeActive = computed(() => isFailsafeActive(config.value?.armingDisableFlags));
+
     // Constants (delegated from FC)
     const TARGET_CAPABILITIES_FLAGS = FC.TARGET_CAPABILITIES_FLAGS;
 
@@ -374,6 +398,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         updateArmingFlags,
         isReadyToArm,
         activeFlagNames,
+        failsafeActive,
         isApiVersionSupported,
         isApiVersionLessThan,
         TARGET_CAPABILITIES_FLAGS,
