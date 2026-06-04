@@ -1,19 +1,18 @@
 <template>
     <div
-        class="relative rounded-lg"
+        class="relative rounded-lg border-2"
         :class="[
-            !collapsible || isOpen ? 'border-2' : '',
-            !collapsible || isOpen ? (highlight ? typeClass.box : 'border-neutral-500/30') : '',
+            !collapsible || isOpen ? (highlight ? typeClass.box : 'border-neutral-500/30') : 'border-transparent',
             title ? 'mt-3' : '',
+            collapsible && !isOpen ? 'min-h-6' : '',
         ]"
     >
         <div
             v-if="title"
             :class="[
-                'flex gap-2 items-center w-fit p-1 px-3 rounded-full text-[13px] font-semibold',
+                'flex gap-2 items-center w-fit p-1 px-3 rounded-full text-[13px] font-semibold absolute top-0 left-4 translate-y-[-50%]',
                 typeClass.pill,
                 collapsible ? 'cursor-pointer select-none' : '',
-                !collapsible || isOpen ? 'absolute top-0 left-4 translate-y-[-50%]' : 'relative ml-4 my-2',
             ]"
             :role="collapsible ? 'button' : undefined"
             :tabindex="collapsible ? 0 : undefined"
