@@ -7,6 +7,104 @@ import { OSD } from "../components/tabs/osd/osd";
 import semver from "semver";
 import { addArrayElement, addArrayElementAfter } from "./utils/array";
 
+// pid.h PID_*_DEFAULT, pid.c resetPidProfile
+const DEFAULT_BETAFLIGHT_PIDS = [
+    [45, 80, 30], // ROLL
+    [47, 84, 34], // PITCH
+    [45, 80, 0], // YAW
+    [50, 75, 75], // LEVEL
+    [40, 0, 0], // MAG
+];
+
+// controlrate_profile.c pgResetFn_controlRateProfiles
+const DEFAULT_BETAFLIGHT_RC_TUNING = {
+    RC_RATE: 0.07,
+    RC_EXPO: 0,
+    roll_rate: 0.67,
+    pitch_rate: 0.67,
+    yaw_rate: 0.67,
+    throttle_MID: 0.5,
+    throttle_EXPO: 0,
+    RC_YAW_EXPO: 0,
+    rcYawRate: 0.07,
+    rcPitchRate: 0.07,
+    RC_PITCH_EXPO: 0,
+    throttleLimitType: 0,
+    throttleLimitPercent: 100,
+    roll_rate_limit: 1998,
+    pitch_rate_limit: 1998,
+    yaw_rate_limit: 1998,
+    rates_type: 3, // RATES_TYPE_ACTUAL
+    throttle_HOVER: 0.5,
+};
+
+// pid.c resetPidProfile, gyro.c pgResetFn_gyroConfig, pg/dyn_notch.c, pg/rpm_filter.c
+const DEFAULT_BETAFLIGHT_FILTER_CONFIG = {
+    gyro_hardware_lpf: 0,
+    gyro_lowpass_hz: 250,
+    gyro_lowpass_dyn_min_hz: 250,
+    gyro_lowpass_dyn_max_hz: 500,
+    gyro_lowpass_type: 0,
+    gyro_lowpass2_hz: 500,
+    gyro_lowpass2_type: 0,
+    gyro_notch_hz: 0,
+    gyro_notch_cutoff: 0,
+    gyro_notch2_hz: 0,
+    gyro_notch2_cutoff: 0,
+    dterm_lowpass_hz: 75,
+    dterm_lowpass_dyn_min_hz: 75,
+    dterm_lowpass_dyn_max_hz: 150,
+    dterm_lowpass_type: 0,
+    dterm_lowpass2_hz: 150,
+    dterm_lowpass2_type: 0,
+    dyn_lpf_curve_expo: 5,
+    dterm_notch_hz: 0,
+    dterm_notch_cutoff: 0,
+    yaw_lowpass_hz: 100,
+    dyn_notch_q: 300,
+    dyn_notch_min_hz: 100,
+    dyn_notch_max_hz: 600,
+    dyn_notch_count: 3,
+    gyro_rpm_notch_harmonics: 3,
+    gyro_rpm_notch_min_hz: 100,
+    gyro_rpm_notch_fade_range_hz: 50,
+    gyro_rpm_notch_q: 500,
+    gyro_rpm_notch_weights: [100, 100, 100],
+};
+
+const DEFAULT_BETAFLIGHT_ADVANCED_TUNING = {
+    antiGravityGain: 80,
+    itermRotation: 0,
+    itermRelax: 1,
+    itermRelaxType: 1,
+    itermRelaxCutoff: 15,
+    throttleBoost: 5,
+    acroTrainerAngleLimit: 20,
+    feedforwardRoll: 120,
+    feedforwardPitch: 125,
+    feedforwardYaw: 120,
+    dMaxRoll: 40,
+    dMaxPitch: 46,
+    dMaxYaw: 0,
+    dMaxGain: 37,
+    dMaxAdvance: 20,
+    useIntegratedYaw: 0,
+    integratedYawRelax: 200,
+    motorOutputLimit: 100,
+    autoProfileCellCount: -1,
+    idleMinRpm: 0,
+    feedforward_averaging: 1,
+    feedforward_smooth_factor: 65,
+    feedforward_boost: 15,
+    feedforward_max_rate_limit: 90,
+    feedforward_jitter_factor: 7,
+    vbat_sag_compensation: 0,
+    thrustLinearization: 0,
+    tpaMode: 1,
+    tpaRate: 0.65,
+    tpaBreakpoint: 1350,
+};
+
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware
     setVirtualConfig() {
@@ -146,6 +244,26 @@ const VirtualFC = {
 
         virtualFC.CONFIG.sampleRateHz = 12000;
         virtualFC.PID_ADVANCED_CONFIG.pid_process_denom = 2;
+        virtualFC.PIDS = virtualFC.PIDS.map((pid, index) => DEFAULT_BETAFLIGHT_PIDS[index]?.slice() ?? pid);
+        virtualFC.PIDS_ACTIVE = virtualFC.PIDS.map((pid) => pid.slice());
+        // pid.c simplified_pids_mode RPY; fc.js DEFAULT_TUNING_SLIDERS (all multipliers 100 = 1.0)
+        virtualFC.TUNING_SLIDERS = {
+            ...virtualFC.TUNING_SLIDERS,
+            ...virtualFC.getSliderDefaults(),
+        };
+        virtualFC.RC_TUNING = {
+            ...virtualFC.RC_TUNING,
+            ...DEFAULT_BETAFLIGHT_RC_TUNING,
+        };
+        virtualFC.FILTER_CONFIG = {
+            ...virtualFC.FILTER_CONFIG,
+            ...DEFAULT_BETAFLIGHT_FILTER_CONFIG,
+        };
+        virtualFC.ADVANCED_TUNING = {
+            ...virtualFC.ADVANCED_TUNING,
+            ...DEFAULT_BETAFLIGHT_ADVANCED_TUNING,
+        };
+        virtualFC.ADVANCED_TUNING_ACTIVE = { ...virtualFC.ADVANCED_TUNING };
 
         virtualFC.BLACKBOX.supported = true;
 
