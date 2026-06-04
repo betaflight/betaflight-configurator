@@ -119,6 +119,9 @@
     "bluetoothConnectionError": {
         "message": "Bluetooth error: $1"
     },
+    "virtualMode": {
+        "message": "Virtual Mode"
+    },
     "virtualMSPVersion": {
         "message": "Virtual Firmware Version"
     },
