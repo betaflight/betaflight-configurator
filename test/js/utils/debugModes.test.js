@@ -42,10 +42,12 @@ describe("debugModes helper", () => {
             expect(modes.indexOf("OPTICALFLOW")).toBe(modes.indexOf("RANGEFINDER_QUALITY") + 1);
         });
 
-        it("appends AUTOPILOT_PID at API 1.48", () => {
+        it("appends AUTOPILOT_PID and drops AUTOPILOT_POSITION at API 1.48", () => {
             const modes = getDebugModes(API_VERSION_1_48);
             expect(modes).toContain("AUTOPILOT_PID");
             expect(modes.indexOf("AUTOPILOT_PID")).toBe(modes.length - 1);
+            // AUTOPILOT_POSITION was removed from the firmware enum in 1.48.
+            expect(modes).not.toContain("AUTOPILOT_POSITION");
         });
 
         it("returns a fresh array each call (safe to mutate)", () => {
@@ -61,9 +63,10 @@ describe("debugModes helper", () => {
             expect(getDebugModeIndex("CHIRP", API_VERSION_1_47)).toBe(97);
         });
 
-        it("places CHIRP at index 97 for API 1.48 as well", () => {
-            // AUTOPILOT_PID is appended after CHIRP, so CHIRP's index is stable.
-            expect(getDebugModeIndex("CHIRP", API_VERSION_1_48)).toBe(97);
+        it("places CHIRP at index 96 for API 1.48 (AUTOPILOT_POSITION removed)", () => {
+            // AUTOPILOT_POSITION (index 96 in 1.47) was dropped from the firmware
+            // enum in 1.48, so CHIRP shifts down one to index 96.
+            expect(getDebugModeIndex("CHIRP", API_VERSION_1_48)).toBe(96);
         });
 
         it("returns -1 for CHIRP on pre-1.47 firmware", () => {

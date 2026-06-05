@@ -142,6 +142,7 @@ export function getDebugModes(apiVersion) {
     }
 
     if (semver.gte(apiVersion, API_VERSION_1_48)) {
+        removeArrayElement(result, "AUTOPILOT_POSITION");
         addArrayElement(result, "AUTOPILOT_PID");
     }
 
