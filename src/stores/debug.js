@@ -811,8 +811,19 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[1]": "P term (North) * 100",
                 "debug[2]": "I term (East) * 100",
                 "debug[3]": "I term (North) * 100",
-                "debug[4]": "D term (East) * 100",
-                "debug[5]": "D term (North) * 100",
+                "debug[4]": "II term (East) * 100",
+                "debug[5]": "II term (North) * 100",
+                "debug[6]": "Roll angle command * 100",
+                "debug[7]": "Pitch angle command * 100",
+            };
+
+            result.AUTOPILOT_STOP = {
+                "debug[all]": "Autopilot Stop",
+                "debug[0]": "Distance to target (cm)",
+                "debug[1]": "Horizontal speed (cm/s)",
+                "debug[2]": "Sticks active",
+                "debug[3]": "Nav active",
+                "debug[4]": "Position held",
                 "debug[6]": "Roll angle command * 100",
                 "debug[7]": "Pitch angle command * 100",
             };
@@ -826,6 +837,8 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[4]": "CPU Load at Sample",
             };
 
+            // POSITION_NAV is a reserved firmware enum slot with no fields yet,
+            // so it intentionally has no fieldNames entry.
             delete result.AUTOPILOT_POSITION;
         }
 
