@@ -742,8 +742,8 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[all]": "Autopilot Altitude",
                 "debug[0]": "Autopilot Throttle",
                 "debug[1]": "Tilt Multiplier",
-                "debug[2]": "Zero Altitude cm",
-                "debug[3]": "Altitude cm",
+                "debug[2]": "Target Altitude cm",
+                "debug[3]": "Current Altitude cm",
                 "debug[4]": "Altitude P",
                 "debug[5]": "Altitude I",
                 "debug[6]": "Altitude D",
@@ -825,6 +825,8 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[3]": "Gyro after all filtering [dbg-axis]",
                 "debug[4]": "CPU Load at Sample",
             };
+
+            delete result.AUTOPILOT_POSITION;
         }
 
         return result;
