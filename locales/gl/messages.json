@@ -252,9 +252,6 @@
     "tabLedStrip": {
         "message": "Tira de LEDS"
     },
-    "tabRawSensorData": {
-        "message": "Sensores"
-    },
     "tabCLI": {
         "message": "CLI"
     },
@@ -612,12 +609,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerómetro"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Coloque a placa ou o chasis nunha superficie <strong> nivelada<\/strong> , proceda coa calibración e asegúrese que a plataforma non se move durante este período"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrar Magnetómetro"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Mova o multirotor <strong>360<\/strong> graos no eixo de rotacion, dispón de 30 segundos para esta tarefa"
     },
@@ -653,7 +644,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
@@ -1116,23 +1107,8 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> O provedor SPI RX só funcionará se o hardware necesario está na placa ou se conecta a un bus SPI."
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "Graos de Roll"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Graos de Pitch"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Graos de Yaw"
-    },
-    "configurationSensorAlignmentGyro": {
-        "message": "Aliñado do XIRO"
-    },
     "configurationSensorGyroToUse": {
         "message": "XIRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Peligro: Non funciona Xiro\/Acc"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primeiro"
@@ -1149,14 +1125,8 @@
     "configurationSensorAlignmentGyro2": {
         "message": "Segundo XIRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Aliñado do ACELERADOR"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Por defecto"
-    },
-    "configurationAccelTrims": {
-        "message": "Trim do acelerómetro"
     },
     "configurationAccelTrimRoll": {
         "message": "Trim do acelerómetro de Roll"
@@ -2889,9 +2859,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Detalles da compilación na nube:"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Estado:"
-    },
     "firmwareFlasherCloudBuildPending": {
         "message": "pendente"
     },
@@ -3047,9 +3014,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Mensaxe:"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong> Recuperación \/ comunicación perdida <\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Abandoando o Instalador o Firmware"
@@ -5972,12 +5936,6 @@
     },
     "configurationAccHardware": {
         "message": "Acelerómetro"
-    },
-    "configurationBaroHardware": {
-        "message": "Barómetro (si está soportado)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetómetro (si está soportado)"
     },
     "configurationSmallAngle": {
         "message": "Ángulo máximo de Armado [degrees]"

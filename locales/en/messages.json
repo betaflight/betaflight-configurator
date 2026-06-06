@@ -68,6 +68,18 @@
     "disconnect": {
         "message": "Disconnect"
     },
+    "disconnectVirtual": {
+        "message": "Disconnect (Virtual)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Disconnect (Manual)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Disconnect (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Select your device",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -116,6 +128,10 @@
     "connectVirtualDescription": {
         "message": "Simulate a flight controller without hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connect (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Enter the serial path or URL to connect to.",
@@ -410,6 +426,18 @@
     "tabOptions": {
         "message": "Options"
     },
+    "sidebarOpenOptions": {
+        "message": "Options",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Toggle dark / light mode",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Toggle expert mode",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Setup"
     },
@@ -470,6 +498,54 @@
     "tabPidTuning": {
         "message": "PID Tuning"
     },
+    "tabAutotune": { "message": "Autotune" },
+    "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
+    "autotuneImportButton": { "message": "Import Blackbox Log" },
+    "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
+    "autotuneSelectingFile": { "message": "Selecting file..." },
+    "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
+    "autotuneBandwidth": { "message": "Bandwidth" },
+    "autotunePhaseMargin": { "message": "Phase Margin" },
+    "autotuneResonantPeak": { "message": "Resonant Peak" },
+    "autotuneCoherence": { "message": "Coherence" },
+    "autotuneParameter": { "message": "Parameter" },
+    "autotuneCurrent": { "message": "Current" },
+    "autotuneProposed": { "message": "Proposed" },
+    "autotuneChange": { "message": "Change" },
+    "autotuneApplying": { "message": "Applying..." },
+    "autotuneApplied": { "message": "Gains applied and saved." },
+    "autotuneApplyFailed": { "message": "Failed to apply gains" },
+    "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
+    "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
+    "autotuneNoChirpData": { "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated." },
+    "autotuneSampleCount": { "message": "{{count}} samples" },
+    "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
+    "autotuneImportAnother": { "message": "Import Another" },
+    "autotuneImportRetry": { "message": "Try Again" },
+    "autotuneFile": { "message": "File" },
+    "autotuneAxesDetected": { "message": "Axes Detected" },
+    "autotuneApplyGains": { "message": "Apply Gains" },
+    "autotuneGainTitle": { "message": "Gain Recommendation" },
+    "autotuneAxisSelector": { "message": "Select Axis" },
+    "autotuneAxisRoll": { "message": "Roll" },
+    "autotuneAxisPitch": { "message": "Pitch" },
+    "autotuneAxisYaw": { "message": "Yaw" },
+    "autotuneBodePlotTitle": { "message": "Frequency Response" },
+    "autotuneSectionCurrentPids": { "message": "Current PIDs (from log)" },
+    "autotuneSectionAnalysis": { "message": "Analysis" },
+    "autotuneSectionProposedSliders": { "message": "Proposed Sliders" },
+    "autotuneSliderMasterMultiplier": { "message": "Master Multiplier" },
+    "autotuneSliderPIGain": { "message": "P / I Gain" },
+    "autotuneSliderIGain": { "message": "I Gain" },
+    "autotuneSliderDGain": { "message": "D Gain" },
+    "autotuneSliderFeedforward": { "message": "Feedforward" },
+    "autotuneSliderDTermFilter": { "message": "D-Term Filter" },
+    "autotuneApplyFromAxis": { "message": "Apply gains from axis" },
+    "autotuneSensitivityPeak": { "message": "Sensitivity Peak" },
+    "autotuneOvershoot": { "message": "Overshoot" },
+    "autotuneRiseTime": { "message": "Rise Time" },
+    "autotuneSettlingTime": { "message": "Settling Time" },
+    "autotuneSpectrogramTitle": { "message": "Spectrogram (Gyro)" },
     "tabReceiver": {
         "message": "Receiver"
     },
@@ -3289,8 +3365,41 @@
     "flightPlanTypeLand": {
         "message": "Land"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Take Off"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Change Altitude",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Delay",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Yaw Rate Cap",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Hold Duration <span class=\"units\">min</span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Hold Duration in minutes",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Delay Duration <span class=\"units\">min</span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "Delay Duration in minutes",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Yaw Rate <span class=\"units\">°/s</span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Yaw Rate in degrees per second",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Hold Pattern"
@@ -3363,6 +3472,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Invalid longitude (must be between -180 and 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Invalid altitude (must be zero or positive)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Invalid duration (must be zero or positive)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "Invalid yaw rate (must be zero or positive)"
     },
     "flightPlanConfirmDelete": {
         "message": "Are you sure you want to delete this waypoint?"
@@ -3960,7 +4078,10 @@
         "message": "Show Log"
     },
     "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
+        "message": "Build status:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Flash status:"
     },
     "firmwareFlasherCloudBuildQueued": {
         "message": "queued"
@@ -4109,8 +4230,21 @@
     "firmwareFlasherExitDfu": {
         "message": "Exit DFU Mode"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Find DFU device"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Flash Firmware"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Flash Firmware options"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Load Firmware options"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Flashing progress",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub Firmware Info"
@@ -4133,11 +4267,29 @@
     "firmwareFlasherWarningText": {
         "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-Betaflight</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed</li></ul>"
     },
+    "firmwareFlasherWarningShort": {
+        "message": "Do not flash non-Betaflight hardware. Do not disconnect during flashing. STM32 bootloader is in ROM and cannot be bricked. Always backup your configuration before upgrading."
+    },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recovery / Lost communication</strong>"
+        "message": "Recovery / Lost communication"
     },
     "firmwareFlasherRecoveryText": {
         "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "If you have lost communication: power off, enable No Reboot Sequence and Full Chip Erase, jumper the BOOT pins, then power on. Install drivers if needed."
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Read more →"
+    },
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "Board & Build"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Advanced"
+    },
+    "firmwareFlasherSubTabFlash": {
+        "message": "Flash"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
@@ -5035,8 +5187,11 @@
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmQ": {
-        "message": "Q Factor",
+        "message": "Q factor (x100)",
         "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Q factor adjusts how narrow or wide the RPM notch filters are. The stored value is Q factor × 100, allowed range 250–3000 (Q 2.5 to Q 30.0), default 500 (Q 5.0). Higher values make each notch narrower and more precise; lower values make them wider. Very low values significantly increase filter delay."
     },
     "pidTuningRpmWeight": {
         "message": "Weight {{index}}",
@@ -5676,6 +5831,15 @@
     "powerBatteryAmperage": {
         "message": "Amperage"
     },
+    "powerBatteryPowerDraw": {
+        "message": "Power Draw"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Voltage Drop"
+    },
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
@@ -5920,7 +6084,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Instantaneous RSSI value (flashes when below alarm threshold)"
+        "message": "Instantaneous RSSI value (flashes when below alarm threshold). For modern protocols, use RSSI dBm instead."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm value",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Received Signal Strength Indicator, this value indicates how loud the reception is in dBm"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -6511,7 +6682,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Alternative indicator for 'link quality' based on frame loss - use with caution"
+        "message": "Link quality indicator based on the percentage of successfully received uncorrupted data packets"
     },
     "osdTextElementFlightDist": {
         "message": "Flight distance",
@@ -6575,13 +6746,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD profile name as set in the \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\" CLI variables"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm value",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Value in dBm of the RSSI signal if available"
     },
     "osdTextElementRcChannels": {
         "message": "RC Channels",
@@ -7528,35 +7692,47 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Detection failed — try with more varied tilting."
     },
-    "magCalibrationStart": {
-        "message": "Guided"
+    "magCalibrationGuidedFw": {
+        "message": "Client Cal (Guided)"
     },
-    "magCalibrationStartDesc": {
-        "message": "Rotate through 6 orientations step by step"
+    "magCalibrationGuidedFwDesc": {
+        "message": "Auto-prompting 60s calibration"
     },
-    "magCalibrationStartAuto": {
-        "message": "Auto-Step"
+    "magCalibrationGuidedFwTitle": {
+        "message": "Guided Calibration"
     },
-    "magCalibrationStartAutoDesc": {
-        "message": "Same as guided but steps advance on a timer"
+    "magCalibrationPrompt1": {
+        "message": "Step 1/6 — Hold flat, yaw 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Step 2/6 — Flip inverted, yaw 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Step 3/6 — Nose straight up, yaw 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Step 4/6 — Nose straight down, yaw 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Step 5/6 — Left side up, yaw 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Step 6/6 — Right side up, yaw 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Data collection complete — review and save"
     },
     "magCalibrationCancel": {
         "message": "Cancel"
+    },
+    "magCalibrationClear": {
+        "message": "Clear"
     },
     "magCalibrationModeOptions": {
         "message": "Calibration mode options"
     },
     "magCalibrationRetry": {
         "message": "Retry"
-    },
-    "magCalibrationNextStep": {
-        "message": "Next Step"
-    },
-    "magCalibrationFinish": {
-        "message": "Finish"
-    },
-    "magCalibrationStepOf": {
-        "message": "Step {{current}} of {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "Waiting for movement... Shake the vehicle to begin."
@@ -7591,24 +7767,6 @@
     "magCalibrationQualityPoor": {
         "message": "Poor"
     },
-    "magCalibrationStep1": {
-        "message": "Level — rotate 360° in yaw"
-    },
-    "magCalibrationStep2": {
-        "message": "Nose down — rotate 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "Nose up — rotate 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "Left side down — rotate 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "Right side down — rotate 360°"
-    },
-    "magCalibrationStep6": {
-        "message": "Inverted — rotate 360°"
-    },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offsets"
     },
@@ -7616,19 +7774,61 @@
         "message": "Sphere fit offsets"
     },
     "magCalibrationUnguided": {
-        "message": "Quick"
+        "message": "Firmware Cal (Legacy)"
     },
     "magCalibrationUnguidedDesc": {
-        "message": "Rotate freely in all directions — stops when firmware finishes"
+        "message": "Rotate freely — firmware auto-saves after 30s"
     },
     "magCalibrationUnguidedTitle": {
-        "message": "Unguided Calibration"
+        "message": "Firmware Calibration"
     },
     "magCalibrationUnguidedInstruction": {
-        "message": "Rotate your vehicle slowly in all directions. The firmware will collect samples and compute offsets automatically."
+        "message": "You have 30 seconds to rotate the vehicle in all directions. The firmware will automatically save the calibration values when the time is up."
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
+    },
+    "magCalibrationGuided": {
+        "message": "Client Cal (Free)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Rotate freely — configurator computes offsets"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Client Calibration"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Rotate your vehicle in all directions. Aim to make a complete sphere of dots over about one or two minutes. Save the result when the calibration values have stabilised."
+    },
+    "magCalibrationCheck": {
+        "message": "Check"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "View live mag data with current calibration"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Checking Calibration"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirm the orientation and calibration of the Magnetometer. Set your craft flat to the horizon, point the nose to a known point on the compass (a phone may be used to figure out which way is North), and confirm that new dots appear at the expected location in the 3D display. The field strength values for each axis and the sphericity of the dots indicate the accuracy of the calibration. If the points go to completely wrong places, the orientation of the Mag is likely to be wrong."
+    },
+    "magCalibrationCalValues": {
+        "message": "Cal Values"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Save Values"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Calibration values saved"
+    },
+    "magCalibrationSaveError": {
+        "message": "Failed to save calibration values"
+    },
+    "magCalibrationAccept": {
+        "message": "Save Calibration"
+    },
+    "magCalibrationDiscard": {
+        "message": "Discard"
     },
     "magVizPointCloud": {
         "message": "Point Cloud"
@@ -7644,6 +7844,15 @@
     },
     "magVizWaitingForData": {
         "message": "Waiting for data…"
+    },
+    "magVizAxisField": {
+        "message": "Field"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Old"
+    },
+    "magVizAgeLegendNew": {
+        "message": "New"
     },
     "magAlignmentApply": {
         "message": "Apply"
@@ -8224,6 +8433,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "Other Options"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Remove {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Select protocol"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Select options"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Select branch or enter PR # / commit hash"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Search for a board..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio Protocol"

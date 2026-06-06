@@ -331,11 +331,29 @@
     "tabOptions": {
         "message": "Ustawienia"
     },
+    "sidebarOpenOptions": {
+        "message": "Opcje",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Przełącz tryb ciemny \/ jasny",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Przełącz tryb eksperta",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Ustawienia"
     },
     "tabSetupOSD": {
         "message": "Ustawienia OSD"
+    },
+    "tabSensorConfig": {
+        "message": "Czujniki"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
     },
     "tabConfiguration": {
         "message": "Konfiguracja"
@@ -345,6 +363,27 @@
     },
     "tabPidTuning": {
         "message": "Regulacja PID"
+    },
+    "tabAutotune": {
+        "message": "Autotune"
+    },
+    "autotuneImportTitle": {
+        "message": "Analiza czarnej skrzynki"
+    },
+    "autotuneImportButton": {
+        "message": "Importuj dziennik czarnej skrzynki"
+    },
+    "autotuneImportDescription": {
+        "message": "Importuj dziennik czarnej skrzynki zapisany z debug_mode = CHIRP, aby analizować odpowiedź częstotliwości i obliczać zalecenia PID."
+    },
+    "autotuneSelectingFile": {
+        "message": "Wybranie pliku..."
+    },
+    "autotuneBandwidth": {
+        "message": "Pasmo"
+    },
+    "autotuneParameter": {
+        "message": "Parametr"
     },
     "tabReceiver": {
         "message": "Odbiornik"
@@ -378,9 +417,6 @@
     },
     "tabLedStrip": {
         "message": "Paski LED\/RGB"
-    },
-    "tabRawSensorData": {
-        "message": "Czujniki"
     },
     "tabCLI": {
         "message": "Wiersz Poleceń CLI"
@@ -827,12 +863,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Kalibracja akcelerometru"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Połóż kontroler lotu lub jednostkę latającą na <strong>płaskiej<\/strong> powierzchni i kontynuuj kalibrację. Zwróć uwagę by płytka kontrolera lotu nie ruszała się podczas trwania kalibracji"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Kalibracja magnetometru"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Obróć model przynajmniej <strong>360<\/strong> stopni wokół każdej osi, masz 30 sekund, aby wykonać to zadanie"
     },
@@ -871,7 +901,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Typ Modelu"
@@ -1432,12 +1462,6 @@
     "configurationActiveImu": {
         "message": "Aktywny IMU"
     },
-    "configurationSensors": {
-        "message": "Konfiguracja czujnika"
-    },
-    "configurationSensorsHelp": {
-        "message": "Skonfiguruj dodatkowe czujniki i zaawansowane funkcje."
-    },
     "configurationMagAlignmentHelp": {
         "message": "Ustawienie magnetometru to orientacja czujnika magnetometru na płycie kontrolera lotu. Wartość domyślna jest zwykle poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją magnetometru, może być konieczne dostosowanie tego ustawienia."
     },
@@ -1473,39 +1497,6 @@
     },
     "configurationBoardAlignment": {
         "message": "Ułożenie kontrolera lotu"
-    },
-    "configurationBoardAlignmentRoll": {
-        "message": "Roll (stopnie)"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Pitch (stopnie)"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Yaw (stopnie)"
-    },
-    "configurationGyroAlignment": {
-        "message": "Ułożenie żyroskopu"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "Ułożenie żyroskopu jest jego orientacją na płytce kontrolera lotu. Domyślna konfiguracja zwykle jest odpowiednia, jednak w przypadku niestandardowych konstrukcji lub płytek z nietypowym ułożeniem żyroskopu konieczna może być ręczna korekta tego ustawienia."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "Aktywny IMU"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Wybierz żyroskop, który ma być używany jako żyroskop główny. Żyroskop główny służy do stabilizacji i sterowania. Jeśli masz tylko jeden żyroskop, zostanie on wybrany automatycznie.<br><br> Nie zawsze jest możliwe włączenie wielu żyroskopów, jeśli są one różnych typów lub marek."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Ułożenie magnetometru"
@@ -1549,14 +1540,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Ułożenie żyroskopu"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/AKCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Ostrzeżenie: Nie znaleziono Gyro\/Accel"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Pierwszy"
@@ -1567,29 +1552,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Oba"
     },
-    "configurationSensorAlignment": {
-        "message": "Wyrównanie czujnika"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Przynajmniej jeden żyroskop musi pozostać włączony. Jeśli wyłączysz wszystkie żyroskopy, kontroler lotu nie będzie działał prawidłowo."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": " GYRO 1"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "GYRO 2"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Ułożenie akcelerometru"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Domyślne"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Własne"
-    },
-    "configurationAccelTrims": {
-        "message": "Dostrajanie akcelerometru"
     },
     "configurationAccelTrimRoll": {
         "message": "Dostrajanie w osi Roll"
@@ -3128,6 +3101,9 @@
     "flightPlanSaveToFC": {
         "message": "Zapisz w FC"
     },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Usuń waypoint"
+    },
     "flightPlanLoadPromptTitle": {
         "message": "Załadować plan lotu z kontrolera lotu?"
     },
@@ -3672,9 +3648,6 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Pokaż log"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
-    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "w kolejce"
     },
@@ -3845,9 +3818,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "Proszę <span class=\"message-negative\">nie<\/span> próbuj używać tego programu do wgrywania oprogramowania na urządzenia <strong>niekompatybilne z Betaflight<\/strong>.<br \/><span class=\"message-negative\">Nie<\/span><strong>odłączaj<\/strong> kontrolera lotu oraz <strong>nie wyłączaj<\/strong> komputera w trakcie wgrywania oprogramowania.<br \/><br \/><strong>Uwaga:<\/strong><ul><li>Bootloader STM32 znajduje się w pamięci ROM i nie można go uszkodzić.<\/li><li><span class=\"message-negative\">Automatyczne połączenie<\/span> pozostaje nieaktywne podczas korzystania z zakładki Wgraj Oprogramowanie.<\/li><li>Wykonaj kopię zapasową — aktualizacja lub cofnięcie wersji może wyczyścić zapisaną konfigurację.<\/li><li>W razie niepowodzenia wgrywania <strong>odłącz wszystkie kable od kontrolera lotu<\/strong>, uruchom komputer ponownie i zaktualizuj sterowniki.<\/li><li>Wgrywając oprogramowanie na kontrolery lotu z bezpośrednio podłączonym USB (większość nowszych), zapoznaj się z sekcją USB Flashing w instrukcji Betaflight i upewnij się, że masz właściwe oprogramowanie oraz sterowniki.<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Przywracanie połączenia \/ utrata komunikacji<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "W przypadku utraty komunikacji z kontrolerem lotu, wykonaj poniższe kroki, aby ją przywrócić:<ul><li>Wyłącz zasilanie.<\/li><li>Włącz opcje: \"Bez ponownego uruchamiania\" i \"Pełne czyszczenie pamięci\".<\/li><li>Zewrzyj piny BOOT lub przytrzymaj przycisk BOOT na płytce.<\/li><li>Włącz zasilanie (jeśli wszystko wykonano poprawnie, dioda LED aktywności NIE POWINNA migać).<\/li><li>Zainstaluj wszystkie sterowniki STM32 i użyj narzędzia Zadig, jeśli to wymagane (patrz sekcja <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> w instrukcji Betaflight).<\/li><li>Zamknij i uruchom ponownie aplikację.<\/li><li>Zwolnij przycisk BOOT, jeśli kontroler lotu go ma.<\/li><li>Wgraj odpowiednie oprogramowanie (ręcznie ustaw prędkość transmisji, jeśli jest określona w instrukcji kontrolera lotu).<\/li><li>Wyłącz zasilanie.<\/li><li>Rozłącz piny BOOT.<\/li><li>Włącz zasilanie (dioda LED aktywności powinna migać).<\/li><li>Połącz się z kontrolerem lotu.<\/li><\/ul>"
@@ -4719,6 +4689,13 @@
         "message": "Minimalna częstotliwość, która będzie używana przez filtr RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmQ": {
+        "message": "Współczynnik Q (x100)",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Współczynnik Q dostosowuje wąski lub szeroki filtr nachylenia RPM. Przechowywana wartość to współczynnik Q × 100, dozwolony zakres 250–3000 (Q 2,5 do Q 30.0), wartość domyślna 500 (Q 5.). Wyższe wartości sprawiają, że każdy nch węższy i bardziej precyzyjny; niższe wartości zwiększają je. Bardzo niskie wartości znacznie zwiększają opóźnienie filtra."
+    },
     "pidTuningFilterSettings": {
         "message": "Ustawienia filtra zależne od profilu"
     },
@@ -4772,11 +4749,17 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Zwiększa wartości PID, aby zrekompensować spadek Vbat. Zapewni to bardziej stałą charakterystykę podczas całego lotu. Zastosowana rekompensata jest obliczana na podstawie wartości $t(powerBatteryMaximum.message) ustawionej na stronie $t(tabPower.message), więc upewnij się, że jest ustawiona tak jak byś tego chciał."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Kompensacja spadku napięcia baterii %"
+    },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br \/><br \/>Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br \/><br \/>Odwiedź <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki<\/a>, aby uzyskać więcej informacji."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Linearyzacja ciągu %"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Poprawia autorytet i szybkość reakcji przy niskiej przepustnicy. <br><br> Szczególnie przydatne w przypadku  ESC 48k.  Nie ma wpływu przy większej przepustnicy. <br><br>Zakres rekompensacji może wynosić od 0 do 150%. Zwykle wystarczy 30-40%."
@@ -5548,6 +5531,9 @@
     },
     "osdSetupSave": {
         "message": "Zapisz"
+    },
+    "osdSetupRefresh": {
+        "message": "Odśwież"
     },
     "osdSetupFontManager": {
         "message": "Menedżer czcionek"
@@ -7135,10 +7121,31 @@
         "message": "Akcelerometr"
     },
     "configurationBaroHardware": {
-        "message": "Barometr (jeśli jest wspierany)"
+        "message": "Barometr"
     },
     "configurationMagHardware": {
-        "message": "Magnetometr (jeśli jest wspierany)"
+        "message": "Magnetometr"
+    },
+    "configurationMagInclination": {
+        "message": "Inklinacja"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Wykryj"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Aktualizuj"
+    },
+    "magCalibrationCancel": {
+        "message": "Anuluj"
+    },
+    "magCalibrationRetry": {
+        "message": "Ponów"
+    },
+    "magAlignmentApply": {
+        "message": "Zastosuj"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Wykryj"
     },
     "configurationSmallAngle": {
         "message": "Maksymalny kąt uzbrojenia [w stopniach]"
@@ -7703,6 +7710,16 @@
     "firmwareFlasherBuildOptions": {
         "message": "Inne opcje"
     },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Usuń {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Wybierz protokół"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Wybierz opcje"
+    },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Protokół radia"
     },
@@ -7902,6 +7919,15 @@
     "userBackupDeleteFailed": {
         "message": "Nie udało się usunąć kopii zapasowej"
     },
+    "actionRestore": {
+        "message": "Przywróć"
+    },
+    "titleRestoreBackup": {
+        "message": "Przywróć kopię zapasową"
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Przywracanie kopii zapasowej..."
+    },
     "userPasskeyNoPasskeys": {
         "message": "Brak dostępnych kluczy dostępu"
     },
@@ -7937,6 +7963,9 @@
     },
     "labelUsePasskey": {
         "message": "Użyj klucza"
+    },
+    "labelBack": {
+        "message": "Powrót"
     },
     "titleEnterVerificationCode": {
         "message": "Wprowadź kod weryfikacyjny"

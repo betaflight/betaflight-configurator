@@ -1,39 +1,46 @@
 <template>
-    <div id="user-session-container">
-        <div v-if="!isLoggedIn" id="user-logged-out" class="session-view">
-            <a href="#" id="open-login" class="tabicon" @click.prevent="handleLoginClick">
-                <img
-                    id="user-default-gravatar"
-                    src="/images/default-user-avatar.png"
-                    alt="User Default Avatar"
-                    class="user-avatar-icon"
-                />
-                <span id="user-login-display" class="username">{{ $t("labelLogin") }}</span>
-            </a>
-        </div>
-
-        <div v-else id="user-logged-in" class="session-view">
-            <a href="#" id="user-menu-trigger" class="tabicon" @click.prevent="toggleMenu">
-                <img
-                    id="user-gravatar"
-                    :src="avatarUrl || '/images/default-user-avatar-loggedin.png'"
-                    alt="User Avatar"
-                    class="user-avatar-icon"
-                />
-                <span id="username-display" class="username">{{ displayName }}</span>
-            </a>
-        </div>
+    <div class="justify-self-end-auto">
+        <UDropdownMenu :items="getMenuItems()" v-if="isLoggedIn" :ui="{ content: 'z-3001' }">
+            <UButton
+                variant="ghost"
+                color="neutral"
+                size="xs"
+                class="py-1"
+                :aria-label="$t('tabUserProfile')"
+                square
+                :avatar="{
+                    icon: 'i-lucide-user',
+                    src: avatarUrl,
+                    size: 'xs',
+                }"
+            >
+            </UButton>
+        </UDropdownMenu>
+        <UTooltip :text="$t('labelLogin')" v-else :disabled="!isCompact">
+            <UButton
+                variant="ghost"
+                color="neutral"
+                :size="isCompact ? 'xs' : 'sm'"
+                :class="{ 'py-2': !isCompact }"
+                :square="isCompact"
+                @click="handleLoginClick"
+                icon="i-lucide-log-in"
+                :aria-label="$t('labelLogin')"
+            >
+                {{ isCompact ? "" : $t("labelLogin") }}
+            </UButton>
+        </UTooltip>
         <Teleport to="#main-wrapper">
             <div v-show="menuOpen" id="user-menu-popup" class="user-popup-menu" :style="menuStyle">
                 <div id="menu-username" class="menu-username">{{ displayName }}</div>
                 <a href="#" id="menu-signout" class="menu-item" @click.prevent="handleSignOut">
-                    <i class="fas fa-sign-out-alt"></i>
+                    <UIcon name="i-lucide-log-out" class="size-4" />
                     <span>{{ $t("labelSignOut") }}</span>
                 </a>
             </div>
 
             <!-- Login Dialog -->
-            <UModal v-model:open="loginDialogOpen" :ui="{ content: 'max-w-sm' }">
+            <UModal v-model:open="loginDialogOpen" :ui="{ overlay: 'z-3000', content: 'max-w-sm z-3001' }">
                 <template #header="{ close }">
                     <div class="flex items-start justify-between gap-2 w-full">
                         <div class="dialog-header-stack">
@@ -159,7 +166,7 @@
             </UModal>
 
             <!-- Verification Code Dialog -->
-            <UModal v-model:open="verificationDialogOpen" :ui="{ content: 'max-w-sm' }">
+            <UModal v-model:open="verificationDialogOpen" :ui="{ overlay: 'z-3000', content: 'max-w-sm z-3001' }">
                 <template #header="{ close }">
                     <div class="flex items-start justify-between gap-2 w-full">
                         <div class="dialog-header-stack">
@@ -195,7 +202,13 @@
             </UModal>
 
             <!-- Waiting Dialog -->
-            <UModal v-model:open="waitingDialogOpen" :close="false" :dismissible="false" title="">
+            <UModal
+                v-model:open="waitingDialogOpen"
+                :close="false"
+                :dismissible="false"
+                title=""
+                :ui="{ overlay: 'z-3000', content: 'z-3001' }"
+            >
                 <template #body>
                     <div class="waiting-container">
                         <div class="waiting-spinner" aria-hidden="true"></div>
@@ -210,92 +223,67 @@
 <script>
 import { defineComponent } from "vue";
 import { useUserSession } from "./UserSession";
+import { switchTab } from "@/js/tab_switch.js";
+import { sidebarItems } from "@/components/sidebar/sidebar_items.js";
+import { i18n } from "@/js/localization";
 
 export default defineComponent({
     name: "UserSession",
-
+    props: {
+        isCompact: {
+            type: Boolean,
+            default: false,
+        },
+    },
     setup() {
-        return useUserSession();
+        const session = useUserSession();
+
+        function getMenuItems() {
+            const name = session.displayName.value || i18n.getMessage("tabUserProfile");
+            const src = session.avatarUrl.value;
+            const leadingItems = [
+                {
+                    label: name,
+                    avatar: {
+                        ...(src ? { src } : {}),
+                        icon: "i-lucide-user",
+                    },
+                    type: "label",
+                },
+                { type: "separator" },
+            ];
+            const tabKeys = ["backups", "user_profile"];
+            const trailingItems = [
+                { type: "separator" },
+                {
+                    label: i18n.getMessage("labelSignOut"),
+                    icon: "i-lucide-log-out",
+                    color: "error",
+                    onSelect: () => session.handleSignOut(),
+                },
+            ];
+
+            return leadingItems.concat(
+                sidebarItems
+                    .filter((item) => tabKeys.includes(item.key))
+                    .map((item) => ({
+                        label: i18n.getMessage(item.i18n),
+                        icon: item.icon,
+                        onSelect: () => switchTab(item.key),
+                    })),
+                trailingItems,
+            );
+        }
+
+        return {
+            ...session,
+            getMenuItems,
+        };
     },
 });
 </script>
 
-<style scoped>
-#user-session-container {
-    background-color: transparent;
-    border-top: 1px solid var(--surface-300);
-    padding-top: 0.5rem;
-    font-size: 13px;
-    position: relative;
-    margin-top: auto;
-
-    #open-login,
-    #user-menu-trigger {
-        position: relative;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        padding: 0.25rem;
-        color: var(--text);
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        z-index: 0;
-
-        &:hover {
-            background-color: var(--surface-200);
-            border-radius: 0.5rem;
-        }
-    }
-
-    .user-avatar-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        object-fit: cover;
-        flex-shrink: 0;
-    }
-
-    .username {
-        font-size: 11px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        flex: 1;
-    }
-
-    @media (max-width: 1055px) {
-        #open-login,
-        #user-menu-trigger {
-            justify-content: center;
-        }
-        .username {
-            display: none;
-        }
-    }
-
-    @media (max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-        margin-bottom: 0.25rem;
-        .user-avatar-icon {
-            width: 32px;
-            height: 32px;
-        }
-    }
-}
-</style>
-
 <style>
-/* Show username when the compact navigation drawer is revealed — unscoped so the external .tab_container.reveal selector matches. */
-.tab_container.reveal #user-session-container #open-login,
-.tab_container.reveal #user-session-container #user-menu-trigger {
-    justify-content: flex-start !important;
-}
-.tab_container.reveal #user-session-container .username {
-    display: inline !important;
-}
-
 /* Unscoped styles for teleported popup menu */
 .user-popup-menu {
     position: fixed;

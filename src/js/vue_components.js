@@ -31,7 +31,6 @@ export const BetaflightComponents = {
         // Register tab components
         app.component("HelpTab", VueTabComponents.help);
         app.component("LandingTab", VueTabComponents.landing);
-        app.component("OptionsTab", VueTabComponents.options);
         app.component("PortsTab", VueTabComponents.ports);
         app.component("ServosTab", VueTabComponents.servos);
         app.component("ConfigurationTab", VueTabComponents.configuration);
@@ -57,6 +56,5 @@ export const BetaflightComponents = {
         app.component("PreflightTab", VueTabComponents.preflight);
         app.component("VtxTab", VueTabComponents.vtx);
         app.component("PresetsTab", VueTabComponents.presets);
-        app.component("LogTab", VueTabComponents.log);
     },
 };

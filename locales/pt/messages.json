@@ -331,11 +331,68 @@
     "tabOptions": {
         "message": "Opções"
     },
+    "sidebarOpenOptions": {
+        "message": "Opções",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Alternar modo escuro \/ claro",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Alternar modo expert",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Opções"
     },
     "tabSetupOSD": {
         "message": "Configuração do OSD"
+    },
+    "tabSensorConfig": {
+        "message": "Sensores"
+    },
+    "sensorConfigHardware": {
+        "message": "Hardware do Sensor"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Gyro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Configuração de Sensor gravada"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "Falha a gravar configuração do sensor"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetómetro"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Acelerómetro"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Coloque o aparelho numa superfície nivelada antes de calibrar"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "O acelerómetro não foi calibrado. Por favor calibre antes de voar."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Os offsets de calibração do magnetómetro são zero. Por favor, calibre para uma direção precisa."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibrar"
+    },
+    "sensorConfig3dPreview": {
+        "message": "Pré-Visualização de Altitude 3D"
+    },
+    "sensorConfigLiveData": {
+        "message": "Dados de Sensor Ao Vivo"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Mostrar Dados de Sensor ao Vivo"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Parar dados ao vivo"
     },
     "tabConfiguration": {
         "message": "Configuração"
@@ -345,6 +402,150 @@
     },
     "tabPidTuning": {
         "message": "Afinação de PID"
+    },
+    "tabAutotune": {
+        "message": "Autotune"
+    },
+    "autotuneImportTitle": {
+        "message": "Análise Blackbox de Chirp"
+    },
+    "autotuneImportButton": {
+        "message": "Importar Log Blackbox"
+    },
+    "autotuneImportDescription": {
+        "message": "Importar um log blackbox gravado com o debug_mode = CHIRP para analisar a frequência de resposta e calcular as recomendações PID."
+    },
+    "autotuneSelectingFile": {
+        "message": "A selecionar ficheiro..."
+    },
+    "autotuneAnalyzing": {
+        "message": "Analisando dados chirp..."
+    },
+    "autotuneBandwidth": {
+        "message": "Largura de banda"
+    },
+    "autotunePhaseMargin": {
+        "message": "Margem de Fase"
+    },
+    "autotuneResonantPeak": {
+        "message": "Pico Resonante"
+    },
+    "autotuneCoherence": {
+        "message": "Coerência"
+    },
+    "autotuneParameter": {
+        "message": "Parâmetro"
+    },
+    "autotuneCurrent": {
+        "message": "Atual"
+    },
+    "autotuneProposed": {
+        "message": "Proposto"
+    },
+    "autotuneChange": {
+        "message": "Mudança"
+    },
+    "autotuneApplying": {
+        "message": "A aplicar..."
+    },
+    "autotuneApplied": {
+        "message": "Ganhos aplicados e gravados."
+    },
+    "autotuneApplyFailed": {
+        "message": "Falha ao aplicar ganhos"
+    },
+    "autotuneConnectRequired": {
+        "message": "Conecte à controladora de voo para aplicar ganhos."
+    },
+    "autotuneNoLogs": {
+        "message": "Nenhum registro de blackbox válido foi encontrado neste ficheiro."
+    },
+    "autotuneNoChirpData": {
+        "message": "Nenhum dado de chirp encontrado. Certifique-se de que o log foi gravado com o debug_mode = CHIRP e modo de chirp foi ativado."
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} amostras"
+    },
+    "autotuneSampleRate": {
+        "message": "Taxa de amostragem: {{rate}} Hz"
+    },
+    "autotuneImportAnother": {
+        "message": "Importar outro"
+    },
+    "autotuneImportRetry": {
+        "message": "Tentar Novamente"
+    },
+    "autotuneFile": {
+        "message": "Ficheiro"
+    },
+    "autotuneAxesDetected": {
+        "message": "Eixos Detetados"
+    },
+    "autotuneApplyGains": {
+        "message": "Aplicar Ganhos"
+    },
+    "autotuneGainTitle": {
+        "message": "Recomendação de Ganho"
+    },
+    "autotuneAxisSelector": {
+        "message": "Selecionar Eixo"
+    },
+    "autotuneAxisRoll": {
+        "message": "Roll"
+    },
+    "autotuneAxisPitch": {
+        "message": "Pitch"
+    },
+    "autotuneAxisYaw": {
+        "message": "Yaw"
+    },
+    "autotuneBodePlotTitle": {
+        "message": "Resposta de Frequência"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "PIDs atuais (do log)"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "Análise"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "Sliders propostos"
+    },
+    "autotuneSliderMasterMultiplier": {
+        "message": "Multiplicador Mestre"
+    },
+    "autotuneSliderPIGain": {
+        "message": "Ganho P \/ I"
+    },
+    "autotuneSliderIGain": {
+        "message": "Ganho I"
+    },
+    "autotuneSliderDGain": {
+        "message": "Ganho D"
+    },
+    "autotuneSliderFeedforward": {
+        "message": "Feedforward"
+    },
+    "autotuneSliderDTermFilter": {
+        "message": "Filtro D-Term"
+    },
+    "autotuneApplyFromAxis": {
+        "message": "Aplicar ganhos do eixo"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "Pico de Sensibilidade"
+    },
+    "autotuneOvershoot": {
+        "message": "Overshoot"
+    },
+    "autotuneRiseTime": {
+        "message": "Tempo de Ascensão"
+    },
+    "autotuneSettlingTime": {
+        "message": "Tempo de Fixação"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "Espectrograma (Gyro)"
     },
     "tabReceiver": {
         "message": "Receptor"
@@ -378,9 +579,6 @@
     },
     "tabLedStrip": {
         "message": "Fita de LED"
-    },
-    "tabRawSensorData": {
-        "message": "Sensores"
     },
     "tabCLI": {
         "message": "Linha de comandos"
@@ -554,6 +752,9 @@
     },
     "firmwareTypeNotSupported": {
         "message": "Firmware que não seja o Betaflight <span class=\"message-negative\">não é suportado<\/span>, exceto no modo CLI."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "A versão atual da aplicação pode não suportar a versão de firmware neste dispositivo. Pode usar versões mais antigas como as versões <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a> para firmware para 4.1 ou <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> para versões de firmware ainda mais antigas.<br><br>A aplicação tentará aceder à CLI do dispositivo - se for bem-sucedido, você pode ver a versão atual do firmware enviando o comando <code>versão<\/code> na CLI.<br><br>Alternativamente, pode atualizar para uma versão mais recente do firmware. Use o CLI para backup antes de atualizar, o procedimento está na documentação <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a>. Mas tenha em mente que backups de versões anteriores do firmware podem não ser transferidos corretamente ao restaurar para uma versão mais recente. Modos, OSD, taxas e portas devem transferir de forma segura, mas tenha cuidado com os PID e configurações de failsafe."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Um padrão personalizado está disponível para esta placa. Normalmente a placa não irá funcionar corretamente a menos que esses padrões sejam aplicados.<br \/>Deseja aplicar os padrões personalizados nesta placa?"
@@ -830,12 +1031,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerómetro"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Coloque a placa ou o frame numa superfície <strong>nivelada<\/strong> e prossiga com a calibração, cuidado para não mover a plataforma durante o período de calibração"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrar Magnetómetro"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Mova o multirotor pelo menos <strong>360<\/strong> graus em todos os eixos de rotação, tem 30 segundos para executar esta tarefa"
     },
@@ -874,7 +1069,11 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+    },
+    "initialSetupMagHeading": {
+        "message": "Direção Mag:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
@@ -952,6 +1151,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "Carga de CPU:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Taxa de Loop:"
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura da CPU:"
@@ -1163,6 +1368,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Mostra Direção, Pitch e Roll nos instrumentos",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "Placa:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Firmware:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1439,12 +1650,6 @@
     "configurationActiveImu": {
         "message": "IMU ativo"
     },
-    "configurationSensors": {
-        "message": "Configuração do Sensor"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configure sensores adicionais e recursos avançados."
-    },
     "configurationMagAlignmentHelp": {
         "message": "O alinhamento do magnetómetro é a orientação do sensor do magnetómetro na placa da controladora de voo. O pré-definido está habitualmente, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação de magnetómetro diferente, pode precisar de ajustar esta configuração."
     },
@@ -1482,37 +1687,13 @@
         "message": "Alinhamento da Placa"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "Graus do Roll"
+        "message": "Roll°"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "Graus do Pitch"
+        "message": "Pitch°"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Graus do Yaw"
-    },
-    "configurationGyroAlignment": {
-        "message": "Alinhamento do Gyro"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "O alinhamento do gyro é a orientação do sensor gyro na placa da controladora de voo. O pré-definido está normalmente correto, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação gyro diferente, pode precisar de ajustar esta configuração."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "IMU ativo"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Selecione qual gyro usar como gyro primário. O gyro primário é usado para estabilização e controle. Se tiver apenas um Gyro, ele será selecionado automaticamente.<br><br>Nem sempre é possível ativar vários gyros, quando eles são de diferentes tipos ou marcas."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
+        "message": "Yaw°"
     },
     "configurationMagAlignment": {
         "message": "Alinhamento do Magnetómetro"
@@ -1556,14 +1737,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Alinhamento do GYRO"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Aviso: Nenhum Gyro\/Accel encontrado"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primeiro"
@@ -1574,29 +1749,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Ambos"
     },
-    "configurationSensorAlignment": {
-        "message": "Alinhamento do Sensor"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Pelo menos um gyro deve permanecer ativo. Se desativar todos os gyros, a controladora de voo não funcionará corretamente."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primeiro GYRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Segundo GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Alinhamento ACCEL"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Padrão"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Personalizado"
-    },
-    "configurationAccelTrims": {
-        "message": "Ajustes do acelerómetro"
     },
     "configurationAccelTrimRoll": {
         "message": "Ajuste Roll do Acelerómetro"
@@ -3200,8 +3363,41 @@
     "flightPlanTypeLand": {
         "message": "Land"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Descolar"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Alterar Altitude",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Atraso",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Limite deTaxa de Yaw",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Duração do Hold <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Duração do Hold em minutos",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Duração de Atraso <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "Duração de Atraso em minutos",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Taxa de Yaw <span class=\"units\">°\/s<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Taxa de Yaw em graus por segundo",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Padrão de Hold"
@@ -3274,6 +3470,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Latitude inválida (deve ser entre -180 e 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Altitude inválida (deve ser zero ou positiva)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Duração inválida (deve ser zero ou positiva)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "Taxa de yaw inválida (deve ser zero ou positiva)"
     },
     "flightPlanConfirmDelete": {
         "message": "Tem certeza que deseja excluir este ponto de referência?"
@@ -3871,7 +4076,10 @@
         "message": "Mostrar Log"
     },
     "firmwareFlasherCloudBuildStatus": {
-        "message": "Estado:"
+        "message": "Estado da compilação:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Estado do flash:"
     },
     "firmwareFlasherCloudBuildQueued": {
         "message": "em fila"
@@ -4020,8 +4228,21 @@
     "firmwareFlasherExitDfu": {
         "message": "Sair do modo DFU"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Encontrar dispositivo DFU"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Flashar Firmware"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Opções do Flash do Firmware"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Opções de Carregamento do Firmware"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Progresso do Flash",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "Informações do Firmware no GitHub"
@@ -4044,11 +4265,29 @@
     "firmwareFlasherWarningText": {
         "message": "Por favor <span class=\"message-negative\">não<\/span> tente flashar <strong>hardware não-Betaflight<\/strong> com este flasher de firmware.<br \/><span class=\"message-negative\">Não<\/span> <strong>desconete<\/strong> a placa ou <strong>desligue<\/strong> o computador enquanto flasha.<br \/><br \/><strong>Nota:<\/strong><ul><li>STM32 bootloader é guardado na ROM, não pode sofrer brick.<\/li><li><span class=\"message-negative\">Auto-Conetar<\/span> está sempre desabilitado enqanto estiver no flasher de firmware.<\/li><li>Assegure-se que tem um backup; alguns upgrades\/downgrades vão apagar a sua configuração.<\/li><li>Se tem problemas a flashar <strong>tente desconetar todos os cabos da sua FC<\/strong> primeiro, tente fazer reboot, atualize drivers.<\/li><li>Quando flashar placas com conetores USB diretamente conetados (maioria das placas recentes) assegure-se que leu a secção de Flash via USB do manual do Betaflight e tem o software e drivers corretamente instalados.<\/li><\/ul>"
     },
+    "firmwareFlasherWarningShort": {
+        "message": "Não instale um hardware que não seja Betaflight . Não desconete durante o flashing. O bootloader STM32 está na ROM e não pode ser brickado. Faça sempre backup da sua configuração antes de atualizar."
+    },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recuperação \/ Comunicação perdida<\/strong>"
+        "message": "Recuperação \/ Comunicação perdida"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Se perdeu comunicação com a placa, siga estes passos para recuperá-la:<ul><li>Desligue a placa<\/li><li>Ative 'Sem sequência de reinicialização', ative 'Apagar completo do chip'.<\/li><li>Faça Jump aos pins de BOOT ou pressione o botão de BOOT.<\/li><li>Ligue a placa (o LED de atividade não vai piscar se for feito corretamente).<\/li><li>Instale todos os drivers STM32 e Zadig se necessário (consulte <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">secção USB Flashing<\/a> do manual do Betaflight).<\/li><li>Feche a App, depois reinicie-a.<\/li><li>Solte o botão de BOOT se a sua FC o tiver.<\/li><li>Flash o firmware correto (usando baud rate manual se especificado no manual da sua FC).<\/li><li>Desligue a FC.<\/li><li>Remova o jump no BOOT.<\/li><li>Ligue a FC (o LED de atividade deve piscar).<\/li><li>Conecte normalmente.<\/li><\/ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "Se perdeu a comunicação: desligue, habilite a Sequência de Não Reinicialização e Apagar Total de Chip, faça jump dos pinos BOOT, depois ligue. Instale os drivers se necessário."
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Ler mais →"
+    },
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "Placa & Compilação"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Avançado"
+    },
+    "firmwareFlasherSubTabFlash": {
+        "message": "Flash"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Sair do Flasher de Firmware"
@@ -4925,13 +5164,36 @@
         "message": "A filtragem RPM é um banco de filtros de notch no gyro que utilizam os dados de telemetria RPM para eliminar o ruído dos motores com precisão cirúrgica.<br \/><br \/><b><span class=\"message-positive\">IMPORTANTE<\/span>: O ESC deve suportar o protocolo DShot Bidirecional e o valor de $t(configurationMotorPoles.message) na aba $t(tabMotorTesting.message) deve estar correto para que este filtro funcione.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
+    "pidTuningRpmHarmonics": {
+        "message": "Harmónicas",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "Quantidade de harmônicas por motor. Um valor de 3 (recomendado para a maioria das aeronaves) irá criar 3 filtros notch por motor, por eixo, em um total de 36 filtros notch. Um filtro na frequência base do motor, e duas harmónicas nos múltiplos dessa frequência base.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmMinHz": {
+        "message": "Frequência Min [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmMinHzHelp": {
         "message": "Frequência mínima utilizada pelo filtro RPM.",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Alcance de desvanecimento [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Fator Q (x100)",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Fator Q ajusta o quão estreito ou largo são os filtros de notch RPM. O valor armazenado é o fator Q × 100, o intervalo é permitido entre 250-3000 (Q 2.5 e Q 30.0), padrão 500 (Q 5.0 ). Valores maiores tornam cada notch mais estreito e mais preciso; valores mais baixos tornam-nos mais largos. Valores muito baixos aumentam significativamente o atraso do filtro."
+    },
+    "pidTuningRpmWeight": {
+        "message": "Peso {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Definições de Filtro dependentes do Perfil"
@@ -7375,10 +7637,121 @@
         "message": "Acelerómetro"
     },
     "configurationBaroHardware": {
-        "message": "Barómetro (se suportado)"
+        "message": "Barómetro"
     },
     "configurationMagHardware": {
-        "message": "Magnetómetro (se suportado)"
+        "message": "Magnetómetro"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Não foi possível determinar a localização. Conecte um módulo GPS ou permita o acesso de localização ao navegador."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Declinação magnética definida como {{declination}}° de local detectado."
+    },
+    "configurationMagInclination": {
+        "message": "Inclinação"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "O ângulo entre o campo magnético da Terra e o plano horizontal da sua localização. Valores positivos indicam que o campo aponta para baixo (hemisfério norte)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Força do Campo"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "A intensidade total do campo magnético da Terra no seu local em nanotesla (nT). Os valores típicos variam de 25,000 a 65,000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detetar"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Atualizar"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "A declinação magnética foi detectada automaticamente como ° {{value}} para a sua localização."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Declinação é {{saved}}° mas GPS deteta {{detected}}° para esta localização. Clique em Atualizar para corrigir."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} amostras"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Inclinar mais!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Falha na deteção — tente com inclinação mais variada."
+    },
+    "magCalibrationCancel": {
+        "message": "Cancelar"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Opções do modo de calibração"
+    },
+    "magCalibrationRetry": {
+        "message": "Voltar a tentar"
+    },
+    "magCalibrationWaiting": {
+        "message": "Esperando o movimento... Agite o veículo para começar."
+    },
+    "magCalibrationCollecting": {
+        "message": "Gire o veículo lentamente em todas as orientações."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibração completa."
+    },
+    "magCalibrationError": {
+        "message": "Falha na calibração. Tente novamente numa área com menos interferência magnética."
+    },
+    "magCalibrationNoMovement": {
+        "message": "Nenhum movimento detetado em 30 segundos. A Calibração foi cancelada."
+    },
+    "magCalibrationSamples": {
+        "message": "Amostras"
+    },
+    "magCalibrationQuality": {
+        "message": "Qualidade"
+    },
+    "magCalibrationResidual": {
+        "message": "Ajustar Residual"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Boa"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Razoável"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Fraca"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Offsets de Firmware"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Offsets da esfera"
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Calibração de firmware completa!"
+    },
+    "magVizPointCloud": {
+        "message": "Point Cloud"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Projeção Tripla"
+    },
+    "magVizPolar": {
+        "message": "Densidade Polar"
+    },
+    "magVizWaitingForData": {
+        "message": "À espera dos dados…"
+    },
+    "magAlignmentApply": {
+        "message": "Aplicar"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Detetar"
     },
     "configurationSmallAngle": {
         "message": "Ângulo máximo permitido para Armar [degrees]"
@@ -7570,6 +7943,10 @@
     "colorThemeContrast": {
         "message": "Alto Contraste",
         "description": "Contrast color theme"
+    },
+    "uiScale": {
+        "message": "Escala da UI",
+        "description": "Scale the entire user interface up or down"
     },
     "pidTuningRatesType": {
         "message": "Tipo de Rates"
@@ -7949,6 +8326,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "Outras Opções"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Remover {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Selecione o protocolo"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Selecionar opções"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Selecione o branch ou digite PR # \/ hash de commit"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Procurar por uma placa..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Protocolo de Rádio"

@@ -50,7 +50,16 @@
                             <template v-for="(channel, index) in activeChannels" :key="index">
                                 <div>
                                     <span class="font-semibold text-sm">{{ channel.name }}</span>
-                                    <span v-if="channel.assignment" v-html="channel.assignment" class="ml-1"></span>
+                                    <span v-if="channel.assignments?.length" class="ml-1 inline-flex flex-wrap gap-0.5">
+                                        <UBadge
+                                            v-for="(badge, i) in channel.assignments"
+                                            :key="i"
+                                            :label="badge.label"
+                                            color="neutral"
+                                            variant="subtle"
+                                            size="sm"
+                                        />
+                                    </span>
                                 </div>
                                 <USelect
                                     v-model="rxFailConfig[index].mode"
@@ -425,6 +434,10 @@ const loadConfig = async () => {
 
         await MSP.promise(MSPCodes.MSP_RXFAIL_CONFIG);
         await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await MSP.promise(MSPCodes.MSP_BOXIDS);
+        await MSP.promise(MSPCodes.MSP_RC);
+        await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
         await MSP.promise(MSPCodes.MSP_MODE_RANGES);
     } catch (e) {
         console.error("Failed to load Failsafe configuration", e);
@@ -542,14 +555,13 @@ const activeChannels = computed(() => {
 
     const auxAssignments = [];
     for (let i = 0; i < rc.value.active_channels - 4; i++) {
-        auxAssignments.push("");
+        auxAssignments.push([]);
     }
 
     if (rssiConfig.value && typeof rssiConfig.value.channel !== "undefined") {
         const index = rssiConfig.value.channel - 5;
         if (index >= 0 && index < auxAssignments.length) {
-            auxAssignments[index] +=
-                '<span class="bg-neutral-600 text-white text-xs font-semibold px-1 rounded border border-neutral-500 mr-0.5">RSSI</span>';
+            auxAssignments[index].push({ label: "RSSI" });
         }
     }
 
@@ -566,8 +578,7 @@ const activeChannels = computed(() => {
             const modeName = adjustBoxNameIfPeripheralWithModeID(modeId, auxConfig.value[modeIndex]);
 
             if (modeRange.auxChannelIndex < auxAssignments.length) {
-                auxAssignments[modeRange.auxChannelIndex] +=
-                    `<span class="bg-neutral-600 text-white text-xs font-semibold px-1 rounded border border-neutral-500 mr-0.5">${modeName}</span>`;
+                auxAssignments[modeRange.auxChannelIndex].push({ label: modeName });
             }
         }
     }
@@ -579,7 +590,7 @@ const activeChannels = computed(() => {
             const messageKey = `controlAxisAux${auxIndex++}`;
             channels.push({
                 name: t(messageKey),
-                assignment: auxAssignments[auxAssignmentIndex++] || "",
+                assignments: auxAssignments[auxAssignmentIndex++] || [],
             });
         }
     }

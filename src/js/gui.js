@@ -33,12 +33,11 @@ class GuiControl {
             "landing",
             "firmware_flasher",
             "preflight",
-            "options",
             "help",
             "user_profile",
             "backups",
             "flight_plan",
-            "log",
+            "autotune",
         ];
 
         this.defaultAllowedTabs = [
@@ -55,10 +54,10 @@ class GuiControl {
             "modes",
             "motors",
             "pid_tuning",
+            "autotune",
             "ports",
             "receiver",
             "sensors",
-            "log",
         ];
 
         this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "vtx", "flight_plan"];
@@ -415,7 +414,10 @@ class GuiControl {
         CONFIGURATOR.connectionValid = false;
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-            return setTimeout(emitToggle, 1500);
+            if (PortHandler.portPicker.autoConnect) {
+                return setTimeout(emitToggle, 1500);
+            }
+            return;
         }
 
         // Show reboot progress modal except for cli and presets tab

@@ -881,21 +881,21 @@ function drawRateCurves() {
     nextTick(() => updateRatesLabels());
 }
 
-// Balloon label configuration
+// Balloon label configuration — RGB axis palette (Roll=#e24761, Pitch=#49c747, Yaw=#477ac7)
 const BALLOON_COLORS = {
     roll: {
-        color: "rgba(255,128,128,0.4)",
-        border: "rgba(255,128,128,0.6)",
+        color: "rgba(226,71,97,0.4)",
+        border: "rgba(226,71,97,0.6)",
         text: "#000000",
     },
     pitch: {
-        color: "rgba(128,255,128,0.4)",
-        border: "rgba(128,255,128,0.6)",
+        color: "rgba(73,199,71,0.4)",
+        border: "rgba(73,199,71,0.6)",
         text: "#000000",
     },
     yaw: {
-        color: "rgba(128,128,255,0.4)",
-        border: "rgba(128,128,255,0.6)",
+        color: "rgba(71,122,199,0.4)",
+        border: "rgba(71,122,199,0.6)",
         text: "#000000",
     },
 };

@@ -1,0 +1,111 @@
+# Use Debian 13 (Trixie) as base — matches firmware devcontainer
+FROM docker.io/library/debian:13-slim
+
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update package lists and install base tools
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    locales \
+    git \
+    ca-certificates \
+    curl \
+    wget \
+    unzip \
+    bash \
+    bash-completion \
+    sudo \
+    usbutils \
+    nano \
+    btop \
+    build-essential \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Tauri system dependencies (webkit, soup, ssl, rsvg, udev for serial)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libwebkit2gtk-4.1-dev \
+    libjavascriptcoregtk-4.1-dev \
+    libsoup-3.0-dev \
+    librsvg2-dev \
+    libssl-dev \
+    libudev-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Generate en_US.UTF-8 locale
+RUN sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen
+
+# Set environment variables for locale
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8
+
+# Install Node.js 24.x via NodeSource
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install JDK 21 for Gradle/Android builds (must be before sdkmanager)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    openjdk-21-jdk-headless \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG TARGETARCH=amd64
+ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk-${TARGETARCH}"
+
+# Install Android command-line tools and SDK
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=${ANDROID_HOME}
+
+RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
+    cd ${ANDROID_HOME}/cmdline-tools && \
+    wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip && \
+    unzip -q tools.zip && \
+    mv cmdline-tools latest && \
+    rm tools.zip
+
+ENV PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${PATH}"
+
+# Accept licenses and install SDK components
+RUN yes | sdkmanager --licenses > /dev/null 2>&1 && \
+    sdkmanager --install \
+    "platform-tools" \
+    "platforms;android-35" \
+    "build-tools;35.0.0" \
+    "ndk;28.0.13004108"
+
+ENV NDK_HOME="${ANDROID_HOME}/ndk/28.0.13004108"
+
+# Create a non-root user
+ARG USERNAME=devpod
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN groupadd --gid $USER_GID $USERNAME && \
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME --shell /bin/bash && \
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Add user to hardware access groups for USB serial devices
+RUN usermod -aG dialout,plugdev $USERNAME
+
+# Give user ownership of Android SDK
+RUN chown -R $USERNAME:$USERNAME ${ANDROID_HOME}
+
+# Install Rust toolchain as the user (matches src-tauri/rust-toolchain.toml)
+USER $USERNAME
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.95 --profile minimal && \
+    /home/$USERNAME/.cargo/bin/rustup component add rustfmt clippy && \
+    /home/$USERNAME/.cargo/bin/rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+
+# Add cargo to PATH
+ENV PATH="/home/$USERNAME/.cargo/bin:${PATH}"
+
+# Set working directory
+WORKDIR /workspace
+
+# Default command
+CMD [ "bash" ]

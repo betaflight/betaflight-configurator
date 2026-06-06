@@ -1,8 +1,7 @@
 export const sidebarItems = [
     { key: "landing", mode: "disconnected", i18n: "tabLanding", icon: "i-lucide-home" },
-    { key: "help", mode: "disconnected", i18n: "tabHelp", icon: "i-lucide-help-circle" },
-    { key: "options", mode: "disconnected", i18n: "tabOptions", icon: "i-lucide-settings" },
     { key: "firmware_flasher", mode: "disconnected", i18n: "tabFirmwareFlasher", icon: "i-lucide-zap" },
+    { key: "help", mode: "disconnected", i18n: "tabHelp", icon: "i-lucide-help-circle" },
     { key: "preflight", mode: "disconnected", i18n: "tabPreflight", icon: "i-lucide-clipboard-check" },
     { key: "flight_plan", mode: "disconnected", i18n: "tabFlightPlan", icon: "i-lucide-route", expert: true },
 
@@ -39,13 +38,14 @@ export const sidebarItems = [
     },
     { key: "logging", mode: "connected", i18n: "tabLogging", icon: "i-lucide-file-text", expert: true },
     { key: "onboard_logging", mode: "connected", i18n: "tabOnboardLogging", icon: "i-lucide-database" },
+    { key: "autotune", mode: "shared", i18n: "tabAutotune", icon: "i-lucide-gauge", expert: true },
 
     { key: "cli", mode: "cli", i18n: "tabCLI", icon: "i-lucide-terminal" },
 
-    { key: "log", mode: "shared", i18n: "tabLog", icon: "i-lucide-file-text", expert: true },
+    { key: "log", mode: "shared", i18n: "tabLog", icon: "i-lucide-file-text", expert: true, hideInSidebar: true },
 
-    { key: "backups", mode: "loggedin", i18n: "tabBackups", icon: "i-lucide-database" },
-    { key: "user_profile", mode: "loggedin", i18n: "tabUserProfile", icon: "i-lucide-user" },
+    { key: "backups", mode: "loggedin", i18n: "tabBackups", icon: "i-lucide-database", hideInSidebar: true },
+    { key: "user_profile", mode: "loggedin", i18n: "tabUserProfile", icon: "i-lucide-user", hideInSidebar: true },
 ];
 
 export function isItemVisible(item, ctx) {

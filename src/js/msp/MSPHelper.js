@@ -356,6 +356,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_DATA.kinematics[1] = data.read16() / 10.0; // y
                     FC.SENSOR_DATA.kinematics[2] = data.read16(); // z
                     break;
+                case MSPCodes.MSP_ATTITUDE_QUATERNION:
+                    FC.SENSOR_DATA.quaternion = {
+                        w: data.read16() / 32767,
+                        x: data.read16() / 32767,
+                        y: data.read16() / 32767,
+                        z: data.read16() / 32767,
+                    };
+                    break;
                 case MSPCodes.MSP_ALTITUDE:
                     FC.SENSOR_DATA.altitude = parseFloat((data.read32() / 100.0).toFixed(2)); // correct scale factor
                     break;
@@ -1228,7 +1236,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.smartFeedforward = data.readU8();
                     FC.ADVANCED_TUNING.itermRelax = data.readU8();
                     FC.ADVANCED_TUNING.itermRelaxType = data.readU8();
-                    FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+                    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                        FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+                    } else {
+                        data.readU8();
+                    }
                     FC.ADVANCED_TUNING.throttleBoost = data.readU8();
                     FC.ADVANCED_TUNING.acroTrainerAngleLimit = data.readU8();
                     FC.ADVANCED_TUNING.feedforwardRoll = data.readU16();
@@ -2228,8 +2240,13 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.ADVANCED_TUNING.itermRotation)
                 .push8(FC.ADVANCED_TUNING.smartFeedforward)
                 .push8(FC.ADVANCED_TUNING.itermRelax)
-                .push8(FC.ADVANCED_TUNING.itermRelaxType)
-                .push8(FC.ADVANCED_TUNING.absoluteControlGain)
+                .push8(FC.ADVANCED_TUNING.itermRelaxType);
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                buffer.push8(FC.ADVANCED_TUNING.absoluteControlGain);
+            } else {
+                buffer.push8(0);
+            }
+            buffer
                 .push8(FC.ADVANCED_TUNING.throttleBoost)
                 .push8(FC.ADVANCED_TUNING.acroTrainerAngleLimit)
                 .push16(FC.ADVANCED_TUNING.feedforwardRoll)

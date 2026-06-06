@@ -296,9 +296,6 @@
     "tabLedStrip": {
         "message": "Faixa de LED"
     },
-    "tabRawSensorData": {
-        "message": "Sensores"
-    },
     "tabCLI": {
         "message": "Linha de comandos"
     },
@@ -660,12 +657,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerômetro"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Coloque a placa ou o frame em uma superfície <strong>nivelada<\/strong> e prossiga com a calibração, cuidado para não mover a plataforma durante o período de calibração"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrar Magnetômetro"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Mova a aeronave pelo menos <strong>360<\/strong> graus em todos os eixos de rotação, você tem 30 segundos para executar esta tarefa"
     },
@@ -701,7 +692,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
@@ -1200,23 +1191,8 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> O protocolo de SPI RX só funcionará se o hardware necessário estiver presente na placa ou ligado a um barramento SPI."
     },
-    "configurationBoardAlignmentRoll": {
-        "message": "Graus de Rotação (Roll)"
-    },
-    "configurationBoardAlignmentPitch": {
-        "message": "Graus de Inclinação (Pitch)"
-    },
-    "configurationBoardAlignmentYaw": {
-        "message": "Graus de Orientação (Yaw)"
-    },
-    "configurationSensorAlignmentGyro": {
-        "message": "Rotacionar Giroscópio"
-    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Aviso: Nenhum Gyro\/Accel encontrado"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primeiro"
@@ -1233,14 +1209,8 @@
     "configurationSensorAlignmentGyro2": {
         "message": "Segundo GYRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Rotacionar Acelerômetro"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Padrão"
-    },
-    "configurationAccelTrims": {
-        "message": "Ajustes do acelerômetro"
     },
     "configurationAccelTrimRoll": {
         "message": "Ajustes da rotação (roll) do Acelerômetro"
@@ -3019,9 +2989,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Detalhes da versão da nuvem:"
     },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": "Status:"
-    },
     "firmwareFlasherCloudBuildPending": {
         "message": "pendente"
     },
@@ -3183,9 +3150,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Mensagem:"
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recuperação \/ Comunicação perdida<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Sair do atualizador de Firmware"
@@ -6164,12 +6128,6 @@
     },
     "configurationAccHardware": {
         "message": "Acelerômetro"
-    },
-    "configurationBaroHardware": {
-        "message": "Barômetro (se suportado)"
-    },
-    "configurationMagHardware": {
-        "message": "Magnetômetro (se suportado)"
     },
     "configurationSmallAngle": {
         "message": "Angulo máximo permitido para Armar [graus]"

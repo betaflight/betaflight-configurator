@@ -325,6 +325,68 @@ class WebSerial extends EventTarget {
         }
     }
 
+    forceClose() {
+        // Best-effort teardown for page-unload (pagehide / beforeunload).
+        // Instance refs are nulled immediately so the rest of the class sees a
+        // disconnected state; the actual async teardown runs in a Promise chain
+        // that Chrome typically drains before destroying the JS context.
+        if (!this.port && !this.reader && !this.writer) {
+            return;
+        }
+
+        this.connected = false;
+        this.transmitting = false;
+        this.reading = false;
+
+        this.removeEventListener("receive", this.handleReceiveBytes);
+
+        const reader = this.reader;
+        const writer = this.writer;
+        const port = this.port;
+        this.reader = null;
+        this.writer = null;
+        this.port = null;
+
+        if (port) {
+            port.removeEventListener("disconnect", this.handleDisconnect);
+        }
+
+        // Mirrors the disconnect() sequence but without awaiting at call-site.
+        (async () => {
+            // 1. Cancel reader — resolves the pending read in streamAsyncIterable,
+            //    whose finally block will call releaseLock() on the readable side.
+            if (reader) {
+                try {
+                    await reader.cancel();
+                } catch (error) {
+                    console.debug(`${logHead} forceClose: reader.cancel() failed during unload`, error);
+                }
+            }
+
+            if (writer) {
+                try {
+                    writer.releaseLock();
+                } catch (error) {
+                    console.debug(`${logHead} forceClose: writer.releaseLock() failed during unload`, error);
+                }
+            }
+
+            // Close port — Chrome allows this after reader.cancel() even if the
+            // reader lock is still technically held (streamAsyncIterable cleans up).
+            if (port) {
+                try {
+                    await port.close();
+                } catch (error) {
+                    console.debug(`${logHead} forceClose: port.close() failed during unload`, error);
+                }
+            }
+        })();
+
+        this.closeRequested = false;
+        this.connectionInfo = null;
+        this.connectionId = false;
+    }
+
     checkIsNeedBatchWrite() {
         const isMac = GUI.operating_system === "MacOS";
         return isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";

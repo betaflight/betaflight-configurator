@@ -1,6 +1,5 @@
 import HelpTab from "../components/tabs/HelpTab.vue";
 import LandingTab from "../components/tabs/LandingTab.vue";
-import OptionsTab from "../components/tabs/OptionsTab.vue";
 import PortsTab from "../components/tabs/PortsTab.vue";
 import ServosTab from "../components/tabs/ServosTab.vue";
 import ConfigurationTab from "../components/tabs/ConfigurationTab.vue";
@@ -26,12 +25,11 @@ import PidTuningTab from "../components/tabs/PidTuningTab.vue";
 import PreflightTab from "../components/tabs/PreflightTab.vue";
 import VtxTab from "../components/tabs/VtxTab.vue";
 import PresetsTab from "../components/tabs/PresetsTab.vue";
-import LogTab from "../components/tabs/LogTab.vue";
+import AutotuneTab from "../components/tabs/AutotuneTab.vue";
 
 export const VueTabComponents = {
     help: HelpTab,
     landing: LandingTab,
-    options: OptionsTab,
     ports: PortsTab,
     servos: ServosTab,
     configuration: ConfigurationTab,
@@ -57,5 +55,5 @@ export const VueTabComponents = {
     preflight: PreflightTab,
     vtx: VtxTab,
     presets: PresetsTab,
-    log: LogTab,
+    autotune: AutotuneTab,
 };

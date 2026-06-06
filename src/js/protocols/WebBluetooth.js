@@ -71,9 +71,16 @@ class WebBluetooth extends EventTarget {
         this.bytesReceived += info.detail.byteLength;
     }
 
+    // Unsolicited disconnect (the device's gattserverdisconnected/disconnect event). Tear the
+    // connection down so serial_backend returns to the landing tab. The guard skips the
+    // re-entrant event our own gatt.disconnect() triggers. The device is intentionally NOT
+    // removed from the list — BLE links drop transiently (reboot/boot bounce) and the paired
+    // device can be reconnected by path, so removing it would only force needless re-discovery.
     handleDisconnect() {
+        if (this.closeRequested) {
+            return;
+        }
         this.disconnect();
-        this.closeRequested = true;
     }
 
     getConnectedPort() {
@@ -323,6 +330,9 @@ class WebBluetooth extends EventTarget {
         if (this.closeRequested) {
             return;
         }
+        // Mark closing now — before the gatt.disconnect() below — so the gattserverdisconnected
+        // event it triggers is recognized by handleDisconnect as our own teardown, not an unplug.
+        this.closeRequested = true;
 
         const doCleanup = async () => {
             this.removeEventListener("receive", this.handleReceiveBytes);
@@ -330,12 +340,17 @@ class WebBluetooth extends EventTarget {
             if (this.device) {
                 this.device.removeEventListener("disconnect", this.handleDisconnect.bind(this));
                 this.device.removeEventListener("gattserverdisconnected", this.handleDisconnect);
-                this.readCharacteristic.removeEventListener(
-                    "characteristicvaluechanged",
-                    this.handleNotification.bind(this),
-                );
 
-                if (this.device.gatt.connected) {
+                // readCharacteristic may already be false from a prior teardown — guard
+                // before calling, or false.removeEventListener throws and aborts cleanup.
+                if (this.readCharacteristic) {
+                    this.readCharacteristic.removeEventListener(
+                        "characteristicvaluechanged",
+                        this.handleNotification.bind(this),
+                    );
+                }
+
+                if (this.device.gatt?.connected) {
                     this.device.gatt.disconnect();
                 }
 

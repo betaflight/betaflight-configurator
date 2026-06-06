@@ -316,9 +316,9 @@
                                         <span
                                             class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
                                             :class="{
-                                                'bg-[#1fb1f0]': axis === 'x',
-                                                'bg-[#97d800]': axis === 'y',
-                                                'bg-[#e24761]': axis === 'z',
+                                                'bg-[#e24761]': axis === 'x',
+                                                'bg-[#49c747]': axis === 'y',
+                                                'bg-[#477ac7]': axis === 'z',
                                             }"
                                             >{{ rawDataDisplay[axis] }}</span
                                         >
@@ -326,7 +326,7 @@
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span
-                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#00d800]"
+                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623]"
                                             >{{ rawDataDisplay.rms }}</span
                                         >
                                     </div>

@@ -8,10 +8,10 @@
             icon="i-lucide-link-2-off"
             size="sm"
             :loading="connecting"
-            :title="$t('disconnect')"
+            :title="disconnectLabel"
             @click="onDisconnectClick"
         >
-            <span class="sidebar-connect__label">{{ $t("disconnect") }}</span>
+            <span class="sidebar-connect__label">{{ disconnectLabel }}</span>
         </UButton>
         <UFieldGroup v-else size="sm" orientation="horizontal" class="sidebar-connect__group w-full !flex">
             <UButton
@@ -93,6 +93,22 @@ export default defineComponent({
 
         const isConnected = computed(() => connectionStore.connectionValid);
         const connecting = computed(() => Boolean(connectionStore.connectingTo));
+        const isVirtualMode = computed(() => connectionStore.virtualMode);
+        const connectedTo = computed(() => connectionStore.connectedTo);
+
+        const disconnectLabel = computed(() => {
+            if (isVirtualMode.value) {
+                return i18n.getMessage("disconnectVirtual");
+            }
+            const path = connectedTo.value || "";
+            if (path.startsWith("bluetooth")) {
+                return i18n.getMessage("disconnectBluetooth");
+            }
+            if (/^(tcp|ws|wss):\/\//.test(path)) {
+                return i18n.getMessage("disconnectManual");
+            }
+            return i18n.getMessage("disconnect");
+        });
         const portPickerDisabled = computed(() => PortHandler.portPickerDisabled);
 
         const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
@@ -112,6 +128,9 @@ export default defineComponent({
         const mainLabel = computed(() => {
             if (connecting.value) {
                 return i18n.getMessage("connecting");
+            }
+            if (selectedPort.value === "virtual") {
+                return i18n.getMessage("connectVirtual");
             }
             return selectedDisplayName.value ?? i18n.getMessage("connect");
         });
@@ -188,13 +207,6 @@ export default defineComponent({
                     onSelect: () => PortHandler.requestDevicePermission("bluetooth"),
                 });
             }
-            if (PortHandler.showUsbOption) {
-                items.push({
-                    label: i18n.getMessage("portsSelectPermissionDFU"),
-                    icon: "i-lucide-cpu",
-                    onSelect: () => PortHandler.requestDevicePermission("usb"),
-                });
-            }
             return items;
         }
 
@@ -246,6 +258,7 @@ export default defineComponent({
             isConnected,
             connecting,
             portPickerDisabled,
+            disconnectLabel,
             mainLabel,
             menuItems,
             dialogOpen,

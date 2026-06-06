@@ -24,10 +24,11 @@
                         </div>
                     </div>
                     <UButton
-                        class="reset-zaxis sm-min"
+                        class="reset-zaxis"
                         :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
                         color="neutral"
                         variant="subtle"
+                        size="xs"
                         @click="resetZaxis"
                     />
                 </div>
@@ -804,10 +805,10 @@ function openBuildOptionsDialog() {
         background-color: var(--surface-200);
         border-radius: 1rem;
         border: 2px solid var(--surface-400);
-        .reset-zaxis {
+        :deep(.reset-zaxis) {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.75rem;
+            right: 0.75rem;
             z-index: 100;
         }
     }

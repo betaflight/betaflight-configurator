@@ -146,7 +146,7 @@
                             class="waypoint-label"
                             text-anchor="middle"
                         >
-                            WP{{ index + 1 }}
+                            WP{{ point.order + 1 }}
                         </text>
                     </g>
 
@@ -166,7 +166,7 @@
                             class="tooltip-text"
                             text-anchor="middle"
                         >
-                            WP{{ hoveredPoint.index + 1 }}
+                            WP{{ hoveredPoint.order + 1 }}
                         </text>
                         <text
                             :x="hoveredPoint.tooltipX"
@@ -200,8 +200,9 @@ import { ref, computed, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 
-const { sortedWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
-const waypoints = sortedWaypoints;
+const { positionalWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
+// Modifier waypoints (lat/lon = 0) would otherwise skew distance and altitude.
+const waypoints = positionalWaypoints;
 
 const chartSvg = ref(null);
 const hoveredPoint = ref(null);
@@ -310,6 +311,7 @@ const profilePoints = computed(() => {
 
         return {
             uid: wp.uid,
+            order: wp.order,
             altitude: wp.altitude,
             distance: cumulativeDistance,
             latitude: wp.latitude,

@@ -339,11 +339,68 @@
     "tabOptions": {
         "message": "Opcions"
     },
+    "sidebarOpenOptions": {
+        "message": "Opcions",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "Canvi mode fosc \/ clar",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Canvi Mode Expert",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "Configuració"
     },
     "tabSetupOSD": {
         "message": "Configuració de l'OSD"
+    },
+    "tabSensorConfig": {
+        "message": "Sensors"
+    },
+    "sensorConfigHardware": {
+        "message": "Hardware del sensor"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Giro $1"
+    },
+    "sensorConfigSaved": {
+        "message": "Configuració del sensor desada"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "No s'ha pogut desar la configuració del sensor"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "Magnetòmetre"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "Acceleròmetre"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Col·loqueu l'aparell sobre una superfície plana abans de calibrar-lo"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "L'acceleròmetre no s'ha calibrat. Si us plau, calibreu-lo abans de volar."
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Els òfsets de calibratge del magnetòmetre són zero. Si us plau, calibreu per obtenir un rumb precís."
+    },
+    "sensorConfigCalibrate": {
+        "message": "Calibrar"
+    },
+    "sensorConfig3dPreview": {
+        "message": "Previsualització d'actitud en 3D"
+    },
+    "sensorConfigLiveData": {
+        "message": "Dades de sensors en directe"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Mostra les dades del sensor en directe"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Atura les dades en directe"
     },
     "tabConfiguration": {
         "message": "Configuració"
@@ -353,6 +410,150 @@
     },
     "tabPidTuning": {
         "message": "Ajustament de PIDs"
+    },
+    "tabAutotune": {
+        "message": "Autotune"
+    },
+    "autotuneImportTitle": {
+        "message": "Anàlisi de piulades de caixa negra"
+    },
+    "autotuneImportButton": {
+        "message": "Importa el registre de la caixa negra"
+    },
+    "autotuneImportDescription": {
+        "message": "Importa un registre de caixa negra enregistrat amb debug_mode = piulada per analitzar la resposta de freqüència i calcular recomanacions de PID."
+    },
+    "autotuneSelectingFile": {
+        "message": "Seleccionant fitxer..."
+    },
+    "autotuneAnalyzing": {
+        "message": "Analitzant les dades de piulades..."
+    },
+    "autotuneBandwidth": {
+        "message": "Amplada de banda"
+    },
+    "autotunePhaseMargin": {
+        "message": "Marge de fase"
+    },
+    "autotuneResonantPeak": {
+        "message": "Pic ressonant"
+    },
+    "autotuneCoherence": {
+        "message": "Coherència"
+    },
+    "autotuneParameter": {
+        "message": "Paràmetre"
+    },
+    "autotuneCurrent": {
+        "message": "Actual"
+    },
+    "autotuneProposed": {
+        "message": "Proposat"
+    },
+    "autotuneChange": {
+        "message": "Canvia"
+    },
+    "autotuneApplying": {
+        "message": "S'està aplicant..."
+    },
+    "autotuneApplied": {
+        "message": "Guanys aplicats i desats."
+    },
+    "autotuneApplyFailed": {
+        "message": "No s'han pogut aplicar els guanys"
+    },
+    "autotuneConnectRequired": {
+        "message": "Connecta't al controlador de vol per aplicar guanys."
+    },
+    "autotuneNoLogs": {
+        "message": "No s'han trobat registres de caixa negra vàlids en aquest fitxer."
+    },
+    "autotuneNoChirpData": {
+        "message": "No s'han trobat dades de piulades. Assegureu-vos que el registre s'hagi enregistrat amb debug_mode = CHIRP i que el mode chirp s'hagi activat."
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} mostres"
+    },
+    "autotuneSampleRate": {
+        "message": "Freqüència de mostreig: {{rate}} Hz"
+    },
+    "autotuneImportAnother": {
+        "message": "Importa'n un altre"
+    },
+    "autotuneImportRetry": {
+        "message": "Torneu-ho a provar"
+    },
+    "autotuneFile": {
+        "message": "Fitxer"
+    },
+    "autotuneAxesDetected": {
+        "message": "Eixos detectats"
+    },
+    "autotuneApplyGains": {
+        "message": "Aplica els guanys"
+    },
+    "autotuneGainTitle": {
+        "message": "Recomanació de guany"
+    },
+    "autotuneAxisSelector": {
+        "message": "Selecciona l'eix"
+    },
+    "autotuneAxisRoll": {
+        "message": "Roll"
+    },
+    "autotuneAxisPitch": {
+        "message": "Pitch"
+    },
+    "autotuneAxisYaw": {
+        "message": "Yaw"
+    },
+    "autotuneBodePlotTitle": {
+        "message": "Resposta de freqüència"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "PID actuals (del registre)"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "Anàlisi"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "Controls lliscants proposats"
+    },
+    "autotuneSliderMasterMultiplier": {
+        "message": "Multiplicador mestre"
+    },
+    "autotuneSliderPIGain": {
+        "message": "Guany P \/ I"
+    },
+    "autotuneSliderIGain": {
+        "message": "Guany I"
+    },
+    "autotuneSliderDGain": {
+        "message": "Guany D"
+    },
+    "autotuneSliderFeedforward": {
+        "message": "Transició"
+    },
+    "autotuneSliderDTermFilter": {
+        "message": "Filtre D-Term"
+    },
+    "autotuneApplyFromAxis": {
+        "message": "Aplica guanys des de l'eix"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "Pic de sensibilitat"
+    },
+    "autotuneOvershoot": {
+        "message": "Excedit"
+    },
+    "autotuneRiseTime": {
+        "message": "Temps de pujada"
+    },
+    "autotuneSettlingTime": {
+        "message": "Temps d'assentament"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "Espectrograma (Giro)"
     },
     "tabReceiver": {
         "message": "Receptor"
@@ -386,9 +587,6 @@
     },
     "tabLedStrip": {
         "message": "Tira LED"
-    },
-    "tabRawSensorData": {
-        "message": "Sensors"
     },
     "tabCLI": {
         "message": "CLI"
@@ -841,12 +1039,6 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar acceleròmetre"
     },
-    "initialSetupCalibrateAccelText": {
-        "message": "Situa la teva controladora o frame a una superfície  <strong>anivellada<\/strong>, continua amb la caŀlibració, vigila que la superfície no es mogui durant el procés"
-    },
-    "initialSetupButtonCalibrateMag": {
-        "message": "Calibrar magnetòmetre"
-    },
     "initialSetupCalibrateMagText": {
         "message": "Mou el multirotor almenys <strong>360<\/strong> graus en tots els eixos de rotació, tens 30 segons per a fer aquests moviments"
     },
@@ -885,7 +1077,11 @@
     },
     "initialSetupHeading": {
         "message": "Eix de guinyada:",
-        "description": "Heading [yaw] attitude value shown on Setup tab"
+        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+    },
+    "initialSetupMagHeading": {
+        "message": "Capçalera magnètica:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
         "message": "Tipus de Mixer"
@@ -963,6 +1159,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "Càrrega de CPU:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Velocitat de bucle:"
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura CPU:"
@@ -1174,6 +1376,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Mostra el sentit, el Pitch i el Roll en els instruments",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "Placa:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Programari:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1450,12 +1658,6 @@
     "configurationActiveImu": {
         "message": "IMU actiu"
     },
-    "configurationSensors": {
-        "message": "Configuració del sensor"
-    },
-    "configurationSensorsHelp": {
-        "message": "Configura sensors addicionals i funcions avançades."
-    },
     "configurationMagAlignmentHelp": {
         "message": "L'alineació del magnetòmetre és l'orientació del sensor del magnetòmetre a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació diferent del magnetòmetre, és possible que hàgiu d'ajustar aquesta configuració."
     },
@@ -1493,37 +1695,13 @@
         "message": "Alineació de la placa"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "Graus de Roll"
+        "message": "Roll°"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "Graus de Pitch"
+        "message": "Pitch°"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Graus de Yaw"
-    },
-    "configurationGyroAlignment": {
-        "message": "Alineació del giroscopi"
-    },
-    "configurationGyroAlignmentHelp": {
-        "message": "L'alineació del giroscopi és l'orientació del sensor del giroscopi a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació de giroscopi diferent, és possible que hàgiu d'ajustar aquesta configuració."
-    },
-    "configurationGyroActiveIMU": {
-        "message": "IMU actiu"
-    },
-    "configurationGyroActiveIMUHelp": {
-        "message": "Seleccioneu quin giroscopi voleu utilitzar com a giroscopi principal. El giroscopi principal s'utilitza per a l'estabilització i el control. Si només teniu un giroscopi, es seleccionarà automàticament.<br><br>No sempre és possible habilitar diversos giroscopis quan són de diferents tipus o marques."
-    },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
+        "message": "Yaw°"
     },
     "configurationMagAlignment": {
         "message": "Alineació del magnetòmetre"
@@ -1567,14 +1745,8 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
-    "configurationSensorAlignmentGyro": {
-        "message": "Alineament GYRO"
-    },
     "configurationSensorGyroToUse": {
         "message": "GIRO\/ACCEL"
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": "Advertència: no s'ha trobat cap Giro\/Acc"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primer"
@@ -1585,29 +1757,17 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Tots dos"
     },
-    "configurationSensorAlignment": {
-        "message": "Alineació del sensor"
-    },
-    "configurationGyroRequiredWarning": {
-        "message": "Com a mínim un giroscopi ha de romandre activat. Si desactiveu tots els giroscopis, el controlador de vol no funcionarà correctament."
-    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primer GIRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Segon GIRO"
     },
-    "configurationSensorAlignmentAcc": {
-        "message": "Alineament ACCEL"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predeterminat"
     },
     "configurationSensorAlignmentCustom": {
         "message": "Personalitzat"
-    },
-    "configurationAccelTrims": {
-        "message": "Alineament Trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Trim Roll Acceleròmetre"
@@ -3211,8 +3371,41 @@
     "flightPlanTypeLand": {
         "message": "Aterra"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Enlairar-se"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Canvi altitud",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Retard",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Yaw rate endavant",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Durada del manteniment <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Durada del manteniment en minuts",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Durada del retard <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "Durada del retard en minuts",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Yaw Rate <span class=\"units\">°\/s<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Yaw Rate en graus per segon",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Patró de manteniment"
@@ -3285,6 +3478,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Longitud no vàlida (ha d'estar entre -180 i 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Altitud invàlida (o zero o positiva)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Durada invàlida (o zero o positiva)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "Yaw rate invàlida (o zero o positiva)"
     },
     "flightPlanConfirmDelete": {
         "message": "Està segur que vols esborrar aquest punt de pas?"
@@ -3882,7 +4084,10 @@
         "message": "Mostrar Log"
     },
     "firmwareFlasherCloudBuildStatus": {
-        "message": "Estat:"
+        "message": "Estat de la compilació:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Estat del flaix:"
     },
     "firmwareFlasherCloudBuildQueued": {
         "message": "en cua"
@@ -4031,8 +4236,21 @@
     "firmwareFlasherExitDfu": {
         "message": "Sortir mode DFUDebug"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "Trobar dispositiu DFU"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Actualizar Programari"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Opcions de flaix de programari"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Carrega opcions de programari"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Progrés del Flaix",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "Informació de Firmware a GitHub"
@@ -4055,11 +4273,29 @@
     "firmwareFlasherWarningText": {
         "message": "Si us plau, <span class=\"message-negative\">no<\/span> intenteu flashejar maquinari <strong>que no sigui Betaflight<\/strong> amb aquest flashejador de firmware.<br \/>No <strong>desconnecteu<\/strong> la placa ni <strong>apagueu<\/strong> l'ordinador mentre s'està flashejant.<br \/><br \/><strong>Nota:<\/strong><ul><li>el carregador d'arrencada STM32 s'emmagatzema a la ROM, no es pot bloquejar.<\/li><li><span class=\"message-negative\">La connexió automàtica<\/span> sempre està desactivada mentre esteu dins del flashejador de firmware.<\/li><li>Assegureu-vos de tenir una còpia de seguretat; Algunes actualitzacions\/versions anteriors esborraran la configuració.<\/li><li>Si teniu problemes per flashejar, <strong>proveu de desconnectar tots els cables del vostre FC<\/strong> primer, proveu de reiniciar i actualitzeu els controladors.<\/li><li>Quan flasheu plaques que tenen endolls USB connectats directament (la majoria de plaques més noves), assegureu-vos d'haver llegit la secció de Flasheig USB del manual de Betaflight i de tenir instal·lats el programari i els controladors correctes.<\/li><\/ul>"
     },
+    "firmwareFlasherWarningShort": {
+        "message": "No flashegeu programari que no sigui Betaflight. No desconnecteu durant el flasheig. El carregador d'arrencada STM32 és a la ROM i no es destrueix. Feu sempre una còpia de seguretat de la configuració abans d'actualitzar."
+    },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recuperació \/ Comunicació perduda<\/strong>"
+        "message": "Recuperació \/ Comunicació perduda"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Si heu perdut la comunicació amb la placa, seguiu aquests passos per restaurar-la:<ul><li>Apagueu l'alimentació<\/li><li>Activeu \"Sense seqüència de reinici\", activeu \"Esborrat complet del xip\".<\/li><li>Connecteu els pins BOOT o manteniu premut el botó BOOT.<\/li><li>Enceneu-lo (el LED d'activitat NO parpellejarà si es fa correctament).<\/li><li>Instal·leu tots els controladors STM32 i Zadig si cal (vegeu la secció <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash USB<\/a> del manual de Betaflight).<\/li><li>Tanqueu l'aplicació i reinicieu-la.<\/li><li>Deixeu anar el botó BOOT si el vostre FC en té un.<\/li><li>Flash amb el firmware correcte (utilitzant la velocitat de baud manual si s'especifica al manual del vostre FC).<\/li><li>Apagueu l'alimentació.<\/li><li>Traieu el jumper BOOT.<\/li><li>Enceneu-lo (el LED d'activitat hauria de flaix).<\/li><li>Connecta't normalment.<\/li><\/ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "Si heu perdut la comunicació: apagueu l'ordinador, activeu No Reboot Sequence i Full Chip Erase, connecteu els pins BOOT a un pont i, a continuació, engegueu-lo. Instal·leu els controladors si cal."
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Llegeix-ne més →"
+    },
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "Placa i compilació"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Avançat"
+    },
+    "firmwareFlasherSubTabFlash": {
+        "message": "Flaix"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Surt del flashejador de Firmware"
@@ -4957,8 +5193,11 @@
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmQ": {
-        "message": "Factor Q",
+        "message": "Factor Q (x100)",
         "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "El factor Q ajusta l'amplada o estret dels filtres de reixa RPM. El valor emmagatzemat és el factor Q × 100, el rang permès és de 250 a 3000 (Q 2,5 a Q 30,0), per defecte 500 (Q 5,0). Els valors més alts fan que cada reixa sigui més estreta i precisa; els valors més baixos les fan més amples. Els valors molt baixos augmenten significativament el retard del filtre."
     },
     "pidTuningRpmWeight": {
         "message": "Pes {{index}}",
@@ -5597,6 +5836,15 @@
     },
     "powerBatteryAmperage": {
         "message": "Amperatge"
+    },
+    "powerBatteryPowerDraw": {
+        "message": "Consum d'energia"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Caiguda de voltatge"
     },
     "powerBatteryCapacity": {
         "message": "Capacitat (mAh)"
@@ -7406,10 +7654,217 @@
         "message": "Acceleròmetre"
     },
     "configurationBaroHardware": {
-        "message": "Baròmetre (si existeix)"
+        "message": "Baròmetre"
     },
     "configurationMagHardware": {
-        "message": "Magnetòmetre (si és compatible)"
+        "message": "Magnetòmetre"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "No s'ha pogut determinar la ubicació. Connecteu un mòdul GPS o permeteu l'accés a la ubicació del navegador."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Declinació magnètica establerta a {{declination}}° des de la ubicació detectada."
+    },
+    "configurationMagInclination": {
+        "message": "Inclinació"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "L'angle entre el camp magnètic terrestre i el pla horitzontal a la teva ubicació. Els valors positius indiquen que el camp apunta cap avall (hemisferi nord)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Força del camp"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "La intensitat total del camp magnètic terrestre a la vostra ubicació en nanotesles (nT). Els valors típics oscil·len entre 25.000 i 65.000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detectar"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Actualitza"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Declinació magnètica detectada automàticament com a {{value}}° per a la vostra ubicació."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "La declinació és de {{saved}}° però el GPS detecta {{detected}}° per a aquesta ubicació. Feu clic a Actualitza per corregir-la."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} mostres"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Inclina-ho més!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "La detecció ha fallat - intenta-ho amb una inclinació més variada."
+    },
+    "magCalibrationGuidedFw": {
+        "message": "Calibratge del client (guiat)"
+    },
+    "magCalibrationGuidedFwDesc": {
+        "message": "Calibratge automàtic de 60 segons"
+    },
+    "magCalibrationGuidedFwTitle": {
+        "message": "Calibratge guiat"
+    },
+    "magCalibrationPrompt1": {
+        "message": "Pas 1\/6 — Mantingueu la posició plana, gireu 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Pas 2\/6 — Gir cap enrere, girar 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Pas 3\/6 — Morro recte cap amunt, yaw de 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Pas 4\/6 — Morro recte cap avall, yaw de 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Pas 5\/6 — Costat esquerre cap amunt, gir de 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Pas 6\/6 — Costat dret cap amunt, gir de 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Recopilació de dades completada: reviseu-la i deseu-la"
+    },
+    "magCalibrationCancel": {
+        "message": "Canceŀlar"
+    },
+    "magCalibrationClear": {
+        "message": "Esborrar"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Opcions del mode de calibratge"
+    },
+    "magCalibrationRetry": {
+        "message": "Reintenta"
+    },
+    "magCalibrationWaiting": {
+        "message": "Esperant moviment... Sacseja el vehicle per començar."
+    },
+    "magCalibrationCollecting": {
+        "message": "Gira l'aparell lentament en totes les orientacions."
+    },
+    "magCalibrationComplete": {
+        "message": "S'ha completat la calibració."
+    },
+    "magCalibrationError": {
+        "message": "El calibratge ha fallat. Torna-ho a provar en una zona amb menys interferències magnètiques."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No s'ha detectat cap moviment durant 30 segons. Calibratge cancel·lat."
+    },
+    "magCalibrationSamples": {
+        "message": "Mostres"
+    },
+    "magCalibrationQuality": {
+        "message": "Qualitat"
+    },
+    "magCalibrationResidual": {
+        "message": "Ajust residual"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Bé"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Insuficient"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Pobre"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Òfsets del programari"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Desplaçaments d'ajust d'esfera"
+    },
+    "magCalibrationUnguided": {
+        "message": "Calibració programari (Guiat)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Gira lliurement: el programari es desa automàticament després de 30 segons"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Calibratge del programari"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Tens 30 segons per girar el vehicle en totes direccions. El programari desarà automàticament els valors de calibratge quan s'acabi el temps."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Calibratge del programari completat!"
+    },
+    "magCalibrationGuided": {
+        "message": "Calibratge del client (lliure)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Gira lliurement: el configurador calcula els desplaçaments"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Calibratge client"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Gira el vehicle en totes direccions. Intenta crear una esfera completa de punts en un o dos minuts aproximadament. Desa el resultat quan els valors de calibratge s'hagin estabilitzat."
+    },
+    "magCalibrationCheck": {
+        "message": "Comprova"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Visualitza dades de mag en directe amb calibratge actual"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Comprovació del calibratge"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirmeu l'orientació i el calibratge del magnetòmetre. Col·loqueu la vostra nau plana respecte a l'horitzó, apunteu el morro cap a un punt conegut de la brúixola (es pot utilitzar un telèfon per esbrinar on és el nord) i confirmeu que apareixen punts nous a la ubicació esperada a la pantalla 3D. Els valors de la intensitat del camp per a cada eix i l'esfericitat dels punts indiquen la precisió del calibratge. Si els punts van a llocs completament equivocats, és probable que l'orientació del magnetòmetre sigui incorrecta."
+    },
+    "magCalibrationCalValues": {
+        "message": "Valors de Calibració"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Desa valors"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Valors de calibratge desats"
+    },
+    "magCalibrationSaveError": {
+        "message": "No s'han pogut desar els valors de calibratge"
+    },
+    "magCalibrationAccept": {
+        "message": "Desa el calibratge"
+    },
+    "magCalibrationDiscard": {
+        "message": "Descarta"
+    },
+    "magVizPointCloud": {
+        "message": "Núvol de punts"
+    },
+    "magVizHeatmap": {
+        "message": "Mapa de calor de vòxels"
+    },
+    "magVizProjection": {
+        "message": "Triple Projecció"
+    },
+    "magVizPolar": {
+        "message": "Densitat polar"
+    },
+    "magVizWaitingForData": {
+        "message": "Esperant dades…"
+    },
+    "magVizAxisField": {
+        "message": "Camp"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Vell"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Nou"
+    },
+    "magAlignmentApply": {
+        "message": "Aplicar"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Detectar"
     },
     "configurationSmallAngle": {
         "message": "Angle máxim d'armat [graus]"
@@ -7984,6 +8439,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "Altres opciones"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Elimina {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Selecciona un protocol"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Escollir opcions"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Seleccioneu la branca o introduïu el número de PR \/ el resum del commit"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Cerca una placa..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Protocol de ràdio"
