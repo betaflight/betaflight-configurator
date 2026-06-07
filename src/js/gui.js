@@ -38,6 +38,7 @@ class GuiControl {
             "backups",
             "flight_plan",
             "autotune",
+            "blackbox_viewer",
         ];
 
         this.defaultAllowedTabs = [
@@ -58,6 +59,7 @@ class GuiControl {
             "ports",
             "receiver",
             "sensors",
+            "blackbox_viewer",
         ];
 
         this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "vtx", "flight_plan"];

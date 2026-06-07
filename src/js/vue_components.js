@@ -56,5 +56,6 @@ export const BetaflightComponents = {
         app.component("PreflightTab", VueTabComponents.preflight);
         app.component("VtxTab", VueTabComponents.vtx);
         app.component("PresetsTab", VueTabComponents.presets);
+        app.component("BlackboxViewerTab", VueTabComponents.blackbox_viewer);
     },
 };

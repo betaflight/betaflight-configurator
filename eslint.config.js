@@ -6,6 +6,11 @@ import vueParser from "vue-eslint-parser";
 
 export default defineConfig([
     {
+        // Vendored blackbox-log-viewer source and assets — keep upstream formatting, not linted
+        // against configurator rules to avoid churn and drift on re-vendor.
+        ignores: ["src/blackbox-viewer/**", "src/js/webworkers/**", "src/js/three.min.js"],
+    },
+    {
         files: ["**/*.js", "**/*.vue"],
         languageOptions: {
             ecmaVersion: "latest",
