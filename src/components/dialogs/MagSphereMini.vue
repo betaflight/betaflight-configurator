@@ -133,7 +133,7 @@ function initScene() {
 
     // Heading group — rotates around world Y (matches main wizard convention)
     // rotation.y = 0 → nose at world +Z = screen top = North
-    const headingGroup = new THREE.Object3D();
+    headingGroup = new THREE.Object3D();
     scene.add(headingGroup);
 
     // Drone group (child of headingGroup) — pitch around X, roll around Z
@@ -262,38 +262,6 @@ function updateMagCylinders() {
         if (i === 0) { tip.position.set(val, 0, 0); }
         else if (i === 1) { tip.position.set(0, val, 0); }
         else { tip.position.set(0, 0, val); }
-        magCylinders.add(tip);
-    }
-        const len = Math.abs(val);
-        const geo = new THREE.CylinderGeometry(0.8, 0.8, len, 6);
-        const mat = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(colors[i][0], colors[i][1], colors[i][2]),
-            transparent: true,
-            opacity: 0.7,
-        });
-        const cyl = new THREE.Mesh(geo, mat);
-        // Position cylinder halfway along the axis
-        if (i === 0) {
-            cyl.position.set(val / 2, 0, 0);
-            cyl.rotation.z = Math.PI / 2;
-        } else if (i === 1) {
-            cyl.position.set(0, val / 2, 0);
-            cyl.rotation.x = Math.PI / 2;
-        } else {
-            cyl.position.set(0, 0, val / 2);
-        }
-        magCylinders.add(cyl);
-
-        // Small sphere at the tip
-        const tipGeo = new THREE.SphereGeometry(1.2, 6, 6);
-        const tip = new THREE.Mesh(tipGeo, mat);
-        if (i === 0) {
-            tip.position.set(val, 0, 0);
-        } else if (i === 1) {
-            tip.position.set(0, val, 0);
-        } else {
-            tip.position.set(0, 0, val);
-        }
         magCylinders.add(tip);
     }
 }
