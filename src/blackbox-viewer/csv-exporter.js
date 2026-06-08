@@ -20,8 +20,9 @@ export function CsvExporter(flightLog, opts = {}) {
 
     /**
      * @param {function} success is a callback triggered when export is done
+     * @param {function} [failure] is a callback triggered when the worker fails
      */
-    function dump(success) {
+    function dump(success, failure = () => {}) {
         const frames = flightLog
                 .getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime())
                 .map((chunk) => chunk.frames),
@@ -30,6 +31,14 @@ export function CsvExporter(flightLog, opts = {}) {
         worker.onmessage = (event) => {
             success(event.data);
             worker.terminate();
+        };
+        worker.onerror = (event) => {
+            worker.terminate();
+            failure(event);
+        };
+        worker.onmessageerror = (event) => {
+            worker.terminate();
+            failure(event);
         };
         worker.postMessage({
             sysConfig: flightLog.getSysConfig(),

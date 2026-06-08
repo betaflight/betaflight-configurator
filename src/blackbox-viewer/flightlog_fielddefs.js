@@ -567,6 +567,8 @@ export function adjustFieldDefsList(firmwareType, firmwareVersion) {
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
     } else {
+        ACC_HARDWARE = makeReadOnly(ACC_HARDWARE_COMPLETE.slice(0));
+        MAG_HARDWARE = makeReadOnly(MAG_HARDWARE_COMPLETE.slice(0));
         DEBUG_MODE = DEBUG_MODE_COMPLETE;
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);

@@ -338,5 +338,38 @@ export function FlightLogAnalyser(flightLog, canvas, analyserCanvas) {
         };
     } catch (e) {
         console.error(`Failed to create analyser... error: ${e}`);
+
+        // Initialisation failed: provide safe no-op stubs so callers that invoke
+        // these methods directly (e.g. grapher.js) don't crash with TypeError.
+        const noop = () => {};
+        this.resize = noop;
+        this.setFullscreen = noop;
+        this.plotSpectrum = noop;
+        this.destroy = noop;
+        this.refresh = noop;
+        this.draw = noop;
+        this.setSpectrumType = noop;
+        this.setOverdrawType = noop;
+        this.setZoomX = noop;
+        this.resetZoomX = noop;
+        this.setZoomY = noop;
+        this.resetZoomY = noop;
+        this.setMinPSD = noop;
+        this.resetMinPSD = noop;
+        this.setMaxPSD = noop;
+        this.resetMaxPSD = noop;
+        this.setLowLevelPSD = noop;
+        this.resetLowLevelPSD = noop;
+        this.setSegmentLength = noop;
+        this.resetSegmentLength = noop;
+        this.prepareSpectrumForComparison = noop;
+        this.setInTime = noop;
+        this.setOutTime = noop;
+        this.shouldAddCurrentSpectrumBeforeReload = () => false;
+        this.exportSpectrumToCSV = noop;
+        this.importSpectrumFromCSV = noop;
+        this.removeImportedSpectrums = noop;
+        this.getExportedFileName = () => "";
+        this.isMultiSpectrum = () => false;
     }
 }

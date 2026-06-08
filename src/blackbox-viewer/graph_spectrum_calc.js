@@ -589,12 +589,20 @@ GraphSpectrumCalc._getFlightSamplesFreqVsX = function (
 GraphSpectrumCalc._getFlightSamplesPidErrorVsSetpoint = function (axisIndex) {
     const allChunks = this._getFlightChunks();
 
+    // Size the buffers from the real number of logged frames; a _blackBoxRate
+    // estimate can undershoot the actual frame count for long logs, overflowing
+    // the buffers and truncating the data (same approach as _getFlightSamplesFreqVsX).
+    let frameCount = 0;
+    for (const chunk of allChunks) {
+        frameCount += chunk.frames.length;
+    }
+
     // Get the PID Error field
     const FIELD_PIDERROR_INDEX = this._flightLog.getMainFieldIndexByName(`axisError[${axisIndex}]`);
     const FIELD_SETPOINT_INDEX = this._flightLog.getMainFieldIndexByName(`setpoint[${axisIndex}]`);
 
-    const piderror = new Int16Array((MAX_ANALYSER_LENGTH / (1000 * 1000)) * this._blackBoxRate);
-    const setpoint = new Int16Array((MAX_ANALYSER_LENGTH / (1000 * 1000)) * this._blackBoxRate);
+    const piderror = new Int16Array(frameCount);
+    const setpoint = new Int16Array(frameCount);
 
     // Loop through all the samples in the chunks and assign them to a sample array.
     let samplesCount = 0;

@@ -1379,11 +1379,11 @@ export function FlightLog(logData) {
             for (; frameIndex < chunk.frames.length; frameIndex++) {
                 const fieldValue = chunk.frames[frameIndex][fieldIndex];
                 const frameTime = chunk.frames[frameIndex][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
-                minValue = Math.min(minValue, fieldValue);
-                maxValue = Math.max(maxValue, fieldValue);
                 if (frameTime > end_time) {
                     break findingLoop;
                 }
+                minValue = Math.min(minValue, fieldValue);
+                maxValue = Math.max(maxValue, fieldValue);
             }
             frameIndex = 0;
         }

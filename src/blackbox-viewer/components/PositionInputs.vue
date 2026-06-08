@@ -12,7 +12,7 @@
                 size="xs"
                 orientation="vertical"
                 :ui="{ root: 'w-14' }"
-                @update:model-value="$emit('update:top', `${$event}%`)"
+                @update:model-value="$emit('update:top', toPercent($event))"
             />
             <span class="text-xs text-dimmed">%</span>
         </div>
@@ -27,7 +27,7 @@
                 size="xs"
                 orientation="vertical"
                 :ui="{ root: 'w-14' }"
-                @update:model-value="$emit('update:left', `${$event}%`)"
+                @update:model-value="$emit('update:left', toPercent($event))"
             />
             <span class="text-xs text-dimmed">%</span>
         </div>
@@ -42,7 +42,7 @@
                 size="xs"
                 orientation="vertical"
                 :ui="{ root: 'w-14' }"
-                @update:model-value="$emit('update:size', `${$event}%`)"
+                @update:model-value="$emit('update:size', toPercent($event))"
             />
             <span class="text-xs text-dimmed">%</span>
         </div>
@@ -62,5 +62,13 @@ defineEmits(["update:top", "update:left", "update:size"]);
 
 function parseVal(v) {
     return Number.parseInt(v) || 0;
+}
+
+function toPercent(v) {
+    const n = Number(v);
+    if (!Number.isFinite(n)) {
+        return "0%";
+    }
+    return `${Math.min(100, Math.max(0, Math.round(n)))}%`;
 }
 </script>

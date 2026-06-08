@@ -60,25 +60,26 @@ export const DarkTheme = {
             this.apply();
         });
 
-        // Set up system preference monitoring for AUTO mode
+        // Set up system preference monitoring for AUTO mode. init() runs on every tab
+        // mount, so register the listener only once to avoid stacking handlers on remount.
         if (globalThis.matchMedia) {
             this.mediaQuery = globalThis.matchMedia("(prefers-color-scheme: dark)");
 
-            // Modern browsers
-            if (this.mediaQuery.addEventListener) {
-                this.mediaQuery.addEventListener("change", () => {
+            if (!this.mediaQueryHandler) {
+                this.mediaQueryHandler = () => {
                     if (this.currentMode === this.modes.AUTO) {
                         this.apply();
                     }
-                });
-            }
-            // Older browsers
-            else if (this.mediaQuery.addListener) {
-                this.mediaQuery.addListener(() => {
-                    if (this.currentMode === this.modes.AUTO) {
-                        this.apply();
-                    }
-                });
+                };
+
+                // Modern browsers
+                if (this.mediaQuery.addEventListener) {
+                    this.mediaQuery.addEventListener("change", this.mediaQueryHandler);
+                }
+                // Older browsers
+                else if (this.mediaQuery.addListener) {
+                    this.mediaQuery.addListener(this.mediaQueryHandler);
+                }
             }
         }
     },

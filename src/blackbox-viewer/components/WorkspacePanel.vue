@@ -20,10 +20,14 @@
 
             <template #ws-trailing="{ item }">
                 <UIcon v-if="item.wsActive" name="i-lucide-check" class="size-4 text-green-500" />
-                <UIcon
-                    name="i-lucide-save"
-                    class="size-4 opacity-40 hover:opacity-100 cursor-pointer"
+                <UButton
+                    variant="ghost"
+                    color="neutral"
+                    size="xs"
+                    icon="i-lucide-save"
+                    aria-label="Save current graph setup to this workspace"
                     title="Save current graph setup to this workspace"
+                    class="opacity-40 hover:opacity-100"
                     @click.stop.prevent="emit('save-workspace', item.wsId, item.wsTitle)"
                 />
             </template>

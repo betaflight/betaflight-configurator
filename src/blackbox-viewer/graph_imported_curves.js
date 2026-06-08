@@ -61,6 +61,7 @@ export function ImportedCurves(curvesChanged) {
                     const curve = {
                         name: file.name.split(".")[0],
                         points: curvesData,
+                        range: getCurveRange(curvesData),
                     };
                     _curvesData.push(curve);
                     curvesChanged();

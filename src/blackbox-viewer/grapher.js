@@ -91,10 +91,10 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
 
         if (this.onSeek) {
             //Reverse the seek direction so that it looks like you're dragging the data
-            this.onSeek(((lastMouseX - e.originalEvent.touches[0].pageX) / canvas.width) * windowWidthMicros);
+            this.onSeek(((lastMouseX - e.touches[0].pageX) / canvas.width) * windowWidthMicros);
         }
 
-        lastMouseX = e.originalEvent.touches[0].pageX;
+        lastMouseX = e.touches[0].pageX;
     };
 
     function onMouseDown(e) {
@@ -116,8 +116,8 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
     }
 
     function onTouchStart(e) {
-        if (e.which === 0) {
-            lastMouseX = e.originalEvent.touches[0].pageX;
+        if (e.touches && e.touches.length > 0) {
+            lastMouseX = e.touches[0].pageX;
 
             //"capture" so we can drag outside the boundaries of canvas
             document.addEventListener("touchmove", onTouchMove);
