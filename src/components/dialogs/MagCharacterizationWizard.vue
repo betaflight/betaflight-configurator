@@ -226,222 +226,62 @@
 /**
  * MagCharacterizationWizard — Full pose wizard with 3D visual aid.
  *
- * Poses: 4 cardinal directions × 5 poses = 20 total.
- * Each direction group: Flat, Nose Up (box under nose), Nose Down (box
- * under front), Box under left (Roll right), Box under right (Roll left).
+ * UI shell consuming useMagCharacterization.js composable.
+ * The composable owns all state, the dialog owns the template + 3D model.
  *
- * 3D VISUAL: Top-down Three.js camera (Y=80 looking at origin, screen-up=world+Z).
- * headingGroup rotates around world Y for cardinal direction (N/E/S/W).
- * droneModel rotates around local X (pitch) and Z (roll) for body pose.
- * Cardinal labels (N/E/S/W) are CSS overlays on the canvas.
- *
- * SENSOR READOUT: Passive sampling from fcStore (see implementation.md §9).
+ * 3D VISUAL: Top-down Three.js camera. headingGroup rotates for cardinal
+ * direction, droneModel for pitch/roll. N/E/S/W labels CSS-overlaid.
  */
-import { ref, computed, onScopeDispose, onMounted, nextTick } from "vue";
+import { ref, onScopeDispose, onMounted, nextTick } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useFlightControllerStore } from "../../stores/fc";
+import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
 
-const CAPTURE_DURATION_MS = 2000;
-const POLL_MS = 80;
-const STABILITY_THRESHOLD_DEG_S = 3;
-const STABILITY_FRAMES = 10;
-const CONFIRMED_DELAY_MS = 750;
 const DEG_TO_RAD = Math.PI / 180;
 
-const fcStore = useFlightControllerStore();
-const dialogRef = ref(null);
-const threeCanvas = ref(null);
+// ── Composable (all state + logic) ─────────────────────────────────────
+const mag = useMagCharacterization();
 
-// --- Pose definitions grouped by direction ---
-const directions = [
-    {
-        label: "North (nose to N line)",
-        alignHint: "Align drone nose with the N-S line, nose toward N.",
-        heading: 0, // radians — expected heading when drone faces this cardinal line
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the N line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the N line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the N line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
-    {
-        label: "East (nose to E line)",
-        alignHint: "Align drone nose with the E-W line, nose toward E.",
-        heading: -Math.PI / 2,
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the E line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the E line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the E line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
-    {
-        label: "South (nose to S line)",
-        alignHint: "Align drone nose with the N-S line, nose toward S.",
-        heading: Math.PI,
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the S line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the S line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the S line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
-    {
-        label: "West (nose to W line)",
-        alignHint: "Align drone nose with the E-W line, nose toward W.",
-        heading: Math.PI / 2,
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the W line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the W line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the W line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
-];
-
-// --- UI state ---
-const phase = ref("intro");
-const currentDirectionIndex = ref(0);
-const currentSubPoseIndex = ref(0);
-const isStable = ref(false);
-const lastRoll = ref(0);
-const lastPitch = ref(0);
-const lastMag = ref([0, 0, 0]);
-const lastFieldStrength = ref(0);
-const gyroRms = ref(0);
-const captureSamples = ref(0);
-const captureData = ref([]); // [dirIdx][poseIdx] = { headingRef, samples[] } | null | undefined
-
+// Template helper — checks whether a pose at (dirIdx, poseIdx) has been captured
 function isPoseDone(di, pi) {
     return captureData.value[di]?.[pi] !== undefined;
 }
 
-const solverResult = ref(null);
-const completedPoseCount = computed(() => {
-    let c = 0;
-    captureData.value.forEach((dc) => {
-        if (dc) {
-            dc.forEach((p) => {
-                if (p) {
-                    c++;
-                }
-            });
-        }
-    });
-    return c;
-});
+const {
+    directions,
+    phase,
+    currentDirectionIndex,
+    currentSubPoseIndex,
+    isStable,
+    lastRoll,
+    lastPitch,
+    lastMag,
+    lastFieldStrength,
+    gyroRms,
+    captureSamples,
+    captureData,
+    solverResult,
+    currentDirection,
+    currentPoseDef,
+    completedPoseCount,
+    startWizard,
+    cancelWizard: cancelWizardInner,
+    skipPose,
+    onKeyDown,
+    reset,
+    downloadSamplesJSON,
+} = mag;
 
-// --- Three.js state ---
+// ── Dialog refs ────────────────────────────────────────────────────────
+const dialogRef = ref(null);
+const threeCanvas = ref(null);
+let resizeObserver = null;
+
+// ── Three.js ───────────────────────────────────────────────────────────
 let renderer = null;
 let scene = null;
 let camera = null;
-let headingGroup = null; // yaw rotation for cardinal direction (around world Y)
+let headingGroup = null;
 let droneModel = null;
 let animFrameId = null;
 let targetRotX = 0;
@@ -462,24 +302,19 @@ function initThreeScene() {
     renderer.setClearColor(0x000000, 0);
 
     scene = new THREE.Scene();
-
-    // Top-down camera: looking straight down at the drone on the "paper"
     camera = new THREE.PerspectiveCamera(40, w / Math.max(h, 1), 1, 500);
     camera.position.set(0, 120, 0);
-    camera.up.set(0, 0, -1); // screen up = world +Z
+    camera.up.set(0, 0, -1);
     camera.lookAt(0, 0, 0);
 
-    // Lighting
     scene.add(new THREE.AmbientLight(0x808080));
     const d1 = new THREE.DirectionalLight(0xffffff, 1.0);
     d1.position.set(0.5, 1, 0.5);
     scene.add(d1);
 
-    // Heading group: rotates around world Y to point nose at N/E/S/W
     headingGroup = new THREE.Object3D();
     scene.add(headingGroup);
 
-    // Load model
     const loader = new GLTFLoader();
     loader.load(
         "./resources/models/quad_x.gltf",
@@ -496,11 +331,9 @@ function initThreeScene() {
 
     function animate() {
         animFrameId = requestAnimationFrame(animate);
-
         if (!renderer || !scene || !camera) {
             return;
         }
-
         if (droneModel) {
             const lf = 0.1;
             droneModel.rotation.x += (targetRotX * DEG_TO_RAD - droneModel.rotation.x) * lf;
@@ -510,7 +343,6 @@ function initThreeScene() {
             const lf = 0.08;
             headingGroup.rotation.y += (targetHeading - headingGroup.rotation.y) * lf;
         }
-
         if (renderer && scene && camera) {
             renderer.render(scene, camera);
         }
@@ -522,6 +354,14 @@ function updateModelTarget(dirHeading, poseRotX, poseRotZ) {
     targetHeading = dirHeading;
     targetRotX = poseRotX;
     targetRotZ = poseRotZ;
+}
+
+function refreshModelTarget() {
+    const dir = directions[currentDirectionIndex.value];
+    const pose = dir?.poses[currentSubPoseIndex.value];
+    if (dir && pose) {
+        updateModelTarget(dir.heading, pose.rotX, pose.rotZ);
+    }
 }
 
 function disposeThreeScene() {
@@ -539,315 +379,22 @@ function disposeThreeScene() {
     droneModel = null;
 }
 
-// --- Sensor polling ---
-let sampleTimer = null;
-let gyroWindow = [];
-let stableCount = 0;
-let spacebarHandler = null;
-
-function tick() {
-    if (phase.value !== "await") {
-        return;
-    }
-
-    const gx = fcStore.sensorData.gyroscope[0];
-    const gy = fcStore.sensorData.gyroscope[1];
-    const gz = fcStore.sensorData.gyroscope[2];
-    const roll = fcStore.sensorData.kinematics[0];
-    const pitch = fcStore.sensorData.kinematics[1];
-    const mx = fcStore.sensorData.magnetometer[0];
-    const my = fcStore.sensorData.magnetometer[1];
-    const mz = fcStore.sensorData.magnetometer[2];
-
-    lastRoll.value = roll;
-    lastPitch.value = pitch;
-    lastMag.value = [mx, my, mz];
-    lastFieldStrength.value = Math.round(Math.hypot(mx, my, mz));
-
-    const gyroMag = Math.hypot(gx, gy, gz);
-    gyroWindow.push(gyroMag);
-    if (gyroWindow.length > 6) {
-        gyroWindow.shift();
-    }
-    if (gyroWindow.length > 0) {
-        gyroRms.value = Math.sqrt(gyroWindow.reduce((s, v) => s + v * v, 0) / gyroWindow.length);
-    }
-
-    stableCount = gyroRms.value < STABILITY_THRESHOLD_DEG_S ? stableCount + 1 : 0;
-    isStable.value = stableCount >= STABILITY_FRAMES;
-
-    if (phase.value === "await") {
-        sampleTimer = setTimeout(tick, POLL_MS);
-    }
-}
-
-function onKeyDown(e) {
-    if (e.code === "Space" && phase.value === "await" && isStable.value) {
-        e.preventDefault();
-        startCapture();
-    }
-}
-
-// --- Phase transitions ---
-function startWizard() {
-    currentDirectionIndex.value = 0;
-    currentSubPoseIndex.value = 0;
-    captureData.value = directions.map(() => []);
-    solverResult.value = null;
-    gyroWindow = [];
-    stableCount = 0;
-    isStable.value = false;
-    phase.value = "await";
-
-    nextTick(() => {
+// ── Wire composable callbacks ──────────────────────────────────────────
+mag.setCallbacks({
+    onWizardStarted: () => {
         initThreeScene();
         refreshModelTarget();
-        tick();
-    });
-}
+    },
+    onPoseAdvanced: refreshModelTarget,
+    onSolverAboutToRun: disposeThreeScene,
+});
 
-function refreshModelTarget() {
-    const dir = directions[currentDirectionIndex.value];
-    const pose = dir?.poses[currentSubPoseIndex.value];
-    if (dir && pose) {
-        updateModelTarget(dir.heading, pose.rotX, pose.rotZ);
-    }
-}
-
-function startCapture() {
-    cleanup();
-    phase.value = "capturing";
-    captureSamples.value = 0;
-
-    const poseSamples = [];
-    const dirIdx = currentDirectionIndex.value;
-    const poseIdx = currentSubPoseIndex.value;
-    // headingRef is the expected heading (degrees) based on which cardinal line the nose faces
-    const headingRefDeg = directions[dirIdx].heading * (180 / Math.PI);
-    const captureStart = Date.now();
-
-    // Real capture: read fcStore on a timer for CAPTURE_DURATION_MS
-    function captureTick() {
-        if (phase.value !== "capturing") {
-            return;
-        }
-        const mx = fcStore.sensorData.magnetometer[0];
-        const my = fcStore.sensorData.magnetometer[1];
-        const mz = fcStore.sensorData.magnetometer[2];
-        const roll = fcStore.sensorData.kinematics[0];
-        const pitch = fcStore.sensorData.kinematics[1];
-        const gx = fcStore.sensorData.gyroscope[0];
-        const gy = fcStore.sensorData.gyroscope[1];
-        const gz = fcStore.sensorData.gyroscope[2];
-        const gyroMag = Math.hypot(gx, gy, gz);
-
-        const elapsed = (Date.now() - captureStart) / 1000;
-        poseSamples.push({
-            mag: [mx, my, mz],
-            roll,
-            pitch,
-            headingRef: headingRefDeg,
-            gyro: [gx, gy, gz],
-            gyroRms: gyroMag,
-            t: elapsed,
-        });
-        captureSamples.value = poseSamples.length;
-
-        if (elapsed * 1000 >= CAPTURE_DURATION_MS) {
-            // Stop the polling timer
-            if (sampleTimer !== null) {
-                clearTimeout(sampleTimer);
-                sampleTimer = null;
-            }
-            // Store captured data
-            if (!captureData.value[dirIdx]) {
-                captureData.value[dirIdx] = [];
-            }
-            captureData.value[dirIdx][poseIdx] = {
-                headingRef: headingRefDeg,
-                samples: poseSamples,
-            };
-            phase.value = "confirmed";
-            setTimeout(() => {
-                if (phase.value === "confirmed") {
-                    advancePose();
-                }
-            }, CONFIRMED_DELAY_MS);
-            return;
-        }
-        sampleTimer = setTimeout(captureTick, POLL_MS);
-    }
-    captureTick();
-}
-
-function skipPose() {
-    if (phase.value !== "await") {
-        return;
-    }
-    if (!captureData.value[currentDirectionIndex.value]) {
-        captureData.value[currentDirectionIndex.value] = [];
-    }
-    captureData.value[currentDirectionIndex.value][currentSubPoseIndex.value] = null;
-    advancePose();
-}
-
-function advancePose() {
-    const dir = directions[currentDirectionIndex.value];
-    if (currentSubPoseIndex.value + 1 < dir.poses.length) {
-        currentSubPoseIndex.value++;
-    } else {
-        currentSubPoseIndex.value = 0;
-        if (currentDirectionIndex.value + 1 < directions.length) {
-            currentDirectionIndex.value++;
-        } else {
-            runSolver();
-            return;
-        }
-    }
-    gyroWindow = [];
-    stableCount = 0;
-    isStable.value = false;
-    refreshModelTarget();
-    phase.value = "await";
-    tick();
-}
-
-function runSolver() {
-    disposeThreeScene();
-    phase.value = "complete";
-
-    const allSamples = [];
-    for (let di = 0; di < directions.length; di++) {
-        for (let pi = 0; pi < directions[di].poses.length; pi++) {
-            const cap = captureData.value[di]?.[pi];
-            if (cap && cap.samples) {
-                for (const s of cap.samples) {
-                    allSamples.push({
-                        mag: s.mag,
-                        roll: s.roll,
-                        pitch: s.pitch,
-                        headingRef: s.headingRef,
-                    });
-                }
-            }
-        }
-    }
-
-    if (allSamples.length < 30) {
-        solverResult.value = { error: "Not enough data — need at least 30 samples across all poses." };
-        return;
-    }
-
-    const currentAlign = fcStore.sensorAlignment.align_mag || 0;
-    const customAngles =
-        currentAlign === 9
-            ? {
-                roll: fcStore.sensorAlignment.mag_align_roll || 0,
-                pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
-                yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
-            }
-            : null;
-
-    const result = characterizeAlignment(allSamples, currentAlign, customAngles, {
-        headingMode: "absolute",
-        headingWeight: 1.0,
-    });
-
-    solverResult.value = result;
-    console.log("=== MAG CHARACTERIZATION RESULT ===", result);
-}
-
-function cancelWizard() {
-    cleanup();
-    disposeThreeScene();
-    phase.value = "intro";
-    currentDirectionIndex.value = 0;
-    currentSubPoseIndex.value = 0;
-    captureData.value = [];
-    solverResult.value = null;
-    close();
-}
-
-function cleanup() {
-    if (sampleTimer !== null) {
-        clearTimeout(sampleTimer);
-        sampleTimer = null;
-    }
-}
-
-function downloadSamplesJSON() {
-    const exportData = {
-        metadata: {
-            exportedAt: new Date().toISOString(),
-            configuratorVersion: "2026.6.0-alpha",
-            currentAlignment: fcStore.sensorAlignment.align_mag || 0,
-            customAngles:
-                fcStore.sensorAlignment.align_mag === 9
-                    ? {
-                        roll: fcStore.sensorAlignment.mag_align_roll || 0,
-                        pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
-                        yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
-                    }
-                    : null,
-            totalPoses: completedPoseCount.value,
-            totalSamples: captureData.value.reduce(
-                (s, d) => s + (d || []).reduce((ss, c) => ss + (c?.samples?.length || 0), 0),
-                0,
-            ),
-        },
-        directions: directions.map((dir, di) => ({
-            label: dir.label,
-            heading: dir.heading,
-            poses: dir.poses.map((pose, pi) => {
-                const cap = captureData.value[di]?.[pi];
-                return {
-                    label: pose.label,
-                    captured: !!cap,
-                    sampleCount: cap?.samples?.length || 0,
-                    samples: cap?.samples || [],
-                };
-            }),
-        })),
-        solverResult: solverResult.value,
-        // NOTE: to use this data in tests, copy the "directions" array to
-        // test/fixtures/mag_samples.json. Then import in your test and call
-        // characterizeAlignment(flattenedSamples, currentAlignment, customAngles).
-        // The flattenedSamples array should combine all pose samples with their
-        // headingRef values — see the runSolver() function below for the
-        // flattening pattern.
-    };
-
-    const json = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `mag-characterization-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-function onDialogClose() {
-    cleanup();
-    disposeThreeScene();
-    phase.value = "intro";
-    captureData.value = [];
-    solverResult.value = null;
-}
-
-// --- Dialog controls ---
-let resizeObserver = null;
+// ── Dialog controls ────────────────────────────────────────────────────
+let spacebarHandler = null;
 
 function show() {
-    phase.value = "intro";
-    currentDirectionIndex.value = 0;
-    currentSubPoseIndex.value = 0;
-    captureData.value = [];
-    solverResult.value = null;
+    reset();
     dialogRef.value?.showModal();
-
     nextTick(() => {
         if (threeCanvas.value?.parentElement && !resizeObserver) {
             resizeObserver = new ResizeObserver(() => {
@@ -864,6 +411,12 @@ function show() {
         }
     });
 }
+
+function cancelWizard() {
+    cancelWizardInner();
+    close();
+}
+
 function close() {
     if (resizeObserver) {
         resizeObserver.disconnect();
@@ -876,8 +429,9 @@ onMounted(() => {
     spacebarHandler = onKeyDown;
     window.addEventListener("keydown", spacebarHandler);
 });
+
 onScopeDispose(() => {
-    cleanup();
+    mag.cleanupTimer();
     disposeThreeScene();
     if (spacebarHandler) {
         window.removeEventListener("keydown", spacebarHandler);
