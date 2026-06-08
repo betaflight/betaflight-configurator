@@ -579,6 +579,25 @@ export function useMagCharacterization() {
             B_total * Math.sin(incRad), // Down
         ];
 
+        // Scale B_world to match raw ADC count scale (QMC5883L outputs int16, not nT)
+        let meanRawMag = 0;
+        let rawCount = 0;
+        for (let di = 0; di < directions.length; di++) {
+            for (let pi = 0; pi < directions[di].poses.length; pi++) {
+                const cap = captureData.value[di]?.[pi];
+                if (!cap || !cap.samples) {
+                    continue;
+                }
+                for (const s of cap.samples) {
+                    const actualBody = mat3mulVec(currentMatForCalibration, s.mag);
+                    meanRawMag += Math.hypot(actualBody[0], actualBody[1], actualBody[2]);
+                    rawCount++;
+                }
+            }
+        }
+        const scaleFactor = rawCount > 0 ? meanRawMag / rawCount / B_total : 1;
+        const B_world_scaled = [B_world[0] * scaleFactor, B_world[1] * scaleFactor, B_world[2] * scaleFactor];
+
         // Accumulate expected body mag vs actual body mag across all aligned samples
         let sumDx = 0;
         let sumDy = 0;
@@ -593,7 +612,7 @@ export function useMagCharacterization() {
                 }
                 for (const s of cap.samples) {
                     // Rotate B_world into body frame using known attitude
-                    const bodyExpected = rotateNedToBody(B_world, s.roll, s.pitch, cap.headingRef || 0);
+                    const bodyExpected = rotateNedToBody(B_world_scaled, s.roll, s.pitch, cap.headingRef || 0);
                     // Actual body mag = raw captured mag (already in body frame per current alignment, but we undo it)
                     // Actually, captured mag is POST current alignment. We need TRUE body mag.
                     // body_true = R_current * captured_mag (this IS what the FC sees as body mag)

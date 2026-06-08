@@ -99,7 +99,7 @@ function initScene() {
 
     // Camera: looking slightly down at the compass plane (Z-up like MagSphereView)
     camera = new THREE.PerspectiveCamera(35, w / Math.max(h, 1), 1, 1000);
-    camera.position.set(0, -60, 120);
+    camera.position.set(0, -80, 170);
     camera.lookAt(0, 0, 0);
 
     // Lights

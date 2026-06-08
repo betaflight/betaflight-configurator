@@ -101,16 +101,16 @@
                     </div>
                     <div class="mag-char-replay-views">
                         <div class="mag-char-replay-view">
-                            <span class="mag-char-replay-view-label">Drone Attitude</span>
-                            <div class="mag-char-replay-drone">
-                                <div class="mag-char-replay-drone-info">
-                                    <div>Roll: {{ currentReplayPose?.roll?.toFixed(1) || "—" }}&deg;</div>
-                                    <div>Pitch: {{ currentReplayPose?.pitch?.toFixed(1) || "—" }}&deg;</div>
-                                    <div>
-                                        Expected: {{ currentReplayPose?.expectedHeading?.toFixed(0) || "—" }}&deg;
-                                    </div>
-                                </div>
-                            </div>
+                            <span class="mag-char-replay-view-label">Your Pose</span>
+                            <MagSphereMini
+                                v-if="currentReplayPose"
+                                :mag="[0, 0, 0]"
+                                :roll="currentReplayPose.roll"
+                                :pitch="currentReplayPose.pitch"
+                                :heading="currentReplayPose.expectedHeading"
+                                :expected-heading="currentReplayPose.expectedHeading"
+                                :field-strength="0"
+                            />
                         </div>
                         <div class="mag-char-replay-view">
                             <span class="mag-char-replay-view-label">Mag NOW (current align)</span>
@@ -1117,27 +1117,6 @@ defineExpose({ show, close });
     letter-spacing: 0.5px;
     margin-bottom: 4px;
     text-align: center;
-}
-.mag-char-replay-drone {
-    flex: 1;
-    min-height: 180px;
-    background: #0d0d1a;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.mag-char-replay-drone-info {
-    text-align: center;
-    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
-    font-size: 14px;
-    color: #7eb8ff;
-    line-height: 1.8;
-}
-.mag-char-solver-error {
-    color: #ee4444;
-    font-size: 13px;
-    font-weight: 600;
 }
 .mag-char-complete-actions {
     margin-top: 14px;
