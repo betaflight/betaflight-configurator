@@ -248,11 +248,20 @@
             <!-- Footer -->
             <div class="mag-char-footer">
                 <template v-if="phase === 'intro'">
+                    <span class="mag-char-debug-link" @click="debugLoadJSON">Debug: Load JSON</span>
+                    <span class="mag-char-readout-spacer"></span>
                     <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="close">Cancel</button>
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="startWizard">
                         Begin Wizard
                     </button>
                 </template>
+                <input
+                    ref="debugFileInput"
+                    type="file"
+                    accept=".json"
+                    style="display: none"
+                    @change="onDebugFileSelected"
+                />
 
                 <div
                     v-if="phase === 'await' || phase === 'capturing' || phase === 'confirmed'"
@@ -451,6 +460,7 @@ watch(
 // ── Dialog refs ────────────────────────────────────────────────────────
 const dialogRef = ref(null);
 const threeCanvas = ref(null);
+const debugFileInput = ref(null);
 let resizeObserver = null;
 
 // ── Three.js ───────────────────────────────────────────────────────────
@@ -643,6 +653,41 @@ async function doApplyAndReboot() {
         console.error("Failed to apply alignment", e);
         alert(`Failed to apply: ${e.message || e}`);
     }
+}
+
+function debugLoadJSON() {
+    debugFileInput.value?.click();
+}
+
+function onDebugFileSelected(e) {
+    const file = e.target.files?.[0];
+    if (!file) {
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            // Populate captureData from the JSON fixture
+            mag.captureData.value = data.directions.map((dir) =>
+                dir.poses.map((pose) =>
+                    pose.samples?.length
+                        ? { headingRef: pose.samples[0]?.headingRef || 0, samples: pose.samples }
+                        : null,
+                ),
+            );
+            // Run solver directly
+            mag.runSolver();
+            // Dispose 3D model (replay phase doesn't use it)
+            disposeThreeScene();
+        } catch (err) {
+            console.error("Failed to load debug JSON", err);
+            alert("Invalid JSON file");
+        }
+    };
+    reader.readAsText(file);
+    // Reset input so same file can be re-selected
+    e.target.value = "";
 }
 
 onMounted(() => {
@@ -1105,6 +1150,16 @@ defineExpose({ show, close });
     color: #888;
     margin-top: 8px;
     font-style: italic;
+}
+.mag-char-debug-link {
+    font-size: 10px;
+    color: #ffaa44;
+    cursor: pointer;
+    text-decoration: underline;
+    opacity: 0.5;
+}
+.mag-char-debug-link:hover {
+    opacity: 1;
 }
 .mag-char-cal-note {
     font-size: 10px;
