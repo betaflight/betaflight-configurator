@@ -121,6 +121,9 @@
     "submit": {
         "message": "Отправить"
     },
+    "delete": {
+        "message": "Удалить"
+    },
     "autoConnectEnabled": {
         "message": "Автоматическое подключение: Включено - конфигуратор будет подключаться при обнаружении нового порта"
     },
@@ -5353,8 +5356,9 @@
         "message": "Значение RSSI",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Мгновенное (дискретное) значение RSSI (замигает, если значение будет ниже заданного порога тревоги)"
+    "osdTextElementRssiDbmValue": {
+        "message": "Значение dBm RSSI",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Таймер",
@@ -5944,9 +5948,6 @@
         "message": "Качество подключения",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Альтернативный индикатор основанный на потере кадров - использовать с осторожностью"
-    },
     "osdTextElementFlightDist": {
         "message": "Расстояние полёта",
         "description": "One of the elements of the OSD"
@@ -6009,13 +6010,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Название профиля OSD, установленное в переменных CLI \"osd_profile_1_name\", \"osd_profile_2_name\" и \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Значение dBm RSSI",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Значение RSSI сигнала в dBm (если доступно)"
     },
     "osdTextElementRcChannels": {
         "message": "Каналы RC",

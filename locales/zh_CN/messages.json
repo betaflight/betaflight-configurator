@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "断开连接"
     },
+    "disconnectVirtual": {
+        "message": "断开连接（虚拟）",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "断开连接（手动）",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "断开连接（蓝牙）",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "选择您的设备",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -109,6 +121,10 @@
     "connectVirtualDescription": {
         "message": "模拟一个没有硬件的飞控。",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "连接 (虚拟)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "输入要连接的串口或 URL。",
@@ -405,7 +421,7 @@
         "message": "导入黑匣子日志"
     },
     "autotuneImportDescription": {
-        "message": "导入一段带有 debug_mode = CHIRP 选项的黑匣子日志以分析频率响应并计算 PID 建议。"
+        "message": "导入一段带有 debug_mode = CHIRP 选项的黑匣子日志以分析频率响应并计算 PID 建议值。"
     },
     "autotuneSelectingFile": {
         "message": "正在选择文件……"
@@ -1794,7 +1810,7 @@
         "description": "One of the fields of the ESC\/Motor configuration"
     },
     "configurationMotorPolesHelp": {
-        "message": "磁极数是电机转子上的磁铁数量。不要计算绕组所在的定子数量。典型的 5 寸电机有 14 个磁铁；3 寸或更小的电机通常有12个磁铁。",
+        "message": "磁极数是电机转子上的磁铁数量。不要数绕组所在的定子数量。典型的 5 寸电机有 14 个磁铁；3 寸或更小的电机通常有12个磁铁。",
         "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
     },
     "configurationMotorIdleRpmHelp": {
@@ -6042,7 +6058,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "实时 RSSI 值 (信号强度低于设定值时会闪烁)"
+        "message": "瞬间的 RSSI 值（当低于报警阈值时会闪烁）。对于现代协议，请用 RSSI dBm 代替。"
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm 值",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "收到信号强度的指示器，这个值表示以 dBm 计的信号强度"
     },
     "osdTextElementTimer": {
         "message": "计时器",
@@ -6633,7 +6656,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "基于帧丢失情况的“连接质量”的替代图标-请谨慎使用"
+        "message": "基于成功收到未损坏数据包百分比的链接质量指示器"
     },
     "osdTextElementFlightDist": {
         "message": "飞行距离",
@@ -6697,13 +6720,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "在 CLI 中设置的 \"osd_profile_1_name\", \"osd_profile_2_name\" 和 \"osd_profile_3_name\" 所对应的 OSD 配置文件名称"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm 值",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "RSSI 信号的 dBm 值 （如果可用）"
     },
     "osdTextElementRcChannels": {
         "message": "RC 通道",
@@ -7650,8 +7666,41 @@
     "sensorConfigAlignDetectFailed": {
         "message": "检测失败 — 尝试向更多不同方向倾斜。"
     },
+    "magCalibrationGuidedFw": {
+        "message": "客户端校准（引导模式）"
+    },
+    "magCalibrationGuidedFwDesc": {
+        "message": "自动提示的 60 秒校准"
+    },
+    "magCalibrationGuidedFwTitle": {
+        "message": "引导模式下校准"
+    },
+    "magCalibrationPrompt1": {
+        "message": "第 1\/6 步——平放飞机，水平旋转 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "第 2\/6 步——倒置飞机，水平旋转 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "第 3\/6 步——机头向上，水平旋转 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "第 4\/6 步——机头向下，水平旋转 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "第 5\/6 步——左舷向上，水平旋转 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "第 6\/6 步——右舷向上，水平旋转 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "数据收集完成——检查并保存"
+    },
     "magCalibrationCancel": {
         "message": "取消"
+    },
+    "magCalibrationClear": {
+        "message": "清空"
     },
     "magCalibrationModeOptions": {
         "message": "校准模式选项"
@@ -7698,8 +7747,62 @@
     "magCalibrationSphereOffsets": {
         "message": "球体拟合偏移"
     },
+    "magCalibrationUnguided": {
+        "message": "固件校准（传统）"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "自由旋转—— 30s 后固件自动保存"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "固件校准"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "你有 30 秒可在所有方向旋转飞机。固件将在时间结束时自动保存校准值。"
+    },
     "magCalibrationUnguidedDone": {
         "message": "固件校准完成！"
+    },
+    "magCalibrationGuided": {
+        "message": "客户端校准（自由模式）"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "自由旋转——地面站会计算偏移量"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "客户端校准"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "向所有方向旋转你的飞机。目标是在大约一两分钟内使机头所指向的点扫过一个完整的球体。 当校准值稳定时保存结果。"
+    },
+    "magCalibrationCheck": {
+        "message": "检查"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "查看当前校准的实时磁力计数据"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "正在检查校准"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "确认磁力计的方向和校准值。 将你的飞机平行于地面放置， 并将机头指向指南针上的一个已知方向（可以用手机来确定哪个方向是北方）， 并确认新点会出现在 3D 显示的预期位置。 每个轴的磁场强度值和点图的圆度指示了校准的准确性。 如果点出现在完全错误的地方，则磁力计的方向可能是错误的。"
+    },
+    "magCalibrationCalValues": {
+        "message": "校准值"
+    },
+    "magCalibrationSaveValues": {
+        "message": "保存值"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "校准值已保存"
+    },
+    "magCalibrationSaveError": {
+        "message": "保存校准值失败"
+    },
+    "magCalibrationAccept": {
+        "message": "保存校准值"
+    },
+    "magCalibrationDiscard": {
+        "message": "丢弃"
     },
     "magVizPointCloud": {
         "message": "点云"
@@ -7715,6 +7818,15 @@
     },
     "magVizWaitingForData": {
         "message": "正在等待数据……"
+    },
+    "magVizAxisField": {
+        "message": "场"
+    },
+    "magVizAgeLegendOld": {
+        "message": "旧版"
+    },
+    "magVizAgeLegendNew": {
+        "message": "新版"
     },
     "magAlignmentApply": {
         "message": "应用"
