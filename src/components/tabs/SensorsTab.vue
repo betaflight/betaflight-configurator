@@ -250,6 +250,14 @@
                         :disabled="alignDetectPhase === 'collecting'"
                         @click="startAlignDetection"
                     />
+                    <UButton
+                        v-if="showMagAlign"
+                        size="xs"
+                        variant="outline"
+                        color="primary"
+                        label="Mag super calibration"
+                        @click="openMagCharacterization"
+                    />
                 </SettingRow>
 
                 <!-- Mag alignment custom angles -->
@@ -750,10 +758,12 @@ import WikiButton from "../elements/WikiButton.vue";
 import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
+import { useDialog } from "../../composables/useDialog";
 
 const fcStore = useFlightControllerStore();
 const navigationStore = useNavigationStore();
 const { reboot } = useReboot();
+const dialog = useDialog();
 
 const isSaving = ref(false);
 const isMounted = ref(true);
@@ -766,6 +776,7 @@ const IP_GEOLOCATION_TIMEOUT_MS = 10000;
 const ACC_CALIBRATION_TIMEOUT_MS = 2000;
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
+const IMU_POLL_MS = 80;
 const CONFIDENCE_HIGH = 5;
 const CONFIDENCE_MEDIUM = 2;
 const ALIGN_TILT_WARN_PERCENT = 30;
@@ -1049,6 +1060,10 @@ const alignDetectConfidenceLevel = computed(() => {
     }
     return "low";
 });
+
+function openMagCharacterization() {
+    dialog.open("MagCharacterizationWizard");
+}
 
 function startAlignDetection() {
     alignSamples = [];
@@ -1760,6 +1775,10 @@ function pollAttitude() {
     }
 }
 
+function pollRawImu() {
+    MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false);
+}
+
 function disposeModel() {
     if (modelInstance) {
         if (boundModelResize) {
@@ -1962,6 +1981,7 @@ const loadConfig = async () => {
         initModel();
         initInstruments();
         addInterval("sensors_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
+        addInterval("sensors_raw_imu", pollRawImu, IMU_POLL_MS, true);
 
         GUI.content_ready();
     } catch (e) {

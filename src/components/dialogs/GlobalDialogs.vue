@@ -23,6 +23,7 @@ import RatesTypeDialog from "./RatesTypeDialog.vue";
 import CopyProfileDialog from "./CopyProfileDialog.vue";
 import ReportProblemsDialog from "./ReportProblemsDialog.vue";
 import InteractiveDialog from "./InteractiveDialog.vue";
+import MagCharacterizationWizard from "./MagCharacterizationWizard.vue";
 
 const dialogStore = useDialogStore();
 const currentDialogRef = ref(null);
@@ -39,6 +40,7 @@ const dialogComponents = {
     CopyProfileDialog,
     ReportProblemsDialog,
     InteractiveDialog,
+    MagCharacterizationWizard,
 };
 
 watch(
