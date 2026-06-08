@@ -221,7 +221,28 @@
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="downloadSamplesJSON">
                         Save Samples as JSON
                     </button>
+                    <button
+                        type="button"
+                        class="mag-char-btn mag-char-btn-cancel"
+                        :disabled="isFetchingGeo"
+                        @click="refreshGeoReference"
+                    >
+                        {{ isFetchingGeo ? "Fetching GPS..." : "Refresh GPS" }}
+                    </button>
+                    <button
+                        v-if="solverResult && !solverResult.error"
+                        type="button"
+                        class="mag-char-btn mag-char-btn-primary"
+                        style="background: #eebb44; border-color: #eebb44"
+                        @click="doApplyAndReboot"
+                    >
+                        Apply Alignment &amp; Reboot
+                    </button>
                 </div>
+                <p v-if="!geoReference" class="mag-char-geo-hint">
+                    No GPS reference available. Click "Refresh GPS" for declination + calibration, or set declination
+                    manually in the Sensors tab after applying.
+                </p>
             </div>
 
             <!-- Footer -->
@@ -321,6 +342,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
 import MagSphereMini from "./MagSphereMini.vue";
+import MSP from "../../js/msp";
+import MSPCodes from "../../js/msp/MSPCodes";
 
 const DEG_TO_RAD = Math.PI / 180;
 
@@ -359,6 +382,9 @@ const {
     replayData,
     calibrationOffsets,
     geoReference,
+    isFetchingGeo,
+    refreshGeoReference,
+    applyAndReboot,
 } = mag;
 
 // ── Replay controls ───────────────────────────────────────────────────
@@ -573,6 +599,50 @@ function close() {
         resizeObserver = null;
     }
     dialogRef.value?.close();
+}
+
+async function doApplyAndReboot() {
+    if (!applyAndReboot()) {
+        return;
+    }
+
+    // Confirm reboot
+    if (
+        !confirm(
+            "Apply alignment and reboot the flight controller?\\n\\nThe FC will disconnect and you\\'ll need to reconnect.",
+        )
+    ) {
+        return;
+    }
+
+    try {
+        // Write MSP commands (same pattern as SensorsTab.saveConfig)
+        const mspHelper = MSP;
+        await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
+
+        // Write calibration if available
+        if (window.__magCharApplyCmd) {
+            // Calibration needs CLI — deferred for now
+            console.log("Apply calibration (requires CLI):", window.__magCharApplyCmd);
+        }
+
+        // Write declination if available
+        if (window.__magCharDeclination !== undefined) {
+            // Declination is set via MSP_COMPASS_CONFIG — deferred for now
+            console.log("Apply declination:", window.__magCharDeclination);
+        }
+
+        // Save and reboot
+        await new Promise((resolve) => {
+            mspHelper.writeConfiguration(false, () => {
+                close();
+                resolve();
+            });
+        });
+    } catch (e) {
+        console.error("Failed to apply alignment", e);
+        alert(`Failed to apply: ${e.message || e}`);
+    }
 }
 
 onMounted(() => {
@@ -1019,15 +1089,27 @@ defineExpose({ show, close });
     color: #7eb8ff;
     line-height: 1.8;
 }
+.mag-char-solver-error {
+    color: #ee4444;
+    font-size: 13px;
+    font-weight: 600;
+}
+.mag-char-complete-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.mag-char-geo-hint {
+    font-size: 11px;
+    color: #888;
+    margin-top: 8px;
+    font-style: italic;
+}
 .mag-char-cal-note {
     font-size: 10px;
     color: #888;
     display: block;
     margin-top: 2px;
-}
-.mag-char-solver-error {
-    color: #ee4444;
-    font-size: 13px;
-    font-weight: 600;
 }
 </style>

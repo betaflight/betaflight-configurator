@@ -203,6 +203,7 @@ export function useMagCharacterization() {
     const replayData = ref([]); // [{ dirLabel, poseLabel, expectedHeading, roll, pitch, currentHeading, currentMag, newHeading, newMag }]
     const calibrationOffsets = ref(null); // { x, y, z } or null if not available
     const geoReference = ref(null); // { declination, inclination, fieldStrength } or null
+    const isFetchingGeo = ref(false);
 
     // --- Computed ---
     const currentDirection = computed(() => directions[currentDirectionIndex.value] || null);
@@ -550,7 +551,7 @@ export function useMagCharacterization() {
         let geo = getGeoReference();
         if (!geo) {
             // Fall back: try to acquire coordinates from GPS or IP
-            acquireGeoReference().then((g) => {
+            fetchGeoReference().then((g) => {
                 if (g) {
                     computeFromGeo(g);
                 }
@@ -637,7 +638,7 @@ export function useMagCharacterization() {
         return mat3mulVec(R, B_ned);
     }
 
-    async function acquireGeoReference() {
+    async function fetchGeoReference() {
         try {
             // Try FC GPS first
             const gps = fcStore.gpsData;
@@ -718,8 +719,47 @@ export function useMagCharacterization() {
         URL.revokeObjectURL(url);
     }
 
-    function finishReplay() {
-        phase.value = "complete";
+    async function refreshGeoReference() {
+        isFetchingGeo.value = true;
+        try {
+            const geo = await fetchGeoReference();
+            if (geo) {
+                computeFromGeo(geo);
+            }
+        } finally {
+            isFetchingGeo.value = false;
+        }
+    }
+
+    function applyAndReboot() {
+        if (!solverResult.value || !solverResult.value.alignment) {
+            return false;
+        }
+
+        // Set alignment
+        fcStore.sensorAlignment.align_mag = solverResult.value.alignment;
+        if (solverResult.value.alignment === 9 && solverResult.value.customAngles) {
+            fcStore.sensorAlignment.mag_align_roll = solverResult.value.customAngles.roll;
+            fcStore.sensorAlignment.mag_align_pitch = solverResult.value.customAngles.pitch;
+            fcStore.sensorAlignment.mag_align_yaw = solverResult.value.customAngles.yaw;
+        }
+
+        // Set calibration offsets if computed
+        if (calibrationOffsets.value) {
+            // Write via CLI — requires isMspCliSupported
+            const cmd = `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${
+                calibrationOffsets.value.z
+            }`;
+            // Deferred to caller — CLI needs MSPHelper context
+            window.__magCharApplyCmd = cmd;
+        }
+
+        // Set declination if geo reference available
+        if (geoReference.value) {
+            window.__magCharDeclination = geoReference.value.declination;
+        }
+
+        return true;
     }
 
     return {
@@ -742,10 +782,7 @@ export function useMagCharacterization() {
         replayData,
         calibrationOffsets,
         geoReference,
-        // Computed
-        currentDirection,
-        currentPoseDef,
-        completedPoseCount,
+        isFetchingGeo,
         // Actions
         setCallbacks,
         startWizard,
@@ -759,5 +796,7 @@ export function useMagCharacterization() {
         reset,
         downloadSamplesJSON,
         finishReplay,
+        refreshGeoReference,
+        applyAndReboot,
     };
 }
