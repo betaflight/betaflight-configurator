@@ -197,6 +197,18 @@
                                     solverResult.yawAbsolute ? "Absolute (compass)" : "Relative (consistency only)"
                                 }}</span>
                             </div>
+                            <div v-if="calibrationOffsets" class="mag-char-solver-row">
+                                <span class="mag-char-stat-label" style="color: #eebb44">Suggested Calibration</span>
+                                <span class="mag-char-stat-value" style="color: #eebb44">
+                                    mag_calibration = {{ calibrationOffsets.x }}, {{ calibrationOffsets.y }},
+                                    {{ calibrationOffsets.z }}
+                                    <span v-if="geoReference" class="mag-char-cal-note">
+                                        (based on {{ geoReference.inclination.toFixed(0) }}&deg; incl,
+                                        {{ geoReference.declination.toFixed(0) }}&deg; decl,
+                                        {{ geoReference.fieldStrength }} nT)
+                                    </span>
+                                </span>
+                            </div>
                         </template>
                     </div>
 
@@ -345,6 +357,8 @@ const {
     downloadSamplesJSON,
     finishReplay,
     replayData,
+    calibrationOffsets,
+    geoReference,
 } = mag;
 
 // ── Replay controls ───────────────────────────────────────────────────
@@ -1004,5 +1018,16 @@ defineExpose({ show, close });
     font-size: 14px;
     color: #7eb8ff;
     line-height: 1.8;
+}
+.mag-char-cal-note {
+    font-size: 10px;
+    color: #888;
+    display: block;
+    margin-top: 2px;
+}
+.mag-char-solver-error {
+    color: #ee4444;
+    font-size: 13px;
+    font-weight: 600;
 }
 </style>

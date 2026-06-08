@@ -10,6 +10,7 @@
  */
 import { ref, computed } from "vue";
 import { characterizeAlignment } from "../js/utils/magCharacterization.js";
+import { computeDeclination, getGeoReference } from "./useMagCalibration.js";
 import {
     eulerToMatrix,
     mat3transpose,
@@ -200,6 +201,8 @@ export function useMagCharacterization() {
     const captureData = ref([]);
     const solverResult = ref(null);
     const replayData = ref([]); // [{ dirLabel, poseLabel, expectedHeading, roll, pitch, currentHeading, currentMag, newHeading, newMag }]
+    const calibrationOffsets = ref(null); // { x, y, z } or null if not available
+    const geoReference = ref(null); // { declination, inclination, fieldStrength } or null
 
     // --- Computed ---
     const currentDirection = computed(() => directions[currentDirectionIndex.value] || null);
@@ -225,6 +228,7 @@ export function useMagCharacterization() {
     let sampleTimer = null;
     let gyroWindow = [];
     let stableCount = 0;
+    let currentMatForCalibration = null;
 
     // --- Callbacks provided by the dialog (for 3D model updates) ---
     let onWizardStarted = null; // called after state is initialised — dialog hooks up 3D model
@@ -440,6 +444,11 @@ export function useMagCharacterization() {
 
         // Pre-compute replay data for all captured poses
         computeReplayData(result, currentAlign);
+
+        // Compute hard iron calibration offsets using geo reference
+        currentMatForCalibration = ALIGNMENT_MATRICES[currentAlign] || ALIGNMENT_MATRICES[1];
+        computeHardIronOffset();
+
         phase.value = "replay";
     }
 
@@ -533,32 +542,132 @@ export function useMagCharacterization() {
         replayData.value = data;
     }
 
-    function cancelWizard() {
-        cleanupTimer();
-        if (onSolverAboutToRun) {
-            onSolverAboutToRun();
-        } // dispose 3D
-        phase.value = "intro";
-        currentDirectionIndex.value = 0;
-        currentSubPoseIndex.value = 0;
-        captureData.value = [];
-        solverResult.value = null;
-    }
+    function computeHardIronOffset() {
+        calibrationOffsets.value = null;
+        geoReference.value = null;
 
-    function reset() {
-        cleanupTimer();
-        phase.value = "intro";
-        currentDirectionIndex.value = 0;
-        currentSubPoseIndex.value = 0;
-        captureData.value = [];
-        solverResult.value = null;
-    }
-
-    function cleanupTimer() {
-        if (sampleTimer !== null) {
-            clearTimeout(sampleTimer);
-            sampleTimer = null;
+        // Try cached geo reference (set by SensorsTab on connect)
+        let geo = getGeoReference();
+        if (!geo) {
+            // Fall back: try to acquire coordinates from GPS or IP
+            acquireGeoReference().then((g) => {
+                if (g) {
+                    computeFromGeo(g);
+                }
+            });
+            return;
         }
+        computeFromGeo(geo);
+    }
+
+    function computeFromGeo(geo) {
+        geoReference.value = geo;
+        const DEG_TO_RAD = Math.PI / 180;
+
+        // Build expected B_world vector in NED (North, East, Down)
+        const incRad = geo.inclination * DEG_TO_RAD;
+        const decRad = geo.declination * DEG_TO_RAD;
+        const B_total = geo.fieldStrength;
+        const B_h = B_total * Math.cos(incRad);
+        const B_world = [
+            B_h * Math.cos(decRad), // North
+            B_h * Math.sin(decRad), // East
+            B_total * Math.sin(incRad), // Down
+        ];
+
+        // Accumulate expected body mag vs actual body mag across all aligned samples
+        let sumDx = 0;
+        let sumDy = 0;
+        let sumDz = 0;
+        let n = 0;
+
+        for (let di = 0; di < directions.length; di++) {
+            for (let pi = 0; pi < directions[di].poses.length; pi++) {
+                const cap = captureData.value[di]?.[pi];
+                if (!cap || !cap.samples) {
+                    continue;
+                }
+                for (const s of cap.samples) {
+                    // Rotate B_world into body frame using known attitude
+                    const bodyExpected = rotateNedToBody(B_world, s.roll, s.pitch, cap.headingRef || 0);
+                    // Actual body mag = raw captured mag (already in body frame per current alignment, but we undo it)
+                    // Actually, captured mag is POST current alignment. We need TRUE body mag.
+                    // body_true = R_current * captured_mag (this IS what the FC sees as body mag)
+                    // The expected body should match body_true after hard iron is removed.
+                    // So: offset = body_true - body_expected
+                    const actualBody = mat3mulVec(currentMatForCalibration, s.mag);
+                    sumDx += actualBody[0] - bodyExpected[0];
+                    sumDy += actualBody[1] - bodyExpected[1];
+                    sumDz += actualBody[2] - bodyExpected[2];
+                    n++;
+                }
+            }
+        }
+
+        if (n < 30) {
+            return;
+        }
+
+        calibrationOffsets.value = {
+            x: Math.round(sumDx / n),
+            y: Math.round(sumDy / n),
+            z: Math.round(sumDz / n),
+        };
+    }
+
+    // Rotation matrix to convert NED world frame → body frame for a given attitude
+    function rotateNedToBody(B_ned, rollDeg, pitchDeg, headingDeg) {
+        const roll = (-rollDeg * Math.PI) / 180;
+        const pitch = (-pitchDeg * Math.PI) / 180;
+        const heading = (-headingDeg * Math.PI) / 180;
+
+        const cr = Math.cos(roll);
+        const sr = Math.sin(roll);
+        const cp = Math.cos(pitch);
+        const sp = Math.sin(pitch);
+        const cy = Math.cos(heading);
+        const sy = Math.sin(heading);
+
+        // R = Rz(yaw) * Ry(pitch) * Rx(roll) in ZYX order (standard aerospace)
+        const R = [
+            [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+            [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+            [-sp, cp * sr, cp * cr],
+        ];
+        return mat3mulVec(R, B_ned);
+    }
+
+    async function acquireGeoReference() {
+        try {
+            // Try FC GPS first
+            const gps = fcStore.gpsData;
+            if (gps && gps.fix && gps.latitude !== 0 && gps.longitude !== 0) {
+                const result = computeDeclination(gps.latitude / 10000000, gps.longitude / 10000000);
+                if (result) {
+                    return result;
+                }
+            }
+        } catch {
+            /* GPS not available */
+        }
+
+        // Fall back to IP geolocation
+        try {
+            const response = await fetch("https://api.ipify.org?format=json");
+            const ipData = await response.json();
+            const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+            const geoData = await geoResponse.json();
+            if (geoData.latitude && geoData.longitude) {
+                const result = computeDeclination(geoData.latitude, geoData.longitude);
+                if (result) {
+                    return result;
+                }
+            }
+        } catch {
+            /* IP lookup failed */
+        }
+
+        return null;
     }
 
     function downloadSamplesJSON() {
@@ -631,6 +740,8 @@ export function useMagCharacterization() {
         captureData,
         solverResult,
         replayData,
+        calibrationOffsets,
+        geoReference,
         // Computed
         currentDirection,
         currentPoseDef,
