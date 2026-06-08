@@ -81,15 +81,71 @@
             <div v-if="phase === 'complete'" class="mag-char-body">
                 <div class="mag-char-summary-card">
                     <h4>Wizard Complete</h4>
-                    <p>{{ completedPoseCount }} poses captured across {{ directions.length }} directions.</p>
-                    <div class="mag-char-stats">
-                        <template v-for="(dir, di) in directions" :key="di">
-                            <div v-for="(pose, pi) in dir.poses" :key="di + '-' + pi" class="mag-char-stat-group">
-                                <span class="mag-char-stat-label">{{ dir.label }} &mdash; {{ pose.label }}</span>
-                                <span class="mag-char-stat-value">{{ getCaptureSummary(di, pi) }}</span>
+
+                    <!-- Solver result -->
+                    <div v-if="solverResult" class="mag-char-solver-result">
+                        <div v-if="solverResult.error" class="mag-char-solver-error">
+                            {{ solverResult.error }}
+                        </div>
+                        <template v-else>
+                            <div class="mag-char-solver-row">
+                                <span class="mag-char-stat-label">Alignment</span>
+                                <span class="mag-char-stat-value" style="color: #4ec97e; font-weight: 700">
+                                    {{ solverResult.label }}
+                                    <template v-if="solverResult.customAngles">
+                                        ({{ solverResult.customAngles.roll.toFixed(0) }}°,
+                                        {{ solverResult.customAngles.pitch.toFixed(0) }}°,
+                                        {{ solverResult.customAngles.yaw.toFixed(0) }}°)
+                                    </template>
+                                </span>
+                            </div>
+                            <div class="mag-char-solver-row">
+                                <span class="mag-char-stat-label">Quality</span>
+                                <span class="mag-char-stat-value">{{ solverResult.qualityScore }}%</span>
+                            </div>
+                            <div class="mag-char-solver-row">
+                                <span class="mag-char-stat-label">Residuals</span>
+                                <span class="mag-char-stat-value">
+                                    Z: {{ (solverResult.residuals.zRms * 100).toFixed(1) }}% | XY:
+                                    {{ (solverResult.residuals.xyRms * 100).toFixed(1) }}%
+                                </span>
+                            </div>
+                            <div class="mag-char-solver-row">
+                                <span class="mag-char-stat-label">Field |B|</span>
+                                <span class="mag-char-stat-value">
+                                    {{ solverResult.fieldConsistency.mean }} nT
+                                    <span v-if="solverResult.fieldConsistency.suspect" style="color: #ee4444">
+                                        — suspicious (±{{ solverResult.fieldConsistency.maxDevPct }}%)</span
+                                    >
+                                    <span v-else style="color: #4ec97e">
+                                        — consistent (±{{ solverResult.fieldConsistency.maxDevPct }}%)</span
+                                    >
+                                </span>
+                            </div>
+                            <div v-if="solverResult.chiralityFlag" class="mag-char-solver-row">
+                                <span class="mag-char-stat-label" style="color: #ee4444">Chirality</span>
+                                <span class="mag-char-stat-value" style="color: #ee4444"
+                                    >Possible axis mirroring detected</span
+                                >
+                            </div>
+                            <div class="mag-char-solver-row">
+                                <span class="mag-char-stat-label">Yaw reference</span>
+                                <span class="mag-char-stat-value">{{
+                                    solverResult.yawAbsolute ? "Absolute (compass)" : "Relative (consistency only)"
+                                }}</span>
                             </div>
                         </template>
                     </div>
+
+                    <p style="margin-top: 12px">
+                        {{ completedPoseCount }} poses captured across {{ directions.length }} directions.
+                    </p>
+                </div>
+
+                <div class="mag-char-complete-actions">
+                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="downloadSamplesJSON">
+                        Save Samples as JSON
+                    </button>
                 </div>
             </div>
 
@@ -171,8 +227,8 @@
  * MagCharacterizationWizard — Full pose wizard with 3D visual aid.
  *
  * Poses: 4 cardinal directions × 5 poses = 20 total.
- * Each direction group: Flat, Nose Up (box under rear), Nose Down (box
- * under front), Left Side Rest, Right Side Rest.
+ * Each direction group: Flat, Nose Up (box under nose), Nose Down (box
+ * under front), Box under left (Roll right), Box under right (Roll left).
  *
  * 3D VISUAL: Top-down Three.js camera (Y=80 looking at origin, screen-up=world+Z).
  * headingGroup rotates around world Y for cardinal direction (N/E/S/W).
@@ -186,11 +242,11 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useFlightControllerStore } from "../../stores/fc";
 
-const CAPTURE_DURATION_MS = 3000;
+const CAPTURE_DURATION_MS = 2000;
 const POLL_MS = 80;
 const STABILITY_THRESHOLD_DEG_S = 3;
 const STABILITY_FRAMES = 10;
-const CONFIRMED_DELAY_MS = 1600;
+const CONFIRMED_DELAY_MS = 750;
 const DEG_TO_RAD = Math.PI / 180;
 
 const fcStore = useFlightControllerStore();
@@ -202,7 +258,7 @@ const directions = [
     {
         label: "North (nose to N line)",
         alignHint: "Align drone nose with the N-S line, nose toward N.",
-        heading: 0,
+        heading: 0, // radians — expected heading when drone faces this cardinal line
         poses: [
             {
                 label: "Flat",
@@ -211,35 +267,35 @@ const directions = [
                 rotZ: 0,
             },
             {
-                label: "Nose Up (box under rear)",
-                instruction: "Place box under REAR arms. Nose tilts UP. Keep nose on the N line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under front)",
-                instruction: "Place box under FRONT arms. Nose tilts DOWN. Keep nose on the N line.",
+                label: "Nose Up (box under nose)",
+                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the N line.",
                 rotX: 35,
                 rotZ: 0,
             },
             {
-                label: "Left Side Rest",
-                instruction: "Rest drone on its LEFT SIDE. Right arms in the air.",
-                rotX: 0,
-                rotZ: 25,
+                label: "Nose Down (box under tail)",
+                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the N line.",
+                rotX: -35,
+                rotZ: 0,
             },
             {
-                label: "Right Side Rest",
-                instruction: "Rest drone on its RIGHT SIDE. Left arms in the air.",
+                label: "Box under left (Roll right)",
+                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
                 rotX: 0,
                 rotZ: -25,
+            },
+            {
+                label: "Box under right (Roll left)",
+                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
+                rotX: 0,
+                rotZ: 25,
             },
         ],
     },
     {
         label: "East (nose to E line)",
         alignHint: "Align drone nose with the E-W line, nose toward E.",
-        heading: Math.PI / 2,
+        heading: -Math.PI / 2,
         poses: [
             {
                 label: "Flat",
@@ -248,28 +304,28 @@ const directions = [
                 rotZ: 0,
             },
             {
-                label: "Nose Up (box under rear)",
-                instruction: "Place box under REAR arms. Nose tilts UP. Keep nose on the E line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under front)",
-                instruction: "Place box under FRONT arms. Nose tilts DOWN. Keep nose on the E line.",
+                label: "Nose Up (box under nose)",
+                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the E line.",
                 rotX: 35,
                 rotZ: 0,
             },
             {
-                label: "Left Side Rest",
-                instruction: "Rest drone on its LEFT SIDE. Right arms in the air.",
-                rotX: 0,
-                rotZ: 25,
+                label: "Nose Down (box under tail)",
+                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the E line.",
+                rotX: -35,
+                rotZ: 0,
             },
             {
-                label: "Right Side Rest",
-                instruction: "Rest drone on its RIGHT SIDE. Left arms in the air.",
+                label: "Box under left (Roll right)",
+                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
                 rotX: 0,
                 rotZ: -25,
+            },
+            {
+                label: "Box under right (Roll left)",
+                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
+                rotX: 0,
+                rotZ: 25,
             },
         ],
     },
@@ -285,35 +341,35 @@ const directions = [
                 rotZ: 0,
             },
             {
-                label: "Nose Up (box under rear)",
-                instruction: "Place box under REAR arms. Nose tilts UP. Keep nose on the S line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under front)",
-                instruction: "Place box under FRONT arms. Nose tilts DOWN. Keep nose on the S line.",
+                label: "Nose Up (box under nose)",
+                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the S line.",
                 rotX: 35,
                 rotZ: 0,
             },
             {
-                label: "Left Side Rest",
-                instruction: "Rest drone on its LEFT SIDE. Right arms in the air.",
-                rotX: 0,
-                rotZ: 25,
+                label: "Nose Down (box under tail)",
+                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the S line.",
+                rotX: -35,
+                rotZ: 0,
             },
             {
-                label: "Right Side Rest",
-                instruction: "Rest drone on its RIGHT SIDE. Left arms in the air.",
+                label: "Box under left (Roll right)",
+                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
                 rotX: 0,
                 rotZ: -25,
+            },
+            {
+                label: "Box under right (Roll left)",
+                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
+                rotX: 0,
+                rotZ: 25,
             },
         ],
     },
     {
         label: "West (nose to W line)",
         alignHint: "Align drone nose with the E-W line, nose toward W.",
-        heading: -Math.PI / 2,
+        heading: Math.PI / 2,
         poses: [
             {
                 label: "Flat",
@@ -322,28 +378,28 @@ const directions = [
                 rotZ: 0,
             },
             {
-                label: "Nose Up (box under rear)",
-                instruction: "Place box under REAR arms. Nose tilts UP. Keep nose on the W line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under front)",
-                instruction: "Place box under FRONT arms. Nose tilts DOWN. Keep nose on the W line.",
+                label: "Nose Up (box under nose)",
+                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the W line.",
                 rotX: 35,
                 rotZ: 0,
             },
             {
-                label: "Left Side Rest",
-                instruction: "Rest drone on its LEFT SIDE. Right arms in the air.",
-                rotX: 0,
-                rotZ: 25,
+                label: "Nose Down (box under tail)",
+                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the W line.",
+                rotX: -35,
+                rotZ: 0,
             },
             {
-                label: "Right Side Rest",
-                instruction: "Rest drone on its RIGHT SIDE. Left arms in the air.",
+                label: "Box under left (Roll right)",
+                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
                 rotX: 0,
                 rotZ: -25,
+            },
+            {
+                label: "Box under right (Roll left)",
+                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
+                rotX: 0,
+                rotZ: 25,
             },
         ],
     },
@@ -360,16 +416,16 @@ const lastMag = ref([0, 0, 0]);
 const lastFieldStrength = ref(0);
 const gyroRms = ref(0);
 const captureSamples = ref(0);
-const poseCaptures = ref([]); // [dirIdx][subIdx] = { sampleCount, meanGyroRms } or null
+const captureData = ref([]); // [dirIdx][poseIdx] = { headingRef, samples[] } | null | undefined
 
-const currentDirection = computed(() => directions[currentDirectionIndex.value] || null);
-const currentPoseDef = computed(() => {
-    const dir = currentDirection.value;
-    return dir ? dir.poses[currentSubPoseIndex.value] : null;
-});
+function isPoseDone(di, pi) {
+    return captureData.value[di]?.[pi] !== undefined;
+}
+
+const solverResult = ref(null);
 const completedPoseCount = computed(() => {
     let c = 0;
-    poseCaptures.value.forEach((dc) => {
+    captureData.value.forEach((dc) => {
         if (dc) {
             dc.forEach((p) => {
                 if (p) {
@@ -380,21 +436,6 @@ const completedPoseCount = computed(() => {
     });
     return c;
 });
-
-function isPoseDone(di, pi) {
-    return poseCaptures.value[di]?.[pi] !== undefined;
-}
-
-function getCaptureSummary(di, pi) {
-    const c = poseCaptures.value[di]?.[pi];
-    if (c === undefined) {
-        return "—";
-    }
-    if (c === null) {
-        return "skipped";
-    }
-    return `${c.sampleCount} samples, ${c.meanGyroRms.toFixed(1)}°/s gyro RMS`;
-}
 
 // --- Three.js state ---
 let renderer = null;
@@ -456,6 +497,10 @@ function initThreeScene() {
     function animate() {
         animFrameId = requestAnimationFrame(animate);
 
+        if (!renderer || !scene || !camera) {
+            return;
+        }
+
         if (droneModel) {
             const lf = 0.1;
             droneModel.rotation.x += (targetRotX * DEG_TO_RAD - droneModel.rotation.x) * lf;
@@ -466,7 +511,9 @@ function initThreeScene() {
             headingGroup.rotation.y += (targetHeading - headingGroup.rotation.y) * lf;
         }
 
-        renderer.render(scene, camera);
+        if (renderer && scene && camera) {
+            renderer.render(scene, camera);
+        }
     }
     animate();
 }
@@ -545,7 +592,8 @@ function onKeyDown(e) {
 function startWizard() {
     currentDirectionIndex.value = 0;
     currentSubPoseIndex.value = 0;
-    poseCaptures.value = directions.map(() => []);
+    captureData.value = directions.map(() => []);
+    solverResult.value = null;
     gyroWindow = [];
     stableCount = 0;
     isStable.value = false;
@@ -570,34 +618,77 @@ function startCapture() {
     cleanup();
     phase.value = "capturing";
     captureSamples.value = 0;
+
+    const poseSamples = [];
+    const dirIdx = currentDirectionIndex.value;
+    const poseIdx = currentSubPoseIndex.value;
+    // headingRef is the expected heading (degrees) based on which cardinal line the nose faces
+    const headingRefDeg = directions[dirIdx].heading * (180 / Math.PI);
     const captureStart = Date.now();
-    const intv = setInterval(() => {
+
+    // Real capture: read fcStore on a timer for CAPTURE_DURATION_MS
+    function captureTick() {
         if (phase.value !== "capturing") {
-            clearInterval(intv);
             return;
         }
-        captureSamples.value = Math.round((Date.now() - captureStart) / POLL_MS);
-        if (Date.now() - captureStart >= CAPTURE_DURATION_MS) {
-            clearInterval(intv);
-            finishCapture();
+        const mx = fcStore.sensorData.magnetometer[0];
+        const my = fcStore.sensorData.magnetometer[1];
+        const mz = fcStore.sensorData.magnetometer[2];
+        const roll = fcStore.sensorData.kinematics[0];
+        const pitch = fcStore.sensorData.kinematics[1];
+        const gx = fcStore.sensorData.gyroscope[0];
+        const gy = fcStore.sensorData.gyroscope[1];
+        const gz = fcStore.sensorData.gyroscope[2];
+        const gyroMag = Math.hypot(gx, gy, gz);
+
+        const elapsed = (Date.now() - captureStart) / 1000;
+        poseSamples.push({
+            mag: [mx, my, mz],
+            roll,
+            pitch,
+            headingRef: headingRefDeg,
+            gyro: [gx, gy, gz],
+            gyroRms: gyroMag,
+            t: elapsed,
+        });
+        captureSamples.value = poseSamples.length;
+
+        if (elapsed * 1000 >= CAPTURE_DURATION_MS) {
+            // Stop the polling timer
+            if (sampleTimer !== null) {
+                clearTimeout(sampleTimer);
+                sampleTimer = null;
+            }
+            // Store captured data
+            if (!captureData.value[dirIdx]) {
+                captureData.value[dirIdx] = [];
+            }
+            captureData.value[dirIdx][poseIdx] = {
+                headingRef: headingRefDeg,
+                samples: poseSamples,
+            };
+            phase.value = "confirmed";
+            setTimeout(() => {
+                if (phase.value === "confirmed") {
+                    advancePose();
+                }
+            }, CONFIRMED_DELAY_MS);
+            return;
         }
-    }, POLL_MS);
+        sampleTimer = setTimeout(captureTick, POLL_MS);
+    }
+    captureTick();
 }
 
-function finishCapture() {
-    if (!poseCaptures.value[currentDirectionIndex.value]) {
-        poseCaptures.value[currentDirectionIndex.value] = [];
+function skipPose() {
+    if (phase.value !== "await") {
+        return;
     }
-    poseCaptures.value[currentDirectionIndex.value][currentSubPoseIndex.value] = {
-        sampleCount: captureSamples.value,
-        meanGyroRms: gyroRms.value,
-    };
-    phase.value = "confirmed";
-    setTimeout(() => {
-        if (phase.value === "confirmed") {
-            advancePose();
-        }
-    }, CONFIRMED_DELAY_MS);
+    if (!captureData.value[currentDirectionIndex.value]) {
+        captureData.value[currentDirectionIndex.value] = [];
+    }
+    captureData.value[currentDirectionIndex.value][currentSubPoseIndex.value] = null;
+    advancePose();
 }
 
 function advancePose() {
@@ -605,13 +696,11 @@ function advancePose() {
     if (currentSubPoseIndex.value + 1 < dir.poses.length) {
         currentSubPoseIndex.value++;
     } else {
-        // Next direction
         currentSubPoseIndex.value = 0;
         if (currentDirectionIndex.value + 1 < directions.length) {
             currentDirectionIndex.value++;
         } else {
-            disposeThreeScene();
-            phase.value = "complete";
+            runSolver();
             return;
         }
     }
@@ -623,15 +712,49 @@ function advancePose() {
     tick();
 }
 
-function skipPose() {
-    if (phase.value !== "await") {
+function runSolver() {
+    disposeThreeScene();
+    phase.value = "complete";
+
+    const allSamples = [];
+    for (let di = 0; di < directions.length; di++) {
+        for (let pi = 0; pi < directions[di].poses.length; pi++) {
+            const cap = captureData.value[di]?.[pi];
+            if (cap && cap.samples) {
+                for (const s of cap.samples) {
+                    allSamples.push({
+                        mag: s.mag,
+                        roll: s.roll,
+                        pitch: s.pitch,
+                        headingRef: s.headingRef,
+                    });
+                }
+            }
+        }
+    }
+
+    if (allSamples.length < 30) {
+        solverResult.value = { error: "Not enough data — need at least 30 samples across all poses." };
         return;
     }
-    if (!poseCaptures.value[currentDirectionIndex.value]) {
-        poseCaptures.value[currentDirectionIndex.value] = [];
-    }
-    poseCaptures.value[currentDirectionIndex.value][currentSubPoseIndex.value] = null;
-    advancePose();
+
+    const currentAlign = fcStore.sensorAlignment.align_mag || 0;
+    const customAngles =
+        currentAlign === 9
+            ? {
+                roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+            }
+            : null;
+
+    const result = characterizeAlignment(allSamples, currentAlign, customAngles, {
+        headingMode: "absolute",
+        headingWeight: 1.0,
+    });
+
+    solverResult.value = result;
+    console.log("=== MAG CHARACTERIZATION RESULT ===", result);
 }
 
 function cancelWizard() {
@@ -640,7 +763,8 @@ function cancelWizard() {
     phase.value = "intro";
     currentDirectionIndex.value = 0;
     currentSubPoseIndex.value = 0;
-    poseCaptures.value = [];
+    captureData.value = [];
+    solverResult.value = null;
     close();
 }
 
@@ -651,10 +775,66 @@ function cleanup() {
     }
 }
 
+function downloadSamplesJSON() {
+    const exportData = {
+        metadata: {
+            exportedAt: new Date().toISOString(),
+            configuratorVersion: "2026.6.0-alpha",
+            currentAlignment: fcStore.sensorAlignment.align_mag || 0,
+            customAngles:
+                fcStore.sensorAlignment.align_mag === 9
+                    ? {
+                        roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                        pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                        yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+                    }
+                    : null,
+            totalPoses: completedPoseCount.value,
+            totalSamples: captureData.value.reduce(
+                (s, d) => s + (d || []).reduce((ss, c) => ss + (c?.samples?.length || 0), 0),
+                0,
+            ),
+        },
+        directions: directions.map((dir, di) => ({
+            label: dir.label,
+            heading: dir.heading,
+            poses: dir.poses.map((pose, pi) => {
+                const cap = captureData.value[di]?.[pi];
+                return {
+                    label: pose.label,
+                    captured: !!cap,
+                    sampleCount: cap?.samples?.length || 0,
+                    samples: cap?.samples || [],
+                };
+            }),
+        })),
+        solverResult: solverResult.value,
+        // NOTE: to use this data in tests, copy the "directions" array to
+        // test/fixtures/mag_samples.json. Then import in your test and call
+        // characterizeAlignment(flattenedSamples, currentAlignment, customAngles).
+        // The flattenedSamples array should combine all pose samples with their
+        // headingRef values — see the runSolver() function below for the
+        // flattening pattern.
+    };
+
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `mag-characterization-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 function onDialogClose() {
     cleanup();
     disposeThreeScene();
     phase.value = "intro";
+    captureData.value = [];
+    solverResult.value = null;
 }
 
 // --- Dialog controls ---
@@ -664,7 +844,8 @@ function show() {
     phase.value = "intro";
     currentDirectionIndex.value = 0;
     currentSubPoseIndex.value = 0;
-    poseCaptures.value = [];
+    captureData.value = [];
+    solverResult.value = null;
     dialogRef.value?.showModal();
 
     nextTick(() => {
@@ -1066,5 +1247,29 @@ defineExpose({ show, close });
 }
 .mag-char-btn-primary:hover {
     background: #5a7cff;
+}
+
+/* Solver result rows */
+.mag-char-solver-result {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.mag-char-solver-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+.mag-char-solver-error {
+    color: #ee4444;
+    font-size: 13px;
+    font-weight: 600;
+}
+.mag-char-complete-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
 }
 </style>
