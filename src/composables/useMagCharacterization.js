@@ -10,6 +10,14 @@
  */
 import { ref, computed } from "vue";
 import { characterizeAlignment } from "../js/utils/magCharacterization.js";
+import {
+    eulerToMatrix,
+    mat3transpose,
+    mat3mul,
+    mat3mulVec,
+    undoRollPitch,
+    ALIGNMENT_MATRICES,
+} from "../js/utils/magAlignment.js";
 import { useFlightControllerStore } from "../stores/fc";
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -191,6 +199,7 @@ export function useMagCharacterization() {
     const captureSamples = ref(0);
     const captureData = ref([]);
     const solverResult = ref(null);
+    const replayData = ref([]); // [{ dirLabel, poseLabel, expectedHeading, roll, pitch, currentHeading, currentMag, newHeading, newMag }]
 
     // --- Computed ---
     const currentDirection = computed(() => directions[currentDirectionIndex.value] || null);
@@ -428,6 +437,100 @@ export function useMagCharacterization() {
         });
         solverResult.value = result;
         console.log("=== MAG CHARACTERIZATION RESULT ===", result);
+
+        // Pre-compute replay data for all captured poses
+        computeReplayData(result, currentAlign);
+        phase.value = "replay";
+    }
+
+    function computeReplayData(result, currentAlignment) {
+        const DEG_TO_RAD = Math.PI / 180;
+        const RAD_TO_DEG = 180 / Math.PI;
+
+        // Build current alignment matrix
+        const currentMat = ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
+        const currentInv = mat3transpose(currentMat);
+
+        // Build proposed alignment matrix
+        let proposedMat;
+        if (result.alignment === 9 && result.customAngles) {
+            proposedMat = eulerToMatrix(result.customAngles.roll, result.customAngles.pitch, result.customAngles.yaw);
+        } else {
+            proposedMat = ALIGNMENT_MATRICES[result.alignment] || ALIGNMENT_MATRICES[1];
+        }
+
+        const data = [];
+
+        for (let di = 0; di < directions.length; di++) {
+            for (let pi = 0; pi < directions[di].poses.length; pi++) {
+                const cap = captureData.value[di]?.[pi];
+                if (!cap || !cap.samples || cap.samples.length === 0) {
+                    continue;
+                }
+
+                // Aggregate all samples for this pose
+                let sumRoll = 0;
+                let sumPitch = 0;
+                const curMags = [0, 0, 0];
+                const newMags = [0, 0, 0];
+                let curSin = 0;
+                let curCos = 0;
+                let newSin = 0;
+                let newCos = 0;
+                let n = 0;
+
+                for (const s of cap.samples) {
+                    sumRoll += s.roll;
+                    sumPitch += s.pitch;
+                    const rollRad = s.roll * DEG_TO_RAD;
+                    const pitchRad = s.pitch * DEG_TO_RAD;
+
+                    // Current alignment heading
+                    const curCombined = mat3mul(currentMat, currentInv); // = I
+                    const curBody = mat3mulVec(curCombined, s.mag);
+                    const curLevel = undoRollPitch(curBody, rollRad, pitchRad);
+                    const curDir = Math.atan2(curLevel[1], curLevel[0]);
+                    curSin += Math.sin(curDir);
+                    curCos += Math.cos(curDir);
+                    curMags[0] += curBody[0];
+                    curMags[1] += curBody[1];
+                    curMags[2] += curBody[2];
+
+                    // Proposed alignment heading
+                    const newCombined = mat3mul(proposedMat, currentInv);
+                    const newBody = mat3mulVec(newCombined, s.mag);
+                    const newLevel = undoRollPitch(newBody, rollRad, pitchRad);
+                    const newDir = Math.atan2(newLevel[1], newLevel[0]);
+                    newSin += Math.sin(newDir);
+                    newCos += Math.cos(newDir);
+                    newMags[0] += newBody[0];
+                    newMags[1] += newBody[1];
+                    newMags[2] += newBody[2];
+
+                    n++;
+                }
+
+                const curHeading = Math.atan2(curSin, curCos) * RAD_TO_DEG;
+                const newHeading = Math.atan2(newSin, newCos) * RAD_TO_DEG;
+                const meanRoll = sumRoll / n;
+                const meanPitch = sumPitch / n;
+                const expectedHeading = cap.headingRef || directions[di].heading * RAD_TO_DEG;
+
+                data.push({
+                    dirLabel: directions[di].label,
+                    poseLabel: directions[di].poses[pi].label,
+                    expectedHeading,
+                    roll: meanRoll,
+                    pitch: meanPitch,
+                    currentHeading: curHeading,
+                    currentMag: [curMags[0] / n, curMags[1] / n, curMags[2] / n],
+                    newHeading,
+                    newMag: [newMags[0] / n, newMags[1] / n, newMags[2] / n],
+                });
+            }
+        }
+
+        replayData.value = data;
     }
 
     function cancelWizard() {
@@ -506,6 +609,10 @@ export function useMagCharacterization() {
         URL.revokeObjectURL(url);
     }
 
+    function finishReplay() {
+        phase.value = "complete";
+    }
+
     return {
         // Constants
         directions,
@@ -523,6 +630,7 @@ export function useMagCharacterization() {
         captureSamples,
         captureData,
         solverResult,
+        replayData,
         // Computed
         currentDirection,
         currentPoseDef,
@@ -539,5 +647,6 @@ export function useMagCharacterization() {
         cleanupTimer,
         reset,
         downloadSamplesJSON,
+        finishReplay,
     };
 }

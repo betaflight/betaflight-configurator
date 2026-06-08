@@ -32,7 +32,7 @@
             </div>
 
             <!-- Wizard body -->
-            <div v-if="phase !== 'intro' && phase !== 'complete'" class="mag-char-wizard-body">
+            <div v-if="phase !== 'intro' && phase !== 'complete' && phase !== 'replay'" class="mag-char-wizard-body">
                 <div class="mag-char-left">
                     <!-- Pose timeline grouped by direction -->
                     <div class="mag-char-pose-timeline">
@@ -73,6 +73,63 @@
                         <span class="mag-char-cardinal mag-char-cardinal-s">S</span>
                         <span class="mag-char-cardinal mag-char-cardinal-w">W</span>
                         <canvas ref="threeCanvas" class="mag-char-three-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replay phase — 3-way split validation -->
+            <div v-if="phase === 'replay'" class="mag-char-wizard-body">
+                <div class="mag-char-replay-container">
+                    <div class="mag-char-replay-controls">
+                        <span class="mag-char-replay-pose-label">
+                            Pose {{ replayIndex + 1 }}/{{ replayData.length }} — {{ currentReplayPose?.poseLabel }}
+                        </span>
+                        <span class="mag-char-replay-dir-label">{{ currentReplayPose?.dirLabel }}</span>
+                        <span class="mag-char-replay-spacer"></span>
+                        <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="replayPrev">
+                            &larr;
+                        </button>
+                        <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="toggleAutoPlay">
+                            {{ isAutoPlaying ? "⏸ Pause" : "▶ Play" }}
+                        </button>
+                        <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="replayNext">
+                            &rarr;
+                        </button>
+                        <button type="button" class="mag-char-btn mag-char-btn-primary" @click="finishReplay">
+                            View Results
+                        </button>
+                    </div>
+                    <div class="mag-char-replay-views">
+                        <div class="mag-char-replay-view">
+                            <span class="mag-char-replay-view-label">Drone Attitude</span>
+                            <div class="mag-char-replay-drone">
+                                <canvas ref="replayCanvas" class="mag-char-three-canvas"></canvas>
+                            </div>
+                        </div>
+                        <div class="mag-char-replay-view">
+                            <span class="mag-char-replay-view-label">Mag NOW (current align)</span>
+                            <MagSphereMini
+                                v-if="currentReplayPose"
+                                :mag="currentReplayPose.currentMag"
+                                :roll="currentReplayPose.roll"
+                                :pitch="currentReplayPose.pitch"
+                                :heading="currentReplayPose.currentHeading"
+                                :expected-heading="currentReplayPose.expectedHeading"
+                                :field-strength="1000"
+                            />
+                        </div>
+                        <div class="mag-char-replay-view">
+                            <span class="mag-char-replay-view-label">Mag NEW (proposed align)</span>
+                            <MagSphereMini
+                                v-if="currentReplayPose"
+                                :mag="currentReplayPose.newMag"
+                                :roll="currentReplayPose.roll"
+                                :pitch="currentReplayPose.pitch"
+                                :heading="currentReplayPose.newHeading"
+                                :expected-heading="currentReplayPose.expectedHeading"
+                                :field-strength="1000"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -232,10 +289,11 @@
  * 3D VISUAL: Top-down Three.js camera. headingGroup rotates for cardinal
  * direction, droneModel for pitch/roll. N/E/S/W labels CSS-overlaid.
  */
-import { ref, onScopeDispose, onMounted, nextTick } from "vue";
+import { ref, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
+import MagSphereMini from "./MagSphereMini.vue";
 
 const DEG_TO_RAD = Math.PI / 180;
 
@@ -270,11 +328,75 @@ const {
     onKeyDown,
     reset,
     downloadSamplesJSON,
+    finishReplay,
+    replayData,
 } = mag;
+
+// ── Replay controls ───────────────────────────────────────────────────
+const replayIndex = ref(0);
+const isAutoPlaying = ref(true);
+let autoPlayTimer = null;
+
+const currentReplayPose = computed(() => replayData.value[replayIndex.value] || null);
+
+function replayPrev() {
+    isAutoPlaying.value = false;
+    if (replayIndex.value > 0) {
+        replayIndex.value--;
+    }
+}
+function replayNext() {
+    isAutoPlaying.value = false;
+    if (replayIndex.value < replayData.value.length - 1) {
+        replayIndex.value++;
+    }
+}
+function toggleAutoPlay() {
+    isAutoPlaying.value = !isAutoPlaying.value;
+    if (isAutoPlaying.value) {
+        startAutoPlay();
+    } else {
+        stopAutoPlay();
+    }
+}
+function startAutoPlay() {
+    stopAutoPlay();
+    autoPlayTimer = setInterval(() => {
+        if (!isAutoPlaying.value || replayData.value.length === 0) {
+            return;
+        }
+        if (replayIndex.value >= replayData.value.length - 1) {
+            replayIndex.value = 0;
+        } else {
+            replayIndex.value++;
+        }
+    }, 1200);
+}
+function stopAutoPlay() {
+    if (autoPlayTimer !== null) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+    }
+}
+
+// Watch for replay phase entry — start auto-play
+watch(
+    () => mag.phase.value,
+    (p) => {
+        if (p === "replay") {
+            replayIndex.value = 0;
+            isAutoPlaying.value = true;
+            startAutoPlay();
+        } else {
+            stopAutoPlay();
+        }
+    },
+);
 
 // ── Dialog refs ────────────────────────────────────────────────────────
 const dialogRef = ref(null);
 const threeCanvas = ref(null);
+const replayCanvas = ref(null);
 let resizeObserver = null;
 
 // ── Three.js ───────────────────────────────────────────────────────────
@@ -433,6 +555,7 @@ onMounted(() => {
 onScopeDispose(() => {
     mag.cleanupTimer();
     disposeThreeScene();
+    stopAutoPlay();
     if (spacebarHandler) {
         window.removeEventListener("keydown", spacebarHandler);
     }
@@ -803,27 +926,59 @@ defineExpose({ show, close });
     background: #5a7cff;
 }
 
-/* Solver result rows */
-.mag-char-solver-result {
-    margin-top: 12px;
+/* Replay phase */
+.mag-char-replay-container {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    flex: 1;
+    min-height: 0;
+    padding: 12px;
 }
-.mag-char-solver-row {
+.mag-char-replay-controls {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     gap: 8px;
+    padding: 8px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #2a2a4a;
+    margin-bottom: 10px;
+    flex-shrink: 0;
 }
-.mag-char-solver-error {
-    color: #ee4444;
-    font-size: 13px;
+.mag-char-replay-pose-label {
+    color: #c0c0c0;
     font-weight: 600;
 }
-.mag-char-complete-actions {
-    margin-top: 14px;
+.mag-char-replay-dir-label {
+    color: #7eb8ff;
+}
+.mag-char-replay-spacer {
+    flex: 1;
+}
+.mag-char-replay-views {
     display: flex;
     gap: 8px;
+    flex: 1;
+    min-height: 0;
+}
+.mag-char-replay-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.mag-char-replay-view-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #777;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+.mag-char-replay-drone {
+    flex: 1;
+    min-height: 180px;
+    background: #0d0d1a;
+    border-radius: 6px;
 }
 </style>
