@@ -323,9 +323,17 @@
     "tabOptions": {
         "message": "Опції"
     },
+    "sidebarOpenOptions": {
+        "message": "Опції",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
     "sidebarToggleDarkMode": {
         "message": "Перемкнути темний \/ світлий режим",
         "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Увімкнути режим експерта",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
     },
     "tabSetup": {
         "message": "Налаштування"
@@ -335,6 +343,12 @@
     },
     "tabSensorConfig": {
         "message": "Датчики"
+    },
+    "sensorConfigHardware": {
+        "message": "Апаратне забезпечення датчика"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "Гіроскоп $1"
     },
     "sensorConfigSaved": {
         "message": "Налаштування датчика збережено"
@@ -348,11 +362,29 @@
     "sensorConfigAccelerometer": {
         "message": "Акселерометр"
     },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "Поставте судно на рівну поверхню перед калібруванням"
+    },
     "sensorConfigAccNeedsCalibration": {
         "message": "Акселерометр не було відкалібровано. Будь ласка, відкалібруйте перед польотом."
     },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "Зміщення калібрування магнітометра нульові. Виконайте калібрування для точного визначення курсу."
+    },
     "sensorConfigCalibrate": {
         "message": "Калібрувати"
+    },
+    "sensorConfig3dPreview": {
+        "message": "3D-перегляд орієнтації"
+    },
+    "sensorConfigLiveData": {
+        "message": "Поточні дані сенсорів"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Показати поточні дані сенсорів"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Зупинити вивід даних"
     },
     "tabConfiguration": {
         "message": "Конфігурація"
@@ -362,6 +394,48 @@
     },
     "tabPidTuning": {
         "message": "Налаштування ПІД"
+    },
+    "tabAutotune": {
+        "message": "Автоналаштування"
+    },
+    "autotuneImportTitle": {
+        "message": "Аналіз чирпу з чорної скриньки"
+    },
+    "autotuneImportButton": {
+        "message": "Імпортувати журнал чорної скриньки"
+    },
+    "autotuneImportDescription": {
+        "message": "Імпортуйте журнал чорної скриньки, записаний із debug_mode = CHIRP, щоб проаналізувати частотний відгук та обчислити рекомендації для ПІД."
+    },
+    "autotuneSelectingFile": {
+        "message": "Вибір файлу..."
+    },
+    "autotuneAnalyzing": {
+        "message": "Аналіз даних чирпу..."
+    },
+    "autotuneBandwidth": {
+        "message": "Смуга пропускання"
+    },
+    "autotunePhaseMargin": {
+        "message": "Запас по фазі"
+    },
+    "autotuneResonantPeak": {
+        "message": "Резонансний пік"
+    },
+    "autotuneCoherence": {
+        "message": "Когерентність"
+    },
+    "autotuneParameter": {
+        "message": "Параметр"
+    },
+    "autotuneCurrent": {
+        "message": "Поточне"
+    },
+    "autotuneProposed": {
+        "message": "Запропоноване"
+    },
+    "autotuneChange": {
+        "message": "Змінити"
     },
     "autotuneApplying": {
         "message": "Застосування..."
@@ -375,11 +449,95 @@
     "autotuneConnectRequired": {
         "message": "Під'єднайтесь до польотного контролера для застосування коефіцієнтів."
     },
+    "autotuneNoLogs": {
+        "message": "У цьому файлі не знайдено потрібних записів чорної скриньки."
+    },
+    "autotuneNoChirpData": {
+        "message": "Дані чирпу не знайдено. Переконайтеся, що журнал записано з debug_mode = CHIRP і що режим чирпу був активований."
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} зразків"
+    },
+    "autotuneSampleRate": {
+        "message": "Частота дискретизації: {{rate}} Гц"
+    },
+    "autotuneImportAnother": {
+        "message": "Імпортувати інший"
+    },
+    "autotuneImportRetry": {
+        "message": "Повторити спробу"
+    },
+    "autotuneFile": {
+        "message": "Файл"
+    },
+    "autotuneAxesDetected": {
+        "message": "Виявлено вісі"
+    },
     "autotuneApplyGains": {
         "message": "Застосувати коефіцієнти"
     },
+    "autotuneGainTitle": {
+        "message": "Рекомендовані коефіцієнти"
+    },
+    "autotuneAxisSelector": {
+        "message": "Оберіть вісь"
+    },
+    "autotuneAxisRoll": {
+        "message": "Крен"
+    },
+    "autotuneAxisPitch": {
+        "message": "Тангаж"
+    },
+    "autotuneAxisYaw": {
+        "message": "Рискання"
+    },
+    "autotuneBodePlotTitle": {
+        "message": "Частотний відгук"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "Поточні ПІД (з журналу)"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "Аналіз"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "Запропоновані повзунки"
+    },
+    "autotuneSliderMasterMultiplier": {
+        "message": "Головний множник"
+    },
+    "autotuneSliderPIGain": {
+        "message": "Коефіцієнт П \/ І"
+    },
+    "autotuneSliderIGain": {
+        "message": "Коефіцієнт І"
+    },
+    "autotuneSliderDGain": {
+        "message": "Коефіцієнт Д"
+    },
+    "autotuneSliderFeedforward": {
+        "message": "Упередження"
+    },
+    "autotuneSliderDTermFilter": {
+        "message": "Фільтр Д-складової"
+    },
     "autotuneApplyFromAxis": {
         "message": "Застосувати коефіцієнти з вісі"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "Пік чутливості"
+    },
+    "autotuneOvershoot": {
+        "message": "Перерегулювання"
+    },
+    "autotuneRiseTime": {
+        "message": "Час наростання"
+    },
+    "autotuneSettlingTime": {
+        "message": "Час встановлення"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "Спектрограма (гіроскоп)"
     },
     "tabReceiver": {
         "message": "Приймач"
@@ -905,6 +1063,10 @@
         "message": "Рискання:",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
+    "initialSetupMagHeading": {
+        "message": "Магнітний курс:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
+    },
     "initialSetupMixerHead": {
         "message": "Тип Мікшеру"
     },
@@ -981,6 +1143,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "Завантаження ЦП:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Частота циклу:"
     },
     "initialSetupCpuTemp": {
         "message": "Температура процесора:"
@@ -1192,6 +1360,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "Показує курс, тангаж і крен в інструментах",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "Плата:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "Прошивка:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1499,6 +1673,15 @@
     },
     "configurationBoardAlignment": {
         "message": "Вирівнювання плати"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Крен°"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Тангаж°"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Рискання°"
     },
     "configurationMagAlignment": {
         "message": "Вирівнювання магнітометра"
@@ -3148,8 +3331,41 @@
     "flightPlanTypeLand": {
         "message": "Приземлитись"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "Зліт"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "Змінити висоту",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "Затримка",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "Обмеження швидкості рискання",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Тривалість утримання <span class=\"units\">хв<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Тривалість утримання у хвилинах",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "Тривалість затримки <span class=\"units\">хв<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "Тривалість затримки у хвилинах",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Швидкість рискання <span class=\"units\">°\/с<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Швидкість рискання в градусах на секунду",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Форма утримання"
@@ -3222,6 +3438,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Неприпустима довгота (має бути від -180 до 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Некоректна висота (має бути нульовою або додатною)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Некоректна тривалість (має бути нульовою або додатною)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "Некоректна швидкість рискання (має бути нульовою або додатною)"
     },
     "flightPlanConfirmDelete": {
         "message": "Ви впевнені, що хочете видалити точку маршруту?"
@@ -3818,6 +4043,12 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Показати журнал"
     },
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Статус збірки:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Статус прошивки:"
+    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "у черзі"
     },
@@ -3971,6 +4202,16 @@
     "firmwareFlasherFlashFirmware": {
         "message": "Прошити прошивку"
     },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "Опції прошивки"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "Завантажити параметри прошивки"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Прогрес прошивки",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
+    },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub дані про прошивку"
     },
@@ -3992,8 +4233,29 @@
     "firmwareFlasherWarningText": {
         "message": "Будь-ласка, <span class=\"message-negative\">не<\/span> намагайтесь прошивати <strong>не Betaflight<\/strong> обладнання за допомогою цього програматора.<br \/><span class=\"message-negative\">Не<\/span> <strong>від'єднуйте<\/strong> плату та <strong>не вимикайте<\/strong> комп'ютер під-час прошивки.<br \/><br \/><strong>Примітка:<\/strong><ul><li>Завантажувач STM32 зберігається в ППЗ, він не може бути пошкоджений.<\/li><li><span class=\"message-negative\">Автоматичне підключення<\/span> завжди вимкнене, доки ви знаходитесь в програматорі.<\/li><li>Переконайтесь, що у вас є резервна копія; деякі оновлення\/пониження зітруть вашу конфігурацію.<\/li><li>Якщо у вас є проблеми з прошиванням, <strong>спробуйте спочатку від'єднати всі дроти від вашого польотного контролера<\/strong>, спробуйте перезавантаження, оновлення драйверів.<\/li><li>При прошивці плат, які мають пряме підключення USB роз'ємів (більшість сучасних плат), переконайтесь, що ви прочитали розділ USB Flashing у посібнику Betaflight і маєте правильне програмне забезпечення та встановлені драйвери<\/li><\/ul>"
     },
+    "firmwareFlasherWarningShort": {
+        "message": "Не прошивайте обладнання, не призначене для Betaflight. Не від'єднуйте під час прошивання. Завантажувач STM32 знаходиться в ROM і не може бути виведений з ладу. Завжди робіть резервну копію конфігурації перед оновленням."
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "Відновлення \/ Втрата зв'язку"
+    },
     "firmwareFlasherRecoveryText": {
         "message": "Якщо зв’язок із платою втрачено, виконайте такі кроки, щоб відновити зв’язок: <ul><li>Вимкніть живлення.<\/li><li>Увімкніть «Польотник уже в режимі завантажувача», увімкніть «Повністю очистити мікроконтролер».<\/li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.<\/li><li>Увімкніть живлення (індикатор активності НЕ блимає, якщо все зроблено правильно).<\/li><li>Установіть усі драйвери STM32 і Zadig, якщо потрібно (див. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB<\/a> у посібнику Betaflight).<\/li><li>Закрийте застосунок, перезапустіть його.<\/li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотнику.<\/li><li>Прошийте правильною прошивкою (з використанням ручної швидкості передачі даних, якщо вказано у посібнику коритувача до вашого польотного контролера).<\/li><li>Вимкніть живлення.<\/li><li>Зніміть перемичку BOOT.<\/li><li>Увімкніть живлення (світлодіод активності має блимати).<\/li><li>Підключіться нормально.<\/li><\/ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "Якщо втрачено з'єднання: вимкніть живлення, увімкніть Польотник уже в режимі завантажувача та Повністю очистити мікроконтролер, замкніть піни BOOT перемичкою, потім увімкніть живлення. За потреби встановіть драйвери."
+    },
+    "firmwareFlasherReadMore": {
+        "message": "Читати більше →"
+    },
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "Плата і збірка"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "Розширені"
+    },
+    "firmwareFlasherSubTabFlash": {
+        "message": "Прошити"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Вийти з програматора"
@@ -4890,6 +5152,13 @@
         "message": "Діапазон згасання [Гц]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmQ": {
+        "message": "Добротність (x100)",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Добротність визначає наскільки вузький або широкий фільтр RPM. Значення зберігається як добротність × 100, дозволяється діапазон 250–3000 (Q від 2.5 до Q 30.0), за замовчуванням 500 (Q 5.0). Вищі значення роблять кожен виріз вужчим і точнішим; нижчі значення роблять їх ширшими. Дуже низькі значення значно збільшують затримку фільтру."
+    },
     "pidTuningRpmWeight": {
         "message": "Вага {{index}}",
         "description": "Text for the per-harmonic weight parameter of the RPM Filter"
@@ -5528,6 +5797,15 @@
     "powerBatteryAmperage": {
         "message": "Струм"
     },
+    "powerBatteryPowerDraw": {
+        "message": "Споживання потужності"
+    },
+    "powerWattValue": {
+        "message": "$1 Вт"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Падіння напруги"
+    },
     "powerBatteryCapacity": {
         "message": "Ємність (мАг)"
     },
@@ -5771,8 +6049,9 @@
         "message": "Значення RSSI",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Миттєве значення RSSI (блимає, якщо нижче порогового значення)"
+    "osdTextElementRssiDbmValue": {
+        "message": "Значення RSSI в дБм",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Таймер",
@@ -6362,9 +6641,6 @@
         "message": "Якість зв'язку",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Альтернативний індикатор «якості зв’язку» на основі втрати кадрів — використовуйте з обережністю"
-    },
     "osdTextElementFlightDist": {
         "message": "Відстань польоту",
         "description": "One of the elements of the OSD"
@@ -6427,13 +6703,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Назва профілю наекранного меню, як встановлена в змінних CLI \"osd_profile_1_name\", \"osd_profile_2_name\" і \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Значення RSSI в дБм",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Значення індикатора рівня потужності отриманого сигналу в дБм, якщо доступне"
     },
     "osdTextElementRcChannels": {
         "message": "Канали пульта",
@@ -7335,6 +7604,219 @@
     "configurationAccHardware": {
         "message": "Акселерометр"
     },
+    "configurationBaroHardware": {
+        "message": "Барометр"
+    },
+    "configurationMagHardware": {
+        "message": "Магнітометр"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Не вдалося визначити місце. Під'єднайте GPS модуль або надайте браузеру доступ до даних про розташування."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Магнітне схилення встановлене на {{declination}}° на основі визначеного місця."
+    },
+    "configurationMagInclination": {
+        "message": "Нахилення"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "Кут між магнітним полем Землі та горизонтальною площиною у вашому місці. Додатні значення означають, що лінії магнітного поля спрямовані вниз (характерно для Північної півкулі)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Сила поля"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "Загальна інтенсивність магнітного поля землі в вашому місці в нанотеслах (нТл). Типові значення варіюються від 25,000 до 65,000 нТл"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Визначити"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Оновити"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Магнітне схилення автоматично визначене як {{value}}° для вашого місця."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Схилення {{saved}}°, проте GPS визначає {{detected}}° для цього місця. Клацніть Оновити для корегування."
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} зразків"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "Нахиліть більше!"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "Не вдалося визначити — спробуйте нахиляти апарат більш різноманітно."
+    },
+    "magCalibrationGuidedFw": {
+        "message": "Калібр. конфігуратором (покрокове)"
+    },
+    "magCalibrationGuidedFwDesc": {
+        "message": "Калібрування з покроковими підказками 60 с"
+    },
+    "magCalibrationGuidedFwTitle": {
+        "message": "Покрокове калібрування"
+    },
+    "magCalibrationPrompt1": {
+        "message": "Крок 1 із 6 —Тримайте горизонтально, поверніть навколо рискання на 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Крок 2 із 6 — Догори дном, поверніть навколо рискання на 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Крок 3 із 6 — Носом догори, поверніть навколо рискання на 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Крок 4 із 6 — Носом вниз, поверніть навколо рискання на 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Крок 5 із 6 — Лівою стороною догори, поверніть навколо рискання на 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Крок 6 із 6 — Правою стороною догори, поверніть навколо рискання на 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Збір даних завершено — переглянути та зберегти"
+    },
+    "magCalibrationCancel": {
+        "message": "Скасувати"
+    },
+    "magCalibrationClear": {
+        "message": "Очистити"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Параметри режиму калібрування"
+    },
+    "magCalibrationRetry": {
+        "message": "Повторити"
+    },
+    "magCalibrationWaiting": {
+        "message": "Очікування руху... Потрусіть борт, щоб почати."
+    },
+    "magCalibrationCollecting": {
+        "message": "Повільно обертайте апарат через всі положення."
+    },
+    "magCalibrationComplete": {
+        "message": "Калібрування завершено."
+    },
+    "magCalibrationError": {
+        "message": "Не вдалось відкалібрувати. Повторіть спробу в місці з меншими магнітними завадами."
+    },
+    "magCalibrationNoMovement": {
+        "message": "Рух не виявлено протягом 30 секунд. Калібрування скасовано."
+    },
+    "magCalibrationSamples": {
+        "message": "Зразки"
+    },
+    "magCalibrationQuality": {
+        "message": "Якість"
+    },
+    "magCalibrationResidual": {
+        "message": "Залишок апроксимації"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Добра"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Задовільна"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Низька"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Зміщення з прошивки"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Зміщення зі сферичної апроксимації"
+    },
+    "magCalibrationUnguided": {
+        "message": "Калібр. прошивкою (застаріле)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Обертайте вільно — прошивка автоматично збережеться за 30 с"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Калібрування прошивкою"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Протягом 30 секунд обертайте апарат у всіх напрямках. Коли час спливе, прошивка автоматично збереже результати калібрування."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Калібрування прошивки завершено!"
+    },
+    "magCalibrationGuided": {
+        "message": "Калібр. конфігуратором (вільне)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Обертайте вільно — конфігуратор обрахує зміщення"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Калібрування конфігуратором"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Обертайте апарат у всіх напрямках. Намагайтеся приблизно за одну або дві хвилини сформувати повну сферу з точок. Збережіть результат, коли значення калібрування стабілізуються."
+    },
+    "magCalibrationCheck": {
+        "message": "Перевірити"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Дані магнітометра в реальному часі з поточним калібруванням"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Перевірка калібрування"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Перевірте орієнтацію та калібрування магнітометра. Встановіть судно горизонтально, спрямуйте ніс на відомий напрямок за компасом (для визначення півночі можна скористатися телефоном) і переконайтеся, що нові точки з'являються в очікуваному місці на 3D візуалізації. Значення напруженості поля по кожній осі та сферичність точок вказують на точність калібрування. Якщо точки потрапляють у зовсім інші місця, ймовірно, орієнтацію магнітометра задано неправильно."
+    },
+    "magCalibrationCalValues": {
+        "message": "Значення калібрування"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Зберегти значення"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Значення калібрування збережені"
+    },
+    "magCalibrationSaveError": {
+        "message": "Не вдалося зберегти значення калібрування"
+    },
+    "magCalibrationAccept": {
+        "message": "Зберегти калібрування"
+    },
+    "magCalibrationDiscard": {
+        "message": "Скасувати"
+    },
+    "magVizPointCloud": {
+        "message": "Хмара точок"
+    },
+    "magVizHeatmap": {
+        "message": "Воксельна теплокарта"
+    },
+    "magVizProjection": {
+        "message": "Потрійна проєкція"
+    },
+    "magVizPolar": {
+        "message": "Полярна щільність"
+    },
+    "magVizWaitingForData": {
+        "message": "Очікування даних…"
+    },
+    "magVizAxisField": {
+        "message": "Поле"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Старі"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Нові"
+    },
+    "magAlignmentApply": {
+        "message": "Застосувати"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "Визначити"
+    },
     "configurationSmallAngle": {
         "message": "Макс. кут взведення [degrees]"
     },
@@ -7908,6 +8390,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "Інші параметри"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "Видалити {{option}}",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "Виберіть протокол"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "Виберіть опції"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Виберіть гілку або введіть PR # \/ хеш коміту"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Шукати плату..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Радіопротокол"

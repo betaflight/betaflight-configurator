@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "Desconnectar"
     },
+    "disconnectVirtual": {
+        "message": "Desconnectar (Virtual)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Desconnectar (Manual)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Desconnectar (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Selecciona el dispositiu",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -113,6 +125,10 @@
     "connectVirtualDescription": {
         "message": "Simular un controlador de vol sense maquinari.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connectar (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Introduïu el port sèrie o l'URL a la qual voleu connectar-vos.",
@@ -6090,7 +6106,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Valor instantani d'RSSI (parpellejarà quan estigui per sota del nivell d'alarma)"
+        "message": "Valor RSSI instantani (parpelleja quan està per sota del llindar d'alarma). Per a protocols moderns, utilitzeu RSSI dBm."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "Valor RSSI dBm",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Indicador de força del senyal rebut, aquest valor indica la intensitat de la recepció en dBm"
     },
     "osdTextElementTimer": {
         "message": "Temporitzador",
@@ -6681,7 +6704,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Indicador alternatiu de \"qualitat d'enllaç\" basat en la pèrdua de paquets: fes-ho servir amb cura"
+        "message": "Indicador de qualitat d'enllaç basat en el percentatge de paquets de dades sense corrupció rebuts correctament"
     },
     "osdTextElementFlightDist": {
         "message": "Distància de vol",
@@ -6745,13 +6768,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nom del perfil OSD establert a les variables del CLI \"osd_profile_1_name\", \"osd_profile_2_name\" i \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Valor RSSI dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Valor en dBm de la senyal RSSI si està disponible"
     },
     "osdTextElementRcChannels": {
         "message": "Canals RC",

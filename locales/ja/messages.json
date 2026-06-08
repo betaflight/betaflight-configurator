@@ -5706,8 +5706,9 @@
         "message": "瞬間RSSI値",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "瞬間RSSI値 (アラームしきい値以下の場合は点滅)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI値 (dBm)",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "タイマー",
@@ -6297,9 +6298,6 @@
         "message": "リンク品質",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "フレーム損失に基く『リンク品質』代替インジケータ - 使用注意"
-    },
     "osdTextElementFlightDist": {
         "message": "今回の飛行距離",
         "description": "One of the elements of the OSD"
@@ -6362,13 +6360,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "\"osd_profile_1_name\"、\"osd_profile_2_name\"、\"osd_profile_3_name\"はCLIにて設定されているOSD Profile名"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI値 (dBm)",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "RSSI信号値(dBm) ※有効な場合"
     },
     "osdTextElementRcChannels": {
         "message": "RCチャンネル",
