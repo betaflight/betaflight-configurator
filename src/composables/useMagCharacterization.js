@@ -762,6 +762,35 @@ export function useMagCharacterization() {
         return true;
     }
 
+    function cancelWizard() {
+        cleanupTimer();
+        phase.value = "intro";
+        currentDirectionIndex.value = 0;
+        currentSubPoseIndex.value = 0;
+        captureData.value = [];
+        solverResult.value = null;
+    }
+
+    function reset() {
+        cleanupTimer();
+        phase.value = "intro";
+        currentDirectionIndex.value = 0;
+        currentSubPoseIndex.value = 0;
+        captureData.value = [];
+        solverResult.value = null;
+    }
+
+    function cleanupTimer() {
+        if (sampleTimer !== null) {
+            clearTimeout(sampleTimer);
+            sampleTimer = null;
+        }
+    }
+
+    function finishReplay() {
+        phase.value = "complete";
+    }
+
     return {
         // Constants
         directions,
