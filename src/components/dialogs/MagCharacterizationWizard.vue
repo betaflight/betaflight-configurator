@@ -32,8 +32,8 @@
             </div>
 
             <!-- Wizard body -->
-            <div v-if="phase !== 'intro' && phase !== 'complete' && phase !== 'replay'" class="mag-char-wizard-body">
-                <div class="mag-char-left">
+            <div v-if="phase !== 'intro' && phase !== 'complete'" class="mag-char-wizard-body">
+                <div v-if="phase !== 'replay'" class="mag-char-left">
                     <!-- Pose timeline grouped by direction -->
                     <div class="mag-char-pose-timeline">
                         <template v-for="(dir, di) in directions" :key="di">
@@ -78,7 +78,7 @@
             </div>
 
             <!-- Replay phase — 3-way split validation -->
-            <div v-if="phase === 'replay'" class="mag-char-wizard-body">
+            <div v-if="phase === 'replay'" class="mag-char-replay-section">
                 <div class="mag-char-replay-container">
                     <div class="mag-char-replay-controls">
                         <span class="mag-char-replay-pose-label">
@@ -1132,6 +1132,13 @@ defineExpose({ show, close });
 }
 
 /* Replay phase */
+.mag-char-replay-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    border-top: 1px solid #2a2a4a;
+}
 .mag-char-replay-container {
     display: flex;
     flex-direction: column;
