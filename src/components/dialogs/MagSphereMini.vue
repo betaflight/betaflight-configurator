@@ -75,11 +75,11 @@ const canvasRef = ref(null);
 let renderer = null;
 let scene = null;
 let camera = null;
-let quadGroup = null; // rotates with attitude
+let headingGroup = null;
+let quadGroup = null;
 let magCylinders = null;
 let animId = null;
-let targetQuadRot = new THREE.Euler(0, 0, 0, "ZYX");
-let currentQuadRot = new THREE.Euler(0, 0, 0, "ZYX");
+let targetQuadRot = new THREE.Euler(0, 0, 0, "XYZ");
 
 const MAG_SCALE = 0.15; // scale raw mag counts to world units
 
@@ -97,9 +97,11 @@ function initScene() {
 
     scene = new THREE.Scene();
 
-    // Camera: looking slightly down at the compass plane (Z-up like MagSphereView)
+    // Camera: top-down, same perspective as the main wizard 3D model
+    // Screen up = world +Z = North, camera looking straight down
     camera = new THREE.PerspectiveCamera(35, w / Math.max(h, 1), 1, 1000);
-    camera.position.set(0, -80, 170);
+    camera.position.set(0, 160, 0);
+    camera.up.set(0, 0, -1); // screen up = world +Z
     camera.lookAt(0, 0, 0);
 
     // Lights
@@ -108,86 +110,122 @@ function initScene() {
     d.position.set(0, 0.5, 1);
     scene.add(d);
 
-    // Compass ring (thin circle at Z=0 in the horizontal plane)
+    // Compass ring in XZ plane (horizontal, for top-down view)
     const ringGeo = new THREE.TorusGeometry(70, 1.2, 16, 64);
-    const ring = new THREE.Mesh(
-        ringGeo,
-        new THREE.MeshBasicMaterial({ color: 0x446688, transparent: true, opacity: 0.6 }),
-    );
+    const ring = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0x446688, transparent: true, opacity: 0.6 }));
+    ring.rotation.x = -Math.PI / 2; // XY → XZ plane
     scene.add(ring);
 
-    // Tick marks at N/E/S/W
-    const tickGeo = new THREE.BoxGeometry(2, 8, 1);
+    // Tick marks at N/E/S/W in XZ plane
+    const tickGeo = new THREE.BoxGeometry(2, 1, 8);
     const tickMat = new THREE.MeshBasicMaterial({ color: 0x6688aa });
-    const positions = [
-        [0, 68, 0], // N (top in Z-up = world +Y)
-        [68, 0, 0], // E (right = world +X)
-        [0, -68, 0], // S
+    const tickPositions = [
+        [0, 0, 68],  // N (screen top = world +Z)
+        [68, 0, 0],  // E (world +X)
+        [0, 0, -68], // S
         [-68, 0, 0], // W
     ];
-    for (const [x, y, z] of positions) {
+    for (const [x, y, z] of tickPositions) {
         const tick = new THREE.Mesh(tickGeo, tickMat);
         tick.position.set(x, y, z);
         scene.add(tick);
     }
 
-    // Quad group — rotates with attitude (ZYX Euler order)
-    quadGroup = new THREE.Object3D();
-    scene.add(quadGroup);
+    // Heading group — rotates around world Y (matches main wizard convention)
+    // rotation.y = 0 → nose at world +Z = screen top = North
+    const headingGroup = new THREE.Object3D();
+    scene.add(headingGroup);
 
-    // Drone body (central bar along X = forward)
-    const bodyGeo = new THREE.BoxGeometry(30, 4, 4);
+    // Drone group (child of headingGroup) — pitch around X, roll around Z
+    quadGroup = new THREE.Object3D();
+    headingGroup.add(quadGroup);
+
+    // Drone body: central bar along Z = forward (nose direction)
+    const bodyGeo = new THREE.BoxGeometry(4, 4, 28);
     const body = new THREE.Mesh(bodyGeo, new THREE.MeshBasicMaterial({ color: 0x888888 }));
     quadGroup.add(body);
 
-    // Front motors (green, at +X end)
-    const motorGeo = new THREE.CylinderGeometry(3, 3, 2, 8);
+    // Nose arrow — bright green cone at +Z, pointing forward
+    const noseGeo = new THREE.ConeGeometry(4, 8, 6);
+    const noseArrow = new THREE.Mesh(noseGeo, new THREE.MeshBasicMaterial({ color: 0x44ff44 }));
+    noseArrow.position.set(0, 3, 18);
+    noseArrow.rotation.x = -Math.PI / 2;
+    quadGroup.add(noseArrow);
+
+    // Tail dot — small red sphere at -Z
+    const tailGeo = new THREE.SphereGeometry(3, 6, 6);
+    const tailDot = new THREE.Mesh(tailGeo, new THREE.MeshBasicMaterial({ color: 0xff4444 }));
+    tailDot.position.set(0, 0, -16);
+    quadGroup.add(tailDot);
+
+    // Front motors (green, at +Z end)
+    const motorGeo = new THREE.CylinderGeometry(2.5, 2.5, 2, 8);
     const frontMotor = new THREE.Mesh(motorGeo, new THREE.MeshBasicMaterial({ color: 0x44cc44 }));
-    frontMotor.position.set(14, 22, 0);
+    frontMotor.position.set(22, 0, 12);
     quadGroup.add(frontMotor);
     const frontMotor2 = new THREE.Mesh(motorGeo, new THREE.MeshBasicMaterial({ color: 0x44cc44 }));
-    frontMotor2.position.set(14, -22, 0);
+    frontMotor2.position.set(-22, 0, 12);
     quadGroup.add(frontMotor2);
 
-    // Rear motors (red, at -X end)
+    // Rear motors (red, at -Z end)
     const rearMotor = new THREE.Mesh(motorGeo, new THREE.MeshBasicMaterial({ color: 0xcc4444 }));
-    rearMotor.position.set(-14, 22, 0);
+    rearMotor.position.set(22, 0, -12);
     quadGroup.add(rearMotor);
     const rearMotor2 = new THREE.Mesh(motorGeo, new THREE.MeshBasicMaterial({ color: 0xcc4444 }));
-    rearMotor2.position.set(-14, -22, 0);
+    rearMotor2.position.set(-22, 0, -12);
     quadGroup.add(rearMotor2);
 
-    // Arms (thin cylinders)
+    // Arms
     const armGeo = new THREE.CylinderGeometry(1.2, 1.2, 44, 6);
     const arm1 = new THREE.Mesh(armGeo, new THREE.MeshBasicMaterial({ color: 0x666666 }));
-    arm1.rotation.z = Math.PI / 4;
+    arm1.rotation.y = Math.PI / 4;
     arm1.position.set(0, 0, 0);
     quadGroup.add(arm1);
     const arm2 = new THREE.Mesh(armGeo, new THREE.MeshBasicMaterial({ color: 0x666666 }));
-    arm2.rotation.z = -Math.PI / 4;
+    arm2.rotation.y = -Math.PI / 4;
+    arm2.rotation.y = -Math.PI / 4;
     arm2.position.set(0, 0, 0);
     quadGroup.add(arm2);
 
-    // Mag vector cylinders group
+    // Mag vector cylinders group (child of quadGroup — moves with drone)
     magCylinders = new THREE.Object3D();
     quadGroup.add(magCylinders);
 
+    // State for smooth animation
+    let curHeadingY = 0;   // headingGroup.rotation.y
+    let curPitchX = 0;     // quadGroup.rotation.x
+    let curRollZ = 0;      // quadGroup.rotation.z
+
     function animate() {
         animId = requestAnimationFrame(animate);
-        if (!renderer || !scene || !camera) {
-            return;
-        }
+        if (!renderer || !scene || !camera) { return; }
 
-        // Smooth lerp to target attitude
         const lf = 0.15;
-        currentQuadRot.x += (targetQuadRot.x - currentQuadRot.x) * lf;
-        currentQuadRot.y += (targetQuadRot.y - currentQuadRot.y) * lf;
-        currentQuadRot.z += (targetQuadRot.z - currentQuadRot.z) * lf;
-        quadGroup.rotation.copy(currentQuadRot);
+        curHeadingY += (targetQuadRot.y - curHeadingY) * lf;
+        curPitchX += (targetQuadRot.x - curPitchX) * lf;
+        curRollZ += (targetQuadRot.z - curRollZ) * lf;
+
+        if (headingGroup) { headingGroup.rotation.y = curHeadingY; }
+        if (quadGroup) {
+            quadGroup.rotation.x = curPitchX;
+            quadGroup.rotation.z = curRollZ;
+        }
 
         renderer.render(scene, camera);
     }
     animate();
+}
+
+function updateAttitude() {
+    // Top-down view, matching main wizard convention:
+    // headingGroup.rotation.y rotates around world Y for cardinal direction
+    // quadGroup.rotation.x = pitch (positive = nose up)
+    // quadGroup.rotation.z = -roll (negative = right side up)
+    targetQuadRot.set(
+        props.pitch * DEG,           // X: pitch
+        (props.heading - 90) * DEG,  // Y: heading, offset -90° so 0°=nose to world+Z=North
+        -props.roll * DEG,           // Z: roll (negated, matching wizard convention)
+    );
 }
 
 function updateMagCylinders() {
@@ -202,19 +240,30 @@ function updateMagCylinders() {
     const [mx, my, mz] = props.mag || [0, 0, 0];
     const scale = MAG_SCALE;
 
-    // Draw a cylinder from origin to scaled mag vector
-    const colors = [
-        [1, 0.3, 0.3],
-        [0.3, 1, 0.3],
-        [0.3, 0.3, 1],
-    ];
+    // Draw cylinders along world axes (body frame: X=right, Z=fwd, Y=up)
+    const colors = [[1, 0.3, 0.3], [0.3, 1, 0.3], [0.3, 0.3, 1]];
     const comps = [mx, my, mz];
 
     for (let i = 0; i < 3; i++) {
         const val = comps[i] * scale;
-        if (Math.abs(val) < 1) {
-            continue;
-        }
+        if (Math.abs(val) < 1) { continue; }
+        const len = Math.abs(val);
+        const geo = new THREE.CylinderGeometry(0.8, 0.8, len, 6);
+        const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(colors[i][0], colors[i][1], colors[i][2]), transparent: true, opacity: 0.7 });
+        const cyl = new THREE.Mesh(geo, mat);
+        if (i === 0) { cyl.position.set(val / 2, 0, 0); cyl.rotation.z = Math.PI / 2; }        // X
+        else if (i === 1) { cyl.position.set(0, val / 2, 0); }                                // Y (up)
+        else { cyl.position.set(0, 0, val / 2); cyl.rotation.x = Math.PI / 2; }              // Z (fwd)
+
+        magCylinders.add(cyl);
+
+        const tipGeo = new THREE.SphereGeometry(1.2, 6, 6);
+        const tip = new THREE.Mesh(tipGeo, mat);
+        if (i === 0) { tip.position.set(val, 0, 0); }
+        else if (i === 1) { tip.position.set(0, val, 0); }
+        else { tip.position.set(0, 0, val); }
+        magCylinders.add(tip);
+    }
         const len = Math.abs(val);
         const geo = new THREE.CylinderGeometry(0.8, 0.8, len, 6);
         const mat = new THREE.MeshBasicMaterial({
@@ -247,30 +296,6 @@ function updateMagCylinders() {
         }
         magCylinders.add(tip);
     }
-}
-
-function updateAttitude() {
-    // In MagSphereView Z-up display frame:
-    // Rotation is applied to the quad group.
-    // The drone faces +X in its local frame (nose forward).
-    // We need to orient the quad so:
-    //   pitch rotates around Y (body right axis)
-    //   roll rotates around X (body forward axis)
-    //   heading rotates around Z (body up axis, after roll/pitch)
-    //
-    // In the Z-up display, the camera looks from (0, -60, 120) at origin.
-    // The quad's local +X (nose) should point toward screen-top (the N label).
-    //
-    // We start with the quad at identity (nose = +X = right on screen).
-    // Rotate by -heading around Z to point nose toward the N label.
-    // Then apply pitch (around quad's Y after heading rot) and roll (around X).
-    targetQuadRot.set(
-        props.pitch * DEG,
-        -props.heading * DEG + Math.PI / 2, // -heading rotates nose to N; +90° aligns local X to world Y (screen up)
-        -props.roll * DEG,
-    );
-    // Use ZYX order: Z first (roll), then Y (heading), then X (pitch)
-    targetQuadRot.order = "ZYX";
 }
 
 watch(
