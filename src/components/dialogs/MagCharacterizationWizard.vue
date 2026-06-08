@@ -103,7 +103,13 @@
                         <div class="mag-char-replay-view">
                             <span class="mag-char-replay-view-label">Drone Attitude</span>
                             <div class="mag-char-replay-drone">
-                                <canvas ref="replayCanvas" class="mag-char-three-canvas"></canvas>
+                                <div class="mag-char-replay-drone-info">
+                                    <div>Roll: {{ currentReplayPose?.roll?.toFixed(1) || "—" }}&deg;</div>
+                                    <div>Pitch: {{ currentReplayPose?.pitch?.toFixed(1) || "—" }}&deg;</div>
+                                    <div>
+                                        Expected: {{ currentReplayPose?.expectedHeading?.toFixed(0) || "—" }}&deg;
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="mag-char-replay-view">
@@ -274,6 +280,15 @@
                 >
                     Close
                 </button>
+
+                <!-- Replay footer -->
+                <div v-if="phase === 'replay'" class="mag-char-readout-bar">
+                    <span class="mag-char-readout-item">Auto-playing {{ replayData.length }} poses</span>
+                    <span class="mag-char-readout-spacer"></span>
+                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="finishReplay">
+                        Skip to Results
+                    </button>
+                </div>
             </div>
         </div>
     </dialog>
@@ -396,7 +411,6 @@ watch(
 // ── Dialog refs ────────────────────────────────────────────────────────
 const dialogRef = ref(null);
 const threeCanvas = ref(null);
-const replayCanvas = ref(null);
 let resizeObserver = null;
 
 // ── Three.js ───────────────────────────────────────────────────────────
@@ -980,5 +994,15 @@ defineExpose({ show, close });
     min-height: 180px;
     background: #0d0d1a;
     border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mag-char-replay-drone-info {
+    text-align: center;
+    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+    font-size: 14px;
+    color: #7eb8ff;
+    line-height: 1.8;
 }
 </style>
