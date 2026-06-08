@@ -570,8 +570,8 @@ let spacebarHandler = null;
 
 function show() {
     reset();
-    dialogRef.value?.showModal();
     nextTick(() => {
+        dialogRef.value?.showModal();
         if (threeCanvas.value?.parentElement && !resizeObserver) {
             resizeObserver = new ResizeObserver(() => {
                 if (renderer && threeCanvas.value?.parentElement) {

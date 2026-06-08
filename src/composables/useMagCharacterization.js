@@ -304,8 +304,11 @@ export function useMagCharacterization() {
         isStable.value = false;
         phase.value = "await";
 
+        // Wait for Vue to re-render the wizard body (v-if canvas → DOM) before initializing 3D
         if (onWizardStarted) {
-            onWizardStarted();
+            setTimeout(() => {
+                onWizardStarted();
+            }, 0);
         }
         tick();
     }
