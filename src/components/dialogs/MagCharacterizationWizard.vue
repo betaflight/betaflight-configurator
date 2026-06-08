@@ -102,39 +102,54 @@
                     <div class="mag-char-replay-views">
                         <div class="mag-char-replay-view">
                             <span class="mag-char-replay-view-label">Your Pose</span>
-                            <MagSphereMini
-                                v-if="currentReplayPose"
-                                :mag="[0, 0, 0]"
-                                :roll="currentReplayPose.roll"
-                                :pitch="currentReplayPose.pitch"
-                                :heading="currentReplayPose.expectedHeading"
-                                :expected-heading="currentReplayPose.expectedHeading"
-                                :field-strength="0"
-                            />
+                            <div class="mag-char-replay-drone">
+                                <canvas ref="replayCanvasRef" class="mag-char-three-canvas"></canvas>
+                            </div>
                         </div>
                         <div class="mag-char-replay-view">
                             <span class="mag-char-replay-view-label">Mag NOW (current align)</span>
-                            <MagSphereMini
-                                v-if="currentReplayPose"
-                                :mag="currentReplayPose.currentMag"
-                                :roll="currentReplayPose.roll"
-                                :pitch="currentReplayPose.pitch"
-                                :heading="currentReplayPose.currentHeading"
-                                :expected-heading="currentReplayPose.expectedHeading"
-                                :field-strength="1000"
-                            />
+                            <div class="mag-char-replay-compare" v-if="currentReplayPose">
+                                <div
+                                    class="mag-char-replay-heading-now"
+                                    :class="
+                                        headingClass(
+                                            currentReplayPose.currentHeading,
+                                            currentReplayPose.expectedHeading,
+                                        )
+                                    "
+                                >
+                                    {{ formatHeading(currentReplayPose.currentHeading) }}
+                                </div>
+                                <div class="mag-char-replay-error">
+                                    {{
+                                        headingErrorText(
+                                            currentReplayPose.currentHeading,
+                                            currentReplayPose.expectedHeading,
+                                        )
+                                    }}
+                                </div>
+                            </div>
                         </div>
                         <div class="mag-char-replay-view">
                             <span class="mag-char-replay-view-label">Mag NEW (proposed align)</span>
-                            <MagSphereMini
-                                v-if="currentReplayPose"
-                                :mag="currentReplayPose.newMag"
-                                :roll="currentReplayPose.roll"
-                                :pitch="currentReplayPose.pitch"
-                                :heading="currentReplayPose.newHeading"
-                                :expected-heading="currentReplayPose.expectedHeading"
-                                :field-strength="1000"
-                            />
+                            <div class="mag-char-replay-compare" v-if="currentReplayPose">
+                                <div
+                                    class="mag-char-replay-heading-new"
+                                    :class="
+                                        headingClass(currentReplayPose.newHeading, currentReplayPose.expectedHeading)
+                                    "
+                                >
+                                    {{ formatHeading(currentReplayPose.newHeading) }}
+                                </div>
+                                <div class="mag-char-replay-error">
+                                    {{
+                                        headingErrorText(
+                                            currentReplayPose.newHeading,
+                                            currentReplayPose.expectedHeading,
+                                        )
+                                    }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -350,7 +365,6 @@ import { ref, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
-import MagSphereMini from "./MagSphereMini.vue";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 
@@ -443,6 +457,42 @@ function stopAutoPlay() {
     }
 }
 
+function formatHeading(deg) {
+    const d = ((deg % 360) + 360) % 360;
+    return `${d.toFixed(0)}\u00B0`;
+}
+function headingError(actual, expected) {
+    if (expected === null || expected === undefined) {
+        return 0;
+    }
+    let diff = actual - expected;
+    while (diff > 180) {
+        diff -= 360;
+    }
+    while (diff < -180) {
+        diff += 360;
+    }
+    return Math.abs(diff);
+}
+function headingClass(actual, expected) {
+    const e = headingError(actual, expected);
+    if (e < 5) {
+        return "good";
+    }
+    if (e < 15) {
+        return "warn";
+    }
+    return "bad";
+}
+function headingErrorText(actual, expected) {
+    const e = headingError(actual, expected);
+    if (expected === null || expected === undefined) {
+        return "";
+    }
+    const dir = actual > expected ? "right" : "left";
+    return `off by ${e.toFixed(0)}\u00B0 ${dir}${e < 10 ? " \u2713" : " \u2717"}`;
+}
+
 // Watch for replay phase entry — start auto-play
 watch(
     () => mag.phase.value,
@@ -451,15 +501,27 @@ watch(
             replayIndex.value = 0;
             isAutoPlaying.value = true;
             startAutoPlay();
+        } else if (p === "complete") {
+            disposeThreeScene();
+            stopAutoPlay();
         } else {
             stopAutoPlay();
         }
     },
 );
 
+// Update 3D model for replay pose
+watch(replayIndex, () => {
+    const pose = currentReplayPose.value;
+    if (pose && headingGroup) {
+        updateModelTarget(pose.expectedHeading * DEG_TO_RAD || 0, pose.roll, pose.pitch);
+    }
+});
+
 // ── Dialog refs ────────────────────────────────────────────────────────
 const dialogRef = ref(null);
 const threeCanvas = ref(null);
+const replayCanvasRef = ref(null);
 const debugFileInput = ref(null);
 let resizeObserver = null;
 
@@ -572,7 +634,7 @@ mag.setCallbacks({
         refreshModelTarget();
     },
     onPoseAdvanced: refreshModelTarget,
-    onSolverAboutToRun: disposeThreeScene,
+    onSolverAboutToRun: () => {}, // keep 3D model alive for replay — dispose on "View Results" or close
 });
 
 // ── Dialog controls ────────────────────────────────────────────────────
@@ -1118,32 +1180,45 @@ defineExpose({ show, close });
     margin-bottom: 4px;
     text-align: center;
 }
-.mag-char-complete-actions {
-    margin-top: 14px;
+.mag-char-replay-compare {
+    flex: 1;
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0d0d1a;
+    border-radius: 6px;
+    min-height: 200px;
+    gap: 6px;
 }
-.mag-char-geo-hint {
-    font-size: 11px;
-    color: #888;
-    margin-top: 8px;
-    font-style: italic;
+.mag-char-replay-heading-now,
+.mag-char-replay-heading-new {
+    font-size: 32px;
+    font-weight: 700;
+    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
 }
-.mag-char-debug-link {
-    font-size: 10px;
-    color: #ffaa44;
-    cursor: pointer;
-    text-decoration: underline;
-    opacity: 0.5;
+.mag-char-replay-heading-now.good,
+.mag-char-replay-heading-new.good {
+    color: #4ec97e;
 }
-.mag-char-debug-link:hover {
-    opacity: 1;
+.mag-char-replay-heading-now.warn,
+.mag-char-replay-heading-new.warn {
+    color: #eebb44;
 }
-.mag-char-cal-note {
-    font-size: 10px;
-    color: #888;
-    display: block;
-    margin-top: 2px;
+.mag-char-replay-heading-now.bad,
+.mag-char-replay-heading-new.bad {
+    color: #ee4444;
+}
+.mag-char-replay-error {
+    font-size: 13px;
+    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+    color: #999;
+}
+.mag-char-replay-drone {
+    flex: 1;
+    min-height: 200px;
+    background: #0d0d1a;
+    border-radius: 6px;
+    overflow: hidden;
 }
 </style>
