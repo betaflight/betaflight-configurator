@@ -86,7 +86,7 @@ export function stringHasComma(string) {
      * returns              true if at least one comma is found.
      *                      false if no comma is found.
      ***/
-    return string.match(/.*,.*/) != null;
+    return string.includes(",");
 }
 
 export function parseCommaSeparatedString(string, length) {

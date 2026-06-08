@@ -2556,12 +2556,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
             case "DFILTER":
                 return value;
             case "CYCLETIME":
-                switch (fieldName) {
-                    case "debug[1]":
-                        return value;
-                    default:
-                        return value;
-                }
+                return value;
             case "BATTERY":
                 switch (fieldName) {
                     case "debug[0]":
@@ -2576,14 +2571,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
             case "PIDLOOP":
                 return value;
             case "RC_INTERPOLATION":
-                switch (fieldName) {
-                    case "debug[1]": // current RX refresh rate
-                        return value; // ms
-                    case "debug[3]": // setpoint [roll]
-                        return value; // °/s
-                    default:
-                        return value;
-                }
+                return value;
             case "GYRO":
             case "GYRO_FILTERED":
             case "GYRO_SCALED":
@@ -2605,12 +2593,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
             case "ANGLERATE":
                 return value; // °/s;
             case "ESC_SENSOR":
-                switch (fieldName) {
-                    case "debug[3]":
-                        return value;
-                    default:
-                        return value;
-                }
+                return value;
             case "SCHEDULER":
                 return value;
             case "STACK":
@@ -2643,16 +2626,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                         return value;
                 }
             case "FFT_TIME":
-                switch (fieldName) {
-                    case "debug[0]":
-                        return value;
-                    case "debug[1]":
-                        return value;
-                    // debug 2 = not used
-                    // debug 3 = not used
-                    default:
-                        return value;
-                }
+                return value;
             case "FFT_FREQ":
                 if (semver.gte(flightLog.getSysConfig().firmwareVersion, "2025.12.0")) {
                     switch (fieldName) {
@@ -2769,15 +2743,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                         return value;
                 }
             case "GHST":
-                switch (fieldName) {
-                    // debug 0 is CRC error count 0 to int16_t
-                    // debug 1 is unknown frame count 0 to int16_t
-                    // debug 2 is RSSI 0 to -128 -> 0 to 128
-                    case "debug[3]": // LQ 0-100
-                        return value;
-                    default:
-                        return value;
-                }
+                return value;
             case "GHST_MSP":
                 switch (fieldName) {
                     // debug 0 is msp frame count
@@ -2806,25 +2772,9 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                         return value;
                 }
             case "RX_EXPRESSLRS_SPI":
-                switch (fieldName) {
-                    case "debug[3]": // uplink LQ %
-                        return value;
-                    // debug 0 = Lost connection count
-                    // debug 1 = RSSI
-                    // debug 2 = SNR
-                    default:
-                        return value;
-                }
+                return value;
             case "RX_EXPRESSLRS_PHASELOCK":
-                switch (fieldName) {
-                    case "debug[2]": // Frequency offset in ticks
-                        return value; // ' ticks';
-                    // debug 0 = Phase offset us
-                    // debug 1 = Filtered phase offset us
-                    // debug 3 = Pphase shift in us
-                    default:
-                        return value; // ' us';
-                }
+                return value;
             case "GPS_RESCUE_THROTTLE_PID":
                 switch (fieldName) {
                     case "debug[0]": // Throttle P added uS
