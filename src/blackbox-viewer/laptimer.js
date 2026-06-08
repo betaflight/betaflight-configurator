@@ -31,9 +31,9 @@ export function LapTimer() {
         const lineHeight = 14, //px
             DEFAULT_FONT_FACE = "8pt Verdana, Arial, sans-serif",
             fgColor = "rgba(191,191,191,1.0)", // Text and highlights color
-            bgColor = `rgba(76,76,76,${parseInt(options.laptimer.transparency, 10) / 100.0})`, // background color
-            left = (canvas.width * parseInt(options.laptimer.left, 10)) / 100.0,
-            top = (canvas.height * parseInt(options.laptimer.top, 10)) / 100.0,
+            bgColor = `rgba(76,76,76,${Number.parseInt(options.laptimer.transparency, 10) / 100})`, // background color
+            left = (canvas.width * Number.parseInt(options.laptimer.left, 10)) / 100,
+            top = (canvas.height * Number.parseInt(options.laptimer.top, 10)) / 100,
             margin = 4, // pixels
             rows = 5 + (lapTime.laps.length > 0 ? 1 + lapTime.laps.length : 0);
 
@@ -111,7 +111,7 @@ export function LapTimer() {
     this.refresh = function (currentTime, maxTime, bookmarkTimes) {
         // Update the lapTimeTable with the current information
 
-        if (currentTime != null && bookmarkTimes != null)
+        if (currentTime != null && bookmarkTimes != null) {
             if (bookmarkTimes.length > 0) {
                 const bookmarkTimesSorted = bookmarkTimes.slice(0);
                 bookmarkTimesSorted.push(maxTime); // add end time
@@ -144,13 +144,14 @@ export function LapTimer() {
 
                 if (lapTime.laps.length > 0 && currentTime > bookmarkTimesSorted[0]) {
                     lapTime.best = maxTime;
-                    for (let i = 0; i < lapTime.laps.length; i++) {
-                        if (lapTime.laps[i] < lapTime.best) {
-                            lapTime.best = lapTime.laps[i];
+                    for (const lap of lapTime.laps) {
+                        if (lap < lapTime.best) {
+                            lapTime.best = lap;
                         }
                     }
                 }
             }
+        }
     };
 
     // Initialisation Code

@@ -217,9 +217,9 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
             case RATES_TYPE.indexOf("ACTUAL"):
             case RATES_TYPE.indexOf("QUICK"):
                 return Math.max(
-                    sysConfig["rates"][0] * 10.0 * scale,
-                    sysConfig["rates"][1] * 10.0 * scale,
-                    sysConfig["rates"][2] * 10.0 * scale,
+                    sysConfig["rates"][0] * 10 * scale,
+                    sysConfig["rates"][1] * 10 * scale,
+                    sysConfig["rates"][2] * 10 * scale,
                 );
             default:
                 return Math.max(
@@ -1413,11 +1413,12 @@ GraphConfig.getMinMaxForFieldDuringWindowTimeInterval = function (flightLog, log
     const maxTime = WindowCenterTime + WindowWidthTime / 2;
 
     const mm = flightLog.getMinMaxForFieldDuringTimeInterval(fieldName, minTime, maxTime);
-    if (mm === undefined)
+    if (mm === undefined) {
         return {
             min: -500,
             max: 500,
         };
+    }
 
     mm.min = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.min);
     mm.max = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.max);
@@ -1442,11 +1443,12 @@ GraphConfig.getMinMaxForFieldDuringMarkedInterval = function (flightLog, logGrap
     }
 
     const mm = flightLog.getMinMaxForFieldDuringTimeInterval(fieldName, minTime, maxTime);
-    if (mm === undefined)
+    if (mm === undefined) {
         return {
             min: -500,
             max: 500,
         };
+    }
 
     mm.min = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.min);
     mm.max = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.max);

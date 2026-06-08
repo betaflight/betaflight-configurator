@@ -26,7 +26,7 @@ export function FlightLogSticks(flightLog, rcCommandFields, canvas) {
 
     const canvasContext = canvas.getContext("2d"),
         sysConfig = flightLog.getSysConfig(),
-        pitchStickCurve = new ExpoCurve(0, 0.7, (500 * (sysConfig.rcRate ? sysConfig.rcRate : 100)) / 100, 1.0, 10);
+        pitchStickCurve = new ExpoCurve(0, 0.7, (500 * (sysConfig.rcRate ? sysConfig.rcRate : 100)) / 100, 1, 10);
 
     this.resize = function (width, height) {
         // Resize canvas if size changed
@@ -86,9 +86,7 @@ export function FlightLogSticks(flightLog, rcCommandFields, canvas) {
 
                 //We may start partway through the first chunk:
                 let frameIndex = startFrameIndex;
-                stickLoop: for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
-                    const chunk = chunks[chunkIndex];
-
+                stickLoop: for (const chunk of chunks) {
                     for (; frameIndex < chunk.frames.length; frameIndex++) {
                         const frameTime =
                                 chunk.frames[frameIndex][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME],
@@ -102,7 +100,9 @@ export function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                             });
                             stickPositionsTrail.push(frameStickPositions);
                         }
-                        if (frameTime >= windowCenterTime) break stickLoop; // we only get the trail up to the center line
+                        if (frameTime >= windowCenterTime) {
+                            break stickLoop; // we only get the trail up to the center line
+                        }
                     }
                     frameIndex = 0;
                 }
@@ -226,7 +226,9 @@ export function FlightLogSticks(flightLog, rcCommandFields, canvas) {
 
         for (stickIndex = 0; stickIndex < 4; stickIndex++) {
             //Check that stick data is present to be drawn:
-            if (rcCommandFields[stickIndex] === undefined) return;
+            if (rcCommandFields[stickIndex] === undefined) {
+                return;
+            }
 
             rcCommand[stickIndex] = frame[rcCommandFields[stickIndex]] / highResolutionScale;
             if (stickLabel != null) {
@@ -308,8 +310,7 @@ export function FlightLogSticks(flightLog, rcCommandFields, canvas) {
 
         for (stickIndex = 0; stickIndex < 4; stickIndex++) {
             //Clamp to [-1..1]
-            stickPositions[stickIndex] =
-                stickPositions[stickIndex] > 1 ? 1 : stickPositions[stickIndex] < -1 ? -1 : stickPositions[stickIndex];
+            stickPositions[stickIndex] = Math.max(-1, Math.min(1, stickPositions[stickIndex]));
 
             //Scale to our stick size
             stickPositions[stickIndex] *= config.stickSurroundRadius;

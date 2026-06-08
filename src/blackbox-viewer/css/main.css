@@ -169,7 +169,6 @@
     position: absolute;
     top: 0;
     left: 0;
-    /* pointer-events:none; */ /* Allow the user to drag the graph lines instead of hitting the craft */
     display: none;
 }
 
@@ -480,7 +479,6 @@
 .blackbox-viewer-root.has-log .video-top-controls .log-chart-zoom-panel,
 .blackbox-viewer-root.has-log .video-top-controls .log-chart-time-panel {
     display: inline-block;
-    /* overflow-y: hidden; */
 }
 
 .video-top-controls .log-view-panel,

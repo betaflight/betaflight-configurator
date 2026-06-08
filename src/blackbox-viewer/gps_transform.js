@@ -1,18 +1,18 @@
 export function GPS_transform(Lat0, Lon0, H0, Heading) {
     function deg2rad(deg) {
-        return (deg * Math.PI) / 180.0;
+        return (deg * Math.PI) / 180;
     }
 
     Lat0 = deg2rad(Lat0);
     Lon0 = deg2rad(Lon0);
-    const Semimajor = 6378137.0,
-        Flat = 1.0 / 298.257223563,
+    const Semimajor = 6378137,
+        Flat = 1 / 298.257223563,
         Ecc_2 = Flat * (2 - Flat),
         SinB = Math.sin(Lat0),
         CosB = Math.cos(Lat0),
         SinL = Math.sin(Lon0),
         CosL = Math.cos(Lon0),
-        N = Semimajor / Math.sqrt(1.0 - Ecc_2 * SinB * SinB),
+        N = Semimajor / Math.sqrt(1 - Ecc_2 * SinB * SinB),
         a11 = -SinB * CosL,
         a12 = -SinB * SinL,
         a13 = CosB,

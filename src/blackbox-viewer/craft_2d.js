@@ -1,5 +1,11 @@
 import { useSettingsStore } from "./stores/settings.js";
 
+function makeColorHalfStrength(colorHex) {
+    const color = Number.parseInt(colorHex.substring(1), 16);
+
+    return `rgba(${(color >> 16) & 0xff},${(color >> 8) & 0xff},${color & 0xff},0.5)`;
+}
+
 export function Craft2D(flightLog, canvas, propColors) {
     const { userSettings } = useSettingsStore();
 
@@ -14,10 +20,10 @@ export function Craft2D(flightLog, canvas, propColors) {
     const customMix = userSettings.customMix ?? null;
 
     let numMotors;
-    if (!customMix) {
-        numMotors = propColors.length;
-    } else {
+    if (customMix) {
         numMotors = customMix.motorOrder.length;
+    } else {
+        numMotors = propColors.length;
     }
 
     const shadeColors = [];
@@ -28,7 +34,10 @@ export function Craft2D(flightLog, canvas, propColors) {
     let motorOrder, yawOffset;
 
     // Motor numbering in counter-clockwise order starting from the 3 o'clock position
-    if (!customMix) {
+    if (customMix) {
+        motorOrder = customMix.motorOrder;
+        yawOffset = customMix.yawOffset;
+    } else {
         switch (numMotors) {
             case 3:
                 motorOrder = [0, 1, 2]; // Put motor 1 at the right
@@ -53,15 +62,6 @@ export function Craft2D(flightLog, canvas, propColors) {
                 }
                 yawOffset = 0;
         }
-    } else {
-        motorOrder = customMix.motorOrder;
-        yawOffset = customMix.yawOffset;
-    }
-
-    function makeColorHalfStrength(color) {
-        color = parseInt(color.substring(1), 16);
-
-        return `rgba(${(color >> 16) & 0xff},${(color >> 8) & 0xff},${color & 0xff},0.5)`;
     }
 
     /**
@@ -195,53 +195,37 @@ export function Craft2D(flightLog, canvas, propColors) {
             const motorValue = frame[frameFieldIndexes[`motor[${motorOrder[i]}]`]];
 
             canvasContext.save();
-            {
-                //Move to the motor center
-                canvasContext.translate(
-                    armLength * craftParameters.motors[i].x,
-                    armLength * craftParameters.motors[i].y,
-                );
 
-                canvasContext.fillStyle = shadeColors[motorOrder[i]];
+            //Move to the motor center
+            canvasContext.translate(armLength * craftParameters.motors[i].x, armLength * craftParameters.motors[i].y);
 
-                canvasContext.beginPath();
+            canvasContext.fillStyle = shadeColors[motorOrder[i]];
 
-                canvasContext.moveTo(0, 0);
-                canvasContext.arc(0, 0, bladeRadius, 0, Math.PI * 2, false);
+            canvasContext.beginPath();
 
-                canvasContext.fill();
+            canvasContext.moveTo(0, 0);
+            canvasContext.arc(0, 0, bladeRadius, 0, Math.PI * 2, false);
 
-                canvasContext.fillStyle = propColors[motorOrder[i]];
+            canvasContext.fill();
 
-                canvasContext.beginPath();
+            canvasContext.fillStyle = propColors[motorOrder[i]];
 
-                canvasContext.moveTo(0, 0);
-                canvasContext.arc(
-                    0,
-                    0,
-                    bladeRadius,
-                    -Math.PI / 2,
-                    -Math.PI / 2 +
-                        (Math.PI * 2 * Math.max(motorValue - sysConfig.motorOutput[0], 0)) /
-                            (sysConfig.motorOutput[1] - sysConfig.motorOutput[0]),
-                    false,
-                );
+            canvasContext.beginPath();
 
-                canvasContext.fill();
+            canvasContext.moveTo(0, 0);
+            canvasContext.arc(
+                0,
+                0,
+                bladeRadius,
+                -Math.PI / 2,
+                -Math.PI / 2 +
+                    (Math.PI * 2 * Math.max(motorValue - sysConfig.motorOutput[0], 0)) /
+                        (sysConfig.motorOutput[1] - sysConfig.motorOutput[0]),
+                false,
+            );
 
-                /* Disable motor value markers
-                var
-                    motorLabel = "" + motorValue;
-    
-                if (craftParameters.motors[motorIndex].x > 0) {
-                    canvasContext.textAlign = 'left';
-                    canvasContext.fillText(motorLabel, bladeRadius + MOTOR_LABEL_SPACING, 0);
-                } else {
-                    canvasContext.textAlign = 'right';
-                    canvasContext.fillText(motorLabel, -(bladeRadius + MOTOR_LABEL_SPACING), 0);
-                }
-                */
-            }
+            canvasContext.fill();
+
             canvasContext.restore();
         }
         canvasContext.restore();

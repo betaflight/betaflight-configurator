@@ -104,7 +104,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watchEffect, onMounted, onUnmounted, inject } from "vue";
+import { computed, watchEffect, onMounted, onUnmounted, inject } from "vue";
 import { useGraphStore } from "./stores/graph.js";
 import { useAppStore } from "./stores/app.js";
 import { useLogStore, FIRMWARE_CLASSES } from "./stores/log.js";

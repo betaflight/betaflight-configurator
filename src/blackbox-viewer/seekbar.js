@@ -63,11 +63,17 @@ export function SeekBar(canvas) {
 
         time = ((x - BAR_INSET) * (max - min)) / (canvas.width - 1 - BAR_INSET * 2) + min;
 
-        if (time < min) time = min;
+        if (time < min) {
+            time = min;
+        }
 
-        if (time > max) time = max;
+        if (time > max) {
+            time = max;
+        }
 
-        if (that.onSeek) that.onSeek(time);
+        if (that.onSeek) {
+            that.onSeek(time);
+        }
 
         that.repaint();
     }
@@ -285,8 +291,9 @@ export function SeekBar(canvas) {
             rebuildBackground();
         }
 
-        if (dirtyRegion === false) canvasContext.drawImage(background, 0, 0);
-        else {
+        if (dirtyRegion === false) {
+            canvasContext.drawImage(background, 0, 0);
+        } else {
             canvasContext.drawImage(
                 background,
                 dirtyRegion.x,

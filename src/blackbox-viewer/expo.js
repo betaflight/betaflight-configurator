@@ -49,7 +49,9 @@ export function ExpoCurve(offset, power, inputRange, outputRange, steps) {
         const proportion = valueInCurve - prevStepIndex,
             result = curve[prevStepIndex] + (curve[prevStepIndex + 1] - curve[prevStepIndex]) * proportion;
 
-        if (input < 0) return -result;
+        if (input < 0) {
+            return -result;
+        }
         return result;
     }
 

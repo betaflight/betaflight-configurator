@@ -4,7 +4,7 @@
 
 export function IMU(copyFrom) {
     // Constants:
-    const RAD = Math.PI / 180.0,
+    const RAD = Math.PI / 180,
         ROLL = 0,
         PITCH = 1,
         YAW = 2,
@@ -81,7 +81,7 @@ export function IMU(copyFrom) {
         const sinePitch = Math.sin(pitch);
         const headingX = vec.X * cosinePitch + vec.Y * sineRoll * sinePitch + vec.Z * sinePitch * cosineRoll;
         const headingY = vec.Y * cosineRoll - vec.Z * sineRoll;
-        let heading = Math.atan2(headingY, headingX) + (magneticDeclination / 10.0) * RAD; // RAD = pi/180
+        let heading = Math.atan2(headingY, headingX) + (magneticDeclination / 10) * RAD; // RAD = pi/180
 
         heading += 2 * Math.PI; // positive all the time, we want zero to return pi
         if (heading > 2 * Math.PI) {

@@ -4,7 +4,7 @@ import { FIRMWARE_TYPE_BETAFLIGHT, FIRMWARE_TYPE_CLEANFLIGHT } from "./flightlog
 //Convert a hexadecimal string (that represents a binary 32-bit float) into a float
 export function hexToFloat(string) {
     const arr = new Uint32Array(1);
-    arr[0] = parseInt(string, 16);
+    arr[0] = Number.parseInt(string, 16);
 
     const floatArr = new Float32Array(arr.buffer);
 
@@ -27,7 +27,9 @@ export function asciiArrayToString(arr) {
 export function asciiStringToByteArray(s) {
     const bytes = [];
 
-    for (let i = 0; i < s.length; i++) bytes.push(s.charCodeAt(i));
+    for (let i = 0; i < s.length; i++) {
+        bytes.push(s.charCodeAt(i));
+    }
 
     return bytes;
 }
@@ -109,15 +111,15 @@ export function parseCommaSeparatedString(string, length) {
 
     if (length < 2) {
         // this is not actually a list, just return the value
-        value = parts.indexOf(".") ? parseFloat(parts) : parseInt(parts, 10);
-        return isNaN(value) ? string : value;
+        value = parts.indexOf(".") ? Number.parseFloat(parts) : Number.parseInt(parts, 10);
+        return Number.isNaN(value) ? string : value;
     } else {
         // this really is a list; build an array
         result = new Array(length);
         for (let i = 0; i < length; i++) {
             if (i < parts.length) {
-                value = parts[i].indexOf(".") ? parseFloat(parts[i]) : parseInt(parts[i], 10);
-                result[i] = isNaN(value) ? parts[i] : value;
+                value = parts[i].indexOf(".") ? Number.parseFloat(parts[i]) : Number.parseInt(parts[i], 10);
+                result[i] = Number.isNaN(value) ? parts[i] : value;
             } else {
                 result[i] = null;
             }
@@ -139,12 +141,15 @@ export function binarySearchOrPrevious(list, item) {
     while (min < max) {
         mid = Math.floor((min + max) / 2);
 
-        if (list[mid] === item) return mid;
-        else if (list[mid] < item) {
+        if (list[mid] === item) {
+            return mid;
+        } else if (list[mid] < item) {
             // This might be the largest element smaller than item, but we have to continue the search right to find out
             result = mid;
             min = mid + 1;
-        } else max = mid;
+        } else {
+            max = mid;
+        }
     }
 
     return result;
@@ -163,12 +168,15 @@ export function binarySearchOrNext(list, item) {
     while (min < max) {
         mid = Math.floor((min + max) / 2);
 
-        if (list[mid] === item) return mid;
-        else if (list[mid] > item) {
+        if (list[mid] === item) {
+            return mid;
+        } else if (list[mid] > item) {
             // This might be the smallest element larger than item, but we have to continue the search left to find out
             max = mid;
             result = mid;
-        } else min = mid + 1;
+        } else {
+            min = mid + 1;
+        }
     }
 
     return result;
@@ -177,7 +185,9 @@ export function binarySearchOrNext(list, item) {
 export function leftPad(string, pad, minLength) {
     string = `${string}`;
 
-    while (string.length < minLength) string = pad + string;
+    while (string.length < minLength) {
+        string = pad + string;
+    }
 
     return string;
 }
@@ -203,15 +213,15 @@ export function formatTime(msec, displayMsec) {
 export function stringLoopTime(loopTime, pid_process_denom, unsynced_fast_pwm, motor_pwm_rate) {
     let returnString = "";
     if (loopTime != null) {
-        returnString = `${loopTime}\u03BCS (${parseFloat((1000 / loopTime).toFixed(3))}kHz`;
+        returnString = `${loopTime}\u03BCS (${Number.parseFloat((1000 / loopTime).toFixed(3))}kHz`;
         if (pid_process_denom != null) {
-            returnString += `/${parseFloat((1000 / (loopTime * pid_process_denom)).toFixed(3))}kHz`;
+            returnString += `/${Number.parseFloat((1000 / (loopTime * pid_process_denom)).toFixed(3))}kHz`;
             if (unsynced_fast_pwm != null) {
                 returnString +=
                     unsynced_fast_pwm === 0
                         ? "/SYNCED"
                         : motor_pwm_rate != null
-                          ? `/${parseFloat((motor_pwm_rate / 1000).toFixed(3))}kHz`
+                          ? `/${Number.parseFloat((motor_pwm_rate / 1000).toFixed(3))}kHz`
                           : "UNSYNCED";
             }
         }
@@ -240,7 +250,9 @@ export function stringTimetoMsec(input) {
                     (matches[2] * 1000000 + (matches[4] ? `${matches[4]}00`.slice(0, 3) : 0) * 1000)
                 );
             }
-        } else return (matches[1] ? -1 : 1) * (matches[2] * 1000000);
+        } else {
+            return (matches[1] ? -1 : 1) * (matches[2] * 1000000);
+        }
     } catch {
         return 0;
     }
@@ -251,7 +263,7 @@ export function constrain(value, min, max) {
 }
 
 export function validate(value, defaultValue) {
-    return value != null ? value : defaultValue;
+    return value == null ? defaultValue : value;
 }
 
 export function roundRect(ctx, { x, y, width, height, radius = 5, fill = true, stroke = true }) {
@@ -323,7 +335,9 @@ export const mouseNotification = {
     elem: null,
     timeout: null,
     show: function (target, x, y, message, delay, messageClass, align, margin) {
-        if (!this.enabled) return false;
+        if (!this.enabled) {
+            return false;
+        }
 
         if (!this.elem) {
             this.elem = document.getElementById("mouseNotification");
@@ -342,14 +356,14 @@ export const mouseNotification = {
         const targetRect = targetEl.getBoundingClientRect();
 
         // reposition the notification
-        if (align != null) {
+        if (align == null) {
+            this.elem.style.left = `${(x || 0) - targetRect.left + margin}px`;
+            this.elem.style.top = `${(y || 0) - targetRect.top + margin}px`;
+        } else {
             const left = computeAlignedLeft(align, targetRect.width, popupRect.width, margin);
             const top = computeAlignedTop(align, targetRect.height, popupRect.height, margin);
             this.elem.style.left = `${left}px`;
             this.elem.style.top = `${top}px`;
-        } else {
-            this.elem.style.left = `${(x || 0) - targetRect.left + margin}px`;
-            this.elem.style.top = `${(y || 0) - targetRect.top + margin}px`;
         }
 
         // now re-position the box if it goes out of the target element

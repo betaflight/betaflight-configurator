@@ -13,6 +13,10 @@ import { useGraphStore } from "./stores/graph.js";
 import { useWorkspaceStore } from "./stores/workspace.js";
 import { ThemeColors } from "./theme_colors";
 
+function extend(base, top) {
+    return { ...base, ...top };
+}
+
 export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanvas, analyserCanvas, options) {
     const graphStore = useGraphStore();
     const workspaceStore = useWorkspaceStore();
@@ -70,10 +74,6 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
     this.getAnalyser = function () {
         return analyser;
     };
-
-    function extend(base, top) {
-        return { ...base, ...top };
-    }
 
     const onMouseMove = (e) => {
         e.preventDefault();
@@ -167,60 +167,86 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             const fieldName = fieldNames[fieldIndex];
             let matches;
 
-            if ((matches = fieldName.match(/^motor\[(\d+)]$/))) {
+            matches = fieldName.match(/^motor\[(\d+)]$/);
+            if (matches) {
                 const motorIndex = matches[1];
 
                 idents.motorFields[motorIndex] = fieldIndex;
                 idents.motorColors[motorIndex] = lineColors[motorGraphColorIndex++ % lineColors.length];
-            } else if ((matches = fieldName.match(/^rcCommand\[(\d+)]$/))) {
+                continue;
+            }
+
+            matches = fieldName.match(/^rcCommand\[(\d+)]$/);
+            if (matches) {
                 const rcCommandIndex = matches[1];
 
                 if (rcCommandIndex >= 0 && rcCommandIndex < 4) {
                     idents.rcCommandFields[rcCommandIndex] = fieldIndex;
                 }
-            } else if ((matches = fieldName.match(/^axisPID\[(\d+)]$/))) {
+                continue;
+            }
+
+            matches = fieldName.match(/^axisPID\[(\d+)]$/);
+            if (matches) {
                 const axisIndex = matches[1];
 
                 idents.axisPIDSum[axisIndex] = fieldIndex;
-            } else if ((matches = fieldName.match(/^axis(.)\[(\d+)]$/))) {
+                continue;
+            }
+
+            matches = fieldName.match(/^axis(.)\[(\d+)]$/);
+            if (matches) {
                 const axisIndex = matches[2];
 
                 idents.axisPIDFields[matches[1]] = axisIndex;
                 idents.hasPIDs = true;
-            } else if ((matches = fieldName.match(/^gyroADC\[(\d+)]$/))) {
+                continue;
+            }
+
+            matches = fieldName.match(/^gyroADC\[(\d+)]$/);
+            if (matches) {
                 const axisIndex = matches[1];
 
                 idents.gyroFields[axisIndex] = fieldIndex;
-            } else if ((matches = fieldName.match(/^accSmooth\[(\d+)]$/))) {
+                continue;
+            }
+
+            matches = fieldName.match(/^accSmooth\[(\d+)]$/);
+            if (matches) {
                 const axisIndex = matches[1];
 
                 idents.accFields[axisIndex] = fieldIndex;
-            } else if ((matches = fieldName.match(/^servo\[(\d+)]$/))) {
+                continue;
+            }
+
+            matches = fieldName.match(/^servo\[(\d+)]$/);
+            if (matches) {
                 const servoIndex = matches[1];
 
                 idents.numServos++;
                 idents.servoFields[servoIndex] = fieldIndex;
-            } else {
-                switch (fieldName) {
-                    case "vbatLatest":
-                        idents.vbatField = fieldIndex;
-                        idents.numCells = flightLog.getNumCellsEstimate();
-                        break;
-                    case "baroAlt":
-                        idents.baroField = fieldIndex;
-                        break;
-                    case "roll":
-                        idents.roll = fieldIndex;
-                        break;
-                    case "pitch":
-                        idents.pitch = fieldIndex;
-                        break;
-                    case "heading":
-                        idents.heading = fieldIndex;
-                        break;
-                    default:
-                        idents.miscFields.push(fieldIndex);
-                }
+                continue;
+            }
+
+            switch (fieldName) {
+                case "vbatLatest":
+                    idents.vbatField = fieldIndex;
+                    idents.numCells = flightLog.getNumCellsEstimate();
+                    break;
+                case "baroAlt":
+                    idents.baroField = fieldIndex;
+                    break;
+                case "roll":
+                    idents.roll = fieldIndex;
+                    break;
+                case "pitch":
+                    idents.pitch = fieldIndex;
+                    break;
+                case "heading":
+                    idents.heading = fieldIndex;
+                    break;
+                default:
+                    idents.miscFields.push(fieldIndex);
             }
         }
     }
@@ -251,8 +277,9 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         canvasContext.font = `${drawingParams.fontSizeFrameLabel}pt ${DEFAULT_FONT_FACE}`;
         canvasContext.fillStyle = ThemeColors.getGraphTextSecondary();
 
-        if (frameLabelTextWidthFrameNumber == null)
+        if (frameLabelTextWidthFrameNumber == null) {
             frameLabelTextWidthFrameNumber = canvasContext.measureText("#0000000").width;
+        }
 
         canvasContext.fillText(
             `#${leftPad(frameIndex, "0", 7)}`,
@@ -260,8 +287,9 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             canvas.height - 8,
         );
 
-        if (frameLabelTextWidthFrameTime == null)
+        if (frameLabelTextWidthFrameTime == null) {
             frameLabelTextWidthFrameTime = canvasContext.measureText("00:00.000").width;
+        }
 
         canvasContext.fillText(
             formatTime(timeMsec, true),
@@ -289,7 +317,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         frameIndex = startFrameIndex;
 
         canvasContext.strokeStyle = color;
-        canvasContext.lineWidth = lineWidth ? lineWidth : drawingParams.plotLineWidth;
+        canvasContext.lineWidth = lineWidth || drawingParams.plotLineWidth;
 
         canvasContext.beginPath();
 
@@ -311,9 +339,13 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
                 } else if (nextY < -1 * plotHeight) {
                     nextY = -1 * plotHeight;
                     notInBounds++;
-                } else notInBounds = -5;
+                } else {
+                    notInBounds = -5;
+                }
 
-                if (notInBounds > 5) notInBounds = -5; // reset it every 5th line draw (to simulate dashing)
+                if (notInBounds > 5) {
+                    notInBounds = -5; // reset it every 5th line draw (to simulate dashing)
+                }
 
                 if (drawingLine && notInBounds <= 0) {
                     canvasContext.lineTo(nextX, nextY);
@@ -342,8 +374,11 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
                                 GAP_WARNING_BOX_RADIUS * 2,
                             );
 
-                            if (chunk.gapStartsHere[frameIndex]) continue;
-                            else inGap = false;
+                            if (chunk.gapStartsHere[frameIndex]) {
+                                continue;
+                            } else {
+                                inGap = false;
+                            }
                         } else if (chunk.gapStartsHere[frameIndex]) {
                             //Must be right at the beginning of drawing
                             inGap = true;
@@ -354,7 +389,9 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
 
                 drawingLine = true;
 
-                if (frameTime >= windowEndTime) break plottingLoop;
+                if (frameTime >= windowEndTime) {
+                    break plottingLoop;
+                }
             }
 
             frameIndex = 0;
@@ -368,7 +405,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             canvasContext.globalAlpha = 0.5;
             canvasContext.stroke();
             canvasContext.lineWidth = lineWidthTemp;
-            canvasContext.globalAlpha = 1.0;
+            canvasContext.globalAlpha = 1;
         }
 
         canvasContext.stroke();
@@ -390,11 +427,11 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
     //Draw an background for the line for a graph (at the origin and spanning the window)
     function drawAxisBackground(plotHeight) {
         const axisGradient = canvasContext.createLinearGradient(0, -plotHeight / 2, 0, plotHeight / 2);
-        axisGradient.addColorStop(0.0, "rgba(255,255,255,0.1)");
+        axisGradient.addColorStop(0, "rgba(255,255,255,0.1)");
         axisGradient.addColorStop(0.15, "rgba(0,0,0,0)");
         axisGradient.addColorStop(0.5, "rgba(0,0,0,0)");
         axisGradient.addColorStop(0.85, "rgba(0,0,0,0)");
-        axisGradient.addColorStop(1.0, "rgba(255,255,255,0.1)");
+        axisGradient.addColorStop(1, "rgba(255,255,255,0.1)");
         canvasContext.fillStyle = axisGradient;
         canvasContext.fillRect(0, -plotHeight / 2, canvas.width, plotHeight);
     }
@@ -441,11 +478,11 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         canvasContext.fillStyle = ThemeColors.getGraphText();
         canvasContext.textAlign = "right";
 
-        canvasContext.fillText(axisLabel, canvas.width - 8, y ? y : -8);
+        canvasContext.fillText(axisLabel, canvas.width - 8, y || -8);
     }
 
     function drawEventLine(x, labelY, label, color, width, labelColor, align) {
-        width = width || 1.0;
+        width = width || 1;
 
         canvasContext.lineWidth = width;
         canvasContext.strokeStyle = color || "rgba(255,255,255,0.5)";
@@ -653,7 +690,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         if (bookmarkEvents != null) {
             for (let i = 0; i <= 9; i++) {
                 if (bookmarkEvents[i] != null) {
-                    if (bookmarkEvents[i].state)
+                    if (bookmarkEvents[i].state) {
                         if (
                             bookmarkEvents[i].time >= windowStartTime - BEGIN_MARGIN_MICROSECONDS &&
                             bookmarkEvents[i].time < windowEndTime
@@ -667,6 +704,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
                                 sequenceNum++,
                             );
                         }
+                    }
                 }
             }
         }
@@ -769,7 +807,9 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             0,
         )}px`;
 
-        if (analyser != null) analyser.resize();
+        if (analyser != null) {
+            analyser.resize();
+        }
 
         // Calculate again the position/size of frame label
         frameLabelTextWidthFrameNumber = null;
@@ -808,47 +848,50 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             }
 
             // Pick the sample before that to begin plotting from
-            if (startFrameIndex > 0) startFrameIndex--;
+            if (startFrameIndex > 0) {
+                startFrameIndex--;
+            }
 
             // Plot graphs
             for (i = 0; i < graphs.length; i++) {
                 const graph = graphs[i];
 
                 canvasContext.save();
-                {
-                    canvasContext.translate(0, canvas.height * graph.y);
 
-                    drawAxisLine();
+                canvasContext.translate(0, canvas.height * graph.y);
 
-                    if (!options.graphGridOverride && graph.fields.length > 0) {
-                        drawGrid(graph.fields[0].curve, canvas.height * graph.height);
-                    }
+                drawAxisLine();
 
-                    if (options.drawGradient && graphs.length > 1)
-                        // only draw the background if more than one graph set.
-                        drawAxisBackground(canvas.height * graph.height);
-
-                    for (j = 0; j < graph.fields.length; j++) {
-                        if (graphConfig.isGraphFieldHidden(i, j)) {
-                            continue;
-                        }
-                        const field = graph.fields[j];
-                        plotField(
-                            chunks,
-                            startFrameIndex,
-                            field.index,
-                            field.curve,
-                            (canvas.height * graph.height) / 2,
-                            field.color ? field.color : GraphConfig.PALETTE[j % GraphConfig.PALETTE.length],
-                            field.lineWidth ? field.lineWidth : null,
-                            graphConfig.highlightGraphIndex === i && graphConfig.highlightFieldIndex === j,
-                        );
-                    }
-
-                    if (graph.label) {
-                        drawAxisLabel(graph.label);
-                    }
+                if (!options.graphGridOverride && graph.fields.length > 0) {
+                    drawGrid(graph.fields[0].curve, canvas.height * graph.height);
                 }
+
+                if (options.drawGradient && graphs.length > 1) {
+                    // only draw the background if more than one graph set.
+                    drawAxisBackground(canvas.height * graph.height);
+                }
+
+                for (j = 0; j < graph.fields.length; j++) {
+                    if (graphConfig.isGraphFieldHidden(i, j)) {
+                        continue;
+                    }
+                    const field = graph.fields[j];
+                    plotField(
+                        chunks,
+                        startFrameIndex,
+                        field.index,
+                        field.curve,
+                        (canvas.height * graph.height) / 2,
+                        field.color ? field.color : GraphConfig.PALETTE[j % GraphConfig.PALETTE.length],
+                        field.lineWidth ? field.lineWidth : null,
+                        graphConfig.highlightGraphIndex === i && graphConfig.highlightFieldIndex === j,
+                    );
+                }
+
+                if (graph.label) {
+                    drawAxisLabel(graph.label);
+                }
+
                 canvasContext.restore();
             }
 
@@ -942,11 +985,9 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         for (i = 0; i < graphs.length; i++) {
             graph = graphs[i];
 
-            heightSum += graph.height ? graph.height : 1.0;
+            heightSum += graph.height ? graph.height : 1;
 
-            for (let j = 0; j < graphs[i].fields.length; j++) {
-                const field = graphs[i].fields[j];
-
+            for (const field of graphs[i].fields) {
                 field.index = flightLog.getMainFieldIndexByName(field.name);
 
                 // Compute inputRange and offset from min-max values
@@ -964,12 +1005,12 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
                 );
                 const inputRange = (max - min) / 2;
                 const offset = -(max + min) / 2;
-                const outputRange = 1.0; // There is no direct zoom now, set outputRange to 1
+                const outputRange = 1; // There is no direct zoom now, set outputRange to 1
 
                 // Convert the field's curve settings into an actual expo curve object:
                 field.curve = new ExpoCurve(
                     offset,
-                    options.graphExpoOverride ? 1.0 : field.curve.power,
+                    options.graphExpoOverride ? 1 : field.curve.power,
                     inputRange,
                     outputRange,
                     field.curve.steps,

@@ -184,8 +184,8 @@ export function MapGrapher() {
                 // Altitude max and min values can be obtained from the stats but fixing the index at 4 doesn't seem safe
                 // const maxAlt = flightLog.getStats().frame.G.field[4].max / altitudeDivider;
                 // const minAlt = flightLog.getStats().frame.G.field[4].min / altitudeDivider;
-                maxAlt = coordinates.alt > maxAlt ? coordinates.alt : maxAlt;
-                minAlt = coordinates.alt < minAlt ? coordinates.alt : minAlt;
+                maxAlt = Math.max(coordinates.alt, maxAlt);
+                minAlt = Math.min(coordinates.alt, minAlt);
 
                 // 1/4 of the dots is enough to draw the line
                 if (frameCount % 4 === 0) {
@@ -391,7 +391,7 @@ export function MapGrapher() {
     };
 
     this.isNumber = function (n) {
-        return typeof n === "number" && !isNaN(n);
+        return typeof n === "number" && !Number.isNaN(n);
     };
 
     this.getGroundCourseFromFrame = function (frame, groundCourseIndex) {

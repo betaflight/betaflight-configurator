@@ -2234,7 +2234,7 @@ FlightLogFieldPresenter.decodeDebugFieldToFriendly = function (flightLog, fieldN
             case "DSHOT_TELEMETRY_COUNTS":
                 return value.toFixed(0);
             case "EZLANDING":
-                return `${(value / 100.0).toFixed(2)} %`;
+                return `${(value / 100).toFixed(2)} %`;
             case "OPTICALFLOW":
                 switch (fieldName) {
                     case "debug[1]":
@@ -2361,7 +2361,7 @@ FlightLogFieldPresenter.ConvertFieldValue = function (flightLog, fieldName, toFr
         case "gyroUnfilt[2]":
             return toFriendly
                 ? flightLog.gyroRawToDegreesPerSecond(value / highResolutionScale)
-                : (value * highResolutionScale) / flightLog.gyroRawToDegreesPerSecond(1.0);
+                : (value * highResolutionScale) / flightLog.gyroRawToDegreesPerSecond(1);
 
         case "axisError[0]":
         case "axisError[1]":
@@ -2414,12 +2414,12 @@ FlightLogFieldPresenter.ConvertFieldValue = function (flightLog, fieldName, toFr
         case "axisS[0]":
         case "axisS[1]":
         case "axisS[2]":
-            return toFriendly ? flightLog.getPIDPercentage(value) : value / flightLog.getPIDPercentage(1.0);
+            return toFriendly ? flightLog.getPIDPercentage(value) : value / flightLog.getPIDPercentage(1);
 
         case "accSmooth[0]":
         case "accSmooth[1]":
         case "accSmooth[2]":
-            return toFriendly ? flightLog.accRawToGs(value) : value / flightLog.accRawToGs(1.0);
+            return toFriendly ? flightLog.accRawToGs(value) : value / flightLog.accRawToGs(1);
 
         case "vbatLatest":
             if (
@@ -2463,7 +2463,7 @@ FlightLogFieldPresenter.ConvertFieldValue = function (flightLog, fieldName, toFr
         case "baroAlt":
             return toFriendly
                 ? FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 100, userSettings.altitudeUnits)
-                : (value * 100) / FlightLogFieldPresenter.decodeAltitudeLogToChart(1.0, userSettings.altitudeUnits);
+                : (value * 100) / FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits);
 
         case "flightModeFlags":
             return value;
@@ -2489,7 +2489,7 @@ FlightLogFieldPresenter.ConvertFieldValue = function (flightLog, fieldName, toFr
         case "GPS_altitude":
             return toFriendly
                 ? FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 10, userSettings.altitudeUnits)
-                : (value * 10) / FlightLogFieldPresenter.decodeAltitudeLogToChart(1.0, userSettings.altitudeUnits);
+                : (value * 10) / FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits);
         case "GPS_speed":
             switch (userSettings.speedUnits) {
                 case 1:
@@ -2565,7 +2565,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                         return toFriendly ? value / 10 : value * 10; // " V";
                 }
             case "ACCELEROMETER":
-                return toFriendly ? flightLog.accRawToGs(value) : value / flightLog.accRawToGs(1.0);
+                return toFriendly ? flightLog.accRawToGs(value) : value / flightLog.accRawToGs(1);
             case "MIXER":
                 return toFriendly ? flightLog.rcCommandRawToThrottle(value) : flightLog.ThrottleTorcCommandRaw(value);
             case "PIDLOOP":
@@ -2589,7 +2589,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                 }
                 return toFriendly
                     ? flightLog.gyroRawToDegreesPerSecond(value)
-                    : value / flightLog.gyroRawToDegreesPerSecond(1.0); // °/s;
+                    : value / flightLog.gyroRawToDegreesPerSecond(1); // °/s;
             case "ANGLERATE":
                 return value; // °/s;
             case "ESC_SENSOR":
@@ -2620,7 +2620,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                     case "debug[2]": // gyro pre dyn notch, downsampled for FFT [for gyro debug axis]
                         return toFriendly
                             ? flightLog.gyroRawToDegreesPerSecond(value)
-                            : value / flightLog.gyroRawToDegreesPerSecond(1.0); // °/s;
+                            : value / flightLog.gyroRawToDegreesPerSecond(1); // °/s;
                     // debug 3 = not used
                     default:
                         return value;
@@ -2633,7 +2633,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                         case "debug[0]": // gyro pre dyn notch [for gyro debug axis]
                             return toFriendly
                                 ? flightLog.gyroRawToDegreesPerSecond(value)
-                                : value / flightLog.gyroRawToDegreesPerSecond(1.0); // °/s;
+                                : value / flightLog.gyroRawToDegreesPerSecond(1); // °/s;
                         default:
                             return value;
                     }
@@ -2642,7 +2642,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                         case "debug[3]": // gyro pre dyn notch [for gyro debug axis]
                             return toFriendly
                                 ? flightLog.gyroRawToDegreesPerSecond(value)
-                                : value / flightLog.gyroRawToDegreesPerSecond(1.0); // °/s;
+                                : value / flightLog.gyroRawToDegreesPerSecond(1); // °/s;
                         default:
                             return value;
                     }
@@ -2712,7 +2712,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
                     case "debug[3]": // pre-dyn notch gyro [for selected axis]
                         return toFriendly
                             ? flightLog.gyroRawToDegreesPerSecond(value)
-                            : value / flightLog.gyroRawToDegreesPerSecond(1.0); // °/s
+                            : value / flightLog.gyroRawToDegreesPerSecond(1); // °/s
                     default:
                         return value;
                 }

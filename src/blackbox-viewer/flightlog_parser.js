@@ -21,6 +21,31 @@ import {
     parseCommaSeparatedString,
 } from "./tools";
 
+function mapFieldNamesToIndex(fieldNames) {
+    const result = {};
+
+    for (let i = 0; i < fieldNames.length; i++) {
+        result[fieldNames[i]] = i;
+    }
+
+    return result;
+}
+
+/**
+ * Translates old field names in the given array to their modern equivalents and return the passed array.
+ */
+function translateLegacyFieldNames(names) {
+    for (let i = 0; i < names.length; i++) {
+        const matches = names[i].match(/^gyroData(.+)$/);
+
+        if (matches) {
+            names[i] = `gyroADC${matches[1]}`;
+        }
+    }
+
+    return names;
+}
+
 export function FlightLogParser(logData) {
     //Private constants:
     const FLIGHT_LOG_MAX_FRAME_LENGTH = 256,
@@ -66,7 +91,7 @@ export function FlightLogParser(logData) {
         FLIGHT_LOG_FIELD_ENCODING_NULL = 9, // Nothing is written to the file, take value to be zero
         FLIGHT_LOG_FIELD_ENCODING_TAG2_3SVARIABLE = 10,
         EOF = ArrayDataStream.prototype.EOF,
-        NEWLINE = "\n".charCodeAt(0),
+        NEWLINE = "\n".codePointAt(0),
         INFLIGHT_ADJUSTMENT_FUNCTIONS = [
             {
                 name: "None",
@@ -480,38 +505,13 @@ export function FlightLogParser(logData) {
 
     // Lets add the custom extensions
     const completeSysConfig = { ...defaultSysConfig, ...defaultSysConfigExtension };
-    this.sysConfig = Object.create(completeSysConfig); // Object.create(defaultSysConfig);
+    this.sysConfig = Object.create(completeSysConfig);
 
     /*
      * Event handler of the signature (frameValid, frame, frameType, frameOffset, frameSize)
      * called when a frame has been decoded.
      */
     this.onFrameReady = null;
-
-    function mapFieldNamesToIndex(fieldNames) {
-        const result = {};
-
-        for (let i = 0; i < fieldNames.length; i++) {
-            result[fieldNames[i]] = i;
-        }
-
-        return result;
-    }
-
-    /**
-     * Translates old field names in the given array to their modern equivalents and return the passed array.
-     */
-    function translateLegacyFieldNames(names) {
-        for (let i = 0; i < names.length; i++) {
-            let matches;
-
-            if ((matches = names[i].match(/^gyroData(.+)$/))) {
-                names[i] = `gyroADC${matches[1]}`;
-            }
-        }
-
-        return names;
-    }
 
     /**
      * Translates the name of a field to the parameter in sysConfig object equivalent
@@ -521,10 +521,10 @@ export function FlightLogParser(logData) {
      */
     function translateFieldName(fieldName) {
         const translation = translationValues[fieldName];
-        if (translation !== undefined) {
-            return translation;
-        } else {
+        if (translation === undefined) {
             return fieldName;
+        } else {
+            return translation;
         }
     }
 
@@ -1062,14 +1062,14 @@ export function FlightLogParser(logData) {
         const fieldStats = this.stats.frame[frameType].field;
 
         for (let i = 0; i < frame.length; i++) {
-            if (!fieldStats[i]) {
+            if (fieldStats[i]) {
+                fieldStats[i].max = Math.max(frame[i], fieldStats[i].max);
+                fieldStats[i].min = Math.min(frame[i], fieldStats[i].min);
+            } else {
                 fieldStats[i] = {
                     max: frame[i],
                     min: frame[i],
                 };
-            } else {
-                fieldStats[i].max = Math.max(frame[i], fieldStats[i].max);
-                fieldStats[i].min = Math.min(frame[i], fieldStats[i].min);
             }
         }
     };
@@ -1117,9 +1117,13 @@ export function FlightLogParser(logData) {
         mainHistory[2] = mainHistory[0];
 
         // And advance the current frame into an empty space ready to be filled
-        if (mainHistory[0] === mainHistoryRing[0]) mainHistory[0] = mainHistoryRing[1];
-        else if (mainHistory[0] === mainHistoryRing[1]) mainHistory[0] = mainHistoryRing[2];
-        else mainHistory[0] = mainHistoryRing[0];
+        if (mainHistory[0] === mainHistoryRing[0]) {
+            mainHistory[0] = mainHistoryRing[1];
+        } else if (mainHistory[0] === mainHistoryRing[1]) {
+            mainHistory[0] = mainHistoryRing[2];
+        } else {
+            mainHistory[0] = mainHistoryRing[0];
+        }
         return mainStreamIsValid;
     };
 
@@ -1155,7 +1159,9 @@ export function FlightLogParser(logData) {
             if (predictor[i] === FLIGHT_LOG_FIELD_PREDICTOR_INC) {
                 current[i] = skippedFrames + 1;
 
-                if (previous) current[i] += previous[i];
+                if (previous) {
+                    current[i] += previous[i];
+                }
 
                 i++;
             } else {
@@ -1170,11 +1176,14 @@ export function FlightLogParser(logData) {
                         value = -signExtend14Bit(stream.readUnsignedVB());
                         break;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG8_4S16:
-                        if (dataVersion < 2) stream.readTag8_4S16_v1(values);
-                        else stream.readTag8_4S16_v2(values);
+                        if (dataVersion < 2) {
+                            stream.readTag8_4S16_v1(values);
+                        } else {
+                            stream.readTag8_4S16_v2(values);
+                        }
 
                         //Apply the predictors for the fields:
-                        for (j = 0; j < 4; j++, i++)
+                        for (j = 0; j < 4; j++, i++) {
                             current[i] = applyPrediction(
                                 i,
                                 raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
@@ -1183,13 +1192,14 @@ export function FlightLogParser(logData) {
                                 previous,
                                 previous2,
                             );
+                        }
 
                         continue;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG2_3S32:
                         stream.readTag2_3S32(values);
 
                         //Apply the predictors for the fields:
-                        for (j = 0; j < 3; j++, i++)
+                        for (j = 0; j < 3; j++, i++) {
                             current[i] = applyPrediction(
                                 i,
                                 raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
@@ -1198,13 +1208,14 @@ export function FlightLogParser(logData) {
                                 previous,
                                 previous2,
                             );
+                        }
 
                         continue;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG2_3SVARIABLE:
                         stream.readTag2_3SVariable(values);
 
                         //Apply the predictors for the fields:
-                        for (j = 0; j < 3; j++, i++)
+                        for (j = 0; j < 3; j++, i++) {
                             current[i] = applyPrediction(
                                 i,
                                 raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
@@ -1213,6 +1224,7 @@ export function FlightLogParser(logData) {
                                 previous,
                                 previous2,
                             );
+                        }
 
                         continue;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB:
@@ -1227,7 +1239,7 @@ export function FlightLogParser(logData) {
 
                         stream.readTag8_8SVB(values, groupCount);
 
-                        for (j = 0; j < groupCount; j++, i++)
+                        for (j = 0; j < groupCount; j++, i++) {
                             current[i] = applyPrediction(
                                 i,
                                 raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
@@ -1236,6 +1248,7 @@ export function FlightLogParser(logData) {
                                 previous,
                                 previous2,
                             );
+                        }
 
                         continue;
                     case FLIGHT_LOG_FIELD_ENCODING_NULL:
@@ -1243,9 +1256,11 @@ export function FlightLogParser(logData) {
                         value = 0;
                         break;
                     default:
-                        if (encoding[i] === undefined)
-                            throw `Missing field encoding header for field #${i} '${frameDef.name[i]}'`;
-                        else throw `Unsupported field encoding ${encoding[i]}`;
+                        if (encoding[i] === undefined) {
+                            throw new Error(`Missing field encoding header for field #${i} '${frameDef.name[i]}'`);
+                        } else {
+                            throw new Error(`Unsupported field encoding ${encoding[i]}`);
+                        }
                 }
 
                 current[i] = applyPrediction(
@@ -1336,9 +1351,13 @@ export function FlightLogParser(logData) {
             mainHistory[1] = mainHistory[0];
 
             // And advance the current frame into an empty space ready to be filled
-            if (mainHistory[0] === mainHistoryRing[0]) mainHistory[0] = mainHistoryRing[1];
-            else if (mainHistory[0] === mainHistoryRing[1]) mainHistory[0] = mainHistoryRing[2];
-            else mainHistory[0] = mainHistoryRing[0];
+            if (mainHistory[0] === mainHistoryRing[0]) {
+                mainHistory[0] = mainHistoryRing[1];
+            } else if (mainHistory[0] === mainHistoryRing[1]) {
+                mainHistory[0] = mainHistoryRing[2];
+            } else {
+                mainHistory[0] = mainHistoryRing[0];
+            }
         }
         return mainStreamIsValid;
     };
@@ -1374,7 +1393,7 @@ export function FlightLogParser(logData) {
                 break;
             case FLIGHT_LOG_FIELD_PREDICTOR_MOTOR_0:
                 if (this.frameDefs.I.nameToIndex["motor[0]"] === undefined) {
-                    throw "Attempted to base I-field prediction on motor0 before it was read";
+                    throw new Error("Attempted to base I-field prediction on motor0 before it was read");
                 }
                 value += current[this.frameDefs.I.nameToIndex["motor[0]"]];
                 break;
@@ -1382,40 +1401,52 @@ export function FlightLogParser(logData) {
                 value += this.sysConfig.vbatref;
                 break;
             case FLIGHT_LOG_FIELD_PREDICTOR_PREVIOUS:
-                if (!previous) break;
+                if (!previous) {
+                    break;
+                }
 
                 value += previous[fieldIndex];
                 break;
             case FLIGHT_LOG_FIELD_PREDICTOR_STRAIGHT_LINE:
-                if (!previous) break;
+                if (!previous) {
+                    break;
+                }
 
                 value += 2 * previous[fieldIndex] - previous2[fieldIndex];
                 break;
             case FLIGHT_LOG_FIELD_PREDICTOR_AVERAGE_2:
-                if (!previous) break;
+                if (!previous) {
+                    break;
+                }
 
                 //Round toward zero like C would do for integer division:
                 value += ~~((previous[fieldIndex] + previous2[fieldIndex]) / 2);
                 break;
             case FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD:
                 if (this.frameDefs.H?.nameToIndex["GPS_home[0]"] === undefined) {
-                    throw "Attempted to base prediction on GPS home position without GPS home frame definition";
+                    throw new Error(
+                        "Attempted to base prediction on GPS home position without GPS home frame definition",
+                    );
                 }
 
                 value += gpsHomeHistory[1][this.frameDefs.H.nameToIndex["GPS_home[0]"]];
                 break;
             case FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD_1:
                 if (this.frameDefs.H?.nameToIndex["GPS_home[1]"] === undefined) {
-                    throw "Attempted to base prediction on GPS home position without GPS home frame definition";
+                    throw new Error(
+                        "Attempted to base prediction on GPS home position without GPS home frame definition",
+                    );
                 }
 
                 value += gpsHomeHistory[1][this.frameDefs.H.nameToIndex["GPS_home[1]"]];
                 break;
             case FLIGHT_LOG_FIELD_PREDICTOR_LAST_MAIN_FRAME_TIME:
-                if (mainHistory[1]) value += mainHistory[1][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
+                if (mainHistory[1]) {
+                    value += mainHistory[1][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
+                }
                 break;
             default:
-                throw `Unsupported field predictor ${predictor}`;
+                throw new Error(`Unsupported field predictor ${predictor}`);
         }
 
         return value;
@@ -1494,15 +1525,13 @@ export function FlightLogParser(logData) {
 
     const completeEventFrame = (frameType, frameStart, frameEnd, _raw) => {
         if (lastEvent) {
-            switch (lastEvent.event) {
-                case FlightLogEvent.LOGGING_RESUME:
-                    /*
-                     * Bring the "last time" and "last iteration" up to the new resume time so we accept the sudden jump into
-                     * the future.
-                     */
-                    lastMainFrameIteration = lastEvent.data.logIteration;
-                    lastMainFrameTime = lastEvent.data.currentTime;
-                    break;
+            if (lastEvent.event === FlightLogEvent.LOGGING_RESUME) {
+                /*
+                 * Bring the "last time" and "last iteration" up to the new resume time so we accept the sudden jump into
+                 * the future.
+                 */
+                lastMainFrameIteration = lastEvent.data.logIteration;
+                lastMainFrameTime = lastEvent.data.currentTime;
             }
 
             if (this.onFrameReady) {
@@ -1653,7 +1682,7 @@ export function FlightLogParser(logData) {
             ...defaultSysConfig,
             ...defaultSysConfigExtension,
         };
-        this.sysConfig = Object.create(completeSysConfig); // Object.create(defaultSysConfig);
+        this.sysConfig = Object.create(completeSysConfig);
 
         this.frameDefs = {};
 
@@ -1706,11 +1735,11 @@ export function FlightLogParser(logData) {
         FlightLogFieldPresenter.adjustDebugDefsList(this.sysConfig.firmwareType, this.sysConfig.firmwareVersion);
 
         if (!isFrameDefComplete(this.frameDefs.I)) {
-            throw "Log is missing required definitions for I frames, header may be corrupt";
+            throw new Error("Log is missing required definitions for I frames, header may be corrupt");
         }
 
         if (!this.frameDefs.P) {
-            throw "Log is missing required definitions for P frames, header may be corrupt";
+            throw new Error("Log is missing required definitions for P frames, header may be corrupt");
         }
 
         // P frames are derived from I frames so copy over frame definition information to those
@@ -1720,7 +1749,7 @@ export function FlightLogParser(logData) {
         this.frameDefs.P.signed = this.frameDefs.I.signed;
 
         if (!isFrameDefComplete(this.frameDefs.P)) {
-            throw "Log is missing required definitions for P frames, header may be corrupt";
+            throw new Error("Log is missing required definitions for P frames, header may be corrupt");
         }
 
         // Now we know our field counts, we can allocate arrays to hold parsed data
@@ -1819,8 +1848,9 @@ export function FlightLogParser(logData) {
                 if (lastFrameSize <= FLIGHT_LOG_MAX_FRAME_LENGTH && looksLikeFrameCompleted) {
                     let frameAccepted = true;
 
-                    if (lastFrameType.complete)
+                    if (lastFrameType.complete) {
                         frameAccepted = lastFrameType.complete(lastFrameType.marker, frameStart, stream.pos, raw);
+                    }
 
                     if (frameAccepted) {
                         //Update statistics for this frame type

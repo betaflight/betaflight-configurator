@@ -106,10 +106,10 @@ export function FlightLogIndex(logData) {
                 }
 
                 for (let j = 0; j < 3; j++) {
-                    if (mainFrameDef.nameToIndex[`rcCommand[${j}]`] !== undefined) {
-                        maxRCFields.push(mainFrameDef.nameToIndex[`rcCommand[${j}]`]);
-                    } else {
+                    if (mainFrameDef.nameToIndex[`rcCommand[${j}]`] === undefined) {
                         console.log("RCField not found");
+                    } else {
+                        maxRCFields.push(mainFrameDef.nameToIndex[`rcCommand[${j}]`]);
                     }
                 }
 
@@ -308,19 +308,25 @@ export function FlightLogIndex(logData) {
     };
 
     this.getLogBeginOffset = function (index) {
-        if (!logBeginOffsets) buildLogOffsetsIndex();
+        if (!logBeginOffsets) {
+            buildLogOffsetsIndex();
+        }
 
         return logBeginOffsets[index];
     };
 
     this.getLogCount = function () {
-        if (!logBeginOffsets) buildLogOffsetsIndex();
+        if (!logBeginOffsets) {
+            buildLogOffsetsIndex();
+        }
 
         return logBeginOffsets.length - 1;
     };
 
     this.getIntraframeDirectories = function () {
-        if (!intraframeDirectories) buildIntraframeDirectories();
+        if (!intraframeDirectories) {
+            buildIntraframeDirectories();
+        }
 
         return intraframeDirectories;
     };

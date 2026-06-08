@@ -130,7 +130,7 @@ export function bootstrapViewer() {
                 }
 
                 if (!success) {
-                    throw "No logs in this file could be parsed successfully";
+                    throw new Error("No logs in this file could be parsed successfully");
                 }
             } else {
                 logStore.flightLog.openLog(logIndex);
@@ -209,9 +209,11 @@ export function bootstrapViewer() {
             const isWorkspaces = file.name.match(/\.(JSON)$/i);
 
             if (!isLog && !isVideo && !isWorkspaces) {
-                if (file.size < 10 * 1024 * 1024)
+                if (file.size < 10 * 1024 * 1024) {
                     isLog = true; //Assume small files are logs rather than videos
-                else isVideo = true;
+                } else {
+                    isVideo = true;
+                }
             }
 
             if (isLog) {
@@ -357,7 +359,7 @@ export function bootstrapViewer() {
         prefs.set("workspaceGraphConfigs", newWorkspaces);
         workspaceStore.workspaceGraphConfigs = newWorkspaces || [];
         workspaceStore.activeWorkspace = newActiveId;
-        if (logStore.flightLog && newWorkspaces[newActiveId] && newWorkspaces[newActiveId].graphConfig) {
+        if (logStore.flightLog && newWorkspaces[newActiveId]?.graphConfig) {
             newGraphConfig(newWorkspaces[newActiveId].graphConfig);
             graphStore.legendTitle = newWorkspaces[newActiveId].title;
         }
@@ -666,7 +668,7 @@ export function bootstrapViewer() {
         };
         playbackStore.setGraphTime = (timeStr) => {
             let newTime = stringTimetoMsec(timeStr);
-            if (!isNaN(newTime)) {
+            if (!Number.isNaN(newTime)) {
                 if (logStore.hasVideo) {
                     setVideoTime(newTime / 1000000 + playbackStore.videoOffset);
                 } else {

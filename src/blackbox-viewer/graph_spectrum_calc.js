@@ -46,8 +46,9 @@ GraphSpectrumCalc.initialize = function (flightLog, sysConfig) {
         length = flightLog.getCurrentLogRowsCount();
 
     this._actualeRate = (1e6 * length) / actualLoggedTime;
-    if (Math.abs(this._BetaflightRate - this._actualeRate) / this._actualeRate > WARNING_RATE_DIFFERENCE)
+    if (Math.abs(this._BetaflightRate - this._actualeRate) / this._actualeRate > WARNING_RATE_DIFFERENCE) {
         this._blackBoxRate = Math.round(this._actualeRate);
+    }
 
     if (this._BetaflightRate !== this._blackBoxRate) {
         return {
@@ -651,7 +652,7 @@ GraphSpectrumCalc._normalizeFft = function (fftOutput) {
     // The fft output contains complex values (re, im pairs) of two-side spectrum
     // Compute magnitudes for one spectrum side
     const magnitudeLength = Math.floor(fftLength / 2);
-    const maxFrequency = this._blackBoxRate / 2.0;
+    const maxFrequency = this._blackBoxRate / 2;
     const noiseLowEndIdx = (100 / maxFrequency) * magnitudeLength;
     const magnitudes = new Float64Array(magnitudeLength);
     let maxNoiseIdx = 0;
@@ -731,13 +732,13 @@ GraphSpectrumCalc._psd = function (samples, pointsPerSegment, overlapCount, scal
             maxNoiseFrequency: 0,
         };
     }
-    const maxFrequency = this._blackBoxRate / 2.0;
+    const maxFrequency = this._blackBoxRate / 2;
     const noise50HzIdx = (50 / maxFrequency) * dataCount;
     const noise3HzIdx = (3 / maxFrequency) * dataCount;
     let maxNoiseIdx = 0;
     let maxNoise = -100;
     for (let i = 0; i < dataCount; i++) {
-        psdOutput[i] = 0.0;
+        psdOutput[i] = 0;
         for (let j = 0; j < segmentsCount; j++) {
             let p = scale * fftOutput[j][i] ** 2;
             if (i !== 0) {

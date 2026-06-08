@@ -21,7 +21,9 @@ export const ArrayDataStream = function (data, start, end) {
  * is set).
  */
 ArrayDataStream.prototype.readChar = function () {
-    if (this.pos < this.end) return String.fromCharCode(this.data[this.pos++]);
+    if (this.pos < this.end) {
+        return String.fromCodePoint(this.data[this.pos++]);
+    }
 
     this.eof = true;
     return EOF;
@@ -33,7 +35,9 @@ ArrayDataStream.prototype.readChar = function () {
  * @returns Unsigned byte, or EOF if the end of file was reached (eof flag is set).
  */
 ArrayDataStream.prototype.readByte = function () {
-    if (this.pos < this.end) return this.data[this.pos++];
+    if (this.pos < this.end) {
+        return this.data[this.pos++];
+    }
 
     this.eof = true;
     return EOF;
@@ -51,7 +55,9 @@ ArrayDataStream.prototype.unreadChar = function (_c) {
 };
 
 ArrayDataStream.prototype.peekChar = function () {
-    if (this.pos < this.end) return String.fromCharCode(this.data[this.pos]);
+    if (this.pos < this.end) {
+        return String.fromCodePoint(this.data[this.pos]);
+    }
 
     this.eof = true;
     return EOF;
@@ -73,7 +79,9 @@ ArrayDataStream.prototype.readUnsignedVB = function () {
     for (i = 0; i < 5; i++) {
         b = this.readByte();
 
-        if (b === EOF) return 0;
+        if (b === EOF) {
+            return 0;
+        }
 
         result = result | ((b & ~0x80) << shift);
 
@@ -147,9 +155,13 @@ ArrayDataStream.prototype.nextOffsetOf = function (needle) {
 
     for (i = this.pos; i <= this.end - needle.length; i++) {
         if (this.data[i] === needle[0]) {
-            for (j = 1; j < needle.length && this.data[i + j] === needle[j]; j++);
+            for (j = 1; j < needle.length && this.data[i + j] === needle[j]; j++) {
+                // advance j to the first mismatch
+            }
 
-            if (j === needle.length) return i;
+            if (j === needle.length) {
+                return i;
+            }
         }
     }
 

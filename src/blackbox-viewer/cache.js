@@ -52,7 +52,9 @@ export function FIFOCache(initialCapacity) {
      */
     this.add = function (key, value) {
         // Was this already cached? Bump it back up to the end of the queue
-        if (items[key] !== undefined) removeFromQueue(key);
+        if (items[key] !== undefined) {
+            removeFromQueue(key);
+        }
 
         queue.push(key);
 

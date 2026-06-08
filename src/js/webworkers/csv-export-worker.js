@@ -1,14 +1,14 @@
-onmessage = function (event) {
-    /**
-     * Converts `null` and other empty non-numeric values to empty string.
-     *
-     * @param {object} value is not a number
-     * @returns {string}
-     */
-    function normalizeEmpty(value) {
-        return !!value ? value : "";
-    }
+/**
+ * Converts `null` and other empty non-numeric values to empty string.
+ *
+ * @param {object} value is not a number
+ * @returns {string}
+ */
+function normalizeEmpty(value) {
+    return value ? value : "";
+}
 
+onmessage = function (event) {
     /**
      * @param {array} columns
      * @returns {string}

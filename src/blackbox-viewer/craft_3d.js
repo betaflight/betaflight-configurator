@@ -94,7 +94,7 @@ export function Craft3D(flightLog, canvas, propColors) {
         const path = new THREE.Path(),
             ARM_WIDTH_RADIANS = 0.15,
             //How much wider is the motor mount than the arm
-            MOTOR_MOUNT_WIDTH_RATIO = 2.0,
+            MOTOR_MOUNT_WIDTH_RATIO = 2,
             //What portion of the arm length is motor mount
             MOTOR_MOUNT_LENGTH_RATIO = 0.1,
             //What portion of the arm length is the bevel at the beginning and end of the motor mount
@@ -213,7 +213,7 @@ export function Craft3D(flightLog, canvas, propColors) {
     }
 
     for (let i = 0; i < numMotors; i++) {
-        const propShell = new THREE.Mesh(propGeometry[propGeometry.length - 1], propShellMaterial);
+        const propShell = new THREE.Mesh(propGeometry.at(-1), propShellMaterial);
 
         propShells[i] = propShell;
 
@@ -260,23 +260,20 @@ export function Craft3D(flightLog, canvas, propColors) {
 
     this.render = function (frame, frameFieldIndexes) {
         for (let i = 0; i < numMotors; i++) {
-            if (props[i]) propShells[i].remove(props[i]);
+            if (props[i]) {
+                propShells[i].remove(props[i]);
+            }
 
             const throttlePos = Math.min(
                     Math.max(frame[frameFieldIndexes[`motor[${motorOrder[i]}]`]] - sysInfo.motorOutput[0], 0) /
                         (sysInfo.motorOutput[1] - sysInfo.motorOutput[0]),
-                    1.0,
+                    1,
                 ),
                 propLevel = Math.round(throttlePos * (NUM_PROP_LEVELS - 1)),
                 geometry = propGeometry[propLevel],
                 prop = new THREE.Mesh(geometry, propMaterials[motorOrder[i]]);
 
             prop.scale.set(0.95, 0.95, 0.95);
-
-            // Tricopter tail servo
-            /*if (i == 0 && numMotors == 3 && frameFieldIndexes["servo[5]"] !== undefined) {
-                propShells[i].rotation.x = -(frame[frameFieldIndexes["servo[5]"]] - 1500) / 1000 * Math.PI;
-            }*/
 
             propShells[i].add(prop);
 
@@ -286,8 +283,6 @@ export function Craft3D(flightLog, canvas, propColors) {
         // Display the craft's attitude
         craftParent.rotation.x = -frame[frameFieldIndexes["heading[1]"]] /*- Math.PI / 2*/; // pitch
         craftParent.rotation.y = frame[frameFieldIndexes["heading[0]"]]; // roll
-
-        //craftParent.rotation.z = -frame[frameFieldIndexes['heading[2]']]; // yaw
 
         renderer.render(scene, camera);
     };

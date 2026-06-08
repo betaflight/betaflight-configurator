@@ -48,8 +48,8 @@ export const GraphSpectrumPlot = {
     _overdrawType: null,
     _spectrumType: null,
     _sysConfig: null,
-    _zoomX: 1.0,
-    _zoomY: 1.0,
+    _zoomX: 1,
+    _zoomY: 1,
     // _minPSD, _maxPSD, _lowLevelPSD will initialize later in FlightLogAnalyser from stored settings
     _minPSD: 0,
     _maxPSD: 0,
@@ -388,9 +388,9 @@ GraphSpectrumPlot._drawPowerSpectralDensityGraph = function (canvasCtx) {
 
 GraphSpectrumPlot._drawLegend = function (canvasCtx, WIDTH, HEIGHT, importedCurves) {
     const { userSettings } = useSettingsStore();
-    const left = parseFloat(userSettings?.analyser_legend?.left);
-    const top = parseFloat(userSettings?.analyser_legend?.top);
-    const width = parseFloat(userSettings?.analyser_legend?.width);
+    const left = Number.parseFloat(userSettings?.analyser_legend?.left);
+    const top = Number.parseFloat(userSettings?.analyser_legend?.top);
+    const width = Number.parseFloat(userSettings?.analyser_legend?.width);
     if (!Number.isFinite(left) || !Number.isFinite(top) || !Number.isFinite(width)) {
         return;
     }
@@ -698,9 +698,9 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function (canvasCtx) {
             this._sysConfig.gyro_lowpass_dyn_hz[1] > this._sysConfig.gyro_lowpass_dyn_hz[0]
         ) {
             const label =
-                this._sysConfig.gyro_soft_type != null
-                    ? `GYRO LPF (${FILTER_TYPE[this._sysConfig.gyro_soft_type]}) Dyn cutoff`
-                    : "GYRO LPF Dyn cutoff";
+                this._sysConfig.gyro_soft_type == null
+                    ? "GYRO LPF Dyn cutoff"
+                    : `GYRO LPF (${FILTER_TYPE[this._sysConfig.gyro_soft_type]}) Dyn cutoff`;
             this._drawLowpassDynFilter(
                 canvasCtx,
                 this._sysConfig.gyro_lowpass_dyn_hz[0],
@@ -718,9 +718,9 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function (canvasCtx) {
             // Static gyro lpf
         } else if (this._sysConfig.gyro_lowpass_hz != null && this._sysConfig.gyro_lowpass_hz > 0) {
             const label =
-                this._sysConfig.gyro_soft_type != null
-                    ? `GYRO LPF (${FILTER_TYPE[this._sysConfig.gyro_soft_type]}) cutoff`
-                    : "GYRO LPF cutoff";
+                this._sysConfig.gyro_soft_type == null
+                    ? "GYRO LPF cutoff"
+                    : `GYRO LPF (${FILTER_TYPE[this._sysConfig.gyro_soft_type]}) cutoff`;
             this._drawLowpassFilter(
                 canvasCtx,
                 this._sysConfig.gyro_lowpass_hz,
@@ -737,9 +737,9 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function (canvasCtx) {
         // Static gyro lpf 2
         if (this._sysConfig.gyro_lowpass2_hz != null && this._sysConfig.gyro_lowpass2_hz > 0) {
             const label =
-                this._sysConfig.gyro_soft2_type != null
-                    ? `GYRO LPF2 (${FILTER_TYPE[this._sysConfig.gyro_soft2_type]}) cutoff`
-                    : "GYRO LPF2 cutoff";
+                this._sysConfig.gyro_soft2_type == null
+                    ? "GYRO LPF2 cutoff"
+                    : `GYRO LPF2 (${FILTER_TYPE[this._sysConfig.gyro_soft2_type]}) cutoff`;
             this._drawLowpassFilter(
                 canvasCtx,
                 this._sysConfig.gyro_lowpass2_hz,
@@ -829,9 +829,9 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function (canvasCtx) {
                 this._sysConfig.dterm_lpf_dyn_hz[1] > this._sysConfig.dterm_lpf_dyn_hz[0]
             ) {
                 const label =
-                    this._sysConfig.dterm_filter_type != null
-                        ? `D-TERM LPF (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) Dyn cutoff`
-                        : "D-TERM LPF Dyn cutoff";
+                    this._sysConfig.dterm_filter_type == null
+                        ? "D-TERM LPF Dyn cutoff"
+                        : `D-TERM LPF (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) Dyn cutoff`;
                 this._drawLowpassDynFilter(
                     canvasCtx,
                     this._sysConfig.dterm_lpf_dyn_hz[0],
@@ -849,9 +849,9 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function (canvasCtx) {
                 // Static dterm lpf
             } else if (this._sysConfig.dterm_lpf_hz != null && this._sysConfig.dterm_lpf_hz > 0) {
                 const label =
-                    this._sysConfig.dterm_filter_type != null
-                        ? `D-TERM LPF (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff`
-                        : "D-TERM LPF cutoff";
+                    this._sysConfig.dterm_filter_type == null
+                        ? "D-TERM LPF cutoff"
+                        : `D-TERM LPF (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff`;
                 this._drawLowpassFilter(
                     canvasCtx,
                     this._sysConfig.dterm_lpf_hz,
@@ -868,9 +868,9 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function (canvasCtx) {
             // Static dterm lpf 2
             if (this._sysConfig.dterm_lpf2_hz != null && this._sysConfig.dterm_lpf2_hz > 0) {
                 const label =
-                    this._sysConfig.dterm_filter2_type != null
-                        ? `D-TERM LPF2 (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff`
-                        : "D-TERM LPF2 cutoff";
+                    this._sysConfig.dterm_filter2_type == null
+                        ? "D-TERM LPF2 cutoff"
+                        : `D-TERM LPF2 (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff`;
                 this._drawLowpassFilter(
                     canvasCtx,
                     this._sysConfig.dterm_lpf2_hz,
@@ -1538,12 +1538,12 @@ GraphSpectrumPlot._drawCurve = function (canvasCtx, points, tension) {
     canvasCtx.beginPath();
     canvasCtx.moveTo(points[0].x, points[0].y);
 
-    const t = tension != null ? tension : 1;
+    const t = tension == null ? 1 : tension;
     for (let i = 0; i < points.length - 1; i++) {
         const p0 = i > 0 ? points[i - 1] : points[0];
         const p1 = points[i];
         const p2 = points[i + 1];
-        const p3 = i !== points.length - 2 ? points[i + 2] : p2;
+        const p3 = i === points.length - 2 ? p2 : points[i + 2];
 
         const cp1x = p1.x + ((p2.x - p0.x) / 6) * t;
         const cp1y = p1.y + ((p2.y - p0.y) / 6) * t;
