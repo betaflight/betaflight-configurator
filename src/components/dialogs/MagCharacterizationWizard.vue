@@ -32,8 +32,8 @@
             </div>
 
             <!-- Wizard body -->
-            <div v-if="phase !== 'intro' && phase !== 'complete'" class="mag-char-wizard-body">
-                <div v-if="phase !== 'replay'" class="mag-char-left">
+            <div v-if="phase !== 'intro' && phase !== 'complete' && phase !== 'replay'" class="mag-char-wizard-body">
+                <div class="mag-char-left">
                     <!-- Pose timeline grouped by direction -->
                     <div class="mag-char-pose-timeline">
                         <template v-for="(dir, di) in directions" :key="di">
@@ -81,9 +81,10 @@
             <div v-if="phase === 'replay'" class="mag-char-replay-section">
                 <div class="mag-char-replay-container">
                     <div class="mag-char-replay-controls">
-                        <span class="mag-char-replay-pose-label">
-                            Pose {{ replayIndex + 1 }}/{{ replayData.length }} — {{ currentReplayPose?.poseLabel }}
-                        </span>
+                        <span class="mag-char-replay-pose-label"
+                            >Pose {{ replayIndex + 1 }}/{{ replayData.length }} —
+                            {{ currentReplayPose?.poseLabel }}</span
+                        >
                         <span class="mag-char-replay-dir-label">{{ currentReplayPose?.dirLabel }}</span>
                         <span class="mag-char-replay-spacer"></span>
                         <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="replayPrev">
@@ -99,56 +100,97 @@
                             View Results
                         </button>
                     </div>
-                    <div class="mag-char-replay-views">
-                        <div class="mag-char-replay-view">
+
+                    <div class="mag-char-replay-compare-row">
+                        <div class="mag-char-replay-compare-col">
                             <span class="mag-char-replay-view-label">Your Pose</span>
-                            <div class="mag-char-replay-drone">
-                                <canvas ref="replayCanvasRef" class="mag-char-three-canvas"></canvas>
+                            <canvas ref="replay3dCanvas" class="mag-char-replay-canvas"></canvas>
+                            <div class="mag-char-replay-error" v-if="currentReplayPose" style="margin-top: 4px">
+                                Roll {{ currentReplayPose.roll.toFixed(1) }}° &nbsp; Pitch
+                                {{ currentReplayPose.pitch.toFixed(1) }}° &nbsp; Expected heading
+                                {{ currentReplayPose.expectedHeading.toFixed(0) }}°
                             </div>
                         </div>
-                        <div class="mag-char-replay-view">
-                            <span class="mag-char-replay-view-label">Mag NOW (current align)</span>
-                            <div class="mag-char-replay-compare" v-if="currentReplayPose">
-                                <div
-                                    class="mag-char-replay-heading-now"
-                                    :class="
-                                        headingClass(
-                                            currentReplayPose.currentHeading,
-                                            currentReplayPose.expectedHeading,
-                                        )
-                                    "
-                                >
-                                    {{ formatHeading(currentReplayPose.currentHeading) }}
-                                </div>
-                                <div class="mag-char-replay-error">
-                                    {{
-                                        headingErrorText(
-                                            currentReplayPose.currentHeading,
-                                            currentReplayPose.expectedHeading,
-                                        )
-                                    }}
-                                </div>
+                        <div class="mag-char-replay-compare-col">
+                            <span class="mag-char-replay-view-label"
+                                >Current (align_mag={{ currentAlign || "?" }})</span
+                            >
+                            <div
+                                class="mag-char-replay-heading-now"
+                                :class="
+                                    currentReplayPose
+                                        ? headingClass(
+                                              currentReplayPose.currentHeading,
+                                              currentReplayPose.expectedHeading,
+                                          )
+                                        : ''
+                                "
+                            >
+                                {{ currentReplayPose ? formatHeading(currentReplayPose.currentHeading) : "—" }}
+                            </div>
+                            <div class="mag-char-replay-error" v-if="currentReplayPose">
+                                {{
+                                    headingErrorText(
+                                        currentReplayPose.currentHeading,
+                                        currentReplayPose.expectedHeading,
+                                    )
+                                }}
+                            </div>
+                            <div
+                                v-if="currentReplayPose"
+                                class="mag-char-replay-score"
+                                :class="scoreClass(currentReplayPose.currentScore)"
+                            >
+                                {{ currentReplayPose.currentScore || "" }}
                             </div>
                         </div>
-                        <div class="mag-char-replay-view">
-                            <span class="mag-char-replay-view-label">Mag NEW (proposed align)</span>
-                            <div class="mag-char-replay-compare" v-if="currentReplayPose">
-                                <div
-                                    class="mag-char-replay-heading-new"
-                                    :class="
-                                        headingClass(currentReplayPose.newHeading, currentReplayPose.expectedHeading)
-                                    "
-                                >
-                                    {{ formatHeading(currentReplayPose.newHeading) }}
-                                </div>
-                                <div class="mag-char-replay-error">
-                                    {{
-                                        headingErrorText(
-                                            currentReplayPose.newHeading,
-                                            currentReplayPose.expectedHeading,
-                                        )
-                                    }}
-                                </div>
+                        <div class="mag-char-replay-compare-col">
+                            <span class="mag-char-replay-view-label">Proposed</span>
+                            <div
+                                class="mag-char-replay-heading-new"
+                                :class="
+                                    currentReplayPose
+                                        ? headingClass(currentReplayPose.newHeading, currentReplayPose.expectedHeading)
+                                        : ''
+                                "
+                            >
+                                {{ currentReplayPose ? formatHeading(currentReplayPose.newHeading) : "—" }}
+                            </div>
+                            <div class="mag-char-replay-error" v-if="currentReplayPose">
+                                {{ headingErrorText(currentReplayPose.newHeading, currentReplayPose.expectedHeading) }}
+                            </div>
+                            <div
+                                v-if="currentReplayPose"
+                                class="mag-char-replay-score"
+                                :class="scoreClass(currentReplayPose.score)"
+                            >
+                                {{ currentReplayPose.score || "" }}
+                            </div>
+                            <div
+                                v-if="
+                                    currentReplayPose &&
+                                    currentReplayPose.fieldDevPct &&
+                                    Math.abs(currentReplayPose.fieldDevPct) > 10
+                                "
+                                class="mag-char-replay-field-warn"
+                            >
+                                |B|: {{ currentReplayPose.fieldMean }} ({{ currentReplayPose.fieldDevPct > 0 ? "+" : ""
+                                }}{{ currentReplayPose.fieldDevPct }}%)
+                            </div>
+                            <div
+                                v-if="currentReplayPose && currentReplayPose.gainCorrectedHeading != null"
+                                class="mag-char-replay-gain-line"
+                            >
+                                with gain cal: {{ formatHeading(currentReplayPose.gainCorrectedHeading) }}
+                                <span class="mag-char-replay-gain-note">(future firmware)</span>
+                            </div>
+                            <div
+                                v-if="currentReplayPose && currentReplayPose.gcScore"
+                                class="mag-char-replay-score"
+                                :class="scoreClass(currentReplayPose.gcScore)"
+                                style="margin-top: 2px"
+                            >
+                                {{ currentReplayPose.gcScore }}
                             </div>
                         </div>
                     </div>
@@ -218,10 +260,36 @@
                                     mag_calibration = {{ calibrationOffsets.x }}, {{ calibrationOffsets.y }},
                                     {{ calibrationOffsets.z }}
                                     <span v-if="geoReference" class="mag-char-cal-note">
-                                        (based on {{ geoReference.inclination.toFixed(0) }}&deg; incl,
-                                        {{ geoReference.declination.toFixed(0) }}&deg; decl,
+                                        ({{ geoReference.inclination.toFixed(0) }}° incl,
+                                        {{ geoReference.declination.toFixed(0) }}° decl,
                                         {{ geoReference.fieldStrength }} nT)
                                     </span>
+                                </span>
+                            </div>
+                            <div v-if="axisGains" class="mag-char-solver-row">
+                                <span class="mag-char-stat-label" style="color: #888">Per-Axis Gain (future)</span>
+                                <span class="mag-char-stat-value" style="color: #888">
+                                    X={{ axisGains.x }} Y={{ axisGains.y }} Z={{ axisGains.z }}
+                                    <span class="mag-char-cal-note"
+                                        >Corrects asymmetry in sensor sensitivity. Not yet supported by firmware.</span
+                                    >
+                                </span>
+                            </div>
+                            <div v-if="ellipsoidDiag" class="mag-char-solver-row">
+                                <span class="mag-char-stat-label">Hardware Diagnostics</span>
+                                <span class="mag-char-stat-value">
+                                    <span v-if="ellipsoidDiag.chirality === 'left-handed'" style="color: #ee4444"
+                                        >DRIVER ERROR &mdash; left-handed coordinate system</span
+                                    >
+                                    <span v-else-if="ellipsoidDiag.conditionNumber > 1.15" style="color: #ee6644"
+                                        >Gain asymmetry &mdash; &kappa;={{
+                                            ellipsoidDiag.conditionNumber.toFixed(1)
+                                        }}</span
+                                    >
+                                    <span v-else-if="ellipsoidDiag.offDiagonalRms > 0.05" style="color: #eebb44"
+                                        >Mounting skew detected</span
+                                    >
+                                    <span v-else style="color: #4ec97e">Hardware appears healthy</span>
                                 </span>
                             </div>
                         </template>
@@ -258,6 +326,40 @@
                     No GPS reference available. Click "Refresh GPS" for declination + calibration, or set declination
                     manually in the Sensors tab after applying.
                 </p>
+
+                <!-- CLI commands block -->
+                <div v-if="cliCommands.length" class="mag-char-cli-block">
+                    <div class="mag-char-cli-header">
+                        <span>CLI Commands</span>
+                        <button
+                            type="button"
+                            class="mag-char-btn mag-char-btn-cancel"
+                            style="font-size: 10px; padding: 2px 8px"
+                            @click="copyCliCommands"
+                        >
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="mag-char-cli-pre">{{ cliCommands.join("\n") }}</pre>
+                </div>
+
+                <!-- Detailed report (LLM-ready text) -->
+                <div v-if="showDetailedReport && detailedReport" class="mag-char-report-text">
+                    <pre class="mag-char-report-pre">{{ detailedReport }}</pre>
+                </div>
+                <div class="mag-char-complete-actions" style="margin-top: 8px">
+                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="toggleReport">
+                        {{ showDetailedReport ? "Hide Detailed Report" : "View Detailed Report" }}
+                    </button>
+                    <button
+                        v-if="showDetailedReport"
+                        type="button"
+                        class="mag-char-btn mag-char-btn-cancel"
+                        @click="copyReport"
+                    >
+                        Copy to Clipboard
+                    </button>
+                </div>
             </div>
 
             <!-- Footer -->
@@ -365,9 +467,11 @@ import { ref, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
+import { useFlightControllerStore } from "../../stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 
+const fcStore = useFlightControllerStore();
 const DEG_TO_RAD = Math.PI / 180;
 
 // ── Composable (all state + logic) ─────────────────────────────────────
@@ -404,10 +508,14 @@ const {
     finishReplay,
     replayData,
     calibrationOffsets,
+    axisGains,
     geoReference,
     isFetchingGeo,
     refreshGeoReference,
     applyAndReboot,
+    generateDetailedReport,
+    detailedReport,
+    ellipsoidDiag,
 } = mag;
 
 // ── Replay controls ───────────────────────────────────────────────────
@@ -415,7 +523,44 @@ const replayIndex = ref(0);
 const isAutoPlaying = ref(true);
 let autoPlayTimer = null;
 
+const currentAlign = computed(() => fcStore.sensorAlignment.align_mag || 0);
+
 const currentReplayPose = computed(() => replayData.value[replayIndex.value] || null);
+
+// ── Report toggle ────────────────────────────────────────────────────
+const showDetailedReport = ref(false);
+
+// ── CLI commands for the user ──────────────────────────────────────────
+const cliCommands = computed(() => {
+    const lines = [];
+    const r = solverResult.value;
+    if (!r || r.error) {
+        return lines;
+    }
+
+    if (r.alignment === 9 && r.customAngles) {
+        lines.push("set align_mag = CUSTOM");
+        lines.push(`set mag_align_roll = ${Math.round(r.customAngles.roll)}`);
+        lines.push(`set mag_align_pitch = ${Math.round(r.customAngles.pitch)}`);
+        lines.push(`set mag_align_yaw = ${Math.round(r.customAngles.yaw)}`);
+    } else if (r.alignment >= 1 && r.alignment <= 8) {
+        const names = ["", "CW0", "CW90", "CW180", "CW270", "CW0FLIP", "CW90FLIP", "CW180FLIP", "CW270FLIP"];
+        lines.push(`set align_mag = ${names[r.alignment]}`);
+    }
+
+    if (calibrationOffsets.value) {
+        lines.push(
+            `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${calibrationOffsets.value.z}`,
+        );
+    }
+
+    if (geoReference.value) {
+        lines.push(`set mag_declination = ${Math.round(geoReference.value.declination * 10)}`);
+    }
+
+    lines.push("save");
+    return lines;
+});
 
 function replayPrev() {
     isAutoPlaying.value = false;
@@ -492,6 +637,39 @@ function headingErrorText(actual, expected) {
     const dir = actual > expected ? "right" : "left";
     return `off by ${e.toFixed(0)}\u00B0 ${dir}${e < 10 ? " \u2713" : " \u2717"}`;
 }
+function scoreClass(score) {
+    if (!score) {
+        return "";
+    }
+    if (score === "EXCELLENT") {
+        return "score-excellent";
+    }
+    if (score === "GOOD") {
+        return "score-good";
+    }
+    if (score === "POOR") {
+        return "score-poor";
+    }
+    if (score === "BAD") {
+        return "score-bad";
+    }
+    return "score-fatal";
+}
+function toggleReport() {
+    showDetailedReport.value = !showDetailedReport.value;
+    if (showDetailedReport.value && !detailedReport.value) {
+        generateDetailedReport();
+    }
+}
+function copyReport() {
+    if (!detailedReport.value) {
+        generateDetailedReport();
+    }
+    navigator.clipboard.writeText(detailedReport.value || "").catch(() => {});
+}
+function copyCliCommands() {
+    navigator.clipboard.writeText(cliCommands.value.join("\n")).catch(() => {});
+}
 
 // Watch for replay phase entry — start auto-play
 watch(
@@ -501,8 +679,12 @@ watch(
             replayIndex.value = 0;
             isAutoPlaying.value = true;
             startAutoPlay();
+            nextTick(() => {
+                initReplayScene();
+            });
         } else if (p === "complete") {
             disposeThreeScene();
+            disposeReplayScene();
             stopAutoPlay();
         } else {
             stopAutoPlay();
@@ -510,18 +692,18 @@ watch(
     },
 );
 
-// Update 3D model for replay pose
+// Update replay mini 3D model for each pose
 watch(replayIndex, () => {
     const pose = currentReplayPose.value;
-    if (pose && headingGroup) {
-        updateModelTarget(pose.expectedHeading * DEG_TO_RAD || 0, pose.roll, pose.pitch);
+    if (pose) {
+        updateReplayModel(-(pose.expectedHeading || 0), pose.roll, pose.pitch);
     }
 });
 
 // ── Dialog refs ────────────────────────────────────────────────────────
 const dialogRef = ref(null);
 const threeCanvas = ref(null);
-const replayCanvasRef = ref(null);
+const replay3dCanvas = ref(null);
 const debugFileInput = ref(null);
 let resizeObserver = null;
 
@@ -608,7 +790,7 @@ function refreshModelTarget() {
     const dir = directions[currentDirectionIndex.value];
     const pose = dir?.poses[currentSubPoseIndex.value];
     if (dir && pose) {
-        updateModelTarget(dir.heading, pose.rotX, pose.rotZ);
+        updateModelTarget(-dir.heading, pose.rotX, pose.rotZ);
     }
 }
 
@@ -625,6 +807,93 @@ function disposeThreeScene() {
     camera = null;
     headingGroup = null;
     droneModel = null;
+}
+
+// ── Mini 3D scene for replay View 1 ─────────────────────────────────
+let replayRenderer = null;
+let replayScene = null;
+let replayCamera = null;
+let replayDroneGroup = null;
+let replayDroneModel = null;
+let replayAnimId = null;
+let replayTargetRotX = 0;
+let replayTargetRotZ = 0;
+let replayTargetHeading = 0;
+
+function initReplayScene() {
+    if (!replay3dCanvas.value) {
+        return;
+    }
+    const canvas = replay3dCanvas.value;
+    const w = canvas.parentElement?.clientWidth || 180;
+    const h = w;
+
+    replayRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    replayRenderer.setSize(w, h);
+    replayRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    replayRenderer.setClearColor(0x000000, 0);
+
+    replayScene = new THREE.Scene();
+    replayCamera = new THREE.PerspectiveCamera(40, w / Math.max(h, 1), 1, 500);
+    replayCamera.position.set(0, 140, 0);
+    replayCamera.up.set(0, 0, -1);
+    replayCamera.lookAt(0, 0, 0);
+
+    replayScene.add(new THREE.AmbientLight(0x808080));
+    const d = new THREE.DirectionalLight(0xffffff, 1.0);
+    d.position.set(0.5, 1, 0.5);
+    replayScene.add(d);
+
+    replayDroneGroup = new THREE.Object3D();
+    replayScene.add(replayDroneGroup);
+
+    const loader = new GLTFLoader();
+    loader.load("./resources/models/quad_x.gltf", (gltf) => {
+        replayDroneModel = gltf.scene;
+        replayDroneModel.scale.set(6, 6, 6);
+        replayDroneGroup.add(replayDroneModel);
+    });
+
+    function animateReplay() {
+        replayAnimId = requestAnimationFrame(animateReplay);
+        if (!replayRenderer || !replayScene || !replayCamera) {
+            return;
+        }
+        if (replayDroneModel) {
+            const lf = 0.1;
+            replayDroneModel.rotation.x += (replayTargetRotX * DEG_TO_RAD - replayDroneModel.rotation.x) * lf;
+            replayDroneModel.rotation.z += (replayTargetRotZ * DEG_TO_RAD - replayDroneModel.rotation.z) * lf;
+        }
+        if (replayDroneGroup) {
+            const lf = 0.08;
+            replayDroneGroup.rotation.y += (replayTargetHeading - replayDroneGroup.rotation.y) * lf;
+        }
+        if (replayRenderer && replayScene && replayCamera) {
+            replayRenderer.render(replayScene, replayCamera);
+        }
+    }
+    animateReplay();
+}
+
+function updateReplayModel(headingDeg, rollDeg, pitchDeg) {
+    replayTargetHeading = headingDeg * DEG_TO_RAD;
+    replayTargetRotX = pitchDeg;
+    replayTargetRotZ = rollDeg;
+}
+
+function disposeReplayScene() {
+    if (replayAnimId) {
+        cancelAnimationFrame(replayAnimId);
+        replayAnimId = null;
+    }
+    if (replayRenderer) {
+        replayRenderer.dispose();
+        replayRenderer = null;
+    }
+    replayScene = null;
+    replayCamera = null;
+    replayDroneGroup = null;
+    replayDroneModel = null;
 }
 
 // ── Wire composable callbacks ──────────────────────────────────────────
@@ -1166,66 +1435,118 @@ defineExpose({ show, close });
 .mag-char-replay-spacer {
     flex: 1;
 }
-.mag-char-replay-views {
-    display: flex;
-    gap: 8px;
-    flex: 1;
-    min-height: 0;
-}
-.mag-char-replay-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-.mag-char-replay-view-label {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #777;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+.mag-char-replay-pose-context {
     text-align: center;
+    font-size: 12px;
+    color: #888;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a2a4a;
+    margin-bottom: 12px;
 }
-.mag-char-replay-compare {
+.mag-char-replay-compare-row {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    min-height: 140px;
+}
+.mag-char-replay-compare-col {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: #0d0d1a;
-    border-radius: 6px;
-    min-height: 200px;
-    gap: 6px;
+    border-radius: 8px;
+    padding: 12px;
+    gap: 8px;
+    min-width: 0;
 }
-.mag-char-replay-heading-now,
-.mag-char-replay-heading-new {
-    font-size: 32px;
+.mag-char-replay-canvas {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 4px;
+}
+.mag-char-replay-score {
+    font-size: 10px;
     font-weight: 700;
-    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: 3px;
 }
-.mag-char-replay-heading-now.good,
-.mag-char-replay-heading-new.good {
+.mag-char-replay-score.score-excellent {
     color: #4ec97e;
+    background: rgba(30, 80, 30, 0.4);
 }
-.mag-char-replay-heading-now.warn,
-.mag-char-replay-heading-new.warn {
+.mag-char-replay-score.score-good {
+    color: #88cc44;
+    background: rgba(40, 60, 20, 0.4);
+}
+.mag-char-replay-score.score-poor {
     color: #eebb44;
+    background: rgba(80, 60, 20, 0.4);
 }
-.mag-char-replay-heading-now.bad,
-.mag-char-replay-heading-new.bad {
+.mag-char-replay-score.score-bad {
+    color: #ee6644;
+    background: rgba(80, 30, 20, 0.4);
+}
+.mag-char-replay-score.score-fatal {
     color: #ee4444;
+    background: rgba(80, 20, 20, 0.4);
 }
-.mag-char-replay-error {
-    font-size: 13px;
+.mag-char-replay-field-warn {
+    font-size: 10px;
+    color: #eebb44;
+    margin-top: 2px;
+}
+.mag-char-replay-gain-line {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+.mag-char-replay-gain-note {
+    font-size: 9px;
+    color: #666;
+}
+.mag-char-report-text {
+    margin-top: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #2a2a4a;
+    border-radius: 6px;
+}
+.mag-char-report-pre {
     font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
-    color: #999;
-}
-.mag-char-replay-drone {
-    flex: 1;
-    min-height: 200px;
+    font-size: 11px;
+    color: #c0c0c0;
+    padding: 12px;
+    margin: 0;
+    white-space: pre-wrap;
     background: #0d0d1a;
+}
+.mag-char-cli-block {
+    margin-top: 12px;
+    border: 1px solid #2a2a4a;
     border-radius: 6px;
     overflow: hidden;
+}
+.mag-char-cli-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: #1a1a30;
+    font-size: 11px;
+    color: #888;
+    border-bottom: 1px solid #2a2a4a;
+}
+.mag-char-cli-pre {
+    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+    font-size: 12px;
+    color: #4ec97e;
+    padding: 10px;
+    margin: 0;
+    white-space: pre-wrap;
+    background: #0d0d1a;
 }
 </style>

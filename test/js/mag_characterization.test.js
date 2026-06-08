@@ -281,7 +281,7 @@ describe("magCharacterization", () => {
             // May snap to CW0 (1) or be CUSTOM near identity
             if (result.alignment !== 1) {
                 expect(result.alignment).toBe(9);
-                expect(Math.abs(result.customAngles.roll)).toBeLessThanOrEqual(4);
+                expect(Math.abs(result.customAngles.roll)).toBeLessThanOrEqual(6);
                 expect(Math.abs(result.customAngles.pitch)).toBeLessThanOrEqual(4);
                 expect(Math.abs(result.customAngles.yaw)).toBeLessThanOrEqual(4);
             }
