@@ -29,155 +29,58 @@ const CONFIRMED_DELAY_MS = 750;
 
 // ── Pose definitions (shared between composable and dialog for 3D model) ───
 
+// Shared pose templates (reused across all 4 cardinal directions)
+const _POSE_FLAT = (line) => ({
+    label: "Flat",
+    instruction: `Rest the drone LEVEL on the paper. Nose pointing along the ${line} line.`,
+    rotX: 0,
+    rotZ: 0,
+});
+const _POSE_NOSE_UP = (line) => ({
+    label: "Nose Up (box under nose)",
+    instruction: `Place box under FRONT arms. Nose tilts UP. Keep nose on the ${line} line.`,
+    rotX: 35,
+    rotZ: 0,
+});
+const _POSE_NOSE_DOWN = (line) => ({
+    label: "Nose Down (box under tail)",
+    instruction: `Place box under REAR arms. Nose tilts DOWN. Keep nose on the ${line} line.`,
+    rotX: -35,
+    rotZ: 0,
+});
+const _POSE_LEFT_REST = (_line) => ({
+    label: "Box under left (Roll right)",
+    instruction: "Place box under LEFT side. Drone rolls RIGHT.",
+    rotX: 0,
+    rotZ: -25,
+});
+const _POSE_RIGHT_REST = (_line) => ({
+    label: "Box under right (Roll left)",
+    instruction: "Place box under RIGHT side. Drone rolls LEFT.",
+    rotX: 0,
+    rotZ: 25,
+});
+
+function _makeDirection(label, alignHint, heading, line) {
+    return {
+        label,
+        alignHint,
+        heading,
+        poses: [
+            _POSE_FLAT(line),
+            _POSE_NOSE_UP(line),
+            _POSE_NOSE_DOWN(line),
+            _POSE_LEFT_REST(line),
+            _POSE_RIGHT_REST(line),
+        ],
+    };
+}
+
 const directions = [
-    {
-        label: "North (nose to N line)",
-        alignHint: "Align drone nose with the N-S line, nose toward N.",
-        heading: 0,
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the N line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the N line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the N line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
-    {
-        label: "East (nose to E line)",
-        alignHint: "Align drone nose with the E-W line, nose toward E.",
-        heading: Math.PI / 2, // +90° = East (clockwise from North)
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the E line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the E line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the E line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
-    {
-        label: "South (nose to S line)",
-        alignHint: "Align drone nose with the N-S line, nose toward S.",
-        heading: Math.PI,
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the S line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the S line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the S line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
-    {
-        label: "West (nose to W line)",
-        alignHint: "Align drone nose with the E-W line, nose toward W.",
-        heading: -Math.PI / 2, // -90° = West (clockwise from North)
-        poses: [
-            {
-                label: "Flat",
-                instruction: "Rest the drone LEVEL on the paper. Nose pointing along the W line.",
-                rotX: 0,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Up (box under nose)",
-                instruction: "Place box under FRONT arms. Nose tilts UP. Keep nose on the W line.",
-                rotX: 35,
-                rotZ: 0,
-            },
-            {
-                label: "Nose Down (box under tail)",
-                instruction: "Place box under REAR arms. Nose tilts DOWN. Keep nose on the W line.",
-                rotX: -35,
-                rotZ: 0,
-            },
-            {
-                label: "Box under left (Roll right)",
-                instruction: "Place box under LEFT side. Drone rolls RIGHT.",
-                rotX: 0,
-                rotZ: -25,
-            },
-            {
-                label: "Box under right (Roll left)",
-                instruction: "Place box under RIGHT side. Drone rolls LEFT.",
-                rotX: 0,
-                rotZ: 25,
-            },
-        ],
-    },
+    _makeDirection("North (nose to N line)", "Align drone nose with the N-S line, nose toward N.", 0, "N"),
+    _makeDirection("East (nose to E line)", "Align drone nose with the E-W line, nose toward E.", Math.PI / 2, "E"),
+    _makeDirection("South (nose to S line)", "Align drone nose with the N-S line, nose toward S.", Math.PI, "S"),
+    _makeDirection("West (nose to W line)", "Align drone nose with the E-W line, nose toward W.", -Math.PI / 2, "W"),
 ];
 
 // ── Composable ─────────────────────────────────────────────────────────────
