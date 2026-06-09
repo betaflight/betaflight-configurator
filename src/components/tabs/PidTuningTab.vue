@@ -164,6 +164,9 @@ const pidSubTab = ref(null);
 const filterSubTab = ref(null);
 const ratesSubTab = ref(null);
 
+// Profile count — matches original loadProfilesList() logic
+const numberOfProfiles = computed(() => FC.CONFIG.numProfiles ?? 3);
+
 // Rate profile count — matches original loadRateProfilesList() logic
 const numberOfRateProfiles = computed(() => {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -175,7 +178,7 @@ const numberOfRateProfiles = computed(() => {
 // Items arrays for USelect / UTabs
 const profileItems = computed(() => {
     const items = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < numberOfProfiles.value; i++) {
         items.push({ label: i18n.getMessage("pidTuningProfileOption", [i + 1]), value: i });
     }
     return items;
@@ -334,7 +337,7 @@ async function onRateProfileChange() {
 async function copyProfile() {
     // Create options for profiles excluding current one
     const options = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < numberOfProfiles.value; i++) {
         if (i !== currentProfile.value) {
             const name = i18n.getMessage("pidTuningProfileOption", [i + 1]);
             options.push({ value: i, label: name });
@@ -1258,10 +1261,10 @@ onUnmounted(() => {
     background-color: #e24761;
 }
 .pid_pitch {
-    background-color: #97d800;
+    background-color: #49c747;
 }
 .pid_yaw {
-    background-color: #1fb1f0;
+    background-color: #477ac7;
 }
 .pid_roll,
 .pid_pitch,

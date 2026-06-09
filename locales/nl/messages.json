@@ -3362,8 +3362,9 @@
         "message": "RSSI waarde",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Directe RSSI-waarde (knippert onder de alarmdrempel)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm waarde",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -3733,9 +3734,6 @@
         "message": "Kwaliteit van de verbinding",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Alternatieve indicator voor 'link kwaliteit' welke is gebaseerd op het aantal frames die verloren zijn - gebruik dit voorzichtig"
-    },
     "osdTextElementFlightDist": {
         "message": "Vlucht afstand",
         "description": "One of the elements of the OSD"
@@ -3788,13 +3786,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD profiel naam zoals deze is ingesteld middels de CLI variabelen \"osd_profile_1_name\", \"osd_profile_2_name\" en \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm waarde",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Waarde in dBm van het RSSI-signaal indien beschikbaar"
     },
     "osdTextElementRcChannels": {
         "message": "RC kanalen",

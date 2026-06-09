@@ -1,15 +1,19 @@
 <template>
     <div
-        class="relative rounded-lg"
+        class="relative rounded-lg border-2"
         :class="[
-            !collapsible || isOpen ? 'border-2' : '',
-            !collapsible || isOpen ? (highlight ? typeClass.box : 'border-neutral-500/30') : '',
+            !collapsible || isOpen ? (highlight ? typeClass.box : 'border-neutral-500/30') : 'border-transparent',
             title ? 'mt-3' : '',
+            collapsible && !isOpen ? 'min-h-6' : '',
         ]"
     >
         <div
             v-if="title"
-            :class="`flex gap-2 items-center absolute top-0 left-4 translate-y-[-50%] p-1 px-3 rounded-full text-[13px] font-semibold ${typeClass.pill} ${collapsible ? 'cursor-pointer select-none' : ''}`"
+            :class="[
+                'flex gap-2 items-center w-fit p-1 px-3 rounded-full text-[13px] font-semibold absolute top-0 left-4 translate-y-[-50%]',
+                typeClass.pill,
+                collapsible ? 'cursor-pointer select-none' : '',
+            ]"
             :role="collapsible ? 'button' : undefined"
             :tabindex="collapsible ? 0 : undefined"
             :aria-expanded="collapsible ? isOpen : undefined"
@@ -24,12 +28,6 @@
             <span>{{ title }}</span>
             <slot name="title"></slot>
             <HelpIcon v-if="help" :text="help" />
-            <UIcon
-                v-if="collapsible"
-                name="i-lucide-chevron-down"
-                class="transition-transform duration-200"
-                :class="{ 'rotate-180': isOpen }"
-            />
         </div>
         <div
             v-show="!collapsible || isOpen"

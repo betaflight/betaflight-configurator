@@ -68,6 +68,18 @@
     "disconnect": {
         "message": "Disconnect"
     },
+    "disconnectVirtual": {
+        "message": "Disconnect (Virtual)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Disconnect (Manual)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Disconnect (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Select your device",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -116,6 +128,10 @@
     "connectVirtualDescription": {
         "message": "Simulate a flight controller without hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connect (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Enter the serial path or URL to connect to.",
@@ -2582,6 +2598,12 @@
     },
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
+    },
+    "receiverFailsafeActiveTitle": {
+        "message": "Failsafe active"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "The flight controller is in failsafe. The channel values shown below are the failsafe output, not the live values coming from your receiver. Check your receiver link and failsafe settings."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -5816,6 +5838,15 @@
     "powerBatteryAmperage": {
         "message": "Amperage"
     },
+    "powerBatteryPowerDraw": {
+        "message": "Power Draw"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Voltage Drop"
+    },
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
@@ -6060,7 +6091,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Instantaneous RSSI value (flashes when below alarm threshold)"
+        "message": "Instantaneous RSSI value (flashes when below alarm threshold). For modern protocols, use RSSI dBm instead."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm value",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Received Signal Strength Indicator, this value indicates how loud the reception is in dBm"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -6651,7 +6689,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Alternative indicator for 'link quality' based on frame loss - use with caution"
+        "message": "Link quality indicator based on the percentage of successfully received uncorrupted data packets"
     },
     "osdTextElementFlightDist": {
         "message": "Flight distance",
@@ -6715,13 +6753,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD profile name as set in the \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\" CLI variables"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm value",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Value in dBm of the RSSI signal if available"
     },
     "osdTextElementRcChannels": {
         "message": "RC Channels",
@@ -7668,35 +7699,47 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Detection failed — try with more varied tilting."
     },
-    "magCalibrationStart": {
-        "message": "Guided"
+    "magCalibrationGuidedFw": {
+        "message": "Client Cal (Guided)"
     },
-    "magCalibrationStartDesc": {
-        "message": "Rotate through 6 orientations step by step"
+    "magCalibrationGuidedFwDesc": {
+        "message": "Auto-prompting 60s calibration"
     },
-    "magCalibrationStartAuto": {
-        "message": "Auto-Step"
+    "magCalibrationGuidedFwTitle": {
+        "message": "Guided Calibration"
     },
-    "magCalibrationStartAutoDesc": {
-        "message": "Same as guided but steps advance on a timer"
+    "magCalibrationPrompt1": {
+        "message": "Step 1/6 — Hold flat, yaw 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Step 2/6 — Flip inverted, yaw 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Step 3/6 — Nose straight up, yaw 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Step 4/6 — Nose straight down, yaw 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Step 5/6 — Left side up, yaw 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Step 6/6 — Right side up, yaw 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Data collection complete — review and save"
     },
     "magCalibrationCancel": {
         "message": "Cancel"
+    },
+    "magCalibrationClear": {
+        "message": "Clear"
     },
     "magCalibrationModeOptions": {
         "message": "Calibration mode options"
     },
     "magCalibrationRetry": {
         "message": "Retry"
-    },
-    "magCalibrationNextStep": {
-        "message": "Next Step"
-    },
-    "magCalibrationFinish": {
-        "message": "Finish"
-    },
-    "magCalibrationStepOf": {
-        "message": "Step {{current}} of {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "Waiting for movement... Shake the vehicle to begin."
@@ -7731,24 +7774,6 @@
     "magCalibrationQualityPoor": {
         "message": "Poor"
     },
-    "magCalibrationStep1": {
-        "message": "Level — rotate 360° in yaw"
-    },
-    "magCalibrationStep2": {
-        "message": "Nose down — rotate 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "Nose up — rotate 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "Left side down — rotate 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "Right side down — rotate 360°"
-    },
-    "magCalibrationStep6": {
-        "message": "Inverted — rotate 360°"
-    },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offsets"
     },
@@ -7756,19 +7781,61 @@
         "message": "Sphere fit offsets"
     },
     "magCalibrationUnguided": {
-        "message": "Quick"
+        "message": "Firmware Cal (Legacy)"
     },
     "magCalibrationUnguidedDesc": {
-        "message": "Rotate freely in all directions — stops when firmware finishes"
+        "message": "Rotate freely — firmware auto-saves after 30s"
     },
     "magCalibrationUnguidedTitle": {
-        "message": "Unguided Calibration"
+        "message": "Firmware Calibration"
     },
     "magCalibrationUnguidedInstruction": {
-        "message": "Rotate your vehicle slowly in all directions. The firmware will collect samples and compute offsets automatically."
+        "message": "You have 30 seconds to rotate the vehicle in all directions. The firmware will automatically save the calibration values when the time is up."
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
+    },
+    "magCalibrationGuided": {
+        "message": "Client Cal (Free)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Rotate freely — configurator computes offsets"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Client Calibration"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Rotate your vehicle in all directions. Aim to make a complete sphere of dots over about one or two minutes. Save the result when the calibration values have stabilised."
+    },
+    "magCalibrationCheck": {
+        "message": "Check"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "View live mag data with current calibration"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Checking Calibration"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirm the orientation and calibration of the Magnetometer. Set your craft flat to the horizon, point the nose to a known point on the compass (a phone may be used to figure out which way is North), and confirm that new dots appear at the expected location in the 3D display. The field strength values for each axis and the sphericity of the dots indicate the accuracy of the calibration. If the points go to completely wrong places, the orientation of the Mag is likely to be wrong."
+    },
+    "magCalibrationCalValues": {
+        "message": "Cal Values"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Save Values"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Calibration values saved"
+    },
+    "magCalibrationSaveError": {
+        "message": "Failed to save calibration values"
+    },
+    "magCalibrationAccept": {
+        "message": "Save Calibration"
+    },
+    "magCalibrationDiscard": {
+        "message": "Discard"
     },
     "magVizPointCloud": {
         "message": "Point Cloud"
@@ -7784,6 +7851,15 @@
     },
     "magVizWaitingForData": {
         "message": "Waiting for data…"
+    },
+    "magVizAxisField": {
+        "message": "Field"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Old"
+    },
+    "magVizAgeLegendNew": {
+        "message": "New"
     },
     "magAlignmentApply": {
         "message": "Apply"
