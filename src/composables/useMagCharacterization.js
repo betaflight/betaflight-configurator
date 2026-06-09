@@ -83,6 +83,10 @@ const directions = [
     _makeDirection("West (nose to W line)", "Align drone nose with the E-W line, nose toward W.", -Math.PI / 2, "W"),
 ];
 
+function round4(v) {
+    return Math.round(v * 10000) / 10000;
+}
+
 // ── Composable ─────────────────────────────────────────────────────────────
 
 export function useMagCharacterization() {
@@ -603,10 +607,29 @@ export function useMagCharacterization() {
             chirality,
             offDiagonalRms: offDiagRms,
             axisRms: { x: Math.round(rmsX), y: Math.round(rmsY), z: Math.round(rmsZ) },
-            residualRms: 0, // not applicable for covariance method
+            residualRms: 0,
             eigenvalues: [rmsX, rmsY, rmsZ],
             determinant: chirality === "right-handed" ? 1 : -1,
+            // Approximate soft iron matrix A and hard iron bias B
+            // mag_corrected = A * (mag_raw - B)
+            // Diagonal = per-axis gains (from WMM regression)
+            // Off-diagonal = cross-axis coupling (from covariance)
+            softIronMatrix: null, // populated below if gains available
+            hardIronBias: [Math.round(meanX), Math.round(meanY), Math.round(meanZ)],
         };
+
+        // Populate soft iron matrix from per-axis gains + cross-coupling
+        const gains = axisGains.value;
+        if (gains && trace > 1e-10) {
+            const normCovXY = covXY / trace;
+            const normCovXZ = covXZ / trace;
+            const normCovYZ = covYZ / trace;
+            ellipsoidDiag.value.softIronMatrix = [
+                [round4(gains.x), round4(normCovXY), round4(normCovXZ)],
+                [round4(normCovXY), round4(gains.y), round4(normCovYZ)],
+                [round4(normCovXZ), round4(normCovYZ), round4(gains.z)],
+            ];
+        }
     }
 
     function scoreHeading(errorDeg) {
@@ -1061,6 +1084,16 @@ export function useMagCharacterization() {
                 report += "    Sensor module may be physically twisted or tilted.\n";
             } else {
                 report += " \u2192 ORTHOGONAL (correctly mounted)\n";
+            }
+            if (ed.softIronMatrix) {
+                report += "\n";
+                report += "  Soft iron matrix A (3\u00D73):\n";
+                report += `    [${ed.softIronMatrix[0].map((v) => v.toFixed(4)).join(", ")}]\n`;
+                report += `    [${ed.softIronMatrix[1].map((v) => v.toFixed(4)).join(", ")}]\n`;
+                report += `    [${ed.softIronMatrix[2].map((v) => v.toFixed(4)).join(", ")}]\n`;
+                report += `  Hard iron bias B: [${ed.hardIronBias.join(", ")}]\n`;
+                report += "  Transform: mag_corrected = A \u00D7 (mag_raw \u2212 B)\n";
+                report += "  Apply before alignment rotation. Requires firmware 3\u00D73 matrix support.\n";
             }
             if (
                 fieldClean &&

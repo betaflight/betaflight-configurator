@@ -5,6 +5,10 @@
 import { mat3mulVec } from "../../src/js/utils/magAlignment.js";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const DEG_TO_RAD = Math.PI / 180;
 
@@ -33,6 +37,13 @@ export function buildBWorld(declination, inclination, fieldStrength) {
     return [Bh * Math.cos(dec), Bh * Math.sin(dec), fieldStrength * Math.sin(inc)];
 }
 
+/**
+ * Rotate a NED world-frame vector into the drone body frame.
+ * Input:  B_ned in NED (X=North, Y=East, Z=Down)
+ * Output: body frame (X=forward/nose, Y=right/starboard, Z=down)
+ * Angles are negated because this transforms FROM reference (NED) TO rotated (body) frame.
+ * Rotation order is ZYX: Yaw(heading) → Pitch → Roll, applied via mat3mulVec.
+ */
 export function rotateNedToBody(B_ned, rollDeg, pitchDeg, headingDeg) {
     const r = -rollDeg * DEG_TO_RAD;
     const p = -pitchDeg * DEG_TO_RAD;
