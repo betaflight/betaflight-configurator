@@ -36,6 +36,13 @@ import {
 } from "../../src/js/utils/magCharacterization.js";
 import { eulerToMatrix, ALIGNMENT_MATRICES } from "../../src/js/utils/magAlignment.js";
 
+// Seeded PRNG for deterministic tests
+let _seed = 42;
+function rng() {
+    _seed = (1664525 * _seed + 1013904223) >>> 0;
+    return _seed / 0x100000000;
+}
+
 const DEG_TO_RAD = Math.PI / 180;
 const RAD_TO_DEG = 180 / Math.PI;
 
@@ -78,10 +85,10 @@ function generateSyntheticData(trueAlignment, nPoses = 5, samplesPerPose = 40, n
         let u = 0;
         let v = 0;
         while (u === 0) {
-            u = Math.random();
+            u = rng();
         }
         while (v === 0) {
-            v = Math.random();
+            v = rng();
         }
         return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
     };
@@ -106,9 +113,9 @@ function generateSyntheticData(trueAlignment, nPoses = 5, samplesPerPose = 40, n
 
             samples.push({
                 mag,
-                roll: pose.roll + (Math.random() - 0.5) * 2, // ±1° jitter
-                pitch: pose.pitch + (Math.random() - 0.5) * 2,
-                headingRef: pose.heading + (Math.random() - 0.5) * 5, // ±2.5° user error
+                roll: pose.roll + (rng() - 0.5) * 2,
+                pitch: pose.pitch + (rng() - 0.5) * 2,
+                headingRef: pose.heading + (rng() - 0.5) * 5,
             });
         }
     }

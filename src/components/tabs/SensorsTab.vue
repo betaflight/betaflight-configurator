@@ -255,7 +255,7 @@
                         size="xs"
                         variant="outline"
                         color="primary"
-                        label="Mag super calibration"
+                        :label="$t('configurationMagSuperCalibration')"
                         @click="openMagCharacterization"
                     />
                 </SettingRow>

@@ -11,24 +11,24 @@
                 <div class="mag-char-setup-image">
                     <img src="../../images/drone_paper.jpg" alt="Drone on paper with compass rose" />
                 </div>
-                <h4>Magnetometer Alignment Wizard</h4>
+                <h4>Magnetometer Characterization</h4>
                 <p>
-                    This tool determines the correct orientation of your magnetometer chip by comparing its readings
-                    against a known physical reference.
+                    Finds the correct magnetometer alignment by comparing sensor readings against a known physical
+                    reference.
                 </p>
                 <p><strong>You will need:</strong></p>
                 <ul>
                     <li>A <strong>flat table</strong> with a large sheet of paper</li>
-                    <li>A <strong>compass</strong> (or phone app) to draw N / E / S / W lines</li>
-                    <li>A <strong>rigid support object</strong> &mdash; tissue box, book, battery pack</li>
+                    <li>
+                        A <strong>compass</strong> (or phone app) to draw
+                        N&thinsp;/&thinsp;E&thinsp;/&thinsp;S&thinsp;/&thinsp;W lines
+                    </li>
+                    <li>A <strong>rigid support</strong> &mdash; tissue box, book, or battery pack</li>
                 </ul>
-                <p><strong>How it works:</strong></p>
-                <ol>
-                    <li>Draw cardinal lines (N / E / S / W) on the paper using a compass</li>
-                    <li>The wizard guides you through 20 rest poses across 4 cardinal directions</li>
-                    <li>At each pose, rest the drone and press SPACEBAR when stable</li>
-                    <li>The solver recovers the correct sensor-to-body alignment</li>
-                </ol>
+                <p>
+                    The wizard will guide you through 20 rest poses. At each step, align the drone with a drawn cardinal
+                    line, let it settle, then press <strong>SPACEBAR</strong> to capture.
+                </p>
             </div>
 
             <!-- Wizard body -->
@@ -630,13 +630,21 @@ function headingClass(actual, expected) {
     return "bad";
 }
 function headingErrorText(actual, expected) {
-    const e = headingError(actual, expected);
     if (expected === null || expected === undefined) {
         return "";
     }
-    const dir = actual > expected ? "right" : "left";
+    let diff = actual - expected;
+    while (diff > 180) {
+        diff -= 360;
+    }
+    while (diff < -180) {
+        diff += 360;
+    }
+    const e = Math.abs(diff);
+    const dir = diff > 0 ? "right" : "left";
     return `off by ${e.toFixed(0)}\u00B0 ${dir}${e < 10 ? " \u2713" : " \u2717"}`;
 }
+
 function scoreClass(score) {
     if (!score) {
         return "";

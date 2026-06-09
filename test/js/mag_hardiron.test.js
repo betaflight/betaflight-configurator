@@ -81,7 +81,7 @@ function computeHardIron(samples, currentAlignment, geo) {
 
     for (const s of samples) {
         const bodyExpected = rotateNedToBody(B_world, s.roll, s.pitch, s.headingRef || 0);
-        const actualBody = mat3mulVec(currentMat, s.mag);
+        const actualBody = s.mag; // fixture data is already post-alignment (body frame)
         sumDx += actualBody[0] - bodyExpected[0];
         sumDy += actualBody[1] - bodyExpected[1];
         sumDz += actualBody[2] - bodyExpected[2];

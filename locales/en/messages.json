@@ -7860,6 +7860,9 @@
     "configurationMagDetectAlignment": {
         "message": "Detect"
     },
+    "configurationMagSuperCalibration": {
+        "message": "Mag characterization"
+    },
     "configurationSmallAngle": {
         "message": "Maximum ARM Angle [degrees]"
     },

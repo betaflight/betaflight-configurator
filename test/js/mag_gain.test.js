@@ -13,6 +13,13 @@ import { mat3mulVec, ALIGNMENT_MATRICES } from "../../src/js/utils/magAlignment.
 import fs from "node:fs";
 import path from "node:path";
 
+// Seeded PRNG for deterministic tests
+let _seed = 1337;
+function rng() {
+    _seed = (1664525 * _seed + 1013904223) >>> 0;
+    return _seed / 0x100000000;
+}
+
 const DEG_TO_RAD = Math.PI / 180;
 
 function loadFixture(name) {
@@ -127,7 +134,7 @@ describe("per-axis gain calibration", () => {
                     expectedScaled[2] * trueGains[2] + trueOffsets[2],
                 ];
                 // Add noise
-                const noise = () => (Math.random() - 0.5) * 20;
+                const noise = () => (rng() - 0.5) * 20;
                 actuals.push([actual[0] + noise(), actual[1] + noise(), actual[2] + noise()]);
                 expecteds.push(expectedScaled);
             }
@@ -162,7 +169,7 @@ describe("per-axis gain calibration", () => {
                     continue;
                 }
                 for (const s of pose.samples) {
-                    const actualBody = mat3mulVec(currentMat, s.mag);
+                    const actualBody = s.mag; // fixture data is already post-alignment (body frame)
                     meanRaw += Math.hypot(actualBody[0], actualBody[1], actualBody[2]);
                     count++;
                 }
@@ -182,7 +189,7 @@ describe("per-axis gain calibration", () => {
                         expected[1] * scaleFactor,
                         expected[2] * scaleFactor,
                     ];
-                    const actualBody = mat3mulVec(currentMat, s.mag);
+                    const actualBody = s.mag; // fixture data is already post-alignment
                     actuals.push(actualBody);
                     expecteds.push(expectedScaled);
                 }

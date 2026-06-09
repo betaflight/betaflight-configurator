@@ -302,6 +302,10 @@ export function useMagCharacterization() {
         currentSubPoseIndex.value = 0;
         captureData.value = directions.map(() => []);
         solverResult.value = null;
+        replayData.value = [];
+        calibrationOffsets.value = null;
+        axisGains.value = null;
+        ellipsoidDiag.value = null;
         gyroWindow = [];
         stableCount = 0;
         isStable.value = false;
@@ -450,6 +454,13 @@ export function useMagCharacterization() {
         solverResult.value = result;
         console.log("=== MAG CHARACTERIZATION RESULT ===", result);
 
+        // Build the current alignment matrix (handling CUSTOM align=9 properly)
+        if (currentAlign === 9 && customAngles) {
+            currentMatForCalibration = eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
+        } else {
+            currentMatForCalibration = ALIGNMENT_MATRICES[currentAlign] || ALIGNMENT_MATRICES[1];
+        }
+
         // Pre-compute replay data for all captured poses
         computeReplayData(result, currentAlign);
 
@@ -457,7 +468,6 @@ export function useMagCharacterization() {
         runEllipsoidDiagnostics(currentAlign);
 
         // Compute hard iron calibration offsets using geo reference
-        currentMatForCalibration = ALIGNMENT_MATRICES[currentAlign] || ALIGNMENT_MATRICES[1];
         computeHardIronOffset();
 
         phase.value = "replay";
@@ -467,8 +477,8 @@ export function useMagCharacterization() {
         const DEG_TO_RAD = Math.PI / 180;
         const RAD_TO_DEG = 180 / Math.PI;
 
-        // Build current alignment matrix
-        const currentMat = ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
+        // Use the already-built current matrix (handles CUSTOM align=9 properly)
+        const currentMat = currentMatForCalibration || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
         const currentInv = mat3transpose(currentMat);
 
         // Build proposed alignment matrix
@@ -613,7 +623,7 @@ export function useMagCharacterization() {
 
     function runEllipsoidDiagnostics(currentAlignment) {
         ellipsoidDiag.value = null;
-        const currentMat = ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
+        const currentMat = currentMatForCalibration || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
 
         // Collect body-frame mag, per-axis variance
         let sx = 0,
@@ -725,15 +735,9 @@ export function useMagCharacterization() {
         calibrationOffsets.value = null;
         geoReference.value = null;
 
-        // Try cached geo reference (set by SensorsTab on connect)
-        let geo = getGeoReference();
+        // Only use cached geo reference (set by SensorsTab on connect or explicit Refresh GPS)
+        const geo = getGeoReference();
         if (!geo) {
-            // Fall back: try to acquire coordinates from GPS or IP
-            fetchGeoReference().then((g) => {
-                if (g) {
-                    computeFromGeo(g);
-                }
-            });
             return;
         }
         computeFromGeo(geo);
@@ -1261,6 +1265,10 @@ export function useMagCharacterization() {
         axisGains,
         geoReference,
         isFetchingGeo,
+        // Computed
+        currentDirection,
+        currentPoseDef,
+        completedPoseCount,
         // Actions
         setCallbacks,
         startWizard,
