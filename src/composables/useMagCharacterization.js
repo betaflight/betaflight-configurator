@@ -758,9 +758,16 @@ export function useMagCharacterization() {
             B_total * Math.sin(incRad), // Down
         ];
 
-        // Scale B_world to match raw ADC count scale (QMC5883L outputs int16, not nT)
-        let meanRawMag = 0;
-        let rawCount = 0;
+        // Single pass: scale factor, hard iron offsets, and per-axis gain sums
+        let meanRawMag = 0,
+            rawCount = 0;
+        let sumDx = 0,
+            sumDy = 0,
+            sumDz = 0,
+            n = 0;
+        const gs = { ex: 0, ex2: 0, ax: 0, ax_ex: 0, ey: 0, ey2: 0, ay: 0, ay_ey: 0, ez: 0, ez2: 0, az: 0, az_ez: 0 };
+        let gn = 0;
+
         for (let di = 0; di < directions.length; di++) {
             for (let pi = 0; pi < directions[di].poses.length; pi++) {
                 const cap = captureData.value[di]?.[pi];
@@ -771,18 +778,40 @@ export function useMagCharacterization() {
                     const actualBody = mat3mulVec(currentMatForCalibration, s.mag);
                     meanRawMag += Math.hypot(actualBody[0], actualBody[1], actualBody[2]);
                     rawCount++;
+
+                    const bodyExpected = rotateNedToBody(B_world, s.roll, s.pitch, cap.headingRef || 0);
+                    sumDx += actualBody[0] - bodyExpected[0];
+                    sumDy += actualBody[1] - bodyExpected[1];
+                    sumDz += actualBody[2] - bodyExpected[2];
+                    n++;
+
+                    gs.ex += bodyExpected[0];
+                    gs.ex2 += bodyExpected[0] * bodyExpected[0];
+                    gs.ax += actualBody[0];
+                    gs.ax_ex += actualBody[0] * bodyExpected[0];
+                    gs.ey += bodyExpected[1];
+                    gs.ey2 += bodyExpected[1] * bodyExpected[1];
+                    gs.ay += actualBody[1];
+                    gs.ay_ey += actualBody[1] * bodyExpected[1];
+                    gs.ez += bodyExpected[2];
+                    gs.ez2 += bodyExpected[2] * bodyExpected[2];
+                    gs.az += actualBody[2];
+                    gs.az_ez += actualBody[2] * bodyExpected[2];
+                    gn++;
                 }
             }
         }
+
         const scaleFactor = rawCount > 0 ? meanRawMag / rawCount / B_total : 1;
+        // Note: B_world is used directly above (unscaled) for gain regression.
+        // Only the offset computation below uses the scaled version for ADC-count compatibility.
         const B_world_scaled = [B_world[0] * scaleFactor, B_world[1] * scaleFactor, B_world[2] * scaleFactor];
 
-        // Accumulate expected body mag vs actual body mag across all aligned samples
-        let sumDx = 0;
-        let sumDy = 0;
-        let sumDz = 0;
-        let n = 0;
-
+        // Recompute offset sums using scaled expected field
+        sumDx = 0;
+        sumDy = 0;
+        sumDz = 0;
+        n = 0;
         for (let di = 0; di < directions.length; di++) {
             for (let pi = 0; pi < directions[di].poses.length; pi++) {
                 const cap = captureData.value[di]?.[pi];
@@ -790,14 +819,8 @@ export function useMagCharacterization() {
                     continue;
                 }
                 for (const s of cap.samples) {
-                    // Rotate B_world into body frame using known attitude
-                    const bodyExpected = rotateNedToBody(B_world_scaled, s.roll, s.pitch, cap.headingRef || 0);
-                    // Actual body mag = raw captured mag (already in body frame per current alignment, but we undo it)
-                    // Actually, captured mag is POST current alignment. We need TRUE body mag.
-                    // body_true = R_current * captured_mag (this IS what the FC sees as body mag)
-                    // The expected body should match body_true after hard iron is removed.
-                    // So: offset = body_true - body_expected
                     const actualBody = mat3mulVec(currentMatForCalibration, s.mag);
+                    const bodyExpected = rotateNedToBody(B_world_scaled, s.roll, s.pitch, cap.headingRef || 0);
                     sumDx += actualBody[0] - bodyExpected[0];
                     sumDy += actualBody[1] - bodyExpected[1];
                     sumDz += actualBody[2] - bodyExpected[2];
@@ -816,69 +839,15 @@ export function useMagCharacterization() {
             z: Math.round(sumDz / n),
         };
 
-        // Per-axis gain computation via linear regression
-        // For each axis i: actual[i] = gain[i] * expected[i] + offset[i]
-        // gain[i] = cov(actual, expected) / var(expected)
-        // This uses the same (expected, actual) pairs already collected in the offset loop
-        const gainSums = {
-            ex: 0,
-            ex2: 0,
-            ax: 0,
-            ax_ex: 0,
-            ey: 0,
-            ey2: 0,
-            ay: 0,
-            ay_ey: 0,
-            ez: 0,
-            ez2: 0,
-            az: 0,
-            az_ez: 0,
-        };
-        let gn = 0;
-
-        for (let di = 0; di < directions.length; di++) {
-            for (let pi = 0; pi < directions[di].poses.length; pi++) {
-                const cap = captureData.value[di]?.[pi];
-                if (!cap || !cap.samples) {
-                    continue;
-                }
-                for (const s of cap.samples) {
-                    const bodyExpected = rotateNedToBody(B_world_scaled, s.roll, s.pitch, cap.headingRef || 0);
-                    const actualBody = mat3mulVec(currentMatForCalibration, s.mag);
-                    gainSums.ex += bodyExpected[0];
-                    gainSums.ex2 += bodyExpected[0] * bodyExpected[0];
-                    gainSums.ax += actualBody[0];
-                    gainSums.ax_ex += actualBody[0] * bodyExpected[0];
-                    gainSums.ey += bodyExpected[1];
-                    gainSums.ey2 += bodyExpected[1] * bodyExpected[1];
-                    gainSums.ay += actualBody[1];
-                    gainSums.ay_ey += actualBody[1] * bodyExpected[1];
-                    gainSums.ez += bodyExpected[2];
-                    gainSums.ez2 += bodyExpected[2] * bodyExpected[2];
-                    gainSums.az += actualBody[2];
-                    gainSums.az_ez += actualBody[2] * bodyExpected[2];
-                    gn++;
-                }
-            }
-        }
-
+        // Per-axis gain computation (sums collected in the merged pass above)
         if (gn >= 30) {
-            const gxVar = gainSums.ex2 - (gainSums.ex * gainSums.ex) / gn;
-            const gyVar = gainSums.ey2 - (gainSums.ey * gainSums.ey) / gn;
-            const gzVar = gainSums.ez2 - (gainSums.ez * gainSums.ez) / gn;
+            const gxVar = gs.ex2 - (gs.ex * gs.ex) / gn;
+            const gyVar = gs.ey2 - (gs.ey * gs.ey) / gn;
+            const gzVar = gs.ez2 - (gs.ez * gs.ez) / gn;
             axisGains.value = {
-                x:
-                    gxVar > 0
-                        ? Math.round(((gainSums.ax_ex - (gainSums.ax * gainSums.ex) / gn) / gxVar) * 100) / 100
-                        : 1,
-                y:
-                    gyVar > 0
-                        ? Math.round(((gainSums.ay_ey - (gainSums.ay * gainSums.ey) / gn) / gyVar) * 100) / 100
-                        : 1,
-                z:
-                    gzVar > 0
-                        ? Math.round(((gainSums.az_ez - (gainSums.az * gainSums.ez) / gn) / gzVar) * 100) / 100
-                        : 1,
+                x: gxVar > 0 ? Math.round(((gs.ax_ex - (gs.ax * gs.ex) / gn) / gxVar) * 100) / 100 : 1,
+                y: gyVar > 0 ? Math.round(((gs.ay_ey - (gs.ay * gs.ey) / gn) / gyVar) * 100) / 100 : 1,
+                z: gzVar > 0 ? Math.round(((gs.az_ez - (gs.az * gs.ez) / gn) / gzVar) * 100) / 100 : 1,
             };
         }
     }
