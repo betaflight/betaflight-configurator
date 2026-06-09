@@ -2598,6 +2598,12 @@
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
     },
+    "receiverFailsafeActiveTitle": {
+        "message": "Failsafe active"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "The flight controller is in failsafe. The channel values shown below are the failsafe output, not the live values coming from your receiver. Check your receiver link and failsafe settings."
+    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },

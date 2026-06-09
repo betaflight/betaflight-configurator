@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "Disconnetti"
     },
+    "disconnectVirtual": {
+        "message": "Disconnetti (Virtuale)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Disconnetti (Manuale)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Disconnetti (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Seleziona il dispositivo",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -113,6 +125,10 @@
     "connectVirtualDescription": {
         "message": "Simula un controllore di volo senza hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connetti (Virtuale)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Inserire il percorso seriale o l'URL a cui connettersi.",
@@ -6078,7 +6094,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Valore RSSI istantaneo (lampeggia se sotto la soglia di allarme)"
+        "message": "Valore istantaneo RSSI (lampeggia quando sotto la soglia di allarme). Per i protocolli moderni, utilizzare invece RSSI dBm."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "Valore RSSI dBm",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Indicatore di forza del segnale ricevuto, questo valore indica quanto forte è la ricezione in dBm"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -6669,7 +6692,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Indicatore alternativo per la 'qualità di collegamento' basato sulla perdita di frame - usare con cautela"
+        "message": "Indicatore di qualità del link basato sulla percentuale di pacchetti di dati non corrotti ricevuti con successo"
     },
     "osdTextElementFlightDist": {
         "message": "Distanza del volo",
@@ -6733,13 +6756,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nome del profilo OSD come impostato nelle variabili CLI \"osd_profile_1_name\", \"osd_profile_2_name\" e \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Valore RSSI dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Valore in dBm del segnale RSSI se disponibile"
     },
     "osdTextElementRcChannels": {
         "message": "Canali RC",
