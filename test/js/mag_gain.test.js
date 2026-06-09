@@ -9,46 +9,13 @@
  * for the test specification.
  */
 import { describe, expect, it } from "vitest";
-import { mat3mulVec, ALIGNMENT_MATRICES } from "../../src/js/utils/magAlignment.js";
-import fs from "node:fs";
-import path from "node:path";
+import { loadFixture, buildBWorld, rotateNedToBody } from "./test_helpers.js";
 
 // Seeded PRNG for deterministic tests
 let _seed = 1337;
 function rng() {
     _seed = (1664525 * _seed + 1013904223) >>> 0;
     return _seed / 0x100000000;
-}
-
-const DEG_TO_RAD = Math.PI / 180;
-
-function loadFixture(name) {
-    return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../fixtures", name), "utf-8"));
-}
-
-function buildBWorld(declination, inclination, fieldStrength) {
-    const inc = inclination * DEG_TO_RAD;
-    const dec = declination * DEG_TO_RAD;
-    const Bh = fieldStrength * Math.cos(inc);
-    return [Bh * Math.cos(dec), Bh * Math.sin(dec), fieldStrength * Math.sin(inc)];
-}
-
-function rotateNedToBody(B_ned, rollDeg, pitchDeg, headingDeg) {
-    const r = -rollDeg * DEG_TO_RAD;
-    const p = -pitchDeg * DEG_TO_RAD;
-    const h = -headingDeg * DEG_TO_RAD;
-    const cr = Math.cos(r);
-    const sr = Math.sin(r);
-    const cp = Math.cos(p);
-    const sp = Math.sin(p);
-    const cy = Math.cos(h);
-    const sy = Math.sin(h);
-    const R = [
-        [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
-        [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
-        [-sp, cp * sr, cp * cr],
-    ];
-    return mat3mulVec(R, B_ned);
 }
 
 /**
@@ -155,9 +122,6 @@ describe("per-axis gain calibration", () => {
     it("does not crash on fixture data (bad data expected to produce unreliable gains)", () => {
         const data = loadFixture("bad_data_no_compass.json");
         const B_world = buildBWorld(GEO.declination, GEO.inclination, GEO.fieldStrength);
-        const currentAlign = data.metadata.currentAlignment || 1;
-        const currentMat = ALIGNMENT_MATRICES[currentAlign] || ALIGNMENT_MATRICES[1];
-
         let meanRaw = 0;
         let count = 0;
         const actuals = [];

@@ -13,67 +13,13 @@
  */
 import { describe, expect, it } from "vitest";
 import { characterizeAlignment } from "../../src/js/utils/magCharacterization.js";
-import { mat3mulVec, ALIGNMENT_MATRICES } from "../../src/js/utils/magAlignment.js";
-import fs from "node:fs";
-import path from "node:path";
-
-const DEG_TO_RAD = Math.PI / 180;
-
-function loadFixture(name) {
-    return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../fixtures", name), "utf-8"));
-}
-
-function flattenSamples(data) {
-    const s = [];
-    for (const dir of data.directions) {
-        for (const pose of dir.poses) {
-            if (pose.samples) {
-                for (const sm of pose.samples) {
-                    s.push(sm);
-                }
-            }
-        }
-    }
-    return s;
-}
-
-/**
- * Build expected B_world NED vector from WMM parameters.
- */
-function buildBWorld(declination, inclination, fieldStrength) {
-    const inc = inclination * DEG_TO_RAD;
-    const dec = declination * DEG_TO_RAD;
-    const Bh = fieldStrength * Math.cos(inc);
-    return [Bh * Math.cos(dec), Bh * Math.sin(dec), fieldStrength * Math.sin(inc)];
-}
-
-/**
- * Rotate NED world vector into body frame for a given attitude.
- */
-function rotateNedToBody(B_ned, rollDeg, pitchDeg, headingDeg) {
-    const r = -rollDeg * DEG_TO_RAD;
-    const p = -pitchDeg * DEG_TO_RAD;
-    const h = -headingDeg * DEG_TO_RAD;
-    const cr = Math.cos(r);
-    const sr = Math.sin(r);
-    const cp = Math.cos(p);
-    const sp = Math.sin(p);
-    const cy = Math.cos(h);
-    const sy = Math.sin(h);
-    const R = [
-        [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
-        [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
-        [-sp, cp * sr, cp * cr],
-    ];
-    return mat3mulVec(R, B_ned);
-}
+import { loadFixture, flattenSamples, buildBWorld, rotateNedToBody } from "./test_helpers.js";
 
 /**
  * Compute hard iron offsets from captured samples + geo reference.
  */
 function computeHardIron(samples, currentAlignment, geo) {
     const B_world = buildBWorld(geo.declination, geo.inclination, geo.fieldStrength);
-    const currentMat = ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
     let sumDx = 0;
     let sumDy = 0;
     let sumDz = 0;

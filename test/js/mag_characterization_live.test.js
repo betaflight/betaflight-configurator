@@ -15,32 +15,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { characterizeAlignment } from "../../src/js/utils/magCharacterization.js";
-import fs from "node:fs";
-import path from "node:path";
-
-function loadFixture(name) {
-    const filePath = path.resolve(__dirname, "../fixtures", name);
-    return JSON.parse(fs.readFileSync(filePath, "utf-8"));
-}
-
-function flattenSamples(data) {
-    const samples = [];
-    for (const dir of data.directions) {
-        for (const pose of dir.poses) {
-            if (pose.samples) {
-                for (const s of pose.samples) {
-                    samples.push({
-                        mag: s.mag,
-                        roll: s.roll,
-                        pitch: s.pitch,
-                        headingRef: s.headingRef,
-                    });
-                }
-            }
-        }
-    }
-    return samples;
-}
+import { loadFixture, flattenSamples } from "./test_helpers.js";
 
 describe("fixture: bad_data_no_compass", () => {
     it("does not crash and returns low-confidence CUSTOM result", () => {

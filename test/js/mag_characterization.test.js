@@ -44,7 +44,6 @@ function rng() {
 }
 
 const DEG_TO_RAD = Math.PI / 180;
-const RAD_TO_DEG = 180 / Math.PI;
 
 // Magnetic field at Arvida, Quebec (48°24'N, 71°09'W, decl -15.3°, incl 71°)
 // B_world in NED frame (North, East, Down)

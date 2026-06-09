@@ -20,7 +20,10 @@
  *   Data source:  MagCharacterizationWizard.vue (pose samples)
  *   Sibling:      magAlignment.js (8-preset discrete detector)
  *
- * See implementation.md §2 Step 1 for full algorithm specification.
+ * Algorithm: multi-resolution grid search over 3 ZYX Euler angles.
+ * Coarse 15° grid, refine top 3 at 2° in ±12° neighborhood.
+ * Cost = weighted variance of leveled Z + XY magnitude + heading error.
+ * Snaps to nearest standard preset (Frobenius norm < 0.1) or returns CUSTOM.
  */
 
 import {

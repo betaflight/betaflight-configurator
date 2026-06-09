@@ -5,8 +5,6 @@
  * state machine, stability detection, spacebar gating, capture, solver,
  * and JSON export.  The dialog component keeps only the template, 3D model
  * rendering, and dialog lifecycle.
- *
- * See implementation.md §12.1 for the full extraction spec.
  */
 import { ref, computed } from "vue";
 import { characterizeAlignment } from "../js/utils/magCharacterization.js";
@@ -233,6 +231,23 @@ export function useMagCharacterization() {
     let gyroWindow = [];
     let stableCount = 0;
     let currentMatForCalibration = null;
+
+    // Shared helper — iterate every captured sample with body-frame mag pre-computed
+    function forEachSample(cb) {
+        const mat = currentMatForCalibration || ALIGNMENT_MATRICES[1];
+        for (let di = 0; di < directions.length; di++) {
+            for (let pi = 0; pi < directions[di].poses.length; pi++) {
+                const cap = captureData.value[di]?.[pi];
+                if (!cap || !cap.samples) {
+                    continue;
+                }
+                for (const s of cap.samples) {
+                    const body = mat3mulVec(mat, s.mag);
+                    cb({ body, sample: s, headingRef: cap.headingRef || 0, dirIdx: di, poseIdx: pi });
+                }
+            }
+        }
+    }
 
     // --- Callbacks provided by the dialog (for 3D model updates) ---
     let onWizardStarted = null; // called after state is initialised — dialog hooks up 3D model
@@ -621,9 +636,8 @@ export function useMagCharacterization() {
         return Math.abs(diff);
     }
 
-    function runEllipsoidDiagnostics(currentAlignment) {
+    function runEllipsoidDiagnostics(_currentAlignment) {
         ellipsoidDiag.value = null;
-        const currentMat = currentMatForCalibration || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
 
         // Collect body-frame mag, per-axis variance
         let sx = 0,
@@ -637,27 +651,18 @@ export function useMagCharacterization() {
             syz = 0;
         let n = 0;
 
-        for (let di = 0; di < directions.length; di++) {
-            for (let pi = 0; pi < directions[di].poses.length; pi++) {
-                const cap = captureData.value[di]?.[pi];
-                if (!cap || !cap.samples) {
-                    continue;
-                }
-                for (const s of cap.samples) {
-                    const body = mat3mulVec(currentMat, s.mag);
-                    sx += body[0];
-                    sy += body[1];
-                    sz += body[2];
-                    sxx += body[0] * body[0];
-                    syy += body[1] * body[1];
-                    szz += body[2] * body[2];
-                    sxy += body[0] * body[1];
-                    sxz += body[0] * body[2];
-                    syz += body[1] * body[2];
-                    n++;
-                }
-            }
-        }
+        forEachSample(({ body }) => {
+            sx += body[0];
+            sy += body[1];
+            sz += body[2];
+            sxx += body[0] * body[0];
+            syy += body[1] * body[1];
+            szz += body[2] * body[2];
+            sxy += body[0] * body[1];
+            sxz += body[0] * body[2];
+            syz += body[1] * body[2];
+            n++;
+        });
         if (n < 9) {
             return;
         }
@@ -683,22 +688,11 @@ export function useMagCharacterization() {
         const trace = varX + varY + varZ;
         const offDiagRms = trace > 1e-10 ? Math.sqrt(covXY * covXY + covXZ * covXZ + covYZ * covYZ) / trace : 0;
 
-        // Chirality: check if Z correlates negatively with X-Y cross product
-        // A left-handed system would show Z sign opposite to what a right-handed rotation predicts
+        // Chirality: scalar triple product proxy — right-handed system has XY·Z > 0
         let chiralitySum = 0;
-        for (let di = 0; di < directions.length; di++) {
-            for (let pi = 0; pi < directions[di].poses.length; pi++) {
-                const cap = captureData.value[di]?.[pi];
-                if (!cap || !cap.samples) {
-                    continue;
-                }
-                for (const s of cap.samples) {
-                    const body = mat3mulVec(currentMat, s.mag);
-                    // Cross product of XY should align with Z in right-handed system
-                    chiralitySum += body[0] * body[1] * body[2]; // scalar triple product proxy
-                }
-            }
-        }
+        forEachSample(({ body }) => {
+            chiralitySum += body[0] * body[1] * body[2];
+        });
         const chirality = chiralitySum > 0 ? "right-handed" : "left-handed";
 
         ellipsoidDiag.value = {
@@ -768,39 +762,30 @@ export function useMagCharacterization() {
         const gs = { ex: 0, ex2: 0, ax: 0, ax_ex: 0, ey: 0, ey2: 0, ay: 0, ay_ey: 0, ez: 0, ez2: 0, az: 0, az_ez: 0 };
         let gn = 0;
 
-        for (let di = 0; di < directions.length; di++) {
-            for (let pi = 0; pi < directions[di].poses.length; pi++) {
-                const cap = captureData.value[di]?.[pi];
-                if (!cap || !cap.samples) {
-                    continue;
-                }
-                for (const s of cap.samples) {
-                    const actualBody = mat3mulVec(currentMatForCalibration, s.mag);
-                    meanRawMag += Math.hypot(actualBody[0], actualBody[1], actualBody[2]);
-                    rawCount++;
+        forEachSample(({ body, sample, headingRef }) => {
+            meanRawMag += Math.hypot(body[0], body[1], body[2]);
+            rawCount++;
 
-                    const bodyExpected = rotateNedToBody(B_world, s.roll, s.pitch, cap.headingRef || 0);
-                    sumDx += actualBody[0] - bodyExpected[0];
-                    sumDy += actualBody[1] - bodyExpected[1];
-                    sumDz += actualBody[2] - bodyExpected[2];
-                    n++;
+            const be = rotateNedToBody(B_world, sample.roll, sample.pitch, headingRef);
+            sumDx += body[0] - be[0];
+            sumDy += body[1] - be[1];
+            sumDz += body[2] - be[2];
+            n++;
 
-                    gs.ex += bodyExpected[0];
-                    gs.ex2 += bodyExpected[0] * bodyExpected[0];
-                    gs.ax += actualBody[0];
-                    gs.ax_ex += actualBody[0] * bodyExpected[0];
-                    gs.ey += bodyExpected[1];
-                    gs.ey2 += bodyExpected[1] * bodyExpected[1];
-                    gs.ay += actualBody[1];
-                    gs.ay_ey += actualBody[1] * bodyExpected[1];
-                    gs.ez += bodyExpected[2];
-                    gs.ez2 += bodyExpected[2] * bodyExpected[2];
-                    gs.az += actualBody[2];
-                    gs.az_ez += actualBody[2] * bodyExpected[2];
-                    gn++;
-                }
-            }
-        }
+            gs.ex += be[0];
+            gs.ex2 += be[0] * be[0];
+            gs.ax += body[0];
+            gs.ax_ex += body[0] * be[0];
+            gs.ey += be[1];
+            gs.ey2 += be[1] * be[1];
+            gs.ay += body[1];
+            gs.ay_ey += body[1] * be[1];
+            gs.ez += be[2];
+            gs.ez2 += be[2] * be[2];
+            gs.az += body[2];
+            gs.az_ez += body[2] * be[2];
+            gn++;
+        });
 
         const scaleFactor = rawCount > 0 ? meanRawMag / rawCount / B_total : 1;
         // Note: B_world is used directly above (unscaled) for gain regression.
@@ -812,23 +797,13 @@ export function useMagCharacterization() {
         sumDy = 0;
         sumDz = 0;
         n = 0;
-        for (let di = 0; di < directions.length; di++) {
-            for (let pi = 0; pi < directions[di].poses.length; pi++) {
-                const cap = captureData.value[di]?.[pi];
-                if (!cap || !cap.samples) {
-                    continue;
-                }
-                for (const s of cap.samples) {
-                    const actualBody = mat3mulVec(currentMatForCalibration, s.mag);
-                    const bodyExpected = rotateNedToBody(B_world_scaled, s.roll, s.pitch, cap.headingRef || 0);
-                    sumDx += actualBody[0] - bodyExpected[0];
-                    sumDy += actualBody[1] - bodyExpected[1];
-                    sumDz += actualBody[2] - bodyExpected[2];
-                    n++;
-                }
-            }
-        }
-
+        forEachSample(({ body, sample, headingRef }) => {
+            const be = rotateNedToBody(B_world_scaled, sample.roll, sample.pitch, headingRef);
+            sumDx += body[0] - be[0];
+            sumDy += body[1] - be[1];
+            sumDz += body[2] - be[2];
+            n++;
+        });
         if (n < 30) {
             return;
         }
@@ -1100,8 +1075,8 @@ export function useMagCharacterization() {
             if (Math.abs(gains.y - 1) > 0.05) {
                 report += "  NOTE: Y-axis gain differs from 1.0 by >5%. This indicates asymmetric\n";
                 report += "  sensor sensitivity. The chip may have a 2x gain difference on the Y axis.\n";
-                report += "  Correcting this requires firmware support for mag_gain parameters\n";
-                report += "  (see implementation.md \u00A722 for implementation guide).\n";
+                report += "  Correcting this requires firmware support for mag_gain parameters.\n";
+                report += "  (Add mag_gain_x/y/z CLI params, apply per-axis multiply after alignment.)\n";
             }
             report += "\n";
         }
