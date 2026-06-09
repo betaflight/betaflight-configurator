@@ -220,14 +220,7 @@ describe("per-axis gain calibration", () => {
         expect(Math.abs(A[0][2])).toBeLessThan(0.01);
         expect(Math.abs(A[1][2])).toBeLessThan(0.01);
 
-        console.log(
-            `  Soft iron matrix diag: X=${ 
-                A[0][0].toFixed(3) 
-            } Y=${ 
-                A[1][1].toFixed(3) 
-            } Z=${ 
-                A[2][2].toFixed(3)}`,
-        );
+        console.log(`  Soft iron matrix diag: X=${A[0][0].toFixed(3)} Y=${A[1][1].toFixed(3)} Z=${A[2][2].toFixed(3)}`);
     });
 
     it("gain correction improves heading accuracy on compass-captured fixture", () => {
@@ -252,7 +245,7 @@ describe("per-axis gain calibration", () => {
             headingWeight: 1.0,
         });
         expect(baseline.error).toBeUndefined();
-        console.log(`  Baseline quality: ${  baseline.qualityScore  }%`);
+        console.log(`  Baseline quality: ${baseline.qualityScore}%`);
 
         // Compute mean raw |B| for scaling
         let meanRaw = 0;
@@ -274,7 +267,7 @@ describe("per-axis gain calibration", () => {
         }
         const gains = computeGains(actuals, expecteds);
         expect(gains).toBeTruthy();
-        console.log(`  Gains: X=${  gains.x.toFixed(3)  } Y=${  gains.y.toFixed(3)  } Z=${  gains.z.toFixed(3)}`);
+        console.log(`  Gains: X=${gains.x.toFixed(3)} Y=${gains.y.toFixed(3)} Z=${gains.z.toFixed(3)}`);
 
         // Apply gain correction to mag data
         const corrected = samples.map((s) => ({
@@ -294,7 +287,7 @@ describe("per-axis gain calibration", () => {
             headingWeight: 1.0,
         });
         expect(improved.error).toBeUndefined();
-        console.log(`  Gain-corrected quality: ${  improved.qualityScore  }%`);
+        console.log(`  Gain-corrected quality: ${improved.qualityScore}%`);
 
         // Gain correction should improve or maintain quality — never make it worse
         expect(improved.qualityScore).toBeGreaterThanOrEqual(baseline.qualityScore - 5);
@@ -307,8 +300,7 @@ describe("per-axis gain calibration", () => {
             return Math.abs(diff);
         };
         // Use a simple leveled-heading computation for flat poses
-        const D2R = Math.PI / 180,
-            R2D = 180 / Math.PI;
+        const R2D = 180 / Math.PI;
         let sumRawErr = 0,
             sumGainErr = 0,
             nPoses = 0;
@@ -340,11 +332,7 @@ describe("per-axis gain calibration", () => {
         const meanRawErr = sumRawErr / nPoses;
         const meanGainErr = sumGainErr / nPoses;
         console.log(
-            `  Mean flat heading error — raw: ${ 
-                meanRawErr.toFixed(1) 
-            }°  gain-corrected: ${ 
-                meanGainErr.toFixed(1) 
-            }°`,
+            `  Mean flat heading error — raw: ${meanRawErr.toFixed(1)}°  gain-corrected: ${meanGainErr.toFixed(1)}°`,
         );
         expect(meanGainErr).toBeLessThanOrEqual(meanRawErr + 2);
     });
