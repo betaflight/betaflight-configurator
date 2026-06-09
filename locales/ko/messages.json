@@ -6085,8 +6085,9 @@
         "message": "RSSI 수치",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "순간 RSSI 값 (알람 임계값 이하일 때 깜박임)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm 수치",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "타이머",
@@ -6676,9 +6677,6 @@
         "message": "링크 품질(LQ)",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "프레임 손실에 따른 '링크 품질'에 대한 대체 표시 - 주의해서 사용"
-    },
     "osdTextElementFlightDist": {
         "message": "비행 거리",
         "description": "One of the elements of the OSD"
@@ -6741,13 +6739,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "\"osd_profile_1_name\", \"osd_profile_2_name\" 그리고 \"osd_profile_3_name\" CLI 변수에서 설정된 OSD 프로필 이름"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm 수치",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "가능한 경우 RSSI 신호의 dBm 수치"
     },
     "osdTextElementRcChannels": {
         "message": "RC 채널",

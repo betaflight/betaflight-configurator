@@ -3124,8 +3124,9 @@
         "message": "RSSI 值",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "實時 RSSI 值 (訊號強度低於設定值時會閃爍)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm 值",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "計時器",
@@ -3463,9 +3464,6 @@
         "message": "連接質量",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "基於幀丟失情況的“連接質量”的替代圖標-請謹慎使用"
-    },
     "osdTextElementFlightDist": {
         "message": "飛行距離",
         "description": "One of the elements of the OSD"
@@ -3518,13 +3516,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "在 CLI 中設置的 \"osd_profile_1_name\", \"osd_profile_2_name\" 和 \"osd_profile_3_name\" 所對應的 OSD 配置文件名稱"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm 值",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "RSSI 訊號的 dBm 值 （如果可用）"
     },
     "osdTextElementRcChannels": {
         "message": "RC 通道",

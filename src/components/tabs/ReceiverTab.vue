@@ -15,6 +15,16 @@
                             <canvas ref="modelCanvas"></canvas>
                         </div>
                     </UiBox>
+                    <!-- Failsafe / RX-loss warning -->
+                    <UiBox
+                        v-if="failsafeActive"
+                        highlight
+                        type="warning"
+                        role="alert"
+                        :title="$t('receiverFailsafeActiveTitle')"
+                    >
+                        <p>{{ $t("receiverFailsafeActiveWarning") }}</p>
+                    </UiBox>
                     <!-- Channel Bars -->
                     <div class="bars">
                         <ul v-for="(channel, index) in channelBars" :key="index">
@@ -25,7 +35,7 @@
                                     :max="100"
                                     :ui="{
                                         base: 'w-full bg-elevated',
-                                        indicator: 'duration-50',
+                                        indicator: failsafeActive ? 'duration-50 !bg-warning' : 'duration-50',
                                     }"
                                     :disabled="rc.active_channels === 0"
                                     size="xl"
@@ -610,6 +620,11 @@ const rssiConfig = computed(() => fcStore.rssiConfig);
 const features = computed(() => fcStore.features);
 
 const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
+
+// Failsafe / RX-loss indicator — detection lives in the fc store (reads the raw
+// armingDisableFlags bitmask). True when the FC is in failsafe or has lost the
+// RX link, so the banner/tint warn that channel values are failsafe output.
+const failsafeActive = computed(() => fcStore.failsafeActive);
 
 // Dirty state tracking
 const savedSnapshot = ref("");

@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "Desconectar"
     },
+    "disconnectVirtual": {
+        "message": "Desconectar (Virtual)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Desconectar (Manual)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Desconectar (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Selecione o seu dispositivo",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -113,6 +125,10 @@
     "connectVirtualDescription": {
         "message": "Simular uma controladora de voo sem hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Conectar (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Digite o caminho de série ou URL a que se ligar.",
@@ -5829,6 +5845,15 @@
     "powerBatteryAmperage": {
         "message": "Amperagem"
     },
+    "powerBatteryPowerDraw": {
+        "message": "Consumo de Energia"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Queda de Tensão"
+    },
     "powerBatteryCapacity": {
         "message": "Capacidade (mAh)"
     },
@@ -6073,7 +6098,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Valor RSSI instantâneo (Pisca quando abaixo do limite do alarme)"
+        "message": "Valor instantâneo do RSSI (pisca abaixo do limite do alarme). Para protocolos modernos, use antes o RSSI dBm."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "Valor RSSI dBm",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Indicador de Força de Sinal Recebido, este valor indica quão alta a recepção está em dBm"
     },
     "osdTextElementTimer": {
         "message": "Cronómetro",
@@ -6664,7 +6696,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Indicador alternativo de \"Qualidade do Link\" baseado em perdas de sinal - use com cuidado"
+        "message": "Indicador de qualidade do link baseado na percentagem de pacotes de dados não corrompidos recebidos com sucesso"
     },
     "osdTextElementFlightDist": {
         "message": "Distância do voo",
@@ -6728,13 +6760,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nome do perfil OSD, definido nos comandos CLI: \"osd_profile_1_name\", \"osd_profile_2_name\" e \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Valor RSSI dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Valor do sinal RSSI em dBm, se disponível"
     },
     "osdTextElementRcChannels": {
         "message": "Canais RC",
@@ -7681,8 +7706,41 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Falha na deteção — tente com inclinação mais variada."
     },
+    "magCalibrationGuidedFw": {
+        "message": "Cal Cliente (Guiada)"
+    },
+    "magCalibrationGuidedFwDesc": {
+        "message": "Autoprompting calibração de 60s"
+    },
+    "magCalibrationGuidedFwTitle": {
+        "message": "Calibração Guiada"
+    },
+    "magCalibrationPrompt1": {
+        "message": "Passo 1\/6 - Segure plano, Yaw 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Etapa 2\/6 — Flip invertido, yaw 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Passo 3\/6 — Nariz direito, yaw 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Passo 4\/6 — Nariz todo para baixo, yaw 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Passo 5\/6 — Lado esquerdo para cima, yaw 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Passo 6\/6 — Lado esquerdo para cima, yaw 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Coleta de dados completa — reveja e grave"
+    },
     "magCalibrationCancel": {
         "message": "Cancelar"
+    },
+    "magCalibrationClear": {
+        "message": "Limpar"
     },
     "magCalibrationModeOptions": {
         "message": "Opções do modo de calibração"
@@ -7729,8 +7787,62 @@
     "magCalibrationSphereOffsets": {
         "message": "Offsets da esfera"
     },
+    "magCalibrationUnguided": {
+        "message": "Cal Firmware (Legado)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Girar livremente - gravação automática de firmware após 30s"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Calibração de Firmware"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Tem 30 segundos para girar o veículo em todas as direções. O firmware vai gravar os valores de calibração automaticamente quando o tempo acabar."
+    },
     "magCalibrationUnguidedDone": {
         "message": "Calibração de firmware completa!"
+    },
+    "magCalibrationGuided": {
+        "message": "Cal Cliente (Livre)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Gire livremente - configurador calcula offsets"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Calibração de Cliente"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Gire o seu veículo em todas as direções. Aponte para fazer uma esfera completa de pontos por cerca de um ou dois minutos. Grave o resultado quando os valores de calibração estiverem estabilizados."
+    },
+    "magCalibrationCheck": {
+        "message": "Verificar"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Exibir dados mag ao vivo com a calibração atual"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "A verificar calibrações"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirme a orientação e a calibração do Magnetómetro. Coloque o seu aparelho plano com o horizonte, aponte o nariz para um ponto conhecido na bússola (um telefone pode ser usado para descobrir qual direção é o norte), e confirme que novos pontos aparecem na localização esperada na tela 3D. Os valores da força do campo para cada eixo e a esfericidade dos pontos indicam a precisão da calibração. Se os pontos forem para direções completamente erradas, é provável que a orientação do Mag esteja errada."
+    },
+    "magCalibrationCalValues": {
+        "message": "Valores Cal"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Guardar valores"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Valores da calibração gravados"
+    },
+    "magCalibrationSaveError": {
+        "message": "Falha ao gravar valores de calibração"
+    },
+    "magCalibrationAccept": {
+        "message": "Gravar Calibração"
+    },
+    "magCalibrationDiscard": {
+        "message": "Descartar"
     },
     "magVizPointCloud": {
         "message": "Point Cloud"
@@ -7746,6 +7858,15 @@
     },
     "magVizWaitingForData": {
         "message": "À espera dos dados…"
+    },
+    "magVizAxisField": {
+        "message": "Campo"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Antigo"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Novo"
     },
     "magAlignmentApply": {
         "message": "Aplicar"

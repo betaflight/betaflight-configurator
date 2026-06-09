@@ -5567,8 +5567,9 @@
         "message": "Wartość RSSI",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Chwilowa wartość RSSI (miga, gdy jest poniżej progu alarmowego)"
+    "osdTextElementRssiDbmValue": {
+        "message": "Wartość RSSI dBm",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Licznik",
@@ -6158,9 +6159,6 @@
         "message": "Jakość połączenia",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Alternatywny wskaźnik „jakości połączenia” oparty na ilości utraconych ramkach danych - używaj z ostrożnością"
-    },
     "osdTextElementFlightDist": {
         "message": "Odległość lotu",
         "description": "One of the elements of the OSD"
@@ -6223,13 +6221,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nazwa Profilu OSD ustawiona w Wierszu Poleceń CLI z pomocą zmiennych: \"osd_profile_1_name\", \"osd_profile_2_name\" oraz \"osd_profile_3_name\"."
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Wartość RSSI dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Wartość w dBm sygnału RSSI, jeżeli jest dostępna"
     },
     "osdTextElementRcChannels": {
         "message": "Kanały RC",
