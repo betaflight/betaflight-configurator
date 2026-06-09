@@ -2,7 +2,7 @@
     <dialog ref="dialogRef" class="mag-char-dialog" @cancel.prevent @close="onDialogClose">
         <div class="mag-char-container">
             <div class="mag-char-header">
-                <h3 class="mag-char-title">Mag Super Calibration</h3>
+                <h3 class="mag-char-title">Mag Characterization</h3>
                 <button type="button" class="mag-char-close" @click="close">&times;</button>
             </div>
 
@@ -223,6 +223,11 @@
                                 <span class="mag-char-stat-label">Quality</span>
                                 <span class="mag-char-stat-value">{{ solverResult.qualityScore }}%</span>
                             </div>
+                            <div v-if="solverResult.qualityScore === 0" class="mag-char-solver-row">
+                                <span class="mag-char-stat-value" style="font-size: 11px; color: #888">
+                                    Solver could not converge — check field consistency and hardware diagnostics below.
+                                </span>
+                            </div>
                             <div class="mag-char-solver-row">
                                 <span class="mag-char-stat-label">Residuals</span>
                                 <span class="mag-char-stat-value">
@@ -233,7 +238,7 @@
                             <div class="mag-char-solver-row">
                                 <span class="mag-char-stat-label">Field |B|</span>
                                 <span class="mag-char-stat-value">
-                                    {{ solverResult.fieldConsistency.mean }} nT
+                                    {{ solverResult.fieldConsistency.mean }} counts
                                     <span v-if="solverResult.fieldConsistency.suspect" style="color: #ee4444">
                                         — suspicious (±{{ solverResult.fieldConsistency.maxDevPct }}%)</span
                                     >
@@ -278,13 +283,14 @@
                             <div v-if="ellipsoidDiag" class="mag-char-solver-row">
                                 <span class="mag-char-stat-label">Hardware Diagnostics</span>
                                 <span class="mag-char-stat-value">
-                                    <span v-if="ellipsoidDiag.chirality === 'left-handed'" style="color: #ee4444"
-                                        >DRIVER ERROR &mdash; left-handed coordinate system</span
+                                    <span v-if="ellipsoidDiag.driverSuspect" style="color: #ee4444"
+                                        >DRIVER MISMATCH — field direction stationary during rotation</span
+                                    >
+                                    <span v-else-if="ellipsoidDiag.chirality === 'left-handed'" style="color: #ee4444"
+                                        >DRIVER ERROR — left-handed coordinate system</span
                                     >
                                     <span v-else-if="ellipsoidDiag.conditionNumber > 1.15" style="color: #ee6644"
-                                        >Gain asymmetry &mdash; &kappa;={{
-                                            ellipsoidDiag.conditionNumber.toFixed(1)
-                                        }}</span
+                                        >Gain asymmetry — κ={{ ellipsoidDiag.conditionNumber.toFixed(1) }}</span
                                     >
                                     <span v-else-if="ellipsoidDiag.offDiagonalRms > 0.05" style="color: #eebb44"
                                         >Mounting skew detected</span

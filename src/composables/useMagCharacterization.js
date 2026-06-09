@@ -602,9 +602,52 @@ export function useMagCharacterization() {
         });
         const chirality = chiralitySum > 0 ? "right-handed" : "left-handed";
 
+        // Driver diagnostic: check if sensor-frame field direction rotates with drone heading
+        // A correctly-driven chip should show field direction changing by ~90° per cardinal direction.
+        // A wrong driver (wrong register order, wrong chip variant) will show stationary field direction.
+        let driverSuspect = false;
+        const flatHeadings = [];
+        for (let di = 0; di < directions.length; di++) {
+            const cap = captureData.value[di]?.[0]; // First pose index = Flat
+            if (!cap || !cap.samples) {
+                continue;
+            }
+            let sumSin = 0,
+                sumCos = 0;
+            for (const s of cap.samples) {
+                const body = mat3mulVec(currentMatForCalibration || ALIGNMENT_MATRICES[1], s.mag);
+                const dir = Math.atan2(body[1], body[0]);
+                sumSin += Math.sin(dir);
+                sumCos += Math.cos(dir);
+            }
+            flatHeadings.push({
+                label: directions[di].label.split(" ")[0],
+                hdg: Math.atan2(sumSin, sumCos) * (180 / Math.PI),
+                expected: directions[di].heading * (180 / Math.PI),
+            });
+        }
+        // Check if flat headings rotate by approximately 90° between adjacent cardinal directions
+        if (flatHeadings.length >= 4) {
+            const deltas = [];
+            for (let i = 1; i < flatHeadings.length; i++) {
+                let d = flatHeadings[i].hdg - flatHeadings[i - 1].hdg;
+                while (d > 180) d -= 360;
+                while (d < -180) d += 360;
+                deltas.push(d);
+            }
+            // Also check the wrap from last to first
+            let d = flatHeadings[0].hdg - flatHeadings[flatHeadings.length - 1].hdg;
+            while (d > 180) d -= 360;
+            while (d < -180) d += 360;
+            deltas.push(d);
+            const meanDelta = deltas.reduce((a, b) => a + Math.abs(b), 0) / deltas.length;
+            driverSuspect = meanDelta < 45; // If average heading change < 45° per 90° rotation, driver is wrong
+        }
+
         ellipsoidDiag.value = {
             conditionNumber,
             chirality,
+            driverSuspect,
             offDiagonalRms: offDiagRms,
             axisRms: { x: Math.round(rmsX), y: Math.round(rmsY), z: Math.round(rmsZ) },
             residualRms: 0,
@@ -1066,6 +1109,13 @@ export function useMagCharacterization() {
             report += `  Chirality:         ${ed.chirality.toUpperCase()}\n`;
             if (ed.chirality === "left-handed") {
                 report += "    DRIVER ERROR: One or more sensor axes are inverted in firmware.\n";
+            }
+            if (ed.driverSuspect) {
+                report += "  Driver diagnostic: SUSPECT — sensor field direction does not follow drone rotation.\n";
+                report += "    Possible causes: wrong chip variant (QMC5883 vs HMC5883), wrong register mapping.\n";
+                report += "    The mag readings do not change direction as the drone rotates.\n";
+                report +=
+                    "    Verify the driver reads registers in X\u2192Y\u2192Z order for QMC5883L 'HA588' variants.\n";
             }
             report += `  Condition \u03BA:       ${ed.conditionNumber.toFixed(2)}`;
             if (ed.conditionNumber > 1.15) {
