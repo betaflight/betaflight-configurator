@@ -67,9 +67,11 @@
             :visible="checkboxes[sensor.checkboxIndex]"
             :title="$t(sensor.titleKey)"
             :hint="sensor.hintKey ? $t(sensor.hintKey) : null"
+            :rate="rates[sensor.type]"
             :scale="sensor.hasScale ? scales[sensor.type] : null"
             :scale-options="sensor.scaleOptions"
             :display-values="sensor.getDisplayValues()"
+            @update:rate="updateRate(sensor.type, $event)"
             @update:scale="sensor.hasScale ? updateScale(sensor.type, $event) : null"
         />
 
@@ -81,10 +83,13 @@
                 :svg-id="`debug${i - 1}`"
                 :visible="true"
                 :title="debugTitles[i - 1]"
+                :show-refresh-rate="i === 1"
+                :rate="rates.debug"
                 :scale="debugScales[i - 1]"
                 :scale-options="DEBUG_SCALE_OPTIONS"
                 :display-values="[debugDisplay[i - 1]]"
                 :is-debug="true"
+                @update:rate="updateRate('debug', $event)"
                 @update:scale="updateDebugScale(i - 1, $event)"
             />
         </div>
@@ -118,7 +123,7 @@ const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
 const { addInterval, removeInterval } = useInterval();
 
-const { checkboxes, globalRate, scales, debugScales, debugColumns } = storeToRefs(sensorsStore);
+const { checkboxes, globalRate, rates, scales, debugScales, debugColumns } = storeToRefs(sensorsStore);
 
 const refreshRateItems = REFRESH_RATE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
 
@@ -223,8 +228,8 @@ function initializeTimers() {
     removeInterval("sonar_pull");
     removeInterval("debug_pull");
 
-    // A single global refresh rate drives every graph so they stay in sync.
-    const rate = globalRate.value;
+    // Gyro/accel/mag share one MSP_RAW_IMU pull, so use the fastest of the three.
+    const fastest = Math.min(rates.value.gyro, rates.value.accel, rates.value.mag);
 
     if (checkboxes.value[0] || checkboxes.value[1] || checkboxes.value[2]) {
         addInterval(
@@ -232,7 +237,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_imu_graphs);
             },
-            rate,
+            fastest,
             true,
         );
     }
@@ -243,7 +248,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, update_altitude_graph);
             },
-            rate,
+            rates.value.altitude,
             true,
         );
     }
@@ -254,7 +259,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
             },
-            rate,
+            rates.value.sonar,
             true,
         );
     }
@@ -265,7 +270,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
             },
-            rate,
+            rates.value.debug,
             true,
         );
     }
@@ -339,6 +344,11 @@ function displayDebugColumnNames() {
 
 function onCheckboxChange() {
     sensorsStore.saveToConfig();
+    initializeTimers();
+}
+
+function updateRate(sensor, value) {
+    sensorsStore.updateRate(sensor, value);
     initializeTimers();
 }
 

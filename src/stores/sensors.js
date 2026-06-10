@@ -6,8 +6,19 @@ export const useSensorsStore = defineStore("sensors", () => {
     // Sensor visibility checkboxes
     const checkboxes = ref([false, false, false, false, false, false]);
 
-    // Global refresh rate (ms) shared by every graph so they stay in sync
+    // Global refresh rate (ms). Setting it applies the same rate to every graph
+    // so they stay in sync; individual graphs can still be tuned afterwards.
     const globalRate = ref(50);
+
+    // Per-graph refresh rates (ms)
+    const rates = reactive({
+        gyro: 50,
+        accel: 50,
+        mag: 50,
+        altitude: 100,
+        sonar: 100,
+        debug: 500,
+    });
 
     // Scale values
     const scales = reactive({
@@ -28,10 +39,13 @@ export const useSensorsStore = defineStore("sensors", () => {
             if (config.checkboxes) {
                 checkboxes.value = config.checkboxes;
             }
+            if (config.rates) {
+                Object.assign(rates, config.rates);
+            }
             if (typeof config.globalRate === "number") {
                 globalRate.value = config.globalRate;
             } else if (config.rates) {
-                // Migrate legacy per-sensor rates to a single global rate.
+                // Seed the global control from the fastest saved per-sensor rate.
                 const legacy = Object.values(config.rates).filter((v) => typeof v === "number");
                 if (legacy.length) {
                     globalRate.value = Math.min(...legacy);
@@ -55,14 +69,24 @@ export const useSensorsStore = defineStore("sensors", () => {
         setConfig("sensors_tab", {
             checkboxes: checkboxes.value,
             globalRate: globalRate.value,
+            rates,
             scales,
             debugScales: debugScales.value,
             debugColumns: debugColumns.value,
         });
     }
 
+    function updateRate(sensor, value) {
+        rates[sensor] = value;
+        saveToConfig();
+    }
+
     function updateGlobalRate(value) {
         globalRate.value = value;
+        // Apply the global rate to every graph so they stay in sync.
+        for (const sensor of Object.keys(rates)) {
+            rates[sensor] = value;
+        }
         saveToConfig();
     }
 
@@ -84,11 +108,13 @@ export const useSensorsStore = defineStore("sensors", () => {
     return {
         checkboxes,
         globalRate,
+        rates,
         scales,
         debugScales,
         debugColumns,
         loadFromConfig,
         saveToConfig,
+        updateRate,
         updateGlobalRate,
         updateScale,
         updateDebugScale,
