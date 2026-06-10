@@ -171,20 +171,9 @@ let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
 let heatmapFaceCounts = null; // sample count per face
 
-// World-space nose direction captured from liveMarker each frame.
-// Stored as unit vectors (nx, ny, nz) per sample — multiplied by
-// totalField * magScale() in updatePoints so dots rescale correctly.
-let noseDirections = [];
-const _worldPosVec = new THREE.Vector3();
-
-function sampleToScene(s, sampleIndex) {
-    const totalField = Math.hypot(s.x, s.y, s.z);
-    const r = totalField * magScale();
-    const dIdx = sampleIndex * 3;
-    if (dIdx + 2 < noseDirections.length) {
-        return [noseDirections[dIdx] * r, noseDirections[dIdx + 1] * r, noseDirections[dIdx + 2] * r];
-    }
-    return [0, 0, 0];
+function sampleToScene(s, _sampleIndex) {
+    const scale = magScale();
+    return [s.x * scale, -s.y * scale, s.z * scale];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -261,7 +250,6 @@ function initScene() {
     fieldStrengthSum = 0;
     fieldStrengthCount = 0;
     smoothQuatInitialized = false;
-    noseDirections = [];
 
     // Camera — Z-up convention, pulled back for isometric overview
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
@@ -539,23 +527,6 @@ function updateLiveMagOverlay() {
                 _tmpVec.set(1, 0, 0);
                 orientCylinder(noseLine, _tmpVec, totalField * magScale());
                 noseLine.position.set(0, 0, 0);
-            }
-
-            // Capture nose direction for dot placement — uses the same
-            // transform chain as the liveMarker so dots always match.
-            quadIcon.updateWorldMatrix(true, false);
-            liveMarker.getWorldPosition(_worldPosVec);
-            const r = totalField * magScale();
-            if (r > 0) {
-                const invR = 1 / r;
-                const nx = _worldPosVec.x * invR;
-                const ny = _worldPosVec.y * invR;
-                const nz = _worldPosVec.z * invR;
-                const target = props.sampleCount;
-                const have = noseDirections.length / 3;
-                for (let i = have; i < target; i++) {
-                    noseDirections.push(nx, ny, nz);
-                }
             }
         }
     }
@@ -1280,19 +1251,17 @@ function updatePoints(sampleList) {
     }
     repositionCalOffsetMarker();
 
-    // Only render dots that have captured nose directions
-    const dirCount = Math.floor(noseDirections.length / 3);
-    const renderCount = Math.min(count, Math.max(0, dirCount - start));
+    // Position each point at its actual mag vector in display frame
+    // BF mag: X=fwd, Y=right, Z=up → display: X=fwd, Y=left (negated), Z=up
+    const renderCount = count;
+    const scale = magScale();
 
     for (let i = 0; i < renderCount; i++) {
         const s = sampleList[start + i];
         const idx = i * 3;
-        const dIdx = (start + i) * 3;
-        const totalField = Math.hypot(s.x, s.y, s.z);
-        const r = totalField * magScale();
-        positions[idx] = noseDirections[dIdx] * r;
-        positions[idx + 1] = noseDirections[dIdx + 1] * r;
-        positions[idx + 2] = noseDirections[dIdx + 2] * r;
+        positions[idx] = s.x * scale;
+        positions[idx + 1] = -s.y * scale;
+        positions[idx + 2] = s.z * scale;
 
         // Color gradient: blue (old) → cyan → green → yellow → red (new)
         const t = renderCount > 1 ? i / (renderCount - 1) : 0;
@@ -1372,7 +1341,6 @@ function disposeScene() {
     liveMarker = null;
     vectorLines = null;
     smoothQuatInitialized = false;
-    noseDirections = [];
 
     disposeGroup(ghostGroup);
     ghostGroup = null;
@@ -1474,7 +1442,7 @@ watch(
             maxFieldStrength = 0;
             fieldStrengthSum = 0;
             fieldStrengthCount = 0;
-            noseDirections = [];
+            _noseDirections = [];
         }
         ensureWireframe();
         updatePoints(props.samples);
