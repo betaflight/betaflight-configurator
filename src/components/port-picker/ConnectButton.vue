@@ -307,13 +307,33 @@ export default defineComponent({
 }
 
 /* Default Nuxt UI `success` soft tint is too pale in light mode — lift the contrast. */
-html:not(.dark) .sidebar-connect :deep(button) {
+html:not(.dark) .sidebar-connect :deep(button.color-success) {
     background-color: var(--success-400);
     border: 1px solid var(--success-600);
     color: var(--surface-900);
 }
-html:not(.dark) .sidebar-connect :deep(button:hover) {
+html:not(.dark) .sidebar-connect :deep(button.color-success:hover) {
     background-color: var(--success-500);
+}
+
+/* Disconnect button (error) styling for light mode - ensure it's red */
+html:not(.dark) .sidebar-connect :deep(button.color-error) {
+    background-color: var(--error-500);
+    border: 1px solid var(--error-600);
+    color: var(--surface-50);
+}
+html:not(.dark) .sidebar-connect :deep(button.color-error:hover) {
+    background-color: var(--error-600);
+}
+
+/* Disconnect button (error) styling for dark mode - ensure proper contrast */
+html.dark .sidebar-connect :deep(button.color-error) {
+    background-color: var(--error-500);
+    border: 1px solid var(--error-600);
+    color: var(--surface-50);
+}
+html.dark .sidebar-connect :deep(button.color-error:hover) {
+    background-color: var(--error-600);
 }
 
 .tab_container.reveal .sidebar-connect {
