@@ -513,7 +513,11 @@ function onOpen(openInfo) {
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
-            if (FC.CONFIG.apiVersion.includes("null") || FC.CONFIG.apiVersion === "0.0.0") {
+            // "0.0.0" is the uninitialised default (no valid version received), and any
+            // unparseable string (e.g. "null.null.0" from a corrupt/truncated payload)
+            // would make the semver.gte() below throw. Reject both robustly instead of
+            // matching a specific garbage substring.
+            if (FC.CONFIG.apiVersion === "0.0.0" || !semver.valid(FC.CONFIG.apiVersion)) {
                 abortConnection();
                 return;
             }

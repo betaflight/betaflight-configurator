@@ -821,10 +821,24 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     console.log("Reboot request accepted");
                     break;
 
-                case MSPCodes.MSP_API_VERSION:
+                case MSPCodes.MSP_API_VERSION: {
+                    // A truncated/corrupt payload makes readU8() return null, producing an
+                    // unparseable version like "null.null.0". This happens intermittently
+                    // with MSP corruption / firmware issues and makes every downstream
+                    // semver comparison throw "Invalid Version". Validate the constructed
+                    // string and keep the semver-valid default ("0.0.0") otherwise, so the
+                    // connection logic can detect and abort the handshake cleanly.
                     FC.CONFIG.mspProtocolVersion = data.readU8();
-                    FC.CONFIG.apiVersion = `${data.readU8()}.${data.readU8()}.0`;
+                    const apiVersion = `${data.readU8()}.${data.readU8()}.0`;
+                    if (semver.valid(apiVersion)) {
+                        FC.CONFIG.apiVersion = apiVersion;
+                    } else {
+                        console.error(
+                            `MSP_API_VERSION: received invalid version "${apiVersion}" - possible MSP corruption / firmware issue`,
+                        );
+                    }
                     break;
+                }
 
                 case MSPCodes.MSP_FC_VARIANT:
                     let fcVariantIdentifier = "";
