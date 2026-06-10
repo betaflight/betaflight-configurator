@@ -8,6 +8,36 @@ const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
 const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 
+// Wire u8 values whose firmware dispatch entry is ADJUSTMENT_MODE_SELECT
+// (i.e. no center/scale).
+//
+// IMPORTANT: these indices are NOT positions in the adjustmentFunction_e enum.
+// Firmware looks up the configured u8 via:
+//   defaultAdjustmentConfigs[adjustmentConfig - 1]   (rc_adjustments.c)
+// and that table was never extended to include the per-axis RC rates / expo
+// (enum values 25-28: ROLL_RC_RATE, PITCH_RC_RATE, ROLL_RC_EXPO, PITCH_RC_EXPO),
+// so dispatch table indices shift up by 4 from enum value 25 onward. The
+// configurator's adjustmentsFunctionN locale labels reflect the dispatch
+// behaviour, not the enum, which is what users actually experience on hardware.
+//
+// What this set means in terms of what the FC actually fires for each u8:
+//   12: RATE_PROFILE
+//   24: HORIZON_STRENGTH
+//   25: PID_AUDIO
+//   29: OSD_PROFILE
+//   30: LED_PROFILE
+//   31: LED_DIMMER
+//   32: SIMPLIFIED_MASTER_MULTIPLIER
+//   33: BATTERY_PROFILE
+const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33]);
+
+export function getAdjustmentMode(adjustmentFunction, adjustmentCenter) {
+    if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) {
+        return "selection";
+    }
+    return adjustmentCenter > 0 ? "absolute" : "step";
+}
+
 export function useAdjustmentsData(adjustments, t) {
     const fcStore = useFlightControllerStore();
 
@@ -44,6 +74,11 @@ export function useAdjustmentsData(adjustments, t) {
         return [first, ...rest];
     });
 
+    const stepModeOptions = computed(() => [
+        { value: "step", label: t("adjustmentsModeStep") },
+        { value: "absolute", label: t("adjustmentsModeAbsolute") },
+    ]);
+
     const channelPercent = (value) => {
         if (value === undefined || value === null || Number.isNaN(value)) {
             return 50;
@@ -61,6 +96,24 @@ export function useAdjustmentsData(adjustments, t) {
         } else {
             adjustment.range.start = 900;
             adjustment.range.end = 900;
+        }
+    };
+
+    const onModeChange = (adjustment, newMode) => {
+        if (newMode === "step") {
+            adjustment.adjustmentCenter = 0;
+            adjustment.adjustmentScale = 0;
+        } else if (newMode === "absolute") {
+            if (adjustment.adjustmentCenter === 0) {
+                adjustment.adjustmentCenter = 50;
+            }
+        }
+    };
+
+    const onFunctionChange = (adjustment) => {
+        if (SELECT_MODE_FUNCTIONS.has(adjustment.adjustmentFunction)) {
+            adjustment.adjustmentCenter = 0;
+            adjustment.adjustmentScale = 0;
         }
     };
 
@@ -95,6 +148,9 @@ export function useAdjustmentsData(adjustments, t) {
                 adjustmentCenter: range.adjustmentCenter ?? 0,
                 adjustmentScale: range.adjustmentScale ?? 0,
                 enabled: isEnabled,
+                get mode() {
+                    return getAdjustmentMode(this.adjustmentFunction, this.adjustmentCenter);
+                },
                 get rangeArray() {
                     return [this.range.start, this.range.end];
                 },
@@ -111,9 +167,12 @@ export function useAdjustmentsData(adjustments, t) {
         auxChannelCount,
         auxChannelOptions,
         sortedFunctions,
+        stepModeOptions,
         pipValues,
         channelPercent,
         onEnableChange,
+        onModeChange,
+        onFunctionChange,
         loadMSPData,
         initializeAdjustments,
     };
