@@ -46,6 +46,17 @@
                 />
                 <UInput v-show="checkboxes[5]" :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
             </div>
+
+            <div class="flex items-center gap-2 ml-auto text-[10px] [&_[data-slot=base]]:!text-[10px]">
+                <span v-html="$t('sensorsGlobalRefresh')"></span>
+                <USelect
+                    :model-value="globalRate"
+                    :items="refreshRateItems"
+                    @update:model-value="updateGlobalRate(Number($event))"
+                    class="min-w-24"
+                    size="xs"
+                />
+            </div>
         </div>
 
         <SensorGraph
@@ -56,11 +67,9 @@
             :visible="checkboxes[sensor.checkboxIndex]"
             :title="$t(sensor.titleKey)"
             :hint="sensor.hintKey ? $t(sensor.hintKey) : null"
-            :rate="rates[sensor.type]"
             :scale="sensor.hasScale ? scales[sensor.type] : null"
             :scale-options="sensor.scaleOptions"
             :display-values="sensor.getDisplayValues()"
-            @update:rate="updateRate(sensor.type, $event)"
             @update:scale="sensor.hasScale ? updateScale(sensor.type, $event) : null"
         />
 
@@ -72,11 +81,11 @@
                 :svg-id="`debug${i - 1}`"
                 :visible="true"
                 :title="debugTitles[i - 1]"
-                :show-refresh-rate="i === 1"
-                :rate="rates.debug"
+                :scale="debugScales[i - 1]"
+                :scale-options="DEBUG_SCALE_OPTIONS"
                 :display-values="[debugDisplay[i - 1]]"
                 :is-debug="true"
-                @update:rate="updateRate('debug', $event)"
+                @update:scale="updateDebugScale(i - 1, $event)"
             />
         </div>
     </div>
@@ -91,7 +100,13 @@ import { useSensorsStore } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
 import { useInterval } from "../../../composables/useInterval";
 import { have_sensor } from "../../../js/sensor_helpers";
-import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./constants";
+import {
+    GYRO_SCALE_OPTIONS,
+    ACCEL_SCALE_OPTIONS,
+    MAG_SCALE_OPTIONS,
+    DEBUG_SCALE_OPTIONS,
+    REFRESH_RATE_OPTIONS,
+} from "./constants";
 import SensorGraph from "./SensorGraph.vue";
 import MSP from "../../../js/msp";
 import MSPCodes from "../../../js/msp/MSPCodes";
@@ -103,7 +118,9 @@ const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
 const { addInterval, removeInterval } = useInterval();
 
-const { checkboxes, rates, scales, debugColumns } = storeToRefs(sensorsStore);
+const { checkboxes, globalRate, scales, debugScales, debugColumns } = storeToRefs(sensorsStore);
+
+const refreshRateItems = REFRESH_RATE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
 
 const {
     addGyroSample,
@@ -114,6 +131,7 @@ const {
     addDebugSample,
     incrementDebugCounter,
     updateScales: updateGraphScales,
+    setDebugScales: updateGraphDebugScales,
     updateGraphs,
     initializeGraphs,
 } = useSensorGraph();
@@ -205,7 +223,8 @@ function initializeTimers() {
     removeInterval("sonar_pull");
     removeInterval("debug_pull");
 
-    const fastest = Math.min(rates.value.gyro, rates.value.accel, rates.value.mag);
+    // A single global refresh rate drives every graph so they stay in sync.
+    const rate = globalRate.value;
 
     if (checkboxes.value[0] || checkboxes.value[1] || checkboxes.value[2]) {
         addInterval(
@@ -213,7 +232,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_imu_graphs);
             },
-            fastest,
+            rate,
             true,
         );
     }
@@ -224,7 +243,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, update_altitude_graph);
             },
-            rates.value.altitude,
+            rate,
             true,
         );
     }
@@ -235,7 +254,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
             },
-            rates.value.sonar,
+            rate,
             true,
         );
     }
@@ -246,7 +265,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
             },
-            rates.value.debug,
+            rate,
             true,
         );
     }
@@ -323,15 +342,19 @@ function onCheckboxChange() {
     initializeTimers();
 }
 
-function updateRate(sensor, value) {
-    sensorsStore.updateRate(sensor, value);
+function updateGlobalRate(value) {
+    sensorsStore.updateGlobalRate(value);
     initializeTimers();
 }
 
 function updateScale(sensor, value) {
     sensorsStore.updateScale(sensor, value);
     updateGraphScales(scales.value);
-    initializeTimers();
+}
+
+function updateDebugScale(index, value) {
+    sensorsStore.updateDebugScale(index, value);
+    updateGraphDebugScales(debugScales.value);
 }
 
 onMounted(async () => {
@@ -367,6 +390,7 @@ onMounted(async () => {
     await nextTick();
     initializeGraphs(null, debugColumns.value);
     updateGraphScales(scales.value);
+    updateGraphDebugScales(debugScales.value);
     initializeTimers();
 });
 </script>

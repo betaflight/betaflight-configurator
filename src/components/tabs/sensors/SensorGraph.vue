@@ -15,16 +15,6 @@
                         <span v-html="title"></span>
                         <HelpIcon v-if="hint" :text="hint" />
                     </div>
-                    <div v-if="showRefreshRate" class="flex items-center gap-2">
-                        <span class="flex-1" v-html="$t('sensorsRefresh')"></span>
-                        <USelect
-                            :model-value="rate"
-                            :items="refreshRateItems"
-                            @update:model-value="$emit('update:rate', Number($event))"
-                            class="min-w-24"
-                            size="xs"
-                        />
-                    </div>
                     <div v-if="scaleOptions" class="flex items-center gap-2">
                         <span class="flex-1" v-html="$t('sensorsScale')"></span>
                         <USelect
@@ -72,12 +62,12 @@
                 </svg>
                 <div class="text-[10px] flex flex-col gap-1 [&_button]:!text-[10px] [&_[data-slot=base]]:!text-[10px]">
                     <div class="font-bold mb-2"><span v-html="title"></span></div>
-                    <div v-if="showRefreshRate" class="flex items-center gap-2">
-                        <span class="flex-1" v-html="$t('sensorsRefresh')"></span>
+                    <div v-if="scaleOptions" class="flex items-center gap-2">
+                        <span class="flex-1" v-html="$t('sensorsScale')"></span>
                         <USelect
-                            :model-value="rate"
-                            :items="refreshRateItems"
-                            @update:model-value="$emit('update:rate', Number($event))"
+                            :model-value="scale"
+                            :items="scaleItems"
+                            @update:model-value="$emit('update:scale', Number($event))"
                             class="min-w-24"
                             size="xs"
                         />
@@ -96,7 +86,8 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { REFRESH_RATE_OPTIONS } from "./constants";
+import { DEBUG_SCALE_AUTO } from "./constants";
+import { i18n } from "@/js/localization";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 
@@ -108,19 +99,21 @@ const props = defineProps({
     visible: { type: Boolean, default: true },
     title: { type: String, required: true },
     hint: { type: String, default: null },
-    showRefreshRate: { type: Boolean, default: true },
-    rate: { type: Number, default: 50 },
     scale: { type: Number, default: null },
     scaleOptions: { type: Array, default: null },
     displayValues: { type: Array, required: true },
     isDebug: { type: Boolean, default: false },
 });
 
-const refreshRateItems = REFRESH_RATE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+const scaleItems = computed(
+    () =>
+        props.scaleOptions?.map((v) => ({
+            value: v,
+            label: v === DEBUG_SCALE_AUTO ? i18n.getMessage("sensorsScaleAuto") : String(v),
+        })) ?? [],
+);
 
-const scaleItems = computed(() => props.scaleOptions?.map((v) => ({ value: v, label: String(v) })) ?? []);
-
-defineEmits(["update:rate", "update:scale"]);
+defineEmits(["update:scale"]);
 defineExpose({ svgElement });
 </script>
 
