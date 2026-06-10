@@ -272,7 +272,7 @@ const VirtualFC = {
             gyro_hardware: 2, // MPU6050
             acc_hardware: 3, // MPU6050
             baro_hardware: 4, // BMP280
-            mag_hardware: 5, // QMC5883
+            mag_hardware: 5, // QMC5883 (matches sensor_types.js enum)
             sonar_hardware: 1, // HCSR04
             opticalflow_hardware: 1, // MT01
         };

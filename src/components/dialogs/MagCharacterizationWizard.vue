@@ -11,28 +11,71 @@
                 <div class="mag-char-setup-image">
                     <img src="../../images/drone_paper.jpg" alt="Drone on paper with compass rose" />
                 </div>
-                <h4>Magnetometer Characterization</h4>
-                <p>
-                    Finds the correct magnetometer alignment by comparing sensor readings against a known physical
-                    reference.
-                </p>
-                <p><strong>You will need:</strong></p>
-                <ul>
-                    <li>A <strong>flat table</strong> with a large sheet of paper</li>
+                <h4>Compass Setup Wizard</h4>
+                <p><strong>We're going to teach your drone which way is North!</strong></p>
+                <p>This wizard does two things:</p>
+                <ol>
                     <li>
-                        A <strong>compass</strong> (or phone app) to draw
+                        <strong>Spin it around</strong> — twirl the drone in every direction so we can learn how your
+                        specific hardware reads the Earth's magnetic field.
+                    </li>
+                    <li>
+                        <strong>20 guided poses</strong> — rest the drone at precise angles so we can build a model of
+                        how accurate your compass is at every orientation.
+                    </li>
+                </ol>
+                <p>The whole thing takes about 5 minutes and makes your GPS rescue tracks <em>way</em> smoother.</p>
+                <p><strong>You'll need:</strong></p>
+                <ul>
+                    <li>A <strong>flat table</strong> and a big sheet of paper</li>
+                    <li>
+                        A <strong>compass</strong> (or phone app) — draw
                         N&thinsp;/&thinsp;E&thinsp;/&thinsp;S&thinsp;/&thinsp;W lines
                     </li>
-                    <li>A <strong>rigid support</strong> &mdash; tissue box, book, or battery pack</li>
+                    <li>A <strong>tissue box, book, or battery</strong> to tilt the drone</li>
                 </ul>
-                <p>
-                    The wizard will guide you through 20 rest poses. At each step, align the drone with a drawn cardinal
-                    line, let it settle, then press <strong>SPACEBAR</strong> to capture.
-                </p>
+                <div class="mag-char-complete-actions" style="margin-top: 16px">
+                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="startCalibrationPhase">
+                        Start with Full Calibration
+                    </button>
+                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="startWizard">
+                        Skip — 20 Poses Only
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calibration tumble phase -->
+            <div v-if="phase === 'calibrate'" class="mag-char-body">
+                <h4>Calibrate Magnetometer</h4>
+                <p>Rotate the drone in all directions to collect calibration data.</p>
+                <MagSphereView
+                    :samples="calibrationSamples"
+                    :sample-count="calibrationSampleCount"
+                    :sphere-fit="null"
+                    :coverage="calibrationCoverage"
+                    :attitude="attitudeRaw"
+                    :quaternion="attitudeQuaternion"
+                    viz-mode="pointcloud"
+                />
+                <p v-if="calibrationCoverage">{{ (calibrationCoverage.uniform * 100).toFixed(0) }}% coverage</p>
+                <div class="mag-char-complete-actions" style="margin-top: 12px">
+                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="completeCalibrationPhase">
+                        Done calibrating
+                    </button>
+                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="exportCalibrationSamples">
+                        Export samples
+                    </button>
+                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="skipCalibration">
+                        Skip
+                    </button>
+                </div>
             </div>
 
             <!-- Wizard body -->
-            <div v-if="phase !== 'intro' && phase !== 'complete' && phase !== 'replay'" class="mag-char-wizard-body">
+            <div
+                v-if="phase !== 'intro' && phase !== 'calibrate' && phase !== 'complete' && phase !== 'replay'"
+                class="mag-char-wizard-body"
+            >
                 <div class="mag-char-left">
                     <!-- Pose timeline grouped by direction -->
                     <div class="mag-char-pose-timeline">
@@ -193,6 +236,42 @@
                                 {{ currentReplayPose.gcScore }}
                             </div>
                         </div>
+                        <div
+                            v-if="
+                                ellipsoidParams && currentReplayPose && currentReplayPose.fullCorrectedHeading != null
+                            "
+                            class="mag-char-replay-compare-col"
+                        >
+                            <span class="mag-char-replay-view-label">Full Corrected</span>
+                            <div
+                                class="mag-char-replay-heading-new"
+                                :class="
+                                    headingClass(
+                                        currentReplayPose.fullCorrectedHeading,
+                                        currentReplayPose.expectedHeading,
+                                    )
+                                "
+                            >
+                                {{ formatHeading(currentReplayPose.fullCorrectedHeading) }}
+                            </div>
+                            <div class="mag-char-replay-error">
+                                {{
+                                    headingErrorText(
+                                        currentReplayPose.fullCorrectedHeading,
+                                        currentReplayPose.expectedHeading,
+                                    )
+                                }}
+                            </div>
+                            <div
+                                class="mag-char-replay-score"
+                                :class="scoreClass(currentReplayPose.fullCorrectedScore)"
+                            >
+                                {{ currentReplayPose.fullCorrectedScore || "" }}
+                            </div>
+                            <div class="mag-char-replay-gain-note" style="font-size: 10px; margin-top: 4px">
+                                Ellipsoid+Align
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -307,8 +386,15 @@
                 </div>
 
                 <div class="mag-char-complete-actions">
-                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="downloadSamplesJSON">
-                        Save Samples as JSON
+                    <button
+                        type="button"
+                        class="mag-char-btn mag-char-btn-primary"
+                        @click="exportCharacterizationPoses"
+                    >
+                        Export Poses for Replay
+                    </button>
+                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="exportCharacterizationData">
+                        Export Characterization Data
                     </button>
                     <button
                         type="button"
@@ -372,11 +458,6 @@
             <div class="mag-char-footer">
                 <template v-if="phase === 'intro'">
                     <span class="mag-char-debug-link" @click="debugLoadJSON">Debug: Load JSON</span>
-                    <span class="mag-char-readout-spacer"></span>
-                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="close">Cancel</button>
-                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="startWizard">
-                        Begin Wizard
-                    </button>
                 </template>
                 <input
                     ref="debugFileInput"
@@ -473,6 +554,7 @@ import { ref, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
+import MagSphereView from "./mag-calibration/MagSphereView.vue";
 import { useFlightControllerStore } from "../../stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -510,7 +592,8 @@ const {
     skipPose,
     onKeyDown,
     reset,
-    downloadSamplesJSON,
+    exportCharacterizationPoses,
+    exportCharacterizationData,
     finishReplay,
     replayData,
     calibrationOffsets,
@@ -522,7 +605,27 @@ const {
     generateDetailedReport,
     detailedReport,
     ellipsoidDiag,
+    ellipsoidParams,
+    calibrationSamples,
+    calibrationSampleCount,
+    calibrationCoverage,
+    startCalibrationPhase,
+    completeCalibrationPhase,
+    skipCalibration,
+    exportCalibrationSamples,
 } = mag;
+
+// Attitude data for MagSphereView calibration phase
+const attitudeRaw = computed(() => ({
+    roll: fcStore.sensorData.kinematics[0] || 0,
+    pitch: fcStore.sensorData.kinematics[1] || 0,
+    heading: 0,
+}));
+
+const attitudeQuaternion = computed(() => {
+    const q = fcStore.sensorData.attitudeQuaternion;
+    return q && q.w !== undefined ? q : null;
+});
 
 // ── Replay controls ───────────────────────────────────────────────────
 const replayIndex = ref(0);
@@ -1022,8 +1125,28 @@ function onDebugFileSelected(e) {
                         : null,
                 ),
             );
-            // Run solver directly
-            mag.runSolver();
+
+            // Restore calibration state from JSON metadata
+            if (data.metadata?.ellipsoidCorrection) {
+                mag.ellipsoidParams.value = data.metadata.ellipsoidCorrection;
+            }
+            if (data.metadata?.geoReference) {
+                mag.geoReference.value = data.metadata.geoReference;
+            }
+            if (data.metadata?.axisGains) {
+                mag.axisGains.value = data.metadata.axisGains;
+            }
+            if (data.metadata?.calibrationOffsets) {
+                mag.calibrationOffsets.value = data.metadata.calibrationOffsets;
+            }
+
+            // Run solver with JSON's recorded state, skip recomputation
+            mag.runSolver(
+                data.metadata.currentAlignment,
+                data.metadata.customAngles,
+                data.metadata.ellipsoidCorrection ?? null,
+                true,
+            );
             // Dispose 3D model (replay phase doesn't use it)
             disposeThreeScene();
         } catch (err) {

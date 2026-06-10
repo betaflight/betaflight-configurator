@@ -7,6 +7,8 @@
  * This enables detection of non-90° rotations (e.g. the ~66° yaw offset observed
  * on iFlight Blitz Mini M10 V2 modules with QMC5883L "HA-588" chips).
  *
+ * Heading penalty uses robust M-estimator (slack 3°, cap 15°) — see computeHeadingVariance.
+ *
  * FIRMWARE MATH (must match exactly):
  *   - 8 standard presets:  betaflight/src/main/sensors/boardalignment.c:98-139
  *   - buildRotationMatrix: betaflight/src/main/common/vector.c:214-236 (XYZ order)
@@ -274,47 +276,97 @@ function evaluateCandidate(rollDeg, pitchDeg, yawDeg, samples, currentInv, headi
 }
 
 /**
- * Compute circular variance of the levelled horizontal direction.
- * In 'absolute' mode: deviation from user-indicated headingRef.
- * In 'relative' mode: circular variance around the mean direction (all poses
- * should point the same way if the alignment is correct and user faced the same
- * direction at every pose).
+ * Compute robust heading variance penalty using truncated quadratic loss.
+ * Slack window forgives human jitter (±slack°); outer cap prevents outlier
+ * poses from hijacking the optimizer.
+ *
+ * @param {Array<number>} directions  - Levelled heading direction per sample (radians)
+ * @param {Array<object>} samples     - Original samples with headingRef (degrees)
+ * @param {string} headingMode        - "absolute" | "relative" | "none"
+ * @returns {number} Mean penalty per sample
  */
+const HEADING_SLACK_DEG = 3.0;
+const HEADING_OUTER_CAP_DEG = 15.0;
+
 function computeHeadingVariance(directions, samples, headingMode) {
+    const RAD_TO_DEG = 180 / Math.PI;
+
     if (headingMode === "absolute") {
-        // Compare each direction to its expected headingRef
-        let sumSq = 0;
-        let count = 0;
-        for (let i = 0; i < samples.length; i++) {
-            if (samples[i].headingRef !== undefined && samples[i].headingRef !== null) {
-                const expectedRad = samples[i].headingRef * (Math.PI / 180);
-                let diff = directions[i] - expectedRad;
-                // Wrap to [-PI, PI]
-                while (diff > Math.PI) {
-                    diff -= 2 * Math.PI;
-                }
-                while (diff < -Math.PI) {
-                    diff += 2 * Math.PI;
-                }
-                sumSq += diff * diff;
-                count++;
+        // Group samples by pose (contiguous blocks in the samples array)
+        const poseErrors = [];
+        let poseStart = 0;
+        while (poseStart < samples.length) {
+            const ref = samples[poseStart].headingRef;
+            if (ref === undefined || ref === null) {
+                poseStart++;
+                continue;
             }
+
+            // Find range of samples sharing the same headingRef (same pose)
+            let poseEnd = poseStart + 1;
+            while (
+                poseEnd < samples.length &&
+                samples[poseEnd].headingRef !== undefined &&
+                samples[poseEnd].headingRef !== null &&
+                Math.abs(samples[poseEnd].headingRef - ref) < 0.5
+            ) {
+                poseEnd++;
+            }
+
+            // Mean direction for this pose
+            let sumSin = 0,
+                sumCos = 0;
+            for (let i = poseStart; i < poseEnd; i++) {
+                sumSin += Math.sin(directions[i]);
+                sumCos += Math.cos(directions[i]);
+            }
+            const meanDir = Math.atan2(sumSin, sumCos);
+            const meanDeg = meanDir * RAD_TO_DEG;
+            const expectedDeg = ref;
+
+            let diffDeg = meanDeg - expectedDeg;
+            // Wrap to [-180, 180]
+            while (diffDeg > 180) {
+                diffDeg -= 360;
+            }
+            while (diffDeg < -180) {
+                diffDeg += 360;
+            }
+
+            const absError = Math.abs(diffDeg);
+            const maxPenalty = Math.pow(HEADING_OUTER_CAP_DEG - HEADING_SLACK_DEG, 2);
+
+            let poseLoss;
+            if (absError <= HEADING_SLACK_DEG) {
+                poseLoss = 0;
+            } else if (absError <= HEADING_OUTER_CAP_DEG) {
+                poseLoss = Math.pow(absError - HEADING_SLACK_DEG, 2);
+            } else {
+                poseLoss = maxPenalty;
+            }
+            poseErrors.push(poseLoss);
+            poseStart = poseEnd;
         }
-        return count > 0 ? sumSq / count : 0;
+
+        if (poseErrors.length === 0) {
+            return 0;
+        }
+        const totalLoss = poseErrors.reduce((a, b) => a + b, 0);
+        return totalLoss / poseErrors.length;
     }
 
-    // Relative mode: circular variance around the mean
+    // Relative mode: circular variance (unchanged)
     if (directions.length < 2) {
         return 0;
     }
-    let sumSin = 0;
-    let sumCos = 0;
+    let sumSin = 0,
+        sumCos = 0;
     for (const d of directions) {
         sumSin += Math.sin(d);
         sumCos += Math.cos(d);
     }
     const R = Math.hypot(sumSin, sumCos) / directions.length;
-    return 1 - R; // 0 = perfectly aligned, 1 = random
+    return 1 - R;
 }
 
 /**

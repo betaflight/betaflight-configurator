@@ -7,8 +7,10 @@
  * rendering, and dialog lifecycle.
  */
 import { ref, computed } from "vue";
-import { characterizeAlignment } from "../js/utils/magCharacterization.js";
+import { characterizeAlignment, matrixToEuler } from "../js/utils/magCharacterization.js";
 import { computeDeclination, getGeoReference } from "./useMagCalibration.js";
+import { fitEllipsoid, applyEllipsoidCorrection } from "../js/utils/ellipsoidFit.js";
+import { computeCoverage } from "../js/utils/sphereFit.js";
 import {
     eulerToMatrix,
     mat3transpose,
@@ -93,7 +95,7 @@ export function useMagCharacterization() {
     const fcStore = useFlightControllerStore();
 
     // --- Reactive state ---
-    const phase = ref("intro");
+    const phase = ref("intro"); // "intro" | "calibrate" | "await" | "capturing" | "confirmed" | "complete" | "replay"
     const currentDirectionIndex = ref(0);
     const currentSubPoseIndex = ref(0);
     const isStable = ref(false);
@@ -111,6 +113,15 @@ export function useMagCharacterization() {
     const geoReference = ref(null); // { declination, inclination, fieldStrength } or null
     const detailedReport = ref(""); // LLM-ready text report, populated by generateDetailedReport()
     const ellipsoidDiag = ref(null); // { conditionNumber, chirality, offDiagonalRms, ... } from fitEllipsoid
+    const ellipsoidParams = ref(null); // { center: {x,y,z}, W_inv: number[3][3], radius: number, residual: number }
+    const calibrationSamples = ref([]); // [{ x, y, z, pitch, heading, timestamp }] for calibration tumble
+    const calibrationSampleCount = computed(() => calibrationSamples.value.length);
+    const calibrationCoverage = computed(() => {
+        const pts = calibrationSamples.value;
+        if (pts.length < 4) return null;
+        const points = pts.map((p) => ({ x: p.x, y: p.y, z: p.z }));
+        return computeCoverage(points, { x: 0, y: 0, z: 0 });
+    });
     const isFetchingGeo = ref(false);
 
     // --- Computed ---
@@ -228,6 +239,8 @@ export function useMagCharacterization() {
         calibrationOffsets.value = null;
         axisGains.value = null;
         ellipsoidDiag.value = null;
+        ellipsoidParams.value = null;
+        calibrationSamples.value = [];
         gyroWindow = [];
         stableCount = 0;
         isStable.value = false;
@@ -240,6 +253,64 @@ export function useMagCharacterization() {
             }, 0);
         }
         tick();
+    }
+
+    function startCalibrationPhase() {
+        if (onSolverAboutToRun) {
+            onSolverAboutToRun();
+        }
+        calibrationSamples.value = [];
+        ellipsoidParams.value = null;
+        phase.value = "calibrate";
+        sampleTimer = setTimeout(calibrationTick, POLL_MS);
+    }
+
+    function completeCalibrationPhase() {
+        cleanupTimer();
+        if (calibrationSamples.value.length >= 9) {
+            const points = calibrationSamples.value.map((s) => ({ x: s.x, y: s.y, z: s.z }));
+            ellipsoidParams.value = fitEllipsoid(points);
+        }
+        phase.value = "await";
+        tick();
+    }
+
+    function skipCalibration() {
+        cleanupTimer();
+        ellipsoidParams.value = null;
+        phase.value = "await";
+        tick();
+    }
+
+    function calibrationTick() {
+        if (phase.value !== "calibrate") {
+            return;
+        }
+
+        const mx = fcStore.sensorData.magnetometer[0];
+        const my = fcStore.sensorData.magnetometer[1];
+        const mz = fcStore.sensorData.magnetometer[2];
+        const pitch = fcStore.sensorData.kinematics[1];
+        const heading = 0;
+
+        if (mx !== undefined && my !== undefined && mz !== undefined) {
+            const lastSample = calibrationSamples.value[calibrationSamples.value.length - 1];
+            if (!lastSample || lastSample.x !== mx || lastSample.y !== my || lastSample.z !== mz) {
+                calibrationSamples.value.push({
+                    x: mx,
+                    y: my,
+                    z: mz,
+                    pitch: Math.round(pitch * 10) / 10,
+                    heading,
+                    timestamp: Date.now(),
+                });
+            }
+        }
+
+        lastMag.value = [mx, my, mz];
+        lastFieldStrength.value = Math.round(Math.hypot(mx, my, mz));
+
+        sampleTimer = setTimeout(calibrationTick, POLL_MS);
     }
 
     function startCapture() {
@@ -336,19 +407,21 @@ export function useMagCharacterization() {
         tick();
     }
 
-    function runSolver() {
+    function runSolver(currentAlignOverride, customAnglesOverride, ellipsoidOverride, skipHardIron) {
         if (onSolverAboutToRun) {
             onSolverAboutToRun();
         }
         phase.value = "complete";
 
         const allSamples = [];
+        const ellipsoid = ellipsoidOverride ?? ellipsoidParams.value;
         for (let di = 0; di < directions.length; di++) {
             for (let pi = 0; pi < directions[di].poses.length; pi++) {
                 const cap = captureData.value[di]?.[pi];
                 if (cap && cap.samples) {
                     for (const s of cap.samples) {
-                        allSamples.push({ mag: s.mag, roll: s.roll, pitch: s.pitch, headingRef: s.headingRef });
+                        const corrected = ellipsoid ? applyEllipsoidCorrection(s.mag, ellipsoid) : s.mag;
+                        allSamples.push({ mag: corrected, roll: s.roll, pitch: s.pitch, headingRef: s.headingRef });
                     }
                 }
             }
@@ -359,15 +432,18 @@ export function useMagCharacterization() {
             return;
         }
 
-        const currentAlign = fcStore.sensorAlignment.align_mag || 0;
+        const currentAlign =
+            currentAlignOverride != null ? currentAlignOverride : fcStore.sensorAlignment.align_mag || 0;
         const customAngles =
-            currentAlign === 9
-                ? {
-                    roll: fcStore.sensorAlignment.mag_align_roll || 0,
-                    pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
-                    yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
-                }
-                : null;
+            currentAlignOverride != null
+                ? customAnglesOverride || null
+                : currentAlign === 9
+                    ? {
+                        roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                        pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                        yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+                    }
+                    : null;
 
         const result = characterizeAlignment(allSamples, currentAlign, customAngles, {
             headingMode: "absolute",
@@ -389,8 +465,10 @@ export function useMagCharacterization() {
         // Run ellipsoid fitter for hardware diagnostics
         runEllipsoidDiagnostics(currentAlign);
 
-        // Compute hard iron calibration offsets using geo reference
-        computeHardIronOffset();
+        // Hard iron + gain calibration (skip if debug-loader provided values)
+        if (!skipHardIron) {
+            computeHardIronOffset();
+        }
 
         phase.value = "replay";
     }
@@ -432,7 +510,10 @@ export function useMagCharacterization() {
                 let newCos = 0;
                 let gcSin = 0; // gain-corrected
                 let gcCos = 0;
+                let fcSin = 0; // full-corrected (ellipsoid + proposed)
+                let fcCos = 0;
                 let n = 0;
+                let hasFullCorrected = false;
 
                 for (const s of cap.samples) {
                     sumRoll += s.roll;
@@ -463,6 +544,17 @@ export function useMagCharacterization() {
                     newMags[1] += newBody[1];
                     newMags[2] += newBody[2];
 
+                    // Full corrected heading (ellipsoid correction + proposed alignment)
+                    if (ellipsoidParams.value) {
+                        const ellCorrected = applyEllipsoidCorrection(s.mag, ellipsoidParams.value);
+                        const fcBody = mat3mulVec(newCombined, ellCorrected);
+                        const fcLevel = undoRollPitch(fcBody, rollRad, pitchRad);
+                        const fcDir = Math.atan2(fcLevel[1], fcLevel[0]);
+                        fcSin += Math.sin(fcDir);
+                        fcCos += Math.cos(fcDir);
+                        hasFullCorrected = true;
+                    }
+
                     // Gain-corrected heading (projected — requires firmware support)
                     if (axisGains.value && calOffsets) {
                         const gcBody = [
@@ -483,6 +575,7 @@ export function useMagCharacterization() {
                 const curHeading = Math.atan2(curSin, curCos) * RAD_TO_DEG;
                 const newHeading = Math.atan2(newSin, newCos) * RAD_TO_DEG;
                 const gcHeading = gcSin !== 0 || gcCos !== 0 ? Math.atan2(gcSin, gcCos) * RAD_TO_DEG : null;
+                const fullCorrectedHeading = hasFullCorrected ? Math.atan2(fcSin, fcCos) * RAD_TO_DEG : null;
                 const meanRoll = sumRoll / n;
                 const meanPitch = sumPitch / n;
                 const expectedHeading = cap.headingRef || directions[di].heading * RAD_TO_DEG;
@@ -498,6 +591,7 @@ export function useMagCharacterization() {
                     newHeading,
                     newMag: [newMags[0] / n, newMags[1] / n, newMags[2] / n],
                     gainCorrectedHeading: gcHeading,
+                    fullCorrectedHeading,
                     _fieldSum: sumField,
                     _fieldCount: n,
                 });
@@ -521,6 +615,9 @@ export function useMagCharacterization() {
             d.score = scoreHeading(headingError(d.newHeading, d.expectedHeading));
             if (d.gainCorrectedHeading != null) {
                 d.gcScore = scoreHeading(headingError(d.gainCorrectedHeading, d.expectedHeading));
+            }
+            if (d.fullCorrectedHeading != null) {
+                d.fullCorrectedScore = scoreHeading(headingError(d.fullCorrectedHeading, d.expectedHeading));
             }
             delete d._fieldSum;
             delete d._fieldCount;
@@ -784,14 +881,26 @@ export function useMagCharacterization() {
         };
 
         // Per-axis gain computation (sums collected in the merged pass above)
+        // Raw gain = Cov(actual_counts, expected_nT) / Var(expected_nT) → units: counts/nT
+        // Divide by scaleFactor to make dimensionless. Threshold Var to avoid
+        // division by near-zero when heading references don't match sensor data.
         if (gn >= 30) {
+            const sf = scaleFactor > 0 ? scaleFactor : 1;
+            const minVarXY = 1e7;
+            const minVarZ = 2e6;
+
             const gxVar = gs.ex2 - (gs.ex * gs.ex) / gn;
             const gyVar = gs.ey2 - (gs.ey * gs.ey) / gn;
             const gzVar = gs.ez2 - (gs.ez * gs.ez) / gn;
+
+            const rawGainX = gxVar > minVarXY ? (gs.ax_ex - (gs.ax * gs.ex) / gn) / gxVar : sf;
+            const rawGainY = gyVar > minVarXY ? (gs.ay_ey - (gs.ay * gs.ey) / gn) / gyVar : sf;
+            const rawGainZ = gzVar > minVarZ ? (gs.az_ez - (gs.az * gs.ez) / gn) / gzVar : sf;
+
             axisGains.value = {
-                x: gxVar > 0 ? Math.round(((gs.ax_ex - (gs.ax * gs.ex) / gn) / gxVar) * 100) / 100 : 1,
-                y: gyVar > 0 ? Math.round(((gs.ay_ey - (gs.ay * gs.ey) / gn) / gyVar) * 100) / 100 : 1,
-                z: gzVar > 0 ? Math.round(((gs.az_ez - (gs.az * gs.ez) / gn) / gzVar) * 100) / 100 : 1,
+                x: Math.round((rawGainX / sf) * 10000) / 10000,
+                y: Math.round((rawGainY / sf) * 10000) / 10000,
+                z: Math.round((rawGainZ / sf) * 10000) / 10000,
             };
         }
     }
@@ -851,8 +960,10 @@ export function useMagCharacterization() {
         return null;
     }
 
-    function downloadSamplesJSON() {
+    function exportCharacterizationPoses() {
+        const sr = solverResult.value;
         const exportData = {
+            type: "characterization_poses",
             metadata: {
                 exportedAt: new Date().toISOString(),
                 configuratorVersion: "2026.6.0-alpha",
@@ -870,6 +981,21 @@ export function useMagCharacterization() {
                     (s, d) => s + (d || []).reduce((ss, c) => ss + (c?.samples?.length || 0), 0),
                     0,
                 ),
+                geoReference: geoReference.value ?? null,
+                ellipsoidCorrection: ellipsoidParams.value
+                    ? {
+                        center: {
+                            x: ellipsoidParams.value.center.x,
+                            y: ellipsoidParams.value.center.y,
+                            z: ellipsoidParams.value.center.z,
+                        },
+                        W_inv: ellipsoidParams.value.W_inv,
+                        radius: ellipsoidParams.value.radius,
+                        residual: ellipsoidParams.value.residual,
+                    }
+                    : null,
+                axisGains: axisGains.value ?? null,
+                calibrationOffsets: calibrationOffsets.value ?? null,
             },
             directions: directions.map((dir, di) => ({
                 label: dir.label,
@@ -884,7 +1010,7 @@ export function useMagCharacterization() {
                     };
                 }),
             })),
-            solverResult: solverResult.value,
+            solverResult: sr,
         };
 
         const json = JSON.stringify(exportData, null, 2);
@@ -892,7 +1018,179 @@ export function useMagCharacterization() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `mag-characterization-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+        a.download = `characterization_poses_${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function exportCalibrationSamples() {
+        const ep = ellipsoidParams.value;
+        const pts = calibrationSamples.value;
+        const exportData = {
+            exportedAt: new Date().toISOString(),
+            type: "calibration_tumble",
+            samples: pts.map((s) => ({
+                x: s.x,
+                y: s.y,
+                z: s.z,
+                pitch: s.pitch,
+                heading: s.heading,
+                timestamp: s.timestamp,
+            })),
+            coverage: calibrationCoverage.value ?? { zones: {}, total: pts.length, uniform: 0 },
+            ellipsoidParams: ep
+                ? {
+                    center: { x: ep.center.x, y: ep.center.y, z: ep.center.z },
+                    W_inv: ep.W_inv,
+                    radius: ep.radius,
+                    residual: ep.residual,
+                }
+                : null,
+            firmwareOffsets: { x: 0, y: 0, z: 0 },
+        };
+
+        const json = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `calibration_samples_${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function mapPoseType(poseLabel) {
+        if (poseLabel.startsWith("Flat")) {
+            return "flat";
+        }
+        if (poseLabel.startsWith("Nose Up")) {
+            return "nose_up";
+        }
+        if (poseLabel.startsWith("Nose Down")) {
+            return "nose_down";
+        }
+        if (poseLabel.includes("Roll right")) {
+            return "left_side";
+        }
+        if (poseLabel.includes("Roll left")) {
+            return "right_side";
+        }
+        if (poseLabel.includes("Inverted")) {
+            return "inverted";
+        }
+        return "flat";
+    }
+
+    function normalizeHeading(deg) {
+        return ((deg % 360) + 360) % 360;
+    }
+
+    function signedHeadingError(actual, expected) {
+        if (expected === null || expected === undefined) {
+            return 0;
+        }
+        let diff = actual - expected;
+        while (diff > 180) {
+            diff -= 360;
+        }
+        while (diff < -180) {
+            diff += 360;
+        }
+        return diff;
+    }
+
+    function getEulerAngles(solverResultVal) {
+        if (!solverResultVal) {
+            return { roll: 0, pitch: 0, yaw: 0 };
+        }
+        const preset = solverResultVal.alignment;
+        if (preset === 9 && solverResultVal.customAngles) {
+            return {
+                roll: solverResultVal.customAngles.roll,
+                pitch: solverResultVal.customAngles.pitch,
+                yaw: solverResultVal.customAngles.yaw,
+            };
+        }
+        if (preset >= 1 && preset <= 8 && ALIGNMENT_MATRICES[preset]) {
+            const euler = matrixToEuler(ALIGNMENT_MATRICES[preset]);
+            return { roll: euler.roll, pitch: euler.pitch, yaw: euler.yaw };
+        }
+        return { roll: 0, pitch: 0, yaw: 0 };
+    }
+
+    function exportCharacterizationData() {
+        const sr = solverResult.value;
+        const ep = ellipsoidParams.value;
+
+        const json = {
+            $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.0",
+            version: "2.0",
+            ellipsoid_correction: ep
+                ? {
+                    center: { x: ep.center.x, y: ep.center.y, z: ep.center.z },
+                    soft_iron: ep.W_inv,
+                    radius: ep.radius,
+                    residual_rms: ep.residual,
+                }
+                : null,
+            geo_reference: {
+                latitude_deg: fcStore.gpsData.fix ? fcStore.gpsData.latitude / 10000000 : null,
+                longitude_deg: fcStore.gpsData.fix ? fcStore.gpsData.longitude / 10000000 : null,
+                declination_deg: geoReference.value?.declination ?? 0,
+                inclination_deg: geoReference.value?.inclination ?? 0,
+                field_strength_nt: geoReference.value?.fieldStrength ?? null,
+            },
+            alignment:
+                sr && !sr.error
+                    ? {
+                        preset: sr.alignment,
+                        label: sr.label,
+                        euler_zyx_deg: getEulerAngles(sr),
+                    }
+                    : null,
+            axis_gains: axisGains.value ?? { x: 1.0, y: 1.0, z: 1.0 },
+            hard_iron: calibrationOffsets.value ?? null,
+            quality:
+                sr && !sr.error
+                    ? {
+                        score_percent: sr.qualityScore,
+                        residual_z_rms: sr.residuals?.zRms ?? 0,
+                        residual_xy_rms: sr.residuals?.xyRms ?? 0,
+                        field_consistency_pct: sr.fieldConsistency?.maxDevPct ?? 0,
+                        chirality_flag: sr.chiralityFlag ?? false,
+                    }
+                    : null,
+            poses: replayData.value.map((pose) => ({
+                body_orientation: mapPoseType(pose.poseLabel),
+                cardinal_direction: pose.dirLabel.charAt(0).toUpperCase(),
+                expected_heading_deg: normalizeHeading(pose.expectedHeading),
+                measured_attitude_deg: { roll: pose.roll, pitch: pose.pitch },
+                heading_current_deg: normalizeHeading(pose.currentHeading),
+                heading_error_current_deg: signedHeadingError(pose.currentHeading, pose.expectedHeading),
+                heading_corrected_deg: normalizeHeading(pose.newHeading),
+                heading_error_corrected_deg: signedHeadingError(pose.newHeading, pose.expectedHeading),
+                heading_gain_corrected_deg:
+                    pose.gainCorrectedHeading != null ? normalizeHeading(pose.gainCorrectedHeading) : null,
+                heading_error_gain_corrected_deg:
+                    pose.gainCorrectedHeading != null
+                        ? signedHeadingError(pose.gainCorrectedHeading, pose.expectedHeading)
+                        : null,
+                heading_quality_weight: Math.max(
+                    0,
+                    Math.min(1, 1.0 - Math.abs(signedHeadingError(pose.newHeading, pose.expectedHeading)) / 30.0),
+                ),
+            })),
+        };
+
+        const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `characterization_model_${new Date().toISOString().slice(0, 10)}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -958,6 +1256,8 @@ export function useMagCharacterization() {
         currentSubPoseIndex.value = 0;
         captureData.value = [];
         solverResult.value = null;
+        ellipsoidParams.value = null;
+        calibrationSamples.value = [];
     }
 
     function cleanupTimer() {
@@ -1006,10 +1306,175 @@ export function useMagCharacterization() {
         report += "\n";
 
         // Hardware
-        report += hdr("HARDWARE");
-        const magHw = fcStore.sensorConfig?.mag_hardware || 0;
-        report += `  Magnetometer HW:  ${magHw}\n`;
-        report += `  Current alignment: ${fcStore.sensorAlignment?.align_mag || "?"}\n`;
+        report += hdr("FIRMWARE & HARDWARE");
+        const cfg = fcStore.config;
+        const target = cfg?.targetName || "?";
+        const version = cfg?.flightControllerVersion || "?";
+        const board = cfg?.boardName || cfg?.hardwareName || "?";
+        const buildKey = cfg?.buildKey || "";
+        report += `  Target:        ${target}\n`;
+        report += `  Board:         ${board}\n`;
+        report += `  Firmware:      ${version}`;
+        if (buildKey && buildKey.length >= 8) {
+            report += `  (build ${buildKey.slice(0, 8)})`;
+        }
+        report += "\n";
+        const i2cErr = cfg?.i2cError;
+        report += `  I2C errors:    ${i2cErr != null ? i2cErr : "?"}`;
+        if (i2cErr > 0) {
+            report += "  \u26A0 I2C bus errors detected \u2014 possible electrical issue or wrong address";
+        } else if (i2cErr === 0) {
+            report += "  (clean)";
+        }
+        report += "\n\n";
+        const MAG_HW_NAMES = {
+            0: "DEFAULT",
+            1: "NONE",
+            2: "HMC5883",
+            3: "AK8975",
+            4: "AK8963",
+            5: "QMC5883",
+            6: "LIS2MDL",
+            7: "LIS3MDL",
+            8: "MPU925X_AK8963",
+            9: "IST8310",
+        };
+        const cfgMagHw = fcStore.sensorConfig?.mag_hardware ?? 0;
+        const activeMagHw = fcStore.sensorConfigActive?.mag_hardware ?? 0;
+        const cfgName = MAG_HW_NAMES[cfgMagHw] || `Unknown (${cfgMagHw})`;
+        const activeName = MAG_HW_NAMES[activeMagHw] || `Unknown (${activeMagHw})`;
+        report += `  Mag configured: ${cfgMagHw} (${cfgName})\n`;
+        report += `  Mag detected:   ${activeMagHw} (${activeName})\n`;
+        if (cfgMagHw !== activeMagHw && activeMagHw !== 0) {
+            report += "  \u26A0 MISMATCH \u2014 configured mag differs from auto-detected hardware\n";
+        }
+        if (activeMagHw === 0) {
+            report += "  \u26A0 No magnetometer found on I2C bus\n";
+        }
+        report += `  Alignment:      ${fcStore.sensorAlignment?.align_mag || "?"}\n`;
+
+        // Raw sensor fingerprint — per-axis stats and per-direction flat-pose mag vectors
+        const flatMagByDir = {}; // dirIdx -> { dirLabel, magMean: [x,y,z], magMin: [x,y,z], magMax: [x,y,z] }
+        let allMagX = [];
+        let allMagY = [];
+        let allMagZ = [];
+        for (let di = 0; di < directions.length; di++) {
+            const dir = directions[di];
+            for (let pi = 0; pi < dir.poses.length; pi++) {
+                const cap = captureData.value[di]?.[pi];
+                if (!cap || !cap.samples || cap.samples.length === 0) {
+                    continue;
+                }
+                for (const s of cap.samples) {
+                    allMagX.push(s.mag[0]);
+                    allMagY.push(s.mag[1]);
+                    allMagZ.push(s.mag[2]);
+                }
+                if (dir.poses[pi].label.startsWith("Flat")) {
+                    const n = cap.samples.length;
+                    let mx = 0,
+                        my = 0,
+                        mz = 0;
+                    let minX = Infinity,
+                        minY = Infinity,
+                        minZ = Infinity;
+                    let maxX = -Infinity,
+                        maxY = -Infinity,
+                        maxZ = -Infinity;
+                    for (const s of cap.samples) {
+                        mx += s.mag[0];
+                        my += s.mag[1];
+                        mz += s.mag[2];
+                        if (s.mag[0] < minX) {
+                            minX = s.mag[0];
+                        }
+                        if (s.mag[1] < minY) {
+                            minY = s.mag[1];
+                        }
+                        if (s.mag[2] < minZ) {
+                            minZ = s.mag[2];
+                        }
+                        if (s.mag[0] > maxX) {
+                            maxX = s.mag[0];
+                        }
+                        if (s.mag[1] > maxY) {
+                            maxY = s.mag[1];
+                        }
+                        if (s.mag[2] > maxZ) {
+                            maxZ = s.mag[2];
+                        }
+                    }
+                    flatMagByDir[di] = {
+                        dirLabel: dir.label,
+                        magMean: [Math.round(mx / n), Math.round(my / n), Math.round(mz / n)],
+                        magMin: [Math.round(minX), Math.round(minY), Math.round(minZ)],
+                        magMax: [Math.round(maxX), Math.round(maxY), Math.round(maxZ)],
+                    };
+                }
+            }
+        }
+        if (allMagX.length > 0) {
+            const stats = (arr) => {
+                const min = Math.min(...arr);
+                const max = Math.max(...arr);
+                const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+                return { min: Math.round(min), max: Math.round(max), mean: Math.round(mean) };
+            };
+            const sx = stats(allMagX);
+            const sy = stats(allMagY);
+            const sz = stats(allMagZ);
+            report += "\n";
+            report += hdr("RAW SENSOR FINGERPRINT (post-alignment, ADC counts)");
+            report += "  Axis   Min       Max       Mean      Range\n";
+            report += "  ----   ---       ---       ----      -----\n";
+            report += `  X      ${sx.min.toString().padStart(5)}     ${sx.max.toString().padStart(5)}     ${sx.mean.toString().padStart(5)}     ${(sx.max - sx.min).toString().padStart(5)}\n`;
+            report += `  Y      ${sy.min.toString().padStart(5)}     ${sy.max.toString().padStart(5)}     ${sy.mean.toString().padStart(5)}     ${(sy.max - sy.min).toString().padStart(5)}\n`;
+            report += `  Z      ${sz.min.toString().padStart(5)}     ${sz.max.toString().padStart(5)}     ${sz.mean.toString().padStart(5)}     ${(sz.max - sz.min).toString().padStart(5)}\n`;
+            const rangeMax = Math.max(sx.max - sx.min, sy.max - sy.min, sz.max - sz.min);
+            const rangeMin = Math.min(sx.max - sx.min, sy.max - sy.min, sz.max - sz.min);
+            const rangeRatio = rangeMax / Math.max(rangeMin, 1);
+            report += `\n  Axis range ratio (max/min): ${rangeRatio.toFixed(2)}x\n`;
+            if (rangeRatio > 1.5) {
+                report += "  \u26A0 AXIS MISMATCH \u2014 sensor axes have different sensitivity or are swapped.\n";
+            }
+
+            // Per-direction flat pose mag — directional fingerprint
+            const dirKeys = Object.keys(flatMagByDir);
+            if (dirKeys.length >= 4) {
+                report += "\n";
+                report += "  Directional fingerprint (Flat pose mag vector per cardinal direction):\n";
+                report += "  Direction     Mag X    Mag Y    Mag Z   |B|\n";
+                report += "  ---------     -----    -----    -----   ---\n";
+                for (const di of dirKeys.sort()) {
+                    const fd = flatMagByDir[di];
+                    const mx = fd.magMean[0],
+                        my = fd.magMean[1],
+                        mz = fd.magMean[2];
+                    const b = Math.round(Math.hypot(mx, my, mz));
+                    const dirShort = fd.dirLabel.split(" ")[0];
+                    report += `  ${dirShort.padEnd(13)} ${mx.toString().padStart(5)}    ${my.toString().padStart(5)}    ${mz.toString().padStart(5)}   ${b.toString().padStart(5)}\n`;
+                }
+                // Check: does horizontal vector rotate with heading?
+                const nIdx = dirKeys.find((k) => flatMagByDir[k].dirLabel.startsWith("North"));
+                const eIdx = dirKeys.find((k) => flatMagByDir[k].dirLabel.startsWith("East"));
+                if (nIdx !== undefined && eIdx !== undefined) {
+                    const nMag = flatMagByDir[nIdx].magMean;
+                    const eMag = flatMagByDir[eIdx].magMean;
+                    const dn = Math.hypot(nMag[0], nMag[1]);
+                    const de = Math.hypot(eMag[0], eMag[1]);
+                    const delta = Math.abs(dn - de);
+                    report += "\n";
+                    if (delta > Math.max(dn, de) * 0.3) {
+                        report += "  \u2717 DRIVER ISSUE: Horizontal field magnitude changes significantly\n";
+                        report += "    between North and East headings. The driver may read registers\n";
+                        report += "    in the wrong axis order for this chip variant.\n";
+                        report += `    North |H|=${dn.toFixed(0)}, East |H|=${de.toFixed(0)} (diff ${delta.toFixed(0)}).\n`;
+                    } else {
+                        report += "  \u2713 Horizontal field magnitude is stable across headings.\n";
+                    }
+                }
+            }
+        }
         report += "\n";
 
         // Solver result
@@ -1195,6 +1660,10 @@ export function useMagCharacterization() {
         axisGains,
         geoReference,
         isFetchingGeo,
+        ellipsoidParams,
+        calibrationSamples,
+        calibrationSampleCount,
+        calibrationCoverage,
         // Computed
         currentDirection,
         currentPoseDef,
@@ -1210,7 +1679,12 @@ export function useMagCharacterization() {
         onKeyDown,
         cleanupTimer,
         reset,
-        downloadSamplesJSON,
+        startCalibrationPhase,
+        completeCalibrationPhase,
+        skipCalibration,
+        exportCalibrationSamples,
+        exportCharacterizationPoses,
+        exportCharacterizationData,
         finishReplay,
         refreshGeoReference,
         applyAndReboot,

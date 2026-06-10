@@ -35,6 +35,7 @@ import {
     checkFieldConsistency,
 } from "../../src/js/utils/magCharacterization.js";
 import { eulerToMatrix, ALIGNMENT_MATRICES } from "../../src/js/utils/magAlignment.js";
+import { loadFixture, flattenSamples } from "./test_helpers.js";
 
 // Seeded PRNG for deterministic tests
 let _seed = 42;
@@ -405,6 +406,26 @@ describe("magCharacterization", () => {
             const samples = generateSyntheticData({ roll: 0, pitch: 0, yaw: 0 }, 5, 40, 50);
             const result = characterizeAlignment(samples, 9, null);
             expect(result.error).toBe("missing_custom_angles");
+        });
+    });
+
+    describe("fixture: bad_data_no_compass", () => {
+        it("does not crash and returns low-confidence CUSTOM result", () => {
+            const data = loadFixture("bad_data_no_compass.json");
+            const samples = flattenSamples(data);
+
+            expect(samples.length).toBe(520);
+
+            const result = characterizeAlignment(samples, data.metadata.currentAlignment, null, {
+                headingMode: "absolute",
+                headingWeight: 1.0,
+            });
+
+            expect(result.error).toBeUndefined();
+            expect(result.qualityScore).toBeGreaterThan(0);
+            expect(result.qualityScore).toBeLessThan(50);
+            expect(result.alignment).toBe(9);
+            expect(result.fieldConsistency.suspect).toBe(true);
         });
     });
 });
