@@ -421,8 +421,10 @@ export function FlightLog(logData) {
                     };
                 }
 
-                // We need to store this in the chunk so we can refer to it later when we inject computed fields
+                // We need to store these on the chunk so we can refer to them later when we inject
+                // computed fields (IMU for attitude, GPS home for cartesian/home-distance/azimuth).
                 chunk.initialIMU = iframeDirectory.initialIMU[chunkIndex];
+                chunk.initialGPSHome = iframeDirectory.initialGPSHome?.[chunkIndex] ?? null;
 
                 let mainFrameIndex = 0;
                 const slowFrameLength = parser.frameDefs.S ? parser.frameDefs.S.count : 0;
@@ -985,6 +987,21 @@ export function FlightLog(logData) {
             if (!destChunk.hasAdditionalFields) {
                 destChunk.hasAdditionalFields = true;
                 const chunkIMU = new IMU(sourceChunk.initialIMU);
+
+                // Restore this chunk's GPS home so the computed GPS fields (cartesian
+                // coordinates / home distance / azimuth) reference the home that was active for
+                // the chunk being processed, not whichever chunk happened to be parsed last.
+                gpsTransform = null;
+                const initialGPSHome = sourceChunk.initialGPSHome;
+                if (initialGPSHome) {
+                    const homeAltitude = initialGPSHome.length > 2 ? initialGPSHome[2] / 10 : 0;
+                    gpsTransform = new GPS_transform(
+                        initialGPSHome[0] / 10000000,
+                        initialGPSHome[1] / 10000000,
+                        homeAltitude,
+                        0,
+                    );
+                }
 
                 for (let i = 0; i < sourceChunk.frames.length; i++) {
                     computeFrameFields(sourceChunk.frames[i], destChunk.frames[i], chunkIMU, ctx);
