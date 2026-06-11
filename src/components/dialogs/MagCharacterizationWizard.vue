@@ -59,7 +59,10 @@
                     :live-mag="calLiveMag"
                     viz-mode="pointcloud"
                 />
-                <p v-if="calibrationCoverage">{{ (calibrationCoverage.uniform * 100).toFixed(0) }}% coverage</p>
+                <p v-if="calibrationCoverage" style="margin-bottom: 0">
+                    {{ (calibrationCoverage.uniform * 100).toFixed(0) }}% coverage
+                </p>
+                <p style="font-size: 13px; color: #7eb8ff; margin-top: 4px">{{ $t(calPromptI18n) }}</p>
                 <div class="mag-char-complete-actions" style="margin-top: 12px">
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="completeCalibrationPhase">
                         Done calibrating
@@ -611,6 +614,7 @@ const {
     calibrationSamples,
     calibrationSampleCount,
     calibrationCoverage,
+    calCurrentPrompt,
     startCalibrationPhase,
     completeCalibrationPhase,
     skipCalibration,
@@ -625,6 +629,16 @@ const calLiveMag = computed(() => {
     const m = fcStore.sensorData.magnetometer;
     return m && m.length === 3 ? { x: m[0], y: m[1], z: m[2] } : null;
 });
+
+const CAL_PROMPT_I18N = [
+    "magCalibrationPrompt1",
+    "magCalibrationPrompt2",
+    "magCalibrationPrompt3",
+    "magCalibrationPrompt4",
+    "magCalibrationPrompt5",
+    "magCalibrationPrompt6",
+];
+const calPromptI18n = computed(() => CAL_PROMPT_I18N[calCurrentPrompt.value] || CAL_PROMPT_I18N[0]);
 
 // ── Replay controls ───────────────────────────────────────────────────
 const replayIndex = ref(0);
