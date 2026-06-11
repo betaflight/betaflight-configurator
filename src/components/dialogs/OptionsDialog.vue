@@ -34,19 +34,6 @@
                     <SettingRow :label="$t('showNotifications')">
                         <USwitch v-model="settings.showNotifications" size="sm" />
                     </SettingRow>
-                    <SettingRow :label="$t('firmwareBackupOnFlash')">
-                        <USelect
-                            :items="[
-                                { label: $t('firmwareBackupDisabled'), value: 0 },
-                                { label: $t('firmwareBackupEnabled'), value: 1 },
-                                { label: $t('firmwareBackupAsk'), value: 2 },
-                            ]"
-                            size="sm"
-                            v-model="settings.backupOnFlash"
-                            class="min-w-40"
-                            :ui="{ content: 'z-3002' }"
-                        />
-                    </SettingRow>
                 </UiBox>
 
                 <UiBox :title="$t('languageAndAppearanceSettings')">

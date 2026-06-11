@@ -48,6 +48,7 @@
                     :on-erase-chip-change="handleEraseChipChange"
                     :on-flash-manual-baud-change="handleFlashManualBaudChange"
                     :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
+                    :on-restore-backup="handleRestoreBackup"
                 />
             </div>
         </div>
@@ -169,7 +170,8 @@ import PortHandler from "../../js/port_handler";
 import { gui_log } from "../../js/gui_log";
 import semver from "semver";
 import FileSystem from "../../js/FileSystem";
-import AutoBackup from "../../js/utils/AutoBackup.js";
+import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup.js";
+import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
@@ -275,6 +277,9 @@ export default defineComponent({
             flashingInProgress: false,
             lastFlashResultText: "",
             lastFlashResultClass: "",
+            // Restore-backup lifecycle (post-flash)
+            restoreInProgress: false,
+            restoreCompleted: false,
         });
 
         // Sponsor component ref
@@ -461,6 +466,10 @@ export default defineComponent({
             state.localFirmwareLoaded = false;
             state.filename = null;
             clearLoadedFirmwareInfo();
+            // NOTE: Do not reset the backup here. After a serial flash the board
+            // reboots and the device-removed event calls clearBufferedFirmware(),
+            // which would wipe the backup needed by the post-flash restore button.
+            // The backup is reset when a new flash begins (handleFlashFirmware).
         };
 
         const showLoadedFirmware = (filename, bytes) => {
@@ -1510,9 +1519,14 @@ export default defineComponent({
                 return;
             }
 
+            // Reset any previous backup cache before starting a new flash
+            resetLastBackupData();
+
             state.progressLabelText = "";
             state.lastFlashResultText = "";
             state.lastFlashResultClass = "";
+            state.restoreInProgress = false;
+            state.restoreCompleted = false;
             state.flashingInProgress = true;
             GUI.flashingInProgress = true;
             activeFlasherStep.value = "flash";
@@ -1725,6 +1739,74 @@ export default defineComponent({
             verifyBoardOnAbortCallback.value = null;
         };
 
+        // Handle restore backup functionality
+        const handleRestoreBackup = async () => {
+            // Check if there's a backup available
+            const backupData = getLastBackupData();
+            if (!backupData) {
+                dialog.openInfo(
+                    $t("warningTitle"),
+                    $t("firmwareFlasherNoBackupAvailable"),
+                    () => {}, // Empty callback to satisfy onConfirm requirement
+                );
+                return;
+            }
+
+            // Check if firmware version supports MSP CLI (4.5.4+)
+            // Note: We check the API version directly in AutoRestore.execute() for more accuracy
+            // This check is for user experience to show an info dialog before the operation
+            // But we still let the operation proceed since it will be verified in AutoRestore
+
+            // Confirmation dialog
+            dialog.openYesNo(
+                $t("firmwareFlasherRestoreBackupTitle"),
+                $t("firmwareFlasherRestoreBackupConfirm"),
+                async () => {
+                    // Parse backup content into CLI lines
+                    const fileLines = backupData.split(/\r?\n/).map((line) => line.trim());
+
+                    // Prepend "defaults nosave" if not present
+                    const hasDefaultsNoSave = fileLines.some((line) => line.trim().toLowerCase() === "defaults nosave");
+                    const cliLines = hasDefaultsNoSave ? fileLines : ["defaults nosave", ...fileLines];
+
+                    // Set connect lock to prevent tab switching interference
+                    GUI.connect_lock = true;
+                    state.restoreInProgress = true;
+
+                    // Open wait dialog
+                    dialog.openWait($t("firmwareFlasherRestoreBackupTitle"), null);
+
+                    // Execute restore
+                    AutoRestore.execute(cliLines, (result) => {
+                        dialog.close();
+                        GUI.connect_lock = false;
+                        state.restoreInProgress = false;
+
+                        if (result.success) {
+                            // Hide the restore button — restore already applied and saved.
+                            state.restoreCompleted = true;
+                            if (result.skipped > 0) {
+                                gui_log($t("firmwareFlasherRestoreBackupSuccessSkipped", { count: result.skipped }));
+                            } else {
+                                gui_log($t("firmwareFlasherRestoreBackupSuccess"));
+                            }
+                        } else {
+                            const errorMsg = result.errors || "Unknown error";
+                            gui_log($t("firmwareFlasherRestoreBackupFailed", { 1: errorMsg }));
+                            dialog.openInfo(
+                                $t("warningTitle"),
+                                $t("firmwareFlasherRestoreBackupFailed", { 1: errorMsg }),
+                                () => {}, // onConfirm — openInfo's 3rd arg must be a callback, not options
+                            );
+                        }
+                    });
+                },
+                () => {
+                    // No-op for "No" click
+                },
+            );
+        };
+
         const showDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
             if (verifyBoardContent.value) {
                 verifyBoardContent.value.innerHTML = $t("firmwareFlasherVerifyBoard", {
@@ -1859,6 +1941,7 @@ export default defineComponent({
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
             handleVerifyBoardDialogClose,
+            handleRestoreBackup,
             saveFirmware,
         };
     },
