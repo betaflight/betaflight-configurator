@@ -47,7 +47,7 @@
                 <UInput v-show="checkboxes[5]" :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
             </div>
 
-            <div class="flex items-center gap-2 ml-auto text-[10px] [&_[data-slot=base]]:!text-[10px]">
+            <div class="flex items-center gap-2 ml-auto text-[10px] [&_[data-slot=base]]:text-[10px]!">
                 <span v-html="$t('sensorsGlobalRefresh')"></span>
                 <USelect
                     :model-value="globalRate"

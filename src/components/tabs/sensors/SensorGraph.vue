@@ -10,7 +10,7 @@
                     <g class="axis x" transform="translate(40, 120)"></g>
                     <g class="axis y" transform="translate(40, 10)"></g>
                 </svg>
-                <div class="text-[10px] flex flex-col gap-1 [&_button]:!text-[10px] [&_[data-slot=base]]:!text-[10px]">
+                <div class="text-[10px] flex flex-col gap-1 [&_button]:text-[10px]! [&_[data-slot=base]]:text-[10px]!">
                     <div class="font-bold mb-2 flex items-center gap-1">
                         <span v-html="title"></span>
                         <HelpIcon v-if="hint" :text="hint" />
@@ -70,7 +70,7 @@
                     <g class="axis x" transform="translate(40, 120)"></g>
                     <g class="axis y" transform="translate(40, 10)"></g>
                 </svg>
-                <div class="text-[10px] flex flex-col gap-1 [&_button]:!text-[10px] [&_[data-slot=base]]:!text-[10px]">
+                <div class="text-[10px] flex flex-col gap-1 [&_button]:text-[10px]! [&_[data-slot=base]]:text-[10px]!">
                     <div class="font-bold mb-2"><span v-html="title"></span></div>
                     <div v-if="showRefreshRate" class="flex items-center gap-2">
                         <span class="flex-1" v-html="$t('sensorsRefresh')"></span>
