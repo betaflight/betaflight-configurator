@@ -224,11 +224,11 @@ class AutoRestore {
         this._callback = null;
         this._saving = false;
 
-        try {
-            serial.disconnect();
-        } catch (e) {
-            console.error("AutoRestore: disconnect error:", e);
-        }
+        // serial.disconnect() is async; _cleanup is not, so handle any rejection with
+        // .catch() rather than a (useless) synchronous try/catch.
+        serial.disconnect().catch((error) => {
+            console.error("AutoRestore: disconnect error:", error);
+        });
 
         serial.removeEventListener("receive", this.boundHandleSerialReceive);
         serial.removeEventListener("connect", this.boundHandleConnect);
