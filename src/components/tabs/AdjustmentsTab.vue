@@ -20,6 +20,7 @@
                     <div>{{ $t("adjustmentsColumnIsInRange") }}</div>
                     <div>{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
                     <div>{{ $t("adjustmentsColumnViaChannel") }}</div>
+                    <div>{{ $t("adjustmentsColumnMode") }}</div>
                     <div>
                         {{ $t("adjustmentsColumnAdjustmentCenter") }}
                         <HelpIcon :text="$t('adjustmentsCenterHelp')" />
@@ -95,6 +96,7 @@
                                 :disabled="!adjustment.enabled"
                                 searchable
                                 class="w-full"
+                                @update:model-value="onFunctionChange(adjustment)"
                             />
                         </div>
 
@@ -106,21 +108,37 @@
                             />
                         </div>
 
+                        <div class="adjustment-mode" :data-label="$t('adjustmentsColumnMode')">
+                            <span v-if="adjustment.mode === 'selection'" class="mode-badge">
+                                {{ $t("adjustmentsModeSelection") }}
+                            </span>
+                            <USelect
+                                v-else
+                                :model-value="adjustment.mode"
+                                :items="stepModeOptions"
+                                :disabled="!adjustment.enabled"
+                                @update:model-value="onModeChange(adjustment, $event)"
+                            />
+                        </div>
+
                         <div class="adjustment-center" :data-label="$t('adjustmentsColumnAdjustmentCenter')">
                             <UInputNumber
+                                v-if="adjustment.mode === 'absolute'"
                                 v-model="adjustment.adjustmentCenter"
                                 size="xs"
                                 orientation="vertical"
                                 class="w-20"
                                 :disabled="!adjustment.enabled"
-                                :min="0"
+                                :min="1"
                                 :max="2000"
                                 :step="1"
                             />
+                            <span v-else class="cell-na">—</span>
                         </div>
 
                         <div class="adjustment-scale" :data-label="$t('adjustmentsColumnAdjustmentScale')">
                             <UInputNumber
+                                v-if="adjustment.mode === 'absolute'"
                                 v-model="adjustment.adjustmentScale"
                                 size="xs"
                                 orientation="vertical"
@@ -130,6 +148,7 @@
                                 :max="2000"
                                 :step="1"
                             />
+                            <span v-else class="cell-na">—</span>
                         </div>
                     </div>
                 </div>
@@ -161,9 +180,12 @@ const { adjustments, hasChanges, storeOriginals, showAllSlots, activeCount, visi
 const {
     auxChannelOptions,
     sortedFunctions,
+    stepModeOptions,
     pipValues,
     channelPercent,
     onEnableChange,
+    onModeChange,
+    onFunctionChange,
     loadMSPData,
     initializeAdjustments,
 } = useAdjustmentsData(adjustments, t);
@@ -198,7 +220,7 @@ onMounted(async () => {
 .adjustments-header,
 .adjustment {
     display: grid;
-    grid-template-columns: 3.5rem 5rem 1fr 13rem 5rem 4.5rem 4.5rem;
+    grid-template-columns: 3.5rem 5rem 1fr 13rem 5rem 7rem 5rem 5rem;
     gap: 12px;
     padding: 12px 16px;
 }
@@ -231,6 +253,7 @@ onMounted(async () => {
 .adjustment-disabled .adjustment-range,
 .adjustment-disabled .adjustment-function,
 .adjustment-disabled .adjustment-via,
+.adjustment-disabled .adjustment-mode,
 .adjustment-disabled .adjustment-center,
 .adjustment-disabled .adjustment-scale {
     pointer-events: none;
@@ -298,6 +321,23 @@ onMounted(async () => {
     font-size: 10px;
     color: var(--text-tertiary);
     white-space: nowrap;
+}
+
+.mode-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--ui-bg-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.cell-na {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    display: block;
+    text-align: center;
 }
 
 /* Responsive layout */
