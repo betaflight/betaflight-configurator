@@ -455,11 +455,23 @@ describe("computeReplayData: direct unit test", () => {
         expect(replayResult.length).toBe(20);
     });
 
-    it("fullCorrectedHeading matches proposed heading (calibration normalizes |B|, not heading)", () => {
+    it("fullCorrectedHeading is non-null and in valid heading range", () => {
         for (const d of replayResult) {
             expect(d.fullCorrectedHeading).not.toBeNull();
-            expect(d.fullCorrectedHeading).toBeCloseTo(d.newHeading, 0);
+            expect(d.fullCorrectedHeading).toBeGreaterThan(-180);
+            expect(d.fullCorrectedHeading).toBeLessThanOrEqual(180);
         }
+    });
+
+    it("fullCorrectedHeading differs from proposed (calibration changes heading)", () => {
+        let anyDifferent = false;
+        for (const d of replayResult) {
+            if (Math.abs(d.fullCorrectedHeading - d.newHeading) > 0.5) {
+                anyDifferent = true;
+                break;
+            }
+        }
+        expect(anyDifferent).toBe(true);
     });
 
     it("every entry has all required fields", () => {

@@ -16,6 +16,7 @@ import {
     undoRollPitch,
     ALIGNMENT_MATRICES,
 } from "./magAlignment.js";
+import { applyEllipsoidCorrection } from "./ellipsoidFit.js";
 
 /**
  * Wrapped heading error between two angles in degrees.
@@ -149,9 +150,27 @@ export function computeReplayData(result, currentAlignment, captureData, directi
                 newSin += Math.sin(newDir);
                 newCos += Math.cos(newDir);
 
-                if (calOffsets || ellipsoidParams) {
-                    fcSin += Math.sin(newDir);
-                    fcCos += Math.cos(newDir);
+                // Full corrected: W_inv applied in sensor frame, then proposed alignment.
+                // Pipeline the firmware would apply if it supported W_inv:
+                //   sensor = currentInv * mag_body
+                //   sensor_cal = W_inv * (sensor - currentInv * center)
+                //   body_cal = proposedMat * sensor_cal
+                if (ellipsoidParams) {
+                    const sensorMag = mat3mulVec(currentInv, s.mag);
+                    const rotatedCenter = mat3mulVec(currentInv, [
+                        ellipsoidParams.center.x,
+                        ellipsoidParams.center.y,
+                        ellipsoidParams.center.z,
+                    ]);
+                    const sensorCal = applyEllipsoidCorrection(sensorMag, {
+                        center: { x: rotatedCenter[0], y: rotatedCenter[1], z: rotatedCenter[2] },
+                        W_inv: ellipsoidParams.W_inv,
+                    });
+                    const fcBody = mat3mulVec(proposedMat, sensorCal);
+                    const fcLevel = undoRollPitch(fcBody, rollRad, pitchRad);
+                    const fcDir = Math.atan2(fcLevel[1], fcLevel[0]);
+                    fcSin += Math.sin(fcDir);
+                    fcCos += Math.cos(fcDir);
                     hasFullCorrected = true;
                 }
 
