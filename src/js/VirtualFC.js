@@ -6,6 +6,7 @@ import CONFIGURATOR, { API_VERSION_1_47 } from "./data_storage";
 import { OSD } from "../components/tabs/osd/osd";
 import semver from "semver";
 import { addArrayElement, addArrayElementAfter } from "./utils/array";
+import { getDebugModes } from "./utils/debugModes";
 
 // pid.h PID_*_DEFAULT, pid.c resetPidProfile
 const DEFAULT_BETAFLIGHT_PIDS = [
@@ -131,6 +132,7 @@ const VirtualFC = {
             "USE_GPS",
             "USE_LED_STRIP",
             "USE_OSD",
+            "USE_VTX",
             "USE_SOFTSERIAL",
             "USE_SONAR",
             "USE_TELEMETRY",
@@ -138,6 +140,7 @@ const VirtualFC = {
             "USE_TRANSPONDER",
             "USE_SERIALRX_CRSF",
             "USE_SERIALRX_SBUS",
+            "USE_DSHOT",
         ];
 
         virtualFC.CONFIG.craftName = "BetaFlight";
@@ -252,6 +255,8 @@ const VirtualFC = {
 
         virtualFC.CONFIG.sampleRateHz = 12000;
         virtualFC.PID_ADVANCED_CONFIG.pid_process_denom = 2;
+        virtualFC.PID_ADVANCED_CONFIG.fast_pwm_protocol = 6; // DSHOT300
+        virtualFC.PID_ADVANCED_CONFIG.debugModeCount = getDebugModes(virtualFC.CONFIG.apiVersion).length;
         virtualFC.PIDS = virtualFC.PIDS.map((pid, index) => DEFAULT_BETAFLIGHT_PIDS[index]?.slice() ?? pid);
         virtualFC.PIDS_ACTIVE = virtualFC.PIDS.map((pid) => pid.slice());
         // pid.c simplified_pids_mode RPY; fc.js DEFAULT_TUNING_SLIDERS (all multipliers 100 = 1.0)
@@ -277,7 +282,11 @@ const VirtualFC = {
             ...DEFAULT_BETAFLIGHT_RX_CONFIG,
         };
 
-        virtualFC.BLACKBOX.supported = true;
+        virtualFC.BLACKBOX = {
+            ...virtualFC.BLACKBOX,
+            supported: true,
+            blackboxDevice: 1, // Onboard flash
+        };
 
         virtualFC.BATTERY_CONFIG = {
             vbatmincellvoltage: 3.7,
