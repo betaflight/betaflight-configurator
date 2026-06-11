@@ -292,6 +292,10 @@
         "message": "\u65E5\u672C\u8A9E",
         "description": "Don't translate!!!"
     },
+    "language_ka": {
+        "message": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8",
+        "description": "Don't translate!!!"
+    },
     "language_ko": {
         "message": "\ud55c\uad6d\uc5b4",
         "description": "Don't translate!!!"
