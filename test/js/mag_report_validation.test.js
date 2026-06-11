@@ -12,7 +12,7 @@ import { loadFixture, flattenSamples } from "./test_helpers.js";
 
 describe("v3 report validation from hardware fixture", () => {
     // ── Load calibration fixture ──────────────────────────────────────────
-    const cal = loadFixture("calibration_samples_2026-06-11T03-08-04-544Z.json");
+    const cal = loadFixture("clean_calibration_tumble.json");
 
     it("calibration fixture loads with valid structure", () => {
         expect(cal.samples.length).toBeGreaterThan(100);
@@ -89,7 +89,7 @@ describe("v3 report validation from hardware fixture", () => {
     });
 
     // ── Load characterization pose fixture ─────────────────────────────────
-    const poses = loadFixture("characterization_poses_2026-06-11T03-12-54-008Z.json");
+    const poses = loadFixture("clean_calibration_poses.json");
 
     it("poses fixture has complete metadata", () => {
         expect(poses.type).toBe("characterization_poses");
@@ -125,7 +125,7 @@ describe("v3 report validation from hardware fixture", () => {
     });
 
     // ── Load model fixture ─────────────────────────────────────────────────
-    const model = loadFixture("characterization_model_2026-06-11(2).json");
+    const model = loadFixture("clean_calibration_model.json");
 
     it("model has v2 schema with all required keys", () => {
         const required = [
