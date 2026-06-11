@@ -290,8 +290,10 @@ export function useMagCharacterization() {
         const mx = fcStore.sensorData.magnetometer[0];
         const my = fcStore.sensorData.magnetometer[1];
         const mz = fcStore.sensorData.magnetometer[2];
-        const pitch = fcStore.sensorData.kinematics[1];
-        const heading = 0;
+        const roll = fcStore.sensorData.kinematics[0] || 0;
+        const pitch = fcStore.sensorData.kinematics[1] || 0;
+        const heading = fcStore.sensorData.kinematics[2] || 0;
+        const quat = fcStore.sensorData.quaternion;
 
         if (mx !== undefined && my !== undefined && mz !== undefined) {
             const lastSample = calibrationSamples.value[calibrationSamples.value.length - 1];
@@ -300,9 +302,14 @@ export function useMagCharacterization() {
                     x: mx,
                     y: my,
                     z: mz,
+                    roll: Math.round(roll * 10) / 10,
                     pitch: Math.round(pitch * 10) / 10,
-                    heading,
+                    heading: Math.round(heading * 10) / 10,
                     timestamp: Date.now(),
+                    qw: quat?.w,
+                    qx: quat?.x,
+                    qy: quat?.y,
+                    qz: quat?.z,
                 });
             }
         }
@@ -1028,16 +1035,93 @@ export function useMagCharacterization() {
     function exportCalibrationSamples() {
         const ep = ellipsoidParams.value;
         const pts = calibrationSamples.value;
+
+        // Helper: compute display-frame position matching MagSphereView rendering
+        function voxelDisplay(s) {
+            const v = [s.x, -s.y, -s.z]; // body→display mapping (negate Y and Z for inverted camera)
+            if (s.qw !== undefined && s.qw !== null) {
+                // Quaternion(qx, -qy, qz, qw): body-to-display rotation (negate Y only)
+                const qw = s.qw,
+                    qx = s.qx,
+                    qy_ = -s.qy,
+                    qz_ = -s.qz;
+                const t = 2 * (qy_ * v[2] - qz_ * v[1]);
+                const u = 2 * (qz_ * v[0] - qx * v[2]);
+                const w = 2 * (qx * v[1] - qy_ * v[0]);
+                v[0] += qw * t + (qy_ * w - qz_ * u);
+                v[1] += qw * u + (qz_ * t - qx * w);
+                v[2] += qw * w + (qx * u - qy_ * t);
+            }
+            return [Math.round(v[0]), Math.round(v[1]), Math.round(v[2])];
+        }
+
+        function noseDisplay(s) {
+            const v = [1, 0, 0];
+            if (s.qw !== undefined && s.qw !== null) {
+                const qw = s.qw,
+                    qx = s.qx,
+                    qy_ = -s.qy,
+                    qz_ = -s.qz;
+                const t = 2 * (qy_ * v[2] - qz_ * v[1]);
+                const u = 2 * (qz_ * v[0] - qx * v[2]);
+                const w = 2 * (qx * v[1] - qy_ * v[0]);
+                v[0] += qw * t + (qy_ * w - qz_ * u);
+                v[1] += qw * u + (qz_ * t - qx * w);
+                v[2] += qw * w + (qx * u - qy_ * t);
+            }
+            return [v[0].toFixed(3), v[1].toFixed(3), v[2].toFixed(3)];
+        }
+
+        function wingDisplay(s) {
+            const v = [0, 1, 0]; // left wing in display body frame
+            if (s.qw !== undefined && s.qw !== null) {
+                const qw = s.qw,
+                    qx = s.qx,
+                    qy_ = -s.qy,
+                    qz_ = -s.qz;
+                const t = 2 * (qy_ * v[2] - qz_ * v[1]);
+                const u = 2 * (qz_ * v[0] - qx * v[2]);
+                const w = 2 * (qx * v[1] - qy_ * v[0]);
+                v[0] += qw * t + (qy_ * w - qz_ * u);
+                v[1] += qw * u + (qz_ * t - qx * w);
+                v[2] += qw * w + (qx * u - qy_ * t);
+            }
+            return [v[0].toFixed(3), v[1].toFixed(3), v[2].toFixed(3)];
+        }
+
         const exportData = {
             exportedAt: new Date().toISOString(),
             type: "calibration_tumble",
+            scene_info: {
+                axes: "X=forward/North, Y=left, Z=up",
+                compass: "N at (+X), E at (+Y), S at (-X), W at (-Y)",
+                default_camera: "at (700,560,420) looking at origin, Z-up, auto-rotating",
+                voxel_transform: "body_mag(x,-y,-z) rotated by Quaternion(qx,-qy,-qz,qw) = body-to-display",
+                nose_line: "white cylinder from origin along body +X, length |B|*magScale()",
+                voxel_color: "blue(old)→cyan→green→yellow→red(new)",
+                pitch_test:
+                    "face drone NORTH (nose_z ~0). pitch nose UP: nose_z should go POSITIVE. pitch nose DOWN: nose_z should go NEGATIVE. Repeat facing SOUTH (nose_z ~0, nose_x ~ -1): same test, pitch UP → nose_z POSITIVE.",
+                roll_test:
+                    "face drone NORTH (nose_z ~0). roll RIGHT: left wing UP → nose_z may stay ~0 but voxel_display Z should change. Roll LEFT: opposite.",
+            },
             samples: pts.map((s) => ({
                 x: s.x,
                 y: s.y,
                 z: s.z,
+                roll: s.roll,
                 pitch: s.pitch,
                 heading: s.heading,
                 timestamp: s.timestamp,
+                field_magnitude: Math.round(Math.hypot(s.x, s.y, s.z)),
+                qw: s.qw,
+                qx: s.qx,
+                qy: s.qy,
+                qz: s.qz,
+                voxel_display: voxelDisplay(s),
+                nose_x: Number(noseDisplay(s)[0]),
+                nose_y: Number(noseDisplay(s)[1]),
+                nose_z: Number(noseDisplay(s)[2]),
+                wing_left_z: Number(wingDisplay(s)[2]),
             })),
             coverage: calibrationCoverage.value ?? { zones: {}, total: pts.length, uniform: 0 },
             ellipsoidParams: ep

@@ -117,6 +117,7 @@ let wireframeMesh = null;
 let quadIcon = null;
 const ATTITUDE_SMOOTH = 0.12;
 const _smoothQuat = new THREE.Quaternion();
+const _BASE_180_X = new THREE.Quaternion(1, 0, 0, 0);
 const _targetQuat = new THREE.Quaternion();
 let smoothQuatInitialized = false;
 
@@ -171,20 +172,14 @@ let heatmapMesh = null;
 let heatmapFaceDirs = null; // unit direction per face (center of each triangle)
 let heatmapFaceCounts = null; // sample count per face
 
-// World-space nose direction captured from liveMarker each frame.
-// Stored as unit vectors (nx, ny, nz) per sample — multiplied by
-// totalField * magScale() in updatePoints so dots rescale correctly.
-let noseDirections = [];
-const _worldPosVec = new THREE.Vector3();
-
-function sampleToScene(s, sampleIndex) {
-    const totalField = Math.hypot(s.x, s.y, s.z);
-    const r = totalField * magScale();
-    const dIdx = sampleIndex * 3;
-    if (dIdx + 2 < noseDirections.length) {
-        return [noseDirections[dIdx] * r, noseDirections[dIdx + 1] * r, noseDirections[dIdx + 2] * r];
+function sampleToScene(s, _sampleIndex) {
+    const scale = magScale();
+    const v = new THREE.Vector3(s.x, -s.y, -s.z);
+    if (s.qw !== undefined && s.qw !== null) {
+        const qCapture = new THREE.Quaternion(s.qx, -s.qy, -s.qz, s.qw);
+        v.applyQuaternion(qCapture);
     }
-    return [0, 0, 0];
+    return [v.x * scale, v.y * scale, v.z * scale];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -261,12 +256,11 @@ function initScene() {
     fieldStrengthSum = 0;
     fieldStrengthCount = 0;
     smoothQuatInitialized = false;
-    noseDirections = [];
 
     // Camera — Z-up convention, pulled back for isometric overview
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
-    camera.up.set(0, 0, 1);
-    camera.position.set(700, 560, 420);
+    camera.up.set(0, 0, -1);
+    camera.position.set(700, 560, -420);
     camera.lookAt(0, 0, 0);
 
     // Lighting
@@ -450,13 +444,13 @@ function updateQuadAttitude() {
         // BF quaternion is body-to-earth; Three.js needs earth-to-body (conjugate).
         // Conjugate: (w, -x, -y, -z), then BF→Display frame (negate Y and Z):
         // Result: (w, -x, y, z) → Three.js Quaternion.set(x, y, z, w)
-        _targetQuat.set(-x, y, z, w);
+        _targetQuat.set(x, -y, -z, w);
     } else if (props.attitude) {
         // Fallback to Euler angles (has gimbal lock at +/-90 pitch)
         const { roll, pitch, heading } = props.attitude;
         // BF body-to-earth Euler (ZYX): invert to earth-to-body, then convert to display frame.
         // Display axes: X=BF_X, Y=-BF_Y, Z=-BF_Z → pitch & heading signs cancel with inversion.
-        const euler = new THREE.Euler(-roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
+        const euler = new THREE.Euler(roll * DEG_TO_RAD, -pitch * DEG_TO_RAD, -heading * DEG_TO_RAD, "ZYX");
         _targetQuat.setFromEuler(euler);
     } else {
         return;
@@ -468,7 +462,7 @@ function updateQuadAttitude() {
     } else {
         _smoothQuat.slerp(_targetQuat, ATTITUDE_SMOOTH);
     }
-    quadIcon.quaternion.copy(_smoothQuat);
+    quadIcon.quaternion.copy(_smoothQuat).multiply(_BASE_180_X);
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
@@ -539,23 +533,6 @@ function updateLiveMagOverlay() {
                 _tmpVec.set(1, 0, 0);
                 orientCylinder(noseLine, _tmpVec, totalField * magScale());
                 noseLine.position.set(0, 0, 0);
-            }
-
-            // Capture nose direction for dot placement — uses the same
-            // transform chain as the liveMarker so dots always match.
-            quadIcon.updateWorldMatrix(true, false);
-            liveMarker.getWorldPosition(_worldPosVec);
-            const r = totalField * magScale();
-            if (r > 0) {
-                const invR = 1 / r;
-                const nx = _worldPosVec.x * invR;
-                const ny = _worldPosVec.y * invR;
-                const nz = _worldPosVec.z * invR;
-                const target = props.sampleCount;
-                const have = noseDirections.length / 3;
-                for (let i = have; i < target; i++) {
-                    noseDirections.push(nx, ny, nz);
-                }
             }
         }
     }
@@ -1245,9 +1222,9 @@ function createCompassRing(radius) {
     // N highlighted red (navigation convention); E/S/W neutral
     makeLabel("N", "#ff4444").position.set(r, 0, 0);
     makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
-    // Display -Y = BF +Y = East when the quad nose faces North
-    makeLabel("E", "#aabbcc").position.set(0, -r, 0);
-    makeLabel("W", "#aabbcc").position.set(0, r, 0);
+    // Display +Y = East, -Y = West when quad nose faces North (scene +X)
+    makeLabel("E", "#aabbcc").position.set(0, r, 0);
+    makeLabel("W", "#aabbcc").position.set(0, -r, 0);
 
     return group;
 }
@@ -1280,19 +1257,22 @@ function updatePoints(sampleList) {
     }
     repositionCalOffsetMarker();
 
-    // Only render dots that have captured nose directions
-    const dirCount = Math.floor(noseDirections.length / 3);
-    const renderCount = Math.min(count, Math.max(0, dirCount - start));
+    // Position each point at its world-frame mag vector
+    const renderCount = count;
+    const scale = magScale();
+    const _v = new THREE.Vector3();
 
     for (let i = 0; i < renderCount; i++) {
         const s = sampleList[start + i];
         const idx = i * 3;
-        const dIdx = (start + i) * 3;
-        const totalField = Math.hypot(s.x, s.y, s.z);
-        const r = totalField * magScale();
-        positions[idx] = noseDirections[dIdx] * r;
-        positions[idx + 1] = noseDirections[dIdx + 1] * r;
-        positions[idx + 2] = noseDirections[dIdx + 2] * r;
+        _v.set(s.x, -s.y, -s.z);
+        if (s.qw !== undefined && s.qw !== null) {
+            const qCapture = new THREE.Quaternion(s.qx, -s.qy, -s.qz, s.qw);
+            _v.applyQuaternion(qCapture);
+        }
+        positions[idx] = _v.x * scale;
+        positions[idx + 1] = _v.y * scale;
+        positions[idx + 2] = _v.z * scale;
 
         // Color gradient: blue (old) → cyan → green → yellow → red (new)
         const t = renderCount > 1 ? i / (renderCount - 1) : 0;
@@ -1372,7 +1352,6 @@ function disposeScene() {
     liveMarker = null;
     vectorLines = null;
     smoothQuatInitialized = false;
-    noseDirections = [];
 
     disposeGroup(ghostGroup);
     ghostGroup = null;

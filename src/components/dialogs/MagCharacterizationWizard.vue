@@ -55,6 +55,8 @@
                     :coverage="calibrationCoverage"
                     :attitude="attitudeRaw"
                     :quaternion="attitudeQuaternion"
+                    :active="true"
+                    :live-mag="calLiveMag"
                     viz-mode="pointcloud"
                 />
                 <p v-if="calibrationCoverage">{{ (calibrationCoverage.uniform * 100).toFixed(0) }}% coverage</p>
@@ -550,7 +552,7 @@
  * 3D VISUAL: Top-down Three.js camera. headingGroup rotates for cardinal
  * direction, droneModel for pitch/roll. N/E/S/W labels CSS-overlaid.
  */
-import { ref, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
+import { ref, reactive, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
@@ -615,16 +617,13 @@ const {
     exportCalibrationSamples,
 } = mag;
 
-// Attitude data for MagSphereView calibration phase
-const attitudeRaw = computed(() => ({
-    roll: fcStore.sensorData.kinematics[0] || 0,
-    pitch: fcStore.sensorData.kinematics[1] || 0,
-    heading: 0,
-}));
+// Attitude data for MagSphereView calibration phase (reactive, updated by MSP polling)
+const attitudeRaw = reactive({ roll: 0, pitch: 0, heading: 0 });
+const attitudeQuaternion = ref(null);
 
-const attitudeQuaternion = computed(() => {
-    const q = fcStore.sensorData.attitudeQuaternion;
-    return q && q.w !== undefined ? q : null;
+const calLiveMag = computed(() => {
+    const m = fcStore.sensorData.magnetometer;
+    return m && m.length === 3 ? { x: m[0], y: m[1], z: m[2] } : null;
 });
 
 // ── Replay controls ───────────────────────────────────────────────────
@@ -790,6 +789,7 @@ function copyCliCommands() {
 }
 
 // Watch for replay phase entry — start auto-play
+let _calAttitudeTimer = null;
 watch(
     () => mag.phase.value,
     (p) => {
@@ -806,6 +806,25 @@ watch(
             stopAutoPlay();
         } else {
             stopAutoPlay();
+        }
+        if (p === "calibrate") {
+            _calAttitudeTimer = setInterval(() => {
+                MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
+                    const k = fcStore.sensorData.kinematics;
+                    attitudeRaw.roll = k[0] || 0;
+                    attitudeRaw.pitch = k[1] || 0;
+                    attitudeRaw.heading = k[2] || 0;
+                });
+                MSP.send_message(MSPCodes.MSP_ATTITUDE_QUATERNION, false, false, () => {
+                    const q = fcStore.sensorData.quaternion;
+                    if (q && q.w !== undefined) {
+                        attitudeQuaternion.value = q;
+                    }
+                });
+            }, 80);
+        } else if (_calAttitudeTimer) {
+            clearInterval(_calAttitudeTimer);
+            _calAttitudeTimer = null;
         }
     },
 );
