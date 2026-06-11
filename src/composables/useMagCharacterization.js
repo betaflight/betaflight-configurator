@@ -10,15 +10,13 @@ import { ref, computed } from "vue";
 import { characterizeAlignment, matrixToEuler } from "../js/utils/magCharacterization.js";
 import { computeDeclination, getGeoReference } from "./useMagCalibration.js";
 import { fitEllipsoid } from "../js/utils/ellipsoidFit.js";
-import { computeCoverage } from "../js/utils/sphereFit.js";
 import {
-    eulerToMatrix,
-    mat3transpose,
-    mat3mul,
-    mat3mulVec,
-    undoRollPitch,
-    ALIGNMENT_MATRICES,
-} from "../js/utils/magAlignment.js";
+    computeReplayData as _computeReplayData,
+    computeCalFromEllipsoid as _computeCalFromEllipsoid,
+    headingError,
+} from "../js/utils/magCharacterizationCompute.js";
+import { computeCoverage } from "../js/utils/sphereFit.js";
+import { eulerToMatrix, mat3mulVec, ALIGNMENT_MATRICES } from "../js/utils/magAlignment.js";
 import { useFlightControllerStore } from "../stores/fc";
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -559,173 +557,17 @@ export function useMagCharacterization() {
     }
 
     function computeCalFromEllipsoid() {
-        const ep = ellipsoidParams.value;
-        if (!ep) return;
-
-        const mat = currentMatForCalibration || ALIGNMENT_MATRICES[1];
-        const inv = mat3transpose(mat);
-        const center = ep.center;
-
-        calibrationOffsets.value = {
-            x: Math.round(inv[0][0] * center.x + inv[0][1] * center.y + inv[0][2] * center.z),
-            y: Math.round(inv[1][0] * center.x + inv[1][1] * center.y + inv[1][2] * center.z),
-            z: Math.round(inv[2][0] * center.x + inv[2][1] * center.y + inv[2][2] * center.z),
-        };
+        const cal = _computeCalFromEllipsoid(ellipsoidParams.value, currentMatForCalibration || ALIGNMENT_MATRICES[1]);
+        if (cal) calibrationOffsets.value = cal;
     }
 
     function computeReplayData(result, currentAlignment) {
-        const DEG_TO_RAD = Math.PI / 180;
-        const RAD_TO_DEG = 180 / Math.PI;
-
-        // Use the already-built current matrix (handles CUSTOM align=9 properly)
-        const currentMat = currentMatForCalibration || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
-        const currentInv = mat3transpose(currentMat);
-
-        // Build proposed alignment matrix
-        let proposedMat;
-        if (result.alignment === 9 && result.customAngles) {
-            proposedMat = eulerToMatrix(result.customAngles.roll, result.customAngles.pitch, result.customAngles.yaw);
-        } else {
-            proposedMat = ALIGNMENT_MATRICES[result.alignment] || ALIGNMENT_MATRICES[1];
-        }
-
-        const data = [];
-
-        for (let di = 0; di < directions.length; di++) {
-            for (let pi = 0; pi < directions[di].poses.length; pi++) {
-                const cap = captureData.value[di]?.[pi];
-                if (!cap || !cap.samples || cap.samples.length === 0) {
-                    continue;
-                }
-
-                // Aggregate all samples for this pose
-                let sumRoll = 0;
-                let sumPitch = 0;
-                let sumField = 0;
-                const curMags = [0, 0, 0];
-                const newMags = [0, 0, 0];
-                let curSin = 0;
-                let curCos = 0;
-                let newSin = 0;
-                let newCos = 0;
-                let gcSin = 0; // gain-corrected
-                let gcCos = 0;
-                let fcSin = 0; // full-corrected (ellipsoid + proposed)
-                let fcCos = 0;
-                let n = 0;
-                let hasFullCorrected = false;
-                const calOffsets = calibrationOffsets.value;
-
-                for (const s of cap.samples) {
-                    sumRoll += s.roll;
-                    sumPitch += s.pitch;
-                    sumField += s.fieldStrength || Math.hypot(s.mag[0], s.mag[1], s.mag[2]);
-                    const rollRad = s.roll * DEG_TO_RAD;
-                    const pitchRad = s.pitch * DEG_TO_RAD;
-
-                    // Current alignment heading
-                    const curCombined = mat3mul(currentMat, currentInv); // = I
-                    const curBody = mat3mulVec(curCombined, s.mag);
-                    const curLevel = undoRollPitch(curBody, rollRad, pitchRad);
-                    const curDir = Math.atan2(curLevel[1], curLevel[0]);
-                    curSin += Math.sin(curDir);
-                    curCos += Math.cos(curDir);
-                    curMags[0] += curBody[0];
-                    curMags[1] += curBody[1];
-                    curMags[2] += curBody[2];
-
-                    // Proposed alignment heading
-                    const newCombined = mat3mul(proposedMat, currentInv);
-                    const newBody = mat3mulVec(newCombined, s.mag);
-                    const newLevel = undoRollPitch(newBody, rollRad, pitchRad);
-                    const newDir = Math.atan2(newLevel[1], newLevel[0]);
-                    newSin += Math.sin(newDir);
-                    newCos += Math.cos(newDir);
-                    newMags[0] += newBody[0];
-                    newMags[1] += newBody[1];
-                    newMags[2] += newBody[2];
-
-                    // Full corrected heading: matches proposed heading.
-                    // The ellipsoid correction (W_inv, center) normalizes field
-                    // magnitude uniformity, not heading direction. Heading
-                    // improvement comes from the alignment solver. The Calibrated
-                    // column displays the proposed heading alongside the
-                    // calibration parameters (W_inv, hard iron).
-                    if (calOffsets || ellipsoidParams.value) {
-                        fcSin += Math.sin(newDir);
-                        fcCos += Math.cos(newDir);
-                        hasFullCorrected = true;
-                    }
-
-                    // Gain-corrected heading (projected — requires firmware support)
-                    if (axisGains.value && calOffsets) {
-                        const gcBody = [
-                            (newBody[0] - calOffsets.x) / Math.max(axisGains.value.x, 0.01),
-                            (newBody[1] - calOffsets.y) / Math.max(axisGains.value.y, 0.01),
-                            (newBody[2] - calOffsets.z) / Math.max(axisGains.value.z, 0.01),
-                        ];
-                        const gcLevel = undoRollPitch(gcBody, rollRad, pitchRad);
-                        const gcDir = Math.atan2(gcLevel[1], gcLevel[0]);
-                        gcSin += Math.sin(gcDir);
-                        gcCos += Math.cos(gcDir);
-                    }
-
-                    n++;
-                }
-
-                const curHeading = Math.atan2(curSin, curCos) * RAD_TO_DEG;
-                const newHeading = Math.atan2(newSin, newCos) * RAD_TO_DEG;
-                const gcHeading = gcSin !== 0 || gcCos !== 0 ? Math.atan2(gcSin, gcCos) * RAD_TO_DEG : null;
-                const fullCorrectedHeading = hasFullCorrected ? Math.atan2(fcSin, fcCos) * RAD_TO_DEG : null;
-                const meanRoll = sumRoll / n;
-                const meanPitch = sumPitch / n;
-                const expectedHeading = cap.headingRef || directions[di].heading * RAD_TO_DEG;
-
-                data.push({
-                    dirLabel: directions[di].label,
-                    poseLabel: directions[di].poses[pi].label,
-                    isFlat: !!directions[di].poses[pi].isFlat,
-                    expectedHeading,
-                    roll: meanRoll,
-                    pitch: meanPitch,
-                    currentHeading: curHeading,
-                    currentMag: [curMags[0] / n, curMags[1] / n, curMags[2] / n],
-                    newHeading,
-                    newMag: [newMags[0] / n, newMags[1] / n, newMags[2] / n],
-                    gainCorrectedHeading: gcHeading,
-                    fullCorrectedHeading,
-                    _fieldSum: sumField,
-                    _fieldCount: n,
-                });
-            }
-        }
-
-        // Compute global mean |B| for deviation calculation
-        let globalFieldSum = 0;
-        let globalFieldCount = 0;
-        for (const d of data) {
-            globalFieldSum += d._fieldSum;
-            globalFieldCount += d._fieldCount;
-        }
-        const globalFieldMean = globalFieldCount > 0 ? globalFieldSum / globalFieldCount : 1;
-
-        // Add field deviation and scores
-        for (const d of data) {
-            d.fieldMean = Math.round(d._fieldSum / d._fieldCount);
-            d.fieldDevPct = Math.round((d.fieldMean / globalFieldMean - 1) * 1000) / 10;
-            d.currentScore = scoreHeading(headingError(d.currentHeading, d.expectedHeading));
-            d.score = scoreHeading(headingError(d.newHeading, d.expectedHeading));
-            if (d.gainCorrectedHeading != null) {
-                d.gcScore = scoreHeading(headingError(d.gainCorrectedHeading, d.expectedHeading));
-            }
-            if (d.fullCorrectedHeading != null) {
-                d.fullCorrectedScore = scoreHeading(headingError(d.fullCorrectedHeading, d.expectedHeading));
-            }
-            delete d._fieldSum;
-            delete d._fieldCount;
-        }
-
-        replayData.value = data;
+        replayData.value = _computeReplayData(result, currentAlignment, captureData.value, directions, {
+            ellipsoidParams: ellipsoidParams.value,
+            calibrationOffsets: calibrationOffsets.value,
+            axisGains: axisGains.value,
+            currentMat: currentMatForCalibration || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1],
+        });
     }
 
     function refreshReplayData() {
@@ -735,18 +577,11 @@ export function useMagCharacterization() {
         }
     }
 
-    function headingError(actual, expected) {
-        if (expected === null || expected === undefined) {
-            return 0;
+    function refreshReplayData() {
+        if (solverResult.value && !solverResult.value.error) {
+            const currentAlign = fcStore.sensorAlignment.align_mag || 0;
+            computeReplayData(solverResult.value, currentAlign);
         }
-        let diff = actual - expected;
-        while (diff > 180) {
-            diff -= 360;
-        }
-        while (diff < -180) {
-            diff += 360;
-        }
-        return Math.abs(diff);
     }
 
     function runEllipsoidDiagnostics(_currentAlignment) {
@@ -879,25 +714,6 @@ export function useMagCharacterization() {
                 [round4(normCovXZ), round4(normCovYZ), round4(gains.z)],
             ];
         }
-    }
-
-    function scoreHeading(errorDeg) {
-        if (errorDeg < 3) {
-            return "EXCELLENT";
-        }
-        if (errorDeg < 10) {
-            return "GOOD";
-        }
-        if (errorDeg < 25) {
-            return "POOR";
-        }
-        if (errorDeg < 60) {
-            return "BAD";
-        }
-        if (errorDeg < 150) {
-            return "CRITICAL";
-        }
-        return "FATAL";
     }
 
     function computeHardIronOffset() {

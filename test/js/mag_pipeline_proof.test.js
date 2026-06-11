@@ -19,18 +19,15 @@ import {
     undoRollPitch,
     ALIGNMENT_MATRICES,
 } from "../../src/js/utils/magAlignment.js";
+import {
+    computeReplayData,
+    computeCalFromEllipsoid,
+    headingError,
+} from "../../src/js/utils/magCharacterizationCompute.js";
 import { loadFixture, flattenSamples } from "./test_helpers.js";
 
 const DEG_TO_RAD = Math.PI / 180;
 const RAD_TO_DEG = 180 / Math.PI;
-
-function headingError(actual, expected) {
-    if (expected == null) return 0;
-    let diff = actual - expected;
-    while (diff > 180) diff -= 360;
-    while (diff < -180) diff += 360;
-    return Math.abs(diff);
-}
 
 // ── Shared state (computed once, used across tests) ──────────────────────
 
@@ -60,6 +57,63 @@ if (solverResult.alignment === 9 && solverResult.customAngles) {
 const currentMat = ALIGNMENT_MATRICES[8]; // CW270FLIP
 const currentInv = mat3transpose(currentMat);
 const newCombined = mat3mul(proposedMat, currentInv);
+
+// Convert poses fixture to captureData format: Array<Array<{headingRef, samples}>>
+const captureData = poses.directions.map((dir) =>
+    dir.poses.map((pose) =>
+        pose.captured && pose.samples?.length
+            ? { headingRef: pose.samples[0]?.headingRef ?? 0, samples: pose.samples }
+            : null,
+    ),
+);
+
+// Reconstruct the directions constant (pose definitions with isFlat, label, heading)
+const directions = [
+    {
+        label: "North (nose to N line)",
+        heading: 0,
+        poses: [
+            { label: "Flat", isFlat: true },
+            { label: "Nose Up (box under nose)", isFlat: false },
+            { label: "Nose Down (box under tail)", isFlat: false },
+            { label: "Box under left (Roll right)", isFlat: false },
+            { label: "Box under right (Roll left)", isFlat: false },
+        ],
+    },
+    {
+        label: "East (nose to E line)",
+        heading: Math.PI / 2,
+        poses: [
+            { label: "Flat", isFlat: true },
+            { label: "Nose Up (box under nose)", isFlat: false },
+            { label: "Nose Down (box under tail)", isFlat: false },
+            { label: "Box under left (Roll right)", isFlat: false },
+            { label: "Box under right (Roll left)", isFlat: false },
+        ],
+    },
+    {
+        label: "South (nose to S line)",
+        heading: Math.PI,
+        poses: [
+            { label: "Flat", isFlat: true },
+            { label: "Nose Up (box under nose)", isFlat: false },
+            { label: "Nose Down (box under tail)", isFlat: false },
+            { label: "Box under left (Roll right)", isFlat: false },
+            { label: "Box under right (Roll left)", isFlat: false },
+        ],
+    },
+    {
+        label: "West (nose to W line)",
+        heading: -Math.PI / 2,
+        poses: [
+            { label: "Flat", isFlat: true },
+            { label: "Nose Up (box under nose)", isFlat: false },
+            { label: "Nose Down (box under tail)", isFlat: false },
+            { label: "Box under left (Roll right)", isFlat: false },
+            { label: "Box under right (Roll left)", isFlat: false },
+        ],
+    },
+];
 
 // ── Tests ─────────────────────────────────────────────────────────────────
 
@@ -386,5 +440,112 @@ describe("pipeline proof: deterministic round-trip", () => {
             expect(Math.abs(result2.customAngles.pitch - solverResult.customAngles.pitch)).toBeLessThan(0.1);
             expect(Math.abs(result2.customAngles.yaw - solverResult.customAngles.yaw)).toBeLessThan(0.1);
         }
+    });
+});
+
+describe("computeReplayData: direct unit test", () => {
+    const replayResult = computeReplayData(solverResult, 8, captureData, directions, {
+        ellipsoidParams: ellipsoid,
+        calibrationOffsets: null,
+        axisGains: null,
+        currentMat: ALIGNMENT_MATRICES[8],
+    });
+
+    it("returns one entry per captured pose", () => {
+        expect(replayResult.length).toBe(20);
+    });
+
+    it("fullCorrectedHeading matches proposed heading (calibration normalizes |B|, not heading)", () => {
+        for (const d of replayResult) {
+            expect(d.fullCorrectedHeading).not.toBeNull();
+            expect(d.fullCorrectedHeading).toBeCloseTo(d.newHeading, 0);
+        }
+    });
+
+    it("every entry has all required fields", () => {
+        const required = [
+            "dirLabel",
+            "poseLabel",
+            "isFlat",
+            "expectedHeading",
+            "roll",
+            "pitch",
+            "currentHeading",
+            "newHeading",
+            "fullCorrectedHeading",
+            "gainCorrectedHeading",
+            "fieldMean",
+            "fieldDevPct",
+            "currentScore",
+            "score",
+        ];
+        for (const d of replayResult) {
+            for (const k of required) {
+                expect(d).toHaveProperty(k);
+            }
+        }
+    });
+
+    it("flat pose expected headings are cardinal directions", () => {
+        const flats = replayResult.filter((d) => d.isFlat);
+        expect(flats.length).toBe(4);
+        const expectedSet = new Set(
+            flats.map((d) => {
+                const h = ((d.expectedHeading % 360) + 360) % 360;
+                return Math.round(h / 90) * 90;
+            }),
+        );
+        expect(expectedSet.has(0)).toBe(true);
+        expect(expectedSet.has(90)).toBe(true);
+        expect(expectedSet.has(180)).toBe(true);
+        expect(expectedSet.has(270)).toBe(true);
+    });
+
+    it("proposed alignment beats current on flat poses", () => {
+        const flats = replayResult.filter((d) => d.isFlat);
+        let curSum = 0,
+            newSum = 0;
+        for (const d of flats) {
+            curSum += headingError(d.currentHeading, d.expectedHeading);
+            newSum += headingError(d.newHeading, d.expectedHeading);
+        }
+        expect(newSum / flats.length).toBeLessThan(curSum / flats.length);
+    });
+
+    it("scores are valid labels", () => {
+        const validScores = ["EXCELLENT", "GOOD", "POOR", "BAD", "CRITICAL", "FATAL"];
+        for (const d of replayResult) {
+            expect(validScores).toContain(d.currentScore);
+            expect(validScores).toContain(d.score);
+        }
+    });
+});
+
+describe("computeCalFromEllipsoid: direct unit test", () => {
+    const calOffsets = computeCalFromEllipsoid(ellipsoid, ALIGNMENT_MATRICES[8]);
+
+    it("returns non-null offsets when ellipsoid is available", () => {
+        expect(calOffsets).not.toBeNull();
+    });
+
+    it("offsets are in plausible ADC range", () => {
+        expect(Math.abs(calOffsets.x)).toBeLessThan(3000);
+        expect(Math.abs(calOffsets.y)).toBeLessThan(3000);
+        expect(Math.abs(calOffsets.z)).toBeLessThan(3000);
+    });
+
+    it("returns null when ellipsoid is null", () => {
+        const result = computeCalFromEllipsoid(null, ALIGNMENT_MATRICES[8]);
+        expect(result).toBeNull();
+    });
+
+    it("calibration offsets are self-consistent with the ellipsoid center", () => {
+        const inv = mat3transpose(ALIGNMENT_MATRICES[8]);
+        const center = ellipsoid.center;
+        // Round-trip: center should approximately equal mat * cal
+        const calBody = mat3mulVec(ALIGNMENT_MATRICES[8], [calOffsets.x, calOffsets.y, calOffsets.z]);
+        expect(Math.abs(calBody[0] - center.x)).toBeLessThan(2);
+        expect(Math.abs(calBody[1] - center.y)).toBeLessThan(2);
+        expect(Math.abs(calBody[2] - center.z)).toBeLessThan(2);
     });
 });
