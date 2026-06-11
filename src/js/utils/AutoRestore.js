@@ -48,25 +48,33 @@ class AutoRestore {
     }
 
     handleSerialReceive(event) {
-        MSP.read(event.detail);
+        // MSP.read accepts either the raw bytes or the { data } wrapper, but pass
+        // event.detail.data to match the convention used by serial_backend.
+        MSP.read(event.detail.data);
     }
 
     handleConnect(event) {
         this.onConnect(event.detail);
     }
 
-    handleDisconnect(event) {
+    handleDisconnect() {
         // A disconnect while saving means the FC rebooted after a successful save —
         // that is the expected success path, not a failure.
         if (this._saving) {
             this._cleanup(true, null);
             return;
         }
-        this._cleanup(false, i18n.getMessage(event.detail ? "serialPortClosedOk" : "serialPortClosedFail"));
+        // An unexpected disconnect before save is a restore failure; use the
+        // restore-specific message (the generic "serial port closed" wording is
+        // misleading here).
+        this._cleanup(false, i18n.getMessage("firmwareFlasherRestoreConnectionFailed"));
     }
 
     async onConnect(openInfo) {
-        if (!openInfo) {
+        // A "connect" event can fire for a failed attempt too (the serial wrapper
+        // normalizes the detail into a truthy object), so verify the transport is
+        // actually connected rather than relying on openInfo being falsy.
+        if (!openInfo || !serial.connected) {
             this._cleanup(false, i18n.getMessage("serialPortOpenFail"));
             return;
         }
@@ -187,7 +195,7 @@ class AutoRestore {
             }
 
             // Backup did not contain a `save` line — persist explicitly.
-            this._finishWithSave(errors);
+            await this._finishWithSave(errors);
         } catch (error) {
             console.error("AutoRestore: CLI command execution failed:", error);
             this._cleanup(false, String(error));
@@ -207,7 +215,7 @@ class AutoRestore {
             console.warn(`AutoRestore: restore applied with ${errors.length} ignored CLI error(s)`, errors);
         }
 
-        gui_log("Saving configuration...");
+        gui_log(i18n.getMessage("buttonSaving"));
         this._saving = true;
         MSP.send_cli_command("save");
         await new Promise((resolve) => setTimeout(resolve, SAVE_FLUSH_MS));
