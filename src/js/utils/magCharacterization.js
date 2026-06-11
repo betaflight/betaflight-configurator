@@ -124,14 +124,26 @@ export function characterizeAlignment(samples, currentAlignment, customAngles, o
     const fieldConsistency = checkFieldConsistency(samples);
     const chiralityFlag = checkChirality(samples, currentInv, best);
 
-    // Quality score: combine residual quality, field consistency, and heading separability
+    // Quality score: based on heading cost normalized against worst-case M-estimator penalty
+    const maxPenalty = 144; // (15 - 3)^2 = 144 — precomputed from constants
+
+    // Spatial observability: fraction of cardinal quadrants with headingRef data
+    const quadrantsSeen = new Set();
+    for (const s of samples) {
+        if (s.headingRef !== undefined && s.headingRef !== null) {
+            const q = Math.round((((s.headingRef % 360) + 360) % 360) / 90) % 4;
+            quadrantsSeen.add(q);
+        }
+    }
+    const spatialBonus = Math.min(1, quadrantsSeen.size / 4);
+
     let qualityScore = 0;
-    if (residuals.zRms > 0) {
-        // Lower residuals = higher score.  Normalise so <2%→100, >15%→0.
-        qualityScore = Math.max(0, Math.min(100, Math.round((1 - residuals.zRms / 0.15) * 100)));
+    if (best.headingVar !== undefined && maxPenalty > 0) {
+        const rawQuality = 100 * (1 - Math.min(1, best.headingVar / maxPenalty));
+        qualityScore = Math.max(0, Math.min(100, Math.round(rawQuality * spatialBonus)));
     }
     if (fieldConsistency.suspect) {
-        qualityScore = Math.max(0, qualityScore - 30);
+        qualityScore = Math.min(qualityScore, 50);
     }
 
     return {
@@ -383,8 +395,8 @@ function gridSearch(samples, currentInv, headingMode, headingWeight, step) {
     for (const roll of rollRange) {
         for (const pitch of pitchRange) {
             for (const yaw of yawRange) {
-                const { cost } = evaluateCandidate(roll, pitch, yaw, samples, currentInv, headingMode, headingWeight);
-                candidates.push({ roll, pitch, yaw, cost });
+                const ev = evaluateCandidate(roll, pitch, yaw, samples, currentInv, headingMode, headingWeight);
+                candidates.push({ roll, pitch, yaw, cost: ev.cost, headingVar: ev.headingVar });
             }
         }
     }
@@ -407,9 +419,9 @@ function refineSearch(samples, currentInv, headingMode, headingWeight, step, cen
     for (const roll of rollVals) {
         for (const pitch of pitchVals) {
             for (const yaw of yawVals) {
-                const { cost } = evaluateCandidate(roll, pitch, yaw, samples, currentInv, headingMode, headingWeight);
-                if (cost < best.cost) {
-                    best = { roll, pitch, yaw, cost };
+                const ev = evaluateCandidate(roll, pitch, yaw, samples, currentInv, headingMode, headingWeight);
+                if (ev.cost < best.cost) {
+                    best = { roll, pitch, yaw, cost: ev.cost, headingVar: ev.headingVar };
                 }
             }
         }

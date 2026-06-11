@@ -35,12 +35,45 @@
                     <li>A <strong>tissue box, book, or battery</strong> to tilt the drone</li>
                 </ul>
                 <div class="mag-char-complete-actions" style="margin-top: 16px">
-                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="startCalibrationPhase">
-                        Start with Full Calibration
-                    </button>
-                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="startWizard">
-                        Skip — 20 Poses Only
-                    </button>
+                    <span class="mag-char-debug-link" @click="toggleDebug">Debug &#9660;</span>
+                    <div
+                        v-if="debugExpanded"
+                        style="
+                            margin-top: 8px;
+                            padding: 8px;
+                            background: #12122a;
+                            border-radius: 4px;
+                            border: 1px solid #2a2a4a;
+                        "
+                    >
+                        <div style="display: flex; gap: 8px; margin-bottom: 8px">
+                            <label :class="{ 'mag-char-debug-item': true, loaded: posesFileLoaded }" style="flex: 1">
+                                {{ posesFileLoaded ? "&#10003; Poses loaded" : "Load poses JSON" }}
+                                <input type="file" accept=".json" style="display: none" @change="onPosesFileSelected" />
+                            </label>
+                            <label :class="{ 'mag-char-debug-item': true, loaded: calFileLoaded }" style="flex: 1">
+                                {{ calFileLoaded ? "&#10003; Cal loaded" : "Load calibration JSON" }}
+                                <input type="file" accept=".json" style="display: none" @change="onCalFileSelected" />
+                            </label>
+                        </div>
+                        <button
+                            type="button"
+                            class="mag-char-btn mag-char-btn-primary"
+                            style="width: 100%; font-size: 11px"
+                            @click="processDebugLoad"
+                            :disabled="!posesFileLoaded && !calFileLoaded"
+                        >
+                            {{
+                                posesFileLoaded && calFileLoaded
+                                    ? "Proceed to Final Report"
+                                    : posesFileLoaded
+                                      ? "Proceed to Solver (no calibration)"
+                                      : calFileLoaded
+                                        ? "Proceed to 20 Poses (with calibration)"
+                                        : "Load files first"
+                            }}
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -225,56 +258,91 @@
                                 |B|: {{ currentReplayPose.fieldMean }} ({{ currentReplayPose.fieldDevPct > 0 ? "+" : ""
                                 }}{{ currentReplayPose.fieldDevPct }}%)
                             </div>
-                            <div
-                                v-if="currentReplayPose && currentReplayPose.gainCorrectedHeading != null"
-                                class="mag-char-replay-gain-line"
-                            >
-                                with gain cal: {{ formatHeading(currentReplayPose.gainCorrectedHeading) }}
-                                <span class="mag-char-replay-gain-note">(future firmware)</span>
-                            </div>
-                            <div
-                                v-if="currentReplayPose && currentReplayPose.gcScore"
-                                class="mag-char-replay-score"
-                                :class="scoreClass(currentReplayPose.gcScore)"
-                                style="margin-top: 2px"
-                            >
-                                {{ currentReplayPose.gcScore }}
-                            </div>
                         </div>
-                        <div
-                            v-if="
-                                ellipsoidParams && currentReplayPose && currentReplayPose.fullCorrectedHeading != null
-                            "
-                            class="mag-char-replay-compare-col"
-                        >
-                            <span class="mag-char-replay-view-label">Full Corrected</span>
-                            <div
-                                class="mag-char-replay-heading-new"
-                                :class="
-                                    headingClass(
-                                        currentReplayPose.fullCorrectedHeading,
-                                        currentReplayPose.expectedHeading,
-                                    )
+                        <div class="mag-char-replay-compare-col">
+                            <span
+                                class="mag-char-replay-view-label"
+                                title="Sensor calibration corrected + proposed alignment"
+                                >Calibrated</span
+                            >
+                            <template
+                                v-if="
+                                    ellipsoidParams &&
+                                    currentReplayPose &&
+                                    currentReplayPose.fullCorrectedHeading != null
                                 "
                             >
-                                {{ formatHeading(currentReplayPose.fullCorrectedHeading) }}
-                            </div>
-                            <div class="mag-char-replay-error">
-                                {{
-                                    headingErrorText(
-                                        currentReplayPose.fullCorrectedHeading,
-                                        currentReplayPose.expectedHeading,
-                                    )
-                                }}
+                                <div
+                                    class="mag-char-replay-heading-new"
+                                    :class="
+                                        headingClass(
+                                            currentReplayPose.fullCorrectedHeading,
+                                            currentReplayPose.expectedHeading,
+                                        )
+                                    "
+                                >
+                                    {{ formatHeading(currentReplayPose.fullCorrectedHeading) }}
+                                </div>
+                                <div class="mag-char-replay-error">
+                                    {{
+                                        headingErrorText(
+                                            currentReplayPose.fullCorrectedHeading,
+                                            currentReplayPose.expectedHeading,
+                                        )
+                                    }}
+                                </div>
+                                <div
+                                    class="mag-char-replay-score"
+                                    :class="scoreClass(currentReplayPose.fullCorrectedScore)"
+                                >
+                                    {{ currentReplayPose.fullCorrectedScore || "" }}
+                                </div>
+                            </template>
+                            <div v-else class="mag-char-replay-na">N/A - run calibration tumble</div>
+                            <div
+                                class="mag-char-replay-gain-note"
+                                style="
+                                    font-size: 9px;
+                                    margin-top: 6px;
+                                    color: #999;
+                                    border-top: 1px solid #333;
+                                    padding-top: 4px;
+                                "
+                            >
+                                — Stored for blackbox replay —
                             </div>
                             <div
-                                class="mag-char-replay-score"
-                                :class="scoreClass(currentReplayPose.fullCorrectedScore)"
+                                v-if="ellipsoidParams"
+                                class="mag-char-replay-gain-note"
+                                style="font-size: 9px; margin-top: 4px; color: #888"
                             >
-                                {{ currentReplayPose.fullCorrectedScore || "" }}
+                                W_inv: {{ ellipsoidParams.W_inv[0][0].toExponential(3) }} /
+                                {{ ellipsoidParams.W_inv[1][1].toExponential(3) }} /
+                                {{ ellipsoidParams.W_inv[2][2].toExponential(3) }}
                             </div>
-                            <div class="mag-char-replay-gain-note" style="font-size: 10px; margin-top: 4px">
-                                Ellipsoid+Align
+                            <div
+                                v-if="ellipsoidParams"
+                                class="mag-char-replay-gain-note"
+                                style="font-size: 9px; color: #888"
+                                title="Hard iron offset in ADC counts"
+                            >
+                                Hard iron: {{ ellipsoidParams.center.x.toFixed(0) }},
+                                {{ ellipsoidParams.center.y.toFixed(0) }}, {{ ellipsoidParams.center.z.toFixed(0) }}
+                            </div>
+                            <div
+                                v-if="axisGains"
+                                class="mag-char-replay-gain-note"
+                                style="font-size: 9px; color: #888"
+                                title="Per-axis sensitivity. Already corrected by W_inv"
+                            >
+                                Axis gain: X={{ axisGains.x }} Y={{ axisGains.y }} Z={{ axisGains.z }}
+                            </div>
+                            <div
+                                v-if="ellipsoidParams || axisGains"
+                                class="mag-char-replay-gain-note"
+                                style="font-size: 8px; color: #666; margin-top: 4px"
+                            >
+                                Corrects sensor errors during post-flight analysis
                             </div>
                         </div>
                     </div>
@@ -462,15 +530,14 @@
             <!-- Footer -->
             <div class="mag-char-footer">
                 <template v-if="phase === 'intro'">
-                    <span class="mag-char-debug-link" @click="debugLoadJSON">Debug: Load JSON</span>
+                    <span class="mag-char-readout-spacer"></span>
+                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="startWizard">
+                        Skip — 20 Poses Only
+                    </button>
+                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="startCalibrationPhase">
+                        Start with Full Calibration
+                    </button>
                 </template>
-                <input
-                    ref="debugFileInput"
-                    type="file"
-                    accept=".json"
-                    style="display: none"
-                    @change="onDebugFileSelected"
-                />
 
                 <div
                     v-if="phase === 'await' || phase === 'capturing' || phase === 'confirmed'"
@@ -479,9 +546,15 @@
                     <div class="mag-char-readout-row">
                         <span class="mag-char-stability-dot" :class="{ stable: isStable && phase === 'await' }"></span>
                         <span
-                            v-if="phase === 'await' && isStable"
+                            v-if="phase === 'await' && isStable && !poseNeedsRetry"
                             class="mag-char-readout-item mag-char-spacebar-prompt"
                             >Press SPACEBAR to capture</span
+                        >
+                        <span
+                            v-else-if="phase === 'await' && isStable && poseNeedsRetry"
+                            class="mag-char-readout-item"
+                            style="color: #ee6644"
+                            >Movement detected — hold steady and press SPACEBAR to retry</span
                         >
                         <span v-else-if="phase === 'await'" class="mag-char-readout-item mag-char-unstable-text"
                             >Hold steady&hellip;</span
@@ -497,6 +570,14 @@
                         <span class="mag-char-readout-item">R: {{ lastRoll.toFixed(1) }}&deg;</span>
                         <span class="mag-char-readout-item">P: {{ lastPitch.toFixed(1) }}&deg;</span>
                         <span class="mag-char-readout-spacer"></span>
+                        <button
+                            v-if="phase === 'capturing'"
+                            type="button"
+                            class="mag-char-btn mag-char-btn-cancel"
+                            @click="retryPose"
+                        >
+                            Retry
+                        </button>
                         <button
                             v-if="phase === 'await'"
                             type="button"
@@ -536,8 +617,16 @@
                 <div v-if="phase === 'replay'" class="mag-char-readout-bar">
                     <span class="mag-char-readout-item">Auto-playing {{ replayData.length }} poses</span>
                     <span class="mag-char-readout-spacer"></span>
+                    <button
+                        type="button"
+                        class="mag-char-btn mag-char-btn-primary"
+                        style="background: #eebb44; border-color: #eebb44"
+                        @click="doApplyAndReboot"
+                    >
+                        Apply Now via CLI
+                    </button>
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="finishReplay">
-                        Skip to Results
+                        View Results
                     </button>
                 </div>
             </div>
@@ -563,6 +652,7 @@ import MagSphereView from "./mag-calibration/MagSphereView.vue";
 import { useFlightControllerStore } from "../../stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
+import { send as cliSend, saveAndReconnect } from "../../composables/useMspCliSession.js";
 
 const fcStore = useFlightControllerStore();
 const DEG_TO_RAD = Math.PI / 180;
@@ -600,6 +690,7 @@ const {
     exportCharacterizationPoses,
     exportCharacterizationData,
     finishReplay,
+    refreshReplayData,
     replayData,
     calibrationOffsets,
     axisGains,
@@ -615,10 +706,12 @@ const {
     calibrationSampleCount,
     calibrationCoverage,
     calCurrentPrompt,
+    poseNeedsRetry,
     startCalibrationPhase,
     completeCalibrationPhase,
     skipCalibration,
     exportCalibrationSamples,
+    retryPose,
 } = mag;
 
 // Attitude data for MagSphereView calibration phase (reactive, updated by MSP polling)
@@ -821,21 +914,23 @@ watch(
         } else {
             stopAutoPlay();
         }
-        if (p === "calibrate") {
-            _calAttitudeTimer = setInterval(() => {
-                MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
-                    const k = fcStore.sensorData.kinematics;
-                    attitudeRaw.roll = k[0] || 0;
-                    attitudeRaw.pitch = k[1] || 0;
-                    attitudeRaw.heading = k[2] || 0;
-                });
-                MSP.send_message(MSPCodes.MSP_ATTITUDE_QUATERNION, false, false, () => {
-                    const q = fcStore.sensorData.quaternion;
-                    if (q && q.w !== undefined) {
-                        attitudeQuaternion.value = q;
-                    }
-                });
-            }, 80);
+        if (p === "calibrate" || p === "await" || p === "capturing" || p === "confirmed") {
+            if (!_calAttitudeTimer) {
+                _calAttitudeTimer = setInterval(() => {
+                    MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
+                        const k = fcStore.sensorData.kinematics;
+                        attitudeRaw.roll = k[0] || 0;
+                        attitudeRaw.pitch = k[1] || 0;
+                        attitudeRaw.heading = k[2] || 0;
+                    });
+                    MSP.send_message(MSPCodes.MSP_ATTITUDE_QUATERNION, false, false, () => {
+                        const q = fcStore.sensorData.quaternion;
+                        if (q && q.w !== undefined) {
+                            attitudeQuaternion.value = q;
+                        }
+                    });
+                }, 80);
+            }
         } else if (_calAttitudeTimer) {
             clearInterval(_calAttitudeTimer);
             _calAttitudeTimer = null;
@@ -855,7 +950,6 @@ watch(replayIndex, () => {
 const dialogRef = ref(null);
 const threeCanvas = ref(null);
 const replay3dCanvas = ref(null);
-const debugFileInput = ref(null);
 let resizeObserver = null;
 
 // ── Three.js ───────────────────────────────────────────────────────────
@@ -1098,97 +1192,204 @@ async function doApplyAndReboot() {
         return;
     }
 
-    // Confirm reboot
     if (
         !confirm(
-            "Apply alignment and reboot the flight controller?\\n\\nThe FC will disconnect and you\\'ll need to reconnect.",
+            "Apply alignment and reboot the flight controller?\n\nThe FC will disconnect and you'll need to reconnect.",
         )
     ) {
         return;
     }
 
     try {
-        // Write MSP commands (same pattern as SensorsTab.saveConfig)
-        const mspHelper = MSP;
-        await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
-
-        // Write calibration if available
-        if (window.__magCharApplyCmd) {
-            // Calibration needs CLI — deferred for now
-            console.log("Apply calibration (requires CLI):", window.__magCharApplyCmd);
+        const r = solverResult.value;
+        if (r.alignment === 9 && r.customAngles) {
+            await cliSend("set align_mag = CUSTOM", { timeoutMs: 5000 });
+            await cliSend(`set mag_align_roll = ${Math.round(r.customAngles.roll * 10)}`, { timeoutMs: 5000 });
+            await cliSend(`set mag_align_pitch = ${Math.round(r.customAngles.pitch * 10)}`, { timeoutMs: 5000 });
+            await cliSend(`set mag_align_yaw = ${Math.round(r.customAngles.yaw * 10)}`, { timeoutMs: 5000 });
+        } else if (r.alignment >= 1 && r.alignment <= 8) {
+            const names = ["", "CW0", "CW90", "CW180", "CW270", "CW0FLIP", "CW90FLIP", "CW180FLIP", "CW270FLIP"];
+            await cliSend(`set align_mag = ${names[r.alignment]}`, { timeoutMs: 5000 });
         }
 
-        // Write declination if available
-        if (window.__magCharDeclination !== undefined) {
-            // Declination is set via MSP_COMPASS_CONFIG — deferred for now
-            console.log("Apply declination:", window.__magCharDeclination);
+        if (calibrationOffsets.value) {
+            await cliSend(
+                `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${calibrationOffsets.value.z}`,
+                { timeoutMs: 5000 },
+            );
         }
 
-        // Save and reboot
-        await new Promise((resolve) => {
-            mspHelper.writeConfiguration(false, () => {
-                close();
-                resolve();
+        if (geoReference.value) {
+            await cliSend(`set mag_declination = ${Math.round(geoReference.value.declination * 10)}`, {
+                timeoutMs: 5000,
             });
-        });
+        }
+
+        await saveAndReconnect();
+        close();
     } catch (e) {
         console.error("Failed to apply alignment", e);
         alert(`Failed to apply: ${e.message || e}`);
     }
 }
 
-function debugLoadJSON() {
-    debugFileInput.value?.click();
+const debugExpanded = ref(false);
+function toggleDebug() {
+    debugExpanded.value = !debugExpanded.value;
+}
+const posesFileLoaded = ref(false);
+const calFileLoaded = ref(false);
+let _loadedPosesData = null;
+let _loadedCalData = null;
+
+/**
+ * Debug replay loader — accepts characterization poses and/or calibration tumble JSON.
+ *
+ * Three workflows, each serving a distinct use case:
+ *
+ *   BOTH FILES: Full replay. Ellipsoid correction (W_inv, hard iron center) from the
+ *   calibration tumble is restored, then the 20-pose solver runs on raw mag samples
+ *   (idempotent — same result as the original live capture). After the solver,
+ *   ellipsoidParams are restored so the Full Corrected column (4th pane) shows
+ *   ellipsoid+alignment heading. Skip to replay → complete.
+ *
+ *   POSES ONLY: Solver-only replay. No ellipsoid correction available. The 4th pane
+ *   shows "N/A — run calibration tumble." Run solver on raw data, skip to replay.
+ *
+ *   CALIBRATION ONLY: Restore ellipsoid params + geo reference + gains + offsets,
+ *   then transition to the live 20-pose wizard (phase "await"). The user performs
+ *   poses manually. After completion, the report includes all 4 columns.
+ *
+ *   IMPORTANT: startWizard() resets ellipsoidParams to null (line 259 of the
+ *   composable). Ellipsoid must be saved before calling startWizard() and restored
+ *   after. For the BOTH-FILES path, ellipsoid is cleared before runSolver() (solver
+ *   sees raw data = idempotent) then restored + refreshReplayData() is called to
+ *   populate the 4th column. Changing the order of these operations will silently
+ *   break the Full Corrected heading display.
+ */
+function processDebugLoad() {
+    const havePoses = _loadedPosesData !== null;
+    const haveCal = _loadedCalData !== null;
+
+    if (havePoses && haveCal) {
+        // Restore geo reference, axis gains, calibration offsets from poses metadata
+        if (_loadedPosesData.metadata?.geoReference) {
+            mag.geoReference.value = _loadedPosesData.metadata.geoReference;
+        }
+        if (_loadedPosesData.metadata?.axisGains) {
+            mag.axisGains.value = _loadedPosesData.metadata.axisGains;
+        }
+        if (_loadedPosesData.metadata?.calibrationOffsets) {
+            mag.calibrationOffsets.value = _loadedPosesData.metadata.calibrationOffsets;
+        }
+        // Populate captureData from poses JSON
+        mag.captureData.value = _loadedPosesData.directions.map((dir) =>
+            dir.poses.map((pose) =>
+                pose.samples?.length ? { headingRef: pose.samples[0]?.headingRef || 0, samples: pose.samples } : null,
+            ),
+        );
+        // Clear ellipsoid so solver runs on raw data (idempotent with live run)
+        mag.ellipsoidParams.value = null;
+        mag.runSolver(
+            _loadedPosesData.metadata.currentAlignment,
+            _loadedPosesData.metadata.customAngles,
+            undefined,
+            true,
+        );
+        // Now restore ellipsoid so Full Corrected column has data
+        const ec = _loadedCalData.ellipsoidParams ?? _loadedPosesData.metadata?.ellipsoidCorrection;
+        if (ec) {
+            mag.ellipsoidParams.value = ec;
+            refreshReplayData();
+        }
+        disposeThreeScene();
+        _loadedPosesData = null;
+        _loadedCalData = null;
+    } else if (havePoses) {
+        // Only poses: populate captureData, run solver without ellipsoid
+        mag.captureData.value = _loadedPosesData.directions.map((dir) =>
+            dir.poses.map((pose) =>
+                pose.samples?.length ? { headingRef: pose.samples[0]?.headingRef || 0, samples: pose.samples } : null,
+            ),
+        );
+        mag.runSolver(_loadedPosesData.metadata.currentAlignment, _loadedPosesData.metadata.customAngles, null, false);
+        disposeThreeScene();
+        _loadedPosesData = null;
+    } else if (haveCal) {
+        // Only calibration: restore state, skip to await for 20 poses
+        const ec = _loadedCalData.ellipsoidParams ?? _loadedCalData.metadata?.ellipsoidCorrection;
+        if (ec) {
+            mag.ellipsoidParams.value = ec;
+        }
+        if (_loadedCalData.metadata?.geoReference) {
+            mag.geoReference.value = _loadedCalData.metadata.geoReference;
+        } else if (_loadedCalData.geoReference) {
+            mag.geoReference.value = _loadedCalData.geoReference;
+        }
+        if (_loadedCalData.metadata?.axisGains) {
+            mag.axisGains.value = _loadedCalData.metadata.axisGains;
+        } else if (_loadedCalData.axisGains) {
+            mag.axisGains.value = _loadedCalData.axisGains;
+        }
+        if (_loadedCalData.metadata?.calibrationOffsets) {
+            mag.calibrationOffsets.value = _loadedCalData.metadata.calibrationOffsets;
+        } else if (_loadedCalData.calibrationOffsets) {
+            mag.calibrationOffsets.value = _loadedCalData.calibrationOffsets;
+        }
+        // Skip to 20 poses (same as clicking "Skip — 20 Poses Only")
+        // Save ellipsoid — startWizard() clears it
+        const savedEc = mag.ellipsoidParams.value;
+        startWizard();
+        mag.ellipsoidParams.value = savedEc;
+        _loadedCalData = null;
+    }
 }
 
-function onDebugFileSelected(e) {
+function onPosesFileSelected(e) {
     const file = e.target.files?.[0];
-    if (!file) {
-        return;
-    }
+    if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
         try {
             const data = JSON.parse(ev.target.result);
-            // Populate captureData from the JSON fixture
-            mag.captureData.value = data.directions.map((dir) =>
-                dir.poses.map((pose) =>
-                    pose.samples?.length
-                        ? { headingRef: pose.samples[0]?.headingRef || 0, samples: pose.samples }
-                        : null,
-                ),
-            );
-
-            // Restore calibration state from JSON metadata
-            if (data.metadata?.ellipsoidCorrection) {
-                mag.ellipsoidParams.value = data.metadata.ellipsoidCorrection;
+            if (!data.directions || data.metadata?.currentAlignment == null) {
+                alert(
+                    "This doesn't look like a characterization poses file (missing directions/metadata). Did you select the calibration samples file by mistake?",
+                );
+                return;
             }
-            if (data.metadata?.geoReference) {
-                mag.geoReference.value = data.metadata.geoReference;
-            }
-            if (data.metadata?.axisGains) {
-                mag.axisGains.value = data.metadata.axisGains;
-            }
-            if (data.metadata?.calibrationOffsets) {
-                mag.calibrationOffsets.value = data.metadata.calibrationOffsets;
-            }
-
-            // Run solver with JSON's recorded state, skip recomputation
-            mag.runSolver(
-                data.metadata.currentAlignment,
-                data.metadata.customAngles,
-                data.metadata.ellipsoidCorrection ?? null,
-                true,
-            );
-            // Dispose 3D model (replay phase doesn't use it)
-            disposeThreeScene();
+            _loadedPosesData = data;
+            posesFileLoaded.value = true;
         } catch (err) {
-            console.error("Failed to load debug JSON", err);
-            alert("Invalid JSON file");
+            console.error("Invalid poses JSON", err);
+            alert("Invalid poses JSON file");
         }
     };
     reader.readAsText(file);
-    // Reset input so same file can be re-selected
+    e.target.value = "";
+}
+
+function onCalFileSelected(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (!data.samples || data.type !== "calibration_tumble") {
+                alert(
+                    "This doesn't look like a calibration samples file (missing samples/type). Did you select the poses file by mistake?",
+                );
+                return;
+            }
+            _loadedCalData = data;
+            calFileLoaded.value = true;
+        } catch (err) {
+            console.error("Invalid calibration JSON", err);
+            alert("Invalid calibration JSON file");
+        }
+    };
+    reader.readAsText(file);
     e.target.value = "";
 }
 
@@ -1719,5 +1920,26 @@ defineExpose({ show, close });
     margin: 0;
     white-space: pre-wrap;
     background: #0d0d1a;
+}
+.mag-char-debug-item {
+    display: block;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: #888;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.mag-char-debug-item:hover {
+    color: #ccc;
+    background: #2a2a4e;
+}
+.mag-char-debug-item.loaded {
+    color: #4ec97e;
+}
+.mag-char-replay-na {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+    padding: 8px 0;
 }
 </style>

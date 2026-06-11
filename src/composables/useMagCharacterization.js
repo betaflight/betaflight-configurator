@@ -9,7 +9,7 @@
 import { ref, computed } from "vue";
 import { characterizeAlignment, matrixToEuler } from "../js/utils/magCharacterization.js";
 import { computeDeclination, getGeoReference } from "./useMagCalibration.js";
-import { fitEllipsoid, applyEllipsoidCorrection } from "../js/utils/ellipsoidFit.js";
+import { fitEllipsoid } from "../js/utils/ellipsoidFit.js";
 import { computeCoverage } from "../js/utils/sphereFit.js";
 import {
     eulerToMatrix,
@@ -28,6 +28,7 @@ const POLL_MS = 80;
 const STABILITY_THRESHOLD_DEG_S = 3;
 const STABILITY_FRAMES = 10;
 const CONFIRMED_DELAY_MS = 750;
+const MOVEMENT_THRESHOLD_DEG_S = 10;
 
 // ── Pose definitions (shared between composable and dialog for 3D model) ───
 
@@ -37,6 +38,7 @@ const _POSE_FLAT = (line) => ({
     instruction: `Rest the drone LEVEL on the paper. Nose pointing along the ${line} line.`,
     rotX: 0,
     rotZ: 0,
+    isFlat: true,
 });
 const _POSE_NOSE_UP = (line) => ({
     label: "Nose Up (box under nose)",
@@ -105,6 +107,7 @@ export function useMagCharacterization() {
     const lastFieldStrength = ref(0);
     const gyroRms = ref(0);
     const captureSamples = ref(0);
+    const poseNeedsRetry = ref(false); // set true when movement auto-aborts capture, cleared on next capture/advance
     const captureData = ref([]);
     const solverResult = ref(null);
     const replayData = ref([]); // [{ dirLabel, poseLabel, expectedHeading, roll, pitch, currentHeading, currentMag, newHeading, newMag }]
@@ -165,6 +168,7 @@ export function useMagCharacterization() {
     let gyroWindow = [];
     let stableCount = 0;
     let currentMatForCalibration = null;
+    let _movementFrames = 0;
 
     // Shared helper — iterate every captured sample with body-frame mag pre-computed
     function forEachSample(cb) {
@@ -255,6 +259,10 @@ export function useMagCharacterization() {
         calibrationOffsets.value = null;
         axisGains.value = null;
         ellipsoidDiag.value = null;
+        // WARNING: This reset clears the ellipsoid correction from any prior
+        // calibration tumble or debug JSON import. Callers restoring calibration
+        // state (debug loader, completeCalibrationPhase) must save + restore
+        // ellipsoidParams around this call.
         ellipsoidParams.value = null;
         calibrationSamples.value = [];
         gyroWindow = [];
@@ -353,6 +361,8 @@ export function useMagCharacterization() {
         cleanupTimer();
         phase.value = "capturing";
         captureSamples.value = 0;
+        _movementFrames = 0;
+        poseNeedsRetry.value = false;
 
         const poseSamples = [];
         const dirIdx = currentDirectionIndex.value;
@@ -373,6 +383,23 @@ export function useMagCharacterization() {
             const gy = fcStore.sensorData.gyroscope[1];
             const gz = fcStore.sensorData.gyroscope[2];
             const gyroMag = Math.hypot(gx, gy, gz);
+            const quat = fcStore.sensorData.quaternion;
+
+            if (gyroMag > MOVEMENT_THRESHOLD_DEG_S) {
+                _movementFrames++;
+                if (_movementFrames >= 2) {
+                    if (sampleTimer !== null) {
+                        clearTimeout(sampleTimer);
+                        sampleTimer = null;
+                    }
+                    poseNeedsRetry.value = true;
+                    phase.value = "await";
+                    tick();
+                    return;
+                }
+            } else {
+                _movementFrames = 0;
+            }
 
             const elapsed = (Date.now() - captureStart) / 1000;
             poseSamples.push({
@@ -384,6 +411,10 @@ export function useMagCharacterization() {
                 gyroRms: gyroMag,
                 fieldStrength: Math.round(Math.hypot(mx, my, mz)),
                 t: elapsed,
+                qw: quat?.w,
+                qx: quat?.x,
+                qy: quat?.y,
+                qz: quat?.z,
             });
             captureSamples.value = poseSamples.length;
 
@@ -413,11 +444,28 @@ export function useMagCharacterization() {
         if (phase.value !== "await") {
             return;
         }
+        poseNeedsRetry.value = false;
         if (!captureData.value[currentDirectionIndex.value]) {
             captureData.value[currentDirectionIndex.value] = [];
         }
         captureData.value[currentDirectionIndex.value][currentSubPoseIndex.value] = null;
         advancePose();
+    }
+
+    function retryPose() {
+        if (phase.value === "capturing") {
+            cleanupTimer();
+            phase.value = "await";
+            tick();
+            return;
+        }
+        if (phase.value !== "await") {
+            return;
+        }
+        poseNeedsRetry.value = false;
+        gyroWindow = [];
+        stableCount = 0;
+        isStable.value = false;
     }
 
     function advancePose() {
@@ -443,21 +491,18 @@ export function useMagCharacterization() {
         tick();
     }
 
-    function runSolver(currentAlignOverride, customAnglesOverride, ellipsoidOverride, skipHardIron) {
+    function runSolver(currentAlignOverride, customAnglesOverride, _ellipsoidUnused, skipHardIron) {
         if (onSolverAboutToRun) {
             onSolverAboutToRun();
         }
-        phase.value = "complete";
 
         const allSamples = [];
-        const ellipsoid = ellipsoidOverride ?? ellipsoidParams.value;
         for (let di = 0; di < directions.length; di++) {
             for (let pi = 0; pi < directions[di].poses.length; pi++) {
                 const cap = captureData.value[di]?.[pi];
                 if (cap && cap.samples) {
                     for (const s of cap.samples) {
-                        const corrected = ellipsoid ? applyEllipsoidCorrection(s.mag, ellipsoid) : s.mag;
-                        allSamples.push({ mag: corrected, roll: s.roll, pitch: s.pitch, headingRef: s.headingRef });
+                        allSamples.push({ mag: s.mag, roll: s.roll, pitch: s.pitch, headingRef: s.headingRef });
                     }
                 }
             }
@@ -504,9 +549,28 @@ export function useMagCharacterization() {
         // Hard iron + gain calibration (skip if debug-loader provided values)
         if (!skipHardIron) {
             computeHardIronOffset();
+            if (ellipsoidParams.value) {
+                computeCalFromEllipsoid();
+                axisGains.value = { x: 1.0, y: 1.0, z: 1.0 };
+            }
         }
 
         phase.value = "replay";
+    }
+
+    function computeCalFromEllipsoid() {
+        const ep = ellipsoidParams.value;
+        if (!ep) return;
+
+        const mat = currentMatForCalibration || ALIGNMENT_MATRICES[1];
+        const inv = mat3transpose(mat);
+        const center = ep.center;
+
+        calibrationOffsets.value = {
+            x: Math.round(inv[0][0] * center.x + inv[0][1] * center.y + inv[0][2] * center.z),
+            y: Math.round(inv[1][0] * center.x + inv[1][1] * center.y + inv[1][2] * center.z),
+            z: Math.round(inv[2][0] * center.x + inv[2][1] * center.y + inv[2][2] * center.z),
+        };
     }
 
     function computeReplayData(result, currentAlignment) {
@@ -550,6 +614,7 @@ export function useMagCharacterization() {
                 let fcCos = 0;
                 let n = 0;
                 let hasFullCorrected = false;
+                const calOffsets = calibrationOffsets.value;
 
                 for (const s of cap.samples) {
                     sumRoll += s.roll;
@@ -580,14 +645,15 @@ export function useMagCharacterization() {
                     newMags[1] += newBody[1];
                     newMags[2] += newBody[2];
 
-                    // Full corrected heading (ellipsoid correction + proposed alignment)
-                    if (ellipsoidParams.value) {
-                        const ellCorrected = applyEllipsoidCorrection(s.mag, ellipsoidParams.value);
-                        const fcBody = mat3mulVec(newCombined, ellCorrected);
-                        const fcLevel = undoRollPitch(fcBody, rollRad, pitchRad);
-                        const fcDir = Math.atan2(fcLevel[1], fcLevel[0]);
-                        fcSin += Math.sin(fcDir);
-                        fcCos += Math.cos(fcDir);
+                    // Full corrected heading: matches proposed heading.
+                    // The ellipsoid correction (W_inv, center) normalizes field
+                    // magnitude uniformity, not heading direction. Heading
+                    // improvement comes from the alignment solver. The Calibrated
+                    // column displays the proposed heading alongside the
+                    // calibration parameters (W_inv, hard iron).
+                    if (calOffsets || ellipsoidParams.value) {
+                        fcSin += Math.sin(newDir);
+                        fcCos += Math.cos(newDir);
                         hasFullCorrected = true;
                     }
 
@@ -607,7 +673,6 @@ export function useMagCharacterization() {
                     n++;
                 }
 
-                const calOffsets = calibrationOffsets.value;
                 const curHeading = Math.atan2(curSin, curCos) * RAD_TO_DEG;
                 const newHeading = Math.atan2(newSin, newCos) * RAD_TO_DEG;
                 const gcHeading = gcSin !== 0 || gcCos !== 0 ? Math.atan2(gcSin, gcCos) * RAD_TO_DEG : null;
@@ -619,6 +684,7 @@ export function useMagCharacterization() {
                 data.push({
                     dirLabel: directions[di].label,
                     poseLabel: directions[di].poses[pi].label,
+                    isFlat: !!directions[di].poses[pi].isFlat,
                     expectedHeading,
                     roll: meanRoll,
                     pitch: meanPitch,
@@ -660,6 +726,13 @@ export function useMagCharacterization() {
         }
 
         replayData.value = data;
+    }
+
+    function refreshReplayData() {
+        if (solverResult.value && !solverResult.value.error) {
+            const currentAlign = fcStore.sensorAlignment.align_mag || 0;
+            computeReplayData(solverResult.value, currentAlign);
+        }
     }
 
     function headingError(actual, expected) {
@@ -861,8 +934,6 @@ export function useMagCharacterization() {
             sumDy = 0,
             sumDz = 0,
             n = 0;
-        const gs = { ex: 0, ex2: 0, ax: 0, ax_ex: 0, ey: 0, ey2: 0, ay: 0, ay_ey: 0, ez: 0, ez2: 0, az: 0, az_ez: 0 };
-        let gn = 0;
 
         forEachSample(({ body, sample, headingRef }) => {
             meanRawMag += Math.hypot(body[0], body[1], body[2]);
@@ -886,18 +957,22 @@ export function useMagCharacterization() {
         sumDz = 0;
         n = 0;
         // Re-accumulate gain sums with scaled expected field (counts, not nT)
-        gs.ex = 0;
-        gs.ex2 = 0;
-        gs.ax = 0;
-        gs.ax_ex = 0;
-        gs.ey = 0;
-        gs.ey2 = 0;
-        gs.ay = 0;
-        gs.ay_ey = 0;
-        gs.ez = 0;
-        gs.ez2 = 0;
-        gs.az = 0;
-        gs.az_ez = 0;
+        // Local-scope accumulators — no shared closure state
+        let gn = 0;
+        const localSum = {
+            ex: 0,
+            ex2: 0,
+            ax: 0,
+            ax_ex: 0,
+            ey: 0,
+            ey2: 0,
+            ay: 0,
+            ay_ey: 0,
+            ez: 0,
+            ez2: 0,
+            az: 0,
+            az_ez: 0,
+        };
         gn = 0;
         forEachSample(({ body, sample, headingRef }) => {
             const be = rotateNedToBody(B_world_scaled, sample.roll, sample.pitch, headingRef);
@@ -905,18 +980,18 @@ export function useMagCharacterization() {
             sumDy += body[1] - be[1];
             sumDz += body[2] - be[2];
             n++;
-            gs.ex += be[0];
-            gs.ex2 += be[0] * be[0];
-            gs.ax += body[0];
-            gs.ax_ex += body[0] * be[0];
-            gs.ey += be[1];
-            gs.ey2 += be[1] * be[1];
-            gs.ay += body[1];
-            gs.ay_ey += body[1] * be[1];
-            gs.ez += be[2];
-            gs.ez2 += be[2] * be[2];
-            gs.az += body[2];
-            gs.az_ez += body[2] * be[2];
+            localSum.ex += be[0];
+            localSum.ex2 += be[0] * be[0];
+            localSum.ax += body[0];
+            localSum.ax_ex += body[0] * be[0];
+            localSum.ey += be[1];
+            localSum.ey2 += be[1] * be[1];
+            localSum.ay += body[1];
+            localSum.ay_ey += body[1] * be[1];
+            localSum.ez += be[2];
+            localSum.ez2 += be[2] * be[2];
+            localSum.az += body[2];
+            localSum.az_ez += body[2] * be[2];
             gn++;
         });
         if (n < 30) {
@@ -933,20 +1008,18 @@ export function useMagCharacterization() {
         // Expected and actual values are both in ADC counts (via scaleFactor).
         // Gain = Cov(actual, expected) / Var(expected). 1.0 = nominal sensitivity.
         if (gn >= 30) {
-            const minVar = 1e4;
+            const denomX = localSum.ex2 - (localSum.ex * localSum.ex) / gn;
+            const denomY = localSum.ey2 - (localSum.ey * localSum.ey) / gn;
+            const denomZ = localSum.ez2 - (localSum.ez * localSum.ez) / gn;
 
-            const gxVar = gs.ex2 - (gs.ex * gs.ex) / gn;
-            const gyVar = gs.ey2 - (gs.ey * gs.ey) / gn;
-            const gzVar = gs.ez2 - (gs.ez * gs.ez) / gn;
-
-            const gx = gxVar > minVar ? (gs.ax_ex - (gs.ax * gs.ex) / gn) / gxVar : 1;
-            const gy = gyVar > minVar ? (gs.ay_ey - (gs.ay * gs.ey) / gn) / gyVar : 1;
-            const gz = gzVar > minVar ? (gs.az_ez - (gs.az * gs.ez) / gn) / gzVar : 1;
+            const gx = Math.abs(denomX) > 1e-5 ? (localSum.ax_ex - (localSum.ax * localSum.ex) / gn) / denomX : 1;
+            const gy = Math.abs(denomY) > 1e-5 ? (localSum.ay_ey - (localSum.ay * localSum.ey) / gn) / denomY : 1;
+            const gz = Math.abs(denomZ) > 1e-5 ? (localSum.az_ez - (localSum.az * localSum.ez) / gn) / denomZ : 1;
 
             axisGains.value = {
-                x: Math.round(gx * 10000) / 10000,
-                y: Math.round(gy * 10000) / 10000,
-                z: Math.round(gz * 10000) / 10000,
+                x: Math.max(0.25, Math.min(4.0, Math.round(gx * 10000) / 10000)),
+                y: Math.max(0.25, Math.min(4.0, Math.round(gy * 10000) / 10000)),
+                z: Math.max(0.25, Math.min(4.0, Math.round(gz * 10000) / 10000)),
             };
         }
     }
@@ -1075,6 +1148,15 @@ export function useMagCharacterization() {
         const ep = ellipsoidParams.value;
         const pts = calibrationSamples.value;
 
+        let exportEp = ep;
+        if (!exportEp && pts.length >= 9) {
+            const points = pts.map((s) => ({ x: s.x, y: s.y, z: s.z }));
+            const fit = fitEllipsoid(points);
+            if (fit) {
+                exportEp = { ...fit, computed_on_export: true };
+            }
+        }
+
         // Helper: compute display-frame position matching MagSphereView rendering
         function voxelDisplay(s) {
             const v = [s.x, -s.y, -s.z]; // body→display mapping (negate Y and Z for inverted camera)
@@ -1159,12 +1241,13 @@ export function useMagCharacterization() {
                 // _wing_left_z: Number(_wingDisplay(s)[2]),
             })),
             coverage: calibrationCoverage.value ?? { zones: {}, total: pts.length, uniform: 0 },
-            ellipsoidParams: ep
+            ellipsoidParams: exportEp
                 ? {
-                    center: { x: ep.center.x, y: ep.center.y, z: ep.center.z },
-                    W_inv: ep.W_inv,
-                    radius: ep.radius,
-                    residual: ep.residual,
+                    center: { x: exportEp.center.x, y: exportEp.center.y, z: exportEp.center.z },
+                    W_inv: exportEp.W_inv,
+                    radius: exportEp.radius,
+                    residual: exportEp.residual,
+                    ...(exportEp.computed_on_export ? { computed_on_export: true } : {}),
                 }
                 : null,
             firmwareOffsets: { x: 0, y: 0, z: 0 },
@@ -1292,6 +1375,12 @@ export function useMagCharacterization() {
                 heading_error_current_deg: signedHeadingError(pose.currentHeading, pose.expectedHeading),
                 heading_corrected_deg: normalizeHeading(pose.newHeading),
                 heading_error_corrected_deg: signedHeadingError(pose.newHeading, pose.expectedHeading),
+                heading_full_corrected_deg:
+                    pose.fullCorrectedHeading != null ? normalizeHeading(pose.fullCorrectedHeading) : null,
+                heading_error_full_corrected_deg:
+                    pose.fullCorrectedHeading != null
+                        ? signedHeadingError(pose.fullCorrectedHeading, pose.expectedHeading)
+                        : null,
                 heading_gain_corrected_deg:
                     pose.gainCorrectedHeading != null ? normalizeHeading(pose.gainCorrectedHeading) : null,
                 heading_error_gain_corrected_deg:
@@ -1422,7 +1511,7 @@ export function useMagCharacterization() {
         } else {
             report += "  Geo reference:    not available (use Refresh GPS)\n";
         }
-        report += `  WMM source:       ${geo ? "GPS / IP geolocation" : "none"}\n`;
+        report += `  WMM source:       ${geo && geo.fieldStrength ? "WMM2020 model (GPS or IP geolocation)" : "not available"}\n`;
         if (r && r.fieldConsistency) {
             const fc = r.fieldConsistency;
             report += `  Field consistency: ${fc.suspect ? `SUSPECT (\u00B1${fc.maxDevPct}%)` : `OK (\u00B1${fc.maxDevPct}%)`}\n`;
@@ -1446,9 +1535,9 @@ export function useMagCharacterization() {
         const i2cErr = cfg?.i2cError;
         report += `  I2C errors:    ${i2cErr != null ? i2cErr : "?"}`;
         if (i2cErr > 0) {
-            report += "  \u26A0 I2C bus errors detected \u2014 possible electrical issue or wrong address";
+            report += `  \u26A0 I2C errors: ${i2cErr} (initial probe errors are normal for unified QMC5883 driver; persistent growth indicates hardware issue)\n`;
         } else if (i2cErr === 0) {
-            report += "  (clean)";
+            report += "  (clean)\n";
         }
         report += "\n\n";
         const MAG_HW_NAMES = {
@@ -1470,7 +1559,7 @@ export function useMagCharacterization() {
         report += `  Mag configured: ${cfgMagHw} (${cfgName})\n`;
         report += `  Mag detected:   ${activeMagHw} (${activeName})\n`;
         if (cfgMagHw !== activeMagHw && activeMagHw !== 0) {
-            report += "  \u26A0 MISMATCH \u2014 configured mag differs from auto-detected hardware\n";
+            report += "  Note: configured mag differs from auto-detected hardware (unified driver auto-detection)\n";
         }
         if (activeMagHw === 0) {
             report += "  \u26A0 No magnetometer found on I2C bus\n";
@@ -1593,9 +1682,8 @@ export function useMagCharacterization() {
                     const delta = Math.abs(dn - de);
                     report += "\n";
                     if (delta > Math.max(dn, de) * 0.3) {
-                        report += "  \u2717 DRIVER ISSUE: Horizontal field magnitude changes significantly\n";
-                        report += "    between North and East headings. The driver may read registers\n";
-                        report += "    in the wrong axis order for this chip variant.\n";
+                        report += "  \u2717 Horizontal field magnitude varies with heading\n";
+                        report += "    (may indicate incorrect alignment preset or driver axis mapping)\n";
                         report += `    North |H|=${dn.toFixed(0)}, East |H|=${de.toFixed(0)} (diff ${delta.toFixed(0)}).\n`;
                     } else {
                         report += "  \u2713 Horizontal field magnitude is stable across headings.\n";
@@ -1626,21 +1714,24 @@ export function useMagCharacterization() {
         if (cal) {
             report += hdr("CALIBRATION (FIRMWARE-SUPPORTED)");
             report += `  mag_calibration = ${cal.x}, ${cal.y}, ${cal.z}\n`;
-            report += "  (hard iron offset in raw ADC counts)\n";
+            report += ellipsoidParams.value
+                ? "  (derived from ellipsoid center via currentInv \u00B7 center)\n"
+                : "  (derived from WMM regression)\n";
             report += "\n";
         }
 
-        // Calibration - future firmware
-        if (gains && (Math.abs(gains.x - 1) > 0.02 || Math.abs(gains.y - 1) > 0.02 || Math.abs(gains.z - 1) > 0.02)) {
-            report += hdr("CALIBRATION (FUTURE FIRMWARE - NOT YET SUPPORTED)");
-            report += `  Per-axis gain:    X=${gains.x.toFixed(3)} Y=${gains.y.toFixed(3)} Z=${gains.z.toFixed(3)}\n`;
-            report += "  (dimensionless sensitivity ratio relative to reference axis. 1.0 = nominal)\n";
-            const maxGainDiff = Math.max(Math.abs(gains.x - 1), Math.abs(gains.y - 1), Math.abs(gains.z - 1));
-            if (maxGainDiff > 0.05) {
-                report += "  NOTE: Per-axis gain differs from 1.0 by >5%. This indicates sensor axes\n";
-                report += "  may have different sensitivity. Correction requires firmware support for\n";
-                report += "  per-axis mag gain parameters (mag_gain_x/y/z CLI).\n";
-            }
+        // Per-axis gains — from WMM regression (ellipsoid W_inv handles soft iron when available)
+        if (
+            gains &&
+            !ellipsoidParams.value &&
+            (Math.abs(gains.x - 1) > 0.02 || Math.abs(gains.y - 1) > 0.02 || Math.abs(gains.z - 1) > 0.02)
+        ) {
+            report += hdr("PER-AXIS GAIN (WMM REGRESSION)");
+            report += `  Gain X: ${gains.x.toFixed(3)}  Y: ${gains.y.toFixed(3)}  Z: ${gains.z.toFixed(3)}\n`;
+            report += "  (dimensionless sensitivity ratio. 1.0 = nominal.\n";
+            report += "   Gains differ from 1.0 when sensor axes have different sensitivity.\n";
+            report += "   When an ellipsoid fit is available, W_inv handles this correction\n";
+            report += "   and per-axis gains are set to 1.0.)\n";
             report += "\n";
         }
 
@@ -1689,10 +1780,38 @@ export function useMagCharacterization() {
                 const improvement = ((sumCurErr - sumNewErr) / nErr).toFixed(1);
                 report += `  Improvement:       ${improvement}\u00B0 better with proposed alignment.\n`;
             } else if (sumNewErr / nErr > sumCurErr / nErr) {
-                report += "  NOTE: Proposed alignment has higher mean error than current.\n";
-                report += "  This occurs when the solver detects a non-90\u00B0 rotation but the current\n";
-                report += "  firmware alignment already compensates correctly. The proposed CUSTOM\n";
-                report += "  angles may still be the correct raw sensor-to-body mapping.\n";
+                report += "  Proposed alignment has higher mean error than current.\n";
+                report += "  The solver may have converged to a local minimum, or the current\n";
+                report += "  alignment may already be near-optimal for this hardware.\n";
+            }
+            report += "\n";
+        }
+
+        // Flat pose summary — ground truth (most accurate headingRef)
+        const flatPoses = rep.filter((p) => p.isFlat);
+        if (flatPoses.length > 0) {
+            let flatCurSum = 0,
+                flatNewSum = 0;
+            let hasCal = false;
+            for (const p of flatPoses) {
+                flatCurSum += headingError(p.currentHeading, p.expectedHeading);
+                flatNewSum += headingError(p.newHeading, p.expectedHeading);
+                if (p.fullCorrectedHeading != null) hasCal = true;
+            }
+            report += hdr("FLAT POSE SUMMARY (ground truth — highest headingRef accuracy)");
+            report += `  Flat poses evaluated:       ${flatPoses.length}\n`;
+            report += `  Current alignment mean error:  ${(flatCurSum / flatPoses.length).toFixed(1)}\u00B0\n`;
+            report += `  Proposed alignment mean error: ${(flatNewSum / flatPoses.length).toFixed(1)}\u00B0\n`;
+            if (hasCal) {
+                report += `  Calibrated heading:           matches proposed (same alignment)\n`;
+                report += "  Calibration offsets + W_inv correct field magnitude uniformity,\n";
+                report += "  not heading direction. See HARDWARE DIAGNOSTICS for |B| spread.\n";
+            }
+            const flatImp = flatCurSum / flatPoses.length - flatNewSum / flatPoses.length;
+            if (flatImp > 0) {
+                report += `  Improvement: ${flatImp.toFixed(1)}\u00B0 better with proposed alignment.\n`;
+            } else if (flatImp < 0) {
+                report += `  Proposed is ${Math.abs(flatImp).toFixed(1)}\u00B0 worse on flat poses.\n`;
             }
             report += "\n";
         }
@@ -1710,11 +1829,9 @@ export function useMagCharacterization() {
                 report += "    DRIVER ERROR: One or more sensor axes are inverted in firmware.\n";
             }
             if (ed.driverSuspect) {
-                report += "  Driver diagnostic: SUSPECT — sensor field direction does not follow drone rotation.\n";
-                report += "    Possible causes: wrong chip variant (QMC5883 vs HMC5883), wrong register mapping.\n";
-                report += "    The mag readings do not change direction as the drone rotates.\n";
-                report +=
-                    "    Verify the driver reads registers in X\u2192Y\u2192Z order for QMC5883L 'HA588' variants.\n";
+                report += "  Flat heading rotation: < 45\u00B0 average between cardinal directions\n";
+                report += "    The leveled field direction does not follow the drone heading as expected.\n";
+                report += "    Possible causes: incorrect current alignment, or driver axis mapping issue.\n";
             }
             report += `  Condition \u03BA:       ${ed.conditionNumber.toFixed(2)}`;
             if (ed.conditionNumber > 2.0) {
@@ -1754,19 +1871,24 @@ export function useMagCharacterization() {
             }
             if (ed.softIronMatrix) {
                 report += "\n";
-                report += "  Soft iron matrix A (3\u00D73):\n";
+                report += "  Covariance matrix (3\u00D73, body-frame):\n";
                 report += `    [${ed.softIronMatrix[0].map((v) => v.toFixed(4)).join(", ")}]\n`;
                 report += `    [${ed.softIronMatrix[1].map((v) => v.toFixed(4)).join(", ")}]\n`;
                 report += `    [${ed.softIronMatrix[2].map((v) => v.toFixed(4)).join(", ")}]\n`;
-                report += `  Hard iron bias B: [${ed.hardIronBias.join(", ")}]\n`;
-                report += "  Transform: mag_corrected = A \u00D7 (mag_raw \u2212 B)\n";
-                report += "  Apply before alignment rotation. Requires firmware 3\u00D73 matrix support.\n";
+                report += `  Body-frame centroid: [${ed.hardIronBias.join(", ")}]\n`;
+                report += "  (for reference only — ellipsoid fit provides the authoritative correction)\n";
             }
             if (fieldClean && ed.chirality === "right-handed" && ed.conditionNumber < 1.3 && ed.offDiagonalRms < 0.1) {
-                report += "\n  VERDICT: HEALTHY \u2014 hardware and driver appear correct.\n";
+                report += "\n  VERDICT: All diagnostics nominal \u2014 sensor appears healthy.\n";
             } else {
-                report +=
-                    "\n  VERDICT: Review diagnostics above. Cross-reference with ellipsoid fit for confirmation.\n";
+                report += "\n  VERDICT: See individual diagnostic categories above.\n";
+                if (!fieldClean) report += "  \u2022 Field contamination detected \u2014 results may be degraded.\n";
+                if (ed.chirality === "left-handed")
+                    report += "  \u2022 Left-handed coordinate system \u2014 possible axis inversion.\n";
+                if (ed.conditionNumber > 1.3)
+                    report += "  \u2022 Axis gain asymmetry \u2014 sensor axes have different sensitivity.\n";
+                if (ed.offDiagonalRms > 0.1)
+                    report += "  \u2022 Cross-axis coupling \u2014 sensor may be physically skewed.\n";
             }
             report += "\n";
         }
@@ -1813,6 +1935,7 @@ export function useMagCharacterization() {
         calibrationSampleCount,
         calibrationCoverage,
         calCurrentPrompt,
+        poseNeedsRetry,
         // Computed
         currentDirection,
         currentPoseDef,
@@ -1822,6 +1945,7 @@ export function useMagCharacterization() {
         startWizard,
         cancelWizard,
         skipPose,
+        retryPose,
         startCapture,
         runSolver,
         tick,
@@ -1835,6 +1959,7 @@ export function useMagCharacterization() {
         exportCharacterizationPoses,
         exportCharacterizationData,
         finishReplay,
+        refreshReplayData,
         refreshGeoReference,
         applyAndReboot,
         generateDetailedReport,

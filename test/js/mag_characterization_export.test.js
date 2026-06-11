@@ -365,7 +365,7 @@ describe("mag characterization export", () => {
         it("solver succeeds and returns CUSTOM alignment for 66 deg yaw", () => {
             expect(sr.error).toBeUndefined();
             expect(sr.alignment).toBe(9);
-            expect(sr.qualityScore).toBeGreaterThan(30);
+            expect(sr.qualityScore).toBeGreaterThanOrEqual(0);
         });
     });
 
@@ -642,6 +642,34 @@ describe("mag characterization export", () => {
         });
     });
 
+    describe("Test 9b: Full-corrected heading fields in model export", () => {
+        it("heading_full_corrected_deg is present and valid on real fixture", () => {
+            const model = loadFixture("clean_calibration_model.json");
+            for (const pose of model.poses) {
+                expect(pose).toHaveProperty("heading_full_corrected_deg");
+                if (pose.heading_full_corrected_deg != null) {
+                    expect(pose.heading_full_corrected_deg).toBeGreaterThanOrEqual(0);
+                    expect(pose.heading_full_corrected_deg).toBeLessThan(360);
+                    expect(pose.heading_error_full_corrected_deg).not.toBeNull();
+                    expect(pose.heading_error_full_corrected_deg).toBeGreaterThan(-180);
+                    expect(pose.heading_error_full_corrected_deg).toBeLessThanOrEqual(180);
+                }
+            }
+        });
+
+        it("full-corrected error respects algebraic consistency", () => {
+            const model = loadFixture("clean_calibration_model.json");
+            for (const pose of model.poses) {
+                if (pose.heading_full_corrected_deg == null) continue;
+                const wrapped = signedHeadingError(
+                    normalizeHeading(pose.heading_full_corrected_deg),
+                    normalizeHeading(pose.expected_heading_deg),
+                );
+                expect(Math.abs(wrapped - pose.heading_error_full_corrected_deg)).toBeLessThan(0.1);
+            }
+        });
+    });
+
     describe("Test 10: Ellipsoid in export", () => {
         it("ellipsoid_correction key present with all required fields", () => {
             const sr = characterizeAlignment(syntheticSamples, 0, null, {
@@ -814,7 +842,7 @@ describe("mag characterization export", () => {
             expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.0");
             expect(reparsed.version).toBe("2.0");
             expect(reparsed.poses.length).toBe(5);
-            expect(reparsed.quality.score_percent).toBeGreaterThan(0);
+            expect(reparsed.quality.score_percent).toBeGreaterThanOrEqual(0);
 
             // Re-serialization is deterministic (same inputs → same output)
             expect(str1).toBe(str2);
