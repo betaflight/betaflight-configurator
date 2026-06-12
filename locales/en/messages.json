@@ -7737,6 +7737,12 @@
     "magCalibrationPrompt6": {
         "message": "Step 6/6 — Right side up, yaw 360°"
     },
+    "magCalibrationPrompt7Fill": {
+        "message": "Fill the gaps — slow barrel rolls (full 360° around the nose axis), then slow front-flips (360° around the wing axis), until every region is painted"
+    },
+    "magCalibrationPromptAllPainted": {
+        "message": "All regions painted — coverage complete. Click Done calibrating."
+    },
     "magCalibrationGuidedDone": {
         "message": "Data collection complete — review and save"
     },

@@ -756,8 +756,15 @@ const CAL_PROMPT_I18N = [
     "magCalibrationPrompt4",
     "magCalibrationPrompt5",
     "magCalibrationPrompt6",
+    "magCalibrationPrompt7Fill",
 ];
-const calPromptI18n = computed(() => CAL_PROMPT_I18N[calCurrentPrompt.value] || CAL_PROMPT_I18N[0]);
+const calPromptI18n = computed(() => {
+    // Coverage complete → tell the user to stop tumbling, regardless of step
+    if (calibrationCoverage.value && calibrationCoverage.value.fraction >= 1) {
+        return "magCalibrationPromptAllPainted";
+    }
+    return CAL_PROMPT_I18N[calCurrentPrompt.value] || CAL_PROMPT_I18N[0];
+});
 
 // ── Replay controls ───────────────────────────────────────────────────
 const replayIndex = ref(0);

@@ -117,7 +117,7 @@ export function useMagCharacterization() {
     const ellipsoidParams = ref(null); // { center: {x,y,z}, W_inv: number[3][3], radius: number, residual: number }
     const calibrationSamples = ref([]); // [{ x, y, z, pitch, heading, timestamp }] for calibration tumble
     const calibrationSampleCount = computed(() => calibrationSamples.value.length);
-    const calCurrentPrompt = ref(0); // index into 6-step tumble guidance prompts
+    const calCurrentPrompt = ref(0); // index into 7-step tumble guidance prompts
     let _calPromptTimer = null;
     const CAL_PROMPT_INTERVAL_MS = 10000;
     const CAL_PROMPTS = [
@@ -127,6 +127,12 @@ export function useMagCharacterization() {
         "magCalibrationPrompt4",
         "magCalibrationPrompt5",
         "magCalibrationPrompt6",
+        // Gap-filling step: each yaw spin paints a constant-latitude BAND of
+        // field directions around its spin axis; six bands always leave gaps
+        // near their poles. Slow full rotations about the two horizontal body
+        // axes (barrel roll, front-flip) trace great circles through those
+        // gaps and deterministically complete the 20-region coverage.
+        "magCalibrationPrompt7Fill",
     ];
     // Running sphere fit during the tumble — gives the live center estimate
     // that coverage classification and the 3D view need (the hard-iron bias
@@ -634,8 +640,9 @@ export function useMagCharacterization() {
                 }
                 console.log(
                     `=== PACKAGE SELECTION === calibrated ${packageErr.toFixed(1)}° vs ` +
-                        `alignment-only ${alignmentOnlyErr.toFixed(1)}° → ${ 
-                            usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY (bias deferred)"}`,
+                        `alignment-only ${alignmentOnlyErr.toFixed(1)}° → ${
+                            usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY (bias deferred)"
+                        }`,
                 );
             }
         }
