@@ -1,12 +1,12 @@
 /**
  * Regenerate test/fixtures/clean_calibration_model.json from the raw capture
  * fixtures (clean_calibration_tumble.json + clean_calibration_poses.json),
- * running the CURRENT production pipeline:
+ * running the CURRENT production pipeline via the same shared functions the
+ * wizard uses (selectAlignmentPackage → computeCalFromEllipsoid →
+ * computeReplayData → buildCharacterizationModel).
  *
- *   fitEllipsoid → characterizeAlignment → computeCalFromEllipsoid → computeReplayData
- *
- * Run whenever the pipeline math changes so the model fixture stays consistent
- * with what the wizard would actually export:
+ * Run whenever the pipeline math changes so the model fixture stays
+ * consistent with what the wizard would actually export:
  *
  *   node test/js/tools/regen_model_fixture.mjs
  *
@@ -18,9 +18,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { fitEllipsoid } from "../../../src/js/utils/ellipsoidFit.js";
-import { characterizeAlignment, matrixToEuler } from "../../../src/js/utils/magCharacterization.js";
-import { eulerToMatrix, mat3mul, mat3transpose, ALIGNMENT_MATRICES } from "../../../src/js/utils/magAlignment.js";
-import { computeReplayData, computeCalFromEllipsoid } from "../../../src/js/utils/magCharacterizationCompute.js";
+import { mat3mul, mat3transpose } from "../../../src/js/utils/magAlignment.js";
+import {
+    selectAlignmentPackage,
+    currentMatrixOf,
+    proposedMatrixOf,
+    computeCalFromEllipsoid,
+    computeReplayData,
+} from "../../../src/js/utils/magCharacterizationCompute.js";
+import { buildCharacterizationModel } from "../../../src/js/utils/magModelExport.js";
+import { flattenSamples, captureDataFromPosesExport, directionsFromPosesExport } from "../test_helpers.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURES = path.resolve(__dirname, "../../fixtures");
@@ -34,184 +41,68 @@ const cal = load("clean_calibration_tumble.json");
 const poses = load("clean_calibration_poses.json");
 const oldModel = load("clean_calibration_model.json");
 
-// ── Pipeline ────────────────────────────────────────────────────────────────
+// ── Pipeline (identical to runSolver) ───────────────────────────────────────
 
 const ellipsoid = fitEllipsoid(cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
 if (!ellipsoid) throw new Error("ellipsoid fit failed");
 
-const allSamples = [];
-for (let di = 0; di < poses.directions.length; di++) {
-    const dir = poses.directions[di];
-    for (let pi = 0; pi < dir.poses.length; pi++) {
-        const pose = dir.poses[pi];
-        if (pose.samples) {
-            for (const sm of pose.samples) allSamples.push({ ...sm, poseKey: `${di}:${pi}` });
-        }
-    }
-}
+const captureData = captureDataFromPosesExport(poses);
+const directions = directionsFromPosesExport(poses);
+const currentMat = currentMatrixOf(CAPTURE_ALIGNMENT, null);
 
-const solverOpts = { headingMode: "absolute", headingWeight: 1.0 };
-
-// Correct-then-solve dual solve + package selection (mirrors runSolver):
-// solve on raw AND on center-subtracted samples, pick the package with the
-// lower measured pose error.
-const rawResult = characterizeAlignment(allSamples, CAPTURE_ALIGNMENT, null, solverOpts);
-if (rawResult.error) throw new Error(`solver failed: ${rawResult.error}`);
-const ec = ellipsoid.center;
-const correctedSamples = allSamples.map((s) => ({
-    ...s,
-    mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
-}));
-const corrResult = characterizeAlignment(correctedSamples, CAPTURE_ALIGNMENT, null, solverOpts);
-if (corrResult.error) throw new Error(`corrected solver failed: ${corrResult.error}`);
-
-const currentMat = ALIGNMENT_MATRICES[CAPTURE_ALIGNMENT];
-const captureData = poses.directions.map((dir) =>
-    dir.poses.map((pose) =>
-        pose.captured && pose.samples?.length
-            ? { headingRef: pose.samples[0]?.headingRef ?? 0, samples: pose.samples }
-            : null,
-    ),
-);
-const directions = poses.directions.map((dir) => ({
-    label: dir.label,
-    heading: 0, // unused: every captured pose carries headingRef
-    poses: dir.poses.map((p) => ({ label: p.label, isFlat: p.label.startsWith("Flat") })),
-}));
-
-const meanPackageErr = (res, includeCenter) => {
-    const replayTmp = computeReplayData(res, CAPTURE_ALIGNMENT, captureData, directions, {
-        ellipsoidParams: ellipsoid,
-        calibrationOffsets: null,
-        axisGains: null,
-        currentMat,
-        proposedIncludesCenter: includeCenter,
-    });
-    let sum = 0;
-    for (const d of replayTmp) {
-        let diff = d.newHeading - d.expectedHeading;
-        while (diff > 180) diff -= 360;
-        while (diff < -180) diff += 360;
-        sum += Math.abs(diff);
-    }
-    return sum / replayTmp.length;
-};
-const packageErr = meanPackageErr(corrResult, true);
-const alignmentOnlyErr = meanPackageErr(rawResult, false);
-const usedCalibratedPackage = packageErr <= alignmentOnlyErr + 1.0;
-const solverResult = usedCalibratedPackage ? corrResult : rawResult;
+const { result, usedCalibratedPackage, validation } = selectAlignmentPackage({
+    samples: flattenSamples(poses),
+    captureData,
+    directions,
+    currentAlignment: CAPTURE_ALIGNMENT,
+    customAngles: null,
+    currentMat,
+    ellipsoidParams: ellipsoid,
+});
+if (result.error) throw new Error(`solver failed: ${result.error}`);
 console.log(
-    `package selection: calibrated ${packageErr.toFixed(1)}° vs alignment-only ${alignmentOnlyErr.toFixed(1)}° → ${usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY"}`,
+    `package selection: calibrated ${validation?.fullCorrectedMeanErr.toFixed(1)}° vs ` +
+        `alignment-only ${validation?.proposedMeanErr.toFixed(1)}° → ` +
+        (usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY"),
 );
 
-let proposedMat;
-if (solverResult.alignment === 9 && solverResult.customAngles) {
-    const a = solverResult.customAngles;
-    proposedMat = eulerToMatrix(a.roll, a.pitch, a.yaw);
-} else {
-    proposedMat = ALIGNMENT_MATRICES[solverResult.alignment] || ALIGNMENT_MATRICES[1];
-}
-const newCombined = mat3mul(proposedMat, mat3transpose(currentMat));
-
+const newCombined = mat3mul(proposedMatrixOf(result, currentMat), mat3transpose(currentMat));
 const calOffsets = computeCalFromEllipsoid(ellipsoid, newCombined, CAPTURE_MAG_ZERO);
-const axisGains = { x: 1.0, y: 1.0, z: 1.0 };
 
-const replay = computeReplayData(solverResult, CAPTURE_ALIGNMENT, captureData, directions, {
+const replay = computeReplayData(result, CAPTURE_ALIGNMENT, captureData, directions, {
     ellipsoidParams: ellipsoid,
     calibrationOffsets: calOffsets,
-    axisGains,
     currentMat,
     proposedIncludesCenter: usedCalibratedPackage,
 });
 
-// ── Export mapping (mirrors useMagCharacterization.exportCharacterizationData) ──
-
-const normalizeHeading = (deg) => ((deg % 360) + 360) % 360;
-const signedHeadingError = (actual, expected) => {
-    if (expected === null || expected === undefined) return 0;
-    let diff = actual - expected;
-    while (diff > 180) diff -= 360;
-    while (diff < -180) diff += 360;
-    return diff;
-};
-const mapPoseType = (label) => {
-    if (label.startsWith("Flat")) return "flat";
-    if (label.startsWith("Nose Up")) return "nose_up";
-    if (label.startsWith("Nose Down")) return "nose_down";
-    if (label.includes("Roll right")) return "left_side";
-    if (label.includes("Roll left")) return "right_side";
-    if (label.includes("Inverted")) return "inverted";
-    return "flat";
-};
-const getEulerAngles = (sr) => {
-    if (sr.alignment === 9 && sr.customAngles) return { ...sr.customAngles };
-    if (sr.alignment >= 1 && sr.alignment <= 8) return matrixToEuler(ALIGNMENT_MATRICES[sr.alignment]);
-    return { roll: 0, pitch: 0, yaw: 0 };
-};
-
-const model = {
-    $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.1",
-    version: "2.1",
-    captured_under: {
+const model = buildCharacterizationModel({
+    solverResult: result,
+    replayData: replay,
+    capturedUnder: {
         alignment: CAPTURE_ALIGNMENT,
         custom_angles: null,
         mag_zero: CAPTURE_MAG_ZERO,
     },
-    ellipsoid_correction: {
-        center: { x: ellipsoid.center.x, y: ellipsoid.center.y, z: ellipsoid.center.z },
-        soft_iron: ellipsoid.W_inv,
-        radius: ellipsoid.radius,
-        residual_rms: ellipsoid.residual,
+    ellipsoidParams: ellipsoid,
+    calibrationOffsets: calOffsets,
+    geoReference: {
+        declination: oldModel.geo_reference.declination_deg,
+        inclination: oldModel.geo_reference.inclination_deg,
+        fieldStrength: oldModel.geo_reference.field_strength_nt,
     },
-    geo_reference: oldModel.geo_reference,
-    alignment: {
-        preset: solverResult.alignment,
-        label: solverResult.label,
-        euler_zyx_deg: getEulerAngles(solverResult),
-    },
-    axis_gains: axisGains,
-    hard_iron: calOffsets,
-    quality: {
-        score_percent: solverResult.qualityScore,
-        residual_z_rms: solverResult.residuals?.zRms ?? 0,
-        residual_xy_rms: solverResult.residuals?.xyRms ?? 0,
-        field_consistency_pct: solverResult.fieldConsistency?.maxDevPct ?? 0,
-        chirality_flag: solverResult.chiralityFlag ?? false,
-    },
-    poses: replay.map((pose) => ({
-        body_orientation: mapPoseType(pose.poseLabel),
-        cardinal_direction: pose.dirLabel.charAt(0).toUpperCase(),
-        expected_heading_deg: normalizeHeading(pose.expectedHeading),
-        measured_attitude_deg: { roll: pose.roll, pitch: pose.pitch },
-        heading_current_deg: normalizeHeading(pose.currentHeading),
-        heading_error_current_deg: signedHeadingError(pose.currentHeading, pose.expectedHeading),
-        heading_corrected_deg: normalizeHeading(pose.newHeading),
-        heading_error_corrected_deg: signedHeadingError(pose.newHeading, pose.expectedHeading),
-        heading_full_corrected_deg:
-            pose.fullCorrectedHeading != null ? normalizeHeading(pose.fullCorrectedHeading) : null,
-        heading_error_full_corrected_deg:
-            pose.fullCorrectedHeading != null
-                ? signedHeadingError(pose.fullCorrectedHeading, pose.expectedHeading)
-                : null,
-        heading_gain_corrected_deg:
-            pose.gainCorrectedHeading != null ? normalizeHeading(pose.gainCorrectedHeading) : null,
-        heading_error_gain_corrected_deg:
-            pose.gainCorrectedHeading != null
-                ? signedHeadingError(pose.gainCorrectedHeading, pose.expectedHeading)
-                : null,
-        heading_quality_weight: Math.max(
-            0,
-            Math.min(1, 1.0 - Math.abs(signedHeadingError(pose.newHeading, pose.expectedHeading)) / 30.0),
-        ),
-    })),
-};
+    gpsFix: false,
+    gpsLat: 0,
+    gpsLon: 0,
+});
 
 const outPath = path.join(FIXTURES, "clean_calibration_model.json");
 fs.writeFileSync(outPath, `${JSON.stringify(model, null, 2)}\n`);
 
 console.log(`wrote ${outPath}`);
 console.log(`  alignment: ${model.alignment.label} (${JSON.stringify(model.alignment.euler_zyx_deg)})`);
-console.log(`  hard_iron: ${JSON.stringify(model.hard_iron)} (proposed-frame, was ${JSON.stringify(oldModel.hard_iron)})`);
-const meanErr = (key) =>
-    (model.poses.reduce((a, p) => a + Math.abs(p[key] ?? 0), 0) / model.poses.length).toFixed(1);
-console.log(`  mean |error|: current=${meanErr("heading_error_current_deg")}°  proposed=${meanErr("heading_error_corrected_deg")}°  full=${meanErr("heading_error_full_corrected_deg")}°`);
+console.log(`  hard_iron: ${JSON.stringify(model.hard_iron)} (proposed-frame)`);
+const meanErr = (key) => (model.poses.reduce((a, p) => a + Math.abs(p[key] ?? 0), 0) / model.poses.length).toFixed(1);
+console.log(
+    `  mean |error|: current=${meanErr("heading_error_current_deg")}°  proposed=${meanErr("heading_error_corrected_deg")}°  full=${meanErr("heading_error_full_corrected_deg")}°`,
+);

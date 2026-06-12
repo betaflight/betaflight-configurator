@@ -16,6 +16,48 @@ export function loadFixture(name) {
     return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../fixtures", name), "utf-8"));
 }
 
+/**
+ * Reconstruct the wizard's captureData structure from a characterization_poses
+ * export: Array<Array<{headingRef, samples}|null>> indexed [direction][pose].
+ */
+export function captureDataFromPosesExport(posesJson) {
+    return posesJson.directions.map((dir) =>
+        dir.poses.map((pose) =>
+            pose.captured !== false && pose.samples?.length
+                ? { headingRef: pose.samples[0]?.headingRef ?? 0, samples: pose.samples }
+                : null,
+        ),
+    );
+}
+
+/**
+ * Reconstruct the wizard's directions constant (labels + isFlat flags) from a
+ * characterization_poses export. `heading` is unused downstream because every
+ * captured pose carries its own headingRef.
+ */
+export function directionsFromPosesExport(posesJson) {
+    return posesJson.directions.map((dir) => ({
+        label: dir.label,
+        heading: 0,
+        poses: dir.poses.map((p) => ({ label: p.label, isFlat: p.label.startsWith("Flat") })),
+    }));
+}
+
+/**
+ * Angle between two rotation matrices in degrees — representation-independent
+ * (Euler triples near flips can look wildly different for similar rotations).
+ */
+export function rotationDelta(matA, matB) {
+    let trace = 0;
+    for (let i = 0; i < 3; i++) {
+        for (let k = 0; k < 3; k++) {
+            // (A·Bᵀ)[i][i] summed = Σ A[i][k]·B[i][k]
+            trace += matA[i][k] * matB[i][k];
+        }
+    }
+    return Math.acos(Math.max(-1, Math.min(1, (trace - 1) / 2))) * (180 / Math.PI);
+}
+
 export function flattenSamples(data) {
     const s = [];
     for (let di = 0; di < data.directions.length; di++) {

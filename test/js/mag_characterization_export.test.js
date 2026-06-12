@@ -7,6 +7,7 @@
 import { describe, expect, it } from "vitest";
 import { characterizeAlignment, matrixToEuler } from "../../src/js/utils/magCharacterization.js";
 import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec } from "../../src/js/utils/magAlignment.js";
+import { buildCharacterizationModel, signedHeadingError, normalizeHeading } from "../../src/js/utils/magModelExport.js";
 import { loadFixture, flattenSamples } from "./test_helpers.js";
 
 // ── Seeded PRNG ────────────────────────────────────────────────────────────
@@ -101,71 +102,14 @@ function generateSyntheticData(trueAlignment, nPoses, samplesPerPose, noiseSigma
     return samples;
 }
 
-// ── Export JSON assembly helpers (matching composable logic exactly) ────────
-
-function mapPoseType(poseLabel) {
-    if (poseLabel.startsWith("Flat")) {
-        return "flat";
-    }
-    if (poseLabel.startsWith("Nose Up")) {
-        return "nose_up";
-    }
-    if (poseLabel.startsWith("Nose Down")) {
-        return "nose_down";
-    }
-    if (poseLabel.includes("Roll right")) {
-        return "left_side";
-    }
-    if (poseLabel.includes("Roll left")) {
-        return "right_side";
-    }
-    if (poseLabel.includes("Inverted")) {
-        return "inverted";
-    }
-    return "flat";
-}
-
-function normalizeHeading(deg) {
-    return ((deg % 360) + 360) % 360;
-}
-
-function signedHeadingError(actual, expected) {
-    if (expected === null || expected === undefined) {
-        return 0;
-    }
-    let diff = actual - expected;
-    while (diff > 180) {
-        diff -= 360;
-    }
-    while (diff < -180) {
-        diff += 360;
-    }
-    return diff;
-}
-
-function getEulerAngles(solverResultVal) {
-    if (!solverResultVal) {
-        return { roll: 0, pitch: 0, yaw: 0 };
-    }
-    const preset = solverResultVal.alignment;
-    if (preset === 9 && solverResultVal.customAngles) {
-        return {
-            roll: solverResultVal.customAngles.roll,
-            pitch: solverResultVal.customAngles.pitch,
-            yaw: solverResultVal.customAngles.yaw,
-        };
-    }
-    if (preset >= 1 && preset <= 8 && ALIGNMENT_MATRICES[preset]) {
-        const euler = matrixToEuler(ALIGNMENT_MATRICES[preset]);
-        return { roll: euler.roll, pitch: euler.pitch, yaw: euler.yaw };
-    }
-    return { roll: 0, pitch: 0, yaw: 0 };
-}
+// ── Export JSON assembly — the PRODUCTION builder under test ────────────────
+// (magModelExport.js is the single home of the model shape; this thin
+// positional adapter avoids churning the many existing call sites.)
 
 function buildExportJson(
     solverResult,
     replayPoses,
-    axisGains,
+    _axisGains, // deprecated with the WMM regression — production emits a constant
     calibrationOffsets,
     geoReference,
     gpsFix,
@@ -173,79 +117,17 @@ function buildExportJson(
     gpsLon,
     ellipsoidCorrection,
 ) {
-    const sr = solverResult;
-
-    const geoRefOut = {};
-    if (gpsFix) {
-        geoRefOut.latitude_deg = gpsLat / 10000000;
-        geoRefOut.longitude_deg = gpsLon / 10000000;
-    } else {
-        geoRefOut.latitude_deg = null;
-        geoRefOut.longitude_deg = null;
-    }
-    geoRefOut.declination_deg = geoReference?.declination ?? 0;
-    geoRefOut.inclination_deg = geoReference?.inclination ?? 0;
-    geoRefOut.field_strength_nt = geoReference?.fieldStrength ?? null;
-
-    const ec = ellipsoidCorrection;
-
-    return {
-        $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.1",
-        version: "2.1",
-        // Capture provenance (schema 2.1): the production export records the
-        // alignment + mag_calibration active during capture; this test builder
-        // exercises schema mechanics only.
-        captured_under: null,
-        ellipsoid_correction: ec
-            ? {
-                center: { x: ec.center.x, y: ec.center.y, z: ec.center.z },
-                soft_iron: ec.W_inv,
-                radius: ec.radius,
-                residual_rms: ec.residual,
-            }
-            : null,
-        geo_reference: geoRefOut,
-        alignment:
-            sr && !sr.error
-                ? {
-                    preset: sr.alignment,
-                    label: sr.label,
-                    euler_zyx_deg: getEulerAngles(sr),
-                }
-                : null,
-        axis_gains: axisGains ?? { x: 1.0, y: 1.0, z: 1.0 },
-        hard_iron: calibrationOffsets ?? null,
-        quality:
-            sr && !sr.error
-                ? {
-                    score_percent: sr.qualityScore,
-                    residual_z_rms: sr.residuals?.zRms ?? 0,
-                    residual_xy_rms: sr.residuals?.xyRms ?? 0,
-                    field_consistency_pct: sr.fieldConsistency?.maxDevPct ?? 0,
-                    chirality_flag: sr.chiralityFlag ?? false,
-                }
-                : null,
-        poses: replayPoses.map((pose) => ({
-            body_orientation: mapPoseType(pose.poseLabel),
-            cardinal_direction: pose.dirLabel.charAt(0).toUpperCase(),
-            expected_heading_deg: normalizeHeading(pose.expectedHeading),
-            measured_attitude_deg: { roll: pose.roll, pitch: pose.pitch },
-            heading_current_deg: normalizeHeading(pose.currentHeading),
-            heading_error_current_deg: signedHeadingError(pose.currentHeading, pose.expectedHeading),
-            heading_corrected_deg: normalizeHeading(pose.newHeading),
-            heading_error_corrected_deg: signedHeadingError(pose.newHeading, pose.expectedHeading),
-            heading_gain_corrected_deg:
-                pose.gainCorrectedHeading != null ? normalizeHeading(pose.gainCorrectedHeading) : null,
-            heading_error_gain_corrected_deg:
-                pose.gainCorrectedHeading != null
-                    ? signedHeadingError(pose.gainCorrectedHeading, pose.expectedHeading)
-                    : null,
-            heading_quality_weight: Math.max(
-                0,
-                Math.min(1, 1.0 - Math.abs(signedHeadingError(pose.newHeading, pose.expectedHeading)) / 30.0),
-            ),
-        })),
-    };
+    return buildCharacterizationModel({
+        solverResult,
+        replayData: replayPoses,
+        capturedUnder: null,
+        ellipsoidParams: ellipsoidCorrection,
+        calibrationOffsets,
+        geoReference,
+        gpsFix,
+        gpsLat,
+        gpsLon,
+    });
 }
 
 // ── Shared test fixture ─────────────────────────────────────────────────────
@@ -599,50 +481,26 @@ describe("mag characterization export", () => {
         });
     });
 
-    describe("Test 9: Gain-corrected heading fields", () => {
+    describe("Test 9: Gain-corrected heading fields (deprecated — always null)", () => {
+        // The per-axis gain path was removed with the WMM regression; the keys
+        // are retained in schema 2.1 for compatibility and are always null.
         const sr = characterizeAlignment(syntheticSamples, 0, null, {
             headingMode: "absolute",
             headingWeight: 1.0,
         });
         const json = buildExportJson(sr, mockReplayPoses, mockGains, mockCalibration, mockGeoRef, false, 0, 0, null);
 
-        it("null gainCorrectedHeading produces null exported fields", () => {
-            // pose index 1 (Nose Up) has gainCorrectedHeading: null
-            const pose = json.poses[1];
-            expect(pose.heading_gain_corrected_deg).toBeNull();
-            expect(pose.heading_error_gain_corrected_deg).toBeNull();
+        it("keys exist and are null on every pose", () => {
+            for (const pose of json.poses) {
+                expect(pose).toHaveProperty("heading_gain_corrected_deg");
+                expect(pose).toHaveProperty("heading_error_gain_corrected_deg");
+                expect(pose.heading_gain_corrected_deg).toBeNull();
+                expect(pose.heading_error_gain_corrected_deg).toBeNull();
+            }
         });
 
-        it("non-null gainCorrectedHeading produces valid heading and error", () => {
-            // pose index 0 (Flat) has gainCorrectedHeading: 0.8
-            const pose = json.poses[0];
-            expect(pose.heading_gain_corrected_deg).not.toBeNull();
-            expect(pose.heading_gain_corrected_deg).toBeGreaterThanOrEqual(0);
-            expect(pose.heading_gain_corrected_deg).toBeLessThan(360);
-            expect(pose.heading_error_gain_corrected_deg).not.toBeNull();
-            expect(pose.heading_error_gain_corrected_deg).toBeGreaterThan(-180);
-            expect(pose.heading_error_gain_corrected_deg).toBeLessThanOrEqual(180);
-        });
-
-        it("gain-corrected error satisfies algebraic consistency", () => {
-            const pose = json.poses[0];
-            const wrapped = signedHeadingError(
-                normalizeHeading(0.8),
-                normalizeHeading(mockReplayPoses[0].expectedHeading),
-            );
-            expect(Math.abs(wrapped - pose.heading_error_gain_corrected_deg)).toBeLessThan(0.01);
-        });
-
-        it("gain-corrected heading consistent with error for pose index 3", () => {
-            // pose index 3 (Box under left) has gainCorrectedHeading: 270.2
-            const pose = json.poses[3];
-            expect(pose.heading_gain_corrected_deg).not.toBeNull();
-            expect(pose.heading_error_gain_corrected_deg).not.toBeNull();
-            const wrapped = signedHeadingError(
-                normalizeHeading(270.2),
-                normalizeHeading(mockReplayPoses[3].expectedHeading),
-            );
-            expect(Math.abs(wrapped - pose.heading_error_gain_corrected_deg)).toBeLessThan(0.01);
+        it("axis_gains is the deprecated constant", () => {
+            expect(json.axis_gains).toEqual({ x: 1.0, y: 1.0, z: 1.0 });
         });
     });
 

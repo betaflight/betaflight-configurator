@@ -7,16 +7,19 @@
  * rendering, and dialog lifecycle.
  */
 import { ref, computed } from "vue";
-import { characterizeAlignment, matrixToEuler } from "../js/utils/magCharacterization.js";
 import { computeDeclination, getGeoReference } from "./useMagCalibration.js";
 import { fitEllipsoid } from "../js/utils/ellipsoidFit.js";
 import {
     computeReplayData as _computeReplayData,
     computeCalFromEllipsoid as _computeCalFromEllipsoid,
+    selectAlignmentPackage,
+    currentMatrixOf,
+    proposedMatrixOf,
     headingError,
 } from "../js/utils/magCharacterizationCompute.js";
+import { buildCharacterizationModel } from "../js/utils/magModelExport.js";
 import { fitSphere, computeDirectionalCoverage } from "../js/utils/sphereFit.js";
-import { eulerToMatrix, mat3mulVec, mat3mul, mat3transpose, ALIGNMENT_MATRICES } from "../js/utils/magAlignment.js";
+import { mat3mulVec, mat3mul, mat3transpose, ALIGNMENT_MATRICES } from "../js/utils/magAlignment.js";
 import { useFlightControllerStore } from "../stores/fc";
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -27,6 +30,22 @@ const STABILITY_THRESHOLD_DEG_S = 3;
 const STABILITY_FRAMES = 10;
 const CONFIRMED_DELAY_MS = 750;
 const MOVEMENT_THRESHOLD_DEG_S = 10;
+
+// Tumble guidance i18n keys — shared with the dialog (single list).
+export const CAL_PROMPTS = [
+    "magCalibrationPrompt1",
+    "magCalibrationPrompt2",
+    "magCalibrationPrompt3",
+    "magCalibrationPrompt4",
+    "magCalibrationPrompt5",
+    "magCalibrationPrompt6",
+    // Gap-filling step: each yaw spin paints a constant-latitude BAND of
+    // field directions around its spin axis; six bands always leave gaps
+    // near their poles. Slow full rotations about the two horizontal body
+    // axes (barrel roll, front-flip) trace great circles through those
+    // gaps and deterministically complete the 20-region coverage.
+    "magCalibrationPrompt7Fill",
+];
 
 // ── Pose definitions (shared between composable and dialog for 3D model) ───
 
@@ -110,30 +129,15 @@ export function useMagCharacterization() {
     const solverResult = ref(null);
     const replayData = ref([]); // [{ dirLabel, poseLabel, expectedHeading, roll, pitch, currentHeading, currentMag, newHeading, newMag }]
     const calibrationOffsets = ref(null); // { x, y, z } or null if not available
-    const axisGains = ref(null); // { x, y, z } per-axis multiplicative gain factors
     const geoReference = ref(null); // { declination, inclination, fieldStrength } or null
     const detailedReport = ref(""); // LLM-ready text report, populated by generateDetailedReport()
     const ellipsoidDiag = ref(null); // { conditionNumber, chirality, offDiagonalRms, ... } from fitEllipsoid
     const ellipsoidParams = ref(null); // { center: {x,y,z}, W_inv: number[3][3], radius: number, residual: number }
     const calibrationSamples = ref([]); // [{ x, y, z, pitch, heading, timestamp }] for calibration tumble
     const calibrationSampleCount = computed(() => calibrationSamples.value.length);
-    const calCurrentPrompt = ref(0); // index into 7-step tumble guidance prompts
+    const calCurrentPrompt = ref(0); // index into the CAL_PROMPTS guidance steps
     let _calPromptTimer = null;
     const CAL_PROMPT_INTERVAL_MS = 10000;
-    const CAL_PROMPTS = [
-        "magCalibrationPrompt1",
-        "magCalibrationPrompt2",
-        "magCalibrationPrompt3",
-        "magCalibrationPrompt4",
-        "magCalibrationPrompt5",
-        "magCalibrationPrompt6",
-        // Gap-filling step: each yaw spin paints a constant-latitude BAND of
-        // field directions around its spin axis; six bands always leave gaps
-        // near their poles. Slow full rotations about the two horizontal body
-        // axes (barrel roll, front-flip) trace great circles through those
-        // gaps and deterministically complete the 20-region coverage.
-        "magCalibrationPrompt7Fill",
-    ];
     // Running sphere fit during the tumble — gives the live center estimate
     // that coverage classification and the 3D view need (the hard-iron bias
     // offsets the cloud by up to ~40% of its radius on real hardware).
@@ -300,7 +304,6 @@ export function useMagCharacterization() {
         solverResult.value = null;
         replayData.value = [];
         calibrationOffsets.value = null;
-        axisGains.value = null;
         calibrationValidation.value = null;
         proposedIncludesCenter.value = false;
         ellipsoidDiag.value = null;
@@ -584,82 +587,37 @@ export function useMagCharacterization() {
                     : null;
 
         // Build the current alignment matrix (handling CUSTOM align=9 properly)
-        if (currentAlign === 9 && customAngles) {
-            currentMatForCalibration = eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
-        } else {
-            currentMatForCalibration = ALIGNMENT_MATRICES[currentAlign] || ALIGNMENT_MATRICES[1];
-        }
+        currentMatForCalibration = currentMatrixOf(currentAlign, customAngles) || ALIGNMENT_MATRICES[1];
 
-        const solverOpts = { headingMode: "absolute", headingWeight: 1.0 };
-
-        // ── Correct-then-solve (dual solve + package selection) ─────────────
-        // Solving on RAW data entangles hard-iron compensation into the
-        // rotation (proven on samples5: raw solve 11.1° vs corrected solve
-        // 5.4°, cross-validated at 5.5° on a held-out session). When an
-        // ellipsoid center is available, ALSO solve on center-subtracted
-        // samples and pick the package with the lower measured pose error:
-        //   package A: alignment solved on (m − center) + mag_calibration
-        //   package B: alignment solved on raw, no offsets (fallback when the
-        //              center is contaminated and doesn't transfer)
-        const rawResult = characterizeAlignment(allSamples, currentAlign, customAngles, solverOpts);
-        let result = rawResult;
-        let usedCalibratedPackage = false;
-        let packageErrs = null;
-
-        if (ellipsoidParams.value && !rawResult.error) {
-            const ec = ellipsoidParams.value.center;
-            const correctedSamples = allSamples.map((s) => ({
-                ...s,
-                mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
-            }));
-            const corrResult = characterizeAlignment(correctedSamples, currentAlign, customAngles, solverOpts);
-
-            if (!corrResult.error) {
-                const meanPackageErr = (res, includeCenter) => {
-                    const replay = _computeReplayData(res, currentAlign, captureData.value, directions, {
-                        ellipsoidParams: ellipsoidParams.value,
-                        calibrationOffsets: null,
-                        axisGains: null,
-                        currentMat: currentMatForCalibration,
-                        proposedIncludesCenter: includeCenter,
-                    });
-                    let sum = 0;
-                    let n = 0;
-                    for (const d of replay) {
-                        sum += headingError(d.newHeading, d.expectedHeading);
-                        n++;
-                    }
-                    return n > 0 ? sum / n : Infinity;
-                };
-                const packageErr = meanPackageErr(corrResult, true);
-                const alignmentOnlyErr = meanPackageErr(rawResult, false);
-                packageErrs = { packageErr, alignmentOnlyErr };
-                if (packageErr <= alignmentOnlyErr + 1.0) {
-                    result = corrResult;
-                    usedCalibratedPackage = true;
-                }
-                console.log(
-                    `=== PACKAGE SELECTION === calibrated ${packageErr.toFixed(1)}° vs ` +
-                        `alignment-only ${alignmentOnlyErr.toFixed(1)}° → ${
-                            usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY (bias deferred)"
-                        }`,
-                );
-            }
-        }
+        // Correct-then-solve dual solve + package selection — see
+        // selectAlignmentPackage() in magCharacterizationCompute.js (single
+        // implementation shared with the offline tools and the test suite).
+        const { result, usedCalibratedPackage, validation } = selectAlignmentPackage({
+            samples: allSamples,
+            captureData: captureData.value,
+            directions,
+            currentAlignment: currentAlign,
+            customAngles,
+            currentMat: currentMatForCalibration,
+            ellipsoidParams: ellipsoidParams.value,
+        });
 
         solverResult.value = result;
         proposedIncludesCenter.value = usedCalibratedPackage;
+        if (validation) {
+            console.log(
+                `=== PACKAGE SELECTION === calibrated ${validation.fullCorrectedMeanErr.toFixed(1)}° vs ` +
+                    `alignment-only ${validation.proposedMeanErr.toFixed(1)}° → ${
+                        usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY (bias deferred)"
+                    }`,
+            );
+        }
         console.log("=== MAG CHARACTERIZATION RESULT ===", result);
 
         // newCombined = R_proposed · R_captureᵀ — used to express capture-frame
         // quantities (ellipsoid center) in the frame of the alignment that will
         // be applied (compass.c subtracts mag_calibration AFTER alignment).
-        let proposedMat;
-        if (result.alignment === 9 && result.customAngles) {
-            proposedMat = eulerToMatrix(result.customAngles.roll, result.customAngles.pitch, result.customAngles.yaw);
-        } else {
-            proposedMat = ALIGNMENT_MATRICES[result.alignment] || currentMatForCalibration;
-        }
+        const proposedMat = proposedMatrixOf(result, currentMatForCalibration);
         newCombinedForCalibration = mat3mul(proposedMat, mat3transpose(currentMatForCalibration));
 
         // Record capture provenance for the model export (schema 2.1)
@@ -675,30 +633,27 @@ export function useMagCharacterization() {
         // Run ellipsoid fitter for hardware diagnostics
         runEllipsoidDiagnostics(currentAlign);
 
-        // Hard iron + gain calibration (skip if debug-loader provided values)
+        // Hard-iron offsets — ONLY from the ellipsoid (the WMM regression
+        // fallback was removed: its frame semantics were broken and it
+        // produced dangerous proposals on tumble-less runs).
         if (!skipHardIron) {
-            computeHardIronOffset();
+            calibrationOffsets.value = null;
+            // Geo reference from the cached WMM lookup (set by SensorsTab on
+            // connect or explicit refresh) — used for declination display/CLI.
+            geoReference.value = getGeoReference() || null;
             if (ellipsoidParams.value) {
                 computeCalFromEllipsoid();
-                axisGains.value = { x: 1.0, y: 1.0, z: 1.0 };
             }
         }
 
-        // Validation verdict from the package selection above. Shape kept for
-        // the UI/report: proposedMeanErr = alignment-only, fullCorrectedMeanErr
-        // = calibrated package, recommended = package won (offsets get applied).
-        calibrationValidation.value = packageErrs
-            ? {
-                proposedMeanErr: packageErrs.alignmentOnlyErr,
-                fullCorrectedMeanErr: packageErrs.packageErr,
-                recommended: usedCalibratedPackage,
-            }
-            : null;
-        if (packageErrs && !usedCalibratedPackage) {
+        // Validation verdict from the package selection. recommended === true
+        // means the calibrated package won and the offsets will be applied.
+        calibrationValidation.value = validation;
+        if (validation && !usedCalibratedPackage) {
             console.warn(
                 "Static bias offsets withheld: calibrated package " +
-                    `${packageErrs.packageErr.toFixed(1)}° vs ` +
-                    `${packageErrs.alignmentOnlyErr.toFixed(1)}° alignment-only on the poses. ` +
+                    `${validation.fullCorrectedMeanErr.toFixed(1)}° vs ` +
+                    `${validation.proposedMeanErr.toFixed(1)}° alignment-only on the poses. ` +
                     "World-frame interference at the bench (it does not rotate with the drone) " +
                     "contaminated the tumble's bias estimate. Alignment is still applied; bias " +
                     "estimation is deferred to per-flight self-calibration in the log viewer.",
@@ -717,17 +672,9 @@ export function useMagCharacterization() {
         replayData.value = _computeReplayData(result, currentAlignment, captureData.value, directions, {
             ellipsoidParams: ellipsoidParams.value,
             calibrationOffsets: calibrationOffsets.value,
-            axisGains: axisGains.value,
             currentMat: currentMatForCalibration || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1],
             proposedIncludesCenter: proposedIncludesCenter.value,
         });
-    }
-
-    function refreshReplayData() {
-        if (solverResult.value && !solverResult.value.error) {
-            const currentAlign = fcStore.sensorAlignment.align_mag || 0;
-            computeReplayData(solverResult.value, currentAlign);
-        }
     }
 
     function refreshReplayData() {
@@ -847,172 +794,18 @@ export function useMagCharacterization() {
             residualRms: 0,
             eigenvalues: [rmsX, rmsY, rmsZ],
             determinant: chirality === "right-handed" ? 1 : -1,
-            // Approximate soft iron matrix A and hard iron bias B
-            // mag_corrected = A * (mag_raw - B)
-            // Diagonal = per-axis gains (from WMM regression)
-            // Off-diagonal = cross-axis coupling (from covariance)
-            softIronMatrix: null, // populated below if gains available
+            // Cross-axis coupling diagnostic (covariance-based). The full
+            // soft-iron correction is the ellipsoid W_inv; this is display-only.
+            softIronMatrix:
+                trace > 1e-10
+                    ? [
+                        [1, round4(covXY / trace), round4(covXZ / trace)],
+                        [round4(covXY / trace), 1, round4(covYZ / trace)],
+                        [round4(covXZ / trace), round4(covYZ / trace), 1],
+                    ]
+                    : null,
             hardIronBias: [Math.round(meanX), Math.round(meanY), Math.round(meanZ)],
         };
-
-        // Populate soft iron matrix from per-axis gains + cross-coupling
-        const gains = axisGains.value;
-        if (gains && trace > 1e-10) {
-            const normCovXY = covXY / trace;
-            const normCovXZ = covXZ / trace;
-            const normCovYZ = covYZ / trace;
-            ellipsoidDiag.value.softIronMatrix = [
-                [round4(gains.x), round4(normCovXY), round4(normCovXZ)],
-                [round4(normCovXY), round4(gains.y), round4(normCovYZ)],
-                [round4(normCovXZ), round4(normCovYZ), round4(gains.z)],
-            ];
-        }
-    }
-
-    function computeHardIronOffset() {
-        calibrationOffsets.value = null;
-        geoReference.value = null;
-
-        // Only use cached geo reference (set by SensorsTab on connect or explicit Refresh GPS)
-        const geo = getGeoReference();
-        if (!geo) {
-            return;
-        }
-        computeFromGeo(geo);
-    }
-
-    function computeFromGeo(geo) {
-        geoReference.value = geo;
-        const DEG_TO_RAD = Math.PI / 180;
-
-        // Build expected B_world vector in NED (North, East, Down)
-        const incRad = geo.inclination * DEG_TO_RAD;
-        const decRad = geo.declination * DEG_TO_RAD;
-        const B_total = geo.fieldStrength;
-        const B_h = B_total * Math.cos(incRad);
-        const B_world = [
-            B_h * Math.cos(decRad), // North
-            B_h * Math.sin(decRad), // East
-            B_total * Math.sin(incRad), // Down
-        ];
-
-        // Single pass: compute raw mag mean and scale factor
-        let meanRawMag = 0,
-            rawCount = 0;
-        let sumDx = 0,
-            sumDy = 0,
-            sumDz = 0,
-            n = 0;
-
-        forEachSample(({ body, sample, headingRef }) => {
-            meanRawMag += Math.hypot(body[0], body[1], body[2]);
-            rawCount++;
-
-            const be = rotateNedToBody(B_world, sample.roll, sample.pitch, headingRef);
-            sumDx += body[0] - be[0];
-            sumDy += body[1] - be[1];
-            sumDz += body[2] - be[2];
-            n++;
-        });
-
-        const scaleFactor = rawCount > 0 ? meanRawMag / rawCount / B_total : 1;
-
-        // Scale expected field to ADC counts for consistent gain computation
-        const B_world_scaled = [B_world[0] * scaleFactor, B_world[1] * scaleFactor, B_world[2] * scaleFactor];
-
-        // Compute hard iron offsets using scaled expected field
-        sumDx = 0;
-        sumDy = 0;
-        sumDz = 0;
-        n = 0;
-        // Re-accumulate gain sums with scaled expected field (counts, not nT)
-        // Local-scope accumulators — no shared closure state
-        let gn = 0;
-        const localSum = {
-            ex: 0,
-            ex2: 0,
-            ax: 0,
-            ax_ex: 0,
-            ey: 0,
-            ey2: 0,
-            ay: 0,
-            ay_ey: 0,
-            ez: 0,
-            ez2: 0,
-            az: 0,
-            az_ez: 0,
-        };
-        gn = 0;
-        forEachSample(({ body, sample, headingRef }) => {
-            const be = rotateNedToBody(B_world_scaled, sample.roll, sample.pitch, headingRef);
-            sumDx += body[0] - be[0];
-            sumDy += body[1] - be[1];
-            sumDz += body[2] - be[2];
-            n++;
-            localSum.ex += be[0];
-            localSum.ex2 += be[0] * be[0];
-            localSum.ax += body[0];
-            localSum.ax_ex += body[0] * be[0];
-            localSum.ey += be[1];
-            localSum.ey2 += be[1] * be[1];
-            localSum.ay += body[1];
-            localSum.ay_ey += body[1] * be[1];
-            localSum.ez += be[2];
-            localSum.ez2 += be[2] * be[2];
-            localSum.az += body[2];
-            localSum.az_ez += body[2] * be[2];
-            gn++;
-        });
-        if (n < 30) {
-            return;
-        }
-
-        calibrationOffsets.value = {
-            x: Math.round(sumDx / n),
-            y: Math.round(sumDy / n),
-            z: Math.round(sumDz / n),
-        };
-
-        // Per-axis gain: dimensionless sensitivity ratio.
-        // Expected and actual values are both in ADC counts (via scaleFactor).
-        // Gain = Cov(actual, expected) / Var(expected). 1.0 = nominal sensitivity.
-        if (gn >= 30) {
-            const denomX = localSum.ex2 - (localSum.ex * localSum.ex) / gn;
-            const denomY = localSum.ey2 - (localSum.ey * localSum.ey) / gn;
-            const denomZ = localSum.ez2 - (localSum.ez * localSum.ez) / gn;
-
-            const gx = Math.abs(denomX) > 1e-5 ? (localSum.ax_ex - (localSum.ax * localSum.ex) / gn) / denomX : 1;
-            const gy = Math.abs(denomY) > 1e-5 ? (localSum.ay_ey - (localSum.ay * localSum.ey) / gn) / denomY : 1;
-            const gz = Math.abs(denomZ) > 1e-5 ? (localSum.az_ez - (localSum.az * localSum.ez) / gn) / denomZ : 1;
-
-            axisGains.value = {
-                x: Math.max(0.25, Math.min(4.0, Math.round(gx * 10000) / 10000)),
-                y: Math.max(0.25, Math.min(4.0, Math.round(gy * 10000) / 10000)),
-                z: Math.max(0.25, Math.min(4.0, Math.round(gz * 10000) / 10000)),
-            };
-        }
-    }
-
-    // Rotation matrix to convert NED world frame → body frame for a given attitude
-    function rotateNedToBody(B_ned, rollDeg, pitchDeg, headingDeg) {
-        const roll = (-rollDeg * Math.PI) / 180;
-        const pitch = (-pitchDeg * Math.PI) / 180;
-        const heading = (-headingDeg * Math.PI) / 180;
-
-        const cr = Math.cos(roll);
-        const sr = Math.sin(roll);
-        const cp = Math.cos(pitch);
-        const sp = Math.sin(pitch);
-        const cy = Math.cos(heading);
-        const sy = Math.sin(heading);
-
-        // R = Rz(yaw) * Ry(pitch) * Rx(roll) in ZYX order (standard aerospace)
-        const R = [
-            [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
-            [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
-            [-sp, cp * sr, cp * cr],
-        ];
-        return mat3mulVec(R, B_ned);
     }
 
     async function fetchGeoReference() {
@@ -1082,7 +875,9 @@ export function useMagCharacterization() {
                         residual: ellipsoidParams.value.residual,
                     }
                     : null,
-                axisGains: axisGains.value ?? null,
+                // Deprecated: per-axis gains came from the removed WMM
+                // regression; key retained for poses-export compatibility.
+                axisGains: null,
                 calibrationOffsets: calibrationOffsets.value ?? null,
             },
             directions: directions.map((dir, di) => ({
@@ -1234,138 +1029,20 @@ export function useMagCharacterization() {
         URL.revokeObjectURL(url);
     }
 
-    function mapPoseType(poseLabel) {
-        if (poseLabel.startsWith("Flat")) {
-            return "flat";
-        }
-        if (poseLabel.startsWith("Nose Up")) {
-            return "nose_up";
-        }
-        if (poseLabel.startsWith("Nose Down")) {
-            return "nose_down";
-        }
-        if (poseLabel.includes("Roll right")) {
-            return "left_side";
-        }
-        if (poseLabel.includes("Roll left")) {
-            return "right_side";
-        }
-        if (poseLabel.includes("Inverted")) {
-            return "inverted";
-        }
-        return "flat";
-    }
-
-    function normalizeHeading(deg) {
-        return ((deg % 360) + 360) % 360;
-    }
-
-    function signedHeadingError(actual, expected) {
-        if (expected === null || expected === undefined) {
-            return 0;
-        }
-        let diff = actual - expected;
-        while (diff > 180) {
-            diff -= 360;
-        }
-        while (diff < -180) {
-            diff += 360;
-        }
-        return diff;
-    }
-
-    function getEulerAngles(solverResultVal) {
-        if (!solverResultVal) {
-            return { roll: 0, pitch: 0, yaw: 0 };
-        }
-        const preset = solverResultVal.alignment;
-        if (preset === 9 && solverResultVal.customAngles) {
-            return {
-                roll: solverResultVal.customAngles.roll,
-                pitch: solverResultVal.customAngles.pitch,
-                yaw: solverResultVal.customAngles.yaw,
-            };
-        }
-        if (preset >= 1 && preset <= 8 && ALIGNMENT_MATRICES[preset]) {
-            const euler = matrixToEuler(ALIGNMENT_MATRICES[preset]);
-            return { roll: euler.roll, pitch: euler.pitch, yaw: euler.yaw };
-        }
-        return { roll: 0, pitch: 0, yaw: 0 };
-    }
-
     function exportCharacterizationData() {
-        const sr = solverResult.value;
-        const ep = ellipsoidParams.value;
-
-        const json = {
-            $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.1",
-            version: "2.1",
-            // Configuration active on the FC while the samples were captured.
-            // ellipsoid_correction (center, soft_iron) is expressed in THIS frame;
-            // hard_iron is expressed in the PROPOSED alignment frame below.
-            captured_under: capturedUnderInfo,
-            ellipsoid_correction: ep
-                ? {
-                    center: { x: ep.center.x, y: ep.center.y, z: ep.center.z },
-                    soft_iron: ep.W_inv,
-                    radius: ep.radius,
-                    residual_rms: ep.residual,
-                }
-                : null,
-            geo_reference: {
-                latitude_deg: fcStore.gpsData.fix ? fcStore.gpsData.latitude / 10000000 : null,
-                longitude_deg: fcStore.gpsData.fix ? fcStore.gpsData.longitude / 10000000 : null,
-                declination_deg: geoReference.value?.declination ?? 0,
-                inclination_deg: geoReference.value?.inclination ?? 0,
-                field_strength_nt: geoReference.value?.fieldStrength ?? null,
-            },
-            alignment:
-                sr && !sr.error
-                    ? {
-                        preset: sr.alignment,
-                        label: sr.label,
-                        euler_zyx_deg: getEulerAngles(sr),
-                    }
-                    : null,
-            axis_gains: axisGains.value ?? { x: 1.0, y: 1.0, z: 1.0 },
-            hard_iron: calibrationOffsets.value ?? null,
-            quality:
-                sr && !sr.error
-                    ? {
-                        score_percent: sr.qualityScore,
-                        residual_z_rms: sr.residuals?.zRms ?? 0,
-                        residual_xy_rms: sr.residuals?.xyRms ?? 0,
-                        field_consistency_pct: sr.fieldConsistency?.maxDevPct ?? 0,
-                        chirality_flag: sr.chiralityFlag ?? false,
-                    }
-                    : null,
-            poses: replayData.value.map((pose) => ({
-                body_orientation: mapPoseType(pose.poseLabel),
-                cardinal_direction: pose.dirLabel.charAt(0).toUpperCase(),
-                expected_heading_deg: normalizeHeading(pose.expectedHeading),
-                measured_attitude_deg: { roll: pose.roll, pitch: pose.pitch },
-                heading_current_deg: normalizeHeading(pose.currentHeading),
-                heading_error_current_deg: signedHeadingError(pose.currentHeading, pose.expectedHeading),
-                heading_corrected_deg: normalizeHeading(pose.newHeading),
-                heading_error_corrected_deg: signedHeadingError(pose.newHeading, pose.expectedHeading),
-                heading_full_corrected_deg:
-                    pose.fullCorrectedHeading != null ? normalizeHeading(pose.fullCorrectedHeading) : null,
-                heading_error_full_corrected_deg:
-                    pose.fullCorrectedHeading != null
-                        ? signedHeadingError(pose.fullCorrectedHeading, pose.expectedHeading)
-                        : null,
-                heading_gain_corrected_deg:
-                    pose.gainCorrectedHeading != null ? normalizeHeading(pose.gainCorrectedHeading) : null,
-                heading_error_gain_corrected_deg:
-                    pose.gainCorrectedHeading != null
-                        ? signedHeadingError(pose.gainCorrectedHeading, pose.expectedHeading)
-                        : null,
-                heading_quality_weight: Math.max(
-                    0,
-                    Math.min(1, 1.0 - Math.abs(signedHeadingError(pose.newHeading, pose.expectedHeading)) / 30.0),
-                ),
-            })),
-        };
+        // Model assembly lives in magModelExport.js (shared with the export
+        // tests and the fixture-regeneration tool).
+        const json = buildCharacterizationModel({
+            solverResult: solverResult.value,
+            replayData: replayData.value,
+            capturedUnder: capturedUnderInfo,
+            ellipsoidParams: ellipsoidParams.value,
+            calibrationOffsets: calibrationOffsets.value,
+            geoReference: geoReference.value,
+            gpsFix: !!fcStore.gpsData.fix,
+            gpsLat: fcStore.gpsData.latitude,
+            gpsLon: fcStore.gpsData.longitude,
+        });
 
         const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
@@ -1383,7 +1060,7 @@ export function useMagCharacterization() {
         try {
             const geo = await fetchGeoReference();
             if (geo) {
-                computeFromGeo(geo);
+                geoReference.value = geo;
             }
         } finally {
             isFetchingGeo.value = false;
@@ -1395,28 +1072,14 @@ export function useMagCharacterization() {
             return false;
         }
 
-        // Set alignment
+        // Mirror the proposal into the store; the dialog performs the actual
+        // CLI writes (alignment, validated offsets, declination) and verifies
+        // them before save.
         fcStore.sensorAlignment.align_mag = solverResult.value.alignment;
         if (solverResult.value.alignment === 9 && solverResult.value.customAngles) {
             fcStore.sensorAlignment.mag_align_roll = solverResult.value.customAngles.roll;
             fcStore.sensorAlignment.mag_align_pitch = solverResult.value.customAngles.pitch;
             fcStore.sensorAlignment.mag_align_yaw = solverResult.value.customAngles.yaw;
-        }
-
-        // Set calibration offsets if computed AND validated against the pose
-        // data — offsets that degrade the held-out poses must not be applied.
-        if (calibrationOffsets.value && (!calibrationValidation.value || calibrationValidation.value.recommended)) {
-            // Write via CLI — requires isMspCliSupported
-            const cmd = `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${
-                calibrationOffsets.value.z
-            }`;
-            // Deferred to caller — CLI needs MSPHelper context
-            window.__magCharApplyCmd = cmd;
-        }
-
-        // Set declination if geo reference available
-        if (geoReference.value) {
-            window.__magCharDeclination = geoReference.value.declination;
         }
 
         return true;
@@ -1461,7 +1124,6 @@ export function useMagCharacterization() {
         const r = solverResult.value;
         const geo = geoReference.value;
         const cal = calibrationOffsets.value;
-        const gains = axisGains.value;
         const rep = replayData.value;
 
         let report = "";
@@ -1716,21 +1378,6 @@ export function useMagCharacterization() {
             report += "\n";
         }
 
-        // Per-axis gains — from WMM regression (ellipsoid W_inv handles soft iron when available)
-        if (
-            gains &&
-            !ellipsoidParams.value &&
-            (Math.abs(gains.x - 1) > 0.02 || Math.abs(gains.y - 1) > 0.02 || Math.abs(gains.z - 1) > 0.02)
-        ) {
-            report += hdr("PER-AXIS GAIN (WMM REGRESSION)");
-            report += `  Gain X: ${gains.x.toFixed(3)}  Y: ${gains.y.toFixed(3)}  Z: ${gains.z.toFixed(3)}\n`;
-            report += "  (dimensionless sensitivity ratio. 1.0 = nominal.\n";
-            report += "   Gains differ from 1.0 when sensor axes have different sensitivity.\n";
-            report += "   When an ellipsoid fit is available, W_inv handles this correction\n";
-            report += "   and per-axis gains are set to 1.0.)\n";
-            report += "\n";
-        }
-
         // Per-pose table
         if (rep && rep.length > 0) {
             report += hdr(`POSE-BY-POSE HEADING ANALYSIS (${rep.length} poses)`);
@@ -1923,7 +1570,6 @@ export function useMagCharacterization() {
         solverResult,
         replayData,
         calibrationOffsets,
-        axisGains,
         magZeroAtCapture,
         calibrationValidation,
         proposedIncludesCenter,

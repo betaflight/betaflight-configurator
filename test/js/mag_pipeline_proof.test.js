@@ -12,7 +12,6 @@ import { describe, expect, it } from "vitest";
 import { characterizeAlignment } from "../../src/js/utils/magCharacterization.js";
 import { fitEllipsoid, applyEllipsoidCorrection } from "../../src/js/utils/ellipsoidFit.js";
 import {
-    eulerToMatrix,
     mat3mulVec,
     mat3transpose,
     mat3mul,
@@ -22,10 +21,12 @@ import {
 import {
     computeReplayData,
     computeCalFromEllipsoid,
-    validateCalibrationOffsets,
+    selectAlignmentPackage,
+    proposedMatrixOf,
     headingError,
+    SOLVER_OPTS,
 } from "../../src/js/utils/magCharacterizationCompute.js";
-import { loadFixture, flattenSamples } from "./test_helpers.js";
+import { loadFixture, flattenSamples, captureDataFromPosesExport, directionsFromPosesExport } from "./test_helpers.js";
 
 const DEG_TO_RAD = Math.PI / 180;
 const RAD_TO_DEG = 180 / Math.PI;
@@ -39,82 +40,16 @@ const model = loadFixture("clean_calibration_model.json");
 const ellipsoid = fitEllipsoid(cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
 const poseSamples = flattenSamples(poses);
 
-const solverResult = characterizeAlignment(poseSamples, 8, null, {
-    headingMode: "absolute",
-    headingWeight: 1.0,
-});
-
-let proposedMat;
-if (solverResult.alignment === 9 && solverResult.customAngles) {
-    proposedMat = eulerToMatrix(
-        solverResult.customAngles.roll,
-        solverResult.customAngles.pitch,
-        solverResult.customAngles.yaw,
-    );
-} else {
-    proposedMat = ALIGNMENT_MATRICES[solverResult.alignment] || ALIGNMENT_MATRICES[1];
-}
+// Raw solve — kept alongside the package to document the bias-entanglement
+// pathology the production dual solve exists to avoid.
+const solverResult = characterizeAlignment(poseSamples, 8, null, SOLVER_OPTS);
 
 const currentMat = ALIGNMENT_MATRICES[8]; // CW270FLIP
 const currentInv = mat3transpose(currentMat);
-const newCombined = mat3mul(proposedMat, currentInv);
+const newCombined = mat3mul(proposedMatrixOf(solverResult), currentInv);
 
-// Convert poses fixture to captureData format: Array<Array<{headingRef, samples}>>
-const captureData = poses.directions.map((dir) =>
-    dir.poses.map((pose) =>
-        pose.captured && pose.samples?.length
-            ? { headingRef: pose.samples[0]?.headingRef ?? 0, samples: pose.samples }
-            : null,
-    ),
-);
-
-// Reconstruct the directions constant (pose definitions with isFlat, label, heading)
-const directions = [
-    {
-        label: "North (nose to N line)",
-        heading: 0,
-        poses: [
-            { label: "Flat", isFlat: true },
-            { label: "Nose Up (box under nose)", isFlat: false },
-            { label: "Nose Down (box under tail)", isFlat: false },
-            { label: "Box under left (Roll right)", isFlat: false },
-            { label: "Box under right (Roll left)", isFlat: false },
-        ],
-    },
-    {
-        label: "East (nose to E line)",
-        heading: Math.PI / 2,
-        poses: [
-            { label: "Flat", isFlat: true },
-            { label: "Nose Up (box under nose)", isFlat: false },
-            { label: "Nose Down (box under tail)", isFlat: false },
-            { label: "Box under left (Roll right)", isFlat: false },
-            { label: "Box under right (Roll left)", isFlat: false },
-        ],
-    },
-    {
-        label: "South (nose to S line)",
-        heading: Math.PI,
-        poses: [
-            { label: "Flat", isFlat: true },
-            { label: "Nose Up (box under nose)", isFlat: false },
-            { label: "Nose Down (box under tail)", isFlat: false },
-            { label: "Box under left (Roll right)", isFlat: false },
-            { label: "Box under right (Roll left)", isFlat: false },
-        ],
-    },
-    {
-        label: "West (nose to W line)",
-        heading: -Math.PI / 2,
-        poses: [
-            { label: "Flat", isFlat: true },
-            { label: "Nose Up (box under nose)", isFlat: false },
-            { label: "Nose Down (box under tail)", isFlat: false },
-            { label: "Box under left (Roll right)", isFlat: false },
-            { label: "Box under right (Roll left)", isFlat: false },
-        ],
-    },
-];
+const captureData = captureDataFromPosesExport(poses);
+const directions = directionsFromPosesExport(poses);
 
 // ── Tests ─────────────────────────────────────────────────────────────────
 
@@ -546,7 +481,6 @@ describe("computeReplayData: direct unit test", () => {
     const replayResult = computeReplayData(solverResult, 8, captureData, directions, {
         ellipsoidParams: ellipsoid,
         calibrationOffsets: null,
-        axisGains: null,
         currentMat: ALIGNMENT_MATRICES[8],
     });
 
@@ -578,7 +512,6 @@ describe("computeReplayData: direct unit test", () => {
             "currentHeading",
             "newHeading",
             "fullCorrectedHeading",
-            "gainCorrectedHeading",
             "fieldMean",
             "fieldDevPct",
             "currentScore",
@@ -674,74 +607,33 @@ describe("computeCalFromEllipsoid: direct unit test", () => {
     });
 });
 
-describe("validateCalibrationOffsets: held-out pose validation", () => {
-    const replayResult = computeReplayData(solverResult, 8, captureData, directions, {
-        ellipsoidParams: ellipsoid,
-        calibrationOffsets: null,
-        axisGains: null,
-        currentMat: ALIGNMENT_MATRICES[8],
-    });
-
-    it("rejects the gold-fixture calibration (center does not transfer to poses)", () => {
-        const v = validateCalibrationOffsets(replayResult);
-        expect(v).not.toBeNull();
-        console.log(
-            `  validation: proposed=${v.proposedMeanErr.toFixed(1)}°  full=${v.fullCorrectedMeanErr.toFixed(1)}°  recommended=${v.recommended}`,
-        );
-        // Measured baseline (samples4): 11.5° alignment-only vs ~61.7° full
-        expect(v.proposedMeanErr).toBeLessThan(20);
-        expect(v.fullCorrectedMeanErr).toBeGreaterThan(40);
-        expect(v.recommended).toBe(false);
-    });
-
-    it("accepts a calibration that matches or improves the poses", () => {
-        const synthetic = [
-            { newHeading: 10, fullCorrectedHeading: 2, expectedHeading: 0 },
-            { newHeading: 95, fullCorrectedHeading: 91, expectedHeading: 90 },
-            { newHeading: 185, fullCorrectedHeading: 181, expectedHeading: 180 },
-        ];
-        const v = validateCalibrationOffsets(synthetic);
-        expect(v.recommended).toBe(true);
-    });
-
-    it("returns null when no full-corrected data exists", () => {
-        const v = validateCalibrationOffsets([{ newHeading: 1, fullCorrectedHeading: null, expectedHeading: 0 }]);
-        expect(v).toBeNull();
-    });
-});
-
-describe("correct-then-solve: calibrated package (production path)", () => {
+describe("selectAlignmentPackage: correct-then-solve (production path)", () => {
     // Solving on RAW data entangles hard-iron compensation into the rotation.
     // Production (runSolver) therefore also solves on center-subtracted samples
     // and ships alignment + mag_calibration as one package when it measures
-    // better on the poses. These tests lock that behavior on the gold fixture.
+    // better on the poses. These tests lock that behavior on the gold fixture
+    // through the SAME function the wizard and the offline tools call.
     const ec = ellipsoid.center;
-    const correctedSamples = poseSamples.map((s) => ({
-        ...s,
-        mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
-    }));
-    const corrResult = characterizeAlignment(correctedSamples, 8, null, {
-        headingMode: "absolute",
-        headingWeight: 1.0,
+    const pkg = selectAlignmentPackage({
+        samples: poseSamples,
+        captureData,
+        directions,
+        currentAlignment: 8,
+        customAngles: null,
+        currentMat: ALIGNMENT_MATRICES[8],
+        ellipsoidParams: ellipsoid,
     });
 
-    function meanPackageErr(res, includeCenter) {
-        const replay = computeReplayData(res, 8, captureData, directions, {
-            ellipsoidParams: ellipsoid,
-            calibrationOffsets: null,
-            axisGains: null,
-            currentMat: ALIGNMENT_MATRICES[8],
-            proposedIncludesCenter: includeCenter,
-        });
-        let sum = 0;
-        for (const d of replay) sum += headingError(d.newHeading, d.expectedHeading);
-        return sum / replay.length;
-    }
+    it("picks the calibrated package on the gold fixture", () => {
+        expect(pkg.result.error).toBeUndefined();
+        expect(pkg.usedCalibratedPackage).toBe(true);
+        expect(pkg.validation).not.toBeNull();
+        expect(pkg.validation.recommended).toBe(true);
+    });
 
     it("recovers the true mount rotation: flip + small tilt, ~−90° yaw", () => {
-        expect(corrResult.error).toBeUndefined();
-        expect(corrResult.alignment).toBe(9);
-        const a = corrResult.customAngles;
+        expect(pkg.result.alignment).toBe(9);
+        const a = pkg.result.customAngles;
         // Measured baseline: (−173, 9, −90); samples5 cross-session: (−173, 2, −88)
         expect(Math.abs(a.roll)).toBeGreaterThan(160);
         expect(Math.abs(a.roll)).toBeLessThan(186);
@@ -751,38 +643,45 @@ describe("correct-then-solve: calibrated package (production path)", () => {
     });
 
     it("removing the bias before solving unmasks heading accuracy", () => {
-        const packageErr = meanPackageErr(corrResult, true);
-        const alignmentOnlyErr = meanPackageErr(solverResult, false);
         console.log(
-            `  package ${packageErr.toFixed(1)}°  vs alignment-only ${alignmentOnlyErr.toFixed(1)}°  ` +
+            `  package ${pkg.validation.fullCorrectedMeanErr.toFixed(1)}°  vs ` +
+                `alignment-only ${pkg.validation.proposedMeanErr.toFixed(1)}°  ` +
                 `(raw-solve roll ${solverResult.customAngles?.roll.toFixed(0)} carried bias compensation)`,
         );
         // Measured baseline: 4.4° vs 11.5°
-        expect(packageErr).toBeLessThan(8);
-        expect(packageErr).toBeLessThan(alignmentOnlyErr - 3);
-    });
-
-    it("package selection rule picks the calibrated package on the gold fixture", () => {
-        const packageErr = meanPackageErr(corrResult, true);
-        const alignmentOnlyErr = meanPackageErr(solverResult, false);
-        expect(packageErr <= alignmentOnlyErr + 1.0).toBe(true);
+        expect(pkg.validation.fullCorrectedMeanErr).toBeLessThan(8);
+        expect(pkg.validation.fullCorrectedMeanErr).toBeLessThan(pkg.validation.proposedMeanErr - 3);
     });
 
     it("quality score reflects the unmasked accuracy", () => {
         // Measured: 92% corrected vs 50% raw
-        expect(corrResult.qualityScore).toBeGreaterThan(75);
-        expect(corrResult.qualityScore).toBeGreaterThan(solverResult.qualityScore);
+        expect(pkg.result.qualityScore).toBeGreaterThan(75);
+        expect(pkg.result.qualityScore).toBeGreaterThan(solverResult.qualityScore);
+    });
+
+    it("returns the raw solve with null validation when no ellipsoid exists", () => {
+        const noTumble = selectAlignmentPackage({
+            samples: poseSamples,
+            captureData,
+            directions,
+            currentAlignment: 8,
+            customAngles: null,
+            currentMat: ALIGNMENT_MATRICES[8],
+            ellipsoidParams: null,
+        });
+        expect(noTumble.usedCalibratedPackage).toBe(false);
+        expect(noTumble.validation).toBeNull();
+        expect(noTumble.result.alignment).toBe(solverResult.alignment);
     });
 
     it("the regenerated model fixture ships the package", () => {
         // model fixture is produced by regen_model_fixture.mjs running this
-        // same dual-solve path — alignment angles must match the corrected solve
+        // same dual-solve path — alignment angles must match the chosen result
         const a = model.alignment.euler_zyx_deg;
-        expect(Math.abs(a.roll - corrResult.customAngles.roll)).toBeLessThan(5);
-        expect(Math.abs(a.yaw - corrResult.customAngles.yaw)).toBeLessThan(5);
+        expect(Math.abs(a.roll - pkg.result.customAngles.roll)).toBeLessThan(5);
+        expect(Math.abs(a.yaw - pkg.result.customAngles.yaw)).toBeLessThan(5);
         // hard_iron = newCombined·center for the package alignment
-        const pm = eulerToMatrix(a.roll, a.pitch, a.yaw);
-        const nc = mat3mul(pm, mat3transpose(ALIGNMENT_MATRICES[8]));
+        const nc = mat3mul(proposedMatrixOf({ alignment: 9, customAngles: a }), mat3transpose(ALIGNMENT_MATRICES[8]));
         const expected = mat3mulVec(nc, [ec.x, ec.y, ec.z]);
         expect(Math.abs(model.hard_iron.x - expected[0])).toBeLessThan(2);
         expect(Math.abs(model.hard_iron.y - expected[1])).toBeLessThan(2);

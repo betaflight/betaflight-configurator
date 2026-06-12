@@ -3,11 +3,11 @@
  *
  * These functions take explicit data parameters (no Vue refs, no fcStore)
  * so they can be unit-tested directly with fixture data. The composable
- * becomes a thin state manager that calls these pure functions.
- *
- * Extracted 2026-06-11 to close the test coverage gap that let the
- * fullCorrectedHeading bug through three iterations undetected.
+ * is a thin state manager around them, and the offline tools
+ * (test/js/tools/*.mjs) import the SAME functions — there is exactly one
+ * implementation of every pipeline step.
  */
+import { characterizeAlignment } from "./magCharacterization.js";
 import {
     eulerToMatrix,
     mat3mulVec,
@@ -16,6 +16,13 @@ import {
     undoRollPitch,
     ALIGNMENT_MATRICES,
 } from "./magAlignment.js";
+
+const DEG_TO_RAD = Math.PI / 180;
+const RAD_TO_DEG = 180 / Math.PI;
+
+// Solver options used by every production and offline caller. Single source —
+// do not redefine these literals at call sites.
+export const SOLVER_OPTS = { headingMode: "absolute", headingWeight: 1.0 };
 
 /**
  * Wrapped heading error between two angles in degrees.
@@ -43,6 +50,40 @@ export function scoreHeading(errorDeg) {
     if (errorDeg < 60) return "BAD";
     if (errorDeg < 150) return "CRITICAL";
     return "FATAL";
+}
+
+/**
+ * The 3×3 matrix the firmware is CURRENTLY applying for a given align_mag
+ * configuration. Single home for the preset/CUSTOM branching.
+ *
+ * @param {number} currentAlignment - align_mag value (0-9; 0 treated as CW0)
+ * @param {{roll:number,pitch:number,yaw:number}|null} customAngles - degrees,
+ *   required when currentAlignment === 9
+ * @returns {number[][]|null} null when CUSTOM is selected but angles missing
+ */
+export function currentMatrixOf(currentAlignment, customAngles) {
+    if (currentAlignment === 9) {
+        if (!customAngles) return null;
+        return eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
+    }
+    const al = currentAlignment >= 1 && currentAlignment <= 8 ? currentAlignment : 1;
+    return ALIGNMENT_MATRICES[al];
+}
+
+/**
+ * The 3×3 matrix a characterizeAlignment() result proposes (sensor → body).
+ * Single home for the result→matrix derivation.
+ *
+ * @param {{alignment:number, customAngles?:{roll,pitch,yaw}|null}} result
+ * @param {number[][]} [fallbackMat] - returned when the result carries no
+ *   usable alignment (defaults to identity/CW0)
+ * @returns {number[][]}
+ */
+export function proposedMatrixOf(result, fallbackMat = ALIGNMENT_MATRICES[1]) {
+    if (result.alignment === 9 && result.customAngles) {
+        return eulerToMatrix(result.customAngles.roll, result.customAngles.pitch, result.customAngles.yaw);
+    }
+    return ALIGNMENT_MATRICES[result.alignment] || fallbackMat;
 }
 
 /**
@@ -83,52 +124,11 @@ export function computeCalFromEllipsoid(ellipsoidParams, newCombined, magZeroAtC
     };
 }
 
-const DEG_TO_RAD = Math.PI / 180;
-const RAD_TO_DEG = 180 / Math.PI;
-
-/**
- * Cross-validate the ellipsoid-derived calibration offsets against the
- * 20-pose data: the poses act as a held-out validation set for the
- * tumble-derived correction.
- *
- * Compares mean |heading error| of the proposed alignment on raw data (P1)
- * against the fully corrected pipeline (P3). When the correction makes the
- * validation poses WORSE, the ellipsoid center does not represent the bias
- * present in the pose data (typical cause: magnetic contamination during the
- * tumble — laptop, USB cable, rebar) and the offsets must not be sent to the
- * firmware.
- *
- * @param {Array<{newHeading:number, fullCorrectedHeading:number|null, expectedHeading:number}>} replayData
- * @param {number} [toleranceDeg=1.0] - calibration may degrade the mean by up
- *   to this much and still be considered neutral/acceptable
- * @returns {{ proposedMeanErr:number, fullCorrectedMeanErr:number, recommended:boolean }|null}
- *   null when there is no full-corrected data to validate against
- */
-export function validateCalibrationOffsets(replayData, toleranceDeg = 1.0) {
-    let pSum = 0;
-    let fSum = 0;
-    let n = 0;
-    for (const d of replayData) {
-        if (d.fullCorrectedHeading == null) continue;
-        pSum += headingError(d.newHeading, d.expectedHeading);
-        fSum += headingError(d.fullCorrectedHeading, d.expectedHeading);
-        n++;
-    }
-    if (n === 0) return null;
-    const proposedMeanErr = pSum / n;
-    const fullCorrectedMeanErr = fSum / n;
-    return {
-        proposedMeanErr,
-        fullCorrectedMeanErr,
-        recommended: fullCorrectedMeanErr <= proposedMeanErr + toleranceDeg,
-    };
-}
-
 /**
  * Compute per-pose heading comparison data from captured samples.
  *
  * For each pose, aggregates all samples into circular-mean headings for
- * four variants:
+ * three variants:
  *   - currentHeading:  current firmware alignment on raw mag (status quo)
  *   - newHeading:      the proposed FIRMWARE PACKAGE. When the solver ran on
  *     center-subtracted data (opts.proposedIncludesCenter), this is
@@ -137,7 +137,6 @@ export function validateCalibrationOffsets(replayData, toleranceDeg = 1.0) {
  *     newCombined·m (alignment-only).
  *   - fullCorrectedHeading: + soft iron, newCombined·W_inv·(m − center) —
  *     the blackbox-log-viewer pipeline (firmware cannot apply W_inv)
- *   - gainCorrectedHeading: experimental (null unless alignment-only mode)
  *
  * @param {object} result - characterizeAlignment() return value
  * @param {number} currentAlignment - firmware align_mag preset (1-9)
@@ -145,31 +144,19 @@ export function validateCalibrationOffsets(replayData, toleranceDeg = 1.0) {
  * @param {Array<{label:string, heading:number, poses:Array}>} directions
  * @param {object} opts
  * @param {object|null} opts.ellipsoidParams
- * @param {object|null} opts.calibrationOffsets
- * @param {object|null} opts.axisGains
+ * @param {object|null} opts.calibrationOffsets - PROPOSED-frame offsets; only
+ *   used for fullCorrected when no ellipsoid exists
  * @param {number[][]} opts.currentMat - current firmware alignment matrix
  * @param {boolean} [opts.proposedIncludesCenter=false] - true when `result`
  *   was solved on center-subtracted samples (correct-then-solve package)
  * @returns {Array<object>} replay data array (one entry per captured pose)
  */
 export function computeReplayData(result, currentAlignment, captureData, directions, opts = {}) {
-    const {
-        ellipsoidParams = null,
-        calibrationOffsets = null,
-        axisGains = null,
-        currentMat: _cm,
-        proposedIncludesCenter = false,
-    } = opts;
+    const { ellipsoidParams = null, calibrationOffsets = null, currentMat: _cm, proposedIncludesCenter = false } = opts;
 
     const currentMat = _cm || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
     const currentInv = mat3transpose(currentMat);
-
-    let proposedMat;
-    if (result.alignment === 9 && result.customAngles) {
-        proposedMat = eulerToMatrix(result.customAngles.roll, result.customAngles.pitch, result.customAngles.yaw);
-    } else {
-        proposedMat = ALIGNMENT_MATRICES[result.alignment] || ALIGNMENT_MATRICES[1];
-    }
+    const proposedMat = proposedMatrixOf(result);
     const newCombined = mat3mul(proposedMat, currentInv);
     const calOffsets = calibrationOffsets;
 
@@ -187,9 +174,7 @@ export function computeReplayData(result, currentAlignment, captureData, directi
                 curCos = 0,
                 newSin = 0,
                 newCos = 0;
-            let gcSin = 0,
-                gcCos = 0,
-                fcSin = 0,
+            let fcSin = 0,
                 fcCos = 0;
             let hasFullCorrected = false,
                 n = 0;
@@ -257,28 +242,11 @@ export function computeReplayData(result, currentAlignment, captureData, directi
                     hasFullCorrected = true;
                 }
 
-                // Gain-corrected heading (experimental). Only meaningful in
-                // alignment-only mode: with proposedIncludesCenter, newBody is
-                // already center-subtracted and subtracting calOffsets again
-                // would double-correct.
-                if (axisGains && calOffsets && !proposedIncludesCenter) {
-                    const gcBody = [
-                        (newBody[0] - calOffsets.x) / Math.max(axisGains.x, 0.01),
-                        (newBody[1] - calOffsets.y) / Math.max(axisGains.y, 0.01),
-                        (newBody[2] - calOffsets.z) / Math.max(axisGains.z, 0.01),
-                    ];
-                    const gcLevel = undoRollPitch(gcBody, rollRad, pitchRad);
-                    const gcDir = Math.atan2(gcLevel[1], gcLevel[0]);
-                    gcSin += Math.sin(gcDir);
-                    gcCos += Math.cos(gcDir);
-                }
-
                 n++;
             }
 
             const curHeading = Math.atan2(curSin, curCos) * RAD_TO_DEG;
             const newHeading = Math.atan2(newSin, newCos) * RAD_TO_DEG;
-            const gcHeading = gcSin !== 0 || gcCos !== 0 ? Math.atan2(gcSin, gcCos) * RAD_TO_DEG : null;
             const fullCorrectedHeading = hasFullCorrected ? Math.atan2(fcSin, fcCos) * RAD_TO_DEG : null;
 
             data.push({
@@ -290,7 +258,6 @@ export function computeReplayData(result, currentAlignment, captureData, directi
                 pitch: sumPitch / n,
                 currentHeading: curHeading,
                 newHeading,
-                gainCorrectedHeading: gcHeading,
                 fullCorrectedHeading,
                 _fieldSum: sumField,
                 _fieldCount: n,
@@ -312,9 +279,6 @@ export function computeReplayData(result, currentAlignment, captureData, directi
         d.fieldDevPct = Math.round((d.fieldMean / globalFieldMean - 1) * 1000) / 10;
         d.currentScore = scoreHeading(headingError(d.currentHeading, d.expectedHeading));
         d.score = scoreHeading(headingError(d.newHeading, d.expectedHeading));
-        if (d.gainCorrectedHeading != null) {
-            d.gcScore = scoreHeading(headingError(d.gainCorrectedHeading, d.expectedHeading));
-        }
         if (d.fullCorrectedHeading != null) {
             d.fullCorrectedScore = scoreHeading(headingError(d.fullCorrectedHeading, d.expectedHeading));
         }
@@ -323,4 +287,102 @@ export function computeReplayData(result, currentAlignment, captureData, directi
     }
 
     return data;
+}
+
+/**
+ * Mean |heading error| of the proposed package over a replay data array.
+ * @param {Array<{newHeading:number, expectedHeading:number}>} replayRows
+ * @returns {number} degrees; Infinity when the array is empty
+ */
+export function meanPackageError(replayRows) {
+    let sum = 0;
+    let n = 0;
+    for (const d of replayRows) {
+        sum += headingError(d.newHeading, d.expectedHeading);
+        n++;
+    }
+    return n > 0 ? sum / n : Infinity;
+}
+
+/**
+ * Correct-then-solve: dual solve + package selection.
+ *
+ * Solving on RAW data entangles hard-iron compensation into the rotation
+ * (hardware-proven: raw solve 11.1–12.7° vs corrected solve 4.4–5.4° mean
+ * pose error across three capture sessions; cross-validated at 5.5° on a
+ * held-out session). When an ellipsoid center is available this ALSO solves
+ * on center-subtracted samples and picks the package with the lower measured
+ * pose error:
+ *
+ *   package A (calibrated): alignment solved on (m − center), shipped WITH
+ *       mag_calibration — firmware applies R·s − magZero ≡ R·(s − b)
+ *   package B (alignment-only): alignment solved on raw, offsets withheld —
+ *       the fallback when the tumble center is contaminated (world-frame
+ *       interference) and does not transfer to the pose data
+ *
+ * This is the single implementation used by the wizard (runSolver), the
+ * offline analysis tools, and the test suite.
+ *
+ * @param {object} args
+ * @param {Array<{mag:number[],roll:number,pitch:number,headingRef:number,poseKey?:string}>} args.samples
+ * @param {Array<Array<{headingRef:number, samples:Array}|null>>} args.captureData
+ * @param {Array<{label:string, heading:number, poses:Array}>} args.directions
+ * @param {number} args.currentAlignment
+ * @param {{roll,pitch,yaw}|null} args.customAngles - required when currentAlignment === 9
+ * @param {number[][]} args.currentMat - from currentMatrixOf()
+ * @param {object|null} args.ellipsoidParams - null ⇒ raw solve only
+ * @param {number} [args.toleranceDeg=1.0] - package may tie within this margin
+ * @returns {{
+ *   result: object,                  // the chosen characterizeAlignment() result
+ *   usedCalibratedPackage: boolean,
+ *   validation: { proposedMeanErr:number, fullCorrectedMeanErr:number, recommended:boolean } | null,
+ * }}
+ */
+export function selectAlignmentPackage({
+    samples,
+    captureData,
+    directions,
+    currentAlignment,
+    customAngles,
+    currentMat,
+    ellipsoidParams,
+    toleranceDeg = 1.0,
+}) {
+    const rawResult = characterizeAlignment(samples, currentAlignment, customAngles, SOLVER_OPTS);
+
+    if (!ellipsoidParams || rawResult.error) {
+        return { result: rawResult, usedCalibratedPackage: false, validation: null };
+    }
+
+    const ec = ellipsoidParams.center;
+    const correctedSamples = samples.map((s) => ({
+        ...s,
+        mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
+    }));
+    const corrResult = characterizeAlignment(correctedSamples, currentAlignment, customAngles, SOLVER_OPTS);
+    if (corrResult.error) {
+        return { result: rawResult, usedCalibratedPackage: false, validation: null };
+    }
+
+    const evalErr = (res, includeCenter) =>
+        meanPackageError(
+            computeReplayData(res, currentAlignment, captureData, directions, {
+                ellipsoidParams,
+                currentMat,
+                proposedIncludesCenter: includeCenter,
+            }),
+        );
+    const packageErr = evalErr(corrResult, true);
+    const alignmentOnlyErr = evalErr(rawResult, false);
+    const usedCalibratedPackage = packageErr <= alignmentOnlyErr + toleranceDeg;
+
+    return {
+        result: usedCalibratedPackage ? corrResult : rawResult,
+        usedCalibratedPackage,
+        validation: {
+            proposedMeanErr: alignmentOnlyErr,
+            fullCorrectedMeanErr: packageErr,
+            recommended: usedCalibratedPackage,
+        },
+    };
 }

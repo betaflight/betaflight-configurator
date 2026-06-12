@@ -336,15 +336,7 @@
                                 {{ ellipsoidParams.center.y.toFixed(0) }}, {{ ellipsoidParams.center.z.toFixed(0) }}
                             </div>
                             <div
-                                v-if="axisGains"
-                                class="mag-char-replay-gain-note"
-                                style="font-size: 9px; color: #888"
-                                title="Per-axis sensitivity. Already corrected by W_inv"
-                            >
-                                Axis gain: X={{ axisGains.x }} Y={{ axisGains.y }} Z={{ axisGains.z }}
-                            </div>
-                            <div
-                                v-if="ellipsoidParams || axisGains"
+                                v-if="ellipsoidParams"
                                 class="mag-char-replay-gain-note"
                                 style="font-size: 8px; color: #666; margin-top: 4px"
                             >
@@ -427,15 +419,6 @@
                                         {{ geoReference.declination.toFixed(0) }}° decl,
                                         {{ geoReference.fieldStrength }} nT)
                                     </span>
-                                </span>
-                            </div>
-                            <div v-if="axisGains" class="mag-char-solver-row">
-                                <span class="mag-char-stat-label" style="color: #888">Per-Axis Gain (future)</span>
-                                <span class="mag-char-stat-value" style="color: #888">
-                                    X={{ axisGains.x }} Y={{ axisGains.y }} Z={{ axisGains.z }}
-                                    <span class="mag-char-cal-note"
-                                        >Corrects asymmetry in sensor sensitivity. Not yet supported by firmware.</span
-                                    >
                                 </span>
                             </div>
                             <div v-if="ellipsoidDiag" class="mag-char-solver-row">
@@ -653,7 +636,7 @@
 import { ref, reactive, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useMagCharacterization } from "../../composables/useMagCharacterization.js";
+import { useMagCharacterization, CAL_PROMPTS } from "../../composables/useMagCharacterization.js";
 import MagSphereView from "./mag-calibration/MagSphereView.vue";
 import { useFlightControllerStore } from "../../stores/fc";
 import MSP from "../../js/msp";
@@ -718,7 +701,6 @@ const {
     calibrationOffsets,
     calibrationValidation,
     magZeroAtCapture,
-    axisGains,
     geoReference,
     isFetchingGeo,
     refreshGeoReference,
@@ -749,21 +731,12 @@ const calLiveMag = computed(() => {
     return m && m.length === 3 ? { x: m[0], y: m[1], z: m[2] } : null;
 });
 
-const CAL_PROMPT_I18N = [
-    "magCalibrationPrompt1",
-    "magCalibrationPrompt2",
-    "magCalibrationPrompt3",
-    "magCalibrationPrompt4",
-    "magCalibrationPrompt5",
-    "magCalibrationPrompt6",
-    "magCalibrationPrompt7Fill",
-];
 const calPromptI18n = computed(() => {
     // Coverage complete → tell the user to stop tumbling, regardless of step
     if (calibrationCoverage.value && calibrationCoverage.value.fraction >= 1) {
         return "magCalibrationPromptAllPainted";
     }
-    return CAL_PROMPT_I18N[calCurrentPrompt.value] || CAL_PROMPT_I18N[0];
+    return CAL_PROMPTS[calCurrentPrompt.value] || CAL_PROMPTS[0];
 });
 
 // ── Replay controls ───────────────────────────────────────────────────
@@ -1362,12 +1335,9 @@ function processDebugLoad() {
     const haveCal = _loadedCalData !== null;
 
     if (havePoses && haveCal) {
-        // Restore geo reference, axis gains, calibration offsets from poses metadata
+        // Restore geo reference + calibration offsets from poses metadata
         if (_loadedPosesData.metadata?.geoReference) {
             mag.geoReference.value = _loadedPosesData.metadata.geoReference;
-        }
-        if (_loadedPosesData.metadata?.axisGains) {
-            mag.axisGains.value = _loadedPosesData.metadata.axisGains;
         }
         if (_loadedPosesData.metadata?.calibrationOffsets) {
             mag.calibrationOffsets.value = _loadedPosesData.metadata.calibrationOffsets;
@@ -1415,11 +1385,6 @@ function processDebugLoad() {
             mag.geoReference.value = _loadedCalData.metadata.geoReference;
         } else if (_loadedCalData.geoReference) {
             mag.geoReference.value = _loadedCalData.geoReference;
-        }
-        if (_loadedCalData.metadata?.axisGains) {
-            mag.axisGains.value = _loadedCalData.metadata.axisGains;
-        } else if (_loadedCalData.axisGains) {
-            mag.axisGains.value = _loadedCalData.axisGains;
         }
         if (_loadedCalData.metadata?.calibrationOffsets) {
             mag.calibrationOffsets.value = _loadedCalData.metadata.calibrationOffsets;

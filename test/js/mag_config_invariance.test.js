@@ -23,17 +23,23 @@
  *     offsets ≈ R_true·b_s again — a tumbled re-run self-heals
  */
 import { describe, expect, it } from "vitest";
-import { characterizeAlignment } from "../../src/js/utils/magCharacterization.js";
 import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
 import {
     eulerToMatrix,
     mat3mul,
     mat3mulVec,
     mat3transpose,
-    undoRollPitch,
     ALIGNMENT_MATRICES,
 } from "../../src/js/utils/magAlignment.js";
-import { computeCalFromEllipsoid, headingError } from "../../src/js/utils/magCharacterizationCompute.js";
+import {
+    selectAlignmentPackage,
+    currentMatrixOf,
+    proposedMatrixOf,
+    computeReplayData,
+    meanPackageError,
+    computeCalFromEllipsoid,
+} from "../../src/js/utils/magCharacterizationCompute.js";
+import { rotationDelta } from "./test_helpers.js";
 
 const DEG_TO_RAD = Math.PI / 180;
 const RAD_TO_DEG = 180 / Math.PI;
@@ -142,83 +148,61 @@ function captureTumble(fcMat, magZero) {
     return pts;
 }
 
-// ── Wizard math (mirrors runSolver's dual solve + package selection) ───────
+// ── Wizard math — the PRODUCTION dual solve, via the shared function ───────
+
+// Minimal directions structure for computeReplayData (labels drive isFlat only;
+// every captured pose carries its own headingRef)
+const DIRECTIONS = [0, 90, 180, 270].map((h) => ({
+    label: `${h}`,
+    heading: 0,
+    poses: [
+        { label: "Flat", isFlat: true },
+        { label: "Nose Up", isFlat: false },
+        { label: "Nose Down", isFlat: false },
+        { label: "Roll right", isFlat: false },
+        { label: "Roll left", isFlat: false },
+    ],
+}));
 
 function runWizard(currentAlignment, customAngles, magZeroAtCapture, fcMat, fcMagZero) {
     const { samples, captureData } = capturePoses(fcMat, fcMagZero);
-    const tumble = captureTumble(fcMat, fcMagZero);
-    const ellipsoid = fitEllipsoid(tumble);
+    const ellipsoid = fitEllipsoid(captureTumble(fcMat, fcMagZero));
     expect(ellipsoid).not.toBeNull();
+    const currentMat = currentMatrixOf(currentAlignment, customAngles);
 
-    const currentMat =
-        currentAlignment === 9
-            ? eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw)
-            : ALIGNMENT_MATRICES[currentAlignment];
-
-    const opts = { headingMode: "absolute", headingWeight: 1.0 };
-    const rawResult = characterizeAlignment(samples, currentAlignment, customAngles, opts);
-    const ec = ellipsoid.center;
-    const corrected = samples.map((s) => ({
-        ...s,
-        mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
-    }));
-    const corrResult = characterizeAlignment(corrected, currentAlignment, customAngles, opts);
-
-    const matOf = (r) =>
-        r.alignment === 9 && r.customAngles
-            ? eulerToMatrix(r.customAngles.roll, r.customAngles.pitch, r.customAngles.yaw)
-            : ALIGNMENT_MATRICES[r.alignment];
-
-    const meanErr = (r, includeCenter) => {
-        const nc = mat3mul(matOf(r), mat3transpose(currentMat));
-        let sum = 0;
-        let n = 0;
-        for (const row of captureData) {
-            for (const cap of row) {
-                let si = 0;
-                let co = 0;
-                for (const s of cap.samples) {
-                    const m = includeCenter ? [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z] : s.mag;
-                    const body = mat3mulVec(nc, m);
-                    const lv = undoRollPitch(body, s.roll * DEG_TO_RAD, s.pitch * DEG_TO_RAD);
-                    const h = Math.atan2(lv[1], lv[0]);
-                    si += Math.sin(h);
-                    co += Math.cos(h);
-                }
-                sum += headingError(Math.atan2(si, co) * RAD_TO_DEG, cap.headingRef);
-                n++;
-            }
-        }
-        return sum / n;
-    };
-
-    const packageErr = meanErr(corrResult, true);
-    const alignmentOnlyErr = meanErr(rawResult, false);
-    const usedPackage = packageErr <= alignmentOnlyErr + 1.0;
-    const result = usedPackage ? corrResult : rawResult;
-    const newCombined = mat3mul(matOf(result), mat3transpose(currentMat));
+    const { result, usedCalibratedPackage, validation } = selectAlignmentPackage({
+        samples,
+        captureData,
+        directions: DIRECTIONS,
+        currentAlignment,
+        customAngles,
+        currentMat,
+        ellipsoidParams: ellipsoid,
+    });
+    const newCombined = mat3mul(proposedMatrixOf(result, currentMat), mat3transpose(currentMat));
     const offsets = computeCalFromEllipsoid(ellipsoid, newCombined, magZeroAtCapture);
 
-    // Current-config error (what the user sees in the Current column)
-    const currentErr = meanErr(
-        currentAlignment === 9 ? { alignment: 9, customAngles } : { alignment: currentAlignment },
-        false,
+    // Current-config error (what the user sees in the Current column):
+    // evaluate the current config as if it were the proposal → newCombined = I
+    const currentErr = meanPackageError(
+        computeReplayData({ alignment: currentAlignment, customAngles }, currentAlignment, captureData, DIRECTIONS, {
+            currentMat,
+        }),
     );
 
-    return { result, offsets, ellipsoid, packageErr, alignmentOnlyErr, usedPackage, currentErr, newCombined };
+    return {
+        result,
+        offsets,
+        ellipsoid,
+        packageErr: validation?.fullCorrectedMeanErr ?? Infinity,
+        alignmentOnlyErr: validation?.proposedMeanErr ?? Infinity,
+        usedPackage: usedCalibratedPackage,
+        currentErr,
+        newCombined,
+    };
 }
 
-// Angle between two rotations (degrees) — representation-independent
-function rotationDelta(matA, matB) {
-    const r = mat3mul(matA, mat3transpose(matB));
-    const trace = r[0][0] + r[1][1] + r[2][2];
-    return Math.acos(Math.max(-1, Math.min(1, (trace - 1) / 2))) * RAD_TO_DEG;
-}
-
-const matOfResult = (r) =>
-    r.alignment === 9 && r.customAngles
-        ? eulerToMatrix(r.customAngles.roll, r.customAngles.pitch, r.customAngles.yaw)
-        : ALIGNMENT_MATRICES[r.alignment];
+const matOfResult = (r) => proposedMatrixOf(r);
 
 // Physical magZero the FC needs once R_TRUE is applied
 const TRUE_MAGZERO = mat3mulVec(R_TRUE, B_SENSOR);
