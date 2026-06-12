@@ -7,14 +7,14 @@
             <div v-if="profileOptions && profileOptions.length" class="contentProfile">
                 <div>
                     <span>{{ profileText }}</span>
-                    <USelect v-model="selectedProfile" :items="profileOptions" class="min-w-40" />
+                    <USelect v-model="selectedProfile" :items="profileOptions" :portal="false" class="min-w-40" />
                 </div>
             </div>
 
             <div v-if="rateOptions && rateOptions.length" class="contentRateProfile">
                 <div>
                     <span>{{ rateProfileText }}</span>
-                    <USelect v-model="selectedRateProfile" :items="rateOptions" class="min-w-40" />
+                    <USelect v-model="selectedRateProfile" :items="rateOptions" :portal="false" class="min-w-40" />
                 </div>
             </div>
         </div>

@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "Afbryd konfigurering"
     },
+    "disconnectVirtual": {
+        "message": "Afbryd (Virtuel)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Afbryd (Manuel)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Afbryd (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Vælg enhed",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -113,6 +125,10 @@
     "connectVirtualDescription": {
         "message": "Simulering af FC uden hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Forbind (Virtuel)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "autoConnect": {
         "message": "Autotilslut"
@@ -382,6 +398,15 @@
     "sensorConfigCalibrate": {
         "message": "Kalibrer"
     },
+    "sensorConfigLiveData": {
+        "message": "Vis data fra sensor i realtid"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "Vis data fra sensor i realtid"
+    },
+    "sensorConfigLiveStop": {
+        "message": "Stop visning af data i realtid"
+    },
     "tabConfiguration": {
         "message": "Opsætning"
     },
@@ -402,6 +427,9 @@
     },
     "autotuneImportDescription": {
         "message": "Importer en blackbox log optaget med debug_mode = CHIRP for analyse af frekvenser og beregne PID anbefalinger."
+    },
+    "autotuneSelectingFile": {
+        "message": "Vælg fil..."
     },
     "autotuneBandwidth": {
         "message": "Båndbredde"
@@ -2332,6 +2360,9 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTpaGroup": {
+        "message": "TPA"
+    },
     "pidTuningTPAMode": {
         "message": "TPA tilstand"
     },
@@ -3921,6 +3952,12 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Vis log"
     },
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Status byg:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "Status brænding:"
+    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "sat i kø"
     },
@@ -4079,6 +4116,10 @@
     },
     "firmwareFlasherLoadFirmwareOptions": {
         "message": "Indlæs firmware indstillinger"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "Brænding ...",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub Firmware info"
@@ -5624,6 +5665,12 @@
     "powerBatteryAmperage": {
         "message": "Strøm"
     },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Spændings tab"
+    },
     "powerBatteryCapacity": {
         "message": "Kapacitet (mAh)"
     },
@@ -5867,8 +5914,9 @@
         "message": "RSSI værdi",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Aktuel RSSI-værdi (blinker, når under den valgte alarmværdi)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm værdi",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -6458,9 +6506,6 @@
         "message": "Link kvalitet",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Alternativ indikator for 'linkkvalitet' baseret på pakke tab - brug med forsigtighed"
-    },
     "osdTextElementFlightDist": {
         "message": "Tilbagelagt strækning i alt for alle flyvninger",
         "description": "One of the elements of the OSD"
@@ -6523,13 +6568,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD profilnavnet som angivet i \"osd_profile_1_name\", \"osd_profile_2_name\" og \"osd_profile_3_name\" CLI variablerne"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm værdi",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Værdi i dBm for RSSI-signalet (hvis tilgængeligt)"
     },
     "osdTextElementRcChannels": {
         "message": "RC kanaler",
@@ -7446,6 +7484,9 @@
     "configurationMagInclinationHelp": {
         "message": "Vinklen mellem jordens magnetfelt og det vandrette plan på din placering. Positive værdier angiver feltpunkterne nedad (nord-halvkugle)"
     },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Feltstyrke"
+    },
     "configurationMagFieldStrengthHelp": {
         "message": "Den samlede intensitet af jordens magnetfelt på din placering i nanotesla (nT). Typiske værdier varierer fra 25.000 til 65.000 nT"
     },
@@ -7505,6 +7546,9 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Klient kalibrering"
     },
     "magVizProjection": {
         "message": "Tredobbelt projektion"

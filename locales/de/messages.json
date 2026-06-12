@@ -4759,8 +4759,9 @@
         "message": "RSSI-Wert",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Aktueller RSSI-Wert (blinkt wenn unter dem Alarm-Schwellwert)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm Wert",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -5317,9 +5318,6 @@
         "message": "Verbindungsqualität",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Alternativer auf \"Frame-Verlust\" basierender Indikator für die Link-Qualität - mit Vorsicht verwenden"
-    },
     "osdTextElementFlightDist": {
         "message": "Flugdistanz",
         "description": "One of the elements of the OSD"
@@ -5382,13 +5380,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD Profilname welcher in den CLI Variablen \"osd_profile_1_name\", \"osd_profile_2_name\" und \"osd_profile_3_name\" gesetzt wurde"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm Wert",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Wert in dBm des RSSI-Signals, falls verfügbar"
     },
     "osdTextElementRcChannels": {
         "message": "RC-Kanäle",

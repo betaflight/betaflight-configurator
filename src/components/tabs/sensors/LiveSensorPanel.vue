@@ -46,6 +46,17 @@
                 />
                 <UInput v-show="checkboxes[5]" :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
             </div>
+
+            <div class="flex items-center gap-2 ml-auto text-[10px] [&_[data-slot=base]]:text-[10px]!">
+                <span v-html="$t('sensorsGlobalRefresh')"></span>
+                <USelect
+                    :model-value="globalRate"
+                    :items="refreshRateItems"
+                    @update:model-value="updateGlobalRate(Number($event))"
+                    class="min-w-24"
+                    size="xs"
+                />
+            </div>
         </div>
 
         <SensorGraph
@@ -74,9 +85,12 @@
                 :title="debugTitles[i - 1]"
                 :show-refresh-rate="i === 1"
                 :rate="rates.debug"
+                :scale="debugScales[i - 1]"
+                :scale-options="DEBUG_SCALE_OPTIONS"
                 :display-values="[debugDisplay[i - 1]]"
                 :is-debug="true"
                 @update:rate="updateRate('debug', $event)"
+                @update:scale="updateDebugScale(i - 1, $event)"
             />
         </div>
     </div>
@@ -91,7 +105,13 @@ import { useSensorsStore } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
 import { useInterval } from "../../../composables/useInterval";
 import { have_sensor } from "../../../js/sensor_helpers";
-import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./constants";
+import {
+    GYRO_SCALE_OPTIONS,
+    ACCEL_SCALE_OPTIONS,
+    MAG_SCALE_OPTIONS,
+    DEBUG_SCALE_OPTIONS,
+    REFRESH_RATE_OPTIONS,
+} from "./constants";
 import SensorGraph from "./SensorGraph.vue";
 import MSP from "../../../js/msp";
 import MSPCodes from "../../../js/msp/MSPCodes";
@@ -103,7 +123,9 @@ const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
 const { addInterval, removeInterval } = useInterval();
 
-const { checkboxes, rates, scales, debugColumns } = storeToRefs(sensorsStore);
+const { checkboxes, globalRate, rates, scales, debugScales, debugColumns } = storeToRefs(sensorsStore);
+
+const refreshRateItems = REFRESH_RATE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
 
 const {
     addGyroSample,
@@ -114,6 +136,7 @@ const {
     addDebugSample,
     incrementDebugCounter,
     updateScales: updateGraphScales,
+    setDebugScales: updateGraphDebugScales,
     updateGraphs,
     initializeGraphs,
 } = useSensorGraph();
@@ -205,6 +228,7 @@ function initializeTimers() {
     removeInterval("sonar_pull");
     removeInterval("debug_pull");
 
+    // Gyro/accel/mag share one MSP_RAW_IMU pull, so use the fastest of the three.
     const fastest = Math.min(rates.value.gyro, rates.value.accel, rates.value.mag);
 
     if (checkboxes.value[0] || checkboxes.value[1] || checkboxes.value[2]) {
@@ -328,10 +352,19 @@ function updateRate(sensor, value) {
     initializeTimers();
 }
 
+function updateGlobalRate(value) {
+    sensorsStore.updateGlobalRate(value);
+    initializeTimers();
+}
+
 function updateScale(sensor, value) {
     sensorsStore.updateScale(sensor, value);
     updateGraphScales(scales.value);
-    initializeTimers();
+}
+
+function updateDebugScale(index, value) {
+    sensorsStore.updateDebugScale(index, value);
+    updateGraphDebugScales(debugScales.value);
 }
 
 onMounted(async () => {
@@ -367,6 +400,7 @@ onMounted(async () => {
     await nextTick();
     initializeGraphs(null, debugColumns.value);
     updateGraphScales(scales.value);
+    updateGraphDebugScales(debugScales.value);
     initializeTimers();
 });
 </script>

@@ -31,9 +31,33 @@ export function resetLastBackupData() {
     _lastBackupData.value = null;
 }
 
+// CLI dumps are plain text: printable ASCII plus tab, CR and LF.
+function isPrintableCharCode(charCode) {
+    return charCode === 9 || charCode === 10 || charCode === 13 || (charCode >= 32 && charCode <= 126);
+}
+
+// Count non-printable characters in a string (firmware-version-independent).
+function countNonPrintable(text) {
+    let invalid = 0;
+    for (let i = 0; i < text.length; i++) {
+        if (!isPrintableCharCode(text.charCodeAt(i))) {
+            invalid++;
+        }
+    }
+    return invalid;
+}
+
+// A real diff/dump is non-empty, pure printable text, and contains at least one
+// CLI comment line (every diff/dump emits `#` header comments). This avoids
+// matching a brittle version banner string that changes between releases.
+export function isPlausibleCliDump(text) {
+    return text.length > 0 && countNonPrintable(text) === 0 && text.split(/\r?\n/).some((line) => line.startsWith("#"));
+}
+
 class AutoBackup {
     constructor() {
         this.outputHistory = "";
+        this.invalidCharCount = 0;
         this.callback = null;
         // Store bound handler references to ensure proper removal
         this.boundReadSerialAdapter = null;
@@ -41,12 +65,40 @@ class AutoBackup {
         this.boundHandleDisconnect = null;
     }
 
+    // Reset the receive buffer and its validation counters together.
+    resetBuffer() {
+        this.outputHistory = "";
+        this.invalidCharCount = 0;
+    }
+
+    // A valid CLI dump is pure printable ASCII, so a single non-printable byte
+    // means the stream is not CLI text (e.g. the device is still in MSP/binary
+    // mode). Tracked incrementally via invalidCharCount so the growing buffer
+    // isn't re-scanned, and trips on the very first garbage byte.
+    isReceivingGarbage() {
+        return this.invalidCharCount > 0;
+    }
+
+    // Centralised failure path: stop the interval, leave CLI, surface an error
+    // to the user, and notify the caller that the backup did not succeed.
+    failBackup(intervalId, reason) {
+        clearInterval(intervalId);
+        console.error(`AutoBackup: Aborting - ${reason}`);
+        gui_log(i18n.getMessage("firmwareFlasherBackupInvalidData"));
+
+        this.sendCommand("exit", this.onClose.bind(this));
+
+        if (this.callback) {
+            this.callback(false);
+        }
+    }
+
     handleConnect(openInfo) {
         console.log("Connected to serial port:", openInfo);
         if (openInfo) {
             // Ensure we have a fresh start
             this.cleanupListeners();
-            this.outputHistory = "";
+            this.resetBuffer();
 
             // Store bound reference for later cleanup
             this.boundReadSerialAdapter = this.readSerialAdapter.bind(this);
@@ -85,6 +137,9 @@ class AutoBackup {
         const data = new Uint8Array(info.detail.data);
 
         for (const charCode of data) {
+            if (!isPrintableCharCode(charCode)) {
+                this.invalidCharCount++;
+            }
             const currentChar = String.fromCharCode(charCode);
             this.outputHistory += currentChar;
         }
@@ -133,7 +188,7 @@ class AutoBackup {
 
     waitForCommandCompletion(command) {
         // Clear previous output
-        this.outputHistory = "";
+        this.resetBuffer();
 
         // Add debug mode for troubleshooting
         const DEBUG = true;
@@ -160,6 +215,19 @@ class AutoBackup {
                     const lastChars = this.outputHistory.slice(-30).replace(/\r/g, "\\r").replace(/\n/g, "\\n");
                     console.log(`AutoBackup: Last chars: "${lastChars}"`);
                 }
+            }
+
+            // Early bail-out: a single non-printable byte means the device is not
+            // producing a valid CLI dump (e.g. it is still in MSP/binary mode).
+            // Saving this garbage to a backup file is worse than failing fast.
+            if (this.isReceivingGarbage()) {
+                this.failBackup(
+                    intervalId,
+                    `received invalid (non-printable) data after ${elapsedTime / 1000}s ` +
+                        `(${this.invalidCharCount} invalid of ${this.outputHistory.length} chars). ` +
+                        `Device is not in CLI mode.`,
+                );
+                return;
             }
 
             // More robust prompt detection with multiple patterns
@@ -209,19 +277,28 @@ class AutoBackup {
             }
             // Check if we've waited too long
             else if (elapsedTime >= maxWaitTime) {
-                clearInterval(intervalId);
                 console.error(`AutoBackup: Timeout waiting for command completion after ${maxWaitTime / 1000}s`);
-
-                // Try to save what we have (partial data is better than none)
-                if (DEBUG) console.log(`AutoBackup: Saving partial data, buffer length: ${this.outputHistory.length}`);
 
                 const lines = this.outputHistory.split(/\r?\n/);
                 // Remove first line if it contains the command
                 const filteredLines = lines[0].includes(command) ? lines.slice(1) : lines;
                 const data = filteredLines.join("\n");
 
+<<<<<<< HEAD
                 // Hold partial backup data in memory as well — better than nothing.
                 setLastBackupData(data);
+=======
+                // Only persist partial data if it actually looks like a CLI dump.
+                // Writing a truncated-but-valid backup beats nothing, but writing
+                // binary/garbage that merely never reached the prompt is worse.
+                if (!isPlausibleCliDump(data)) {
+                    this.failBackup(intervalId, "timed out without receiving a valid CLI dump.");
+                    return;
+                }
+
+                clearInterval(intervalId);
+                if (DEBUG) console.log(`AutoBackup: Saving partial data, buffer length: ${this.outputHistory.length}`);
+>>>>>>> origin/master
 
                 this.sendCommand("exit", this.onClose.bind(this));
                 this.save(data);
@@ -239,7 +316,7 @@ class AutoBackup {
             serial.send(bufferOut);
 
             setTimeout(() => {
-                this.outputHistory = "";
+                this.resetBuffer();
                 resolve();
             }, 1000);
         });
@@ -262,7 +339,7 @@ class AutoBackup {
 
     execute(callback) {
         // Reset state at the beginning of a new run
-        this.outputHistory = "";
+        this.resetBuffer();
         this.callback = callback;
         this.cleanupListeners();
 
