@@ -44,6 +44,10 @@ const poses = findFile("characterization_poses", "high-inclination_poses");
 // FC configuration during capture, from export metadata
 const CAPTURE_ALIGNMENT = poses.metadata?.currentAlignment ?? 8;
 const CAPTURE_CUSTOM_ANGLES = poses.metadata?.customAngles ?? null;
+// mag_calibration active during capture: the fitted center is the RESIDUAL
+// bias, so the proposal must compose newCombined·(center + magZero_capture).
+// Older exports (and failed CLI reads) carry no value — assume zero, but say so.
+const CAPTURE_MAG_ZERO = poses.metadata?.magZeroAtCapture ?? null;
 
 // ── Tumble ──────────────────────────────────────────────────────────────────
 const pts = cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
@@ -155,8 +159,15 @@ console.log(`  current     ${f("C1")} ${f("C2")} ${f("C3")}`);
 console.log(`  proposed    ${f("P1")} ${f("P2")} ${f("P3")}`);
 
 // ── What the wizard would apply ─────────────────────────────────────────────
-const calOffsets = computeCalFromEllipsoid(ellipsoid, newCombined, { x: 0, y: 0, z: 0 });
+const calOffsets = computeCalFromEllipsoid(ellipsoid, newCombined, CAPTURE_MAG_ZERO ?? { x: 0, y: 0, z: 0 });
 console.log(`\nWIZARD WOULD APPLY: ${describeSolve(result)}`);
+if (CAPTURE_MAG_ZERO) {
+    console.log(
+        `  composes mag_calibration active during capture: (${CAPTURE_MAG_ZERO.x}, ${CAPTURE_MAG_ZERO.y}, ${CAPTURE_MAG_ZERO.z})`,
+    );
+} else {
+    console.log("  WARNING: mag_calibration during capture unknown (assumed 0,0,0) — older export or failed CLI read");
+}
 if (usedCalibratedPackage) {
     console.log(`  set mag_calibration = ${calOffsets.x},${calOffsets.y},${calOffsets.z}`);
     console.log(

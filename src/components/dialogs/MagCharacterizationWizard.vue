@@ -383,6 +383,16 @@
                 <div v-else-if="biasWarning" class="mag-char-verdict mag-char-verdict-warn">
                     {{ $t("magCharCompleteBiasWarning") }}
                 </div>
+                <!-- Independent of the verdict above: the proposed offsets are
+                     computed as newCombined·(center + magZero_capture); when the
+                     CLI read of the FC's active mag_calibration failed, they
+                     assume zero and would overwrite a previous calibration. -->
+                <div
+                    v-if="magZeroAtCapture === null && calibrationOffsets"
+                    class="mag-char-verdict mag-char-verdict-warn"
+                >
+                    {{ $t("magCharCompleteMagZeroUnknown") }}
+                </div>
                 <div class="mag-char-summary-card">
                     <h4>{{ $t("magCharCompleteTitle") }}</h4>
 
@@ -586,10 +596,10 @@
             <div class="mag-char-footer">
                 <template v-if="phase === 'intro'">
                     <span class="mag-char-readout-spacer"></span>
-                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="startWizard">
+                    <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="beginPosesOnly">
                         {{ $t("magCharFooterSkipPoses") }}
                     </button>
-                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="startCalibrationPhase">
+                    <button type="button" class="mag-char-btn mag-char-btn-primary" @click="beginFullCalibration">
                         {{ $t("magCharFooterFullCal") }}
                     </button>
                 </template>
@@ -792,6 +802,7 @@ const {
     calibrationOffsets,
     calibrationValidation,
     magZeroAtCapture,
+    setMagZeroAtCapture,
     geoReference,
     isFetchingGeo,
     refreshGeoReference,
@@ -1338,38 +1349,65 @@ mag.setCallbacks({
 let spacebarHandler = null;
 
 /**
- * Read the mag_calibration active on the FC before any samples are captured.
- * MSP_RAW_IMU streams post-magZero data, so the ellipsoid center fit on the
- * capture is the RESIDUAL bias; computeCalFromEllipsoid composes these values
- * back into the total (magZero_new = newCombined · (center + magZero_capture)).
- * On failure the values are assumed zero — correct unless the user previously
- * ran a mag calibration on this FC.
+ * Read the mag_calibration active on the FC. MSP_RAW_IMU streams post-magZero
+ * data, so the ellipsoid center fit on the capture is the RESIDUAL bias;
+ * computeCalFromEllipsoid composes these values back into the total
+ * (magZero_new = newCombined · (center + magZero_capture)). Returns true on a
+ * confirmed read (even of zero).
  */
 async function readMagZeroAtCapture() {
-    magZeroAtCapture.value = null;
     if (!isMspCliSupported()) {
         console.warn("MSP CLI unsupported (FC < 4.5.4) — assuming mag_calibration = 0,0,0 during capture");
-        return;
+        return false;
     }
     try {
         const lines = await cliSend("get mag_calibration", { timeoutMs: 3000 });
         for (const line of lines) {
             const m = /mag_calibration\s*=\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)/.exec(line);
             if (m) {
-                magZeroAtCapture.value = { x: Number(m[1]), y: Number(m[2]), z: Number(m[3]) };
+                setMagZeroAtCapture({ x: Number(m[1]), y: Number(m[2]), z: Number(m[3]) });
                 console.log("mag_calibration active during capture:", magZeroAtCapture.value);
-                return;
+                return true;
             }
         }
         console.warn("Could not parse 'get mag_calibration' response — assuming 0,0,0:", lines);
     } catch (e) {
         console.warn("Failed to read mag_calibration — assuming 0,0,0:", e);
     }
+    return false;
+}
+
+/**
+ * Retry wrapper around readMagZeroAtCapture. The value is sticky once read:
+ * FC settings cannot change inside a wizard session (the wizard is the only
+ * writer, at apply time), so a read that succeeds at any phase transition
+ * still describes the state the samples were captured under. The 2026-06-12
+ * samples7 runs showed the dialog-open read failing silently while the same
+ * command worked at apply time — without these retries the wizard proposed
+ * REPLACING a good mag_calibration with just the residual.
+ */
+async function ensureMagZeroAtCapture() {
+    if (magZeroAtCapture.value !== null) {
+        return true;
+    }
+    return await readMagZeroAtCapture();
+}
+
+// Intro-footer handlers: retry the magZero read (fire-and-forget — sticky,
+// and the solver only consumes it minutes later) before starting capture.
+function beginFullCalibration() {
+    ensureMagZeroAtCapture();
+    startCalibrationPhase();
+}
+
+function beginPosesOnly() {
+    ensureMagZeroAtCapture();
+    startWizard();
 }
 
 function show() {
     reset();
-    readMagZeroAtCapture();
+    ensureMagZeroAtCapture();
     nextTick(() => {
         dialogRef.value?.showModal();
         if (threeCanvas.value?.parentElement && !resizeObserver) {
@@ -1421,6 +1459,16 @@ async function doApplyAndReboot() {
     }
 
     try {
+        // Authoritative magZero read before computing the final CLI values.
+        // The CLI demonstrably works at this point in the session (the sets
+        // below use the same channel); if every earlier read failed and the
+        // FC turns out to hold a non-zero mag_calibration, the proposed
+        // offsets were computed against an assumed zero and would REPLACE
+        // the existing calibration with just the residual. A success here
+        // recomputes the offsets (setMagZeroAtCapture) before anything is
+        // written.
+        await ensureMagZeroAtCapture();
+
         const r = solverResult.value;
         if (r.alignment === 9 && r.customAngles) {
             await cliSendChecked("set align_mag = CUSTOM");

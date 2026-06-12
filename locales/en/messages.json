@@ -501,7 +501,9 @@
     "tabAutotune": { "message": "Autotune" },
     "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
     "autotuneImportButton": { "message": "Import Blackbox Log" },
-    "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
+    "autotuneImportDescription": {
+        "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations."
+    },
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
@@ -517,7 +519,9 @@
     "autotuneApplyFailed": { "message": "Failed to apply gains" },
     "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
     "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
-    "autotuneNoChirpData": { "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated." },
+    "autotuneNoChirpData": {
+        "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated."
+    },
     "autotuneSampleCount": { "message": "{{count}} samples" },
     "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
     "autotuneImportAnother": { "message": "Import Another" },
@@ -8073,6 +8077,9 @@
     },
     "magCharCompleteBiasWarning": {
         "message": "BIAS DETECTED BUT UNVERIFIED — no tumble this session. The proposal is untrustworthy: re-run with Full Calibration."
+    },
+    "magCharCompleteMagZeroUnknown": {
+        "message": "FC's active mag_calibration could not be read (assumed 0,0,0). If this drone was calibrated before, the proposed offsets only contain the residual and would overwrite the existing values. The read is retried before Apply; compare the CLI box against 'get mag_calibration' before saving."
     },
     "magCharCliCommands": {
         "message": "CLI Commands"

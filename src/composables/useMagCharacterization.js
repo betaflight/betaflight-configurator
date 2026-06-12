@@ -736,6 +736,26 @@ export function useMagCharacterization() {
         if (cal) calibrationOffsets.value = cal;
     }
 
+    /**
+     * Record the mag_calibration that was active on the FC during capture.
+     * The FC settings cannot change inside a wizard session (the wizard is
+     * the only writer, at apply time), so a read that only succeeds late —
+     * the dialog retries at phase transitions and before apply — still
+     * describes the capture state. Re-derives everything that consumed the
+     * value: the proposed offsets (magZero_new = newCombined·(center +
+     * magZero_capture)) and the export provenance.
+     */
+    function setMagZeroAtCapture(value) {
+        magZeroAtCapture.value = value ? { ...value } : null;
+        if (capturedUnderInfo) {
+            capturedUnderInfo.mag_zero = value ? { ...value } : null;
+            capturedUnderInfo.mag_zero_known = value !== null;
+        }
+        if (ellipsoidParams.value && newCombinedForCalibration) {
+            computeCalFromEllipsoid();
+        }
+    }
+
     function computeReplayData(result, currentAlignment) {
         replayData.value = _computeReplayData(result, currentAlignment, captureData.value, directions, {
             ellipsoidParams: ellipsoidParams.value,
@@ -947,6 +967,12 @@ export function useMagCharacterization() {
                 // regression; key retained for poses-export compatibility.
                 axisGains: null,
                 calibrationOffsets: calibrationOffsets.value ?? null,
+                // mag_calibration active on the FC during capture (firmware
+                // subtracts it before MSP_RAW_IMU, so the fitted center is
+                // the residual). magZeroKnown=false means the CLI read
+                // failed and zero was assumed.
+                magZeroAtCapture: magZeroAtCapture.value ? { ...magZeroAtCapture.value } : null,
+                magZeroKnown: magZeroAtCapture.value !== null,
             },
             directions: directions.map((dir, di) => ({
                 label: dir.label,
@@ -1640,6 +1666,7 @@ export function useMagCharacterization() {
         replayData,
         calibrationOffsets,
         magZeroAtCapture,
+        setMagZeroAtCapture,
         calibrationValidation,
         proposedIncludesCenter,
         biasWarning,
