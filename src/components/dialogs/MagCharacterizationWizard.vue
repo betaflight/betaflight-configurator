@@ -652,7 +652,7 @@ import MagSphereView from "./mag-calibration/MagSphereView.vue";
 import { useFlightControllerStore } from "../../stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
-import { send as cliSend, saveAndReconnect } from "../../composables/useMspCliSession.js";
+import { send as cliSend, saveAndReconnect, isMspCliSupported } from "../../composables/useMspCliSession.js";
 
 const fcStore = useFlightControllerStore();
 const DEG_TO_RAD = Math.PI / 180;
@@ -693,6 +693,8 @@ const {
     refreshReplayData,
     replayData,
     calibrationOffsets,
+    calibrationValidation,
+    magZeroAtCapture,
     axisGains,
     geoReference,
     isFetchingGeo,
@@ -765,9 +767,17 @@ const cliCommands = computed(() => {
     }
 
     if (calibrationOffsets.value) {
-        lines.push(
-            `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${calibrationOffsets.value.z}`,
-        );
+        if (!calibrationValidation.value || calibrationValidation.value.recommended) {
+            lines.push(
+                `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${calibrationOffsets.value.z}`,
+            );
+        } else {
+            lines.push(
+                `# mag_calibration withheld: full correction degrades the 20 poses ` +
+                    `(${calibrationValidation.value.fullCorrectedMeanErr.toFixed(1)}° vs ` +
+                    `${calibrationValidation.value.proposedMeanErr.toFixed(1)}° alignment-only) — re-capture the tumble`,
+            );
+        }
     }
 
     if (geoReference.value) {
@@ -1154,8 +1164,39 @@ mag.setCallbacks({
 // ── Dialog controls ────────────────────────────────────────────────────
 let spacebarHandler = null;
 
+/**
+ * Read the mag_calibration active on the FC before any samples are captured.
+ * MSP_RAW_IMU streams post-magZero data, so the ellipsoid center fit on the
+ * capture is the RESIDUAL bias; computeCalFromEllipsoid composes these values
+ * back into the total (magZero_new = newCombined · (center + magZero_capture)).
+ * On failure the values are assumed zero — correct unless the user previously
+ * ran a mag calibration on this FC.
+ */
+async function readMagZeroAtCapture() {
+    magZeroAtCapture.value = null;
+    if (!isMspCliSupported()) {
+        console.warn("MSP CLI unsupported (FC < 4.5.4) — assuming mag_calibration = 0,0,0 during capture");
+        return;
+    }
+    try {
+        const lines = await cliSend("get mag_calibration", { timeoutMs: 3000 });
+        for (const line of lines) {
+            const m = /mag_calibration\s*=\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)/.exec(line);
+            if (m) {
+                magZeroAtCapture.value = { x: Number(m[1]), y: Number(m[2]), z: Number(m[3]) };
+                console.log("mag_calibration active during capture:", magZeroAtCapture.value);
+                return;
+            }
+        }
+        console.warn("Could not parse 'get mag_calibration' response — assuming 0,0,0:", lines);
+    } catch (e) {
+        console.warn("Failed to read mag_calibration — assuming 0,0,0:", e);
+    }
+}
+
 function show() {
     reset();
+    readMagZeroAtCapture();
     nextTick(() => {
         dialogRef.value?.showModal();
         if (threeCanvas.value?.parentElement && !resizeObserver) {
@@ -1212,7 +1253,7 @@ async function doApplyAndReboot() {
             await cliSend(`set align_mag = ${names[r.alignment]}`, { timeoutMs: 5000 });
         }
 
-        if (calibrationOffsets.value) {
+        if (calibrationOffsets.value && (!calibrationValidation.value || calibrationValidation.value.recommended)) {
             await cliSend(
                 `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${calibrationOffsets.value.z}`,
                 { timeoutMs: 5000 },

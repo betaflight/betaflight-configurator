@@ -87,6 +87,44 @@ const DEG_TO_RAD = Math.PI / 180;
 const RAD_TO_DEG = 180 / Math.PI;
 
 /**
+ * Cross-validate the ellipsoid-derived calibration offsets against the
+ * 20-pose data: the poses act as a held-out validation set for the
+ * tumble-derived correction.
+ *
+ * Compares mean |heading error| of the proposed alignment on raw data (P1)
+ * against the fully corrected pipeline (P3). When the correction makes the
+ * validation poses WORSE, the ellipsoid center does not represent the bias
+ * present in the pose data (typical cause: magnetic contamination during the
+ * tumble — laptop, USB cable, rebar) and the offsets must not be sent to the
+ * firmware.
+ *
+ * @param {Array<{newHeading:number, fullCorrectedHeading:number|null, expectedHeading:number}>} replayData
+ * @param {number} [toleranceDeg=1.0] - calibration may degrade the mean by up
+ *   to this much and still be considered neutral/acceptable
+ * @returns {{ proposedMeanErr:number, fullCorrectedMeanErr:number, recommended:boolean }|null}
+ *   null when there is no full-corrected data to validate against
+ */
+export function validateCalibrationOffsets(replayData, toleranceDeg = 1.0) {
+    let pSum = 0;
+    let fSum = 0;
+    let n = 0;
+    for (const d of replayData) {
+        if (d.fullCorrectedHeading == null) continue;
+        pSum += headingError(d.newHeading, d.expectedHeading);
+        fSum += headingError(d.fullCorrectedHeading, d.expectedHeading);
+        n++;
+    }
+    if (n === 0) return null;
+    const proposedMeanErr = pSum / n;
+    const fullCorrectedMeanErr = fSum / n;
+    return {
+        proposedMeanErr,
+        fullCorrectedMeanErr,
+        recommended: fullCorrectedMeanErr <= proposedMeanErr + toleranceDeg,
+    };
+}
+
+/**
  * Compute per-pose heading comparison data from captured samples.
  *
  * For each pose, aggregates all samples into circular-mean headings for

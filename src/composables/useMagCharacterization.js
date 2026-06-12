@@ -13,6 +13,7 @@ import { fitEllipsoid } from "../js/utils/ellipsoidFit.js";
 import {
     computeReplayData as _computeReplayData,
     computeCalFromEllipsoid as _computeCalFromEllipsoid,
+    validateCalibrationOffsets,
     headingError,
 } from "../js/utils/magCharacterizationCompute.js";
 import { computeCoverage } from "../js/utils/sphereFit.js";
@@ -175,6 +176,9 @@ export function useMagCharacterization() {
     // mag_calibration values active on the FC during capture (read via MSP CLI
     // before the tumble; null when unknown → assumed zero).
     const magZeroAtCapture = ref(null);
+    // Held-out validation of the tumble-derived offsets against the pose data:
+    // { proposedMeanErr, fullCorrectedMeanErr, recommended } or null.
+    const calibrationValidation = ref(null);
     let _movementFrames = 0;
 
     // Shared helper — iterate every captured sample with body-frame mag pre-computed
@@ -265,6 +269,7 @@ export function useMagCharacterization() {
         replayData.value = [];
         calibrationOffsets.value = null;
         axisGains.value = null;
+        calibrationValidation.value = null;
         ellipsoidDiag.value = null;
         // WARNING: This reset clears the ellipsoid correction from any prior
         // calibration tumble or debug JSON import. Callers restoring calibration
@@ -578,6 +583,19 @@ export function useMagCharacterization() {
                 computeCalFromEllipsoid();
                 axisGains.value = { x: 1.0, y: 1.0, z: 1.0 };
             }
+        }
+
+        // Cross-validate the tumble-derived calibration against the pose data
+        // (held-out validation). When the full correction degrades the poses,
+        // the offsets are withheld from the apply path and the CLI preview.
+        calibrationValidation.value = validateCalibrationOffsets(replayData.value);
+        if (calibrationValidation.value && !calibrationValidation.value.recommended) {
+            console.warn(
+                "Calibration offsets NOT recommended: full-corrected mean error " +
+                    `${calibrationValidation.value.fullCorrectedMeanErr.toFixed(1)}° vs ` +
+                    `${calibrationValidation.value.proposedMeanErr.toFixed(1)}° alignment-only. ` +
+                    "Ellipsoid center does not transfer to the pose data (likely capture contamination).",
+            );
         }
 
         phase.value = "replay";
@@ -1277,8 +1295,9 @@ export function useMagCharacterization() {
             fcStore.sensorAlignment.mag_align_yaw = solverResult.value.customAngles.yaw;
         }
 
-        // Set calibration offsets if computed
-        if (calibrationOffsets.value) {
+        // Set calibration offsets if computed AND validated against the pose
+        // data — offsets that degrade the held-out poses must not be applied.
+        if (calibrationOffsets.value && (!calibrationValidation.value || calibrationValidation.value.recommended)) {
             // Write via CLI — requires isMspCliSupported
             const cmd = `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${
                 calibrationOffsets.value.z
@@ -1567,6 +1586,17 @@ export function useMagCharacterization() {
                   "   mag_calibration AFTER alignment, compass.c:492-550)\n"
                 : "  (derived from WMM regression \u2014 legacy path, frame semantics\n" +
                   "   unverified; prefer running the calibration tumble)\n";
+            const cv = calibrationValidation.value;
+            if (cv) {
+                report += cv.recommended
+                    ? `  Validation: PASS \u2014 full correction ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 vs ` +
+                      `${cv.proposedMeanErr.toFixed(1)}\u00B0 alignment-only on the 20 poses\n`
+                    : `  Validation: FAIL \u2014 full correction ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 vs ` +
+                      `${cv.proposedMeanErr.toFixed(1)}\u00B0 alignment-only on the 20 poses.\n` +
+                      "  The offsets will NOT be applied: the ellipsoid center does not\n" +
+                      "  match the bias of the pose data (likely tumble contamination).\n" +
+                      "  Re-capture the tumble away from metal/electronics.\n";
+            }
             report += "\n";
         }
 
@@ -1779,6 +1809,7 @@ export function useMagCharacterization() {
         calibrationOffsets,
         axisGains,
         magZeroAtCapture,
+        calibrationValidation,
         geoReference,
         isFetchingGeo,
         ellipsoidParams,

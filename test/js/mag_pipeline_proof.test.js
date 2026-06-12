@@ -22,6 +22,7 @@ import {
 import {
     computeReplayData,
     computeCalFromEllipsoid,
+    validateCalibrationOffsets,
     headingError,
 } from "../../src/js/utils/magCharacterizationCompute.js";
 import { loadFixture, flattenSamples } from "./test_helpers.js";
@@ -670,5 +671,41 @@ describe("computeCalFromEllipsoid: direct unit test", () => {
         expect(withPrior.x).toBe(Math.round(expected[0]));
         expect(withPrior.y).toBe(Math.round(expected[1]));
         expect(withPrior.z).toBe(Math.round(expected[2]));
+    });
+});
+
+describe("validateCalibrationOffsets: held-out pose validation", () => {
+    const replayResult = computeReplayData(solverResult, 8, captureData, directions, {
+        ellipsoidParams: ellipsoid,
+        calibrationOffsets: null,
+        axisGains: null,
+        currentMat: ALIGNMENT_MATRICES[8],
+    });
+
+    it("rejects the gold-fixture calibration (center does not transfer to poses)", () => {
+        const v = validateCalibrationOffsets(replayResult);
+        expect(v).not.toBeNull();
+        console.log(
+            `  validation: proposed=${v.proposedMeanErr.toFixed(1)}°  full=${v.fullCorrectedMeanErr.toFixed(1)}°  recommended=${v.recommended}`,
+        );
+        // Measured baseline (samples4): 11.5° alignment-only vs ~61.7° full
+        expect(v.proposedMeanErr).toBeLessThan(20);
+        expect(v.fullCorrectedMeanErr).toBeGreaterThan(40);
+        expect(v.recommended).toBe(false);
+    });
+
+    it("accepts a calibration that matches or improves the poses", () => {
+        const synthetic = [
+            { newHeading: 10, fullCorrectedHeading: 2, expectedHeading: 0 },
+            { newHeading: 95, fullCorrectedHeading: 91, expectedHeading: 90 },
+            { newHeading: 185, fullCorrectedHeading: 181, expectedHeading: 180 },
+        ];
+        const v = validateCalibrationOffsets(synthetic);
+        expect(v.recommended).toBe(true);
+    });
+
+    it("returns null when no full-corrected data exists", () => {
+        const v = validateCalibrationOffsets([{ newHeading: 1, fullCorrectedHeading: null, expectedHeading: 0 }]);
+        expect(v).toBeNull();
     });
 });
