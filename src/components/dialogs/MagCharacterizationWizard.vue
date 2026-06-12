@@ -653,9 +653,26 @@ import { useFlightControllerStore } from "../../stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { send as cliSend, saveAndReconnect, isMspCliSupported } from "../../composables/useMspCliSession.js";
+import semver from "semver";
 
 const fcStore = useFlightControllerStore();
 const DEG_TO_RAD = Math.PI / 180;
+
+// First firmware whose CUSTOM mag alignment matches the wizard's math:
+// "Fix mag_align_yaw" (betaflight#14849, merged 2025-12-30, first release
+// 2026.6.0) negates the angles before buildRotationMatrix so the net applied
+// transform is Rz(yaw)·Ry(pitch)·Rx(roll) — the convention eulerToMatrix and
+// the solver use. Older firmware applies the INVERSE rotation for the same
+// CLI values, which would corrupt the heading instead of fixing it.
+const MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN = "2026.6.0";
+
+function isCustomMagAlignSupported() {
+    // coerce() strips prerelease tags: dev builds of 2026.6.0 (like
+    // 2026.6.0-alpha master) are accepted — their build date cannot be
+    // verified from the version string alone.
+    const v = semver.coerce(fcStore.config?.flightControllerVersion || "");
+    return !!v && semver.gte(v, MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN);
+}
 
 // ── Composable (all state + logic) ─────────────────────────────────────
 const mag = useMagCharacterization();
@@ -756,6 +773,13 @@ const cliCommands = computed(() => {
     }
 
     if (r.alignment === 9 && r.customAngles) {
+        if (!isCustomMagAlignSupported()) {
+            lines.push(
+                `# WARNING: firmware ${fcStore.config?.flightControllerVersion || "?"} predates ` +
+                    `betaflight#14849 (${MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN}+): it would apply the ` +
+                    "INVERSE of these angles. Update the firmware before using CUSTOM alignment.",
+            );
+        }
         // CLI uses decidegrees (tenths of a degree), our solver outputs degrees
         lines.push("set align_mag = CUSTOM");
         lines.push(`set mag_align_roll = ${Math.round(r.customAngles.roll * 10)}`);
@@ -1230,6 +1254,17 @@ function close() {
 
 async function doApplyAndReboot() {
     if (!applyAndReboot()) {
+        return;
+    }
+
+    if (solverResult.value?.alignment === 9 && !isCustomMagAlignSupported()) {
+        alert(
+            `CUSTOM mag alignment requires firmware ${MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN} or newer ` +
+                `(detected: ${fcStore.config?.flightControllerVersion || "unknown"}).\n\n` +
+                "Older firmware builds the custom rotation matrix without the angle negation " +
+                "added in betaflight#14849 and would apply the INVERSE of the solved rotation. " +
+                "Update the firmware, or use the nearest 90° preset instead.",
+        );
         return;
     }
 
