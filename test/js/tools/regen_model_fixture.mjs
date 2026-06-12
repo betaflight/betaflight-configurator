@@ -83,6 +83,7 @@ const model = buildCharacterizationModel({
         alignment: CAPTURE_ALIGNMENT,
         custom_angles: null,
         mag_zero: CAPTURE_MAG_ZERO,
+        mag_zero_known: true,
     },
     ellipsoidParams: ellipsoid,
     calibrationOffsets: calOffsets,

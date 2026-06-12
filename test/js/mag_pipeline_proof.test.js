@@ -23,6 +23,7 @@ import {
     computeCalFromEllipsoid,
     selectAlignmentPackage,
     proposedMatrixOf,
+    estimateFlatPoseBias,
     headingError,
     SOLVER_OPTS,
 } from "../../src/js/utils/magCharacterizationCompute.js";
@@ -363,6 +364,7 @@ describe("pipeline proof: model export schema", () => {
         expect(model.version).toBe("2.1");
         expect(model.captured_under.alignment).toBe(8);
         expect(model.captured_under.mag_zero).toEqual({ x: 0, y: 0, z: 0 });
+        expect(model.captured_under.mag_zero_known).toBe(true);
         expect(model.poses.length).toBe(20);
     });
 
@@ -686,5 +688,46 @@ describe("selectAlignmentPackage: correct-then-solve (production path)", () => {
         expect(Math.abs(model.hard_iron.x - expected[0])).toBeLessThan(2);
         expect(Math.abs(model.hard_iron.y - expected[1])).toBeLessThan(2);
         expect(Math.abs(model.hard_iron.z - expected[2])).toBeLessThan(2);
+    });
+});
+
+describe("estimateFlatPoseBias: tumble-less bias detection", () => {
+    it("detects the horizontal hard iron from the gold fixture's flat poses", () => {
+        const est = estimateFlatPoseBias(captureData, directions);
+        expect(est).not.toBeNull();
+        expect(est.flatPoseCount).toBe(4);
+        // Detector accuracy, not calibrator accuracy: the cardinal cancellation
+        // leaves a residual of order (H_max − H_min)/4 when the site has a
+        // field gradient between rose positions (~40% |H| spread on this
+        // capture → ~150 counts). That is fine for the purpose — flagging a
+        // ~700-count bias against a 15%-of-|H| (~140 count) threshold.
+        expect(Math.abs(est.x - ellipsoid.center.x)).toBeLessThan(250);
+        expect(Math.abs(est.y - ellipsoid.center.y)).toBeLessThan(250);
+        // The warning condition fires on this hardware: bias is most of |H|
+        expect(est.ratio).toBeGreaterThan(0.15);
+    });
+
+    it("stays quiet on bias-free data", () => {
+        // 4 flat poses with a purely rotating horizontal field (no offset)
+        const H = 900;
+        const cleanDirs = [0, 90, 180, 270].map(() => ({ poses: [{ label: "Flat", isFlat: true }] }));
+        const cleanCapture = [0, 90, 180, 270].map((h) => {
+            const rad = (h * Math.PI) / 180;
+            const samples = Array.from({ length: 20 }, () => ({
+                mag: [H * Math.cos(rad), H * Math.sin(rad), -1500],
+                roll: 0,
+                pitch: 0,
+            }));
+            return [{ headingRef: h, samples }];
+        });
+        const est = estimateFlatPoseBias(cleanCapture, cleanDirs);
+        expect(est).not.toBeNull();
+        expect(est.ratio).toBeLessThan(0.05);
+    });
+
+    it("returns null below 3 flat poses", () => {
+        const dirs = [{ poses: [{ label: "Flat", isFlat: true }] }];
+        const cd = [[{ headingRef: 0, samples: [{ mag: [1, 2, 3], roll: 0, pitch: 0 }] }]];
+        expect(estimateFlatPoseBias(cd, dirs)).toBeNull();
     });
 });

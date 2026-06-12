@@ -1266,26 +1266,40 @@ async function doApplyAndReboot() {
     try {
         const r = solverResult.value;
         if (r.alignment === 9 && r.customAngles) {
-            await cliSend("set align_mag = CUSTOM", { timeoutMs: 5000 });
-            await cliSend(`set mag_align_roll = ${Math.round(r.customAngles.roll * 10)}`, { timeoutMs: 5000 });
-            await cliSend(`set mag_align_pitch = ${Math.round(r.customAngles.pitch * 10)}`, { timeoutMs: 5000 });
-            await cliSend(`set mag_align_yaw = ${Math.round(r.customAngles.yaw * 10)}`, { timeoutMs: 5000 });
+            await cliSendChecked("set align_mag = CUSTOM");
+            await cliSendChecked(`set mag_align_roll = ${Math.round(r.customAngles.roll * 10)}`);
+            await cliSendChecked(`set mag_align_pitch = ${Math.round(r.customAngles.pitch * 10)}`);
+            await cliSendChecked(`set mag_align_yaw = ${Math.round(r.customAngles.yaw * 10)}`);
         } else if (r.alignment >= 1 && r.alignment <= 8) {
             const names = ["", "CW0", "CW90", "CW180", "CW270", "CW0FLIP", "CW90FLIP", "CW180FLIP", "CW270FLIP"];
-            await cliSend(`set align_mag = ${names[r.alignment]}`, { timeoutMs: 5000 });
+            await cliSendChecked(`set align_mag = ${names[r.alignment]}`);
         }
 
-        if (calibrationOffsets.value && (!calibrationValidation.value || calibrationValidation.value.recommended)) {
-            await cliSend(
+        const applyOffsets =
+            calibrationOffsets.value && (!calibrationValidation.value || calibrationValidation.value.recommended);
+        if (applyOffsets) {
+            await cliSendChecked(
                 `set mag_calibration = ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${calibrationOffsets.value.z}`,
-                { timeoutMs: 5000 },
             );
         }
 
         if (geoReference.value) {
-            await cliSend(`set mag_declination = ${Math.round(geoReference.value.declination * 10)}`, {
-                timeoutMs: 5000,
-            });
+            await cliSendChecked(`set mag_declination = ${Math.round(geoReference.value.declination * 10)}`);
+        }
+
+        // Read-back verification BEFORE save: a silent set failure here led to
+        // a flight-ready drone with alignment applied but no bias removal
+        // (2026-06-12). Throws with the offending value on mismatch.
+        if (applyOffsets) {
+            await verifyCliValue(
+                "mag_calibration",
+                `${calibrationOffsets.value.x}, ${calibrationOffsets.value.y}, ${calibrationOffsets.value.z}`,
+            );
+        }
+        if (r.alignment === 9 && r.customAngles) {
+            await verifyCliValue("mag_align_roll", `${Math.round(r.customAngles.roll * 10)}`);
+            await verifyCliValue("mag_align_pitch", `${Math.round(r.customAngles.pitch * 10)}`);
+            await verifyCliValue("mag_align_yaw", `${Math.round(r.customAngles.yaw * 10)}`);
         }
 
         await saveAndReconnect();
@@ -1293,6 +1307,30 @@ async function doApplyAndReboot() {
     } catch (e) {
         console.error("Failed to apply alignment", e);
         alert(`Failed to apply: ${e.message || e}`);
+    }
+}
+
+/** cliSend that rejects when the FC answers with a CLI error line. */
+async function cliSendChecked(cmd) {
+    const lines = await cliSend(cmd, { timeoutMs: 5000 });
+    const err = lines.find((l) => l.startsWith("###ERROR"));
+    if (err) {
+        throw new Error(`CLI rejected '${cmd}': ${err}`);
+    }
+    return lines;
+}
+
+/**
+ * Read a setting back via `get <name>` and throw unless the FC reports the
+ * expected value. Whitespace-insensitive (the CLI prints arrays with spaces).
+ */
+async function verifyCliValue(name, expected) {
+    const lines = await cliSendChecked(`get ${name}`);
+    const norm = (s) => s.replace(/\s+/g, "");
+    const wanted = norm(expected);
+    const line = lines.find((l) => l.includes(`${name} = `));
+    if (!line || norm(line.split("=")[1] ?? "") !== wanted) {
+        throw new Error(`Verification failed for ${name}: expected '${expected}', FC reports '${line ?? "no reply"}'`);
     }
 }
 

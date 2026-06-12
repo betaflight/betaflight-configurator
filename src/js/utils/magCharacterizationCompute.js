@@ -305,6 +305,66 @@ export function meanPackageError(replayRows) {
 }
 
 /**
+ * Estimate the horizontal hard-iron bias from the cardinal FLAT poses.
+ *
+ * With yaw-only rotation between the flat poses, the Earth-field contribution
+ * to the horizontal components averages out across opposing/orthogonal
+ * cardinal directions — the body-frame mean IS the horizontal bias. The
+ * vertical (z) bias is unobservable this way (the field's vertical component
+ * does not rotate with yaw), so only x/y are returned.
+ *
+ * Used by tumble-less wizard runs to detect "bias present but unobservable":
+ * without an ellipsoid the solver would silently entangle this bias into a
+ * phantom rotation (hardware-demonstrated on the 2026-06-12 rested run).
+ *
+ * @param {Array<Array<{headingRef:number, samples:Array}|null>>} captureData
+ * @param {Array<{poses:Array<{label:string,isFlat?:boolean}>}>} directions
+ * @returns {{x:number, y:number, avgH:number, ratio:number, flatPoseCount:number}|null}
+ *   null when fewer than 3 flat poses were captured. `ratio` =
+ *   |bias_xy| / avgH (avgH = mean horizontal magnitude of the flat samples).
+ */
+export function estimateFlatPoseBias(captureData, directions) {
+    let bx = 0;
+    let by = 0;
+    let hSum = 0;
+    let nSamples = 0;
+    let flatPoseCount = 0;
+
+    for (let di = 0; di < directions.length; di++) {
+        for (let pi = 0; pi < directions[di].poses.length; pi++) {
+            const poseDef = directions[di].poses[pi];
+            if (!(poseDef.isFlat || poseDef.label.startsWith("Flat"))) continue;
+            const cap = captureData[di]?.[pi];
+            if (!cap?.samples?.length) continue;
+
+            let sx = 0;
+            let sy = 0;
+            for (const s of cap.samples) {
+                sx += s.mag[0];
+                sy += s.mag[1];
+                hSum += Math.hypot(s.mag[0], s.mag[1]);
+                nSamples++;
+            }
+            bx += sx / cap.samples.length;
+            by += sy / cap.samples.length;
+            flatPoseCount++;
+        }
+    }
+
+    if (flatPoseCount < 3 || nSamples === 0) return null;
+    bx /= flatPoseCount;
+    by /= flatPoseCount;
+    const avgH = hSum / nSamples;
+    return {
+        x: Math.round(bx),
+        y: Math.round(by),
+        avgH: Math.round(avgH),
+        ratio: avgH > 0 ? Math.hypot(bx, by) / avgH : 0,
+        flatPoseCount,
+    };
+}
+
+/**
  * Correct-then-solve: dual solve + package selection.
  *
  * Solving on RAW data entangles hard-iron compensation into the rotation

@@ -15,6 +15,7 @@ import {
     selectAlignmentPackage,
     currentMatrixOf,
     proposedMatrixOf,
+    estimateFlatPoseBias,
     headingError,
 } from "../js/utils/magCharacterizationCompute.js";
 import { buildCharacterizationModel } from "../js/utils/magModelExport.js";
@@ -215,6 +216,10 @@ export function useMagCharacterization() {
     // (correct-then-solve): the Proposed column then represents the firmware
     // package alignment + mag_calibration, not alignment alone.
     const proposedIncludesCenter = ref(false);
+    // Tumble-less runs only: flat-pose bias estimate when a significant
+    // horizontal hard iron is present but unobservable (no ellipsoid) —
+    // the proposal is untrustworthy. { x, y, avgH, ratio, flatPoseCount } or null.
+    const biasWarning = ref(null);
     let _movementFrames = 0;
 
     // Shared helper — iterate every captured sample with body-frame mag pre-computed
@@ -306,6 +311,7 @@ export function useMagCharacterization() {
         calibrationOffsets.value = null;
         calibrationValidation.value = null;
         proposedIncludesCenter.value = false;
+        biasWarning.value = null;
         ellipsoidDiag.value = null;
         // WARNING: This reset clears the ellipsoid correction from any prior
         // calibration tumble or debug JSON import. Callers restoring calibration
@@ -620,12 +626,32 @@ export function useMagCharacterization() {
         const proposedMat = proposedMatrixOf(result, currentMatForCalibration);
         newCombinedForCalibration = mat3mul(proposedMat, mat3transpose(currentMatForCalibration));
 
-        // Record capture provenance for the model export (schema 2.1)
+        // Record capture provenance for the model export (schema 2.1).
+        // mag_zero_known distinguishes a confirmed read (even of zero) from a
+        // failed CLI read — a failed read silently recorded as zero hid the
+        // FC state during the 2026-06-12 rested-run investigation.
         capturedUnderInfo = {
             alignment: currentAlign,
             custom_angles: currentAlign === 9 && customAngles ? { ...customAngles } : null,
-            mag_zero: magZeroAtCapture.value ? { ...magZeroAtCapture.value } : { x: 0, y: 0, z: 0 },
+            mag_zero: magZeroAtCapture.value ? { ...magZeroAtCapture.value } : null,
+            mag_zero_known: magZeroAtCapture.value !== null,
         };
+
+        // Tumble-less run: the bias is unobservable to the solver. Estimate it
+        // from the flat poses and warn when it is significant — the proposal
+        // would silently entangle it into a phantom rotation.
+        biasWarning.value = null;
+        if (!ellipsoidParams.value) {
+            const biasEst = estimateFlatPoseBias(captureData.value, directions);
+            if (biasEst && biasEst.ratio > 0.15) {
+                biasWarning.value = biasEst;
+                console.warn(
+                    `Tumble-less run with significant horizontal bias: ≈(${biasEst.x}, ${biasEst.y}) counts, ` +
+                        `${(biasEst.ratio * 100).toFixed(0)}% of |H|. The proposed alignment is untrustworthy — ` +
+                        "run the Full Calibration tumble.",
+                );
+            }
+        }
 
         // Pre-compute replay data for all captured poses
         computeReplayData(result, currentAlign);
@@ -1107,6 +1133,7 @@ export function useMagCharacterization() {
         _calLastFitCount = 0;
         calibrationValidation.value = null;
         proposedIncludesCenter.value = false;
+        biasWarning.value = null;
     }
 
     function cleanupTimer() {
@@ -1573,6 +1600,7 @@ export function useMagCharacterization() {
         magZeroAtCapture,
         calibrationValidation,
         proposedIncludesCenter,
+        biasWarning,
         geoReference,
         isFetchingGeo,
         ellipsoidParams,
