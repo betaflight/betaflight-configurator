@@ -7737,6 +7737,9 @@
     "magCalibrationPrompt6": {
         "message": "Step 6/6 — Right side up, yaw 360°"
     },
+    "magCharCaptureButton": {
+        "message": "Hold to Capture"
+    },
     "magCharPoseRejectNotFlat": {
         "message": "Drone is tilted but this pose should be FLAT — check you are on the right step, then retry"
     },

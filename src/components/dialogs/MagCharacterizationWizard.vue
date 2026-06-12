@@ -600,6 +600,22 @@
                 >
                     <div class="mag-char-readout-row">
                         <span class="mag-char-stability-dot" :class="{ stable: isStable && phase === 'await' }"></span>
+                        <!-- Keyboard-less capture: delayed-enable + 0.5 s hold-to-confirm.
+                             Appears on stability (with a grace period if it briefly dips);
+                             the hold gives the user time to re-steady the drone after
+                             touching the screen. Spacebar remains the keyboard path. -->
+                        <button
+                            v-if="phase === 'await' && captureBtnVisible"
+                            type="button"
+                            class="mag-char-capture-btn"
+                            :style="{ '--hold': captureHoldProgress }"
+                            @pointerdown.prevent="beginCaptureHold"
+                            @pointerup="cancelCaptureHold"
+                            @pointerleave="cancelCaptureHold"
+                            @pointercancel="cancelCaptureHold"
+                        >
+                            {{ $t("magCharCaptureButton") }}
+                        </button>
                         <span
                             v-if="phase === 'await' && isStable && !poseNeedsRetry"
                             class="mag-char-readout-item mag-char-spacebar-prompt"
@@ -791,6 +807,7 @@ const {
     calCurrentPrompt,
     poseNeedsRetry,
     poseRetryReason,
+    startCapture,
     startCalibrationPhase,
     completeCalibrationPhase,
     skipCalibration,
@@ -814,6 +831,75 @@ const calPromptI18n = computed(() => {
     }
     return CAL_PROMPTS[calCurrentPrompt.value] || CAL_PROMPTS[0];
 });
+
+// ── Keyboard-less Capture button (delayed-enable + hold-to-confirm) ────
+// Touching the screen can disturb the drone, so: the button only appears
+// once stability is reached, survives brief stability dips (grace period),
+// and requires a continuous 0.5 s hold — re-checking stability at the
+// moment of firing — before it triggers the same startCapture() the
+// spacebar uses.
+const CAPTURE_HOLD_MS = 500;
+const CAPTURE_BTN_GRACE_MS = 2000;
+const captureBtnVisible = ref(false);
+const captureHoldProgress = ref(0); // 0..1 drives the button's fill
+let _captureHoldTimer = null;
+let _captureHoldStart = 0;
+let _captureBtnGraceTimer = null;
+
+watch(
+    () => [isStable.value, phase.value],
+    ([stable, ph]) => {
+        if (ph !== "await") {
+            captureBtnVisible.value = false;
+            cancelCaptureHold();
+            clearCaptureGrace();
+            return;
+        }
+        if (stable) {
+            clearCaptureGrace();
+            captureBtnVisible.value = true;
+        } else if (captureBtnVisible.value && !_captureBtnGraceTimer) {
+            _captureBtnGraceTimer = setTimeout(() => {
+                captureBtnVisible.value = false;
+                _captureBtnGraceTimer = null;
+                cancelCaptureHold();
+            }, CAPTURE_BTN_GRACE_MS);
+        }
+    },
+);
+
+function clearCaptureGrace() {
+    if (_captureBtnGraceTimer) {
+        clearTimeout(_captureBtnGraceTimer);
+        _captureBtnGraceTimer = null;
+    }
+}
+
+function beginCaptureHold() {
+    if (phase.value !== "await" || _captureHoldTimer) {
+        return;
+    }
+    _captureHoldStart = Date.now();
+    captureHoldProgress.value = 0;
+    _captureHoldTimer = setInterval(() => {
+        const p = (Date.now() - _captureHoldStart) / CAPTURE_HOLD_MS;
+        captureHoldProgress.value = Math.min(1, p);
+        if (p >= 1) {
+            cancelCaptureHold();
+            if (phase.value === "await" && isStable.value) {
+                startCapture();
+            }
+        }
+    }, 50);
+}
+
+function cancelCaptureHold() {
+    if (_captureHoldTimer) {
+        clearInterval(_captureHoldTimer);
+        _captureHoldTimer = null;
+    }
+    captureHoldProgress.value = 0;
+}
 
 // ── Replay controls ───────────────────────────────────────────────────
 const replayIndex = ref(0);
@@ -1562,6 +1648,8 @@ onScopeDispose(() => {
     mag.cleanupTimer();
     disposeThreeScene();
     stopAutoPlay();
+    cancelCaptureHold();
+    clearCaptureGrace();
     if (spacebarHandler) {
         window.removeEventListener("keydown", spacebarHandler);
     }
@@ -2119,5 +2207,28 @@ defineExpose({ show, close });
     background: rgba(80, 60, 20, 0.5);
     color: #eebb44;
     border: 1px solid #eebb44;
+}
+
+/* Keyboard-less capture button: the --hold custom property (0..1) drives a
+   left-to-right fill while the user holds, mirroring the 0.5 s confirm. */
+.mag-char-capture-btn {
+    padding: 6px 22px;
+    margin-right: 10px;
+    border-radius: 6px;
+    border: 1px solid #4ec97e;
+    color: #eaffea;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    background: linear-gradient(
+        to right,
+        #2f9e5f calc(var(--hold, 0) * 100%),
+        rgba(30, 80, 45, 0.55) calc(var(--hold, 0) * 100%)
+    );
+}
+.mag-char-capture-btn:active {
+    border-color: #7effb0;
 }
 </style>
