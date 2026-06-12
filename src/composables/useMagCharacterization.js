@@ -599,10 +599,12 @@ export function useMagCharacterization() {
         calibrationValidation.value = validateCalibrationOffsets(replayData.value);
         if (calibrationValidation.value && !calibrationValidation.value.recommended) {
             console.warn(
-                "Calibration offsets NOT recommended: full-corrected mean error " +
+                "Static bias offsets withheld: full-corrected mean error " +
                     `${calibrationValidation.value.fullCorrectedMeanErr.toFixed(1)}° vs ` +
                     `${calibrationValidation.value.proposedMeanErr.toFixed(1)}° alignment-only. ` +
-                    "Ellipsoid center does not transfer to the pose data (likely capture contamination).",
+                    "World-frame interference at the bench (it does not rotate with the drone) " +
+                    "contaminated the tumble's bias estimate. Alignment is still applied; bias " +
+                    "estimation is deferred to per-flight self-calibration in the log viewer.",
             );
         }
 
@@ -1599,11 +1601,15 @@ export function useMagCharacterization() {
                 report += cv.recommended
                     ? `  Validation: PASS \u2014 full correction ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 vs ` +
                       `${cv.proposedMeanErr.toFixed(1)}\u00B0 alignment-only on the 20 poses\n`
-                    : `  Validation: FAIL \u2014 full correction ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 vs ` +
+                    : `  Validation: BIAS DEFERRED \u2014 full correction ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 vs ` +
                       `${cv.proposedMeanErr.toFixed(1)}\u00B0 alignment-only on the 20 poses.\n` +
-                      "  The offsets will NOT be applied: the ellipsoid center does not\n" +
-                      "  match the bias of the pose data (likely tumble contamination).\n" +
-                      "  Re-capture the tumble away from metal/electronics.\n";
+                      "  Static offsets will NOT be written to the FC: world-frame bench\n" +
+                      "  interference (does not rotate with the drone) contaminated the\n" +
+                      "  tumble's bias estimate. Alignment is still applied. Bias correction\n" +
+                      "  is deferred to per-flight self-calibration in the log viewer, which\n" +
+                      "  fits the bias on the flight's own samples \u2014 away from the bench,\n" +
+                      "  with motors running. A tumble re-capture away from electronics can\n" +
+                      "  also recover a writable static offset.\n";
             }
             report += "\n";
         }

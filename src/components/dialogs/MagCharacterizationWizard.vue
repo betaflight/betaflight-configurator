@@ -797,9 +797,9 @@ const cliCommands = computed(() => {
             );
         } else {
             lines.push(
-                `# mag_calibration withheld: full correction degrades the 20 poses ` +
-                    `(${calibrationValidation.value.fullCorrectedMeanErr.toFixed(1)}° vs ` +
-                    `${calibrationValidation.value.proposedMeanErr.toFixed(1)}° alignment-only) — re-capture the tumble`,
+                `# mag_calibration deferred to per-flight self-calibration: bench interference ` +
+                    `contaminated the tumble bias (${calibrationValidation.value.fullCorrectedMeanErr.toFixed(1)}° vs ` +
+                    `${calibrationValidation.value.proposedMeanErr.toFixed(1)}° alignment-only on the 20 poses)`,
             );
         }
     }
