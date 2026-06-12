@@ -284,10 +284,8 @@ class AutoBackup {
                 const filteredLines = lines[0].includes(command) ? lines.slice(1) : lines;
                 const data = filteredLines.join("\n");
 
-<<<<<<< HEAD
                 // Hold partial backup data in memory as well — better than nothing.
                 setLastBackupData(data);
-=======
                 // Only persist partial data if it actually looks like a CLI dump.
                 // Writing a truncated-but-valid backup beats nothing, but writing
                 // binary/garbage that merely never reached the prompt is worse.
@@ -298,7 +296,6 @@ class AutoBackup {
 
                 clearInterval(intervalId);
                 if (DEBUG) console.log(`AutoBackup: Saving partial data, buffer length: ${this.outputHistory.length}`);
->>>>>>> origin/master
 
                 this.sendCommand("exit", this.onClose.bind(this));
                 this.save(data);
