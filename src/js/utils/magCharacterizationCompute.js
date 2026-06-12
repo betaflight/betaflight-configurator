@@ -304,6 +304,50 @@ export function meanPackageError(replayRows) {
     return n > 0 ? sum / n : Infinity;
 }
 
+// Pose-angle acceptance windows (degrees). Tilted poses must land within
+// ANGLE_WINDOW of the target on both axes AND have a tilt magnitude inside
+// [TILT_MIN, TILT_MAX]: below TILT_MIN the pose is effectively flat (no Z
+// cross-coupling to observe); above TILT_MAX the accelerometer roll/pitch
+// decomposition degrades toward gimbal lock. Flat poses accept any tilt up
+// to ANGLE_WINDOW. Windows are deliberately permissive: the solver needs
+// VARIED attitudes, not exact ones — household boxes give 20–45° of tilt.
+export const POSE_ANGLE_WINDOW_DEG = 20;
+export const POSE_TILT_MIN_DEG = 10;
+export const POSE_TILT_MAX_DEG = 60;
+
+/**
+ * Validate that a captured pose's mean attitude matches the intended pose.
+ *
+ * @param {number} targetRoll - intended roll, degrees (0 for flat/pitch poses)
+ * @param {number} targetPitch - intended pitch, degrees (0 for flat/roll poses)
+ * @param {number} measuredRoll - mean captured roll, degrees
+ * @param {number} measuredPitch - mean captured pitch, degrees
+ * @returns {{accepted: boolean, reason?: string}} reason is an i18n key
+ */
+export function validatePoseAngle(targetRoll, targetPitch, measuredRoll, measuredPitch) {
+    const tilt = Math.max(Math.abs(measuredRoll), Math.abs(measuredPitch));
+    const isFlatTarget = targetRoll === 0 && targetPitch === 0;
+
+    if (isFlatTarget) {
+        return tilt <= POSE_ANGLE_WINDOW_DEG
+            ? { accepted: true }
+            : { accepted: false, reason: "magCharPoseRejectNotFlat" };
+    }
+    if (tilt < POSE_TILT_MIN_DEG) {
+        return { accepted: false, reason: "magCharPoseRejectNearlyFlat" };
+    }
+    if (tilt > POSE_TILT_MAX_DEG) {
+        return { accepted: false, reason: "magCharPoseRejectTooSteep" };
+    }
+    if (
+        Math.abs(measuredRoll - targetRoll) > POSE_ANGLE_WINDOW_DEG ||
+        Math.abs(measuredPitch - targetPitch) > POSE_ANGLE_WINDOW_DEG
+    ) {
+        return { accepted: false, reason: "magCharPoseRejectOffTarget" };
+    }
+    return { accepted: true };
+}
+
 /**
  * Estimate the horizontal hard-iron bias from the cardinal FLAT poses.
  *

@@ -7737,6 +7737,18 @@
     "magCalibrationPrompt6": {
         "message": "Step 6/6 — Right side up, yaw 360°"
     },
+    "magCharPoseRejectNotFlat": {
+        "message": "Drone is tilted but this pose should be FLAT — check you are on the right step, then retry"
+    },
+    "magCharPoseRejectNearlyFlat": {
+        "message": "Drone appears nearly flat — make sure the box is under the correct arms, then retry"
+    },
+    "magCharPoseRejectTooSteep": {
+        "message": "Angle too steep (over 60°) — use a smaller box and check the drone is resting stably, then retry"
+    },
+    "magCharPoseRejectOffTarget": {
+        "message": "Angle too far from the expected pose — adjust the box/drone position, then retry"
+    },
     "magCalibrationPrompt7Fill": {
         "message": "Fill the gaps — slow barrel rolls (full 360° around the nose axis), then slow front-flips (360° around the wing axis), until every region is painted"
     },

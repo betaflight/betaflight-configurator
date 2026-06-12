@@ -609,7 +609,7 @@
                             v-else-if="phase === 'await' && isStable && poseNeedsRetry"
                             class="mag-char-readout-item"
                             style="color: #ee6644"
-                            >{{ $t("magCharFooterMovementRetry") }}</span
+                            >{{ $t(poseRetryReason || "magCharFooterMovementRetry") }}</span
                         >
                         <span
                             v-else-if="phase === 'await'"
@@ -790,6 +790,7 @@ const {
     calibrationSphereFit,
     calCurrentPrompt,
     poseNeedsRetry,
+    poseRetryReason,
     startCalibrationPhase,
     completeCalibrationPhase,
     skipCalibration,

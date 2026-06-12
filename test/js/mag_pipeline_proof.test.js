@@ -24,6 +24,7 @@ import {
     selectAlignmentPackage,
     proposedMatrixOf,
     estimateFlatPoseBias,
+    validatePoseAngle,
     headingError,
     SOLVER_OPTS,
 } from "../../src/js/utils/magCharacterizationCompute.js";
@@ -729,5 +730,46 @@ describe("estimateFlatPoseBias: tumble-less bias detection", () => {
         const dirs = [{ poses: [{ label: "Flat", isFlat: true }] }];
         const cd = [[{ headingRef: 0, samples: [{ mag: [1, 2, 3], roll: 0, pitch: 0 }] }]];
         expect(estimateFlatPoseBias(cd, dirs)).toBeNull();
+    });
+});
+
+describe("validatePoseAngle: pose-angle gate", () => {
+    // Targets use the hardware-verified MSP signs: Nose Up ≈ −35 pitch,
+    // Nose Down ≈ +35, box-under-left ≈ +30 roll, box-under-right ≈ −30.
+    it("accepts honest variation on tilted poses (±20° window)", () => {
+        expect(validatePoseAngle(0, -35, -2, -40.8).accepted).toBe(true); // real Nose Up capture
+        expect(validatePoseAngle(0, 35, -0.8, 29.9).accepted).toBe(true); // real Nose Down capture
+        expect(validatePoseAngle(30, 0, 29.5, 1.7).accepted).toBe(true); // real box-under-left
+        expect(validatePoseAngle(-30, 0, -30.5, -1.1).accepted).toBe(true); // real box-under-right
+        expect(validatePoseAngle(0, -35, 0, -18).accepted).toBe(true); // thin box, shallow but ≥10°
+    });
+
+    it("rejects a flat drone on a tilted pose (wrong box placement)", () => {
+        const r = validatePoseAngle(0, -35, 1, -3);
+        expect(r.accepted).toBe(false);
+        expect(r.reason).toBe("magCharPoseRejectNearlyFlat");
+    });
+
+    it("rejects near-vertical balancing", () => {
+        const r = validatePoseAngle(0, -35, 0, -75);
+        expect(r.accepted).toBe(false);
+        expect(r.reason).toBe("magCharPoseRejectTooSteep");
+    });
+
+    it("rejects the right tilt magnitude on the wrong axis/sign", () => {
+        // Asked for Nose Up (−35 pitch), drone is rolled +30 instead
+        const r = validatePoseAngle(0, -35, 30, -2);
+        expect(r.accepted).toBe(false);
+        expect(r.reason).toBe("magCharPoseRejectOffTarget");
+        // Asked for Nose Up, drone is Nose DOWN
+        expect(validatePoseAngle(0, -35, 0, 35).reason).toBe("magCharPoseRejectOffTarget");
+    });
+
+    it("flat pose accepts level and rejects accidental tilt", () => {
+        expect(validatePoseAngle(0, 0, -0.4, 1.1).accepted).toBe(true); // real flat capture
+        expect(validatePoseAngle(0, 0, 3, 18).accepted).toBe(true); // sloppy but flat-ish
+        const r = validatePoseAngle(0, 0, 0, 32);
+        expect(r.accepted).toBe(false);
+        expect(r.reason).toBe("magCharPoseRejectNotFlat");
     });
 });

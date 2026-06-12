@@ -16,6 +16,7 @@ import {
     currentMatrixOf,
     proposedMatrixOf,
     estimateFlatPoseBias,
+    validatePoseAngle,
     headingError,
 } from "../js/utils/magCharacterizationCompute.js";
 import { buildCharacterizationModel } from "../js/utils/magModelExport.js";
@@ -51,36 +52,50 @@ export const CAL_PROMPTS = [
 // ── Pose definitions (shared between composable and dialog for 3D model) ───
 
 // Shared pose templates (reused across all 4 cardinal directions)
+// targetRoll/targetPitch: expected MSP attitude per pose, signs verified
+// against hardware captures (high-inclination reference dataset): Nose Up
+// measures pitch ≈ −40, Nose Down ≈ +30, box-under-left ≈ +30 roll,
+// box-under-right ≈ −30 roll. Used by validatePoseAngle (±20° window).
 const _POSE_FLAT = (line) => ({
     label: "Flat",
     instruction: `Rest the drone LEVEL on the paper. Nose pointing along the ${line} line.`,
     rotX: 0,
     rotZ: 0,
     isFlat: true,
+    targetRoll: 0,
+    targetPitch: 0,
 });
 const _POSE_NOSE_UP = (line) => ({
     label: "Nose Up (box under nose)",
     instruction: `Place box under FRONT arms. Nose tilts UP. Keep nose on the ${line} line.`,
     rotX: 35,
     rotZ: 0,
+    targetRoll: 0,
+    targetPitch: -35,
 });
 const _POSE_NOSE_DOWN = (line) => ({
     label: "Nose Down (box under tail)",
     instruction: `Place box under REAR arms. Nose tilts DOWN. Keep nose on the ${line} line.`,
     rotX: -35,
     rotZ: 0,
+    targetRoll: 0,
+    targetPitch: 35,
 });
 const _POSE_LEFT_REST = (_line) => ({
     label: "Box under left (Roll right)",
     instruction: "Place box under LEFT side. Drone rolls RIGHT.",
     rotX: 0,
     rotZ: -25,
+    targetRoll: 30,
+    targetPitch: 0,
 });
 const _POSE_RIGHT_REST = (_line) => ({
     label: "Box under right (Roll left)",
     instruction: "Place box under RIGHT side. Drone rolls LEFT.",
     rotX: 0,
     rotZ: 25,
+    targetRoll: -30,
+    targetPitch: 0,
 });
 
 function _makeDirection(label, alignHint, heading, line) {
@@ -126,6 +141,7 @@ export function useMagCharacterization() {
     const gyroRms = ref(0);
     const captureSamples = ref(0);
     const poseNeedsRetry = ref(false); // set true when movement auto-aborts capture, cleared on next capture/advance
+    const poseRetryReason = ref(null); // i18n key explaining the rejection (angle gate), null for movement aborts
     const captureData = ref([]);
     const solverResult = ref(null);
     const replayData = ref([]); // [{ dirLabel, poseLabel, expectedHeading, roll, pitch, currentHeading, currentMag, newHeading, newMag }]
@@ -421,6 +437,7 @@ export function useMagCharacterization() {
         captureSamples.value = 0;
         _movementFrames = 0;
         poseNeedsRetry.value = false;
+        poseRetryReason.value = null;
 
         const poseSamples = [];
         const dirIdx = currentDirectionIndex.value;
@@ -451,6 +468,7 @@ export function useMagCharacterization() {
                         sampleTimer = null;
                     }
                     poseNeedsRetry.value = true;
+                    poseRetryReason.value = null; // generic movement abort
                     phase.value = "await";
                     tick();
                     return;
@@ -481,6 +499,28 @@ export function useMagCharacterization() {
                     clearTimeout(sampleTimer);
                     sampleTimer = null;
                 }
+
+                // Pose-angle gate: reject captures whose mean attitude does not
+                // match the intended pose (wrong box placement, drone flat when
+                // a tilt was requested, precarious near-vertical balance).
+                const poseDef = directions[dirIdx].poses[poseIdx];
+                let meanRoll = 0;
+                let meanPitch = 0;
+                for (const s of poseSamples) {
+                    meanRoll += s.roll;
+                    meanPitch += s.pitch;
+                }
+                meanRoll /= poseSamples.length;
+                meanPitch /= poseSamples.length;
+                const angleCheck = validatePoseAngle(poseDef.targetRoll, poseDef.targetPitch, meanRoll, meanPitch);
+                if (!angleCheck.accepted) {
+                    poseNeedsRetry.value = true;
+                    poseRetryReason.value = angleCheck.reason;
+                    phase.value = "await";
+                    tick();
+                    return;
+                }
+
                 if (!captureData.value[dirIdx]) {
                     captureData.value[dirIdx] = [];
                 }
@@ -503,6 +543,7 @@ export function useMagCharacterization() {
             return;
         }
         poseNeedsRetry.value = false;
+        poseRetryReason.value = null;
         if (!captureData.value[currentDirectionIndex.value]) {
             captureData.value[currentDirectionIndex.value] = [];
         }
@@ -521,6 +562,7 @@ export function useMagCharacterization() {
             return;
         }
         poseNeedsRetry.value = false;
+        poseRetryReason.value = null;
         gyroWindow = [];
         stableCount = 0;
         isStable.value = false;
@@ -1610,6 +1652,7 @@ export function useMagCharacterization() {
         calibrationSphereFit,
         calCurrentPrompt,
         poseNeedsRetry,
+        poseRetryReason,
         // Computed
         currentDirection,
         currentPoseDef,
