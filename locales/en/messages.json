@@ -3806,8 +3806,14 @@
     "sensorsRefresh": {
         "message": "Refresh:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Refresh all:"
+    },
     "sensorsScale": {
         "message": "Scale:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Auto"
     },
     "sensorsGyroSelect": {
         "message": "Gyroscope"
