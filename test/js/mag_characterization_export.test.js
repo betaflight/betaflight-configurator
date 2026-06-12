@@ -506,7 +506,7 @@ describe("mag characterization export", () => {
 
     describe("Test 9b: Full-corrected heading fields in model export", () => {
         it("heading_full_corrected_deg is present and valid on real fixture", () => {
-            const model = loadFixture("clean_calibration_model.json");
+            const model = loadFixture("high-inclination_model.json");
             for (const pose of model.poses) {
                 expect(pose).toHaveProperty("heading_full_corrected_deg");
                 if (pose.heading_full_corrected_deg != null) {
@@ -520,7 +520,7 @@ describe("mag characterization export", () => {
         });
 
         it("full-corrected error respects algebraic consistency", () => {
-            const model = loadFixture("clean_calibration_model.json");
+            const model = loadFixture("high-inclination_model.json");
             for (const pose of model.poses) {
                 if (pose.heading_full_corrected_deg == null) continue;
                 const wrapped = signedHeadingError(

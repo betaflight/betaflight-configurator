@@ -1,7 +1,7 @@
 /**
  * 3×2 comparison matrix — heading error under all combinations of
  * {current, proposed} alignment × {raw, −center, W_inv·(−center)} correction,
- * evaluated on the 20-pose gold fixture (samples4, Saguenay QC, CW270FLIP).
+ * evaluated on the 20-pose reference dataset (samples4, Saguenay QC, CW270FLIP).
  *
  * Frame conventions (the part v3task.md Appendix K originally got wrong):
  * the ellipsoid (center, W_inv) is fit on CAPTURE-frame data, so the
@@ -15,7 +15,7 @@
  *   P3 = heading(newCombined·W_inv·(m − center))      proposed, full ellipsoid
  *
  * This is a CHARACTERIZATION test: the numeric thresholds are the measured
- * baseline of the gold fixture. If a code change moves them, understand why
+ * baseline of the reference dataset. If a code change moves them, understand why
  * before adjusting — see PullRequest.md "Comparison matrix".
  */
 import { describe, expect, it } from "vitest";
@@ -37,8 +37,8 @@ const RAD_TO_DEG = 180 / Math.PI;
 
 // ── Shared setup ────────────────────────────────────────────────────────────
 
-const calFixture = loadFixture("clean_calibration_tumble.json");
-const poses = loadFixture("clean_calibration_poses.json");
+const calFixture = loadFixture("high-inclination_tumble.json");
+const poses = loadFixture("high-inclination_poses.json");
 
 const ellipsoid = fitEllipsoid(calFixture.samples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
 const poseSamples = flattenSamples(poses);
@@ -119,7 +119,7 @@ const mean = computeMatrix();
 
 // ── Tests ───────────────────────────────────────────────────────────────────
 
-describe("3×2 comparison matrix (gold fixture)", () => {
+describe("3×2 comparison matrix (samples4 dataset)", () => {
     it("logs the full matrix", () => {
         const f = (k) => `${mean[k].toFixed(1)}°`.padStart(7);
         console.log("  COMPARISON MATRIX (mean heading error, 20 poses)");

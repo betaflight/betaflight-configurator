@@ -3,7 +3,7 @@
  * full calibration pipeline produces measurably better heading accuracy than
  * the factory CW270FLIP preset.
  *
- * Gold fixture: samples4 — outdoor capture 2026-06-11, Saguenay QC
+ * Reference dataset (high-inclination): samples4 — outdoor capture 2026-06-11, Saguenay QC
  *   Coordinates: 48.4167N, 71.1503W
  *   WMM ref: decl=-15.36°, incl=70.89°, |B|=53998 nT (NOAA WMMHR-2025)
  *   Baseline: align_mag=CW270FLIP, mag_calibration=0,0,0
@@ -34,9 +34,9 @@ const RAD_TO_DEG = 180 / Math.PI;
 
 // ── Shared state (computed once, used across tests) ──────────────────────
 
-const cal = loadFixture("clean_calibration_tumble.json");
-const poses = loadFixture("clean_calibration_poses.json");
-const model = loadFixture("clean_calibration_model.json");
+const cal = loadFixture("high-inclination_tumble.json");
+const poses = loadFixture("high-inclination_poses.json");
+const model = loadFixture("high-inclination_model.json");
 
 const ellipsoid = fitEllipsoid(cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
 const poseSamples = flattenSamples(poses);
@@ -613,7 +613,7 @@ describe("selectAlignmentPackage: correct-then-solve (production path)", () => {
     // Solving on RAW data entangles hard-iron compensation into the rotation.
     // Production (runSolver) therefore also solves on center-subtracted samples
     // and ships alignment + mag_calibration as one package when it measures
-    // better on the poses. These tests lock that behavior on the gold fixture
+    // better on the poses. These tests lock that behavior on the reference dataset
     // through the SAME function the wizard and the offline tools call.
     const ec = ellipsoid.center;
     const pkg = selectAlignmentPackage({
@@ -626,7 +626,7 @@ describe("selectAlignmentPackage: correct-then-solve (production path)", () => {
         ellipsoidParams: ellipsoid,
     });
 
-    it("picks the calibrated package on the gold fixture", () => {
+    it("picks the calibrated package on the reference dataset", () => {
         expect(pkg.result.error).toBeUndefined();
         expect(pkg.usedCalibratedPackage).toBe(true);
         expect(pkg.validation).not.toBeNull();
@@ -692,7 +692,7 @@ describe("selectAlignmentPackage: correct-then-solve (production path)", () => {
 });
 
 describe("estimateFlatPoseBias: tumble-less bias detection", () => {
-    it("detects the horizontal hard iron from the gold fixture's flat poses", () => {
+    it("detects the horizontal hard iron from the reference dataset's flat poses", () => {
         const est = estimateFlatPoseBias(captureData, directions);
         expect(est).not.toBeNull();
         expect(est.flatPoseCount).toBe(4);

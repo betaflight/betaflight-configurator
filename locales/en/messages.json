@@ -7854,6 +7854,317 @@
     "magCalibrationDiscard": {
         "message": "Discard"
     },
+
+    "magCharTitle": {
+        "message": "Mag Characterization"
+    },
+    "magCharWizardTitle": {
+        "message": "Compass Setup Wizard"
+    },
+    "magCharIntroHeadline": {
+        "message": "We're going to teach your drone which way is North!"
+    },
+    "magCharIntroDoesTwo": {
+        "message": "This wizard does two things:"
+    },
+    "magCharIntroSpin": {
+        "message": "Spin it around"
+    },
+    "magCharIntroSpinDesc": {
+        "message": "twirl the drone in every direction so we can learn how your specific hardware reads the Earth's magnetic field."
+    },
+    "magCharIntroPoses": {
+        "message": "20 guided poses"
+    },
+    "magCharIntroPosesDesc": {
+        "message": "rest the drone at precise angles so we can build a model of how accurate your compass is at every orientation."
+    },
+    "magCharIntroTime": {
+        "message": "The whole thing takes about 5 minutes and makes your GPS rescue tracks <em>way</em> smoother."
+    },
+    "magCharIntroYouNeed": {
+        "message": "You'll need:"
+    },
+    "magCharIntroNeedTable": {
+        "message": "A <strong>flat table</strong> and a big sheet of paper"
+    },
+    "magCharIntroNeedCompass": {
+        "message": "A <strong>compass</strong> (or phone app) — draw N&thinsp;/&thinsp;E&thinsp;/&thinsp;S&thinsp;/&thinsp;W lines"
+    },
+    "magCharIntroNeedBox": {
+        "message": "A <strong>tissue box, book, or battery</strong> to tilt the drone"
+    },
+    "magCharCalibrateTitle": {
+        "message": "Calibrate Magnetometer"
+    },
+    "magCharCalibratePrompt": {
+        "message": "Rotate the drone in all directions to collect calibration data."
+    },
+    "magCharCalibrateCoverage": {
+        "message": "sphere coverage {{ coverage }}% ({{ covered }} of {{ total }} regions painted)"
+    },
+    "magCharCalibrateDone": {
+        "message": "Done calibrating"
+    },
+    "magCharCalibrateExport": {
+        "message": "Export samples"
+    },
+    "magCharSkip": {
+        "message": "Skip"
+    },
+    "magCharReplayPose": {
+        "message": "Pose {{ index }}/{{ total }} — {{ label }}"
+    },
+    "magCharReplayYourPose": {
+        "message": "Your Pose"
+    },
+    "magCharReplayCurrent": {
+        "message": "Current (align_mag={{ align }})"
+    },
+    "magCharReplayProposed": {
+        "message": "Proposed"
+    },
+    "magCharReplayCalibrated": {
+        "message": "Calibrated"
+    },
+    "magCharReplayCalibratedTitle": {
+        "message": "Sensor calibration corrected + proposed alignment"
+    },
+    "magCharReplayNoTumble": {
+        "message": "N/A - run calibration tumble"
+    },
+    "magCharReplayStoredForBb": {
+        "message": "— Stored for blackbox replay —"
+    },
+    "magCharReplayCorrectsPostFlight": {
+        "message": "Corrects sensor errors during post-flight analysis"
+    },
+    "magCharReplayHardIron": {
+        "message": "Hard iron: {{ x }}, {{ y }}, {{ z }}"
+    },
+    "magCharReplayRollPitchExpected": {
+        "message": "Roll {{ roll }}° &nbsp; Pitch {{ pitch }}° &nbsp; Expected heading {{ heading }}°"
+    },
+    "magCharReplayHeadingErrorText": {
+        "message": "off by {{ error }}° {{ direction }}{{ symbol }}"
+    },
+    "magCharReplayPause": {
+        "message": "⏸ Pause"
+    },
+    "magCharReplayPlay": {
+        "message": "▶ Play"
+    },
+    "magCharReplayViewResults": {
+        "message": "View Results"
+    },
+    "magCharReplayAutoPlaying": {
+        "message": "Auto-playing {{ total }} poses"
+    },
+    "magCharReplayApplyNow": {
+        "message": "Apply Now via CLI"
+    },
+    "magCharCompleteTitle": {
+        "message": "Wizard Complete"
+    },
+    "magCharCompleteAlignment": {
+        "message": "Alignment"
+    },
+    "magCharCompleteAlignmentCustom": {
+        "message": "({{ roll }}°, {{ pitch }}°, {{ yaw }}°)"
+    },
+    "magCharCompleteQuality": {
+        "message": "Quality"
+    },
+    "magCharCompleteQualityZero": {
+        "message": "Solver could not converge — check field consistency and hardware diagnostics below."
+    },
+    "magCharCompleteResiduals": {
+        "message": "Residuals"
+    },
+    "magCharCompleteResidualsValue": {
+        "message": "Z: {{ z }}% | XY: {{ xy }}%"
+    },
+    "magCharCompleteFieldB": {
+        "message": "Field |B|"
+    },
+    "magCharCompleteFieldSuspicious": {
+        "message": "— suspicious (±{{ dev }}%)"
+    },
+    "magCharCompleteFieldConsistent": {
+        "message": "— consistent (±{{ dev }}%)"
+    },
+    "magCharCompleteChirality": {
+        "message": "Chirality"
+    },
+    "magCharCompleteChiralityMirrored": {
+        "message": "Possible axis mirroring detected"
+    },
+    "magCharCompleteYawReference": {
+        "message": "Yaw reference"
+    },
+    "magCharCompleteYawAbsolute": {
+        "message": "Absolute (compass)"
+    },
+    "magCharCompleteYawRelative": {
+        "message": "Relative (consistency only)"
+    },
+    "magCharCompleteSuggestedCal": {
+        "message": "Suggested Calibration"
+    },
+    "magCharCompleteHardwareDiag": {
+        "message": "Hardware Diagnostics"
+    },
+    "magCharCompleteDiagDriverMismatch": {
+        "message": "DRIVER MISMATCH — field direction stationary during rotation"
+    },
+    "magCharCompleteDiagLeftHanded": {
+        "message": "DRIVER ERROR — left-handed coordinate system"
+    },
+    "magCharCompleteDiagGainAsymmetry": {
+        "message": "Gain asymmetry — κ={{ kappa }}"
+    },
+    "magCharCompleteDiagMountingSkew": {
+        "message": "Mounting skew detected"
+    },
+    "magCharCompleteDiagHealthy": {
+        "message": "Hardware appears healthy"
+    },
+    "magCharCompletePosesCaptured": {
+        "message": "{{ count }} poses captured across {{ directions }} directions."
+    },
+    "magCharCompleteExportPoses": {
+        "message": "Export Poses for Replay"
+    },
+    "magCharCompleteExportData": {
+        "message": "Export Characterization Data"
+    },
+    "magCharCompleteRefreshGps": {
+        "message": "Refresh GPS"
+    },
+    "magCharCompleteFetchingGps": {
+        "message": "Fetching GPS..."
+    },
+    "magCharCompleteApplyReboot": {
+        "message": "Apply Alignment & Reboot"
+    },
+    "magCharCompleteNoGeo": {
+        "message": "No GPS reference available. Click \"Refresh GPS\" for declination + calibration, or set declination manually in the Sensors tab after applying."
+    },
+    "magCharCompleteWillApplyCal": {
+        "message": "CALIBRATED PACKAGE ACTIVE — alignment + offsets, {{ calErr }}° mean error on the 20 poses"
+    },
+    "magCharCompleteAlignmentOnly": {
+        "message": "ALIGNMENT-ONLY (bias deferred) — {{ proposalErr }}° vs {{ calibratedErr }}° on the poses. Run the Full Calibration tumble for bias estimation."
+    },
+    "magCharCompleteBiasWarning": {
+        "message": "BIAS DETECTED BUT UNVERIFIED — no tumble this session. The proposal is untrustworthy: re-run with Full Calibration."
+    },
+    "magCharCliCommands": {
+        "message": "CLI Commands"
+    },
+    "magCharCliCopy": {
+        "message": "Copy"
+    },
+    "magCharCliCalNote": {
+        "message": "({{ incl }}° incl, {{ decl }}° decl, {{ strength }} nT)"
+    },
+    "magCharReportToggle": {
+        "message": "View Detailed Report"
+    },
+    "magCharReportHide": {
+        "message": "Hide Detailed Report"
+    },
+    "magCharReportCopy": {
+        "message": "Copy to Clipboard"
+    },
+    "magCharClose": {
+        "message": "Close"
+    },
+    "magCharFooterSkipPoses": {
+        "message": "Skip — 20 Poses Only"
+    },
+    "magCharFooterFullCal": {
+        "message": "Start with Full Calibration"
+    },
+    "magCharFooterSpacebar": {
+        "message": "Press SPACEBAR to capture"
+    },
+    "magCharFooterMovementRetry": {
+        "message": "Movement detected — hold steady and press SPACEBAR to retry"
+    },
+    "magCharFooterHoldSteady": {
+        "message": "Hold steady&hellip;"
+    },
+    "magCharFooterCapturing": {
+        "message": "Capturing&hellip; {{ samples }} samples"
+    },
+    "magCharFooterCaptured": {
+        "message": "&#10003; Pose captured &mdash; advancing&hellip;"
+    },
+    "magCharFooterRetry": {
+        "message": "Retry"
+    },
+    "magCharFooterCancel": {
+        "message": "Cancel"
+    },
+    "magCharFooterMagX": {
+        "message": "Mag X"
+    },
+    "magCharFooterMagY": {
+        "message": "Mag Y"
+    },
+    "magCharFooterMagZ": {
+        "message": "Mag Z"
+    },
+    "magCharAlertFwTooOld": {
+        "message": "CUSTOM mag alignment requires firmware {{ minVer }} or newer (detected: {{ detected }}).\n\nOlder firmware builds the custom rotation matrix without the angle negation added in betaflight#14849 and would apply the INVERSE of the solved rotation. Update the firmware, or use the nearest 90° preset instead."
+    },
+    "magCharAlertApplyConfirm": {
+        "message": "Apply alignment and reboot the flight controller?\n\nThe FC will disconnect and you'll need to reconnect."
+    },
+    "magCharAlertApplyFailed": {
+        "message": "Failed to apply: {{ error }}"
+    },
+    "magCharAlertInvalidPosesFile": {
+        "message": "This doesn't look like a characterization poses file (missing directions/metadata). Did you select the calibration samples file by mistake?"
+    },
+    "magCharAlertInvalidPosesJson": {
+        "message": "Invalid poses JSON file"
+    },
+    "magCharAlertInvalidCalFile": {
+        "message": "This doesn't look like a calibration samples file (missing samples/type). Did you select the poses file by mistake?"
+    },
+    "magCharAlertInvalidCalJson": {
+        "message": "Invalid calibration JSON file"
+    },
+    "magCharDebugLoadPoses": {
+        "message": "Load poses JSON"
+    },
+    "magCharDebugPosesLoaded": {
+        "message": "&#10003; Poses loaded"
+    },
+    "magCharDebugLoadCal": {
+        "message": "Load calibration JSON"
+    },
+    "magCharDebugCalLoaded": {
+        "message": "&#10003; Cal loaded"
+    },
+    "magCharDebugProceedReport": {
+        "message": "Proceed to Final Report"
+    },
+    "magCharDebugProceedSolver": {
+        "message": "Proceed to Solver (no calibration)"
+    },
+    "magCharDebugProceedPoses": {
+        "message": "Proceed to 20 Poses (with calibration)"
+    },
+    "magCharDebugLoadFirst": {
+        "message": "Load files first"
+    },
+    "magCharDebugToggle": {
+        "message": "Debug ▼"
+    },
+
     "magVizPointCloud": {
         "message": "Point Cloud"
     },

@@ -1,6 +1,6 @@
 /**
- * Regenerate test/fixtures/clean_calibration_model.json from the raw capture
- * fixtures (clean_calibration_tumble.json + clean_calibration_poses.json),
+ * Regenerate test/fixtures/high-inclination_model.json from the raw capture
+ * fixtures (high-inclination_tumble.json + high-inclination_poses.json),
  * running the CURRENT production pipeline via the same shared functions the
  * wizard uses (selectAlignmentPackage → computeCalFromEllipsoid →
  * computeReplayData → buildCharacterizationModel).
@@ -37,9 +37,9 @@ const CAPTURE_MAG_ZERO = { x: 0, y: 0, z: 0 }; // mag_calibration during capture
 
 const load = (name) => JSON.parse(fs.readFileSync(path.join(FIXTURES, name), "utf-8"));
 
-const cal = load("clean_calibration_tumble.json");
-const poses = load("clean_calibration_poses.json");
-const oldModel = load("clean_calibration_model.json");
+const cal = load("high-inclination_tumble.json");
+const poses = load("high-inclination_poses.json");
+const oldModel = load("high-inclination_model.json");
 
 // ── Pipeline (identical to runSolver) ───────────────────────────────────────
 
@@ -97,7 +97,7 @@ const model = buildCharacterizationModel({
     gpsLon: 0,
 });
 
-const outPath = path.join(FIXTURES, "clean_calibration_model.json");
+const outPath = path.join(FIXTURES, "high-inclination_model.json");
 fs.writeFileSync(outPath, `${JSON.stringify(model, null, 2)}\n`);
 
 console.log(`wrote ${outPath}`);

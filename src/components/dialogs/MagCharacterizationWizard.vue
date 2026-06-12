@@ -2,7 +2,7 @@
     <dialog ref="dialogRef" class="mag-char-dialog" @cancel.prevent @close="onDialogClose">
         <div class="mag-char-container">
             <div class="mag-char-header">
-                <h3 class="mag-char-title">Mag Characterization</h3>
+                <h3 class="mag-char-title">{{ $t("magCharTitle") }}</h3>
                 <button type="button" class="mag-char-close" @click="close">&times;</button>
             </div>
 
@@ -11,31 +11,30 @@
                 <div class="mag-char-setup-image">
                     <img src="../../images/drone_paper.jpg" alt="Drone on paper with compass rose" />
                 </div>
-                <h4>Compass Setup Wizard</h4>
-                <p><strong>We're going to teach your drone which way is North!</strong></p>
-                <p>This wizard does two things:</p>
+                <h4>{{ $t("magCharWizardTitle") }}</h4>
+                <p>
+                    <strong>{{ $t("magCharIntroHeadline") }}</strong>
+                </p>
+                <p>{{ $t("magCharIntroDoesTwo") }}</p>
                 <ol>
                     <li>
-                        <strong>Spin it around</strong> — twirl the drone in every direction so we can learn how your
-                        specific hardware reads the Earth's magnetic field.
+                        <strong>{{ $t("magCharIntroSpin") }}</strong> — {{ $t("magCharIntroSpinDesc") }}
                     </li>
                     <li>
-                        <strong>20 guided poses</strong> — rest the drone at precise angles so we can build a model of
-                        how accurate your compass is at every orientation.
+                        <strong>{{ $t("magCharIntroPoses") }}</strong> — {{ $t("magCharIntroPosesDesc") }}
                     </li>
                 </ol>
-                <p>The whole thing takes about 5 minutes and makes your GPS rescue tracks <em>way</em> smoother.</p>
-                <p><strong>You'll need:</strong></p>
+                <p v-html="$t('magCharIntroTime')"></p>
+                <p>
+                    <strong>{{ $t("magCharIntroYouNeed") }}</strong>
+                </p>
                 <ul>
-                    <li>A <strong>flat table</strong> and a big sheet of paper</li>
-                    <li>
-                        A <strong>compass</strong> (or phone app) — draw
-                        N&thinsp;/&thinsp;E&thinsp;/&thinsp;S&thinsp;/&thinsp;W lines
-                    </li>
-                    <li>A <strong>tissue box, book, or battery</strong> to tilt the drone</li>
+                    <li v-html="$t('magCharIntroNeedTable')"></li>
+                    <li v-html="$t('magCharIntroNeedCompass')"></li>
+                    <li v-html="$t('magCharIntroNeedBox')"></li>
                 </ul>
                 <div class="mag-char-complete-actions" style="margin-top: 16px">
-                    <span class="mag-char-debug-link" @click="toggleDebug">Debug &#9660;</span>
+                    <span class="mag-char-debug-link" @click="toggleDebug">{{ $t("magCharDebugToggle") }}</span>
                     <div
                         v-if="debugExpanded"
                         style="
@@ -48,11 +47,11 @@
                     >
                         <div style="display: flex; gap: 8px; margin-bottom: 8px">
                             <label :class="{ 'mag-char-debug-item': true, loaded: posesFileLoaded }" style="flex: 1">
-                                {{ posesFileLoaded ? "&#10003; Poses loaded" : "Load poses JSON" }}
+                                {{ posesFileLoaded ? $t("magCharDebugPosesLoaded") : $t("magCharDebugLoadPoses") }}
                                 <input type="file" accept=".json" style="display: none" @change="onPosesFileSelected" />
                             </label>
                             <label :class="{ 'mag-char-debug-item': true, loaded: calFileLoaded }" style="flex: 1">
-                                {{ calFileLoaded ? "&#10003; Cal loaded" : "Load calibration JSON" }}
+                                {{ calFileLoaded ? $t("magCharDebugCalLoaded") : $t("magCharDebugLoadCal") }}
                                 <input type="file" accept=".json" style="display: none" @change="onCalFileSelected" />
                             </label>
                         </div>
@@ -65,12 +64,12 @@
                         >
                             {{
                                 posesFileLoaded && calFileLoaded
-                                    ? "Proceed to Final Report"
+                                    ? $t("magCharDebugProceedReport")
                                     : posesFileLoaded
-                                      ? "Proceed to Solver (no calibration)"
+                                      ? $t("magCharDebugProceedSolver")
                                       : calFileLoaded
-                                        ? "Proceed to 20 Poses (with calibration)"
-                                        : "Load files first"
+                                        ? $t("magCharDebugProceedPoses")
+                                        : $t("magCharDebugLoadFirst")
                             }}
                         </button>
                     </div>
@@ -79,8 +78,8 @@
 
             <!-- Calibration tumble phase -->
             <div v-if="phase === 'calibrate'" class="mag-char-body">
-                <h4>Calibrate Magnetometer</h4>
-                <p>Rotate the drone in all directions to collect calibration data.</p>
+                <h4>{{ $t("magCharCalibrateTitle") }}</h4>
+                <p>{{ $t("magCharCalibratePrompt") }}</p>
                 <MagSphereView
                     :samples="calibrationSamples"
                     :sample-count="calibrationSampleCount"
@@ -92,25 +91,25 @@
                     :live-mag="calLiveMag"
                     viz-mode="pointcloud"
                 />
-                <!-- "sphere regions" = the 20 icosahedron faces used to bin sampled
-                     field directions (sphereFit.js ICOSA_FACE_DIRS). Unrelated to the
-                     20 guided poses — the numeric match is pure coincidence. -->
                 <p v-if="calibrationCoverage" style="margin-bottom: 0">
-                    sphere coverage {{ (calibrationCoverage.fraction * 100).toFixed(0) }}% ({{
-                        calibrationCoverage.covered
+                    {{
+                        $t("magCharCalibrateCoverage", {
+                            coverage: (calibrationCoverage.fraction * 100).toFixed(0),
+                            covered: calibrationCoverage.covered,
+                            total: calibrationCoverage.totalFaces,
+                        })
                     }}
-                    of {{ calibrationCoverage.totalFaces }} regions painted)
                 </p>
                 <p style="font-size: 13px; color: #7eb8ff; margin-top: 4px">{{ $t(calPromptI18n) }}</p>
                 <div class="mag-char-complete-actions" style="margin-top: 12px">
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="completeCalibrationPhase">
-                        Done calibrating
+                        {{ $t("magCharCalibrateDone") }}
                     </button>
                     <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="exportCalibrationSamples">
-                        Export samples
+                        {{ $t("magCharCalibrateExport") }}
                     </button>
                     <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="skipCalibration">
-                        Skip
+                        {{ $t("magCharSkip") }}
                     </button>
                 </div>
             </div>
@@ -168,40 +167,50 @@
             <div v-if="phase === 'replay'" class="mag-char-replay-section">
                 <div class="mag-char-replay-container">
                     <div class="mag-char-replay-controls">
-                        <span class="mag-char-replay-pose-label"
-                            >Pose {{ replayIndex + 1 }}/{{ replayData.length }} —
-                            {{ currentReplayPose?.poseLabel }}</span
-                        >
+                        <span class="mag-char-replay-pose-label">{{
+                            $t("magCharReplayPose", {
+                                index: replayIndex + 1,
+                                total: replayData.length,
+                                label: currentReplayPose?.poseLabel,
+                            })
+                        }}</span>
                         <span class="mag-char-replay-dir-label">{{ currentReplayPose?.dirLabel }}</span>
                         <span class="mag-char-replay-spacer"></span>
                         <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="replayPrev">
                             &larr;
                         </button>
                         <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="toggleAutoPlay">
-                            {{ isAutoPlaying ? "⏸ Pause" : "▶ Play" }}
+                            {{ isAutoPlaying ? $t("magCharReplayPause") : $t("magCharReplayPlay") }}
                         </button>
                         <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="replayNext">
                             &rarr;
                         </button>
                         <button type="button" class="mag-char-btn mag-char-btn-primary" @click="finishReplay">
-                            View Results
+                            {{ $t("magCharReplayViewResults") }}
                         </button>
                     </div>
 
                     <div class="mag-char-replay-compare-row">
                         <div class="mag-char-replay-compare-col">
-                            <span class="mag-char-replay-view-label">Your Pose</span>
+                            <span class="mag-char-replay-view-label">{{ $t("magCharReplayYourPose") }}</span>
                             <canvas ref="replay3dCanvas" class="mag-char-replay-canvas"></canvas>
-                            <div class="mag-char-replay-error" v-if="currentReplayPose" style="margin-top: 4px">
-                                Roll {{ currentReplayPose.roll.toFixed(1) }}° &nbsp; Pitch
-                                {{ currentReplayPose.pitch.toFixed(1) }}° &nbsp; Expected heading
-                                {{ currentReplayPose.expectedHeading.toFixed(0) }}°
-                            </div>
+                            <div
+                                class="mag-char-replay-error"
+                                v-if="currentReplayPose"
+                                style="margin-top: 4px"
+                                v-html="
+                                    $t('magCharReplayRollPitchExpected', {
+                                        roll: currentReplayPose.roll.toFixed(1),
+                                        pitch: currentReplayPose.pitch.toFixed(1),
+                                        heading: currentReplayPose.expectedHeading.toFixed(0),
+                                    })
+                                "
+                            ></div>
                         </div>
                         <div class="mag-char-replay-compare-col">
-                            <span class="mag-char-replay-view-label"
-                                >Current (align_mag={{ currentAlign || "?" }})</span
-                            >
+                            <span class="mag-char-replay-view-label">{{
+                                $t("magCharReplayCurrent", { align: currentAlign || "?" })
+                            }}</span>
                             <div
                                 class="mag-char-replay-heading-now"
                                 :class="
@@ -232,7 +241,7 @@
                             </div>
                         </div>
                         <div class="mag-char-replay-compare-col">
-                            <span class="mag-char-replay-view-label">Proposed</span>
+                            <span class="mag-char-replay-view-label">{{ $t("magCharReplayProposed") }}</span>
                             <div
                                 class="mag-char-replay-heading-new"
                                 :class="
@@ -266,11 +275,9 @@
                             </div>
                         </div>
                         <div class="mag-char-replay-compare-col">
-                            <span
-                                class="mag-char-replay-view-label"
-                                title="Sensor calibration corrected + proposed alignment"
-                                >Calibrated</span
-                            >
+                            <span class="mag-char-replay-view-label" :title="$t('magCharReplayCalibratedTitle')">{{
+                                $t("magCharReplayCalibrated")
+                            }}</span>
                             <template
                                 v-if="
                                     ellipsoidParams &&
@@ -304,7 +311,7 @@
                                     {{ currentReplayPose.fullCorrectedScore || "" }}
                                 </div>
                             </template>
-                            <div v-else class="mag-char-replay-na">N/A - run calibration tumble</div>
+                            <div v-else class="mag-char-replay-na">{{ $t("magCharReplayNoTumble") }}</div>
                             <div
                                 class="mag-char-replay-gain-note"
                                 style="
@@ -315,7 +322,7 @@
                                     padding-top: 4px;
                                 "
                             >
-                                — Stored for blackbox replay —
+                                {{ $t("magCharReplayStoredForBb") }}
                             </div>
                             <div
                                 v-if="ellipsoidParams"
@@ -330,17 +337,22 @@
                                 v-if="ellipsoidParams"
                                 class="mag-char-replay-gain-note"
                                 style="font-size: 9px; color: #888"
-                                title="Hard iron offset in ADC counts"
+                                :title="'Hard iron offset in ADC counts'"
                             >
-                                Hard iron: {{ ellipsoidParams.center.x.toFixed(0) }},
-                                {{ ellipsoidParams.center.y.toFixed(0) }}, {{ ellipsoidParams.center.z.toFixed(0) }}
+                                {{
+                                    $t("magCharReplayHardIron", {
+                                        x: ellipsoidParams.center.x.toFixed(0),
+                                        y: ellipsoidParams.center.y.toFixed(0),
+                                        z: ellipsoidParams.center.z.toFixed(0),
+                                    })
+                                }}
                             </div>
                             <div
                                 v-if="ellipsoidParams"
                                 class="mag-char-replay-gain-note"
                                 style="font-size: 8px; color: #666; margin-top: 4px"
                             >
-                                Corrects sensor errors during post-flight analysis
+                                {{ $t("magCharReplayCorrectsPostFlight") }}
                             </div>
                         </div>
                     </div>
@@ -349,8 +361,30 @@
 
             <!-- Complete -->
             <div v-if="phase === 'complete'" class="mag-char-body">
+                <!-- Verdict banner -->
+                <div v-if="proposedIncludesCenter" class="mag-char-verdict mag-char-verdict-good">
+                    {{
+                        $t("magCharCompleteWillApplyCal", {
+                            calErr: calibrationValidation?.fullCorrectedMeanErr?.toFixed(1) ?? "?",
+                        })
+                    }}
+                </div>
+                <div
+                    v-else-if="calibrationValidation && !calibrationValidation.recommended"
+                    class="mag-char-verdict mag-char-verdict-warn"
+                >
+                    {{
+                        $t("magCharCompleteAlignmentOnly", {
+                            proposalErr: calibrationValidation.proposedMeanErr.toFixed(1),
+                            calibratedErr: calibrationValidation.fullCorrectedMeanErr.toFixed(1),
+                        })
+                    }}
+                </div>
+                <div v-else-if="biasWarning" class="mag-char-verdict mag-char-verdict-warn">
+                    {{ $t("magCharCompleteBiasWarning") }}
+                </div>
                 <div class="mag-char-summary-card">
-                    <h4>Wizard Complete</h4>
+                    <h4>{{ $t("magCharCompleteTitle") }}</h4>
 
                     <!-- Solver result -->
                     <div v-if="solverResult" class="mag-char-solver-result">
@@ -359,91 +393,124 @@
                         </div>
                         <template v-else>
                             <div class="mag-char-solver-row">
-                                <span class="mag-char-stat-label">Alignment</span>
+                                <span class="mag-char-stat-label">{{ $t("magCharCompleteAlignment") }}</span>
                                 <span class="mag-char-stat-value" style="color: #4ec97e; font-weight: 700">
                                     {{ solverResult.label }}
                                     <template v-if="solverResult.customAngles">
-                                        ({{ solverResult.customAngles.roll.toFixed(0) }}°,
-                                        {{ solverResult.customAngles.pitch.toFixed(0) }}°,
-                                        {{ solverResult.customAngles.yaw.toFixed(0) }}°)
+                                        {{
+                                            $t("magCharCompleteAlignmentCustom", {
+                                                roll: solverResult.customAngles.roll.toFixed(0),
+                                                pitch: solverResult.customAngles.pitch.toFixed(0),
+                                                yaw: solverResult.customAngles.yaw.toFixed(0),
+                                            })
+                                        }}
                                     </template>
                                 </span>
                             </div>
                             <div class="mag-char-solver-row">
-                                <span class="mag-char-stat-label">Quality</span>
+                                <span class="mag-char-stat-label">{{ $t("magCharCompleteQuality") }}</span>
                                 <span class="mag-char-stat-value">{{ solverResult.qualityScore }}%</span>
                             </div>
                             <div v-if="solverResult.qualityScore === 0" class="mag-char-solver-row">
                                 <span class="mag-char-stat-value" style="font-size: 11px; color: #888">
-                                    Solver could not converge — check field consistency and hardware diagnostics below.
+                                    {{ $t("magCharCompleteQualityZero") }}
                                 </span>
                             </div>
                             <div class="mag-char-solver-row">
-                                <span class="mag-char-stat-label">Residuals</span>
-                                <span class="mag-char-stat-value">
-                                    Z: {{ (solverResult.residuals.zRms * 100).toFixed(1) }}% | XY:
-                                    {{ (solverResult.residuals.xyRms * 100).toFixed(1) }}%
-                                </span>
+                                <span class="mag-char-stat-label">{{ $t("magCharCompleteResiduals") }}</span>
+                                <span class="mag-char-stat-value">{{
+                                    $t("magCharCompleteResidualsValue", {
+                                        z: (solverResult.residuals.zRms * 100).toFixed(1),
+                                        xy: (solverResult.residuals.xyRms * 100).toFixed(1),
+                                    })
+                                }}</span>
                             </div>
                             <div class="mag-char-solver-row">
-                                <span class="mag-char-stat-label">Field |B|</span>
+                                <span class="mag-char-stat-label">{{ $t("magCharCompleteFieldB") }}</span>
                                 <span class="mag-char-stat-value">
                                     {{ solverResult.fieldConsistency.mean }} counts
                                     <span v-if="solverResult.fieldConsistency.suspect" style="color: #ee4444">
-                                        — suspicious (±{{ solverResult.fieldConsistency.maxDevPct }}%)</span
+                                        {{
+                                            $t("magCharCompleteFieldSuspicious", {
+                                                dev: solverResult.fieldConsistency.maxDevPct,
+                                            })
+                                        }}</span
                                     >
                                     <span v-else style="color: #4ec97e">
-                                        — consistent (±{{ solverResult.fieldConsistency.maxDevPct }}%)</span
+                                        {{
+                                            $t("magCharCompleteFieldConsistent", {
+                                                dev: solverResult.fieldConsistency.maxDevPct,
+                                            })
+                                        }}</span
                                     >
                                 </span>
                             </div>
                             <div v-if="solverResult.chiralityFlag" class="mag-char-solver-row">
-                                <span class="mag-char-stat-label" style="color: #ee4444">Chirality</span>
-                                <span class="mag-char-stat-value" style="color: #ee4444"
-                                    >Possible axis mirroring detected</span
-                                >
+                                <span class="mag-char-stat-label" style="color: #ee4444">{{
+                                    $t("magCharCompleteChirality")
+                                }}</span>
+                                <span class="mag-char-stat-value" style="color: #ee4444">{{
+                                    $t("magCharCompleteChiralityMirrored")
+                                }}</span>
                             </div>
                             <div class="mag-char-solver-row">
-                                <span class="mag-char-stat-label">Yaw reference</span>
+                                <span class="mag-char-stat-label">{{ $t("magCharCompleteYawReference") }}</span>
                                 <span class="mag-char-stat-value">{{
-                                    solverResult.yawAbsolute ? "Absolute (compass)" : "Relative (consistency only)"
+                                    solverResult.yawAbsolute
+                                        ? $t("magCharCompleteYawAbsolute")
+                                        : $t("magCharCompleteYawRelative")
                                 }}</span>
                             </div>
                             <div v-if="calibrationOffsets" class="mag-char-solver-row">
-                                <span class="mag-char-stat-label" style="color: #eebb44">Suggested Calibration</span>
+                                <span class="mag-char-stat-label" style="color: #eebb44">{{
+                                    $t("magCharCompleteSuggestedCal")
+                                }}</span>
                                 <span class="mag-char-stat-value" style="color: #eebb44">
                                     mag_calibration = {{ calibrationOffsets.x }}, {{ calibrationOffsets.y }},
                                     {{ calibrationOffsets.z }}
                                     <span v-if="geoReference" class="mag-char-cal-note">
-                                        ({{ geoReference.inclination.toFixed(0) }}° incl,
-                                        {{ geoReference.declination.toFixed(0) }}° decl,
-                                        {{ geoReference.fieldStrength }} nT)
+                                        {{
+                                            $t("magCharCliCalNote", {
+                                                incl: geoReference.inclination.toFixed(0),
+                                                decl: geoReference.declination.toFixed(0),
+                                                strength: geoReference.fieldStrength,
+                                            })
+                                        }}
                                     </span>
                                 </span>
                             </div>
                             <div v-if="ellipsoidDiag" class="mag-char-solver-row">
-                                <span class="mag-char-stat-label">Hardware Diagnostics</span>
+                                <span class="mag-char-stat-label">{{ $t("magCharCompleteHardwareDiag") }}</span>
                                 <span class="mag-char-stat-value">
-                                    <span v-if="ellipsoidDiag.driverSuspect" style="color: #ee4444"
-                                        >DRIVER MISMATCH — field direction stationary during rotation</span
+                                    <span v-if="ellipsoidDiag.driverSuspect" style="color: #ee4444">{{
+                                        $t("magCharCompleteDiagDriverMismatch")
+                                    }}</span>
+                                    <span
+                                        v-else-if="ellipsoidDiag.chirality === 'left-handed'"
+                                        style="color: #ee4444"
+                                        >{{ $t("magCharCompleteDiagLeftHanded") }}</span
                                     >
-                                    <span v-else-if="ellipsoidDiag.chirality === 'left-handed'" style="color: #ee4444"
-                                        >DRIVER ERROR — left-handed coordinate system</span
-                                    >
-                                    <span v-else-if="ellipsoidDiag.conditionNumber > 1.15" style="color: #ee6644"
-                                        >Gain asymmetry — κ={{ ellipsoidDiag.conditionNumber.toFixed(1) }}</span
-                                    >
-                                    <span v-else-if="ellipsoidDiag.offDiagonalRms > 0.05" style="color: #eebb44"
-                                        >Mounting skew detected</span
-                                    >
-                                    <span v-else style="color: #4ec97e">Hardware appears healthy</span>
+                                    <span v-else-if="ellipsoidDiag.conditionNumber > 1.15" style="color: #ee6644">{{
+                                        $t("magCharCompleteDiagGainAsymmetry", {
+                                            kappa: ellipsoidDiag.conditionNumber.toFixed(1),
+                                        })
+                                    }}</span>
+                                    <span v-else-if="ellipsoidDiag.offDiagonalRms > 0.05" style="color: #eebb44">{{
+                                        $t("magCharCompleteDiagMountingSkew")
+                                    }}</span>
+                                    <span v-else style="color: #4ec97e">{{ $t("magCharCompleteDiagHealthy") }}</span>
                                 </span>
                             </div>
                         </template>
                     </div>
 
                     <p style="margin-top: 12px">
-                        {{ completedPoseCount }} poses captured across {{ directions.length }} directions.
+                        {{
+                            $t("magCharCompletePosesCaptured", {
+                                count: completedPoseCount,
+                                directions: directions.length,
+                            })
+                        }}
                     </p>
                 </div>
 
@@ -453,10 +520,10 @@
                         class="mag-char-btn mag-char-btn-primary"
                         @click="exportCharacterizationPoses"
                     >
-                        Export Poses for Replay
+                        {{ $t("magCharCompleteExportPoses") }}
                     </button>
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="exportCharacterizationData">
-                        Export Characterization Data
+                        {{ $t("magCharCompleteExportData") }}
                     </button>
                     <button
                         type="button"
@@ -464,7 +531,7 @@
                         :disabled="isFetchingGeo"
                         @click="refreshGeoReference"
                     >
-                        {{ isFetchingGeo ? "Fetching GPS..." : "Refresh GPS" }}
+                        {{ isFetchingGeo ? $t("magCharCompleteFetchingGps") : $t("magCharCompleteRefreshGps") }}
                     </button>
                     <button
                         v-if="solverResult && !solverResult.error"
@@ -473,25 +540,24 @@
                         style="background: #eebb44; border-color: #eebb44"
                         @click="doApplyAndReboot"
                     >
-                        Apply Alignment &amp; Reboot
+                        {{ $t("magCharCompleteApplyReboot") }}
                     </button>
                 </div>
                 <p v-if="!geoReference" class="mag-char-geo-hint">
-                    No GPS reference available. Click "Refresh GPS" for declination + calibration, or set declination
-                    manually in the Sensors tab after applying.
+                    {{ $t("magCharCompleteNoGeo") }}
                 </p>
 
                 <!-- CLI commands block -->
                 <div v-if="cliCommands.length" class="mag-char-cli-block">
                     <div class="mag-char-cli-header">
-                        <span>CLI Commands</span>
+                        <span>{{ $t("magCharCliCommands") }}</span>
                         <button
                             type="button"
                             class="mag-char-btn mag-char-btn-cancel"
                             style="font-size: 10px; padding: 2px 8px"
                             @click="copyCliCommands"
                         >
-                            Copy
+                            {{ $t("magCharCliCopy") }}
                         </button>
                     </div>
                     <pre class="mag-char-cli-pre">{{ cliCommands.join("\n") }}</pre>
@@ -503,7 +569,7 @@
                 </div>
                 <div class="mag-char-complete-actions" style="margin-top: 8px">
                     <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="toggleReport">
-                        {{ showDetailedReport ? "Hide Detailed Report" : "View Detailed Report" }}
+                        {{ showDetailedReport ? $t("magCharReportHide") : $t("magCharReportToggle") }}
                     </button>
                     <button
                         v-if="showDetailedReport"
@@ -511,7 +577,7 @@
                         class="mag-char-btn mag-char-btn-cancel"
                         @click="copyReport"
                     >
-                        Copy to Clipboard
+                        {{ $t("magCharReportCopy") }}
                     </button>
                 </div>
             </div>
@@ -521,10 +587,10 @@
                 <template v-if="phase === 'intro'">
                     <span class="mag-char-readout-spacer"></span>
                     <button type="button" class="mag-char-btn mag-char-btn-cancel" @click="startWizard">
-                        Skip — 20 Poses Only
+                        {{ $t("magCharFooterSkipPoses") }}
                     </button>
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="startCalibrationPhase">
-                        Start with Full Calibration
+                        {{ $t("magCharFooterFullCal") }}
                     </button>
                 </template>
 
@@ -537,23 +603,28 @@
                         <span
                             v-if="phase === 'await' && isStable && !poseNeedsRetry"
                             class="mag-char-readout-item mag-char-spacebar-prompt"
-                            >Press SPACEBAR to capture</span
+                            >{{ $t("magCharFooterSpacebar") }}</span
                         >
                         <span
                             v-else-if="phase === 'await' && isStable && poseNeedsRetry"
                             class="mag-char-readout-item"
                             style="color: #ee6644"
-                            >Movement detected — hold steady and press SPACEBAR to retry</span
+                            >{{ $t("magCharFooterMovementRetry") }}</span
                         >
-                        <span v-else-if="phase === 'await'" class="mag-char-readout-item mag-char-unstable-text"
-                            >Hold steady&hellip;</span
-                        >
+                        <span
+                            v-else-if="phase === 'await'"
+                            class="mag-char-readout-item mag-char-unstable-text"
+                            v-html="$t('magCharFooterHoldSteady')"
+                        ></span>
                         <span v-else-if="phase === 'capturing'" class="mag-char-readout-item mag-char-capturing-text"
-                            >Capturing&hellip; {{ captureSamples }} samples</span
+                            >{{ $t("magCharFooterCapturing", { samples: captureSamples }) }} samples</span
                         >
-                        <span v-else class="mag-char-readout-item" style="color: #4ec97e"
-                            >&#10003; Pose captured &mdash; advancing&hellip;</span
-                        >
+                        <span
+                            v-else
+                            class="mag-char-readout-item"
+                            style="color: #4ec97e"
+                            v-html="$t('magCharFooterCaptured')"
+                        ></span>
                         <span class="mag-char-readout-sep">|</span>
                         <span class="mag-char-readout-item">Gyro: {{ gyroRms.toFixed(1) }}&deg;/s</span>
                         <span class="mag-char-readout-item">R: {{ lastRoll.toFixed(1) }}&deg;</span>
@@ -565,7 +636,7 @@
                             class="mag-char-btn mag-char-btn-cancel"
                             @click="retryPose"
                         >
-                            Retry
+                            {{ $t("magCharFooterRetry") }}
                         </button>
                         <button
                             v-if="phase === 'await'"
@@ -573,7 +644,7 @@
                             class="mag-char-btn mag-char-btn-cancel"
                             @click="skipPose"
                         >
-                            Skip
+                            {{ $t("magCharSkip") }}
                         </button>
                         <button
                             v-if="phase === 'await'"
@@ -581,13 +652,13 @@
                             class="mag-char-btn mag-char-btn-cancel"
                             @click="cancelWizard"
                         >
-                            Cancel
+                            {{ $t("magCharFooterCancel") }}
                         </button>
                     </div>
                     <div class="mag-char-readout-row mag-char-readout-row-secondary">
-                        <span class="mag-char-readout-item">Mag X: {{ lastMag[0] }}</span>
-                        <span class="mag-char-readout-item">Mag Y: {{ lastMag[1] }}</span>
-                        <span class="mag-char-readout-item">Mag Z: {{ lastMag[2] }}</span>
+                        <span class="mag-char-readout-item">{{ $t("magCharFooterMagX") }}: {{ lastMag[0] }}</span>
+                        <span class="mag-char-readout-item">{{ $t("magCharFooterMagY") }}: {{ lastMag[1] }}</span>
+                        <span class="mag-char-readout-item">{{ $t("magCharFooterMagZ") }}: {{ lastMag[2] }}</span>
                         <span class="mag-char-readout-sep">|</span>
                         <span class="mag-char-readout-item">|B|: {{ lastFieldStrength }}</span>
                     </div>
@@ -599,12 +670,14 @@
                     class="mag-char-btn mag-char-btn-primary"
                     @click="close"
                 >
-                    Close
+                    {{ $t("magCharClose") }}
                 </button>
 
                 <!-- Replay footer -->
                 <div v-if="phase === 'replay'" class="mag-char-readout-bar">
-                    <span class="mag-char-readout-item">Auto-playing {{ replayData.length }} poses</span>
+                    <span class="mag-char-readout-item">{{
+                        $t("magCharReplayAutoPlaying", { total: replayData.length })
+                    }}</span>
                     <span class="mag-char-readout-spacer"></span>
                     <button
                         type="button"
@@ -612,10 +685,10 @@
                         style="background: #eebb44; border-color: #eebb44"
                         @click="doApplyAndReboot"
                     >
-                        Apply Now via CLI
+                        {{ $t("magCharReplayApplyNow") }}
                     </button>
                     <button type="button" class="mag-char-btn mag-char-btn-primary" @click="finishReplay">
-                        View Results
+                        {{ $t("magCharReplayViewResults") }}
                     </button>
                 </div>
             </div>
@@ -634,6 +707,7 @@
  * direction, droneModel for pitch/roll. N/E/S/W labels CSS-overlaid.
  */
 import { ref, reactive, computed, watch, onScopeDispose, onMounted, nextTick } from "vue";
+import { useTranslation } from "i18next-vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization, CAL_PROMPTS } from "../../composables/useMagCharacterization.js";
@@ -645,6 +719,7 @@ import { send as cliSend, saveAndReconnect, isMspCliSupported } from "../../comp
 import semver from "semver";
 
 const fcStore = useFlightControllerStore();
+const { t } = useTranslation();
 const DEG_TO_RAD = Math.PI / 180;
 
 // First firmware whose CUSTOM mag alignment matches the wizard's math:
@@ -1246,20 +1321,15 @@ async function doApplyAndReboot() {
 
     if (solverResult.value?.alignment === 9 && !isCustomMagAlignSupported()) {
         alert(
-            `CUSTOM mag alignment requires firmware ${MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN} or newer ` +
-                `(detected: ${fcStore.config?.flightControllerVersion || "unknown"}).\n\n` +
-                "Older firmware builds the custom rotation matrix without the angle negation " +
-                "added in betaflight#14849 and would apply the INVERSE of the solved rotation. " +
-                "Update the firmware, or use the nearest 90° preset instead.",
+            t("magCharAlertFwTooOld", {
+                minVer: MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN,
+                detected: fcStore.config?.flightControllerVersion || "unknown",
+            }),
         );
         return;
     }
 
-    if (
-        !confirm(
-            "Apply alignment and reboot the flight controller?\n\nThe FC will disconnect and you'll need to reconnect.",
-        )
-    ) {
+    if (!confirm(t("magCharAlertApplyConfirm"))) {
         return;
     }
 
@@ -1306,7 +1376,7 @@ async function doApplyAndReboot() {
         close();
     } catch (e) {
         console.error("Failed to apply alignment", e);
-        alert(`Failed to apply: ${e.message || e}`);
+        alert(t("magCharAlertApplyFailed", { error: e.message || e }));
     }
 }
 
@@ -1446,16 +1516,14 @@ function onPosesFileSelected(e) {
         try {
             const data = JSON.parse(ev.target.result);
             if (!data.directions || data.metadata?.currentAlignment == null) {
-                alert(
-                    "This doesn't look like a characterization poses file (missing directions/metadata). Did you select the calibration samples file by mistake?",
-                );
+                alert(t("magCharAlertInvalidPosesFile"));
                 return;
             }
             _loadedPosesData = data;
             posesFileLoaded.value = true;
         } catch (err) {
             console.error("Invalid poses JSON", err);
-            alert("Invalid poses JSON file");
+            alert(t("magCharAlertInvalidPosesJson"));
         }
     };
     reader.readAsText(file);
@@ -1470,16 +1538,14 @@ function onCalFileSelected(e) {
         try {
             const data = JSON.parse(ev.target.result);
             if (!data.samples || data.type !== "calibration_tumble") {
-                alert(
-                    "This doesn't look like a calibration samples file (missing samples/type). Did you select the poses file by mistake?",
-                );
+                alert(t("magCharAlertInvalidCalFile"));
                 return;
             }
             _loadedCalData = data;
             calFileLoaded.value = true;
         } catch (err) {
             console.error("Invalid calibration JSON", err);
-            alert("Invalid calibration JSON file");
+            alert(t("magCharAlertInvalidCalJson"));
         }
     };
     reader.readAsText(file);
@@ -2034,5 +2100,23 @@ defineExpose({ show, close });
     color: #666;
     font-style: italic;
     padding: 8px 0;
+}
+.mag-char-verdict {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.mag-char-verdict-good {
+    background: rgba(30, 80, 30, 0.5);
+    color: #4ec97e;
+    border: 1px solid #4ec97e;
+}
+.mag-char-verdict-warn {
+    background: rgba(80, 60, 20, 0.5);
+    color: #eebb44;
+    border: 1px solid #eebb44;
 }
 </style>

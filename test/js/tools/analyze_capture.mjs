@@ -5,8 +5,8 @@
  *
  *   node test/js/tools/analyze_capture.mjs <dir>
  *
- * <dir> must contain calibration_samples_*.json (or clean_calibration_tumble)
- * and characterization_poses_*.json (or clean_calibration_poses). The FC
+ * <dir> must contain calibration_samples_*.json (or high-inclination_tumble)
+ * and characterization_poses_*.json (or high-inclination_poses). The FC
  * configuration active during capture (alignment, custom angles) is read from
  * the poses export metadata — no manual argument, no human error vector.
  */
@@ -38,8 +38,8 @@ const findFile = (...prefixes) => {
     return JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8"));
 };
 
-const cal = findFile("calibration_samples", "clean_calibration_tumble");
-const poses = findFile("characterization_poses", "clean_calibration_poses");
+const cal = findFile("calibration_samples", "high-inclination_tumble");
+const poses = findFile("characterization_poses", "high-inclination_poses");
 
 // FC configuration during capture, from export metadata
 const CAPTURE_ALIGNMENT = poses.metadata?.currentAlignment ?? 8;
