@@ -292,6 +292,10 @@
         "message": "\u65E5\u672C\u8A9E",
         "description": "Don't translate!!!"
     },
+    "language_ka": {
+        "message": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8",
+        "description": "Don't translate!!!"
+    },
     "language_ko": {
         "message": "\ud55c\uad6d\uc5b4",
         "description": "Don't translate!!!"
@@ -3806,8 +3810,14 @@
     "sensorsRefresh": {
         "message": "Refresh:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Refresh all:"
+    },
     "sensorsScale": {
         "message": "Scale:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Auto"
     },
     "sensorsGyroSelect": {
         "message": "Gyroscope"
@@ -4371,6 +4381,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Backup cancelled, flashing aborted"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Backup failed: received invalid data from the device (not in CLI mode), flashing aborted"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",

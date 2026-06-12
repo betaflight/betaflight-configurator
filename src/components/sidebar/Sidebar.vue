@@ -24,7 +24,7 @@
         </UTooltip>
         <UTooltip :text="$t('sidebarToggleDarkMode')" :delay-duration="300">
             <UButton
-                :icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'"
+                :icon="isDark ? 'i-lucide-sun' : 'i-lucide-moon'"
                 variant="ghost"
                 color="neutral"
                 square

@@ -16,6 +16,7 @@ const languagesAvailables = [
     "gl",
     "it",
     "ja",
+    "ka",
     "ko",
     "nl",
     "pt",
