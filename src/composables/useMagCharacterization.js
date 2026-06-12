@@ -16,7 +16,7 @@ import {
     headingError,
 } from "../js/utils/magCharacterizationCompute.js";
 import { computeCoverage } from "../js/utils/sphereFit.js";
-import { eulerToMatrix, mat3mulVec, ALIGNMENT_MATRICES } from "../js/utils/magAlignment.js";
+import { eulerToMatrix, mat3mulVec, mat3mul, mat3transpose, ALIGNMENT_MATRICES } from "../js/utils/magAlignment.js";
 import { useFlightControllerStore } from "../stores/fc";
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -166,6 +166,15 @@ export function useMagCharacterization() {
     let gyroWindow = [];
     let stableCount = 0;
     let currentMatForCalibration = null;
+    // R_proposed · R_captureᵀ — maps capture-frame vectors into the proposed
+    // alignment frame. Identity until the solver has run.
+    let newCombinedForCalibration = null;
+    // Alignment configuration active on the FC while samples were captured —
+    // recorded at solve time for export provenance (schema 2.1 captured_under).
+    let capturedUnderInfo = null;
+    // mag_calibration values active on the FC during capture (read via MSP CLI
+    // before the tumble; null when unknown → assumed zero).
+    const magZeroAtCapture = ref(null);
     let _movementFrames = 0;
 
     // Shared helper — iterate every captured sample with body-frame mag pre-computed
@@ -538,6 +547,24 @@ export function useMagCharacterization() {
             currentMatForCalibration = ALIGNMENT_MATRICES[currentAlign] || ALIGNMENT_MATRICES[1];
         }
 
+        // newCombined = R_proposed · R_captureᵀ — used to express capture-frame
+        // quantities (ellipsoid center) in the frame of the alignment that will
+        // be applied (compass.c subtracts mag_calibration AFTER alignment).
+        let proposedMat;
+        if (result.alignment === 9 && result.customAngles) {
+            proposedMat = eulerToMatrix(result.customAngles.roll, result.customAngles.pitch, result.customAngles.yaw);
+        } else {
+            proposedMat = ALIGNMENT_MATRICES[result.alignment] || currentMatForCalibration;
+        }
+        newCombinedForCalibration = mat3mul(proposedMat, mat3transpose(currentMatForCalibration));
+
+        // Record capture provenance for the model export (schema 2.1)
+        capturedUnderInfo = {
+            alignment: currentAlign,
+            custom_angles: currentAlign === 9 && customAngles ? { ...customAngles } : null,
+            mag_zero: magZeroAtCapture.value ? { ...magZeroAtCapture.value } : { x: 0, y: 0, z: 0 },
+        };
+
         // Pre-compute replay data for all captured poses
         computeReplayData(result, currentAlign);
 
@@ -557,7 +584,7 @@ export function useMagCharacterization() {
     }
 
     function computeCalFromEllipsoid() {
-        const cal = _computeCalFromEllipsoid(ellipsoidParams.value, currentMatForCalibration || ALIGNMENT_MATRICES[1]);
+        const cal = _computeCalFromEllipsoid(ellipsoidParams.value, newCombinedForCalibration, magZeroAtCapture.value);
         if (cal) calibrationOffsets.value = cal;
     }
 
@@ -1145,8 +1172,12 @@ export function useMagCharacterization() {
         const ep = ellipsoidParams.value;
 
         const json = {
-            $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.0",
-            version: "2.0",
+            $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.1",
+            version: "2.1",
+            // Configuration active on the FC while the samples were captured.
+            // ellipsoid_correction (center, soft_iron) is expressed in THIS frame;
+            // hard_iron is expressed in the PROPOSED alignment frame below.
+            captured_under: capturedUnderInfo,
             ellipsoid_correction: ep
                 ? {
                     center: { x: ep.center.x, y: ep.center.y, z: ep.center.z },
@@ -1531,8 +1562,11 @@ export function useMagCharacterization() {
             report += hdr("CALIBRATION (FIRMWARE-SUPPORTED)");
             report += `  mag_calibration = ${cal.x}, ${cal.y}, ${cal.z}\n`;
             report += ellipsoidParams.value
-                ? "  (derived from ellipsoid center via currentInv \u00B7 center)\n"
-                : "  (derived from WMM regression)\n";
+                ? "  (ellipsoid center mapped into the proposed alignment frame:\n" +
+                  "   newCombined \u00B7 (center + magZero_at_capture) \u2014 firmware subtracts\n" +
+                  "   mag_calibration AFTER alignment, compass.c:492-550)\n"
+                : "  (derived from WMM regression \u2014 legacy path, frame semantics\n" +
+                  "   unverified; prefer running the calibration tumble)\n";
             report += "\n";
         }
 
@@ -1744,6 +1778,7 @@ export function useMagCharacterization() {
         replayData,
         calibrationOffsets,
         axisGains,
+        magZeroAtCapture,
         geoReference,
         isFetchingGeo,
         ellipsoidParams,

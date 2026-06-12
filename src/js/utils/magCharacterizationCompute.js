@@ -48,23 +48,38 @@ export function scoreHeading(errorDeg) {
 /**
  * Derive firmware mag_calibration offsets from the ellipsoid fit center.
  *
- * The ellipsoid center is the hard-iron bias in the current firmware-aligned
- * body frame. Firmware subtracts mag_calibration in the SENSOR frame before
- * alignment, so we rotate the center through the inverse of the current
- * alignment matrix:  cal = currentInv · center.
+ * Frame derivation (betaflight compass.c:492-550 — alignment is applied FIRST,
+ * then mag_calibration is subtracted, so magZero lives in the ALIGNED BODY
+ * frame of whatever alignment is active):
+ *
+ *   capture:  m = R_capture·s − magZero_capture        (what MSP_RAW_IMU streams)
+ *   fit:      center ≈ R_capture·b − magZero_capture   (bias of m, capture frame)
+ *   sensor bias:  b = R_captureᵀ·(center + magZero_capture)
+ *   after the wizard applies R_proposed, firmware needs:
+ *     magZero_new = R_proposed·b = newCombined·(center + magZero_capture)
+ *   where newCombined = R_proposed·R_captureᵀ.
  *
  * @param {{ center: {x:number,y:number,z:number}, W_inv: number[][], radius: number, residual: number }|null} ellipsoidParams
- * @param {number[][]} currentMat - current firmware alignment matrix (3×3)
+ * @param {number[][]} newCombined - R_proposed·R_captureᵀ (3×3); identity when the
+ *   proposed alignment equals the alignment active during capture
+ * @param {{x:number,y:number,z:number}|null} [magZeroAtCapture] - mag_calibration
+ *   values active on the FC while the tumble was captured (null → assumed zero)
  * @returns {{x:number,y:number,z:number}|null}
  */
-export function computeCalFromEllipsoid(ellipsoidParams, currentMat) {
+export function computeCalFromEllipsoid(ellipsoidParams, newCombined, magZeroAtCapture = null) {
     if (!ellipsoidParams) return null;
-    const inv = mat3transpose(currentMat);
     const c = ellipsoidParams.center;
+    const z = magZeroAtCapture || { x: 0, y: 0, z: 0 };
+    const b = [c.x + z.x, c.y + z.y, c.z + z.z];
+    const m = newCombined || [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+    ];
     return {
-        x: Math.round(inv[0][0] * c.x + inv[0][1] * c.y + inv[0][2] * c.z),
-        y: Math.round(inv[1][0] * c.x + inv[1][1] * c.y + inv[1][2] * c.z),
-        z: Math.round(inv[2][0] * c.x + inv[2][1] * c.y + inv[2][2] * c.z),
+        x: Math.round(m[0][0] * b[0] + m[0][1] * b[1] + m[0][2] * b[2]),
+        y: Math.round(m[1][0] * b[0] + m[1][1] * b[1] + m[1][2] * b[2]),
+        z: Math.round(m[2][0] * b[0] + m[2][1] * b[1] + m[2][2] * b[2]),
     };
 }
 
@@ -149,15 +164,38 @@ export function computeReplayData(result, currentAlignment, captureData, directi
                 newSin += Math.sin(newDir);
                 newCos += Math.cos(newDir);
 
-                // Full corrected heading: matches proposed. The ellipsoid correction
-                // (W_inv, center) normalizes |B| magnitude uniformity, not heading angle.
-                // The calibration parameters are displayed alongside the proposed heading
-                // as data for blackbox-log-viewer post-flight analysis.
-                // See planv3 Appendix I for the three-attempt investigation proving
-                // that center subtraction always shifts heading direction.
-                if (calOffsets || ellipsoidParams) {
-                    fcSin += Math.sin(newDir);
-                    fcCos += Math.cos(newDir);
+                // Full corrected heading: hard-iron + soft-iron correction applied in
+                // the CAPTURE frame (the frame the ellipsoid was fit in), then rotated
+                // into the proposed body frame:
+                //   m_fc = newCombined · W_inv · (m_raw − center)
+                // The operator order matters: W_inv and center live in the capture
+                // body frame, so they must be applied before the frame change.
+                if (ellipsoidParams) {
+                    const ec = ellipsoidParams.center;
+                    const w = ellipsoidParams.W_inv;
+                    const dx = s.mag[0] - ec.x;
+                    const dy = s.mag[1] - ec.y;
+                    const dz = s.mag[2] - ec.z;
+                    const corr = [
+                        w[0][0] * dx + w[0][1] * dy + w[0][2] * dz,
+                        w[1][0] * dx + w[1][1] * dy + w[1][2] * dz,
+                        w[2][0] * dx + w[2][1] * dy + w[2][2] * dz,
+                    ];
+                    const fcBody = mat3mulVec(newCombined, corr);
+                    const fcLevel = undoRollPitch(fcBody, rollRad, pitchRad);
+                    const fcDir = Math.atan2(fcLevel[1], fcLevel[0]);
+                    fcSin += Math.sin(fcDir);
+                    fcCos += Math.cos(fcDir);
+                    hasFullCorrected = true;
+                } else if (calOffsets) {
+                    // No ellipsoid fit: calOffsets are expressed in the PROPOSED
+                    // alignment frame (computeCalFromEllipsoid output convention),
+                    // so subtract after the frame change.
+                    const fcBody = [newBody[0] - calOffsets.x, newBody[1] - calOffsets.y, newBody[2] - calOffsets.z];
+                    const fcLevel = undoRollPitch(fcBody, rollRad, pitchRad);
+                    const fcDir = Math.atan2(fcLevel[1], fcLevel[0]);
+                    fcSin += Math.sin(fcDir);
+                    fcCos += Math.cos(fcDir);
                     hasFullCorrected = true;
                 }
 

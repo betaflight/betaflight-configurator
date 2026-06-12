@@ -322,10 +322,12 @@ describe("pipeline proof: ellipsoid correction normalizes field magnitude", () =
 describe("pipeline proof: ellipsoid center vs WMM calibration offsets", () => {
     it("ellipsoid-derived offsets are mathematically self-consistent with the fit", () => {
         const center = ellipsoid.center;
+        // Subtraction below happens on capture-frame samples (s.mag), so the
+        // frame-matched offsets are the ellipsoid center itself — no rotation.
         const calEllipsoid = {
-            x: Math.round(currentInv[0][0] * center.x + currentInv[0][1] * center.y + currentInv[0][2] * center.z),
-            y: Math.round(currentInv[1][0] * center.x + currentInv[1][1] * center.y + currentInv[1][2] * center.z),
-            z: Math.round(currentInv[2][0] * center.x + currentInv[2][1] * center.y + currentInv[2][2] * center.z),
+            x: Math.round(center.x),
+            y: Math.round(center.y),
+            z: Math.round(center.z),
         };
 
         const calWmm = poses.metadata.calibrationOffsets;
@@ -412,6 +414,7 @@ describe("pipeline proof: model export schema", () => {
         const required = [
             "$schema",
             "version",
+            "captured_under",
             "ellipsoid_correction",
             "geo_reference",
             "alignment",
@@ -421,7 +424,9 @@ describe("pipeline proof: model export schema", () => {
             "poses",
         ];
         for (const k of required) expect(model).toHaveProperty(k);
-        expect(model.version).toBe("2.0");
+        expect(model.version).toBe("2.1");
+        expect(model.captured_under.alignment).toBe(8);
+        expect(model.captured_under.mag_zero).toEqual({ x: 0, y: 0, z: 0 });
         expect(model.poses.length).toBe(20);
     });
 
@@ -548,11 +553,17 @@ describe("computeReplayData: direct unit test", () => {
         expect(replayResult.length).toBe(20);
     });
 
-    it("fullCorrectedHeading matches proposed (calibration params shown separately)", () => {
+    it("fullCorrectedHeading applies the ellipsoid correction in the capture frame (P3)", () => {
         for (const d of replayResult) {
             expect(d.fullCorrectedHeading).not.toBeNull();
-            expect(d.fullCorrectedHeading).toBeCloseTo(d.newHeading, 0);
+            expect(Number.isFinite(d.fullCorrectedHeading)).toBe(true);
+            expect(d.fullCorrectedHeading).toBeGreaterThanOrEqual(-180);
+            expect(d.fullCorrectedHeading).toBeLessThanOrEqual(180);
         }
+        // The correction must actually do something: with a hard-iron center
+        // this large (76% of |H|), corrected headings cannot all equal proposed.
+        const differing = replayResult.filter((d) => Math.abs(d.fullCorrectedHeading - d.newHeading) > 0.5);
+        expect(differing.length).toBeGreaterThan(0);
     });
 
     it("every entry has all required fields", () => {
@@ -615,7 +626,9 @@ describe("computeReplayData: direct unit test", () => {
 });
 
 describe("computeCalFromEllipsoid: direct unit test", () => {
-    const calOffsets = computeCalFromEllipsoid(ellipsoid, ALIGNMENT_MATRICES[8]);
+    // Offsets for the alignment the wizard will apply: newCombined·center
+    // (firmware subtracts mag_calibration AFTER alignment, compass.c:492-550)
+    const calOffsets = computeCalFromEllipsoid(ellipsoid, newCombined);
 
     it("returns non-null offsets when ellipsoid is available", () => {
         expect(calOffsets).not.toBeNull();
@@ -628,17 +641,34 @@ describe("computeCalFromEllipsoid: direct unit test", () => {
     });
 
     it("returns null when ellipsoid is null", () => {
-        const result = computeCalFromEllipsoid(null, ALIGNMENT_MATRICES[8]);
+        const result = computeCalFromEllipsoid(null, newCombined);
         expect(result).toBeNull();
     });
 
     it("calibration offsets are self-consistent with the ellipsoid center", () => {
-        const inv = mat3transpose(ALIGNMENT_MATRICES[8]);
         const center = ellipsoid.center;
-        // Round-trip: center should approximately equal mat * cal
-        const calBody = mat3mulVec(ALIGNMENT_MATRICES[8], [calOffsets.x, calOffsets.y, calOffsets.z]);
-        expect(Math.abs(calBody[0] - center.x)).toBeLessThan(2);
-        expect(Math.abs(calBody[1] - center.y)).toBeLessThan(2);
-        expect(Math.abs(calBody[2] - center.z)).toBeLessThan(2);
+        // Round-trip: mapping the offsets back into the capture frame must
+        // reproduce the ellipsoid center (newCombinedᵀ · cal ≈ center)
+        const backToCapture = mat3mulVec(mat3transpose(newCombined), [calOffsets.x, calOffsets.y, calOffsets.z]);
+        expect(Math.abs(backToCapture[0] - center.x)).toBeLessThan(2);
+        expect(Math.abs(backToCapture[1] - center.y)).toBeLessThan(2);
+        expect(Math.abs(backToCapture[2] - center.z)).toBeLessThan(2);
+    });
+
+    it("identity newCombined returns the rounded center (alignment unchanged case)", () => {
+        const cal = computeCalFromEllipsoid(ellipsoid, null);
+        expect(cal.x).toBe(Math.round(ellipsoid.center.x));
+        expect(cal.y).toBe(Math.round(ellipsoid.center.y));
+        expect(cal.z).toBe(Math.round(ellipsoid.center.z));
+    });
+
+    it("composes mag_calibration active during capture into the total bias", () => {
+        const priorZero = { x: 100, y: -50, z: 25 };
+        const withPrior = computeCalFromEllipsoid(ellipsoid, newCombined, priorZero);
+        const c = ellipsoid.center;
+        const expected = mat3mulVec(newCombined, [c.x + priorZero.x, c.y + priorZero.y, c.z + priorZero.z]);
+        expect(withPrior.x).toBe(Math.round(expected[0]));
+        expect(withPrior.y).toBe(Math.round(expected[1]));
+        expect(withPrior.z).toBe(Math.round(expected[2]));
     });
 });

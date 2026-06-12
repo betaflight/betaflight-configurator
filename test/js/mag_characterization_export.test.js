@@ -190,8 +190,12 @@ function buildExportJson(
     const ec = ellipsoidCorrection;
 
     return {
-        $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.0",
-        version: "2.0",
+        $schema: "https://betaflight.com/blackbox/mag-characterization-model/2.1",
+        version: "2.1",
+        // Capture provenance (schema 2.1): the production export records the
+        // alignment + mag_calibration active during capture; this test builder
+        // exercises schema mechanics only.
+        captured_under: null,
         ellipsoid_correction: ec
             ? {
                 center: { x: ec.center.x, y: ec.center.y, z: ec.center.z },
@@ -579,8 +583,8 @@ describe("mag characterization export", () => {
 
             const str = JSON.stringify(fixtureJson, null, 2);
             const reparsed = JSON.parse(str);
-            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.0");
-            expect(reparsed.version).toBe("2.0");
+            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.1");
+            expect(reparsed.version).toBe("2.1");
             expect(fixtureResult.alignment).toBe(9);
             expect(reparsed.alignment).not.toBeNull();
             expect(reparsed.quality).not.toBeNull();
@@ -839,8 +843,8 @@ describe("mag characterization export", () => {
             const str2 = JSON.stringify(json2, null, 2);
 
             // Reparsed JSON preserves all top-level keys
-            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.0");
-            expect(reparsed.version).toBe("2.0");
+            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.1");
+            expect(reparsed.version).toBe("2.1");
             expect(reparsed.poses.length).toBe(5);
             expect(reparsed.quality.score_percent).toBeGreaterThanOrEqual(0);
 
