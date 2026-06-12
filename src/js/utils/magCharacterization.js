@@ -304,7 +304,11 @@ function computeHeadingVariance(directions, samples, headingMode) {
     const RAD_TO_DEG = 180 / Math.PI;
 
     if (headingMode === "absolute") {
-        // Group samples by pose (contiguous blocks in the samples array)
+        // Group samples by pose. Samples carry an optional poseKey (set by the
+        // wizard per direction×attitude pose); without it, contiguous blocks
+        // sharing a headingRef merge — which collapses the 5 attitudes of one
+        // cardinal direction into a single group and dilutes the per-pose
+        // M-estimator cap. poseKey restores true per-pose aggregation.
         const poseErrors = [];
         let poseStart = 0;
         while (poseStart < samples.length) {
@@ -314,13 +318,16 @@ function computeHeadingVariance(directions, samples, headingMode) {
                 continue;
             }
 
-            // Find range of samples sharing the same headingRef (same pose)
+            // Find range of samples sharing the same pose (same headingRef and,
+            // when present, same poseKey)
+            const key = samples[poseStart].poseKey;
             let poseEnd = poseStart + 1;
             while (
                 poseEnd < samples.length &&
                 samples[poseEnd].headingRef !== undefined &&
                 samples[poseEnd].headingRef !== null &&
-                Math.abs(samples[poseEnd].headingRef - ref) < 0.5
+                Math.abs(samples[poseEnd].headingRef - ref) < 0.5 &&
+                samples[poseEnd].poseKey === key
             ) {
                 poseEnd++;
             }

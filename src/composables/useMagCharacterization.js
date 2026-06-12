@@ -514,7 +514,15 @@ export function useMagCharacterization() {
                 const cap = captureData.value[di]?.[pi];
                 if (cap && cap.samples) {
                     for (const s of cap.samples) {
-                        allSamples.push({ mag: s.mag, roll: s.roll, pitch: s.pitch, headingRef: s.headingRef });
+                        allSamples.push({
+                            mag: s.mag,
+                            roll: s.roll,
+                            pitch: s.pitch,
+                            headingRef: s.headingRef,
+                            // Per-pose key so the M-estimator caps each
+                            // direction×attitude pose independently
+                            poseKey: `${di}:${pi}`,
+                        });
                     }
                 }
             }

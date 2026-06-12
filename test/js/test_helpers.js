@@ -18,11 +18,15 @@ export function loadFixture(name) {
 
 export function flattenSamples(data) {
     const s = [];
-    for (const dir of data.directions) {
-        for (const pose of dir.poses) {
+    for (let di = 0; di < data.directions.length; di++) {
+        const dir = data.directions[di];
+        for (let pi = 0; pi < dir.poses.length; pi++) {
+            const pose = dir.poses[pi];
             if (pose.samples) {
                 for (const sm of pose.samples) {
-                    s.push(sm);
+                    // poseKey mirrors the wizard's per-pose tagging so the
+                    // M-estimator groups by true pose, not by headingRef block
+                    s.push({ ...sm, poseKey: `${di}:${pi}` });
                 }
             }
         }

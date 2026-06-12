@@ -40,9 +40,13 @@ const ellipsoid = fitEllipsoid(cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z 
 if (!ellipsoid) throw new Error("ellipsoid fit failed");
 
 const allSamples = [];
-for (const dir of poses.directions) {
-    for (const pose of dir.poses) {
-        if (pose.samples) allSamples.push(...pose.samples);
+for (let di = 0; di < poses.directions.length; di++) {
+    const dir = poses.directions[di];
+    for (let pi = 0; pi < dir.poses.length; pi++) {
+        const pose = dir.poses[pi];
+        if (pose.samples) {
+            for (const sm of pose.samples) allSamples.push({ ...sm, poseKey: `${di}:${pi}` });
+        }
     }
 }
 
