@@ -151,6 +151,11 @@ let fieldStrengthSum = 0;
 let fieldStrengthCount = 0;
 
 function magScale() {
+    // With a sphere fit, scale so the (re-centered) cloud hugs the wireframe
+    // sphere exactly; otherwise fall back to the average field strength.
+    if (props.sphereFit?.radius > 0) {
+        return DEFAULT_SPHERE_RADIUS / props.sphereFit.radius;
+    }
     const avg = fieldStrengthCount > 0 ? fieldStrengthSum / fieldStrengthCount : 0;
     return avg > 0 ? DEFAULT_SPHERE_RADIUS / avg : 1;
 }
@@ -174,12 +179,17 @@ let heatmapFaceCounts = null; // sample count per face
 
 function sampleToScene(s, _sampleIndex) {
     const scale = magScale();
-    const v = new THREE.Vector3(s.x, -s.y, -s.z);
-    if (s.qw !== undefined && s.qw !== null) {
-        const qCapture = new THREE.Quaternion(s.qx, -s.qy, -s.qz, s.qw);
-        v.applyQuaternion(qCapture);
-    }
-    return [v.x * scale, v.y * scale, v.z * scale];
+    // Body-frame display, centered on the fitted sphere center when known.
+    // Do NOT rotate by the capture attitude quaternion: that maps the sample
+    // into the EARTH frame, where the magnetic field is one constant direction
+    // (≈70° into the ground at high latitude) — every sample collapses into a
+    // single bottom cluster and coverage becomes invisible. Tumble coverage
+    // only exists in the body frame, where the cloud sweeps the full sphere.
+    const c = props.sphereFit?.center;
+    const x = s.x - (c?.x ?? 0);
+    const y = s.y - (c?.y ?? 0);
+    const z = s.z - (c?.z ?? 0);
+    return [x * scale, -y * scale, -z * scale];
 }
 
 // Shared 2D canvas init: size, DPR, clear, background, empty-state text
@@ -735,7 +745,8 @@ function updateHeatmap(sampleList) {
         return;
     }
 
-    // In attitude-based view, sphere is centered at origin
+    // sampleToScene already re-centers on the fitted sphere center, so the
+    // displayed cloud is origin-centered here
     const scx = 0,
         scy = 0,
         scz = 0;
@@ -1257,22 +1268,18 @@ function updatePoints(sampleList) {
     }
     repositionCalOffsetMarker();
 
-    // Position each point at its world-frame mag vector
+    // Position each point at its body-frame mag vector (fit-centered)
     const renderCount = count;
-    const scale = magScale();
-    const _v = new THREE.Vector3();
 
     for (let i = 0; i < renderCount; i++) {
         const s = sampleList[start + i];
         const idx = i * 3;
-        _v.set(s.x, -s.y, -s.z);
-        if (s.qw !== undefined && s.qw !== null) {
-            const qCapture = new THREE.Quaternion(s.qx, -s.qy, -s.qz, s.qw);
-            _v.applyQuaternion(qCapture);
-        }
-        positions[idx] = _v.x * scale;
-        positions[idx + 1] = _v.y * scale;
-        positions[idx + 2] = _v.z * scale;
+        // Body-frame, fit-centered — same mapping as sampleToScene (no attitude
+        // rotation; see the comment there).
+        const [px, py, pz] = sampleToScene(s, start + i);
+        positions[idx] = px;
+        positions[idx + 1] = py;
+        positions[idx + 2] = pz;
 
         // Color gradient: blue (old) → cyan → green → yellow → red (new)
         const t = renderCount > 1 ? i / (renderCount - 1) : 0;

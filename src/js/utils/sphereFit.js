@@ -237,3 +237,78 @@ function classifyZone(pt, center) {
     }
     return dz >= 0 ? "+Z" : "-Z";
 }
+
+// 20 icosahedron-face directions = the 20 dodecahedron vertices, normalized.
+// Generated once at module load.
+const ICOSA_FACE_DIRS = (() => {
+    const phi = (1 + Math.sqrt(5)) / 2;
+    const inv = 1 / phi;
+    const raw = [];
+    for (const sx of [-1, 1]) {
+        for (const sy of [-1, 1]) {
+            for (const sz of [-1, 1]) {
+                raw.push([sx, sy, sz]);
+            }
+        }
+    }
+    for (const a of [-inv, inv]) {
+        for (const b of [-phi, phi]) {
+            raw.push([0, a, b], [a, b, 0], [b, 0, a]);
+        }
+    }
+    return raw.map(([x, y, z]) => {
+        const n = Math.hypot(x, y, z);
+        return [x / n, y / n, z / n];
+    });
+})();
+
+/**
+ * Directional sphere coverage: what fraction of the sphere of directions
+ * (as seen from `center`) has been sampled?
+ *
+ * Unlike computeCoverage()'s min/max dwell ratio — which punishes spending
+ * extra time in any orientation and therefore goes DOWN with more data —
+ * this metric is presence-based and monotonically non-decreasing for a
+ * fixed center: directions are binned onto the 20 icosahedron faces and a
+ * face counts as covered once it has `minHits` samples. A thorough tumble
+ * reaches 100%.
+ *
+ * @param {Array<{x:number,y:number,z:number}>} points
+ * @param {{x:number,y:number,z:number}} center - best available cloud center
+ *   (running sphere-fit center; falls back to origin early in a capture)
+ * @param {number} [minHits=3] - samples required before a face counts
+ * @returns {{ covered: number, totalFaces: number, fraction: number,
+ *             faceCounts: number[], uniform: number }}
+ *   `uniform` aliases `fraction` for backward compatibility with consumers
+ *   of computeCoverage()'s shape.
+ */
+export function computeDirectionalCoverage(points, center, minHits = 3) {
+    const faceCounts = new Array(ICOSA_FACE_DIRS.length).fill(0);
+
+    for (const pt of points) {
+        const dx = pt.x - center.x;
+        const dy = pt.y - center.y;
+        const dz = pt.z - center.z;
+        const len = Math.hypot(dx, dy, dz);
+        if (len < 1e-9) continue;
+        const nx = dx / len;
+        const ny = dy / len;
+        const nz = dz / len;
+
+        let best = 0;
+        let bestDot = -2;
+        for (let f = 0; f < ICOSA_FACE_DIRS.length; f++) {
+            const d = ICOSA_FACE_DIRS[f];
+            const dot = nx * d[0] + ny * d[1] + nz * d[2];
+            if (dot > bestDot) {
+                bestDot = dot;
+                best = f;
+            }
+        }
+        faceCounts[best]++;
+    }
+
+    const covered = faceCounts.filter((c) => c >= minHits).length;
+    const fraction = covered / ICOSA_FACE_DIRS.length;
+    return { covered, totalFaces: ICOSA_FACE_DIRS.length, fraction, faceCounts, uniform: fraction };
+}

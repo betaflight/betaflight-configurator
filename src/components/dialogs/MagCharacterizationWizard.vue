@@ -84,7 +84,7 @@
                 <MagSphereView
                     :samples="calibrationSamples"
                     :sample-count="calibrationSampleCount"
-                    :sphere-fit="null"
+                    :sphere-fit="calibrationSphereFit"
                     :coverage="calibrationCoverage"
                     :attitude="attitudeRaw"
                     :quaternion="attitudeQuaternion"
@@ -93,7 +93,9 @@
                     viz-mode="pointcloud"
                 />
                 <p v-if="calibrationCoverage" style="margin-bottom: 0">
-                    {{ (calibrationCoverage.uniform * 100).toFixed(0) }}% coverage
+                    {{ (calibrationCoverage.fraction * 100).toFixed(0) }}% coverage ({{
+                        calibrationCoverage.covered
+                    }}/{{ calibrationCoverage.totalFaces }} directions)
                 </p>
                 <p style="font-size: 13px; color: #7eb8ff; margin-top: 4px">{{ $t(calPromptI18n) }}</p>
                 <div class="mag-char-complete-actions" style="margin-top: 12px">
@@ -724,6 +726,7 @@ const {
     calibrationSamples,
     calibrationSampleCount,
     calibrationCoverage,
+    calibrationSphereFit,
     calCurrentPrompt,
     poseNeedsRetry,
     startCalibrationPhase,

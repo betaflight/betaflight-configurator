@@ -16,7 +16,7 @@ import {
     validateCalibrationOffsets,
     headingError,
 } from "../js/utils/magCharacterizationCompute.js";
-import { computeCoverage } from "../js/utils/sphereFit.js";
+import { fitSphere, computeDirectionalCoverage } from "../js/utils/sphereFit.js";
 import { eulerToMatrix, mat3mulVec, mat3mul, mat3transpose, ALIGNMENT_MATRICES } from "../js/utils/magAlignment.js";
 import { useFlightControllerStore } from "../stores/fc";
 
@@ -129,17 +129,40 @@ export function useMagCharacterization() {
         "magCalibrationPrompt5",
         "magCalibrationPrompt6",
     ];
+    // Running sphere fit during the tumble — gives the live center estimate
+    // that coverage classification and the 3D view need (the hard-iron bias
+    // offsets the cloud by up to ~40% of its radius on real hardware).
+    // Refit every CAL_REFIT_INTERVAL new samples to stay cheap.
+    const CAL_REFIT_MIN_SAMPLES = 40;
+    const CAL_REFIT_INTERVAL = 25;
+    const calibrationSphereFit = ref(null);
+    let _calLastFitCount = 0;
+
+    function updateCalibrationSphereFit() {
+        const pts = calibrationSamples.value;
+        if (pts.length < CAL_REFIT_MIN_SAMPLES) return;
+        if (pts.length - _calLastFitCount < CAL_REFIT_INTERVAL && calibrationSphereFit.value) return;
+        const fit = fitSphere(pts.map((p) => ({ x: p.x, y: p.y, z: p.z })));
+        if (fit) {
+            calibrationSphereFit.value = fit;
+            _calLastFitCount = pts.length;
+        }
+    }
+
+    // Directional coverage: fraction of the 20 icosahedron-face directions
+    // (seen from the running center) that have been sampled. Presence-based,
+    // so it only ever grows for a stable center — unlike the old min/max
+    // dwell-ratio metric, which DROPPED when the user lingered in any
+    // orientation and plateaued long before the sphere was painted.
     const calibrationCoverage = computed(() => {
         const pts = calibrationSamples.value;
         if (pts.length < 4) return null;
-        const points = pts.map((p) => ({ x: p.x, y: p.y, z: p.z }));
-        const cov = computeCoverage(points, { x: 0, y: 0, z: 0 });
-        if (!_calMaxCoverage || cov.uniform > _calMaxCoverage.uniform) {
-            _calMaxCoverage = cov;
-        }
-        return _calMaxCoverage;
+        const center = calibrationSphereFit.value?.center ?? { x: 0, y: 0, z: 0 };
+        return computeDirectionalCoverage(
+            pts.map((p) => ({ x: p.x, y: p.y, z: p.z })),
+            center,
+        );
     });
-    let _calMaxCoverage = null;
     const isFetchingGeo = ref(false);
 
     // --- Computed ---
@@ -277,6 +300,8 @@ export function useMagCharacterization() {
         // ellipsoidParams around this call.
         ellipsoidParams.value = null;
         calibrationSamples.value = [];
+        calibrationSphereFit.value = null;
+        _calLastFitCount = 0;
         gyroWindow = [];
         stableCount = 0;
         isStable.value = false;
@@ -294,7 +319,8 @@ export function useMagCharacterization() {
     function startCalibrationPhase() {
         calibrationSamples.value = [];
         ellipsoidParams.value = null;
-        _calMaxCoverage = null;
+        calibrationSphereFit.value = null;
+        _calLastFitCount = 0;
         calCurrentPrompt.value = 0;
         if (_calPromptTimer) clearInterval(_calPromptTimer);
         _calPromptTimer = setInterval(() => {
@@ -360,6 +386,7 @@ export function useMagCharacterization() {
                     qy: quat?.y,
                     qz: quat?.z,
                 });
+                updateCalibrationSphereFit();
             }
         }
 
@@ -1342,7 +1369,8 @@ export function useMagCharacterization() {
         solverResult.value = null;
         ellipsoidParams.value = null;
         calibrationSamples.value = [];
-        _calMaxCoverage = null;
+        calibrationSphereFit.value = null;
+        _calLastFitCount = 0;
     }
 
     function cleanupTimer() {
@@ -1830,6 +1858,7 @@ export function useMagCharacterization() {
         calibrationSamples,
         calibrationSampleCount,
         calibrationCoverage,
+        calibrationSphereFit,
         calCurrentPrompt,
         poseNeedsRetry,
         // Computed

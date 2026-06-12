@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { fitEllipsoid, applyEllipsoidCorrection } from "../../src/js/utils/ellipsoidFit.js";
-import { computeCoverage } from "../../src/js/utils/sphereFit.js";
+import { computeCoverage, computeDirectionalCoverage, fitSphere } from "../../src/js/utils/sphereFit.js";
 
 // Seeded PRNG for deterministic tests
 let _seed = 42;
@@ -290,6 +290,75 @@ describe("ellipsoidFit", () => {
             expect(coverage.zones).toBeDefined();
             expect(coverage.uniform).toBeGreaterThan(0.5);
             expect(coverage.uniform).toBeLessThanOrEqual(1.0);
+        });
+    });
+
+    describe("Directional coverage (tumble progress metric)", () => {
+        // Fibonacci sphere: deterministic, even distribution
+        function fibSphere(n, radius, center) {
+            const pts = [];
+            for (let i = 0; i < n; i++) {
+                const k = i + 0.5;
+                const phi = Math.acos(1 - (2 * k) / n);
+                const theta = Math.PI * (1 + Math.sqrt(5)) * k;
+                pts.push({
+                    x: center.x + radius * Math.sin(phi) * Math.cos(theta),
+                    y: center.y + radius * Math.sin(phi) * Math.sin(theta),
+                    z: center.z + radius * Math.cos(phi),
+                });
+            }
+            return pts;
+        }
+
+        it("reaches 100% for a full tumble, even with a large hard-iron offset", () => {
+            // 700-count bias on an 1800-count sphere ≈ the real hardware (40%)
+            const center = { x: 650, y: -200, z: 150 };
+            const points = fibSphere(800, 1800, center);
+            const cov = computeDirectionalCoverage(points, center);
+            expect(cov.fraction).toBe(1);
+            expect(cov.covered).toBe(20);
+        });
+
+        it("running sphere fit recovers the center needed for classification", () => {
+            const trueCenter = { x: 650, y: -200, z: 150 };
+            const points = fibSphere(200, 1800, trueCenter);
+            const fit = fitSphere(points);
+            expect(fit).not.toBeNull();
+            const cov = computeDirectionalCoverage(points, fit.center);
+            expect(cov.fraction).toBeGreaterThan(0.9);
+        });
+
+        it("reports roughly half for a hemisphere-only tumble", () => {
+            const center = { x: 0, y: 0, z: 0 };
+            const points = fibSphere(800, 1800, center).filter((p) => p.z > 0);
+            const cov = computeDirectionalCoverage(points, center);
+            expect(cov.fraction).toBeGreaterThan(0.3);
+            expect(cov.fraction).toBeLessThan(0.7);
+        });
+
+        it("does not decrease when the user dwells in one orientation (unlike min/max ratio)", () => {
+            const center = { x: 0, y: 0, z: 0 };
+            const full = fibSphere(400, 1800, center);
+            const before = computeDirectionalCoverage(full, center);
+            // Dwell: 2000 extra samples all in one direction (drone sitting flat)
+            const dwell = Array.from({ length: 2000 }, () => ({ x: 30, y: -20, z: -1795 }));
+            const after = computeDirectionalCoverage([...full, ...dwell], center);
+            expect(after.fraction).toBeGreaterThanOrEqual(before.fraction);
+
+            // The old metric craters under the same dwell — documents why it was replaced
+            const oldBefore = computeCoverage(full, center);
+            const oldAfter = computeCoverage([...full, ...dwell], center);
+            expect(oldAfter.uniform).toBeLessThan(oldBefore.uniform * 0.5);
+        });
+
+        it("requires minHits samples before a face counts as covered", () => {
+            const center = { x: 0, y: 0, z: 0 };
+            const twoSamples = [
+                { x: 0, y: 0, z: 1000 },
+                { x: 0, y: 0, z: 1000 },
+            ];
+            expect(computeDirectionalCoverage(twoSamples, center, 3).covered).toBe(0);
+            expect(computeDirectionalCoverage(twoSamples, center, 2).covered).toBe(1);
         });
     });
 });
