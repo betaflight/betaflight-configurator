@@ -50,25 +50,22 @@ for (let di = 0; di < poses.directions.length; di++) {
     }
 }
 
-const solverResult = characterizeAlignment(allSamples, CAPTURE_ALIGNMENT, null, {
-    headingMode: "absolute",
-    headingWeight: 1.0,
-});
-if (solverResult.error) throw new Error(`solver failed: ${solverResult.error}`);
+const solverOpts = { headingMode: "absolute", headingWeight: 1.0 };
 
-let proposedMat;
-if (solverResult.alignment === 9 && solverResult.customAngles) {
-    const a = solverResult.customAngles;
-    proposedMat = eulerToMatrix(a.roll, a.pitch, a.yaw);
-} else {
-    proposedMat = ALIGNMENT_MATRICES[solverResult.alignment] || ALIGNMENT_MATRICES[1];
-}
+// Correct-then-solve dual solve + package selection (mirrors runSolver):
+// solve on raw AND on center-subtracted samples, pick the package with the
+// lower measured pose error.
+const rawResult = characterizeAlignment(allSamples, CAPTURE_ALIGNMENT, null, solverOpts);
+if (rawResult.error) throw new Error(`solver failed: ${rawResult.error}`);
+const ec = ellipsoid.center;
+const correctedSamples = allSamples.map((s) => ({
+    ...s,
+    mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
+}));
+const corrResult = characterizeAlignment(correctedSamples, CAPTURE_ALIGNMENT, null, solverOpts);
+if (corrResult.error) throw new Error(`corrected solver failed: ${corrResult.error}`);
+
 const currentMat = ALIGNMENT_MATRICES[CAPTURE_ALIGNMENT];
-const newCombined = mat3mul(proposedMat, mat3transpose(currentMat));
-
-const calOffsets = computeCalFromEllipsoid(ellipsoid, newCombined, CAPTURE_MAG_ZERO);
-const axisGains = { x: 1.0, y: 1.0, z: 1.0 };
-
 const captureData = poses.directions.map((dir) =>
     dir.poses.map((pose) =>
         pose.captured && pose.samples?.length
@@ -82,11 +79,49 @@ const directions = poses.directions.map((dir) => ({
     poses: dir.poses.map((p) => ({ label: p.label, isFlat: p.label.startsWith("Flat") })),
 }));
 
+const meanPackageErr = (res, includeCenter) => {
+    const replayTmp = computeReplayData(res, CAPTURE_ALIGNMENT, captureData, directions, {
+        ellipsoidParams: ellipsoid,
+        calibrationOffsets: null,
+        axisGains: null,
+        currentMat,
+        proposedIncludesCenter: includeCenter,
+    });
+    let sum = 0;
+    for (const d of replayTmp) {
+        let diff = d.newHeading - d.expectedHeading;
+        while (diff > 180) diff -= 360;
+        while (diff < -180) diff += 360;
+        sum += Math.abs(diff);
+    }
+    return sum / replayTmp.length;
+};
+const packageErr = meanPackageErr(corrResult, true);
+const alignmentOnlyErr = meanPackageErr(rawResult, false);
+const usedCalibratedPackage = packageErr <= alignmentOnlyErr + 1.0;
+const solverResult = usedCalibratedPackage ? corrResult : rawResult;
+console.log(
+    `package selection: calibrated ${packageErr.toFixed(1)}° vs alignment-only ${alignmentOnlyErr.toFixed(1)}° → ${usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY"}`,
+);
+
+let proposedMat;
+if (solverResult.alignment === 9 && solverResult.customAngles) {
+    const a = solverResult.customAngles;
+    proposedMat = eulerToMatrix(a.roll, a.pitch, a.yaw);
+} else {
+    proposedMat = ALIGNMENT_MATRICES[solverResult.alignment] || ALIGNMENT_MATRICES[1];
+}
+const newCombined = mat3mul(proposedMat, mat3transpose(currentMat));
+
+const calOffsets = computeCalFromEllipsoid(ellipsoid, newCombined, CAPTURE_MAG_ZERO);
+const axisGains = { x: 1.0, y: 1.0, z: 1.0 };
+
 const replay = computeReplayData(solverResult, CAPTURE_ALIGNMENT, captureData, directions, {
     ellipsoidParams: ellipsoid,
     calibrationOffsets: calOffsets,
     axisGains,
     currentMat,
+    proposedIncludesCenter: usedCalibratedPackage,
 });
 
 // ── Export mapping (mirrors useMagCharacterization.exportCharacterizationData) ──

@@ -13,7 +13,6 @@ import { fitEllipsoid } from "../js/utils/ellipsoidFit.js";
 import {
     computeReplayData as _computeReplayData,
     computeCalFromEllipsoid as _computeCalFromEllipsoid,
-    validateCalibrationOffsets,
     headingError,
 } from "../js/utils/magCharacterizationCompute.js";
 import { fitSphere, computeDirectionalCoverage } from "../js/utils/sphereFit.js";
@@ -202,6 +201,10 @@ export function useMagCharacterization() {
     // Held-out validation of the tumble-derived offsets against the pose data:
     // { proposedMeanErr, fullCorrectedMeanErr, recommended } or null.
     const calibrationValidation = ref(null);
+    // True when the active solverResult was solved on center-subtracted data
+    // (correct-then-solve): the Proposed column then represents the firmware
+    // package alignment + mag_calibration, not alignment alone.
+    const proposedIncludesCenter = ref(false);
     let _movementFrames = 0;
 
     // Shared helper — iterate every captured sample with body-frame mag pre-computed
@@ -293,6 +296,7 @@ export function useMagCharacterization() {
         calibrationOffsets.value = null;
         axisGains.value = null;
         calibrationValidation.value = null;
+        proposedIncludesCenter.value = false;
         ellipsoidDiag.value = null;
         // WARNING: This reset clears the ellipsoid correction from any prior
         // calibration tumble or debug JSON import. Callers restoring calibration
@@ -573,19 +577,72 @@ export function useMagCharacterization() {
                     }
                     : null;
 
-        const result = characterizeAlignment(allSamples, currentAlign, customAngles, {
-            headingMode: "absolute",
-            headingWeight: 1.0,
-        });
-        solverResult.value = result;
-        console.log("=== MAG CHARACTERIZATION RESULT ===", result);
-
         // Build the current alignment matrix (handling CUSTOM align=9 properly)
         if (currentAlign === 9 && customAngles) {
             currentMatForCalibration = eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
         } else {
             currentMatForCalibration = ALIGNMENT_MATRICES[currentAlign] || ALIGNMENT_MATRICES[1];
         }
+
+        const solverOpts = { headingMode: "absolute", headingWeight: 1.0 };
+
+        // ── Correct-then-solve (dual solve + package selection) ─────────────
+        // Solving on RAW data entangles hard-iron compensation into the
+        // rotation (proven on samples5: raw solve 11.1° vs corrected solve
+        // 5.4°, cross-validated at 5.5° on a held-out session). When an
+        // ellipsoid center is available, ALSO solve on center-subtracted
+        // samples and pick the package with the lower measured pose error:
+        //   package A: alignment solved on (m − center) + mag_calibration
+        //   package B: alignment solved on raw, no offsets (fallback when the
+        //              center is contaminated and doesn't transfer)
+        const rawResult = characterizeAlignment(allSamples, currentAlign, customAngles, solverOpts);
+        let result = rawResult;
+        let usedCalibratedPackage = false;
+        let packageErrs = null;
+
+        if (ellipsoidParams.value && !rawResult.error) {
+            const ec = ellipsoidParams.value.center;
+            const correctedSamples = allSamples.map((s) => ({
+                ...s,
+                mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
+            }));
+            const corrResult = characterizeAlignment(correctedSamples, currentAlign, customAngles, solverOpts);
+
+            if (!corrResult.error) {
+                const meanPackageErr = (res, includeCenter) => {
+                    const replay = _computeReplayData(res, currentAlign, captureData.value, directions, {
+                        ellipsoidParams: ellipsoidParams.value,
+                        calibrationOffsets: null,
+                        axisGains: null,
+                        currentMat: currentMatForCalibration,
+                        proposedIncludesCenter: includeCenter,
+                    });
+                    let sum = 0;
+                    let n = 0;
+                    for (const d of replay) {
+                        sum += headingError(d.newHeading, d.expectedHeading);
+                        n++;
+                    }
+                    return n > 0 ? sum / n : Infinity;
+                };
+                const packageErr = meanPackageErr(corrResult, true);
+                const alignmentOnlyErr = meanPackageErr(rawResult, false);
+                packageErrs = { packageErr, alignmentOnlyErr };
+                if (packageErr <= alignmentOnlyErr + 1.0) {
+                    result = corrResult;
+                    usedCalibratedPackage = true;
+                }
+                console.log(
+                    `=== PACKAGE SELECTION === calibrated ${packageErr.toFixed(1)}° vs ` +
+                        `alignment-only ${alignmentOnlyErr.toFixed(1)}° → ${ 
+                            usedCalibratedPackage ? "CALIBRATED PACKAGE" : "ALIGNMENT-ONLY (bias deferred)"}`,
+                );
+            }
+        }
+
+        solverResult.value = result;
+        proposedIncludesCenter.value = usedCalibratedPackage;
+        console.log("=== MAG CHARACTERIZATION RESULT ===", result);
 
         // newCombined = R_proposed · R_captureᵀ — used to express capture-frame
         // quantities (ellipsoid center) in the frame of the alignment that will
@@ -620,15 +677,21 @@ export function useMagCharacterization() {
             }
         }
 
-        // Cross-validate the tumble-derived calibration against the pose data
-        // (held-out validation). When the full correction degrades the poses,
-        // the offsets are withheld from the apply path and the CLI preview.
-        calibrationValidation.value = validateCalibrationOffsets(replayData.value);
-        if (calibrationValidation.value && !calibrationValidation.value.recommended) {
+        // Validation verdict from the package selection above. Shape kept for
+        // the UI/report: proposedMeanErr = alignment-only, fullCorrectedMeanErr
+        // = calibrated package, recommended = package won (offsets get applied).
+        calibrationValidation.value = packageErrs
+            ? {
+                proposedMeanErr: packageErrs.alignmentOnlyErr,
+                fullCorrectedMeanErr: packageErrs.packageErr,
+                recommended: usedCalibratedPackage,
+            }
+            : null;
+        if (packageErrs && !usedCalibratedPackage) {
             console.warn(
-                "Static bias offsets withheld: full-corrected mean error " +
-                    `${calibrationValidation.value.fullCorrectedMeanErr.toFixed(1)}° vs ` +
-                    `${calibrationValidation.value.proposedMeanErr.toFixed(1)}° alignment-only. ` +
+                "Static bias offsets withheld: calibrated package " +
+                    `${packageErrs.packageErr.toFixed(1)}° vs ` +
+                    `${packageErrs.alignmentOnlyErr.toFixed(1)}° alignment-only on the poses. ` +
                     "World-frame interference at the bench (it does not rotate with the drone) " +
                     "contaminated the tumble's bias estimate. Alignment is still applied; bias " +
                     "estimation is deferred to per-flight self-calibration in the log viewer.",
@@ -649,6 +712,7 @@ export function useMagCharacterization() {
             calibrationOffsets: calibrationOffsets.value,
             axisGains: axisGains.value,
             currentMat: currentMatForCalibration || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1],
+            proposedIncludesCenter: proposedIncludesCenter.value,
         });
     }
 
@@ -1371,6 +1435,8 @@ export function useMagCharacterization() {
         calibrationSamples.value = [];
         calibrationSphereFit.value = null;
         _calLastFitCount = 0;
+        calibrationValidation.value = null;
+        proposedIncludesCenter.value = false;
     }
 
     function cleanupTimer() {
@@ -1627,17 +1693,18 @@ export function useMagCharacterization() {
             const cv = calibrationValidation.value;
             if (cv) {
                 report += cv.recommended
-                    ? `  Validation: PASS \u2014 full correction ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 vs ` +
-                      `${cv.proposedMeanErr.toFixed(1)}\u00B0 alignment-only on the 20 poses\n`
-                    : `  Validation: BIAS DEFERRED \u2014 full correction ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 vs ` +
-                      `${cv.proposedMeanErr.toFixed(1)}\u00B0 alignment-only on the 20 poses.\n` +
+                    ? `  Package selection: CALIBRATED PACKAGE \u2014 alignment solved on\n` +
+                      `  bias-corrected data + mag_calibration: ${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0 mean error\n` +
+                      `  vs ${cv.proposedMeanErr.toFixed(1)}\u00B0 for alignment-only (raw solve) on the 20 poses.\n` +
+                      "  Both align_mag and mag_calibration will be applied together.\n"
+                    : `  Package selection: ALIGNMENT-ONLY \u2014 calibrated package ` +
+                      `${cv.fullCorrectedMeanErr.toFixed(1)}\u00B0\n` +
+                      `  vs ${cv.proposedMeanErr.toFixed(1)}\u00B0 alignment-only on the 20 poses.\n` +
                       "  Static offsets will NOT be written to the FC: world-frame bench\n" +
                       "  interference (does not rotate with the drone) contaminated the\n" +
-                      "  tumble's bias estimate. Alignment is still applied. Bias correction\n" +
-                      "  is deferred to per-flight self-calibration in the log viewer, which\n" +
-                      "  fits the bias on the flight's own samples \u2014 away from the bench,\n" +
-                      "  with motors running. A tumble re-capture away from electronics can\n" +
-                      "  also recover a writable static offset.\n";
+                      "  tumble's bias estimate. Bias correction is deferred to per-flight\n" +
+                      "  self-calibration in the log viewer. A tumble re-capture away from\n" +
+                      "  electronics can also recover a writable static offset.\n";
             }
             report += "\n";
         }
@@ -1852,6 +1919,7 @@ export function useMagCharacterization() {
         axisGains,
         magZeroAtCapture,
         calibrationValidation,
+        proposedIncludesCenter,
         geoReference,
         isFetchingGeo,
         ellipsoidParams,

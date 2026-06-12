@@ -129,11 +129,15 @@ export function validateCalibrationOffsets(replayData, toleranceDeg = 1.0) {
  *
  * For each pose, aggregates all samples into circular-mean headings for
  * four variants:
- *   - currentHeading:  current firmware alignment on raw mag
- *   - newHeading:      solver-proposed alignment on raw mag
- *   - fullCorrectedHeading: matches newHeading (calibration normalizes
- *     |B| uniformity, not heading direction)
- *   - gainCorrectedHeading: experimental (null in most cases)
+ *   - currentHeading:  current firmware alignment on raw mag (status quo)
+ *   - newHeading:      the proposed FIRMWARE PACKAGE. When the solver ran on
+ *     center-subtracted data (opts.proposedIncludesCenter), this is
+ *     newCombined·(m − center) — exactly what the firmware produces after
+ *     `align_mag` AND `mag_calibration` are applied. Otherwise it is
+ *     newCombined·m (alignment-only).
+ *   - fullCorrectedHeading: + soft iron, newCombined·W_inv·(m − center) —
+ *     the blackbox-log-viewer pipeline (firmware cannot apply W_inv)
+ *   - gainCorrectedHeading: experimental (null unless alignment-only mode)
  *
  * @param {object} result - characterizeAlignment() return value
  * @param {number} currentAlignment - firmware align_mag preset (1-9)
@@ -144,10 +148,18 @@ export function validateCalibrationOffsets(replayData, toleranceDeg = 1.0) {
  * @param {object|null} opts.calibrationOffsets
  * @param {object|null} opts.axisGains
  * @param {number[][]} opts.currentMat - current firmware alignment matrix
+ * @param {boolean} [opts.proposedIncludesCenter=false] - true when `result`
+ *   was solved on center-subtracted samples (correct-then-solve package)
  * @returns {Array<object>} replay data array (one entry per captured pose)
  */
 export function computeReplayData(result, currentAlignment, captureData, directions, opts = {}) {
-    const { ellipsoidParams = null, calibrationOffsets = null, axisGains = null, currentMat: _cm } = opts;
+    const {
+        ellipsoidParams = null,
+        calibrationOffsets = null,
+        axisGains = null,
+        currentMat: _cm,
+        proposedIncludesCenter = false,
+    } = opts;
 
     const currentMat = _cm || ALIGNMENT_MATRICES[currentAlignment] || ALIGNMENT_MATRICES[1];
     const currentInv = mat3transpose(currentMat);
@@ -195,8 +207,16 @@ export function computeReplayData(result, currentAlignment, captureData, directi
                 curSin += Math.sin(curDir);
                 curCos += Math.cos(curDir);
 
-                // Proposed alignment heading
-                const newBody = mat3mulVec(newCombined, s.mag);
+                // Proposed firmware package. With correct-then-solve the rotation
+                // was solved on center-subtracted data, so the package heading is
+                // newCombined·(m − center) — matching firmware behavior once both
+                // align_mag and mag_calibration are applied.
+                let propVec = s.mag;
+                if (proposedIncludesCenter && ellipsoidParams) {
+                    const pc = ellipsoidParams.center;
+                    propVec = [s.mag[0] - pc.x, s.mag[1] - pc.y, s.mag[2] - pc.z];
+                }
+                const newBody = mat3mulVec(newCombined, propVec);
                 const newLevel = undoRollPitch(newBody, rollRad, pitchRad);
                 const newDir = Math.atan2(newLevel[1], newLevel[0]);
                 newSin += Math.sin(newDir);
@@ -237,8 +257,11 @@ export function computeReplayData(result, currentAlignment, captureData, directi
                     hasFullCorrected = true;
                 }
 
-                // Gain-corrected heading (experimental)
-                if (axisGains && calOffsets) {
+                // Gain-corrected heading (experimental). Only meaningful in
+                // alignment-only mode: with proposedIncludesCenter, newBody is
+                // already center-subtracted and subtracting calOffsets again
+                // would double-correct.
+                if (axisGains && calOffsets && !proposedIncludesCenter) {
                     const gcBody = [
                         (newBody[0] - calOffsets.x) / Math.max(axisGains.x, 0.01),
                         (newBody[1] - calOffsets.y) / Math.max(axisGains.y, 0.01),

@@ -162,13 +162,57 @@ describe("3×2 comparison matrix (gold fixture)", () => {
         expect(Math.abs(mean.P3 - mean.P2)).toBeLessThan(5.0);
     });
 
-    it("documents the calibration transfer failure on this dataset (P3 > P1)", () => {
-        // The tumble-derived center does NOT transfer to the pose data
-        // (capture contamination; |center| ≈ 76% of |H|). Applying it under
-        // the corrected alignment makes heading WORSE — this is the measured
-        // basis for the wizard's calibration cross-validation guard.
-        // A clean re-capture is expected to flip this relation; when it does,
-        // update this test and the guard threshold together.
+    it("documents the raw-solve entanglement (P3 > P1 for the RAW-solved rotation)", () => {
+        // The proposal in this matrix was solved on RAW data, so it carries
+        // hard-iron compensation inside the rotation: subtracting the (real,
+        // session-reproducible) center then double-corrects and degrades
+        // heading. This is the pathology that correct-then-solve resolves —
+        // see the describe below and mag_pipeline_proof.test.js.
         expect(mean.P3).toBeGreaterThan(mean.P1);
+    });
+});
+
+describe("correct-then-solve resolves the entanglement", () => {
+    it("the package (alignment solved on −center, plus offsets) beats every raw-solve cell", () => {
+        const ec = ellipsoid.center;
+        const corrected = poseSamples.map((s) => ({
+            ...s,
+            mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
+        }));
+        const corrResult = characterizeAlignment(corrected, 8, null, {
+            headingMode: "absolute",
+            headingWeight: 1.0,
+        });
+        expect(corrResult.error).toBeUndefined();
+        const a = corrResult.customAngles;
+        const pm = eulerToMatrix(a.roll, a.pitch, a.yaw);
+        const nc = mat3mul(pm, mat3transpose(currentMat));
+
+        let errSum = 0;
+        let n = 0;
+        for (const dir of poses.directions) {
+            for (const pose of dir.poses) {
+                if (!pose.captured || !pose.samples?.length) continue;
+                let si = 0;
+                let co = 0;
+                for (const s of pose.samples) {
+                    const d = [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z];
+                    const body = mat3mulVec(nc, d);
+                    const lv = undoRollPitch(body, s.roll * DEG_TO_RAD, s.pitch * DEG_TO_RAD);
+                    const h = Math.atan2(lv[1], lv[0]);
+                    si += Math.sin(h);
+                    co += Math.cos(h);
+                }
+                errSum += headingError(Math.atan2(si, co) * RAD_TO_DEG, pose.samples[0].headingRef);
+                n++;
+            }
+        }
+        const packageErr = errSum / n;
+        console.log(`  correct-then-solve package: ${packageErr.toFixed(1)}° (raw-solve matrix best was P1)`);
+        // Measured baseline: 4.4° — beats every cell of the raw-solve matrix
+        expect(packageErr).toBeLessThan(8);
+        for (const k of COMBOS) {
+            expect(packageErr).toBeLessThan(mean[k]);
+        }
     });
 });

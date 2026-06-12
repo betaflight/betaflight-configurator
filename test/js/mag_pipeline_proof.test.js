@@ -709,3 +709,83 @@ describe("validateCalibrationOffsets: held-out pose validation", () => {
         expect(v).toBeNull();
     });
 });
+
+describe("correct-then-solve: calibrated package (production path)", () => {
+    // Solving on RAW data entangles hard-iron compensation into the rotation.
+    // Production (runSolver) therefore also solves on center-subtracted samples
+    // and ships alignment + mag_calibration as one package when it measures
+    // better on the poses. These tests lock that behavior on the gold fixture.
+    const ec = ellipsoid.center;
+    const correctedSamples = poseSamples.map((s) => ({
+        ...s,
+        mag: [s.mag[0] - ec.x, s.mag[1] - ec.y, s.mag[2] - ec.z],
+    }));
+    const corrResult = characterizeAlignment(correctedSamples, 8, null, {
+        headingMode: "absolute",
+        headingWeight: 1.0,
+    });
+
+    function meanPackageErr(res, includeCenter) {
+        const replay = computeReplayData(res, 8, captureData, directions, {
+            ellipsoidParams: ellipsoid,
+            calibrationOffsets: null,
+            axisGains: null,
+            currentMat: ALIGNMENT_MATRICES[8],
+            proposedIncludesCenter: includeCenter,
+        });
+        let sum = 0;
+        for (const d of replay) sum += headingError(d.newHeading, d.expectedHeading);
+        return sum / replay.length;
+    }
+
+    it("recovers the true mount rotation: flip + small tilt, ~−90° yaw", () => {
+        expect(corrResult.error).toBeUndefined();
+        expect(corrResult.alignment).toBe(9);
+        const a = corrResult.customAngles;
+        // Measured baseline: (−173, 9, −90); samples5 cross-session: (−173, 2, −88)
+        expect(Math.abs(a.roll)).toBeGreaterThan(160);
+        expect(Math.abs(a.roll)).toBeLessThan(186);
+        expect(Math.abs(a.pitch)).toBeLessThan(20);
+        expect(a.yaw).toBeGreaterThan(-105);
+        expect(a.yaw).toBeLessThan(-75);
+    });
+
+    it("removing the bias before solving unmasks heading accuracy", () => {
+        const packageErr = meanPackageErr(corrResult, true);
+        const alignmentOnlyErr = meanPackageErr(solverResult, false);
+        console.log(
+            `  package ${packageErr.toFixed(1)}°  vs alignment-only ${alignmentOnlyErr.toFixed(1)}°  ` +
+                `(raw-solve roll ${solverResult.customAngles?.roll.toFixed(0)} carried bias compensation)`,
+        );
+        // Measured baseline: 4.4° vs 11.5°
+        expect(packageErr).toBeLessThan(8);
+        expect(packageErr).toBeLessThan(alignmentOnlyErr - 3);
+    });
+
+    it("package selection rule picks the calibrated package on the gold fixture", () => {
+        const packageErr = meanPackageErr(corrResult, true);
+        const alignmentOnlyErr = meanPackageErr(solverResult, false);
+        expect(packageErr <= alignmentOnlyErr + 1.0).toBe(true);
+    });
+
+    it("quality score reflects the unmasked accuracy", () => {
+        // Measured: 92% corrected vs 50% raw
+        expect(corrResult.qualityScore).toBeGreaterThan(75);
+        expect(corrResult.qualityScore).toBeGreaterThan(solverResult.qualityScore);
+    });
+
+    it("the regenerated model fixture ships the package", () => {
+        // model fixture is produced by regen_model_fixture.mjs running this
+        // same dual-solve path — alignment angles must match the corrected solve
+        const a = model.alignment.euler_zyx_deg;
+        expect(Math.abs(a.roll - corrResult.customAngles.roll)).toBeLessThan(5);
+        expect(Math.abs(a.yaw - corrResult.customAngles.yaw)).toBeLessThan(5);
+        // hard_iron = newCombined·center for the package alignment
+        const pm = eulerToMatrix(a.roll, a.pitch, a.yaw);
+        const nc = mat3mul(pm, mat3transpose(ALIGNMENT_MATRICES[8]));
+        const expected = mat3mulVec(nc, [ec.x, ec.y, ec.z]);
+        expect(Math.abs(model.hard_iron.x - expected[0])).toBeLessThan(2);
+        expect(Math.abs(model.hard_iron.y - expected[1])).toBeLessThan(2);
+        expect(Math.abs(model.hard_iron.z - expected[2])).toBeLessThan(2);
+    });
+});

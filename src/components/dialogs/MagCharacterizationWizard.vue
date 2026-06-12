@@ -92,10 +92,14 @@
                     :live-mag="calLiveMag"
                     viz-mode="pointcloud"
                 />
+                <!-- "sphere regions" = the 20 icosahedron faces used to bin sampled
+                     field directions (sphereFit.js ICOSA_FACE_DIRS). Unrelated to the
+                     20 guided poses — the numeric match is pure coincidence. -->
                 <p v-if="calibrationCoverage" style="margin-bottom: 0">
-                    {{ (calibrationCoverage.fraction * 100).toFixed(0) }}% coverage ({{
+                    sphere coverage {{ (calibrationCoverage.fraction * 100).toFixed(0) }}% ({{
                         calibrationCoverage.covered
-                    }}/{{ calibrationCoverage.totalFaces }} directions)
+                    }}
+                    of {{ calibrationCoverage.totalFaces }} regions painted)
                 </p>
                 <p style="font-size: 13px; color: #7eb8ff; margin-top: 4px">{{ $t(calPromptI18n) }}</p>
                 <div class="mag-char-complete-actions" style="margin-top: 12px">
