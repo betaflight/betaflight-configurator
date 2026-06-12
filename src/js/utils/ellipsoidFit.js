@@ -105,13 +105,15 @@ export function fitEllipsoid(points) {
     ];
 
     // Cholesky decomposition: Q_norm = L * L^T
-    // W_inv = L^T (the upper-triangular Cholesky factor)
+    // W_inv = L^T (the upper-triangular Cholesky factor), so that
+    // |W_inv·(m−b)|² = (m−b)ᵀ·L·Lᵀ·(m−b) = (m−b)ᵀ·Q_norm·(m−b) = 1.
+    // L is lower-triangular: its off-diagonal terms live at [1][0], [2][0], [2][1].
     const L = cholesky3x3(Q_norm);
     if (!L) return null;
 
     const W_inv = [
-        [L[0][0], L[0][1], L[0][2]],
-        [0, L[1][1], L[1][2]],
+        [L[0][0], L[1][0], L[2][0]],
+        [0, L[1][1], L[2][1]],
         [0, 0, L[2][2]],
     ];
 

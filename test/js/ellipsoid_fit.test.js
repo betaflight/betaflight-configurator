@@ -2,7 +2,7 @@
  * Tests for ellipsoidFit.js — 3D ellipsoid fitting via algebraic least-squares.
  */
 import { describe, expect, it } from "vitest";
-import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
+import { fitEllipsoid, applyEllipsoidCorrection } from "../../src/js/utils/ellipsoidFit.js";
 import { computeCoverage } from "../../src/js/utils/sphereFit.js";
 
 // Seeded PRNG for deterministic tests
@@ -114,6 +114,78 @@ describe("ellipsoidFit", () => {
             expect(result.W_inv[0][0]).toBeGreaterThan(0);
             expect(result.W_inv[1][1]).toBeGreaterThan(0);
             expect(result.W_inv[2][2]).toBeGreaterThan(0);
+
+            // The corrected points must land on a unit sphere up to the injected
+            // noise (50 counts on ~1500 ≈ 3.3% σ). The RMS residual is a population
+            // statistic that catches dropped off-diagonal soft-iron terms without
+            // being sensitive to individual noise outliers.
+            expect(result.residual).toBeLessThan(0.06);
+            for (const p of points) {
+                const c = applyEllipsoidCorrection([p.x, p.y, p.z], result);
+                expect(Math.hypot(c[0], c[1], c[2])).toBeGreaterThan(0.8);
+                expect(Math.hypot(c[0], c[1], c[2])).toBeLessThan(1.2);
+            }
+        });
+    });
+
+    describe("Cross-axis soft iron recovery", () => {
+        // Regression test for the Cholesky transpose bug: W_inv was built from
+        // L[0][1], L[0][2], L[1][2] — entries of the LOWER-triangular factor that
+        // are always zero — silently dropping all cross-axis terms and reducing
+        // the soft-iron correction to a per-axis scale.
+        it("maps a noise-free ellipsoid with strong cross terms exactly onto the unit sphere", () => {
+            // Symmetric positive-definite distortion with significant off-diagonals
+            const A = [
+                [1000, 150, 0],
+                [150, 900, 80],
+                [0, 80, 1100],
+            ];
+            const b = [300, -120, 50];
+
+            const points = [];
+            const N = 800;
+            for (let i = 0; i < N; i++) {
+                // Fibonacci sphere: deterministic, well-distributed directions
+                const k = i + 0.5;
+                const phi = Math.acos(1 - (2 * k) / N);
+                const theta = Math.PI * (1 + Math.sqrt(5)) * k;
+                const u = [Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi)];
+                points.push({
+                    x: A[0][0] * u[0] + A[0][1] * u[1] + A[0][2] * u[2] + b[0],
+                    y: A[1][0] * u[0] + A[1][1] * u[1] + A[1][2] * u[2] + b[1],
+                    z: A[2][0] * u[0] + A[2][1] * u[1] + A[2][2] * u[2] + b[2],
+                });
+            }
+
+            const result = fitEllipsoid(points);
+            expect(result).not.toBeNull();
+
+            // Exact center recovery (noise-free data)
+            expect(result.center.x).toBeCloseTo(b[0], 6);
+            expect(result.center.y).toBeCloseTo(b[1], 6);
+            expect(result.center.z).toBeCloseTo(b[2], 6);
+
+            // W_inv must carry the cross-axis structure: at least one strictly
+            // upper-triangular entry must be non-negligible relative to the diagonal
+            const offDiagMax = Math.max(
+                Math.abs(result.W_inv[0][1]),
+                Math.abs(result.W_inv[0][2]),
+                Math.abs(result.W_inv[1][2]),
+            );
+            expect(offDiagMax).toBeGreaterThan(result.W_inv[0][0] * 0.02);
+
+            // Every corrected point must lie on the unit sphere to high precision
+            let min = Infinity;
+            let max = -Infinity;
+            for (const p of points) {
+                const c = applyEllipsoidCorrection([p.x, p.y, p.z], result);
+                const n = Math.hypot(c[0], c[1], c[2]);
+                if (n < min) min = n;
+                if (n > max) max = n;
+            }
+            expect(min).toBeGreaterThan(0.999);
+            expect(max).toBeLessThan(1.001);
+            expect(result.residual).toBeLessThan(1e-3);
         });
     });
 
