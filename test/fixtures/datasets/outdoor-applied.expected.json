@@ -1,0 +1,28 @@
+﻿{
+  "name": "outdoor-applied",
+  "class": "applied",
+  "fixtures": {
+    "tumble": "high-inclination-outdoor-applied_tumble.json",
+    "poses": "high-inclination-outdoor-applied_poses.json"
+  },
+  "sensor": { "model": "QMC5883L", "is_clone": true, "clone_marking": "HA 5883 1A31", "adc_max_counts": 3000 },
+  "capture": {
+    "location": { "lat": 48.42, "lon": -71.15 },
+    "date": "2026-06-12",
+    "environment": "outdoor_yard",
+    "fc_firmware": "2026.6.0-alpha",
+    "alignment": 9,
+    "custom_angles": { "roll": -172, "pitch": 2, "yaw": -88 }
+  },
+  "wmm": { "inclination_deg": 70.9, "declination_deg": -15.3, "field_strength_nt": 53900 },
+  "build": { "airframe": "5-inch freestyle on Flywoo H743, GPS at rear" },
+  "expected": {
+    "current_error_max_deg": 8, "_measured_current_error_deg": 3.8,
+    "residual_center_max_counts": 100, "_measured_residual_center_counts": 11,
+    "rotation_delta_max_deg": 6,
+    "proposal_composes_max_counts": 60,
+    "quality_min": 75, "_measured_quality": 98,
+    "coverage_min": 0.95,
+    "ellipsoid_residual_max": 0.05
+  }
+}
