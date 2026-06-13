@@ -37,25 +37,17 @@ class TauriTcp extends EventTarget {
         this.disconnect();
     }
 
+    _portInfo(path) {
+        return { path, displayName: "Betaflight TCP", vendorId: 0, productId: 0, port: 0 };
+    }
+
     createPort(url) {
         this.address = url;
-        return {
-            path: url,
-            displayName: `Betaflight TCP`,
-            vendorId: 0,
-            productId: 0,
-            port: 0,
-        };
+        return this._portInfo(url);
     }
 
     getConnectedPort() {
-        return {
-            path: this.address,
-            displayName: `Betaflight TCP`,
-            vendorId: 0,
-            productId: 0,
-            port: 0,
-        };
+        return this._portInfo(this.address);
     }
 
     async getDevices() {
