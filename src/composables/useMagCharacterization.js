@@ -1536,7 +1536,7 @@ export function useMagCharacterization() {
                 report += "  Directional fingerprint (Flat pose mag vector per cardinal direction):\n";
                 report += "  Direction     Mag X    Mag Y    Mag Z   |B|\n";
                 report += "  ---------     -----    -----    -----   ---\n";
-                for (const di of dirKeys.sort()) {
+                for (const di of dirKeys.sort((a, b) => a.localeCompare(b))) {
                     const fd = flatMagByDir[di];
                     const mx = fd.magMean[0],
                         my = fd.magMean[1],

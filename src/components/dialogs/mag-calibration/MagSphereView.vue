@@ -1460,7 +1460,6 @@ watch(
             maxFieldStrength = 0;
             fieldStrengthSum = 0;
             fieldStrengthCount = 0;
-            noseDirections = [];
         }
         ensureWireframe();
         updatePoints(props.samples);

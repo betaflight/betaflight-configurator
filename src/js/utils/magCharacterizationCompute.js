@@ -528,7 +528,7 @@ export function assessTumbleQuality({ centerRatio, coverageFraction, ellipsoidRe
     if (ellipsoidResidual >= 0.02)
         reasons.push(`ellipsoid_residual ${(ellipsoidResidual * 100).toFixed(1)}% >= 2.0%: fit quality below target`);
 
-    let verdict = "clean";
+    let verdict;
     if (centerRatio < 0.15 && coverageFraction >= 0.8 && ellipsoidResidual < 0.02) {
         verdict = "clean";
     } else if (centerRatio < 0.5 && coverageFraction >= 0.6) {
@@ -554,7 +554,7 @@ export function assessPoseQuality({ currentErrorDeg, packageErrorDeg, fieldDevMa
     if (fieldDevMaxPct !== undefined && fieldDevMaxPct >= 15)
         reasons.push(`field_dev ${fieldDevMaxPct.toFixed(1)}% >= 15%: strong environmental field distortion`);
 
-    let verdict = "clean";
+    let verdict;
     if (currentErrorDeg < 5 && packageErrorDeg < 5) {
         verdict = "clean";
     } else if (packageErrorDeg < 12) {

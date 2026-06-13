@@ -181,11 +181,16 @@ if (usedCalibratedPackage) {
         `  expected firmware mean error after apply: ${(validation?.proposedMeanErr ?? mean.P1).toFixed(1)}° (was ${mean.C1.toFixed(1)}°)`,
     );
 }
-// Quality verdicts (matches wizard export)
-const pts = cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
-const avgH = pts.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) / pts.length || 1;
-const cRatio = Math.hypot(c.x, c.y, c.z) / avgH;
-const tumbleQ = assessTumbleQuality({ centerRatio: cRatio, coverageFraction: coverage, ellipsoidResidual: ellipsoid.residual });
+// Quality verdicts (matches wizard export). Reuse pts (declared above); the
+// wizard's centerRatio is against the TUMBLE field magnitude, which is distinct
+// from the pose-sample avgH used for the ratio line earlier.
+const tumbleAvgH = pts.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) / pts.length || 1;
+const cRatio = Math.hypot(c.x, c.y, c.z) / tumbleAvgH;
+const tumbleQ = assessTumbleQuality({
+    centerRatio: cRatio,
+    coverageFraction: coverage.fraction,
+    ellipsoidResidual: ellipsoid.residual,
+});
 const currentErr = validation ? validation.proposedMeanErr : mean.C1;
 const pkgErr = validation?.fullCorrectedMeanErr ?? currentErr;
 const poseQ = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: pkgErr, fieldDevMaxPct: result.fieldConsistency?.maxDevPct });

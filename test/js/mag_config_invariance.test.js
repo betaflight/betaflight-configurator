@@ -44,7 +44,6 @@ import {
 import { rotationDelta } from "./test_helpers.js";
 
 const DEG_TO_RAD = Math.PI / 180;
-const RAD_TO_DEG = 180 / Math.PI;
 
 // Seeded PRNG (same generator as the export tests) for deterministic noise
 let _seed = 1337;
@@ -356,22 +355,6 @@ describe("F6 M-estimator: per-poseKey cap is independent", () => {
             samples.push({ mag: field(0), roll: 0, pitch: 0, headingRef: 0, poseKey: "0:1" });
         }
         samples.push({ mag: field(90), roll: 0, pitch: 0, headingRef: 0, poseKey: "0:1" });
-        const directions = [
-            {
-                label: "N",
-                heading: 0,
-                poses: [
-                    { label: "Flat", isFlat: true },
-                    { label: "Tilt", isFlat: false },
-                ],
-            },
-        ];
-        const captureData = [
-            [
-                { headingRef: 0, samples: samples.filter((s) => s.poseKey === "0:0") },
-                { headingRef: 0, samples: samples.filter((s) => s.poseKey === "0:1") },
-            ],
-        ];
 
         const result = characterizeAlignment(samples, 8, null, {
             headingMode: "absolute",

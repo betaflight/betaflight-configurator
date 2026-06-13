@@ -26,7 +26,6 @@ import {
     computeReplayData,
     computeCalFromEllipsoid,
     headingError,
-    SOLVER_OPTS,
     assessTumbleQuality,
     assessPoseQuality,
 } from "../../../src/js/utils/magCharacterizationCompute.js";

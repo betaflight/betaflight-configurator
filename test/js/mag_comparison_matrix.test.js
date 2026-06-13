@@ -126,7 +126,7 @@ describe("3×2 comparison matrix (samples4 dataset)", () => {
         console.log("                    raw     −center  W_inv·(−center)");
         console.log(`  CW270FLIP     ${f("C1")} ${f("C2")} ${f("C3")}`);
         console.log(`  CUSTOM        ${f("P1")} ${f("P2")} ${f("P3")}`);
-        const best = COMBOS.reduce((a, b) => (mean[a] <= mean[b] ? a : b));
+        const best = COMBOS.reduce((a, b) => (mean[a] <= mean[b] ? a : b), COMBOS[0]);
         console.log(`  best: ${best} at ${mean[best].toFixed(1)}°`);
         // measured baseline (samples4, CW270FLIP, raw solve)
         // C1=36.1 C2=20.7 C3=18.5  P1=11.5 P2=59.4 P3=61.7
