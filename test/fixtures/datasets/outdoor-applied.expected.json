@@ -15,13 +15,13 @@
     "custom_angles": { "roll": -172, "pitch": 2, "yaw": -88 }
   },
   "wmm": { "inclination_deg": 70.9, "declination_deg": -15.3, "field_strength_nt": 53900 },
-  "build": { "airframe": "5-inch freestyle on Flywoo H743, GPS at rear" },
+  "build": { "airframe": "3.5-inch freestyle on Flywoo H743, GPS at rear" },
   "expected": {
     "current_error_max_deg": 8, "_measured_current_error_deg": 3.8,
     "residual_center_max_counts": 100, "_measured_residual_center_counts": 11,
     "rotation_delta_max_deg": 6,
     "proposal_composes_max_counts": 60,
-    "quality_min": 75, "_measured_quality": 98,
+    "quality_min": 75, "_measured_quality": 95,
     "coverage_min": 0.95,
     "ellipsoid_residual_max": 0.05
   }

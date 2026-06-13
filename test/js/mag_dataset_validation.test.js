@@ -7,7 +7,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
 import { fitSphere, computeDirectionalCoverage } from "../../src/js/utils/sphereFit.js";
 import { mat3mul, mat3mulVec, mat3transpose } from "../../src/js/utils/magAlignment.js";
@@ -37,45 +37,53 @@ const dsFiles = fs
         return { file: f, data: raw };
     });
 
-for (const { file, data: ds } of dsFiles) {
+for (const { data: ds } of dsFiles) {
     describe(ds.name, () => {
-        const tumble = loadFixture(ds.fixtures.tumble);
-        const poses = loadFixture(ds.fixtures.poses);
+        let tumble, poses, samples, captureData, directions, points, ellipsoid, currentMat;
+        let result, usedCalibratedPackage, validation;
+        let proposedMat, newCombined, magZero, cal, rows, currentErr;
 
-        // fixture/config consistency guard — catches a wrong copy in FP1
+        beforeAll(() => {
+            tumble = loadFixture(ds.fixtures.tumble);
+            poses = loadFixture(ds.fixtures.poses);
+
+            samples = flattenSamples(poses);
+            captureData = captureDataFromPosesExport(poses);
+            directions = directionsFromPosesExport(poses);
+            points = tumble.samples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
+            ellipsoid = fitEllipsoid(points);
+            currentMat = currentMatrixOf(ds.capture.alignment, ds.capture.custom_angles);
+
+            const pkg = selectAlignmentPackage({
+                samples,
+                captureData,
+                directions,
+                currentAlignment: ds.capture.alignment,
+                customAngles: ds.capture.custom_angles || null,
+                currentMat,
+                ellipsoidParams: ellipsoid,
+            });
+            result = pkg.result;
+            usedCalibratedPackage = pkg.usedCalibratedPackage;
+            validation = pkg.validation;
+
+            proposedMat = proposedMatrixOf(result, currentMat);
+            newCombined = mat3mul(proposedMat, mat3transpose(currentMat));
+            magZero = poses.metadata.magZeroAtCapture ?? { x: 0, y: 0, z: 0 };
+            cal = computeCalFromEllipsoid(ellipsoid, newCombined, magZero);
+            rows = computeReplayData(result, ds.capture.alignment, captureData, directions, {
+                ellipsoidParams: ellipsoid,
+                currentMat,
+                proposedIncludesCenter: usedCalibratedPackage,
+            });
+            currentErr = rows.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) / rows.length;
+        }, 120_000);
+
+        // --- fixture/config consistency guard ---
         it("fixtures match the expected capture config", () => {
             expect(poses.metadata.currentAlignment).toBe(ds.capture.alignment);
             expect(poses.metadata.customAngles || null).toEqual(ds.capture.custom_angles || null);
         });
-
-        const samples = flattenSamples(poses);
-        const captureData = captureDataFromPosesExport(poses);
-        const directions = directionsFromPosesExport(poses);
-        const points = tumble.samples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
-        const ellipsoid = fitEllipsoid(points);
-        const currentMat = currentMatrixOf(ds.capture.alignment, ds.capture.custom_angles);
-
-        const { result, usedCalibratedPackage, validation } = selectAlignmentPackage({
-            samples,
-            captureData,
-            directions,
-            currentAlignment: ds.capture.alignment,
-            customAngles: ds.capture.custom_angles || null,
-            currentMat,
-            ellipsoidParams: ellipsoid,
-        });
-
-        const proposedMat = proposedMatrixOf(result, currentMat);
-        const newCombined = mat3mul(proposedMat, mat3transpose(currentMat));
-        const magZero = poses.metadata.magZeroAtCapture ?? { x: 0, y: 0, z: 0 };
-        const cal = computeCalFromEllipsoid(ellipsoid, newCombined, magZero);
-        const rows = computeReplayData(result, ds.capture.alignment, captureData, directions, {
-            ellipsoidParams: ellipsoid,
-            currentMat,
-            proposedIncludesCenter: usedCalibratedPackage,
-        });
-        const currentErr =
-            rows.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) / rows.length;
 
         // --- universal assertions (every class) ---
         it("ellipsoid fit succeeds", () => {
@@ -115,8 +123,8 @@ for (const { file, data: ds } of dsFiles) {
             }
         });
 
-        // F2 round-trip: newCombined^T · cal ≈ center + magZero (the frame-algebra identity)
-        // ±2 counts because cal is integer-rounded
+        // F2 round-trip: newCombined^T * cal ~= center + magZero (frame-algebra identity)
+        // +-2 counts because cal is integer-rounded
         it("offsets round-trip to ellipsoid center + magZero (F2 frame algebra)", () => {
             const back = mat3mulVec(mat3transpose(newCombined), [cal.x, cal.y, cal.z]);
             expect(Math.abs(back[0] - (ellipsoid.center.x + magZero.x))).toBeLessThan(2);

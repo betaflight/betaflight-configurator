@@ -5,7 +5,7 @@
  *   Form A — replay-transfer (only between runs with IDENTICAL captured_under)
  *   Form B — package comparison (all other pairings; physical-frame quantities)
  */
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
 import { mat3mul, mat3transpose } from "../../src/js/utils/magAlignment.js";
 import {
@@ -78,18 +78,15 @@ function evaluatePackageOnPoses(resultA, ellipsoidA, posesB) {
     return meanPackageError(rows);
 }
 
-// --- load all datasets ---
-// We hardcode the pairings; the discover-everything pattern is FP2.1's job.
-function loadExpected(name) {
-    const ds = loadFixture(`datasets/${name}.expected.json`);
-    return solveDataset(ds);
-}
+let indoorBase, indoorAppl, outdoorBase, outdoorAppl, indoorDef;
 
-const indoorBase = loadExpected("indoor-baseline");
-const indoorAppl = loadExpected("indoor-applied");
-const outdoorBase = loadExpected("outdoor-baseline");
-const outdoorAppl = loadExpected("outdoor-applied");
-const indoorDef = loadExpected("indoor-default");
+beforeAll(() => {
+    indoorBase = solveDataset(loadFixture("datasets/indoor-baseline.expected.json"));
+    indoorAppl = solveDataset(loadFixture("datasets/indoor-applied.expected.json"));
+    outdoorBase = solveDataset(loadFixture("datasets/outdoor-baseline.expected.json"));
+    outdoorAppl = solveDataset(loadFixture("datasets/outdoor-applied.expected.json"));
+    indoorDef = solveDataset(loadFixture("datasets/indoor-default.expected.json"));
+}, 300_000);
 
 describe("per-environment applied verification", () => {
     it("indoor: residual bias is a small fraction of the baseline (firmware removed hard iron)", () => {
@@ -145,14 +142,15 @@ describe("per-environment applied verification", () => {
 
 describe("cross-environment stability", () => {
     it("indoor baseline package transfers to outdoor baseline poses (Form A — replay)", () => {
-        // both alignment 8 + mag_zero 0,0,0 — frames are identical, replay-transfer is safe
+        // measured: 3.26 deg
         const err = evaluatePackageOnPoses(indoorBase.result, indoorBase.ellipsoid, outdoorBase.poses);
-        expect(err).toBeLessThanOrEqual(12);
+        expect(err).toBeLessThanOrEqual(8);
     });
 
     it("outdoor baseline package transfers to indoor baseline poses (Form A — replay)", () => {
+        // measured: 3.49 deg
         const err = evaluatePackageOnPoses(outdoorBase.result, outdoorBase.ellipsoid, indoorBase.poses);
-        expect(err).toBeLessThanOrEqual(12);
+        expect(err).toBeLessThanOrEqual(8);
     });
 
     it("baseline centers are stable across environments (Form B)", () => {
@@ -170,14 +168,14 @@ describe("cross-environment stability", () => {
 
 describe("hardware config-invariance (DEFAULT alignment)", () => {
     it("solved package matches the indoor-baseline package (Form B — per-axis cal)", () => {
-        // measured delta ≤ 8 counts: (664,117,194) vs (663,124,195)
+        // measured delta <= 8 counts: (664,117,194) vs (663,124,195)
         expect(Math.abs(indoorDef.cal.x - indoorBase.cal.x)).toBeLessThanOrEqual(40);
         expect(Math.abs(indoorDef.cal.y - indoorBase.cal.y)).toBeLessThanOrEqual(40);
         expect(Math.abs(indoorDef.cal.z - indoorBase.cal.z)).toBeLessThanOrEqual(40);
     });
 
     it("solved rotation matches the indoor-baseline rotation (Form B — rotation delta)", () => {
-        // measured Δ ≈ 2°
+        // measured delta ~= 2 deg
         expect(rotationDelta(indoorDef.proposedMat, indoorBase.proposedMat)).toBeLessThanOrEqual(6);
     });
 });

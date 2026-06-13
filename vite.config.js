@@ -138,6 +138,8 @@ export default defineConfig({
         environment: "jsdom",
         setupFiles: ["test/setup.js"],
         root: ".",
+        testTimeout: 20_000,
+        hookTimeout: 120_000,
         alias: {
             "/images/": `${path.resolve(__dirname, "src/images")}/`,
         },

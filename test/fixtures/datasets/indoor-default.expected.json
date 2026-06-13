@@ -15,7 +15,7 @@
     "custom_angles": null
   },
   "wmm": { "inclination_deg": 70.9, "declination_deg": -15.3, "field_strength_nt": 53900 },
-  "build": { "airframe": "5-inch freestyle on Flywoo H743, GPS at rear" },
+  "build": { "airframe": "3.5-inch freestyle on Flywoo H743, GPS at rear" },
   "expected": {
     "package_wins": true,
     "current_error_min_deg": 30, "_measured_current_error_deg": 109.7,

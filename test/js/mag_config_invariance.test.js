@@ -292,3 +292,17 @@ describe("config invariance C: capture under CUSTOM R_true, magZero MISSING", ()
         expect(C.alignmentOnlyErr).toBeGreaterThan(C.packageErr);
     });
 });
+
+// ── Config D: DEFAULT alignment (identity clamp) ─────────────────────────
+
+describe("config invariance D: currentMatrixOf(0) returns identity", () => {
+    it("alignment 0 (DEFAULT) produces the CW0 identity matrix", () => {
+        const mat = currentMatrixOf(0, null);
+        expect(mat).toEqual(ALIGNMENT_MATRICES[1]);
+    });
+
+    it("alignment 0 with customAngles ignored (no CUSTOM meaning)", () => {
+        const mat = currentMatrixOf(0, { roll: 45, pitch: 10, yaw: 90 });
+        expect(mat).toEqual(ALIGNMENT_MATRICES[1]);
+    });
+});
