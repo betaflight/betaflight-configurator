@@ -330,9 +330,7 @@ export function validatePoseAngle(targetRoll, targetPitch, measuredRoll, measure
     const isFlatTarget = targetRoll === 0 && targetPitch === 0;
 
     if (isFlatTarget) {
-        return tilt <= POSE_ANGLE_WINDOW_DEG
-            ? { accepted: true }
-            : { accepted: false, reason: "magCharPoseRejectNotFlat" };
+        return tilt <= POSE_TILT_MIN_DEG ? { accepted: true } : { accepted: false, reason: "magCharPoseRejectNotFlat" };
     }
     if (tilt < POSE_TILT_MIN_DEG) {
         return { accepted: false, reason: "magCharPoseRejectNearlyFlat" };

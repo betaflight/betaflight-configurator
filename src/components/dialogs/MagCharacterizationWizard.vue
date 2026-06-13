@@ -609,48 +609,62 @@
                     class="mag-char-readout-lines"
                 >
                     <div class="mag-char-readout-row">
-                        <span class="mag-char-stability-dot" :class="{ stable: isStable && phase === 'await' }"></span>
-                        <!-- Keyboard-less capture: delayed-enable + 0.5 s hold-to-confirm.
-                             Appears on stability (with a grace period if it briefly dips);
-                             the hold gives the user time to re-steady the drone after
-                             touching the screen. Spacebar remains the keyboard path. -->
-                        <button
-                            v-if="phase === 'await' && captureBtnVisible"
-                            type="button"
-                            class="mag-char-capture-btn"
-                            :style="{ '--hold': captureHoldProgress }"
-                            @pointerdown.prevent="beginCaptureHold"
-                            @pointerup="cancelCaptureHold"
-                            @pointerleave="cancelCaptureHold"
-                            @pointercancel="cancelCaptureHold"
-                        >
-                            {{ $t("magCharCaptureButton") }}
-                        </button>
                         <span
-                            v-if="phase === 'await' && isStable && !poseNeedsRetry"
-                            class="mag-char-readout-item mag-char-spacebar-prompt"
-                            >{{ $t("magCharFooterSpacebar") }}</span
-                        >
-                        <span
-                            v-else-if="phase === 'await' && isStable && poseNeedsRetry"
-                            class="mag-char-readout-item"
-                            style="color: #ee6644"
-                            >{{ $t(poseRetryReason || "magCharFooterMovementRetry") }}</span
-                        >
-                        <span
-                            v-else-if="phase === 'await'"
-                            class="mag-char-readout-item mag-char-unstable-text"
-                            v-html="$t('magCharFooterHoldSteady')"
+                            class="mag-char-stability-dot"
+                            :class="{
+                                stable: isStable && phase === 'await' && poseAngleOk,
+                                'angle-warn': isStable && phase === 'await' && !poseAngleOk,
+                            }"
                         ></span>
-                        <span v-else-if="phase === 'capturing'" class="mag-char-readout-item mag-char-capturing-text"
-                            >{{ $t("magCharFooterCapturing", { samples: captureSamples }) }} samples</span
-                        >
-                        <span
-                            v-else
-                            class="mag-char-readout-item"
-                            style="color: #4ec97e"
-                            v-html="$t('magCharFooterCaptured')"
-                        ></span>
+                        <span class="mag-char-status-slot">
+                            <span
+                                v-if="phase === 'await' && isStable && poseAngleMessage"
+                                class="mag-char-readout-item"
+                                :class="{ 'mag-char-angle-bad': !poseAngleOk, 'mag-char-angle-good': poseAngleOk }"
+                                >{{ $t(poseAngleMessage) }}</span
+                            >
+                            <span
+                                v-if="phase === 'await' && poseNeedsRetry"
+                                class="mag-char-readout-item"
+                                style="color: #ee6644"
+                                >{{ $t(poseRetryReason || "magCharFooterMovementRetry") }}</span
+                            >
+                            <template v-if="phase === 'await' && captureBtnVisible">
+                                <button
+                                    type="button"
+                                    class="mag-char-capture-btn"
+                                    :class="{ 'mag-char-capture-btn-dimmed': !poseAngleOk }"
+                                    :style="{ '--hold': captureHoldProgress }"
+                                    @pointerdown.prevent="beginCaptureHold"
+                                    @pointerup="cancelCaptureHold"
+                                    @pointerleave="cancelCaptureHold"
+                                    @pointercancel="cancelCaptureHold"
+                                >
+                                    {{ $t("magCharCaptureButton") }}
+                                </button>
+                            </template>
+                            <span
+                                v-else-if="phase === 'await' && isStable && poseAngleOk && !poseNeedsRetry"
+                                class="mag-char-readout-item mag-char-spacebar-prompt"
+                                >{{ $t("magCharFooterSpacebar") }}</span
+                            >
+                            <span
+                                v-else-if="phase === 'await' && !isStable"
+                                class="mag-char-readout-item mag-char-unstable-text"
+                                v-html="$t('magCharFooterHoldSteady')"
+                            ></span>
+                            <span
+                                v-else-if="phase === 'capturing'"
+                                class="mag-char-readout-item mag-char-capturing-text"
+                                >{{ $t("magCharFooterCapturing", { samples: captureSamples }) }} samples</span
+                            >
+                            <span
+                                v-else
+                                class="mag-char-readout-item"
+                                style="color: #4ec97e"
+                                v-html="$t('magCharFooterCaptured')"
+                            ></span>
+                        </span>
                         <span class="mag-char-readout-sep">|</span>
                         <span class="mag-char-readout-item">Gyro: {{ gyroRms.toFixed(1) }}&deg;/s</span>
                         <span class="mag-char-readout-item">R: {{ lastRoll.toFixed(1) }}&deg;</span>
@@ -809,6 +823,8 @@ const {
     calCurrentPrompt,
     poseNeedsRetry,
     poseRetryReason,
+    poseAngleOk,
+    poseAngleMessage,
     startCapture,
     startCalibrationPhase,
     completeCalibrationPhase,
@@ -849,15 +865,15 @@ let _captureHoldStart = 0;
 let _captureBtnGraceTimer = null;
 
 watch(
-    () => [isStable.value, phase.value],
-    ([stable, ph]) => {
+    () => [isStable.value, phase.value, poseAngleOk.value],
+    ([stable, ph, angleOk]) => {
         if (ph !== "await") {
             captureBtnVisible.value = false;
             cancelCaptureHold();
             clearCaptureGrace();
             return;
         }
-        if (stable) {
+        if (stable && angleOk) {
             clearCaptureGrace();
             captureBtnVisible.value = true;
         } else if (captureBtnVisible.value && !_captureBtnGraceTimer) {
@@ -878,7 +894,7 @@ function clearCaptureGrace() {
 }
 
 function beginCaptureHold() {
-    if (phase.value !== "await" || _captureHoldTimer) {
+    if (phase.value !== "await" || _captureHoldTimer || !poseAngleOk.value) {
         return;
     }
     _captureHoldStart = Date.now();
@@ -1129,6 +1145,14 @@ watch(replayIndex, () => {
     if (pose) {
         updateReplayModel(-(pose.expectedHeading || 0), pose.roll, pose.pitch);
     }
+});
+
+// Auto-scroll pose timeline to keep the current pose visible
+watch([currentDirectionIndex, currentSubPoseIndex], () => {
+    nextTick(() => {
+        const el = document.querySelector(".mag-char-pose-step.current");
+        if (el) el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    });
 });
 
 // ── Dialog refs ────────────────────────────────────────────────────────
@@ -2003,6 +2027,13 @@ defineExpose({ show, close });
 .mag-char-readout-item {
     white-space: nowrap;
 }
+.mag-char-status-slot {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 260px;
+    flex-shrink: 0;
+}
 .mag-char-readout-sep {
     color: #444;
     margin: 0 2px;
@@ -2021,6 +2052,10 @@ defineExpose({ show, close });
 .mag-char-stability-dot.stable {
     background: #4ec97e;
     box-shadow: 0 0 6px #4ec97e;
+}
+.mag-char-stability-dot.angle-warn {
+    background: #ee6644;
+    box-shadow: 0 0 6px #ee6644;
 }
 .mag-char-spacebar-prompt {
     color: #4ec97e;
@@ -2269,5 +2304,17 @@ defineExpose({ show, close });
 }
 .mag-char-capture-btn:active {
     border-color: #7effb0;
+}
+.mag-char-capture-btn-dimmed {
+    opacity: 0.4;
+    border-color: #ee6644 !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.mag-char-angle-good {
+    color: #4ec97e;
+}
+.mag-char-angle-bad {
+    color: #ee6644;
 }
 </style>

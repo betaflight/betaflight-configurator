@@ -144,6 +144,8 @@ export function useMagCharacterization() {
     const captureSamples = ref(0);
     const poseNeedsRetry = ref(false); // set true when movement auto-aborts capture, cleared on next capture/advance
     const poseRetryReason = ref(null); // i18n key explaining the rejection (angle gate), null for movement aborts
+    const poseAngleOk = ref(false); // true when live roll/pitch are within the current pose's target range
+    const poseAngleMessage = ref(null); // human-readable reason when poseAngleOk is false, null when ok
     const captureData = ref([]);
     const solverResult = ref(null);
     const replayData = ref([]); // [{ dirLabel, poseLabel, expectedHeading, roll, pitch, currentHeading, currentMag, newHeading, newMag }]
@@ -306,6 +308,19 @@ export function useMagCharacterization() {
         stableCount = gyroRms.value < STABILITY_THRESHOLD_DEG_S ? stableCount + 1 : 0;
         isStable.value = stableCount >= STABILITY_FRAMES;
 
+        // Live angle feedback: gate capture on the drone being at the correct
+        // body attitude for the current pose. Flat poses require both axes within
+        // +-10 deg of level; tilted poses use the existing validatePoseAngle gate.
+        if (currentPoseDef.value) {
+            const pose = currentPoseDef.value;
+            const angleCheck = validatePoseAngle(pose.targetRoll, pose.targetPitch, roll, pitch);
+            poseAngleOk.value = angleCheck.accepted;
+            poseAngleMessage.value = angleCheck.accepted ? null : angleCheck.reason;
+        } else {
+            poseAngleOk.value = true;
+            poseAngleMessage.value = null;
+        }
+
         if (phase.value === "await") {
             sampleTimer = setTimeout(tick, POLL_MS);
         }
@@ -313,7 +328,7 @@ export function useMagCharacterization() {
 
     // --- Spacebar handler ---
     function onKeyDown(e) {
-        if (e.code === "Space" && phase.value === "await" && isStable.value) {
+        if (e.code === "Space" && phase.value === "await" && isStable.value && poseAngleOk.value) {
             e.preventDefault();
             startCapture();
         }
@@ -1767,6 +1782,8 @@ export function useMagCharacterization() {
         calCurrentPrompt,
         poseNeedsRetry,
         poseRetryReason,
+        poseAngleOk,
+        poseAngleMessage,
         // Computed
         currentDirection,
         currentPoseDef,
