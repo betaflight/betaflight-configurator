@@ -261,7 +261,9 @@ describe("pipeline proof: ellipsoid correction normalizes field magnitude", () =
         for (const dir of poses.directions) {
             for (const pose of dir.poses) {
                 if (!pose.captured || !pose.samples) continue;
-                for (const s of pose.samples) H_vals.push(Math.hypot(s.mag[0], s.mag[1]));
+                for (const s of pose.samples) {
+                    H_vals.push(Math.hypot(s.mag[0], s.mag[1]));
+                }
             }
         }
         const avgH = H_vals.reduce((a, b) => a + b, 0) / H_vals.length || 1;
@@ -380,7 +382,9 @@ describe("pipeline proof: model export schema", () => {
             "poses",
             "downstream_fusion",
         ];
-        for (const k of required) expect(model).toHaveProperty(k);
+        for (const k of required) {
+            expect(model).toHaveProperty(k);
+        }
         expect(model.version).toBe("2.2");
         expect(model.downstream_fusion.frame).toBe("FRD");
         expect(model.captured_under.alignment).toBe(8);
