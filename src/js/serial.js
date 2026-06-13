@@ -7,6 +7,7 @@ import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
+import TauriTcp from "./protocols/TauriTcp.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -29,12 +30,13 @@ class Serial extends EventTarget {
                 { name: "tcp", instance: new CapacitorTcp() },
             ];
         } else if (isTauri()) {
-            // Desktop Tauri shell: native serial via tauri-plugin-serialplugin,
-            // bluetooth/tcp fall back to the web APIs (the webview exposes them).
+            // Tauri shell (desktop + Android): native serial via tauri-plugin-serialplugin,
+            // raw TCP via the Rust tcp_* commands (so the Betaflight bridge on 5761 works),
+            // bluetooth falls back to the web API the webview exposes.
             this._protocols = [
                 { name: "serial", instance: new TauriSerial() },
                 { name: "bluetooth", instance: new WebBluetooth() },
-                { name: "tcp", instance: new Websocket() },
+                { name: "tcp", instance: new TauriTcp() },
             ];
         } else {
             this._protocols = [
