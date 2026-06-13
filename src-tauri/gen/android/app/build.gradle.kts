@@ -1,3 +1,4 @@
+import java.time.Year
 import java.util.Properties
 
 plugins {
@@ -28,12 +29,13 @@ android {
         applicationId = "com.betaflight.app"
         minSdk = 24
         targetSdk = 36
-        // versionCode floor comes from the app version (e.g. 2026.6.0 -> 2026006000); CI adds the
-        // monotonic build number (ANDROID_BUILD_NUMBER) so every uploaded bundle outranks the last.
-        val baseVersionCode = tauriProperties.getProperty("tauri.android.versionCode", "1").toInt()
+        // versionCode = <calendar year>000000 + CI build number (github.run_number) so it tracks the
+        // year and every upload outranks the last. The 2026006000 floor grandfathers the first build
+        // manually uploaded to Play, which forbids ever going lower. Valid until 2099 (< 2.1e9 cap).
         val baseVersionName = tauriProperties.getProperty("tauri.android.versionName", "1.0")
         val buildNumber = System.getenv("ANDROID_BUILD_NUMBER")?.toIntOrNull() ?: 0
-        versionCode = baseVersionCode + buildNumber
+        val yearBase = maxOf(Year.now().value * 1_000_000, 2026006000)
+        versionCode = yearBase + buildNumber
         versionName = if (buildNumber > 0) "$baseVersionName.$buildNumber" else baseVersionName
     }
     signingConfigs {
