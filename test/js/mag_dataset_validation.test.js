@@ -18,6 +18,8 @@ import {
     computeReplayData,
     computeCalFromEllipsoid,
     headingError,
+    assessTumbleQuality,
+    assessPoseQuality,
 } from "../../src/js/utils/magCharacterizationCompute.js";
 import {
     loadFixture,
@@ -172,6 +174,25 @@ for (const { data: ds } of dsFiles) {
                 expect(result.customAngles.pitch).toBeLessThanOrEqual(ar.pitch[1]);
                 expect(result.customAngles.yaw).toBeGreaterThanOrEqual(ar.yaw[0]);
                 expect(result.customAngles.yaw).toBeLessThanOrEqual(ar.yaw[1]);
+            });
+
+            it("quality verdicts match expected.json (FR4b)", () => {
+                const avgH = samples.reduce((s, v) => s + Math.hypot(v.mag[0], v.mag[1]), 0) / samples.length || 1;
+                const ratio = Math.hypot(ellipsoid.center.x, ellipsoid.center.y, ellipsoid.center.z) / avgH;
+                const tumble = assessTumbleQuality({
+                    centerRatio: ratio,
+                    coverageFraction: 1.0,
+                    ellipsoidResidual: ellipsoid.residual,
+                });
+                expect(tumble.verdict).toBe(ds.expected.tumble_verdict);
+                if (validation) {
+                    const pose = assessPoseQuality({
+                        currentErrorDeg: currentErr,
+                        packageErrorDeg: validation.fullCorrectedMeanErr,
+                        fieldDevMaxPct: result.fieldConsistency?.maxDevPct,
+                    });
+                    expect(pose.verdict).toBe(ds.expected.pose_verdict);
+                }
             });
         }
 

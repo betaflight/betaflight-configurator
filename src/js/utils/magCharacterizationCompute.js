@@ -562,5 +562,13 @@ export function assessPoseQuality({ currentErrorDeg, packageErrorDeg, fieldDevMa
     } else {
         verdict = "contaminated";
     }
+    // Cap at suspect when field deviation is high — heading errors alone
+    // may be small due to correct-then-solve, but the environment is not clean.
+    if (verdict === "clean" && fieldDevMaxPct !== undefined && fieldDevMaxPct >= 15) {
+        verdict = "suspect";
+        if (!reasons.some((r) => r.startsWith("field_dev"))) {
+            reasons.push(`field_dev ${fieldDevMaxPct.toFixed(1)}% >= 15%: strong environmental field distortion`);
+        }
+    }
     return { verdict, reasons };
 }

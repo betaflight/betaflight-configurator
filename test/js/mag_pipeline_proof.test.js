@@ -28,6 +28,8 @@ import {
     validatePoseAngle,
     headingError,
     SOLVER_OPTS,
+    assessTumbleQuality,
+    assessPoseQuality,
 } from "../../src/js/utils/magCharacterizationCompute.js";
 import { loadFixture, flattenSamples, captureDataFromPosesExport, directionsFromPosesExport } from "./test_helpers.js";
 
@@ -814,5 +816,52 @@ describe("validatePoseAngle: pose-angle gate", () => {
         const r = validatePoseAngle(0, 0, 0, 32);
         expect(r.accepted).toBe(false);
         expect(r.reason).toBe("magCharPoseRejectNotFlat");
+        // 10-20 deg rejection band — would have passed the old 20 deg gate
+        expect(validatePoseAngle(0, 0, 0, 15).accepted).toBe(false);
+    });
+});
+
+describe("Quality assessment: tumble", () => {
+    it("clean: low center ratio, good coverage, low residual", () => {
+        const v = assessTumbleQuality({ centerRatio: 0.05, coverageFraction: 0.95, ellipsoidResidual: 0.005 });
+        expect(v.verdict).toBe("clean");
+    });
+
+    it("suspect: moderate center ratio with decent coverage", () => {
+        const v = assessTumbleQuality({ centerRatio: 0.3, coverageFraction: 0.85, ellipsoidResidual: 0.01 });
+        expect(v.verdict).toBe("suspect");
+    });
+
+    it("contaminated: high center ratio (bench capture)", () => {
+        const v = assessTumbleQuality({ centerRatio: 0.77, coverageFraction: 1.0, ellipsoidResidual: 0.006 });
+        expect(v.verdict).toBe("contaminated");
+        expect(v.reasons.length).toBeGreaterThan(0);
+    });
+
+    it("contaminated: poor coverage", () => {
+        const v = assessTumbleQuality({ centerRatio: 0.1, coverageFraction: 0.55, ellipsoidResidual: 0.01 });
+        expect(v.verdict).toBe("contaminated");
+    });
+});
+
+describe("Quality assessment: poses", () => {
+    it("clean: both errors under 5 deg", () => {
+        const v = assessPoseQuality({ currentErrorDeg: 3, packageErrorDeg: 2 });
+        expect(v.verdict).toBe("clean");
+    });
+
+    it("suspect: moderate package error", () => {
+        const v = assessPoseQuality({ currentErrorDeg: 10, packageErrorDeg: 6 });
+        expect(v.verdict).toBe("suspect");
+    });
+
+    it("contaminated: large package error", () => {
+        const v = assessPoseQuality({ currentErrorDeg: 36, packageErrorDeg: 15 });
+        expect(v.verdict).toBe("contaminated");
+    });
+
+    it("caps at suspect when field deviation is high despite low errors (FR3b)", () => {
+        const v = assessPoseQuality({ currentErrorDeg: 3, packageErrorDeg: 2, fieldDevMaxPct: 40 });
+        expect(v.verdict).toBe("suspect");
     });
 });

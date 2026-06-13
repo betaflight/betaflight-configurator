@@ -22,6 +22,8 @@ import {
     proposedMatrixOf,
     computeCalFromEllipsoid,
     headingError,
+    assessTumbleQuality,
+    assessPoseQuality,
 } from "../../../src/js/utils/magCharacterizationCompute.js";
 import { flattenSamples, captureDataFromPosesExport, directionsFromPosesExport } from "../test_helpers.js";
 
@@ -179,3 +181,14 @@ if (usedCalibratedPackage) {
         `  expected firmware mean error after apply: ${(validation?.proposedMeanErr ?? mean.P1).toFixed(1)}° (was ${mean.C1.toFixed(1)}°)`,
     );
 }
+// Quality verdicts (matches wizard export)
+const pts = cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
+const avgH = pts.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) / pts.length || 1;
+const cRatio = Math.hypot(c.x, c.y, c.z) / avgH;
+const tumbleQ = assessTumbleQuality({ centerRatio: cRatio, coverageFraction: coverage, ellipsoidResidual: ellipsoid.residual });
+const currentErr = validation ? validation.proposedMeanErr : mean.C1;
+const pkgErr = validation?.fullCorrectedMeanErr ?? currentErr;
+const poseQ = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: pkgErr, fieldDevMaxPct: result.fieldConsistency?.maxDevPct });
+console.log(`\nQUALITY: tumble=${tumbleQ.verdict}  pose=${poseQ.verdict}`);
+if (tumbleQ.reasons.length) tumbleQ.reasons.forEach((r) => console.log(`  tumble: ${r}`));
+if (poseQ.reasons.length) poseQ.reasons.forEach((r) => console.log(`  pose: ${r}`));

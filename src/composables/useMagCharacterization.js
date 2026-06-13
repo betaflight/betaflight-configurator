@@ -946,13 +946,58 @@ export function useMagCharacterization() {
         return null;
     }
 
+    function computeQualityAssessment() {
+        let tumbleVerdict = null;
+        if (ellipsoidParams.value && calibrationSamples.value.length) {
+            const avgH =
+                calibrationSamples.value.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) /
+                calibrationSamples.value.length;
+            const ratio =
+                Math.hypot(
+                    ellipsoidParams.value.center.x,
+                    ellipsoidParams.value.center.y,
+                    ellipsoidParams.value.center.z,
+                ) / avgH;
+            const covFrac = calibrationCoverage.value?.fraction ?? 0;
+            const tumble = assessTumbleQuality({
+                centerRatio: ratio,
+                coverageFraction: covFrac,
+                ellipsoidResidual: ellipsoidParams.value.residual,
+            });
+            tumbleVerdict = {
+                ...tumble,
+                center_ratio: ratio,
+                coverage: covFrac,
+                ellipsoid_residual: ellipsoidParams.value.residual,
+            };
+        }
+        const currentErr = replayData.value.length
+            ? replayData.value.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) /
+              replayData.value.length
+            : 0;
+        const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
+        const pose = assessPoseQuality({
+            currentErrorDeg: currentErr,
+            packageErrorDeg: packageErr,
+            fieldDevMaxPct: solverResult.value?.fieldConsistency?.maxDevPct,
+        });
+        return {
+            tumble_verdict: tumbleVerdict?.verdict ?? null,
+            pose_verdict: pose.verdict,
+            center_ratio: tumbleVerdict?.center_ratio ?? null,
+            coverage: tumbleVerdict?.coverage ?? null,
+            ellipsoid_residual: tumbleVerdict?.ellipsoid_residual ?? null,
+            reasons: [...(tumbleVerdict?.reasons ?? []), ...pose.reasons],
+        };
+    }
+
     function exportCharacterizationPoses() {
         const sr = solverResult.value;
         const exportData = {
             type: "characterization_poses",
             metadata: {
                 exportedAt: new Date().toISOString(),
-                configuratorVersion: "2026.6.0-alpha",
+                configuratorVersion: typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "?.?.?-alpha",
                 currentAlignment: fcStore.sensorAlignment.align_mag || 0,
                 customAngles:
                     fcStore.sensorAlignment.align_mag === 9
@@ -990,53 +1035,7 @@ export function useMagCharacterization() {
                 // failed and zero was assumed.
                 magZeroAtCapture: magZeroAtCapture.value ? { ...magZeroAtCapture.value } : null,
                 magZeroKnown: magZeroAtCapture.value !== null,
-                quality_assessment: (() => {
-                    // tumble quality
-                    let tumbleVerdict = null;
-                    if (ellipsoidParams.value) {
-                        const avgH = calibrationSamples.value.length
-                            ? calibrationSamples.value.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) /
-                              calibrationSamples.value.length
-                            : 1;
-                        const ratio =
-                            Math.hypot(
-                                ellipsoidParams.value.center.x,
-                                ellipsoidParams.value.center.y,
-                                ellipsoidParams.value.center.z,
-                            ) / avgH;
-                        const covFrac = calibrationCoverage.value?.fraction ?? 0;
-                        const tumble = assessTumbleQuality({
-                            centerRatio: ratio,
-                            coverageFraction: covFrac,
-                            ellipsoidResidual: ellipsoidParams.value.residual,
-                        });
-                        tumbleVerdict = {
-                            ...tumble,
-                            center_ratio: ratio,
-                            coverage: covFrac,
-                            ellipsoid_residual: ellipsoidParams.value.residual,
-                        };
-                    }
-                    // pose quality
-                    const currentErr = replayData.value.length
-                        ? replayData.value.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) /
-                          replayData.value.length
-                        : 0;
-                    const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
-                    const pose = assessPoseQuality({
-                        currentErrorDeg: currentErr,
-                        packageErrorDeg: packageErr,
-                        fieldDevMaxPct: solverResult.value?.fieldConsistency?.maxDevPct,
-                    });
-                    return {
-                        tumble_verdict: tumbleVerdict?.verdict ?? null,
-                        pose_verdict: pose.verdict,
-                        center_ratio: tumbleVerdict?.center_ratio ?? null,
-                        coverage: tumbleVerdict?.coverage ?? null,
-                        ellipsoid_residual: tumbleVerdict?.ellipsoid_residual ?? null,
-                        reasons: [...(tumbleVerdict?.reasons ?? []), ...pose.reasons],
-                    };
-                })(),
+                quality_assessment: computeQualityAssessment(),
             },
             directions: directions.map((dir, di) => ({
                 label: dir.label,
@@ -1338,6 +1337,79 @@ export function useMagCharacterization() {
         report += sep;
         report += "MAGNETOMETER CHARACTERIZATION REPORT\n";
         report += `${sep}\n`;
+
+        // ── Tier 1: VERDICT (plain language, no jargon) ──────────────────
+        report += hdr("VERDICT");
+        const qa = computeQualityAssessment();
+        if (r && !r.error) {
+            const ang = r.customAngles;
+            const alignLabel = ang
+                ? `CUSTOM (roll ${ang.roll.toFixed(0)}, pitch ${ang.pitch.toFixed(0)}, yaw ${ang.yaw.toFixed(0)})`
+                : r.label || `preset ${r.alignment}`;
+            report += `  Alignment found:   ${alignLabel}\n`;
+        }
+        const currentMean = rep.length
+            ? rep.reduce((s, d) => s + headingError(d.currentHeading, d.expectedHeading), 0) / rep.length
+            : null;
+        const afterMean = calibrationValidation.value?.fullCorrectedMeanErr ?? currentMean;
+        if (currentMean != null) {
+            report += `  Heading accuracy:  ${currentMean.toFixed(1)} deg (before)`;
+            if (afterMean !== currentMean) report += ` -> ${afterMean.toFixed(1)} deg (after)`;
+            report += ` on ${rep.length || "?"} poses\n`;
+        }
+        if (proposedIncludesCenter.value) {
+            report += "  Recommendation:    CALIBRATED PACKAGE — apply alignment + mag_calibration together\n";
+        } else if (calibrationValidation.value && !calibrationValidation.value.recommended) {
+            report += "  Recommendation:    ALIGNMENT-ONLY (bias deferred) — alignment still applied; bias\n";
+            report += "                     estimation deferred to per-flight self-calibration in the log viewer\n";
+        } else if (biasWarning.value) {
+            report += "  Recommendation:    UNTRUSTWORTHY — re-run with Full Calibration tumble; bias is\n";
+            report += "                     present but unobservable from poses alone\n";
+        } else if (qa.tumble_verdict) {
+            report += "  Recommendation:    APPLY — alignment only (no tumble this session)\n";
+        }
+        if (qa.tumble_verdict) {
+            report += `  Tumble quality:    ${qa.tumble_verdict.toUpperCase()}`;
+            if (qa.center_ratio != null) report += ` — center_ratio ${qa.center_ratio.toFixed(2)}`;
+            report += "\n";
+            for (const reason of qa.reasons) {
+                if (
+                    reason.startsWith("center_ratio") ||
+                    reason.startsWith("coverage") ||
+                    reason.startsWith("ellipsoid_residual")
+                ) {
+                    report += `                     ${reason}\n`;
+                }
+            }
+            if (qa.tumble_verdict === "contaminated" && qa.pose_verdict === "clean") {
+                report += "                     The ALIGNMENT is still trustworthy (solved on bias-corrected\n";
+                report += "                     data); re-run outdoors for cleaner mag_calibration.\n";
+            }
+        } else {
+            report += "  Tumble quality:    NOT RUN — no tumble this session; bias unobservable\n";
+        }
+        if (qa.pose_verdict) {
+            report += `  Pose quality:      ${qa.pose_verdict.toUpperCase()}`;
+            for (const reason of qa.reasons) {
+                if (
+                    reason.startsWith("current_error") ||
+                    reason.startsWith("package_error") ||
+                    reason.startsWith("field_dev")
+                ) {
+                    report += `\n                     ${reason}`;
+                }
+            }
+            report += "\n";
+        }
+        if (r && !r.error && calibrationOffsets.value) {
+            report += "  Will apply:        set align_mag = CUSTOM / mag_align_* = ... / set mag_calibration =";
+            report += ` ${calibrationOffsets.value.x},${calibrationOffsets.value.y},${calibrationOffsets.value.z}\n`;
+        } else if (r && !r.error) {
+            const names = ["", "CW0", "CW90", "CW180", "CW270", "CW0FLIP", "CW90FLIP", "CW180FLIP", "CW270FLIP"];
+            const nm = r.alignment >= 1 && r.alignment <= 8 ? names[r.alignment] : "CUSTOM";
+            report += `  Will apply:        set align_mag = ${nm}\n`;
+        }
+        report += "\n";
 
         // Location & environment
         report += hdr("LOCATION & ENVIRONMENT");
@@ -1747,6 +1819,71 @@ export function useMagCharacterization() {
         report += "  Mahony AHRS:       imu.c:242-244\n";
         report += "  Custom matrix:     vector.c:214-236\n";
         report += "  Presets:           boardalignment.c:98-139\n";
+        report += "\n";
+        report += sep;
+
+        // ── Tier 3: LLM APPENDIX ────────────────────────────────────────
+        report += "APPENDIX FOR LLM AGENTS (paste this report into a chat freely)\n";
+        report += `${sep}\n`;
+        report += "=== SOURCE IDENTITY ===\n";
+        report += `Generated by: Betaflight Configurator ${typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "?.?.?-alpha"} -\n`;
+        report += "  branch feature/mag-full-calibration (mag characterization wizard PR)\n";
+        if (typeof __APP_REVISION__ !== "undefined") {
+            report += `  revision: ${__APP_REVISION__}\n`;
+        }
+        report += "Schema: characterization model 2.1\n";
+        report += "Pipeline: selectAlignmentPackage dual solve (correct-then-solve), magCharacterizationCompute.js\n";
+        const fwVer = fcStore.config?.flightControllerVersion || "?";
+        report += `Firmware at capture: ${fwVer} — CUSTOM mag alignment requires >= 2026.6.0 (betaflight#14849)\n`;
+        report += `Export date: ${new Date().toISOString()}\n`;
+        report += "\n";
+        report += "=== KEY FUNCTIONS (where these numbers come from) ===\n";
+        report += "fitEllipsoid: 9-param algebraic LS; W_inv = UPPER-triangular Cholesky transpose\n";
+        report += "selectAlignmentPackage: dual solve on raw AND center-subtracted samples; package\n";
+        report += "  chosen by measured pose error\n";
+        report += "computeCalFromEllipsoid: magZero_new = newCombined * (center + magZero_capture)\n";
+        report += "computeReplayData: corrected heading = newCombined * W_inv * (m - center),\n";
+        report += "  corrections in capture frame FIRST\n";
+        report += "assessTumbleQuality / assessPoseQuality: thresholds printed in the verdict above\n";
+        report += "\n";
+        report += "=== FOR LLM AGENTS ===\n";
+        report += "- Every number in this report is MEASURED from this capture. Do not re-derive.\n";
+        report += "- mag_calibration values live in the PROPOSED alignment body frame; firmware\n";
+        report += "  subtracts them AFTER alignment.\n";
+        report += '- Do NOT suggest axis inversion hacks ("invert Z") or driver edits; orientation is\n';
+        report += "  fully expressed by align_mag / mag_align_roll/pitch/yaw.\n";
+        report += "- This wizard requires Betaflight 2026.6.0+. CLI and behavior from Betaflight\n";
+        report += "  4.x docs DO NOT apply.\n";
+        report += '- "Is this good?": compare the after-error and verdicts above against the\n';
+        report += "  printed thresholds — not against zero. A bench capture with tumble verdict\n";
+        report += "  CONTAMINATED and a clean package error is NORMAL (world-frame interference\n";
+        report += "  inflates the center estimate, not the alignment).\n";
+        report += "\n";
+        report += "=== TEST EXPECTATIONS (this capture, self-description) ===\n";
+        const capAlign = fcStore.sensorAlignment.align_mag || 0;
+        report += `capture_alignment: ${capAlign}   mag_zero_known: ${magZeroAtCapture.value !== null}`;
+        if (magZeroAtCapture.value) {
+            report += `   mag_zero_at_capture: (${magZeroAtCapture.value.x}, ${magZeroAtCapture.value.y}, ${magZeroAtCapture.value.z})`;
+        }
+        report += "\n";
+        if (qa.center_ratio != null) {
+            report += `center_ratio: ${qa.center_ratio.toFixed(2)}   coverage: ${(qa.coverage || 0).toFixed(2)}`;
+            report += `   ellipsoid_residual: ${(qa.ellipsoid_residual || 0).toFixed(4)}\n`;
+        }
+        const pkgErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentMean ?? NaN;
+        const fd = r?.fieldConsistency;
+        report += `package_error_deg: ${Number.isFinite(pkgErr) ? pkgErr.toFixed(1) : "N/A"}   `;
+        report += `current_error_deg: ${currentMean != null ? currentMean.toFixed(1) : "N/A"}   `;
+        report += `quality: ${r?.qualityScore ?? "N/A"}   `;
+        report += `field_dev_max_pct: ${fd?.maxDevPct?.toFixed(1) ?? "N/A"}\n`;
+        report += `tumble_verdict: ${qa.tumble_verdict ?? "not_run"}   `;
+        report += `pose_verdict: ${qa.pose_verdict ?? "N/A"}\n`;
+        report += '(NOTE: no "class" line — the wizard cannot know baseline-vs-applied; that is\n';
+        report += " an experiment-protocol concept. It reports capture FACTS; the reader\n";
+        report += " infers class.)\n";
+        report += "\n";
+        report += "=== RAW NUMBERS ===\n";
+        report += "  (see the detailed sections above for the full per-pose table and diagnostics)\n";
         report += "\n";
         report += sep;
         report += "END OF REPORT - Generated by Betaflight Configurator Mag Wizard\n";
