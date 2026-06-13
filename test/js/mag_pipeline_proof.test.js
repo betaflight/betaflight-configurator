@@ -378,9 +378,11 @@ describe("pipeline proof: model export schema", () => {
             "hard_iron",
             "quality",
             "poses",
+            "downstream_fusion",
         ];
         for (const k of required) expect(model).toHaveProperty(k);
-        expect(model.version).toBe("2.1");
+        expect(model.version).toBe("2.2");
+        expect(model.downstream_fusion.frame).toBe("FRD");
         expect(model.captured_under.alignment).toBe(8);
         expect(model.captured_under.mag_zero).toEqual({ x: 0, y: 0, z: 0 });
         expect(model.captured_under.mag_zero_known).toBe(true);

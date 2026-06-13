@@ -1,6 +1,6 @@
 {
-  "$schema": "https://betaflight.com/blackbox/mag-characterization-model/2.1",
-  "version": "2.1",
+  "$schema": "https://betaflight.com/blackbox/mag-characterization-model/2.2",
+  "version": "2.2",
   "captured_under": {
     "alignment": 8,
     "custom_angles": null,
@@ -443,5 +443,29 @@
       "coverage 75% < 80%: tumble did not cover enough sphere regions",
       "current_error 36.1 deg >= 30: baseline alignment is very wrong"
     ]
+  },
+  "downstream_fusion": {
+    "frame": "FRD",
+    "nt_per_corrected_unit": 53876.59271561083,
+    "gauss_per_corrected_unit": 0.5387659271561083,
+    "earth_field_ned_gauss": {
+      "n": 0.17039856799056122,
+      "e": -0.04672611507820233,
+      "d": 0.5089100728974272
+    },
+    "mag_noise_gauss": {
+      "sigma": 0.003179687572276443,
+      "sigma_xy": 0.028739947143954298,
+      "sigma_z": 0.02229938701453573
+    },
+    "quality_bounds": {
+      "field_strength_mg": 538.71,
+      "field_strength_ok": true,
+      "soft_iron_offdiag_ratio": 0.04356198147078067,
+      "soft_iron_offdiag_ok": true,
+      "soft_iron_anisotropy": 1.0136526876307306,
+      "soft_iron_anisotropy_ok": true,
+      "bounds_ok": true
+    }
   }
 }

@@ -7,7 +7,13 @@
 import { describe, expect, it } from "vitest";
 import { characterizeAlignment, matrixToEuler } from "../../src/js/utils/magCharacterization.js";
 import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec } from "../../src/js/utils/magAlignment.js";
-import { buildCharacterizationModel, signedHeadingError, normalizeHeading } from "../../src/js/utils/magModelExport.js";
+import {
+    buildCharacterizationModel,
+    signedHeadingError,
+    normalizeHeading,
+    computeDownstreamFusion,
+    computeMagQualityBounds,
+} from "../../src/js/utils/magModelExport.js";
 import { loadFixture, flattenSamples } from "./test_helpers.js";
 
 // ── Seeded PRNG ────────────────────────────────────────────────────────────
@@ -465,8 +471,8 @@ describe("mag characterization export", () => {
 
             const str = JSON.stringify(fixtureJson, null, 2);
             const reparsed = JSON.parse(str);
-            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.1");
-            expect(reparsed.version).toBe("2.1");
+            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.2");
+            expect(reparsed.version).toBe("2.2");
             expect(fixtureResult.alignment).toBe(9);
             expect(reparsed.alignment).not.toBeNull();
             expect(reparsed.quality).not.toBeNull();
@@ -685,8 +691,8 @@ describe("mag characterization export", () => {
             const str2 = JSON.stringify(json2, null, 2);
 
             // Reparsed JSON preserves all top-level keys
-            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.1");
-            expect(reparsed.version).toBe("2.1");
+            expect(reparsed.$schema).toBe("https://betaflight.com/blackbox/mag-characterization-model/2.2");
+            expect(reparsed.version).toBe("2.2");
             expect(reparsed.poses.length).toBe(5);
             expect(reparsed.quality.score_percent).toBeGreaterThanOrEqual(0);
 
@@ -756,6 +762,88 @@ describe("mag characterization export", () => {
             });
             expect(json.captured_under.mag_zero).toEqual(mz);
             expect(json.captured_under.mag_zero_known).toBe(true);
+        });
+    });
+
+    describe("Test 17: downstream_fusion block (schema 2.2)", () => {
+        const sr = characterizeAlignment(syntheticSamples, 0, null, {
+            headingMode: "absolute",
+            headingWeight: 1.0,
+        });
+        const json = buildExportJson(
+            sr,
+            mockReplayPoses,
+            mockGains,
+            mockCalibration,
+            mockGeoRef,
+            false,
+            0,
+            0,
+            mockEllipsoid,
+        );
+        const df = json.downstream_fusion;
+
+        it("block present with all keys and frame = FRD", () => {
+            expect(df).toBeDefined();
+            expect(df.frame).toBe("FRD");
+            expect(df).toHaveProperty("nt_per_corrected_unit");
+            expect(df).toHaveProperty("gauss_per_corrected_unit");
+            expect(df).toHaveProperty("earth_field_ned_gauss");
+            expect(df).toHaveProperty("mag_noise_gauss");
+            expect(df).toHaveProperty("quality_bounds");
+        });
+
+        it("ADC↔field scale: nt_per_unit = field/radius, gauss = nt/1e5", () => {
+            expect(df.nt_per_corrected_unit).toBeCloseTo(mockGeoRef.fieldStrength / mockEllipsoid.radius, 3);
+            expect(df.gauss_per_corrected_unit).toBeCloseTo(df.nt_per_corrected_unit / 1e5, 9);
+        });
+
+        it("earth field magnitude (Gauss) equals field_strength_nt/1e5", () => {
+            const { n, e, d } = df.earth_field_ned_gauss;
+            expect(Math.hypot(n, e, d)).toBeCloseTo(mockGeoRef.fieldStrength / 1e5, 4);
+        });
+
+        it("mag noise sigma = ellipsoid residual × gauss_per_unit", () => {
+            expect(df.mag_noise_gauss.sigma).toBeCloseTo(mockEllipsoid.residual * df.gauss_per_corrected_unit, 9);
+        });
+
+        it("quality_bounds pass for a clean mock calibration", () => {
+            expect(df.quality_bounds.field_strength_ok).toBe(true);
+            expect(df.quality_bounds.soft_iron_offdiag_ok).toBe(true);
+            expect(df.quality_bounds.soft_iron_anisotropy_ok).toBe(true);
+            expect(df.quality_bounds.bounds_ok).toBe(true);
+        });
+
+        it("null-safe: missing ellipsoid/geo yields null scale, no throw", () => {
+            const dfn = computeDownstreamFusion(null, null, null);
+            expect(dfn.frame).toBe("FRD");
+            expect(dfn.nt_per_corrected_unit).toBeNull();
+            expect(dfn.gauss_per_corrected_unit).toBeNull();
+            expect(dfn.earth_field_ned_gauss).toBeNull();
+            expect(dfn.mag_noise_gauss.sigma).toBeNull();
+            expect(dfn.quality_bounds.bounds_ok).toBe(false);
+        });
+
+        it("computeMagQualityBounds rejects a degenerate (anisotropic) soft iron", () => {
+            const degenerate = [
+                [5.0, 0, 0],
+                [0, 0.1, 0],
+                [0, 0, 1.0],
+            ];
+            const qb = computeMagQualityBounds(degenerate, 53000);
+            expect(qb.soft_iron_anisotropy).toBeCloseTo(50.0, 1);
+            expect(qb.soft_iron_anisotropy_ok).toBe(false);
+            expect(qb.bounds_ok).toBe(false);
+        });
+
+        it("computeMagQualityBounds flags out-of-range field strength", () => {
+            const goodIron = [
+                [1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1],
+            ];
+            expect(computeMagQualityBounds(goodIron, 5000).field_strength_ok).toBe(false); // 50 mG, too low
+            expect(computeMagQualityBounds(goodIron, 53000).field_strength_ok).toBe(true); // 530 mG
         });
     });
 });

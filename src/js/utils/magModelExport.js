@@ -1,15 +1,19 @@
 /**
- * Characterization model (schema 2.1) assembly — the JSON consumed by the
- * blackbox-log-viewer for post-flight heading correction.
+ * Characterization model (schema 2.2) assembly — the JSON consumed by the
+ * blackbox-log-viewer for post-flight heading correction and, as of schema 2.2,
+ * for full 3-axis magnetometer fusion in a post-flight pose estimator.
  *
  * Single home for the export shape and its helpers; used by the wizard
  * composable, the export test suite, and the fixture-regeneration tool so the
  * tested shape can never drift from the shipped shape.
+ *
+ * Schema 2.2 adds a `downstream_fusion` block (all values DERIVED from existing
+ * capture data — no extra capture). See computeDownstreamFusion() for the why.
  */
 import { matrixToEuler } from "./magCharacterization.js";
 import { ALIGNMENT_MATRICES } from "./magAlignment.js";
 
-export const MODEL_SCHEMA_VERSION = "2.1";
+export const MODEL_SCHEMA_VERSION = "2.2";
 export const MODEL_SCHEMA_URL = `https://betaflight.com/blackbox/mag-characterization-model/${MODEL_SCHEMA_VERSION}`;
 
 /** Map a wizard pose label to the schema body_orientation enum. */
@@ -53,12 +57,142 @@ export function getEulerAngles(solverResultVal) {
 }
 
 /**
- * Build the characterization model object (schema 2.1).
+ * Soft-iron sanity bounds (schema 2.2).
+ *
+ * Attribution: the numeric acceptance thresholds — field-strength range
+ * (150–950 milliGauss) and per-axis soft-iron scale range (0.67–1.5, applied below
+ * as a max/min diagonal ratio < 2.24) — originate from ArduPilot's CompassCalibrator
+ * (libraries/AP_Compass/CompassCalibrator.cpp, GPLv3). This is an INDEPENDENT
+ * reimplementation in JavaScript: no ArduPilot source was copied — only its published
+ * threshold values are reused as functional parameters. ArduPilot and this project are
+ * both GPLv3, so the reuse is license-compatible.
+ *
+ * These are scale-invariant ratios on the soft-iron matrix plus a physical field-
+ * magnitude range, so they hold whether `soft_iron` is normalized (unit-sphere) or in
+ * raw ADC scale. They catch degenerate/pathological fits that a residual-only score can
+ * miss (e.g. a near-singular soft-iron matrix).
+ *
+ * @param {number[3][3]|null} softIron - the W_inv soft-iron matrix
+ * @param {number|null} fieldNt - local field strength (nanotesla)
+ * @returns {object} per-check values + booleans + overall bounds_ok
+ */
+export function computeMagQualityBounds(softIron, fieldNt) {
+    const fieldMg = fieldNt != null ? fieldNt / 100 : null; // 1 milliGauss = 100 nT
+    const fieldOk = fieldMg != null ? fieldMg >= 150 && fieldMg <= 950 : null;
+
+    let offdiagRatio = null;
+    let anisotropy = null;
+    if (Array.isArray(softIron) && softIron.length === 3) {
+        const diag = [Math.abs(softIron[0][0]), Math.abs(softIron[1][1]), Math.abs(softIron[2][2])];
+        const offdiag = [
+            Math.abs(softIron[0][1]),
+            Math.abs(softIron[0][2]),
+            Math.abs(softIron[1][2]),
+            Math.abs(softIron[1][0]),
+            Math.abs(softIron[2][0]),
+            Math.abs(softIron[2][1]),
+        ];
+        const meanDiag = (diag[0] + diag[1] + diag[2]) / 3;
+        const maxDiag = Math.max(...diag);
+        const minDiag = Math.min(...diag);
+        offdiagRatio = meanDiag > 1e-12 ? Math.max(...offdiag) / meanDiag : null;
+        anisotropy = minDiag > 1e-12 ? maxDiag / minDiag : null;
+    }
+    const offdiagOk = offdiagRatio != null ? offdiagRatio < 1.0 : null;
+    // AP per-axis scale bound 0.67–1.5 ⇒ max/min diagonal ratio < 1.5/0.67 ≈ 2.24.
+    const anisotropyOk = anisotropy != null ? anisotropy < 2.24 : null;
+    const boundsOk = [fieldOk, offdiagOk, anisotropyOk].every((b) => b === true);
+
+    return {
+        field_strength_mg: fieldMg,
+        field_strength_ok: fieldOk,
+        soft_iron_offdiag_ratio: offdiagRatio,
+        soft_iron_offdiag_ok: offdiagOk,
+        soft_iron_anisotropy: anisotropy,
+        soft_iron_anisotropy_ok: anisotropyOk,
+        bounds_ok: boundsOk,
+    };
+}
+
+/**
+ * Build the schema-2.2 `downstream_fusion` block — everything a post-flight 3-axis
+ * magnetometer EKF needs to consume this static bench calibration as a *seed +
+ * noise model*, not just a heading correction. Every value is DERIVED from data the
+ * wizard already produced; nothing here needs extra capture.
+ *
+ * Why each field exists (the downstream consumer is the blackbox-log-viewer pose
+ * estimator, which fuses 3-axis mag against a WMM-seeded earth-field state):
+ *  - nt/gauss_per_corrected_unit: the ellipsoid fit lands corrected samples on a
+ *    sphere of magnitude `radius`, which physically equals the local field. So one
+ *    corrected unit = field/radius nanotesla. This lets the estimator fuse mag in
+ *    PHYSICAL units against a WMM earth field, instead of guessing a scale.
+ *  - earth_field_ned_gauss: the WMM earth-field vector in the NED world frame,
+ *    ready to SEED the estimator's earth-field state (no WMM re-implementation
+ *    downstream).
+ *  - mag_noise_gauss: the estimator's measurement noise R, set from THIS cal's
+ *    MEASURED residual (isotropic from the ellipsoid fit; per-axis xy/z from the
+ *    solver). A good cal earns tight mag trust; a marginal one is auto-downweighted
+ *    — far better than a generic constant.
+ *  - quality_bounds: independent sanity gates (computeMagQualityBounds).
+ *  - frame: the body frame of center/soft_iron/hard_iron and of the live magADC the
+ *    estimator applies them to (FRD — firmware-verified; see planv5/01).
+ *
+ * @param {object|null} ellipsoidParams - { center, W_inv, radius, residual }
+ * @param {object|null} geoReference - { declination, inclination, fieldStrength }
+ * @param {object|null} solverResiduals - { xyRms, zRms } per-axis fit residuals
+ * @returns {object} the downstream_fusion block (all keys present; values null when unknown)
+ */
+export function computeDownstreamFusion(ellipsoidParams, geoReference, solverResiduals) {
+    const fieldNt = geoReference?.fieldStrength ?? null;
+    const radius = ellipsoidParams?.radius ?? null;
+    const softIron = ellipsoidParams?.W_inv ?? null;
+    const epResidual = ellipsoidParams?.residual ?? null;
+
+    let ntPerUnit = null;
+    let gaussPerUnit = null;
+    if (fieldNt != null && radius != null && Math.abs(radius) > 1e-9) {
+        ntPerUnit = fieldNt / radius;
+        gaussPerUnit = ntPerUnit / 1e5; // 1 Gauss = 1e5 nT
+    }
+
+    let earthFieldNedGauss = null;
+    if (fieldNt != null && geoReference?.inclination != null && geoReference?.declination != null) {
+        const incl = (geoReference.inclination * Math.PI) / 180;
+        const decl = (geoReference.declination * Math.PI) / 180;
+        const bTotalG = fieldNt / 1e5; // nT → Gauss
+        const bH = bTotalG * Math.cos(incl);
+        earthFieldNedGauss = {
+            n: bH * Math.cos(decl),
+            e: bH * Math.sin(decl),
+            d: bTotalG * Math.sin(incl),
+        };
+    }
+
+    const scaleNoise = (r) => (r != null && gaussPerUnit != null ? Math.abs(r) * gaussPerUnit : null);
+
+    return {
+        frame: "FRD",
+        nt_per_corrected_unit: ntPerUnit,
+        gauss_per_corrected_unit: gaussPerUnit,
+        earth_field_ned_gauss: earthFieldNedGauss,
+        mag_noise_gauss: {
+            sigma: scaleNoise(epResidual),
+            sigma_xy: scaleNoise(solverResiduals?.xyRms),
+            sigma_z: scaleNoise(solverResiduals?.zRms),
+        },
+        quality_bounds: computeMagQualityBounds(softIron, fieldNt),
+    };
+}
+
+/**
+ * Build the characterization model object (schema 2.2).
  *
  * Frame conventions: `captured_under` is the FC configuration active during
  * capture; `ellipsoid_correction` (center, soft_iron) is expressed in that
  * CAPTURE frame; `hard_iron` is expressed in the PROPOSED alignment frame
- * (the literal `set mag_calibration` values).
+ * (the literal `set mag_calibration` values). All are in the FRD body frame
+ * (see `downstream_fusion.frame`). Schema 2.2 adds the `downstream_fusion`
+ * block (computeDownstreamFusion) for 3-axis-fusion consumers.
  *
  * @param {object} args
  * @param {object|null} args.solverResult - characterizeAlignment() result
@@ -153,5 +287,6 @@ export function buildCharacterizationModel({
             ),
         })),
         quality_assessment: qualityAssessment,
+        downstream_fusion: computeDownstreamFusion(ep, geoReference, sr && !sr.error ? sr.residuals : null),
     };
 }

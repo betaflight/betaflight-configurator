@@ -1807,7 +1807,7 @@ export function useMagCharacterization() {
         if (typeof __APP_REVISION__ !== "undefined") {
             report += `  revision: ${__APP_REVISION__}\n`;
         }
-        report += "Schema: characterization model 2.1\n";
+        report += "Schema: characterization model 2.2\n";
         report += "Pipeline: selectAlignmentPackage dual solve (correct-then-solve), magCharacterizationCompute.js\n";
         const fwVer = fcStore.config?.flightControllerVersion || "?";
         report += `Firmware at capture: ${fwVer} — CUSTOM mag alignment requires >= 2026.6.0 (betaflight#14849)\n`;
@@ -1821,6 +1821,26 @@ export function useMagCharacterization() {
         report += "computeReplayData: corrected heading = newCombined * W_inv * (m - center),\n";
         report += "  corrections in capture frame FIRST\n";
         report += "assessTumbleQuality / assessPoseQuality: thresholds printed in the verdict above\n";
+        report += "\n";
+        report += "=== DOWNSTREAM FUSION (schema 2.2) ===\n";
+        report += "The downstream_fusion block lets a post-flight pose estimator (blackbox-log-\n";
+        report += "viewer) fuse the magnetometer in 3 AXES against a world-magnetic-model earth\n";
+        report += "field, not just correct heading. A 3-axis EKF needs (1) a physical scale to read\n";
+        report += "magADC in Gauss, (2) the earth-field vector to seed against, (3) a measurement-\n";
+        report += "noise value. All three are DERIVED from this capture — no extra data:\n";
+        report += " - nt/gauss_per_corrected_unit = field_strength / ellipsoid radius (the\n";
+        report += "   corrected sphere's magnitude IS the local field).\n";
+        report += " - earth_field_ned_gauss = WMM (N,E,D) vector from declination/inclination/\n";
+        report += "   field_strength, ready to seed the estimator's earth-field state.\n";
+        report += " - mag_noise_gauss = THIS cal's MEASURED fit residual × the scale. A good cal\n";
+        report += "   earns tight mag trust; a marginal one auto-downweights — better than a\n";
+        report += "   generic constant.\n";
+        report += " - quality_bounds = ArduPilot-style sanity gates (field range, soft-iron off-\n";
+        report += "   diagonal ratio, anisotropy) that catch degenerate fits a score alone misses.\n";
+        report += " - frame = FRD (firmware body frame of magADC and of these numbers).\n";
+        report += "It CANNOT model motor-current field (no current flows at the bench) — that is\n";
+        report += "learned in flight; use the contamination verdict above to set how much to trust\n";
+        report += "this static cal vs. learn body-field online.\n";
         report += "\n";
         report += "=== FOR LLM AGENTS ===\n";
         report += "- Every number in this report is MEASURED from this capture. Do not re-derive.\n";
