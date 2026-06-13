@@ -28,8 +28,13 @@ android {
         applicationId = "com.betaflight.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = tauriProperties.getProperty("tauri.android.versionCode", "1").toInt()
-        versionName = tauriProperties.getProperty("tauri.android.versionName", "1.0")
+        // versionCode floor comes from the app version (e.g. 2026.6.0 -> 2026006000); CI adds the
+        // monotonic build number (ANDROID_BUILD_NUMBER) so every uploaded bundle outranks the last.
+        val baseVersionCode = tauriProperties.getProperty("tauri.android.versionCode", "1").toInt()
+        val baseVersionName = tauriProperties.getProperty("tauri.android.versionName", "1.0")
+        val buildNumber = System.getenv("ANDROID_BUILD_NUMBER")?.toIntOrNull() ?: 0
+        versionCode = baseVersionCode + buildNumber
+        versionName = if (buildNumber > 0) "$baseVersionName.$buildNumber" else baseVersionName
     }
     signingConfigs {
         create("release") {
