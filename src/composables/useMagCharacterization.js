@@ -394,9 +394,15 @@ export function useMagCharacterization() {
             const points = calibrationSamples.value.map((s) => ({ x: s.x, y: s.y, z: s.z }));
             ellipsoidParams.value = fitEllipsoid(points);
         }
+        // startWizard() resets the calibration state; preserve the tumble inputs
+        // the quality assessment and exports still need (ellipsoid, samples, fit).
         const savedEp = ellipsoidParams.value;
+        const savedSamples = calibrationSamples.value;
+        const savedSphereFit = calibrationSphereFit.value;
         startWizard();
         ellipsoidParams.value = savedEp;
+        calibrationSamples.value = savedSamples;
+        calibrationSphereFit.value = savedSphereFit;
     }
 
     function skipCalibration() {
@@ -975,7 +981,12 @@ export function useMagCharacterization() {
             ? replayData.value.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) /
               replayData.value.length
             : 0;
-        const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
+        // Use the error of the package that will actually be APPLIED: the
+        // calibrated package's error only when it won, otherwise the
+        // alignment-only error. fullCorrectedMeanErr describes a rejected
+        // package and would make a good run look bad.
+        const v = calibrationValidation.value;
+        const packageErr = v ? (v.recommended ? v.fullCorrectedMeanErr : v.proposedMeanErr) : currentErr;
         const pose = assessPoseQuality({
             currentErrorDeg: currentErr,
             packageErrorDeg: packageErr,
@@ -1248,6 +1259,10 @@ export function useMagCharacterization() {
 
     function cancelWizard() {
         cleanupTimer();
+        if (_calPromptTimer) {
+            clearInterval(_calPromptTimer);
+            _calPromptTimer = null;
+        }
         phase.value = "intro";
         currentDirectionIndex.value = 0;
         currentSubPoseIndex.value = 0;
@@ -1269,6 +1284,9 @@ export function useMagCharacterization() {
         calibrationValidation.value = null;
         proposedIncludesCenter.value = false;
         biasWarning.value = null;
+        // Clear so a new session re-reads the FC's mag_calibration rather than
+        // reusing the previous session's (possibly different FC/drone) value.
+        magZeroAtCapture.value = null;
     }
 
     function cleanupTimer() {

@@ -150,9 +150,7 @@ for (const { data: ds } of dsFiles) {
             });
 
             it("package wins when expected", () => {
-                if (ds.expected.package_wins) {
-                    expect(usedCalibratedPackage).toBe(true);
-                }
+                expect(usedCalibratedPackage).toBe(ds.expected.package_wins);
             });
 
             it("center ratio within expected range", () => {
@@ -177,18 +175,24 @@ for (const { data: ds } of dsFiles) {
             });
 
             it("quality verdicts match expected.json (FR4b)", () => {
-                const avgH = samples.reduce((s, v) => s + Math.hypot(v.mag[0], v.mag[1]), 0) / samples.length || 1;
-                const ratio = Math.hypot(ellipsoid.center.x, ellipsoid.center.y, ellipsoid.center.z) / avgH;
+                // Mirror the wizard's computeQualityAssessment exactly: centerRatio
+                // and coverage are both measured from the TUMBLE samples.
+                const tumbleAvgH = points.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) / points.length || 1;
+                const ratio = Math.hypot(ellipsoid.center.x, ellipsoid.center.y, ellipsoid.center.z) / tumbleAvgH;
+                const coverageFraction = computeDirectionalCoverage(points, fitSphere(points).center).fraction;
                 const tumble = assessTumbleQuality({
                     centerRatio: ratio,
-                    coverageFraction: 1.0,
+                    coverageFraction,
                     ellipsoidResidual: ellipsoid.residual,
                 });
                 expect(tumble.verdict).toBe(ds.expected.tumble_verdict);
                 if (validation) {
+                    const packageErr = validation.recommended
+                        ? validation.fullCorrectedMeanErr
+                        : validation.proposedMeanErr;
                     const pose = assessPoseQuality({
                         currentErrorDeg: currentErr,
-                        packageErrorDeg: validation.fullCorrectedMeanErr,
+                        packageErrorDeg: packageErr,
                         fieldDevMaxPct: result.fieldConsistency?.maxDevPct,
                     });
                     expect(pose.verdict).toBe(ds.expected.pose_verdict);

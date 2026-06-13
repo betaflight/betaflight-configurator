@@ -1442,20 +1442,33 @@ function show() {
 }
 
 function cancelWizard() {
-    cancelWizardInner();
     close();
 }
 
-function close() {
+// Single teardown path. Fires for EVERY way the dialog closes — the X button
+// and the Close button (@click="close"), the Cancel button, programmatic
+// close() after a successful apply, and the native @close event (Esc). Without
+// routing all of these through here, closing via X/Esc left the composable's
+// sample timer and prompt interval running with stale phase state.
+function onDialogClose() {
     if (resizeObserver) {
         resizeObserver.disconnect();
         resizeObserver = null;
     }
+    cancelWizardInner();
+}
+
+function close() {
+    // Triggers the dialog's native "close" event → onDialogClose() does teardown.
     dialogRef.value?.close();
 }
 
 async function doApplyAndReboot() {
-    if (!applyAndReboot()) {
+    // Guard only — do NOT mutate the store yet. applyAndReboot() (which writes
+    // fcStore.sensorAlignment) is deferred until after the firmware check, the
+    // user confirmation, and the CLI write+verify all succeed, so a cancelled
+    // or failed apply never leaves the store showing an alignment the FC lacks.
+    if (!solverResult.value?.alignment) {
         return;
     }
 
@@ -1523,6 +1536,8 @@ async function doApplyAndReboot() {
         }
 
         await saveAndReconnect();
+        // CLI write + read-back succeeded — now reflect the new alignment in the store.
+        applyAndReboot();
         close();
     } catch (e) {
         console.error("Failed to apply alignment", e);

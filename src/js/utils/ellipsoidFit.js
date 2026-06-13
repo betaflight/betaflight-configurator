@@ -271,19 +271,23 @@ function cholesky3x3(Q) {
         [0, 0, 0],
     ];
 
+    // Guard with !(x > 0) rather than (x <= 0): Math.sqrt of a negative
+    // radicand yields NaN, and `NaN <= 0` is false — it would slip through and
+    // propagate NaN into W_inv. `!(NaN > 0)` is true, so this rejects NaN,
+    // zero, and negative pivots alike (i.e. non-positive-definite Q).
     L[0][0] = Math.sqrt(Q[0][0]);
-    if (L[0][0] <= 0) return null;
+    if (!(L[0][0] > 0)) return null;
 
     L[1][0] = Q[1][0] / L[0][0];
     L[2][0] = Q[2][0] / L[0][0];
 
     L[1][1] = Math.sqrt(Q[1][1] - L[1][0] * L[1][0]);
-    if (L[1][1] <= 0) return null;
+    if (!(L[1][1] > 0)) return null;
 
     L[2][1] = (Q[2][1] - L[2][0] * L[1][0]) / L[1][1];
 
     L[2][2] = Math.sqrt(Q[2][2] - L[2][0] * L[2][0] - L[2][1] * L[2][1]);
-    if (L[2][2] <= 0) return null;
+    if (!(L[2][2] > 0)) return null;
 
     return L;
 }

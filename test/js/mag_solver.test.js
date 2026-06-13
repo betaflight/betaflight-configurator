@@ -27,7 +27,7 @@
  * ability to recover the full sensor-to-body mapping from truly raw data.
  */
 
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import {
     characterizeAlignment,
     matrixToEuler,
@@ -37,8 +37,14 @@ import {
 import { eulerToMatrix, ALIGNMENT_MATRICES } from "../../src/js/utils/magAlignment.js";
 import { loadFixture, flattenSamples } from "./test_helpers.js";
 
-// Seeded PRNG for deterministic tests
-let _seed = 42;
+// Seeded PRNG for deterministic tests. Reset before each test so the sequence
+// does not depend on test execution order (the shared mutable seed otherwise
+// couples tests together).
+const PRNG_SEED = 42;
+let _seed = PRNG_SEED;
+beforeEach(() => {
+    _seed = PRNG_SEED;
+});
 function rng() {
     _seed = (1664525 * _seed + 1013904223) >>> 0;
     return _seed / 0x100000000;

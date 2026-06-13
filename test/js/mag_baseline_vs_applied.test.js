@@ -68,13 +68,23 @@ function solveDataset(ds) {
     };
 }
 
-// Form A: replay-transfer (only when captured_under match)
+// Form A: replay-transfer. Valid ONLY when A and B share the same captured_under
+// frame (FP0.4 frame-safety rule) — here, the two baselines, both CW270FLIP.
+// Derive B's capture alignment from its export rather than hard-coding it.
 function evaluatePackageOnPoses(resultA, ellipsoidA, posesB) {
-    const rows = computeReplayData(resultA, 8, captureDataFromPosesExport(posesB), directionsFromPosesExport(posesB), {
-        ellipsoidParams: ellipsoidA,
-        currentMat: currentMatrixOf(8, null),
-        proposedIncludesCenter: true,
-    });
+    const alignB = posesB.metadata.currentAlignment ?? 8;
+    const customB = posesB.metadata.customAngles ?? null;
+    const rows = computeReplayData(
+        resultA,
+        alignB,
+        captureDataFromPosesExport(posesB),
+        directionsFromPosesExport(posesB),
+        {
+            ellipsoidParams: ellipsoidA,
+            currentMat: currentMatrixOf(alignB, customB),
+            proposedIncludesCenter: true,
+        },
+    );
     return meanPackageError(rows);
 }
 

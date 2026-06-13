@@ -84,7 +84,8 @@ const avgH = tumblePoints.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) / tumble
 const centerRatio = Math.hypot(ellipsoid.center.x, ellipsoid.center.y, ellipsoid.center.z) / avgH;
 const tumbleQuality = assessTumbleQuality({ centerRatio, coverageFraction: 0.75, ellipsoidResidual: ellipsoid.residual });
 const currentErr = replay.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) / replay.length;
-const poseQuality = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: validation.fullCorrectedMeanErr, fieldDevMaxPct: result.fieldConsistency?.maxDevPct });
+const packageErr = validation ? (validation.recommended ? validation.fullCorrectedMeanErr : validation.proposedMeanErr) : currentErr;
+const poseQuality = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: packageErr, fieldDevMaxPct: result.fieldConsistency?.maxDevPct });
 const qualityAssessment = {
     tumble_verdict: tumbleQuality.verdict,
     pose_verdict: poseQuality.verdict,

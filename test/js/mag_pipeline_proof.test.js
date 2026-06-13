@@ -517,12 +517,18 @@ describe("computeReplayData: direct unit test", () => {
             expect(d.fullCorrectedHeading).toBeLessThanOrEqual(180);
         }
         const ec = ellipsoid.center;
+        // avgH is the mean horizontal field over the raw pose samples — those
+        // live on captureData cells (.samples), NOT on computeReplayData rows
+        // (which carry only aggregated headings). Reading the wrong object left
+        // hN=0 and made the ratio branch below always take the "moved" path.
         let hSum = 0;
         let hN = 0;
-        for (const d of replayResult) {
-            for (const s of d.samples || []) {
-                hSum += Math.hypot(s.mag[0], s.mag[1]);
-                hN++;
+        for (const row of captureData) {
+            for (const cap of row) {
+                for (const s of cap?.samples || []) {
+                    hSum += Math.hypot(s.mag[0], s.mag[1]);
+                    hN++;
+                }
             }
         }
         const avgH = hN ? hSum / hN : 1;
@@ -651,7 +657,6 @@ describe("selectAlignmentPackage: correct-then-solve (production path)", () => {
     // and ships alignment + mag_calibration as one package when it measures
     // better on the poses. These tests lock that behavior on the reference dataset
     // through the SAME function the wizard and the offline tools call.
-    const ec = ellipsoid.center;
     const pkg = selectAlignmentPackage({
         samples: poseSamples,
         captureData,

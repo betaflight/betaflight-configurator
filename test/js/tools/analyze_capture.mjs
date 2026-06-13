@@ -191,8 +191,10 @@ const tumbleQ = assessTumbleQuality({
     coverageFraction: coverage.fraction,
     ellipsoidResidual: ellipsoid.residual,
 });
-const currentErr = validation ? validation.proposedMeanErr : mean.C1;
-const pkgErr = validation?.fullCorrectedMeanErr ?? currentErr;
+// Current = baseline heading error (raw, current alignment). Package = the
+// error of whichever package the selector actually accepted.
+const currentErr = mean.C1;
+const pkgErr = validation ? (validation.recommended ? validation.fullCorrectedMeanErr : validation.proposedMeanErr) : mean.C1;
 const poseQ = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: pkgErr, fieldDevMaxPct: result.fieldConsistency?.maxDevPct });
 console.log(`\nQUALITY: tumble=${tumbleQ.verdict}  pose=${poseQ.verdict}`);
 if (tumbleQ.reasons.length) tumbleQ.reasons.forEach((r) => console.log(`  tumble: ${r}`));

@@ -51,12 +51,16 @@ describe("ellipsoidFit", () => {
             expect(result.radius).toBeGreaterThan(0);
             expect(result.radius).toBeLessThan(radius * 1.5);
 
-            // W_inv should be approximately identity (within 5%)
+            // W_inv maps the sphere onto the unit sphere, so it is approximately
+            // diag(1/radius) with near-zero cross terms (the lower-left is exactly
+            // zero by the upper-triangular Lᵀ construction — the F1 fix).
+            const expectedDiag = 1 / radius;
             for (let r = 0; r < 3; r++) {
                 for (let c = 0; c < 3; c++) {
-                    const expected = r === c ? 1 / result.radius : 0;
                     if (r === c) {
-                        expect(Math.abs(result.W_inv[r][c])).toBeGreaterThan(0);
+                        expect(Math.abs(result.W_inv[r][c] - expectedDiag)).toBeLessThan(expectedDiag * 0.05);
+                    } else {
+                        expect(Math.abs(result.W_inv[r][c])).toBeLessThan(expectedDiag * 0.1);
                     }
                 }
             }
