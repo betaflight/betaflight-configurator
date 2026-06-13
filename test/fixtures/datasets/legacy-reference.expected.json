@@ -5,27 +5,65 @@
     "tumble": "high-inclination_tumble.json",
     "poses": "high-inclination_poses.json"
   },
-  "sensor": { "model": "QMC5883L", "is_clone": true, "clone_marking": "HA 5883 1A31", "adc_max_counts": 3000 },
+  "sensor": {
+    "model": "QMC5883L",
+    "is_clone": true,
+    "clone_marking": "HA 5883 1A31",
+    "adc_max_counts": 3000
+  },
   "capture": {
-    "location": { "lat": 48.42, "lon": -71.15 },
+    "location": {
+      "lat": 48.42,
+      "lon": -71.15
+    },
     "date": "2026-06-11",
     "environment": "indoor_bench",
     "fc_firmware": "2026.6.0-alpha",
     "alignment": 8,
     "custom_angles": null
   },
-  "wmm": { "inclination_deg": 70.9, "declination_deg": -15.3, "field_strength_nt": 53900 },
-  "build": { "airframe": "3.5-inch freestyle on Flywoo H743, GPS at rear" },
+  "wmm": {
+    "inclination_deg": 70.9,
+    "declination_deg": -15.3,
+    "field_strength_nt": 53900
+  },
+  "build": {
+    "airframe": "3.5-inch freestyle on Flywoo H743, GPS at rear"
+  },
   "expected": {
     "package_wins": true,
-    "current_error_min_deg": 25, "_measured_current_error_deg": 36.1,
-    "package_error_max_deg": 8, "_measured_package_error_deg": 4.4,
-    "quality_min": 75, "_measured_quality": 92,
-    "center_ratio_range": [0.5, 0.95], "_measured_center_ratio": 0.76,
-    "coverage_min": 0.70,
+    "current_error_min_deg": 25,
+    "_measured_current_error_deg": 36.1,
+    "package_error_max_deg": 8,
+    "_measured_package_error_deg": 4.4,
+    "quality_min": 75,
+    "_measured_quality": 92,
+    "center_ratio_range": [
+      0.5,
+      0.95
+    ],
+    "_measured_center_ratio": 0.76,
+    "coverage_min": 0.7,
     "ellipsoid_residual_max": 0.05,
     "w_ratio_max": 1.15,
-    "soft_iron_heading_shift_max_deg": 5.0,
-    "angle_ranges": { "roll_abs": [150, 210], "pitch": [-20, 20], "yaw": [-110, -70] }
+    "soft_iron_heading_shift_max_deg": 5,
+    "angle_ranges": {
+      "roll_abs": [
+        150,
+        210
+      ],
+      "pitch": [
+        -20,
+        20
+      ],
+      "yaw": [
+        -110,
+        -70
+      ]
+    },
+    "tumble_verdict": "contaminated",
+    "pose_verdict": "suspect",
+    "_measured_tumble_verdict": "contaminated",
+    "_measured_pose_verdict": "suspect"
   }
 }

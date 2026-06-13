@@ -1023,7 +1023,11 @@ export function useMagCharacterization() {
                           replayData.value.length
                         : 0;
                     const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
-                    const pose = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: packageErr });
+                    const pose = assessPoseQuality({
+                        currentErrorDeg: currentErr,
+                        packageErrorDeg: packageErr,
+                        fieldDevMaxPct: solverResult.value?.fieldConsistency?.maxDevPct,
+                    });
                     return {
                         tumble_verdict: tumbleVerdict?.verdict ?? null,
                         pose_verdict: pose.verdict,
@@ -1217,7 +1221,11 @@ export function useMagCharacterization() {
                   replayData.value.length
                 : 0;
             const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
-            const pose = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: packageErr });
+            const pose = assessPoseQuality({
+                currentErrorDeg: currentErr,
+                packageErrorDeg: packageErr,
+                fieldDevMaxPct: solverResult.value?.fieldConsistency?.maxDevPct,
+            });
             return {
                 tumble_verdict: tumbleVerdict?.verdict ?? null,
                 pose_verdict: pose.verdict,

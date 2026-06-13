@@ -432,5 +432,16 @@
       "heading_quality_weight": 0.7428552949882392
     }
   ],
-  "quality_assessment": null
+  "quality_assessment": {
+    "tumble_verdict": "contaminated",
+    "pose_verdict": "suspect",
+    "center_ratio": 0.5285032522787787,
+    "coverage": 0.75,
+    "ellipsoid_residual": 0.0059017978160952325,
+    "reasons": [
+      "center_ratio 0.53 >= 0.50: world-frame interference likely (bench capture)",
+      "coverage 75% < 80%: tumble did not cover enough sphere regions",
+      "current_error 36.1 deg >= 30: baseline alignment is very wrong"
+    ]
+  }
 }

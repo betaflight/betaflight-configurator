@@ -309,9 +309,11 @@ export function meanPackageError(replayRows) {
 // ANGLE_WINDOW of the target on both axes AND have a tilt magnitude inside
 // [TILT_MIN, TILT_MAX]: below TILT_MIN the pose is effectively flat (no Z
 // cross-coupling to observe); above TILT_MAX the accelerometer roll/pitch
-// decomposition degrades toward gimbal lock. Flat poses accept any tilt up
-// to ANGLE_WINDOW. Windows are deliberately permissive: the solver needs
-// VARIED attitudes, not exact ones — household boxes give 20–45° of tilt.
+// decomposition degrades toward gimbal lock. Flat poses must stay within
+// +-TILT_MIN (10 deg) on both axes — the live angle feedback makes a
+// tighter flat gate usable. Windows are deliberately permissive for tilted
+// poses: the solver needs VARIED attitudes, not exact ones — household
+// boxes give 20–45° of tilt.
 export const POSE_ANGLE_WINDOW_DEG = 20;
 export const POSE_TILT_MIN_DEG = 10;
 export const POSE_TILT_MAX_DEG = 60;
@@ -538,10 +540,10 @@ export function assessTumbleQuality({ centerRatio, coverageFraction, ellipsoidRe
 }
 
 /**
- * @param {{ currentErrorDeg: number, packageErrorDeg: number }} params
+ * @param {{ currentErrorDeg: number, packageErrorDeg: number, fieldDevMaxPct?: number }} params
  * @returns {{ verdict: "clean"|"suspect"|"contaminated", reasons: string[] }}
  */
-export function assessPoseQuality({ currentErrorDeg, packageErrorDeg }) {
+export function assessPoseQuality({ currentErrorDeg, packageErrorDeg, fieldDevMaxPct }) {
     const reasons = [];
     if (currentErrorDeg >= 30)
         reasons.push(`current_error ${currentErrorDeg.toFixed(1)} deg >= 30: baseline alignment is very wrong`);
@@ -549,6 +551,8 @@ export function assessPoseQuality({ currentErrorDeg, packageErrorDeg }) {
         reasons.push(`current_error ${currentErrorDeg.toFixed(1)} deg >= 15: baseline alignment needs correction`);
     if (packageErrorDeg >= 8)
         reasons.push(`package_error ${packageErrorDeg.toFixed(1)} deg >= 8: corrected heading still above target`);
+    if (fieldDevMaxPct !== undefined && fieldDevMaxPct >= 15)
+        reasons.push(`field_dev ${fieldDevMaxPct.toFixed(1)}% >= 15%: strong environmental field distortion`);
 
     let verdict = "clean";
     if (currentErrorDeg < 5 && packageErrorDeg < 5) {

@@ -23,8 +23,12 @@ import {
     selectAlignmentPackage,
     currentMatrixOf,
     proposedMatrixOf,
-    computeCalFromEllipsoid,
     computeReplayData,
+    computeCalFromEllipsoid,
+    headingError,
+    SOLVER_OPTS,
+    assessTumbleQuality,
+    assessPoseQuality,
 } from "../../../src/js/utils/magCharacterizationCompute.js";
 import { buildCharacterizationModel } from "../../../src/js/utils/magModelExport.js";
 import { flattenSamples, captureDataFromPosesExport, directionsFromPosesExport } from "../test_helpers.js";
@@ -76,6 +80,21 @@ const replay = computeReplayData(result, CAPTURE_ALIGNMENT, captureData, directi
     proposedIncludesCenter: usedCalibratedPackage,
 });
 
+const tumblePoints = cal.samples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
+const avgH = tumblePoints.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) / tumblePoints.length || 1;
+const centerRatio = Math.hypot(ellipsoid.center.x, ellipsoid.center.y, ellipsoid.center.z) / avgH;
+const tumbleQuality = assessTumbleQuality({ centerRatio, coverageFraction: 0.75, ellipsoidResidual: ellipsoid.residual });
+const currentErr = replay.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) / replay.length;
+const poseQuality = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: validation.fullCorrectedMeanErr, fieldDevMaxPct: result.fieldConsistency?.maxDevPct });
+const qualityAssessment = {
+    tumble_verdict: tumbleQuality.verdict,
+    pose_verdict: poseQuality.verdict,
+    center_ratio: centerRatio,
+    coverage: 0.75,
+    ellipsoid_residual: ellipsoid.residual,
+    reasons: [...tumbleQuality.reasons, ...poseQuality.reasons],
+};
+
 const model = buildCharacterizationModel({
     solverResult: result,
     replayData: replay,
@@ -95,6 +114,7 @@ const model = buildCharacterizationModel({
     gpsFix: false,
     gpsLat: 0,
     gpsLon: 0,
+    qualityAssessment,
 });
 
 const outPath = path.join(FIXTURES, "high-inclination_model.json");

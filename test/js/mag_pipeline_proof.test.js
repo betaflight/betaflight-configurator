@@ -810,7 +810,7 @@ describe("validatePoseAngle: pose-angle gate", () => {
 
     it("flat pose accepts level and rejects accidental tilt", () => {
         expect(validatePoseAngle(0, 0, -0.4, 1.1).accepted).toBe(true); // real flat capture
-        expect(validatePoseAngle(0, 0, 3, 18).accepted).toBe(true); // sloppy but flat-ish
+        expect(validatePoseAngle(0, 0, 2, 8).accepted).toBe(true); // sloppy but within +-10 deg
         const r = validatePoseAngle(0, 0, 0, 32);
         expect(r.accepted).toBe(false);
         expect(r.reason).toBe("magCharPoseRejectNotFlat");

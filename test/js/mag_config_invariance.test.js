@@ -429,3 +429,24 @@ describe("Quality assessment: poses", () => {
         expect(v.verdict).toBe("contaminated");
     });
 });
+
+// ── Config D: DEFAULT (identity) capture — FP2.3 synthetic ground truth ──
+
+describe("config invariance D: capture under DEFAULT (identity), magZero 0", () => {
+    const D = runWizard(0, null, { x: 0, y: 0, z: 0 }, ALIGNMENT_MATRICES[1], [0, 0, 0]);
+
+    it("recovers the planted mount rotation within 4 deg", () => {
+        expect(rotationDelta(matOfResult(D.result), R_TRUE)).toBeLessThan(4);
+    });
+
+    it("offsets reproduce the physical magZero R_true·b_s within +-15 counts", () => {
+        expect(Math.abs(D.offsets.x - TRUE_MAGZERO[0])).toBeLessThan(15);
+        expect(Math.abs(D.offsets.y - TRUE_MAGZERO[1])).toBeLessThan(15);
+        expect(Math.abs(D.offsets.z - TRUE_MAGZERO[2])).toBeLessThan(15);
+    });
+
+    it("package wins and lands near zero error", () => {
+        expect(D.usedPackage).toBe(true);
+        expect(D.packageErr).toBeLessThan(2);
+    });
+});

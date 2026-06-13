@@ -222,6 +222,7 @@ describe("mag characterization export", () => {
             expect(json).toHaveProperty("hard_iron");
             expect(json).toHaveProperty("quality");
             expect(json).toHaveProperty("poses");
+            expect(json).toHaveProperty("quality_assessment");
         });
 
         it("poses.length >= 4", () => {
@@ -505,6 +506,13 @@ describe("mag characterization export", () => {
                 );
                 expect(Math.abs(wrapped - pose.heading_error_full_corrected_deg)).toBeLessThan(0.1);
             }
+        });
+
+        it("quality_assessment is present and non-null on the regenerated fixture", () => {
+            const model = loadFixture("high-inclination_model.json");
+            expect(model.quality_assessment).not.toBeNull();
+            expect(model.quality_assessment.tumble_verdict).toEqual(expect.any(String));
+            expect(model.quality_assessment.pose_verdict).toEqual(expect.any(String));
         });
     });
 
