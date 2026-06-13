@@ -65,7 +65,8 @@ class TauriTcp extends EventTarget {
     async _teardownListeners() {
         for (const unlisten of this._unlisten) {
             try {
-                unlisten();
+                // listen() may resolve an async unlisten — await so removal completes.
+                await unlisten();
             } catch (e) {
                 console.error(`${this.logHead}Failed to remove listener: ${e}`);
             }
@@ -81,6 +82,10 @@ class TauriTcp extends EventTarget {
 
             console.log(`${this.logHead} Connecting to ${url}`);
 
+            // Drop any listeners left over from a previous connection before re-registering,
+            // otherwise reconnects leak listeners and duplicate receive/disconnect handling.
+            await this._teardownListeners();
+
             const dataUnlisten = await listen("tcp-data", (event) => {
                 const bytes = new Uint8Array(event.payload);
                 this.handleReceiveBytes({ detail: bytes });
@@ -93,14 +98,17 @@ class TauriTcp extends EventTarget {
 
             await invoke("tcp_connect", { ip: host, port });
 
-            this.address = `${host}:${port}`;
+            // Keep the canonical tcp:// URL so path-based protocol detection still matches.
+            this.address = `tcp://${host}:${port}`;
             this.connected = true;
             this.dispatchEvent(new CustomEvent("connect", { detail: this.address }));
+            return true;
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
             this.connected = false;
             await this._teardownListeners();
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return false;
         }
     }
 
@@ -113,10 +121,12 @@ class TauriTcp extends EventTarget {
             await invoke("tcp_disconnect");
             await this._teardownListeners();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            return true;
         } catch (e) {
             console.error(`${this.logHead}Failed to close connection: ${e}`);
             await this._teardownListeners();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            return false;
         }
     }
 

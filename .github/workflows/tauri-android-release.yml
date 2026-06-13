@@ -90,12 +90,14 @@ jobs:
           : "${ANDROID_UPLOAD_KEY_PASSWORD:?Set the ANDROID_UPLOAD_KEY_PASSWORD secret}"
           KS="$RUNNER_TEMP/betaflight-upload.jks"
           echo "$ANDROID_UPLOAD_KEYSTORE" | base64 --decode > "$KS"
-          cat > src-tauri/gen/android/keystore.properties <<EOF
-          storeFile=$KS
-          storePassword=$ANDROID_UPLOAD_KEYSTORE_PASSWORD
-          keyAlias=$ANDROID_UPLOAD_KEY_ALIAS
-          keyPassword=$ANDROID_UPLOAD_KEY_PASSWORD
-          EOF
+          # Write each property explicitly — a heredoc here would fold the YAML
+          # block indentation into the values and corrupt the keystore path.
+          {
+            printf 'storeFile=%s\n' "$KS"
+            printf 'storePassword=%s\n' "$ANDROID_UPLOAD_KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$ANDROID_UPLOAD_KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$ANDROID_UPLOAD_KEY_PASSWORD"
+          } > src-tauri/gen/android/keystore.properties
 
       - name: Build signed AAB
         env:
