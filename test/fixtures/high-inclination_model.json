@@ -431,5 +431,6 @@
       "heading_error_gain_corrected_deg": null,
       "heading_quality_weight": 0.7428552949882392
     }
-  ]
+  ],
+  "quality_assessment": null
 }

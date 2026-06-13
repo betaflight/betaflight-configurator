@@ -508,3 +508,57 @@ export function isFirmwareCustomMagAlignCapable(versionString) {
     const v = semver.coerce(versionString || "");
     return !!v && semver.gte(v, MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN);
 }
+
+// ── Quality assessment (FP4 / P2.7) ────────────────────────────────────
+
+/**
+ * @param {{ centerRatio: number, coverageFraction: number, ellipsoidResidual: number }} params
+ * @returns {{ verdict: "clean"|"suspect"|"contaminated", reasons: string[] }}
+ */
+export function assessTumbleQuality({ centerRatio, coverageFraction, ellipsoidResidual }) {
+    const reasons = [];
+    if (centerRatio >= 0.5)
+        reasons.push(`center_ratio ${centerRatio.toFixed(2)} >= 0.50: world-frame interference likely (bench capture)`);
+    else if (centerRatio >= 0.15)
+        reasons.push(`center_ratio ${centerRatio.toFixed(2)} >= 0.15: some contamination or moderate hard iron`);
+    if (coverageFraction < 0.8)
+        reasons.push(
+            `coverage ${(coverageFraction * 100).toFixed(0)}% < 80%: tumble did not cover enough sphere regions`,
+        );
+    if (ellipsoidResidual >= 0.02)
+        reasons.push(`ellipsoid_residual ${(ellipsoidResidual * 100).toFixed(1)}% >= 2.0%: fit quality below target`);
+
+    let verdict = "clean";
+    if (centerRatio < 0.15 && coverageFraction >= 0.8 && ellipsoidResidual < 0.02) {
+        verdict = "clean";
+    } else if (centerRatio < 0.5 && coverageFraction >= 0.6) {
+        verdict = "suspect";
+    } else {
+        verdict = "contaminated";
+    }
+    return { verdict, reasons };
+}
+
+/**
+ * @param {{ currentErrorDeg: number, packageErrorDeg: number }} params
+ * @returns {{ verdict: "clean"|"suspect"|"contaminated", reasons: string[] }}
+ */
+export function assessPoseQuality({ currentErrorDeg, packageErrorDeg }) {
+    const reasons = [];
+    if (currentErrorDeg >= 30)
+        reasons.push(`current_error ${currentErrorDeg.toFixed(1)} deg >= 30: baseline alignment is very wrong`);
+    else if (currentErrorDeg >= 15)
+        reasons.push(`current_error ${currentErrorDeg.toFixed(1)} deg >= 15: baseline alignment needs correction`);
+    if (packageErrorDeg >= 8)
+        reasons.push(`package_error ${packageErrorDeg.toFixed(1)} deg >= 8: corrected heading still above target`);
+
+    let verdict = "clean";
+    if (currentErrorDeg < 5 && packageErrorDeg < 5) {
+        verdict = "clean";
+    } else if (packageErrorDeg < 12) {
+        verdict = "suspect";
+    } else {
+        verdict = "contaminated";
+    }
+    return { verdict, reasons };
+}

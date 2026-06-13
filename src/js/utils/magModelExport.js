@@ -82,6 +82,7 @@ export function buildCharacterizationModel({
     gpsFix,
     gpsLat,
     gpsLon,
+    qualityAssessment = null,
 }) {
     const sr = solverResult;
     const ep = ellipsoidParams;
@@ -151,5 +152,6 @@ export function buildCharacterizationModel({
                 Math.min(1, 1.0 - Math.abs(signedHeadingError(pose.newHeading, pose.expectedHeading)) / 30.0),
             ),
         })),
+        quality_assessment: qualityAssessment,
     };
 }

@@ -18,6 +18,8 @@ import {
     estimateFlatPoseBias,
     validatePoseAngle,
     headingError,
+    assessTumbleQuality,
+    assessPoseQuality,
 } from "../js/utils/magCharacterizationCompute.js";
 import { buildCharacterizationModel } from "../js/utils/magModelExport.js";
 import { fitSphere, computeDirectionalCoverage } from "../js/utils/sphereFit.js";
@@ -973,6 +975,49 @@ export function useMagCharacterization() {
                 // failed and zero was assumed.
                 magZeroAtCapture: magZeroAtCapture.value ? { ...magZeroAtCapture.value } : null,
                 magZeroKnown: magZeroAtCapture.value !== null,
+                quality_assessment: (() => {
+                    // tumble quality
+                    let tumbleVerdict = null;
+                    if (ellipsoidParams.value) {
+                        const avgH = calibrationSamples.value.length
+                            ? calibrationSamples.value.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) /
+                              calibrationSamples.value.length
+                            : 1;
+                        const ratio =
+                            Math.hypot(
+                                ellipsoidParams.value.center.x,
+                                ellipsoidParams.value.center.y,
+                                ellipsoidParams.value.center.z,
+                            ) / avgH;
+                        const covFrac = calibrationCoverage.value?.fraction ?? 0;
+                        const tumble = assessTumbleQuality({
+                            centerRatio: ratio,
+                            coverageFraction: covFrac,
+                            ellipsoidResidual: ellipsoidParams.value.residual,
+                        });
+                        tumbleVerdict = {
+                            ...tumble,
+                            center_ratio: ratio,
+                            coverage: covFrac,
+                            ellipsoid_residual: ellipsoidParams.value.residual,
+                        };
+                    }
+                    // pose quality
+                    const currentErr = replayData.value.length
+                        ? replayData.value.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) /
+                          replayData.value.length
+                        : 0;
+                    const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
+                    const pose = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: packageErr });
+                    return {
+                        tumble_verdict: tumbleVerdict?.verdict ?? null,
+                        pose_verdict: pose.verdict,
+                        center_ratio: tumbleVerdict?.center_ratio ?? null,
+                        coverage: tumbleVerdict?.coverage ?? null,
+                        ellipsoid_residual: tumbleVerdict?.ellipsoid_residual ?? null,
+                        reasons: [...(tumbleVerdict?.reasons ?? []), ...pose.reasons],
+                    };
+                })(),
             },
             directions: directions.map((dir, di) => ({
                 label: dir.label,
@@ -1126,6 +1171,47 @@ export function useMagCharacterization() {
     function exportCharacterizationData() {
         // Model assembly lives in magModelExport.js (shared with the export
         // tests and the fixture-regeneration tool).
+        const qualityAssessment = (() => {
+            let tumbleVerdict = null;
+            if (ellipsoidParams.value) {
+                const avgH = calibrationSamples.value.length
+                    ? calibrationSamples.value.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) /
+                      calibrationSamples.value.length
+                    : 1;
+                const ratio =
+                    Math.hypot(
+                        ellipsoidParams.value.center.x,
+                        ellipsoidParams.value.center.y,
+                        ellipsoidParams.value.center.z,
+                    ) / avgH;
+                const covFrac = calibrationCoverage.value?.fraction ?? 0;
+                const tumble = assessTumbleQuality({
+                    centerRatio: ratio,
+                    coverageFraction: covFrac,
+                    ellipsoidResidual: ellipsoidParams.value.residual,
+                });
+                tumbleVerdict = {
+                    ...tumble,
+                    center_ratio: ratio,
+                    coverage: covFrac,
+                    ellipsoid_residual: ellipsoidParams.value.residual,
+                };
+            }
+            const currentErr = replayData.value.length
+                ? replayData.value.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) /
+                  replayData.value.length
+                : 0;
+            const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
+            const pose = assessPoseQuality({ currentErrorDeg: currentErr, packageErrorDeg: packageErr });
+            return {
+                tumble_verdict: tumbleVerdict?.verdict ?? null,
+                pose_verdict: pose.verdict,
+                center_ratio: tumbleVerdict?.center_ratio ?? null,
+                coverage: tumbleVerdict?.coverage ?? null,
+                ellipsoid_residual: tumbleVerdict?.ellipsoid_residual ?? null,
+                reasons: [...(tumbleVerdict?.reasons ?? []), ...pose.reasons],
+            };
+        })();
         const json = buildCharacterizationModel({
             solverResult: solverResult.value,
             replayData: replayData.value,
@@ -1136,6 +1222,7 @@ export function useMagCharacterization() {
             gpsFix: !!fcStore.gpsData.fix,
             gpsLat: fcStore.gpsData.latitude,
             gpsLon: fcStore.gpsData.longitude,
+            qualityAssessment,
         });
 
         const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
