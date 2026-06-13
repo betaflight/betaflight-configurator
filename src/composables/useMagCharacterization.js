@@ -1188,52 +1188,10 @@ export function useMagCharacterization() {
 
     function exportCharacterizationData() {
         // Model assembly lives in magModelExport.js (shared with the export
-        // tests and the fixture-regeneration tool).
-        const qualityAssessment = (() => {
-            let tumbleVerdict = null;
-            if (ellipsoidParams.value) {
-                const avgH = calibrationSamples.value.length
-                    ? calibrationSamples.value.reduce((s, v) => s + Math.hypot(v.x, v.y), 0) /
-                      calibrationSamples.value.length
-                    : 1;
-                const ratio =
-                    Math.hypot(
-                        ellipsoidParams.value.center.x,
-                        ellipsoidParams.value.center.y,
-                        ellipsoidParams.value.center.z,
-                    ) / avgH;
-                const covFrac = calibrationCoverage.value?.fraction ?? 0;
-                const tumble = assessTumbleQuality({
-                    centerRatio: ratio,
-                    coverageFraction: covFrac,
-                    ellipsoidResidual: ellipsoidParams.value.residual,
-                });
-                tumbleVerdict = {
-                    ...tumble,
-                    center_ratio: ratio,
-                    coverage: covFrac,
-                    ellipsoid_residual: ellipsoidParams.value.residual,
-                };
-            }
-            const currentErr = replayData.value.length
-                ? replayData.value.reduce((s, r) => s + headingError(r.currentHeading, r.expectedHeading), 0) /
-                  replayData.value.length
-                : 0;
-            const packageErr = calibrationValidation.value?.fullCorrectedMeanErr ?? currentErr;
-            const pose = assessPoseQuality({
-                currentErrorDeg: currentErr,
-                packageErrorDeg: packageErr,
-                fieldDevMaxPct: solverResult.value?.fieldConsistency?.maxDevPct,
-            });
-            return {
-                tumble_verdict: tumbleVerdict?.verdict ?? null,
-                pose_verdict: pose.verdict,
-                center_ratio: tumbleVerdict?.center_ratio ?? null,
-                coverage: tumbleVerdict?.coverage ?? null,
-                ellipsoid_residual: tumbleVerdict?.ellipsoid_residual ?? null,
-                reasons: [...(tumbleVerdict?.reasons ?? []), ...pose.reasons],
-            };
-        })();
+        // tests and the fixture-regeneration tool). Quality block from the
+        // single shared builder — same object the poses export and the
+        // Tier-1 report verdict use.
+        const qualityAssessment = computeQualityAssessment();
         const json = buildCharacterizationModel({
             solverResult: solverResult.value,
             replayData: replayData.value,
