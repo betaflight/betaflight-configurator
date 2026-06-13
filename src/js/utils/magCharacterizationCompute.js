@@ -8,6 +8,7 @@
  * implementation of every pipeline step.
  */
 import { characterizeAlignment } from "./magCharacterization.js";
+import semver from "semver";
 import {
     eulerToMatrix,
     mat3mulVec,
@@ -489,4 +490,21 @@ export function selectAlignmentPackage({
             recommended: usedCalibratedPackage,
         },
     };
+}
+
+// ── Firmware version gate (F4) ──────────────────────────────────────────
+// "Fix mag_align_yaw" (betaflight#14849, merged 2025-12-30, first release
+// 2026.6.0) negates the angles before buildRotationMatrix so the net applied
+// transform is Rz(yaw)·Ry(pitch)·Rx(roll). Older firmware applies the INVERSE.
+export const MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN = "2026.6.0";
+
+/**
+ * Returns true when the firmware contains #14849 (angle negation + transpose).
+ * semver.coerce strips prerelease tags; master builds like 2026.6.0-alpha
+ * are accepted — their build date cannot be verified from the version string
+ * alone.  Unknown/unparseable versions safely return false.
+ */
+export function isFirmwareCustomMagAlignCapable(versionString) {
+    const v = semver.coerce(versionString || "");
+    return !!v && semver.gte(v, MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN);
 }

@@ -737,31 +737,22 @@ import { useTranslation } from "i18next-vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useMagCharacterization, CAL_PROMPTS } from "../../composables/useMagCharacterization.js";
+import {
+    MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN,
+    isFirmwareCustomMagAlignCapable,
+} from "../../js/utils/magCharacterizationCompute.js";
 import MagSphereView from "./mag-calibration/MagSphereView.vue";
 import { useFlightControllerStore } from "../../stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { send as cliSend, saveAndReconnect, isMspCliSupported } from "../../composables/useMspCliSession.js";
-import semver from "semver";
 
 const fcStore = useFlightControllerStore();
 const { t } = useTranslation();
 const DEG_TO_RAD = Math.PI / 180;
 
-// First firmware whose CUSTOM mag alignment matches the wizard's math:
-// "Fix mag_align_yaw" (betaflight#14849, merged 2025-12-30, first release
-// 2026.6.0) negates the angles before buildRotationMatrix so the net applied
-// transform is Rz(yaw)·Ry(pitch)·Rx(roll) — the convention eulerToMatrix and
-// the solver use. Older firmware applies the INVERSE rotation for the same
-// CLI values, which would corrupt the heading instead of fixing it.
-const MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN = "2026.6.0";
-
 function isCustomMagAlignSupported() {
-    // coerce() strips prerelease tags: dev builds of 2026.6.0 (like
-    // 2026.6.0-alpha master) are accepted — their build date cannot be
-    // verified from the version string alone.
-    const v = semver.coerce(fcStore.config?.flightControllerVersion || "");
-    return !!v && semver.gte(v, MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN);
+    return isFirmwareCustomMagAlignCapable(fcStore.config?.flightControllerVersion);
 }
 
 // ── Composable (all state + logic) ─────────────────────────────────────

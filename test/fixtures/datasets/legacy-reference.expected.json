@@ -24,6 +24,8 @@
     "center_ratio_range": [0.5, 0.95], "_measured_center_ratio": 0.76,
     "coverage_min": 0.70,
     "ellipsoid_residual_max": 0.05,
+    "w_ratio_max": 1.15,
+    "soft_iron_heading_shift_max_deg": 5.0,
     "angle_ranges": { "roll_abs": [150, 210], "pitch": [-20, 20], "yaw": [-110, -70] }
   }
 }

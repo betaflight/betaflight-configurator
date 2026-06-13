@@ -284,7 +284,7 @@ describe("mag characterization export", () => {
         });
         const json = buildExportJson(sr, mockReplayPoses, mockGains, mockCalibration, mockGeoRef, false, 0, 0, null);
 
-        it("expected headings are in {0, 90, 180, 270}", () => {
+        it("expected headings match the synthetic fixture's 4 cardinal directions", () => {
             const allowed = [0, 90, 180, 270];
             for (const pose of json.poses) {
                 expect(allowed).toContain(pose.expected_heading_deg);
@@ -353,29 +353,28 @@ describe("mag characterization export", () => {
         });
     });
 
-    describe("Test 5: Axis gains bounds", () => {
+    describe("Test 5: Deprecated schema keys (schema 2.1 compatibility)", () => {
+        // axis_gains and gain_corrected fields are frozen constants — the
+        // WMM regression path that produced them was removed in P0.6.
+        // The keys are retained so schema 2.1 consumers never encounter
+        // missing properties; one guard per design decision.
         const sr = characterizeAlignment(syntheticSamples, 0, null, {
             headingMode: "absolute",
             headingWeight: 1.0,
         });
         const json = buildExportJson(sr, mockReplayPoses, mockGains, mockCalibration, mockGeoRef, false, 0, 0, null);
 
-        it("all gains > 0", () => {
-            expect(json.axis_gains.x).toBeGreaterThan(0);
-            expect(json.axis_gains.y).toBeGreaterThan(0);
-            expect(json.axis_gains.z).toBeGreaterThan(0);
+        it("axis_gains is the frozen constant {x:1, y:1, z:1}", () => {
+            expect(json.axis_gains).toEqual({ x: 1.0, y: 1.0, z: 1.0 });
         });
 
-        it("at least one gain equals 1.0", () => {
-            const g = json.axis_gains;
-            const hasRef = g.x === 1.0 || g.y === 1.0 || g.z === 1.0;
-            expect(hasRef).toBe(true);
-        });
-
-        it("no gain exceeds 10.0", () => {
-            expect(json.axis_gains.x).toBeLessThanOrEqual(10.0);
-            expect(json.axis_gains.y).toBeLessThanOrEqual(10.0);
-            expect(json.axis_gains.z).toBeLessThanOrEqual(10.0);
+        it("gain-corrected heading fields are always null on every pose", () => {
+            for (const pose of json.poses) {
+                expect(pose).toHaveProperty("heading_gain_corrected_deg");
+                expect(pose).toHaveProperty("heading_error_gain_corrected_deg");
+                expect(pose.heading_gain_corrected_deg).toBeNull();
+                expect(pose.heading_error_gain_corrected_deg).toBeNull();
+            }
         });
     });
 
@@ -481,30 +480,7 @@ describe("mag characterization export", () => {
         });
     });
 
-    describe("Test 9: Gain-corrected heading fields (deprecated — always null)", () => {
-        // The per-axis gain path was removed with the WMM regression; the keys
-        // are retained in schema 2.1 for compatibility and are always null.
-        const sr = characterizeAlignment(syntheticSamples, 0, null, {
-            headingMode: "absolute",
-            headingWeight: 1.0,
-        });
-        const json = buildExportJson(sr, mockReplayPoses, mockGains, mockCalibration, mockGeoRef, false, 0, 0, null);
-
-        it("keys exist and are null on every pose", () => {
-            for (const pose of json.poses) {
-                expect(pose).toHaveProperty("heading_gain_corrected_deg");
-                expect(pose).toHaveProperty("heading_error_gain_corrected_deg");
-                expect(pose.heading_gain_corrected_deg).toBeNull();
-                expect(pose.heading_error_gain_corrected_deg).toBeNull();
-            }
-        });
-
-        it("axis_gains is the deprecated constant", () => {
-            expect(json.axis_gains).toEqual({ x: 1.0, y: 1.0, z: 1.0 });
-        });
-    });
-
-    describe("Test 9b: Full-corrected heading fields in model export", () => {
+    describe("Test 9: Full-corrected heading fields in model export", () => {
         it("heading_full_corrected_deg is present and valid on real fixture", () => {
             const model = loadFixture("high-inclination_model.json");
             for (const pose of model.poses) {
@@ -708,6 +684,11 @@ describe("mag characterization export", () => {
 
             // Re-serialization is deterministic (same inputs → same output)
             expect(str1).toBe(str2);
+            // Also verify deep equality on parsed objects (JSON.stringify key
+            // order is not guaranteed across Node versions)
+            const reparsed1 = JSON.parse(str1);
+            const reparsed2 = JSON.parse(str2);
+            expect(reparsed1).toEqual(reparsed2);
         });
     });
 
@@ -727,6 +708,46 @@ describe("mag characterization export", () => {
             expect(result.qualityScore).toBeLessThanOrEqual(100);
             expect(result.fieldConsistency).toBeDefined();
             expect(result.chiralityFlag !== undefined).toBe(true);
+        });
+    });
+
+    describe("Test 16: magZero provenance (F12)", () => {
+        const result = characterizeAlignment(syntheticSamples, 0, null, {
+            headingMode: "absolute",
+            headingWeight: 1.0,
+        });
+
+        it("records mag_zero:null and mag_zero_known:false when unknown", () => {
+            const json = buildCharacterizationModel({
+                solverResult: result,
+                replayData: mockReplayPoses,
+                capturedUnder: { alignment: 8, custom_angles: null, mag_zero: null, mag_zero_known: false },
+                ellipsoidParams: null,
+                calibrationOffsets: null,
+                geoReference: null,
+                gpsFix: false,
+                gpsLat: 0,
+                gpsLon: 0,
+            });
+            expect(json.captured_under.mag_zero).toBeNull();
+            expect(json.captured_under.mag_zero_known).toBe(false);
+        });
+
+        it("records mag_zero value and mag_zero_known:true when present", () => {
+            const mz = { x: 100, y: -50, z: 25 };
+            const json = buildCharacterizationModel({
+                solverResult: result,
+                replayData: mockReplayPoses,
+                capturedUnder: { alignment: 8, custom_angles: null, mag_zero: mz, mag_zero_known: true },
+                ellipsoidParams: null,
+                calibrationOffsets: null,
+                geoReference: null,
+                gpsFix: false,
+                gpsLat: 0,
+                gpsLon: 0,
+            });
+            expect(json.captured_under.mag_zero).toEqual(mz);
+            expect(json.captured_under.mag_zero_known).toBe(true);
         });
     });
 });

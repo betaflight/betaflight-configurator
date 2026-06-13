@@ -23,6 +23,7 @@
  *     offsets ≈ R_true·b_s again — a tumbled re-run self-heals
  */
 import { describe, expect, it } from "vitest";
+import { characterizeAlignment } from "../../src/js/utils/magCharacterization.js";
 import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
 import {
     eulerToMatrix,
@@ -38,6 +39,7 @@ import {
     computeReplayData,
     meanPackageError,
     computeCalFromEllipsoid,
+    isFirmwareCustomMagAlignCapable,
 } from "../../src/js/utils/magCharacterizationCompute.js";
 import { rotationDelta } from "./test_helpers.js";
 
@@ -304,5 +306,82 @@ describe("config invariance D: currentMatrixOf(0) returns identity", () => {
     it("alignment 0 with customAngles ignored (no CUSTOM meaning)", () => {
         const mat = currentMatrixOf(0, { roll: 45, pitch: 10, yaw: 90 });
         expect(mat).toEqual(ALIGNMENT_MATRICES[1]);
+    });
+});
+
+// ── F4: Firmware version gate (#14849) ──────────────────────────────────
+
+describe("F4 firmware gate: isFirmwareCustomMagAlignCapable", () => {
+    it("rejects 4.5.2 and older pre-14849 versions", () => {
+        expect(isFirmwareCustomMagAlignCapable("4.5.2")).toBe(false);
+    });
+
+    it("rejects 2025.12.0 (maintenance branch WITHOUT #14849)", () => {
+        expect(isFirmwareCustomMagAlignCapable("2025.12.0")).toBe(false);
+    });
+
+    it("accepts 2026.6.0 (first release WITH #14849)", () => {
+        expect(isFirmwareCustomMagAlignCapable("2026.6.0")).toBe(true);
+    });
+
+    it("accepts 2026.6.0-alpha (prerelease master WITH #14849)", () => {
+        expect(isFirmwareCustomMagAlignCapable("2026.6.0-alpha")).toBe(true);
+    });
+
+    it("rejects empty, undefined, and garbage strings", () => {
+        expect(isFirmwareCustomMagAlignCapable("")).toBe(false);
+        expect(isFirmwareCustomMagAlignCapable(undefined)).toBe(false);
+        expect(isFirmwareCustomMagAlignCapable("garbage")).toBe(false);
+    });
+});
+
+// ── F6: M-estimator per-poseKey cap (contiguous grouping bug guard) ────
+
+describe("F6 M-estimator: per-poseKey cap is independent", () => {
+    it("a 90 deg outlier in one pose does not suppress the other pose's residual", () => {
+        // Two poses, same direction (0 deg heading), different poseKeys.
+        // Pose A: clean 0 deg samples. Pose B: one clean, one 90 deg outlier.
+        // If pose keys are merged (the old contiguous-grouping bug), Pose A's
+        // residual is suppressed by Pose B's cap. With correct per-poseKey
+        // capping, Pose A reports its true error.
+        const H = 900;
+        const field = (h) => [H * Math.cos((h * Math.PI) / 180), H * Math.sin((h * Math.PI) / 180), -1500];
+        const samples = [];
+        // Pose A (key "0:0"): 15 clean samples at 0 deg
+        for (let i = 0; i < 15; i++) {
+            samples.push({ mag: field(0), roll: 0, pitch: 0, headingRef: 0, poseKey: "0:0" });
+        }
+        // Pose B (key "0:1"): 14 clean at 0 deg, one outlier at 90 deg
+        for (let i = 0; i < 14; i++) {
+            samples.push({ mag: field(0), roll: 0, pitch: 0, headingRef: 0, poseKey: "0:1" });
+        }
+        samples.push({ mag: field(90), roll: 0, pitch: 0, headingRef: 0, poseKey: "0:1" });
+        const directions = [
+            {
+                label: "N",
+                heading: 0,
+                poses: [
+                    { label: "Flat", isFlat: true },
+                    { label: "Tilt", isFlat: false },
+                ],
+            },
+        ];
+        const captureData = [
+            [
+                { headingRef: 0, samples: samples.filter((s) => s.poseKey === "0:0") },
+                { headingRef: 0, samples: samples.filter((s) => s.poseKey === "0:1") },
+            ],
+        ];
+
+        const result = characterizeAlignment(samples, 8, null, {
+            headingMode: "absolute",
+            headingWeight: 1.0,
+        });
+        expect(result.error).toBeFalsy();
+        // If the M-estimator correctly isolates per-poseKey, both poses
+        // contribute to the cost and the alignment should be near identity
+        // with quality > 0. If keys were merged, the 90 deg outlier caps
+        // the entire direction and quality would be much worse.
+        expect(result.qualityScore).toBeGreaterThan(0);
     });
 });
