@@ -101,6 +101,7 @@ import { ref, reactive, computed, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
+import { decodeDebugFieldToFriendly } from "@/js/utils/debugModes";
 import { useSensorsStore } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
 import { useInterval } from "../../../composables/useInterval";
@@ -318,10 +319,33 @@ function update_sonar_graphs() {
     updateGraphs();
 }
 
+/**
+ * Hardware-scaling context for the shared debug decode helper, built from the
+ * connected FC. Mirrors the fixed scaling MSPHelper applies to the live main
+ * gyro/acc display (no per-FC gyroScale/acc_1G exists), plus motor config for
+ * throttle/RPM modes.
+ */
+function liveDebugContext() {
+    const minThrottle = fcStore.motorConfig?.minthrottle ?? 1000;
+    const maxThrottle = fcStore.motorConfig?.maxthrottle ?? 2000;
+    return {
+        apiVersion: fcStore.config?.apiVersion,
+        motorPoles: fcStore.motorConfig?.motor_poles ?? 1,
+        gyroRawToDegreesPerSecond: (v) => v * (4 / 16.4),
+        accRawToGs: (v) => v / 2048,
+        rcCommandRawToThrottle: (v) =>
+            Math.min(Math.max(((v - minThrottle) / (maxThrottle - minThrottle)) * 100, 0), 100),
+        throttleToRcCommandRaw: (v) => (v / 100) * (maxThrottle - minThrottle) + minThrottle,
+    };
+}
+
 function update_debug_graphs() {
+    const modeName = debugStore.modes[fcStore.pidAdvancedConfig.debugMode];
+    const ctx = liveDebugContext();
     for (let i = 0; i < debugColumns.value; i++) {
-        addDebugSample(i, [fcStore.sensorData.debug[i]]);
-        debugDisplay.value[i] = fcStore.sensorData.debug[i].toString();
+        const raw = fcStore.sensorData.debug[i];
+        addDebugSample(i, [raw]);
+        debugDisplay.value[i] = decodeDebugFieldToFriendly(modeName, `debug[${i}]`, raw, ctx);
     }
     incrementDebugCounter();
     updateGraphs();

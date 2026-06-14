@@ -1,5 +1,4 @@
 import semver from "semver";
-import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import {
     adjustFieldDefsList,
     FlightLogEvent,
@@ -20,6 +19,68 @@ import {
     stringHasComma,
     parseCommaSeparatedString,
 } from "./tools";
+import {
+    API_VERSION_1_44,
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+} from "../js/data_storage";
+
+/**
+ * Maps a blackbox log's firmware revision (firmware type + version) to the MSP
+ * API version whose debug-mode / debug-field definitions match it.
+ *
+ * A blackbox log header carries only a firmware revision string (no API
+ * version), but the shared debug definitions (`getDebugModes` /
+ * `getDebugFieldNames` in `src/js/utils/debugModes.js`) are keyed by API
+ * version. Resolving the version here — at the core, where the log's firmware
+ * identity is established — lets every consumer simply read
+ * `sysConfig.apiVersion`, mirroring how the FC store exposes `config.apiVersion`.
+ *
+ * The result is clamped to the configurator's supported range
+ * [API_VERSION_1_44, API_VERSION_1_48]. Non-Betaflight firmware
+ * (Cleanflight / iNav / Baseflight / unknown) and anything below the floor
+ * resolve to API_VERSION_1_44, which yields the base definition tables.
+ *
+ * Known Betaflight version <-> API pairs:
+ *   - 4.4.x          -> 1.45
+ *   - 4.5.x          -> 1.46
+ *   - 2025.12.x      -> 1.47
+ *   - 2026.x and up  -> 1.48
+ * Anything older (incl. legacy "0.0.0") -> 1.44.
+ *
+ * @param {number} firmwareType - sysConfig.firmwareType id.
+ * @param {string} firmwareVersion - sysConfig.firmwareVersion, e.g. "4.5.0".
+ * @returns {string} An API version string in [1.44.0, 1.48.0].
+ */
+function firmwareToApiVersion(firmwareType, firmwareVersion) {
+    if (firmwareType !== FIRMWARE_TYPE_BETAFLIGHT) {
+        return API_VERSION_1_44;
+    }
+
+    const version = semver.valid(semver.coerce(firmwareVersion));
+    if (!version) {
+        return API_VERSION_1_44;
+    }
+
+    // Betaflight switched from 4.x to a year-based scheme (2025.12, 2026.x),
+    // so a calendar version always compares greater than any 4.x version.
+    if (semver.gte(version, "2026.0.0")) {
+        return API_VERSION_1_48;
+    }
+    if (semver.gte(version, "2025.12.0")) {
+        return API_VERSION_1_47;
+    }
+    if (semver.gte(version, "4.5.0")) {
+        return API_VERSION_1_46;
+    }
+    if (semver.gte(version, "4.4.0")) {
+        return API_VERSION_1_45;
+    }
+
+    return API_VERSION_1_44;
+}
 
 function mapFieldNamesToIndex(fieldNames) {
     const result = {};
@@ -192,6 +253,9 @@ export function FlightLogParser(logData) {
         frameIntervalPNum: 1,
         frameIntervalPDenom: 1,
         firmwareType: FIRMWARE_TYPE_UNKNOWN,
+        // Resolved from the firmware revision once headers are parsed (see
+        // firmwareToApiVersion); consumers read this instead of mapping per call.
+        apiVersion: API_VERSION_1_44,
         rcRate: 90,
         vbatscale: 110,
         vbatref: 4095,
@@ -1732,7 +1796,7 @@ export function FlightLogParser(logData) {
         }
 
         adjustFieldDefsList(this.sysConfig.firmwareType, this.sysConfig.firmwareVersion);
-        FlightLogFieldPresenter.adjustDebugDefsList(this.sysConfig.firmwareType, this.sysConfig.firmwareVersion);
+        this.sysConfig.apiVersion = firmwareToApiVersion(this.sysConfig.firmwareType, this.sysConfig.firmwareVersion);
 
         if (!isFrameDefComplete(this.frameDefs.I)) {
             throw new Error("Log is missing required definitions for I frames, header may be corrupt");

@@ -1,6 +1,7 @@
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
-import { RATES_TYPE, DEBUG_MODE } from "./flightlog_fielddefs";
+import { RATES_TYPE } from "./flightlog_fielddefs";
 import { escapeRegExp } from "./tools";
+import { getDebugModes } from "../js/utils/debugModes";
 
 export function GraphConfig(graphConfig) {
     const listeners = [];
@@ -48,6 +49,8 @@ export function GraphConfig(graphConfig) {
         const logFieldNames = flightLog.getMainFieldNames();
         const fields = [];
         const setupColor = field?.color === -1;
+        const sysConfig = flightLog.getSysConfig();
+        const apiVersion = sysConfig.apiVersion;
         if (matches) {
             const nameRoot = matches[1],
                 nameRegex = new RegExp(String.raw`^${escapeRegExp(nameRoot)}\[[0-9]+\]$`);
@@ -67,7 +70,8 @@ export function GraphConfig(graphConfig) {
                                 name: fieldName,
                                 friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(
                                     fieldName,
-                                    flightLog.getSysConfig().debug_mode,
+                                    sysConfig.debug_mode,
+                                    apiVersion,
                                 ),
                             },
                             forceNewCurve,
@@ -84,7 +88,8 @@ export function GraphConfig(graphConfig) {
                         curve: { ...field.curve },
                         friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(
                             field.name,
-                            flightLog.getSysConfig().debug_mode,
+                            sysConfig.debug_mode,
+                            apiVersion,
                         ),
                     }),
                 );
@@ -388,7 +393,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 },
             };
         } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
-            const debugModeName = DEBUG_MODE[sysConfig.debug_mode];
+            const debugModeName = getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
             switch (debugModeName) {
                 case "CYCLETIME":
                     switch (fieldName) {

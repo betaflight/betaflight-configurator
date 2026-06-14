@@ -222,10 +222,10 @@ import {
     FF_AVERAGING,
     SIMPLIFIED_PIDS_MODE,
     THROTTLE_LIMIT_TYPE,
-    DEBUG_MODE,
     FIRMWARE_TYPE_BETAFLIGHT,
     FIRMWARE_TYPE_INAV,
 } from "../flightlog_fielddefs";
+import { getDebugModes } from "../../js/utils/debugModes";
 
 const open = defineModel("open", { type: Boolean, default: false });
 const cols = ref(null);
@@ -519,7 +519,7 @@ const generalParams = computed(() => {
         param("Loop Time", fmtVal(s.looptime, 0)),
         param("Gyro Sync", fmtVal(s.gyro_sync_denom, 0)),
         param("PID Denom", fmtVal(s.pid_process_denom, 0)),
-        param("Debug Mode", selectVal(s.debug_mode, DEBUG_MODE)),
+        param("Debug Mode", selectVal(s.debug_mode, getDebugModes(sc.value.apiVersion))),
         param("Deadband", fmtVal(s.deadband, 0)),
         param("Yaw Deadband", fmtVal(s.yaw_deadband, 0)),
         param("Vbat Scale", fmtVal(s.vbatscale, 0)),

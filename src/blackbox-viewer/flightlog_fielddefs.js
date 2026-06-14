@@ -260,105 +260,11 @@ export const RC_SMOOTHING_DEBUG_AXIS = makeReadOnly(["ROLL", "PITCH", "YAW", "TH
 
 export const FILTER_TYPE = makeReadOnly(["PT1", "BIQUAD", "PT2", "PT3"]);
 
-export let DEBUG_MODE = [];
-
-export const DEBUG_MODE_COMPLETE = makeReadOnly([
-    "NONE",
-    "CYCLETIME",
-    "BATTERY",
-    "GYRO", // deprecated (GYRO_FILTERED)
-    "ACCELEROMETER",
-    "MIXER", // deprecated
-    "AIRMODE", // deprecated
-    "PIDLOOP",
-    "NOTCH", // deprecated (GYRO_SCALED)
-    "RC_INTERPOLATION",
-    "VELOCITY", // deprecated
-    "DTERM_FILTER", // deprecated
-    "ANGLERATE",
-    "ESC_SENSOR",
-    "SCHEDULER",
-    "STACK",
-    "ESC_SENSOR_RPM",
-    "ESC_SENSOR_TMP",
-    "ALTITUDE",
-    "FFT",
-    "FFT_TIME",
-    "FFT_FREQ",
-    "RX_FRSKY_SPI",
-    "GYRO_RAW", // deprecated
-    "DUAL_GYRO", // deprecated
-    "DUAL_GYRO_RAW",
-    "DUAL_GYRO_COMBINED", // deprecated
-    "DUAL_GYRO_DIFF",
-    "MAX7456_SIGNAL",
-    "MAX7456_SPICLOCK",
-    "SBUS",
-    "FPORT",
-    "RANGEFINDER",
-    "RANGEFINDER_QUALITY",
-    "LIDAR_TF",
-    "ADC_INTERNAL",
-    "RUNAWAY_TAKEOFF",
-    "SDIO",
-    "CURRENT_SENSOR",
-    "USB",
-    "SMARTAUDIO",
-    "RTH",
-    "ITERM_RELAX",
-    "ACRO_TRAINER",
-    "RC_SMOOTHING",
-    "RX_SIGNAL_LOSS",
-    "RC_SMOOTHING_RATE",
-    "ANTI_GRAVITY",
-    "DYN_LPF",
-    "RX_SPECTRUM_SPI",
-    "DSHOT_RPM_TELEMETRY",
-    "RPM_FILTER",
-    "D_MAX",
-    "AC_CORRECTION",
-    "AC_ERROR",
-    "DUAL_GYRO_SCALED",
-    "DSHOT_RPM_ERRORS",
-    "CRSF_LINK_STATISTICS_UPLINK",
-    "CRSF_LINK_STATISTICS_PWR",
-    "CRSF_LINK_STATISTICS_DOWN",
-    "BARO",
-    "GPS_RESCUE_THROTTLE_PID",
-    "DYN_IDLE",
-    "FF_LIMIT", // deprecated (FEEDFORWARD_LIMIT)
-    "FF_INTERPOLATED", // deprecated (FEEDFORWARD)
-    "BLACKBOX_OUTPUT",
-    "GYRO_SAMPLE",
-    "RX_TIMING",
-    "D_LPF",
-    "VTX_TRAMP",
-    "GHST",
-    "GHST_MSP",
-    "SCHEDULER_DETERMINISM",
-    "TIMING_ACCURACY",
-    "RX_EXPRESSLRS_SPI",
-    "RX_EXPRESSLRS_PHASELOCK",
-    "RX_STATE_TIME",
-    "GPS_RESCUE_VELOCITY",
-    "GPS_RESCUE_HEADING",
-    "GPS_RESCUE_TRACKING",
-    "GPS_CONNECTION",
-    "ATTITUDE",
-    "VTX_MSP",
-    "GPS_DOP",
-    "FAILSAFE",
-    "GYRO_CALIBRATION",
-    "ANGLE_MODE",
-    "ANGLE_TARGET",
-    "CURRENT_ANGLE",
-    "DSHOT_TELEMETRY_COUNTS",
-    "RPM_LIMIT",
-    "RC_STATS",
-    "MAG_CALIB",
-    "MAG_TASK_RATE",
-    "EZLANDING",
-]);
+// Debug mode names and debug field labels are no longer defined here. They now
+// live in the single shared source of truth `src/js/utils/debugModes.js`
+// (getDebugModes / getDebugFieldNames), consumed by both the configurator debug
+// store and the blackbox viewer. The blackbox parser resolves the log's
+// API version once (firmwareToApiVersion) and stores it on sysConfig.apiVersion.
 
 export const SUPER_EXPO_YAW = makeReadOnly(["OFF", "ON", "ALWAYS"]);
 
@@ -472,35 +378,10 @@ export function adjustFieldDefsList(firmwareType, firmwareVersion) {
         // Hardware names
         ACC_HARDWARE = ACC_HARDWARE_COMPLETE.slice(0);
         MAG_HARDWARE = MAG_HARDWARE_COMPLETE.slice(0);
-        // Debug names
-        DEBUG_MODE = DEBUG_MODE_COMPLETE.slice(0);
 
-        DEBUG_MODE.splice(DEBUG_MODE.indexOf("MIXER"), 1);
-        DEBUG_MODE.splice(DEBUG_MODE.indexOf("AIRMODE"), 1);
-        DEBUG_MODE.splice(DEBUG_MODE.indexOf("VELOCITY"), 1);
-        DEBUG_MODE.splice(DEBUG_MODE.indexOf("DTERM_FILTER"), 1);
-
-        if (semver.gte(firmwareVersion, "3.4.0")) {
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("GYRO"), 1, "GYRO_FILTERED");
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("NOTCH"), 1, "GYRO_SCALED");
-        }
-        if (semver.gte(firmwareVersion, "4.0.0")) {
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("GYRO_RAW"), 0, "RX_SFHSS_SPI");
-        }
-        if (semver.gte(firmwareVersion, "4.1.0")) {
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("DUAL_GYRO"), 1);
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("DUAL_GYRO_COMBINED"), 1);
-        }
-        if (semver.gte(firmwareVersion, "4.3.0")) {
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("FF_INTERPOLATED"), 1, "FEEDFORWARD");
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("FF_LIMIT"), 1, "FEEDFORWARD_LIMIT");
-        }
         if (semver.gte(firmwareVersion, "4.5.0")) {
             MAG_HARDWARE.splice(MAG_HARDWARE.indexOf("LIS3MDL"), 0, "LIS2MDL");
             MAG_HARDWARE.push("IST8310");
-        }
-        if (semver.lt(firmwareVersion, "2025.12.0")) {
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("D_MAX"), 1, "D_MIN");
         }
         if (semver.gte(firmwareVersion, "2025.12.0")) {
             ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("ADXL345"), 1);
@@ -508,36 +389,10 @@ export function adjustFieldDefsList(firmwareType, firmwareVersion) {
             ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("BMA280"), 1);
             ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("LSM303DLHC"), 1);
             ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
-
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("GPS_RESCUE_THROTTLE_PID"), 1, "AUTOPILOT_ALTITUDE");
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("GYRO_SCALED"), 1);
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("RANGEFINDER_QUALITY") + 1, 0, "OPTICALFLOW");
-            DEBUG_MODE.push(
-                "TPA",
-                "S_TERM",
-                "SPA",
-                "TASK",
-                "GIMBAL",
-                "WING_SETPOINT",
-                "AUTOPILOT_POSITION",
-                "CHIRP",
-                "FLASH_TEST_PRBS",
-                "MAVLINK_TELEMETRY",
-            );
-        }
-        if (semver.gte(firmwareVersion, "2025.12.0")) {
-            //rename DUAL_GYRO_ to MULTI_GYRO
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("DUAL_GYRO_RAW"), 1, "MULTI_GYRO_RAW");
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("DUAL_GYRO_DIFF"), 1, "MULTI_GYRO_DIFF");
-            DEBUG_MODE.splice(DEBUG_MODE.indexOf("DUAL_GYRO_SCALED"), 1, "MULTI_GYRO_SCALED");
-        }
-        if (semver.gte(firmwareVersion, "2026.6.0")) {
-            DEBUG_MODE.push("AUTOPILOT_PID");
         }
 
         ACC_HARDWARE = makeReadOnly(ACC_HARDWARE);
         MAG_HARDWARE = makeReadOnly(MAG_HARDWARE);
-        DEBUG_MODE = makeReadOnly(DEBUG_MODE);
 
         // Flight mode names
         if (semver.gte(firmwareVersion, "2025.12.0")) {
@@ -569,7 +424,6 @@ export function adjustFieldDefsList(firmwareType, firmwareVersion) {
     } else {
         ACC_HARDWARE = makeReadOnly(ACC_HARDWARE_COMPLETE.slice(0));
         MAG_HARDWARE = makeReadOnly(MAG_HARDWARE_COMPLETE.slice(0));
-        DEBUG_MODE = DEBUG_MODE_COMPLETE;
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);
 

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { getDebugModes, getDebugModeIndex } from "../../../src/js/utils/debugModes";
+import {
+    getDebugModes,
+    getDebugModeIndex,
+    getDebugFieldNames,
+    decodeDebugFieldToFriendly,
+    convertDebugFieldValue,
+} from "../../../src/js/utils/debugModes";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
 
 describe("debugModes helper", () => {
@@ -93,6 +99,133 @@ describe("debugModes helper", () => {
 
         it("returns -1 for unknown names", () => {
             expect(getDebugModeIndex("NOT_A_REAL_MODE", API_VERSION_1_47)).toBe(-1);
+        });
+    });
+
+    describe("getDebugFieldNames", () => {
+        it("returns the base labels when no API version is given", () => {
+            const names = getDebugFieldNames();
+            expect(names.NONE["debug[0]"]).toBe("Debug [0]");
+            expect(names.CYCLETIME["debug[1]"]).toBe("CPU Load");
+            // base list keeps the pre-1.47 modes
+            expect(names.GYRO_SCALED).toBeDefined();
+            expect(names.GPS_RESCUE_THROTTLE_PID).toBeDefined();
+            expect(names.AUTOPILOT_PID).toBeUndefined();
+        });
+
+        it("applies the 1.46 ATTITUDE / GPS_RESCUE_THROTTLE_PID overrides", () => {
+            const names = getDebugFieldNames(API_VERSION_1_46);
+            expect(names.ATTITUDE["debug[7]"]).toBe("dcmKp Gain");
+            expect(names.GPS_RESCUE_THROTTLE_PID["debug[7]"]).toBe("Throttle adjustment");
+        });
+
+        it("applies the 1.47 transformations", () => {
+            const names = getDebugFieldNames(API_VERSION_1_47);
+            expect(names.GPS_RESCUE_THROTTLE_PID).toBeUndefined();
+            expect(names.GYRO_SCALED).toBeUndefined();
+            expect(names.DUAL_GYRO_RAW).toBeUndefined();
+            expect(names.MULTI_GYRO_RAW).toBeDefined();
+            expect(names.AUTOPILOT_ALTITUDE).toBeDefined();
+            expect(names.OPTICALFLOW).toBeDefined();
+            expect(names.CHIRP).toBeDefined();
+            expect(names.AUTOPILOT_POSITION).toBeDefined();
+        });
+
+        it("applies the 1.48 transformations", () => {
+            const names = getDebugFieldNames(API_VERSION_1_48);
+            expect(names.AUTOPILOT_PID["debug[0]"]).toBe("P term (East) * 100");
+            expect(names.AUTOPILOT_STOP).toBeDefined();
+            expect(names.GYRO_SAMPLE["debug[4]"]).toBe("CPU Load at Sample");
+            expect(names.AUTOPILOT_POSITION).toBeUndefined();
+        });
+
+        it("keys align with getDebugModes for the same API version", () => {
+            const apiVersion = API_VERSION_1_48;
+            const modes = getDebugModes(apiVersion);
+            const names = getDebugFieldNames(apiVersion);
+            // Every named mode that has fields should resolve through the mode list index.
+            const cycletimeIndex = modes.indexOf("CYCLETIME");
+            expect(names[modes[cycletimeIndex]]["debug[0]"]).toBe("Cycle Time");
+        });
+    });
+
+    // Deterministic stub scaling so assertions are exact (gyro is identity).
+    const stubCtx = (overrides = {}) => ({
+        apiVersion: API_VERSION_1_48,
+        motorPoles: 14,
+        gyroRawToDegreesPerSecond: (v) => v,
+        accRawToGs: (v) => v / 2048,
+        rcCommandRawToThrottle: (v) => v,
+        throttleToRcCommandRaw: (v) => v,
+        ...overrides,
+    });
+
+    describe("decodeDebugFieldToFriendly", () => {
+        it("formats units-only fields without touching ctx scaling", () => {
+            expect(decodeDebugFieldToFriendly("BATTERY", "debug[1]", 123, stubCtx())).toBe("12.3 V");
+            expect(decodeDebugFieldToFriendly("CYCLETIME", "debug[1]", 80, stubCtx())).toBe("80 %");
+        });
+
+        it("applies injected gyro scaling for gyro modes", () => {
+            expect(decodeDebugFieldToFriendly("GYRO_FILTERED", "debug[0]", 100, stubCtx())).toBe("100 °/s");
+            // a non-identity ctx is honoured
+            expect(
+                decodeDebugFieldToFriendly(
+                    "GYRO_FILTERED",
+                    "debug[0]",
+                    10,
+                    stubCtx({ gyroRawToDegreesPerSecond: (v) => v * 2 }),
+                ),
+            ).toBe("20 °/s");
+        });
+
+        it("uses ctx.motorPoles for DSHOT_RPM_TELEMETRY", () => {
+            expect(decodeDebugFieldToFriendly("DSHOT_RPM_TELEMETRY", "debug[0]", 14, stubCtx())).toBe("200 rpm / 3 hz");
+        });
+
+        it("selects the FFT_FREQ field layout by ctx.apiVersion", () => {
+            // 1.47+: debug[0] is the gyro field, others are Hz
+            expect(
+                decodeDebugFieldToFriendly("FFT_FREQ", "debug[0]", 100, stubCtx({ apiVersion: API_VERSION_1_47 })),
+            ).toBe("100 °/s");
+            expect(
+                decodeDebugFieldToFriendly("FFT_FREQ", "debug[1]", 250, stubCtx({ apiVersion: API_VERSION_1_47 })),
+            ).toBe("250 Hz");
+            // pre-1.47: debug[3] is the gyro field
+            expect(
+                decodeDebugFieldToFriendly("FFT_FREQ", "debug[3]", 100, stubCtx({ apiVersion: API_VERSION_1_46 })),
+            ).toBe("100 °/s");
+            expect(
+                decodeDebugFieldToFriendly("FFT_FREQ", "debug[0]", 250, stubCtx({ apiVersion: API_VERSION_1_46 })),
+            ).toBe("250 Hz");
+        });
+
+        it("uses ctx.fftCalcSteps for FFT_TIME debug[0], with graceful fallback", () => {
+            expect(decodeDebugFieldToFriendly("FFT_TIME", "debug[0]", 1, stubCtx({ fftCalcSteps: ["A", "B"] }))).toBe(
+                "B",
+            );
+            expect(decodeDebugFieldToFriendly("FFT_TIME", "debug[0]", 1, stubCtx())).toBe("1");
+        });
+
+        it("falls back to a plain integer for unknown modes/fields", () => {
+            expect(decodeDebugFieldToFriendly("NOT_A_MODE", "debug[0]", 42, stubCtx())).toBe("42");
+        });
+    });
+
+    describe("convertDebugFieldValue", () => {
+        it("round-trips a scaled field (BATTERY)", () => {
+            const friendly = convertDebugFieldValue("BATTERY", "debug[1]", true, 120, stubCtx());
+            expect(friendly).toBe(12);
+            expect(convertDebugFieldValue("BATTERY", "debug[1]", false, friendly, stubCtx())).toBe(120);
+        });
+
+        it("uses injected accel scaling and its inverse", () => {
+            expect(convertDebugFieldValue("ACCELEROMETER", "debug[0]", true, 2048, stubCtx())).toBe(1);
+            expect(convertDebugFieldValue("ACCELEROMETER", "debug[0]", false, 1, stubCtx())).toBe(2048);
+        });
+
+        it("passes unscaled fields through unchanged", () => {
+            expect(convertDebugFieldValue("PIDLOOP", "debug[0]", true, 999, stubCtx())).toBe(999);
         });
     });
 });
