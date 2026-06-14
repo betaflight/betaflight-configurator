@@ -23,6 +23,13 @@ export const sidebarItems = [
         icon: "i-lucide-rotate-ccw",
         buildOptions: ["USE_SERVOS", "USE_WING"],
     },
+    {
+        key: "wing_tuning",
+        mode: "connected",
+        i18n: "tabWingTuning",
+        icon: "i-lucide-plane",
+        buildOptions: ["USE_WING"],
+    },
     { key: "gps", mode: "connected", i18n: "tabGPS", icon: "i-lucide-map-pin", buildOptions: ["USE_GPS"] },
     { key: "motors", mode: "connected", i18n: "tabMotorTesting", icon: "i-lucide-fan" },
     { key: "osd", mode: "connected", i18n: "tabOsd", icon: "i-lucide-monitor", feature: "OSD" },

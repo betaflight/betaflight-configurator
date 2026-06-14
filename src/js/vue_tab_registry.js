@@ -26,6 +26,8 @@ import PreflightTab from "../components/tabs/PreflightTab.vue";
 import VtxTab from "../components/tabs/VtxTab.vue";
 import PresetsTab from "../components/tabs/PresetsTab.vue";
 import AutotuneTab from "../components/tabs/AutotuneTab.vue";
+import LogTab from "../components/tabs/LogTab.vue";
+import WingTuningTab from "../components/tabs/WingTuningTab.vue";
 
 export const VueTabComponents = {
     help: HelpTab,
@@ -56,4 +58,6 @@ export const VueTabComponents = {
     vtx: VtxTab,
     presets: PresetsTab,
     autotune: AutotuneTab,
+    log: LogTab,
+    wing_tuning: WingTuningTab,
 };
