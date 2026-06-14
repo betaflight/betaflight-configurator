@@ -45,6 +45,24 @@
                             class="drag-handle size-3.5 cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100"
                             title="Drag to reorder graph"
                         />
+                        <UButton
+                            variant="ghost"
+                            color="neutral"
+                            icon="i-lucide-chevron-up"
+                            size="2xs"
+                            :disabled="gIdx === 0"
+                            :aria-label="`Move graph ${gIdx + 1} up`"
+                            @click.stop="moveGraph(gIdx, gIdx - 1)"
+                        />
+                        <UButton
+                            variant="ghost"
+                            color="neutral"
+                            icon="i-lucide-chevron-down"
+                            size="2xs"
+                            :disabled="gIdx === localGraphs.length - 1"
+                            :aria-label="`Move graph ${gIdx + 1} down`"
+                            @click.stop="moveGraph(gIdx, gIdx + 1)"
+                        />
                     </template>
                     <div class="flex flex-col gap-1">
                         <!-- Graph settings row -->
@@ -287,6 +305,27 @@ function nextUid() {
 const graphListEl = ref(null);
 let sortable = null;
 
+// Move a graph panel from one position to another. Shared by the drag handle
+// (Sortable) and the keyboard-accessible move up/down buttons. Guards against
+// out-of-bounds / undefined indices (Sortable can report undefined indices in
+// edge cases, and splice(undefined, ...) would corrupt the list).
+function moveGraph(oldIndex, newIndex) {
+    if (
+        oldIndex === newIndex ||
+        oldIndex == null ||
+        newIndex == null ||
+        oldIndex < 0 ||
+        newIndex < 0 ||
+        oldIndex >= localGraphs.value.length ||
+        newIndex >= localGraphs.value.length
+    ) {
+        return;
+    }
+    const [moved] = localGraphs.value.splice(oldIndex, 1);
+    localGraphs.value.splice(newIndex, 0, moved);
+    emitUpdate();
+}
+
 watch(graphListEl, (el) => {
     if (sortable) {
         sortable.destroy();
@@ -300,12 +339,7 @@ watch(graphListEl, (el) => {
         ghostClass: "opacity-30",
         animation: 150,
         onEnd({ oldIndex, newIndex }) {
-            if (oldIndex === newIndex) {
-                return;
-            }
-            const moved = localGraphs.value.splice(oldIndex, 1)[0];
-            localGraphs.value.splice(newIndex, 0, moved);
-            emitUpdate();
+            moveGraph(oldIndex, newIndex);
         },
     });
 });
