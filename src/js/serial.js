@@ -33,12 +33,11 @@ class Serial extends EventTarget {
             // Tauri shell: raw TCP via the Rust tcp_* commands (so the Betaflight bridge
             // on 5761 works), bluetooth via the web API the webview exposes. Native serial
             // (tauri-plugin-serialplugin) is desktop + Android only — iOS has no USB serial.
-            this._protocols = [];
-            if (!isTauriIOS()) {
-                this._protocols.push({ name: "serial", instance: new TauriSerial() });
-            }
-            this._protocols.push({ name: "bluetooth", instance: new WebBluetooth() });
-            this._protocols.push({ name: "tcp", instance: new TauriTcp() });
+            this._protocols = [
+                ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
+                { name: "bluetooth", instance: new WebBluetooth() },
+                { name: "tcp", instance: new TauriTcp() },
+            ];
         } else {
             this._protocols = [
                 { name: "serial", instance: new WebSerial() },
