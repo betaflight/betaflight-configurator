@@ -330,7 +330,8 @@ function liveDebugContext() {
     const maxThrottle = fcStore.motorConfig?.maxthrottle ?? 2000;
     return {
         apiVersion: fcStore.config?.apiVersion,
-        motorPoles: fcStore.motorConfig?.motor_poles ?? 1,
+        // `|| 1` (not `??`) so an unloaded 0 can't divide-by-zero in RPM modes.
+        motorPoles: fcStore.motorConfig?.motor_poles || 1,
         gyroRawToDegreesPerSecond: (v) => v * (4 / 16.4),
         accRawToGs: (v) => v / 2048,
         rcCommandRawToThrottle: (v) =>
@@ -393,6 +394,10 @@ function updateDebugScale(index, value) {
 
 onMounted(async () => {
     sensorsStore.loadFromConfig();
+
+    // Needed for DSHOT_RPM_TELEMETRY debug decoding (motor_poles); other tabs
+    // load it on mount too, and it isn't fetched at connection time.
+    await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         sensorsStore.debugColumns = 8;
