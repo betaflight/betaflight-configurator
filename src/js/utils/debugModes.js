@@ -1028,6 +1028,253 @@ export function getDebugFieldNames(apiVersion) {
  * @property {string[]} [fftCalcSteps] - FFT calc-step enum names (optional).
  */
 
+// ---------------------------------------------------------------------------
+// Per-debug-mode value decoding (→ display string with units).
+//
+// Each entry is keyed by mode name and is either:
+//   - a function (value, ctx, fieldName) => string  (whole-mode formatter), or
+//   - an object  { "debug[n]": (value, ctx) => string, _default: ... } keyed by field.
+// Modes/fields not present fall back to a plain integer (`value.toFixed(0)`),
+// which matches the firmware's "no special formatting" behaviour. Hardware
+// scaling comes from the injected ctx so this stays source-agnostic.
+// ---------------------------------------------------------------------------
+
+const f0 = (v) => v.toFixed(0);
+const gyroDps = (v, ctx) => `${Math.round(ctx.gyroRawToDegreesPerSecond(v))} °/s`;
+const gyroDecode = (v, ctx, fieldName) => (fieldName === "debug[4]" ? `${v.toFixed(0)} %` : gyroDps(v, ctx));
+const fftFreqDecode = (v, ctx, fieldName) => {
+    const gyroField = semver.gte(ctx.apiVersion, API_VERSION_1_47) ? "debug[0]" : "debug[3]";
+    return fieldName === gyroField ? gyroDps(v, ctx) : `${v.toFixed(0)} Hz`;
+};
+
+const DEBUG_DECODE = {
+    NONE: {
+        "debug[1]": (v) => `${v.toFixed(0)} hPa`,
+        "debug[2]": (v) => `${(v / 100).toFixed(2)} °C`,
+        "debug[3]": (v) => `${(v / 100).toFixed(2)} m`,
+        _default: (v) => `${v.toFixed(0)}`,
+    },
+    CYCLETIME: {
+        "debug[1]": (v) => `${v.toFixed(0)} %`,
+        _default: (v) => `${v.toFixed(0)}μS`,
+    },
+    BATTERY: {
+        "debug[0]": f0,
+        _default: (v) => `${(v / 10).toFixed(1)} V`,
+    },
+    ACCELEROMETER: (v, ctx) => `${ctx.accRawToGs(v).toFixed(2)} g`,
+    MIXER: (v, ctx) => `${Math.round(ctx.rcCommandRawToThrottle(v))} %`,
+    PIDLOOP: (v) => `${v.toFixed(0)} μS`,
+    RC_INTERPOLATION: {
+        "debug[1]": (v) => `${v.toFixed(0)} ms`,
+        "debug[3]": (v) => `${v.toFixed(0)} °/s`,
+        _default: f0,
+    },
+    ANGLERATE: (v) => `${v.toFixed(0)} °/s`,
+    ESC_SENSOR: {
+        "debug[3]": (v) => `${v.toFixed(0)} μS`,
+        _default: f0,
+    },
+    SCHEDULER: (v) => `${v.toFixed(0)} μS`,
+    ESC_SENSOR_RPM: (v) => `${v.toFixed(0)} rpm`,
+    ESC_SENSOR_TMP: (v) => `${v.toFixed(0)} °C`,
+    ALTITUDE: {
+        "debug[1]": (v) => `${(v / 100).toFixed(2)} m`,
+        "debug[2]": (v) => `${(v / 100).toFixed(2)} m`,
+        "debug[3]": (v) => `${(v / 100).toFixed(2)} m`,
+        _default: f0,
+    },
+    FFT: {
+        "debug[0]": gyroDps,
+        "debug[1]": gyroDps,
+        "debug[2]": gyroDps,
+        _default: f0,
+    },
+    FFT_TIME: {
+        "debug[0]": (v, ctx) => ctx.fftCalcSteps?.[v] ?? v.toFixed(0),
+        "debug[1]": (v) => `${v.toFixed(0)} μs`,
+        _default: f0,
+    },
+    FFT_FREQ: fftFreqDecode,
+    ITERM_RELAX: {
+        "debug[0]": (v) => `${v.toFixed(0)} °/s`,
+        "debug[1]": (v) => `${v.toFixed(0)} %`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)} °`,
+        _default: f0,
+    },
+    RC_SMOOTHING: {
+        "debug[0]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[1]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[2]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[3]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[5]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[4]": (v) => `${(v / 1000).toFixed(3)}`,
+        _default: f0,
+    },
+    RC_SMOOTHING_RATE: {
+        "debug[0]": (v) => `${(v / 1000).toFixed(2)} ms`,
+        "debug[2]": (v) => `${v.toFixed(0)} Hz`,
+        _default: f0,
+    },
+    DSHOT_RPM_TELEMETRY: (v, ctx) =>
+        `${((v * 200) / ctx.motorPoles).toFixed(0)} rpm / ${((v * 3.333) / ctx.motorPoles).toFixed(0)} hz`,
+    RPM_FILTER: (v) => `${(v * 60).toFixed(0)}rpm / ${v.toFixed(0)} Hz`,
+    D_MAX: {
+        "debug[0]": (v) => `${v.toFixed(0)} %`,
+        "debug[1]": (v) => `${v.toFixed(0)} %`,
+        "debug[2]": (v) => (v / 10).toFixed(1),
+        "debug[3]": (v) => (v / 10).toFixed(1),
+        _default: f0,
+    },
+    DYN_LPF: {
+        "debug[0]": gyroDps,
+        "debug[3]": gyroDps,
+        _default: (v) => `${v.toFixed(0)} Hz`,
+    },
+    DYN_IDLE: {
+        "debug[3]": (v) => `${v * 6} rpm / ${(v / 10).toFixed(0)} hz`,
+        _default: f0,
+    },
+    AC_CORRECTION: (v) => `${(v / 10).toFixed(1)} °/s`,
+    AC_ERROR: (v) => `${(v / 10).toFixed(1)} °`,
+    RX_TIMING: {
+        "debug[0]": (v) => `${(v / 100).toFixed(2)} ms`,
+        "debug[3]": (v) => `${(v / 100).toFixed(2)} ms`,
+        "debug[1]": (v) => `${(v / 10).toFixed(1)} ms`,
+        "debug[4]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[5]": (v) => `${v.toFixed(0)} Hz`,
+        _default: f0,
+    },
+    GHST: {
+        "debug[3]": (v) => `${v.toFixed(0)} %`,
+        _default: f0,
+    },
+    SCHEDULER_DETERMINISM: {
+        "debug[0]": (v) => `${(v / 10).toFixed(1)} us`,
+        "debug[2]": (v) => `${(v / 10).toFixed(1)} us`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)} us`,
+        _default: f0,
+    },
+    TIMING_ACCURACY: {
+        "debug[0]": (v) => `${v.toFixed(1)} %`,
+        "debug[2]": (v) => `${(v / 10).toFixed(1)} us`,
+        _default: f0,
+    },
+    RX_EXPRESSLRS_SPI: {
+        "debug[3]": (v) => `${v.toFixed(1)} %`,
+        _default: f0,
+    },
+    RX_EXPRESSLRS_PHASELOCK: {
+        "debug[2]": (v) => `${v.toFixed(0)} ticks`,
+        _default: (v) => `${v.toFixed(0)} us`,
+    },
+    GPS_RESCUE_THROTTLE_PID: {
+        "debug[0]": (v) => `${v.toFixed(0)} uS`,
+        "debug[1]": (v) => `${v.toFixed(0)} uS`,
+        "debug[4]": (v) => `${v.toFixed(0)} uS`,
+        "debug[6]": (v) => `${v.toFixed(0)} uS`,
+        "debug[2]": (v) => `${(v / 100).toFixed(1)} m`,
+        "debug[3]": (v) => `${(v / 100).toFixed(1)} m`,
+        _default: f0,
+    },
+    GPS_RESCUE_VELOCITY: {
+        "debug[0]": (v) => `${(v / 100).toFixed(1)} °`,
+        "debug[1]": (v) => `${(v / 100).toFixed(1)} °`,
+        "debug[2]": (v) => `${(v / 100).toFixed(1)} m/s`,
+        "debug[3]": (v) => `${(v / 100).toFixed(1)} m/s`,
+        _default: f0,
+    },
+    GPS_RESCUE_HEADING: {
+        "debug[0]": (v) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[1]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[2]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[4]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[6]": (v) => `${(v / 100).toFixed(1)} °`,
+        _default: f0,
+    },
+    GPS_RESCUE_TRACKING: {
+        "debug[0]": (v) => `${(v / 100).toFixed(1)} m/s`,
+        "debug[1]": (v) => `${(v / 100).toFixed(1)} m/s`,
+        "debug[2]": (v) => `${(v / 100).toFixed(1)} m`,
+        "debug[3]": (v) => `${(v / 100).toFixed(1)} m`,
+        _default: f0,
+    },
+    GPS_CONNECTION: {
+        "debug[3]": (v) => (v * 100).toFixed(0),
+        _default: f0,
+    },
+    GPS_DOP: {
+        "debug[0]": f0,
+        _default: (v) => (v / 100).toFixed(2),
+    },
+    ANGLE_MODE: {
+        "debug[0]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[1]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[2]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)} °`,
+        _default: f0,
+    },
+    EZLANDING: (v) => `${(v / 100).toFixed(2)} %`,
+    OPTICALFLOW: {
+        "debug[1]": (v) => `${(v / 1000).toFixed(1)}`,
+        "debug[2]": (v) => `${(v / 1000).toFixed(1)}`,
+        "debug[3]": (v) => `${(v / 1000).toFixed(1)}`,
+        "debug[4]": (v) => `${(v / 1000).toFixed(1)}`,
+        _default: (v) => v.toFixed(1),
+    },
+    AUTOPILOT_POSITION: {
+        "debug[2]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[4]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[5]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[6]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[7]": (v) => `${(v / 10).toFixed(1)}`,
+        _default: (v) => v.toFixed(1),
+    },
+    TPA: {
+        "debug[1]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[2]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[4]": (v) => `${(v / 10).toFixed(1)} m/s`,
+        _default: (v) => v.toFixed(1),
+    },
+    FEEDFORWARD: {
+        "debug[0]": (v) => `${v.toFixed(0)} °/s`,
+        "debug[1]": (v) => `${v.toFixed(0)} °/s/s`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[4]": (v) => `${v.toFixed(0)} %`,
+        _default: f0,
+    },
+    FEEDFORWARD_LIMIT: {
+        "debug[0]": (v) => `${v.toFixed(0)} %`,
+        "debug[6]": (v) => `${(v / 1000).toFixed(3)}`,
+        "debug[7]": (v) => `${v.toFixed(0)} Hz`,
+        _default: f0,
+    },
+    VELOCITY: () => "",
+    DFILTER: () => "",
+};
+// Gyro-family modes share one whole-mode formatter.
+for (const m of [
+    "GYRO",
+    "GYRO_FILTERED",
+    "GYRO_SCALED",
+    "DUAL_GYRO",
+    "DUAL_GYRO_COMBINED",
+    "DUAL_GYRO_DIFF",
+    "DUAL_GYRO_RAW",
+    "MULTI_GYRO_DIFF",
+    "MULTI_GYRO_RAW",
+    "MULTI_GYRO_SCALED",
+    "NOTCH",
+    "GYRO_SAMPLE",
+]) {
+    DEBUG_DECODE[m] = gyroDecode;
+}
+// NONE/AIRMODE/BARO share one block (firmware groups them).
+DEBUG_DECODE.AIRMODE = DEBUG_DECODE.NONE;
+DEBUG_DECODE.BARO = DEBUG_DECODE.NONE;
+
 /**
  * Format a debug field value as a human-readable string with units, for the
  * given debug mode. Mirrors the firmware's per-debug-mode field semantics.
@@ -1041,474 +1288,176 @@ export function getDebugFieldNames(apiVersion) {
  * @returns {string}
  */
 export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx) {
-    switch (debugModeName) {
-        case "NONE":
-        case "AIRMODE":
-        case "BARO":
-            switch (fieldName) {
-                case "debug[1]":
-                    return `${value.toFixed(0)} hPa`;
-                case "debug[2]":
-                    return `${(value / 100).toFixed(2)} °C`;
-                case "debug[3]":
-                    return `${(value / 100).toFixed(2)} m`;
-                default:
-                    return `${value.toFixed(0)}`;
-            }
-        case "VELOCITY":
-        case "DFILTER":
-            return "";
-        case "CYCLETIME":
-            switch (fieldName) {
-                case "debug[1]":
-                    return `${value.toFixed(0)} %`;
-                default:
-                    return `${value.toFixed(0)}μS`;
-            }
-        case "BATTERY":
-            switch (fieldName) {
-                case "debug[0]":
-                    return value.toFixed(0);
-                default:
-                    return `${(value / 10).toFixed(1)} V`;
-            }
-        case "ACCELEROMETER":
-            return `${ctx.accRawToGs(value).toFixed(2)} g`;
-        case "MIXER":
-            return `${Math.round(ctx.rcCommandRawToThrottle(value))} %`;
-        case "PIDLOOP":
-            return `${value.toFixed(0)} μS`;
-        case "RC_INTERPOLATION":
-            switch (fieldName) {
-                case "debug[1]": // current RX refresh rate
-                    return `${value.toFixed(0)} ms`;
-                case "debug[3]": // setpoint [roll]
-                    return `${value.toFixed(0)} °/s`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "GYRO":
-        case "GYRO_FILTERED":
-        case "GYRO_SCALED":
-        case "DUAL_GYRO":
-        case "DUAL_GYRO_COMBINED":
-        case "DUAL_GYRO_DIFF":
-        case "DUAL_GYRO_RAW":
-        case "MULTI_GYRO_DIFF":
-        case "MULTI_GYRO_RAW":
-        case "MULTI_GYRO_SCALED":
-        case "NOTCH":
-        case "GYRO_SAMPLE":
-            if (fieldName === "debug[4]") {
-                return `${value.toFixed(0)} %`; // Avg System Load %
-            }
-            return `${Math.round(ctx.gyroRawToDegreesPerSecond(value))} °/s`;
-        case "ANGLERATE":
-            return `${value.toFixed(0)} °/s`;
-        case "ESC_SENSOR":
-            switch (fieldName) {
-                case "debug[3]":
-                    return `${value.toFixed(0)} μS`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "SCHEDULER":
-            return `${value.toFixed(0)} μS`;
-        case "STACK":
-            return value.toFixed(0);
-        case "ESC_SENSOR_RPM":
-            return `${value.toFixed(0)} rpm`;
-        case "ESC_SENSOR_TMP":
-            return `${value.toFixed(0)} °C`;
-        case "ALTITUDE":
-            switch (fieldName) {
-                case "debug[0]": // GPS Trust * 100
-                    return value.toFixed(0);
-                case "debug[1]": // GPS Altitude cm
-                case "debug[2]": // OSD Altitude cm
-                case "debug[3]": // Control Altitude
-                    return `${(value / 100).toFixed(2)} m`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "FFT":
-            switch (fieldName) {
-                case "debug[0]": // gyro pre dyn notch [for gyro debug axis]
-                case "debug[1]": // gyro post dyn notch [for gyro debug axis]
-                case "debug[2]": // gyro pre dyn notch, downsampled for FFT [for gyro debug axis]
-                    return `${Math.round(ctx.gyroRawToDegreesPerSecond(value))} °/s`;
-                // debug 3 = not used
-                default:
-                    return value.toFixed(0);
-            }
-        case "FFT_TIME":
-            switch (fieldName) {
-                case "debug[0]":
-                    return ctx.fftCalcSteps?.[value] ?? value.toFixed(0);
-                case "debug[1]":
-                    return `${value.toFixed(0)} μs`;
-                // debug 2 = not used
-                // debug 3 = not used
-                default:
-                    return value.toFixed(0);
-            }
-        case "FFT_FREQ":
-            if (semver.gte(ctx.apiVersion, API_VERSION_1_47)) {
-                switch (fieldName) {
-                    case "debug[0]": // gyro pre dyn notch [for gyro debug axis]
-                        return `${Math.round(ctx.gyroRawToDegreesPerSecond(value))} °/s`;
-                    default:
-                        return `${value.toFixed(0)} Hz`;
-                }
-            } else {
-                switch (fieldName) {
-                    case "debug[3]": // gyro pre dyn notch [for gyro debug axis]
-                        return `${Math.round(ctx.gyroRawToDegreesPerSecond(value))} °/s`;
-                    default:
-                        return `${value.toFixed(0)} Hz`;
-                }
-            }
-        case "RTH":
-            switch (fieldName) {
-                // temporarily, perhaps
-                //                        case 'debug[0]': // pitch angle +/-4000 means +/- 40 deg
-                //                            return (value / 100).toFixed(1) + " °";
-                default:
-                    return value.toFixed(0);
-            }
-        case "ITERM_RELAX":
-            switch (fieldName) {
-                case "debug[0]": // roll setpoint high-pass filtered
-                    return `${value.toFixed(0)} °/s`;
-                case "debug[1]": // roll I-term relax factor
-                    return `${value.toFixed(0)} %`;
-                case "debug[3]": // roll absolute control axis error (pre-2026.6; unused/zero in firmware >= 2026.6)
-                    return `${(value / 10).toFixed(1)} °`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "RC_SMOOTHING":
-            switch (fieldName) {
-                case "debug[0]": // current Rx Rate Hz
-                case "debug[1]": // smoothed but stepped Rx Rate Hz
-                case "debug[2]": // setpoint cutoff Hz
-                case "debug[3]": // throttle cutoff Hz
-                case "debug[5]": // smoothed Rx Rate Hz, without steps
-                    return `${value.toFixed(0)} Hz`;
-                case "debug[4]": // Feedforward PT1k range 0-1000 show as 0.nnn
-                    return `${(value / 1000).toFixed(3)}`;
-                // debug 6 is outlier count 0-3
-                // debug 7 is valid count 0-3
-                default:
-                    return value.toFixed(0);
-            }
-        case "RC_SMOOTHING_RATE":
-            switch (fieldName) {
-                case "debug[0]": // current Rx Interval [us]
-                    return `${(value / 1000).toFixed(2)} ms`;
-                case "debug[2]": // smoothed Rx Rate [Hz]
-                    return `${value.toFixed(0)} Hz`;
-                // case "debug[3]": // flag to update smoothing
-                default:
-                    return value.toFixed(0);
-            }
-        case "DSHOT_RPM_TELEMETRY":
-            return `${((value * 200) / ctx.motorPoles).toFixed(0)} rpm / ${((value * 3.333) / ctx.motorPoles).toFixed(
-                0,
-            )} hz`;
-        case "RPM_FILTER":
-            return `${(value * 60).toFixed(0)}rpm / ${value.toFixed(0)} Hz`;
-        case "D_MAX":
-            switch (fieldName) {
-                case "debug[0]": // roll gyro factor
-                case "debug[1]": // roll setpoint Factor
-                    return `${value.toFixed(0)} %`;
-                case "debug[2]": // roll actual D
-                case "debug[3]": // pitch actual D
-                    return (value / 10).toFixed(1);
-                default:
-                    return value.toFixed(0);
-            }
-        case "DYN_LPF":
-            switch (fieldName) {
-                case "debug[0]": // gyro scaled [for selected axis]
-                case "debug[3]": // pre-dyn notch gyro [for selected axis]
-                    return `${Math.round(ctx.gyroRawToDegreesPerSecond(value))} °/s`;
-                default:
-                    return `${value.toFixed(0)} Hz`;
-            }
-        case "DYN_IDLE":
-            switch (fieldName) {
-                case "debug[3]": // minRPS
-                    return `${value * 6} rpm / ${(value / 10).toFixed(0)} hz`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "AC_CORRECTION":
-            return `${(value / 10).toFixed(1)} °/s`;
-        case "AC_ERROR":
-            return `${(value / 10).toFixed(1)} °`;
-        case "RX_TIMING":
-            switch (fieldName) {
-                case "debug[0]": // Packet interval us/10
-                case "debug[3]": // Constrained packet interval us/10
-                    return `${(value / 100).toFixed(2)} ms`;
-                case "debug[1]": // Packet time stamp us/100, divide by 10 to ms
-                    return `${(value / 10).toFixed(1)} ms`;
-                case "debug[4]": // Rx Rate Hz
-                case "debug[5]": // Smoothed Rx RateHz
-                    return `${value.toFixed(0)} Hz`;
-                case "debug[6]": // LQ Percent
-                case "debug[2]": // isRateValid boolean
-                case "debug[7]": // Is Receiving Signal boolean
-                default:
-                    return value.toFixed(0);
-            }
-        case "GHST":
-            switch (fieldName) {
-                // debug 0 is CRC error count 0 to int16_t
-                // debug 1 is unknown frame count 0 to int16_t
-                // debug 2 is RSSI 0 to -128 -> 0 to 128
-                case "debug[3]": // LQ 0-100
-                    return `${value.toFixed(0)} %`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "GHST_MSP":
-            switch (fieldName) {
-                // debug 0 is msp frame count
-                // debug 1 is msp frame count
-                // debug 2 and 3 not used
-                default:
-                    return value.toFixed(0);
-            }
-        case "SCHEDULER_DETERMINISM":
-            switch (fieldName) {
-                case "debug[0]": // cycle time in us*10
-                case "debug[2]": // task delay time in us*10
-                case "debug[3]": // task delay time in us*10
-                    return `${(value / 10).toFixed(1)} us`;
-                // debug 1 is task ID of late task
-                default:
-                    return value.toFixed(0);
-            }
-        case "TIMING_ACCURACY":
-            switch (fieldName) {
-                case "debug[0]": // CPU Busy %
-                    return `${value.toFixed(1)} %`;
-                case "debug[2]": // task delay time in us*10
-                    return `${(value / 10).toFixed(1)} us`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "RX_EXPRESSLRS_SPI":
-            switch (fieldName) {
-                case "debug[3]": // uplink LQ %
-                    return `${value.toFixed(1)} %`;
-                // debug 0 = Lost connection count
-                // debug 1 = RSSI
-                // debug 2 = SNR
-                default:
-                    return value.toFixed(0);
-            }
-        case "RX_EXPRESSLRS_PHASELOCK":
-            switch (fieldName) {
-                case "debug[2]": // Frequency offset in ticks
-                    return `${value.toFixed(0)} ticks`;
-                // debug 0 = Phase offset us
-                // debug 1 = Filtered phase offset us
-                // debug 3 = Pphase shift in us
-                default:
-                    return `${value.toFixed(0)} us`;
-            }
-        case "GPS_RESCUE_THROTTLE_PID":
-            switch (fieldName) {
-                case "debug[0]": // Throttle P added uS
-                case "debug[1]": // Throttle D added uS
-                case "debug[4]": // Throttle I added uS
-                case "debug[6]": // Throttle D before lp smoothing uS
-                    return `${value.toFixed(0)} uS`;
-                case "debug[2]": // current altitude in m
-                case "debug[3]": // TARGET altitude in m
-                    return `${(value / 100).toFixed(1)} m`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "GPS_RESCUE_VELOCITY":
-            switch (fieldName) {
-                case "debug[0]": // Pitch P degrees * 100
-                case "debug[1]": // Pitch D degrees * 100
-                    return `${(value / 100).toFixed(1)} °`;
-                case "debug[2]": // velocity to home cm/s
-                case "debug[3]": // velocity target cm/s
-                    return `${(value / 100).toFixed(1)} m/s`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "GPS_RESCUE_HEADING":
-            switch (fieldName) {
-                case "debug[0]": // Ground speed cm/s
-                    return `${(value / 100).toFixed(2)} m/s`;
-                case "debug[1]": // GPS Ground course degrees * 10
-                case "debug[2]": // Attitude in degrees * 10
-                case "debug[3]": // Angle to home in degrees * 10
-                case "debug[4]": // magYaw in degrees * 10
-                    return `${(value / 10).toFixed(1)} °`;
-                case "debug[6]": // Roll Added deg * 100
-                    return `${(value / 100).toFixed(1)} °`;
-                case "debug[5]": // Roll Mix Att
-                case "debug[7]": // Rescue Yaw Rate
-                default:
-                    return value.toFixed(0);
-            }
-        case "GPS_RESCUE_TRACKING":
-            switch (fieldName) {
-                case "debug[0]": // velocity to home cm/s
-                case "debug[1]": // velocity target cm/s
-                    return `${(value / 100).toFixed(1)} m/s`;
-                case "debug[2]": // altitude cm
-                case "debug[3]": // altitude target cm
-                    return `${(value / 100).toFixed(1)} m`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "GPS_CONNECTION":
-            switch (fieldName) {
-                case "debug[0]": // Flight model
-                case "debug[1]": // GPS Nav packet interval
-                case "debug[2]": // FC Nav data time
-                    return value.toFixed(0);
-                case "debug[3]": // Baud Rate / Nav interval
-                    return (value * 100).toFixed(0);
-                case "debug[4]": // main state * 100 + subState
-                case "debug[5]": // executeTimeUs
-                case "debug[6]": // ack state
-                case "debug[7]": // serial Rx buffer
-                default:
-                    return value.toFixed(0);
-            }
-        case "ATTITUDE":
-            switch (fieldName) {
-                case "debug[0]": // Roll Angle
-                case "debug[1]": // Pitch Angle
-                case "debug[2]": // Ground speed factor
-                case "debug[3]": // Heading error
-                case "debug[4]": // Velocity to home
-                case "debug[5]": // Ground speed error ratio
-                case "debug[6]": // Pitch forward angle
-                case "debug[7]": // dcmKp gain
-                default:
-                    return value.toFixed(0);
-            }
-        case "VTX_MSP":
-            switch (fieldName) {
-                case "debug[0]": // packetCounter
-                case "debug[1]": // isCrsfPortConfig
-                case "debug[2]": // isLowPowerDisarmed
-                case "debug[3]": // mspTelemetryDescriptor
-                default:
-                    return value.toFixed(0);
-            }
-        case "GPS_DOP":
-            switch (fieldName) {
-                case "debug[0]": // Number of Satellites
-                    return value.toFixed(0);
-                case "debug[1]": // pDOP (positional - 3D)
-                case "debug[2]": // hDOP (horizontal - 2D)
-                case "debug[3]": // vDOP (vertical - 1D)
-                default:
-                    return (value / 100).toFixed(2);
-            }
-        case "FAILSAFE":
-            return value.toFixed(0);
-        case "GYRO_CALIBRATION":
-            return value.toFixed(0);
-        case "ANGLE_MODE":
-            switch (fieldName) {
-                case "debug[0]": // target angle
-                case "debug[1]": // angle error
-                case "debug[2]": // angle feedforward
-                case "debug[3]": // angle achieved
-                    return `${(value / 10).toFixed(1)} °`;
-                default:
-                    return value.toFixed(0);
-            }
-        case "ANGLE_TARGET":
-            return value.toFixed(0);
-        case "CURRENT_ANGLE":
-            return value.toFixed(0);
-        case "DSHOT_TELEMETRY_COUNTS":
-            return value.toFixed(0);
-        case "EZLANDING":
-            return `${(value / 100).toFixed(2)} %`;
-        case "OPTICALFLOW":
-            switch (fieldName) {
-                case "debug[1]":
-                case "debug[2]":
-                case "debug[3]":
-                case "debug[4]":
-                    return `${(value / 1000).toFixed(1)}`;
-                default:
-                    return value.toFixed(1);
-            }
-        case "AUTOPILOT_POSITION":
-            switch (fieldName) {
-                case "debug[2]":
-                case "debug[3]":
-                case "debug[4]":
-                case "debug[5]":
-                case "debug[6]":
-                case "debug[7]":
-                    return `${(value / 10).toFixed(1)}`;
-                default:
-                    return value.toFixed(1);
-            }
-        case "TPA":
-            switch (fieldName) {
-                case "debug[1]":
-                case "debug[2]":
-                    return `${(value / 10).toFixed(1)} °`;
-                case "debug[4]":
-                    return `${(value / 10).toFixed(1)} m/s`;
-                default:
-                    return value.toFixed(1);
-            }
-        case "FEEDFORWARD":
-            switch (fieldName) {
-                case "debug[0]": // setpoint
-                    return `${value.toFixed(0)} °/s`;
-                case "debug[1]": // setpoint speed
-                    return `${value.toFixed(0)} °/s/s`;
-                // case "debug[2]": feedforward boost
-                case "debug[3]": // rcCommand Delta integer * 10
-                    return `${(value / 10).toFixed(1)}`;
-                case "debug[4]": // jitter attenuator percent
-                    return `${value.toFixed(0)} %`;
-                // case "debug[5]": boolean packet duplicate
-                // case "debug[6]": yaw feedforward
-                // case "debug[7]": yaw feedforward hold element
-                default:
-                    return value.toFixed(0);
-            }
-        case "FEEDFORWARD_LIMIT":
-            switch (fieldName) {
-                case "debug[0]": // jitter attenuator percent
-                    return `${value.toFixed(0)} %`;
-                // case "debug[1]": max setpoint rate for the axis
-                // case "debug[2]": setpoint
-                // case "debug[3]": feedforward
-                // case "debug[4]": setpoint speed un-smoothed
-                // case "debug[5]": setpoint speed smoothed
-                case "debug[6]": // feedforward smoothing PT1K * 1000
-                    return `${(value / 1000).toFixed(3)}`;
-                case "debug[7]": // smoothed RxRateHz
-                    return `${value.toFixed(0)} Hz`;
-                default:
-                    return value.toFixed(0);
-            }
+    const entry = DEBUG_DECODE[debugModeName];
+    if (entry === undefined) {
+        return value.toFixed(0);
     }
-    return value.toFixed(0);
+    if (typeof entry === "function") {
+        return entry(value, ctx, fieldName);
+    }
+    const fn = entry[fieldName] ?? entry._default;
+    return fn ? fn(value, ctx) : value.toFixed(0);
 }
+
+// ---------------------------------------------------------------------------
+// Per-debug-mode value conversion (log/raw units ↔ chart/friendly units).
+// Same table shape as DEBUG_DECODE; each formatter is (toFriendly, value, ctx)
+// => number. Modes/fields not present pass the value through unchanged.
+// ---------------------------------------------------------------------------
+
+const cScale = (n) => (toFriendly, v) => (toFriendly ? v / n : v * n);
+const cInvScale = (n) => (toFriendly, v) => (toFriendly ? v * n : v / n);
+const cGyro = (toFriendly, v, ctx) =>
+    toFriendly ? ctx.gyroRawToDegreesPerSecond(v) : v / ctx.gyroRawToDegreesPerSecond(1);
+const cGyroGroup = (toFriendly, v, ctx, fieldName) => (fieldName === "debug[4]" ? v : cGyro(toFriendly, v, ctx));
+const cFftFreq = (toFriendly, v, ctx, fieldName) => {
+    const gyroField = semver.gte(ctx.apiVersion, API_VERSION_1_47) ? "debug[0]" : "debug[3]";
+    return fieldName === gyroField ? cGyro(toFriendly, v, ctx) : v;
+};
+const cScale100 = cScale(100);
+const cScale10 = cScale(10);
+
+const DEBUG_CONVERT = {
+    NONE: {
+        "debug[2]": cScale100,
+        "debug[3]": cScale100,
+    },
+    BATTERY: {
+        "debug[0]": null, // explicit passthrough (overrides _default)
+        _default: cScale10,
+    },
+    ACCELEROMETER: (toFriendly, v, ctx) => (toFriendly ? ctx.accRawToGs(v) : v / ctx.accRawToGs(1)),
+    MIXER: (toFriendly, v, ctx) => (toFriendly ? ctx.rcCommandRawToThrottle(v) : ctx.throttleToRcCommandRaw(v)),
+    ALTITUDE: {
+        "debug[1]": cScale100,
+        "debug[2]": cScale100,
+        "debug[3]": cScale100,
+    },
+    FFT: {
+        "debug[0]": cGyro,
+        "debug[1]": cGyro,
+        "debug[2]": cGyro,
+    },
+    FFT_FREQ: cFftFreq,
+    ITERM_RELAX: {
+        "debug[3]": cScale10,
+    },
+    RC_SMOOTHING: {
+        "debug[4]": cScale(1000),
+    },
+    RC_SMOOTHING_RATE: {
+        "debug[0]": cScale(1000),
+    },
+    DSHOT_RPM_TELEMETRY: (toFriendly, v, ctx) => (toFriendly ? (v * 200) / ctx.motorPoles : (v * ctx.motorPoles) / 200),
+    RPM_FILTER: cInvScale(60),
+    D_MAX: {
+        "debug[2]": cScale10,
+        "debug[3]": cScale10,
+    },
+    DYN_LPF: {
+        "debug[0]": cGyro,
+        "debug[3]": cGyro,
+    },
+    DYN_IDLE: {
+        "debug[3]": cInvScale(6),
+    },
+    AC_CORRECTION: cScale10,
+    AC_ERROR: cScale10,
+    RX_TIMING: {
+        "debug[0]": cScale100,
+        "debug[3]": cScale100,
+        "debug[1]": cScale10,
+    },
+    SCHEDULER_DETERMINISM: {
+        "debug[0]": cScale10,
+        "debug[2]": cScale10,
+        "debug[3]": cScale10,
+    },
+    TIMING_ACCURACY: {
+        "debug[2]": cScale10,
+    },
+    GPS_RESCUE_THROTTLE_PID: {
+        "debug[2]": cScale100,
+        "debug[3]": cScale100,
+    },
+    GPS_RESCUE_VELOCITY: {
+        "debug[0]": cScale100,
+        "debug[1]": cScale100,
+        "debug[2]": cScale100,
+        "debug[3]": cScale100,
+    },
+    GPS_RESCUE_HEADING: {
+        "debug[0]": cScale100,
+        "debug[1]": cScale10,
+        "debug[2]": cScale10,
+        "debug[3]": cScale10,
+        "debug[4]": cScale10,
+        "debug[6]": cScale100,
+    },
+    GPS_RESCUE_TRACKING: {
+        "debug[0]": cScale100,
+        "debug[1]": cScale100,
+        "debug[2]": cScale100,
+        "debug[3]": cScale100,
+    },
+    GPS_CONNECTION: {
+        "debug[3]": cInvScale(100),
+    },
+    GPS_DOP: {
+        "debug[0]": null, // passthrough
+        _default: cScale100,
+    },
+    ANGLE_MODE: {
+        "debug[0]": cScale10,
+        "debug[1]": cScale10,
+        "debug[2]": cScale10,
+        "debug[3]": cScale10,
+    },
+    OPTICALFLOW: {
+        "debug[1]": cScale(1000),
+        "debug[2]": cScale(1000),
+        "debug[3]": cScale(1000),
+        "debug[4]": cScale(1000),
+    },
+    AUTOPILOT_POSITION: {
+        "debug[2]": cScale10,
+        "debug[3]": cScale10,
+        "debug[4]": cScale10,
+        "debug[5]": cScale10,
+        "debug[6]": cScale10,
+        "debug[7]": cScale10,
+    },
+    TPA: {
+        "debug[1]": cScale10,
+        "debug[2]": cScale10,
+        "debug[4]": cScale10,
+    },
+    FEEDFORWARD: {
+        "debug[3]": cScale10,
+    },
+    FEEDFORWARD_LIMIT: {
+        "debug[6]": cScale(1000),
+    },
+};
+for (const m of [
+    "GYRO",
+    "GYRO_FILTERED",
+    "GYRO_SCALED",
+    "DUAL_GYRO",
+    "DUAL_GYRO_COMBINED",
+    "DUAL_GYRO_DIFF",
+    "DUAL_GYRO_RAW",
+    "MULTI_GYRO_DIFF",
+    "MULTI_GYRO_RAW",
+    "MULTI_GYRO_SCALED",
+    "NOTCH",
+    "GYRO_SAMPLE",
+]) {
+    DEBUG_CONVERT[m] = cGyroGroup;
+}
+// NONE/AIRMODE/BARO share one block (firmware groups them).
+DEBUG_CONVERT.AIRMODE = DEBUG_CONVERT.NONE;
+DEBUG_CONVERT.BARO = DEBUG_CONVERT.NONE;
 
 /**
  * Convert a debug field value between log/raw units and chart/friendly units
@@ -1522,414 +1471,14 @@ export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx)
  * @returns {number}
  */
 export function convertDebugFieldValue(debugModeName, fieldName, toFriendly, value, ctx) {
-    switch (debugModeName) {
-        case "NONE":
-        case "AIRMODE":
-        case "BARO":
-            switch (fieldName) {
-                case "debug[1]":
-                    return value; // hPa
-                case "debug[2]":
-                    return toFriendly ? value / 100 : value * 100; // °C`
-                case "debug[3]":
-                    return toFriendly ? value / 100 : value * 100; //m`
-                default:
-                    return value;
-            }
-        case "VELOCITY":
-        case "DFILTER":
-            return value;
-        case "CYCLETIME":
-            return value;
-        case "BATTERY":
-            switch (fieldName) {
-                case "debug[0]":
-                    return value;
-                default:
-                    return toFriendly ? value / 10 : value * 10; // " V";
-            }
-        case "ACCELEROMETER":
-            return toFriendly ? ctx.accRawToGs(value) : value / ctx.accRawToGs(1);
-        case "MIXER":
-            return toFriendly ? ctx.rcCommandRawToThrottle(value) : ctx.throttleToRcCommandRaw(value);
-        case "PIDLOOP":
-            return value;
-        case "RC_INTERPOLATION":
-            return value;
-        case "GYRO":
-        case "GYRO_FILTERED":
-        case "GYRO_SCALED":
-        case "DUAL_GYRO":
-        case "DUAL_GYRO_COMBINED":
-        case "DUAL_GYRO_DIFF":
-        case "DUAL_GYRO_RAW":
-        case "MULTI_GYRO_DIFF":
-        case "MULTI_GYRO_RAW":
-        case "MULTI_GYRO_SCALED":
-        case "NOTCH":
-        case "GYRO_SAMPLE":
-            if (fieldName === "debug[4]") {
-                return value; // Avg System Load %
-            }
-            return toFriendly ? ctx.gyroRawToDegreesPerSecond(value) : value / ctx.gyroRawToDegreesPerSecond(1); // °/s;
-        case "ANGLERATE":
-            return value; // °/s;
-        case "ESC_SENSOR":
-            return value;
-        case "SCHEDULER":
-            return value;
-        case "STACK":
-            return value;
-        case "ESC_SENSOR_RPM":
-            return value; // " rpm";
-        case "ESC_SENSOR_TMP":
-            return value; // " °C";
-        case "ALTITUDE":
-            switch (fieldName) {
-                case "debug[0]": // GPS Trust * 100
-                    return value;
-                case "debug[1]": // GPS Altitude cm
-                case "debug[2]": // OSD Altitude cm
-                case "debug[3]": // Control Altitude
-                    return toFriendly ? value / 100 : value * 100; //  m
-                default:
-                    return value;
-            }
-        case "FFT":
-            switch (fieldName) {
-                case "debug[0]": // gyro pre dyn notch [for gyro debug axis]
-                case "debug[1]": // gyro post dyn notch [for gyro debug axis]
-                case "debug[2]": // gyro pre dyn notch, downsampled for FFT [for gyro debug axis]
-                    return toFriendly ? ctx.gyroRawToDegreesPerSecond(value) : value / ctx.gyroRawToDegreesPerSecond(1); // °/s;
-                // debug 3 = not used
-                default:
-                    return value;
-            }
-        case "FFT_TIME":
-            return value;
-        case "FFT_FREQ":
-            if (semver.gte(ctx.apiVersion, API_VERSION_1_47)) {
-                switch (fieldName) {
-                    case "debug[0]": // gyro pre dyn notch [for gyro debug axis]
-                        return toFriendly
-                            ? ctx.gyroRawToDegreesPerSecond(value)
-                            : value / ctx.gyroRawToDegreesPerSecond(1); // °/s;
-                    default:
-                        return value;
-                }
-            } else {
-                switch (fieldName) {
-                    case "debug[3]": // gyro pre dyn notch [for gyro debug axis]
-                        return toFriendly
-                            ? ctx.gyroRawToDegreesPerSecond(value)
-                            : value / ctx.gyroRawToDegreesPerSecond(1); // °/s;
-                    default:
-                        return value;
-                }
-            }
-        case "RTH":
-            switch (fieldName) {
-                // temporarily, perhaps
-                //                        case 'debug[0]': // pitch angle +/-4000 means +/- 40 deg
-                //                            return (value / 100).toFixed(1) + " °";
-                default:
-                    return value;
-            }
-        case "ITERM_RELAX":
-            switch (fieldName) {
-                case "debug[0]": // roll setpoint high-pass filtered
-                    return value; // °/s
-                case "debug[1]": // roll I-term relax factor
-                    return value; // %
-                case "debug[3]": // roll absolute control axis error (pre-2026.6; unused/zero in firmware >= 2026.6)
-                    return toFriendly ? value / 10 : value * 10; // °
-                default:
-                    return value;
-            }
-        case "RC_SMOOTHING":
-            switch (fieldName) {
-                // case "debug[0]": // current Rx Rate Hz
-                // case "debug[1]": // smoothed but stepped Rx Rate Hz
-                // case "debug[2]": // setpoint cutoff Hz
-                // case "debug[3]": // throttle cutoff Hz
-                // case "debug[5]": // smoothed Rx Rate Hz, without steps
-                case "debug[4]": // Feedforward PT1K range 0-1000 show as 0.mmm
-                    return toFriendly ? value / 1000 : value * 1000;
-                // debug 6 is outlier count 0-3
-                // debug 7 is valid count 0-3
-                default:
-                    return value;
-            }
-        case "RC_SMOOTHING_RATE":
-            switch (fieldName) {
-                case "debug[0]": // current frame rate [us]
-                    return toFriendly ? value / 1000 : value * 1000; // ms
-                case "debug[2]": // smoothed RxRate [Hz]
-                case "debug[3]": // boolean indicating need to update smoothing
-                default:
-                    return value;
-            }
-        case "DSHOT_RPM_TELEMETRY": {
-            const pole = ctx.motorPoles;
-            return toFriendly ? (value * 200) / pole : (value * pole) / 200;
-        }
-        case "RPM_FILTER":
-            return toFriendly ? value * 60 : value / 60;
-        case "D_MAX":
-            switch (fieldName) {
-                case "debug[0]": // roll gyro factor
-                case "debug[1]": // roll setpoint Factor
-                    return value;
-                case "debug[2]": // roll actual D
-                case "debug[3]": // pitch actual D
-                    return toFriendly ? value / 10 : value * 10;
-                default:
-                    return value;
-            }
-        case "DYN_LPF":
-            switch (fieldName) {
-                case "debug[0]": // gyro scaled [for selected axis]
-                case "debug[3]": // pre-dyn notch gyro [for selected axis]
-                    return toFriendly ? ctx.gyroRawToDegreesPerSecond(value) : value / ctx.gyroRawToDegreesPerSecond(1); // °/s
-                default:
-                    return value;
-            }
-        case "DYN_IDLE":
-            switch (fieldName) {
-                case "debug[3]": // minRPS
-                    return toFriendly ? value * 6 : value / 6;
-                default:
-                    return value;
-            }
-        case "AC_CORRECTION":
-            return toFriendly ? value / 10 : value * 10; // °/s
-        case "AC_ERROR":
-            return toFriendly ? value / 10 : value * 10; // °
-        case "RX_TIMING":
-            switch (fieldName) {
-                case "debug[0]": // packet interval in hundredths of ms
-                case "debug[3]": // constrained packet interval in hundredths of ms
-                    return toFriendly ? value / 100 : value * 100; //ms
-                case "debug[1]": // Frame time stamp us/100
-                    return toFriendly ? value / 10 : value * 10; //ms
-                // debug 2 is isRateValid boolean
-                // debug 4 is current Rx Rate, Hz
-                // debug 5 is smoothed Rx Rate, Hz
-                // debug 6 is link quality
-                // debug 7 is isReceivingSignal boolean
-                default:
-                    return value;
-            }
-        case "GHST":
-            return value;
-        case "GHST_MSP":
-            switch (fieldName) {
-                // debug 0 is msp frame count
-                // debug 1 is msp frame count
-                // debug 2 and 3 not used
-                default:
-                    return value;
-            }
-        case "SCHEDULER_DETERMINISM":
-            switch (fieldName) {
-                case "debug[0]": // cycle time in us*10
-                case "debug[2]": // task delay time in us*10
-                case "debug[3]": // task delay time in us*10
-                    return toFriendly ? value / 10 : value * 10; // us
-                // debug 1 is task ID of late task
-                default:
-                    return value;
-            }
-        case "TIMING_ACCURACY":
-            switch (fieldName) {
-                case "debug[0]": // CPU Busy %
-                    return value; // %
-                case "debug[2]": // task delay time in us*10
-                    return toFriendly ? value / 10 : value * 10; // us
-                default:
-                    return value;
-            }
-        case "RX_EXPRESSLRS_SPI":
-            return value;
-        case "RX_EXPRESSLRS_PHASELOCK":
-            return value;
-        case "GPS_RESCUE_THROTTLE_PID":
-            switch (fieldName) {
-                case "debug[0]": // Throttle P added uS
-                case "debug[1]": // Throttle D added * uS
-                case "debug[4]": // Throttle I added uS
-                case "debug[6]": // Throttle D before lp smoothing uS
-                    return value; // ' uS';
-                case "debug[2]": // current altitude in m
-                case "debug[3]": // TARGET altitude in m
-                    return toFriendly ? value / 100 : value * 100; //  m
-                default:
-                    return value;
-            }
-        case "GPS_RESCUE_VELOCITY":
-            switch (fieldName) {
-                case "debug[0]": // Pitch P degrees * 100
-                case "debug[1]": // Pitch D degrees * 100
-                    return toFriendly ? value / 100 : value * 100; // °
-                case "debug[2]": // velocity to home cm/s
-                case "debug[3]": // velocity target cm/s
-                    return toFriendly ? value / 100 : value * 100; // m/s
-                default:
-                    return value;
-            }
-        case "GPS_RESCUE_HEADING":
-            switch (fieldName) {
-                case "debug[0]": // Ground speed cm/s
-                    return toFriendly ? value / 100 : value * 100; // m/s
-                case "debug[1]": // GPS Ground course degrees * 10
-                case "debug[2]": // Attitude in degrees * 10
-                case "debug[3]": // Angle to home in degrees * 10
-                case "debug[4]": // magYaw in degrees * 10
-                    return toFriendly ? value / 10 : value * 10; //°
-                case "debug[6]": // Roll Added deg * 100
-                    return toFriendly ? value / 100 : value * 100; // °
-                case "debug[5]": // Roll Mix Att
-                case "debug[7]": // Rescue Yaw Rate
-                default:
-                    return value;
-            }
-        case "GPS_RESCUE_TRACKING":
-            switch (fieldName) {
-                case "debug[0]": // velocity to home cm/s
-                case "debug[1]": // velocity target cm/s
-                    return toFriendly ? value / 100 : value * 100; // m/s
-                case "debug[2]": // altitude cm
-                case "debug[3]": // altitude target cm
-                    return toFriendly ? value / 100 : value * 100;
-                default:
-                    return value;
-            }
-        case "GPS_CONNECTION":
-            switch (fieldName) {
-                case "debug[0]": // Flight model
-                case "debug[1]": // GPS Nav packet interval
-                case "debug[2]": // FC Nav data time
-                    return value;
-                case "debug[3]": // Baud Rate / Nav interval
-                    return toFriendly ? value * 100 : value / 100;
-                case "debug[4]": // main state * 100 + subState
-                case "debug[5]": // executeTimeUs
-                case "debug[6]": // ack state
-                case "debug[7]": // serial Rx buffer
-                default:
-                    return value;
-            }
-        case "ATTITUDE":
-            switch (fieldName) {
-                case "debug[0]": // Roll Angle
-                case "debug[1]": // Pitch Angle
-                case "debug[2]": // Ground speed factor
-                case "debug[3]": // Heading error
-                case "debug[4]": // Velocity to home
-                case "debug[5]": // Ground speed error ratio
-                case "debug[6]": // Pitch forward angle
-                case "debug[7]": // dcmKp gain
-                default:
-                    return value;
-            }
-        case "VTX_MSP":
-            switch (fieldName) {
-                case "debug[0]": // packetCounter
-                case "debug[1]": // isCrsfPortConfig
-                case "debug[2]": // isLowPowerDisarmed
-                case "debug[3]": // mspTelemetryDescriptor
-                default:
-                    return value;
-            }
-        case "GPS_DOP":
-            switch (fieldName) {
-                case "debug[0]": // Number of Satellites
-                    return value;
-                case "debug[1]": // pDOP (positional - 3D)
-                case "debug[2]": // hDOP (horizontal - 2D)
-                case "debug[3]": // vDOP (vertical - 1D)
-                default:
-                    return toFriendly ? value / 100 : value * 100;
-            }
-        case "FAILSAFE":
-            return value;
-        case "GYRO_CALIBRATION":
-            return value;
-        case "ANGLE_MODE":
-            switch (fieldName) {
-                case "debug[0]": // target angle
-                case "debug[1]": // angle error
-                case "debug[2]": // angle feedforward
-                case "debug[3]": // angle achieved
-                    return toFriendly ? value / 10 : value * 10; // °
-                default:
-                    return value;
-            }
-        case "ANGLE_TARGET":
-            return value;
-        case "CURRENT_ANGLE":
-            return value;
-        case "DSHOT_TELEMETRY_COUNTS":
-            return value;
-        case "OPTICALFLOW":
-            switch (fieldName) {
-                case "debug[1]":
-                case "debug[2]":
-                case "debug[3]":
-                case "debug[4]":
-                    return toFriendly ? value / 1000 : value * 1000;
-                default:
-                    return value;
-            }
-        case "AUTOPILOT_POSITION":
-            switch (fieldName) {
-                case "debug[2]":
-                case "debug[3]":
-                case "debug[4]":
-                case "debug[5]":
-                case "debug[6]":
-                case "debug[7]":
-                    return toFriendly ? value / 10 : value * 10;
-                default:
-                    return value;
-            }
-        case "TPA":
-            switch (fieldName) {
-                case "debug[1]":
-                case "debug[2]":
-                case "debug[4]":
-                    return toFriendly ? value / 10 : value * 10;
-                default:
-                    return value;
-            }
-        case "FEEDFORWARD":
-            switch (fieldName) {
-                // case "debug[0]": // setpoint
-                // case "debug[1]": // setpoint speed
-                // case "debug[2]": //feedforward boost
-                case "debug[3]": // rcCommand Delta integer * 10
-                    return toFriendly ? value / 10 : value * 10;
-                // case "debug[4]": // jitter attenuator percent
-                // case "debug[5]": // boolean indicating packet duplicate
-                // case "debug[6]": // yaw feedforward
-                // case "debug[7]": // yaw feedforward hold element
-                default:
-                    return value;
-            }
-        case "FEEDFORWARD_LIMIT":
-            switch (fieldName) {
-                // case "debug[0]": // jitter attenuator percent
-                // case "debug[1]": // max setpoint rate for the axis
-                // case "debug[2]": // setpoint
-                // case "debug[3]": // feedforward
-                // case "debug[4]": // setpoint speed un-smoothed
-                // case "debug[5]": // setpoint speed smoothed
-                case "debug[6]": //feedforward smoothing PT1K * 1000 show as 0.nnn
-                    return toFriendly ? value / 1000 : value * 1000;
-                // case "debug[7]": // smoothed RxRateHz
-                default:
-                    return value;
-            }
+    const entry = DEBUG_CONVERT[debugModeName];
+    if (entry === undefined) {
+        return value;
     }
-    return value;
+    if (typeof entry === "function") {
+        return entry(toFriendly, value, ctx, fieldName);
+    }
+    // `null` field entries are explicit passthroughs that override `_default`.
+    const fn = fieldName in entry ? entry[fieldName] : entry._default;
+    return fn ? fn(toFriendly, value, ctx) : value;
 }

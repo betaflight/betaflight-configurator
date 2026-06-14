@@ -210,6 +210,16 @@ describe("debugModes helper", () => {
         it("falls back to a plain integer for unknown modes/fields", () => {
             expect(decodeDebugFieldToFriendly("NOT_A_MODE", "debug[0]", 42, stubCtx())).toBe("42");
         });
+
+        it("treats AIRMODE/BARO as aliases of NONE", () => {
+            expect(decodeDebugFieldToFriendly("AIRMODE", "debug[1]", 1013, stubCtx())).toBe("1013 hPa");
+            expect(decodeDebugFieldToFriendly("BARO", "debug[2]", 2500, stubCtx())).toBe("25.00 °C");
+        });
+
+        it("applies a per-mode default different from plain integer (GPS_DOP)", () => {
+            expect(decodeDebugFieldToFriendly("GPS_DOP", "debug[0]", 12, stubCtx())).toBe("12");
+            expect(decodeDebugFieldToFriendly("GPS_DOP", "debug[1]", 150, stubCtx())).toBe("1.50");
+        });
     });
 
     describe("convertDebugFieldValue", () => {
@@ -226,6 +236,17 @@ describe("debugModes helper", () => {
 
         it("passes unscaled fields through unchanged", () => {
             expect(convertDebugFieldValue("PIDLOOP", "debug[0]", true, 999, stubCtx())).toBe(999);
+        });
+
+        it("honours a null field entry as passthrough overriding _default (BATTERY debug[0])", () => {
+            expect(convertDebugFieldValue("BATTERY", "debug[0]", true, 250, stubCtx())).toBe(250);
+            // a non-listed field still hits the scaling _default
+            expect(convertDebugFieldValue("BATTERY", "debug[1]", true, 250, stubCtx())).toBe(25);
+        });
+
+        it("applies a per-mode default scaling (GPS_DOP)", () => {
+            expect(convertDebugFieldValue("GPS_DOP", "debug[0]", true, 12, stubCtx())).toBe(12);
+            expect(convertDebugFieldValue("GPS_DOP", "debug[1]", true, 150, stubCtx())).toBe(1.5);
         });
     });
 });
