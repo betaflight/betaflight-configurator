@@ -38,7 +38,7 @@ jobs:
       - name: Select Xcode 26 (iOS 26 SDK)
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
-          xcode-version: latest-stable
+          xcode-version: '26'
 
       - name: Setup Node
         uses: actions/setup-node@v5
@@ -85,16 +85,22 @@ jobs:
       - name: Locate IPA
         id: ipa
         run: |
-          IPA=$(ls src-tauri/gen/apple/build/arm64/*.ipa | head -1)
-          echo "path=$IPA" >> "$GITHUB_OUTPUT"
+          shopt -s nullglob
+          ipas=(src-tauri/gen/apple/build/arm64/*.ipa)
+          if [ ${#ipas[@]} -ne 1 ]; then
+            echo "Expected exactly one IPA, found ${#ipas[@]}: ${ipas[*]}" >&2
+            exit 1
+          fi
+          echo "path=${ipas[0]}" >> "$GITHUB_OUTPUT"
 
       - name: Upload to TestFlight
         env:
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          IPA_PATH: ${{ steps.ipa.outputs.path }}
         run: |
           xcrun altool --upload-app --type ios \
-            --file "${{ steps.ipa.outputs.path }}" \
+            --file "$IPA_PATH" \
             --apiKey "$APPLE_API_KEY" --apiIssuer "$APPLE_API_ISSUER"
 
       - name: Upload IPA artifact
