@@ -32,13 +32,20 @@
         </template>
 
         <template #body>
-            <div class="flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
-                <!-- Graph panels -->
+            <div ref="graphListEl" class="flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
+                <!-- Graph panels (drag the handle to reorder) -->
                 <UiBox
                     v-for="(graph, gIdx) in localGraphs"
-                    :key="gIdx"
+                    :key="graph._uid"
                     :title="`Graph ${gIdx + 1}${graph.label ? ' — ' + graph.label : ''}`"
                 >
+                    <template #title>
+                        <UIcon
+                            name="i-lucide-grip-vertical"
+                            class="drag-handle size-3.5 cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100"
+                            title="Drag to reorder graph"
+                        />
+                    </template>
                     <div class="flex flex-col gap-1">
                         <!-- Graph settings row -->
                         <div class="flex items-center gap-3 mb-1 text-xs">
@@ -245,7 +252,8 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onBeforeUnmount } from "vue";
+import Sortable from "sortablejs";
 import UiBox from "./UiBox.vue";
 import { GraphConfig } from "../graph_config.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
@@ -266,6 +274,46 @@ const localGraphs = ref([]);
 const prevConfig = ref(null);
 const offeredFields = ref([]);
 const exampleGraphs = ref([]);
+
+// --- Drag-and-drop reordering of graph panels (Sortable.js) ---
+// Stable per-panel id so Vue's keyed reconciliation cooperates with Sortable's
+// DOM move instead of corrupting the list (index keys would break after a drag).
+let uidCounter = 0;
+function nextUid() {
+    uidCounter += 1;
+    return uidCounter;
+}
+
+const graphListEl = ref(null);
+let sortable = null;
+
+watch(graphListEl, (el) => {
+    if (sortable) {
+        sortable.destroy();
+        sortable = null;
+    }
+    if (!el) {
+        return;
+    }
+    sortable = Sortable.create(el, {
+        handle: ".drag-handle",
+        ghostClass: "opacity-30",
+        animation: 150,
+        onEnd({ oldIndex, newIndex }) {
+            if (oldIndex === newIndex) {
+                return;
+            }
+            const moved = localGraphs.value.splice(oldIndex, 1)[0];
+            localGraphs.value.splice(newIndex, 0, moved);
+            emitUpdate();
+        },
+    });
+});
+
+onBeforeUnmount(() => {
+    sortable?.destroy();
+    sortable = null;
+});
 
 const heightOptions = [
     { label: "1", value: 1 },
@@ -550,6 +598,7 @@ function addExampleGraph(example) {
         }
     }
     localGraphs.value.push({
+        _uid: nextUid(),
         label: example.label || "",
         height: example.height || 1,
         fields,
@@ -588,7 +637,7 @@ function cloneGraphToLocal(g) {
             fields.push(makeField(ef.name, ef, c));
         }
     }
-    return { label: g.label || "", height: g.height || 1, fields };
+    return { _uid: nextUid(), label: g.label || "", height: g.height || 1, fields };
 }
 
 // Initialize when dialog opens
