@@ -1372,7 +1372,7 @@ export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx)
                 default:
                     return value.toFixed(0);
             }
-        case "GPS__CONNECTION":
+        case "GPS_CONNECTION":
             switch (fieldName) {
                 case "debug[0]": // Flight model
                 case "debug[1]": // GPS Nav packet interval
@@ -1804,7 +1804,7 @@ export function convertDebugFieldValue(debugModeName, fieldName, toFriendly, val
                 default:
                     return value;
             }
-        case "GPS__CONNECTION":
+        case "GPS_CONNECTION":
             switch (fieldName) {
                 case "debug[0]": // Flight model
                 case "debug[1]": // GPS Nav packet interval
