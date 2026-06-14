@@ -20,6 +20,10 @@ name: Tauri iOS release
 
 on:
   workflow_dispatch:
+  # TEMPORARY: build from the branch (workflow_dispatch only works from the
+  # default branch). Remove before merge.
+  push:
+    branches: [feature/tauri-ios]
 
 jobs:
   ios:
