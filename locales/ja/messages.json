@@ -2736,12 +2736,6 @@
     "adjustmentsColumnViaChannel": {
         "message": "チャンネル"
     },
-    "adjustmentsColumnAdjustmentCenter": {
-        "message": "w\/ 中央 (値)"
-    },
-    "adjustmentsColumnAdjustmentScale": {
-        "message": "範囲｜スケール (値｜%)"
-    },
     "adjustmentsCenterHelp": {
         "message": "調整機能で使用される中央値 [基準値] を設定します。<br \/><br \/><strong>スライダー調整:<\/strong><br \/>スライダー調整では、Adjustment Center を 0 に設定してください。現在のスライダー位置が上下の調整に使用されます。<br \/><br \/><strong>選択式調整: <\/strong><br \/>Adjustment Center を 0、または特定のマイクロ秒 (uS) 値に設定します。RC調整開始時に、1500uSからのスイッチ基準位置をオフセットしたい場合に使用します。<br \/><br \/><strong>ステップ調整: <\/strong><br \/>Adjustment Center を 0 に設定すると、調整対象の現在値が使用されます。<br \/><br \/><strong>絶対値調整: <\/strong><br \/>絶対値調整方式を使用するには、Adjustment Center と Adjustment Scale の両方を設定し、目的の値と範囲を指定する必要があります。範囲は【Center ± Scale】で計算されます。例えば、Adjustment Center を 50、Adjustment Scale を 25 に設定すると、範囲は 25〜75 となり、中央位置 (スイッチまたはPOT) は 50 に対応します。<br \/><br \/>詳細は <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのページ<\/a> を参照してください。",
         "description": "Tooltip help text for the Adjustment Center column"

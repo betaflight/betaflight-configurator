@@ -206,7 +206,7 @@
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
     "cliOnlyMode": {
-        "message": "启用仅 CLI 模式",
+        "message": "启用仅命令行模式",
         "description": "Text for the option to enable or disable CLI only mode"
     },
     "automaticDevOptions": {
@@ -240,6 +240,10 @@
     },
     "language_default": {
         "message": "系统默认"
+    },
+    "language_ka": {
+        "message": "ქართული",
+        "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
         "message": "未发现<br>闪存芯片",
@@ -589,7 +593,7 @@
         "message": "LED 灯带"
     },
     "tabCLI": {
-        "message": "CLI"
+        "message": "命令行"
     },
     "tabLogging": {
         "message": "线传日志"
@@ -756,13 +760,13 @@
         "message": "<span class=\"message-negative\">10秒<\/span>内未收到任何配置信息，飞控通信 <span class=\"message-negative\"> 失败<\/span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "<span class=\"message-negative\">不支持<\/span>此版本的固件。请升级固件，使其能够支持<strong>$1<\/strong>或更高版本的 api。刷写前请使用 CLI 备份。CLI 备份\/恢复的步骤在文档中有说明。<br \/>如果您不准备升级固件，也可以下载使用旧版本的应用程序。"
+        "message": "<span class=\"message-negative\">不支持<\/span>此版本的固件。请升级固件，使其能够支持<strong>$1<\/strong>或更高版本的 api。刷写前请使用命令行备份。命令行备份\/恢复的步骤在文档中有说明。<br \/>如果您不准备升级固件，也可以下载使用旧版本的应用程序。"
     },
     "firmwareTypeNotSupported": {
-        "message": "<span class=\"message-negative\">不支持<\/span>非 Betaflight 固件，只能使用 CLI 模式"
+        "message": "<span class=\"message-negative\">不支持<\/span>非 Betaflight 固件，只能使用命令行模式。"
     },
     "firmwareUpgradeRequired": {
-        "message": "当前版本的地面站可能不支持此设备上的固件版本。您可以使用旧版本地面站，例如 <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a> 用于飞控固件版本低至4.1或 <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> 用于更老的飞控固件版本。<br><br>地面站将尝试访问设备上的 CLI ——如果成功， 您可以通过在 CLI 中发送 <code>version<\/code> 命令查看当前固件版本。<br><br>或者，您可以升级飞控到较新的固件版本。刷写固件前使用 CLI 备份设置，备份流程记载于 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">文档<\/a>但要注意，旧版本的设置备份在应用到较新版本时可能无法正确恢复。模式、OSD、rates 和端口应该会正确恢复，但要注意PID和失控保护设置。"
+        "message": "当前版本的地面站可能不支持此设备上的固件版本。您可以使用旧版本地面站，例如 <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a> 用于飞控固件版本低至4.1或 <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> 用于更老的飞控固件版本。<br><br>地面站将尝试访问设备上的命令行——如果成功， 您可以通过在命令行中发送 <code>version<\/code> 命令查看当前固件版本。<br><br>或者，您可以升级飞控到较新的固件版本。刷写固件前使用 CLI 备份设置，备份流程记载于 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">文档<\/a>但要注意，旧版本的设置备份在应用到较新版本时可能无法正确恢复。模式、OSD、rates 和端口应该会正确恢复，但要注意PID和失控保护设置。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "有适用于此飞控板的特定预设值。通常来说，只有在设定了这些定制的预设值后，飞控板才能正常工作。<br \/>您是否要为此飞控板应用这些预设值？"
@@ -915,7 +919,7 @@
         "description": "CPU load text shown in the status bar"
     },
     "statusbar_connection_time": {
-        "message": "连接：",
+        "message": "已连接时间：",
         "description": "Connection time text shown in the status bar"
     },
     "dfu_connect_message": {
@@ -1064,7 +1068,7 @@
         "message": "实验性备份和恢复"
     },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>备份<\/strong>您的配置时遇到问题，<strong>CLI <\/strong> 设置<span class=\"message-negative\">没有<\/span>被包含 - 在 CLI 使用“diff all” 命令来处理此问题。"
+        "message": "<strong>备份<\/strong>您的配置时遇到问题，<strong>命令行<\/strong>设置<span class=\"message-negative\">没有<\/span>被包含 - 在命令行使用「diff all」命令来处理此问题。"
     },
     "initialSetupRebootBootloaderText": {
         "message": "重启进入 <strong>bootloader\/DFU<\/strong> 模式。"
@@ -1298,7 +1302,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP 链接已激活，可能已与 Betaflight 应用连接",
+        "message": "MSP 连接已激活，可能已与 Betaflight 应用连接",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -1579,7 +1583,7 @@
         "message": "比赛应答机"
     },
     "featureTRANSPONDERTip": {
-        "message": "启用应答机固件支持。 通过 CLI 配置服务提供商(<code>设置 transponder_provider = [ILAP|ARCITIMER|ERLT<\/code>)和数据(<code>设置 transponder_data = &lt;bytes&gt;<\/code>)，然后 <code>保存<\/code>。运行<code>get transponder<\/code>以检查当前值。"
+        "message": "启用应答机固件支持。 通过命令行配置服务提供商(<code>设置 transponder_provider = [ILAP|ARCITIMER|ERLT<\/code>)和数据(<code>设置 transponder_data = &lt;bytes&gt;<\/code>)，然后 <code>保存<\/code>。运行<code>get transponder<\/code>以检查当前值。"
     },
     "featureAIRMODE": {
         "message": "永久启用 Airmode"
@@ -2135,7 +2139,7 @@
         "message": "Benewake 雷达"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">禁止切换 PID 控制器 - 您可以通过 CLI 设置是否启用。<\/span>当前固件 API 版本为 <span class=\"message-negative\">$1<\/span>，而此功能需要版本 <span class=\"message-positive\">$2<\/span>。"
+        "message": "<span class=\"message-negative\">禁止切换 PID 控制器 - 您可以通过命令行设置是否启用。<\/span>当前固件 API 版本为 <span class=\"message-negative\">$1<\/span>，而此功能需要版本 <span class=\"message-positive\">$2<\/span>。"
     },
     "pidTuningSubTabPid": {
         "message": "PID 配置文件设置"
@@ -2252,7 +2256,7 @@
         "description": "Setpoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "调整目标值自动平滑因子的计算，10 是默认的延迟比因子。增加该数将加大对 RC 输入信号的平滑度，但同时会增加延迟。对于 RC 链接并不可靠的情况和电影式飞行来说这可能非常有用。<br>当数字接近 50 时请小心，输入延迟将会变得非常明显。<br>当遥控器与接收机都上电时，可以使用 CLI 命令 rc_smoothing_info 查看自动计算的 RC 平滑的截止频率。",
+        "message": "调整目标值自动平滑因子的计算，10 是默认的延迟比因子。增加该数将加大对 RC 输入信号的平滑度，但同时会增加延迟。对于 RC 链接并不可靠的情况和电影式飞行来说这可能非常有用。<br>当数字接近 50 时请小心，输入延迟将会变得非常明显。<br>当遥控器与接收机都上电时，可以使用命令行命令 rc_smoothing_info 查看自动计算的 RC 平滑的截止频率。",
         "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
@@ -2264,7 +2268,7 @@
         "description": "Throttle Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorThrottleHelp": {
-        "message": "调整油门自动平滑因子的计算，10 是默认的延迟比因子。增加该数将加大对油门输入信号的平滑度，但同时会增加延迟。对于 RC 链接并不可靠的情况和电影式飞行来说这可能非常有用。<br>当数字接近 50 时请小心，因为输入延迟将会变得非常明显。<br>当遥控器与接收机都上电时，可以使用 CLI 命令 rc_smoothing_info 查看自动计算的 RC 平滑的截止频率。",
+        "message": "调整油门自动平滑因子的计算，10 是默认的延迟比因子。增加该数将加大对油门输入信号的平滑度，但同时会增加延迟。对于 RC 链接并不可靠的情况和电影式飞行来说这可能非常有用。<br>当数字接近 50 时请小心，因为输入延迟将会变得非常明显。<br>当遥控器与接收机都上电时，可以使用命令行命令 rc_smoothing_info 查看自动计算的 RC 平滑的截止频率。",
         "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
@@ -2591,6 +2595,12 @@
     },
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">务必确保飞行器的失控保护正常工作！<\/a><\/strong><\/b>这需要开启专家模式后，在「失控保护」选项页设置。<br> &#8226; <b>请使用最新的发射器固件!<\/b><br> &#8226; 如果您使用 OpenTx 或 EdgeTx，在遥控器中<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">关闭硬件 ADC 滤波器<\/a><\/strong>。<br>基础设置：正确设置「接收机」选项。在您的遥控器中选择正确的“通道映射”。 检查横滚、俯仰以及其他的条形图都能正确地对应移动。调节遥控的通道端点或范围值为~1000 到 ~2000，同时将中点设置为 1500。更多相关信息，请阅读<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">相关文档<\/a><\/strong>。"
+    },
+    "receiverFailsafeActiveTitle": {
+        "message": "「失控保护」激活"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "飞控处于失控保护状态。如下显示的通道值是失控保护输出，而不是您接收机发送的实时值。 检查您的接收机链接状态和失控保护设置。"
     },
     "receiverThrottleMid": {
         "message": "油门中点"
@@ -2981,11 +2991,23 @@
     "adjustmentsColumnViaChannel": {
         "message": "「与」通道"
     },
+    "adjustmentsColumnMode": {
+        "message": "模式"
+    },
+    "adjustmentsModeStep": {
+        "message": "步进"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "绝对值"
+    },
+    "adjustmentsModeSelection": {
+        "message": "选择"
+    },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "「与」中心（数值）"
+        "message": "中心（值）"
     },
     "adjustmentsColumnAdjustmentScale": {
-        "message": "「与」范围或比率（数值或百分比）"
+        "message": "比例（值|%）"
     },
     "adjustmentsCenterHelp": {
         "message": "设置「调整」功能使用的中点或参考值。<br \/><br \/><strong>滑块调整:<\/strong><br \/>对于滑块调整, 「调整中心」将被设置为0。 当前滑块位置将用于向上\/向下调整。<br \/><br \/><strong>选区调整：<\/strong><br \/>设置「调整中心」为0，或者如果您想要在启动 RC 调整时从 1500uS 偏移切换的参考点，可将其设定为一个特定的微秒 (uS)值。<br \/><br \/><strong>步进调整：<\/strong><br \/>将调整中心设置为 0，以便使用被调整项目的当前值。<br \/><br \/><strong>绝对调整：<\/strong><br \/>要使用绝对调整，您必须同时设置「调整中心」和「比率」，以指定所需的值和范围。 范围计算为：中心 ± 比率。 例如，将「调整中心」设定为50，「调整比率」设定为25在中心位置（开关或POT）映射到50时会得到25至75的范围。<br \/><br \/>访问<a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">本页<\/a>获取更多信息。",
@@ -3132,7 +3154,7 @@
         "message": "舵机功能支持要求固件版本&gt;大于等于1.10.0 且飞控支持。"
     },
     "servosChangeDirection": {
-        "message": "遥控器设置通道反向以匹配"
+        "message": "遥控器设置通道反向以匹配方向"
     },
     "servosName": {
         "message": "名称"
@@ -3264,7 +3286,7 @@
         "message": "信号强度"
     },
     "gpsSignalLost": {
-        "message": "仅在确认与 GPS 模块建立连接时，GPS 图标才会亮起。<br \/><br \/>最初为红色，当获得 3D 定位时会变为黄色。<br \/><br \/>如果 GPS 图标未亮起，请检查接线和配置，并确认 GPS 模块是否获得供电。<br \/><br \/>CLI 的“status”命令可提供 GPS 连接状态的更多信息。"
+        "message": "仅在确认与 GPS 模块建立连接时，GPS 图标才会亮起。<br \/><br \/>最初为红色，当获得 3D 定位时会变为黄色。<br \/><br \/>如果 GPS 图标未亮起，请检查接线和配置，并确认 GPS 模块是否获得供电。<br \/><br \/>命令行的“status”命令可提供 GPS 连接状态的更多信息。"
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
@@ -3664,7 +3686,7 @@
         "message": "<strong>安全提示<\/strong><br \/><strong class=\"message-negative\">请拆除所有螺旋桨以免受伤！<\/strong><br \/>电机<strong>将会转动<\/strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>信息提示<\/strong><br \/> 电机将开始一个接一个的转动，并且可以选择让哪个电机转动。确保已接入电池，并选择了正确的电调协议。这个工具只能对当前已激活的电机进行排序。更多复杂的重新映射工作请在 CLI 中使用 Resource 命令。可参考<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\"> Wiki 页<\/a> 。"
+        "message": "<strong>信息提示<\/strong><br \/> 电机将开始一个接一个的转动，并且可以选择让哪个电机转动。确保已接入电池，并选择了正确的电调协议。这个工具只能对当前已激活的电机进行排序。更多复杂的重新映射工作请在命令行中使用 Resource 命令。可参考<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\"> Wiki 页<\/a> 。"
     },
     "motorsRemapDialogSave": {
         "message": "保存"
@@ -3739,7 +3761,7 @@
         "message": "该功能只适用于 DSHOT 电调。<br \/>验证您的电调（电子调速器）是否支持 DSHOT 协议，并在「$t(tabMotorTesting.message)」选项页内更改。"
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "电机数为 0。<br \/>在「 $t(tabMotorTesting.message) 」选项页核实当前混控器，或通过 CLI 设置一个自定义混控器。参见此 <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 页面<\/a>。"
+        "message": "电机数为 0。<br \/>在「 $t(tabMotorTesting.message) 」选项页核实当前混控器，或通过命令行设置一个自定义混控器。参见此 <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 页面<\/a>。"
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "更新固件。<br \/> 请确保您正在使用最新的固件：Betaflight 4.3或更高版本。"
@@ -3762,8 +3784,14 @@
     "sensorsRefresh": {
         "message": "刷新："
     },
+    "sensorsGlobalRefresh": {
+        "message": "刷新全部："
+    },
     "sensorsScale": {
         "message": "比例："
+    },
+    "sensorsScaleAuto": {
+        "message": "自动"
     },
     "sensorsGyroSelect": {
         "message": "陀螺仪"
@@ -3805,7 +3833,7 @@
         "message": "调试"
     },
     "cliInfo": {
-        "message": "<strong>注意：<\/strong>退出 CLI 页面或者点击断开连接将<strong>自动<\/strong>向飞控发送“<strong>退出<\/strong>”指令。在最新的固件中这将使飞控<strong>重启<\/strong>并且未保存的设置将会<strong>丢失<\/strong>。<p><strong><span class=\"message-negative\">警告：<\/span><\/strong>CLI中的某些命令可能导致电机输出引脚发出随机指令。如果连接电池，这有可能导致电机旋转。因此，强烈建议<strong>在 CLI 中输入命令之前确保未连接电池<\/strong>。"
+        "message": "<strong>注意：<\/strong>退出命令行页面或者点击断开连接将<strong>自动<\/strong>向飞控发送“<strong>退出<\/strong>”指令。在最新的固件中这将使飞控<strong>重启<\/strong>并且未保存的设置将会<strong>丢失<\/strong>。<p><strong><span class=\"message-negative\">警告：<\/span><\/strong>命令行中的某些命令可能导致电机输出引脚发出随机指令。如果连接电池，这有可能导致电机旋转。因此，强烈建议<strong>在命令行中输入命令之前确保未连接电池<\/strong>。"
     },
     "cliInputPlaceholder": {
         "message": "在这里输入您的命令。按 Tab 可以进行自动填充。"
@@ -3817,7 +3845,7 @@
         "message": "检测到命令行模式"
     },
     "cliDevEnter": {
-        "message": "检测到仅 CLI 开发人员模式"
+        "message": "检测到仅命令行开发人员模式"
     },
     "cliReboot": {
         "message": "检测到命令行重启"
@@ -4327,6 +4355,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "备份已取消，刷写中止"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "备份失败：从设备收到了无效数据（非命令行模式），已放弃刷写"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (旧格式)",
@@ -5563,13 +5594,13 @@
         "message": "警告单芯电压"
     },
     "powerBatteryMinimumHelp": {
-        "message": "被认为是关键低电压的值，将触发相应的警告。在OSD上显示 “LAND NOW” 警告，并在连接蜂鸣器的情况下发出声音警报。同时有助于电池单元数量的计算。"
+        "message": "判断严重低电压的值，将触发相应的警告。在OSD上显示 “LAND NOW” 警告，并在连接蜂鸣器的情况下发出声音警报。同时影响电池串数的计算。"
     },
     "powerBatteryMaximumHelp": {
         "message": "单个电池满电时的电压值，用于辅助计算电池单元数量。"
     },
     "powerBatteryWarningHelp": {
-        "message": "被认定为低电压的值，达到此电压将触发相应的警告。OSD 将显示 “LOW BATTERY” 警告。"
+        "message": "判断低电压的值，达到此电压将触发相应的警告。OSD 将显示 “LOW BATTERY” 警告。"
     },
     "powerCalibrationManagerButton": {
         "message": "校准"
@@ -6277,7 +6308,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "「配置」选项页中设置的飞行器名称。<\/br>也可使用 CLI 变量 “craft_name” 来设置。"
+        "message": "「配置」选项页中设置的飞行器名称。<\/br>也可使用命令行变量 “craft_name” 来设置。"
     },
     "osdTextElementAltitude": {
         "message": "海拔高度",
@@ -6414,14 +6445,14 @@
         "message": "调试 4-7 的调试变量"
     },
     "osdTextElementPIDRoll": {
-        "message": "PID roll",
+        "message": "横滚 PID",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRoll": {
         "message": "横滚 PID 增益"
     },
     "osdTextElementPIDPitch": {
-        "message": "PID pitch",
+        "message": "俯仰 PID",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDPitch": {
@@ -6546,7 +6577,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementWarnings": {
-        "message": "警报 (比如低电压)，警告 (不能开锁原因，电池电压极低) 和模拟蜂鸣器(4个闪烁星号)。"
+        "message": "警报（比如低电压），警告（不能解锁原因，电池电压极低）和模拟蜂鸣器（4个闪烁的星号）。"
     },
     "osdTextElementEscTemperature": {
         "message": "电调温度",
@@ -6684,14 +6715,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "也可以通过 \"display_name\" CLI 命令设置。"
+        "message": "也可以通过 \"display_name\"命令行命令设置。"
     },
     "osdTextElementPilotName": {
         "message": "飞行员名称",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPilotName": {
-        "message": "「配置」选项页中设置的飞行员名称。<\/br>也可使用 CLI 变量 “pilot_name” 来设置。"
+        "message": "「配置」选项页中设置的飞行员名称。<\/br>也可使用命令行变量 “pilot_name” 来设置。"
     },
     "osdTextElementEscRpmFreq": {
         "message": "电调转速频率",
@@ -6719,21 +6750,21 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOsdProfileName": {
-        "message": "在 CLI 中设置的 \"osd_profile_1_name\", \"osd_profile_2_name\" 和 \"osd_profile_3_name\" 所对应的 OSD 配置文件名称"
+        "message": "在命令行中设置的 \"osd_profile_1_name\", \"osd_profile_2_name\" 和 \"osd_profile_3_name\" 所对应的 OSD 配置文件名称"
     },
     "osdTextElementRcChannels": {
         "message": "RC 通道",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRcChannels": {
-        "message": "最多显示4个通道的值。通道须由 CLI 变量 ‘osd_rcchannels’ 来指定"
+        "message": "最多显示4个通道的值。通道须由命令行变量 ‘osd_rcchannels’ 来指定"
     },
     "osdTextElementCameraFrame": {
         "message": "相机取景框",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
-        "message": "添加一个可调整的虚拟取景框，用于表示飞行员的高清摄像机的视野范围。<br \/><br \/>您可以在CLI中通过 'osd_camera_frame_width' 和 'osd_camera_frame_height' 来调整其宽度和高度"
+        "message": "添加一个可调整的虚拟取景框，用于表示飞行员的高清摄像机的视野范围。<br \/><br \/>您可以在命令行中通过 'osd_camera_frame_width' 和 'osd_camera_frame_height' 来调整其宽度和高度"
     },
     "osdTextElementEfficiency": {
         "message": "电池效率",
@@ -6971,7 +7002,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinRssiDbm": {
-        "message": "最小 RSSI 分贝值"
+        "message": "最小 RSSI dBm 值"
     },
     "osdTextStatMinRSNR": {
         "message": "最小 RSNR 值",
@@ -7203,11 +7234,11 @@
         "message": "当连接质量低于报警设置时发出警告"
     },
     "osdWarningTextRssiDbm": {
-        "message": "RSSI 分贝",
+        "message": "RSSI dBm",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningRssiDbm": {
-        "message": "当 RSSI 分贝低于报警设置时发出警告"
+        "message": "当 RSSI dBm 低于报警设置时发出警告"
     },
     "osdWarningTextOverCap": {
         "message": "过放的电池容量",
@@ -7926,13 +7957,13 @@
         "message": "飞行器名称"
     },
     "configurationCraftNameHelp": {
-        "message": "可显示在日志、备份文件名和 OSD 中。<\/br>可借助 CLI 变量 <b>craft_name<\/b> 进行设置。"
+        "message": "可显示在日志、备份文件名和 OSD 中。<\/br>可借助命令行变量 <b>craft_name<\/b> 进行设置。"
     },
     "configurationPilotName": {
         "message": "飞行员名称"
     },
     "configurationPilotNameHelp": {
-        "message": "可显示在 OSD 中。<\/br>可借助 CLI 变量<b>pilot_name<\/b> 进行设置。"
+        "message": "可显示在 OSD 中。<\/br>可借助命令行变量<b>pilot_name<\/b> 进行设置。"
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV摄像头角度 [度]"
@@ -8001,7 +8032,7 @@
         "message": "更新固件"
     },
     "cliAutoComplete": {
-        "message": "高级 CLI 自动填充"
+        "message": "高级命令行自动填充"
     },
     "firmwareBackupOnFlash": {
         "message": "在刷写新目标前创建备份"
@@ -8219,11 +8250,11 @@
         "description": "Link text for opening preset discussion"
     },
     "presetsShowCli": {
-        "message": "显示 CLI",
+        "message": "显示命令行",
         "description": "Button to show CLI code of a preset"
     },
     "presetsHideCli": {
-        "message": "隐藏 CLI",
+        "message": "隐藏命令行",
         "description": "Button to hide CLI code of a preset"
     },
     "presetsOptions": {
@@ -8271,7 +8302,7 @@
         "description": "Second label in the progress dialog when applying presets"
     },
     "presetsCliErrorsWarning": {
-        "message": "<span class='message-negative'>警告!<\/span><br\/> 已在存在 CLI 错误情况下应用配置。",
+        "message": "<span class='message-negative'>警告!<\/span><br\/> 已在存在命令行错误情况下应用配置。",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
     "presetsSaveAnyway": {
@@ -8311,7 +8342,7 @@
         "description": "Button to load backup from the file"
     },
     "presetsVirtualModeCliUnsupported": {
-        "message": "预设应用和备份操作需要 CLI ，这在虚拟模式中不可用。",
+        "message": "预设应用和备份操作需要命令行，这在虚拟模式中不可用。",
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "mspCliFirmwareTooOld": {
@@ -8371,7 +8402,7 @@
         "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
-        "message": "请确保您在选择加载预设<strong>之前<\/strong>已经对当前配置进行备份（'$t(presetsBackupSave.message)' 按钮或 CLI 命令），否则，应用预设之后将无法恢复先前的配置。",
+        "message": "请确保您在选择加载预设<strong>之前<\/strong>已经对当前配置进行备份（「$t(presetsBackupSave.message)」 按钮或命令行命令），否则，应用预设之后将无法恢复先前的配置。",
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
@@ -8425,7 +8456,7 @@
         "message": "搜索主板……"
     },
     "firmwareFlasherBuildRadioProtocols": {
-        "message": "无线电协议"
+        "message": "遥控协议"
     },
     "firmwareFlasherBuildTelemetryProtocols": {
         "message": "回传协议"
@@ -8440,10 +8471,10 @@
         "message": "配置文件名："
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "选择您希望在此构建中引入的无线电协议。要注意这是一个下拉列表，但仅能选择一个项目。"
+        "message": "选择您希望在此构建中引入的遥控协议。要注意这是一个下拉列表，但仅能选择一个项目。"
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "选择您希望在此构建中引入的回传协议。要注意这是一个下拉列表，但仅能选择一个项目。基于您在无线电协议中的选项，例如CRSF，将会忽视您在此处选择的协议，并启用一些其他的回传协议。"
+        "message": "选择您希望在此构建中引入的回传协议。要注意这是一个下拉列表，但仅能选择一个项目。基于您在遥控协议中的选项，例如CRSF，将会忽视您在此处选择的协议，并启用一些其他的回传协议。"
     },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "协议已自动包含"
@@ -8638,7 +8669,7 @@
         "message": "备份恢复失败"
     },
     "userBackupRestoreErrors": {
-        "message": "<span class='message-negative'>警告！<\/span><br\/>备份已在存在 CLI 错误的情况下应用。"
+        "message": "<span class='message-negative'>警告！<\/span><br\/>备份已在存在命令行错误的情况下应用。"
     },
     "userPasskeyNoPasskeys": {
         "message": "没有可用的密码"
@@ -9225,7 +9256,7 @@
         "message": "太阳辐射"
     },
     "preflightRadioBlackout": {
-        "message": "无线电瘫痪"
+        "message": "遥控瘫痪"
     },
     "preflightLastMeasurement": {
         "message": "上次测量"
@@ -9249,7 +9280,7 @@
         "message": "GPS 救援状态"
     },
     "preflightMagDeclination": {
-        "message": "磁偏角"
+        "message": "lian磁偏角"
     },
     "preflightMagInclination": {
         "message": "磁灵敏度"
