@@ -418,6 +418,10 @@
     "tabAutotune": {
         "message": "Autotune"
     },
+    "tabBlackboxViewer": {
+        "message": "Visualizzatore Blackbox",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
     "autotuneImportTitle": {
         "message": "Analisi Chirp Blackbox"
     },
@@ -2608,6 +2612,12 @@
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il tuo Failsafe funzioni correttamente!<\/a><\/strong><\/b> Le impostazioni sono nella scheda Failsafe, che richiede la modalità Esperto.<br> &#8226; <b>Usa l'ultimo firmware Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita il filtro hardware ADC<\/a><\/strong> nel trasmettitore se si utilizza OpenTx o EdgeTx.<br>Configurazione base: Configura correttamente le impostazioni del 'Ricevitore'. Scegli la ‘Mappa dei canali’ corretta per la tua radio. Controlla che il Rollio, Imbardata e altri grafici delle barre si muovano correttamente. Regolare l'endpoint del canale o i valori dell'intervallo nel trasmettitore a ~1000 a ~2000 e impostare il punto medio a 1500. Per ulteriori informazioni, leggere la documentazione <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
     },
+    "receiverFailsafeActiveTitle": {
+        "message": "Failsafe-attivo"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "Il controller di volo è in modalità failsafe. I valori dei canali mostrati qui sotto sono quelli generati dall'uscita failsafe e non i valori in tempo reale provenienti dal ricevitore. Controlla il collegamento del ricevitore e le impostazioni del failsafe."
+    },
     "receiverThrottleMid": {
         "message": "Gas Medio"
     },
@@ -3001,11 +3011,23 @@
     "adjustmentsColumnViaChannel": {
         "message": "via canale"
     },
+    "adjustmentsColumnMode": {
+        "message": "modalità"
+    },
+    "adjustmentsModeStep": {
+        "message": "Passo"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Assoluto"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Selezione"
+    },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "con\/ centro (val.)"
+        "message": "centro (val.)"
     },
     "adjustmentsColumnAdjustmentScale": {
-        "message": "e scala del range (val.|%)"
+        "message": "scala (val.|%)"
     },
     "adjustmentsCenterHelp": {
         "message": "Imposta il valore medio o di riferimento utilizzato dalla funzione di regolazione.<br \/><br \/><strong>Regolazioni Slider:<\/strong><br \/>Per le regolazioni dello slider, impostare il centro di regolazione a 0. La posizione corrente del cursore verrà utilizzata per la regolazione su\/giù.<br \/><br \/><strong>Selezione Regolazioni:<\/strong><br \/>Impostare il centro di regolazione a 0, o a un valore specifico di microsecondo (uS) se si desidera spostare il punto di riferimento dell'interruttore da 1500uS quando si avvia la regolazione RC.<br \/><br \/><strong>Regolazioni Fasi:<\/strong><br \/>Impostare il centro di regolazione a 0 per il valore corrente dell'elemento da aggiustare per essere utilizzato.<br \/><br \/><strong>Regolazioni Assolute:<\/strong><br \/>Per utilizzare il metodo di regolazione Assoluta, è necessario impostare sia il centro di regolazione che la scala per specificare il valore e l'intervallo desiderati. L’intervallo è calcolato come: centro ± scala. Ad esempio, imopostando il centro di regolazione a 50 e la scala di regolazione a 25 si crea un intervallo da 25 a 75, con la posizione centrale (interruttore o POT) mappata a 50.<br \/><br \/>Visita <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina<\/a> per ulteriori informazioni.",
@@ -3794,8 +3816,14 @@
     "sensorsRefresh": {
         "message": "Aggiorna:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Aggiorna tutto:"
+    },
     "sensorsScale": {
         "message": "Scala:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Auto"
     },
     "sensorsGyroSelect": {
         "message": "Giroscopio"
@@ -4359,6 +4387,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Backup cancellato, flash annullato"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Backup non riuscito: ricevuti dati non validi dal dispositivo (non in modalità CLI), flashing interrotto"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",

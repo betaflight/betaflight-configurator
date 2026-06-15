@@ -2993,12 +2993,6 @@
     "adjustmentsColumnViaChannel": {
         "message": "채널 2"
     },
-    "adjustmentsColumnAdjustmentCenter": {
-        "message": "w\/ 중심 (val.)"
-    },
-    "adjustmentsColumnAdjustmentScale": {
-        "message": "범위|스케일 (val.|%)"
-    },
     "adjustmentsCenterHelp": {
         "message": "조정 함수에서 사용하는 중간 지점 또는 참조 값을 설정합니다.<br \/><br \/><strong>슬라이더 조정:<\/strong><br \/>슬라이더 조정의 경우 조정 센터를 0으로 설정합니다. 현재 슬라이더 위치는 위\/아래 조정에 사용됩니다.<br \/><br \/><strong>선택 조정:<\/strong><br \/>RC 조정을 시작할 때 스위치 기준점을 1500μS에서 오프셋하려면 조정 센터를 0으로 설정하거나 특정 마이크로초(uS) 값으로 설정합니다.<br \/><br \/><strong>단계 조정:<\/strong><br \/>사용할 항목의 현재 값을 조정할 때 조정 센터를 0으로 설정합니다.<br \/><br \/><strong>절대 조정:<\/strong><br \/>절대 조정 방법을 사용하려면 조정 중심과 스케일을 모두 설정하여 원하는 값과 범위를 지정해야 합니다. 범위는 다음과 같이 계산됩니다: 중심 ± 스케일. 예를 들어 조정 중심을 50으로, 조정 스케일을 25로 설정하면 중심 위치(스위치 또는 POT)가 50으로 매핑되어 25에서 75 사이의 범위가 만들어집니다.<br \/><br \/>자세한 내용은 <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">이 페이지<\/a>를 방문하세요.",
         "description": "Tooltip help text for the Adjustment Center column"
