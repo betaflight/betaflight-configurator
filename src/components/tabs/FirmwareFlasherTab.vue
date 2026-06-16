@@ -405,7 +405,11 @@ export default defineComponent({
             state.flashProgressValue = 0;
             state.flashingInProgress = false;
             GUI.flashingInProgress = false;
-            enableFlashButton(!!firmwareFlashing.getParsedHex() || !!firmwareFlashing.getUf2Binary());
+            enableFlashButton(
+                !!firmwareFlashing.getParsedHex() ||
+                    !!firmwareFlashing.getUf2Binary() ||
+                    !!firmwareFlashing.getEspBinary(),
+            );
             updateDfuExitButtonState();
             enableLoadRemoteFileButton(true);
             enableLoadFileButton(true);
@@ -1648,7 +1652,11 @@ export default defineComponent({
             state.developmentFirmwareLoaded = false;
 
             try {
-                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [".hex", ".uf2"]);
+                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [
+                    ".hex",
+                    ".uf2",
+                    ".bin",
+                ]);
 
                 if (!file) {
                     enableLoadRemoteFileButton(true);
@@ -1658,7 +1666,7 @@ export default defineComponent({
 
                 const extension = getExtension(file.name);
 
-                if (extension === "uf2") {
+                if (extension === "uf2" || extension === "bin") {
                     const data = await FileSystem.readFileAsBlob(file);
                     await processFirmwareFile(file, extension, data);
                 } else if (extension === "hex") {

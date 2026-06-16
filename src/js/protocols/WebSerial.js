@@ -100,6 +100,16 @@ class WebSerial extends EventTarget {
         return this.port;
     }
 
+    /**
+     * Return the raw W3C SerialPort for a given path, so callers that need direct
+     * port access (e.g. esptool-js for ESP32 flashing) can own open/close and signals.
+     * @param {string} path - port path (e.g. "serial")
+     * @returns {SerialPort|undefined}
+     */
+    getNativePort(path) {
+        return this.ports.find((device) => device.path === path)?.port;
+    }
+
     createPort(port) {
         const portInfo = port.getInfo();
         const displayName = vendorIdNames[portInfo.usbVendorId]
