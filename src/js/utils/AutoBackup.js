@@ -1,3 +1,4 @@
+import { ref } from "vue";
 import PortHandler from "../port_handler";
 import FileSystem from "../FileSystem";
 import { generateFilename } from "./generate_filename";
@@ -7,9 +8,28 @@ import { serial } from "../serial";
 
 /**
  *
- * Bacup the current configuration to a file before flashing in serial mode
+ * Backup the current configuration to a file before flashing in serial mode
  *
  */
+
+/**
+ * Reactive cache of the last captured backup data (the `diff all` output).
+ * Reactive so Vue computeds (e.g. the post-flash restore button) re-evaluate
+ * when the backup is captured or reset.
+ */
+const _lastBackupData = ref(null);
+
+export function getLastBackupData() {
+    return _lastBackupData.value;
+}
+
+export function setLastBackupData(data) {
+    _lastBackupData.value = data;
+}
+
+export function resetLastBackupData() {
+    _lastBackupData.value = null;
+}
 
 // CLI dumps are plain text: printable ASCII plus tab, CR and LF.
 function isPrintableCharCode(charCode) {
@@ -248,6 +268,10 @@ class AutoBackup {
 
                 if (DEBUG) console.log(`AutoBackup: Final data length: ${data.length} chars`);
 
+                // Hold the captured backup in memory immediately so it is available
+                // for restore regardless of whether the file-save picker succeeds.
+                setLastBackupData(data);
+
                 this.sendCommand("exit", this.onClose.bind(this));
                 this.save(data);
             }
@@ -260,6 +284,8 @@ class AutoBackup {
                 const filteredLines = lines[0].includes(command) ? lines.slice(1) : lines;
                 const data = filteredLines.join("\n");
 
+                // Hold partial backup data in memory as well — better than nothing.
+                setLastBackupData(data);
                 // Only persist partial data if it actually looks like a CLI dump.
                 // Writing a truncated-but-valid backup beats nothing, but writing
                 // binary/garbage that merely never reached the prompt is worse.

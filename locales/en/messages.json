@@ -8379,6 +8379,38 @@
         "message": "This action requires Betaflight firmware {{required}} or newer (currently connected to {{current}}). Please update your flight controller firmware before continuing.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Restore Backup",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Restore Pre-Flash Backup",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "This will restore the configuration backup taken before flashing. Continue?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Configuration backup restored successfully.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Configuration backup restored, {{count}} line(s) skipped.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Restore failed: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "Could not connect to flight controller for restore.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "No backup is available to restore.",
+        "description": "Error message when no backup data is cached for restore"
+    },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",
         "description": "Title for the waiting dialog when loading dump all into a file"
