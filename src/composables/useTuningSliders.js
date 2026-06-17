@@ -2,6 +2,13 @@ import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
+import CONFIGURATOR from "@/js/data_storage";
+import {
+    applySimplifiedPids,
+    applySimplifiedGyroFilters,
+    applySimplifiedDtermFilters,
+    validateVirtualSimplifiedTuning,
+} from "@/js/simplifiedTuning";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -87,7 +94,59 @@ export function calculateNewPids(s) {
     FC.TUNING_SLIDERS.slider_pitch_pi_gain = Math.round(s.pitchPIGain * 100);
     FC.TUNING_SLIDERS.slider_master_multiplier = Math.round(s.masterMultiplier * 100);
 
+    // In virtual mode there is no FC to crunch the sliders, so compute the
+    // resulting PID/feedforward/D-max values client-side (port of the firmware's
+    // simplified_tuning.c) and resolve immediately.
+    if (CONFIGURATOR.virtualMode) {
+        applySimplifiedPids();
+        return Promise.resolve();
+    }
+
     return MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_PID, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_PID));
+}
+
+/**
+ * Write the gyro filter slider position to FC.TUNING_SLIDERS and compute the
+ * resulting gyro lowpass cutoffs.  Returns a promise that resolves after
+ * FC.FILTER_CONFIG has been updated.
+ *
+ * @param {number} multiplier  Gyro filter multiplier (decimal, e.g. 1.0)
+ */
+export function calculateNewGyroFilters(multiplier) {
+    FC.TUNING_SLIDERS.slider_gyro_filter = 1;
+    FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(multiplier * 100);
+
+    if (CONFIGURATOR.virtualMode) {
+        applySimplifiedGyroFilters();
+        return Promise.resolve();
+    }
+
+    return MSP.promise(
+        MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO,
+        mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO),
+    );
+}
+
+/**
+ * Write the D-term filter slider position to FC.TUNING_SLIDERS and compute the
+ * resulting D-term lowpass cutoffs.  Returns a promise that resolves after
+ * FC.FILTER_CONFIG has been updated.
+ *
+ * @param {number} multiplier  D-term filter multiplier (decimal, e.g. 1.0)
+ */
+export function calculateNewDTermFilters(multiplier) {
+    FC.TUNING_SLIDERS.slider_dterm_filter = 1;
+    FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(multiplier * 100);
+
+    if (CONFIGURATOR.virtualMode) {
+        applySimplifiedDtermFilters();
+        return Promise.resolve();
+    }
+
+    return MSP.promise(
+        MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM,
+        mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM),
+    );
 }
 
 /**
@@ -96,7 +155,7 @@ export function calculateNewPids(s) {
  * invalid slider modes are set to 0 (sliders off).  Returns a promise.
  */
 export function validateTuningSliders() {
-    return MSP.promise(MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING).then(() => {
+    const patchInvalidSliders = () => {
         if (!FC.TUNING_SLIDERS.slider_pids_valid) {
             FC.TUNING_SLIDERS.slider_pids_mode = 0;
         }
@@ -106,5 +165,15 @@ export function validateTuningSliders() {
         if (!FC.TUNING_SLIDERS.slider_dterm_valid) {
             FC.TUNING_SLIDERS.slider_dterm_filter = 0;
         }
-    });
+    };
+
+    // In virtual mode, compare the stored PID/filter values against what the
+    // sliders would produce client-side instead of asking the FC.
+    if (CONFIGURATOR.virtualMode) {
+        validateVirtualSimplifiedTuning();
+        patchInvalidSliders();
+        return Promise.resolve();
+    }
+
+    return MSP.promise(MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING).then(patchInvalidSliders);
 }
