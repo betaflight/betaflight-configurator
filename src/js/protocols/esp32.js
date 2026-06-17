@@ -17,10 +17,8 @@ import { isAndroid, isTauri } from "../utils/checkCompatibility";
 const logHead = "[ESP32]";
 
 class ESP32Protocol {
-    constructor() {
-        this.transport = null;
-        this.loader = null;
-    }
+    transport = null;
+    loader = null;
 
     /**
      * Flash a merged ESP32 image at offset 0x0.
@@ -38,7 +36,7 @@ class ESP32Protocol {
             flashingMessage?.(args.length ? i18n.getMessage(key, args) : i18n.getMessage(key), type);
 
         // esptool-js requires a W3C SerialPort with DTR/RTS control — browser Web Serial only.
-        if (isTauri() || isAndroid() || !navigator.serial) {
+        if (isTauri() || isAndroid() || !globalThis.navigator?.serial) {
             console.warn(`${logHead} ESP32 flashing requires the browser Web Serial path`);
             message("firmwareFlasherEsp32NotSupported", TYPES?.INVALID);
             flashProgress?.(0);

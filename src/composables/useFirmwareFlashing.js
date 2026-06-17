@@ -179,16 +179,18 @@ export function useFirmwareFlashing(params = {}) {
 
         let bytes;
         if (!data) {
-            bytes = undefined;
+            bytes = null;
         } else if (data instanceof Blob) {
             bytes = new Uint8Array(await data.arrayBuffer());
         } else if (data instanceof ArrayBuffer) {
             bytes = new Uint8Array(data);
-        } else {
+        } else if (data instanceof Uint8Array) {
             bytes = data;
+        } else {
+            bytes = null;
         }
 
-        if (!bytes || bytes.byteLength === 0) {
+        if (!(bytes instanceof Uint8Array) || bytes.byteLength === 0) {
             const errorMessage = isLocalFile
                 ? `Failed to load ${key}`
                 : $t?.("firmwareFlasherFailedToLoadOnlineFirmware");
@@ -340,15 +342,14 @@ export function useFirmwareFlashing(params = {}) {
             return false;
         }
 
-        const port = PortHandler.portPicker.selectedPort;
-        if (!port || !port.startsWith("serial")) {
-            flashingMessage?.($t?.("firmwareFlasherEsp32NoPort"), FLASH_MESSAGE_TYPES?.INVALID);
-            return false;
-        }
-
         tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "ESP32 Flashing", {
             filename: filename || null,
         });
+
+        // Let ESP32.connect() own environment gating (Web Serial only) and port
+        // validation, so the correct message is shown on Tauri/Capacitor and when
+        // no port is selected.
+        const port = PortHandler.portPicker.selectedPort;
 
         // esptool-js connects at the ROM baud (115200) and bumps to this rate after the stub loads.
         const ESP_FLASH_BAUD = 460800;
@@ -494,15 +495,23 @@ export function useFirmwareFlashing(params = {}) {
         // ESP32 .bin flow — flashed over the serial ROM bootloader via esptool-js.
         // Bypasses the STM32 MSP reboot-to-bootloader and the backup machinery.
         if (firmwareType === "BIN") {
-            const flashed = await flashEspFirmware({ filename });
-
-            resumeSponsorInterval?.();
-            enableFlashButton?.(true);
-            enableLoadRemoteFileButton?.(true);
-            enableLoadFileButton?.(true);
-            enableDfuExitButton?.(dfuAvailable);
-
-            report("bin-complete", { flashed });
+            // Hold the connect lock for the duration of the long-running flash so
+            // nothing else grabs the port, and always finalise the UI in finally.
+            GUI.connect_lock = true;
+            try {
+                const flashed = await flashEspFirmware({ filename });
+                if (!flashed) {
+                    flashProgress?.(100);
+                }
+                report("bin-complete", { flashed });
+            } finally {
+                GUI.connect_lock = false;
+                resumeSponsorInterval?.();
+                enableFlashButton?.(true);
+                enableLoadRemoteFileButton?.(true);
+                enableLoadFileButton?.(true);
+                enableDfuExitButton?.(dfuAvailable);
+            }
             return;
         }
 

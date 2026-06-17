@@ -414,7 +414,7 @@ export default defineComponent({
             enableLoadRemoteFileButton(true);
             enableLoadFileButton(true);
 
-            if (firmwareFlashing.getParsedHex() || firmwareFlashing.getUf2Binary()) {
+            if (firmwareFlashing.getParsedHex() || firmwareFlashing.getUf2Binary() || firmwareFlashing.getEspBinary()) {
                 if (state.preFlashingMessage && state.preFlashingMessageType) {
                     flashingMessage(state.preFlashingMessage, state.preFlashingMessageType);
                 }
