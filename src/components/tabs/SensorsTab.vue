@@ -1616,6 +1616,14 @@ const accNeedsCalibration = computed(() => {
 const calibratingAccel = ref(false);
 const { addTimeout } = useTimeout();
 
+// React to the firmware clearing the flag after calibration completes
+watch(accNeedsCalibration, (needsCal, wasNeeded) => {
+    if (wasNeeded && !needsCal && calibratingAccel.value) {
+        gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
+        calibratingAccel.value = false;
+    }
+});
+
 function onCalibrateAccel() {
     if (calibratingAccel.value) {
         return;
@@ -1635,9 +1643,15 @@ function onCalibrateAccel() {
             if (!isMounted.value) {
                 return;
             }
-            gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
-            calibratingAccel.value = false;
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
+            // Re-fetch board info to refresh configurationProblems; the watcher above
+            // handles cleanup when the flag clears. The callback acts as a fallback for
+            // firmware that does not report configurationProblems.
+            MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
+                if (calibratingAccel.value) {
+                    gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
+                    calibratingAccel.value = false;
+                }
+            });
         },
         ACC_CALIBRATION_TIMEOUT_MS,
     );
