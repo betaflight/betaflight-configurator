@@ -1616,11 +1616,24 @@ const accNeedsCalibration = computed(() => {
 const calibratingAccel = ref(false);
 const { addTimeout } = useTimeout();
 
+// React to the firmware clearing the flag after calibration completes
+watch(accNeedsCalibration, (needsCal, wasNeeded) => {
+    if (wasNeeded && !needsCal && calibratingAccel.value) {
+        resumeInterval("sensors_attitude");
+        gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
+        calibratingAccel.value = false;
+    }
+});
+
 function onCalibrateAccel() {
     if (calibratingAccel.value) {
         return;
     }
     calibratingAccel.value = true;
+
+    // The MCU is locked in a busy loop during calibration and cannot process
+    // serial commands; pause the attitude poll to avoid flooding the buffer.
+    pauseInterval("sensors_attitude");
 
     MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
         if (!isMounted.value) {
@@ -1635,9 +1648,16 @@ function onCalibrateAccel() {
             if (!isMounted.value) {
                 return;
             }
-            gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
-            calibratingAccel.value = false;
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
+            resumeInterval("sensors_attitude");
+            // Re-fetch board info to refresh configurationProblems; the watcher above
+            // handles cleanup when the flag clears. The callback acts as a fallback for
+            // firmware that does not report configurationProblems.
+            MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
+                if (calibratingAccel.value) {
+                    gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
+                    calibratingAccel.value = false;
+                }
+            });
         },
         ACC_CALIBRATION_TIMEOUT_MS,
     );
@@ -1660,7 +1680,7 @@ let attitudeIndicator = null;
 let headingIndicator = null;
 let altimeterIndicator = null;
 
-const { addInterval, removeAllIntervals } = useInterval();
+const { addInterval, pauseInterval, resumeInterval, removeAllIntervals } = useInterval();
 
 const DEG_TO_RAD = Math.PI / 180;
 
