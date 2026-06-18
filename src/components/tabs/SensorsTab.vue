@@ -1619,6 +1619,7 @@ const { addTimeout } = useTimeout();
 // React to the firmware clearing the flag after calibration completes
 watch(accNeedsCalibration, (needsCal, wasNeeded) => {
     if (wasNeeded && !needsCal && calibratingAccel.value) {
+        resumeInterval("sensors_attitude");
         gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
         calibratingAccel.value = false;
     }
