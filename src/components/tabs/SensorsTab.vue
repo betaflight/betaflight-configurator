@@ -1630,6 +1630,10 @@ function onCalibrateAccel() {
     }
     calibratingAccel.value = true;
 
+    // The MCU is locked in a busy loop during calibration and cannot process
+    // serial commands; pause the attitude poll to avoid flooding the buffer.
+    pauseInterval("sensors_attitude");
+
     MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
         if (!isMounted.value) {
             return;
@@ -1643,6 +1647,7 @@ function onCalibrateAccel() {
             if (!isMounted.value) {
                 return;
             }
+            resumeInterval("sensors_attitude");
             // Re-fetch board info to refresh configurationProblems; the watcher above
             // handles cleanup when the flag clears. The callback acts as a fallback for
             // firmware that does not report configurationProblems.
@@ -1674,7 +1679,7 @@ let attitudeIndicator = null;
 let headingIndicator = null;
 let altimeterIndicator = null;
 
-const { addInterval, removeAllIntervals } = useInterval();
+const { addInterval, pauseInterval, resumeInterval, removeAllIntervals } = useInterval();
 
 const DEG_TO_RAD = Math.PI / 180;
 

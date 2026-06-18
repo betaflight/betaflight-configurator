@@ -28,6 +28,14 @@ export function useInterval() {
         }
     }
 
+    function pauseInterval(name) {
+        return GUI.interval_pause(name);
+    }
+
+    function resumeInterval(name) {
+        return GUI.interval_resume(name);
+    }
+
     function removeAllIntervals() {
         localIntervals.forEach((name) => GUI.interval_remove(name));
         localIntervals.length = 0;
@@ -40,6 +48,8 @@ export function useInterval() {
     return {
         addInterval,
         removeInterval,
+        pauseInterval,
+        resumeInterval,
         removeAllIntervals,
     };
 }
