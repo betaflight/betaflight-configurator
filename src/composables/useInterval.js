@@ -1,6 +1,14 @@
 import { onUnmounted } from "vue";
 import GUI from "../js/gui";
 
+function pauseInterval(name) {
+    return GUI.interval_pause(name);
+}
+
+function resumeInterval(name) {
+    return GUI.interval_resume(name);
+}
+
 /**
  * A composable for managing named intervals via GUI's interval registry.
  * All intervals added through this composable are automatically removed
@@ -26,14 +34,6 @@ export function useInterval() {
         if (idx !== -1) {
             localIntervals.splice(idx, 1);
         }
-    }
-
-    function pauseInterval(name) {
-        return GUI.interval_pause(name);
-    }
-
-    function resumeInterval(name) {
-        return GUI.interval_resume(name);
     }
 
     function removeAllIntervals() {
