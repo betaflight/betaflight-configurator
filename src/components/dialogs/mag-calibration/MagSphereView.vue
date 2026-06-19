@@ -447,10 +447,9 @@ function updateQuadAttitude() {
     // Prefer quaternion (gimbal-lock-free) when available
     if (props.quaternion) {
         const { w, x, y, z } = props.quaternion;
-        // BF quaternion is body-to-earth; Three.js needs earth-to-body (conjugate).
-        // Conjugate: (w, -x, -y, -z), then BF→Display frame (negate Y and Z):
-        // Result: (w, -x, y, z) → Three.js Quaternion.set(x, y, z, w)
-        _targetQuat.set(-x, y, z, w);
+        // BF quaternion is body-to-earth. Q1 frame adapter (180°-about-X)
+        // converts FLU/NWU → FRD/NED: negate qy, qz.
+        _targetQuat.set(x, -y, -z, w);
     } else if (props.attitude) {
         // Fallback to Euler angles (has gimbal lock at +/-90 pitch)
         const { roll, pitch, heading } = props.attitude;
