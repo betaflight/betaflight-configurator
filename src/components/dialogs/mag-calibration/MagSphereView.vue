@@ -445,9 +445,11 @@ function updateQuadAttitude() {
         return;
     }
 
-    // Q1 frame adapter: BF body-to-earth (FLU/NWU) → display (FRD/NED).
-    // Net result = Rx180 · q. Both attitude sources pass through the identical
-    // adapter + shared _BASE_180_X post-multiply so they cannot diverge.
+    // Betaflight stores the quaternion in FLU/NWU (X=forward, Y=left, Z=up).
+    // The viewer uses FRD/NED (X=forward, Y=right, Z=down). These differ by
+    // a 180° rotation about X — negate qy and qz to convert.
+    // Net result = Rx180 · q. Both sources pass through the same adapter
+    // + shared _BASE_180_X so the quaternion and Euler paths cannot diverge.
     if (props.quaternion) {
         const { w, x, y, z } = props.quaternion;
         _targetQuat.set(x, -y, -z, w);
