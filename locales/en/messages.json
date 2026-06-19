@@ -2315,13 +2315,13 @@
         "message": "G load Max"
     },
     "psasTuningAccelZLimitMaxHelp": {
-        "message": "Maximum (positive) G load value, *0.1"
+        "message": "Maximum G load magnitude, *0.1"
     },
     "psasTuningAccelZLimitMin": {
         "message": "G load Min"
     },
     "psasTuningAccelZLimitMinHelp": {
-        "message": "Minimum (negative) G load value, *-0.1"
+        "message": "Minimum G load magnitude, *0.1 (represents negative G)"
     },
     "psasTuningAccelZServosGroup": {
         "message": "Servos"

@@ -42,7 +42,7 @@
                     class="w-full"
                 />
 
-                <div></div>
+                <div>-</div>
 
                 <!-- PITCH -->
                 <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">PITCH</div>

@@ -949,7 +949,7 @@ export function FlightLog(logData) {
         if (!gpsVelNED[0]) {
             gpsVelNED = false;
         }
-        if (!psasData[0][0] && !psasData[1][0] && !psasData[2][0]) {
+        if (psasData[0][0] === undefined && psasData[1][0] === undefined && psasData[2][0] === undefined) {
             psasData = false;
         }
 

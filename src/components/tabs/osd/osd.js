@@ -1482,7 +1482,6 @@ OSD.chooseFields = function () {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
-            F.PSAS_AOA_LIMITER,
         ]);
 
         if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
