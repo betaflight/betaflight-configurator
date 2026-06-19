@@ -12,6 +12,15 @@
                     <span v-if="boardInfo">{{ boardInfo }}</span>
                 </div>
             </div>
+            <USelect
+                v-if="logStore.logIndexEntries.length > 1"
+                :model-value="logStore.activeLogIndex"
+                :items="logStore.logIndexEntries"
+                size="xs"
+                class="w-48 sm:w-64 shrink-0"
+                title="Switch log"
+                @update:model-value="onLogIndexChange"
+            />
             <div class="flex items-center gap-0.5">
                 <UIcon name="i-lucide-columns-3" class="size-4 text-dimmed mr-1" />
                 <button
@@ -200,6 +209,8 @@ import UiBox from "./UiBox.vue";
 import ParamTable from "./ParamTable.vue";
 import PidTable from "./PidTable.vue";
 import FeatureTable from "./FeatureTable.vue";
+import { useLogStore } from "../stores/log.js";
+import { useGraphStore } from "../stores/graph.js";
 import {
     OFF_ON,
     FAST_PROTOCOL,
@@ -233,6 +244,13 @@ const cols = ref(null);
 const props = defineProps({
     sysConfig: { type: Object, default: null },
 });
+
+const logStore = useLogStore();
+const graphStore = useGraphStore();
+
+function onLogIndexChange(val) {
+    graphStore.selectLogIndex?.(val);
+}
 
 // --- Helpers ---
 
