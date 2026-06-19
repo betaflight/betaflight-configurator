@@ -445,19 +445,18 @@ function updateQuadAttitude() {
         return;
     }
 
-    // Prefer quaternion (gimbal-lock-free) when available
+    // Q1 frame adapter: BF body-to-earth (FLU/NWU) → display (FRD/NED).
+    // Net result = Rx180 · q. Both attitude sources pass through the identical
+    // adapter + shared _BASE_180_X post-multiply so they cannot diverge.
     if (props.quaternion) {
         const { w, x, y, z } = props.quaternion;
-        // BF quaternion is body-to-earth. Q1 frame adapter (180°-about-X)
-        // converts FLU/NWU → FRD/NED: negate qy, qz.
         _targetQuat.set(x, -y, -z, w);
     } else if (props.attitude) {
-        // Fallback to Euler angles (has gimbal lock at +/-90 pitch)
         const { roll, pitch, heading } = props.attitude;
-        // BF body-to-earth Euler (ZYX): invert to earth-to-body, then convert to display frame.
-        // Display axes: X=BF_X, Y=-BF_Y, Z=-BF_Z → pitch & heading signs cancel with inversion.
-        const euler = new THREE.Euler(-roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
-        _targetQuat.setFromEuler(euler);
+        const q = new THREE.Quaternion().setFromEuler(
+            new THREE.Euler(roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX"),
+        );
+        _targetQuat.set(q.x, -q.y, -q.z, q.w);
     } else {
         return;
     }
