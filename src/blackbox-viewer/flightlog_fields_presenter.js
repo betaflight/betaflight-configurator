@@ -179,6 +179,29 @@ const FRIENDLY_FIELD_NAMES = {
     gpsDistance: "GPS Home distance",
     gpsHomeAzimuth: "GPS Home azimuth",
     gpsTrajectoryTiltAngle: "GPS Traject. tilt angle",
+
+    "PSAS_pitch[all]": "PSAS Pitch",
+    "PSAS_pitch[0]": "PSAS pitch Pilot",
+    "PSAS_pitch[1]": "PSAS pitch Damping",
+    "PSAS_pitch[2]": "PSAS pitch Stability",
+    "PSAS_pitch[3]": "PSAS pitch controller I",
+    "PSAS_pitch[4]": "PSAS pitch controller P",
+
+    "PSAS_roll[all]": "PSAS Roll",
+    "PSAS_roll[0]": "PSAS roll Pilot",
+    "PSAS_roll[1]": "PSAS roll Damping",
+
+    "PSAS_yaw[all]": "PSAS Yaw",
+    "PSAS_yaw[0]": "PSAS yaw Pilot",
+    "PSAS_yaw[1]": "PSAS yaw Damping",
+    "PSAS_yaw[2]": "PSAS yaw Stability",
+    "PSAS_yaw[3]": "PSAS yaw roll cross link",
+
+    //Virtual field
+    "psasSum[all]": "PSAS Sum",
+    "psasSum[0]": "PSAS Sum [roll]",
+    "psasSum[1]": "PSAS Sum [pitch]",
+    "psasSum[2]": "PSAS Sum [yaw]",
 };
 
 FlightLogFieldPresenter.presentFlags = function (flags, flagNames) {
@@ -484,6 +507,22 @@ FlightLogFieldPresenter.decodeFieldToFriendly = function (flightLog, fieldName, 
         case "magADC[2]":
             return `${(value / 10).toFixed(1)} °`;
 
+        case "PSAS_pitch[0]":
+        case "PSAS_pitch[1]":
+        case "PSAS_pitch[2]":
+        case "PSAS_pitch[3]":
+        case "PSAS_pitch[4]":
+        case "PSAS_roll[0]":
+        case "PSAS_roll[1]":
+        case "PSAS_yaw[0]":
+        case "PSAS_yaw[1]":
+        case "PSAS_yaw[2]":
+        case "PSAS_yaw[3]":
+        case "psasSum[0]":
+        case "psasSum[1]":
+        case "psasSum[2]":
+            return `${(value / 10).toFixed(1)} %`;
+
         case "debug[0]":
         case "debug[1]":
         case "debug[2]":
@@ -717,6 +756,22 @@ FlightLogFieldPresenter.ConvertFieldValue = function (flightLog, fieldName, toFr
         case "magADC[0]":
         case "magADC[1]":
         case "magADC[2]":
+            return toFriendly ? value / 10 : value * 10;
+
+        case "PSAS_pitch[0]":
+        case "PSAS_pitch[1]":
+        case "PSAS_pitch[2]":
+        case "PSAS_pitch[3]":
+        case "PSAS_pitch[4]":
+        case "PSAS_roll[0]":
+        case "PSAS_roll[1]":
+        case "PSAS_yaw[0]":
+        case "PSAS_yaw[1]":
+        case "PSAS_yaw[2]":
+        case "PSAS_yaw[3]":
+        case "psasSum[0]":
+        case "psasSum[1]":
+        case "psasSum[2]":
             return toFriendly ? value / 10 : value * 10;
 
         case "debug[0]":

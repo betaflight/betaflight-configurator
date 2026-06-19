@@ -148,6 +148,7 @@ export function getDebugModes(apiVersion) {
         // it must occupy its index so AUTOPILOT_STOP decodes correctly.
         addArrayElement(result, "POSITION_NAV");
         addArrayElement(result, "AUTOPILOT_STOP");
+        addArrayElement(result, "PLANE_SAS");
     }
 
     return result;
@@ -1002,6 +1003,18 @@ export function getDebugFieldNames(apiVersion) {
             "debug[2]": "Gyro after RPM [dbg-axis]",
             "debug[3]": "Gyro after all filtering [dbg-axis]",
             "debug[4]": "CPU Load at Sample",
+        };
+
+        result.PLANE_SAS = {
+            "debug[all]": "Plane SAS",
+            "debug[0]": "Pitch Sum",
+            "debug[1]": "Pitch I",
+            "debug[2]": "Lift coefficient",
+            "debug[3]": "Accel Z required",
+            "debug[4]": "Accel Z delta",
+            "debug[5]": "Accel Z P",
+            "debug[6]": "Lift coeff delta",
+            "debug[7]": "AoA limiter is on",
         };
 
         // POSITION_NAV is a reserved firmware enum slot with no fields yet,

@@ -392,6 +392,19 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     max: 90,
                 },
             };
+        } else if (
+            fieldName.match(/^PSAS_pitch\[/) ||
+            fieldName.match(/^PSAS_roll\[/) ||
+            fieldName.match(/^PSAS_yaw\[/) ||
+            fieldName.match(/^psasSum\[/)
+        ) {
+            return {
+                power: 1,
+                MinMax: {
+                    min: -100,
+                    max: 100,
+                },
+            };
         } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
             const debugModeName = getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
             switch (debugModeName) {
