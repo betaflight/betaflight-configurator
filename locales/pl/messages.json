@@ -2768,12 +2768,6 @@
     "adjustmentsColumnViaChannel": {
         "message": "kanałem"
     },
-    "adjustmentsColumnAdjustmentCenter": {
-        "message": "ze środkiem (wartość)"
-    },
-    "adjustmentsColumnAdjustmentScale": {
-        "message": "i zakresem|skalą (wartość|%)"
-    },
     "adjustmentsCenterHelp": {
         "message": "Ustawia punkt środkowy lub wartość odniesienia używaną przez funkcję regulacji. <br \/><br \/><strong>Regulacje suwaka:<\/strong><br \/>W przypadku regulacji suwaka ustaw wartość Adjustment Center na 0. Aktualna pozycja suwaka zostanie wykorzystana do regulacji w górę\/w dół. <br \/><br \/><strong>Regulacje wyboru:<\/strong><br \/>Ustaw środek regulacji na 0 lub na określoną wartość w mikrosekundach (uS), jeśli chcesz przesunąć punkt odniesienia przełącznika z 1500 uS podczas inicjowania regulacji RC. <br \/><br \/><strong>Regulacje skokowe:<\/strong><br \/>Ustaw wartość środkową regulacji na 0, aby wykorzystać bieżącą wartość regulowanego elementu. <br \/><br \/><strong>Regulacje bezwzględne:<\/strong><br \/>Aby skorzystać z metody regulacji bezwzględnej, należy ustawić zarówno wartość środkową regulacji, jak i skalę, aby określić żądaną wartość i zakres. Zakres oblicza się jako: środek ± skala. Na przykład ustawienie środka regulacji na 50 i skali regulacji na 25 tworzy zakres od 25 do 75, z pozycją środkową (przełącznik lub potencjometr) przypisaną do 50. <br \/><br \/>Więcej informacji można znaleźć na <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">tej stronie<\/a>.",
         "description": "Tooltip help text for the Adjustment Center column"

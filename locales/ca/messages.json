@@ -249,6 +249,10 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ka": {
+        "message": "ქართული",
+        "description": "Don't translate!!!"
+    },
     "language_pl": {
         "message": "Polonès",
         "description": "Don't translate!!!"
@@ -429,6 +433,10 @@
     },
     "tabAutotune": {
         "message": "Autotune"
+    },
+    "tabBlackboxViewer": {
+        "message": "Visualitzador de Blackbox",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
     "autotuneImportTitle": {
         "message": "Anàlisi de piulades de caixa negra"
@@ -2620,6 +2628,12 @@
     "receiverHelp": {
         "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comproveu sempre que el vostre Failsafe funciona correctament!<\/a><\/strong><\/b> La configuració es troba a la pestanya Failsafe, que requereix el mode expert.<br> &#8226; <b>Utilitzeu el darrer microprogramari Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactiva el filtre ADC de maquinari< \/a><\/strong> al transmissor si feu servir OpenTx o EdgeTx.<br>Configuració bàsica: configureu correctament la configuració del \"Receptor\". Trieu el \"Mapa de canals\" correcte per a la vostra ràdio. Comproveu que els gràfics de Roll, Pitch i altres barres es mouen correctament. Ajusteu el punt final del canal o els valors d'interval al transmissor entre ~1000 i ~2000 i configureu el punt mitjà en 1500. Per obtenir més informació, llegiu la <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener \nnoreferrer\">documentació<\/a><\/strong>."
     },
+    "receiverFailsafeActiveTitle": {
+        "message": "Failsafe actiu"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "El controlador de vol està en mode de seguretat. Els valors del canal que es mostren a continuació són la sortida de seguretat, no els valors en directe que provenen del receptor. Comproveu l'enllaç del receptor i la configuració de seguretat."
+    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -3013,11 +3027,23 @@
     "adjustmentsColumnViaChannel": {
         "message": "mitjançant el canal"
     },
+    "adjustmentsColumnMode": {
+        "message": "mode"
+    },
+    "adjustmentsModeStep": {
+        "message": "Pas"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Absolut"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Selecció"
+    },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "w\/ centre (val.)"
+        "message": "centre (val.)"
     },
     "adjustmentsColumnAdjustmentScale": {
-        "message": "i rang|escala (val.|%)"
+        "message": "escala (val.|%)"
     },
     "adjustmentsCenterHelp": {
         "message": "Estableix el punt mitjà o valor de referència utilitzat per la funció d'ajust.<br \/><br \/><strong>Ajustaments del control lliscant:<\/strong><br \/>Per als ajustos del control lliscant, configureu el Centre d'ajust a 0. La posició actual del control lliscant s'utilitzarà per a l'ajust amunt\/avall.<br \/><br \/><strong>Ajustaments de selecció:<\/strong><br \/>Configureu el Centre d'ajust a 0 o a un valor específic de microsegons (uS) si voleu compensar el punt de referència del commutador de 1500uS en iniciar l'ajust RC.<br \/><br \/><strong>Ajustaments esglaonats:<\/strong><br \/>Configureu el Centre d'ajust a 0 perquè s'utilitzi el valor actual de l'element que s'està ajustant.<br \/><br \/><strong>Ajustaments absoluts:<\/strong><br \/>Per utilitzar el mètode d'ajust absolut, heu de definir tant el Centre d'ajust com l'Escala per especificar el valor i l'interval desitjats. L'interval es calcula com a: Centre ± Escala. Per exemple, si configureu el Centre d'ajustament a 50 i l'Escala d'ajustament a 25, es crea un interval de 25 a 75, amb la posició central (interruptor o POT) assignada a 50.<br \/><br \/>Visiteu <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta pàgina<\/a> per obtenir més informació.",
@@ -3806,8 +3832,14 @@
     "sensorsRefresh": {
         "message": "Actualitza:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Actualitza-ho tot:"
+    },
     "sensorsScale": {
         "message": "Escala:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Auto"
     },
     "sensorsGyroSelect": {
         "message": "Giroscopi"
@@ -4371,6 +4403,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "S'ha cancel·lat la còpia de seguretat, s'ha avortat l'actualització"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Còpia de seguretat fallida: s'han rebut dades no vàlides del dispositiu (no en mode CLI), s'ha cancel·lat l'actualització"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Heretat)",

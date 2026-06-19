@@ -654,7 +654,10 @@ export function bootstrapViewer() {
             } else if (ctrlKey) {
                 msg = changePenSmoothing(graphs, g, f, increase);
             }
-            applyPenChange(msg);
+            if (msg) {
+                graphStore.activeGraphConfig.setGraphs(graphs);
+                applyPenChange(msg);
+            }
         };
         playbackStore.logSyncHere = logSyncHere;
         playbackStore.logSyncBack = logSyncBack;

@@ -249,6 +249,10 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ka": {
+        "message": "ქართული",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "Nenhuma memória <br> flash detectada",
         "description": "Text of the dataflash image in the header of the page."
@@ -421,6 +425,10 @@
     },
     "tabAutotune": {
         "message": "Autotune"
+    },
+    "tabBlackboxViewer": {
+        "message": "Visualizador Blackbox",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
     "autotuneImportTitle": {
         "message": "Análise Blackbox de Chirp"
@@ -2612,6 +2620,12 @@
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Verifique sempre que o Failsafe está a trabalhar bem!<\/a><\/strong><\/b> As definições estão na aba Failsafe, que requere Modo Especialista.<br> &#8226; <b>Use o último firmware no Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desative o filtro ADC<\/a><\/strong> no rádio se usar o OpenTx ou o EdgeTx.<br>Configuração Básica: Configure as definições do ´Recetor´ corretamente. Escolha o ´Mapa de Canais’ correto para o seu rádio. Verifique que o Roll, Pitch e outras barras do gráfico se movem corretamente. Ajuste o endpoint do canal ou os valores do rádio entre ~1000 e ~2000, e coloque o ponto médio em 1500. Para mais informação, leia a <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentação<\/a><\/strong>."
     },
+    "receiverFailsafeActiveTitle": {
+        "message": "Failsafe ativo"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "A controladora de voo está em failsafe. Os valores de canal mostrados abaixo são a saída do failsafe, não os valores ao vivo provenientes do seu receptor. Verifique o link do receptor e as configurações de failsafe."
+    },
     "receiverThrottleMid": {
         "message": "MEIO do Acelerador"
     },
@@ -3005,11 +3019,23 @@
     "adjustmentsColumnViaChannel": {
         "message": "via o canal"
     },
+    "adjustmentsColumnMode": {
+        "message": "modo"
+    },
+    "adjustmentsModeStep": {
+        "message": "Step"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Absoluto"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Seleção"
+    },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "com centro (val.)"
+        "message": "centro (val.)"
     },
     "adjustmentsColumnAdjustmentScale": {
-        "message": "e alcance|escala (val.|%)"
+        "message": "escala (val.|%)"
     },
     "adjustmentsCenterHelp": {
         "message": "Define o ponto médio ou valor de referência usado pela função de ajuste.<br \/><br \/><strong>Ajustamentos de controle deslizante:<\/strong><br \/>Para ajustar o controle deslizante, defina o Centro de Ajuste como 0. A posição atual do controle deslizante será utilizada para o ajuste para cima\/baixo.<br \/><br \/><strong>Ajustamentos de Seleção:<\/strong><br \/>Configurar Ajuste para 0, ou para um valor específico de microsegundo (uS) se quiser deslocar o ponto de referência para 1500uS ao iniciar o ajuste de RC.<br \/><br \/><strong>Ajustamentos por fases:<\/strong><br \/>Definir o Centro de Ajuste para 0 para o valor atual do item que está a ser ajustado para ser utilizado.<br \/><br \/><strong>Ajustamentos absolutos:<\/strong><br \/>Para usar o método de ajuste absoluto, deve definir o Centro de Ajustamento e a Escala para especificar o valor e o intervalo desejados. O intervalo é calculado como: centro ± alcance. Por exemplo, definindo o Centro de Ajuste para 50 e Escala de Ajuste para 25 cria um intervalo de 25 a 75, com a posição central (switch ou POT) mapeado a 50.<br \/><br \/>Visite <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para mais informações.",
@@ -3798,8 +3824,14 @@
     "sensorsRefresh": {
         "message": "Atualizar:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Atualizar tudo:"
+    },
     "sensorsScale": {
         "message": "Escala:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Auto"
     },
     "sensorsGyroSelect": {
         "message": "Giroscópio"
@@ -4363,6 +4395,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Backup cancelado, flash abortado"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Backup falhou: dados inválidos do dispositivo (não no modo CLI), flash cancelado"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legado)",

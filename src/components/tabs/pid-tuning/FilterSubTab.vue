@@ -579,12 +579,11 @@ import {
     NON_EXPERT_SLIDER_MAX_GYRO,
     NON_EXPERT_SLIDER_MIN_DTERM,
     NON_EXPERT_SLIDER_MAX_DTERM,
+    calculateNewGyroFilters,
+    calculateNewDTermFilters,
 } from "@/composables/useTuningSliders";
 import semver from "semver";
 import { API_VERSION_1_48 } from "@/js/data_storage";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
-import { mspHelper } from "@/js/msp/MSPHelper";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -1179,11 +1178,9 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
         return;
     }
 
-    // Sync local slider position → FC state before MSP send (like master)
-    FC.TUNING_SLIDERS.slider_gyro_filter = 1;
-    FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(newValue * 100);
-
-    MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO))
+    // Compute new gyro filter cutoffs (via FC on a real connection, or
+    // client-side in virtual mode).
+    calculateNewGyroFilters(newValue)
         .then(() => emit("change"))
         .catch((error) => {
             console.error("Failed to calculate simplified gyro filters:", error);
@@ -1213,11 +1210,9 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
         return;
     }
 
-    // Sync local slider position → FC state before MSP send (like master)
-    FC.TUNING_SLIDERS.slider_dterm_filter = 1;
-    FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(newValue * 100);
-
-    MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM))
+    // Compute new D-term filter cutoffs (via FC on a real connection, or
+    // client-side in virtual mode).
+    calculateNewDTermFilters(newValue)
         .then(() => emit("change"))
         .catch((error) => {
             console.error("Failed to calculate simplified dterm filters:", error);

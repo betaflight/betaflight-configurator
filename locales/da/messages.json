@@ -245,6 +245,10 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ka": {
+        "message": "ქართული",
+        "description": "Don't translate!!!"
+    },
     "language_pl": {
         "message": "Polski",
         "description": "Don't translate!!!"
@@ -419,6 +423,10 @@
     "tabAutotune": {
         "message": "Auto tuning"
     },
+    "tabBlackboxViewer": {
+        "message": "Vis Blackbox log",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
     "autotuneImportTitle": {
         "message": "Blackbox CHRIP analyse"
     },
@@ -452,6 +460,12 @@
     "autotuneFile": {
         "message": "Fil"
     },
+    "autotuneApplyGains": {
+        "message": "Anvend forstærkning"
+    },
+    "autotuneGainTitle": {
+        "message": "Anbefaling til forstærkning"
+    },
     "autotuneAxisSelector": {
         "message": "Vælg akse"
     },
@@ -466,6 +480,18 @@
     },
     "autotuneSectionAnalysis": {
         "message": "Analyser"
+    },
+    "autotuneSliderPIGain": {
+        "message": "P \/ I forstærkning"
+    },
+    "autotuneSliderIGain": {
+        "message": "I forstærkning"
+    },
+    "autotuneSliderDGain": {
+        "message": "D forstærkning"
+    },
+    "autotuneApplyFromAxis": {
+        "message": "Anvend forstærkning fra akser"
     },
     "tabReceiver": {
         "message": "Modtager"
@@ -1286,6 +1312,9 @@
         "message": "Viser kurs, stigning og krængning",
         "description": "Message that pops up to describe the Instruments section"
     },
+    "initialSetupInfoBoardName": {
+        "message": "FC:"
+    },
     "initialSetupInfoFirmwareVersion": {
         "message": "Firmware version:"
     },
@@ -2073,7 +2102,7 @@
         "message": "Beskrivelse af hastighed profil, som kan angive hvad profilen er beregnet til, fx Filme, Ræs, etc"
     },
     "pidTuningShowAllPids": {
-        "message": "Vis alle PID profiler"
+        "message": "Vis alle kanal justeringer"
     },
     "pidTuningHideUnusedPids": {
         "message": "Skjul ubenyttede PID profiler"
@@ -2502,7 +2531,7 @@
         "message": "ID til Model Match"
     },
     "receiverHelp": {
-        "message": "Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. For mere information, læs <strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">dokumentationen<\/a><\/strong>.<br>&#8226;  <b><strong><a href=\\\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !<\/a><\/strong><\/b> Indstillingerne på fanen Fejlsikring kræver App er i eksperttilstand (se under Indstillinger).<br> &#8226; <b>Brug den seneste firmware i din sender \/ transmitter  !<\/b>&nbsp<strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Deaktiver altid ADC filter<\/a><\/strong> i senderen, hvis du bruger fx OpenTx eller EdgeTx."
+        "message": "Grundliggende opsætning: Indstil 'Modtager' konfiguration, evt også Kanalkort, for din radio. Kontroller at krængror, højderor, gas, sideror og andre kanaler bevæger sig som ønsket. Justér i radio, kanalens endepunkt eller intervalværdier til ~1000 til ~2000, og sæt midtpunktet til 1500. For mere information, læs <strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">dokumentationen<\/a><\/strong>.<br>&#8226;  <b><strong><a href=\\\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !<\/a><\/strong><\/b> Indstillingerne på fanen Fejlsikring, kræver at App er i eksperttilstand (se under Indstillinger).<br> &#8226; <b>Kontroller, at du har den seneste firmware i din radio  !<\/b>&nbsp<strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Deaktiver altid ADC filter<\/a><\/strong> i radioen, hvis du bruger fx OpenTx eller EdgeTx."
     },
     "receiverThrottleMid": {
         "message": "Gas MID"
@@ -2897,11 +2926,17 @@
     "adjustmentsColumnViaChannel": {
         "message": "via kanal"
     },
-    "adjustmentsColumnAdjustmentCenter": {
-        "message": "w\/ midtpunkt (værdi)"
+    "adjustmentsColumnMode": {
+        "message": "tilstand"
     },
-    "adjustmentsColumnAdjustmentScale": {
-        "message": "og rækkevidde skala (værdi|%)"
+    "adjustmentsModeStep": {
+        "message": "Trin"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Endelig"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Valg"
     },
     "adjustmentsCenterHelp": {
         "message": "Angiver referencepunktet (midtpunktet) for justeringsfunktionen.<br \/><br \/><strong>Slider-justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0. Den aktuelle slider-position bruges derefter til at justere værdien op eller ned.<br \/><br \/><strong>Valg-justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0, eller angiv en specifik værdi i mikrosekunder (uS) hvis switchens referencepunkt skal forskydes fra standarden på 1500uS.<br \/><br \/><strong>Trinvis justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0 for at bruge den aktuelle værdi som udgangspunkt for justeringen.<br \/><br \/><strong>Absolut justering<\/strong><br \/>For absolut justering skal både <strong>Adjustment Center<\/strong> og <strong>Scale<\/strong> angives.<br \/>Justeringsområdet beregnes som: <strong>Center ± Scale<\/strong>.<br \/>Eksempel: Center = 50 og Scale = 25 giver området <strong>25–75<\/strong>, hvor midterpositionen på switch\/POT svarer til 50.<br \/><br \/>Se <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight In-flight Adjustments<\/a> for flere detaljer.",
@@ -3043,10 +3078,10 @@
         "message": "Vis alle PID profiler"
     },
     "adjustmentsHideEmpty": {
-        "message": "Skjul tomme PID profiler"
+        "message": "Skjul ikke aktive kanal justeringer"
     },
     "adjustmentsSlotsActive": {
-        "message": "{{active}} af {{total}} aktive PID profiler"
+        "message": "{{active}} af {{total}} aktive kanal justeringer"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servoer kræver firmware version &gt;= 1.10.0 og understøttelse af FC"
@@ -3283,6 +3318,13 @@
         "description": "Modifier waypoint type: pauses traversal for a duration"
     },
     "flightPlanDuration": {
+        "message": "Hold varighed <span class=\"units\">min<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "Hold varighed i minutter",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
         "message": "Hold varighed <span class=\"units\">min<\/span>"
     },
     "flightPlanPattern": {
@@ -7508,6 +7550,30 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
     },
+    "magCalibrationGuidedFwTitle": {
+        "message": "Kalibrering via guide"
+    },
+    "magCalibrationPrompt1": {
+        "message": "Trin 1\/6 — Hold fladt, roter 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Trin 2\/6 — Vend omvendt, roter 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Trin 3\/6 — Næsen lige op, roter 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Trin 4\/6 — Næsen lige ned, roter 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Trin 5\/6 — Venstre side op, roter 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Trin 6\/6 — Højre side op, roter 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Dataindsamling færdig — kontroller og gem"
+    },
     "magCalibrationCancel": {
         "message": "Fortryd"
     },
@@ -7550,11 +7616,35 @@
     "magCalibrationGuidedTitle": {
         "message": "Klient kalibrering"
     },
+    "magCalibrationGuidedInstruction": {
+        "message": "Drej dit køretøj i alle retninger. Sigtet er at få en komplet kugle af prikker på omkring et eller to minutter. Gem resultatet, når kalibreringsværdierne er stabiliseret."
+    },
+    "magCalibrationCheck": {
+        "message": "Kontroller"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Kontrollerer kalibrering"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Kalibreringsværdier gemt"
+    },
+    "magCalibrationSaveError": {
+        "message": "Kunne ikke gemme kalibreringsværdier"
+    },
+    "magCalibrationAccept": {
+        "message": "Gem kalibrering"
+    },
     "magVizProjection": {
         "message": "Tredobbelt projektion"
     },
     "magVizWaitingForData": {
         "message": "Venter på data …"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Gamle"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Ny"
     },
     "magAlignmentApply": {
         "message": "Anvend"
@@ -8145,6 +8235,9 @@
     },
     "firmwareFlasherSelectOptions": {
         "message": "Vælg indstilling"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "Søg efter FC..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio protokol"

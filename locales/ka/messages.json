@@ -241,6 +241,10 @@
     "language_default": {
         "message": "სისტემის ნაგულისხმები"
     },
+    "language_ka": {
+        "message": "ქართული",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "მონაცემთა ფლეშ <br>ჩიპი ვერ მოიძებნა",
         "description": "Text of the dataflash image in the header of the page."
@@ -413,6 +417,10 @@
     },
     "tabAutotune": {
         "message": "ავტომატური რეგულირება"
+    },
+    "tabBlackboxViewer": {
+        "message": "Blackbox წამკითხველი",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
     "autotuneImportTitle": {
         "message": "Blackbox Chirp ანალიზი"
@@ -3736,8 +3744,14 @@
     "sensorsRefresh": {
         "message": "განახლება:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "განაახლეთ ყველა:"
+    },
     "sensorsScale": {
         "message": "მასშტაბი:"
+    },
+    "sensorsScaleAuto": {
+        "message": "ავტომატური"
     },
     "sensorsGyroSelect": {
         "message": "გიროსკოპი"
@@ -4301,6 +4315,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "სარეზერვო ასლი გაუქმდა, ციმციმა შეწყდა"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "სარეზერვო ასლის შექმნა ვერ მოხერხდა: მოწყობილობიდან მიღებულია არასწორი მონაცემები (არ არის CLI რეჟიმში), ჩაწერა შეწყდა"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (მემკვიდრეობა)",
