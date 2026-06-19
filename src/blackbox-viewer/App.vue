@@ -74,6 +74,9 @@
                     @apply-default="onApplyDefaultWorkspace"
                 />
             </Teleport>
+            <Teleport to="#vue-log-panel">
+                <LogPanel />
+            </Teleport>
 
             <Teleport to="#vue-analyser">
                 <SpectrumAnalyser />
@@ -120,6 +123,7 @@ import SpeedPanel from "./components/SpeedPanel.vue";
 import ZoomPanel from "./components/ZoomPanel.vue";
 import SyncPanel from "./components/SyncPanel.vue";
 import WorkspacePanel from "./components/WorkspacePanel.vue";
+import LogPanel from "./components/LogPanel.vue";
 import StatusBar from "./components/StatusBar.vue";
 import KeysDialog from "./components/KeysDialog.vue";
 import UserSettingsDialog from "./components/UserSettingsDialog.vue";
