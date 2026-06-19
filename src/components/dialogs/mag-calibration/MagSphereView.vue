@@ -121,6 +121,7 @@ const _targetQuat = new THREE.Quaternion();
 // 180° about X (forward axis): the Betaflight→scene frame adapter.
 // Derivation lives in updateQuadAttitude() — the one genuinely subtle spot.
 const _BASE_180_X = new THREE.Quaternion(1, 0, 0, 0);
+const _tmpEuler = new THREE.Euler();
 let smoothQuatInitialized = false;
 
 // Reference ghost sphere (shown before calibration data arrives)
@@ -465,10 +466,9 @@ function updateQuadAttitude() {
         // Euler fallback: build q from (roll, pitch, heading) in aerospace ZYX,
         // then the same adapter.
         const { roll, pitch, heading } = props.attitude;
-        const q = new THREE.Quaternion().setFromEuler(
-            new THREE.Euler(roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX"),
-        );
-        _targetQuat.set(q.x, -q.y, -q.z, q.w);
+        _tmpEuler.set(roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
+        _tmpQuat.setFromEuler(_tmpEuler);
+        _targetQuat.set(_tmpQuat.x, -_tmpQuat.y, -_tmpQuat.z, _tmpQuat.w);
     } else {
         return;
     }
