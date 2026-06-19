@@ -643,8 +643,8 @@ export function bootstrapViewer() {
         };
         graphStore.fieldWheel = (gi, fi, delta, shiftKey, altKey, ctrlKey) => {
             const graphs = graphStore.activeGraphConfig.getGraphs();
-            const g = String(gi);
-            const f = String(fi);
+            const g = gi == null ? gi : String(gi);
+            const f = fi == null ? fi : String(fi);
             const increase = delta >= 0;
             let msg = null;
             if (shiftKey) {
