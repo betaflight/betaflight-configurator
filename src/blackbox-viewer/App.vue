@@ -174,10 +174,11 @@ watchEffect(() => {
 
 // Derived state from stores
 const sysConfig = computed(() => {
-    // Re-evaluate when the active log changes: parser.sysConfig is replaced per log,
-    // but logStore.flightLog keeps the same reference across logs in a multi-log file.
-    void logStore.activeLogIndex;
-    return logStore.flightLog?.getSysConfig?.() ?? null;
+    // Read activeLogIndex so this re-evaluates when the active log changes: parser.sysConfig
+    // is replaced per log, but logStore.flightLog keeps the same reference across logs in a
+    // multi-log file.
+    const activeLogIndex = logStore.activeLogIndex;
+    return activeLogIndex >= 0 ? (logStore.flightLog?.getSysConfig?.() ?? null) : null;
 });
 
 function onFilesSelected(files) {
