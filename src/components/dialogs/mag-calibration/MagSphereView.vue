@@ -118,6 +118,7 @@ let quadIcon = null;
 const ATTITUDE_SMOOTH = 0.12;
 const _smoothQuat = new THREE.Quaternion();
 const _targetQuat = new THREE.Quaternion();
+const _BASE_180_X = new THREE.Quaternion(1, 0, 0, 0);
 let smoothQuatInitialized = false;
 
 // Reference ghost sphere (shown before calibration data arrives)
@@ -265,8 +266,8 @@ function initScene() {
 
     // Camera — Z-up convention, pulled back for isometric overview
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
-    camera.up.set(0, 0, 1);
-    camera.position.set(700, 560, 420);
+    camera.up.set(0, 0, -1);
+    camera.position.set(700, 560, -420);
     camera.lookAt(0, 0, 0);
 
     // Lighting
@@ -467,7 +468,7 @@ function updateQuadAttitude() {
     } else {
         _smoothQuat.slerp(_targetQuat, ATTITUDE_SMOOTH);
     }
-    quadIcon.quaternion.copy(_smoothQuat);
+    quadIcon.quaternion.copy(_smoothQuat).multiply(_BASE_180_X);
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
@@ -1245,8 +1246,8 @@ function createCompassRing(radius) {
     makeLabel("N", "#ff4444").position.set(r, 0, 0);
     makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
     // Display -Y = BF +Y = East when the quad nose faces North
-    makeLabel("E", "#aabbcc").position.set(0, -r, 0);
-    makeLabel("W", "#aabbcc").position.set(0, r, 0);
+    makeLabel("E", "#aabbcc").position.set(0, r, 0);
+    makeLabel("W", "#aabbcc").position.set(0, -r, 0);
 
     return group;
 }
