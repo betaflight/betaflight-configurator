@@ -39,6 +39,7 @@
                     class="graph-legend-group"
                     @click="onGraphClick($event, gi)"
                     @mousedown.middle.prevent="onResetPen(gi, null)"
+                    @wheel.prevent="onFieldWheel($event, gi, null)"
                 >
                     <UIcon name="i-lucide-trash-2" class="size-3.5 mr-1 inline-block align-middle" />
                     {{ graph.label }}

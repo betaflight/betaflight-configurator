@@ -88,6 +88,15 @@ export function changePenSmoothing(graphs, group, field, delta) {
     return null;
 }
 
+function scaleMinMax(mimmax, scale) {
+    const middle = (mimmax.min + mimmax.max) / 2;
+    const halfRange = (mimmax.max - mimmax.min) / 2;
+    return {
+        min: middle - halfRange * scale,
+        max: middle + halfRange * scale,
+    };
+}
+
 export function changePenZoom(graphs, group, field, delta) {
     if (group == null && field == null) {
         return null;
@@ -102,16 +111,14 @@ export function changePenZoom(graphs, group, field, delta) {
         const gi = Number.parseInt(group, 10);
         let changedValue = `<h4></h4>${direction}`;
         for (const configField of graphs[gi].fields) {
-            configField.curve.MinMax.min *= scale;
-            configField.curve.MinMax.max *= scale;
+            configField.curve.MinMax = scaleMinMax(configField.curve.MinMax, scale);
             changedValue += `${configField.friendlyName}\n`;
         }
         return changedValue;
     }
     if (group != null && field != null) {
         const gi = Number.parseInt(group, 10);
-        graphs[gi].fields[field].curve.MinMax.min *= scale;
-        graphs[gi].fields[field].curve.MinMax.max *= scale;
+        graphs[gi].fields[field].curve.MinMax = scaleMinMax(graphs[gi].fields[field].curve.MinMax, scale);
         return `<h4></h4>${direction}${graphs[gi].fields[field].friendlyName}\n`;
     }
     return null;
