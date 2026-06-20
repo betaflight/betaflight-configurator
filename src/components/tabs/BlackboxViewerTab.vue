@@ -16,6 +16,7 @@
                     <div id="vue-time-panel" style="display: contents"></div>
                     <div id="vue-sync-panel" style="display: contents"></div>
                     <div id="vue-workspace-panel" style="display: contents"></div>
+                    <div id="vue-log-panel" style="display: contents"></div>
                 </div>
                 <div id="screenshot-frame" class="graph-row">
                     <div id="log-graph" class="log-graph">
