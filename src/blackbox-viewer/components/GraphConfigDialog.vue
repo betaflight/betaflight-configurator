@@ -491,7 +491,11 @@ function convertToConfig() {
 
 function friendlyName(fieldName) {
     const debugMode = props.flightLog?.getSysConfig()?.debug_mode;
-    return FlightLogFieldPresenter.fieldNameToFriendly(fieldName, debugMode);
+    return FlightLogFieldPresenter.fieldNameToFriendly(
+        fieldName,
+        debugMode,
+        props.flightLog?.getSysConfig()?.apiVersion,
+    );
 }
 
 function getDefaults(fieldName) {
