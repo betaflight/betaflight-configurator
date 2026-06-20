@@ -6,6 +6,7 @@ import ConfigInserter from "../js/ConfigInserter";
 import { tracking } from "../js/Analytics";
 import read_hex_file from "../js/workers/hex_parser";
 import STM32 from "../js/protocols/webstm32";
+import ESP32 from "../js/protocols/esp32";
 import PortHandler from "../js/port_handler";
 
 /**
@@ -27,6 +28,7 @@ export function useFirmwareFlashing(params = {}) {
     const firmwareState = reactive({
         parsedHex: null,
         uf2Binary: null,
+        espBinary: null,
         intelHex: null,
     });
 
@@ -36,6 +38,7 @@ export function useFirmwareFlashing(params = {}) {
     const clearFirmwareState = () => {
         firmwareState.parsedHex = null;
         firmwareState.uf2Binary = null;
+        firmwareState.espBinary = null;
         firmwareState.intelHex = null;
     };
 
@@ -169,7 +172,40 @@ export function useFirmwareFlashing(params = {}) {
     };
 
     /**
-     * Process firmware file (HEX or UF2) based on extension
+     * Process a raw ESP32 .bin firmware image (merged image flashed at offset 0x0)
+     */
+    const processBin = async (data, options) => {
+        const { enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
+
+        let bytes;
+        if (!data) {
+            bytes = null;
+        } else if (data instanceof Blob) {
+            bytes = new Uint8Array(await data.arrayBuffer());
+        } else if (data instanceof ArrayBuffer) {
+            bytes = new Uint8Array(data);
+        } else if (data instanceof Uint8Array) {
+            bytes = data;
+        } else {
+            bytes = null;
+        }
+
+        if (!(bytes instanceof Uint8Array) || bytes.byteLength === 0) {
+            const errorMessage = isLocalFile
+                ? `Failed to load ${key}`
+                : $t?.("firmwareFlasherFailedToLoadOnlineFirmware");
+            flashingMessage?.(errorMessage, FLASH_MESSAGE_TYPES?.NEUTRAL);
+            enableLoadRemoteFileButton?.(true);
+            return null;
+        }
+
+        firmwareState.espBinary = bytes;
+        showLoadedFirmware?.(key, bytes.byteLength);
+        return { espBinary: bytes, firmwareType: "BIN" };
+    };
+
+    /**
+     * Process firmware file (HEX, UF2 or ESP32 BIN) based on extension
      */
     const processFirmware = async (data, extension, options) => {
         const { enableFlashButton, enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
@@ -193,6 +229,13 @@ export function useFirmwareFlashing(params = {}) {
                 });
             } else if (fileExtension === "uf2") {
                 return await processUf2(data, {
+                    enableLoadRemoteFileButton,
+                    showLoadedFirmware,
+                    key,
+                    isLocalFile,
+                });
+            } else if (fileExtension === "bin") {
+                return await processBin(data, {
                     enableLoadRemoteFileButton,
                     showLoadedFirmware,
                     key,
@@ -285,6 +328,37 @@ export function useFirmwareFlashing(params = {}) {
                     resetFlashingState?.();
                 });
         }
+    };
+
+    /**
+     * Flash a raw ESP32 .bin image over the serial ROM bootloader (browser Web Serial only).
+     */
+    const flashEspFirmware = async (options = {}) => {
+        const { filename } = options;
+
+        const image = firmwareState.espBinary;
+        if (!image) {
+            flashingMessage?.($t?.("firmwareFlasherFirmwareNotLoaded"), FLASH_MESSAGE_TYPES?.INVALID);
+            return false;
+        }
+
+        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "ESP32 Flashing", {
+            filename: filename || null,
+        });
+
+        // Let ESP32.connect() own environment gating (Web Serial only) and port
+        // validation, so the correct message is shown on Tauri/Capacitor and when
+        // no port is selected.
+        const port = PortHandler.portPicker.selectedPort;
+
+        // esptool-js connects at the ROM baud (115200) and bumps to this rate after the stub loads.
+        const ESP_FLASH_BAUD = 460800;
+
+        return ESP32.connect(port, ESP_FLASH_BAUD, image, {
+            flashingMessage,
+            flashProgress,
+            flashMessageTypes: FLASH_MESSAGE_TYPES,
+        });
     };
 
     /**
@@ -415,6 +489,29 @@ export function useFirmwareFlashing(params = {}) {
             enableDfuExitButton?.(dfuAvailable);
 
             report("uf2-complete", { saved });
+            return;
+        }
+
+        // ESP32 .bin flow — flashed over the serial ROM bootloader via esptool-js.
+        // Bypasses the STM32 MSP reboot-to-bootloader and the backup machinery.
+        if (firmwareType === "BIN") {
+            // Hold the connect lock for the duration of the long-running flash so
+            // nothing else grabs the port, and always finalise the UI in finally.
+            GUI.connect_lock = true;
+            try {
+                const flashed = await flashEspFirmware({ filename });
+                if (!flashed) {
+                    flashProgress?.(100);
+                }
+                report("bin-complete", { flashed });
+            } finally {
+                GUI.connect_lock = false;
+                resumeSponsorInterval?.();
+                enableFlashButton?.(true);
+                enableLoadRemoteFileButton?.(true);
+                enableLoadFileButton?.(true);
+                enableDfuExitButton?.(dfuAvailable);
+            }
             return;
         }
 
@@ -554,6 +651,7 @@ export function useFirmwareFlashing(params = {}) {
         // Getters (for backward compatibility)
         getParsedHex: () => firmwareState.parsedHex,
         getUf2Binary: () => firmwareState.uf2Binary,
+        getEspBinary: () => firmwareState.espBinary,
         getIntelHex: () => firmwareState.intelHex,
 
         // Methods

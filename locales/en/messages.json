@@ -4359,6 +4359,30 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Failed to save (flash) UF2"
     },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "Connecting to ESP32 bootloader..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "Detected $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "Flashing ESP32..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "Flashing complete, rebooting..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "Flashed ESP32 successfully"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "ESP32 flashing failed: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32 flashing requires the browser (Web Serial) build"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "Select a serial port before flashing the ESP32"
+    },
     "firmwareFlasherClickToConnectDfu": {
         "message": "Click to connect to DFU device"
     },
