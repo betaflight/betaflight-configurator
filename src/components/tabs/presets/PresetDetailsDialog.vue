@@ -1,12 +1,16 @@
 <template>
-    <dialog
-        ref="dialogRef"
-        class="w-[600px] max-w-[calc(100vw-2rem)] h-[520px] p-3 pb-0"
-        @close="emit('close')"
-        @cancel.prevent="requestClose"
+    <UModal
+        :open="open"
+        :close="false"
+        :ui="{
+            overlay: 'z-3000',
+            content: 'w-[600px] max-w-[calc(100vw-2rem)] h-[520px] z-3001',
+            body: 'overflow-visible',
+        }"
+        @update:open="onOpenChange"
     >
-        <div class="flex flex-col flex-1 min-h-0 h-full">
-            <div class="flex flex-col flex-1 min-h-0">
+        <template #body>
+            <div class="flex flex-col flex-1 min-h-0 h-full">
                 <div v-if="!loading && preset" class="flex flex-col flex-1 min-h-0">
                     <PresetCard
                         :preset="preset"
@@ -104,8 +108,10 @@
                 <div v-if="loading" class="data-loading h-[300px]"></div>
                 <div v-if="error" class="p-5 text-(--ui-error)">{{ error }}</div>
             </div>
+        </template>
 
-            <div class="flex flex-wrap items-center justify-between gap-2 mt-auto mx-[-12px] py-2 px-3">
+        <template #footer>
+            <div class="flex flex-wrap items-center justify-between gap-2 w-full">
                 <div class="flex items-center flex-wrap gap-1.5">
                     <UButton
                         v-if="!showCli"
@@ -147,12 +153,12 @@
                     <UButton :label="$t('close')" variant="outline" @click="requestClose" />
                 </div>
             </div>
-        </div>
-    </dialog>
+        </template>
+    </UModal>
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { i18n } from "@/js/localization";
@@ -223,7 +229,6 @@ const emit = defineEmits([
     "options-expanded-change",
 ]);
 
-const dialogRef = ref(null);
 const optionsDetailsRef = ref(null);
 
 function handleClickOutside(event) {
@@ -290,26 +295,14 @@ const descriptionHtml = computed(() => {
     return wrapper.innerHTML;
 });
 
-watch(
-    () => props.open,
-    async (isOpen) => {
-        await nextTick();
-
-        if (!dialogRef.value) {
-            return;
-        }
-
-        if (isOpen && !dialogRef.value.open) {
-            dialogRef.value.showModal();
-        } else if (!isOpen && dialogRef.value.open) {
-            dialogRef.value.close();
-        }
-    },
-    { immediate: true },
-);
-
 function requestClose() {
     emit("close");
+}
+
+function onOpenChange(value) {
+    if (!value && props.open) {
+        requestClose();
+    }
 }
 
 function sanitizeExternalHttpUrl(rawUrl) {
@@ -347,14 +340,9 @@ function handleOptionsToggle(event) {
 </script>
 
 <style>
-/* Details dialog: show as flex when open */
-dialog[open]:has(.preset-description-text) {
-    display: flex;
-}
-
-/* Preset title styling inside the details dialog */
-.tab-presets dialog .preset-description-text + .preset-description-text,
-.tab-presets dialog .preset-description-text {
+/* Preset description styling (modal body is teleported, so no .tab-presets ancestor) */
+.preset-description-text + .preset-description-text,
+.preset-description-text {
     padding-top: 6px;
     padding-bottom: 6px;
     margin-top: 12px;
