@@ -2,7 +2,7 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid, isTauri } from "./utils/checkCompatibility.js";
+import { isAndroid, isTauri, isTauriIOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
@@ -30,11 +30,11 @@ class Serial extends EventTarget {
                 { name: "tcp", instance: new CapacitorTcp() },
             ];
         } else if (isTauri()) {
-            // Tauri shell (desktop + Android): native serial via tauri-plugin-serialplugin,
-            // raw TCP via the Rust tcp_* commands (so the Betaflight bridge on 5761 works),
-            // bluetooth falls back to the web API the webview exposes.
+            // Tauri shell: raw TCP via the Rust tcp_* commands (so the Betaflight bridge
+            // on 5761 works), bluetooth via the web API the webview exposes. Native serial
+            // (tauri-plugin-serialplugin) is desktop + Android only — iOS has no USB serial.
             this._protocols = [
-                { name: "serial", instance: new TauriSerial() },
+                ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
                 { name: "bluetooth", instance: new WebBluetooth() },
                 { name: "tcp", instance: new TauriTcp() },
             ];

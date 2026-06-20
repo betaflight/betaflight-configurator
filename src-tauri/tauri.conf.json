@@ -44,7 +44,10 @@
         "category": "Utility",
         "copyright": "The Betaflight open source project.",
         "shortDescription": "Configuration and management application for Betaflight flight controllers.",
-        "longDescription": "Crossplatform configuration and management application for the Betaflight flight control firmware."
+        "longDescription": "Crossplatform configuration and management application for the Betaflight flight control firmware.",
+        "iOS": {
+            "minimumSystemVersion": "13.0"
+        }
     },
     "plugins": {
         "shell": {

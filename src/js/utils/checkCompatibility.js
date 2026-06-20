@@ -71,6 +71,16 @@ export function isTauri() {
     return typeof globalThis !== "undefined" && "__TAURI_INTERNALS__" in globalThis;
 }
 
+export function isTauriIOS() {
+    if (!isTauri()) {
+        return false;
+    }
+    // The Tauri iOS webview is WKWebView: iPhone/iPod report directly, while an
+    // iPad in desktop mode reports "Macintosh" but still exposes touch points.
+    const ua = navigator.userAgent ?? "";
+    return /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+}
+
 export function checkCompatibility() {
     if (isEmbeddedDeployment()) {
         console.log("[COMPAT] Embedded deployment detected — skipping browser checks");
@@ -150,7 +160,8 @@ export function checkCompatibility() {
 
 export function checkSerialSupport() {
     let result = false;
-    if (isAndroid() || isTauri()) {
+    // iOS (Capacitor or Tauri) has no USB serial API, so don't advertise it there.
+    if (isAndroid() || (isTauri() && !isTauriIOS())) {
         result = true;
     } else if (navigator.serial) {
         result = true;
