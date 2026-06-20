@@ -90,7 +90,9 @@ vi.mock("../../src/js/msp", () => ({
 
 vi.mock("../../src/js/msp/MSPHelper", () => ({
     __esModule: true,
-    default: vi.fn(() => mspHelperInstance),
+    default: vi.fn(function () {
+        return mspHelperInstance;
+    }),
 }));
 
 vi.mock("../../src/js/msp/MSPCodes", () => ({
