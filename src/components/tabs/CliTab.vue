@@ -41,21 +41,23 @@
         </div>
 
         <!-- Snippet preview dialog -->
-        <dialog ref="snippetPreviewDialogRef" closedby="any" class="w-[600px] h-fit">
-            <div class="p-4">
+        <UModal v-model:open="snippetPreviewOpen" :ui="{ overlay: 'z-3000', content: 'w-[600px] z-3001' }">
+            <template #body>
                 <div class="note mb-3">
                     <p v-html="$t('cliConfirmSnippetNote')"></p>
                 </div>
                 <textarea
                     v-model="cli.state.snippetPreview"
                     rows="20"
-                    class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px] mb-[5px]"
+                    class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px]"
                 ></textarea>
-                <div class="mt-3">
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
                     <UButton :label="$t('cliConfirmSnippetBtn')" @click="handleSnippetConfirm" />
                 </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
 
         <!-- Support warning dialog -->
         <dialog ref="supportWarningDialogRef" class="w-[400px] h-fit">
@@ -243,7 +245,7 @@ export default defineComponent({
             windowWrapperRef: cli.windowWrapperRef,
             cliWindowRef: cli.cliWindowRef,
             commandInputRef: cli.commandInputRef,
-            snippetPreviewDialogRef: cli.snippetPreviewDialogRef,
+            snippetPreviewOpen: cli.snippetPreviewOpen,
             supportWarningDialogRef: cli.supportWarningDialogRef,
         };
     },
