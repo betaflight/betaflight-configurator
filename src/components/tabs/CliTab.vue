@@ -60,9 +60,14 @@
         </UModal>
 
         <!-- Support warning dialog -->
-        <dialog ref="supportWarningDialogRef" class="w-[400px] h-fit">
-            <div class="p-4">
-                <h3 class="font-semibold mb-2">{{ $t("supportWarningDialogTitle") }}</h3>
+        <UModal
+            v-model:open="supportWarningOpen"
+            :title="$t('supportWarningDialogTitle')"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+        >
+            <template #body>
                 <div class="mb-3" v-html="$t('supportWarningDialogText')"></div>
                 <textarea
                     v-model="cli.state.supportDialogInput"
@@ -72,12 +77,14 @@
                     cols="0"
                     class="w-full mt-2 leading-5 p-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"
                 ></textarea>
-                <div class="flex gap-2 mt-3">
-                    <UButton :label="$t('submit')" @click="handleSupportSubmit" />
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
                     <UButton :label="$t('cancel')" variant="outline" @click="handleSupportCancel" />
+                    <UButton :label="$t('submit')" @click="handleSupportSubmit" />
                 </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
 
         <!-- Bottom toolbar -->
         <div class="content_toolbar xs-compressed toolbar_fixed_bottom flex items-center gap-2">
@@ -246,7 +253,7 @@ export default defineComponent({
             cliWindowRef: cli.cliWindowRef,
             commandInputRef: cli.commandInputRef,
             snippetPreviewOpen: cli.snippetPreviewOpen,
-            supportWarningDialogRef: cli.supportWarningDialogRef,
+            supportWarningOpen: cli.supportWarningOpen,
         };
     },
 });

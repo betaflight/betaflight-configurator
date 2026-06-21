@@ -134,7 +134,7 @@ export function useCli() {
     const cliWindowRef = ref(null);
     const commandInputRef = ref(null);
     const snippetPreviewOpen = ref(false);
-    const supportWarningDialogRef = ref(null);
+    const supportWarningOpen = ref(false);
 
     // Support dialog callback
     let supportDialogCallback = null;
@@ -345,15 +345,11 @@ export function useCli() {
 
     const showSupportWarningDialog = (onAccept) => {
         supportDialogCallback = onAccept;
-        if (supportWarningDialogRef.value && !supportWarningDialogRef.value.hasAttribute("open")) {
-            supportWarningDialogRef.value.showModal();
-        }
+        supportWarningOpen.value = true;
     };
 
     const handleSupportDialogSubmit = () => {
-        if (supportWarningDialogRef.value) {
-            supportWarningDialogRef.value.close();
-        }
+        supportWarningOpen.value = false;
         if (supportDialogCallback) {
             supportDialogCallback(state.supportDialogInput);
             supportDialogCallback = null;
@@ -362,9 +358,7 @@ export function useCli() {
     };
 
     const handleSupportDialogCancel = () => {
-        if (supportWarningDialogRef.value) {
-            supportWarningDialogRef.value.close();
-        }
+        supportWarningOpen.value = false;
         supportDialogCallback = null;
         state.supportDialogInput = "";
     };
@@ -721,7 +715,7 @@ export function useCli() {
         cliWindowRef,
         commandInputRef,
         snippetPreviewOpen,
-        supportWarningDialogRef,
+        supportWarningOpen,
         initialize,
         cleanup,
         clearHistory,
