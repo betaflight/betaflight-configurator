@@ -100,11 +100,18 @@
             </Dialog>
 
             <!-- Restore progress dialog -->
-            <dialog ref="restoreProgressDialogRef" class="w-[320px] h-fit p-6" @cancel.prevent>
-                <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
-                <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
-                <UProgress :model-value="restoreProgress" :max="100" class="mt-3" />
-            </dialog>
+            <UModal
+                :open="restoreProgressOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ overlay: 'z-3000', content: 'w-[320px] z-3001' }"
+            >
+                <template #body>
+                    <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
+                    <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
+                    <UProgress :model-value="restoreProgress" :max="100" class="mt-3" />
+                </template>
+            </UModal>
 
             <!-- Restore errors dialog -->
             <dialog
@@ -180,7 +187,6 @@ const restoreProgressOpen = ref(false);
 const restoreErrors = ref([]);
 const restoreErrorsOpen = ref(false);
 const restoreSavePressed = ref(false);
-const restoreProgressDialogRef = ref(null);
 const restoreErrorsDialogRef = ref(null);
 let userApi = null;
 let unsubscribeLogin = null;
@@ -421,18 +427,6 @@ async function handleRestoreErrorsClose() {
         scheduleReconnect();
     }
 }
-
-watch(restoreProgressOpen, async (isOpen) => {
-    await nextTick();
-    if (!restoreProgressDialogRef.value) {
-        return;
-    }
-    if (isOpen && !restoreProgressDialogRef.value.open) {
-        restoreProgressDialogRef.value.showModal();
-    } else if (!isOpen && restoreProgressDialogRef.value.open) {
-        restoreProgressDialogRef.value.close();
-    }
-});
 
 watch(restoreErrorsOpen, async (isOpen) => {
     await nextTick();
