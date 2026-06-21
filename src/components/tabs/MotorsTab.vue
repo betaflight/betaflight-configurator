@@ -465,12 +465,21 @@
             </div>
 
             <!-- Warning Dialog -->
-            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged" class="w-[400px] h-fit">
-                <div class="p-4">
-                    <div class="mb-4" v-html="warningMessage"></div>
-                    <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
-                </div>
-            </dialog>
+            <UModal
+                v-model:open="settingsChangedOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+            >
+                <template #body>
+                    <div v-html="warningMessage"></div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
+                        <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
+                    </div>
+                </template>
+            </UModal>
 
             <!-- Dynamic Notch Filters Dialog -->
             <dialog id="dialog-dyn-filters" ref="dialogDynFilters" class="w-[400px] h-fit">
@@ -542,16 +551,16 @@ const motorsState = useMotorsState();
 const { configHasChanged, resetChanges } = motorsState;
 
 // Warning dialog
-const dialogSettingsChanged = ref(null);
+const settingsChangedOpen = ref(false);
 const warningMessage = ref("");
 
 const showWarningDialog = (message) => {
     warningMessage.value = message;
-    dialogSettingsChanged.value?.showModal();
+    settingsChangedOpen.value = true;
 };
 
 const closeWarningDialog = () => {
-    dialogSettingsChanged.value?.close();
+    settingsChangedOpen.value = false;
 };
 
 // Dynamic notch filter dialog
