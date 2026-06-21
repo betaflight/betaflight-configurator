@@ -119,27 +119,26 @@
             </template>
         </UModal>
 
-        <dialog ref="verifyBoardDialog" id="dialog-verify-board" @close="handleVerifyBoardDialogClose">
-            <div id="dialog-verify-board-content-wrapper">
-                <div ref="verifyBoardContent" id="dialog-verify-board-content"></div>
-                <div class="btn dialog-buttons">
-                    <a
-                        href="#"
-                        id="dialog-verify-board-abort-confirmbtn"
-                        class="regular-button"
-                        @click.prevent="handleVerifyBoardAbort"
-                        >{{ $t("firmwareFlasherButtonAbort") }}</a
-                    >
-                    <a
-                        href="#"
-                        id="dialog-verify-board-continue-confirmbtn"
-                        class="regular-button"
-                        @click.prevent="handleVerifyBoardContinue"
-                        >{{ $t("firmwareFlasherButtonContinue") }}</a
-                    >
+        <UModal
+            v-model:open="verifyBoardOpen"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
+        >
+            <template #body>
+                <div v-html="verifyBoardContentHtml"></div>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton
+                        :label="$t('firmwareFlasherButtonAbort')"
+                        variant="outline"
+                        @click="handleVerifyBoardAbort"
+                    />
+                    <UButton :label="$t('firmwareFlasherButtonContinue')" @click="handleVerifyBoardContinue" />
                 </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
     </BaseTab>
 </template>
 
@@ -277,8 +276,8 @@ export default defineComponent({
         const sponsorTile = ref(null);
 
         // Verify board dialog refs
-        const verifyBoardDialog = ref(null);
-        const verifyBoardContent = ref(null);
+        const verifyBoardOpen = ref(false);
+        const verifyBoardContentHtml = ref("");
         const verifyBoardOnAcceptCallback = ref(null);
         const verifyBoardOnAbortCallback = ref(null);
 
@@ -1695,28 +1694,23 @@ export default defineComponent({
         };
 
         const handleVerifyBoardAbort = () => {
-            if (verifyBoardDialog.value) {
-                verifyBoardDialog.value.close();
-            }
-
-            if (verifyBoardOnAbortCallback.value) {
-                verifyBoardOnAbortCallback.value();
+            verifyBoardOpen.value = false;
+            const onAbort = verifyBoardOnAbortCallback.value;
+            verifyBoardOnAcceptCallback.value = null;
+            verifyBoardOnAbortCallback.value = null;
+            if (onAbort) {
+                onAbort();
             }
         };
 
         const handleVerifyBoardContinue = () => {
-            if (verifyBoardDialog.value) {
-                verifyBoardDialog.value.close();
-            }
-
-            if (verifyBoardOnAcceptCallback.value) {
-                verifyBoardOnAcceptCallback.value();
-            }
-        };
-
-        const handleVerifyBoardDialogClose = () => {
+            verifyBoardOpen.value = false;
+            const onAccept = verifyBoardOnAcceptCallback.value;
             verifyBoardOnAcceptCallback.value = null;
             verifyBoardOnAbortCallback.value = null;
+            if (onAccept) {
+                onAccept();
+            }
         };
 
         // Handle restore backup functionality
@@ -1788,17 +1782,15 @@ export default defineComponent({
         };
 
         const showDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
-            if (verifyBoardContent.value) {
-                verifyBoardContent.value.innerHTML = $t("firmwareFlasherVerifyBoard", {
-                    selected_board: selected,
-                    verified_board: verified,
-                });
-            }
+            verifyBoardContentHtml.value = $t("firmwareFlasherVerifyBoard", {
+                selected_board: selected,
+                verified_board: verified,
+            });
 
-            if (verifyBoardDialog.value && !verifyBoardDialog.value.hasAttribute("open")) {
+            if (!verifyBoardOpen.value) {
                 verifyBoardOnAcceptCallback.value = onAccept;
                 verifyBoardOnAbortCallback.value = onAbort;
-                verifyBoardDialog.value.showModal();
+                verifyBoardOpen.value = true;
             }
         };
 
@@ -1877,8 +1869,8 @@ export default defineComponent({
             FLASH_MESSAGE_TYPES,
             // Template refs
             sponsorTile,
-            verifyBoardDialog,
-            verifyBoardContent,
+            verifyBoardOpen,
+            verifyBoardContentHtml,
             unstableFirmwareOpen,
             // Functions
             enableFlashButton,
@@ -1919,7 +1911,6 @@ export default defineComponent({
             handleUnstableFirmwareCancel,
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
-            handleVerifyBoardDialogClose,
             handleRestoreBackup,
             saveFirmware,
         };
