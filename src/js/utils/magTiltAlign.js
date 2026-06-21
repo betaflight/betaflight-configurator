@@ -31,7 +31,13 @@ const REFINE_RADIUS = 12; // degrees
 const REFINE_TOP_N = 8; // how many of the top coarse candidates to refine
 
 function clamp(v, lo, hi) {
-    return v < lo ? lo : v > hi ? hi : v;
+    if (v < lo) {
+        return lo;
+    }
+    if (v > hi) {
+        return hi;
+    }
+    return v;
 }
 
 function normalize3(v) {
@@ -161,7 +167,10 @@ export function solveTiltAlignment(mCalSamples, wmmInclinationRad) {
 
     // Unique minimum: a tilt-diverse tumble (enforced by the upstream coverage gate) pins the
     // full proper rotation with no chirality twin, so take the lowest-cost refined candidate.
-    const best = refined.reduce((a, b) => (a.cost < b.cost ? a : b));
+    if (refined.length === 0) {
+        return null;
+    }
+    const best = refined.reduce((a, b) => (a.cost < b.cost ? a : b), refined[0]);
 
     const bestMatrix = eulerToMatrix(best.roll, best.pitch, best.yaw);
     const snap = snapToPreset(bestMatrix);

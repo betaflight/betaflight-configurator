@@ -263,7 +263,9 @@ export function check3DCoverage(samples) {
     const n = samples.length;
     for (const s of samples) {
         const len = Math.hypot(s.x, s.y, s.z);
-        if (len < 1e-6) continue;
+        if (len < 1e-6) {
+            continue;
+        }
         sx += s.x / len;
         sy += s.y / len;
         sz += s.z / len;
@@ -280,7 +282,9 @@ export function check3DCoverage(samples) {
         cyz = 0;
     for (const s of samples) {
         const len = Math.hypot(s.x, s.y, s.z);
-        if (len < 1e-6) continue;
+        if (len < 1e-6) {
+            continue;
+        }
         const dx = s.x / len - mx;
         const dy = s.y / len - my;
         const dz = s.z / len - mz;
@@ -396,7 +400,9 @@ export function computeDirectionalCoverage(points, center, minHits = 3) {
         const dy = pt.y - center.y;
         const dz = pt.z - center.z;
         const len = Math.hypot(dx, dy, dz);
-        if (len < 1e-9) continue;
+        if (len < 1e-9) {
+            continue;
+        }
         const nx = dx / len;
         const ny = dy / len;
         const nz = dz / len;

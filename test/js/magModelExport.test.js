@@ -140,6 +140,20 @@ describe("computeDownstreamFusion — null-safety", () => {
     });
 });
 
+describe("buildCharacterizationModel — null geoReference", () => {
+    it("emits null geo_reference fields and a populated downstream_fusion when geoReference is null", () => {
+        const model = buildModel({ geoReference: null });
+        expect(model.geo_reference.declination_deg).toBeNull();
+        expect(model.geo_reference.inclination_deg).toBeNull();
+        expect(model.geo_reference.field_strength_nt).toBeNull();
+        // downstream_fusion should still be present (computeDownstreamFusion is null-safe)
+        expect(model.downstream_fusion).toBeDefined();
+        expect(model.downstream_fusion.frame).toBe("FRD");
+        expect(model.downstream_fusion.nt_per_corrected_unit).toBeNull();
+        expect(model.downstream_fusion.earth_field_ned_gauss).toBeNull();
+    });
+});
+
 describe("computeMagQualityBounds", () => {
     it("flags out-of-range field strength (too low)", () => {
         const q = computeMagQualityBounds(

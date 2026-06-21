@@ -43,7 +43,9 @@ export function isFirmwareCustomMagAlignCapable(versionString) {
  */
 export function currentMatrixOf(currentAlignment, customAngles) {
     if (currentAlignment === 9) {
-        if (!customAngles) return null;
+        if (!customAngles) {
+            return null;
+        }
         return eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
     }
     const al = currentAlignment >= 1 && currentAlignment <= 8 ? currentAlignment : 1;
@@ -88,7 +90,9 @@ export function proposedMatrixOf(result, fallbackMat = ALIGNMENT_MATRICES[1]) {
  * @returns {{ x: number, y: number, z: number }|null}
  */
 export function computeCalFromEllipsoid(ellipsoidParams, newCombined, magZeroAtCapture = null) {
-    if (!ellipsoidParams) return null;
+    if (!ellipsoidParams) {
+        return null;
+    }
     const c = ellipsoidParams.center;
     const z = magZeroAtCapture ?? { x: 0, y: 0, z: 0 };
     const b = [c.x + z.x, c.y + z.y, c.z + z.z];

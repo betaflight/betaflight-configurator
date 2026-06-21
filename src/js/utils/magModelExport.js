@@ -23,16 +23,24 @@ export function normalizeHeading(deg) {
 
 /** Signed wrapped heading error in (-180, 180]. */
 export function signedHeadingError(actual, expected) {
-    if (expected === null || expected === undefined) return 0;
+    if (expected === null || expected === undefined) {
+        return 0;
+    }
     let diff = actual - expected;
-    while (diff > 180) diff -= 360;
-    while (diff < -180) diff += 360;
+    while (diff > 180) {
+        diff -= 360;
+    }
+    while (diff < -180) {
+        diff += 360;
+    }
     return diff;
 }
 
 /** ZYX Euler angles (degrees) for a solver result, presets included. */
 export function getEulerAngles(solverResultVal) {
-    if (!solverResultVal) return { roll: 0, pitch: 0, yaw: 0 };
+    if (!solverResultVal) {
+        return { roll: 0, pitch: 0, yaw: 0 };
+    }
     const preset = solverResultVal.preset ?? solverResultVal.alignment;
     if (preset === 9 && solverResultVal.euler_zyx_deg) {
         return { ...solverResultVal.euler_zyx_deg };
@@ -247,8 +255,8 @@ export function buildCharacterizationModel({
         geo_reference: {
             latitude_deg: gpsFix ? gpsLat / 10000000 : null,
             longitude_deg: gpsFix ? gpsLon / 10000000 : null,
-            declination_deg: geoReference?.declination ?? 0,
-            inclination_deg: geoReference?.inclination ?? 0,
+            declination_deg: geoReference?.declination ?? null,
+            inclination_deg: geoReference?.inclination ?? null,
             field_strength_nt: geoReference?.fieldStrength ?? null,
         },
         alignment: alignmentBlock,

@@ -1599,7 +1599,9 @@ async function startClientCal() {
 }
 
 async function startFullCal() {
-    if (!calGuidedAvailable.value) return;
+    if (!calGuidedAvailable.value) {
+        return;
+    }
     lastCalStarter = startFullCal;
     calIsFull.value = true;
     calIsGuided.value = false;
@@ -1641,6 +1643,7 @@ async function acceptGuidedMagCal() {
 }
 
 async function acceptFullCal() {
+    clearFullStepTimer();
     const samples = cal.samples;
     if (samples.length < 40) {
         gui_log(i18n.getMessage("magCalibrationFullInsufficientSamples"));
@@ -1685,7 +1688,6 @@ async function acceptFullCal() {
     }
 
     fullCalResult.value = result;
-    clearFullStepTimer();
     cal.completeCalibration();
 }
 
@@ -1708,7 +1710,9 @@ async function saveCalValues({ x, y, z }) {
 
 function buildFullCalCliLines() {
     const r = fullCalResult.value;
-    if (!r) return [];
+    if (!r) {
+        return [];
+    }
     const lines = [];
 
     if (r.preset === 9) {
@@ -1739,14 +1743,29 @@ function buildFullCalCliLines() {
 
 function copyFullCalCli() {
     const lines = buildFullCalCliLines();
-    if (!lines.length) return;
-    navigator.clipboard.writeText(lines.join("\n")).catch(() => {});
-    gui_log(i18n.getMessage("magCalibrationFullCliCopied"));
+    if (!lines.length) {
+        return;
+    }
+    navigator.clipboard
+        .writeText(lines.join("\n"))
+        .then(() => gui_log(i18n.getMessage("magCalibrationFullCliCopied")))
+        .catch(() => gui_log(i18n.getMessage("magCalibrationFullCliCopyFailed")));
 }
 
 async function applyFullCal() {
     const r = fullCalResult.value;
-    if (!r) return;
+    if (!r) {
+        return;
+    }
+    if (r.preset === 9 && !isFirmwareCustomMagAlignCapable(fcStore.config?.flightControllerVersion)) {
+        gui_log(
+            i18n.getMessage("magCalibrationFullCustomUnsupported", {
+                version: fcStore.config?.flightControllerVersion || "?",
+                min: MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN,
+            }),
+        );
+        return;
+    }
     isSavingCal.value = true;
     try {
         // Reflect the proposed alignment into the form. This makes it visible in the
@@ -1784,7 +1803,9 @@ async function applyFullCal() {
 
 function exportFullCalModel() {
     const r = fullCalResult.value;
-    if (!r) return;
+    if (!r) {
+        return;
+    }
     const geoRef = calGeoRef.value || getGeoReference();
     const align_mag = fcStore.sensorAlignment.align_mag || 0;
     const customAngles =

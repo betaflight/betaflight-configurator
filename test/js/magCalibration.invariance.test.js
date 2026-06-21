@@ -36,7 +36,15 @@ function mulberry32(seed) {
 }
 
 const DEG = Math.PI / 180;
-const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+function clamp(v, lo, hi) {
+    if (v < lo) {
+        return lo;
+    }
+    if (v > hi) {
+        return hi;
+    }
+    return v;
+}
 
 /** Geodesic distance between two rotation matrices (degrees). */
 function rotationAngleDeg(A, B) {
@@ -58,7 +66,6 @@ function rotationAngleDeg(A, B) {
  * then fitEllipsoid to recover b_s (as center), then solveTiltAlignment to recover R_true.
  */
 function makeCapturedTumble(rTrue, bSensor, inclDeg, rCapture, magZero, rng) {
-    const rCaptureT = mat3transpose(rCapture);
     const rTrueT = mat3transpose(rTrue);
 
     const I = inclDeg * DEG;

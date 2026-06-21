@@ -28,10 +28,15 @@ function mulberry32(seed) {
 }
 
 const DEG = Math.PI / 180;
-const RAD = 180 / Math.PI;
 
 function clamp(v, lo, hi) {
-    return v < lo ? lo : v > hi ? hi : v;
+    if (v < lo) {
+        return lo;
+    }
+    if (v > hi) {
+        return hi;
+    }
+    return v;
 }
 
 function det3(m) {
@@ -140,7 +145,6 @@ describe("characterizeTumble — synthetic oracle", () => {
 
     it("refuses a planar (level-only) sample set", () => {
         const I = 71 * DEG;
-        const gWorld = [0, 0, -1];
         const fWorld = [Math.cos(I), 0, -Math.sin(I)];
         const R_plantT = mat3transpose(R_plant);
         const samples = [];

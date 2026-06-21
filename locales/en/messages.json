@@ -7940,6 +7940,12 @@
     "magCalibrationFullCliCopied": {
         "message": "CLI commands copied to clipboard"
     },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Could not copy to clipboard"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Firmware {{version}} is too old for CUSTOM mag alignment (needs {{min}}+). Update firmware, then apply."
+    },
     "magCalibrationFullApplied": {
         "message": "Calibration applied and saved"
     },

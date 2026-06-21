@@ -13,6 +13,49 @@
  */
 
 /**
+ * Accumulate design-matrix normal equations for one point.
+ * Updates DtD (upper triangle) and DtY in-place.
+ */
+function accumulatePoint(DtD, DtY, x, y, z) {
+    const xx = x * x,
+        yy = y * y,
+        zz = z * z;
+    const row = [xx, yy, zz, 2 * x * y, 2 * x * z, 2 * y * z, 2 * x, 2 * y, 2 * z];
+    for (let r = 0; r < 9; r++) {
+        for (let c = r; c < 9; c++) {
+            DtD[r][c] += row[r] * row[c];
+        }
+        DtY[r] += row[r];
+    }
+}
+
+/**
+ * Compute radius (mean corrected magnitude) and RMS residual from the fit.
+ * @param {Array<{x,y,z}>} points
+ * @param {number[]} bias - [bx, by, bz] hard-iron center
+ * @param {number[][]} W_inv - 3×3 soft-iron correction matrix
+ * @returns {{ radius: number, residual: number }}
+ */
+function computeRadiusAndResidual(points, bias, W_inv) {
+    let sumR = 0;
+    let sumResid = 0;
+    for (const { x, y, z } of points) {
+        const dx = x - bias[0],
+            dy = y - bias[1],
+            dz = z - bias[2];
+        const cx = W_inv[0][0] * dx + W_inv[0][1] * dy + W_inv[0][2] * dz;
+        const cy = W_inv[1][0] * dx + W_inv[1][1] * dy + W_inv[1][2] * dz;
+        const cz = W_inv[2][0] * dx + W_inv[2][1] * dy + W_inv[2][2] * dz;
+        const r = Math.hypot(cx, cy, cz);
+        sumR += r;
+        const err = r - 1.0;
+        sumResid += err * err;
+    }
+    const N = points.length;
+    return { radius: sumR / N, residual: Math.sqrt(sumResid / N) };
+}
+
+/**
  * Fit a 3D ellipsoid to a set of points.
  *
  * @param {Array<{x:number,y:number,z:number}>} points
@@ -20,32 +63,16 @@
  */
 export function fitEllipsoid(points) {
     const N = points.length;
-    if (N < 9) return null;
+    if (N < 9) {
+        return null;
+    }
 
     // Accumulate D^T*D (9×9) and D^T*Y (9×1) directly to avoid large N×9 matrix
     const DtD = Array.from({ length: 9 }, () => new Float64Array(9));
     const DtY = new Float64Array(9);
 
-    for (let i = 0; i < N; i++) {
-        const { x, y, z } = points[i];
-        const xx = x * x,
-            yy = y * y,
-            zz = z * z;
-        const xy2 = 2 * x * y,
-            xz2 = 2 * x * z,
-            yz2 = 2 * y * z;
-        const row = [xx, yy, zz, xy2, xz2, yz2, 2 * x, 2 * y, 2 * z];
-
-        // Symmetric rank-1 update: DtD += row^T * row
-        for (let r = 0; r < 9; r++) {
-            for (let c = r; c < 9; c++) {
-                DtD[r][c] += row[r] * row[c];
-            }
-        }
-        // DtY += row^T * 1.0
-        for (let r = 0; r < 9; r++) {
-            DtY[r] += row[r];
-        }
+    for (const { x, y, z } of points) {
+        accumulatePoint(DtD, DtY, x, y, z);
     }
 
     // Fill lower triangle of DtD
@@ -57,7 +84,9 @@ export function fitEllipsoid(points) {
 
     // Solve 9×9 linear system DtD * p = DtY via Gaussian elimination with partial pivoting
     const p = solve9x9(DtD, DtY);
-    if (!p) return null;
+    if (!p) {
+        return null;
+    }
 
     const A = p[0],
         B = p[1],
@@ -79,7 +108,9 @@ export function fitEllipsoid(points) {
 
     // Extract hard-iron bias: b = -inv(Q) * u
     const Q_inv = invert3x3(Q);
-    if (!Q_inv) return null;
+    if (!Q_inv) {
+        return null;
+    }
 
     const bias = [
         -(Q_inv[0][0] * u[0] + Q_inv[0][1] * u[1] + Q_inv[0][2] * u[2]),
@@ -96,7 +127,9 @@ export function fitEllipsoid(points) {
         by * (Q[1][0] * bx + Q[1][1] * by + Q[1][2] * bz) +
         bz * (Q[2][0] * bx + Q[2][1] * by + Q[2][2] * bz);
     const offset = 1.0 + bQb;
-    if (offset <= 0) return null;
+    if (offset <= 0) {
+        return null;
+    }
 
     const Q_norm = [
         [Q[0][0] / offset, Q[0][1] / offset, Q[0][2] / offset],
@@ -109,36 +142,19 @@ export function fitEllipsoid(points) {
     // |W_inv·(m−b)|² = (m−b)ᵀ·L·Lᵀ·(m−b) = (m−b)ᵀ·Q_norm·(m−b) = 1.
     // L is lower-triangular: its off-diagonal terms live at [1][0], [2][0], [2][1].
     const L = cholesky3x3(Q_norm);
-    if (!L) return null;
+    if (!L) {
+        return null;
+    }
 
+    // cholesky3x3 already guarantees L[0][0], L[1][1], L[2][2] > 0
+    // (it returns null for any non-positive pivot), so no further negativity check is needed.
     const W_inv = [
         [L[0][0], L[1][0], L[2][0]],
         [0, L[1][1], L[2][1]],
         [0, 0, L[2][2]],
     ];
 
-    // Check for negativity
-    if (L[0][0] <= 0 || L[1][1] <= 0 || L[2][2] <= 0) return null;
-
-    // Compute radius and residual
-    let sumR = 0;
-    let sumResid = 0;
-    for (let i = 0; i < N; i++) {
-        const { x, y, z } = points[i];
-        const dx = x - bias[0],
-            dy = y - bias[1],
-            dz = z - bias[2];
-        const cx = W_inv[0][0] * dx + W_inv[0][1] * dy + W_inv[0][2] * dz;
-        const cy = W_inv[1][0] * dx + W_inv[1][1] * dy + W_inv[1][2] * dz;
-        const cz = W_inv[2][0] * dx + W_inv[2][1] * dy + W_inv[2][2] * dz;
-        const r = Math.hypot(cx, cy, cz);
-        sumR += r;
-        const err = r - 1.0;
-        sumResid += err * err;
-    }
-    const radius = sumR / N;
-    const residual = Math.sqrt(sumResid / N);
-
+    const { radius, residual } = computeRadiusAndResidual(points, bias, W_inv);
     return { center: { x: bias[0], y: bias[1], z: bias[2] }, W_inv, radius, residual };
 }
 
@@ -164,6 +180,31 @@ export function applyEllipsoidCorrection(raw, params) {
 
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
+/** Find the row with the largest absolute value in column `col`, starting from `col`. */
+function findPivot9(aug, col) {
+    let maxVal = Math.abs(aug[col][col]);
+    let maxRow = col;
+    for (let row = col + 1; row < 9; row++) {
+        const val = Math.abs(aug[row][col]);
+        if (val > maxVal) {
+            maxVal = val;
+            maxRow = row;
+        }
+    }
+    return { maxVal, maxRow };
+}
+
+/** Eliminate all rows below `col` using the pivot at aug[col][col]. */
+function eliminateBelow9(aug, col) {
+    const pivot = aug[col][col];
+    for (let row = col + 1; row < 9; row++) {
+        const factor = aug[row][col] / pivot;
+        for (let c = col; c <= 9; c++) {
+            aug[row][c] -= factor * aug[col][c];
+        }
+    }
+}
+
 /**
  * Solve 9×9 system with partial pivoting.  Returns null if singular.
  * Same pattern as sphereFit.js solveGaussian, extended to 9×9.
@@ -186,34 +227,16 @@ function solve9x9(A, b) {
 
     // Forward elimination with partial pivoting
     for (let col = 0; col < n; col++) {
-        // Find pivot row (largest absolute value in column)
-        let maxVal = Math.abs(aug[col][col]);
-        let maxRow = col;
-        for (let row = col + 1; row < n; row++) {
-            const val = Math.abs(aug[row][col]);
-            if (val > maxVal) {
-                maxVal = val;
-                maxRow = row;
-            }
+        const { maxVal, maxRow } = findPivot9(aug, col);
+        if (maxVal < 1e-12) {
+            return null; // Singular
         }
-
-        if (maxVal < 1e-12) return null; // Singular
-
-        // Swap rows
         if (maxRow !== col) {
             const tmp = aug[col];
             aug[col] = aug[maxRow];
             aug[maxRow] = tmp;
         }
-
-        // Eliminate below
-        const pivot = aug[col][col];
-        for (let row = col + 1; row < n; row++) {
-            const factor = aug[row][col] / pivot;
-            for (let c = col; c <= n; c++) {
-                aug[row][c] -= factor * aug[col][c];
-            }
-        }
+        eliminateBelow9(aug, col);
     }
 
     // Back substitution
@@ -247,7 +270,9 @@ function invert3x3(m) {
         i = m[2][2];
 
     const det = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
-    if (Math.abs(det) < 1e-24) return null;
+    if (Math.abs(det) < 1e-24) {
+        return null;
+    }
 
     const invDet = 1 / det;
     return [
@@ -276,18 +301,24 @@ function cholesky3x3(Q) {
     // propagate NaN into W_inv. `!(NaN > 0)` is true, so this rejects NaN,
     // zero, and negative pivots alike (i.e. non-positive-definite Q).
     L[0][0] = Math.sqrt(Q[0][0]);
-    if (!(L[0][0] > 0)) return null;
+    if (!(L[0][0] > 0)) {
+        return null;
+    }
 
     L[1][0] = Q[1][0] / L[0][0];
     L[2][0] = Q[2][0] / L[0][0];
 
     L[1][1] = Math.sqrt(Q[1][1] - L[1][0] * L[1][0]);
-    if (!(L[1][1] > 0)) return null;
+    if (!(L[1][1] > 0)) {
+        return null;
+    }
 
     L[2][1] = (Q[2][1] - L[2][0] * L[1][0]) / L[1][1];
 
     L[2][2] = Math.sqrt(Q[2][2] - L[2][0] * L[2][0] - L[2][1] * L[2][1]);
-    if (!(L[2][2] > 0)) return null;
+    if (!(L[2][2] > 0)) {
+        return null;
+    }
 
     return L;
 }
