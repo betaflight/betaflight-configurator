@@ -162,39 +162,48 @@
             </template>
         </UModal>
 
-        <dialog
-            ref="cliErrorsDialogRef"
-            class="w-[600px] max-w-[calc(100vw-2rem)] h-fit p-6"
-            @close="handleCliErrorsDialogClose"
-            @cancel.prevent
+        <UModal
+            :open="store.applyState.cliErrorsDialogOpen"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'w-[600px] max-w-[calc(100vw-2rem)] z-3001' }"
         >
-            <div class="text-lg mb-2" v-html="$t('presetsCliErrorsWarning')"></div>
-            <div class="presets_cli_background">
-                <div class="presets_cli_window">
-                    <div class="presets_cli_wrapper">
-                        <template v-for="(failure, idx) in store.applyState.cliErrors" :key="idx">
-                            <div>{{ failure.command }}</div>
-                            <div
-                                v-for="(line, lineIdx) in failure.response"
-                                :key="lineIdx"
-                                :class="{ error_message: line.startsWith('###ERROR') }"
-                            >
-                                {{ line }}
-                            </div>
-                        </template>
+            <template #title>
+                <span v-html="$t('presetsCliErrorsWarning')"></span>
+            </template>
+            <template #body>
+                <div class="presets_cli_background">
+                    <div class="presets_cli_window">
+                        <div class="presets_cli_wrapper">
+                            <template v-for="(failure, idx) in store.applyState.cliErrors" :key="idx">
+                                <div>{{ failure.command }}</div>
+                                <div
+                                    v-for="(line, lineIdx) in failure.response"
+                                    :key="lineIdx"
+                                    :class="{ error_message: line.startsWith('###ERROR') }"
+                                >
+                                    {{ line }}
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="flex gap-2 justify-end mt-3">
-                <UButton :label="$t('presetsButtonCancel')" variant="outline" @click="closeCliErrorsWithoutSaving" />
-                <UButton :label="$t('presetsSaveAnyway')" @click="saveAnywayAfterCliErrors" />
-            </div>
-        </dialog>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton
+                        :label="$t('presetsButtonCancel')"
+                        variant="outline"
+                        @click="closeCliErrorsWithoutSaving"
+                    />
+                    <UButton :label="$t('presetsSaveAnyway')" @click="saveAnywayAfterCliErrors" />
+                </div>
+            </template>
+        </UModal>
     </BaseTab>
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -225,7 +234,6 @@ const store = usePresetsStore();
 const connectionStore = useConnectionStore();
 const dialog = useDialog();
 const cliSession = useMspCliSession();
-const cliErrorsDialogRef = ref(null);
 const searchPlaceholder = 'example: "karate race", or "5\'\' freestyle"';
 
 function reportProgress({ index, total }) {
@@ -235,23 +243,6 @@ function reportProgress({ index, total }) {
     }
     store.updateApplyProgress(Math.round((index / total) * 100));
 }
-
-watch(
-    () => store.applyState.cliErrorsDialogOpen,
-    async (isOpen) => {
-        await nextTick();
-
-        if (!cliErrorsDialogRef.value) {
-            return;
-        }
-
-        if (isOpen && !cliErrorsDialogRef.value.open) {
-            cliErrorsDialogRef.value.showModal();
-        } else if (!isOpen && cliErrorsDialogRef.value.open) {
-            cliErrorsDialogRef.value.close();
-        }
-    },
-);
 
 async function onTabMounted() {
     store.initialize();
@@ -493,6 +484,7 @@ async function saveAnywayAfterCliErrors() {
 
 function closeCliErrorsWithoutSaving() {
     store.closeCliErrorsDialog(false);
+    handleCliErrorsDialogClose();
 }
 
 async function handleCliErrorsDialogClose() {
