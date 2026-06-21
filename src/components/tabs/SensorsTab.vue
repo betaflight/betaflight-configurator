@@ -453,6 +453,13 @@
                                     </UDropdownMenu>
                                 </UFieldGroup>
                             </div>
+                            <UButton
+                                size="xs"
+                                variant="soft"
+                                icon="i-lucide-sparkles"
+                                :label="$t('magCalibrationImproved')"
+                                @click="showImprovedTumble = true"
+                            />
                         </div>
 
                         <!-- Calibrating -->
@@ -714,6 +721,7 @@
             </div>
         </div>
     </BaseTab>
+    <MagCharacterizationWizard v-if="showImprovedTumble" @close="showImprovedTumble = false" />
 </template>
 
 <script setup>
@@ -749,6 +757,7 @@ import HelpIcon from "../elements/HelpIcon.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
+import MagCharacterizationWizard from "../dialogs/MagCharacterizationWizard.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 
 const fcStore = useFlightControllerStore();
@@ -1322,6 +1331,7 @@ async function autoSetDeclination() {
 // --- Inline Mag Calibration (replaces dialog) ---
 
 const cal = reactive(useMagCalibration());
+const showImprovedTumble = ref(false);
 const calIsGuided = ref(false);
 const calCurrentPrompt = ref(0);
 const guidedSecondsRemaining = ref(-1);

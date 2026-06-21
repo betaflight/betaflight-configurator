@@ -237,3 +237,184 @@ function classifyZone(pt, center) {
     }
     return dz >= 0 ? "+Z" : "-Z";
 }
+
+/**
+ * Tilt-diversity gate: checks that a sample set of 3D points covers the full
+ * sphere of directions (needed for the yaw alignment to be observable).
+ *
+ * Computes the 3x3 covariance of unit-normalized directions, finds the minimum
+ * eigenvalue, and returns ok=true only when eigMin/eigMax >= 0.1 (i.e. the
+ * point cloud is not confined to a 2D plane or line).
+ *
+ * @param {Array<{x: number, y: number, z: number}>} samples
+ * @returns {{ ok: boolean, reason?: string, ratio?: number }}
+ */
+export function check3DCoverage(samples) {
+    const MIN_SAMPLES = 20;
+    const PLANAR_RATIO_THRESHOLD = 0.1;
+
+    if (samples.length < MIN_SAMPLES) {
+        return { ok: false, reason: "Not enough samples for 3D coverage check." };
+    }
+
+    let sx = 0,
+        sy = 0,
+        sz = 0;
+    const n = samples.length;
+    for (const s of samples) {
+        const len = Math.hypot(s.x, s.y, s.z);
+        if (len < 1e-6) continue;
+        sx += s.x / len;
+        sy += s.y / len;
+        sz += s.z / len;
+    }
+    const mx = sx / n,
+        my = sy / n,
+        mz = sz / n;
+
+    let cxx = 0,
+        cyy = 0,
+        czz = 0,
+        cxy = 0,
+        cxz = 0,
+        cyz = 0;
+    for (const s of samples) {
+        const len = Math.hypot(s.x, s.y, s.z);
+        if (len < 1e-6) continue;
+        const dx = s.x / len - mx;
+        const dy = s.y / len - my;
+        const dz = s.z / len - mz;
+        cxx += dx * dx;
+        cyy += dy * dy;
+        czz += dz * dz;
+        cxy += dx * dy;
+        cxz += dx * dz;
+        cyz += dy * dz;
+    }
+    cxx /= n;
+    cyy /= n;
+    czz /= n;
+    cxy /= n;
+    cxz /= n;
+    cyz /= n;
+
+    const trace = cxx + cyy + czz;
+    const p1 = cxy * cxy + cxz * cxz + cyz * cyz;
+
+    let eig1, eig2, eig3;
+    if (p1 < 1e-12) {
+        eig1 = cxx;
+        eig2 = cyy;
+        eig3 = czz;
+    } else {
+        const q = trace / 3;
+        const p2 = (cxx - q) * (cxx - q) + (cyy - q) * (cyy - q) + (czz - q) * (czz - q) + 2 * p1;
+        const p = Math.sqrt(p2 / 6);
+        const B00 = (cxx - q) / p,
+            B11 = (cyy - q) / p,
+            B22 = (czz - q) / p;
+        const B01 = cxy / p,
+            B02 = cxz / p,
+            B12 = cyz / p;
+        const detB = B00 * (B11 * B22 - B12 * B12) - B01 * (B01 * B22 - B12 * B02) + B02 * (B01 * B12 - B11 * B02);
+        let r = Math.max(-1, Math.min(1, detB / 2));
+        const phi = Math.acos(r) / 3;
+        eig1 = q + 2 * p * Math.cos(phi);
+        eig3 = q + 2 * p * Math.cos(phi + (2 * Math.PI) / 3);
+        eig2 = 3 * q - eig1 - eig3;
+    }
+
+    const eigMax = Math.max(eig1, eig2, eig3);
+    const eigMin = Math.min(eig1, eig2, eig3);
+
+    if (eigMax < 1e-10) {
+        return { ok: false, reason: "Degenerate sample distribution." };
+    }
+
+    const ratio = eigMin / eigMax;
+    if (ratio < PLANAR_RATIO_THRESHOLD) {
+        return {
+            ok: false,
+            reason:
+                `Tumble too planar (eigenvalue ratio ${ratio.toFixed(3)}). ` +
+                "Tilt the drone through more orientations (barrel rolls, front/back flips).",
+            ratio,
+        };
+    }
+    return { ok: true, ratio };
+}
+
+// 20 icosahedron-face directions = the 20 dodecahedron vertices, normalized.
+// Generated once at module load.
+const ICOSA_FACE_DIRS = (() => {
+    const phi = (1 + Math.sqrt(5)) / 2;
+    const inv = 1 / phi;
+    const raw = [];
+    for (const sx of [-1, 1]) {
+        for (const sy of [-1, 1]) {
+            for (const sz of [-1, 1]) {
+                raw.push([sx, sy, sz]);
+            }
+        }
+    }
+    for (const a of [-inv, inv]) {
+        for (const b of [-phi, phi]) {
+            raw.push([0, a, b], [a, b, 0], [b, 0, a]);
+        }
+    }
+    return raw.map(([x, y, z]) => {
+        const n = Math.hypot(x, y, z);
+        return [x / n, y / n, z / n];
+    });
+})();
+
+/**
+ * Directional sphere coverage: what fraction of the sphere of directions
+ * (as seen from `center`) has been sampled?
+ *
+ * Unlike computeCoverage()'s min/max dwell ratio — which punishes spending
+ * extra time in any orientation and therefore goes DOWN with more data —
+ * this metric is presence-based and monotonically non-decreasing for a
+ * fixed center: directions are binned onto the 20 icosahedron faces and a
+ * face counts as covered once it has `minHits` samples. A thorough tumble
+ * reaches 100%.
+ *
+ * @param {Array<{x:number,y:number,z:number}>} points
+ * @param {{x:number,y:number,z:number}} center - best available cloud center
+ *   (running sphere-fit center; falls back to origin early in a capture)
+ * @param {number} [minHits=3] - samples required before a face counts
+ * @returns {{ covered: number, totalFaces: number, fraction: number,
+ *             faceCounts: number[], uniform: number }}
+ *   `uniform` aliases `fraction` for backward compatibility with consumers
+ *   of computeCoverage()'s shape.
+ */
+export function computeDirectionalCoverage(points, center, minHits = 3) {
+    const faceCounts = new Array(ICOSA_FACE_DIRS.length).fill(0);
+
+    for (const pt of points) {
+        const dx = pt.x - center.x;
+        const dy = pt.y - center.y;
+        const dz = pt.z - center.z;
+        const len = Math.hypot(dx, dy, dz);
+        if (len < 1e-9) continue;
+        const nx = dx / len;
+        const ny = dy / len;
+        const nz = dz / len;
+
+        let best = 0;
+        let bestDot = -2;
+        for (let f = 0; f < ICOSA_FACE_DIRS.length; f++) {
+            const d = ICOSA_FACE_DIRS[f];
+            const dot = nx * d[0] + ny * d[1] + nz * d[2];
+            if (dot > bestDot) {
+                bestDot = dot;
+                best = f;
+            }
+        }
+        faceCounts[best]++;
+    }
+
+    const covered = faceCounts.filter((c) => c >= minHits).length;
+    const fraction = covered / ICOSA_FACE_DIRS.length;
+    return { covered, totalFaces: ICOSA_FACE_DIRS.length, fraction, faceCounts, uniform: fraction };
+}

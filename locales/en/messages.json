@@ -7862,6 +7862,96 @@
     "magCalibrationAccept": {
         "message": "Save Calibration"
     },
+    "magCalibrationImproved": {
+        "message": "Improved Calibration (full soft-iron + alignment)"
+    },
+    "improvedTumbleTitle": {
+        "message": "Improved Magnetometer Calibration"
+    },
+    "improvedTumbleIntroHeadline": {
+        "message": "One Tumble — Complete Calibration"
+    },
+    "improvedTumbleIntroDesc": {
+        "message": "Spin the drone through all orientations. The tool computes hard-iron, soft-iron, and mounting alignment from a single bench tumble — no guided poses needed."
+    },
+    "improvedTumbleIntroStep1": {
+        "message": "Connect your drone, place it on a non-metallic surface"
+    },
+    "improvedTumbleIntroStep2": {
+        "message": "Spin through all orientations — barrel rolls, front/back flips, yaw spins"
+    },
+    "improvedTumbleIntroStep3": {
+        "message": "Click Done when the coverage bar is full — the tool computes everything"
+    },
+    "improvedTumbleIntroTimeEstimate": {
+        "message": "Takes about 30–60 seconds of spinning."
+    },
+    "improvedTumbleStart": {
+        "message": "Start Tumble"
+    },
+    "improvedTumbleTumbling": {
+        "message": "Spin the drone through all orientations"
+    },
+    "improvedTumbleDone": {
+        "message": "Done — Compute"
+    },
+    "improvedTumbleResultsTitle": {
+        "message": "Calibration Results"
+    },
+    "improvedTumbleAlignment": {
+        "message": "Alignment:"
+    },
+    "improvedTumbleCustomAngles": {
+        "message": "CUSTOM (roll: {roll}°, pitch: {pitch}°, yaw: {yaw}°)"
+    },
+    "improvedTumbleQuality": {
+        "message": "Quality:"
+    },
+    "improvedTumbleResidualDeg": {
+        "message": "{deg}° mean inclination residual"
+    },
+    "improvedTumbleSoftIron": {
+        "message": "Soft-iron:"
+    },
+    "improvedTumbleSoftIronAnisotropy": {
+        "message": "anisotropy {val}×"
+    },
+    "improvedTumbleCalibration": {
+        "message": "Calibration:"
+    },
+    "improvedTumbleGeo": {
+        "message": "WMM:"
+    },
+    "improvedTumbleCoverage": {
+        "message": "Coverage:"
+    },
+    "improvedTumbleExportModel": {
+        "message": "Export Model JSON"
+    },
+    "improvedTumbleQualityGood": {
+        "message": "Good alignment — consistent inclination match across all orientations."
+    },
+    "improvedTumbleQualityFair": {
+        "message": "Fair alignment — moderate inclination scatter. Spin through more tilted orientations."
+    },
+    "improvedTumbleQualityPoor": {
+        "message": "Poor alignment — high inclination scatter. The tumble may be too planar."
+    },
+    "improvedTumbleChiralityWarn": {
+        "message": "Warning: alignment may be mirrored (left-handed). This produces an East-West heading swap."
+    },
+    "improvedTumblePrompt1": {
+        "message": "Spin the drone slowly through all orientations."
+    },
+    "improvedTumblePrompt2": {
+        "message": "Barrel rolls and front/back flips give the best tilt diversity."
+    },
+    "improvedTumblePrompt3": {
+        "message": "Yaw spins cover the horizontal plane."
+    },
+    "improvedTumblePrompt4": {
+        "message": "A full coverage bar means enough data for a clean solve."
+    },
     "magCalibrationDiscard": {
         "message": "Discard"
     },
