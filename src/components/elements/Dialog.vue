@@ -4,14 +4,16 @@
         :title="title"
         :close="closeable"
         :dismissible="closeable"
-        :ui="{ overlay: 'z-3000', content: 'z-3001', footer: 'justify-end' }"
+        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
         @update:open="onOpenChange"
     >
         <template #body>
             <slot></slot>
         </template>
         <template v-if="$slots.footer" #footer>
-            <slot name="footer"></slot>
+            <div class="flex justify-end gap-2 w-full">
+                <slot name="footer"></slot>
+            </div>
         </template>
     </UModal>
 </template>

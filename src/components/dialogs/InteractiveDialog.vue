@@ -10,8 +10,19 @@
             <div class="flex flex-col h-full gap-3">
                 <!-- cli-response / cli-command are driven imperatively by gui.js via their ids;
                      kept as raw elements so the CLI panel's DOM hooks (textContent/value/onchange/focus) work. -->
-                <textarea id="cli-response" class="cli-response flex-1 w-full" readonly></textarea>
-                <input id="cli-command" class="cli-command w-full" type="text" :placeholder="commandPlaceholder" />
+                <textarea
+                    id="cli-response"
+                    class="cli-response flex-1 w-full"
+                    readonly
+                    :aria-label="$t('cliPanelTitle')"
+                ></textarea>
+                <input
+                    id="cli-command"
+                    class="cli-command w-full"
+                    type="text"
+                    :placeholder="commandPlaceholder"
+                    :aria-label="$t('cliCommand')"
+                />
             </div>
         </template>
         <template #footer>
