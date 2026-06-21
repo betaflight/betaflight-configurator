@@ -266,19 +266,24 @@
             </template>
         </UModal>
 
-        <dialog class="dialogBuildInfo" ref="dialogBuildInfo">
-            <h3>{{ state.buildInfoDialogTitle }}</h3>
-            <div class="contentBuildInfo">
-                <div class="dialogBuildInfoGrid-container" style="margin-top: 10px">
+        <UModal
+            v-model:open="buildInfoOpen"
+            :title="state.buildInfoDialogTitle"
+            :ui="{ overlay: 'z-3000', content: 'w-fit max-w-2xl z-3001' }"
+        >
+            <template #body>
+                <div class="dialogBuildInfoGrid-container">
                     <div v-for="option in state.sortedBuildOptions" :key="option" class="dialogBuildInfoGrid-item">
                         {{ option }}
                     </div>
                 </div>
-            </div>
-            <div class="dialogButtons">
-                <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
-            </div>
-        </dialog>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
+                </div>
+            </template>
+        </UModal>
     </BaseTab>
 </template>
 
@@ -461,7 +466,7 @@ const updateExpertMode = (enabled) => {
 let mountedFlag = true;
 const isExpert = ref(isExpertModeEnabled());
 const confirmResetOpen = ref(false);
-const dialogBuildInfo = ref(null);
+const buildInfoOpen = ref(false);
 
 function resetZaxis() {
     yaw_fix.value = fcStore.sensorData.kinematics[2] * -1;
@@ -496,9 +501,7 @@ function confirmReset() {
 }
 
 function closeBuildInfo() {
-    if (dialogBuildInfo.value) {
-        dialogBuildInfo.value.close();
-    }
+    buildInfoOpen.value = false;
 }
 
 const canvasWrapper = ref(null);
@@ -791,9 +794,7 @@ function openBuildOptionsDialog() {
     );
     state.buildInfoDialogTitle = t("initialSetupInfoBuildOptionList");
 
-    if (dialogBuildInfo.value && !dialogBuildInfo.value.hasAttribute("open")) {
-        dialogBuildInfo.value.showModal();
-    }
+    buildInfoOpen.value = true;
 }
 </script>
 
