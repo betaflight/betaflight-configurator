@@ -423,7 +423,7 @@
                     <!-- Calibrate Magnetometer (inline) -->
                     <div class="mag-cal-section">
                         <!-- Idle: check + calibrate buttons -->
-                        <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
+                        <div v-if="!showImprovedTumble && cal.phase === 'idle'" class="flex flex-col gap-2">
                             <div class="flex items-center gap-2">
                                 <UButton
                                     size="xs"
