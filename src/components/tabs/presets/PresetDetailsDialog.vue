@@ -111,7 +111,7 @@
         </template>
 
         <template #footer>
-            <div class="flex flex-wrap items-center justify-between gap-2 w-full">
+            <div class="flex flex-wrap items-center justify-end gap-2 w-full">
                 <div class="flex items-center flex-wrap gap-1.5">
                     <UButton
                         v-if="!showCli"
@@ -148,7 +148,7 @@
                         data-testid="preset-discussion-link"
                     />
                 </div>
-                <div class="flex flex-wrap justify-end gap-1.5 ml-auto">
+                <div class="flex flex-wrap justify-end gap-1.5">
                     <UButton :label="$t('presetsApply')" :disabled="loading || !!error" @click="handleApply" />
                     <UButton :label="$t('close')" variant="outline" @click="requestClose" />
                 </div>
