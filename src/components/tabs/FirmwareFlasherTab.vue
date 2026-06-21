@@ -90,43 +90,34 @@
             </UFieldGroup>
         </div>
 
-        <dialog
-            ref="unstableFirmwareDialog"
-            id="dialogUnstableFirmwareAcknowledgement"
-            @close="handleUnstableFirmwareDialogClose"
+        <UModal
+            v-model:open="unstableFirmwareOpen"
+            :title="$t('warningTitle')"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
         >
-            <h3>{{ $t("warningTitle") }}</h3>
-            <div class="content">
+            <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 mt-3">
                     <USwitch
                         v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
                         :aria-label="$t('unstableFirmwareAcknowledgement')"
                     />
                     <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
                 </div>
-            </div>
-            <div class="dialog_toolbar">
-                <div class="btn">
-                    <a
-                        :class="['regular-button', { disabled: !state.dialogUnstableFirmwareAcknowledgementCheckbox }]"
-                        href="#"
-                        id="dialogUnstableFirmwareAcknowledgement-flashbtn"
-                        @click.prevent="handleUnstableFirmwareFlash"
-                        >{{ $t("unstableFirmwareAcknowledgementFlash") }}</a
-                    >
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton :label="$t('cancel')" variant="outline" @click="handleUnstableFirmwareCancel" />
+                    <UButton
+                        :label="$t('unstableFirmwareAcknowledgementFlash')"
+                        :disabled="!state.dialogUnstableFirmwareAcknowledgementCheckbox"
+                        @click="handleUnstableFirmwareFlash"
+                    />
                 </div>
-                <div class="btn">
-                    <a
-                        href="#"
-                        id="dialogUnstableFirmwareAcknowledgement-cancelbtn"
-                        class="regular-button"
-                        @click.prevent="handleUnstableFirmwareCancel"
-                        >{{ $t("cancel") }}</a
-                    >
-                </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
 
         <dialog ref="verifyBoardDialog" id="dialog-verify-board" @close="handleVerifyBoardDialogClose">
             <div id="dialog-verify-board-content-wrapper">
@@ -292,7 +283,7 @@ export default defineComponent({
         const verifyBoardOnAbortCallback = ref(null);
 
         // Unstable firmware dialog refs
-        const unstableFirmwareDialog = ref(null);
+        const unstableFirmwareOpen = ref(false);
         const unstableFirmwareAcknowledgementCallback = ref(null);
 
         let dfuMonitorInterval = null;
@@ -1218,20 +1209,8 @@ export default defineComponent({
         };
 
         const showAcknowledgementDialog = async (acknowledgementCallback) => {
-            await nextTick();
-
-            if (!unstableFirmwareDialog.value) {
-                console.error("Dialog element not found");
-                return;
-            }
-
             unstableFirmwareAcknowledgementCallback.value = acknowledgementCallback;
-            unstableFirmwareDialog.value.showModal();
-        };
-
-        const handleUnstableFirmwareDialogClose = () => {
-            state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
-            unstableFirmwareAcknowledgementCallback.value = null;
+            unstableFirmwareOpen.value = true;
         };
 
         const initiateFlashing = async () => {
@@ -1694,12 +1673,14 @@ export default defineComponent({
                 return;
             }
 
-            if (unstableFirmwareDialog.value) {
-                unstableFirmwareDialog.value.close();
-            }
+            unstableFirmwareOpen.value = false;
 
-            if (unstableFirmwareAcknowledgementCallback.value) {
-                unstableFirmwareAcknowledgementCallback.value();
+            const acknowledgementCallback = unstableFirmwareAcknowledgementCallback.value;
+            state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
+            unstableFirmwareAcknowledgementCallback.value = null;
+
+            if (acknowledgementCallback) {
+                acknowledgementCallback();
             }
 
             await startFlashing().catch((error) => {
@@ -1709,9 +1690,8 @@ export default defineComponent({
 
         const handleUnstableFirmwareCancel = () => {
             state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
-            if (unstableFirmwareDialog.value) {
-                unstableFirmwareDialog.value.close();
-            }
+            unstableFirmwareAcknowledgementCallback.value = null;
+            unstableFirmwareOpen.value = false;
         };
 
         const handleVerifyBoardAbort = () => {
@@ -1899,7 +1879,7 @@ export default defineComponent({
             sponsorTile,
             verifyBoardDialog,
             verifyBoardContent,
-            unstableFirmwareDialog,
+            unstableFirmwareOpen,
             // Functions
             enableFlashButton,
             enableLoadRemoteFileButton,
@@ -1937,7 +1917,6 @@ export default defineComponent({
             showDfuButton,
             handleUnstableFirmwareFlash,
             handleUnstableFirmwareCancel,
-            handleUnstableFirmwareDialogClose,
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
             handleVerifyBoardDialogClose,
