@@ -245,21 +245,26 @@
             </div>
         </div>
 
-        <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
-            <h3>{{ $t("dialogConfirmResetTitle") }}</h3>
-            <div class="content">
-                <div style="margin-top: 10px" v-html="$t('dialogConfirmResetNote')"></div>
-            </div>
-            <div class="buttons">
-                <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
-                <UButton
-                    :label="$t('dialogConfirmResetClose')"
-                    color="neutral"
-                    variant="outline"
-                    @click="cancelConfirmReset"
-                />
-            </div>
-        </dialog>
+        <UModal
+            v-model:open="confirmResetOpen"
+            :title="$t('dialogConfirmResetTitle')"
+            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
+        >
+            <template #body>
+                <div v-html="$t('dialogConfirmResetNote')"></div>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton
+                        :label="$t('dialogConfirmResetClose')"
+                        color="neutral"
+                        variant="outline"
+                        @click="cancelConfirmReset"
+                    />
+                    <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
+                </div>
+            </template>
+        </UModal>
 
         <dialog class="dialogBuildInfo" ref="dialogBuildInfo">
             <h3>{{ state.buildInfoDialogTitle }}</h3>
@@ -455,7 +460,7 @@ const updateExpertMode = (enabled) => {
 
 let mountedFlag = true;
 const isExpert = ref(isExpertModeEnabled());
-const dialogConfirmReset = ref(null);
+const confirmResetOpen = ref(false);
 const dialogBuildInfo = ref(null);
 
 function resetZaxis() {
@@ -472,21 +477,15 @@ function onRebootBootloader() {
 }
 
 function showConfirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.showModal();
-    }
+    confirmResetOpen.value = true;
 }
 
 function cancelConfirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.close();
-    }
+    confirmResetOpen.value = false;
 }
 
 function confirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.close();
-    }
+    confirmResetOpen.value = false;
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
         gui_log(t("initialSetupSettingsRestored"));
         GUI.tab_switch_cleanup(function () {
