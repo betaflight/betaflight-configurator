@@ -116,34 +116,40 @@
                                     </template>
                                 </UModal>
 
-                                <dialog ref="savingDialog" class="dataflash-saving">
-                                    <h3>{{ $t("dataflashSavingTitle") }}</h3>
-                                    <div class="dataflash-saving-before">
-                                        <div>{{ $t("dataflashSavingNote") }}</div>
-                                        <progress :value="saveProgress" min="0" max="100"></progress>
-                                        <div class="buttons">
-                                            <a
-                                                href="#"
-                                                class="save-flash-cancel regular-button"
-                                                @click.prevent="flashSaveCancel"
-                                            >
-                                                {{ $t("dataflashButtonSaveCancel") }}
-                                            </a>
+                                <UModal
+                                    :open="saveOpen"
+                                    :close="false"
+                                    :dismissible="false"
+                                    :ui="{ overlay: 'z-3000', content: 'w-[36rem] max-w-[calc(100vw-2rem)] z-3001' }"
+                                >
+                                    <template #body>
+                                        <div class="dataflash-saving" :class="{ done: saveDone }">
+                                            <h3>{{ $t("dataflashSavingTitle") }}</h3>
+                                            <div class="dataflash-saving-before">
+                                                <div>{{ $t("dataflashSavingNote") }}</div>
+                                                <progress :value="saveProgress" min="0" max="100"></progress>
+                                                <div class="buttons flex justify-end gap-2 mt-3">
+                                                    <UButton
+                                                        class="save-flash-cancel"
+                                                        variant="outline"
+                                                        :label="$t('dataflashButtonSaveCancel')"
+                                                        @click="flashSaveCancel"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="dataflash-saving-after">
+                                                <div>{{ $t("dataflashSavingNoteAfter") }}</div>
+                                                <div class="buttons flex justify-end gap-2 mt-3">
+                                                    <UButton
+                                                        class="save-flash-dismiss"
+                                                        :label="$t('dataflashButtonSaveDismiss')"
+                                                        @click="dismissSavingDialog"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="dataflash-saving-after">
-                                        <div>{{ $t("dataflashSavingNoteAfter") }}</div>
-                                        <div class="buttons">
-                                            <a
-                                                href="#"
-                                                class="save-flash-dismiss regular-button"
-                                                @click.prevent="dismissSavingDialog"
-                                            >
-                                                {{ $t("dataflashButtonSaveDismiss") }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </dialog>
+                                    </template>
+                                </UModal>
 
                                 <ul class="dataflash-contents">
                                     <li
@@ -276,7 +282,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import BaseTab from "./BaseTab.vue";
@@ -358,7 +364,8 @@ export default defineComponent({
 
         // Refs
         const eraseOpen = ref(false);
-        const savingDialog = ref(null);
+        const saveOpen = ref(false);
+        const saveDone = ref(false);
 
         // State
         const blackboxDevice = ref(0);
@@ -631,14 +638,12 @@ export default defineComponent({
         function showSavingDialog() {
             saveProgress.value = 0;
             saveCancelled.value = false;
-            savingDialog.value?.showModal();
-            nextTick(() => {
-                savingDialog.value?.classList.remove("done");
-            });
+            saveDone.value = false;
+            saveOpen.value = true;
         }
 
         function dismissSavingDialog() {
-            savingDialog.value?.close();
+            saveOpen.value = false;
         }
 
         function markSavingDialogDone(startTime, totalBytes, totalBytesCompressed) {
@@ -657,9 +662,7 @@ export default defineComponent({
                 );
             }
 
-            nextTick(() => {
-                savingDialog.value?.classList.add("done");
-            });
+            saveDone.value = true;
 
             if (getConfig("showNotifications").showNotifications) {
                 NotificationManager.showNotification("Betaflight App", {
@@ -895,7 +898,8 @@ export default defineComponent({
         return {
             MSP,
             eraseOpen,
-            savingDialog,
+            saveOpen,
+            saveDone,
             blackboxDevice,
             blackboxRate,
             debugMode,
