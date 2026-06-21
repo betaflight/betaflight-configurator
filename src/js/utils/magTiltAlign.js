@@ -1,19 +1,16 @@
 /**
- * Tilt + WMM-inclination alignment solve (no known-heading poses).
+ * Tilt + WMM-inclination alignment solve.
  *
  * Recovers the 3-dof sensor→body mount rotation from a single tilt-diverse tumble:
  * the calibrated mag must make a constant angle with gravity equal to the WMM dip
  * (π/2 − inclination) across all orientations. Heading is NOT used (the FC heading
- * is untrustworthy when settings are wrong); the magnetometer supplies magnetic
+ * is untrustworthy when the alignment is wrong); the magnetometer supplies magnetic
  * North at runtime.
  *
- * Chirality / handedness: a TILT-DIVERSE tumble pins the full proper rotation with no
- * E↔W twin (the dip constraint at many gravity directions has a unique solution), and
- * every candidate is a proper rotation (det = +1) by construction. So handedness is
- * enforced by the upstream tilt-diversity coverage gate, NOT by a per-symptom reflection
- * test (which is what the pose solver uses, where known headings break the twin instead).
- *
- * See planv5/30 §2B and planv5/31 §10.2.
+ * Handedness: a tilt-diverse tumble pins the full proper rotation with no E↔W twin
+ * (the dip constraint across many gravity directions has a unique solution), and every
+ * candidate is a proper rotation (det = +1) by construction. Handedness is therefore
+ * guaranteed by the tilt-diversity coverage gate, not by a separate reflection test.
  */
 import { ALIGNMENT_MATRICES, ALIGNMENT_LABELS, eulerToMatrix, mat3mulVec } from "./magAlignment.js";
 import { snapToPreset, matrixToEuler } from "./magCharacterization.js";

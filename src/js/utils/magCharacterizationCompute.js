@@ -1,15 +1,11 @@
 /**
- * Pure computation helpers for the improved-tumble mag-calibration pipeline.
+ * Pure computation helpers for the full magnetometer calibration: deriving the
+ * firmware mag_calibration offsets from an ellipsoid fit, mapping align_mag
+ * presets to/from rotation matrices, a firmware-capability check, and a tumble
+ * quality verdict. The orchestrator characterizeTumble() ties them together.
  *
- * These functions take explicit data parameters (no Vue refs, no fcStore)
- * so they can be unit-tested directly. The composable (useMagCharacterization.js)
- * is a thin state manager around them.
- *
- * Kept: computeCalFromEllipsoid, currentMatrixOf, proposedMatrixOf,
- *       assessTumbleQuality, isFirmwareCustomMagAlignCapable.
- * Removed: computeReplayData, selectAlignmentPackage, estimateFlatPoseBias,
- *          meanPackageError, headingError, scoreHeading, validatePoseAngle
- *          (pose-only; replaced by solveTiltAlignment in magTiltAlign.js).
+ * These take explicit data parameters (no Vue refs, no FC store) so they can be
+ * unit-tested directly.
  */
 import semver from "semver";
 import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose } from "./magAlignment.js";
@@ -80,7 +76,7 @@ export function proposedMatrixOf(result, fallbackMat = ALIGNMENT_MATRICES[1]) {
  *   capture:  m = R_capture * s - magZero_capture   (what MSP_RAW_IMU streams)
  *   fit:      center ≈ R_capture * b - magZero_capture  (bias of m, capture frame)
  *   sensor bias:  b = R_captureT * (center + magZero_capture)
- *   after the wizard applies R_proposed, firmware needs:
+ *   after the proposed alignment R_proposed is applied, firmware needs:
  *     magZero_new = R_proposed * b = newCombined * (center + magZero_capture)
  *   where newCombined = R_proposed * R_captureT.
  *

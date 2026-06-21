@@ -639,12 +639,7 @@
                                 <template v-if="calIsFull">
                                     <dl
                                         v-if="fullCalResult"
-                                        class="mag-cal-stats-inline"
-                                        style="
-                                            margin-top: 6px;
-                                            border-top: 1px solid var(--border-default);
-                                            padding-top: 6px;
-                                        "
+                                        class="mag-cal-stats-inline mt-2 border-t border-[var(--border-default)] pt-2"
                                     >
                                         <dt>{{ $t("magCalibrationFullAlignment") }}</dt>
                                         <dd>

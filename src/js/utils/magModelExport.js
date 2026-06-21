@@ -1,16 +1,14 @@
 /**
- * Characterization model (schema 2.2) assembly — the JSON consumed by the
- * blackbox-log-viewer for post-flight heading correction and, as of schema 2.2,
- * for full 3-axis magnetometer fusion in a post-flight pose estimator.
+ * Builds a portable, self-contained JSON description of a magnetometer
+ * calibration: the hard-iron offsets, the soft-iron (ellipsoid) correction, the
+ * solved mounting alignment, the geomagnetic reference captured at the time, and
+ * a derived `downstream_fusion` block for external log-analysis tools that want
+ * to apply this calibration in physical units. The configurator only produces
+ * the file; nothing in the configurator reads it back.
  *
- * Single home for the export shape and its helpers; used by the wizard
- * composable and the test suite so the tested shape can never drift from
+ * This module is the single home for the export shape and its helpers; the test
+ * suite asserts against the same builders so the tested shape cannot drift from
  * the shipped shape.
- *
- * Schema 2.2 adds a `downstream_fusion` block (all values DERIVED from
- * existing capture data — no extra capture). See computeDownstreamFusion().
- * The `poses` key has been removed in this revision (improved-tumble branch:
- * no guided poses are captured; alignment is solved from tilt diversity alone).
  */
 import { matrixToEuler } from "./magCharacterization.js";
 import { ALIGNMENT_MATRICES } from "./magAlignment.js";
@@ -50,7 +48,7 @@ export function getEulerAngles(solverResultVal) {
 }
 
 /**
- * Soft-iron sanity bounds (schema 2.2).
+ * Soft-iron sanity bounds.
  *
  * Attribution: the numeric acceptance thresholds — field-strength range
  * (150-950 milliGauss) and per-axis soft-iron scale range (0.67-1.5, applied
@@ -109,14 +107,13 @@ export function computeMagQualityBounds(softIron, fieldNt) {
 }
 
 /**
- * Build the schema-2.2 `downstream_fusion` block — everything a post-flight
- * 3-axis magnetometer EKF needs to consume this static bench calibration as a
- * seed + noise model, not just a heading correction. Every value is DERIVED
- * from data the wizard already produced; nothing here needs extra capture.
+ * Build the `downstream_fusion` block — everything a 3-axis magnetometer filter
+ * needs to consume this calibration as a seed + noise model, not just a heading
+ * correction. Every value is DERIVED from data the calibration already produced;
+ * nothing here needs extra capture.
  *
- * Why each field exists (the downstream consumer is the blackbox-log-viewer
- * pose estimator, which fuses 3-axis mag against a WMM-seeded earth-field
- * state):
+ * Why each field exists (for a consumer that fuses 3-axis mag against a
+ * WMM-seeded earth-field state):
  *  - nt/gauss_per_corrected_unit: the ellipsoid fit lands corrected samples on
  *    a sphere of magnitude `radius`, which physically equals the local field.
  *    So one corrected unit = field/radius nanotesla. This lets the estimator
@@ -181,17 +178,13 @@ export function computeDownstreamFusion(ellipsoidParams, geoReference, solverRes
 }
 
 /**
- * Build the characterization model object (schema 2.2).
+ * Build the calibration model object.
  *
  * Frame conventions: `captured_under` is the FC configuration active during
  * capture; `ellipsoid_correction` (center, soft_iron) is expressed in that
  * CAPTURE frame; `hard_iron` is expressed in the PROPOSED alignment frame
  * (the literal `set mag_calibration` values). All are in the FRD body frame
  * (see `downstream_fusion.frame`).
- *
- * Note: the `poses` key present in schema 2.1 has been removed. The
- * improved-tumble flow captures a free tumble (no guided poses), so there
- * is no per-pose heading comparison to emit.
  *
  * @param {object} args
  * @param {object|null} args.solverResult - solveTiltAlignment() result

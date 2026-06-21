@@ -1,9 +1,9 @@
 /**
- * Synthetic oracle tests for buildCharacterizationModel (schema 2.2).
+ * Synthetic oracle tests for buildCharacterizationModel.
  *
  * All inputs are planted — no fixtures, no Math.random.
- * Verifies: schema version, downstream_fusion presence and scaling,
- * no `poses` key, and round-trip serialization.
+ * Verifies: schema version, downstream_fusion presence and scaling, the quality
+ * bounds, and round-trip serialization.
  */
 import { describe, expect, it } from "vitest";
 import {
@@ -105,11 +105,6 @@ describe("buildCharacterizationModel — schema 2.2", () => {
         const model = buildModel();
         const { n, e, d } = model.downstream_fusion.earth_field_ned_gauss;
         expect(Math.hypot(n, e, d)).toBeCloseTo(MOCK_GEO.fieldStrength / 1e5, 4);
-    });
-
-    it("does NOT have a `poses` key", () => {
-        const model = buildModel();
-        expect(model).not.toHaveProperty("poses");
     });
 
     it("round-trips through JSON.parse without data loss", () => {
