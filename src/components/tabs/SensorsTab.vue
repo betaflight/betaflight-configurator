@@ -477,8 +477,19 @@
                                     </p>
                                 </template>
                                 <template v-else-if="cal.mode === 'full'">
-                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationFullTitle") }}</div>
-                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                    <div class="mag-cal-step-counter">
+                                        {{ $t("magCalibrationFullTitle") }} —
+                                        {{
+                                            $t("magCalibrationFullStepCounter", {
+                                                n: fullCalStep + 1,
+                                                total: CAL_FULL_STEPS.length,
+                                            })
+                                        }}
+                                    </div>
+                                    <p class="text-sm font-semibold text-center mt-2">
+                                        {{ $t(CAL_FULL_STEPS[fullCalStep]) }}
+                                    </p>
+                                    <p class="text-xs text-[var(--surface-500)] text-center mb-1">
                                         {{ $t("magCalibrationFullInstruction") }}
                                     </p>
                                     <p v-if="cal.coverage" class="text-lg font-bold text-center tabular-nums">
@@ -552,7 +563,7 @@
                                         v-if="cal.mode === 'guided' || cal.mode === 'full'"
                                         size="xs"
                                         :loading="isAcceptingCal"
-                                        :disabled="!cal.quality"
+                                        :disabled="cal.mode === 'full' ? !fullReady : !cal.quality"
                                         :label="
                                             cal.mode === 'full'
                                                 ? $t('magCalibrationFullCompute')
@@ -878,6 +889,7 @@ onUnmounted(() => {
     cleanupAlignDetection();
     clearPromptTimer();
     clearGuidedCountdown();
+    clearFullStepTimer();
     if (calIsCalibrating.value) {
         cal.cancelCalibration();
     }
@@ -1415,6 +1427,49 @@ const cal = reactive(useMagCalibration());
 const calIsGuided = ref(false);
 const calIsFull = ref(false);
 const fullCalResult = ref(null);
+
+// Guided choreography for the full tumble — each step is one full rotation about a
+// different axis, which together light up all 20 coverage zones.
+const CAL_FULL_STEPS = [
+    "magCalibrationFullStep1",
+    "magCalibrationFullStep2",
+    "magCalibrationFullStep3",
+    "magCalibrationFullStep4",
+    "magCalibrationFullStep5",
+    "magCalibrationFullStep6",
+    "magCalibrationFullStep7",
+    "magCalibrationFullStep8",
+];
+const FULL_STEP_DURATION_MS = 9000;
+const FULL_READY_FRACTION = 0.8; // 16 of 20 zones before "Compute" is allowed
+const fullCalStep = ref(0);
+let fullStepTimer = null;
+
+// "Compute" is enabled only once enough zones are covered — clicking earlier would
+// just be refused by the planar/coverage gate, so the button stays disabled until then.
+const FULL_MIN_SAMPLES = 40;
+const fullReady = computed(
+    () => cal.sampleCount >= FULL_MIN_SAMPLES && (cal.coverage?.fraction ?? 0) >= FULL_READY_FRACTION,
+);
+
+function startFullStepTimer() {
+    clearFullStepTimer();
+    fullCalStep.value = 0;
+    fullStepTimer = setInterval(() => {
+        if (fullCalStep.value < CAL_FULL_STEPS.length - 1) {
+            fullCalStep.value++;
+        } else {
+            clearFullStepTimer();
+        }
+    }, FULL_STEP_DURATION_MS);
+}
+
+function clearFullStepTimer() {
+    if (fullStepTimer !== null) {
+        clearInterval(fullStepTimer);
+        fullStepTimer = null;
+    }
+}
 const calCurrentPrompt = ref(0);
 const guidedSecondsRemaining = ref(-1);
 let promptTimer = null;
@@ -1488,6 +1543,7 @@ async function startLegacyFirmwareCal() {
 function cancelMagCal() {
     clearPromptTimer();
     clearGuidedCountdown();
+    clearFullStepTimer();
     calIsGuided.value = false;
     calIsFull.value = false;
     fullCalResult.value = null;
@@ -1566,6 +1622,7 @@ async function startFullCal() {
     }
 
     await cal.startCalibration("full");
+    startFullStepTimer();
 }
 
 const isAcceptingCal = ref(false);
@@ -1633,6 +1690,7 @@ async function acceptFullCal() {
     }
 
     fullCalResult.value = result;
+    clearFullStepTimer();
     cal.completeCalibration();
 }
 
@@ -1794,6 +1852,7 @@ function clearMagCalSamples() {
 function retryMagCal() {
     clearPromptTimer();
     clearGuidedCountdown();
+    clearFullStepTimer();
     calIsGuided.value = false;
     calIsFull.value = false;
     fullCalResult.value = null;
