@@ -149,11 +149,18 @@
             @deactivate-source="handleDeactivateSource"
         />
 
-        <dialog ref="progressDialogRef" class="w-[300px] h-fit p-6" @cancel.prevent>
-            <div class="text-lg mb-2" v-html="$t('presetsApplyingPresets')"></div>
-            <div class="text-sm text-(--ui-text-muted)" v-html="$t('presetsPleaseWait')"></div>
-            <UProgress :model-value="store.applyState.progress" :max="100" class="mt-3" />
-        </dialog>
+        <UModal
+            :open="store.applyState.progressDialogOpen"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'w-[300px] z-3001' }"
+        >
+            <template #body>
+                <div class="text-lg mb-2" v-html="$t('presetsApplyingPresets')"></div>
+                <div class="text-sm text-(--ui-text-muted)" v-html="$t('presetsPleaseWait')"></div>
+                <UProgress :model-value="store.applyState.progress" :max="100" class="mt-3" />
+            </template>
+        </UModal>
 
         <dialog
             ref="cliErrorsDialogRef"
@@ -218,7 +225,6 @@ const store = usePresetsStore();
 const connectionStore = useConnectionStore();
 const dialog = useDialog();
 const cliSession = useMspCliSession();
-const progressDialogRef = ref(null);
 const cliErrorsDialogRef = ref(null);
 const searchPlaceholder = 'example: "karate race", or "5\'\' freestyle"';
 
@@ -229,23 +235,6 @@ function reportProgress({ index, total }) {
     }
     store.updateApplyProgress(Math.round((index / total) * 100));
 }
-
-watch(
-    () => store.applyState.progressDialogOpen,
-    async (isOpen) => {
-        await nextTick();
-
-        if (!progressDialogRef.value) {
-            return;
-        }
-
-        if (isOpen && !progressDialogRef.value.open) {
-            progressDialogRef.value.showModal();
-        } else if (!isOpen && progressDialogRef.value.open) {
-            progressDialogRef.value.close();
-        }
-    },
-);
 
 watch(
     () => store.applyState.cliErrorsDialogOpen,
