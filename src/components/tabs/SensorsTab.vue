@@ -462,6 +462,9 @@
                             />
                         </div>
 
+                        <!-- Improved Tumble Calibration -->
+                        <MagCharacterizationWizard v-else-if="showImprovedTumble" @close="showImprovedTumble = false" />
+
                         <!-- Calibrating -->
                         <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
                             <div class="mag-cal-inline-steps">
@@ -721,7 +724,6 @@
             </div>
         </div>
     </BaseTab>
-    <MagCharacterizationWizard v-if="showImprovedTumble" @close="showImprovedTumble = false" />
 </template>
 
 <script setup>

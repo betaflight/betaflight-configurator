@@ -1,5 +1,5 @@
 <template>
-    <dialog class="mag-char-dialog">
+    <div class="mag-char-dialog">
         <div class="mag-char-container">
             <div class="mag-char-header">
                 <h3>{{ $t("improvedTumbleTitle") }}</h3>
@@ -182,7 +182,7 @@
                 </button>
             </div>
         </div>
-    </dialog>
+    </div>
 </template>
 
 <script setup>
