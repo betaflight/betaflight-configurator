@@ -12,7 +12,10 @@
  *          (pose-only; replaced by solveTiltAlignment in magTiltAlign.js).
  */
 import semver from "semver";
-import { eulerToMatrix, ALIGNMENT_MATRICES } from "./magAlignment.js";
+import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose } from "./magAlignment.js";
+import { fitEllipsoid } from "./ellipsoidFit.js";
+import { check3DCoverage } from "./sphereFit.js";
+import { solveTiltAlignment } from "./magTiltAlign.js";
 
 // ── Firmware version gate ───────────────────────────────────────────────────
 // "Fix mag_align_yaw" (betaflight#14849, merged 2025-12-30, first release
@@ -102,6 +105,69 @@ export function computeCalFromEllipsoid(ellipsoidParams, newCombined, magZeroAtC
         x: Math.round(m[0][0] * b[0] + m[0][1] * b[1] + m[0][2] * b[2]),
         y: Math.round(m[1][0] * b[0] + m[1][1] * b[1] + m[1][2] * b[2]),
         z: Math.round(m[2][0] * b[0] + m[2][1] * b[1] + m[2][2] * b[2]),
+    };
+}
+
+/**
+ * Run the full improved-tumble pipeline on the collected guided-mode samples.
+ * Sync, pure — no Vue refs, no network. Unit-testable.
+ *
+ * Guided-mode collection already added the firmware mag_calibration offset back
+ * into every sample, so samples are in the CURRENT ALIGNMENT FRAME (R_cur·raw_sensor).
+ * This function un-applies R_cur to get raw-sensor frame, then fits the ellipsoid,
+ * solves tilt+WMM alignment, and computes firmware offsets.
+ *
+ * @param {{ samples: Array<{x:number,y:number,z:number,roll:number,pitch:number}>, currentMatrix: number[][], inclinationRad: number }} args
+ * @returns {{ ok: boolean, preset?: number, label?: string, euler_zyx_deg?: {roll:number,pitch:number,yaw:number}, offsets?: {x:number,y:number,z:number}, ellipsoid?: object, quality?: object, error?: string }}
+ */
+export function characterizeTumble({ samples, currentMatrix, inclinationRad }) {
+    if (!samples || samples.length < 40) {
+        return { ok: false, error: "Not enough samples — need at least 40. Spin longer." };
+    }
+
+    const R_curT = mat3transpose(currentMatrix);
+    const rawSamples = samples.map((s) => {
+        const raw = mat3mulVec(R_curT, [s.x, s.y, s.z]);
+        return { x: raw[0], y: raw[1], z: raw[2], roll: s.roll, pitch: s.pitch };
+    });
+
+    const covCheck = check3DCoverage(rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
+    if (!covCheck.ok) {
+        return { ok: false, error: covCheck.reason };
+    }
+
+    const rawPoints = rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
+    const ep = fitEllipsoid(rawPoints);
+    if (!ep) {
+        return { ok: false, error: "Ellipsoid fit failed — spin through more orientations." };
+    }
+
+    const mCalSamples = rawSamples.map((s) => {
+        const centered = [s.x - ep.center.x, s.y - ep.center.y, s.z - ep.center.z];
+        const cal = mat3mulVec(ep.W_inv, centered);
+        return { m_cal: cal, roll: s.roll, pitch: s.pitch };
+    });
+
+    const tilt = solveTiltAlignment(mCalSamples, inclinationRad);
+    if (!tilt) {
+        return { ok: false, error: "Alignment solve failed — ensure sufficient tilt diversity." };
+    }
+
+    const proposedMat = proposedMatrixOf(tilt);
+    const offsets = computeCalFromEllipsoid(ep, proposedMat, null);
+
+    if (!offsets) {
+        return { ok: false, error: "Failed to compute calibration offsets." };
+    }
+
+    return {
+        ok: true,
+        preset: tilt.preset,
+        label: tilt.label,
+        euler_zyx_deg: tilt.euler_zyx_deg,
+        offsets,
+        ellipsoid: ep,
+        quality: tilt.quality,
     };
 }
 

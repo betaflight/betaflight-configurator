@@ -7862,95 +7862,59 @@
     "magCalibrationAccept": {
         "message": "Save Calibration"
     },
-    "magCalibrationImproved": {
-        "message": "Improved Calibration (full soft-iron + alignment)"
+    "magCalibrationFull": {
+        "message": "Full Cal (auto-align)"
     },
-    "improvedTumbleTitle": {
-        "message": "Improved Magnetometer Calibration"
+    "magCalibrationFullDesc": {
+        "message": "One spin — sets offsets, soft-iron, and the mag's mounting orientation"
     },
-    "improvedTumbleIntroHeadline": {
-        "message": "One Tumble — Complete Calibration"
+    "magCalibrationFullTitle": {
+        "message": "Full Calibration"
     },
-    "improvedTumbleIntroDesc": {
-        "message": "Spin the drone through all orientations. The tool computes hard-iron, soft-iron, and mounting alignment from a single bench tumble — no guided poses needed."
+    "magCalibrationFullInstruction": {
+        "message": "Tumble through every orientation — barrel rolls and front/back flips, not just a flat spin. The zone count climbs as you reach new angles; aim to cover all 20."
     },
-    "improvedTumbleIntroStep1": {
-        "message": "Connect your drone, place it on a non-metallic surface"
+    "magCalibrationFullZones": {
+        "message": "{covered} / {total} zones"
     },
-    "improvedTumbleIntroStep2": {
-        "message": "Spin through all orientations — barrel rolls, front/back flips, yaw spins"
+    "magCalibrationFullCompute": {
+        "message": "Compute"
     },
-    "improvedTumbleIntroStep3": {
-        "message": "Click Done when the coverage bar is full — the tool computes everything"
-    },
-    "improvedTumbleIntroTimeEstimate": {
-        "message": "Takes about 30–60 seconds of spinning."
-    },
-    "improvedTumbleStart": {
-        "message": "Start Tumble"
-    },
-    "improvedTumbleTumbling": {
-        "message": "Spin the drone through all orientations"
-    },
-    "improvedTumbleDone": {
-        "message": "Done — Compute"
-    },
-    "improvedTumbleResultsTitle": {
-        "message": "Calibration Results"
-    },
-    "improvedTumbleAlignment": {
-        "message": "Alignment:"
-    },
-    "improvedTumbleCustomAngles": {
-        "message": "CUSTOM (roll: {roll}°, pitch: {pitch}°, yaw: {yaw}°)"
-    },
-    "improvedTumbleQuality": {
-        "message": "Quality:"
-    },
-    "improvedTumbleResidualDeg": {
-        "message": "{deg}° mean inclination residual"
-    },
-    "improvedTumbleSoftIron": {
-        "message": "Soft-iron:"
-    },
-    "improvedTumbleSoftIronAnisotropy": {
-        "message": "anisotropy {val}×"
-    },
-    "improvedTumbleCalibration": {
-        "message": "Calibration:"
-    },
-    "improvedTumbleGeo": {
-        "message": "WMM:"
-    },
-    "improvedTumbleCoverage": {
+    "magCalibrationFullCoverage": {
         "message": "Coverage:"
     },
-    "improvedTumbleExportModel": {
-        "message": "Export Model JSON"
+    "magCalibrationFullAlignment": {
+        "message": "Alignment:"
     },
-    "improvedTumbleQualityGood": {
-        "message": "Good alignment — consistent inclination match across all orientations."
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {roll}° pitch {pitch}° yaw {yaw}°"
     },
-    "improvedTumbleQualityFair": {
-        "message": "Fair alignment — moderate inclination scatter. Spin through more tilted orientations."
+    "magCalibrationFullOffsets": {
+        "message": "Calibration:"
     },
-    "improvedTumbleQualityPoor": {
-        "message": "Poor alignment — high inclination scatter. The tumble may be too planar."
+    "magCalibrationFullResidual": {
+        "message": "Residual:"
     },
-    "improvedTumbleChiralityWarn": {
-        "message": "Warning: alignment may be mirrored (left-handed). This produces an East-West heading swap."
+    "magCalibrationFullCopyCli": {
+        "message": "Copy CLI"
     },
-    "improvedTumblePrompt1": {
-        "message": "Spin the drone slowly through all orientations."
+    "magCalibrationFullApply": {
+        "message": "Apply"
     },
-    "improvedTumblePrompt2": {
-        "message": "Barrel rolls and front/back flips give the best tilt diversity."
+    "magCalibrationFullExport": {
+        "message": "Export Model"
     },
-    "improvedTumblePrompt3": {
-        "message": "Yaw spins cover the horizontal plane."
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Not enough samples — spin longer"
     },
-    "improvedTumblePrompt4": {
-        "message": "A full coverage bar means enough data for a clean solve."
+    "magCalibrationFullNoGeo": {
+        "message": "No GPS or IP location — cannot determine magnetic inclination"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI commands copied to clipboard"
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibration applied and saved"
     },
     "magCalibrationDiscard": {
         "message": "Discard"

@@ -423,7 +423,7 @@
                     <!-- Calibrate Magnetometer (inline) -->
                     <div class="mag-cal-section">
                         <!-- Idle: check + calibrate buttons -->
-                        <div v-if="!showImprovedTumble && cal.phase === 'idle'" class="flex flex-col gap-2">
+                        <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
                             <div class="flex items-center gap-2">
                                 <UButton
                                     size="xs"
@@ -453,17 +453,7 @@
                                     </UDropdownMenu>
                                 </UFieldGroup>
                             </div>
-                            <UButton
-                                size="xs"
-                                variant="soft"
-                                icon="i-lucide-sparkles"
-                                :label="$t('magCalibrationImproved')"
-                                @click="showImprovedTumble = true"
-                            />
                         </div>
-
-                        <!-- Improved Tumble Calibration -->
-                        <MagCharacterizationWizard v-else-if="showImprovedTumble" @close="showImprovedTumble = false" />
 
                         <!-- Calibrating -->
                         <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
@@ -484,6 +474,20 @@
                                         class="text-xs font-semibold quality-good text-center"
                                     >
                                         {{ $t("magCalibrationGuidedDone") }}
+                                    </p>
+                                </template>
+                                <template v-else-if="cal.mode === 'full'">
+                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationFullTitle") }}</div>
+                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
+                                        {{ $t("magCalibrationFullInstruction") }}
+                                    </p>
+                                    <p v-if="cal.coverage" class="text-lg font-bold text-center tabular-nums">
+                                        {{
+                                            $t("magCalibrationFullZones", {
+                                                covered: cal.coverage.covered ?? 0,
+                                                total: cal.coverage.totalFaces ?? 20,
+                                            })
+                                        }}
                                     </p>
                                 </template>
                                 <template v-else-if="cal.mode === 'check'">
@@ -513,7 +517,10 @@
                                         {{ $t("magCalibrationUnguidedDone") }}
                                     </p>
                                 </template>
-                                <dl v-if="cal.mode !== 'check' && cal.sphereFitResult" class="mag-cal-stats-inline">
+                                <dl
+                                    v-if="cal.mode !== 'check' && cal.mode !== 'full' && cal.sphereFitResult"
+                                    class="mag-cal-stats-inline"
+                                >
                                     <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
                                     <dd>{{ calOffsetsText }}</dd>
                                     <dt>{{ $t("magCalibrationResidual") }}</dt>
@@ -542,11 +549,15 @@
                                         @click="clearMagCalSamples()"
                                     />
                                     <UButton
-                                        v-if="cal.mode === 'guided'"
+                                        v-if="cal.mode === 'guided' || cal.mode === 'full'"
                                         size="xs"
                                         :loading="isAcceptingCal"
                                         :disabled="!cal.quality"
-                                        :label="$t('magCalibrationAccept')"
+                                        :label="
+                                            cal.mode === 'full'
+                                                ? $t('magCalibrationFullCompute')
+                                                : $t('magCalibrationAccept')
+                                        "
                                         @click="acceptGuidedMagCal()"
                                     />
                                 </div>
@@ -597,7 +608,7 @@
                                 <p class="text-sm font-semibold quality-good mb-2">
                                     {{ $t("magCalibrationComplete") }}
                                 </p>
-                                <dl class="mag-cal-stats-inline">
+                                <dl v-if="!calIsFull" class="mag-cal-stats-inline">
                                     <dt>{{ $t("magCalibrationFirmwareOffsets") }}</dt>
                                     <dd>{{ calFirmwareOffsetsText }}</dd>
                                     <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
@@ -614,6 +625,68 @@
                                         <span v-else>&mdash;</span>
                                     </dd>
                                 </dl>
+                                <template v-if="calIsFull">
+                                    <dl
+                                        v-if="fullCalResult"
+                                        class="mag-cal-stats-inline"
+                                        style="
+                                            margin-top: 6px;
+                                            border-top: 1px solid var(--border-default);
+                                            padding-top: 6px;
+                                        "
+                                    >
+                                        <dt>{{ $t("magCalibrationFullAlignment") }}</dt>
+                                        <dd>
+                                            {{ fullCalResult.label }}
+                                            <template v-if="fullCalResult.preset === 9">
+                                                ({{
+                                                    $t("magCalibrationFullCustomAngles", {
+                                                        roll: fullCalResult.euler_zyx_deg.roll.toFixed(1),
+                                                        pitch: fullCalResult.euler_zyx_deg.pitch.toFixed(1),
+                                                        yaw: fullCalResult.euler_zyx_deg.yaw.toFixed(1),
+                                                    })
+                                                }})
+                                            </template>
+                                        </dd>
+                                        <dt>{{ $t("magCalibrationFullOffsets") }}</dt>
+                                        <dd>
+                                            {{ fullCalResult.offsets.x }}, {{ fullCalResult.offsets.y }},
+                                            {{ fullCalResult.offsets.z }}
+                                        </dd>
+                                        <dt>{{ $t("magCalibrationFullResidual") }}</dt>
+                                        <dd>{{ fullCalResult.quality?.meanResidualDeg?.toFixed(1) ?? "—" }}&deg;</dd>
+                                        <dt>{{ $t("magCalibrationFullCoverage") }}</dt>
+                                        <dd>
+                                            {{
+                                                cal.coverage
+                                                    ? cal.coverage.covered + "/" + cal.coverage.totalFaces
+                                                    : "—"
+                                            }}
+                                            ({{ cal.sampleCount }} {{ $t("magCalibrationSamples").toLowerCase() }})
+                                        </dd>
+                                    </dl>
+                                    <div class="flex gap-2 justify-center mt-3" v-if="fullCalResult">
+                                        <UButton
+                                            size="xs"
+                                            variant="outline"
+                                            :label="$t('magCalibrationFullCopyCli')"
+                                            @click="copyFullCalCli"
+                                        />
+                                        <UButton
+                                            size="xs"
+                                            :label="$t('magCalibrationFullApply')"
+                                            @click="applyFullCal"
+                                            :disabled="isSavingCal"
+                                            :loading="isSavingCal"
+                                        />
+                                        <UButton
+                                            size="xs"
+                                            variant="outline"
+                                            :label="$t('magCalibrationFullExport')"
+                                            @click="exportFullCalModel"
+                                        />
+                                    </div>
+                                </template>
                                 <div class="flex gap-2 justify-center mt-3">
                                     <UButton
                                         size="xs"
@@ -744,6 +817,13 @@ import { sensorTypes } from "../../js/sensor_types";
 import { useMagCalibration, computeDeclination, getGeoReference } from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
 import { detectAlignment } from "../../js/utils/magAlignment";
+import {
+    characterizeTumble,
+    currentMatrixOf,
+    isFirmwareCustomMagAlignCapable,
+    MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN,
+} from "../../js/utils/magCharacterizationCompute";
+import { buildCharacterizationModel } from "../../js/utils/magModelExport";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { useTimeout } from "../../composables/useTimeout";
 import { useInterval } from "../../composables/useInterval";
@@ -759,7 +839,6 @@ import HelpIcon from "../elements/HelpIcon.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
-import MagCharacterizationWizard from "../dialogs/MagCharacterizationWizard.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 
 const fcStore = useFlightControllerStore();
@@ -1333,8 +1412,9 @@ async function autoSetDeclination() {
 // --- Inline Mag Calibration (replaces dialog) ---
 
 const cal = reactive(useMagCalibration());
-const showImprovedTumble = ref(false);
 const calIsGuided = ref(false);
+const calIsFull = ref(false);
+const fullCalResult = ref(null);
 const calCurrentPrompt = ref(0);
 const guidedSecondsRemaining = ref(-1);
 let promptTimer = null;
@@ -1409,6 +1489,8 @@ function cancelMagCal() {
     clearPromptTimer();
     clearGuidedCountdown();
     calIsGuided.value = false;
+    calIsFull.value = false;
+    fullCalResult.value = null;
     cal.cancelCalibration();
 }
 
@@ -1437,6 +1519,12 @@ const calModeItems = computed(() => {
             icon: "i-lucide-crosshair",
             onSelect: () => startClientCal(),
         });
+        items.push({
+            label: i18n.getMessage("magCalibrationFull"),
+            description: i18n.getMessage("magCalibrationFullDesc"),
+            icon: "i-lucide-sparkles",
+            onSelect: () => startFullCal(),
+        });
     }
     items.push({
         label: i18n.getMessage("magCalibrationUnguided"),
@@ -1459,11 +1547,36 @@ async function startClientCal() {
     await cal.startCalibration("guided");
 }
 
+async function startFullCal() {
+    if (!calGuidedAvailable.value) return;
+    lastCalStarter = startFullCal;
+    calIsFull.value = true;
+    calIsGuided.value = false;
+    fullCalResult.value = null;
+    calCurrentPrompt.value = 0;
+
+    // The dip-angle alignment solve needs the WMM inclination. Fetch it up front
+    // (best effort, no consent prompt) so the user is not surprised at the end.
+    calGeoRef.value = getGeoReference();
+    if (!calGeoRef.value) {
+        const coords = await acquireCoordinates(false);
+        if (coords) {
+            calGeoRef.value = computeDeclination(coords.lat, coords.lon);
+        }
+    }
+
+    await cal.startCalibration("full");
+}
+
 const isAcceptingCal = ref(false);
 
 async function acceptGuidedMagCal() {
     isAcceptingCal.value = true;
     try {
+        if (calIsFull.value) {
+            await acceptFullCal();
+            return;
+        }
         const result = await cal.acceptCalibration();
         if (result?.ok) {
             magNeedsCalibration.value = false;
@@ -1473,6 +1586,54 @@ async function acceptGuidedMagCal() {
     } finally {
         isAcceptingCal.value = false;
     }
+}
+
+async function acceptFullCal() {
+    const samples = cal.samples;
+    if (samples.length < 40) {
+        gui_log(i18n.getMessage("magCalibrationFullInsufficientSamples"));
+        return;
+    }
+
+    let geoRef = calGeoRef.value || getGeoReference();
+    if (!geoRef) {
+        // No GPS fix and nothing cached — ask for IP geolocation consent now rather
+        // than discard the tumble.
+        const coords = await acquireCoordinates(true);
+        if (coords) {
+            geoRef = computeDeclination(coords.lat, coords.lon);
+        }
+    }
+    if (!geoRef) {
+        gui_log(i18n.getMessage("magCalibrationFullNoGeo"));
+        return;
+    }
+    calGeoRef.value = geoRef;
+
+    const align_mag = fcStore.sensorAlignment.align_mag || 0;
+    const customAngles =
+        align_mag === 9
+            ? {
+                roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+            }
+            : null;
+    const R_cur = currentMatrixOf(align_mag, customAngles);
+
+    const result = characterizeTumble({
+        samples,
+        currentMatrix: R_cur,
+        inclinationRad: (geoRef.inclination * Math.PI) / 180,
+    });
+
+    if (!result.ok) {
+        gui_log(result.error || i18n.getMessage("magCalibrationError"));
+        return;
+    }
+
+    fullCalResult.value = result;
+    cal.completeCalibration();
 }
 
 const isSavingCal = ref(false);
@@ -1490,6 +1651,128 @@ async function saveCalValues({ x, y, z }) {
     } finally {
         isSavingCal.value = false;
     }
+}
+
+function buildFullCalCliLines() {
+    const r = fullCalResult.value;
+    if (!r) return [];
+    const lines = [];
+
+    if (r.preset === 9) {
+        if (!isFirmwareCustomMagAlignCapable(fcStore.config?.flightControllerVersion)) {
+            lines.push(
+                `# WARNING: firmware ${fcStore.config?.flightControllerVersion || "?"} predates betaflight#14849 (${MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN}+): it would apply the INVERSE of these angles. Update the firmware before using CUSTOM alignment.`,
+            );
+        }
+        lines.push("set align_mag = CUSTOM");
+        lines.push(`set mag_align_roll = ${Math.round(r.euler_zyx_deg.roll * 10)}`);
+        lines.push(`set mag_align_pitch = ${Math.round(r.euler_zyx_deg.pitch * 10)}`);
+        lines.push(`set mag_align_yaw = ${Math.round(r.euler_zyx_deg.yaw * 10)}`);
+    } else if (r.preset >= 1 && r.preset <= 8) {
+        const names = ["", "CW0", "CW90", "CW180", "CW270", "CW0FLIP", "CW90FLIP", "CW180FLIP", "CW270FLIP"];
+        lines.push(`set align_mag = ${names[r.preset]}`);
+    }
+
+    lines.push(`set mag_calibration = ${r.offsets.x},${r.offsets.y},${r.offsets.z}`);
+
+    const geoRef = calGeoRef.value || getGeoReference();
+    if (geoRef) {
+        lines.push(`set mag_declination = ${Math.round(geoRef.declination * 10)}`);
+    }
+
+    lines.push("save");
+    return lines;
+}
+
+function copyFullCalCli() {
+    const lines = buildFullCalCliLines();
+    if (!lines.length) return;
+    navigator.clipboard.writeText(lines.join("\n")).catch(() => {});
+    gui_log(i18n.getMessage("magCalibrationFullCliCopied"));
+}
+
+async function applyFullCal() {
+    const r = fullCalResult.value;
+    if (!r) return;
+    isSavingCal.value = true;
+    try {
+        // Reflect the proposed alignment into the form. This makes it visible in the
+        // alignment dropdown and persists it through the standard sensor-config save
+        // (MSP_SET_SENSOR_ALIGNMENT + EEPROM), which is the proven path — not raw CLI.
+        sensorAlignment.align_mag = r.preset;
+        if (r.preset === 9 && r.euler_zyx_deg) {
+            sensorAlignment.mag_align_roll = roundOneDp(r.euler_zyx_deg.roll);
+            sensorAlignment.mag_align_pitch = roundOneDp(r.euler_zyx_deg.pitch);
+            sensorAlignment.mag_align_yaw = roundOneDp(r.euler_zyx_deg.yaw);
+        }
+        const geoRef = calGeoRef.value || getGeoReference();
+        if (geoRef) {
+            magDeclination.value = roundOneDp(geoRef.declination);
+        }
+
+        // Write the new hard-iron offsets via the same path the offset editor uses.
+        const offsetResult = await cal.writeCalValues(r.offsets.x, r.offsets.y, r.offsets.z);
+        if (!offsetResult?.ok) {
+            gui_log(i18n.getMessage("magCalibrationSaveError"));
+            return;
+        }
+        magNeedsCalibration.value = false;
+
+        // Persist alignment + declination to EEPROM and reboot (standard save flow).
+        await saveConfig();
+        gui_log(i18n.getMessage("magCalibrationFullApplied"));
+    } catch (e) {
+        gui_log(i18n.getMessage("magCalibrationSaveError"));
+        console.error(e);
+    } finally {
+        isSavingCal.value = false;
+    }
+}
+
+function exportFullCalModel() {
+    const r = fullCalResult.value;
+    if (!r) return;
+    const geoRef = calGeoRef.value || getGeoReference();
+    const align_mag = fcStore.sensorAlignment.align_mag || 0;
+    const customAngles =
+        align_mag === 9
+            ? {
+                roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+            }
+            : null;
+
+    const model = buildCharacterizationModel({
+        solverResult: {
+            preset: r.preset,
+            label: r.label,
+            euler_zyx_deg: r.euler_zyx_deg,
+            quality: r.quality,
+        },
+        capturedUnder: {
+            alignment: align_mag,
+            custom_angles: align_mag === 9 && customAngles ? { ...customAngles } : null,
+            mag_zero: cal.firmwareOffsets ? { ...cal.firmwareOffsets } : null,
+            mag_zero_known: cal.firmwareOffsets !== null,
+        },
+        ellipsoidParams: r.ellipsoid,
+        calibrationOffsets: r.offsets,
+        geoReference: geoRef,
+        gpsFix: !!fcStore.gpsData.fix,
+        gpsLat: fcStore.gpsData.latitude,
+        gpsLon: fcStore.gpsData.longitude,
+    });
+
+    const blob = new Blob([JSON.stringify(model, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `characterization_model_${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 function retryAndStartMagCal() {
@@ -1512,6 +1795,8 @@ function retryMagCal() {
     clearPromptTimer();
     clearGuidedCountdown();
     calIsGuided.value = false;
+    calIsFull.value = false;
+    fullCalResult.value = null;
     cal.retry();
 }
 
