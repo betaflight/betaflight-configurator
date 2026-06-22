@@ -8806,6 +8806,13 @@
         "message": "Rulers",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     },
+    "osdPsasAoALimiter": {
+        "message": "PSAS AoA limiter",
+        "description": "PSAS angle of attack limiter state"
+    },
+    "osdDescPsasAoALimiter": {
+        "message": "PSAS angle of attack limiter state"
+    },
     "tabUserProfile": {
         "message": "User Profile"
     },
