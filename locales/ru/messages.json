@@ -740,9 +740,6 @@
     "defaultHardwareHead": {
         "message": "Аппаратное обеспечение"
     },
-    "defaultHardwareText": {
-        "message": "Программа поддерживает все устройства, которые могут запускать Betaflight. Проверьте вкладку Прошивка программатора для получения полного списка аппаратных средств.<br \/><br \/>Полезные аппаратные утилиты \/ драйверы:<ul><li>для устаревшего оборудования использующего микросхемы CP210x для переходника USB в последовательный порт, последние <b>драйверы CP210x<\/b> можно загрузить с <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><li>Последняя версия <b>Zadig<\/b> для установки USB драйвера Windows можно загрузить с <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><li><b>Исправление для драйвера ImpulseRC<\/b> можно загрузить <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><\/ul>"
-    },
     "defaultSoftwareHead": {
         "message": "Программное обеспечение"
     },
@@ -751,9 +748,6 @@
     },
     "defaultContributingHead": {
         "message": "Содействие"
-    },
-    "defaultContributingText": {
-        "message": "Если вы хотите помочь сделать Betaflight еще лучше, вы можете помочь многими способами, в том числе:<br \/><ul><li>используя свои знания о Betaflight для создания или обновления контента на <a href=\"https:\/\/betaflight.com\/docs\/wiki \" target=\"_blank\" rel=\"нет доступа\">наша Вики-страница<\/a> или отвечать на вопросы других пользователей на онлайн-форумах;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development \" target=\"_blank\" rel=\"noopener noreferrer\">добавление кода<\/a> в прошивку и приложение - новые функции, исправления, улучшения;<\/li><li>тестирование <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls \" target=\"_blank\" rel=\"noopener noreferrer\">новые функции и исправления<\/a> и предоставление обратной связи;<\/li><li>помощь другим пользователям в решении проблем, о которых они сообщают в <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues \" target=\"_blank\" rel=\"noopener noreferrer\">наш сервис отслеживания проблем<\/a> и участия в обсуждениях функциональности;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">переводить<\/a> приложение Betaflight на новый язык или помогать поддерживать существующие переводы.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Также у нас есть группа на Facebook<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a>.<br \/>Присоединяйтесь к нам, чтобы поговорить о Betaflight, задать вопросы о конфигурации или просто пообщаться с другими пилотами."
@@ -2372,9 +2366,6 @@
     "receiverModelId": {
         "message": "Model Match ID"
     },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Всегда проверяйте правильность работы сценариев спасения Failsafe!<\/a><\/strong><\/b> Настройки находятся на вкладке Failsafe, которая требует включения  режима эксперта.<br> &#8226; <b>Используйте последнюю прошивку приемника!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Отключите аппаратный фильтр ADC<\/a><\/strong> на пульте при использовании OpenTx или EdgeTx.<br>Базовая установка: Укажите настройки приемника. Выберите правильную карту каналов для вашего радиоканала. Проверьте, что Крен, Тангаж и другие линии диаграммы корректно реагируют на изменения положения элементов управления. Установите крание  значения канала или диапазона передатчика от ~1000 до ~2000 и установите среднюю точку на 1500. Для получения дополнительной информации прочтите <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">документацию<\/a><\/strong>."
-    },
     "receiverThrottleMid": {
         "message": "Газ, средняя точка"
     },
@@ -2544,14 +2535,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Режим полета увеличивает P и I во время быстрых движений газа для улучшения отслеживания стика и предотвращения носового дрейфа при быстрых изменениях газа.",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode позволяет поддерживать стабильность летательного аппарата при низком уровне газа. Для получения дополнительной информации обратитесь к <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Удержание высоты (Altitude Hold)<\/a> активно регулирует высоту аппарата, используя внешние датчики в сочетании с Angle Mode (Стабилизационным режимом).",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включает звуковой сигнал - полезно для определения местоположения упавшего воздушного судна",
@@ -2753,14 +2736,6 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "через канал"
-    },
-    "adjustmentsCenterHelp": {
-        "message": "Задаёт среднюю точку или опорное значение, используемое функцией настройки.<br \/><br \/><strong>Настройки ползунком:<\/strong><br \/>Для настроек ползунком установите «Центр настройки» в 0. Для увеличения\/уменьшения настройки будет использоваться текущее положение ползунка.<br \/><br \/><strong>Настройки выбором:<\/strong><br \/>Установите «Центр настройки» в 0 либо в конкретное значение в микросекундах (uS), если хотите сместить опорную точку переключателя относительно 1500uS при запуске RC-настройки.<br \/><br \/><strong>Пошаговые настройки:<\/strong><br \/>Установите «Центр настройки» в 0, чтобы использовалось текущее значение настраиваемого параметра.<br \/><br \/><strong>Абсолютные настройки:<\/strong><br \/>Для использования метода абсолютной настройки необходимо задать и «Центр настройки», и «Масштаб», чтобы указать требуемое значение и диапазон. Диапазон вычисляется по формуле: Центр ± Масштаб. Например, если установить «Центр настройки» на 50, а «Масштаб настройки» на 25, получится диапазон от 25 до 75, при этом центральное положение (переключателя или POT) будет соответствовать значению 50.<br \/><br \/>Подробнее см. <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">на этой странице<\/a>.",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "Контролирует масштабирование или диапазон регулировки; чем больше значение увеличивает диапазон регулировки или чувствительности.<br \/><br \/><strong>Регулировка слайдер:<\/strong><br \/>Для регулировки слайдера регулировка масштабирования\/чувствительности регулировки. Значение 50 равно 50% диапазона ползунков. Установка значения в 0 использует шкалу по умолчанию для ползунков.<br \/><br \/><strong>Корректировка:<\/strong><br \/>для выборочных корректировок, задать значение Шкала Регулирования в 0 для поведения по умолчанию, или указать значение микросекунды (uS) для ограничения диапазона. Например: Установите центр регулировки на 1000 (uS) и шкалу регулировки на 500 (uS) для использования 3-позиционного переключателя как 2-позиционный переключатель.<br \/><br \/><strong>Степень и Абсолютная корректировка:<\/strong><br \/>для Степенных и Абсолютных корректировок, Регулировка масштаба определяет диапазон выше и ниже центра регулировки. Например, значение 25 создает диапазон регулировки ±25 из значения центра регулировки, или из текущего значения, если Центр корректировки установлен в 0.<br \/><strong>Замечание:<\/strong> Для использования метода абсолютной корректировки с потенциалом, необходимо указать значение шкалы корректировки.<br \/><br \/>Посетите <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">эту страницу<\/a> для получения дополнительной информации.",
-        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "Слот 1"
@@ -3475,9 +3450,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Функция работает только с DSHOT ESC.<br \/>Убедитесь, что ваш ESC (контроллер скорости) поддерживает протокол DSHOT и измените его на вкладке $t(tabMotorTesting.message)."
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Количество моторов равно 0.<br \/> Проверьте текущий Mixer на вкладке $t(tabMotorTesting.message) или настройте через CLI. Обратитесь к этой <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">странице<\/a>."
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Обновите прошивку.<br \/> Убедитесь, что вы используете последнюю прошивку: Betaflight 4.3 или новее."
     },
@@ -3987,9 +3959,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "Восстановление \/ потеря связи"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Если вы потеряли связь с вашей платой, выполните следующие шаги для её восстановления:<ul><li>Отключите питание.<\/li><li>Включите «Без перезагрузки» и «Полное стирание чипа».<\/li><li>Замкните BOOT-пины или удерживайте кнопку BOOT.<\/li><li>Включите питание (светодиод активности НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите все драйверы STM32 и Zadig при необходимости (см. раздел <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивка USB<\/a> в руководстве Betaflight).<\/li><li>Закройте приложение, затем перезапустите его.<\/li><li>Отпустите кнопку BOOT, если она есть на вашем FC.<\/li><li>Прошейте правильную прошивку (используя ручную скорость передачи данных, если указано в руководстве к вашему FC).<\/li><li>Выключите питание.<\/li><li>Снимите перемычку BOOT.<\/li><li>Включите питание (светодиод активности должен мигать).<\/li><li>Подключитесь в обычном режиме.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "Если связь потеряна: отключите питание, включите «No Reboot Sequence»..."
@@ -4959,9 +4928,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Компенсация просадки аккумулятора (%)"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Обеспечивает стабильные показатели тяги и работы PID во всем рабочем диапазоне напряжения батареи, увеличивая выходную мощность моторов по мере падения напряжения.<br \/><br \/>\n\nУровень компенсации можно регулировать от 0% до 100%. Рекомендуется полная компенсация (100%).<br \/><br \/>\n\nПодробнее см. в <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">этой статье вики<\/a>."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -6960,10 +6926,6 @@
     },
     "osdButtonSaved": {
         "message": "Сохранено"
-    },
-    "vtxHelp": {
-        "message": "Здесь вы можете настроить свой видеопередатчик (VTX). Вы можете видеть и изменять настройки передачи, включая таблицы VTX, если полётный контроллер и видеопередатчик это поддерживают.<br>Чтобы настроить видеопередатчик следуйте нижеперечисленным шагам:<br>1. Ознакомьтесь с <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">этой<\/a> страницей;<br>2. Найдите подходящий файл конфигурации для вашей страны, вашей модели видеопередатчика и загрузите его;<br>3. Щёлкните кнопку '$t(vtxButtonLoadFile.message)' ниже, выберите найденный файл конфигурации видеопередатчика и загрузите его;<br>4. Проверьте правильность настроек;<br>5. Щёлкните кнопку '$t(vtxButtonSave.message)' чтобы сохранить настройки видеопередатчика в полётный контроллер.<br>6. Опционально нажмите '$t(vtxButtonSaveLua.message)' для сохранения конфигурационного файла lua, который вы сможете использовать с betaflight lua скриптами (больше об этом <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">здесь<\/a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">ВНИМАНИЕ:<\/span> Ваш видеопередатчик не настроен или не поддерживается. Поэтому вы не можете изменять настройки видеопередатчика здесь. Это будет возможно только в том случае, если полётный контроллер соединён с видеопередатчиком посредством протокола Tramp или SmartAudio и корректно настроен во вкладке $t(tabPorts.message).",

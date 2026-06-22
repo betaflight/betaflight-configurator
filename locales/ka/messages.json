@@ -112,6 +112,9 @@
     "bluetoothConnectionError": {
         "message": "ბლუთუზთან კავშირის პრობლემა: $1"
     },
+    "virtualMode": {
+        "message": "ვირტუალური რეჟიმი"
+    },
     "virtualMSPVersion": {
         "message": "ვირტუალური პროგრამის ვერსია"
     },
@@ -564,13 +567,7 @@
         "message": "სიხშირული სპექტრის ანალიზი (Gyro)"
     },
     "tabReceiver": {
-        "message": "მომღები"
-    },
-    "tabModeSelection": {
-        "message": "რეჟიმის არჩევა"
-    },
-    "tabServos": {
-        "message": "სერვოსები"
+        "message": "რადიომიმღები"
     },
     "tabFailsafe": {
         "message": "უსაფრთხო მარცხი"
@@ -950,9 +947,6 @@
     "defaultHardwareHead": {
         "message": "მოწყობილობა"
     },
-    "defaultHardwareText": {
-        "message": "აპლიკაციას აქვს ყველა იმ აპარატურის მხარდაჭერა, რომელსაც შეუძლია Betaflight-ის გაშვება. აპარატურის სრული სიის სანახავად შეამოწმეთ მიკროპროგრამის განახლების ჩანართი.<br \/><br \/>სასარგებლო აპარატურული ხელსაწყოები \/ დრაივერები:<ul><li>ძველი თაობის აპარატურისთვის, რომელიც იყენებს CP210x USB-დან Serial ჩიპს, უახლესი <b>CP210x დრაივერების<\/b> გადმოწერა შესაძლებელია <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers \"target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a><\/li><li>Windows-ზე USB დრაივერების დასაყენებელი უახლესი <b>Zadig<\/b>-ის გადმოწერა შესაძლებელია <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b>-ის გადმოწერა შესაძლებელია <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a><\/li><\/ul>"
-    },
     "defaultSoftwareHead": {
         "message": "პროგრამული უზრუნველყოფა"
     },
@@ -961,9 +955,6 @@
     },
     "defaultContributingHead": {
         "message": "მონაწილეობის მიღება"
-    },
-    "defaultContributingText": {
-        "message": "თუ გსურთ დაგვეხმაროთ Betaflight-ის კიდევ უფრო გაუმჯობესებაში, ამის გაკეთება მრავალი გზით შეგიძლიათ, მათ შორის:<br \/><ul><li>თქვენი ცოდნის გამოყენებით ახალი კონტენტის შექმნით ან განახლებით <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">ჩვენს Wiki-ზე<\/a>, ან ონლაინ ფორუმებზე სხვა მომხმარებლების კითხვებზე პასუხის გაცემით;<\/li><li>მიკროპროგრამასა და აპლიკაციაში <a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">კოდის შეტანით <\/a> — ახალი ფუნქციების, ხარვეზების გასწორებებისა და გაუმჯობესებების სახით;<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">ახალი ფუნქციებისა და შესწორებების<\/a> ტესტირებით და უკუკავშირის მიწოდებით;<\/li><li>სხვა მომხმარებლების დახმარებით იმ პრობლემების მოგვარებაში, რომლებსაც ისინი <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">ჩვენს ხარვეზების ტრეკერში <\/a> აფიქსირებენ, და ახალი ფუნქციების მოთხოვნებთან დაკავშირებულ დისკუსიებში მონაწილეობით;<\/li><li>Betaflight აპლიკაციის ახალ ენაზე <a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">თარგმნით<\/a> ან არსებული თარგმანების აქტუალობის შენარჩუნებაში დახმარებით.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "ჩვენ ასევე გვაქვს<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">ფეისბუქ ჯგუფი<\/a><br \/>შემოგვიერთდით ჯგუფში სადაც ვსაუბრობთ Betaflight, ვსავთ კითხვებს კონფიგურატორზე, ან უბრალოდ გაერთეთ თქვენნაირ პილოტებთან."
@@ -1084,7 +1075,7 @@
         "message": "განულება Z ღერძზე, გდახრა: $1 გრადუსი"
     },
     "initialSetupHeading": {
-        "message": "ვერტიკალურ ღერძზე ბრუნვა:",
+        "message": "Yaw:",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMagHeading": {
@@ -1125,7 +1116,7 @@
         "message": "აქსელელომეტრის გასწორება"
     },
     "initialSetupPitch": {
-        "message": "ტანგაჟი:"
+        "message": "Pitch:"
     },
     "initialSetupRoll": {
         "message": "კრენი:"
@@ -2390,7 +2381,7 @@
         "message": "<span class=\"message-negative\"><b>გაფრთხილება:<\/b><\/span> ძალიან მაღალმა მაჩვენებლებმა შეიძლება გამოიწვიოს დესინქრონიზაცია სწრაფი შენელების შედეგად."
     },
     "pidTuningRcRate": {
-        "message": "RC კურსი"
+        "message": "RC მნიშვნელობა"
     },
     "pidTuningMaxVel": {
         "message": "მაქს ველი [deg\/s]"
@@ -2553,9 +2544,6 @@
     "receiverModelId": {
         "message": "მოდელის მატჩის ID"
     },
-    "receiverHelp": {
-        "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">ყოველთვის შეამოწმეთ, რომ თქვენი Failsafe მუშაობს გამართულად! &#8226; <b>გამოიყენეთ უახლესი Tx firmware!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">გამორთეთ აპარატურის ADC ფილტრი<\/a>HTMLT ან Transmit_3-ში EdgeTx.<br>ძირითადი დაყენება: „მიმღების“ პარამეტრების სწორად კონფიგურაცია. აირჩიეთ სწორი „არხის რუკა“ თქვენი რადიოსთვის. შეამოწმეთ, რომ Roll, Pitch და სხვა ზოლიანი გრაფიკები სწორად მოძრაობენ. დაარეგულირეთ არხის საბოლოო წერტილი ან დიაპაზონის მნიშვნელობები გადამცემში ~1000-დან ~2000-მდე და დააყენეთ შუა წერტილი 1500-ზე. დამატებითი ინფორმაციისთვის წაიკითხეთ <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation<\/a><\/strong>."
-    },
     "receiverFailsafeActiveTitle": {
         "message": "Failsafe აქტიური"
     },
@@ -2599,7 +2587,7 @@
         "message": "ეს არის მნიშვნელობები (ჩვენში) იმის მიხედვით, თუ რამდენად შეიძლება განსხვავებული იყოს RC შეყვანა, სანამ ის მართებულად ჩაითვლება. გადამცემებისთვის, რომლებსაც გამომავალზე ჟიტერი აქვთ, ეს მნიშვნელობა შეიძლება გაიზარდოს, თუ rc შეყვანები იკუმშება უმოქმედობის დროს."
     },
     "receiverYawDeadband": {
-        "message": "კურსის (Yaw) მკვდარი ზონა"
+        "message": "Yaw მკვდარი ზონა"
     },
     "receiverHelpYawDeadband": {
         "message": "ეს არის მნიშვნელობები (ჩვენში) იმის მიხედვით, თუ რამდენად შეიძლება განსხვავებული იყოს RC შეყვანა, სანამ ის მართებულად ჩაითვლება. გადამცემებისთვის, რომლებსაც გამომავალზე ჟიტერი აქვთ, ეს მნიშვნელობა შეიძლება გაიზარდოს, თუ rc შეყვანები იკუმშება უმოქმედობის დროს. <strong>ეს პარამეტრი განკუთვნილია მხოლოდ Yaw-ისთვის.<\/strong>"
@@ -2737,14 +2725,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "ფრენის რეჟიმი ზრდის P და I ტერმინს დროსელის სწრაფი მოძრაობების დროს, რათა გააუმჯობესოს ჩხირის თვალყურის დევნება და თავიდან აიცილოს ცხვირის დრეიფი დროსელის სწრაფი ცვლილებების დროს",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode საშუალებას გაძლევთ შეინარჩუნოთ საფრენი აპარატის სტაბილურობა დაბალ დროსელზე. დამატებითი ინფორმაციისთვის იხილეთ <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> Betaflight.com-ზე.",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> აქტიურად არეგულირებს საფრენი აპარატის სიმაღლეს გარე სენსორების გამოყენებით კუთხის რეჟიმთან ერთად (სტაბილური რეჟიმი).",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "ავტომატური პილოტის რეჟიმი იძლევა ფრენის ავტონომიურ კონტროლს, აერთიანებს სიმაღლის შეკავებას და პოზიციის შეკავებას სტაბილურად ფრენის შესანარჩუნებლად ან დაგეგმილი ფრენის გზაზე.",
@@ -2969,14 +2949,6 @@
     "adjustmentsColumnAdjustmentScale": {
         "message": "მასშტაბი (მნიშვნ.|%)"
     },
-    "adjustmentsCenterHelp": {
-        "message": "აყენებს შუა წერტილს ან საცნობარო მნიშვნელობას, რომელსაც იყენებს კორექტირების ფუნქცია.<br \/><br \/><strong>Slider Adjustments:<\/strong><br \/>სლაიდერის კორექტირებისთვის დააყენეთ Adjustment Center-ზე 0. სლაიდერის პოზიციის მორგება ახლანდელი utilized იქნება ზევით\/ქვევით.<br \/><br \/><strong>შერჩევის კორექტირება:<\/strong><br \/>დააყენეთ რეგულირების ცენტრი 0-ზე, ან კონკრეტულ მიკროწამში (US) მნიშვნელობა, თუ გსურთ გადამრთველის საცნობარო წერტილი 15iti0-დან. კორექტირება.<br \/><br \/><strong>საფეხურიანი კორექტირება:<\/strong><br \/>დააყენეთ რეგულირების ცენტრი 0-ზე, გამოსაყენებლად დარეგულირებული ელემენტის მიმდინარე მნიშვნელობისთვის. კორექტირება:<\/strong><br \/>აბსოლუტური კორექტირების მეთოდის გამოსაყენებლად, თქვენ უნდა დააყენოთ როგორც რეგულირების ცენტრი, ასევე მასშტაბი, რათა მიუთითოთ სასურველი მნიშვნელობა და დიაპაზონი. დიაპაზონი გამოითვლება როგორც: ცენტრი ± მასშტაბი. მაგალითად, Adjustment Center-ის 50-ზე და Adjustment Scale-ზე 25-ზე დაყენება ქმნის დიაპაზონს 25-დან 75-მდე, ხოლო ცენტრის პოზიცია (გამრთველი ან POT) არის 50-ზე.",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "აკონტროლებს კორექტირების სკალირებას ან დიაპაზონს; უფრო მაღალი მნიშვნელობები ზრდის კორექტირების დიაპაზონს ან მგრძნობელობას.<br \/><br \/><strong>Slider Adjustments:<\/strong><br \/>Slider-ის კორექტირებისთვის, Adjustment Scale აკონტროლებს კორექტირების მასშტაბირებას\/მგრძნობელობას. 50-ის მნიშვნელობა უდრის სლაიდერის დიაპაზონის 50%-ს. 0-ზე დაყენება იყენებს ნაგულისხმევ შკალას სლაიდერებისთვის.<br \/><br \/><strong>Selection Adjustments:<\/strong><br \/>შერჩევის კორექტირებისთვის, დააყენეთ Adjustment Scale 0-ზე ნაგულისხმევი ქცევის მნიშვნელობისთვის, ან მიუთითეთ მიკროS მნიშვნელობის შეზღუდვა. მაგალითად: დააყენეთ რეგულირების ცენტრი 1000-ზე (uS) და რეგულირების მასშტაბი 500 (uS) 3-პოზიციური გადამრთველის 2-პოზიციის გადამრთველად გამოსაყენებლად. აბსოლუტური კორექტირება, რეგულირების მასშტაბი განსაზღვრავს დიაპაზონს რეგულირების ცენტრის ზემოთ და ქვემოთ. მაგალითად, 25 მნიშვნელობა ქმნის კორექტირების დიაპაზონს ±25-ს რეგულირების ცენტრის მნიშვნელობიდან, ან მიმდინარე მნიშვნელობიდან, თუ რეგულირების ცენტრი დაყენებულია 0.<br \/><strong>შენიშვნა:<\/strong> პოტენციომეტრით აბსოლუტური კორექტირების მეთოდის გამოსაყენებლად, უნდა იყოს რეგულირებადი მნიშვნელობის S. მითითებულია.<br \/><br \/>ეწვიეთ <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">ამ გვერდს<\/a> დამატებითი ინფორმაციისთვის.",
-        "description": "Tooltip help text for the Adjustment Scale column"
-    },
     "adjustmentsSlot0": {
         "message": "სლოტი 1"
     },
@@ -3038,7 +3010,7 @@
         "message": "სიმაღლის მაჩვენებელი"
     },
     "adjustmentsFunction14": {
-        "message": "კრენის სიჩქარე"
+        "message": "Roll  მნიშვნელობა"
     },
     "adjustmentsFunction15": {
         "message": "Pitch P რეგულირება"
@@ -3059,7 +3031,7 @@
         "message": "Roll D რეგულირება"
     },
     "adjustmentsFunction21": {
-        "message": "RC კურსის სიჩქარე"
+        "message": "RC Yaw სიჩქარე"
     },
     "adjustmentsFunction22": {
         "message": "Pitch & Roll F რეგულირება"
@@ -3341,7 +3313,7 @@
         "description": "Modifier waypoint type: pauses traversal for a duration"
     },
     "flightPlanTypeYawRate": {
-        "message": "ყაბზობის ქუდი",
+        "message": "Yaw მნიშვნელობის ქუდი",
         "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
     },
     "flightPlanDuration": {
@@ -3444,7 +3416,7 @@
         "message": "არასწორი ხანგრძლივობა (უნდა იყოს ნული ან დადებითი)"
     },
     "flightPlanInvalidYawRate": {
-        "message": "არასწორი გადახვევის მაჩვენებელი (უნდა იყოს ნული ან დადებითი)"
+        "message": "არასწორი Yaw მაჩვენებელი (უნდა იყოს ნული ან დადებითი)"
     },
     "flightPlanConfirmDelete": {
         "message": "დარწმუნებული ხართ, რომ გსურთ წაშალოთ ეს გზა?"
@@ -3719,9 +3691,6 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "ფუნქცია მუშაობს მხოლოდ DSHOT ESC-ებთან.<br \/>დაადასტურეთ, რომ თქვენი ESC (ელექტრული სიჩქარის კონტროლერი) მხარს უჭერს DSHOT პროტოკოლს და შეცვალეთ იგი $t(tabMotorTesting.message) ჩანართზე."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "ძრავების რაოდენობა არის 0.<br \/>გადაამოწმეთ მიმდინარე მიქსერი $t(tabMotorTesting.message) ჩანართზე ან დააყენეთ მორგებული CLI-ის მეშვეობით. იხილეთ ეს <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">ვიკი გვერდი<\/a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "განაახლე პროგრამა.<br \/> დარწმუნდით რომ იყენებთ უახლეს პროგრამას: ბეტაფლაით 4,3 ან უფრო ახლი."
@@ -4239,9 +4208,6 @@
     "firmwareFlasherRecoveryHead": {
         "message": "აღდგენა \/ დაკარგული კომუნიკაცია"
     },
-    "firmwareFlasherRecoveryText": {
-        "message": "თუ დაკარგეთ კომუნიკაცია თქვენს დაფასთან, მიჰყევით ამ ნაბიჯებს კომუნიკაციის აღსადგენად:<ul><li>გამორთეთ<\/li><li>ჩართეთ „გადატვირთვის თანმიმდევრობა არ არის“, ჩართეთ „ჩიპის სრული წაშლა“.<\/li><li>. ღილაკი.<\/li><li>ჩართვა (აქტივობის LED არ ანათებს, თუ სწორად შესრულდება).<\/li><li>დააინსტალირეთ ყველა STM32 დრაივერი და საჭიროების შემთხვევაში Zadig (იხ. სახელმძღვანელო).<\/li><li>დახურეთ აპი, შემდეგ გადატვირთეთ.<\/li><li>გაუშვით BOOT ღილაკი, თუ თქვენს FC-ს აქვს. სახელმძღვანელო).<\/li><li>გამორთვა.<\/li><li>ამოშალე BOOT jumper.<\/li><li>ჩართვა (აქტივობის LED უნდა ციმციმდეს).<\/li>Con_3_ect ჩვეულებრივ.<\/li><\/ul>"
-    },
     "firmwareFlasherRecoveryShort": {
         "message": "თუ კომუნიკაცია დაკარგეთ: გამორთეთ, ჩართეთ No Reboot Sequence და Full Chip Ease, გადახტეთ BOOT ქინძისთავები და შემდეგ ჩართეთ. საჭიროების შემთხვევაში დააინსტალირეთ დრაივერები."
     },
@@ -4292,6 +4258,30 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "ვერ მოხერხდა (Flash) UF2 შენახვა"
+    },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "მიმდინარეობს დაკავშირება ESP32-ის ჩამტვირთავთან..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "აღმოჩენილია $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "მიმდინარეობს ESP32-ის ჩაწერა..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "ჩაწერა დასრულდა, მიმდინარეობს გადატვირთვა..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "ESP32-ის ჩაწერა წარმატებით დასრულდა"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "ESP32-ის ჩაწერა ვერ მოხერხდა: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32-ის ჩასაწერად საჭიროა ბრაუზერის (Web Serial) ვერსია"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "ESP32-ის ჩაწერამდე აირჩიეთ სერიული პორტი"
     },
     "firmwareFlasherClickToConnectDfu": {
         "message": "დააწკაპუნეთ DFU მოწყობილობასთან დასაკავშირებლად"
@@ -4705,10 +4695,10 @@
         "message": "კრენი [A]"
     },
     "controlAxisPitch": {
-        "message": "ტანგაჟი [E]"
+        "message": "Pitch [E] "
     },
     "controlAxisYaw": {
-        "message": "კურსი"
+        "message": "Yaw"
     },
     "controlAxisThrottle": {
         "message": "დროსელი [T]"
@@ -5004,7 +4994,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "ტანგაჟის ავტოროტაცია - რხევა:<br \/><i><small>ტანგაჟი P და I<\/small><\/i>",
+        "message": "Pitch ავტოროტაცია - რხევა:<br><i><small>Pitch: Roll P, I და FF<\/small><\/i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
@@ -5221,9 +5211,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag კომპენსაცია %"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "იძლევა დროსელისა და PID-ის თანმიმდევრულ შესრულებას გამოსაყენებელი ბატარეის ძაბვის დიაპაზონში ძრავის გამომუშავების გაზრდით ბატარეის ძაბვის ვარდნისას. რეკომენდირებულია სრული კომპენსაცია (100%).<br \/><br \/>დამატებითი ინფორმაციისთვის ეწვიეთ <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">ეს ვიკი ჩანაწერს<\/a>."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -6454,7 +6441,7 @@
         "message": "უჯრედების საშუალო ძაბვა (ბატარეის ძაბვა \/ უჯრედების რაოდენობა)"
     },
     "osdTextElementPitchAngle": {
-        "message": "კუთხე: ტანგაჟი",
+        "message": "კუთხე: pitch",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPitchAngle": {
@@ -6465,7 +6452,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRollAngle": {
-        "message": "რიცხვითი კრენის კუთხე გრადუსებში"
+        "message": "roll ის რიცხვითი კუთხე გრადუსებში"
     },
     "osdTextElementMainBattUsage": {
         "message": "ბატარეის მოხმარება",
@@ -6745,7 +6732,7 @@
         "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
     },
     "osdDescUpDownReference": {
-        "message": "OSD სიმბოლო, რომელიც აჩვენებს, როდესაც ტანგაჟი უახლოვდება ვერტიკალურს (90 გრადუსი, U) და D ცხვირის ქვემოთ (-90 გრადუსი, D)"
+        "message": "OSD სიმბოლო, რომელიც აჩვენებს, როდესაც pitch უახლოვდება ვერტიკალურს (90 გრადუსი, U) და D ცხვირის ქვემოთ (-90 გრადუსი, D)"
     },
     "osdTextElementTxUplinkPower": {
         "message": "Tx uplink ძალა",
@@ -7272,10 +7259,6 @@
     },
     "osdButtonSaved": {
         "message": "შენახულია"
-    },
-    "vtxHelp": {
-        "message": "აქ შეგიძლიათ დააკონფიგურიროთ მნიშვნელობები თქვენი ვიდეო გადამცემისთვის (VTX). თქვენ შეგიძლიათ ნახოთ და შეცვალოთ გადაცემის მნიშვნელობები, მათ შორის VTX ცხრილები, თუ ფრენის კონტროლერი და VTX მხარს უჭერენ მას.<br>თქვენი VTX-ის დასაყენებლად გამოიყენეთ შემდეგი ნაბიჯები:<br>1. გადადით <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">this<\/a> გვერდზე;<br>2. იპოვეთ შესაბამისი VTX კონფიგურაციის ფაილი თქვენი ქვეყნისთვის და თქვენი VTX მოდელისთვის და გადმოწერეთ;<br>3. დააწკაპუნეთ '$t(vtxButtonLoadFile.message)' ქვემოთ, აირჩიეთ VTX კონფიგურაციის ფაილი, ჩატვირთეთ იგი;<br>4. შეამოწმეთ, რომ პარამეტრები სწორია;<br>5. დააწკაპუნეთ '$t(vtxButtonSave.message)'-ზე, რათა შეინახოთ VTX პარამეტრები ფრენის კონტროლერზე.<br>6. სურვილისამებრ დააწკაპუნეთ '$t(vtxButtonSaveLua.message)' lua კონფიგურაციის ფაილის შესანახად, რომელიც შეგიძლიათ გამოიყენოთ betaflight lua სკრიპტებთან ერთად (იხილეთ მეტი <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">აქ<\/a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">ყურადღება:<\/span> თქვენი VTX არ არის კონფიგურირებული ან არ არის მხარდაჭერილი. ასე რომ, თქვენ არ შეგიძლიათ შეცვალოთ VTX მნიშვნელობები აქედან. ეს შესაძლებელი იქნება მხოლოდ იმ შემთხვევაში, თუ ფრენის კონტროლერი მიმაგრებულია VTX-ზე რაიმე პროტოკოლის გამოყენებით, როგორიცაა Tramp ან SmartAudio და სწორად არის კონფიგურირებული $t(tabPorts.message) ჩანართში, საჭიროების შემთხვევაში.",
@@ -8308,6 +8291,38 @@
     "mspCliFirmwareTooOld": {
         "message": "ეს ქმედება მოითხოვს Betaflight firmware {{required}} ან უფრო ახალს (ამჟამად დაკავშირებულია {{current}}-თან). გთხოვთ, განაახლოთ თქვენი ფრენის კონტროლერის firmware სანამ გააგრძელებთ.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "სარეზერვო ასლის აღდგენა",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "ჩაწერამდელი სარეზერვო ასლის აღდგენა",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "ეს აღადგენს კონფიგურაციის სარეზერვო ასლს, რომელიც ჩაწერამდე შეიქმნა. გსურთ გაგრძელება?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "კონფიგურაციის სარეზერვო ასლი წარმატებით აღდგა.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "კონფიგურაციის სარეზერვო ასლი აღდგენილია, {{count}} ხაზი (ები) გამოტოვებულია.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "აღდგენა ვერ მოხერხდა: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "ვერ მოხერხდა ფრენის კონტროლერთან დაკავშირება აღსადგენად.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "აღსადგენი სარეზერვო ასლი ხელმისაწვდომი არ არის.",
+        "description": "Error message when no backup data is cached for restore"
     },
     "presetsLoadingDumpAll": {
         "message": "მიმდინარეობს კონფიგურაციის ამოკითხვა ფრენის კონტროლერიდან",
