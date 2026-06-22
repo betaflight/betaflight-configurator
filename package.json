@@ -59,7 +59,7 @@
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",
-    "dompurify": "^3.4.0",
+    "dompurify": "^3.4.11",
     "esptool-js": "^0.6.0",
     "geomagnetism": "^0.2.0",
     "i18next": "^24.2.2",
