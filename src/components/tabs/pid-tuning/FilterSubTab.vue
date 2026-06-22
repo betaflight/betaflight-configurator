@@ -442,9 +442,9 @@
                                 :format-options="{ useGrouping: false }"
                                 class="w-16"
                                 v-model="dterm_lowpass_dyn_max_hz"
-                                :step="10"
-                                :min="200"
-                                :max="2000"
+                                :step="1"
+                                :min="1"
+                                :max="1000"
                                 :disabled="dtermInputsDisabled"
                             />
                         </div>
