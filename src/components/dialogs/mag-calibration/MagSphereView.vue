@@ -12,7 +12,7 @@
             <span class="axis-z">Z</span>
             <span class="axis-field">{{ $t("magVizAxisField") }}</span>
             <span v-if="inclination !== null" class="axis-incl"
-                >{{ inclination >= 0 ? "↗" : "↘" }}{{ Math.round(inclination) }}°</span
+                >{{ inclination >= 0 ? "↘" : "↗" }}{{ Math.round(inclination) }}°</span
             >
         </div>
         <div v-if="sampleCount > 0" class="mag-sphere-age-legend">
@@ -596,10 +596,13 @@ function rebuildFieldReference() {
 
     const incl = (props.inclination * Math.PI) / 180;
     const radius = DEFAULT_SPHERE_RADIUS;
-    // Field direction: horizontal along X, vertical along Z
-    // Display frame: Z-up, so field dips toward -Z
+    // Field direction: horizontal along +X (magnetic north), vertical along Z.
+    // Scene is NED (Z-down, set in initScene): the downward field component is
+    // +sin(incl)·Z. Northern inclination (>0) dips toward +Z (down); southern
+    // (<0) toward -Z (up). (The camera flip in the NED conversion inverted this;
+    // the sign here was left in the old Z-up convention.)
     const fdx = Math.cos(incl) * radius;
-    const fdz = -Math.sin(incl) * radius;
+    const fdz = Math.sin(incl) * radius;
 
     // Always positioned at origin — the field line passes through 0,0,0
     fieldRefGroup.position.set(0, 0, 0);
