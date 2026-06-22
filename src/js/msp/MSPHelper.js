@@ -206,6 +206,67 @@ MspHelper.writeGyroFilterSliderSettings = function (buffer) {
         .push32(0); // reserved for future use
 };
 
+MspHelper.readPsasSettings = function (data) {
+    FC.PSAS_CONFIG.stick_gain[0] = data.readU8();
+    FC.PSAS_CONFIG.stick_gain[1] = data.readU8();
+    FC.PSAS_CONFIG.stick_gain[2] = data.readU8();
+    FC.PSAS_CONFIG.damping_gain[0] = data.readU16();
+    FC.PSAS_CONFIG.damping_gain[1] = data.readU16();
+    FC.PSAS_CONFIG.damping_gain[2] = data.readU16();
+    FC.PSAS_CONFIG.pitch_damping_filter_freq = data.readU16();
+    FC.PSAS_CONFIG.accel_z_filter_freq = data.readU8();
+    FC.PSAS_CONFIG.pitch_stability_gain = data.readU16();
+    FC.PSAS_CONFIG.pitch_accel_p_gain = data.readU16();
+    FC.PSAS_CONFIG.pitch_accel_i_gain = data.readU8();
+    FC.PSAS_CONFIG.pitch_accel_max = data.readU8();
+    FC.PSAS_CONFIG.pitch_accel_min = data.readU8();
+    FC.PSAS_CONFIG.yaw_damping_filter_freq = data.readU16();
+    FC.PSAS_CONFIG.accel_y_filter_freq = data.readU8();
+    FC.PSAS_CONFIG.yaw_stability_gain = data.readU16();
+    FC.PSAS_CONFIG.wing_load = data.readU16();
+    FC.PSAS_CONFIG.air_density = data.readU16();
+    FC.PSAS_CONFIG.lift_c_limit = data.readU8();
+    FC.PSAS_CONFIG.aoa_limiter_gain = data.readU8();
+    FC.PSAS_CONFIG.lift_coef_filter_freq = data.readU8();
+    FC.PSAS_CONFIG.aoa_limiter_forecast_time = data.readU8();
+    FC.PSAS_CONFIG.aoa_limiter_tau_return = data.readU8();
+    FC.PSAS_CONFIG.servo_time = data.readU16();
+    FC.PSAS_CONFIG.roll_yaw_clift_start = data.readU8();
+    FC.PSAS_CONFIG.roll_yaw_clift_stop = data.readU8();
+    FC.PSAS_CONFIG.roll_to_yaw_link = data.readU8();
+};
+
+MspHelper.writePsasSettings = function (buffer) {
+    buffer
+        .push8(FC.PSAS_CONFIG.stick_gain[0])
+        .push8(FC.PSAS_CONFIG.stick_gain[1])
+        .push8(FC.PSAS_CONFIG.stick_gain[2])
+        .push16(FC.PSAS_CONFIG.damping_gain[0])
+        .push16(FC.PSAS_CONFIG.damping_gain[1])
+        .push16(FC.PSAS_CONFIG.damping_gain[2])
+        .push16(FC.PSAS_CONFIG.pitch_damping_filter_freq)
+        .push8(FC.PSAS_CONFIG.accel_z_filter_freq)
+        .push16(FC.PSAS_CONFIG.pitch_stability_gain)
+        .push16(FC.PSAS_CONFIG.pitch_accel_p_gain)
+        .push8(FC.PSAS_CONFIG.pitch_accel_i_gain)
+        .push8(FC.PSAS_CONFIG.pitch_accel_max)
+        .push8(FC.PSAS_CONFIG.pitch_accel_min)
+        .push16(FC.PSAS_CONFIG.yaw_damping_filter_freq)
+        .push8(FC.PSAS_CONFIG.accel_y_filter_freq)
+        .push16(FC.PSAS_CONFIG.yaw_stability_gain)
+        .push16(FC.PSAS_CONFIG.wing_load)
+        .push16(FC.PSAS_CONFIG.air_density)
+        .push8(FC.PSAS_CONFIG.lift_c_limit)
+        .push8(FC.PSAS_CONFIG.aoa_limiter_gain)
+        .push8(FC.PSAS_CONFIG.lift_coef_filter_freq)
+        .push8(FC.PSAS_CONFIG.aoa_limiter_forecast_time)
+        .push8(FC.PSAS_CONFIG.aoa_limiter_tau_return)
+        .push16(FC.PSAS_CONFIG.servo_time)
+        .push8(FC.PSAS_CONFIG.roll_yaw_clift_start)
+        .push8(FC.PSAS_CONFIG.roll_yaw_clift_stop)
+        .push8(FC.PSAS_CONFIG.roll_to_yaw_link);
+};
+
 MspHelper.prototype.process_data = function (dataHandler) {
     const self = this;
     const data = dataHandler.dataView; // DataView (allowing us to view arrayBuffer as struct/union)
@@ -1791,6 +1852,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     break;
 
+                case MSPCodes.MSP_PSAS_CONFIG:
+                    MspHelper.readPsasSettings(data);
+                    break;
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
             }
@@ -2491,6 +2555,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
             break;
 
+        case MSPCodes.MSP_SET_PSAS_CONFIG:
+            MspHelper.writePsasSettings(buffer);
+            break;
         default:
             return buffer;
     }
