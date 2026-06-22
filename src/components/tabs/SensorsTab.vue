@@ -603,7 +603,7 @@
                                     :sphere-fit="cal.sphereFitResult"
                                     :active="true"
                                     :live-mag="cal.liveMag"
-                                    :inclination="calGeoRef?.inclination ?? null"
+                                    :inclination="magInclination"
                                     :coverage="cal.coverage"
                                     :attitude="attitudeRaw"
                                     :quaternion="attitudeQuaternion"
@@ -723,7 +723,7 @@
                                     :sample-count="cal.sampleCount"
                                     :sphere-fit="cal.sphereFitResult"
                                     :active="false"
-                                    :inclination="calGeoRef?.inclination ?? null"
+                                    :inclination="magInclination"
                                     :coverage="cal.coverage"
                                     :attitude="attitudeRaw"
                                     :quaternion="attitudeQuaternion"
@@ -1318,6 +1318,12 @@ function dismissDeclinationNote() {
  * @returns {Promise<{lat: number, lon: number}|null>}
  */
 async function acquireCoordinates(promptConsent) {
+    const gps = await gpsCoordinates();
+    return gps ?? ipCoordinates(promptConsent);
+}
+
+// A live GPS fix from the flight controller, or null if there's no fix.
+async function gpsCoordinates() {
     try {
         await MSP.promise(MSPCodes.MSP_RAW_GPS);
         if (fcStore.gpsData?.fix) {
@@ -1329,7 +1335,12 @@ async function acquireCoordinates(promptConsent) {
     } catch {
         // GPS not available
     }
+    return null;
+}
 
+// IP geolocation (consent-gated), or null. The caller decides when to attempt it,
+// so the consent prompt only appears when there is genuinely no GPS fix.
+async function ipCoordinates(promptConsent) {
     const hasConsent = !!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY];
     if (!hasConsent) {
         if (!promptConsent) {
@@ -1387,6 +1398,30 @@ async function tryAutoGeoReference() {
     magInclination.value = roundOneDp(result.inclination);
     magFieldStrength.value = result.fieldStrength;
     applyDetectedDeclination(roundOneDp(result.declination));
+}
+
+// Resolve the best geomagnetic reference (cached, else GPS, else IP) and reflect its
+// inclination + field strength in the reactive panel state. The magSphere field-
+// direction arrow binds to magInclination, so this makes the arrow appear for BOTH
+// GPS and IP sources, consistently and live. Returns the reference or null.
+async function resolveGeoReference(promptConsent) {
+    // No movement during capture, so a single fix suffices. Prefer a live GPS fix:
+    // it overwrites any earlier IP snapshot. Otherwise reuse the cached reference
+    // (last good value); fall back to IP geolocation only when there's nothing
+    // better — so IP is never fetched or prompted while GPS is available.
+    const gps = await gpsCoordinates();
+    let geo = gps ? computeDeclination(gps.lat, gps.lon) : getGeoReference();
+    if (!geo) {
+        const ip = await ipCoordinates(promptConsent);
+        if (ip) {
+            geo = computeDeclination(ip.lat, ip.lon);
+        }
+    }
+    if (geo) {
+        magInclination.value = roundOneDp(geo.inclination);
+        magFieldStrength.value = geo.fieldStrength;
+    }
+    return geo;
 }
 
 async function autoSetDeclination() {
@@ -1608,15 +1643,9 @@ async function startFullCal() {
     fullCalResult.value = null;
     calCurrentPrompt.value = 0;
 
-    // The dip-angle alignment solve needs the WMM inclination. Fetch it up front
-    // (best effort, no consent prompt) so the user is not surprised at the end.
-    calGeoRef.value = getGeoReference();
-    if (!calGeoRef.value) {
-        const coords = await acquireCoordinates(false);
-        if (coords) {
-            calGeoRef.value = computeDeclination(coords.lat, coords.lon);
-        }
-    }
+    // The dip-angle alignment solve needs the WMM inclination. Resolve it up front
+    // (best effort, no consent prompt) and reflect it in the panel + field arrow.
+    calGeoRef.value = await resolveGeoReference(false);
 
     await cal.startCalibration("full");
     startFullStepTimer();
@@ -1650,15 +1679,9 @@ async function acceptFullCal() {
         return;
     }
 
-    let geoRef = calGeoRef.value || getGeoReference();
-    if (!geoRef) {
-        // No GPS fix and nothing cached — ask for IP geolocation consent now rather
-        // than discard the tumble.
-        const coords = await acquireCoordinates(true);
-        if (coords) {
-            geoRef = computeDeclination(coords.lat, coords.lon);
-        }
-    }
+    // Resolve the reference (cached, else GPS, else IP — prompting for consent now
+    // rather than discarding the tumble). Also refreshes the panel + arrow inclination.
+    const geoRef = await resolveGeoReference(true);
     if (!geoRef) {
         gui_log(i18n.getMessage("magCalibrationFullNoGeo"));
         return;
