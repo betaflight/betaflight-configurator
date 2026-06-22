@@ -89,7 +89,7 @@
     "vue-router": "^4"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.9",
+    "@babel/core": "^7.29.6",
     "@capacitor/cli": "^8.3.0",
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^28.0.2",
