@@ -1,13 +1,22 @@
 <template>
-    <dialog ref="dialogRef" class="dialogWait" @cancel.prevent>
-        <ProgressRing indeterminate :size="80" :stroke-width="6" color="primary" class="dialogWait-spinner" />
-        <h3 class="dialogWaitTitle">{{ title }}</h3>
-        <div class="buttons" v-if="showCancel">
-            <button type="button" class="dialogWait-cancelButton regular-button" @click="$emit('cancel')">
-                {{ cancelText }}
-            </button>
-        </div>
-    </dialog>
+    <UModal
+        :open="open"
+        :title="title"
+        :close="false"
+        :dismissible="false"
+        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
+    >
+        <template #body>
+            <div class="flex justify-center py-2">
+                <ProgressRing indeterminate :size="80" :stroke-width="6" color="primary" />
+            </div>
+        </template>
+        <template v-if="showCancel" #footer>
+            <div class="flex justify-end w-full">
+                <UButton color="neutral" variant="soft" @click="$emit('cancel')">{{ cancelText }}</UButton>
+            </div>
+        </template>
+    </UModal>
 </template>
 
 <script setup>
@@ -29,45 +38,18 @@ defineProps({
 
 defineEmits(["cancel"]);
 
-const dialogRef = ref(null);
+const open = ref(false);
 
 const show = () => {
-    dialogRef.value?.showModal();
+    open.value = true;
 };
 
 const close = () => {
-    dialogRef.value?.close();
+    open.value = false;
 };
 
 defineExpose({
     show,
     close,
-    dialog: dialogRef,
 });
 </script>
-
-<style scoped>
-.dialogWait:not([open]) {
-    display: none;
-}
-
-.dialogWait {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1000;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-}
-
-.dialogWait-spinner {
-    margin: 1rem auto;
-}
-
-.dialogWait::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-}
-</style>
