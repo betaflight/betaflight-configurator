@@ -610,6 +610,157 @@
                                     {{ $t("preflightNOTAMsEU") }}
                                 </a>
                             </div>
+
+                            <!-- NOTAM Settings -->
+                            <details class="notam-settings">
+                                <summary><em class="fas fa-cog"></em> {{ $t("preflightNotamSettings") }}</summary>
+                                <div class="notam-settings-body">
+                                    <div class="notam-setting-row">
+                                        <label class="notam-setting-label">{{ $t("preflightNotamProvider") }}</label>
+                                        <USelect
+                                            v-model="notamProvider"
+                                            :items="notamProviderOptions"
+                                            class="notam-setting-select"
+                                            @update:model-value="onNotamSettingChange"
+                                        />
+                                    </div>
+                                    <div v-if="notamProvider === 'faa'" class="notam-setting-row">
+                                        <label class="notam-setting-label">{{
+                                            $t("preflightNotamFaaApiKeyLabel")
+                                        }}</label>
+                                        <input
+                                            v-model="preflight.notamSettings.faaApiKey"
+                                            type="password"
+                                            autocomplete="new-password"
+                                            class="notam-setting-input"
+                                            @change="onNotamSettingChange"
+                                        />
+                                    </div>
+                                    <div v-if="notamProvider === 'openaip'" class="notam-setting-row">
+                                        <label class="notam-setting-label">{{
+                                            $t("preflightNotamOpenAipApiKeyLabel")
+                                        }}</label>
+                                        <input
+                                            v-model="preflight.notamSettings.openAipApiKey"
+                                            type="password"
+                                            autocomplete="new-password"
+                                            class="notam-setting-input"
+                                            @change="onNotamSettingChange"
+                                        />
+                                    </div>
+                                    <div class="notam-setting-row">
+                                        <label class="notam-setting-label">{{ $t("preflightNotamRadius") }}</label>
+                                        <div class="notam-radius-group">
+                                            <input
+                                                v-model.number="preflight.notamSettings.radius"
+                                                type="number"
+                                                min="1"
+                                                max="500"
+                                                class="notam-radius-input"
+                                                @change="onNotamSettingChange"
+                                            />
+                                            <USelect
+                                                v-model="preflight.notamSettings.radiusUnit"
+                                                :items="notamRadiusUnitOptions"
+                                                class="notam-radius-unit"
+                                                @update:model-value="onNotamSettingChange"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- Privacy note -->
+                            <p v-if="notamProvider" class="notam-privacy-note">
+                                <em class="fas fa-info-circle"></em> {{ $t("preflightNotamPrivacyNote") }}
+                            </p>
+
+                            <!-- NOTAM data panel -->
+                            <UiBox v-if="notamProvider && notamNeedsApiKey" highlight class="mt-2">
+                                <p>{{ $t("preflightNotamApiKeyRequired") }}</p>
+                            </UiBox>
+                            <div v-else-if="notamProvider && preflight.location.latitude !== null" class="notam-panel">
+                                <div v-if="preflight.notams.loading" class="notam-loading">
+                                    <em class="fas fa-spinner fa-spin"></em> {{ $t("preflightNotamLoading") }}
+                                </div>
+                                <div v-else-if="preflight.notams.error" class="notam-error">
+                                    <em class="fas fa-exclamation-circle"></em>
+                                    {{ $t("preflightNotamFetchError") }}: {{ preflight.notams.error }}
+                                </div>
+                                <div v-else-if="preflight.notams.items.length === 0" class="notam-empty">
+                                    {{ $t("preflightNotamEmpty") }}
+                                </div>
+                                <div v-else class="notam-list">
+                                    <div
+                                        v-for="item in preflight.notams.items"
+                                        :key="item.id + ':' + item.source"
+                                        class="notam-card"
+                                        :class="getNotamCardClass(item)"
+                                    >
+                                        <div class="notam-card-header">
+                                            <span class="notam-id">{{ item.id }}</span>
+                                            <span class="notam-type-badge" :class="getNotamTypeBadgeClass(item.type)">
+                                                {{ getNotamTypeLabel(item.type) }}
+                                            </span>
+                                            <span
+                                                v-if="getNotamCardClass(item) !== 'notam-card-future'"
+                                                class="notam-status-badge"
+                                                :class="getNotamStatusBadgeClass(item)"
+                                            >
+                                                {{ getNotamStatusLabel(item) }}
+                                            </span>
+                                            <span class="notam-location">{{ item.location }}</span>
+                                        </div>
+                                        <div class="notam-card-times">
+                                            <span>
+                                                {{ formatNotamTime(item.startTime) }}
+                                                <template v-if="item.isPermanent">
+                                                    — {{ $t("preflightNotamPermanent") }}</template
+                                                >
+                                                <template v-else-if="item.endTime">
+                                                    — {{ formatNotamTime(item.endTime) }}</template
+                                                >
+                                            </span>
+                                        </div>
+                                        <div v-if="item.lowerAlt || item.upperAlt" class="notam-card-alt">
+                                            <template v-if="item.lowerAlt">
+                                                {{ $t("preflightNotamAltFrom") }}: {{ item.lowerAlt }}
+                                            </template>
+                                            <template v-if="item.upperAlt">
+                                                &nbsp;{{ $t("preflightNotamAltTo") }}: {{ item.upperAlt }}
+                                            </template>
+                                        </div>
+                                        <div class="notam-card-body">
+                                            <span v-if="!expandedNotams.has(item.id + ':' + item.source)">
+                                                {{ (item.body ?? "").slice(0, 160)
+                                                }}<template v-if="(item.body ?? '').length > 160">…</template>
+                                            </span>
+                                            <span v-else>{{ item.body ?? "" }}</span>
+                                            <a
+                                                v-if="(item.body ?? '').length > 160"
+                                                href="#"
+                                                class="notam-expand-link"
+                                                @click.prevent="toggleNotamExpand(item)"
+                                            >
+                                                {{
+                                                    expandedNotams.has(item.id + ":" + item.source)
+                                                        ? $t("preflightNotamShowLess")
+                                                        : $t("preflightNotamShowMore")
+                                                }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="preflight.notams.lastFetched" class="notam-timestamp">
+                                    {{ $t("preflightNotamLastFetched") }}:
+                                    {{
+                                        preflight.notams.lastFetched.toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })
+                                    }}
+                                </div>
+                            </div>
                         </div>
                     </UiBox>
 
@@ -679,6 +830,7 @@ import UiBox from "../elements/UiBox.vue";
 import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
 import { usePreflight } from "@/composables/usePreflight";
+import { getNotamStatus } from "@/js/notam/index.js";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 
@@ -788,6 +940,19 @@ function getForecastRowClass(day) {
         return "forecast-row-moderate";
     }
     return "";
+}
+
+function formatNotamTime(dt) {
+    if (!dt) {
+        return "-";
+    }
+    return dt.toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short",
+    });
 }
 
 export default defineComponent({
@@ -1312,6 +1477,119 @@ export default defineComponent({
             return preflight.getUvStatus(uv).label;
         }
 
+        // ── NOTAM logic ──────────────────────────────────────────────────────────
+
+        const expandedNotams = ref(new Set());
+
+        // Two-way binding for provider selector so changes propagate to notamSettings
+        const notamProvider = computed({
+            get: () => preflight.notamSettings.provider,
+            set: (val) => {
+                preflight.notamSettings.provider = val;
+            },
+        });
+
+        const notamProviderOptions = computed(() => [
+            { label: i18n.getMessage("preflightNotamProviderNone"), value: null },
+            // AviationWeather.gov excluded: /api/data/notam returns 404 — restore when a working endpoint is confirmed
+            { label: i18n.getMessage("preflightNotamProviderFaa"), value: "faa" },
+            { label: i18n.getMessage("preflightNotamProviderOpenaip"), value: "openaip" },
+        ]);
+
+        const notamRadiusUnitOptions = computed(() => [
+            { label: i18n.getMessage("preflightNotamRadiusUnitNm"), value: "NM" },
+            { label: i18n.getMessage("preflightNotamRadiusUnitKm"), value: "km" },
+        ]);
+
+        const notamNeedsApiKey = computed(() => {
+            const p = preflight.notamSettings.provider;
+            if (p === "faa") {
+                return !preflight.notamSettings.faaApiKey?.trim();
+            }
+            if (p === "openaip") {
+                return !preflight.notamSettings.openAipApiKey?.trim();
+            }
+            return false;
+        });
+
+        function onNotamSettingChange() {
+            preflight.persistNotamSettings();
+            const lat = preflight.location.latitude;
+            const lon = preflight.location.longitude;
+            if (lat !== null && lon !== null && !notamNeedsApiKey.value) {
+                preflight.fetchNotams(lat, lon);
+            }
+        }
+
+        const NOTAM_TYPE_LABELS = {
+            TFR: "preflightNotamTypeTfr",
+            SUA: "preflightNotamTypeSua",
+            SNOWTAM: "preflightNotamTypeSnow",
+            ASHTAM: "preflightNotamTypeAsh",
+            NOTAM: "preflightNotamTypeNotam",
+        };
+
+        const NOTAM_TYPE_BADGE_CLASSES = {
+            TFR: "notam-badge-tfr",
+            SUA: "notam-badge-sua",
+            SNOWTAM: "notam-badge-snow",
+            ASHTAM: "notam-badge-ash",
+            NOTAM: "notam-badge-notam",
+        };
+
+        function getNotamTypeLabel(type) {
+            return i18n.getMessage(NOTAM_TYPE_LABELS[type] ?? "preflightNotamTypeNotam");
+        }
+
+        function getNotamTypeBadgeClass(type) {
+            return NOTAM_TYPE_BADGE_CLASSES[type] ?? "notam-badge-notam";
+        }
+
+        const NOTAM_STATUS_CARD_CLASS = {
+            active: "notam-card-active",
+            future: "notam-card-future",
+            expired: "notam-card-expired",
+        };
+
+        function getNotamCardClass(item) {
+            return NOTAM_STATUS_CARD_CLASS[getNotamStatus(item)];
+        }
+
+        function getNotamStatusBadgeClass(item) {
+            const cls = getNotamCardClass(item);
+            if (cls === "notam-card-active") {
+                return "notam-status-active";
+            }
+            if (cls === "notam-card-future") {
+                return "notam-status-future";
+            }
+            return "notam-status-expired";
+        }
+
+        function getNotamStatusLabel(item) {
+            const cls = getNotamCardClass(item);
+            if (cls === "notam-card-active") {
+                return i18n.getMessage("preflightNotamActiveNow");
+            }
+            if (cls === "notam-card-expired") {
+                return i18n.getMessage("preflightNotamExpired");
+            }
+            return null;
+        }
+
+        function toggleNotamExpand(item) {
+            const key = `${item.id}:${item.source}`;
+            const next = new Set(expandedNotams.value);
+            if (next.has(key)) {
+                next.delete(key);
+            } else {
+                next.add(key);
+            }
+            expandedNotams.value = next;
+        }
+
+        // ── End NOTAM logic ───────────────────────────────────────────────────────
+
         onMounted(() => {
             GUI.content_ready();
             document.addEventListener("fullscreenchange", handleFullscreenChange);
@@ -1341,6 +1619,13 @@ export default defineComponent({
                     initializeMap();
                     updateMapPosition();
                 });
+            },
+        );
+
+        watch(
+            () => preflight.notams.items,
+            () => {
+                expandedNotams.value = new Set();
             },
         );
 
@@ -1411,6 +1696,19 @@ export default defineComponent({
             getUvStatusLabel,
             formatForecastDay,
             getForecastRowClass,
+            notamProvider,
+            notamProviderOptions,
+            notamRadiusUnitOptions,
+            notamNeedsApiKey,
+            expandedNotams,
+            onNotamSettingChange,
+            getNotamTypeLabel,
+            getNotamTypeBadgeClass,
+            getNotamCardClass,
+            getNotamStatusBadgeClass,
+            getNotamStatusLabel,
+            formatNotamTime,
+            toggleNotamExpand,
         };
     },
 });
@@ -1880,6 +2178,283 @@ export default defineComponent({
                     width: 16px;
                     text-align: center;
                 }
+            }
+        }
+
+        /* NOTAM settings accordion */
+        .notam-settings {
+            margin-top: 8px;
+            font-size: 12px;
+
+            summary {
+                display: flex;
+                align-items: center;
+                padding: 8px 12px;
+                background: var(--surface-200);
+                border: 1px solid var(--surface-400);
+                border-radius: 4px;
+                color: var(--primary-500);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: bold;
+                cursor: pointer;
+                user-select: none;
+                list-style: none;
+                transition: background 0.2s;
+
+                &:hover {
+                    background: var(--surface-300);
+                }
+
+                &::-webkit-details-marker {
+                    display: none;
+                }
+
+                em {
+                    margin-right: 8px;
+                    width: 16px;
+                    text-align: center;
+                }
+            }
+
+            &[open] summary {
+                border-radius: 4px 4px 0 0;
+                border-bottom: none;
+            }
+
+            .notam-settings-body {
+                padding: 10px;
+                border: 1px solid var(--surface-400);
+                border-top: none;
+                border-radius: 0 0 4px 4px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .notam-setting-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .notam-setting-label {
+                flex: 0 0 auto;
+                min-width: 110px;
+                font-size: 12px;
+                color: var(--text);
+            }
+
+            .notam-setting-select {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .notam-setting-input {
+                flex: 1;
+                min-width: 0;
+                padding: 4px 8px;
+                border: 1px solid var(--surface-500);
+                border-radius: 3px;
+                background: var(--surface-200);
+                color: var(--text);
+                font-size: 12px;
+            }
+
+            .notam-radius-group {
+                display: flex;
+                gap: 6px;
+                flex: 1;
+            }
+
+            .notam-radius-input {
+                width: 70px;
+                padding: 4px 8px;
+                border: 1px solid var(--surface-500);
+                border-radius: 3px;
+                background: var(--surface-200);
+                color: var(--text);
+                font-size: 12px;
+            }
+
+            .notam-radius-unit {
+                width: 80px;
+            }
+        }
+
+        /* Privacy note */
+        .notam-privacy-note {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--surface-600);
+            background: var(--surface-100);
+            border: 1px solid var(--surface-300);
+            border-radius: 4px;
+            padding: 6px 8px;
+
+            em {
+                margin-right: 4px;
+            }
+        }
+
+        /* NOTAM data panel */
+        .notam-panel {
+            margin-top: 10px;
+
+            .notam-loading,
+            .notam-empty {
+                font-size: 12px;
+                color: var(--surface-600);
+                padding: 8px 0;
+                text-align: center;
+
+                em {
+                    margin-right: 6px;
+                }
+            }
+
+            .notam-error {
+                font-size: 12px;
+                color: var(--color-error-600);
+                padding: 6px 8px;
+                background: var(--color-error-50);
+                border: 1px solid var(--color-error-300);
+                border-radius: 4px;
+
+                em {
+                    margin-right: 6px;
+                }
+            }
+
+            .notam-list {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                max-height: 400px;
+                overflow-y: auto;
+            }
+
+            .notam-card {
+                border: 1px solid var(--surface-400);
+                border-radius: 4px;
+                padding: 8px 10px;
+                font-size: 12px;
+                background: var(--surface-0);
+
+                &.notam-card-active {
+                    border-left: 3px solid var(--color-success-500);
+                }
+
+                &.notam-card-future {
+                    border-left: 3px solid var(--color-warning-500);
+                }
+
+                &.notam-card-expired {
+                    border-left: 3px solid var(--surface-400);
+                    opacity: 0.6;
+                }
+            }
+
+            .notam-card-header {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-bottom: 4px;
+            }
+
+            .notam-id {
+                font-weight: 600;
+                font-size: 12px;
+            }
+
+            .notam-location {
+                color: var(--surface-600);
+                font-size: 11px;
+                margin-left: auto;
+            }
+
+            .notam-type-badge,
+            .notam-status-badge {
+                font-size: 10px;
+                font-weight: 600;
+                padding: 1px 6px;
+                border-radius: 3px;
+                text-transform: uppercase;
+            }
+
+            .notam-badge-notam {
+                background: var(--color-info-100);
+                color: var(--color-info-800);
+            }
+
+            .notam-badge-tfr {
+                background: var(--color-error-100);
+                color: var(--color-error-800);
+            }
+
+            .notam-badge-sua {
+                background: var(--color-warning-100);
+                color: var(--color-warning-800);
+            }
+
+            .notam-badge-snow {
+                background: var(--surface-100);
+                color: var(--surface-700);
+            }
+
+            .notam-badge-ash {
+                background: var(--surface-200);
+                color: var(--surface-700);
+            }
+
+            .notam-status-active {
+                background: var(--color-success-100);
+                color: var(--color-success-800);
+            }
+
+            .notam-status-future {
+                background: var(--color-warning-100);
+                color: var(--color-warning-800);
+            }
+
+            .notam-status-expired {
+                background: var(--surface-100);
+                color: var(--surface-600);
+            }
+
+            .notam-card-times {
+                font-size: 11px;
+                color: var(--surface-600);
+                margin-bottom: 3px;
+            }
+
+            .notam-card-alt {
+                font-size: 11px;
+                color: var(--surface-600);
+                margin-bottom: 3px;
+            }
+
+            .notam-card-body {
+                font-size: 12px;
+                line-height: 1.4;
+                word-break: break-word;
+            }
+
+            .notam-expand-link {
+                display: inline-block;
+                margin-left: 4px;
+                font-size: 11px;
+                color: var(--primary-500);
+                text-decoration: underline;
+                cursor: pointer;
+            }
+
+            .notam-timestamp {
+                margin-top: 6px;
+                font-size: 11px;
+                color: var(--surface-500);
+                text-align: right;
             }
         }
     }
