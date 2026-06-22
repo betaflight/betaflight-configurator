@@ -2,9 +2,13 @@ mod tcp;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_serialplugin::init())
+    let builder = tauri::Builder::default().plugin(tauri_plugin_shell::init());
+
+    // USB serial (serialplugin) is unavailable on iOS — TCP is the only transport there.
+    #[cfg(not(target_os = "ios"))]
+    let builder = builder.plugin(tauri_plugin_serialplugin::init());
+
+    builder
         .manage(tcp::TcpState::default())
         .invoke_handler(tauri::generate_handler![
             tcp::tcp_connect,

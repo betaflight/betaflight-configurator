@@ -3,9 +3,18 @@ import geomagnetism from "geomagnetism";
 import SunCalc from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
+import { sortNotams, kmToNm } from "../js/notam/index.js";
+import { fetchFromFaa } from "../js/notam/faa.js";
+import { fetchFromOpenAip } from "../js/notam/openaip.js";
 
 const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
+
+const NOTAM_PROVIDER_KEY = "preflight_notam_provider";
+const NOTAM_FAA_API_KEY = "preflight_notam_faa_api_key";
+const NOTAM_OPENAIP_API_KEY = "preflight_notam_openaip_api_key";
+const NOTAM_RADIUS_KEY = "preflight_notam_radius";
+const NOTAM_RADIUS_UNIT_KEY = "preflight_notam_radius_unit";
 const MAX_SAVED_LOCATIONS = 5;
 const MAX_LABEL_LENGTH = 20;
 
@@ -315,9 +324,51 @@ const solar = reactive({
 
 const savedLocations = reactive([]);
 
+const notamSettings = reactive({
+    provider: null, // "faa" | "openaip" | null
+    faaApiKey: "",
+    openAipApiKey: "",
+    radius: 25,
+    radiusUnit: "NM",
+});
+
+const notams = reactive({
+    loading: false,
+    error: null,
+    items: [],
+    lastFetched: null,
+});
+
+function loadNotamSettings() {
+    const stored = getConfig([
+        NOTAM_PROVIDER_KEY,
+        NOTAM_FAA_API_KEY,
+        NOTAM_OPENAIP_API_KEY,
+        NOTAM_RADIUS_KEY,
+        NOTAM_RADIUS_UNIT_KEY,
+    ]);
+    notamSettings.provider = stored[NOTAM_PROVIDER_KEY] ?? null;
+    notamSettings.faaApiKey = stored[NOTAM_FAA_API_KEY] ?? "";
+    notamSettings.openAipApiKey = stored[NOTAM_OPENAIP_API_KEY] ?? "";
+    const radius = Number(stored[NOTAM_RADIUS_KEY]);
+    notamSettings.radius = Number.isFinite(radius) && radius > 0 ? radius : 25;
+    notamSettings.radiusUnit = stored[NOTAM_RADIUS_UNIT_KEY] === "km" ? "km" : "NM";
+}
+
+function persistNotamSettings() {
+    const obj = {};
+    obj[NOTAM_PROVIDER_KEY] = notamSettings.provider;
+    obj[NOTAM_FAA_API_KEY] = notamSettings.faaApiKey;
+    obj[NOTAM_OPENAIP_API_KEY] = notamSettings.openAipApiKey;
+    obj[NOTAM_RADIUS_KEY] = notamSettings.radius;
+    obj[NOTAM_RADIUS_UNIT_KEY] = notamSettings.radiusUnit;
+    setConfig(obj);
+}
+
 let weatherRequestId = 0;
 let solarRequestId = 0;
 let elevationRequestId = 0;
+let notamRequestId = 0;
 
 function loadSavedLocations() {
     const stored = getConfig(SAVED_LOCATIONS_KEY);
@@ -421,7 +472,7 @@ function applySavedLocation(index) {
     return loc;
 }
 
-const isLoading = computed(() => weather.loading || solar.loading);
+const isLoading = computed(() => weather.loading || solar.loading || notams.loading);
 
 async function fetchWeather(lat, lon) {
     const requestId = ++weatherRequestId;
@@ -761,6 +812,68 @@ async function fetchElevation(lat, lon) {
     }
 }
 
+/**
+ * Compute the radius in NM to use for NOTAM fetches,
+ * converting from km if the user chose that unit.
+ */
+function getNotamRadiusNm() {
+    if (notamSettings.radiusUnit === "km") {
+        return kmToNm(notamSettings.radius);
+    }
+    return notamSettings.radius;
+}
+
+async function fetchNotams(lat, lon) {
+    if (!notamSettings.provider) {
+        notams.items = [];
+        notams.error = null;
+        notams.loading = false;
+        notams.lastFetched = null;
+        return;
+    }
+    if (
+        (notamSettings.provider === "faa" && !notamSettings.faaApiKey?.trim()) ||
+        (notamSettings.provider === "openaip" && !notamSettings.openAipApiKey?.trim())
+    ) {
+        notams.items = [];
+        notams.error = null;
+        notams.loading = false;
+        notams.lastFetched = null;
+        return;
+    }
+    const requestId = ++notamRequestId;
+    notams.loading = true;
+    notams.error = null;
+    notams.items = [];
+    try {
+        const radiusNm = getNotamRadiusNm();
+        let items = [];
+        switch (notamSettings.provider) {
+            case "faa":
+                items = await fetchFromFaa(lat, lon, radiusNm, notamSettings.faaApiKey);
+                break;
+            case "openaip":
+                items = await fetchFromOpenAip(lat, lon, radiusNm, notamSettings.openAipApiKey);
+                break;
+            default:
+                break;
+        }
+        if (requestId !== notamRequestId) {
+            return;
+        }
+        notams.items = sortNotams(items);
+        notams.lastFetched = new Date();
+    } catch (err) {
+        if (requestId === notamRequestId) {
+            notams.error = err.message;
+        }
+    } finally {
+        if (requestId === notamRequestId) {
+            notams.loading = false;
+        }
+    }
+}
+
 async function refreshAll() {
     if (location.latitude === null || location.longitude === null) {
         return;
@@ -769,7 +882,12 @@ async function refreshAll() {
     const lon = location.longitude;
     updateMagneticDeclination();
     updateCivilTwilight();
-    await Promise.allSettled([fetchWeather(lat, lon), fetchSolarActivity(), fetchElevation(lat, lon)]);
+    await Promise.allSettled([
+        fetchWeather(lat, lon),
+        fetchSolarActivity(),
+        fetchElevation(lat, lon),
+        fetchNotams(lat, lon),
+    ]);
 }
 
 const civilTwilight = ref(null);
@@ -787,8 +905,9 @@ function updateCivilTwilight() {
     civilTwilight.value = { dawn: times.dawn, dusk: times.dusk };
 }
 
-// Load saved locations once at module init
+// Load saved locations and NOTAM settings once at module init
 loadSavedLocations();
+loadNotamSettings();
 
 // ── Public API (singleton) ─────────────────────────────────────────────────────
 
@@ -800,10 +919,14 @@ export function usePreflight() {
         mag,
         civilTwilight,
         savedLocations,
+        notams,
+        notamSettings,
         isLoading,
         launchStatus,
         fetchWeather,
         fetchSolarActivity,
+        fetchNotams,
+        persistNotamSettings,
         useGeolocation,
         useIpGeolocationFallback,
         ipGeolocationConsent,

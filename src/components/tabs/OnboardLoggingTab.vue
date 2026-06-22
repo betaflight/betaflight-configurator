@@ -82,66 +82,74 @@
                             <div class="require-dataflash-supported">
                                 <p>{{ $t("dataflashNote") }}</p>
 
-                                <dialog
-                                    ref="eraseDialog"
-                                    class="dataflash-confirm-erase"
-                                    :class="{ erasing: isErasing }"
+                                <UModal
+                                    :open="eraseOpen"
+                                    :close="false"
+                                    :dismissible="false"
+                                    :ui="{ overlay: 'z-3000', content: 'w-[36rem] max-w-[calc(100vw-2rem)] z-3001' }"
                                 >
-                                    <h3>{{ $t("dataflashConfirmEraseTitle") }}</h3>
-                                    <div class="dataflash-confirm-erase-note">
-                                        {{ $t("dataflashConfirmEraseNote") }}
-                                    </div>
-                                    <div class="dataflash-erase-progress">
-                                        <div class="data-loading">
-                                            <p>{{ $t("onboardLoggingEraseInProgress") }}</p>
+                                    <template #body>
+                                        <div class="dataflash-confirm-erase" :class="{ erasing: isErasing }">
+                                            <h3>{{ $t("dataflashConfirmEraseTitle") }}</h3>
+                                            <div class="dataflash-confirm-erase-note">
+                                                {{ $t("dataflashConfirmEraseNote") }}
+                                            </div>
+                                            <div class="dataflash-erase-progress">
+                                                <div class="data-loading">
+                                                    <p>{{ $t("onboardLoggingEraseInProgress") }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="buttons flex justify-end gap-2 mt-3">
+                                                <UButton
+                                                    class="erase-flash-cancel"
+                                                    variant="outline"
+                                                    :label="$t('dataflashButtonEraseCancel')"
+                                                    @click="flashEraseCancel"
+                                                />
+                                                <UButton
+                                                    class="erase-flash-confirm"
+                                                    :label="$t('dataflashButtonEraseConfirm')"
+                                                    @click="flashErase"
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="buttons">
-                                        <a
-                                            href="#"
-                                            class="erase-flash-confirm regular-button"
-                                            @click.prevent="flashErase"
-                                        >
-                                            {{ $t("dataflashButtonEraseConfirm") }}
-                                        </a>
-                                        <a
-                                            href="#"
-                                            class="erase-flash-cancel regular-button"
-                                            @click.prevent="flashEraseCancel"
-                                        >
-                                            {{ $t("dataflashButtonEraseCancel") }}
-                                        </a>
-                                    </div>
-                                </dialog>
+                                    </template>
+                                </UModal>
 
-                                <dialog ref="savingDialog" class="dataflash-saving">
-                                    <h3>{{ $t("dataflashSavingTitle") }}</h3>
-                                    <div class="dataflash-saving-before">
-                                        <div>{{ $t("dataflashSavingNote") }}</div>
-                                        <progress :value="saveProgress" min="0" max="100"></progress>
-                                        <div class="buttons">
-                                            <a
-                                                href="#"
-                                                class="save-flash-cancel regular-button"
-                                                @click.prevent="flashSaveCancel"
-                                            >
-                                                {{ $t("dataflashButtonSaveCancel") }}
-                                            </a>
+                                <UModal
+                                    :open="saveOpen"
+                                    :close="false"
+                                    :dismissible="false"
+                                    :ui="{ overlay: 'z-3000', content: 'w-[36rem] max-w-[calc(100vw-2rem)] z-3001' }"
+                                >
+                                    <template #body>
+                                        <div class="dataflash-saving" :class="{ done: saveDone }">
+                                            <h3>{{ $t("dataflashSavingTitle") }}</h3>
+                                            <div class="dataflash-saving-before">
+                                                <div>{{ $t("dataflashSavingNote") }}</div>
+                                                <progress :value="saveProgress" min="0" max="100"></progress>
+                                                <div class="buttons flex justify-end gap-2 mt-3">
+                                                    <UButton
+                                                        class="save-flash-cancel"
+                                                        variant="outline"
+                                                        :label="$t('dataflashButtonSaveCancel')"
+                                                        @click="flashSaveCancel"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="dataflash-saving-after">
+                                                <div>{{ $t("dataflashSavingNoteAfter") }}</div>
+                                                <div class="buttons flex justify-end gap-2 mt-3">
+                                                    <UButton
+                                                        class="save-flash-dismiss"
+                                                        :label="$t('dataflashButtonSaveDismiss')"
+                                                        @click="dismissSavingDialog"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="dataflash-saving-after">
-                                        <div>{{ $t("dataflashSavingNoteAfter") }}</div>
-                                        <div class="buttons">
-                                            <a
-                                                href="#"
-                                                class="save-flash-dismiss regular-button"
-                                                @click.prevent="dismissSavingDialog"
-                                            >
-                                                {{ $t("dataflashButtonSaveDismiss") }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </dialog>
+                                    </template>
+                                </UModal>
 
                                 <ul class="dataflash-contents">
                                     <li
@@ -274,7 +282,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import BaseTab from "./BaseTab.vue";
@@ -355,8 +363,9 @@ export default defineComponent({
         const debugStore = useDebugStore();
 
         // Refs
-        const eraseDialog = ref(null);
-        const savingDialog = ref(null);
+        const eraseOpen = ref(false);
+        const saveOpen = ref(false);
+        const saveDone = ref(false);
 
         // State
         const blackboxDevice = ref(0);
@@ -581,7 +590,7 @@ export default defineComponent({
                 return;
             }
             eraseCancelled.value = false;
-            eraseDialog.value?.showModal();
+            eraseOpen.value = true;
         }
 
         function flashErase() {
@@ -594,7 +603,7 @@ export default defineComponent({
         function flashEraseCancel() {
             eraseCancelled.value = true;
             isErasing.value = false;
-            eraseDialog.value?.close();
+            eraseOpen.value = false;
             connectionStore.resumeLiveData();
         }
 
@@ -603,7 +612,7 @@ export default defineComponent({
                 if (connectionStore.connectionValid && !eraseCancelled.value) {
                     if (fcStore.dataflash?.ready) {
                         isErasing.value = false;
-                        eraseDialog.value?.close();
+                        eraseOpen.value = false;
                         connectionStore.resumeLiveData();
                         if (getConfig("showNotifications").showNotifications) {
                             NotificationManager.showNotification("Betaflight App", {
@@ -629,14 +638,12 @@ export default defineComponent({
         function showSavingDialog() {
             saveProgress.value = 0;
             saveCancelled.value = false;
-            savingDialog.value?.showModal();
-            nextTick(() => {
-                savingDialog.value?.classList.remove("done");
-            });
+            saveDone.value = false;
+            saveOpen.value = true;
         }
 
         function dismissSavingDialog() {
-            savingDialog.value?.close();
+            saveOpen.value = false;
         }
 
         function markSavingDialogDone(startTime, totalBytes, totalBytesCompressed) {
@@ -655,9 +662,7 @@ export default defineComponent({
                 );
             }
 
-            nextTick(() => {
-                savingDialog.value?.classList.add("done");
-            });
+            saveDone.value = true;
 
             if (getConfig("showNotifications").showNotifications) {
                 NotificationManager.showNotification("Betaflight App", {
@@ -674,10 +679,8 @@ export default defineComponent({
         function conditionallyEraseFlash(maxBytes, nextAddress) {
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
                 eraseCancelled.value = false;
-                nextTick(() => {
-                    eraseDialog.value?.classList.add("erasing");
-                });
-                eraseDialog.value?.showModal();
+                isErasing.value = true;
+                eraseOpen.value = true;
                 MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
             } else {
                 gui_log(
@@ -894,8 +897,9 @@ export default defineComponent({
 
         return {
             MSP,
-            eraseDialog,
-            savingDialog,
+            eraseOpen,
+            saveOpen,
+            saveDone,
             blackboxDevice,
             blackboxRate,
             debugMode,

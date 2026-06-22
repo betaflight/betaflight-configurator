@@ -100,39 +100,56 @@
             </Dialog>
 
             <!-- Restore progress dialog -->
-            <dialog ref="restoreProgressDialogRef" class="w-[320px] h-fit p-6" @cancel.prevent>
-                <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
-                <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
-                <UProgress :model-value="restoreProgress" :max="100" class="mt-3" />
-            </dialog>
+            <UModal
+                :open="restoreProgressOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ overlay: 'z-3000', content: 'w-[320px] z-3001' }"
+            >
+                <template #body>
+                    <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
+                    <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
+                    <UProgress :model-value="restoreProgress" :max="100" class="mt-3" />
+                </template>
+            </UModal>
 
             <!-- Restore errors dialog -->
-            <dialog
-                ref="restoreErrorsDialogRef"
-                class="w-[600px] max-w-[calc(100vw-2rem)] h-fit p-6"
-                @close="handleRestoreErrorsClose"
-                @cancel.prevent
+            <UModal
+                :open="restoreErrorsOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ overlay: 'z-3000', content: 'w-[600px] max-w-[calc(100vw-2rem)] z-3001' }"
             >
-                <div class="text-lg mb-2" v-html="$t('userBackupRestoreErrors')"></div>
-                <div class="backups_cli_background">
-                    <div class="backups_cli_window">
-                        <template v-for="(failure, idx) in restoreErrors" :key="idx">
-                            <div>{{ failure.command }}</div>
-                            <div
-                                v-for="(line, lineIdx) in failure.response"
-                                :key="lineIdx"
-                                :class="{ error_message: line.startsWith('###ERROR') }"
-                            >
-                                {{ line }}
-                            </div>
-                        </template>
+                <template #title>
+                    <span v-html="$t('userBackupRestoreErrors')"></span>
+                </template>
+                <template #body>
+                    <div class="backups_cli_background">
+                        <div class="backups_cli_window">
+                            <template v-for="(failure, idx) in restoreErrors" :key="idx">
+                                <div>{{ failure.command }}</div>
+                                <div
+                                    v-for="(line, lineIdx) in failure.response"
+                                    :key="lineIdx"
+                                    :class="{ error_message: line.startsWith('###ERROR') }"
+                                >
+                                    {{ line }}
+                                </div>
+                            </template>
+                        </div>
                     </div>
-                </div>
-                <div class="flex gap-2 justify-end mt-3">
-                    <UButton :label="$t('presetsButtonCancel')" variant="outline" @click="closeRestoreErrors(false)" />
-                    <UButton :label="$t('presetsSaveAnyway')" @click="closeRestoreErrors(true)" />
-                </div>
-            </dialog>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
+                        <UButton
+                            :label="$t('presetsButtonCancel')"
+                            variant="outline"
+                            @click="closeRestoreErrors(false)"
+                        />
+                        <UButton :label="$t('presetsSaveAnyway')" @click="closeRestoreErrors(true)" />
+                    </div>
+                </template>
+            </UModal>
         </div>
 
         <!-- Bottom toolbar -->
@@ -146,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
@@ -180,8 +197,6 @@ const restoreProgressOpen = ref(false);
 const restoreErrors = ref([]);
 const restoreErrorsOpen = ref(false);
 const restoreSavePressed = ref(false);
-const restoreProgressDialogRef = ref(null);
-const restoreErrorsDialogRef = ref(null);
 let userApi = null;
 let unsubscribeLogin = null;
 let unsubscribeLogout = null;
@@ -402,6 +417,7 @@ async function restoreBackup(backup) {
 function closeRestoreErrors(saveAnyway) {
     restoreSavePressed.value = saveAnyway;
     restoreErrorsOpen.value = false;
+    handleRestoreErrorsClose();
 }
 
 async function handleRestoreErrorsClose() {
@@ -421,30 +437,6 @@ async function handleRestoreErrorsClose() {
         scheduleReconnect();
     }
 }
-
-watch(restoreProgressOpen, async (isOpen) => {
-    await nextTick();
-    if (!restoreProgressDialogRef.value) {
-        return;
-    }
-    if (isOpen && !restoreProgressDialogRef.value.open) {
-        restoreProgressDialogRef.value.showModal();
-    } else if (!isOpen && restoreProgressDialogRef.value.open) {
-        restoreProgressDialogRef.value.close();
-    }
-});
-
-watch(restoreErrorsOpen, async (isOpen) => {
-    await nextTick();
-    if (!restoreErrorsDialogRef.value) {
-        return;
-    }
-    if (isOpen && !restoreErrorsDialogRef.value.open) {
-        restoreErrorsDialogRef.value.showModal();
-    } else if (!isOpen && restoreErrorsDialogRef.value.open) {
-        restoreErrorsDialogRef.value.close();
-    }
-});
 
 async function deleteBackup(backupId) {
     const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemBackup") }));

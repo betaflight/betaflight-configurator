@@ -1,22 +1,36 @@
 <template>
-    <dialog ref="dialogRef" class="dialogInteractive" @cancel.prevent>
-        <h3 class="dialogInteractiveTitle">{{ title }}</h3>
-        <div class="dialogInteractiveContent"></div>
-
-        <div class="cli-response">
-            <textarea id="cli-response" readonly rows="32" cols="96"></textarea>
-        </div>
-
-        <div class="cli-command">
-            <input type="text" id="cli-command" :placeholder="commandPlaceholder" />
-        </div>
-
-        <div class="buttons">
-            <button type="button" class="dialogInteractive-closeButton regular-button" @click.prevent="$emit('close')">
-                {{ buttonCloseText }}
-            </button>
-        </div>
-    </dialog>
+    <UModal
+        :open="open"
+        :title="title"
+        :close="false"
+        :dismissible="false"
+        :ui="{ overlay: 'z-3000', content: 'max-w-3xl w-[calc(100vw-2rem)] h-[80vh] z-3001' }"
+    >
+        <template #body>
+            <div class="flex flex-col h-full gap-3">
+                <!-- cli-response / cli-command are driven imperatively by gui.js via their ids;
+                     kept as raw elements so the CLI panel's DOM hooks (textContent/value/onchange/focus) work. -->
+                <textarea
+                    id="cli-response"
+                    class="cli-response flex-1 w-full"
+                    readonly
+                    :aria-label="$t('cliPanelTitle')"
+                ></textarea>
+                <input
+                    id="cli-command"
+                    class="cli-command w-full"
+                    type="text"
+                    :placeholder="commandPlaceholder"
+                    :aria-label="$t('cliCommand')"
+                />
+            </div>
+        </template>
+        <template #footer>
+            <div class="flex justify-end w-full">
+                <UButton @click="$emit('close')">{{ buttonCloseText }}</UButton>
+            </div>
+        </template>
+    </UModal>
 </template>
 
 <script setup>
@@ -39,64 +53,42 @@ defineProps({
 
 defineEmits(["close"]);
 
-const dialogRef = ref(null);
+const open = ref(false);
 
 const show = () => {
-    dialogRef.value?.showModal();
+    open.value = true;
 };
 
 const close = () => {
-    dialogRef.value?.close();
+    open.value = false;
 };
 
 defineExpose({
     show,
     close,
-    dialog: dialogRef,
 });
 </script>
 
 <style scoped>
-.dialogInteractive {
-    display: block;
-    z-index: 1000;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-    width: fit-content;
-}
-
-.dialogInteractive::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
-
-.dialogInteractive:not([open]) {
-    display: none;
-}
-
-.dialogInteractive-closeButton {
-    margin: 0px;
-}
-
-.cli-command input {
-    width: 100%;
-    margin-top: 12px;
-    margin-bottom: 12px;
-}
-
 .cli-response {
-    margin-top: 12px;
-    margin-bottom: 12px;
+    min-height: 0;
+    padding: 0.5rem 0.75rem;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 11px;
+    line-height: 1.4;
     white-space: pre-line;
-    height: 100%;
-    width: 100%;
+    resize: none;
+    color: var(--text);
+    background-color: var(--surface-0);
+    border: 1px solid var(--subtleAccent);
+    border-radius: 4px;
 }
 
-.cli-response textarea {
-    font-size: 11px;
-    object-fit: contain;
+.cli-command {
+    padding: 0.4rem 0.75rem;
+    color: var(--text);
+    background-color: var(--surface-0);
+    border: 1px solid var(--subtleAccent);
+    border-radius: 4px;
 }
 </style>

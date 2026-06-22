@@ -90,65 +90,55 @@
             </UFieldGroup>
         </div>
 
-        <dialog
-            ref="unstableFirmwareDialog"
-            id="dialogUnstableFirmwareAcknowledgement"
-            @close="handleUnstableFirmwareDialogClose"
+        <UModal
+            v-model:open="unstableFirmwareOpen"
+            :title="$t('warningTitle')"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
         >
-            <h3>{{ $t("warningTitle") }}</h3>
-            <div class="content">
+            <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 mt-3">
                     <USwitch
                         v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
                         :aria-label="$t('unstableFirmwareAcknowledgement')"
                     />
                     <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
                 </div>
-            </div>
-            <div class="dialog_toolbar">
-                <div class="btn">
-                    <a
-                        :class="['regular-button', { disabled: !state.dialogUnstableFirmwareAcknowledgementCheckbox }]"
-                        href="#"
-                        id="dialogUnstableFirmwareAcknowledgement-flashbtn"
-                        @click.prevent="handleUnstableFirmwareFlash"
-                        >{{ $t("unstableFirmwareAcknowledgementFlash") }}</a
-                    >
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton :label="$t('cancel')" variant="outline" @click="handleUnstableFirmwareCancel" />
+                    <UButton
+                        :label="$t('unstableFirmwareAcknowledgementFlash')"
+                        :disabled="!state.dialogUnstableFirmwareAcknowledgementCheckbox"
+                        @click="handleUnstableFirmwareFlash"
+                    />
                 </div>
-                <div class="btn">
-                    <a
-                        href="#"
-                        id="dialogUnstableFirmwareAcknowledgement-cancelbtn"
-                        class="regular-button"
-                        @click.prevent="handleUnstableFirmwareCancel"
-                        >{{ $t("cancel") }}</a
-                    >
-                </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
 
-        <dialog ref="verifyBoardDialog" id="dialog-verify-board" @close="handleVerifyBoardDialogClose">
-            <div id="dialog-verify-board-content-wrapper">
-                <div ref="verifyBoardContent" id="dialog-verify-board-content"></div>
-                <div class="btn dialog-buttons">
-                    <a
-                        href="#"
-                        id="dialog-verify-board-abort-confirmbtn"
-                        class="regular-button"
-                        @click.prevent="handleVerifyBoardAbort"
-                        >{{ $t("firmwareFlasherButtonAbort") }}</a
-                    >
-                    <a
-                        href="#"
-                        id="dialog-verify-board-continue-confirmbtn"
-                        class="regular-button"
-                        @click.prevent="handleVerifyBoardContinue"
-                        >{{ $t("firmwareFlasherButtonContinue") }}</a
-                    >
+        <UModal
+            v-model:open="verifyBoardOpen"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
+        >
+            <template #body>
+                <div v-html="verifyBoardContentHtml"></div>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton
+                        :label="$t('firmwareFlasherButtonAbort')"
+                        variant="outline"
+                        @click="handleVerifyBoardAbort"
+                    />
+                    <UButton :label="$t('firmwareFlasherButtonContinue')" @click="handleVerifyBoardContinue" />
                 </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
     </BaseTab>
 </template>
 
@@ -286,13 +276,13 @@ export default defineComponent({
         const sponsorTile = ref(null);
 
         // Verify board dialog refs
-        const verifyBoardDialog = ref(null);
-        const verifyBoardContent = ref(null);
+        const verifyBoardOpen = ref(false);
+        const verifyBoardContentHtml = ref("");
         const verifyBoardOnAcceptCallback = ref(null);
         const verifyBoardOnAbortCallback = ref(null);
 
         // Unstable firmware dialog refs
-        const unstableFirmwareDialog = ref(null);
+        const unstableFirmwareOpen = ref(false);
         const unstableFirmwareAcknowledgementCallback = ref(null);
 
         let dfuMonitorInterval = null;
@@ -410,12 +400,16 @@ export default defineComponent({
             state.flashProgressValue = 0;
             state.flashingInProgress = false;
             GUI.flashingInProgress = false;
-            enableFlashButton(!!firmwareFlashing.getParsedHex() || !!firmwareFlashing.getUf2Binary());
+            enableFlashButton(
+                !!firmwareFlashing.getParsedHex() ||
+                    !!firmwareFlashing.getUf2Binary() ||
+                    !!firmwareFlashing.getEspBinary(),
+            );
             updateDfuExitButtonState();
             enableLoadRemoteFileButton(true);
             enableLoadFileButton(true);
 
-            if (firmwareFlashing.getParsedHex() || firmwareFlashing.getUf2Binary()) {
+            if (firmwareFlashing.getParsedHex() || firmwareFlashing.getUf2Binary() || firmwareFlashing.getEspBinary()) {
                 if (state.preFlashingMessage && state.preFlashingMessageType) {
                     flashingMessage(state.preFlashingMessage, state.preFlashingMessageType);
                 }
@@ -1218,20 +1212,8 @@ export default defineComponent({
         };
 
         const showAcknowledgementDialog = async (acknowledgementCallback) => {
-            await nextTick();
-
-            if (!unstableFirmwareDialog.value) {
-                console.error("Dialog element not found");
-                return;
-            }
-
             unstableFirmwareAcknowledgementCallback.value = acknowledgementCallback;
-            unstableFirmwareDialog.value.showModal();
-        };
-
-        const handleUnstableFirmwareDialogClose = () => {
-            state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
-            unstableFirmwareAcknowledgementCallback.value = null;
+            unstableFirmwareOpen.value = true;
         };
 
         const initiateFlashing = async () => {
@@ -1662,7 +1644,11 @@ export default defineComponent({
             state.developmentFirmwareLoaded = false;
 
             try {
-                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [".hex", ".uf2"]);
+                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [
+                    ".hex",
+                    ".uf2",
+                    ".bin",
+                ]);
 
                 if (!file) {
                     enableLoadRemoteFileButton(true);
@@ -1672,7 +1658,7 @@ export default defineComponent({
 
                 const extension = getExtension(file.name);
 
-                if (extension === "uf2") {
+                if (extension === "uf2" || extension === "bin") {
                     const data = await FileSystem.readFileAsBlob(file);
                     await processFirmwareFile(file, extension, data);
                 } else if (extension === "hex") {
@@ -1694,12 +1680,14 @@ export default defineComponent({
                 return;
             }
 
-            if (unstableFirmwareDialog.value) {
-                unstableFirmwareDialog.value.close();
-            }
+            unstableFirmwareOpen.value = false;
 
-            if (unstableFirmwareAcknowledgementCallback.value) {
-                unstableFirmwareAcknowledgementCallback.value();
+            const acknowledgementCallback = unstableFirmwareAcknowledgementCallback.value;
+            state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
+            unstableFirmwareAcknowledgementCallback.value = null;
+
+            if (acknowledgementCallback) {
+                acknowledgementCallback();
             }
 
             await startFlashing().catch((error) => {
@@ -1709,34 +1697,28 @@ export default defineComponent({
 
         const handleUnstableFirmwareCancel = () => {
             state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
-            if (unstableFirmwareDialog.value) {
-                unstableFirmwareDialog.value.close();
-            }
+            unstableFirmwareAcknowledgementCallback.value = null;
+            unstableFirmwareOpen.value = false;
         };
 
         const handleVerifyBoardAbort = () => {
-            if (verifyBoardDialog.value) {
-                verifyBoardDialog.value.close();
-            }
-
-            if (verifyBoardOnAbortCallback.value) {
-                verifyBoardOnAbortCallback.value();
+            verifyBoardOpen.value = false;
+            const onAbort = verifyBoardOnAbortCallback.value;
+            verifyBoardOnAcceptCallback.value = null;
+            verifyBoardOnAbortCallback.value = null;
+            if (onAbort) {
+                onAbort();
             }
         };
 
         const handleVerifyBoardContinue = () => {
-            if (verifyBoardDialog.value) {
-                verifyBoardDialog.value.close();
-            }
-
-            if (verifyBoardOnAcceptCallback.value) {
-                verifyBoardOnAcceptCallback.value();
-            }
-        };
-
-        const handleVerifyBoardDialogClose = () => {
+            verifyBoardOpen.value = false;
+            const onAccept = verifyBoardOnAcceptCallback.value;
             verifyBoardOnAcceptCallback.value = null;
             verifyBoardOnAbortCallback.value = null;
+            if (onAccept) {
+                onAccept();
+            }
         };
 
         // Handle restore backup functionality
@@ -1808,17 +1790,15 @@ export default defineComponent({
         };
 
         const showDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
-            if (verifyBoardContent.value) {
-                verifyBoardContent.value.innerHTML = $t("firmwareFlasherVerifyBoard", {
-                    selected_board: selected,
-                    verified_board: verified,
-                });
-            }
+            verifyBoardContentHtml.value = $t("firmwareFlasherVerifyBoard", {
+                selected_board: selected,
+                verified_board: verified,
+            });
 
-            if (verifyBoardDialog.value && !verifyBoardDialog.value.hasAttribute("open")) {
+            if (!verifyBoardOpen.value) {
                 verifyBoardOnAcceptCallback.value = onAccept;
                 verifyBoardOnAbortCallback.value = onAbort;
-                verifyBoardDialog.value.showModal();
+                verifyBoardOpen.value = true;
             }
         };
 
@@ -1897,9 +1877,9 @@ export default defineComponent({
             FLASH_MESSAGE_TYPES,
             // Template refs
             sponsorTile,
-            verifyBoardDialog,
-            verifyBoardContent,
-            unstableFirmwareDialog,
+            verifyBoardOpen,
+            verifyBoardContentHtml,
+            unstableFirmwareOpen,
             // Functions
             enableFlashButton,
             enableLoadRemoteFileButton,
@@ -1937,10 +1917,8 @@ export default defineComponent({
             showDfuButton,
             handleUnstableFirmwareFlash,
             handleUnstableFirmwareCancel,
-            handleUnstableFirmwareDialogClose,
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
-            handleVerifyBoardDialogClose,
             handleRestoreBackup,
             saveFirmware,
         };

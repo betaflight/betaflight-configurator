@@ -32,13 +32,42 @@
         </template>
 
         <template #body>
-            <div class="flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
-                <!-- Graph panels -->
+            <div ref="graphListEl" class="flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
+                <!-- Graph panels (drag the handle to reorder) -->
                 <UiBox
                     v-for="(graph, gIdx) in localGraphs"
-                    :key="gIdx"
+                    :key="graph._uid"
                     :title="`Graph ${gIdx + 1}${graph.label ? ' — ' + graph.label : ''}`"
                 >
+                    <template #title>
+                        <UIcon
+                            name="i-lucide-grip-vertical"
+                            class="drag-handle size-3.5 cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100"
+                            title="Drag to reorder graph"
+                        />
+                        <UButton
+                            variant="ghost"
+                            color="neutral"
+                            icon="i-lucide-chevron-up"
+                            size="2xs"
+                            class="disabled:opacity-30"
+                            :ui="{ leadingIcon: 'text-black!' }"
+                            :disabled="gIdx === 0"
+                            :aria-label="`Move graph ${gIdx + 1} up`"
+                            @click.stop="moveGraph(gIdx, gIdx - 1)"
+                        />
+                        <UButton
+                            variant="ghost"
+                            color="neutral"
+                            icon="i-lucide-chevron-down"
+                            size="2xs"
+                            class="disabled:opacity-30"
+                            :ui="{ leadingIcon: 'text-black!' }"
+                            :disabled="gIdx === localGraphs.length - 1"
+                            :aria-label="`Move graph ${gIdx + 1} down`"
+                            @click.stop="moveGraph(gIdx, gIdx + 1)"
+                        />
+                    </template>
                     <div class="flex flex-col gap-1">
                         <!-- Graph settings row -->
                         <div class="flex items-center gap-3 mb-1 text-xs">
@@ -245,7 +274,8 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onBeforeUnmount } from "vue";
+import Sortable from "sortablejs";
 import UiBox from "./UiBox.vue";
 import { GraphConfig } from "../graph_config.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
@@ -266,6 +296,62 @@ const localGraphs = ref([]);
 const prevConfig = ref(null);
 const offeredFields = ref([]);
 const exampleGraphs = ref([]);
+
+// --- Drag-and-drop reordering of graph panels (Sortable.js) ---
+// Stable per-panel id so Vue's keyed reconciliation cooperates with Sortable's
+// DOM move instead of corrupting the list (index keys would break after a drag).
+let uidCounter = 0;
+function nextUid() {
+    uidCounter += 1;
+    return uidCounter;
+}
+
+const graphListEl = ref(null);
+let sortable = null;
+
+// Move a graph panel from one position to another. Shared by the drag handle
+// (Sortable) and the keyboard-accessible move up/down buttons. Guards against
+// out-of-bounds / undefined indices (Sortable can report undefined indices in
+// edge cases, and splice(undefined, ...) would corrupt the list).
+function moveGraph(oldIndex, newIndex) {
+    if (
+        oldIndex === newIndex ||
+        oldIndex == null ||
+        newIndex == null ||
+        oldIndex < 0 ||
+        newIndex < 0 ||
+        oldIndex >= localGraphs.value.length ||
+        newIndex >= localGraphs.value.length
+    ) {
+        return;
+    }
+    const [moved] = localGraphs.value.splice(oldIndex, 1);
+    localGraphs.value.splice(newIndex, 0, moved);
+    emitUpdate();
+}
+
+watch(graphListEl, (el) => {
+    if (sortable) {
+        sortable.destroy();
+        sortable = null;
+    }
+    if (!el) {
+        return;
+    }
+    sortable = Sortable.create(el, {
+        handle: ".drag-handle",
+        ghostClass: "opacity-30",
+        animation: 150,
+        onEnd({ oldIndex, newIndex }) {
+            moveGraph(oldIndex, newIndex);
+        },
+    });
+});
+
+onBeforeUnmount(() => {
+    sortable?.destroy();
+    sortable = null;
+});
 
 const heightOptions = [
     { label: "1", value: 1 },
@@ -554,6 +640,7 @@ function addExampleGraph(example) {
         }
     }
     localGraphs.value.push({
+        _uid: nextUid(),
         label: example.label || "",
         height: example.height || 1,
         fields,
@@ -592,7 +679,7 @@ function cloneGraphToLocal(g) {
             fields.push(makeField(ef.name, ef, c));
         }
     }
-    return { label: g.label || "", height: g.height || 1, fields };
+    return { _uid: nextUid(), label: g.label || "", height: g.height || 1, fields };
 }
 
 // Initialize when dialog opens

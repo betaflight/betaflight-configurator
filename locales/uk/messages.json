@@ -926,9 +926,6 @@
     "defaultHardwareHead": {
         "message": "Апаратне забезпечення"
     },
-    "defaultHardwareText": {
-        "message": "Застосунок підтримує все обладнання, на якому можна запустити Betaflight. Повний список обладнання дивіться у вкладці Програматор.<br \/><br \/>Корисні утиліти та драйвери для обладнання:<ul><li>Для старого обладнання з чіпом CP210x останні <b>CP210x драйвери<\/b> можна завантажити <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><li>Останню версію <b>Zadig<\/b> для встановлення USB-драйверів у Windows можна завантажити <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> можна завантажити <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><\/ul>"
-    },
     "defaultSoftwareHead": {
         "message": "Програмне забезпечення"
     },
@@ -937,9 +934,6 @@
     },
     "defaultContributingHead": {
         "message": "Сприяння"
-    },
-    "defaultContributingText": {
-        "message": "Якщо ви хочете допомогти зробити Betaflight ще кращим, ви можете долучитися багатьма способами, зокрема:<br \/><ul><li>використовувати свої знання про Betaflight, щоб створювати або оновлювати матеріали в <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">нашій Wiki<\/a> чи відповідати на запитання інших користувачів в онлайн-форумах;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">вносити зміни до коду<\/a> прошивки та застосунку — нові функції, виправлення, покращення;<\/li><li>тестувати <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">нові функції та виправлення<\/a> та надавати відгуки;<\/li><li>допомагати іншим користувачам вирішувати проблеми, про які вони повідомляють у <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">нашому трекері помилок<\/a>, а також брати участь в обговореннях запитів на нові функції;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">перекладати<\/a> застосунок Betaflight на нову мову або допомагати підтримувати наявні переклади.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Ми також маємо <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">групу на Facebook<\/a>.<br \/>Приєднуйтесь до нас, щоб мати можливість обговорювати Betaflight, ставити запитання щодо налаштування, або просто спілкуватись зі своїми колегами-пілотами."
@@ -2573,9 +2567,6 @@
     "receiverModelId": {
         "message": "ID відповідності моделі"
     },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Завжди перевіряйте, чи працює Безварійність належним чином!<\/a><\/strong><\/b> Налаштування знаходяться на вкладці Безаварійність, яка вимагає експертного режиму.<br> &#8226; <b>Використовуйте останню версію прошивки Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Вимкніть апаратний фільтр АЦП<\/a><\/strong> у передавачі, якщо ви використовуєте OpenTx або EdgeTx.<br>Базові налаштування: Правильно налаштуйте параметри \"Приймача\". Виберіть правильну \"Схему каналів\" для вашого пульта. Перевірте, чи правильно рухаються гістограми крену, тангажу та інші. Налаштуйте значення кінцевої точки каналу або діапазону в передавачі на ~1000 - ~2000 і встановіть середню точку на 1500. Для отримання додаткової інформації прочитайте <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">документацію<\/a><\/strong>."
-    },
     "receiverThrottleMid": {
         "message": "Середня точка тяги"
     },
@@ -2751,14 +2742,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Режим польоту збільшує значення П та І під час швидких рухів стіком тяги, щоб покращити відстеження стіків та уникнути дрейфу носа під час швидких змін тяги",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "Режим Air дозволяє підтримувати стабільність повітряного судна на низькій тязі. Для отримання додаткової інформації, будь ласка, відвідайте <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Утримання висоти<\/a> активно регулює висоту літального апарату, використовуючи зовнішні датчики у поєднанні з режимом Кут (стабільний режим).",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "Режим автопілота забезпечує автономне керування польотом, поєднуючи утримання висоти та утримання позиції для стабільного зависання або слідування запланованому маршруту польоту.",
@@ -2964,14 +2947,6 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "через канал"
-    },
-    "adjustmentsCenterHelp": {
-        "message": "Встановлює середню точку або опорне значення для використання функцією регулювання.<br \/><br \/><strong>Регулювання повзунком:<\/strong><br \/>Для регулювань повзунком встановіть середнє значення регулювання у 0. Поточна позиція повзунка буде використана для збільшення або зменшення значення.<br \/><br \/><strong>Регулювання вибором:<\/strong><br \/>Встановіть середнє значення регулювання у 0 або конкретне значення в мікросекундах (мкс), якщо потрібно змістити опорну точку перемикача від 1500мкс під час запуску налаштування з пульта.<br \/><br \/><strong>Крокові регулювання:<\/strong><br \/>Встановіть середнє значення регулювання у 0, щоб використовувалось поточне значення параметра, який регулюється.<br \/><br \/><strong>Абсолютні регулювання:<\/strong><br \/>Щоб використовувати метод абсолютного регулювання, потрібно встановити і середнє значення регулювання, і масштаб регулювання для вказання бажаного значення та діапазону. Діапазон обчислюється як: середнє ± масштаб. Наприклад, встановивши середнє значення регулювання = 50 і масштаб регулювання = 25, буде створено діапазон від 25 до 75, де центральне положення (перемикача або потенціометра) відповідає значенню 50.<br \/><br \/>Відвідайте <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">цю сторінку<\/a> для додаткової інформації.",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "Керує масштабом або діапазоном регулювання; більші значення збільшують діапазон або чутливість.<br \/><br \/><strong>Регулювання повзунком:<\/strong><br \/>Для регулювань повзунком масштаб регулювання керує масштабом\/чутливістю. Значення 50 відповідає 50% діапазону повзунка. Встановлення 0 використовує стандартний масштаб для повзунків.<br \/><br \/><strong>Регулювання вибором:<\/strong><br \/>Для регулювань вибором встановіть масштаб регулювання у 0 для стандартної поведінки або вкажіть значення в мікросекундах (мкс), щоб обмежити діапазон. Наприклад: встановіть середнє значення регулювання = 1000 (мкс) і масштаб регулювання = 500 (мкс), щоб використовувати 3-позиційний перемикач як 2-позиційний.<br \/><br \/><strong>Крокові та абсолютні регулювання:<\/strong><br \/>Для крокових та абсолютних регулювань масштаб регулювання визначає діапазон вище і нижче середнього значення регулювання. Наприклад, значення 25 створює діапазон регулювання ±25 від середнього значення регулювання або від поточного значення, якщо середнє значення регулювання встановлено у 0.<br \/><strong>Примітка:<\/strong> Для використання методу регулювання Абсолютне з потенціометром необхідно вказати значення масштабу регулювання.<br \/><br \/>Відвідайте <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">цю сторінку<\/a> для додаткової інформації.",
-        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "Слот 1"
@@ -3720,9 +3695,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Функція працює тільки з DSHOT електронними контролерами швидкості.<br \/> Переконайтеся, що ваш електронний контролер швидкості (ESC) підтримує протокол DSHOT і змініть його на $t(tabMotorTesting.message) вкладці."
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Кількість моторів дорівнює 0.<br \/>Перевірте поточний мікшер на вкладці $t(tabMotorTesting.message) або налаштуйте свій власний за допомогою командного рядку (CLI). Подивіться цю <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">сторінку Вікі<\/a> для додаткової інформації."
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Оновіть прошивку.<br \/> Переконайтеся, що ви використовуєте останню версію прошивки: Betaflight 4.3 або новішу."
     },
@@ -4232,9 +4204,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "Відновлення \/ Втрата зв'язку"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Якщо зв’язок із платою втрачено, виконайте такі кроки, щоб відновити зв’язок: <ul><li>Вимкніть живлення.<\/li><li>Увімкніть «Польотник уже в режимі завантажувача», увімкніть «Повністю очистити мікроконтролер».<\/li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.<\/li><li>Увімкніть живлення (індикатор активності НЕ блимає, якщо все зроблено правильно).<\/li><li>Установіть усі драйвери STM32 і Zadig, якщо потрібно (див. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB<\/a> у посібнику Betaflight).<\/li><li>Закрийте застосунок, перезапустіть його.<\/li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотнику.<\/li><li>Прошийте правильною прошивкою (з використанням ручної швидкості передачі даних, якщо вказано у посібнику коритувача до вашого польотного контролера).<\/li><li>Вимкніть живлення.<\/li><li>Зніміть перемичку BOOT.<\/li><li>Увімкніть живлення (світлодіод активності має блимати).<\/li><li>Підключіться нормально.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "Якщо втрачено з'єднання: вимкніть живлення, увімкніть Польотник уже в режимі завантажувача та Повністю очистити мікроконтролер, замкніть піни BOOT перемичкою, потім увімкніть живлення. За потреби встановіть драйвери."
@@ -5212,9 +5181,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Компенсація падіння напруги батареї %"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Забезпечує стабільність тяги та характеристик ПІД у діапазоні корисної напруги батареї, збільшуючи потужність моторів, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -7258,10 +7224,6 @@
     },
     "osdButtonSaved": {
         "message": "Збережено"
-    },
-    "vtxHelp": {
-        "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">цю сторінку;<\/a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації lua, який можна використовувати разом зі сценаріями betaflight lua (докладніше <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">тут<\/a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Увага:<\/span> Ваш відеопередавач не налаштований або не підтримується. Тому ви не можете змінити значення відеопередавача звідси. Це буде можливо лише за умови, якщо польотний контролер під’єднано до відеопередавача за допомогою певного протоколу, як-от Tramp або SmartAudio, і його було правильно налаштовано на вкладці $t(tabPorts.message).",

@@ -116,6 +116,9 @@
     "bluetoothConnectionError": {
         "message": "Errore Bluetooth:: $1"
     },
+    "virtualMode": {
+        "message": "Modalità Virtuale"
+    },
     "virtualMSPVersion": {
         "message": "Versione Firmware Virtuale"
     },
@@ -950,9 +953,6 @@
     "defaultHardwareHead": {
         "message": "Hardware"
     },
-    "defaultHardwareText": {
-        "message": "L'applicazione supporta tutto l'hardware che può eseguire Betaflight. Controllare la scheda Flasher firmware per l'elenco completo dell'hardware.<br \/><br \/>Utilità hardware utili \/ driver:<ul><li>Per hardware legacy utilizza un USB CP210x a seriale, gli ultimi driver <b>CP210x<\/b> possono essere scaricati da <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><\/li><li>Gli ultimi driver <b>Zadig<\/b> per l'installazione del driver USB Windows possono essere scaricati da <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><\/li><li><b>Il driver Fixer ImpulseRC<\/b> può essere scaricato <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><\/li><\/ul>"
-    },
     "defaultSoftwareHead": {
         "message": "Software"
     },
@@ -961,9 +961,6 @@
     },
     "defaultContributingHead": {
         "message": "Contribuisci"
-    },
-    "defaultContributingText": {
-        "message": "Se vuoi contribuire a migliorare Betaflight si può aiutare in molti modi, includendo:<br \/><ul><li>utilizzando la tua conoscenza di Betaflight per creare o aggiornare contenuti su <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">il nostro Wiki<\/a>, o rispondere alle domande degli altri utenti nei forum online;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuendo codice<\/a> al firmware e all'app - nuove funzionalità, correzioni, miglioramenti;<\/li><li>testando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuove funzionalità e correzioni<\/a> fornendo feedback;<\/li><li>aiutando altri utenti a risolvere i problemi che segnalano nel <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nostro issue tracker<\/a>, e partecipare alle discussioni sulle richieste di funzionalità;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traducendo<\/a> Betaflight App in una nuova lingua, o contribuendo a mantenere le traduzioni esistenti.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Visita il <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">gruppo Facebook<\/a>.<br \/> Unisciti a noi per discutere di Betaflight, per domande sulla configurazione, o semplicemente per discutere con altri piloti."
@@ -2609,9 +2606,6 @@
     "receiverModelId": {
         "message": "ID Abbina Modello"
     },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il tuo Failsafe funzioni correttamente!<\/a><\/strong><\/b> Le impostazioni sono nella scheda Failsafe, che richiede la modalità Esperto.<br> &#8226; <b>Usa l'ultimo firmware Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita il filtro hardware ADC<\/a><\/strong> nel trasmettitore se si utilizza OpenTx o EdgeTx.<br>Configurazione base: Configura correttamente le impostazioni del 'Ricevitore'. Scegli la ‘Mappa dei canali’ corretta per la tua radio. Controlla che il Rollio, Imbardata e altri grafici delle barre si muovano correttamente. Regolare l'endpoint del canale o i valori dell'intervallo nel trasmettitore a ~1000 a ~2000 e impostare il punto medio a 1500. Per ulteriori informazioni, leggere la documentazione <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
-    },
     "receiverFailsafeActiveTitle": {
         "message": "Failsafe-attivo"
     },
@@ -2797,14 +2791,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "La modalità di volo aumenta il termine P e I durante i movimenti veloci dell' acceleratore per seguire meglio il movimento dello stick ed evitare sbandamenti del muso sui cambi rapidi dell'acceleratore",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode mantiene il drone stabile a basso acceleratore. Per maggiori informazioni consulta <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> su Betaflight.com.",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> regola l'altitudine dell'aeromobile utilizzando sensori esterni combinati con la Modalità Angolo (Modalità Stabile).",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "La modalità «Autopilota» consente il comando autonomo del volo, combinando la posizione di altitudine e posizione per mantenere un passaggio stabile o seguire una traiettoria di volo pianificata.",
@@ -3028,14 +3014,6 @@
     },
     "adjustmentsColumnAdjustmentScale": {
         "message": "scala (val.|%)"
-    },
-    "adjustmentsCenterHelp": {
-        "message": "Imposta il valore medio o di riferimento utilizzato dalla funzione di regolazione.<br \/><br \/><strong>Regolazioni Slider:<\/strong><br \/>Per le regolazioni dello slider, impostare il centro di regolazione a 0. La posizione corrente del cursore verrà utilizzata per la regolazione su\/giù.<br \/><br \/><strong>Selezione Regolazioni:<\/strong><br \/>Impostare il centro di regolazione a 0, o a un valore specifico di microsecondo (uS) se si desidera spostare il punto di riferimento dell'interruttore da 1500uS quando si avvia la regolazione RC.<br \/><br \/><strong>Regolazioni Fasi:<\/strong><br \/>Impostare il centro di regolazione a 0 per il valore corrente dell'elemento da aggiustare per essere utilizzato.<br \/><br \/><strong>Regolazioni Assolute:<\/strong><br \/>Per utilizzare il metodo di regolazione Assoluta, è necessario impostare sia il centro di regolazione che la scala per specificare il valore e l'intervallo desiderati. L’intervallo è calcolato come: centro ± scala. Ad esempio, imopostando il centro di regolazione a 50 e la scala di regolazione a 25 si crea un intervallo da 25 a 75, con la posizione centrale (interruttore o POT) mappata a 50.<br \/><br \/>Visita <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina<\/a> per ulteriori informazioni.",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "Controlla il ridimensionamento o l'intervallo di regolazione; valori superiori aumentano l'intervallo di regolazione o la sensibilità.<br \/><br \/><strong>Regolazioni Slider:<\/strong><br \/>Per le regolazioni Slider, la scala di regolazione controlla la scala\/sensibilità della regolazione. Un valore di 50 è pari al 50% dell'intervallo di scorrimento. Impostando a 0 si utilizza la scala predefinita per i cursori.<br \/><br \/><strong>Regolazioni di selezione:<\/strong><br \/>Per le regolazioni della selezione, imposta scala di regolazione a 0 per il predefinito o specifica un valore di microsecondo (uS) per limitare l'intervallo. Per esempio: Impostare il centro di regolazione a 1000 (uS) e la scala di regolazione a 500 (uS) per utilizzare un interruttore a 3 posizioni come interruttore a 2 posizioni.<br \/><br \/><strong>Regolazioni graduali e assolute:<\/strong><br \/>Per aggiustamenti graduali e assoluti, La scala di regolazione definisce l'intervallo sopra e sotto il centro di regolazione. Ad esempio, un valore di 25 crea un intervallo di regolazione di ±25 dal valore del centro di regolazione, o dal valore corrente se il centro di regolazione è impostato a 0.<br \/><strong>Nota:<\/strong> Per utilizzare il metodo di regolazione assoluta con un potenziometro, è necessario specificare un valore della scala di regolazione.<br \/><br \/>Visita <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina<\/a> per maggiori informazioni.",
-        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "Slot 1"
@@ -3792,9 +3770,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funziona solo con ESC DSHOT.<br \/>Verifica che il tuo ESC (Electric Speed Controller) supporti il protocollo DSHOT e cambialo nella scheda $t(tabMotorTesting.message)."
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Il numero di motori è 0.<br \/>Verifica il Mixer corrente nella scheda $t(tabMotorTesting.message) oppure impostane uno personalizzato via CLI. Fai riferimento a questa <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki<\/a>."
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Aggiorna il firmware.<br \/> Assicurati di utilizzare l'ultimo firmware: Betaflight 4.3 o successivo."
     },
@@ -4310,9 +4285,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "Recupero \/ Comunicazione persa"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Se hai perso la comunicazione con la tua scheda segui questi passaggi per ripristinare la comunicazione: <ul><li>Spegnimento<\/li><li>Abilita 'Nessuna sequenza di riavvio', abilita 'Cancellazione completa del chip'.<\/li><li>Ponticellare i pin del BOOT o tenere premuto il pulsante BOOT.<\/li><li>Accensione (il LED NON lampeggia se non eseguito correttamente).<\/li><li>Installare tutti i driver STM32 e Zadig se necessario (vedere la sezione <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash con USB<\/a> del manuale di Betaflight).<\/li><li>Chiudere l'App, quindi riavviarla.<\/li><li>Rilascia il pulsante BOOT se il tuo FC ne ha uno.<\/li><li>Flash con firmware corretto (utilizzando la velocità di baud manuale se specificato nel manuale dell' FC).<\/li><li>Spegnimento.<\/li><li>Rimuovere il ponticello BOOT.<\/li><li>Accensione (LED d'attività dovrebbe lampeggiare).<\/li><li>Connetti normalmente.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "Se hai perso la comunicazione: spegni, abilita nessuna sequenza di riavvio e la cancellazione completa del chip, unire i pin BOOT, quindi accendere. Installare i driver se necessario."
@@ -5293,9 +5265,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Compensazione Calo Vbat %"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Dà prestazioni costanti di gas e PID sulla tensione utilizzabile della batteria aumentando l'output di motori al calo della tensione della batteria.<br \/><br \/>Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki<\/a> per ulteriori informazioni."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -7349,10 +7318,6 @@
     "osdButtonSaved": {
         "message": "Salvato"
     },
-    "vtxHelp": {
-        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX effettuare questi passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-tables\">questa<\/a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller di volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (più informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">qui<\/a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Attenzione:<\/span> La tua VTX non è configurata o non è supportata, quindi non puoi modificare i valori VTX da qui. La modifica sarà possibile solo se il controllore del volo è collegato alla VTX utilizzando qualche protocollo come Tramp o SmartAudio ed è configurato correttamente nella scheda $t(tabPorts.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -8384,6 +8349,38 @@
     "mspCliFirmwareTooOld": {
         "message": "Questa azione richiede il firmware Betaflight {{required}} o più recente (attualmente connesso a {{current}}). Si prega di aggiornare il firmware del controller di volo prima di continuare.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Ripristina Backup",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Ripristina Backup Pre-Flash",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "Ripristino del backup di configurazione preso prima del flash. Continuare?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Configurazione ripristinata con successo.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Backup di configurazione ripristinato, {{count}} righe saltate.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Ripristino fallito: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "Impossibile connettersi al controllore di volo per il ripristino.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "Nessun backup disponibile da ripristinare.",
+        "description": "Error message when no backup data is cached for restore"
     },
     "presetsLoadingDumpAll": {
         "message": "Caricamento della configurazione attuale dal controllore di volo",

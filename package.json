@@ -25,6 +25,8 @@
     "tauri:build": "node scripts/check-tauri-prereqs.mjs && tauri build",
     "tauri:android:dev": "cross-env TAURI_DEV=1 tauri android dev",
     "tauri:android:build": "tauri android build",
+    "tauri:ios:dev": "cross-env TAURI_DEV=1 tauri ios dev",
+    "tauri:ios:build": "tauri ios build",
     "tauri:prebuild": "node scripts/sync-tauri-version.mjs && vite build",
     "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
     "storybook": "storybook dev -p 6006",
@@ -58,6 +60,7 @@
     "d3": "^7.9.0",
     "djv": "^2.1.4",
     "dompurify": "^3.4.0",
+    "esptool-js": "^0.6.0",
     "geomagnetism": "^0.2.0",
     "i18next": "^24.2.2",
     "i18next-http-backend": "^3.0.5",
@@ -80,7 +83,7 @@
     "three": "^0.184.0",
     "throttle-debounce": "^5.0.0",
     "tiny-emitter": "^2.1.0",
-    "vite-plugin-pwa": "^1.0.3",
+    "vite-plugin-pwa": "^1.3.0",
     "vue": "^3.5.13",
     "vue-multiselect": "^3.0.0",
     "vue-router": "^4"
@@ -117,8 +120,8 @@
     "rollup": "^4.59.0",
     "rollup-plugin-copy": "^3.5.0",
     "run-script-os": "^1.1.6",
-    "vite": "^7.3.2",
+    "vite": "^8.0.16",
     "vite-plugin-mkcert": "^1.17.9",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.9"
   }
 }

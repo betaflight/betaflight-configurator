@@ -1,0 +1,112 @@
+name: Tauri iOS release
+
+# Builds the signed Tauri iOS app and uploads it to TestFlight.
+#
+# Runs on a GitHub-hosted macOS runner because Apple requires the iOS 26 SDK
+# (Xcode 26 / macOS 26) for App Store Connect uploads — older local Macs can't
+# build this. Hosted macOS runners are free for public repos.
+#
+# CFBundleVersion = github.run_number so each upload is unique/monotonic.
+#
+# Required repository secrets:
+#   IOS_CERTIFICATE           base64 of the Apple Distribution .p12
+#   IOS_CERTIFICATE_PASSWORD  the .p12 export password
+#   IOS_MOBILE_PROVISION      base64 of the App Store .mobileprovision
+#   APPLE_API_ISSUER          App Store Connect API issuer id
+#   APPLE_API_KEY             App Store Connect API key id (e.g. 97RB6UHFMN)
+#   APPLE_API_KEY_P8          contents of the AuthKey_<keyid>.p8 file
+# Required repository variable (already set):
+#   APPLE_DEVELOPMENT_TEAM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ios:
+    name: Build & publish iOS bundle
+    runs-on: macos-26
+    permissions:
+      contents: read
+    env:
+      APPLE_DEVELOPMENT_TEAM: ${{ vars.APPLE_DEVELOPMENT_TEAM }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode 26 (iOS 26 SDK)
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
+        with:
+          xcode-version: '26'
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          targets: aarch64-apple-ios
+
+      - name: Cache Cargo registry and target
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Stage App Store Connect API key
+        env:
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          : "${APPLE_API_KEY:?Set the APPLE_API_KEY secret (key id)}"
+          : "${APPLE_API_KEY_P8:?Set the APPLE_API_KEY_P8 secret (.p8 contents)}"
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          KEY_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_${APPLE_API_KEY}.p8"
+          printf '%s' "$APPLE_API_KEY_P8" > "$KEY_PATH"
+          echo "APPLE_API_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Build signed IPA
+        env:
+          IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+        run: |
+          npx tauri ios build --export-method app-store-connect \
+            -c "{\"bundle\":{\"iOS\":{\"bundleVersion\":\"${{ github.run_number }}\"}}}"
+
+      - name: Locate IPA
+        id: ipa
+        run: |
+          shopt -s nullglob
+          ipas=(src-tauri/gen/apple/build/arm64/*.ipa)
+          if [ ${#ipas[@]} -ne 1 ]; then
+            echo "Expected exactly one IPA, found ${#ipas[@]}: ${ipas[*]}" >&2
+            exit 1
+          fi
+          echo "path=${ipas[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to TestFlight
+        env:
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          IPA_PATH: ${{ steps.ipa.outputs.path }}
+        run: |
+          xcrun altool --upload-app --type ios \
+            --file "$IPA_PATH" \
+            --apiKey "$APPLE_API_KEY" --apiIssuer "$APPLE_API_ISSUER"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-app-ipa
+          path: ${{ steps.ipa.outputs.path }}
+          if-no-files-found: error
+          retention-days: 30

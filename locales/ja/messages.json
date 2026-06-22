@@ -722,9 +722,6 @@
     "defaultHardwareHead": {
         "message": "ハードウェア"
     },
-    "defaultHardwareText": {
-        "message": "このアプリケーションは、Betaflightが動作するすべてのハードウェアをサポートしています。対応ハードウェアの一覧については【ファームフラッシャー】タブをご確認ください。<br \/><br \/>役立つハードウェアユーティリティ \/ ドライバ:<ul><li>CP210x USB–シリアルチップを使用したレガシーハードウェアの場合、最新の<b>CP210xドライバ<\/b>は <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><li>Windows用 USBドライバをインストールするための最新の <b>Zadig<\/b> は <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><li><b>ImpulseRC Driver Fixer<\/b>は <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><\/ul>"
-    },
     "defaultSoftwareHead": {
         "message": "ソフトウェア"
     },
@@ -733,9 +730,6 @@
     },
     "defaultContributingHead": {
         "message": "開発への協力・貢献"
-    },
-    "defaultContributingText": {
-        "message": "もしBetaflightをさらに良くするお手伝いをしていただけるなら、次のような方法があります:<br \/><ul><li>\nBetaflight に関する知識を活かして <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a> のコンテンツを作成・更新したり、オンラインフォーラムで他のユーザの質問に答える<\/li><li>ファームウェアやアプリへの <a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">コード貢献<\/a> [新機能の追加、修正、改善 など] <\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能や修正<\/a> をテストして、フィードバックを提供する<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue tracker<\/a> で報告された問題の解決を手伝い、機能要望に関する議論に参加する<\/li><li>Betaflight Appを <a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">新しい言語に翻訳<\/a> したり、既存の翻訳の維持に協力する<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "私たちは<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebookグループ<\/a>も運営しています。<br \/>私たちと一緒にBetaflightについて語り合い、設定に関する質問をしたり、パイロット同士で交流してみましょう。"
@@ -2344,9 +2338,6 @@
     "receiverModelId": {
         "message": "モデルマッチ ID"
     },
-    "receiverHelp": {
-        "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">フェイルセーフが正しく機能しているか、常に確認をしてください！<\/a><\/strong><\/b> 設定はフェイルセーフタブにあり、Expertモードへの切り替えが必要です。<br> &#8226; <b>最新の送信機ファームウェアを適用してください！<\/b><br> &#8226; OpenTX、またはEdgeTXを使用している場合は、送信機の<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">ハードウェアADCフィルターを無効にしてください。<\/a><\/strong><br>基本セットアップ:【受信機】の設定を正しく行ってください。送信機の正しい【チャンネルマップ】を選択します。ロール、ピッチ、その他のスライダーが正しく動くことを確認してください。送信機のチャンネルのエンドポイントまたは動作範囲の値を1000～2000に調整し、中央値を1500に設定します。詳しくは<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">マニュアル<\/a><\/strong>をご確認ください。"
-    },
     "receiverThrottleMid": {
         "message": "スロットルMID"
     },
@@ -2522,14 +2513,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "フライトモードは、スロットルのすばやい操作時にP値とI値とを増加させ、スティック追従性を向上させ、スロットルのすばやい操作時におけるノーズドリフトを回避します。",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "エアーモードでは低いスロットルで機体を安定することができます。詳しい情報はBetaflight.comの<a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">エアーモード<\/a>を確認してください。",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度ホールド<\/a>は、外部センサーとアングルモード (安定モード) を組み合わせて、機体の高度を積極的に制御します。",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "オートパイロットモードは自律飛行制御を有効にし、高度維持とポジションホールドを組み合わせて、安定したホバリングや計画された飛行経路の追従を行います。",
@@ -2735,14 +2718,6 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "チャンネル"
-    },
-    "adjustmentsCenterHelp": {
-        "message": "調整機能で使用される中央値 [基準値] を設定します。<br \/><br \/><strong>スライダー調整:<\/strong><br \/>スライダー調整では、Adjustment Center を 0 に設定してください。現在のスライダー位置が上下の調整に使用されます。<br \/><br \/><strong>選択式調整: <\/strong><br \/>Adjustment Center を 0、または特定のマイクロ秒 (uS) 値に設定します。RC調整開始時に、1500uSからのスイッチ基準位置をオフセットしたい場合に使用します。<br \/><br \/><strong>ステップ調整: <\/strong><br \/>Adjustment Center を 0 に設定すると、調整対象の現在値が使用されます。<br \/><br \/><strong>絶対値調整: <\/strong><br \/>絶対値調整方式を使用するには、Adjustment Center と Adjustment Scale の両方を設定し、目的の値と範囲を指定する必要があります。範囲は【Center ± Scale】で計算されます。例えば、Adjustment Center を 50、Adjustment Scale を 25 に設定すると、範囲は 25〜75 となり、中央位置 (スイッチまたはPOT) は 50 に対応します。<br \/><br \/>詳細は <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのページ<\/a> を参照してください。",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "調整のスケーリング [倍率] または範囲を制御します。値を大きくすると、調整範囲または感度が増加します。<br \/><br \/><strong>スライダー調整: <\/strong><br \/>スライダー調整では、Adjustment Scale は調整の感度を制御します。50 に設定するとスライダー範囲の 50% で動作します。0 に設定するとデフォルトの感度が使用されます。<br \/><br \/><strong>選択式調整: <\/strong><br \/>選択式調整では、Adjustment Scale を0に設定するとデフォルト動作になります。範囲を制限したい場合は、マイクロ秒 (uS) 値を指定します。例：Adjustment Center を1000 (uS) 、Adjustment Scale を500 (uS) に設定すると、3ポジションスイッチを2ポジションスイッチとして使用できます。<br \/><br \/><strong>ステップ調整および絶対値調整: <\/strong><br \/>ステップ調整および絶対値調整では、Adjustment Scale は Adjustment Center の上下の範囲を定義します。例えば値を 25 に設定すると、Adjustment Center [または Adjustment Center が 0 の場合は現在値] を基準に ±25 の調整範囲になります。<br \/><strong>注意: <\/strong> ポテンショメータで絶対値調整方式を使用する場合、Adjustment Scale の値を設定する必要があります。<br \/><br \/>詳細は <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのページ<\/a> を参照してください。",
-        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "スロット1"
@@ -3449,9 +3424,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "この機能はDSHOT対応ESCのみで動作します。<br \/>お使いのESC (electric speed controller) がDSHOTプロトコルに対応していることを確認し $t(tabMotorTesting.message) タブで変更してください。"
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "モーター数は0です。<br \/>現在のミキサー設定を $t(tabMotorTesting.message) タブで確認するか、CLIを使ってカスタムミキサーとして設定してください。詳しくはこちらの<a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ<\/a>をご覧ください。"
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "ファームウェアを更新します。<br \/> 最新ファームウェア (Betaflight 4.3以降) を使用していることを確認してください。"
     },
@@ -3936,9 +3908,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "<span class=\"message-negative\">やらないで！<\/span> このファームフラッシャーを使用して、<strong>Betaflight 非対応<\/strong>のハードウェアへ書き込みはしないでください。<br \/><span class=\"message-negative\">やらないで！<\/span>書き込み中はコンピュータからFCボードを<strong>取り外したり<\/strong>、<strong>電源を切ったり<\/strong>しないでください。<br \/><br \/><strong>注: <\/strong><ul><li>STM32ブートローダーはROMに格納されているため、致命的な故障となることはありません。<\/li><li><span class=\"message-negative\">自動接続<\/span> は、ファームフラッシャー使用中は常に無効になります。<\/li><li>必ずバックアップを作成してください。アップグレード \/ ダウングレードによっては設定が消去される場合があります。<\/li><li>書き込みに問題がある場合は、まず <strong>FC からすべてのケーブルを取り外し<\/strong>、再起動やドライバの更新を試してください。<\/li><li>USBコネクタが基板に直接実装されているボード（近年の多くのFCボード）を書き込む場合は、Betaflightマニュアルの『USB Flashing』の章を確認し、正しいソフトウェアおよびドライバがインストールされていることを確認してください。<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。<\/li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。<\/li><li>BOOTピンをジャンパさせるか、またはBOOTボタンを長押ししてください。<\/li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません) <\/li><li>すべてのSTM32ドライバと、必要あればZadigをインストールします。(Betaflightマニュアルの [<a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a>] 章を参照) <\/li><li>Betaflight Appを一度閉じ、Appを再起動します。<\/li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。<\/li><li>正常なファームウェアをフラッシュしてください。(FCのボードのマニュアルに指定されている場合は、手動で伝送速度を調整してください) <\/li><li>電源をオフにします。<\/li>\n<li>BOOTピンのジャンパを取り外します。<\/li><li>電源をオンにします。(アクティビティLEDが点滅するはずです) <\/li><li>再度、通常通り接続してください。<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "ファームフラッシャーより退避"
@@ -4878,9 +4847,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Vbatサグ値補正 %"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲内で一定したスロットルおよびPID性能を提供します。<br \/><br \/>補正量は 0 ～ 100% の間で調整可能です。完全な補正 (100%) が推奨されます。<br \/><br \/>詳しくは<a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ<\/a>をご覧ください。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -6915,10 +6881,6 @@
     },
     "osdButtonSaved": {
         "message": "保存しました"
-    },
-    "vtxHelp": {
-        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">こちらのページ<\/a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">こちら<\/a>を参照)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">注目:<\/span> VTXが設定されていないかサポートされていません。フライトコントローラはTrampやSmartAudio等のプロトコルを使用してVTXと接続しており、必要に応じて、$t(tabPorts.message)タブで設定を修正する必要があります。",

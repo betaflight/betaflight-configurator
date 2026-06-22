@@ -57,44 +57,49 @@
                 </UiBox>
 
                 <!-- Edit Profile Dialog -->
-                <dialog ref="editDialogRef" class="profile-edit-dialog" @cancel="cancelEdit">
-                    <h3>{{ $t("titleEditProfile") }}</h3>
-                    <div class="profile-edit-form">
-                        <p>
-                            <label for="edit-name">{{ $t("labelName") }}</label>
-                            <input v-model="editForm.name" type="text" id="edit-name" name="name" />
-                        </p>
-                        <p>
-                            <label for="edit-address">{{ $t("labelAddress") }}</label>
-                            <input v-model="editForm.address" type="text" id="edit-address" name="address" />
-                        </p>
-                        <p>
-                            <label for="edit-country">{{ $t("labelCountry") }}</label>
-                            <input v-model="editForm.country" type="text" id="edit-country" name="country" />
-                        </p>
-                        <p>
-                            <label for="edit-avatar">{{ $t("labelAvatarUrl") }}</label>
-                            <input
-                                v-model="editForm.avatar"
-                                type="url"
-                                id="edit-avatar"
-                                name="avatar"
-                                :placeholder="$t('placeholderAvatarUrl')"
-                            />
-                        </p>
-                        <p v-if="editError" class="profile-edit-error" role="alert" aria-live="polite">
-                            {{ editError }}
-                        </p>
-                        <div class="buttons">
-                            <button type="button" class="regular-button" @click="saveProfileChanges">
-                                {{ $t("actionSave") }}
-                            </button>
-                            <button type="button" class="regular-button" @click="cancelEdit">
-                                {{ $t("cancel") }}
-                            </button>
+                <UModal
+                    :open="editOpen"
+                    :close="false"
+                    :dismissible="false"
+                    :title="$t('titleEditProfile')"
+                    :ui="{ overlay: 'z-3000', content: 'w-[90%] max-w-[600px] z-3001' }"
+                >
+                    <template #body>
+                        <div class="profile-edit-form">
+                            <p>
+                                <label for="edit-name">{{ $t("labelName") }}</label>
+                                <input v-model="editForm.name" type="text" id="edit-name" name="name" />
+                            </p>
+                            <p>
+                                <label for="edit-address">{{ $t("labelAddress") }}</label>
+                                <input v-model="editForm.address" type="text" id="edit-address" name="address" />
+                            </p>
+                            <p>
+                                <label for="edit-country">{{ $t("labelCountry") }}</label>
+                                <input v-model="editForm.country" type="text" id="edit-country" name="country" />
+                            </p>
+                            <p>
+                                <label for="edit-avatar">{{ $t("labelAvatarUrl") }}</label>
+                                <input
+                                    v-model="editForm.avatar"
+                                    type="url"
+                                    id="edit-avatar"
+                                    name="avatar"
+                                    :placeholder="$t('placeholderAvatarUrl')"
+                                />
+                            </p>
+                            <p v-if="editError" class="profile-edit-error" role="alert" aria-live="polite">
+                                {{ editError }}
+                            </p>
                         </div>
-                    </div>
-                </dialog>
+                    </template>
+                    <template #footer>
+                        <div class="flex justify-end gap-2 w-full">
+                            <UButton :label="$t('cancel')" variant="outline" @click="cancelEdit" />
+                            <UButton :label="$t('actionSave')" @click="saveProfileChanges" />
+                        </div>
+                    </template>
+                </UModal>
 
                 <!-- Token Section -->
                 <UiBox class="options col-span-3" :title="$t('sectionUserTokens')">
@@ -178,7 +183,7 @@ const profile = ref(null);
 const editForm = ref({ name: "", address: "", country: "", avatar: "" });
 const tokens = ref([]);
 const passkeys = ref([]);
-const editDialogRef = ref(null);
+const editOpen = ref(false);
 let userApi = null;
 let unsubscribeLogin = null;
 let unsubscribeLogout = null;
@@ -267,12 +272,12 @@ function startEdit() {
     editForm.value.country = profile.value.country || "";
     editForm.value.avatar = profile.value.avatar || "";
     editError.value = null;
-    editDialogRef.value?.showModal();
+    editOpen.value = true;
 }
 
 function cancelEdit() {
     editError.value = null;
-    editDialogRef.value?.close();
+    editOpen.value = false;
 }
 
 async function saveProfileChanges() {
@@ -297,7 +302,7 @@ async function saveProfileChanges() {
         profile.value.country = editForm.value.country;
         profile.value.avatar = editForm.value.avatar;
         gui_log(t("userProfileUpdateSuccess"));
-        editDialogRef.value?.close();
+        editOpen.value = false;
     } catch (error) {
         editError.value = `${t("userProfileUpdateFailed")}: ${error.message || error}`;
         gui_log(editError.value);
@@ -378,6 +383,28 @@ onUnmounted(() => {
 </script>
 
 <style lang="less">
+/* Edit-profile form lives in a teleported UModal, so these are global (not nested under .tab-user_profile) */
+.profile-edit-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.profile-edit-form input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid var(--surface-400);
+    border-radius: 4px;
+}
+.profile-edit-error {
+    color: var(--error-500);
+    font-size: 12px;
+    margin: 10px 0;
+    padding: 8px;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
 .tab-user_profile {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
@@ -414,51 +441,6 @@ onUnmounted(() => {
             min-width: 60px;
             display: inline-block;
         }
-    }
-
-    .profile-edit-dialog {
-        z-index: 1000;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        margin: 0;
-        width: 90%;
-        max-width: 600px;
-        max-height: 90vh;
-        overflow-y: auto;
-        border: 1px solid var(--surface-400);
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-
-        &::backdrop {
-            background: rgba(0, 0, 0, 0.5);
-        }
-    }
-
-    .profile-edit-form {
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 10px;
-            border: 1px solid var(--surface-400);
-            border-radius: 4px;
-        }
-    }
-
-    .profile-edit-error {
-        color: var(--error-500);
-        font-size: 12px;
-        margin: 10px 0;
-        padding: 8px;
-        background-color: rgba(255, 0, 0, 0.1);
-        border-radius: 4px;
     }
 
     .content_wrapper .data-loading {
