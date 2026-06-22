@@ -112,6 +112,9 @@
     "bluetoothConnectionError": {
         "message": "蓝牙错误： $1"
     },
+    "virtualMode": {
+        "message": "虚拟模式"
+    },
     "virtualMSPVersion": {
         "message": "仿真固件版本"
     },
@@ -417,6 +420,10 @@
     },
     "tabAutotune": {
         "message": "自动调参"
+    },
+    "tabBlackboxViewer": {
+        "message": "黑匣子浏览器",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
     "autotuneImportTitle": {
         "message": "黑匣子啁啾分析"
@@ -946,9 +953,6 @@
     "defaultHardwareHead": {
         "message": "硬件"
     },
-    "defaultHardwareText": {
-        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。请检查固件烧写器标签以获取完整的硬件列表。<br \/><br \/>有用的硬件工具\/驱动程序：<ul><li>对于使用 CP210x USB 转串口的旧硬件， 最新的 <b>CP210x 驱动器<\/b> 可以从 <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li>下载。最新的 <b>Zadig<\/b> Windows USB 驱动安装程序可以从 <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li><b>下载。ImpulseRC Driver Fixer<\/b> 可以从 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><\/ul>下载。"
-    },
     "defaultSoftwareHead": {
         "message": "软件"
     },
@@ -957,9 +961,6 @@
     },
     "defaultContributingHead": {
         "message": "参与开发"
-    },
-    "defaultContributingText": {
-        "message": "如果想协助 Betaflight 精益求精，您有很多途径可以提供帮助，包括：<br \/><ul><li>借助您对 Betaflight 的了解在<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">我们的 Wiki<\/a> 创建或更新内容，或者在我们的线上论坛回答他人的问题；<\/li><li>为固件和应用<a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">贡献代码<\/a>——新功能、修复、改进；<\/li><li>测试<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新功能、问题修复<\/a>以及提供反馈；<\/li><li>帮助解决其他用户汇报在<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">我们的问题跟踪器<\/a>的问题，并参与功能需求相关的讨论；<\/li><li>将 Betaflight 应用<a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻译<\/a>成新的语言，或是帮助维护现有的翻译。<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "我们还有一个 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小组<\/a>。<br \/>加入我们来一起讨论 Betaflight，询问配置问题，或者只是和飞行爱好者们闲聊。"
@@ -2593,9 +2594,6 @@
     "receiverModelId": {
         "message": "模型匹配 ID"
     },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">务必确保飞行器的失控保护正常工作！<\/a><\/strong><\/b>这需要开启专家模式后，在「失控保护」选项页设置。<br> &#8226; <b>请使用最新的发射器固件!<\/b><br> &#8226; 如果您使用 OpenTx 或 EdgeTx，在遥控器中<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">关闭硬件 ADC 滤波器<\/a><\/strong>。<br>基础设置：正确设置「接收机」选项。在您的遥控器中选择正确的“通道映射”。 检查横滚、俯仰以及其他的条形图都能正确地对应移动。调节遥控的通道端点或范围值为~1000 到 ~2000，同时将中点设置为 1500。更多相关信息，请阅读<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">相关文档<\/a><\/strong>。"
-    },
     "receiverFailsafeActiveTitle": {
         "message": "「失控保护」激活"
     },
@@ -2777,14 +2775,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "通过在快速油门操作变化时增加PID中的P值和I值，改进摇杆追踪，避免机头飘移的模式。",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode 允许在低油门时保持飞行器的姿态稳定。有关更多信息，请参阅 Betaflight.com 上的 <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> 。",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度保持<\/a> 使用外部传感器结合角度模式（自稳模式）主动调节飞行器的高度。",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "自动飞行模式启用自主飞行控制，同时使用高度保持模式和位置保持模式以维持稳定的悬停或沿着计划的路径飞行。",
@@ -3008,14 +2998,6 @@
     },
     "adjustmentsColumnAdjustmentScale": {
         "message": "比例（值|%）"
-    },
-    "adjustmentsCenterHelp": {
-        "message": "设置「调整」功能使用的中点或参考值。<br \/><br \/><strong>滑块调整:<\/strong><br \/>对于滑块调整, 「调整中心」将被设置为0。 当前滑块位置将用于向上\/向下调整。<br \/><br \/><strong>选区调整：<\/strong><br \/>设置「调整中心」为0，或者如果您想要在启动 RC 调整时从 1500uS 偏移切换的参考点，可将其设定为一个特定的微秒 (uS)值。<br \/><br \/><strong>步进调整：<\/strong><br \/>将调整中心设置为 0，以便使用被调整项目的当前值。<br \/><br \/><strong>绝对调整：<\/strong><br \/>要使用绝对调整，您必须同时设置「调整中心」和「比率」，以指定所需的值和范围。 范围计算为：中心 ± 比率。 例如，将「调整中心」设定为50，「调整比率」设定为25在中心位置（开关或POT）映射到50时会得到25至75的范围。<br \/><br \/>访问<a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">本页<\/a>获取更多信息。",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "控制「调整」的比率或范围；较高的数值增加调整范围或灵敏度。<br \/><br \/><strong>滑块调整:<\/strong><br \/>对于滑块调整, 「调整比率」控制调整的大小\/灵敏度。50 等于滑块范围的 50%。设置为 0 将使用滑块的默认比率。<br \/><br \/><strong>选区调整：<\/strong><br \/>对于选区调整，默认设置「调整比率」为 0，或者指定微秒(uS)值来限制范围。例如：将「调整中心」设为 1000(uS) 和「调整比例」设为 500(uS) 以把一个 3 段开关用作一个 2 段开关。<br \/><br \/><strong>步进和绝对调整：<\/strong><br \/>对于步进和绝对调整， 「调整比率」定义了「调整中心」以上和以下的范围。 例如，25 的值将从「调整中心」产生 ±25 的调整范围。如果「调整中心」设为 0 则将当前值作为中心。<br \/><strong>注意：<\/strong> 必须设置一个「调整比率」值以在绝对调整中使用电位器。<br \/><br \/>访问 <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">本页<\/a>获取更多信息。",
-        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "滑槽 1"
@@ -3760,9 +3742,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "该功能只适用于 DSHOT 电调。<br \/>验证您的电调（电子调速器）是否支持 DSHOT 协议，并在「$t(tabMotorTesting.message)」选项页内更改。"
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "电机数为 0。<br \/>在「 $t(tabMotorTesting.message) 」选项页核实当前混控器，或通过命令行设置一个自定义混控器。参见此 <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 页面<\/a>。"
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "更新固件。<br \/> 请确保您正在使用最新的固件：Betaflight 4.3或更高版本。"
     },
@@ -4279,9 +4258,6 @@
     "firmwareFlasherRecoveryHead": {
         "message": "恢复\/丢失通信"
     },
-    "firmwareFlasherRecoveryText": {
-        "message": "如果您与飞控板断开连接，您可以按照如下步骤来恢复：<ul><li>断电<\/li><li>，启用「无重启序列」、启用「全盘擦除」。<\/li><li>短接 BOOT 引脚，或者按住 BOOT 按键。<\/li><li>上电(如果操作正确，飞控的「活动」灯不会闪烁)。<\/li><li>如果有必要，安装完整 STM32 驱动和 Zadig（参阅 Betaflight 手册<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> 部分）。<\/li><li>关闭此应用，并重新打开。<\/li><li>如果存在 BOOT 按钮，将原本按住的 BOOT 按键松开。<\/li><li>烧写正确的固件（使用飞控制造商所规定的波特率）。<\/li><li>断电。<\/li><li>移除 BOOT 引脚的短接。<\/li><li>上电（飞控「活动」灯应该会闪烁）。<\/li><li>正常连接。<\/li><\/ul>"
-    },
     "firmwareFlasherRecoveryShort": {
         "message": "如果您丢失了通信：关闭电源，开启无重启序列和全芯片擦除，短接 BOOT 引脚，然后上电。 如需要请安装驱动程序。"
     },
@@ -4332,6 +4308,30 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "保存 UF2（到闪存）失败"
+    },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "正在连接到 ESP32 bootloader……"
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "检测到 $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "正在刷写 ESP32……"
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "刷写结束，正在重新启动……"
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "已成功刷写 ESP32"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "ESP32 刷写失败: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32 刷入需要浏览器 (Web 串口) 编译"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "刷写 ESP32 之前选择一个串口"
     },
     "firmwareFlasherClickToConnectDfu": {
         "message": "点击连接到 DFU 设备"
@@ -5261,9 +5261,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "电池压降补偿 %"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "提供一致的油门和 PID 性能，即使在电池电压可用范围内，通过在电池电压下降时增加电机输出来实现。<br \/><br \/>\n补偿量可以在 0% 到 100% 之间调整。建议使用完全补偿（100%）。<br \/><br \/>\n有关更多信息，请访问 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">此 Wiki 条目<\/a>。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -7313,10 +7310,6 @@
     "osdButtonSaved": {
         "message": "已保存"
     },
-    "vtxHelp": {
-        "message": "这里可以定义图传 (VTX) 用到的值。如果飞控和图传支持，您可以查看和修改发射参数，包括图传表在内。<br>按以下步骤设置您的图传：<br>1. 打开<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">这个<\/a>页面；<br>2. 找到并下载适合您图传型号和所在地区的图传配置文件；<br>3. 点击下方「$t(vtxButtonLoadFile.message)」，选择并加载图传配置文件；<br>4. 确认设置项都正确；<br>5. 点击「$t(vtxButtonSave.message)」将图传设置保存到飞控。<br>6. （可选）点击「$t(vtxButtonSaveLua.message)」保存 Lua 配置文件供 Betaflight Lua 脚本使用。（在<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">这里<\/a>查看更多。）",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">注意:<\/span>您的图传未配置或不支持。所以您不能在此修改图传值。只有当图传使用Tramp或SmartAudio等协议，连接到飞行控制器，并在$t(tabPorts.message)页面中正确配置后，才可以使用。",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -8348,6 +8341,38 @@
     "mspCliFirmwareTooOld": {
         "message": "此操作需要 Betaflight 固件版本 {{required}} 或更新（当前连接的版本是 {{current}}）。在继续前请升级您的飞控固件。",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "恢复备份",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "恢复刷写前的备份",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "此操作将会恢复刷写前保存的配置备份。要继续吗？",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "配置备份已成功恢复。",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "配置备份已恢复，跳过了{{count}} 行。",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "恢复失败：{{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "无法连接到飞控以恢复。",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "无可用于恢复的备份。",
+        "description": "Error message when no backup data is cached for restore"
     },
     "presetsLoadingDumpAll": {
         "message": "从飞控加载当前配置",

@@ -2130,14 +2130,6 @@
         "message": "Der Flugmodus erhöht P und I bei schnellen Gasbewegungen, um die Knüppelnachführung zu verbessern und ein Abdriften der Nase bei schnellen Gaswechseln zu vermeiden.",
         "description": "Help text to ANTIGRAVITY mode"
     },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode ermöglicht Stabilität für das Fluggerät, selbst bei geringem Schub. Weitere Informationen befinden sich auf Betaflight.com unter <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a>.",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> sorgt für eine stabile Flughöhe Mithilfe von externen Sensoren und stabilisiert das Fluggerät gemeinsam mit Angle Mode.",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Piepser aktivieren - nützlich zum Auffinden eines abgestürzten Fluggerätes",
         "description": "Help text to BEEPER mode"
@@ -2771,9 +2763,6 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Diese Funktion funktioniert nur mit DSHOT ESCs.<br \/>Stelle sicher, dass der ESC (electric speed controller) das DSHOT Protokoll unterstützt, wählen dieses Protokoll im $t(tabMotorTesting.message) Fenster aus."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Anzahl Motoren ist 0. <br \/>Prüfe den aktuellen Mixer auf der Registerkarte $t(tabMotorTesting.message) oder richte einen benutzerdefinierten Mixer über CLI ein. Siehe auch diese <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-Seite<\/a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Firmware aktualisieren.<br \/>Stelle sicher, dass du die neueste Firmware verwendest: Betaflight 4.3 oder neuer."

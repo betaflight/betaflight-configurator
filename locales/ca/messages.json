@@ -116,6 +116,9 @@
     "bluetoothConnectionError": {
         "message": "Error Bluetooth: $1"
     },
+    "virtualMode": {
+        "message": "Mode virtual"
+    },
     "virtualMSPVersion": {
         "message": "Versió de microprogramari virtual"
     },
@@ -966,9 +969,6 @@
     "defaultHardwareHead": {
         "message": "Maquinari"
     },
-    "defaultHardwareText": {
-        "message": "L'aplicació admet tot el maquinari que pot executar Betaflight. Consulteu la pestanya \"Microsoftware flasher\" per obtenir la llista completa del maquinari.<br \/><br \/>Utilitats\/controladors de maquinari útils:<ul><li>Per al maquinari antic que utilitza un xip USB CP210x, els <b>controladors CP210x<\/b> més recents es poden descarregar des de <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li>La instal·lació més recent del controlador USB de <b>Zadig<\/b> per a Windows es pot descarregar des de <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> es pot descarregar <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><\/ul>"
-    },
     "defaultSoftwareHead": {
         "message": "Programari"
     },
@@ -977,9 +977,6 @@
     },
     "defaultContributingHead": {
         "message": "Contribuir"
-    },
-    "defaultContributingText": {
-        "message": "Si voleu ajudar a millorar encara més Betaflight, podeu col·laborar de moltes maneres, com ara:<br \/><ul><li>utilitzant els vostres coneixements de Betaflight per crear o actualitzar contingut a la <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki<\/a> o responent preguntes d'altres usuaris en fòrums en línia;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuint amb codi<\/a> al firmware i a l'aplicació: noves funcions, correccions, millores;<\/li><li>provant <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">noves funcions i correccions<\/a> i proporcionant comentaris;<\/li><li>ajudant altres usuaris a resoldre els problemes que informen a <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">el nostre seguiment d'incidències<\/a> i participar en debats sobre sol·licituds de funcions;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduir<\/a> l'aplicació Betaflight a un nou idioma o ajudar a mantenir les traduccions existents.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "També tenim un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Grup de Facebook<\/a>. <br \/>Uneix-te a nosaltres per obtenir un lloc on parlar de Betaflight, fer preguntes de configuració o simplement passar una estona amb altres pilots."
@@ -2625,9 +2622,6 @@
     "receiverModelId": {
         "message": "Identificador del model de coincidència"
     },
-    "receiverHelp": {
-        "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comproveu sempre que el vostre Failsafe funciona correctament!<\/a><\/strong><\/b> La configuració es troba a la pestanya Failsafe, que requereix el mode expert.<br> &#8226; <b>Utilitzeu el darrer microprogramari Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactiva el filtre ADC de maquinari< \/a><\/strong> al transmissor si feu servir OpenTx o EdgeTx.<br>Configuració bàsica: configureu correctament la configuració del \"Receptor\". Trieu el \"Mapa de canals\" correcte per a la vostra ràdio. Comproveu que els gràfics de Roll, Pitch i altres barres es mouen correctament. Ajusteu el punt final del canal o els valors d'interval al transmissor entre ~1000 i ~2000 i configureu el punt mitjà en 1500. Per obtenir més informació, llegiu la <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener \nnoreferrer\">documentació<\/a><\/strong>."
-    },
     "receiverFailsafeActiveTitle": {
         "message": "Failsafe actiu"
     },
@@ -2813,14 +2807,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "El mode de vol augmenta el termini P i I durant els moviments ràpids de l'accelerador per millorar el seguiment del pal i evitar la deriva del nas en els canvis ràpids de l'accelerador",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode permet mantindre l'estabilitat del quad a baixas revolucions. per més informació veure <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> a Betaflight.com.",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> regula activamente la altitud de la aeronave utilizando sensores externos combinados con el modo de ángulo (modo estable).",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "El mode de pilot automàtic permet el control de vol autònom, combinant el manteniment de l'altitud i el manteniment de la posició per mantenir una posició estacionària estable o seguir una trajectòria de vol planificada.",
@@ -3044,14 +3030,6 @@
     },
     "adjustmentsColumnAdjustmentScale": {
         "message": "escala (val.|%)"
-    },
-    "adjustmentsCenterHelp": {
-        "message": "Estableix el punt mitjà o valor de referència utilitzat per la funció d'ajust.<br \/><br \/><strong>Ajustaments del control lliscant:<\/strong><br \/>Per als ajustos del control lliscant, configureu el Centre d'ajust a 0. La posició actual del control lliscant s'utilitzarà per a l'ajust amunt\/avall.<br \/><br \/><strong>Ajustaments de selecció:<\/strong><br \/>Configureu el Centre d'ajust a 0 o a un valor específic de microsegons (uS) si voleu compensar el punt de referència del commutador de 1500uS en iniciar l'ajust RC.<br \/><br \/><strong>Ajustaments esglaonats:<\/strong><br \/>Configureu el Centre d'ajust a 0 perquè s'utilitzi el valor actual de l'element que s'està ajustant.<br \/><br \/><strong>Ajustaments absoluts:<\/strong><br \/>Per utilitzar el mètode d'ajust absolut, heu de definir tant el Centre d'ajust com l'Escala per especificar el valor i l'interval desitjats. L'interval es calcula com a: Centre ± Escala. Per exemple, si configureu el Centre d'ajustament a 50 i l'Escala d'ajustament a 25, es crea un interval de 25 a 75, amb la posició central (interruptor o POT) assignada a 50.<br \/><br \/>Visiteu <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta pàgina<\/a> per obtenir més informació.",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "Controla l'escala o el rang de l'ajust; els valors més alts augmenten el rang d'ajust o la sensibilitat.<br \/><br \/><strong>Ajustaments del control lliscant:<\/strong><br \/>Per als ajustos del control lliscant, l'escala d'ajust controla l'escala\/sensibilitat de l'ajust. Un valor de 50 equival al 50% del rang del control lliscant. Si s'estableix a 0, s'utilitza l'escala predeterminada per als controls lliscants.<br \/><br \/><strong>Ajustaments de selecció:<\/strong><br \/>Per als ajustos de selecció, definiu l'escala d'ajust a 0 per al comportament predeterminat o especifiqueu un valor de microsegons (uS) per limitar el rang. Per exemple: definiu el centre d'ajust a 1000 (uS) i l'escala d'ajust a 500 (uS) per utilitzar un interruptor de 3 posicions com a interruptor de 2 posicions.<br \/><br \/><strong>Ajustaments esglaonats i absoluts:<\/strong><br \/>Per als ajustos esglaonats i absoluts, l'escala d'ajust defineix el rang per sobre i per sota del centre d'ajust. Per exemple, un valor de 25 crea un rang d'ajust de ±25 a partir del valor del Centre d'ajust, o a partir del valor actual si el Centre d'ajust està definit a 0.<br \/><strong>Nota:<\/strong> Per utilitzar el mètode d'ajust absolut amb un potenciòmetre, cal especificar un valor d'escala d'ajust.<br \/><br \/>Visiteu <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta pàgina<\/a> per obtenir més informació.",
-        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "Slot 1"
@@ -3808,9 +3786,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "La funció només funciona amb DSHOT ESC.<br \/>Verifiqueu que el vostre ESC (controlador de velocitat elèctric) admeti el protocol DSHOT i canvieu-lo a la pestanya $t(tabMotorTesting.message)."
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "El nombre de motors és 0.<br \/>Verifiqueu el mesclador actual a la pestanya $t(tabMotorTesting.message) o configureu-ne un de personalitzat mitjançant CLI. Consulteu aquesta <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Pàgina Wiki<\/a>."
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualitzeu el microprogramari.<br \/> Assegureu-vos que utilitzeu el microprogramari més recent: Betaflight 4.3 o posterior."
     },
@@ -4327,9 +4302,6 @@
     "firmwareFlasherRecoveryHead": {
         "message": "Recuperació \/ Comunicació perduda"
     },
-    "firmwareFlasherRecoveryText": {
-        "message": "Si heu perdut la comunicació amb la placa, seguiu aquests passos per restaurar-la:<ul><li>Apagueu l'alimentació<\/li><li>Activeu \"Sense seqüència de reinici\", activeu \"Esborrat complet del xip\".<\/li><li>Connecteu els pins BOOT o manteniu premut el botó BOOT.<\/li><li>Enceneu-lo (el LED d'activitat NO parpellejarà si es fa correctament).<\/li><li>Instal·leu tots els controladors STM32 i Zadig si cal (vegeu la secció <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash USB<\/a> del manual de Betaflight).<\/li><li>Tanqueu l'aplicació i reinicieu-la.<\/li><li>Deixeu anar el botó BOOT si el vostre FC en té un.<\/li><li>Flash amb el firmware correcte (utilitzant la velocitat de baud manual si s'especifica al manual del vostre FC).<\/li><li>Apagueu l'alimentació.<\/li><li>Traieu el jumper BOOT.<\/li><li>Enceneu-lo (el LED d'activitat hauria de flaix).<\/li><li>Connecta't normalment.<\/li><\/ul>"
-    },
     "firmwareFlasherRecoveryShort": {
         "message": "Si heu perdut la comunicació: apagueu l'ordinador, activeu No Reboot Sequence i Full Chip Erase, connecteu els pins BOOT a un pont i, a continuació, engegueu-lo. Instal·leu els controladors si cal."
     },
@@ -4380,6 +4352,30 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "Error en guardar (Flaix) UF2"
+    },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "Connectant al gestor d'arrencada del ESP32..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "Detectat $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "Flashejant ESP32..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "Flaix complet, reiniciant..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "ESP32 flashejat correctament"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "Fallada de flasheig d'ESP32: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "El flasheig de l'ESP32 requereix la compilació del navegador (Web Serial)"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "Seleccioneu un port sèrie abans de flashejar l'ESP32"
     },
     "firmwareFlasherClickToConnectDfu": {
         "message": "Feu clic per connectar el dispositiu DFU"
@@ -5309,9 +5305,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Compensació de baixada de Vbat %"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Ofereix un rendiment constant de l'acceleració i el PID en l'interval de tensió de la bateria utilitzable augmentant la sortida del motor a mesura que cau la tensió de la bateria.<br \/><br \/>La quantitat de compensació es pot variar entre 0 i 100%. Es recomana una compensació total (100%).<br \/><br \/>Visiteu <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/4-2-Tuning-Notes#dynamic-battery-sag-compensation \"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki<\/a> per a més informació."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -7365,10 +7358,6 @@
     "osdButtonSaved": {
         "message": "Desat"
     },
-    "vtxHelp": {
-        "message": "Aquí podeu configurar els valors del vostre transmissor de vídeo (VTX). Podeu veure i canviar els valors de transmissió, incloses les taules VTX, si el controlador de vol i el VTX ho admeten.<br>Per configurar el vostre VTX, seguiu els passos següents:<br>1. Aneu a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-tables\">aquesta<\/a> pàgina;<br>2. Trobeu el fitxer de configuració VTX adequat per al vostre país i el vostre model VTX i descarregueu-lo;<br>3. Feu clic a \"$t(vtxButtonLoadFile.message)\" a continuació, seleccioneu el fitxer de configuració VTX, carregueu-lo;<br>4. Comproveu que la configuració sigui correcta;<br>5. Feu clic a \"$t(vtxButtonSave.message)\" per emmagatzemar la configuració de VTX al controlador de vol.<br>6. Opcionalment, feu clic a \"$t(vtxButtonSaveLua.message)\" per desar un fitxer de configuració lua que podeu utilitzar amb els scripts lua betaflight (vegeu més <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github. com\/betaflight\/betaflight-tx-lua-scripts\/\">aquí<\/a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atenció:<\/span> El vostre VTX no està configurat o no és compatible. Per tant, no podeu modificar els valors VTX d'aquí. Això només serà possible si el controlador de vol està unit a la VTX mitjançant algun protocol com Tramp o SmartAudio i està configurat correctament a la pestanya $t(tabPorts.message) si es necessita.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -8400,6 +8389,38 @@
     "mspCliFirmwareTooOld": {
         "message": "Aquesta acció requereix el programari de Betaflight {{required}} o més recent (actualment connectat a {{current}}). Actualitzeu el programari del controlador de vol abans de continuar.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Restaurar còpia de seguretat",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Restaurar pre-flash de seguretat",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "Això restaurarà la còpia de seguretat de la configuració feta abans del flasheig. Voleu continuar?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Configuració de seguretat restaurada correctament.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Còpia de seguretat de la configuració restaurada, s'han omès {{count}} línia(es).",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Restauració fallida: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "No s'ha pogut connectar a la controladora per a la restauració.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "No hi ha cap còpia de seguretat disponible per restaurar.",
+        "description": "Error message when no backup data is cached for restore"
     },
     "presetsLoadingDumpAll": {
         "message": "S'està carregant la configuració actual des de la controladora de vol",

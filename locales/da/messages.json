@@ -54,7 +54,7 @@
         "message": "Din hardware understøtter ikke denne handling."
     },
     "storageDeviceNotReady": {
-        "message": "Lagerenheden er ikke klar. Ved microSD-kort skal du sørge for, at det er korrekt genkendt af din flight controller."
+        "message": "Lagerenheden er ikke klar. Ved microSD-kort skal du sørge for, at det er korrekt genkendt af din FC."
     },
     "connect": {
         "message": "Tilslut konfigurering"
@@ -116,6 +116,9 @@
     "bluetoothConnectionError": {
         "message": "Bluetooth fejl: $1"
     },
+    "virtualMode": {
+        "message": "Virtuel tilstand"
+    },
     "virtualMSPVersion": {
         "message": "Virtuel Firmware version"
     },
@@ -129,6 +132,10 @@
     "connectVirtual": {
         "message": "Forbind (Virtuel)",
         "description": "Connect button label shown when virtual mode port is selected."
+    },
+    "connectManualDescription": {
+        "message": "For oprettelse af forbindelse, angiv seriel sti eller URL.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
     "autoConnect": {
         "message": "Autotilslut"
@@ -397,7 +404,7 @@
         "message": "Accelerometer er ikke kalibreret. Kalibrér venligst inden flyvning."
     },
     "sensorConfigMagNeedsCalibration": {
-        "message": "Kompas kalibering offset er nul, Kalibrer for at få præcis kurs."
+        "message": "Kompas kalibering offset er nul, Kalibrer for at få præcis retning."
     },
     "sensorConfigCalibrate": {
         "message": "Kalibrer"
@@ -439,6 +446,9 @@
     "autotuneSelectingFile": {
         "message": "Vælg fil..."
     },
+    "autotuneAnalyzing": {
+        "message": "Analyserer chirp data..."
+    },
     "autotuneBandwidth": {
         "message": "Båndbredde"
     },
@@ -450,6 +460,27 @@
     },
     "autotuneApplying": {
         "message": "Anvender..."
+    },
+    "autotuneApplied": {
+        "message": "Forstærkninger anvendt og gemt."
+    },
+    "autotuneApplyFailed": {
+        "message": "Kunne ikke anvende forstærkninger"
+    },
+    "autotuneConnectRequired": {
+        "message": "Tilslut FC for at anvende forstærkninger."
+    },
+    "autotuneNoLogs": {
+        "message": "Fandt ikke gyldige blackbox-logs i denne fil."
+    },
+    "autotuneNoChirpData": {
+        "message": "Fandt ikke CHRIP data. Sørg for, at loggen blev optaget med debug_mode = CHIRP og CHRIP tilstand blev aktiveret."
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} prøver"
+    },
+    "autotuneSampleRate": {
+        "message": "Prøve frekvens: {{rate}} Hz"
     },
     "autotuneImportAnother": {
         "message": "Importer anden fil"
@@ -481,6 +512,9 @@
     "autotuneSectionAnalysis": {
         "message": "Analyser"
     },
+    "autotuneSliderMasterMultiplier": {
+        "message": "Generel forstærkning"
+    },
     "autotuneSliderPIGain": {
         "message": "P \/ I forstærkning"
     },
@@ -490,8 +524,20 @@
     "autotuneSliderDGain": {
         "message": "D forstærkning"
     },
+    "autotuneSliderDTermFilter": {
+        "message": "D Term filter"
+    },
     "autotuneApplyFromAxis": {
         "message": "Anvend forstærkning fra akser"
+    },
+    "autotuneRiseTime": {
+        "message": "Tid for stigning"
+    },
+    "autotuneSettlingTime": {
+        "message": "Tid for udjævning"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "Spektrogram (Gyro)"
     },
     "tabReceiver": {
         "message": "Modtager"
@@ -652,7 +698,7 @@
         "message": "Sletter..."
     },
     "stm32Flashing": {
-        "message": "Flasher..."
+        "message": "Brænder..."
     },
     "stm32Verifying": {
         "message": "Verificerer..."
@@ -721,7 +767,7 @@
         "message": "<strong>der er ikke valgt en motor protokol<\/strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>accelerometeret er aktiveret, men er ikke kalibreret<\/strong>.<br>Hvis du planlægger at bruge accelerometer, så følg venligst instruktionerne for '$t(initialSetupButtonCalibrateAccel.message)' på fanen '$t(tabSetup.message)' . Hvis en funktion, der kræver accelerometeret (automatisk niveau, GPS redning, . .) aktiveres, vil motor aktivering ikke aktiveres, før accelerometeret er kalibreret.<br>Hvis du ikke bruger accelerometeret anbefales det, at du deaktiverer det i '$t(configurationSystem.message)' på fanen '$t(tabConfiguration.message)'."
+        "message": "<strong>accelerometeret er aktiveret, men er ikke kalibreret<\/strong>.<br>Hvis du planlægger at bruge accelerometer, så følg venligst instruktionerne for '$t(initialSetupButtonCalibrateAccel.message)' på fanen 'Sensorer' . Hvis en funktion, der kræver accelerometeret (automatisk niveau, GPS redning, . .) aktiveres, vil motor aktivering ikke aktiveres, før accelerometeret er kalibreret.<br>Hvis du ikke bruger accelerometeret anbefales det, at du deaktiverer det i '$t(configurationSystem.message)' på fanen '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -881,7 +927,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "Programmet understøtter hardware, der kan køre Betaflight. Tjek fanen Brænd firmware, for liste over kompatibel hardware.<br \/><br \/>Nyttige hardware værktøjer \/ drivere:<ul><li>For ældre hardware kan du have brug for den seneste CP210x USB driver til seriel chip <b>CP210x drivere<\/b> kan hentes fra <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li>Den seneste <b>Zadig<\/b> til Windows USB driverinstallation kan hentes fra <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> kan hentes <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><\/ul>"
+        "message": "Programmet understøtter hardware, der kan køre Betaflight. Tjek fanen Brænd firmware, for liste over kompatibel hardware.<br \/><br \/>Nyttige hardware værktøjer \/ drivere:<ul><li>For ældre hardware kan du have brug for den seneste CP210x USB driver til seriel chip <b>CP210x drivere<\/b> kan hentes fra <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li>Den seneste <b>Zadig<\/b> til Windows USB driverinstallation kan hentes fra <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> kan hentes <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><\/ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -981,7 +1027,7 @@
         "message": "Bevæg indenfor 30 sek. dronen <strong>360<\/strong> grader i alle dens rotationsakser"
     },
     "initialSetupButtonCalibratingText": {
-        "message": "Kalibrerér..."
+        "message": "Kalibrerer..."
     },
     "initialSetupButtonReset": {
         "message": "Nulstil indstillinger"
@@ -1018,7 +1064,7 @@
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMagHeading": {
-        "message": "Kompas kurs:",
+        "message": "Kompas retning:",
         "description": "Heading value shown on Setup tab when magnetometer is active"
     },
     "initialSetupMixerHead": {
@@ -1100,6 +1146,9 @@
     },
     "initialSetupCpuLoad": {
         "message": "CPU belastning:"
+    },
+    "initialSetupLoopTime": {
+        "message": "Loop hastighed:"
     },
     "initialSetupCpuTemp": {
         "message": "CPU temperatur:"
@@ -1213,7 +1262,7 @@
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
-        "message": "Accelerometerkalibrering er stadig i gang",
+        "message": "Accelerometer kalibrering er stadig i gang",
         "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
@@ -1383,10 +1432,10 @@
         "message": "$1 grad"
     },
     "initialSetupAccelCalibStarted": {
-        "message": "Accelerometerkalibrering startet"
+        "message": "Accelerometer kalibrering startet"
     },
     "initialSetupAccelCalibEnded": {
-        "message": "Accelerometerkalibrering <span class=\"message-positive\">færdig<\/span>"
+        "message": "Accelerometer kalibrering <span class=\"message-positive\">færdig<\/span>"
     },
     "initialSetupMagCalibStarted": {
         "message": "Kompas kalibrering startet"
@@ -1582,7 +1631,7 @@
         "message": "ESC-\/Motorfunktioner"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Bemærk:<\/strong> Ikke alle kombinationer af funktioner fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de uden videre.<br \/><strong>Bemærk:<\/strong> Opsæt porte og andet <span class=\"message-negative\">inden<\/span> aktivering af funktioner , på fanen Porte."
+        "message": "<strong>Bemærk:<\/strong> Opsæt porte og andet <span class=\"message-negative\">inden<\/span> aktivering af funktioner , på fanen Porte. Ikke alle kombinationer af funktioner fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de uden videre."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; UART til modtageren skal indstilles til ‘Serial Rx’ (i fanen <i>Porte<\/i>)<br>&#8226; Vælg den korrekte leverandør protokol i rullemenu"
@@ -1714,7 +1763,7 @@
         "message": "Aktiveret"
     },
     "configurationArmingHelp": {
-        "message": "Visse Tilkoblingsfunktioner kan kræve aktivt accelerometer"
+        "message": "Visse funktioner til Aktivering af FC kan kræve aktivt accelerometer"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motorretning er vendt om"
@@ -1823,10 +1872,10 @@
         "message": "Bip, når aux-kanal er sat til at bippe"
     },
     "beeperACC_CALIBRATION": {
-        "message": "Bekræftelse for Accelerometer flyvekalibrering afsluttet"
+        "message": "Bekræftelse af at Accelerometer kalibrering er afsluttet"
     },
     "beeperACC_CALIBRATION_FAIL": {
-        "message": "Mislykket Accelerometer flyvekalibrering"
+        "message": "Mislykket Accelerometer kalibrering"
     },
     "beeperREADY_BEEP": {
         "message": "Afgiv ringetone, når GPS er låst og klar"
@@ -2149,7 +2198,7 @@
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
-        "message": "Dynamiskdæmpning",
+        "message": "Dynamisk dæmpning",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
@@ -2533,6 +2582,12 @@
     "receiverHelp": {
         "message": "Grundliggende opsætning: Indstil 'Modtager' konfiguration, evt også Kanalkort, for din radio. Kontroller at krængror, højderor, gas, sideror og andre kanaler bevæger sig som ønsket. Justér i radio, kanalens endepunkt eller intervalværdier til ~1000 til ~2000, og sæt midtpunktet til 1500. For mere information, læs <strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">dokumentationen<\/a><\/strong>.<br>&#8226;  <b><strong><a href=\\\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !<\/a><\/strong><\/b> Indstillingerne på fanen Fejlsikring, kræver at App er i eksperttilstand (se under Indstillinger).<br> &#8226; <b>Kontroller, at du har den seneste firmware i din radio  !<\/b>&nbsp<strong><a href=\\\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Deaktiver altid ADC filter<\/a><\/strong> i radioen, hvis du bruger fx OpenTx eller EdgeTx."
     },
+    "receiverFailsafeActiveTitle": {
+        "message": "Fejlsikring er aktiv"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "FC er i fejlsikring tilstand. De kanalværdier, der vises nedenfor, er fejlsikre output, ikke de værdier, der kommer fra din radio. Tjek dit modtagerlink og indstillinger af fejlsikring."
+    },
     "receiverThrottleMid": {
         "message": "Gas MID"
     },
@@ -2714,11 +2769,11 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode tilstand giver mulighed for at opretholde fartøjets stabilitet ved lav gas. Se venligst <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> på Betaflight.com.",
+        "message": "AirMode tilstand giver mulighed for at opretholde fartøjets stabilitet ved lav gas. Se venligst <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> på Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Hold højde<\/a> regulerer fartøjets højde vha. eksterne sensorer kombineret med Vinkeltilstand (Stabil tilstand).",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Hold højde<\/a> regulerer fartøjets højde vha. eksterne sensorer kombineret med Vinkeltilstand (Stabil tilstand).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
@@ -2938,6 +2993,12 @@
     "adjustmentsModeSelection": {
         "message": "Valg"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "midtpunkt (værdi)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "skala (værdi|%)"
+    },
     "adjustmentsCenterHelp": {
         "message": "Angiver referencepunktet (midtpunktet) for justeringsfunktionen.<br \/><br \/><strong>Slider-justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0. Den aktuelle slider-position bruges derefter til at justere værdien op eller ned.<br \/><br \/><strong>Valg-justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0, eller angiv en specifik værdi i mikrosekunder (uS) hvis switchens referencepunkt skal forskydes fra standarden på 1500uS.<br \/><br \/><strong>Trinvis justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0 for at bruge den aktuelle værdi som udgangspunkt for justeringen.<br \/><br \/><strong>Absolut justering<\/strong><br \/>For absolut justering skal både <strong>Adjustment Center<\/strong> og <strong>Scale<\/strong> angives.<br \/>Justeringsområdet beregnes som: <strong>Center ± Scale<\/strong>.<br \/>Eksempel: Center = 50 og Scale = 25 giver området <strong>25–75<\/strong>, hvor midterpositionen på switch\/POT svarer til 50.<br \/><br \/>Se <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight In-flight Adjustments<\/a> for flere detaljer.",
         "description": "Tooltip help text for the Adjustment Center column"
@@ -3061,7 +3122,7 @@
         "message": "LED lysstyrke "
     },
     "adjustmentsFunction32": {
-        "message": "Generel multiplikator"
+        "message": "Generel forstærkning"
     },
     "adjustmentsFunction33": {
         "message": "Vælg batteri profil",
@@ -3327,6 +3388,10 @@
     "flightPlanDelayDuration": {
         "message": "Hold varighed <span class=\"units\">min<\/span>"
     },
+    "flightPlanDelayDurationAria": {
+        "message": "Forsinkelses varighed i minutter",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
     "flightPlanPattern": {
         "message": "Hold mønster"
     },
@@ -3398,6 +3463,12 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "Ugyldig længdegrad (skal være mellem -180 og 180)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "Ugyldig højde (skal være nul eller positiv)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "Ugyldig varighed (skal være nul eller positiv)"
     },
     "flightPlanConfirmDelete": {
         "message": "Er du sikker på, at du vil slette dette vejpunkt?"
@@ -3677,9 +3748,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funktionen fungerer kun med DSHOT ESC'er.<br \/>Kontroller, at din ESC understøtter Dshot protokol og sæt protokol på fanen $t(tabMotorTesting.message)."
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Antallet af motorer er 0.<br \/>Kontroller den aktuelle Mix på fanen $t(tabMotorTesting.message), eller brug et tilpasset mix via CLI. Se denne <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side<\/a>."
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Opdater firmwaren.<br \/> Sørg for at du bruger den seneste firmware: Betaflight 4.3 eller nyere."
     },
@@ -3701,8 +3769,14 @@
     "sensorsRefresh": {
         "message": "Opfrisk:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Opdater alle:"
+    },
     "sensorsScale": {
         "message": "Skala:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Automatisk"
     },
     "sensorsGyroSelect": {
         "message": "Gyroskop"
@@ -4184,11 +4258,17 @@
     "firmwareFlasherWarningText": {
         "message": "Du bør <span class=\"message-negative\">ikke<\/span> forsøge at brænde <strong>ikke-Betaflight \/ kompatibel<\/strong> hardware med denne firmware brænder.<br \/>Du må <span class=\"message-negative\">ikke<\/span> <strong>frakoble<\/strong> FC eller <strong>slukke<\/strong> din pc under brænding.<br \/><br \/><strong>Bemærk:<\/strong><ul style=\"margin-top: 2px;\"><li>STM32 bootloader er gemt i ROM og kan derfor ikke ændres.<\/li><li><span class=\"message-negative\">Autotilslut<\/span> er altid deaktiveret, mens du brænder firmware.<\/li><li>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger\/nedgraderinger vil slette hele\/ændre dele af din konfiguration.<\/li><li>Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC<\/strong>, prøv genstart, prøv at genindstallere\/opgradere drivere.<\/li><li>Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere.<\/li><\/ul>"
     },
-    "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart app (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
+    "firmwareFlasherWarningShort": {
+        "message": "Brænd ikke hardware som ikke er Betaflight kompatibel. Afbryd ikke under brændning. STM32 bootloader er i ROM og kan ikke testes. Gem altid en sikkerhedskopi af din konfiguration før opgradering firmware."
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "Hvis du har mistet kommunikation med FC: sluk FC, aktiver valg 'Ingen genstart sekvens' og 'Slet alt på chip', konakt mellem BOOT pinde, tænd igen. Hvis nødvendigt, installer eller opdater drivere."
     },
     "firmwareFlasherReadMore": {
         "message": "Læs mere →"
+    },
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "FC & Byg"
     },
     "firmwareFlasherAdvancedTitle": {
         "message": "Avanceret"
@@ -4232,6 +4312,30 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Kunne ikke gemme (brænde) firmware image (UF2)"
     },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "Forbinder til ESP32 bootloader..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "Registreret $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "Brænder ESP32..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "Brændning fuldført, genstarter..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "Brænding af ESP32 lykkedes"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "Brændning af ESP32 mislykkedes: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32 brændning kræver byg i browseren (Web Serial)"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "Vælg en seriel port før brændning af ESP32"
+    },
     "firmwareFlasherClickToConnectDfu": {
         "message": "Klik for at oprette forbindelse til DFU enhed"
     },
@@ -4254,6 +4358,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Sikkerhedskopiering annulleret, brænding afbrudt"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Sikkerhedskopi ikke taget: modtaget ugyldig data fra FC (ikke i CLI tilstand), brænding afbrudt"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
@@ -4793,7 +4900,7 @@
         "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "Profil <strong>u<\/strong>afhængige filter indstillinger"
+        "message": "Profil ikke afhængige filter indstillinger"
     },
     "pidTuningFilterSlidersHelp": {
         "message": "Disse skydere justere Gyro og D-term filtre.<br \/><br \/>For mere filtrering:<br \/> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br \/><br \/> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere og kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br \/> - Skydere til højre<br \/> - Højere afskærings frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. Bevæger gyro lowpass filter højre er normalt OK, men det er normalt ikke nødvendigt at flytte D-filteret til højre, og det kan nemt resultere i meget varme motorer.",
@@ -4811,9 +4918,17 @@
         "message": "Mere filtrering",
         "description": "Filter tuning slider high header"
     },
+    "pidTuningGyroFilterSlider": {
+        "message": "Gyro filter forstærkning",
+        "description": "Gyro filter tuning slider label"
+    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Ændrer Gyro Lowpass filter afskæring.<br \/><br \/>Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere cutoff frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre Gyro filtrering (højere afskærings frekvens).<br \/><br \/>Når skyderen flyttes til højre for at forbedre  mod propel turbulens, skal du være FORSIGTIG for ikke at være for radikal. Hvis du tillader mere støj i både P og D kan det få et fartøj til at flyver væk eller få brændte motorer.<br \/><br \/>Du kan være nødt til at flytte skyderen til venstre, hvis du har resonans problemer, dårlige lejer, ødelagte propeller, varme motorer, osv.<br \/><br \/>Gyro filtrering anvendes før, og i tillæg til D filtrering.",
         "description": "Gyro filter tuning slider helpicon message"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "D Term filter forstærkning",
+        "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
         "message": "Ændrer D-termen Lowpass Filter cutoffs.<br \/><br \/>Flytning skyderen til venstre giver stærkere D filtrering (lavere afskærings frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre filtrering (højere afskærings frekvens).<br \/><br \/>D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter afskæring meget lavere end gyro filtre.<br \/><br \/>D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og skal sjældent ændres.<br \/><br \/>Flyttes denne skyder til venstre reduceres motorvarme i frekvens støjende fartøjer og med høj PID 'D' term, men vi kan også se mere propel turbulens og lavere frekvens D resonans.<br \/><br \/>Flytning af skyderen til højre anbefales ikke, men kan forbedre mod propel turbulens på enkle fartøjer. Det kan forårsage uønsket slid på motor ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
@@ -4876,7 +4991,7 @@
         "description": "Tuning Slider High header"
     },
     "pidTuningMasterSlider": {
-        "message": "Generel multiplikator:",
+        "message": "Generel forstærkning:",
         "description": "Master tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
@@ -5080,7 +5195,7 @@
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
-        "message": "Profil <strong>af<\/strong>hængige filter indstillinger"
+        "message": "Profil afhængige filter indstillinger"
     },
     "pidTuningDTermLowpass": {
         "message": "D Term Lowpass 1"
@@ -5132,9 +5247,6 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Forøger PID værdierne for at kompensere når Vbat bliver lavere. Dette vil give mere konstante flyveegenskaber under hele flyvningen. Den  kompensation som søges, beregnes fra $t(powerBatteryMaximum.message) sat på $t(tabPower.message) siden, så sørg for, at det er indstillet til noget passende."
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Giver stabil gas og PID ydeevne i hele batteris spændingsområde ved at øge motoren output som kompensation for fald i batteri spænding.<br \/><br \/>Kompensationen kan variere mellem 0 og 100%. Fuld kompensation (100%) anbefales.<br \/><br \/>Besøg <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post<\/a> for mere info."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5145,7 +5257,7 @@
         "message": "%"
     },
     "pidTuningItermRotation": {
-        "message": "I Term Rotation"
+        "message": "I Term rotation"
     },
     "pidTuningItermRotationHelp": {
         "message": "Roterer den aktuelle I term vektor korrekt til andre akser, som fartøj roterer når sideror kontinuerligt aktiveres under krænging og når der flyves igennem tragter og andre tricks. Meget værdsat af LOS acro piloter."
@@ -5483,7 +5595,7 @@
         "message": "For at kalibrere, brug et multimeter til at måle den faktiske spænding \/ strøm på fartøjet (med et batteri tilsluttet), og indtast værdierne nedenfor. Klik derefter med det samme batteri stadig tilsluttet, [Calibrate]."
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>Bemærk:<\/strong> Før kalibrering af skalaen skal du sørge for, at deleapparatet og multiplikatoren for spænding og offset for ampering er indstillet korrekt.<br>Forlader værdierne ved 0 vil ikke anvende kalibrering.<\/br><strong>Husk at fjerne propeller, før du tilslutter et batteri!<\/strong>"
+        "message": "<strong>Bemærk:<\/strong> Før kalibrering af skala skal du sørge for, at division og multiplikatoren for spænding og offset for strøm er indstillet korrekt.<br>Er værdier sat til 0, vil kalibrering ike anvendes.<\/br><strong>Husk at fjerne propeller, før du tilslutter et batteri!<\/strong>"
     },
     "powerCalibrationManagerWarning": {
         "message": "<span class=\"message-negative\">Advarsel:<\/span> Batteriet <span class=\"message-negative\">er ikke tilsluttet<\/span> eller spændings- og strømmålerkilder er <span class=\"message-negative\">ikke indstillet korrekt.<\/span> Sørg for, at spændingen og\/eller spændingen aflæses en værdi over 0. Ellers vil du ikke kunne kalibrere ved hjælp af dette værktøj."
@@ -5597,7 +5709,7 @@
         "message": "Divider værdi"
     },
     "powerVoltageMultiplier": {
-        "message": "Multiplikator værdi"
+        "message": "Forstærkning værdi"
     },
     "powerAmperageHead": {
         "message": "Strømmåler"
@@ -7172,10 +7284,6 @@
     "osdButtonSaved": {
         "message": "Gemt"
     },
-    "vtxHelp": {
-        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-Tables\">VTX-tabeller<\/a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">her<\/a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Bemærk:<\/span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne her. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7523,6 +7631,9 @@
     "configurationMagDeclinationSet": {
         "message": "Magnetisk afvigelse\/declination indstillet til {{declination}}° fra registreret placering."
     },
+    "configurationMagInclination": {
+        "message": "Vinkel"
+    },
     "configurationMagInclinationHelp": {
         "message": "Vinklen mellem jordens magnetfelt og det vandrette plan på din placering. Positive værdier angiver feltpunkterne nedad (nord-halvkugle)"
     },
@@ -7544,11 +7655,17 @@
     "sensorConfigDeclinationDrift": {
         "message": "Afvigelse\/deklination er {{saved}}° men GPS registrerer {{detected}}° for denne placering. Klik på Opdater for at korrigere."
     },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} prøver"
+    },
     "sensorConfigAlignTiltMore": {
         "message": "Vip mere !"
     },
     "sensorConfigAlignDetectFailed": {
         "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
+    },
+    "magCalibrationGuidedFwDesc": {
+        "message": "Auto prompt i 60s kalibrering"
     },
     "magCalibrationGuidedFwTitle": {
         "message": "Kalibrering via guide"
@@ -7577,6 +7694,9 @@
     "magCalibrationCancel": {
         "message": "Fortryd"
     },
+    "magCalibrationClear": {
+        "message": "Slet"
+    },
     "magCalibrationModeOptions": {
         "message": "Indstillinger for kalibrering"
     },
@@ -7598,6 +7718,9 @@
     "magCalibrationNoMovement": {
         "message": "Ingen bevægelse registreret indenfor 30 sekunder. Kalibrering afbrudt."
     },
+    "magCalibrationSamples": {
+        "message": "Prøver"
+    },
     "magCalibrationQuality": {
         "message": "Kvalitet"
     },
@@ -7610,8 +7733,14 @@
     "magCalibrationQualityPoor": {
         "message": "Dårlig"
     },
+    "magCalibrationUnguidedTitle": {
+        "message": "Firmware kalibrering"
+    },
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Roter frit — app beregner forskydninger"
     },
     "magCalibrationGuidedTitle": {
         "message": "Klient kalibrering"
@@ -7624,6 +7753,15 @@
     },
     "magCalibrationCheckTitle": {
         "message": "Kontrollerer kalibrering"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Bekræft retningen og kalibreringen af kompasset. Placer dit fartøj fladt vandret, peg næsen til et kendt punkt på kompasset (en mobil kan bruges til at bestemme hvor der er nord), og se efter, at nye prikker vises på den forventede placering i 3D-displayet. Feltstyrkeværdierne for hver akse og punkternes sfæriske sammensætning angiver kalibreringens nøjagtighed. Hvis punkterne gå til helt forkerte steder, er orienteringen af kompasset sandsynligvis forkert."
+    },
+    "magCalibrationCalValues": {
+        "message": "Kalibrederede værdier"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Gem værdier"
     },
     "magCalibrationSaveSuccess": {
         "message": "Kalibreringsværdier gemt"
@@ -7639,6 +7777,9 @@
     },
     "magVizWaitingForData": {
         "message": "Venter på data …"
+    },
+    "magVizAxisField": {
+        "message": "Feltstyrke"
     },
     "magVizAgeLegendOld": {
         "message": "Gamle"
@@ -7822,7 +7963,7 @@
         "message": "Avanceret CLI autoudfyld"
     },
     "firmwareBackupOnFlash": {
-        "message": "Opret en sikkerhedskopi, før du brænder fc"
+        "message": "Opret en sikkerhedskopi, før du brænder image i FC"
     },
     "darkTheme": {
         "message": "Brug mørkt tema"
@@ -8136,6 +8277,30 @@
         "message": "Dette kræver Betaflight firmware {{required}} eller nyere (aktuelt fundet {{current}}). Opdater venligst din FC firmware før du fortsætter.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Gendan sikkerhedskopi",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Gendan pre brændning sikkerhedskopi",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Sikkerhedskopi af konfiguration genoprettet, {{count}} linje(r) sprunget over.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Gendannelse mislykkedes: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "Kunne ikke forbinde til FC for gendannelse med sikkerhedskopi.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "Ingen sikkerhedskopi er tilgængelig for gendannelse.",
+        "description": "Error message when no backup data is cached for restore"
+    },
     "presetsLoadingDumpAll": {
         "message": "Indlæser nuværende opsætning fra FC",
         "description": "Title for the waiting dialog when loading dump all into a file"
@@ -8221,7 +8386,7 @@
         "description": "Dialog text to prompt user to review options for the preset"
     },
     "firmwareFlasherBuildConfigurationHead": {
-        "message": "Build konfirguration"
+        "message": "Byg konfirguration"
     },
     "firmwareFlasherBuildOptions": {
         "message": "Andre indstillinger"
@@ -8235,6 +8400,9 @@
     },
     "firmwareFlasherSelectOptions": {
         "message": "Vælg indstilling"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "Vælg branch eller indtast PR # \/ afslut med hash"
     },
     "firmwareFlasherSearchBoard": {
         "message": "Søg efter FC..."
@@ -8279,7 +8447,7 @@
         "message": "Er du udvikler, kan du definere Defines, adskildt af blanktegn. Skriv ikke USE_ prefix, det tilføjes automatisk."
     },
     "firmwareFlasherBuildCustomDefines": {
-        "message": "Brugertilpasset Defines"
+        "message": "Brugertilpasset konfigurationer \/ Defines"
     },
     "firmwareFlasherOSDProtocolNotSelected": {
         "message": "OSD protokol ikke valgt"
