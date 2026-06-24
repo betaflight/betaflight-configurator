@@ -19,7 +19,9 @@
 
             <!-- Rate Setup Table -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-[4rem_repeat(3,4rem)_4rem] gap-x-1 gap-y-1 items-center min-w-0">
+                <div
+                    class="grid grid-cols-[4rem_repeat(3,4rem)_4rem] gap-x-1 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
+                >
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center">{{ rcRateLabel }}</div>
