@@ -173,6 +173,9 @@ const logoTooltip = computed(() => {
 });
 
 provide("sidebarExpanded", isSidebarExpanded);
+provide("closeMobileSidebar", () => {
+    isRevealed.value = false;
+});
 
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
