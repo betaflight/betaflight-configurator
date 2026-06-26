@@ -6,10 +6,15 @@ const EXTENSION_MIME_MAP = {
     ".json": "application/json",
     ".hex": "application/octet-stream",
     ".uf2": "application/octet-stream",
+    ".bin": "application/octet-stream",
     ".bbl": "application/octet-stream",
+    ".bfl": "application/octet-stream",
+    ".cfl": "application/octet-stream",
+    ".log": "text/plain",
     ".mcm": "application/octet-stream",
     ".png": "image/png",
     ".bmp": "image/bmp",
+    ".gpx": "application/gpx+xml",
     ".lua": "text/plain",
     ".csv": "text/csv",
 };
@@ -20,11 +25,50 @@ function mimeForExtension(ext) {
     return EXTENSION_MIME_MAP[lower] || "*/*";
 }
 
-function normalizeExtensions(extension) {
-    if (Array.isArray(extension)) {
-        return extension;
+// `*/*` is not a valid key for the File System Access API `accept` map, so fall
+// back to a generic binary type for unknown extensions when building filters.
+function mimeForAcceptKey(ext) {
+    const mime = mimeForExtension(ext);
+    return mime === "*/*" ? "application/octet-stream" : mime;
+}
+
+// Normalize an extension (or list of extensions) to a deduplicated array of
+// dot-prefixed variants in BOTH lower and upper case. The File System Access
+// API matches extensions case-sensitively, so a `.txt` filter would otherwise
+// hide a `FOO.TXT` file. Listing both cases keeps the picker case-insensitive.
+export function normalizeExtensions(extension) {
+    const list = Array.isArray(extension) ? extension : extension ? [extension] : [];
+    const result = [];
+    for (const raw of list) {
+        if (!raw) {
+            continue;
+        }
+        const withDot = raw.startsWith(".") ? raw : `.${raw}`;
+        const lower = withDot.toLowerCase();
+        const upper = withDot.toUpperCase();
+        if (!result.includes(lower)) {
+            result.push(lower);
+        }
+        if (upper !== lower && !result.includes(upper)) {
+            result.push(upper);
+        }
     }
-    return extension ? [extension] : [];
+    return result;
+}
+
+// Build the `types` array for show{Open,Save}FilePicker, grouping the (case
+// expanded) extensions under their proper MIME types.
+export function buildAcceptTypes(description, extension) {
+    const extensions = normalizeExtensions(extension);
+    if (extensions.length === 0) {
+        return [];
+    }
+    const accept = {};
+    for (const ext of extensions) {
+        const mime = mimeForAcceptKey(ext);
+        (accept[mime] ||= []).push(ext);
+    }
+    return [{ description, accept }];
 }
 
 class FileSystem {
@@ -46,14 +90,7 @@ class FileSystem {
 
         const fileHandle = await window.showSaveFilePicker({
             suggestedName: suggestedName,
-            types: [
-                {
-                    description: description,
-                    accept: {
-                        "application/unknown": extension,
-                    },
-                },
-            ],
+            types: buildAcceptTypes(description, extension),
         });
 
         if (!fileHandle) {
@@ -93,14 +130,7 @@ class FileSystem {
 
         const fileHandle = await window.showOpenFilePicker({
             multiple: false,
-            types: [
-                {
-                    description: description,
-                    accept: {
-                        "application/unknown": extension,
-                    },
-                },
-            ],
+            types: buildAcceptTypes(description, extension),
         });
 
         const file = this._createFile(fileHandle[0]);
