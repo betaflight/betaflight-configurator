@@ -4,7 +4,7 @@
         ref="fileInput"
         type="file"
         style="display: none"
-        accept=".bbl,.BBL,.txt,.TXT,.cfl,.CFL,.bfl,.BFL,.log,.LOG,.json,.JSON"
+        accept=".bbl,.BBL,.txt,.TXT,.cfl,.CFL,.bfl,.BFL,.log,.LOG,.json,.JSON,.avi,.AVI,.mov,.MOV,.mp4,.MP4,.mpeg,.MPEG"
         @change="onFileChange"
     />
 </template>
