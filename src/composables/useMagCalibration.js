@@ -3,7 +3,7 @@ import geomagnetism from "geomagnetism";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { useFlightControllerStore } from "../stores/fc";
-import { fitSphere, computeCoverage } from "../js/utils/sphereFit";
+import { fitSphere, computeCoverage, computeDirectionalCoverage } from "../js/utils/sphereFit";
 import { send as cliSend, isMspCliSupported } from "./useMspCliSession";
 
 const POLL_INTERVAL_MS = 100;
@@ -16,6 +16,21 @@ const MOVEMENT_THRESHOLD = 5;
 const PROGRESS_TARGET_SAMPLES = 300;
 const MAG_CAL_MIN = -32768;
 const MAG_CAL_MAX = 32767;
+
+// Full calibration is gated on icosahedral coverage (fraction of the 20 face
+// directions reached), not dwell time. These set the live good/fair/poor verdict.
+const FULL_COVERAGE_GOOD = 0.8;
+const FULL_COVERAGE_FAIR = 0.5;
+
+function coverageQuality(fraction) {
+    if (fraction >= FULL_COVERAGE_GOOD) {
+        return "good";
+    }
+    if (fraction >= FULL_COVERAGE_FAIR) {
+        return "fair";
+    }
+    return "poor";
+}
 
 function centroid(pts) {
     let sx = 0,
@@ -152,8 +167,10 @@ export function useMagCalibration() {
             phase.value = "collecting";
             statusMessage.value = "magCalibrationCheckTitle";
             startDataPolling();
-        } else if (calMode === "guided") {
-            // Guided mode: store offsets for raw reconstruction, skip firmware trigger
+        } else if (calMode === "guided" || calMode === "full") {
+            // Guided / full modes: reconstruct raw samples by adding the firmware
+            // offset back, skip the firmware trigger. Full mode additionally solves
+            // soft-iron + mounting alignment when the user accepts.
             guidedOffsets = firmwareOffsets.value ?? { x: 0, y: 0, z: 0 };
             phase.value = "collecting";
             statusMessage.value = "magCalibrationCollecting";
@@ -258,8 +275,8 @@ export function useMagCalibration() {
             return;
         }
 
-        // In guided mode, reconstruct raw samples by adding back firmware offsets
-        if (mode.value === "guided" && guidedOffsets) {
+        // In guided/full modes, reconstruct raw samples by adding back firmware offsets
+        if ((mode.value === "guided" || mode.value === "full") && guidedOffsets) {
             mx += guidedOffsets.x;
             my += guidedOffsets.y;
             mz += guidedOffsets.z;
@@ -285,7 +302,7 @@ export function useMagCalibration() {
 
         // Store attitude alongside mag data for attitude-based dot placement
         const k = fcStore.sensorData.kinematics;
-        samples.value.push({ x: mx, y: my, z: mz, pitch: k[1], heading: k[2], timestamp: Date.now() });
+        samples.value.push({ x: mx, y: my, z: mz, roll: k[0], pitch: k[1], heading: k[2], timestamp: Date.now() });
         triggerRef(samples);
 
         samplesSinceLastFit++;
@@ -294,8 +311,11 @@ export function useMagCalibration() {
             samplesSinceLastFit = 0;
         }
 
-        // Update progress (rough estimate based on sample count, capped at 95 until firmware signals done)
-        progress.value = Math.min(95, Math.round((samples.value.length / PROGRESS_TARGET_SAMPLES) * 100));
+        // Update progress (rough estimate based on sample count, capped at 95 until firmware signals done).
+        // Full mode drives progress from coverage instead (set in updateAnalysis), so skip it here.
+        if (mode.value !== "full") {
+            progress.value = Math.min(95, Math.round((samples.value.length / PROGRESS_TARGET_SAMPLES) * 100));
+        }
     }
 
     function updateAnalysis() {
@@ -307,6 +327,22 @@ export function useMagCalibration() {
         const fit = fitSphere(pts);
         // Use sphere center for coverage when available, otherwise fall back to centroid
         const center = fit ? fit.center : centroid(pts);
+
+        if (mode.value === "full") {
+            // Presence-based icosahedral coverage (20 faces): climbs monotonically toward
+            // 100% as new orientations are reached. This is the observability condition the
+            // alignment solve needs — a flat spin never reaches the tilted faces.
+            const cov = computeDirectionalCoverage(pts, center);
+            coverage.value = cov;
+            progress.value = Math.min(100, Math.round(cov.fraction * 100));
+            if (fit) {
+                sphereFitResult.value = fit;
+                quality.value = coverageQuality(cov.fraction);
+                qualityScore.value = Math.round(cov.fraction * 100);
+            }
+            return;
+        }
+
         const cov = computeCoverage(pts, center);
         coverage.value = cov;
 

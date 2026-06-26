@@ -301,4 +301,5 @@ function eulerToMatrix(rollDeg, pitchDeg, yawDeg) {
     ];
 }
 
-export { ALIGNMENT_LABELS };
+export { ALIGNMENT_LABELS, ALIGNMENT_MATRICES };
+export { eulerToMatrix, mat3transpose, mat3mul, mat3mulVec, undoRollPitch, computeWeightedVariance };
