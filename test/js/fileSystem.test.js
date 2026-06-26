@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { buildAcceptTypes, normalizeExtensions } from "../../src/js/FileSystem";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import FileSystem, { buildAcceptTypes, normalizeExtensions } from "../../src/js/FileSystem";
 
 describe("normalizeExtensions", () => {
     it("expands a single extension to both lower and upper case", () => {
@@ -50,5 +50,71 @@ describe("buildAcceptTypes", () => {
 
     it("returns an empty types array when no extension is given", () => {
         expect(buildAcceptTypes("anything", undefined)).toEqual([]);
+    });
+});
+
+// In jsdom, window.showOpenFilePicker / showSaveFilePicker are undefined and
+// isAndroid() is false, so the FileSystem wrapper takes its <input>/<a download>
+// fallback paths (the same ones used by Firefox and WebKit-based Tauri webviews).
+describe("FileSystem fallback (no File System Access API)", () => {
+    let clickSpy;
+    let downloaded;
+
+    beforeEach(() => {
+        // jsdom does not implement object URLs.
+        URL.createObjectURL = vi.fn(() => "blob:mock");
+        URL.revokeObjectURL = vi.fn();
+        downloaded = [];
+        clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function () {
+            downloaded.push({ download: this.download });
+        });
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it("uses the fallback path because the pickers are unavailable in jsdom", () => {
+        expect(window.showOpenFilePicker).toBeUndefined();
+        expect(window.showSaveFilePicker).toBeUndefined();
+    });
+
+    it("pickSaveFile returns a download descriptor instead of an OS save dialog", async () => {
+        const file = await FileSystem.pickSaveFile("config.txt", "Text", ".txt");
+        expect(file.name).toBe("config.txt");
+        expect(file._download).toBeTruthy();
+    });
+
+    it("pickSaveFile appends the extension when the suggested name has none", async () => {
+        const file = await FileSystem.pickSaveFile("config", "Text", ".txt");
+        expect(file.name).toBe("config.txt");
+    });
+
+    it("writeFile triggers a browser download for a fallback descriptor", async () => {
+        const file = await FileSystem.pickSaveFile("dump.txt", "Text", ".txt");
+        await FileSystem.writeFile(file, "hello");
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+        expect(downloaded[0].download).toBe("dump.txt");
+    });
+
+    it("buffers streamed chunks and downloads them on close", async () => {
+        const file = await FileSystem.pickSaveFile("log.csv", "CSV", ".csv");
+        const writable = await FileSystem.openFile(file);
+        await FileSystem.writeChunck(writable, new Blob(["a"]));
+        await FileSystem.writeChunck(writable, new Blob(["b"]));
+        expect(clickSpy).not.toHaveBeenCalled();
+        await FileSystem.closeFile(writable);
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+        expect(downloaded[0].download).toBe("log.csv");
+    });
+
+    it("reads a fallback (input-selected) file straight from its blob", async () => {
+        // jsdom's Blob lacks .text(); real browser/WebKit File objects have it,
+        // so stub the blob to verify the descriptor routing and delegation.
+        const blob = { text: vi.fn().mockResolvedValue("chirp") };
+        const descriptor = { name: "x.txt", _blob: blob };
+        expect(await FileSystem.readFile(descriptor)).toBe("chirp");
+        expect(blob.text).toHaveBeenCalledTimes(1);
+        expect(await FileSystem.readFileAsBlob(descriptor)).toBe(blob);
     });
 });

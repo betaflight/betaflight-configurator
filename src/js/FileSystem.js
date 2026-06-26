@@ -80,6 +80,81 @@ export function buildAcceptTypes(description, extension) {
     return [{ description, accept }];
 }
 
+// The File System Access API pickers are available in Chromium-based browsers
+// and WebView2 (Windows Tauri). They are missing in Firefox and in the
+// WebKit-based webviews used by the Tauri desktop build (macOS WKWebView,
+// Linux WebKitGTK), where we fall back to a classic <input> / <a download>
+// flow so file open/save still works.
+function canUseOpenPicker() {
+    return typeof window !== "undefined" && typeof window.showOpenFilePicker === "function";
+}
+
+function canUseSavePicker() {
+    return typeof window !== "undefined" && typeof window.showSaveFilePicker === "function";
+}
+
+// Open a file via a hidden <input type=file> and resolve with the selected File
+// (or reject with an AbortError when the dialog is dismissed, mirroring
+// showOpenFilePicker).
+function pickFileViaInput(extension) {
+    const accept = normalizeExtensions(extension).join(",");
+    return new Promise((resolve, reject) => {
+        const input = document.createElement("input");
+        input.type = "file";
+        if (accept) {
+            input.accept = accept;
+        }
+        input.style.display = "none";
+        document.body.appendChild(input);
+
+        input.addEventListener("change", () => {
+            const selected = input.files?.[0] ?? null;
+            input.remove();
+            resolve(selected);
+        });
+
+        // Modern webviews fire `cancel` on dismissal; treat it like the
+        // AbortError that showOpenFilePicker throws.
+        input.addEventListener("cancel", () => {
+            input.remove();
+            const error = new Error("The user aborted a request.");
+            error.name = "AbortError";
+            reject(error);
+        });
+
+        input.click();
+    });
+}
+
+// Ensure a suggested name keeps a sensible suffix when downloaded.
+function ensureExtension(name, extension) {
+    if (name && name.includes(".")) {
+        return name;
+    }
+    const [first] = normalizeExtensions(extension);
+    return first ? `${name || "download"}${first}` : name || "download";
+}
+
+// Save data by triggering a browser download (fallback for showSaveFilePicker).
+function downloadViaAnchor(name, contents) {
+    let blob;
+    if (contents instanceof Blob) {
+        blob = contents;
+    } else {
+        const ext = name && name.includes(".") ? `.${name.split(".").pop()}` : "";
+        blob = new Blob([contents], { type: mimeForAcceptKey(ext) });
+    }
+
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = name || "download";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+}
+
 class FileSystem {
     _createFile(fileHandle) {
         return {
@@ -97,6 +172,10 @@ class FileSystem {
             return this._androidPickSaveFile(suggestedName, description, extension);
         }
 
+        if (!canUseSavePicker()) {
+            return this._fallbackPickSaveFile(suggestedName, extension);
+        }
+
         const fileHandle = await window.showSaveFilePicker({
             suggestedName: suggestedName,
             types: buildAcceptTypes(description, extension),
@@ -111,6 +190,17 @@ class FileSystem {
         if (await this.verifyPermission(file, true)) {
             return file;
         }
+    }
+
+    // Fallback save "handle": there is no OS save dialog without the File System
+    // Access API, so we defer to a browser download when the data is written.
+    // A `_download` token also carries chunks for the streaming write path.
+    _fallbackPickSaveFile(suggestedName, extension) {
+        const name = ensureExtension(suggestedName, extension);
+        return {
+            name,
+            _download: { name, chunks: [] },
+        };
     }
 
     async _androidPickSaveFile(suggestedName, description, extension) {
@@ -137,6 +227,10 @@ class FileSystem {
             return this._androidPickOpenFile(description, extension);
         }
 
+        if (!canUseOpenPicker()) {
+            return this._fallbackPickOpenFile(extension);
+        }
+
         const fileHandle = await window.showOpenFilePicker({
             multiple: false,
             types: buildAcceptTypes(description, extension),
@@ -147,6 +241,19 @@ class FileSystem {
         if (await this.verifyPermission(file, false)) {
             return file;
         }
+    }
+
+    // Fallback open: read the File selected via a hidden <input>. The File is a
+    // Blob, so it is carried directly on the descriptor for later reads.
+    async _fallbackPickOpenFile(extension) {
+        const selected = await pickFileViaInput(extension);
+        if (!selected) {
+            return null;
+        }
+        return {
+            name: selected.name,
+            _blob: selected,
+        };
     }
 
     async _androidPickOpenFile(description, extension) {
@@ -197,6 +304,11 @@ class FileSystem {
             return this._androidWriteFile(file, contents);
         }
 
+        if (file._download) {
+            downloadViaAnchor(file.name, contents);
+            return;
+        }
+
         const fileHandle = file._fileHandle;
 
         const writable = await fileHandle.createWritable();
@@ -226,6 +338,10 @@ class FileSystem {
             return CapacitorFile.readFile(file._fileHandle);
         }
 
+        if (file._blob) {
+            return await file._blob.text();
+        }
+
         const fileHandle = file._fileHandle;
 
         const fileReader = await fileHandle.getFile();
@@ -239,6 +355,10 @@ class FileSystem {
     async readFileAsBlob(file) {
         if (isAndroid()) {
             return this._androidReadFileAsBlob(file);
+        }
+
+        if (file._blob) {
+            return file._blob;
         }
 
         const fileHandle = file._fileHandle;
@@ -268,6 +388,13 @@ class FileSystem {
             return file._fileHandle;
         }
 
+        if (file._download) {
+            // Fallback streaming: buffer chunks in memory; they are downloaded
+            // as a single blob on closeFile. The token is the `_download` object.
+            file._download.chunks = [];
+            return file._download;
+        }
+
         const fileHandle = file._fileHandle;
 
         const options = { keepExistingData: false };
@@ -281,6 +408,11 @@ class FileSystem {
     async writeChunck(writable, chunk) {
         if (isAndroid()) {
             return this._androidWriteChunk(writable, chunk);
+        }
+
+        if (Array.isArray(writable?.chunks)) {
+            writable.chunks.push(chunk);
+            return;
         }
 
         await writable.write(chunk);
@@ -301,6 +433,11 @@ class FileSystem {
     async closeFile(writable) {
         if (isAndroid()) {
             await CapacitorFile.closeFile(writable);
+            return;
+        }
+
+        if (Array.isArray(writable?.chunks)) {
+            downloadViaAnchor(writable.name, new Blob(writable.chunks));
             return;
         }
 
