@@ -86,11 +86,11 @@ export function buildAcceptTypes(description, extension) {
 // Linux WebKitGTK), where we fall back to a classic <input> / <a download>
 // flow so file open/save still works.
 function canUseOpenPicker() {
-    return typeof window !== "undefined" && typeof window.showOpenFilePicker === "function";
+    return typeof globalThis.showOpenFilePicker === "function";
 }
 
 function canUseSavePicker() {
-    return typeof window !== "undefined" && typeof window.showSaveFilePicker === "function";
+    return typeof globalThis.showSaveFilePicker === "function";
 }
 
 // Open a file via a hidden <input type=file> and resolve with the selected File
@@ -107,20 +107,56 @@ function pickFileViaInput(extension) {
         input.style.display = "none";
         document.body.appendChild(input);
 
-        input.addEventListener("change", () => {
-            const selected = input.files?.[0] ?? null;
+        let settled = false;
+        let focusTimer = null;
+        // Predeclared so `cleanup` can detach it (assigned further below).
+        let onFocus = null;
+
+        const cleanup = () => {
+            globalThis.removeEventListener("focus", onFocus);
+            if (focusTimer) {
+                clearTimeout(focusTimer);
+            }
             input.remove();
-            resolve(selected);
+        };
+
+        const settle = (action, value) => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            cleanup();
+            action(value);
+        };
+
+        const abort = () => {
+            const error = new Error("The user aborted a request.");
+            error.name = "AbortError";
+            settle(reject, error);
+        };
+
+        // When focus returns to the window the dialog has closed. Give `change`
+        // a moment to fire first; if nothing was selected, treat it as a
+        // cancellation. This covers webviews that never fire `cancel`
+        // (e.g. older WebKit), which would otherwise leave the promise hanging.
+        onFocus = () => {
+            focusTimer = setTimeout(() => {
+                if (!input.files || input.files.length === 0) {
+                    abort();
+                }
+            }, 500);
+        };
+
+        input.addEventListener("change", () => {
+            settle(resolve, input.files?.[0] ?? null);
         });
 
         // Modern webviews fire `cancel` on dismissal; treat it like the
         // AbortError that showOpenFilePicker throws.
-        input.addEventListener("cancel", () => {
-            input.remove();
-            const error = new Error("The user aborted a request.");
-            error.name = "AbortError";
-            reject(error);
-        });
+        input.addEventListener("cancel", abort);
+
+        // Fallback dismissal detection for webviews without the `cancel` event.
+        globalThis.addEventListener("focus", onFocus);
 
         input.click();
     });
@@ -128,7 +164,7 @@ function pickFileViaInput(extension) {
 
 // Ensure a suggested name keeps a sensible suffix when downloaded.
 function ensureExtension(name, extension) {
-    if (name && name.includes(".")) {
+    if (name?.includes(".")) {
         return name;
     }
     const [first] = normalizeExtensions(extension);
@@ -141,7 +177,7 @@ function downloadViaAnchor(name, contents) {
     if (contents instanceof Blob) {
         blob = contents;
     } else {
-        const ext = name && name.includes(".") ? `.${name.split(".").pop()}` : "";
+        const ext = name?.includes(".") ? `.${name.split(".").pop()}` : "";
         blob = new Blob([contents], { type: mimeForAcceptKey(ext) });
     }
 
@@ -176,7 +212,7 @@ class FileSystem {
             return this._fallbackPickSaveFile(suggestedName, extension);
         }
 
-        const fileHandle = await window.showSaveFilePicker({
+        const fileHandle = await globalThis.showSaveFilePicker({
             suggestedName: suggestedName,
             types: buildAcceptTypes(description, extension),
         });
@@ -231,7 +267,7 @@ class FileSystem {
             return this._fallbackPickOpenFile(extension);
         }
 
-        const fileHandle = await window.showOpenFilePicker({
+        const fileHandle = await globalThis.showOpenFilePicker({
             multiple: false,
             types: buildAcceptTypes(description, extension),
         });
