@@ -52,11 +52,13 @@ export function normalizeExtensions(extension) {
         const withDot = raw.startsWith(".") ? raw : `.${raw}`;
         const lower = withDot.toLowerCase();
         const upper = withDot.toUpperCase();
+        // `lower` is always pushed before `upper`, so if `lower` is new then
+        // `upper` cannot already be present — no separate dedup check needed.
         if (!result.includes(lower)) {
             result.push(lower);
-        }
-        if (upper !== lower && !result.includes(upper)) {
-            result.push(upper);
+            if (upper !== lower) {
+                result.push(upper);
+            }
         }
     }
     return result;

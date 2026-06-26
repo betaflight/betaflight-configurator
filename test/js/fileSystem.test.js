@@ -89,7 +89,7 @@ describe("FileSystem fallback (no File System Access API)", () => {
     it("pickSaveFile returns a download descriptor instead of an OS save dialog", async () => {
         const file = await FileSystem.pickSaveFile("config.txt", "Text", ".txt");
         expect(file.name).toBe("config.txt");
-        expect(file._download).toBeTruthy();
+        expect(file._download).toMatchObject({ name: "config.txt", chunks: [] });
     });
 
     it("pickSaveFile appends the extension when the suggested name has none", async () => {
@@ -123,5 +123,24 @@ describe("FileSystem fallback (no File System Access API)", () => {
         expect(await FileSystem.readFile(descriptor)).toBe("chirp");
         expect(blob.text).toHaveBeenCalledTimes(1);
         expect(await FileSystem.readFileAsBlob(descriptor)).toBe(blob);
+    });
+
+    it("aborts the open fallback when focus returns with no selection (cancel-less webviews)", async () => {
+        vi.useFakeTimers();
+        try {
+            // Don't trigger a real file dialog when the input is clicked.
+            vi.spyOn(HTMLInputElement.prototype, "click").mockImplementation(() => {});
+
+            const pending = FileSystem.pickOpenFile("Text", ".txt");
+
+            // Simulate the dialog closing with no file: focus returns to the
+            // window and the dismissal timer elapses.
+            globalThis.dispatchEvent(new Event("focus"));
+            vi.advanceTimersByTime(500);
+
+            await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+        } finally {
+            vi.useRealTimers();
+        }
     });
 });
