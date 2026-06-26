@@ -330,7 +330,7 @@ class FileSystem {
         }
 
         console.error("The user has no permission for file: ", fileHandle.name);
-        throw new Error("The user has no %s permission for file: %s", opts.mode, fileHandle.name);
+        throw new Error(`The user has no ${opts.mode} permission for file: ${fileHandle.name}`);
     }
 
     // ---------------------------------------------------------------
