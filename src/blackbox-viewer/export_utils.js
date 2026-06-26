@@ -18,7 +18,9 @@ function suggestedName(logFilename, fileExtension) {
 
 // Prompt the user for a save location (preserving the export button's user
 // gesture), then run the async exporter and write the result through the shared
-// FileSystem wrapper. `dumpFn` receives the success callback the exporters expect.
+// FileSystem wrapper. `dumpFn` receives success/failure callbacks where supported.
+// The returned promise only settles once the file has actually been written (or
+// the export failed/was cancelled), so callers can reliably await completion.
 async function saveExport(fileExtension, suggested, dumpFn) {
     let file;
     try {
@@ -40,25 +42,39 @@ async function saveExport(fileExtension, suggested, dumpFn) {
     }
 
     const startTime = performance.now();
-    dumpFn(async (data) => {
-        console.debug(
-            `${fileExtension.toUpperCase()} export finished in ${(performance.now() - startTime) / 1000} secs`,
-        );
-        if (!data) {
-            console.debug("Empty data, nothing to save");
-            return;
-        }
+    await new Promise((resolve) => {
+        const onFailure = (error) => {
+            console.error(`Failed to export ${fileExtension.toUpperCase()} file:`, error);
+            resolve();
+        };
+
         try {
-            await FileSystem.writeFile(file, data);
+            dumpFn(async (data) => {
+                console.debug(
+                    `${fileExtension.toUpperCase()} export finished in ${(performance.now() - startTime) / 1000} secs`,
+                );
+                if (!data) {
+                    console.debug("Empty data, nothing to save");
+                    resolve();
+                    return;
+                }
+                try {
+                    await FileSystem.writeFile(file, data);
+                } catch (error) {
+                    console.error(`Failed to write ${fileExtension.toUpperCase()} file:`, error);
+                } finally {
+                    resolve();
+                }
+            }, onFailure);
         } catch (error) {
-            console.error(`Failed to write ${fileExtension.toUpperCase()} file:`, error);
+            onFailure(error);
         }
     });
 }
 
 export function exportCsv(flightLog, logFilename, options = {}) {
-    return saveExport("csv", suggestedName(logFilename, "csv"), (onSuccess) =>
-        CsvExporter(flightLog, options).dump(onSuccess),
+    return saveExport("csv", suggestedName(logFilename, "csv"), (onSuccess, onFailure) =>
+        CsvExporter(flightLog, options).dump(onSuccess, onFailure),
     );
 }
 

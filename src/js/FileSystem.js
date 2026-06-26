@@ -37,7 +37,13 @@ function mimeForAcceptKey(ext) {
 // API matches extensions case-sensitively, so a `.txt` filter would otherwise
 // hide a `FOO.TXT` file. Listing both cases keeps the picker case-insensitive.
 export function normalizeExtensions(extension) {
-    const list = Array.isArray(extension) ? extension : extension ? [extension] : [];
+    let list = [];
+    if (Array.isArray(extension)) {
+        list = extension;
+    } else if (extension) {
+        list = [extension];
+    }
+
     const result = [];
     for (const raw of list) {
         if (!raw) {
@@ -66,7 +72,10 @@ export function buildAcceptTypes(description, extension) {
     const accept = {};
     for (const ext of extensions) {
         const mime = mimeForAcceptKey(ext);
-        (accept[mime] ||= []).push(ext);
+        if (!accept[mime]) {
+            accept[mime] = [];
+        }
+        accept[mime].push(ext);
     }
     return [{ description, accept }];
 }
