@@ -59,9 +59,14 @@ describe("buildAcceptTypes", () => {
 describe("FileSystem fallback (no File System Access API)", () => {
     let clickSpy;
     let downloaded;
+    let originalCreateObjectURL;
+    let originalRevokeObjectURL;
 
     beforeEach(() => {
-        // jsdom does not implement object URLs.
+        // jsdom does not implement object URLs; save the originals so they can be
+        // restored (vi.restoreAllMocks() does not touch direct global assignment).
+        originalCreateObjectURL = URL.createObjectURL;
+        originalRevokeObjectURL = URL.revokeObjectURL;
         URL.createObjectURL = vi.fn(() => "blob:mock");
         URL.revokeObjectURL = vi.fn();
         downloaded = [];
@@ -71,6 +76,8 @@ describe("FileSystem fallback (no File System Access API)", () => {
     });
 
     afterEach(() => {
+        URL.createObjectURL = originalCreateObjectURL;
+        URL.revokeObjectURL = originalRevokeObjectURL;
         vi.restoreAllMocks();
     });
 

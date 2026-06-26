@@ -420,7 +420,7 @@ class FileSystem {
     async openFile(file) {
         if (isAndroid()) {
             // Return the fileId as the "writable" token.
-            // The native OutputStream is lazy-opened on the first writeChunk.
+            // The native OutputStream is lazy-opened on the first writeChunck.
             return file._fileHandle;
         }
 
