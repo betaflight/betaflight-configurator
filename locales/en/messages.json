@@ -8042,6 +8042,93 @@
     "magCalibrationAccept": {
         "message": "Save Calibration"
     },
+    "magCalibrationFull": {
+        "message": "Full Cal (auto-align)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "One spin — sets offsets, soft-iron, and the mag's mounting orientation"
+    },
+    "magCalibrationFullTitle": {
+        "message": "Full Calibration"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Follow the steps below, holding the craft steady through each full turn. The zone count climbs as you reach new angles — aim to cover all 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Step {{n}} of {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Hold the craft level and rotate it slowly through a full 360° turn."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Turn it upside-down and rotate slowly through another full 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Point the nose straight up and rotate a full turn around it."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Point the nose straight down and rotate a full turn."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Rest it on its left side and rotate a full turn."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Rest it on its right side and rotate a full turn."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Do a few slow forward flips, facing a different direction each time."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Do a few slow backward flips, again facing a different direction each time."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} / {{total}} zones covered"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Compute"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Coverage:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Alignment:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibration:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Residual:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copy CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Apply"
+    },
+    "magCalibrationFullExport": {
+        "message": "Export Model"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Not enough samples — spin longer"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "No GPS or IP location — cannot determine magnetic inclination"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI commands copied to clipboard"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Could not copy to clipboard"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Firmware {{version}} is too old for CUSTOM mag alignment (needs {{min}}+). Update firmware, then apply."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibration applied and saved"
+    },
     "magCalibrationDiscard": {
         "message": "Discard"
     },
