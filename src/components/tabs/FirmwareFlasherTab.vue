@@ -1280,6 +1280,15 @@ export default defineComponent({
             }
         };
 
+        const commitPendingCustomDefines = () => {
+            const input = document.querySelector("#customDefinesInfo input");
+            const tags = input?.value?.trim().split(/\s+/).filter(Boolean) ?? [];
+
+            if (tags.length > 0) {
+                state.customDefinesTags = [...new Set([...state.customDefinesTags, ...tags])];
+            }
+        };
+
         const processFile = async (data, key) => {
             const ext = getExtension(key);
             const result = await firmwareFlashing.processFirmware(data, ext, {
@@ -1573,6 +1582,7 @@ export default defineComponent({
             }
 
             if (state.targetDetail) {
+                commitPendingCustomDefines();
                 activeFlasherStep.value = "flash";
                 await nextTick();
                 flashingMessage($t("firmwareFlasherButtonDownloading"), FLASH_MESSAGE_TYPES.NEUTRAL);
