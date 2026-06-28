@@ -4,6 +4,7 @@ import MSP from "./msp";
 import { getOS } from "./utils/checkCompatibility";
 import { i18n } from "./localization";
 import { useDialogStore } from "../stores/dialog";
+import { useConnectionStore } from "../stores/connection";
 import { pinia } from "./pinia_instance";
 import { getLockManager } from "./lock_manager";
 
@@ -11,8 +12,6 @@ const TABS = {};
 
 class GuiControl {
     constructor() {
-        this.connecting_to = false;
-        this.connected_to = false;
         this.flashingInProgress = false;
         this.active_tab = null;
         this.tab_switch_in_progress = false;
@@ -76,6 +75,27 @@ class GuiControl {
 
     set connect_lock(value) {
         getLockManager().setBoolean("gui", Boolean(value));
+    }
+
+    // connecting_to / connected_to now live in useConnectionStore (the canonical
+    // connection-target state); GUI delegates so existing GUI.* readers/writers
+    // (serial_backend, tab_switch, …) transparently hit the store. Reactivity is
+    // preserved — the getters read store refs. Accessed lazily at runtime, so no
+    // pinia-timing issue at GUI construction.
+    get connecting_to() {
+        return useConnectionStore(pinia).connectingTo;
+    }
+
+    set connecting_to(value) {
+        useConnectionStore(pinia).connectingTo = value;
+    }
+
+    get connected_to() {
+        return useConnectionStore(pinia).connectedTo;
+    }
+
+    set connected_to(value) {
+        useConnectionStore(pinia).connectedTo = value;
     }
 
     // Timer managing methods

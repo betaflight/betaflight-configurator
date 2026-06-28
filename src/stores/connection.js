@@ -1,28 +1,23 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import GUI from "../js/gui";
 import CONFIGURATOR from "../js/data_storage";
 import PortHandler from "../js/port_handler";
-import MSP from "../js/msp";
 import { getConnectionFsm } from "../js/connection_fsm";
+import { getLockManager } from "../js/lock_manager";
 
 export const useConnectionStore = defineStore("connection", () => {
-    // Proxy state directly to legacy reactive objects
-    // This ensures full bi-directional synchronization during migration
-
-    const connectingTo = computed({
-        get: () => GUI.connecting_to,
-        set: (val) => (GUI.connecting_to = val),
-    });
-
-    const connectedTo = computed({
-        get: () => GUI.connected_to,
-        set: (val) => (GUI.connected_to = val),
-    });
+    // The store OWNS the connection-target state (was GUI.connecting_to /
+    // GUI.connected_to). gui.js now delegates those fields here, so the store is
+    // the canonical home and the store no longer imports gui.js (which would
+    // cycle: gui -> store -> ... -> msp -> gui). connect_lock delegates to the
+    // ref-counting LockManager (single source of truth); clearMspQueue and reboot
+    // reach msp/serial_backend via dynamic import to stay cycle-free.
+    const connectingTo = ref(false);
+    const connectedTo = ref(false);
 
     const connectLock = computed({
-        get: () => GUI.connect_lock,
-        set: (val) => (GUI.connect_lock = val),
+        get: () => getLockManager().locked,
+        set: (val) => getLockManager().setBoolean("gui", Boolean(val)),
     });
 
     // CONFIGURATOR is already reactive (wrapped in reactive() in data_storage.js)
@@ -77,7 +72,9 @@ export const useConnectionStore = defineStore("connection", () => {
     }
 
     function clearMspQueue() {
-        MSP.callbacks_cleanup();
+        // Dynamic import keeps the store free of a static msp import (msp.js imports
+        // gui.js, which now imports this store — a static import would cycle).
+        import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
     }
 
     function reboot() {
