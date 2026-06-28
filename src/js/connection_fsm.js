@@ -277,9 +277,8 @@ export class ConnectionFsm {
         const prev = this._state;
         this._state = reconnected ? State.CONNECTED : State.IDLE;
         this._quality = reconnected ? Quality.FULLY_READY : Quality.NONE;
-        if (this._state === State.IDLE) {
-            this._token = null;
-        }
+        // The reconnect token's job is done once the reboot concludes either way.
+        this._token = null;
         this._notify(prev, reconnected ? Event.READY : Event.CLOSED);
     }
 

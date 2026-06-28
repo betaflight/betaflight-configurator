@@ -1057,6 +1057,18 @@ export function reinitializeConnection(suppressDialog = false) {
     // briefly off the port list. Only pin real device paths — never "virtual"/"manual"/noselection.
     if (currentPort && currentPort !== "noselection" && currentPort !== "virtual") {
         PortHandler.pinnedReconnectTarget = currentPort;
+
+        // S2/S6 flip: freeze a transport-resolvable reconnect TOKEN (not just the
+        // display path) while still connected. The retry resolves it to the FC's
+        // CURRENT path — so a CDC re-enumeration that changes the OS path
+        // (/dev/ttyACM0 -> ACM1, COM3 -> COM5) is followed correctly instead of
+        // reconnecting to a stale path. Supersedes the pinned string (kept as a
+        // fallback for transports without a token). Captured here because the
+        // transport is still open and can report its identity.
+        const token = serial.getReconnectToken?.();
+        if (token) {
+            getConnectionFsm().freezeReconnectToken(token);
+        }
     }
 
     // Send reboot command to the flight controller
@@ -1148,8 +1160,14 @@ function rebootReconnect() {
 
                 // Aim the reconnect at the originally-connected device, not at whatever
                 // selectActivePort may have drifted to while the FC was off the list.
-                if (PortHandler.pinnedReconnectTarget) {
-                    PortHandler.portPicker.selectedPort = PortHandler.pinnedReconnectTarget;
+                // S2/S6 flip: prefer resolving the frozen TOKEN to the device's CURRENT
+                // path (handles a CDC path change across the reboot); fall back to the
+                // pinned display path for transports that supplied no token.
+                const token = getConnectionFsm().getReconnectToken();
+                const resolved = token ? serial.resolveReconnectTarget?.(token) : null;
+                const target = resolved ?? PortHandler.pinnedReconnectTarget;
+                if (target) {
+                    PortHandler.portPicker.selectedPort = target;
                 }
                 connectDisconnect();
             }

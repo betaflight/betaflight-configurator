@@ -46,6 +46,11 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
             connect: vi.fn(),
             disconnect: vi.fn(),
             forceClose: vi.fn(),
+            // S2/S6 reconnect token contract. Default to null so existing tests
+            // exercise the pinned-path fallback; the token-resolution test below
+            // overrides these.
+            getReconnectToken: vi.fn(() => null),
+            resolveReconnectTarget: vi.fn(() => null),
         },
         unmountVueTab: vi.fn(),
         switchTab: vi.fn(),
@@ -223,6 +228,7 @@ import PortHandler from "../../src/js/port_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
+import { __resetConnectionFsmForTests } from "../../src/js/connection_fsm.js";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -398,6 +404,40 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
             vi.advanceTimersByTime(1000);
             expect(serial.connect).toHaveBeenCalled();
         } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("aims the BLE/manual retry at the TOKEN-resolved path (falls back to pin without a token)", () => {
+        vi.useFakeTimers();
+        __resetConnectionFsmForTests();
+        try {
+            // The BLE/manual reboot path runs rebootReconnect's retry loop, which is
+            // where the frozen token is resolved to the device's current path.
+            PortHandler.portPicker.selectedPort = "manual";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+
+            serial.getReconnectToken.mockReturnValue({
+                transportType: "tcp",
+                opaqueId: "tcp://host:5761",
+                baud: 0,
+            });
+            serial.resolveReconnectTarget.mockReturnValue("tcp://host:5761");
+            serial.connect.mockClear();
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush -> disconnectForReboot
+            vi.advanceTimersByTime(1000); // first retry tick
+
+            // The retry resolved the frozen token and aimed at it before reconnecting.
+            expect(serial.resolveReconnectTarget).toHaveBeenCalled();
+            expect(PortHandler.portPicker.selectedPort).toBe("tcp://host:5761");
+            expect(serial.connect).toHaveBeenCalled();
+        } finally {
+            serial.getReconnectToken.mockReturnValue(null);
+            serial.resolveReconnectTarget.mockReturnValue(null);
+            __resetConnectionFsmForTests();
             vi.useRealTimers();
         }
     });
