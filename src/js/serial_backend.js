@@ -106,6 +106,16 @@ export function initializeSerialBackend() {
             !isCliOnlyMode() &&
             (connectionTimestamp === null || connectionTimestamp > 0)
         ) {
+            // S2/S6 flip (serial/Tauri path): if a reboot froze a reconnect token,
+            // resolve it to the device's CURRENT path before auto-connecting, so a
+            // CDC re-enumeration that changed the OS path (/dev/ttyACM0 -> ACM1,
+            // COM3 -> COM5) reconnects to the right device instead of the stale
+            // pinned path. No-op when no token is frozen (normal auto-connect).
+            const token = getConnectionFsm().getReconnectToken();
+            const resolved = token ? serial.resolveReconnectTarget?.(token) : null;
+            if (resolved) {
+                PortHandler.portPicker.selectedPort = resolved;
+            }
             connectDisconnect();
         }
     });
