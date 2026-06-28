@@ -304,6 +304,26 @@ describe("S4 intentional-disconnect intent flag", () => {
     });
 });
 
+describe("S4 transport-open (linkOpen) flag", () => {
+    it("defaults closed; set and toggle mutate it", () => {
+        const m = fsm();
+        expect(m.linkOpen).toBe(false);
+        m.setLinkOpen(true);
+        expect(m.linkOpen).toBe(true);
+        expect(m.toggleLinkOpen()).toBe(false); // returns new value
+        expect(m.linkOpen).toBe(false);
+        expect(m.toggleLinkOpen()).toBe(true);
+        expect(m.linkOpen).toBe(true);
+    });
+
+    it("shutdown() force-closes the link flag", () => {
+        const m = fsm();
+        m.setLinkOpen(true);
+        m.shutdown();
+        expect(m.linkOpen).toBe(false);
+    });
+});
+
 describe("S5 pagehide shutdown", () => {
     it("forces IDLE and aborts the in-flight loop from any state, ungated", () => {
         const m = connected();

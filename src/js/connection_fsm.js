@@ -162,6 +162,11 @@ export class ConnectionFsm {
         // Marks that the NEXT close is user-initiated, so the disconnect handler
         // can distinguish an intentional teardown from an unexpected drop.
         this._intentionalDisconnect = false;
+        // S4: whether a transport link is currently open (was serial_backend's
+        // module-private `isConnected`). This is the TRANSPORT-level flag — true
+        // from port-open through teardown — distinct from the FSM readiness state
+        // (CONNECTED/CLI). connectDisconnect() branches on it.
+        this._linkOpen = false;
         this._listeners = new Set();
         this.logHead = "[CONNECTION-FSM]";
     }
@@ -374,6 +379,22 @@ export class ConnectionFsm {
         return wasIntentional;
     }
 
+    /** Transport-level "a link is open" flag (was serial_backend's isConnected). */
+    get linkOpen() {
+        return this._linkOpen;
+    }
+
+    /** Set the transport-open flag explicitly. */
+    setLinkOpen(open) {
+        this._linkOpen = Boolean(open);
+    }
+
+    /** Flip the transport-open flag (the connect/disconnect callback toggle). */
+    toggleLinkOpen() {
+        this._linkOpen = !this._linkOpen;
+        return this._linkOpen;
+    }
+
     // ---- Abort plumbing ----------------------------------------------------
 
     /** Start a fresh abortable operation (reboot/reconnect). */
@@ -400,6 +421,7 @@ export class ConnectionFsm {
         this._state = State.IDLE;
         this._quality = Quality.NONE;
         this._token = null;
+        this._linkOpen = false;
         if (prev !== State.IDLE) {
             this._notify(prev, Event.CLOSED);
         }

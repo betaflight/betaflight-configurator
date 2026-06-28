@@ -45,7 +45,10 @@ let rebootReconnectTimerId = false;
 let rebootDialogProgressTimerId = false;
 let rebootDialogCheckTimerId = false;
 
-let isConnected = false;
+// S4: the transport-open flag formerly stored here as `isConnected` now lives in
+// the FSM — read via `getConnectionFsm().linkOpen`, mutated via setLinkOpen/
+// toggleLinkOpen. Kept as a local read-through helper so the call sites stay terse.
+const isConnected = () => getConnectionFsm().linkOpen;
 
 // True while an intentional disconnect (Disconnect button, or removed-device toggle)
 // is in flight. finishClose() owns the full teardown in that case; onClosed() uses this
@@ -69,7 +72,8 @@ function isCliOnlyMode() {
 }
 
 const toggleStatus = function () {
-    isConnected = !isConnected;
+    // S4: transport-open flag now lives in the FSM (was module-private isConnected).
+    getConnectionFsm().toggleLinkOpen();
 };
 
 function connectHandler(event) {
@@ -243,7 +247,7 @@ function disconnectForReboot() {
 // "connect" if `isConnected` has already been toggled off (e.g. when the UI
 // state still shows "connected" but the internal flag just changed).
 export function disconnect() {
-    if (GUI.connect_lock || !isConnected) {
+    if (GUI.connect_lock || !isConnected()) {
         return;
     }
     beginDisconnect();
@@ -333,7 +337,7 @@ export function connectDisconnect() {
     // GUI control overrides the user control
     GUI.configuration_loaded = false;
 
-    if (isConnected) {
+    if (isConnected()) {
         beginDisconnect();
     } else {
         const selectedPort = PortHandler.portPicker.selectedPort;
@@ -457,7 +461,7 @@ function finishUnexpectedDisconnect() {
     // Mirror the toggleStatus that finishClose runs via finishedCallback for intentional
     // disconnects. Reset before the UI teardown so a late removedDevice cannot re-enter
     // connectDisconnect() against a still-"connected" state.
-    isConnected = false;
+    getConnectionFsm().setLinkOpen(false);
 
     teardownConnectionUi();
 }
@@ -665,7 +669,7 @@ function onOpenVirtual() {
     CONFIGURATOR.virtualMode = true;
     CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
 
-    isConnected = true;
+    getConnectionFsm().setLinkOpen(true);
 
     // Set connection timestamp for virtual connections
     connectionTimestamp = Date.now();
@@ -1127,7 +1131,7 @@ function rebootReconnect() {
         // If the link survived the reboot, drop the now-stale connection so the UI returns to
         // the landing tab instead of sitting on a dead connection. (disconnectForReboot ->
         // prepareDisconnect calls stopRebootReconnect on the already-fired timeout — harmless.)
-        if (isConnected) {
+        if (isConnected()) {
             disconnectForReboot();
         }
 
@@ -1161,7 +1165,7 @@ function rebootReconnect() {
                 getConnectionFsm().concludeReboot(CONFIGURATOR.connectionValid);
                 return;
             }
-            if (!isConnected && !GUI.connecting_to) {
+            if (!isConnected() && !GUI.connecting_to) {
                 // Drain any leftover MSP state from the reboot command (queued resends and
                 // their callbacks) before the fresh handshake, so stale reboot-command
                 // traffic can't collide with the new connection's request chain.
