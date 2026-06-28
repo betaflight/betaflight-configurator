@@ -108,7 +108,10 @@ export function initializeSerialBackend() {
     // TODO: use event gattserverdisconnected for save and reboot and device removal.
 
     serial.addEventListener("removedDevice", (event) => {
-        if (event.detail.path === GUI.connected_to) {
+        // event.detail.path is now a stable per-device id (WebSerial: "serial_N"),
+        // so this match is device-specific: removing device A no longer triggers a
+        // disconnect when device B is the connected one.
+        if (event.detail?.path && event.detail.path === GUI.connected_to) {
             connectDisconnect();
         }
     });
