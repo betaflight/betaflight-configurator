@@ -377,6 +377,39 @@ describe("S2a abortable reconnect loop", () => {
         expect(open).toHaveBeenCalledWith("/dev/ttyACM1");
     });
 
+    it("preserves the frozen token across a FAILED reopen and retries to CONNECTED", async () => {
+        // Regression guard: a failed reopen must NOT route CONNECTING -> IDLE (which
+        // clears the token). resolveTarget here resolves the TOKEN — exactly as the
+        // live wiring will — so if the failed reopen wiped it, every later poll
+        // returns null and the loop wedges to the deadline (ok === false).
+        const m = connected();
+        m.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
+        const { now, wait } = fakeClock();
+
+        const states = [];
+        m.subscribe((snap) => states.push(snap.state));
+
+        let openCalls = 0;
+        const open = vi.fn(async () => ++openCalls >= 2); // first reopen fails, second succeeds
+        const resolveTarget = vi.fn(() => (m.getReconnectToken() ? "serial_0" : null));
+
+        const ok = await m.runReconnect({
+            resolveTarget,
+            open,
+            isReady: () => true,
+            policy: DEFAULT_POLICY,
+            now,
+            wait,
+        });
+
+        expect(ok).toBe(true);
+        expect(m.state).toBe(State.CONNECTED);
+        expect(openCalls).toBe(2); // failed once, succeeded on retry
+        expect(m.getReconnectToken()).not.toBeNull(); // token survived the failed reopen
+        // The retry must NOT flicker through IDLE.
+        expect(states).not.toContain(State.IDLE);
+    });
+
     it("gives up at the deadline and returns to IDLE", async () => {
         const m = connected();
         const { now, wait } = fakeClock();

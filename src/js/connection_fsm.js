@@ -69,6 +69,7 @@ const TRANSITIONS = Object.freeze({
         [Event.HANDSHAKE]: State.HANDSHAKING,
         [Event.READY]: State.CONNECTED,
         [Event.CLI_READY]: State.CLI,
+        [Event.RECONNECT]: State.RECONNECTING, // a failed reopen during a reconnect loop -> wait again
         [Event.DISCONNECT]: State.DISCONNECTING,
         [Event.FAIL]: State.FAILED,
         [Event.CLOSED]: State.IDLE,
@@ -504,13 +505,13 @@ export class ConnectionFsm {
                     this.dispatch(Event.READY); // CONNECTING -> CONNECTED
                     return true;
                 }
-                // Open failed or not ready: fall back to RECONNECTING and retry.
+                // Open failed or not ready: go back to waiting. Use the dedicated
+                // CONNECTING -> RECONNECTING edge — NOT CONNECTING -> IDLE, which
+                // would clear the frozen reconnect token (see dispatch()) and make
+                // every subsequent resolveTarget() (which resolves that token)
+                // return null, wedging the loop until the deadline.
                 if (this._state === State.CONNECTING) {
-                    this.dispatch(Event.CLOSED); // CONNECTING -> IDLE
-                    // Re-enter the reconnect wait from IDLE via CONNECT->...?
-                    // Simpler: treat a failed reopen as a retry by re-priming
-                    // the loop through RECONNECTING.
-                    this._state = State.RECONNECTING;
+                    this.dispatch(Event.RECONNECT);
                 }
             }
 
@@ -550,7 +551,12 @@ function defaultWait(ms, signal) {
     });
 }
 
-/** Default per-transport timeout policy (ms). Tuned per transport in S2b. */
+/**
+ * Default per-transport timeout policy (ms). Tuned per transport when runReconnect
+ * goes live. NOTE: `deadline` (30000) must be reconciled with serial_backend's
+ * REBOOT_CONNECT_MAX_TIME_MS (10000) when runReconnect replaces that live loop —
+ * today they are two independent loops with two independent deadlines.
+ */
 export const DEFAULT_POLICY = Object.freeze({ initialDelay: 250, maxDelay: 2000, deadline: 30000 });
 
 // Lazily-constructed singleton so there is no module-init-order hazard.
