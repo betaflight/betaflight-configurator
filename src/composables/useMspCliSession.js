@@ -5,6 +5,8 @@ import GUI from "../js/gui";
 import FC from "../js/fc";
 import { connectDisconnect } from "../js/serial_backend";
 import PortHandler from "../js/port_handler";
+import { serial } from "../js/serial";
+import { getConnectionFsm } from "../js/connection_fsm";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const SAVE_COMMAND_TIMEOUT_MS = 5000;
@@ -68,11 +70,18 @@ export function readDumpAll() {
 
 export function scheduleReconnect() {
     // Capture the currently-selected real device synchronously, before the reboot/save can drop
-    // it off the port list. Pin it so selectActivePort() will not hijack the selection with the
-    // expert-mode virtual/manual fallback during the reconnect window. Only pin real paths.
+    // it off the port list. Freeze it as the FSM reconnect token (the single authority for
+    // "reconnect in progress + target") so selectActivePort() will not hijack the selection with
+    // the expert-mode virtual/manual fallback during the reconnect window. Only real paths.
     const target = PortHandler.portPicker.selectedPort;
     if (target && target !== "noselection" && target !== "virtual") {
-        PortHandler.pinnedReconnectTarget = target;
+        const token = serial.getReconnectToken?.() ?? {
+            transportType: "unknown",
+            opaqueId: target,
+            baud: 0,
+            isVirtual: false,
+        };
+        getConnectionFsm().freezeReconnectToken(token);
     }
 
     GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
@@ -80,12 +89,15 @@ export function scheduleReconnect() {
         RECONNECT_TIMEOUT_NAME,
         () => {
             // If selectActivePort drifted the selection while the device was transiently gone,
-            // restore it to the pinned target so we reconnect to the original device.
-            if (
-                PortHandler.pinnedReconnectTarget &&
-                PortHandler.portPicker.selectedPort !== PortHandler.pinnedReconnectTarget
-            ) {
-                PortHandler.portPicker.selectedPort = PortHandler.pinnedReconnectTarget;
+            // restore it to the reconnect target (token resolved to its current path, or its
+            // original path while still absent) so we reconnect to the original device.
+            const token = getConnectionFsm().getReconnectToken();
+            if (token) {
+                const original = typeof token.opaqueId === "string" ? token.opaqueId : token.opaqueId?.path;
+                const aim = serial.resolveReconnectTarget?.(token) ?? original;
+                if (aim && PortHandler.portPicker.selectedPort !== aim) {
+                    PortHandler.portPicker.selectedPort = aim;
+                }
             }
             connectDisconnect();
         },
@@ -95,10 +107,10 @@ export function scheduleReconnect() {
 
 export function cancelScheduledReconnect() {
     GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
-    // Cancelling the reconnect ends the reconnect-in-progress window: clear the pin so
+    // Cancelling the reconnect ends the reconnect-in-progress window: clear the FSM token so
     // selectActivePort() resumes its normal (incl. virtual/manual) fallback. Without this the
-    // pin set in scheduleReconnect would linger and suppress that fallback until the next connect.
-    PortHandler.pinnedReconnectTarget = null;
+    // token frozen in scheduleReconnect would linger and suppress that fallback until the next connect.
+    getConnectionFsm().clearReconnectToken();
 }
 
 export async function saveAndReconnect() {

@@ -207,9 +207,10 @@ function prepareDisconnect() {
     // which does not pass through here, so the loop is unaffected.)
     stopRebootReconnect();
 
-    // A user disconnect ends any reconnect-in-progress window: clear the pin so selectActivePort()
-    // resumes normal fallback behavior (the user is no longer waiting for the rebooted device).
-    PortHandler.pinnedReconnectTarget = null;
+    // NOTE: the reconnect window is NOT ended here. prepareDisconnect() is shared by the
+    // user-disconnect path (beginDisconnect → concludeReboot(false) clears the FSM token) and
+    // the mid-reboot disconnectForReboot() path (which must KEEP the token so the reconnect can
+    // continue). So token lifecycle is owned by those callers, not by this shared helper.
 
     GUI.configuration_loaded = false;
     GUI.timeout_kill_all();
@@ -538,9 +539,10 @@ function abortConnection(messageKey) {
     GUI.connected_to = false;
     GUI.connecting_to = false;
 
-    // A failed connect attempt ends any reconnect-in-progress window: clear the pin so
-    // selectActivePort() resumes normal fallback rather than staying aimed at a dead target.
-    PortHandler.pinnedReconnectTarget = null;
+    // A failed connect attempt ends any reconnect-in-progress window: clear the frozen
+    // reconnect token (FAILED state does not auto-clear it) so selectActivePort() resumes
+    // normal fallback rather than staying aimed at a dead target.
+    getConnectionFsm().clearReconnectToken();
 
     gui_log(message);
     showConnectionFailedDialog(message);
@@ -904,9 +906,10 @@ function connectCli() {
 function onConnect() {
     GUI.timeout_remove("connecting"); // kill connecting timer
 
-    // A connection is now established: any pending save/reboot reconnect has completed, so
-    // clear the pin and let selectActivePort() resume its normal fallback behavior.
-    PortHandler.pinnedReconnectTarget = null;
+    // A connection is now established: any pending save/reboot reconnect has completed.
+    // The FSM clears its reconnect token on reaching a ready state (READY/CLI_READY,
+    // dispatched right after this in finishOpen/connectCli), so selectActivePort()
+    // resumes its normal fallback behavior automatically.
 
     hide("#tabs ul.mode-disconnected");
     show("#tabs ul.mode-connected-cli");
@@ -1079,23 +1082,23 @@ export function reinitializeConnection(suppressDialog = false) {
 
     const currentPort = PortHandler.portPicker.selectedPort;
 
-    // Pin the device we are about to reboot so the reconnect targets it and selectActivePort()
-    // does not hijack the selection with the expert-mode virtual/manual fallback while the FC is
-    // briefly off the port list. Only pin real device paths — never "virtual"/"manual"/noselection.
+    // Freeze a reconnect TOKEN for the device we are about to reboot — the single
+    // authority for "reconnect in progress + target". selectActivePort() reads it
+    // so it does not hijack the selection with the expert-mode virtual/manual
+    // fallback while the FC is briefly off the port list, and the retry resolves it
+    // to the FC's CURRENT path (so a CDC re-enumeration that changes the OS path
+    // /dev/ttyACM0->ACM1, COM3->COM5 is followed instead of reconnecting to a stale
+    // path). Only for real device paths — never "virtual"/"manual"/noselection.
+    // Captured here because the transport is still open and can report its identity;
+    // fall back to a path-only token if the transport supplies none.
     if (currentPort && currentPort !== "noselection" && currentPort !== "virtual") {
-        PortHandler.pinnedReconnectTarget = currentPort;
-
-        // S2/S6 flip: freeze a transport-resolvable reconnect TOKEN (not just the
-        // display path) while still connected. The retry resolves it to the FC's
-        // CURRENT path — so a CDC re-enumeration that changes the OS path
-        // (/dev/ttyACM0 -> ACM1, COM3 -> COM5) is followed correctly instead of
-        // reconnecting to a stale path. Supersedes the pinned string (kept as a
-        // fallback for transports without a token). Captured here because the
-        // transport is still open and can report its identity.
-        const token = serial.getReconnectToken?.();
-        if (token) {
-            getConnectionFsm().freezeReconnectToken(token);
-        }
+        const token = serial.getReconnectToken?.() ?? {
+            transportType: "unknown",
+            opaqueId: currentPort,
+            baud: 0,
+            isVirtual: false,
+        };
+        getConnectionFsm().freezeReconnectToken(token);
     }
 
     // Send reboot command to the flight controller
@@ -1154,9 +1157,8 @@ function rebootReconnect() {
         // user reconnect manually (the reboot dialog closes via its no-reconnect check).
         if (!PortHandler.portPicker.autoConnect) {
             rebootReconnectTimerId = false;
-            // No automatic reconnect will run, so end the reconnect-in-progress window and let
-            // normal selection (incl. virtual/manual fallback) resume.
-            PortHandler.pinnedReconnectTarget = null;
+            // No automatic reconnect will run, so end the reconnect-in-progress window
+            // (concludeReboot clears the FSM token) and let normal selection resume.
             getConnectionFsm().concludeReboot(false);
             return;
         }
@@ -1174,8 +1176,7 @@ function rebootReconnect() {
             if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
-                // stop treating a reconnect as in progress so normal selection resumes.
-                PortHandler.pinnedReconnectTarget = null;
+                // concludeReboot clears the FSM token so normal selection resumes.
                 getConnectionFsm().concludeReboot(CONFIGURATOR.connectionValid);
                 return;
             }
@@ -1187,12 +1188,11 @@ function rebootReconnect() {
 
                 // Aim the reconnect at the originally-connected device, not at whatever
                 // selectActivePort may have drifted to while the FC was off the list.
-                // S2/S6 flip: prefer resolving the frozen TOKEN to the device's CURRENT
-                // path (handles a CDC path change across the reboot); fall back to the
-                // pinned display path for transports that supplied no token.
+                // Resolve the frozen TOKEN to the device's CURRENT path (handles a CDC
+                // path change), falling back to its original path while transiently absent.
                 const token = getConnectionFsm().getReconnectToken();
-                const resolved = token ? serial.resolveReconnectTarget?.(token) : null;
-                const target = resolved ?? PortHandler.pinnedReconnectTarget;
+                const original = typeof token?.opaqueId === "string" ? token.opaqueId : token?.opaqueId?.path;
+                const target = (token ? serial.resolveReconnectTarget?.(token) : null) ?? original;
                 if (target) {
                     PortHandler.portPicker.selectedPort = target;
                 }
@@ -1238,8 +1238,7 @@ function showRebootDialog() {
             rebootDialogProgressTimerId = false;
 
             // The reboot window has closed (reconnected / timed out / not auto-reconnecting):
-            // end the reconnect-in-progress state so normal port selection resumes.
-            PortHandler.pinnedReconnectTarget = null;
+            // concludeReboot clears the FSM token so normal port selection resumes.
             getConnectionFsm().concludeReboot(CONFIGURATOR.connectionValid);
 
             rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";

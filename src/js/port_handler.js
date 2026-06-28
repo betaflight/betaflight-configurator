@@ -1,6 +1,7 @@
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
+import { getConnectionFsm } from "./connection_fsm.js";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
@@ -35,13 +36,9 @@ const PortHandler = new (function () {
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
 
-    // The real device path we are reconnecting to after a save/reboot or MSP-CLI reconnect.
-    // A non-null value means "reconnect in progress": selectActivePort() must not hijack the
-    // selection with the expert-mode virtual/manual fallback while the rebooting device is
-    // transiently absent from the port lists. Set by serial_backend at the start of a reboot
-    // and the MSP-CLI reconnect; cleared on successful reconnect, when the reboot window
-    // closes, and on user disconnect. port_handler must NOT import serial_backend (no cycle).
-    this.pinnedReconnectTarget = null;
+    // The "reconnect in progress + target" state formerly lived here as
+    // `pinnedReconnectTarget`; it is now the FSM's frozen reconnect token (the
+    // single authority), read in selectActivePort() via getConnectionFsm().
 
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
@@ -293,12 +290,16 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     }
 
     // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
-    // While a reconnect is in progress (pinnedReconnectTarget set), the rebooting device is
-    // only transiently absent from the lists — it will re-enumerate and re-select itself.
-    // Do NOT assign the virtual/manual fallback in that window, or it would hijack the
-    // selection mid-reboot and leave the configurator pointed at the wrong "device".
+    // While a reconnect is in progress (the FSM holds a frozen reconnect token),
+    // the rebooting device is only transiently absent from the lists — it will
+    // re-enumerate and re-select itself. Do NOT assign the virtual/manual fallback
+    // in that window, or it would hijack the selection mid-reboot and leave the
+    // configurator pointed at the wrong "device". The FSM token is the SINGLE
+    // authority for "reconnect in progress + target" (was PortHandler's separate
+    // pinnedReconnectTarget string, set by both the reboot and CLI paths).
     const expertMode = isExpertModeEnabled();
-    const reconnectInProgress = this.pinnedReconnectTarget !== null;
+    const reconnectToken = getConnectionFsm().getReconnectToken();
+    const reconnectInProgress = reconnectToken !== null;
 
     if (!selectedPort && !reconnectInProgress && expertMode && this.showVirtualMode) {
         selectedPort = "virtual";
@@ -308,11 +309,17 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         selectedPort = "manual";
     }
 
-    // While reconnecting, keep the selection pinned to the real target (rather than dropping
-    // to "noselection") so the reconnect loop keeps aiming at the rebooting device until it
-    // re-enumerates and re-selects itself. Only pin to an actual path, never to virtual/manual.
-    if (!selectedPort && reconnectInProgress && typeof this.pinnedReconnectTarget === "string") {
-        selectedPort = this.pinnedReconnectTarget;
+    // While reconnecting, keep the selection aimed at the rebooting device rather
+    // than dropping to "noselection": resolve the frozen token to its CURRENT path
+    // (handles a CDC path change), falling back to the token's original path while
+    // the device is transiently absent. Never virtual/manual.
+    if (!selectedPort && reconnectInProgress) {
+        const original =
+            typeof reconnectToken.opaqueId === "string" ? reconnectToken.opaqueId : reconnectToken.opaqueId?.path;
+        const target = serial.resolveReconnectTarget?.(reconnectToken) ?? original;
+        if (typeof target === "string") {
+            selectedPort = target;
+        }
     }
 
     // Return the default port if no other port was selected

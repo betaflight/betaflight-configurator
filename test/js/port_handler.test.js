@@ -75,9 +75,17 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
 }));
 
 import PortHandler from "../../src/js/port_handler";
+import { getConnectionFsm, __resetConnectionFsmForTests } from "../../src/js/connection_fsm.js";
+
+// "Reconnect in progress" is now the FSM holding a frozen reconnect token (was
+// PortHandler.pinnedReconnectTarget). Helper to simulate it with a path-only token.
+function pinReconnectTarget(path) {
+    getConnectionFsm().freezeReconnectToken({ transportType: "unknown", opaqueId: path, baud: 0, isVirtual: false });
+}
 
 function resetPortHandler() {
     vi.clearAllMocks();
+    __resetConnectionFsmForTests();
     serial.connected = false;
     dfuProtocol.usbDevice = null;
     isExpertModeEnabled.mockReturnValue(true);
@@ -86,7 +94,6 @@ function resetPortHandler() {
     PortHandler.currentBluetoothPorts = [];
     PortHandler.showVirtualMode = false;
     PortHandler.showManualMode = false;
-    PortHandler.pinnedReconnectTarget = null;
     PortHandler.portPicker.selectedPort = "noselection";
 }
 
@@ -105,7 +112,7 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
         PortHandler.currentSerialPorts = [];
         PortHandler.currentUsbPorts = [];
         PortHandler.currentBluetoothPorts = [];
-        PortHandler.pinnedReconnectTarget = "/dev/ttyACM0";
+        pinReconnectTarget("/dev/ttyACM0");
 
         // Expert mode + virtual mode are both enabled (the regression's precondition).
         isExpertModeEnabled.mockReturnValue(true);
@@ -124,7 +131,7 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
     // scoped to the reconnect window and does not break ordinary virtual-mode selection.
     it("still falls back to 'virtual' on normal startup (no reconnect pinned)", () => {
         PortHandler.currentSerialPorts = [];
-        PortHandler.pinnedReconnectTarget = null;
+        __resetConnectionFsmForTests(); // no reconnect token => not reconnecting
         isExpertModeEnabled.mockReturnValue(true);
         PortHandler.showVirtualMode = true;
 
@@ -137,7 +144,7 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
     // The same guard applies to the "manual" fallback during a reconnect.
     it("does NOT select 'manual' while a reconnect is pinned (expert + showManualMode on)", () => {
         PortHandler.currentSerialPorts = [];
-        PortHandler.pinnedReconnectTarget = "bluetooth-0011";
+        pinReconnectTarget("bluetooth-0011");
         isExpertModeEnabled.mockReturnValue(true);
         PortHandler.showManualMode = true;
 

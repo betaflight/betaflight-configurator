@@ -209,9 +209,13 @@ export class ConnectionFsm {
             this._quality = Quality.NONE;
         }
 
-        // Token lifecycle: cleared whenever we settle into IDLE; a fresh
-        // CONNECTED (not via a reconnect) also drops a stale token.
-        if (next === State.IDLE) {
+        // Token lifecycle: the frozen reconnect token exists only while a
+        // reconnect is in flight. Clear it once we SETTLE — either reached a
+        // ready state (CONNECTED/CLI: the reconnect succeeded) or fell back to
+        // IDLE (gave up / torn down). It is preserved through the transient
+        // CONNECTING/HANDSHAKING/REBOOTING/RECONNECTING states so selectActivePort
+        // can resolve it to aim the reconnect.
+        if (next === State.IDLE || READY_STATES.has(next)) {
             this._token = null;
         }
 

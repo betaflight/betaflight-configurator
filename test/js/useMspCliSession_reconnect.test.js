@@ -61,12 +61,14 @@ vi.mock("../../src/js/fc", () => ({
 
 import { scheduleReconnect, cancelScheduledReconnect } from "../../src/composables/useMspCliSession";
 import PortHandler from "../../src/js/port_handler";
+import { getConnectionFsm, __resetConnectionFsmForTests } from "../../src/js/connection_fsm.js";
 
 describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         vi.clearAllMocks();
         GUI._timers.clear();
+        __resetConnectionFsmForTests();
     });
 
     afterEach(() => {
@@ -115,16 +117,15 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         expect(connectDisconnect).not.toHaveBeenCalled();
     });
 
-    it("cancelScheduledReconnect clears the pinned reconnect target (no sticky pin)", () => {
-        PortHandler.pinnedReconnectTarget = null;
+    it("cancelScheduledReconnect clears the FSM reconnect token (no sticky reconnect)", () => {
         PortHandler.portPicker.selectedPort = "serial_0";
 
-        // scheduleReconnect pins the currently-selected real device...
+        // scheduleReconnect freezes the currently-selected real device as the FSM token...
         scheduleReconnect();
-        expect(PortHandler.pinnedReconnectTarget).toBe("serial_0");
+        expect(getConnectionFsm().getReconnectToken()?.opaqueId).toBe("serial_0");
 
-        // ...and cancelling must release it so selectActivePort's fallback resumes.
+        // ...and cancelling must clear it so selectActivePort's fallback resumes.
         cancelScheduledReconnect();
-        expect(PortHandler.pinnedReconnectTarget).toBeNull();
+        expect(getConnectionFsm().getReconnectToken()).toBeNull();
     });
 });
