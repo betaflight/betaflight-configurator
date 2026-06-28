@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { serialDevices, vendorIdNames } from "./devices";
+import { LinkEvent } from "./LinkEvent.js";
 import GUI from "../gui";
 
 const logHead = "[TAURI SERIAL]";
@@ -47,6 +48,9 @@ function parseId(value) {
  * Tauri shell. The plugin exposes a stable command interface via `invoke`.
  */
 class TauriSerial extends EventTarget {
+    // S6d: emits the normalized LinkEvent contract alongside legacy events.
+    supportsLinkEvents = true;
+
     constructor() {
         super();
 
@@ -56,6 +60,9 @@ class TauriSerial extends EventTarget {
         this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
+        // S6d: set by handleFatalSerialError (broken pipe / device gone) so
+        // disconnect() emits LOST rather than CLOSED.
+        this._linkLost = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -103,8 +110,73 @@ class TauriSerial extends EventTarget {
         // On fatal errors (broken pipe, etc.) just disconnect cleanly.
         // The monitor loop will surface the removal as a removedDevice event.
         if (this.connected) {
+            // Fatal error mid-link → the link was lost, not intentionally closed.
+            this._linkLost = true;
             this.disconnect();
         }
+    }
+
+    /**
+     * S6d / S1b-Tauri: reconnect token for a Tauri serial device. Unlike other
+     * transports the OS path is NOT stable — a CDC device commonly re-enumerates
+     * to a different path across a reboot (/dev/ttyACM0 -> ACM1, COM3 -> COM5).
+     * So the token freezes the device IDENTITY ({path, vid, pid, serialNumber})
+     * and resolveReconnectTarget re-derives the CURRENT path from the live port
+     * list rather than trusting the old path.
+     */
+    getReconnectToken() {
+        if (!this.connected || !this.connectionId) {
+            return null;
+        }
+        return {
+            transportType: "serial",
+            opaqueId: {
+                path: this.connectionId,
+                vendorId: this.connectionInfo?.vendorId,
+                productId: this.connectionInfo?.productId,
+                serialNumber: this.connectionInfo?.serialNumber,
+            },
+            baud: this.bitrate,
+            isVirtual: false,
+        };
+    }
+
+    /**
+     * Re-resolve a Tauri token to the CURRENT path, tolerating a CDC path change:
+     *   1. exact path still present (no path change) -> use it;
+     *   2. else a UNIQUE serial_number match (reliable across re-enumeration);
+     *   3. else a UNIQUE vid/pid match;
+     *   4. else null -> ambiguous (two identical FCs / empty serial_number), so
+     *      the FSM surfaces a re-pick rather than silently binding the wrong one
+     *      (plan MINOR limitation). Reads the live port list, which the 1s device
+     *      monitor keeps fresh after a re-enumeration.
+     */
+    resolveReconnectTarget(token) {
+        if (!token || token.transportType !== "serial") {
+            return null;
+        }
+        const id = token.opaqueId;
+        if (!id) {
+            return null;
+        }
+        const ports = this.ports;
+
+        if (id.path && ports.some((p) => p.path === id.path)) {
+            return id.path;
+        }
+        if (id.serialNumber) {
+            const matches = ports.filter((p) => p.serialNumber && p.serialNumber === id.serialNumber);
+            if (matches.length === 1) {
+                return matches[0].path;
+            }
+        }
+        if (id.vendorId != null && id.productId != null) {
+            const matches = ports.filter((p) => p.vendorId === id.vendorId && p.productId === id.productId);
+            if (matches.length === 1) {
+                return matches[0].path;
+            }
+        }
+        return null;
     }
 
     startDeviceMonitoring() {
@@ -188,11 +260,13 @@ class TauriSerial extends EventTarget {
 
             for (const removed of removedPorts) {
                 this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+                this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_LEFT, { detail: removed }));
                 console.log(`${logHead} Device removed: ${removed.path}`);
             }
 
             for (const added of addedPorts) {
                 this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+                this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_ARRIVED, { detail: added }));
                 console.log(`${logHead} Device added: ${added.path}`);
             }
 
@@ -285,6 +359,9 @@ class TauriSerial extends EventTarget {
                 bitrate: this.bitrate,
                 vendorId: activePort?.vendorId,
                 productId: activePort?.productId,
+                // S6d: kept for the reconnect token so a CDC path change can be
+                // re-resolved by serial_number across an FC reboot.
+                serialNumber: activePort?.serialNumber,
             };
 
             this.isNeedBatchWrite = this.checkIsNeedBatchWrite();
@@ -298,6 +375,7 @@ class TauriSerial extends EventTarget {
             this.readLoop();
 
             this.dispatchEvent(new CustomEvent("connect", { detail: true }));
+            this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: true }));
             console.log(`${logHead} Connected to ${path}`);
             return true;
         } catch (error) {
@@ -378,7 +456,9 @@ class TauriSerial extends EventTarget {
                     });
 
                     if (result && result.length > 0) {
-                        this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(result) }));
+                        const bytes = new Uint8Array(result);
+                        this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
+                        this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: bytes }));
                     }
 
                     await new Promise((resolve) => setTimeout(resolve, 5));
@@ -503,16 +583,20 @@ class TauriSerial extends EventTarget {
             this.closeRequested = false;
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
             return true;
         } catch (error) {
             console.error(`${logHead} Error disconnecting:`, error);
             this.closeRequested = false;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: false }));
             return false;
         } finally {
             if (this.openCanceled) {
                 this.openCanceled = false;
             }
+            // Reset so a subsequent intentional close reads as CLOSED.
+            this._linkLost = false;
         }
     }
 
