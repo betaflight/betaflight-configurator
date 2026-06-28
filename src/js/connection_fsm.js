@@ -214,6 +214,48 @@ export class ConnectionFsm {
         this._token = null;
     }
 
+    // ---- Reboot intent (S2b consolidation bridge) -------------------------
+
+    /**
+     * Mark a reboot as begun. Returns false if a reboot/reconnect is already in
+     * flight (reentrancy). NOTE (S2b): the FSM is not yet driven by the live
+     * connect/disconnect handlers — that wiring, which makes this rejection
+     * AUTHORITATIVE, lands in S4. Until then this is observability + a soft
+     * reentrancy signal; the actual overlap guard remains stopRebootReconnect().
+     * A reboot implies a live FC, so from any non-reboot state we adopt REBOOTING.
+     */
+    requestReboot() {
+        if (this._state === State.REBOOTING || this._state === State.RECONNECTING) {
+            return false;
+        }
+        const prev = this._state;
+        this._state = State.REBOOTING;
+        this._notify(prev, Event.REBOOT);
+        return true;
+    }
+
+    /** Mark the reconnect wait as started (REBOOTING -> RECONNECTING). */
+    reconnectStarted() {
+        if (this._state === State.REBOOTING) {
+            const prev = this._state;
+            this._state = State.RECONNECTING;
+            this._notify(prev, Event.RECONNECT);
+        }
+    }
+
+    /**
+     * Settle a reboot window: reconnected -> CONNECTED, else -> IDLE (giving up
+     * clears the frozen token). Best-effort during the S2b migration.
+     */
+    concludeReboot(reconnected) {
+        const prev = this._state;
+        this._state = reconnected ? State.CONNECTED : State.IDLE;
+        if (this._state === State.IDLE) {
+            this._token = null;
+        }
+        this._notify(prev, reconnected ? Event.READY : Event.CLOSED);
+    }
+
     // ---- Abort plumbing ----------------------------------------------------
 
     /** Start a fresh abortable operation (reboot/reconnect). */

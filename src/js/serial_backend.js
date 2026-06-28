@@ -23,6 +23,7 @@ import CryptoES from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
+import { getConnectionFsm } from "./connection_fsm.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
@@ -89,6 +90,12 @@ export function initializeSerialBackend() {
     // (notably gui.js, which is on the other side of an import cycle) can still
     // request a connect/disconnect toggle.
     EventBus.$on("connection:toggle", () => connectDisconnect());
+
+    // S2b: the SINGLE canonical reboot entry point. gui.js (on the other side of
+    // an import cycle) and any other caller emit "reboot:request" instead of
+    // running their own divergent reboot/reconnect logic, so every reboot flows
+    // through reinitializeConnection() — killing the CLI-vs-Vue divergence.
+    EventBus.$on("reboot:request", () => reinitializeConnection());
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
@@ -198,6 +205,10 @@ function beginDisconnect() {
     // prepareDisconnect() only stops the reconnect timers. (disconnectForReboot does NOT close it:
     // the modal must stay up while the reboot's own reconnect runs.)
     closeRebootDialog();
+
+    // A user disconnect aborts any in-flight reboot in the FSM read-model.
+    // (disconnectForReboot is mid-reboot and deliberately does NOT conclude.)
+    getConnectionFsm().concludeReboot(false);
 
     mspHelper?.setArmingEnabled(true, false, function () {
         finishClose(toggleStatus);
@@ -978,14 +989,22 @@ export function reinitializeConnection(suppressDialog = false) {
     // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
 
+    // S2b: record reboot intent in the FSM (single owner of lifecycle state).
+    // Observability + soft reentrancy signal during the migration; the actual
+    // overlap guard remains stopRebootReconnect() until S4 makes the FSM the
+    // authoritative gate. Virtual toggles settle immediately below.
+    getConnectionFsm().requestReboot();
+
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
             setTimeout(function () {
                 connectDisconnect();
             }, 500);
+            getConnectionFsm().concludeReboot(true);
             return rebootTimestamp;
         }
+        getConnectionFsm().concludeReboot(false);
         return rebootTimestamp;
     }
 
@@ -1020,6 +1039,9 @@ export function reinitializeConnection(suppressDialog = false) {
         gui_log(i18n.getMessage("deviceRebooting"));
         gui_log(i18n.getMessage("deviceReady"));
 
+        // No reconnect loop runs here (auto-connect handles it); settle the FSM
+        // read-model now. Authoritative readiness wiring lands in S3/S4.
+        getConnectionFsm().concludeReboot(false);
         return rebootTimestamp;
     }
     // Show reboot progress modal
@@ -1054,8 +1076,12 @@ function rebootReconnect() {
             // No automatic reconnect will run, so end the reconnect-in-progress window and let
             // normal selection (incl. virtual/manual fallback) resume.
             PortHandler.pinnedReconnectTarget = null;
+            getConnectionFsm().concludeReboot(false);
             return;
         }
+
+        // Entering the retry phase: REBOOTING -> RECONNECTING in the FSM read-model.
+        getConnectionFsm().reconnectStarted();
 
         // Retry connecting until the rebooted FC answers (connectionValid), the reboot window
         // closes, or Auto-Connect is turned off mid-window. Early attempts may connect to a
@@ -1069,6 +1095,7 @@ function rebootReconnect() {
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
                 // stop treating a reconnect as in progress so normal selection resumes.
                 PortHandler.pinnedReconnectTarget = null;
+                getConnectionFsm().concludeReboot(CONFIGURATOR.connectionValid);
                 return;
             }
             if (!isConnected && !GUI.connecting_to) {
@@ -1126,6 +1153,7 @@ function showRebootDialog() {
             // The reboot window has closed (reconnected / timed out / not auto-reconnecting):
             // end the reconnect-in-progress state so normal port selection resumes.
             PortHandler.pinnedReconnectTarget = null;
+            getConnectionFsm().concludeReboot(CONFIGURATOR.connectionValid);
 
             rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
             rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");

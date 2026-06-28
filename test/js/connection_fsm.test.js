@@ -157,6 +157,43 @@ describe("S2a read-model", () => {
     });
 });
 
+describe("S2b reboot-intent helpers", () => {
+    it("requestReboot enters REBOOTING and rejects a re-entrant reboot", () => {
+        const m = connected();
+        expect(m.requestReboot()).toBe(true);
+        expect(m.state).toBe(State.REBOOTING);
+        // Already rebooting -> rejected.
+        expect(m.requestReboot()).toBe(false);
+        m.reconnectStarted();
+        expect(m.state).toBe(State.RECONNECTING);
+        // Still in flight -> rejected.
+        expect(m.requestReboot()).toBe(false);
+    });
+
+    it("concludeReboot(true) settles to CONNECTED, concludeReboot(false) to IDLE and clears the token", () => {
+        const m = connected();
+        m.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
+        m.requestReboot();
+        m.concludeReboot(true);
+        expect(m.state).toBe(State.CONNECTED);
+
+        m.requestReboot();
+        m.concludeReboot(false);
+        expect(m.state).toBe(State.IDLE);
+        expect(m.getReconnectToken()).toBeNull();
+    });
+
+    it("notifies subscribers across the reboot lifecycle", () => {
+        const m = connected();
+        const states = [];
+        m.subscribe((snap) => states.push(snap.state));
+        m.requestReboot();
+        m.reconnectStarted();
+        m.concludeReboot(true);
+        expect(states).toEqual([State.REBOOTING, State.RECONNECTING, State.CONNECTED]);
+    });
+});
+
 describe("S2a abortable reconnect loop", () => {
     // Injected sleep that advances a fake clock so the deadline is reachable
     // without real time.

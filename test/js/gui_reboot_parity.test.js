@@ -1,27 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// S0 / S2 characterization — CLI-vs-Vue BLE reboot PARITY.
+// S0 -> S2b characterization — CLI-vs-Vue reboot PARITY (divergence removed).
 //
-// There are TWO reboot/reconnect implementations in the tree:
+// BEFORE S2b there were two divergent reboot implementations:
+//   1. serial_backend.reinitializeConnection() + rebootReconnect() — flush+retry.
+//   2. gui.js GuiControl.reinitializeConnection() — a legacy one-shot that sent
+//      MSP_SET_REBOOT itself and emitted a single "connection:toggle" with NO
+//      retry loop (so a toggle into a still-booting FC was never retried).
 //
-//   1. serial_backend.reinitializeConnection() + rebootReconnect()
-//      (used by the Vue reboot path / useReboot). For BLE/manual it:
-//        - sends MSP_SET_REBOOT,
-//        - waits REBOOT_FLUSH_DELAY_MS (1500ms), then disconnectForReboot(),
-//        - and RETRIES connecting on an interval (REBOOT_RECONNECT_RETRY_MS)
-//          until connectionValid / timeout / auto-connect off.
-//      (See "serial_backend BLE Save-and-Reboot reconnect" in serial_backend.test.js.)
-//
-//   2. gui.js GuiControl.reinitializeConnection() (the legacy/CLI-era path). For
-//      BLE/manual it does a SINGLE one-shot:
-//        return setTimeout(emitToggle, 1500);
-//      It emits "connection:toggle" exactly once after ~1500ms and then stops —
-//      there is NO flush-then-retry loop. If that single toggle reconnects to a
-//      still-booting FC and gets dropped, nothing retries.
-//
-// This test pins divergence #2 so S2 (which is expected to unify these two paths)
-// has a regression net. It asserts the CURRENT gui.js behavior (one-shot, no retry).
+// S2b removes divergence by deleting gui.js's implementation: it now simply
+// emits "reboot:request", the single canonical event that serial_backend's
+// orchestrator handles. This test — which previously PINNED the divergence —
+// now asserts the PARITY: gui.js delegates and runs no reboot logic of its own.
 // ---------------------------------------------------------------------------
 
 const { EventBus, PortHandler, CONFIGURATOR, MSP, MSPCodes } = vi.hoisted(() => {
@@ -54,7 +45,10 @@ vi.mock("../../src/js/pinia_instance", () => ({ __esModule: true, pinia: {} }));
 
 import GUI from "../../src/js/gui";
 
-describe("gui.js reinitializeConnection — BLE reboot (CLI-vs-Vue parity / divergence)", () => {
+const toggleCalls = () => EventBus.$emit.mock.calls.filter((c) => c[0] === "connection:toggle").length;
+const rebootRequests = () => EventBus.$emit.mock.calls.filter((c) => c[0] === "reboot:request").length;
+
+describe("gui.js reinitializeConnection — delegates to the canonical reboot path (parity)", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         CONFIGURATOR.virtualMode = false;
@@ -64,44 +58,46 @@ describe("gui.js reinitializeConnection — BLE reboot (CLI-vs-Vue parity / dive
         PortHandler.portAvailable = false;
     });
 
-    it("emits a SINGLE connection:toggle at ~1500ms with NO retry loop (diverges from serial_backend flush+retry)", () => {
+    it("emits a single reboot:request and runs NO reboot logic of its own", () => {
         vi.useFakeTimers();
         try {
             GUI.reinitializeConnection();
 
-            // The reboot command is sent.
-            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+            // Delegation: exactly one reboot:request, emitted synchronously.
+            expect(rebootRequests()).toBe(1);
 
-            // Nothing toggles before the one-shot delay.
-            vi.advanceTimersByTime(1499);
-            expect(EventBus.$emit).not.toHaveBeenCalledWith("connection:toggle");
+            // gui.js no longer sends the reboot command or toggles the link itself —
+            // serial_backend's single orchestrator owns all of that now.
+            expect(MSP.send_message).not.toHaveBeenCalled();
+            expect(toggleCalls()).toBe(0);
 
-            // Exactly one toggle at the 1500ms boundary.
-            vi.advanceTimersByTime(1);
-            const toggleCalls = () => EventBus.$emit.mock.calls.filter((c) => c[0] === "connection:toggle").length;
-            expect(toggleCalls()).toBe(1);
-
-            // Crucially: NO further toggles — unlike serial_backend.rebootReconnect(),
-            // gui.js does not retry. (connectionValid never flips here.)
+            // And crucially: no legacy one-shot timer / retry loop hiding in gui.js.
             vi.advanceTimersByTime(30000);
-            expect(toggleCalls()).toBe(1);
+            expect(toggleCalls()).toBe(0);
+            expect(rebootRequests()).toBe(1);
         } finally {
             vi.useRealTimers();
         }
     });
 
-    it("does NOT toggle at all when auto-connect is off (no manual-reconnect retry either)", () => {
-        vi.useFakeTimers();
-        try {
-            PortHandler.portPicker.autoConnect = false;
+    it("delegates identically regardless of port type or auto-connect (no per-case divergence)", () => {
+        for (const setup of [
+            { selectedPort: "bluetooth_1", autoConnect: true, virtualMode: false },
+            { selectedPort: "/dev/ttyACM0", autoConnect: true, virtualMode: false },
+            { selectedPort: "manual", autoConnect: false, virtualMode: false },
+            { selectedPort: "virtual", autoConnect: true, virtualMode: true },
+        ]) {
+            vi.clearAllMocks();
+            PortHandler.portPicker.selectedPort = setup.selectedPort;
+            PortHandler.portPicker.autoConnect = setup.autoConnect;
+            CONFIGURATOR.virtualMode = setup.virtualMode;
 
             GUI.reinitializeConnection();
 
-            vi.advanceTimersByTime(30000);
-            const toggleCalls = EventBus.$emit.mock.calls.filter((c) => c[0] === "connection:toggle").length;
-            expect(toggleCalls).toBe(0);
-        } finally {
-            vi.useRealTimers();
+            // Same single delegation in every case — the whole point of S2b.
+            expect(rebootRequests()).toBe(1);
+            expect(MSP.send_message).not.toHaveBeenCalled();
+            expect(toggleCalls()).toBe(0);
         }
     });
 });
