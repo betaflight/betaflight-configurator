@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { LinkEvent } from "./LinkEvent.js";
 
 /**
  * Raw TCP transport for the Tauri shell (desktop and Android).
@@ -9,11 +10,16 @@ import { listen } from "@tauri-apps/api/event";
  * receives bytes via the `tcp-data` / `tcp-closed` events.
  */
 class TauriTcp extends EventTarget {
+    // S6b: emits the normalized LinkEvent contract alongside legacy events.
+    supportsLinkEvents = true;
+
     constructor() {
         super();
 
         this.connected = false;
         this.connectionInfo = null;
+        // S6b: set by handleDisconnect (tcp-closed) so disconnect() emits LOST.
+        this._linkLost = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -34,11 +40,31 @@ class TauriTcp extends EventTarget {
     }
 
     handleDisconnect() {
+        // Peer-initiated close (tcp-closed) → the link was lost, not closed.
+        this._linkLost = true;
         this.disconnect();
     }
 
     _portInfo(path) {
         return { path, displayName: "Betaflight TCP", vendorId: 0, productId: 0, port: 0 };
+    }
+
+    /**
+     * S6b: reconnect token for the TCP endpoint (identity = address; stable
+     * across an FC reboot).
+     */
+    getReconnectToken() {
+        if (!this.connected || !this.address) {
+            return null;
+        }
+        return { transportType: "tcp", opaqueId: this.address, baud: 0, isVirtual: false };
+    }
+
+    resolveReconnectTarget(token) {
+        if (!token || token.transportType !== "tcp") {
+            return null;
+        }
+        return token.opaqueId ?? null;
     }
 
     createPort(url) {
@@ -82,6 +108,7 @@ class TauriTcp extends EventTarget {
                 const bytes = new Uint8Array(event.payload);
                 this.handleReceiveBytes({ detail: bytes });
                 this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
+                this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: bytes }));
             });
             const closedUnlisten = await listen("tcp-closed", () => {
                 this.handleDisconnect();
@@ -94,6 +121,7 @@ class TauriTcp extends EventTarget {
             this.address = `tcp://${host}:${port}`;
             this.connected = true;
             this.dispatchEvent(new CustomEvent("connect", { detail: this.address }));
+            this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: this.address }));
             return true;
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
@@ -108,16 +136,20 @@ class TauriTcp extends EventTarget {
         this.connected = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
+        const lost = this._linkLost;
+        this._linkLost = false;
 
         try {
             await invoke("tcp_disconnect");
             await this._teardownListeners();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            this.dispatchEvent(new CustomEvent(lost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
             return true;
         } catch (e) {
             console.error(`${this.logHead}Failed to close connection: ${e}`);
             await this._teardownListeners();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            this.dispatchEvent(new CustomEvent(lost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: false }));
             return false;
         }
     }

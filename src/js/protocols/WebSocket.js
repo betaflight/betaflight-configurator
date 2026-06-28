@@ -1,9 +1,18 @@
+import { LinkEvent } from "./LinkEvent.js";
+
 class Websocket extends EventTarget {
+    // S6b: emits the normalized LinkEvent contract alongside legacy events.
+    supportsLinkEvents = true;
+
     constructor() {
         super();
 
         this.connected = false;
         this.connectionInfo = null;
+        // S6b: true while an intentional disconnect() is closing the socket, so
+        // the onclose handler emits CLOSED rather than LOST. A peer-initiated
+        // close (server gone) leaves it false → LOST.
+        this._closing = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -74,13 +83,19 @@ class Websocket extends EventTarget {
                     },
                 }),
             );
+            socket.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: { socketId: socket.address } }));
         };
 
         this.ws.onclose = async function (e) {
             console.log(`${socket.logHead} Connection closed: `, e);
 
+            // An onclose we did not initiate (server vanished, network drop) is a
+            // LOST link; one driven by disconnect() is an intentional CLOSED.
+            const lost = !socket._closing;
             await socket.disconnect();
             socket.dispatchEvent(new CustomEvent("disconnect", { detail: { socketId: socket.address } }));
+            socket.dispatchEvent(new CustomEvent(lost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
+            socket._closing = false;
         };
 
         this.ws.onerror = function (e) {
@@ -90,13 +105,35 @@ class Websocket extends EventTarget {
         this.ws.onmessage = async function (msg) {
             let uint8Chunk = await socket.blob2uint(msg.data);
             socket.dispatchEvent(new CustomEvent("receive", { detail: uint8Chunk }));
+            socket.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: uint8Chunk }));
         };
+    }
+
+    /**
+     * S6b: reconnect token for the TCP/WebSocket endpoint. Identity is the
+     * address — a TCP endpoint does not change across an FC reboot, so
+     * resolveReconnectTarget just returns it unchanged.
+     */
+    getReconnectToken() {
+        if (!this.connected || !this.address) {
+            return null;
+        }
+        return { transportType: "tcp", opaqueId: this.address, baud: 0, isVirtual: false };
+    }
+
+    resolveReconnectTarget(token) {
+        if (!token || token.transportType !== "tcp") {
+            return null;
+        }
+        return token.opaqueId ?? null;
     }
 
     async disconnect() {
         this.connected = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
+        // Mark the close intentional so onclose emits CLOSED, not LOST.
+        this._closing = true;
 
         if (this.ws) {
             try {
