@@ -5,7 +5,6 @@ import { getOS } from "./utils/checkCompatibility";
 import { i18n } from "./localization";
 import { useDialogStore } from "../stores/dialog";
 import { pinia } from "./pinia_instance";
-import { EventBus } from "../components/eventBus";
 import { getLockManager } from "./lock_manager";
 
 const TABS = {};
@@ -397,15 +396,6 @@ class GuiControl {
         for (const a of element.querySelectorAll("a")) {
             a.setAttribute("target", "_blank");
         }
-    }
-    reinitializeConnection() {
-        // S2b: gui.js no longer owns a divergent reboot/reconnect implementation.
-        // It delegates to the single canonical orchestrator in serial_backend via
-        // EventBus (gui.js and serial_backend are on opposite sides of an import
-        // cycle, so a direct call is impossible). This removes the CLI-vs-Vue
-        // reboot divergence — every reboot now flows through the same path,
-        // dialog, retry loop and FSM state.
-        EventBus.$emit("reboot:request");
     }
 
     showCliPanel() {

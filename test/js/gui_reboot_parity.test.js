@@ -58,46 +58,24 @@ describe("gui.js reinitializeConnection — delegates to the canonical reboot pa
         PortHandler.portAvailable = false;
     });
 
-    it("emits a single reboot:request and runs NO reboot logic of its own", () => {
-        vi.useFakeTimers();
-        try {
-            GUI.reinitializeConnection();
-
-            // Delegation: exactly one reboot:request, emitted synchronously.
-            expect(rebootRequests()).toBe(1);
-
-            // gui.js no longer sends the reboot command or toggles the link itself —
-            // serial_backend's single orchestrator owns all of that now.
-            expect(MSP.send_message).not.toHaveBeenCalled();
-            expect(toggleCalls()).toBe(0);
-
-            // And crucially: no legacy one-shot timer / retry loop hiding in gui.js.
-            vi.advanceTimersByTime(30000);
-            expect(toggleCalls()).toBe(0);
-            expect(rebootRequests()).toBe(1);
-        } finally {
-            vi.useRealTimers();
-        }
+    it("gui.js owns NO reboot path at all — divergence is structurally impossible", () => {
+        // The strongest form of parity: there is no second reboot implementation to
+        // diverge. gui.js no longer exposes reinitializeConnection; every reboot goes
+        // through serial_backend.reinitializeConnection (imported directly by useCli,
+        // OsdTab, useReboot, MSPHelper, and via a dynamic import by stores/connection).
+        expect(GUI.reinitializeConnection).toBeUndefined();
     });
 
-    it("delegates identically regardless of port type or auto-connect (no per-case divergence)", () => {
-        for (const setup of [
-            { selectedPort: "bluetooth_1", autoConnect: true, virtualMode: false },
-            { selectedPort: "/dev/ttyACM0", autoConnect: true, virtualMode: false },
-            { selectedPort: "manual", autoConnect: false, virtualMode: false },
-            { selectedPort: "virtual", autoConnect: true, virtualMode: true },
-        ]) {
-            vi.clearAllMocks();
-            PortHandler.portPicker.selectedPort = setup.selectedPort;
-            PortHandler.portPicker.autoConnect = setup.autoConnect;
-            CONFIGURATOR.virtualMode = setup.virtualMode;
-
-            GUI.reinitializeConnection();
-
-            // Same single delegation in every case — the whole point of S2b.
-            expect(rebootRequests()).toBe(1);
-            expect(MSP.send_message).not.toHaveBeenCalled();
+    it("gui.js emits no reboot/connect EventBus indirection", () => {
+        // The "reboot:request" / "connection:toggle" workarounds are gone.
+        vi.useFakeTimers();
+        try {
+            vi.advanceTimersByTime(30000);
+            expect(rebootRequests()).toBe(0);
             expect(toggleCalls()).toBe(0);
+            expect(MSP.send_message).not.toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
         }
     });
 });

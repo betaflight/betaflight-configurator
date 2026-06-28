@@ -81,7 +81,11 @@ export const useConnectionStore = defineStore("connection", () => {
     }
 
     function reboot() {
-        GUI.reinitializeConnection();
+        // serial_backend imports this store, so a static import here would cycle.
+        // A dynamic import is cycle-safe and resolves instantly (serial_backend is
+        // already loaded). Replaces the former GUI.reinitializeConnection() ->
+        // EventBus("reboot:request") indirection.
+        import("../js/serial_backend").then(({ reinitializeConnection }) => reinitializeConnection());
     }
 
     return {

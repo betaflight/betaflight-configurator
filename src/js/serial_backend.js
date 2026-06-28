@@ -90,13 +90,12 @@ export function initializeSerialBackend() {
     // Exposed via EventBus so modules that can't import serial_backend directly
     // (notably gui.js, which is on the other side of an import cycle) can still
     // request a connect/disconnect toggle.
-    EventBus.$on("connection:toggle", () => connectDisconnect());
-
-    // S2b: the SINGLE canonical reboot entry point. gui.js (on the other side of
-    // an import cycle) and any other caller emit "reboot:request" instead of
-    // running their own divergent reboot/reconnect logic, so every reboot flows
-    // through reinitializeConnection() — killing the CLI-vs-Vue divergence.
-    EventBus.$on("reboot:request", () => reinitializeConnection());
+    // Connect/disconnect and reboot are now invoked directly: callers import
+    // connectDisconnect / reinitializeConnection from this module (useCli, OsdTab,
+    // useReboot, MSPHelper) or, where a static import would cycle (stores/connection),
+    // via a dynamic import. The former "connection:toggle" / "reboot:request"
+    // EventBus indirection (a workaround for gui.js not being able to import this
+    // module) is gone — gui.js no longer owns any connection action.
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
