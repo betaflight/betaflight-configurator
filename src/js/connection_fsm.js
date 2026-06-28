@@ -334,6 +334,18 @@ export class ConnectionFsm {
         this._notify(State.FLASHING, Event.FLASH_END);
     }
 
+    /**
+     * S8: stand the MSP reconnect down and hand the port to the flasher. The
+     * flasher grabs the raw port (serial.connect / getNativePort), bypassing the
+     * normal connect path, so before it does we abort any in-flight reboot/
+     * reconnect loop and enter FLASHING (which hard-blocks connect/reboot/
+     * reconnect via the table). Pairs with endFlashing() when the flash finishes.
+     */
+    beginDeviceReplacement() {
+        this.abort();
+        return this.beginFlashing();
+    }
+
     /** Whether connect/reconnect/reboot are currently hard-blocked (FLASHING). */
     get isFlashing() {
         return this._state === State.FLASHING;

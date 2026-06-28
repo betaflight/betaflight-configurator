@@ -248,6 +248,20 @@ describe("S4 teardown + flashing", () => {
         expect(m.state).toBe(State.RECONNECTING);
     });
 
+    it("beginDeviceReplacement aborts the reconnect loop and enters FLASHING", () => {
+        const m = connected();
+        m.requestReboot();
+        m.reconnectStarted();
+        m.beginOperation();
+
+        expect(m.beginDeviceReplacement()).toBe(true);
+        expect(m.state).toBe(State.FLASHING);
+        expect(m.aborted).toBe(true); // the in-flight reconnect was stood down
+        expect(m.can(Event.CONNECT)).toBe(false);
+        m.endFlashing();
+        expect(m.state).toBe(State.IDLE);
+    });
+
     it("beginFlashing enters FLASHING and hard-blocks connect/reboot/reconnect", () => {
         const m = connected();
         expect(m.beginFlashing()).toBe(true);
