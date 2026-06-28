@@ -4,6 +4,7 @@ import GUI from "../js/gui";
 import CONFIGURATOR from "../js/data_storage";
 import PortHandler from "../js/port_handler";
 import MSP from "../js/msp";
+import { getConnectionFsm } from "../js/connection_fsm";
 
 export const useConnectionStore = defineStore("connection", () => {
     // Proxy state directly to legacy reactive objects
@@ -47,6 +48,23 @@ export const useConnectionStore = defineStore("connection", () => {
 
     const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
 
+    // S7: thin reactive read-model of the connection FSM. The store subscribes
+    // to the FSM snapshot and re-publishes it as reactive refs, so Vue components
+    // can read lifecycle state/readiness/quality from one canonical source
+    // instead of poking the legacy CONFIGURATOR/GUI globals. Read-only — the FSM
+    // is the single writer of these. (Inverting the legacy globals to be computed
+    // mirrors of the FSM, with dev throw-on-write, is the final step once the FSM
+    // is the authoritative live orchestrator.)
+    const fsm = getConnectionFsm();
+    const fsmSnapshot = ref(fsm.snapshot());
+    fsm.subscribe((snap) => {
+        fsmSnapshot.value = snap;
+    });
+    const fsmState = computed(() => fsmSnapshot.value.state);
+    const fsmReady = computed(() => fsmSnapshot.value.isReady);
+    const fsmQuality = computed(() => fsmSnapshot.value.quality);
+    const fsmReconnectToken = computed(() => fsmSnapshot.value.token);
+
     // Live data refresh control
     const liveDataPaused = ref(false);
 
@@ -76,6 +94,11 @@ export const useConnectionStore = defineStore("connection", () => {
         cliValid,
         clearMspQueue,
         selectedPort,
+        // S7 FSM read-model (read-only)
+        fsmState,
+        fsmReady,
+        fsmQuality,
+        fsmReconnectToken,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,
