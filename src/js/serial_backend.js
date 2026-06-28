@@ -954,6 +954,11 @@ function onClosed(result) {
     if (!wasIntentional) {
         finishUnexpectedDisconnect();
     }
+
+    // S4: single teardown convergence point — settle the FSM to IDLE for both
+    // intentional and unexpected closes. A reboot's link drop is left alone
+    // (notifyClosed ignores REBOOTING/RECONNECTING); its conclude settles it.
+    getConnectionFsm().notifyClosed();
 }
 
 export function read_serial(info) {

@@ -229,6 +229,39 @@ describe("S2b reboot-intent helpers", () => {
     });
 });
 
+describe("S4 teardown + flashing", () => {
+    it("notifyClosed settles a CONNECTED session to IDLE and clears token/quality", () => {
+        const m = connected();
+        m.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
+        m.notifyClosed();
+        expect(m.state).toBe(State.IDLE);
+        expect(m.quality).toBe(Quality.NONE);
+        expect(m.getReconnectToken()).toBeNull();
+    });
+
+    it("notifyClosed leaves a reboot in progress untouched (reboot owns lifecycle)", () => {
+        const m = connected();
+        m.requestReboot();
+        m.reconnectStarted();
+        expect(m.state).toBe(State.RECONNECTING);
+        m.notifyClosed(); // a reboot link drop must NOT settle to IDLE
+        expect(m.state).toBe(State.RECONNECTING);
+    });
+
+    it("beginFlashing enters FLASHING and hard-blocks connect/reboot/reconnect", () => {
+        const m = connected();
+        expect(m.beginFlashing()).toBe(true);
+        expect(m.state).toBe(State.FLASHING);
+        expect(m.isFlashing).toBe(true);
+        expect(m.can(Event.CONNECT)).toBe(false);
+        expect(m.can(Event.REBOOT)).toBe(false);
+        expect(m.can(Event.RECONNECT)).toBe(false);
+        m.endFlashing();
+        expect(m.state).toBe(State.IDLE);
+        expect(m.isFlashing).toBe(false);
+    });
+});
+
 describe("S2a abortable reconnect loop", () => {
     // Injected sleep that advances a fake clock so the deadline is reachable
     // without real time.

@@ -283,6 +283,62 @@ export class ConnectionFsm {
         this._notify(prev, reconnected ? Event.READY : Event.CLOSED);
     }
 
+    /**
+     * Settle the FSM on a link close (S4). Called from the single teardown
+     * convergence point (onClosed) for BOTH intentional and unexpected
+     * disconnects. During a reboot the link drop is expected and the reconnect
+     * still owns the lifecycle, so we leave REBOOTING/RECONNECTING untouched —
+     * the reboot's concludeReboot settles it. Otherwise -> IDLE.
+     */
+    notifyClosed() {
+        if (this._state === State.REBOOTING || this._state === State.RECONNECTING) {
+            return;
+        }
+        if (this._state === State.IDLE) {
+            return;
+        }
+        const prev = this._state;
+        this._state = State.IDLE;
+        this._quality = Quality.NONE;
+        this._token = null;
+        this._notify(prev, Event.CLOSED);
+    }
+
+    /**
+     * Enter the FLASHING state (S4/S8). The flasher grabs the raw port, so while
+     * flashing the FSM hard-blocks connect/reconnect/reboot (those events are
+     * absent from the FLASHING row of the table). Returns false if flashing
+     * cannot be entered from the current state.
+     */
+    beginFlashing() {
+        if (this._state === State.FLASHING) {
+            return true;
+        }
+        const prev = this._state;
+        // Flashing can start from a disconnected idle OR from a connected board
+        // (Save-and-flash). Adopt FLASHING directly; the migration singleton is
+        // non-strict so this never throws on an unmodeled prior state.
+        this._state = State.FLASHING;
+        this._quality = Quality.NONE;
+        this._token = null;
+        this._notify(prev, Event.FLASH_START);
+        return true;
+    }
+
+    /** Leave FLASHING back to IDLE (S4/S8). */
+    endFlashing() {
+        if (this._state !== State.FLASHING) {
+            return;
+        }
+        this._state = State.IDLE;
+        this._notify(State.FLASHING, Event.FLASH_END);
+    }
+
+    /** Whether connect/reconnect/reboot are currently hard-blocked (FLASHING). */
+    get isFlashing() {
+        return this._state === State.FLASHING;
+    }
+
     // ---- Abort plumbing ----------------------------------------------------
 
     /** Start a fresh abortable operation (reboot/reconnect). */
