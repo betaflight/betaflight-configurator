@@ -27,7 +27,6 @@ class WebBluetooth extends EventTarget {
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.portCounter = 0;
         this.devices = [];
         this.device = null;
 
@@ -87,9 +86,17 @@ class WebBluetooth extends EventTarget {
         return this.device;
     }
 
+    // Derive a stable path from the Web Bluetooth device.id. That id is the
+    // browser's persistent per-device identifier, so the SAME device always
+    // yields the SAME path across loadDevices()/refreshes — surviving an FC
+    // reboot that rebuilds the device list. A bare counter (the old behaviour)
+    // was an ordinal reassigned/reset on every rebuild, so a pinned path could
+    // silently re-map to a different device. Mirrors CapacitorBle's
+    // `bluetooth-${address}`; the `bluetooth` prefix keeps serial.js
+    // selectProtocol routing to the BLE protocol.
     createPort(device) {
         return {
-            path: `bluetooth_${this.portCounter++}`,
+            path: `bluetooth_${device.id}`,
             displayName: device.name,
             vendorId: "unknown",
             productId: device.id,
@@ -130,10 +137,13 @@ class WebBluetooth extends EventTarget {
 
     async loadDevices() {
         try {
-            const devices = await this.getDevices();
+            const ports = await this.getDevices();
 
-            this.portCounter = 1;
-            this.devices = devices.map((device) => this.createPort(device));
+            // getDevices() returns the already-built port wrappers, so rebuild from
+            // each wrapper's underlying Web Bluetooth device (port.port). Because the
+            // path is derived from device.id, re-running loadDevices() is idempotent:
+            // the same device keeps the same path across refreshes.
+            this.devices = ports.map((wrapper) => this.createPort(wrapper.port));
         } catch (error) {
             console.error(`${this.logHead} Failed to load devices:`, error);
         }
