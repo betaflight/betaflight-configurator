@@ -170,57 +170,29 @@ describe("WebSerial stable device identity", () => {
     });
 });
 
-describe("(c) serial_backend removedDevice matching is device-specific", () => {
-    // Reproduce the exact predicate used in serial_backend.initializeSerialBackend:
-    //   if (event.detail?.path && event.detail.path === GUI.connected_to) disconnect.
-    function shouldDisconnect(detail, connectedTo) {
-        return Boolean(detail?.path && detail.path === connectedTo);
-    }
-
-    it("removing device A does NOT disconnect while connected to device B", () => {
-        const connectedTo = "serial_1"; // device B is the active connection
-        expect(shouldDisconnect({ path: "serial_0" }, connectedTo)).toBe(false);
-    });
-
-    it("removing the connected device DOES disconnect", () => {
-        const connectedTo = "serial_1";
-        expect(shouldDisconnect({ path: "serial_1" }, connectedTo)).toBe(true);
-    });
-
-    it("a null/empty removal detail never triggers a disconnect", () => {
-        expect(shouldDisconnect(undefined, "serial_1")).toBe(false);
-        expect(shouldDisconnect({}, "serial_1")).toBe(false);
-        expect(shouldDisconnect({ path: "" }, "serial_1")).toBe(false);
-        // Guard against the pre-fix bug: connected_to===false must not match an empty path.
-        expect(shouldDisconnect({ path: "" }, false)).toBe(false);
-    });
-});
-
 describe("(d) selectProtocol routes the stable serial id to WebSerial", () => {
-    // Replicates serial.js selectProtocol routing logic for the relevant cases,
-    // proving "serial_N" falls through to the serial protocol (not virtual/tcp/bt).
-    function routeName(s) {
-        if (s === "virtual") {
-            return "virtual";
-        }
-        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
-            return "tcp";
-        }
-        if (s.startsWith("bluetooth")) {
-            return "bluetooth";
-        }
-        return "serial";
-    }
+    // Exercises the REAL serial.selectProtocol on the exported singleton, proving
+    // "serial_N" falls through to the WebSerial protocol (not virtual/tcp/bt).
+    it("routes serial_0 / serial_42 to the WebSerial protocol", async () => {
+        const { serial } = await import("../../src/js/serial.js");
 
-    it("routes serial_0 / serial_42 to the serial protocol", () => {
-        expect(routeName("serial_0")).toBe("serial");
-        expect(routeName("serial_42")).toBe("serial");
+        expect(serial.selectProtocol("serial_0").constructor.name).toBe("WebSerial");
+        expect(serial.selectProtocol("serial_42").constructor.name).toBe("WebSerial");
     });
 
-    it("still routes the other id shapes to their protocols", () => {
-        expect(routeName("virtual")).toBe("virtual");
-        expect(routeName("bluetooth-abc")).toBe("bluetooth");
-        expect(routeName("tcp://127.0.0.1:5761")).toBe("tcp");
-        expect(routeName("manual")).toBe("tcp");
+    it("still routes the other id shapes to their protocols", async () => {
+        const { serial } = await import("../../src/js/serial.js");
+
+        expect(serial.selectProtocol("virtual").constructor.name).toBe("VirtualSerial");
+        expect(serial.selectProtocol("bluetooth-abc").constructor.name).toBe("WebBluetooth");
+        expect(serial.selectProtocol("tcp://127.0.0.1:5761").constructor.name).toBe("Websocket");
+        expect(serial.selectProtocol("manual").constructor.name).toBe("Websocket");
+    });
+
+    it("routes the function/callback (virtual) form via the isFn branch", async () => {
+        const { serial } = await import("../../src/js/serial.js");
+
+        // The omitted-in-copy branch: a function argument must select VirtualSerial.
+        expect(serial.selectProtocol(() => {}).constructor.name).toBe("VirtualSerial");
     });
 });

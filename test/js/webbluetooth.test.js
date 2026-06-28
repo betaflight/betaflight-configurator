@@ -198,30 +198,21 @@ describe("WebBluetooth stable device identity", () => {
 });
 
 describe("(c) selectProtocol routes the stable bluetooth path to the BLE protocol", () => {
-    // Replicates serial.js selectProtocol routing logic, proving the new
-    // "bluetooth_<id>" path falls through to the bluetooth protocol.
-    function routeName(s) {
-        if (s === "virtual") {
-            return "virtual";
-        }
-        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
-            return "tcp";
-        }
-        if (s.startsWith("bluetooth")) {
-            return "bluetooth";
-        }
-        return "serial";
-    }
+    // Exercises the REAL serial.selectProtocol on the exported singleton, proving
+    // the new "bluetooth_<id>" path falls through to the WebBluetooth protocol.
+    it("routes bluetooth_<id> to the WebBluetooth protocol", async () => {
+        const { serial } = await import("../../src/js/serial.js");
 
-    it("routes bluetooth_<id> to the bluetooth protocol", () => {
-        expect(routeName("bluetooth_dev-aaaa")).toBe("bluetooth");
-        expect(routeName("bluetooth_abc123")).toBe("bluetooth");
+        expect(serial.selectProtocol("bluetooth_dev-aaaa").constructor.name).toBe("WebBluetooth");
+        expect(serial.selectProtocol("bluetooth_abc123").constructor.name).toBe("WebBluetooth");
     });
 
-    it("does not misroute it to serial/virtual/tcp", () => {
-        expect(routeName("bluetooth_dev-aaaa")).not.toBe("serial");
-        expect(routeName("serial_0")).toBe("serial");
-        expect(routeName("virtual")).toBe("virtual");
-        expect(routeName("tcp://127.0.0.1:5761")).toBe("tcp");
+    it("does not misroute it to serial/virtual/tcp", async () => {
+        const { serial } = await import("../../src/js/serial.js");
+
+        expect(serial.selectProtocol("bluetooth_dev-aaaa").constructor.name).not.toBe("WebSerial");
+        expect(serial.selectProtocol("serial_0").constructor.name).toBe("WebSerial");
+        expect(serial.selectProtocol("virtual").constructor.name).toBe("VirtualSerial");
+        expect(serial.selectProtocol("tcp://127.0.0.1:5761").constructor.name).toBe("Websocket");
     });
 });

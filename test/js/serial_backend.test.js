@@ -213,7 +213,12 @@ vi.mock("../../src/components/eventBus", () => ({
     EventBus: { $on: vi.fn(), $emit: vi.fn() },
 }));
 
-import { connectDisconnect, disconnect, reinitializeConnection } from "../../src/js/serial_backend";
+import {
+    connectDisconnect,
+    disconnect,
+    initializeSerialBackend,
+    reinitializeConnection,
+} from "../../src/js/serial_backend";
 import PortHandler from "../../src/js/port_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
@@ -464,6 +469,80 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         } finally {
             vi.useRealTimers();
         }
+    });
+});
+
+// ---------------------------------------------------------------------------
+// removedDevice listener — exercises the REAL inline predicate registered by
+// initializeSerialBackend (serial.addEventListener("removedDevice", ...)). The
+// handler is captured in serialHandlers.removedDevice by the serial mock, so we
+// fire it directly and observe whether the disconnect branch of connectDisconnect
+// runs. beginDisconnect() calls mspHelper.setArmingEnabled exactly once, so that
+// call is our proxy for "a disconnect was triggered".
+// ---------------------------------------------------------------------------
+describe("serial_backend removedDevice matching is device-specific", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        resetMocks();
+        // initializeSerialBackend registers the real removedDevice listener on the
+        // serial mock, capturing the handler in serialHandlers.removedDevice.
+        initializeSerialBackend();
+    });
+
+    // Each test establishes a real connection (so module isConnected === true and
+    // the disconnect branch is reachable), then tears it down via the captured
+    // disconnect handler so module-private state does not leak into later tests.
+    it("removing a DIFFERENT device does NOT disconnect the active connection", () => {
+        establishConnection();
+        GUI.connected_to = "serial_1"; // device B is the active connection
+        mspHelperInstance.setArmingEnabled.mockClear();
+
+        expect(typeof serialHandlers.removedDevice).toBe("function");
+        serialHandlers.removedDevice({ detail: { path: "serial_0" } });
+
+        expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+
+        serialHandlers.disconnect({ detail: true }); // teardown
+    });
+
+    it("removing the CONNECTED device DOES disconnect", () => {
+        establishConnection();
+        GUI.connected_to = "serial_1";
+        mspHelperInstance.setArmingEnabled.mockClear();
+
+        serialHandlers.removedDevice({ detail: { path: "serial_1" } });
+
+        // beginDisconnect -> setArmingEnabled with the finishClose callback.
+        expect(mspHelperInstance.setArmingEnabled).toHaveBeenCalledTimes(1);
+
+        // Run finishClose to complete the disconnect and reset module state.
+        mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
+    });
+
+    it("a null/empty removal detail never triggers a disconnect", () => {
+        establishConnection();
+        GUI.connected_to = "serial_1";
+        mspHelperInstance.setArmingEnabled.mockClear();
+
+        serialHandlers.removedDevice({ detail: undefined });
+        serialHandlers.removedDevice({ detail: {} });
+        serialHandlers.removedDevice({ detail: { path: "" } });
+
+        expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+
+        serialHandlers.disconnect({ detail: true }); // teardown
+    });
+
+    it("an empty removal path does not match connected_to === false", () => {
+        establishConnection();
+        GUI.connected_to = false; // guard against the pre-fix empty-path bug
+        mspHelperInstance.setArmingEnabled.mockClear();
+
+        serialHandlers.removedDevice({ detail: { path: "" } });
+
+        expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+
+        serialHandlers.disconnect({ detail: true }); // teardown
     });
 });
 
