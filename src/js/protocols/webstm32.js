@@ -15,14 +15,18 @@ import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import { serial } from "../serial";
+import { getConnectionFsm } from "../connection_fsm";
+// NOTE: the flashing path must NOT depend on serial_backend (the MSP-connection
+// orchestrator). During flashing the received bytes are always MSP, so we feed
+// MSP.read directly instead of serial_backend.read_serial.
 import { DFU_AUTH_REQUIRED } from "../protocols/usbdfu";
 import PortHandler from "../port_handler";
-import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 
 function readSerialAdapter(event) {
-    read_serial(event.detail.buffer);
+    // Flashing bytes are always MSP — feed MSP directly (no serial_backend dependency).
+    MSP.read(event.detail.buffer);
 }
 
 function onMSPConnectionError() {
@@ -88,6 +92,9 @@ class STM32Protocol {
      */
     handleError(resetRebootMode = true) {
         GUI.connect_lock = false;
+        // S8: flash aborted/failed — release the FLASHING state alongside the lock so
+        // the FSM hard-block can't strand a later connect (endFlashing is idempotent).
+        getConnectionFsm().endFlashing();
         if (resetRebootMode) {
             this.rebootMode = 0;
         }
@@ -99,6 +106,9 @@ class STM32Protocol {
         if (connectionResult) {
             // we are connected, disabling connect button in the UI
             GUI.connect_lock = true;
+            // S8: the flasher now owns the raw port — stand the MSP reconnect down and
+            // enter FLASHING (hard-blocks connect/reboot until the flash completes).
+            getConnectionFsm().beginDeviceReplacement();
 
             this.initialize();
         } else {
@@ -182,6 +192,7 @@ class STM32Protocol {
 
     onAbort() {
         GUI.connect_lock = false;
+        getConnectionFsm().endFlashing();
         this.rebootMode = 0;
         console.log(`${this.logHead} User cancelled because selected target does not match verified board`);
         this.reboot();
@@ -1021,6 +1032,8 @@ class STM32Protocol {
 
         // unlocking connect button
         GUI.connect_lock = false;
+        // S8: flash complete — leave FLASHING so normal connect/reboot resume.
+        getConnectionFsm().endFlashing();
 
         // unlock some UI elements TODO needs rework
         const releaseEl = document.querySelector('select[name="release"]');

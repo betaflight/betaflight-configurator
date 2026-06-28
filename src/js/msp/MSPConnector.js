@@ -1,5 +1,4 @@
 import MspHelper from "./MSPHelper";
-import { read_serial } from "../serial_backend";
 import { i18n } from "../localization";
 import GUI from "../gui";
 import MSP from "../msp";
@@ -14,7 +13,9 @@ import { gui_log } from "../gui_log";
  */
 
 function readSerialAdapter(e) {
-    read_serial(e.detail);
+    // The MSP connector (flashing path) must not depend on serial_backend; bytes
+    // here are always MSP, so feed MSP directly.
+    MSP.read(e.detail);
 }
 
 class MSPConnectorImpl {

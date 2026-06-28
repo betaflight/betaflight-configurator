@@ -334,6 +334,15 @@ export function connectDisconnect() {
         return;
     }
 
+    // S8: the flasher owns the port while FLASHING; hard-block connect/disconnect
+    // (defence-in-depth alongside connect_lock, for flows that grab the raw port).
+    // FLASHING is cleared by the flasher's exits and, as a safety net, by
+    // resetConnection — so a post-flash reconnect is never blocked.
+    if (getConnectionFsm().isFlashing) {
+        console.log(`${logHead} connect/disconnect ignored — flashing in progress`);
+        return;
+    }
+
     // GUI control overrides the user control
     GUI.configuration_loaded = false;
 
@@ -487,6 +496,11 @@ function setConnectionTimeout() {
 
 function resetConnection() {
     clearLiveDataRefreshTimer();
+
+    // S8 safety net: any normal teardown clears a lingering FLASHING state, so the
+    // hard-block above can never strand a post-flash reconnect even if a flasher
+    // exit path missed its endFlashing().
+    getConnectionFsm().endFlashing();
 
     MSP.clearListeners();
 
