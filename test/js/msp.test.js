@@ -81,6 +81,29 @@ describe("MSP", () => {
             expect(vi.getTimerCount()).toBe(0);
         });
 
+        it("arms the deadline for a COALESCED timeoutMs request so it still rejects (S3 acceptance)", async () => {
+            const timeoutMs = 200;
+            // First request owns the queue slot and the resend timer.
+            const cb1 = vi.fn();
+            MSP.send_message(1, false, false, cb1, { timeoutMs });
+            // An identical request coalesces (requestExists === true): it gets no
+            // resend timer, but it MUST still get its own deadline — otherwise it
+            // could never reject (the trap this fix closes).
+            const cb2 = vi.fn();
+            MSP.send_message(1, false, false, cb2, { timeoutMs });
+
+            const entries = MSP.callbacks.filter((c) => c.code === 1);
+            expect(entries.length).toBe(2);
+            expect(entries.every((e) => e.deadlineTimer !== undefined)).toBe(true);
+
+            await vi.advanceTimersByTimeAsync(timeoutMs);
+
+            // Both the original and the coalesced waiter reject with a timeout marker.
+            expect(cb1).toHaveBeenCalledWith(expect.objectContaining({ timeout: true, timeoutMs }));
+            expect(cb2).toHaveBeenCalledWith(expect.objectContaining({ timeout: true, timeoutMs }));
+            expect(MSP.callbacks.filter((c) => c.code === 1).length).toBe(0);
+        });
+
         it("clears the deadline timer when a response arrives in time", () => {
             const clearSpy = vi.spyOn(globalThis, "clearTimeout");
             const responseCallback = vi.fn();

@@ -546,28 +546,37 @@ const MSP = {
                     clearTimeout(obj.timer); // prevent leaks
                 });
             }, this.TIMEOUT);
+        }
 
-            // Opt-in bounded timeout: when a caller supplies timeoutMs, give the
-            // request a hard deadline. On expiry we stop the resend cycle, drop the
-            // request from the queue, and invoke the callback with a timeout marker
-            // so awaiting callers can reject. Without timeoutMs this branch never
-            // runs and the legacy resend-forever / never-reject behavior is intact.
-            if (typeof timeoutMs === "number" && timeoutMs >= 0) {
-                obj.deadlineTimer = setTimeout(() => {
-                    // Stop resending this request and remove it from the queue.
-                    clearTimeout(obj.timer);
-                    const index = this.callbacks.indexOf(obj);
-                    if (index !== -1) {
-                        this.callbacks.splice(index, 1);
-                    }
-                    console.warn(
-                        `MSP: data request rejected after ${timeoutMs}ms: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab}`,
-                    );
-                    if (obj.callback) {
-                        obj.callback({ command: code, timeout: true, timeoutMs });
-                    }
-                }, timeoutMs);
-            }
+        // Opt-in bounded timeout: when a caller supplies timeoutMs, give the
+        // request a hard deadline. On expiry we drop THIS request from the queue
+        // and invoke its callback with a timeout marker so awaiting callers can
+        // reject. Without timeoutMs this never runs and the legacy
+        // resend-forever / never-reject behavior is intact.
+        //
+        // S3 acceptance fix: armed even when this request COALESCES onto an
+        // already-queued identical one (requestExists === true). Previously the
+        // deadline lived inside the `!requestExists` block, so a coalesced
+        // timeoutMs request had no deadline and could never reject — the
+        // handshake reject the FSM relies on would silently never fire. The
+        // resend timer stays exclusive to the first request; on a coalesced
+        // entry `obj.timer` is undefined and clearTimeout no-ops, so the shared
+        // resend cycle and other waiters are undisturbed.
+        if (typeof timeoutMs === "number" && timeoutMs >= 0) {
+            obj.deadlineTimer = setTimeout(() => {
+                // Stop this request's resend (no-op when coalesced) and remove it.
+                clearTimeout(obj.timer);
+                const index = this.callbacks.indexOf(obj);
+                if (index !== -1) {
+                    this.callbacks.splice(index, 1);
+                }
+                console.warn(
+                    `MSP: data request rejected after ${timeoutMs}ms: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab}`,
+                );
+                if (obj.callback) {
+                    obj.callback({ command: code, timeout: true, timeoutMs });
+                }
+            }, timeoutMs);
         }
 
         this.callbacks.push(obj);
