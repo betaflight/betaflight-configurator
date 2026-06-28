@@ -3,6 +3,7 @@ import semver from "semver";
 import MSP from "../js/msp";
 import GUI from "../js/gui";
 import FC from "../js/fc";
+import PortHandler from "../js/port_handler";
 import { connectDisconnect } from "../js/serial_backend";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
@@ -66,8 +67,22 @@ export function readDumpAll() {
 }
 
 export function scheduleReconnect() {
+    // Pin the port we are connected to right now. The save/exit that precedes this reboots the
+    // FC, so the port briefly disappears; the live selectedPort can then be auto-reassigned
+    // (e.g. to "virtual" in expert mode). Capturing synchronously here — before the async
+    // device-removal callback runs — lets us reconnect to the original FC, not the fallback.
+    const pinnedPort = PortHandler.portPicker.selectedPort;
     GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
-    GUI.timeout_add(RECONNECT_TIMEOUT_NAME, () => connectDisconnect(), RECONNECT_DELAY_MS);
+    GUI.timeout_add(
+        RECONNECT_TIMEOUT_NAME,
+        () => {
+            if (pinnedPort && !["noselection", "virtual", "manual"].includes(pinnedPort)) {
+                PortHandler.portPicker.selectedPort = pinnedPort;
+            }
+            connectDisconnect();
+        },
+        RECONNECT_DELAY_MS,
+    );
 }
 
 export function cancelScheduledReconnect() {
