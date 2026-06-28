@@ -1,4 +1,5 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
+import { LinkEvent } from "./LinkEvent.js";
 import GUI from "../gui";
 
 const logHead = "[WEBSERIAL]";
@@ -43,6 +44,11 @@ class WebSerial extends EventTarget {
     #portIds = new WeakMap();
     #nextPortId = 0;
 
+    // S6a: this transport emits the normalized LinkEvent contract alongside the
+    // legacy connect/disconnect/receive/addedDevice/removedDevice events.
+    // serial.js forwards both while consumers migrate; legacy names go in S9.
+    supportsLinkEvents = true;
+
     constructor() {
         super();
 
@@ -52,6 +58,10 @@ class WebSerial extends EventTarget {
         this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
+        // S6a: set when the link drops unexpectedly (device unplug/reboot, read
+        // error) so disconnect() emits LinkEvent.LOST rather than CLOSED. Reset
+        // after each teardown so a subsequent intentional close reads as CLOSED.
+        this._linkLost = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -86,6 +96,7 @@ class WebSerial extends EventTarget {
         const added = this.createPort(device);
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_ARRIVED, { detail: added }));
         return added;
     }
 
@@ -93,6 +104,7 @@ class WebSerial extends EventTarget {
         const removed = this.ports.find((port) => port.port === device);
         this.ports = this.ports.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+        this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_LEFT, { detail: removed }));
     }
 
     handleReceiveBytes(info) {
@@ -101,6 +113,9 @@ class WebSerial extends EventTarget {
 
     handleDisconnect() {
         console.log(`${logHead} Device disconnected externally`);
+        // External disconnect (cable pull / device reboot) is an unexpected loss,
+        // not an intentional close — flag it so disconnect() emits LinkEvent.LOST.
+        this._linkLost = true;
         this.disconnect();
     }
 
@@ -116,6 +131,46 @@ class WebSerial extends EventTarget {
      */
     getNativePort(path) {
         return this.ports.find((device) => device.path === path)?.port;
+    }
+
+    /**
+     * S6a: produce a frozen reconnect token for the currently-connected port.
+     * For WebSerial the device identity is the live SerialPort object, captured
+     * here as its stable path id (`serial_N`). Because the browser reuses the
+     * same SerialPort object across an MCU-reboot re-enumeration, that id stays
+     * valid through the reboot — no OS path to chase (cf. Tauri, S6d).
+     * @returns {{transportType:string,opaqueId:string,baud:number,isVirtual:boolean}|null}
+     */
+    getReconnectToken() {
+        if (!this.connected || !this.connectionId) {
+            return null;
+        }
+        return {
+            transportType: "serial",
+            opaqueId: this.connectionId, // == the stable `serial_N` path id
+            baud: this.bitrate,
+            isVirtual: false,
+        };
+    }
+
+    /**
+     * S6a: re-resolve a reconnect token to the CURRENT path for that device, or
+     * null if the device is no longer present. The FSM calls this during a
+     * reconnect instead of reading the live port picker, so enumeration changes
+     * mid-reboot cannot redirect the reconnect to a different device.
+     *
+     * WebSerial's stable id is keyed off SerialPort object identity, so the
+     * token's `opaqueId` still names the same physical port after re-enumeration
+     * — resolution is a direct lookup with no VID/PID matching needed.
+     * @param {{transportType:string,opaqueId:string}} token
+     * @returns {string|null} the current path, or null if not resolvable
+     */
+    resolveReconnectTarget(token) {
+        if (!token || token.transportType !== "serial") {
+            return null;
+        }
+        const match = this.ports.find((device) => device.path === token.opaqueId);
+        return match ? match.path : null;
     }
 
     /**
@@ -227,6 +282,7 @@ class WebSerial extends EventTarget {
                 console.log(`${logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
 
                 this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
+                this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: connectionInfo }));
 
                 // Start reading from the port
                 this.reading = true;
@@ -264,10 +320,14 @@ class WebSerial extends EventTarget {
         try {
             for await (let value of streamAsyncIterable(this.reader, () => this.reading)) {
                 this.dispatchEvent(new CustomEvent("receive", { detail: value }));
+                this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: value }));
             }
         } catch (error) {
             console.error(`${logHead} Error reading:`, error);
             if (this.connected) {
+                // A read failure on a live link is an unexpected loss, not a
+                // user close — surface it as LinkEvent.LOST.
+                this._linkLost = true;
                 this.disconnect();
             }
         }
@@ -344,6 +404,7 @@ class WebSerial extends EventTarget {
             this.closeRequested = false;
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
             return true;
         } catch (error) {
             console.error(`${logHead} Error disconnecting:`, error);
@@ -351,11 +412,14 @@ class WebSerial extends EventTarget {
             // Ensure connectionInfo is reset even on error if port was potentially open
             this.connectionInfo = null;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: false }));
             return false;
         } finally {
             if (this.openCanceled) {
                 this.openCanceled = false;
             }
+            // Reset for the next connection so an intentional close reads as CLOSED.
+            this._linkLost = false;
         }
     }
 
