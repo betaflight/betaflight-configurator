@@ -49,10 +49,11 @@ let isConnected = false;
 
 // True while an intentional disconnect (Disconnect button, or removed-device toggle)
 // is in flight. finishClose() owns the full teardown in that case; onClosed() uses this
-// flag to tell an intentional disconnect apart from an unexpected one (unplug / FC reboot
-// / BLE drop) and avoid tearing down twice. Set in beginDisconnect(), reset on connect,
-// and consumed (read-and-reset) in onClosed().
-let intentionalDisconnect = false;
+// S4: the intentional-disconnect flag — telling an intentional disconnect apart
+// from an unexpected one (unplug / FC reboot / BLE drop) so we don't tear down
+// twice — now lives in the FSM (getConnectionFsm().markIntentionalDisconnect /
+// clearIntentionalDisconnect / consumeIntentionalDisconnect). Set in
+// prepareDisconnect(), cleared on connect, consumed (read-and-reset) in onClosed().
 
 const REBOOT_CONNECT_MAX_TIME_MS = 10000;
 // BLE/manual links usually survive an FC reboot (the radio stays connected while only the
@@ -196,7 +197,7 @@ function prepareDisconnect() {
     // Mark this as an intentional disconnect so the later protocol "disconnect" event
     // (handled by onClosed) does not run the unexpected-disconnect teardown on top of
     // finishClose(). Covers both the Disconnect button and the removedDevice route.
-    intentionalDisconnect = true;
+    getConnectionFsm().markIntentionalDisconnect();
 
     // Cancel any in-flight reboot reconnect so a user-initiated disconnect during the reboot
     // window is not undone by a retry. (The reboot retry itself reconnects via beginConnect,
@@ -258,7 +259,7 @@ function beginConnect(selectedPort) {
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
     // may never dispatch the "disconnect" event that would otherwise consume the flag, so
     // resetting here keeps a stale flag from downgrading a later unexpected disconnect.
-    intentionalDisconnect = false;
+    getConnectionFsm().clearIntentionalDisconnect();
 
     // prevent connection when we do not have permission
     if (selectedPort.startsWith("requestpermission")) {
@@ -978,8 +979,7 @@ function onClosed(result) {
     // FC reboot / BLE drop). Read-and-reset the guard here — it cannot be cleared in finishClose(),
     // which returns before this microtask runs. Intentional disconnects are already fully torn
     // down by finishClose(); for unexpected ones complete the same UI teardown now.
-    const wasIntentional = intentionalDisconnect;
-    intentionalDisconnect = false;
+    const wasIntentional = getConnectionFsm().consumeIntentionalDisconnect();
     if (!wasIntentional) {
         finishUnexpectedDisconnect();
     }

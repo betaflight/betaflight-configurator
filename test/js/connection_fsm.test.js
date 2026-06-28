@@ -286,6 +286,24 @@ describe("S4 teardown + flashing", () => {
     });
 });
 
+describe("S4 intentional-disconnect intent flag", () => {
+    it("defaults false; mark sets it; consume reads-and-resets", () => {
+        const m = fsm();
+        expect(m.consumeIntentionalDisconnect()).toBe(false);
+        m.markIntentionalDisconnect();
+        expect(m.consumeIntentionalDisconnect()).toBe(true);
+        // consumed -> reset
+        expect(m.consumeIntentionalDisconnect()).toBe(false);
+    });
+
+    it("clear resets a pending intentional flag (stale-guard on reconnect)", () => {
+        const m = fsm();
+        m.markIntentionalDisconnect();
+        m.clearIntentionalDisconnect();
+        expect(m.consumeIntentionalDisconnect()).toBe(false);
+    });
+});
+
 describe("S5 pagehide shutdown", () => {
     it("forces IDLE and aborts the in-flight loop from any state, ungated", () => {
         const m = connected();

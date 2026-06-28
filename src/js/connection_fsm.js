@@ -157,6 +157,10 @@ export class ConnectionFsm {
         this._quality = Quality.NONE;
         this._token = null;
         this._abort = null;
+        // S4: intent flag owned by the FSM (was a serial_backend module var).
+        // Marks that the NEXT close is user-initiated, so the disconnect handler
+        // can distinguish an intentional teardown from an unexpected drop.
+        this._intentionalDisconnect = false;
         this._listeners = new Set();
         this.logHead = "[CONNECTION-FSM]";
     }
@@ -348,6 +352,25 @@ export class ConnectionFsm {
     /** Whether connect/reconnect/reboot are currently hard-blocked (FLASHING). */
     get isFlashing() {
         return this._state === State.FLASHING;
+    }
+
+    // ---- Intentional-disconnect intent (S4) -------------------------------
+
+    /** Mark the next close as user-initiated (intentional). */
+    markIntentionalDisconnect() {
+        this._intentionalDisconnect = true;
+    }
+
+    /** Clear the intentional-disconnect flag (e.g. on a fresh connect attempt). */
+    clearIntentionalDisconnect() {
+        this._intentionalDisconnect = false;
+    }
+
+    /** Read-and-reset: was the close that just happened intentional? */
+    consumeIntentionalDisconnect() {
+        const wasIntentional = this._intentionalDisconnect;
+        this._intentionalDisconnect = false;
+        return wasIntentional;
     }
 
     // ---- Abort plumbing ----------------------------------------------------
