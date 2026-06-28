@@ -3,6 +3,7 @@ import {
     ConnectionFsm,
     State,
     Event,
+    Quality,
     DEFAULT_POLICY,
     getConnectionFsm,
     __resetConnectionFsmForTests,
@@ -154,6 +155,40 @@ describe("S2a read-model", () => {
         expect(m.dispatch(Event.CONNECT)).toBe(State.CONNECTING);
         expect(err).toHaveBeenCalled();
         err.mockRestore();
+    });
+});
+
+describe("S3 readiness quality", () => {
+    it("starts NONE, becomes FULLY_READY via the full-MSP/virtual edge", () => {
+        const m = fsm();
+        expect(m.quality).toBe(Quality.NONE);
+        m.dispatch(Event.CONNECT);
+        m.dispatch(Event.READY);
+        expect(m.quality).toBe(Quality.FULLY_READY);
+        expect(m.snapshot().quality).toBe(Quality.FULLY_READY);
+    });
+
+    it("becomes CLI_ONLY via the CLI edge", () => {
+        const m = fsm();
+        m.dispatch(Event.CONNECT);
+        m.dispatch(Event.CLI_READY);
+        expect(m.quality).toBe(Quality.CLI_ONLY);
+    });
+
+    it("clears quality to NONE when leaving a ready state", () => {
+        const m = connected(); // CONNECT + READY -> CONNECTED (FULLY_READY)
+        expect(m.quality).toBe(Quality.FULLY_READY);
+        m.dispatch(Event.DISCONNECT);
+        expect(m.quality).toBe(Quality.NONE);
+    });
+
+    it("CLI -> full session upgrades quality to FULLY_READY", () => {
+        const m = fsm();
+        m.dispatch(Event.CONNECT);
+        m.dispatch(Event.CLI_READY);
+        expect(m.quality).toBe(Quality.CLI_ONLY);
+        m.dispatch(Event.READY); // CLI -> CONNECTED
+        expect(m.quality).toBe(Quality.FULLY_READY);
     });
 });
 

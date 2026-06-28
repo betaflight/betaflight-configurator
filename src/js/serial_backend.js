@@ -23,7 +23,7 @@ import CryptoES from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
-import { getConnectionFsm } from "./connection_fsm.js";
+import { getConnectionFsm, Event as FsmEvent } from "./connection_fsm.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
@@ -280,6 +280,11 @@ function beginConnect(selectedPort) {
 
         serial.removeEventListener("disconnect", disconnectHandler);
         serial.addEventListener("disconnect", disconnectHandler);
+
+        // S3: a connect attempt begins. IDLE -> CONNECTING; during a reboot the
+        // FSM is RECONNECTING -> CONNECTING. Readiness (finishOpen/connectCli)
+        // advances it to CONNECTED/CLI. (virtual dispatches its own in onOpenVirtual.)
+        getConnectionFsm().dispatch(FsmEvent.CONNECT);
     }
 
     serial.connect(
@@ -621,6 +626,12 @@ function onOpenVirtual() {
     GUI.connected_to = GUI.connecting_to;
     GUI.connecting_to = false;
 
+    // S3 readiness edge #3: virtual is ready immediately (no MSP chain).
+    // CONNECT then READY so the FSM reaches CONNECTED (FULLY_READY) cleanly.
+    const fsm = getConnectionFsm();
+    fsm.dispatch(FsmEvent.CONNECT);
+    fsm.dispatch(FsmEvent.READY);
+
     CONFIGURATOR.connectionValid = true;
     CONFIGURATOR.virtualMode = true;
     CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
@@ -822,6 +833,9 @@ function finishOpen() {
 
     onConnect();
 
+    // S3 readiness edge #1: full MSP chain complete -> CONNECTED (FULLY_READY).
+    getConnectionFsm().dispatch(FsmEvent.READY);
+
     GUI.selectDefaultTabWhenConnected();
 }
 
@@ -833,6 +847,10 @@ function connectCli() {
     MSP.disconnect_cleanup();
 
     onConnect();
+
+    // S3 readiness edge #2: CLI-only / version-mismatch session -> CLI (CLI_ONLY).
+    getConnectionFsm().dispatch(FsmEvent.CLI_READY);
+
     switchTab("cli", { mode: "cli" });
 }
 

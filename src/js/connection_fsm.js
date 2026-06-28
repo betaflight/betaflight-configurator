@@ -127,6 +127,18 @@ const TRANSITIONS = Object.freeze({
 /** States that count as "ready" (a usable connection from the user's view). */
 const READY_STATES = Object.freeze(new Set([State.CONNECTED, State.CLI]));
 
+/**
+ * Readiness quality (S3): consumers must not read a half-populated FC.CONFIG, so
+ * the FSM records HOW ready a connection is. FULLY_READY = the full MSP chain
+ * completed (finishOpen) or virtual; CLI_ONLY = CLI/version-mismatch session
+ * with only a CLI subset usable.
+ */
+export const Quality = Object.freeze({
+    NONE: "NONE",
+    FULLY_READY: "FULLY_READY",
+    CLI_ONLY: "CLI_ONLY",
+});
+
 function detectDev() {
     try {
         // Vite injects import.meta.env.DEV; guarded so non-Vite contexts (tests,
@@ -142,6 +154,7 @@ export class ConnectionFsm {
         this._state = State.IDLE;
         // Throw on illegal transitions in dev; log+ignore in prod.
         this._strict = strict ?? detectDev();
+        this._quality = Quality.NONE;
         this._token = null;
         this._abort = null;
         this._listeners = new Set();
@@ -154,6 +167,10 @@ export class ConnectionFsm {
 
     get isReady() {
         return READY_STATES.has(this._state);
+    }
+
+    get quality() {
+        return this._quality;
     }
 
     /** Whether `event` is a legal transition from the current state. */
@@ -178,6 +195,15 @@ export class ConnectionFsm {
 
         const prev = this._state;
         this._state = next;
+
+        // Readiness quality follows the entry edge (S3): full-MSP/virtual vs CLI.
+        if (event === Event.READY) {
+            this._quality = Quality.FULLY_READY;
+        } else if (event === Event.CLI_READY) {
+            this._quality = Quality.CLI_ONLY;
+        } else if (!READY_STATES.has(next)) {
+            this._quality = Quality.NONE;
+        }
 
         // Token lifecycle: cleared whenever we settle into IDLE; a fresh
         // CONNECTED (not via a reconnect) also drops a stale token.
@@ -250,6 +276,7 @@ export class ConnectionFsm {
     concludeReboot(reconnected) {
         const prev = this._state;
         this._state = reconnected ? State.CONNECTED : State.IDLE;
+        this._quality = reconnected ? Quality.FULLY_READY : Quality.NONE;
         if (this._state === State.IDLE) {
             this._token = null;
         }
@@ -288,6 +315,7 @@ export class ConnectionFsm {
         return {
             state: this._state,
             isReady: this.isReady,
+            quality: this._quality,
             token: this._token,
         };
     }
@@ -423,7 +451,14 @@ let _instance = null;
 /** The process-wide connection FSM. */
 export function getConnectionFsm() {
     if (!_instance) {
-        _instance = new ConnectionFsm();
+        // Non-strict during the migration: until EVERY connect/disconnect/reboot
+        // writer is routed through the FSM (completed in S7), a live dispatch can
+        // legitimately arrive in a state the table doesn't yet model. Non-strict
+        // logs+ignores those instead of throwing and wedging a real connection.
+        // Unit tests construct `new ConnectionFsm({ strict: true })` directly, so
+        // the transition table is still verified strictly. Flip this to strict
+        // (the default dev behavior) in S7 once all writers are rerouted.
+        _instance = new ConnectionFsm({ strict: false });
     }
     return _instance;
 }
