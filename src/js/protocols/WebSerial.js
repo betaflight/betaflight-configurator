@@ -1,5 +1,4 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
-import { LinkEvent } from "./LinkEvent.js";
 import GUI from "../gui";
 
 const logHead = "[WEBSERIAL]";
@@ -44,11 +43,6 @@ class WebSerial extends EventTarget {
     #portIds = new WeakMap();
     #nextPortId = 0;
 
-    // S6a: this transport emits the normalized LinkEvent contract alongside the
-    // legacy connect/disconnect/receive/addedDevice/removedDevice events.
-    // serial.js forwards both while consumers migrate; legacy names go in S9.
-    supportsLinkEvents = true;
-
     constructor() {
         super();
 
@@ -58,10 +52,6 @@ class WebSerial extends EventTarget {
         this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
-        // S6a: set when the link drops unexpectedly (device unplug/reboot, read
-        // error) so disconnect() emits LinkEvent.LOST rather than CLOSED. Reset
-        // after each teardown so a subsequent intentional close reads as CLOSED.
-        this._linkLost = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -96,7 +86,6 @@ class WebSerial extends EventTarget {
         const added = this.createPort(device);
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-        this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_ARRIVED, { detail: added }));
         return added;
     }
 
@@ -104,7 +93,6 @@ class WebSerial extends EventTarget {
         const removed = this.ports.find((port) => port.port === device);
         this.ports = this.ports.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-        this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_LEFT, { detail: removed }));
     }
 
     handleReceiveBytes(info) {
@@ -113,9 +101,6 @@ class WebSerial extends EventTarget {
 
     handleDisconnect() {
         console.log(`${logHead} Device disconnected externally`);
-        // External disconnect (cable pull / device reboot) is an unexpected loss,
-        // not an intentional close — flag it so disconnect() emits LinkEvent.LOST.
-        this._linkLost = true;
         this.disconnect();
     }
 
@@ -282,7 +267,6 @@ class WebSerial extends EventTarget {
                 console.log(`${logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
 
                 this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
-                this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: connectionInfo }));
 
                 // Start reading from the port
                 this.reading = true;
@@ -320,14 +304,10 @@ class WebSerial extends EventTarget {
         try {
             for await (let value of streamAsyncIterable(this.reader, () => this.reading)) {
                 this.dispatchEvent(new CustomEvent("receive", { detail: value }));
-                this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: value }));
             }
         } catch (error) {
             console.error(`${logHead} Error reading:`, error);
             if (this.connected) {
-                // A read failure on a live link is an unexpected loss, not a
-                // user close — surface it as LinkEvent.LOST.
-                this._linkLost = true;
                 this.disconnect();
             }
         }
@@ -404,7 +384,6 @@ class WebSerial extends EventTarget {
             this.closeRequested = false;
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
             return true;
         } catch (error) {
             console.error(`${logHead} Error disconnecting:`, error);
@@ -412,14 +391,11 @@ class WebSerial extends EventTarget {
             // Ensure connectionInfo is reset even on error if port was potentially open
             this.connectionInfo = null;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
-            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: false }));
             return false;
         } finally {
             if (this.openCanceled) {
                 this.openCanceled = false;
             }
-            // Reset for the next connection so an intentional close reads as CLOSED.
-            this._linkLost = false;
         }
     }
 

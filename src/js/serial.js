@@ -8,7 +8,6 @@ import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
 import TauriTcp from "./protocols/TauriTcp.js";
-import { LinkEvent, LINK_EVENTS } from "./protocols/LinkEvent.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -61,29 +60,22 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const legacyEvents = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
-        // Normalized LinkEvent contract (S6). Forwarded only for transports that
-        // opt in via `supportsLinkEvents`; others keep emitting only legacy names
-        // and consumers fall back to those until S9 removes the legacy layer.
-        const linkEvents = LINK_EVENTS;
-        // Events whose detail is a raw data chunk rather than an object — these
-        // are re-wrapped as `{ data, protocolType }`.
-        const dataEvents = new Set(["receive", LinkEvent.DATA]);
+        const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
 
         for (const { name, instance } of this._protocols) {
             if (typeof instance?.addEventListener !== "function") {
                 continue;
             }
 
-            const events = instance.supportsLinkEvents ? [...legacyEvents, ...linkEvents] : legacyEvents;
-
             for (const eventType of events) {
                 instance.addEventListener(eventType, (event) => {
-                    const newDetail = dataEvents.has(event.type)
-                        ? { data: event.detail, protocolType: name }
-                        : { ...event.detail, protocolType: name };
+                    // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
+                    // Other events carry an object detail merged with the protocol tag.
+                    const newDetail =
+                        event.type === "receive"
+                            ? { data: event.detail, protocolType: name }
+                            : { ...event.detail, protocolType: name };
 
-                    // Dispatch the event with the new detail
                     this.dispatchEvent(
                         new CustomEvent(event.type, {
                             detail: newDetail,

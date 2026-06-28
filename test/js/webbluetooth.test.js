@@ -1,11 +1,8 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import {
-    expectSupportsLinkEvents,
     expectNullTokenWhenDisconnected,
     expectTokenShape,
     expectResolveContract,
-    expectClosedOnIntentionalDisconnect,
-    expectLostOnUnsolicitedDrop,
 } from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
@@ -206,7 +203,7 @@ describe("WebBluetooth stable device identity", () => {
 });
 
 // ---------------------------------------------------------------------------
-// S6c — WebBluetooth LinkEvent adapter + openCanceled abort contract + token.
+// S6c — WebBluetooth openCanceled abort contract + token.
 // ---------------------------------------------------------------------------
 
 async function connectStubbed(bt, path) {
@@ -217,71 +214,6 @@ async function connectStubbed(bt, path) {
     bt.startNotifications = vi.fn(async () => {});
     await bt.connect(path, { baudRate: 115200 });
 }
-
-describe("S6c WebBluetooth LinkEvent adapter", () => {
-    it("declares LinkEvent support", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-        expectSupportsLinkEvents(new WebBluetooth());
-    });
-
-    it("emits deviceArrived on attach and deviceLeft on removal", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-        const bt = new WebBluetooth();
-
-        const arrived = [];
-        const left = [];
-        bt.addEventListener("deviceArrived", (e) => arrived.push(e.detail.path));
-        bt.addEventListener("deviceLeft", (e) => left.push(e.detail?.path));
-
-        const device = makeFakeDevice("dev-x");
-        const added = bt.handleNewDevice(device);
-        expect(arrived).toEqual([added.path]);
-
-        bt.handleRemovedDevice(device);
-        expect(left).toEqual([added.path]);
-    });
-
-    it("emits open on a successful connect", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-        const bt = new WebBluetooth();
-        bt.devices = [bt.createPort(makeFakeDevice("dev-open"))];
-
-        let opened = false;
-        bt.addEventListener("open", () => (opened = true));
-
-        await connectStubbed(bt, bt.devices[0].path);
-        expect(opened).toBe(true);
-    });
-
-    it("emits closed on an intentional disconnect, lost on an unsolicited drop", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-
-        // Intentional close.
-        const bt1 = new WebBluetooth();
-        bt1.devices = [bt1.createPort(makeFakeDevice("dev-c"))];
-        await connectStubbed(bt1, bt1.devices[0].path);
-        await expectClosedOnIntentionalDisconnect(bt1, () => bt1.disconnect());
-
-        // Unsolicited drop via handleDisconnect (gattserverdisconnected).
-        const bt2 = new WebBluetooth();
-        bt2.devices = [bt2.createPort(makeFakeDevice("dev-l"))];
-        await connectStubbed(bt2, bt2.devices[0].path);
-        await expectLostOnUnsolicitedDrop(bt2, () => bt2.handleDisconnect());
-    });
-
-    it("emits data on a characteristic notification", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-        const bt = new WebBluetooth();
-
-        const received = [];
-        bt.addEventListener("data", (e) => received.push(Array.from(e.detail)));
-
-        const dataView = new DataView(new Uint8Array([10, 20, 30]).buffer);
-        bt.handleNotification({ target: { value: dataView } });
-
-        expect(received).toEqual([[10, 20, 30]]);
-    });
-});
 
 describe("S6c WebBluetooth openCanceled abort contract", () => {
     it("disconnect() during an in-flight open signals openCanceled without tearing down", async () => {

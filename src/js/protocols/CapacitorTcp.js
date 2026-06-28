@@ -1,5 +1,4 @@
 import { Capacitor } from "@capacitor/core";
-import { LinkEvent } from "./LinkEvent.js";
 
 const BetaflightTcp = Capacitor?.Plugins?.BetaflightTcp;
 
@@ -25,17 +24,11 @@ function uint8ArrayToBase64(bytes) {
 }
 
 class CapacitorTcp extends EventTarget {
-    // S6b: emits the normalized LinkEvent contract alongside legacy events.
-    supportsLinkEvents = true;
-
     constructor() {
         super();
 
         this.connected = false;
         this.connectionInfo = null;
-        // S6b: set by handleDisconnect (peer close / read error) so disconnect()
-        // emits LOST rather than CLOSED.
-        this._linkLost = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -60,7 +53,6 @@ class CapacitorTcp extends EventTarget {
             this.handleReceiveBytes({ detail: bytes });
             // Forward raw bytes as detail; Serial/port_usage consume TypedArray.byteLength.
             this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
-            this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: bytes }));
         });
 
         this.plugin.addListener("dataReceivedError", (ev) => {
@@ -79,8 +71,6 @@ class CapacitorTcp extends EventTarget {
     }
 
     handleDisconnect() {
-        // Peer-initiated close or read error → the link was lost, not closed.
-        this._linkLost = true;
         this.disconnect();
     }
 
@@ -143,7 +133,6 @@ class CapacitorTcp extends EventTarget {
                 throw new Error("Connect failed");
             }
             this.dispatchEvent(new CustomEvent("connect", { detail: this.address }));
-            this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: this.address }));
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
             this.connected = false;
@@ -155,19 +144,15 @@ class CapacitorTcp extends EventTarget {
         this.connected = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
-        const lost = this._linkLost;
-        this._linkLost = false;
 
         try {
             const res = await this.plugin.disconnect();
             if (res.success) {
                 this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-                this.dispatchEvent(new CustomEvent(lost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
             }
         } catch (e) {
             console.error(`${this.logHead}Failed to close connection: ${e}`);
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
-            this.dispatchEvent(new CustomEvent(lost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: false }));
         }
     }
 

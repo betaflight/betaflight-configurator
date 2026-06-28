@@ -1,5 +1,4 @@
 import { Capacitor } from "@capacitor/core";
-import { LinkEvent } from "./LinkEvent.js";
 
 const logHead = "[CAPACITORSERIAL]";
 const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
@@ -10,9 +9,6 @@ const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
  * on Android devices using USB OTG
  */
 class CapacitorSerial extends EventTarget {
-    // S6b: emits the normalized LinkEvent contract alongside legacy events.
-    supportsLinkEvents = true;
-
     constructor() {
         super();
 
@@ -60,7 +56,6 @@ class CapacitorSerial extends EventTarget {
 
         // Dispatch receive event with the data
         this.dispatchEvent(new CustomEvent("receive", { detail: data }));
-        this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: data }));
     }
 
     handleDeviceAttached(device) {
@@ -70,7 +65,6 @@ class CapacitorSerial extends EventTarget {
         }
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-        this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_ARRIVED, { detail: added }));
         console.log(`${logHead} Device attached:`, added.path);
         return added;
     }
@@ -92,13 +86,11 @@ class CapacitorSerial extends EventTarget {
                 // Dispatch disconnect event to notify the app. The connected
                 // device vanished, so this is a LOST link, not an intentional close.
                 this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-                this.dispatchEvent(new CustomEvent(LinkEvent.LOST, { detail: true }));
             }
 
             // Remove from ports list
             this.ports = this.ports.filter((port) => port.path !== deviceKey);
             this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-            this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_LEFT, { detail: removed }));
             console.log(`${logHead} Device detached:`, removed.path);
         }
     }
@@ -214,7 +206,6 @@ class CapacitorSerial extends EventTarget {
                 };
 
                 this.dispatchEvent(new CustomEvent("connect", { detail: this.connectionInfo }));
-                this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: this.connectionInfo }));
                 return true;
             } else {
                 this.openRequested = false;
@@ -256,13 +247,11 @@ class CapacitorSerial extends EventTarget {
 
             this.cleanupConnectionState();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-            this.dispatchEvent(new CustomEvent(LinkEvent.CLOSED, { detail: true }));
             return true;
         } catch (error) {
             console.error(`${logHead} Error disconnecting:`, error);
             this.cleanupConnectionState();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
-            this.dispatchEvent(new CustomEvent(LinkEvent.CLOSED, { detail: false }));
             return false;
         }
     }

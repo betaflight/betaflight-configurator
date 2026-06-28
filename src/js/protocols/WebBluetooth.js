@@ -1,7 +1,6 @@
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import { bluetoothDevices } from "./devices";
-import { LinkEvent } from "./LinkEvent.js";
 
 /*  Certain flags needs to be enabled in the browser to use BT
  *
@@ -12,9 +11,6 @@ import { LinkEvent } from "./LinkEvent.js";
  */
 
 class WebBluetooth extends EventTarget {
-    // S6c: emits the normalized LinkEvent contract alongside legacy events.
-    supportsLinkEvents = true;
-
     constructor() {
         super();
 
@@ -25,9 +21,6 @@ class WebBluetooth extends EventTarget {
         this.transmitting = false;
         this.connectionInfo = null;
         this.lastWrite = null;
-        // S6c: set by handleDisconnect (unsolicited gattserverdisconnected) so
-        // disconnect() emits LOST rather than CLOSED.
-        this._linkLost = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -63,7 +56,6 @@ class WebBluetooth extends EventTarget {
         const added = this.createPort(device);
         this.devices.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-        this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_ARRIVED, { detail: added }));
 
         return added;
     }
@@ -72,7 +64,6 @@ class WebBluetooth extends EventTarget {
         const removed = this.devices.find((port) => port.port === device);
         this.devices = this.devices.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-        this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_LEFT, { detail: removed }));
     }
 
     handleReceiveBytes(info) {
@@ -88,9 +79,6 @@ class WebBluetooth extends EventTarget {
         if (this.closeRequested) {
             return;
         }
-        // Unsolicited GATT drop (reboot/boot bounce/out-of-range) → LOST, not an
-        // intentional CLOSED.
-        this._linkLost = true;
         this.disconnect();
     }
 
@@ -258,7 +246,6 @@ class WebBluetooth extends EventTarget {
             console.log(`${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
 
             this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
-            this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: connectionInfo }));
         } else if (connectionInfo && this.openCanceled) {
             this.connectionId = path;
 
@@ -349,7 +336,6 @@ class WebBluetooth extends EventTarget {
 
         // Dispatch immediately instead of using setTimeout to avoid race conditions
         this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
-        this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: buffer }));
     }
 
     startNotifications() {
@@ -425,20 +411,16 @@ class WebBluetooth extends EventTarget {
             this.connectionId = false;
             this.bitrate = 0;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
         } catch (error) {
             console.error(error);
             console.error(
                 `${this.logHead} Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
             );
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
-            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: false }));
         } finally {
             if (this.openCanceled) {
                 this.openCanceled = false;
             }
-            // Reset so a subsequent intentional close reads as CLOSED.
-            this._linkLost = false;
         }
     }
 

@@ -1,6 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
 import { serialDevices, vendorIdNames } from "./devices";
-import { LinkEvent } from "./LinkEvent.js";
 import GUI from "../gui";
 
 const logHead = "[TAURI SERIAL]";
@@ -48,9 +47,6 @@ function parseId(value) {
  * Tauri shell. The plugin exposes a stable command interface via `invoke`.
  */
 class TauriSerial extends EventTarget {
-    // S6d: emits the normalized LinkEvent contract alongside legacy events.
-    supportsLinkEvents = true;
-
     constructor() {
         super();
 
@@ -60,9 +56,6 @@ class TauriSerial extends EventTarget {
         this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
-        // S6d: set by handleFatalSerialError (broken pipe / device gone) so
-        // disconnect() emits LOST rather than CLOSED.
-        this._linkLost = false;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -110,8 +103,6 @@ class TauriSerial extends EventTarget {
         // On fatal errors (broken pipe, etc.) just disconnect cleanly.
         // The monitor loop will surface the removal as a removedDevice event.
         if (this.connected) {
-            // Fatal error mid-link → the link was lost, not intentionally closed.
-            this._linkLost = true;
             this.disconnect();
         }
     }
@@ -260,13 +251,11 @@ class TauriSerial extends EventTarget {
 
             for (const removed of removedPorts) {
                 this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-                this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_LEFT, { detail: removed }));
                 console.log(`${logHead} Device removed: ${removed.path}`);
             }
 
             for (const added of addedPorts) {
                 this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-                this.dispatchEvent(new CustomEvent(LinkEvent.DEVICE_ARRIVED, { detail: added }));
                 console.log(`${logHead} Device added: ${added.path}`);
             }
 
@@ -375,7 +364,6 @@ class TauriSerial extends EventTarget {
             this.readLoop();
 
             this.dispatchEvent(new CustomEvent("connect", { detail: true }));
-            this.dispatchEvent(new CustomEvent(LinkEvent.OPEN, { detail: true }));
             console.log(`${logHead} Connected to ${path}`);
             return true;
         } catch (error) {
@@ -458,7 +446,6 @@ class TauriSerial extends EventTarget {
                     if (result && result.length > 0) {
                         const bytes = new Uint8Array(result);
                         this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
-                        this.dispatchEvent(new CustomEvent(LinkEvent.DATA, { detail: bytes }));
                     }
 
                     await new Promise((resolve) => setTimeout(resolve, 5));
@@ -583,20 +570,16 @@ class TauriSerial extends EventTarget {
             this.closeRequested = false;
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: true }));
             return true;
         } catch (error) {
             console.error(`${logHead} Error disconnecting:`, error);
             this.closeRequested = false;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
-            this.dispatchEvent(new CustomEvent(this._linkLost ? LinkEvent.LOST : LinkEvent.CLOSED, { detail: false }));
             return false;
         } finally {
             if (this.openCanceled) {
                 this.openCanceled = false;
             }
-            // Reset so a subsequent intentional close reads as CLOSED.
-            this._linkLost = false;
         }
     }
 

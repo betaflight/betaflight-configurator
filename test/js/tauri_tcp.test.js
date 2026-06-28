@@ -1,12 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-    expectSupportsLinkEvents,
-    expectTokenShape,
-    expectResolveContract,
-    expectLostOnUnsolicitedDrop,
-} from "./helpers/linkEventContract.js";
+import { afterEach, beforeEach, describe, it, vi } from "vitest";
+import { expectTokenShape, expectResolveContract } from "./helpers/linkEventContract.js";
 
-// S6b — TauriTcp LinkEvent adapter + reconnect token. The Tauri core `invoke`
+// S6b — TauriTcp reconnect token. The Tauri core `invoke`
 // and event `listen` APIs are mocked; listen captures the tcp-data / tcp-closed
 // handlers so the test can drive them.
 
@@ -35,42 +30,7 @@ async function newTcp() {
     return new mod.default();
 }
 
-describe("S6b TauriTcp LinkEvent adapter", () => {
-    it("declares LinkEvent support", async () => {
-        expectSupportsLinkEvents(await newTcp());
-    });
-
-    it("emits open on connect and closed on intentional disconnect", async () => {
-        const tcp = await newTcp();
-        const events = [];
-        tcp.addEventListener("open", () => events.push("open"));
-        tcp.addEventListener("closed", () => events.push("closed"));
-        tcp.addEventListener("lost", () => events.push("lost"));
-
-        await tcp.connect("tcp://localhost:5761");
-        await tcp.disconnect();
-
-        expect(events).toEqual(["open", "closed"]);
-    });
-
-    it("emits lost when the peer closes (tcp-closed)", async () => {
-        const tcp = await newTcp();
-        await tcp.connect("tcp://localhost:5761");
-
-        await expectLostOnUnsolicitedDrop(tcp, () => handlers["tcp-closed"]());
-    });
-
-    it("emits data on tcp-data", async () => {
-        const tcp = await newTcp();
-        await tcp.connect("tcp://localhost:5761");
-        const received = [];
-        tcp.addEventListener("data", (e) => received.push(Array.from(e.detail)));
-
-        handlers["tcp-data"]({ payload: [7, 8, 9] });
-
-        expect(received).toEqual([[7, 8, 9]]);
-    });
-
+describe("S6b TauriTcp reconnect token", () => {
     it("freezes the canonical tcp:// address as a tcp token and resolves it back", async () => {
         const tcp = await newTcp();
         await tcp.connect("tcp://localhost:5761");

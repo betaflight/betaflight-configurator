@@ -1,12 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-    expectSupportsLinkEvents,
-    expectTokenShape,
-    expectLostOnUnsolicitedDrop,
-} from "./helpers/linkEventContract.js";
+import { expectTokenShape } from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
-// S6d / S1b-Tauri — TauriSerial LinkEvent adapter + path-change re-resolution.
+// S1b-Tauri — TauriSerial reconnect token + path-change re-resolution.
 //
 // The FATAL case: a Tauri CDC device commonly re-enumerates to a DIFFERENT OS
 // path across a reboot (/dev/ttyACM0 -> ACM1). The reconnect token freezes the
@@ -45,38 +41,7 @@ const port = (path, serialNumber, vendorId = 0x0483, productId = 0x5740) => ({
     serialNumber,
 });
 
-describe("S6d TauriSerial LinkEvent adapter", () => {
-    it("declares LinkEvent support", async () => {
-        expectSupportsLinkEvents(await newTauriSerial());
-    });
-
-    it("emits open on connect and closed on intentional disconnect", async () => {
-        const ts = await newTauriSerial();
-        ts.ports = [port("/dev/ttyACM0", "SN1")];
-        ts.readLoop = vi.fn(); // don't drive the real poll loop
-
-        const events = [];
-        ts.addEventListener("open", () => events.push("open"));
-        ts.addEventListener("closed", () => events.push("closed"));
-        ts.addEventListener("lost", () => events.push("lost"));
-
-        await ts.connect("/dev/ttyACM0", { baudRate: 115200 });
-        await ts.disconnect();
-
-        expect(events).toEqual(["open", "closed"]);
-    });
-
-    it("emits lost (not closed) on a fatal serial error", async () => {
-        const ts = await newTauriSerial();
-        ts.ports = [port("/dev/ttyACM0", "SN1")];
-        ts.readLoop = vi.fn();
-        await ts.connect("/dev/ttyACM0", { baudRate: 115200 });
-
-        await expectLostOnUnsolicitedDrop(ts, () => ts.handleFatalSerialError(new Error("Broken pipe")));
-    });
-});
-
-describe("S6d/S1b-Tauri reconnect token + path-change re-resolution", () => {
+describe("S1b-Tauri reconnect token + path-change re-resolution", () => {
     it("freezes {path, vid, pid, serialNumber} as the token identity", async () => {
         const ts = await newTauriSerial();
         ts.ports = [port("/dev/ttyACM0", "SN1")];
