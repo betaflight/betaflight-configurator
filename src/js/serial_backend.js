@@ -1065,6 +1065,11 @@ function rebootReconnect() {
                 return;
             }
             if (!isConnected && !GUI.connecting_to) {
+                // Drain any leftover MSP state from the reboot command (queued resends and
+                // their callbacks) before the fresh handshake, so stale reboot-command
+                // traffic can't collide with the new connection's request chain.
+                MSP.disconnect_cleanup();
+
                 // Aim the reconnect at the originally-connected device, not at whatever
                 // selectActivePort may have drifted to while the FC was off the list.
                 if (PortHandler.pinnedReconnectTarget) {

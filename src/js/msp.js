@@ -488,7 +488,21 @@ const MSP = {
             }
         }
     },
-    send_message(code, data, callback_sent, callback_msp) {
+    /**
+     * Send an MSP request.
+     *
+     * @param {number} code MSP code
+     * @param {*} data optional request payload
+     * @param {Function|false} callback_sent invoked once the request bytes are written
+     * @param {Function} callback_msp invoked with the decoded response
+     * @param {object} [options] optional behavior overrides
+     * @param {number} [options.timeoutMs] when provided, the request stops
+     *   resending and is rejected after this many milliseconds. Rejection is
+     *   signalled by invoking `callback_msp` with an object carrying a `timeout`
+     *   flag (see `promise`). When omitted, behavior is unchanged: the request
+     *   resends forever and never rejects.
+     */
+    send_message(code, data, callback_sent, callback_msp, options = {}) {
         if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
@@ -496,6 +510,7 @@ const MSP = {
             return false;
         }
 
+        const timeoutMs = options?.timeoutMs;
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
         const view = new Uint8Array(bufferOut);
         const keyCrc = this.crc8_dvb_s2_data(view, 0, view.length);
@@ -531,6 +546,28 @@ const MSP = {
                     clearTimeout(obj.timer); // prevent leaks
                 });
             }, this.TIMEOUT);
+
+            // Opt-in bounded timeout: when a caller supplies timeoutMs, give the
+            // request a hard deadline. On expiry we stop the resend cycle, drop the
+            // request from the queue, and invoke the callback with a timeout marker
+            // so awaiting callers can reject. Without timeoutMs this branch never
+            // runs and the legacy resend-forever / never-reject behavior is intact.
+            if (typeof timeoutMs === "number" && timeoutMs >= 0) {
+                obj.deadlineTimer = setTimeout(() => {
+                    // Stop resending this request and remove it from the queue.
+                    clearTimeout(obj.timer);
+                    const index = this.callbacks.indexOf(obj);
+                    if (index !== -1) {
+                        this.callbacks.splice(index, 1);
+                    }
+                    console.warn(
+                        `MSP: data request rejected after ${timeoutMs}ms: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab}`,
+                    );
+                    if (obj.callback) {
+                        obj.callback({ command: code, timeout: true, timeoutMs });
+                    }
+                }, timeoutMs);
+            }
         }
 
         this.callbacks.push(obj);
@@ -547,18 +584,37 @@ const MSP = {
         return true;
     },
     /**
-     * resolves: {command: code, data: data, length: message_length}
+     * Resolves: {command: code, data: data, length: message_length}
+     *
+     * @param {number} code MSP code
+     * @param {*} [data] optional request payload
+     * @param {object} [options] optional behavior overrides
+     * @param {number} [options.timeoutMs] when provided, the returned promise
+     *   rejects with an Error after this bound if no response arrives (and the
+     *   underlying request stops resending). When omitted, behavior is
+     *   unchanged: the promise resolves on response and never rejects.
      */
-    async promise(code, data) {
-        return new Promise((resolve) => {
-            this.send_message(code, data, false, (_data) => {
-                resolve(_data);
-            });
+    async promise(code, data, options = {}) {
+        return new Promise((resolve, reject) => {
+            this.send_message(
+                code,
+                data,
+                false,
+                (_data) => {
+                    if (_data?.timeout) {
+                        reject(new Error(`MSP request ${code} timed out after ${_data.timeoutMs}ms`));
+                        return;
+                    }
+                    resolve(_data);
+                },
+                options,
+            );
         });
     },
     callbacks_cleanup() {
         for (const callback of this.callbacks) {
             clearTimeout(callback.timer);
+            clearTimeout(callback.deadlineTimer);
         }
 
         this.callbacks = [];

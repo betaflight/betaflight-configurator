@@ -1,7 +1,107 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import MSP from "../../src/js/msp";
+import { serial } from "../../src/js/serial.js";
 
 describe("MSP", () => {
+    describe("send_message / promise bounded timeout", () => {
+        let sendSpy;
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+            // Force the connected path in send_message and capture outgoing bytes.
+            vi.spyOn(serial, "connected", "get").mockReturnValue(true);
+            sendSpy = vi.spyOn(serial, "send").mockImplementation((_data, callback) => {
+                // Mimic a successful, but unanswered, write.
+                callback?.({ bytesSent: _data.byteLength });
+            });
+            MSP.callbacks_cleanup();
+        });
+
+        afterEach(() => {
+            MSP.callbacks_cleanup();
+            vi.clearAllTimers();
+            vi.useRealTimers();
+            vi.restoreAllMocks();
+        });
+
+        it("without timeoutMs keeps resending and never rejects (legacy behavior preserved)", async () => {
+            const responseCallback = vi.fn();
+            const sent = MSP.send_message(MSP.code ?? 1, false, false, responseCallback);
+            expect(sent).toBe(true);
+
+            const initialSends = sendSpy.mock.calls.length;
+            expect(initialSends).toBeGreaterThan(0);
+
+            // Advance well past several TIMEOUT windows: the request should resend
+            // repeatedly and the callback must never fire (no rejection/resolution).
+            for (let i = 0; i < 5; i++) {
+                vi.advanceTimersByTime(MSP.TIMEOUT);
+            }
+
+            expect(sendSpy.mock.calls.length).toBeGreaterThan(initialSends);
+            expect(responseCallback).not.toHaveBeenCalled();
+            // The request remains queued (still in flight).
+            expect(MSP.callbacks.length).toBe(1);
+        });
+
+        it("with timeoutMs rejects after the bound and stops resending", async () => {
+            const timeoutMs = 250;
+            const promise = MSP.promise(1, false, { timeoutMs });
+            // Surface the rejection without an unhandled-rejection warning.
+            const assertion = expect(promise).rejects.toThrow(/timed out after 250ms/);
+
+            const sendsBeforeDeadline = sendSpy.mock.calls.length;
+
+            // Fire the deadline.
+            await vi.advanceTimersByTimeAsync(timeoutMs);
+            await assertion;
+
+            // The request is removed from the queue and its timers are gone.
+            expect(MSP.callbacks.length).toBe(0);
+
+            // After the deadline, the resend timer must not fire any more sends.
+            const sendsAfterDeadline = sendSpy.mock.calls.length;
+            vi.advanceTimersByTime(MSP.TIMEOUT * 5);
+            expect(sendSpy.mock.calls.length).toBe(sendsAfterDeadline);
+            expect(sendsAfterDeadline).toBeGreaterThanOrEqual(sendsBeforeDeadline);
+        });
+
+        it("cleans up both resend and deadline timers on rejection", async () => {
+            const clearSpy = vi.spyOn(globalThis, "clearTimeout");
+            const promise = MSP.promise(1, false, { timeoutMs: 100 });
+            const assertion = expect(promise).rejects.toThrow();
+
+            await vi.advanceTimersByTimeAsync(100);
+            await assertion;
+
+            // Deadline handler clears the resend timer; queue is empty so no leaks.
+            expect(clearSpy).toHaveBeenCalled();
+            expect(MSP.callbacks.length).toBe(0);
+            // No pending timers remain.
+            expect(vi.getTimerCount()).toBe(0);
+        });
+
+        it("clears the deadline timer when a response arrives in time", () => {
+            const clearSpy = vi.spyOn(globalThis, "clearTimeout");
+            const responseCallback = vi.fn();
+            MSP.send_message(1, false, false, responseCallback, { timeoutMs: 1000 });
+
+            // Simulate the response path that MSPHelper performs on a matched code.
+            const entry = MSP.callbacks.find((c) => c.code === 1);
+            expect(entry).toBeDefined();
+            clearTimeout(entry.timer);
+            clearTimeout(entry.deadlineTimer);
+            MSP.callbacks.splice(MSP.callbacks.indexOf(entry), 1);
+            entry.callback({ command: 1, data: null, length: 0, crcError: false });
+
+            expect(clearSpy).toHaveBeenCalled();
+            // Advancing past the deadline must not invoke the callback again.
+            vi.advanceTimersByTime(2000);
+            expect(responseCallback).toHaveBeenCalledTimes(1);
+            expect(MSP.callbacks.length).toBe(0);
+        });
+    });
+
     describe("encode_message_v1", () => {
         it("handles correctly any code and no data", () => {
             for (let code = 0; code < 256; code++) {
