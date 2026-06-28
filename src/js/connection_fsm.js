@@ -6,21 +6,15 @@
  *   - the current lifecycle state,
  *   - the FROZEN reconnect token (captured at reboot/connect start; never
  *     re-derived from the live port picker during a reconnect),
- *   - a single AbortController-based reboot/reconnect loop (replaces the five
- *     duplicated timeout/interval orchestrators), and
+ *   - the reboot/reconnect intent + abort plumbing the live reconnect (the
+ *     serial_backend interval loop) drives through, and
  *   - a snapshot read-model that `useConnectionStore` (S2b) subscribes to.
  *
  * Deliberately a PLAIN module: NO Vue/Pinia/serial_backend imports, so it has no
- * init-order hazard and is fully unit-testable in isolation. Transports are
- * reached only through dependency-injected callbacks passed to runReconnect().
+ * init-order hazard and is fully unit-testable in isolation.
  *
  * Illegal transitions throw in dev (surfacing missed wiring) and log+ignore in
  * prod (never wedge a user's connection over a programming slip).
- *
- * Slice S2a: the FSM + transition table + abortable reconnect loop, with full
- * unit tests. The live call-site rewiring (serial_backend, gui.js, useReboot,
- * useMspCliSession, stores/connection.js, useCli.js) lands in S2b. The RAII
- * connect_lock and lifecycle-flag ownership land in S4.
  */
 
 /** Lifecycle states. */
@@ -461,125 +455,7 @@ export class ConnectionFsm {
             }
         }
     }
-
-    // ---- Reboot / reconnect loop ------------------------------------------
-
-    /**
-     * Single AbortController-based reboot+reconnect orchestrator. Replaces the
-     * five duplicated timeout/interval loops. Pure w.r.t. transports: every
-     * transport-specific action is injected, so this is fully unit-testable.
-     *
-     * Sequence: REBOOTING -> RECONNECTING, then poll resolveTarget() until the
-     * device's CURRENT path is resolvable (handles a CDC path change), open it,
-     * wait for readiness, settle to CONNECTED. Honors the AbortController and a
-     * per-transport timeout policy with an overall deadline.
-     *
-     * @param {object} deps
-     * @param {() => (string|null)} deps.resolveTarget - current path or null
-     * @param {(path: string) => Promise<boolean>} deps.open - open that path
-     * @param {() => boolean} deps.isReady - has readiness been reached
-     * @param {{initialDelay:number,maxDelay:number,deadline:number}} deps.policy
-     * @param {(ms:number, signal:AbortSignal)=>Promise<void>} [deps.wait] - injectable sleep
-     * @param {()=>number} [deps.now] - injectable clock
-     * @returns {Promise<boolean>} true if reconnected, false on give-up/abort
-     */
-    async runReconnect(deps) {
-        const { resolveTarget, open, isReady, policy } = deps;
-        const wait = deps.wait ?? defaultWait;
-        const now = deps.now ?? Date.now;
-
-        const signal = this.beginOperation();
-        // CONNECTED/CLI -> REBOOTING -> RECONNECTING.
-        if (this._state === State.CONNECTED || this._state === State.CLI) {
-            this.dispatch(Event.REBOOT);
-        }
-        if (this._state === State.REBOOTING) {
-            this.dispatch(Event.RECONNECT);
-        }
-
-        const start = now();
-        let delay = policy.initialDelay;
-
-        while (!signal.aborted) {
-            if (now() - start > policy.deadline) {
-                console.warn(`${this.logHead} reconnect deadline exceeded`);
-                this.dispatch(Event.CLOSED); // RECONNECTING -> IDLE (gave up)
-                return false;
-            }
-
-            const path = resolveTarget();
-            if (path != null) {
-                // Device is back. RECONNECTING -> CONNECTING and open it.
-                if (this._state === State.RECONNECTING) {
-                    this.dispatch(Event.CONNECT);
-                }
-                let opened = false;
-                try {
-                    opened = await open(path);
-                } catch (error) {
-                    console.warn(`${this.logHead} reconnect open failed:`, error);
-                    opened = false;
-                }
-                if (signal.aborted) {
-                    break;
-                }
-                if (opened && isReady()) {
-                    this.dispatch(Event.READY); // CONNECTING -> CONNECTED
-                    return true;
-                }
-                // Open failed or not ready: go back to waiting. Use the dedicated
-                // CONNECTING -> RECONNECTING edge — NOT CONNECTING -> IDLE, which
-                // would clear the frozen reconnect token (see dispatch()) and make
-                // every subsequent resolveTarget() (which resolves that token)
-                // return null, wedging the loop until the deadline.
-                if (this._state === State.CONNECTING) {
-                    this.dispatch(Event.RECONNECT);
-                }
-            }
-
-            try {
-                await wait(delay, signal);
-            } catch {
-                break; // aborted during wait
-            }
-            delay = Math.min(delay * 2, policy.maxDelay);
-        }
-
-        // Aborted.
-        if (this._state === State.RECONNECTING || this._state === State.CONNECTING) {
-            this.dispatch(Event.DISCONNECT); // -> DISCONNECTING
-            this.dispatch(Event.CLOSED); // -> IDLE
-        }
-        return false;
-    }
 }
-
-/** Default abortable sleep. Rejects if the signal aborts mid-wait. */
-function defaultWait(ms, signal) {
-    return new Promise((resolve, reject) => {
-        if (signal?.aborted) {
-            reject(new Error("aborted"));
-            return;
-        }
-        const id = setTimeout(resolve, ms);
-        signal?.addEventListener(
-            "abort",
-            () => {
-                clearTimeout(id);
-                reject(new Error("aborted"));
-            },
-            { once: true },
-        );
-    });
-}
-
-/**
- * Default per-transport timeout policy (ms). Tuned per transport when runReconnect
- * goes live. NOTE: `deadline` (30000) must be reconciled with serial_backend's
- * REBOOT_CONNECT_MAX_TIME_MS (10000) when runReconnect replaces that live loop —
- * today they are two independent loops with two independent deadlines.
- */
-export const DEFAULT_POLICY = Object.freeze({ initialDelay: 250, maxDelay: 2000, deadline: 30000 });
 
 // Lazily-constructed singleton so there is no module-init-order hazard.
 let _instance = null;

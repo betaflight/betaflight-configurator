@@ -4,7 +4,6 @@ import {
     State,
     Event,
     Quality,
-    DEFAULT_POLICY,
     getConnectionFsm,
     __resetConnectionFsmForTests,
 } from "../../src/js/connection_fsm.js";
@@ -347,126 +346,6 @@ describe("S5 pagehide shutdown", () => {
         m.shutdown();
         expect(m.state).toBe(State.IDLE);
         expect(seen).toEqual([]); // no spurious notification
-    });
-});
-
-describe("S2a abortable reconnect loop", () => {
-    // Injected sleep that advances a fake clock so the deadline is reachable
-    // without real time.
-    function fakeClock() {
-        const ref = { t: 0 };
-        return {
-            now: () => ref.t,
-            wait: (ms) => {
-                ref.t += ms;
-                return Promise.resolve();
-            },
-        };
-    }
-
-    it("polls until the device path resolves, opens it, and settles to CONNECTED", async () => {
-        const m = connected();
-        const { now, wait } = fakeClock();
-
-        let calls = 0;
-        const resolveTarget = vi.fn(() => (++calls >= 2 ? "serial_0" : null));
-        const open = vi.fn(async () => true);
-        const isReady = vi.fn(() => true);
-
-        const ok = await m.runReconnect({ resolveTarget, open, isReady, policy: DEFAULT_POLICY, now, wait });
-
-        expect(ok).toBe(true);
-        expect(m.state).toBe(State.CONNECTED);
-        expect(open).toHaveBeenCalledWith("serial_0");
-    });
-
-    it("opens whatever CURRENT path resolveTarget returns (path-change tolerant)", async () => {
-        const m = connected();
-        const { now, wait } = fakeClock();
-        const open = vi.fn(async () => true);
-
-        await m.runReconnect({
-            resolveTarget: () => "/dev/ttyACM1", // changed from ACM0
-            open,
-            isReady: () => true,
-            policy: DEFAULT_POLICY,
-            now,
-            wait,
-        });
-
-        expect(open).toHaveBeenCalledWith("/dev/ttyACM1");
-    });
-
-    it("preserves the frozen token across a FAILED reopen and retries to CONNECTED", async () => {
-        // Regression guard: a failed reopen must NOT route CONNECTING -> IDLE (which
-        // clears the token). resolveTarget here resolves the TOKEN — exactly as the
-        // live wiring will — so if the failed reopen wiped it, every later poll
-        // returns null and the loop wedges to the deadline (ok === false).
-        const m = connected();
-        m.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
-        const { now, wait } = fakeClock();
-
-        const states = [];
-        m.subscribe((snap) => states.push(snap.state));
-
-        let openCalls = 0;
-        const open = vi.fn(async () => ++openCalls >= 2); // first reopen fails, second succeeds
-        const resolveTarget = vi.fn(() => (m.getReconnectToken() ? "serial_0" : null));
-
-        const ok = await m.runReconnect({
-            resolveTarget,
-            open,
-            isReady: () => true,
-            policy: DEFAULT_POLICY,
-            now,
-            wait,
-        });
-
-        expect(ok).toBe(true);
-        expect(m.state).toBe(State.CONNECTED);
-        expect(openCalls).toBe(2); // failed once, succeeded on retry
-        expect(m.getReconnectToken()).not.toBeNull(); // token survived the failed reopen
-        // The retry must NOT flicker through IDLE.
-        expect(states).not.toContain(State.IDLE);
-    });
-
-    it("gives up at the deadline and returns to IDLE", async () => {
-        const m = connected();
-        const { now, wait } = fakeClock();
-
-        const ok = await m.runReconnect({
-            resolveTarget: () => null, // never comes back
-            open: vi.fn(),
-            isReady: () => false,
-            policy: DEFAULT_POLICY,
-            now,
-            wait,
-        });
-
-        expect(ok).toBe(false);
-        expect(m.state).toBe(State.IDLE);
-    });
-
-    it("stops and tears down when aborted mid-wait", async () => {
-        const m = connected();
-        const open = vi.fn();
-
-        const ok = await m.runReconnect({
-            resolveTarget: () => null,
-            open,
-            isReady: () => false,
-            policy: DEFAULT_POLICY,
-            now: () => 0,
-            wait: (_ms, _signal) => {
-                m.abort();
-                return Promise.reject(new Error("aborted"));
-            },
-        });
-
-        expect(ok).toBe(false);
-        expect(m.aborted).toBe(true);
-        expect(m.state).toBe(State.IDLE);
-        expect(open).not.toHaveBeenCalled();
     });
 });
 
