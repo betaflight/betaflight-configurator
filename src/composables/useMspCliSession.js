@@ -3,8 +3,8 @@ import semver from "semver";
 import MSP from "../js/msp";
 import GUI from "../js/gui";
 import FC from "../js/fc";
-import PortHandler from "../js/port_handler";
 import { connectDisconnect } from "../js/serial_backend";
+import PortHandler from "../js/port_handler";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const SAVE_COMMAND_TIMEOUT_MS = 5000;
@@ -67,17 +67,25 @@ export function readDumpAll() {
 }
 
 export function scheduleReconnect() {
-    // Pin the port we are connected to right now. The save/exit that precedes this reboots the
-    // FC, so the port briefly disappears; the live selectedPort can then be auto-reassigned
-    // (e.g. to "virtual" in expert mode). Capturing synchronously here — before the async
-    // device-removal callback runs — lets us reconnect to the original FC, not the fallback.
-    const pinnedPort = PortHandler.portPicker.selectedPort;
+    // Capture the currently-selected real device synchronously, before the reboot/save can drop
+    // it off the port list. Pin it so selectActivePort() will not hijack the selection with the
+    // expert-mode virtual/manual fallback during the reconnect window. Only pin real paths.
+    const target = PortHandler.portPicker.selectedPort;
+    if (target && target !== "noselection" && target !== "virtual") {
+        PortHandler.pinnedReconnectTarget = target;
+    }
+
     GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
     GUI.timeout_add(
         RECONNECT_TIMEOUT_NAME,
         () => {
-            if (pinnedPort && !["noselection", "virtual", "manual"].includes(pinnedPort)) {
-                PortHandler.portPicker.selectedPort = pinnedPort;
+            // If selectActivePort drifted the selection while the device was transiently gone,
+            // restore it to the pinned target so we reconnect to the original device.
+            if (
+                PortHandler.pinnedReconnectTarget &&
+                PortHandler.portPicker.selectedPort !== PortHandler.pinnedReconnectTarget
+            ) {
+                PortHandler.portPicker.selectedPort = PortHandler.pinnedReconnectTarget;
             }
             connectDisconnect();
         },

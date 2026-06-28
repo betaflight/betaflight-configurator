@@ -8,7 +8,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // This file pins behavior around the "preset -> virtual" regression: after a
 // save/reboot with expert mode + showVirtualMode enabled, if the real port is
 // transiently gone, selectActivePort() must NOT silently pick the "virtual"
-// device. See the it.fails test below.
+// device. The durable fix (S1a) gates the expert-mode virtual/manual fallback on
+// PortHandler.pinnedReconnectTarget being null — see the tests below.
 // ---------------------------------------------------------------------------
 
 const { serial, dfuProtocol, isExpertModeEnabled } = vi.hoisted(() => {
@@ -85,6 +86,7 @@ function resetPortHandler() {
     PortHandler.currentBluetoothPorts = [];
     PortHandler.showVirtualMode = false;
     PortHandler.showManualMode = false;
+    PortHandler.pinnedReconnectTarget = null;
     PortHandler.portPicker.selectedPort = "noselection";
 }
 
@@ -93,37 +95,36 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
         resetPortHandler();
     });
 
-    // DESIRED behavior (S1 target). On THIS branch selectActivePort still falls back
-    // to "virtual" whenever expert mode + showVirtualMode are on and no real port is
-    // listed — which happens transiently during a save/reboot, hijacking the selection.
-    // The body asserts the FIXED behavior, so it fails today and auto-flips green when
-    // S1 lands. // flips to it() in S1
-    it.fails(
-        "does NOT select 'virtual' when the real port is transiently gone during a reboot (expert + showVirtualMode on)",
-        () => {
-            // Reboot in progress: the real serial device has briefly dropped off the list.
-            PortHandler.currentSerialPorts = [];
-            PortHandler.currentUsbPorts = [];
-            PortHandler.currentBluetoothPorts = [];
-
-            // Expert mode + virtual mode are both enabled (the regression's precondition).
-            isExpertModeEnabled.mockReturnValue(true);
-            PortHandler.showVirtualMode = true;
-
-            const selected = PortHandler.selectActivePort();
-
-            // The selection must not be hijacked to "virtual" mid-reboot.
-            expect(selected).not.toBe("virtual");
-            expect(PortHandler.portPicker.selectedPort).not.toBe("virtual");
-        },
-    );
-
-    // Characterization companion (always green): documents that TODAY the very same
-    // preconditions DO produce "virtual". This is the current bug, pinned so the
-    // direction of the fix is unambiguous. When S1 lands, this characterization is
-    // expected to be updated alongside the it.fails -> it() flip above.
-    it("currently DOES fall back to 'virtual' under those preconditions (documents the bug)", () => {
+    // S1a FIXED behavior. While a reconnect is in progress (pinnedReconnectTarget set), the
+    // rebooting device is only transiently gone from the lists. selectActivePort() must NOT
+    // hijack the selection with the expert-mode "virtual" fallback; it keeps aiming at the
+    // pinned real target so the device re-selects itself once it re-enumerates.
+    it("does NOT select 'virtual' when the real port is transiently gone during a reboot (expert + showVirtualMode on)", () => {
+        // Reboot in progress: the real serial device has briefly dropped off the list, and
+        // serial_backend has pinned the device we are reconnecting to.
         PortHandler.currentSerialPorts = [];
+        PortHandler.currentUsbPorts = [];
+        PortHandler.currentBluetoothPorts = [];
+        PortHandler.pinnedReconnectTarget = "/dev/ttyACM0";
+
+        // Expert mode + virtual mode are both enabled (the regression's precondition).
+        isExpertModeEnabled.mockReturnValue(true);
+        PortHandler.showVirtualMode = true;
+
+        const selected = PortHandler.selectActivePort();
+
+        // The selection must not be hijacked to "virtual" mid-reboot — it stays on the pinned target.
+        expect(selected).not.toBe("virtual");
+        expect(PortHandler.portPicker.selectedPort).not.toBe("virtual");
+        expect(PortHandler.portPicker.selectedPort).toBe("/dev/ttyACM0");
+    });
+
+    // Companion: when NO reconnect is in progress (pinnedReconnectTarget null), the normal
+    // startup expert-mode fallback still surfaces "virtual". This pins that the guard is
+    // scoped to the reconnect window and does not break ordinary virtual-mode selection.
+    it("still falls back to 'virtual' on normal startup (no reconnect pinned)", () => {
+        PortHandler.currentSerialPorts = [];
+        PortHandler.pinnedReconnectTarget = null;
         isExpertModeEnabled.mockReturnValue(true);
         PortHandler.showVirtualMode = true;
 
@@ -131,6 +132,19 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
 
         expect(selected).toBe("virtual");
         expect(PortHandler.portPicker.selectedPort).toBe("virtual");
+    });
+
+    // The same guard applies to the "manual" fallback during a reconnect.
+    it("does NOT select 'manual' while a reconnect is pinned (expert + showManualMode on)", () => {
+        PortHandler.currentSerialPorts = [];
+        PortHandler.pinnedReconnectTarget = "bluetooth-0011";
+        isExpertModeEnabled.mockReturnValue(true);
+        PortHandler.showManualMode = true;
+
+        const selected = PortHandler.selectActivePort();
+
+        expect(selected).not.toBe("manual");
+        expect(PortHandler.portPicker.selectedPort).toBe("bluetooth-0011");
     });
 
     it("does NOT select 'virtual' when expert mode is off (even if showVirtualMode is on)", () => {

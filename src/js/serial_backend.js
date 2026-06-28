@@ -178,6 +178,10 @@ function prepareDisconnect() {
     // which does not pass through here, so the loop is unaffected.)
     stopRebootReconnect();
 
+    // A user disconnect ends any reconnect-in-progress window: clear the pin so selectActivePort()
+    // resumes normal fallback behavior (the user is no longer waiting for the rebooted device).
+    PortHandler.pinnedReconnectTarget = null;
+
     GUI.configuration_loaded = false;
     GUI.timeout_kill_all();
     GUI.interval_kill_all();
@@ -817,6 +821,10 @@ function connectCli() {
 function onConnect() {
     GUI.timeout_remove("connecting"); // kill connecting timer
 
+    // A connection is now established: any pending save/reboot reconnect has completed, so
+    // clear the pin and let selectActivePort() resume its normal fallback behavior.
+    PortHandler.pinnedReconnectTarget = null;
+
     hide("#tabs ul.mode-disconnected");
     show("#tabs ul.mode-connected-cli");
 
@@ -976,6 +984,13 @@ export function reinitializeConnection(suppressDialog = false) {
 
     const currentPort = PortHandler.portPicker.selectedPort;
 
+    // Pin the device we are about to reboot so the reconnect targets it and selectActivePort()
+    // does not hijack the selection with the expert-mode virtual/manual fallback while the FC is
+    // briefly off the port list. Only pin real device paths — never "virtual"/"manual"/noselection.
+    if (currentPort && currentPort !== "noselection" && currentPort !== "virtual") {
+        PortHandler.pinnedReconnectTarget = currentPort;
+    }
+
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
@@ -1029,6 +1044,9 @@ function rebootReconnect() {
         // user reconnect manually (the reboot dialog closes via its no-reconnect check).
         if (!PortHandler.portPicker.autoConnect) {
             rebootReconnectTimerId = false;
+            // No automatic reconnect will run, so end the reconnect-in-progress window and let
+            // normal selection (incl. virtual/manual fallback) resume.
+            PortHandler.pinnedReconnectTarget = null;
             return;
         }
 
@@ -1041,9 +1059,17 @@ function rebootReconnect() {
             const timedOut = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
             if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
+                // The reboot window has closed (reconnected, timed out, or auto-connect off):
+                // stop treating a reconnect as in progress so normal selection resumes.
+                PortHandler.pinnedReconnectTarget = null;
                 return;
             }
             if (!isConnected && !GUI.connecting_to) {
+                // Aim the reconnect at the originally-connected device, not at whatever
+                // selectActivePort may have drifted to while the FC was off the list.
+                if (PortHandler.pinnedReconnectTarget) {
+                    PortHandler.portPicker.selectedPort = PortHandler.pinnedReconnectTarget;
+                }
                 connectDisconnect();
             }
         }, REBOOT_RECONNECT_RETRY_MS);
@@ -1084,6 +1110,10 @@ function showRebootDialog() {
             clearInterval(rebootDialogProgressTimerId);
             rebootDialogCheckTimerId = false;
             rebootDialogProgressTimerId = false;
+
+            // The reboot window has closed (reconnected / timed out / not auto-reconnecting):
+            // end the reconnect-in-progress state so normal port selection resumes.
+            PortHandler.pinnedReconnectTarget = null;
 
             rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
             rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
