@@ -352,6 +352,24 @@ export class ConnectionFsm {
         this._abort?.abort();
     }
 
+    /**
+     * S5: hard shutdown for page unload (pagehide). Cancels any in-flight
+     * reboot/reconnect loop and forces the FSM to IDLE regardless of the current
+     * state (ungated by isConnected/lock) — a page unload mid-reconnect or while
+     * locked must still tear everything down. The caller force-closes the
+     * transport; this just collapses the FSM and aborts the loop.
+     */
+    shutdown() {
+        this.abort();
+        const prev = this._state;
+        this._state = State.IDLE;
+        this._quality = Quality.NONE;
+        this._token = null;
+        if (prev !== State.IDLE) {
+            this._notify(prev, Event.CLOSED);
+        }
+    }
+
     get signal() {
         return this._abort?.signal ?? null;
     }

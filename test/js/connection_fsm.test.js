@@ -262,6 +262,32 @@ describe("S4 teardown + flashing", () => {
     });
 });
 
+describe("S5 pagehide shutdown", () => {
+    it("forces IDLE and aborts the in-flight loop from any state, ungated", () => {
+        const m = connected();
+        m.requestReboot();
+        m.reconnectStarted();
+        m.beginOperation();
+        expect(m.state).toBe(State.RECONNECTING);
+
+        m.shutdown();
+
+        expect(m.state).toBe(State.IDLE);
+        expect(m.aborted).toBe(true);
+        expect(m.getReconnectToken()).toBeNull();
+        expect(m.quality).toBe(Quality.NONE);
+    });
+
+    it("is a safe no-op when already IDLE", () => {
+        const m = fsm();
+        const seen = [];
+        m.subscribe((s) => seen.push(s.state));
+        m.shutdown();
+        expect(m.state).toBe(State.IDLE);
+        expect(seen).toEqual([]); // no spurious notification
+    });
+});
+
 describe("S2a abortable reconnect loop", () => {
     // Injected sleep that advances a fake clock so the deadline is reachable
     // without real time.
