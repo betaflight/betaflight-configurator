@@ -1,4 +1,12 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectNullTokenWhenDisconnected,
+    expectTokenShape,
+    expectResolveContract,
+    expectClosedOnIntentionalDisconnect,
+    expectLostOnUnsolicitedDrop,
+} from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
 // WebSerial stable device identity (slice S1b).
@@ -208,7 +216,7 @@ function makeStreamingPort(chunks, usbVendorId = 0x10c4, usbProductId = 0xea60) 
 describe("S6a WebSerial LinkEvent adapter", () => {
     it("declares LinkEvent support", async () => {
         const WebSerial = await loadWebSerial();
-        expect(new WebSerial().supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(new WebSerial());
     });
 
     it("emits deviceArrived on a new device and deviceLeft on removal", async () => {
@@ -248,12 +256,7 @@ describe("S6a WebSerial LinkEvent adapter", () => {
         ws.ports = [ws.createPort(makeFakePort())];
         await ws.connect(ws.ports[0].path, { baudRate: 115200 });
 
-        const events = [];
-        ws.addEventListener("closed", () => events.push("closed"));
-        ws.addEventListener("lost", () => events.push("lost"));
-
-        await ws.disconnect();
-        expect(events).toEqual(["closed"]);
+        await expectClosedOnIntentionalDisconnect(ws, () => ws.disconnect());
     });
 
     it("emits lost (not closed) when the device disconnects externally", async () => {
@@ -262,15 +265,8 @@ describe("S6a WebSerial LinkEvent adapter", () => {
         ws.ports = [ws.createPort(makeFakePort())];
         await ws.connect(ws.ports[0].path, { baudRate: 115200 });
 
-        const events = [];
-        ws.addEventListener("closed", () => events.push("closed"));
-        ws.addEventListener("lost", () => events.push("lost"));
-
         // Simulate the W3C 'disconnect' (cable pull / device reboot) path.
-        ws.handleDisconnect();
-        // Allow the async disconnect() teardown to run.
-        await vi.waitFor(() => expect(events).toContain("lost"));
-        expect(events).not.toContain("closed");
+        await expectLostOnUnsolicitedDrop(ws, () => ws.handleDisconnect());
     });
 
     it("resets the lost flag so a later intentional close reads as closed", async () => {
@@ -318,7 +314,7 @@ describe("S6a WebSerial LinkEvent adapter", () => {
 describe("S6a WebSerial reconnect-token contract", () => {
     it("getReconnectToken returns null when not connected", async () => {
         const WebSerial = await loadWebSerial();
-        expect(new WebSerial().getReconnectToken()).toBeNull();
+        expectNullTokenWhenDisconnected(new WebSerial());
     });
 
     it("getReconnectToken freezes the stable id, baud and transport when connected", async () => {
@@ -328,9 +324,7 @@ describe("S6a WebSerial reconnect-token contract", () => {
         const path = ws.ports[0].path;
 
         await ws.connect(path, { baudRate: 230400 });
-        const token = ws.getReconnectToken();
-
-        expect(token).toEqual({
+        expectTokenShape(ws, {
             transportType: "serial",
             opaqueId: path,
             baud: 230400,
@@ -340,7 +334,7 @@ describe("S6a WebSerial reconnect-token contract", () => {
         await ws.disconnect();
     });
 
-    it("resolveReconnectTarget returns the current path for a known token", async () => {
+    it("resolveReconnectTarget returns the current path for a known token, null for unknown id / wrong transport", async () => {
         const WebSerial = await loadWebSerial();
         const ws = new WebSerial();
         const port = makeFakePort();
@@ -351,17 +345,12 @@ describe("S6a WebSerial reconnect-token contract", () => {
         // the stable id is preserved and the token still resolves.
         ws.ports = [ws.createPort(port)];
 
-        expect(ws.resolveReconnectTarget({ transportType: "serial", opaqueId: path })).toBe(path);
-    });
-
-    it("resolveReconnectTarget returns null for an unknown id or wrong transport", async () => {
-        const WebSerial = await loadWebSerial();
-        const ws = new WebSerial();
-        ws.ports = [ws.createPort(makeFakePort())];
-
-        expect(ws.resolveReconnectTarget({ transportType: "serial", opaqueId: "serial_999" })).toBeNull();
-        expect(ws.resolveReconnectTarget({ transportType: "bluetooth", opaqueId: ws.ports[0].path })).toBeNull();
-        expect(ws.resolveReconnectTarget(null)).toBeNull();
+        expectResolveContract(ws, {
+            token: { transportType: "serial", opaqueId: path },
+            resolvesTo: path,
+            unknownToken: { transportType: "serial", opaqueId: "serial_999" },
+            wrongTransportToken: { transportType: "bluetooth", opaqueId: path },
+        });
     });
 });
 

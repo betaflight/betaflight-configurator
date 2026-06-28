@@ -1,4 +1,12 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectNullTokenWhenDisconnected,
+    expectTokenShape,
+    expectResolveContract,
+    expectClosedOnIntentionalDisconnect,
+    expectLostOnUnsolicitedDrop,
+} from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
 // WebBluetooth stable device identity (slice S1b-BLE).
@@ -213,7 +221,7 @@ async function connectStubbed(bt, path) {
 describe("S6c WebBluetooth LinkEvent adapter", () => {
     it("declares LinkEvent support", async () => {
         const WebBluetooth = await loadWebBluetooth();
-        expect(new WebBluetooth().supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(new WebBluetooth());
     });
 
     it("emits deviceArrived on attach and deviceLeft on removal", async () => {
@@ -252,22 +260,13 @@ describe("S6c WebBluetooth LinkEvent adapter", () => {
         const bt1 = new WebBluetooth();
         bt1.devices = [bt1.createPort(makeFakeDevice("dev-c"))];
         await connectStubbed(bt1, bt1.devices[0].path);
-        const e1 = [];
-        bt1.addEventListener("closed", () => e1.push("closed"));
-        bt1.addEventListener("lost", () => e1.push("lost"));
-        await bt1.disconnect();
-        expect(e1).toEqual(["closed"]);
+        await expectClosedOnIntentionalDisconnect(bt1, () => bt1.disconnect());
 
         // Unsolicited drop via handleDisconnect (gattserverdisconnected).
         const bt2 = new WebBluetooth();
         bt2.devices = [bt2.createPort(makeFakeDevice("dev-l"))];
         await connectStubbed(bt2, bt2.devices[0].path);
-        const e2 = [];
-        bt2.addEventListener("closed", () => e2.push("closed"));
-        bt2.addEventListener("lost", () => e2.push("lost"));
-        bt2.handleDisconnect();
-        await vi.waitFor(() => expect(e2).toContain("lost"));
-        expect(e2).not.toContain("closed");
+        await expectLostOnUnsolicitedDrop(bt2, () => bt2.handleDisconnect());
     });
 
     it("emits data on a characteristic notification", async () => {
@@ -329,7 +328,7 @@ describe("S6c WebBluetooth openCanceled abort contract", () => {
 describe("S6c WebBluetooth reconnect-token contract", () => {
     it("returns null token when not connected", async () => {
         const WebBluetooth = await loadWebBluetooth();
-        expect(new WebBluetooth().getReconnectToken()).toBeNull();
+        expectNullTokenWhenDisconnected(new WebBluetooth());
     });
 
     it("freezes the bluetooth path, baud and transport when connected", async () => {
@@ -339,7 +338,7 @@ describe("S6c WebBluetooth reconnect-token contract", () => {
         const path = bt.devices[0].path;
         await connectStubbed(bt, path);
 
-        expect(bt.getReconnectToken()).toEqual({
+        expectTokenShape(bt, {
             transportType: "bluetooth",
             opaqueId: path,
             baud: 115200,
@@ -353,9 +352,13 @@ describe("S6c WebBluetooth reconnect-token contract", () => {
         bt.devices = [bt.createPort(makeFakeDevice("dev-res"))];
         const path = bt.devices[0].path;
 
-        expect(bt.resolveReconnectTarget({ transportType: "bluetooth", opaqueId: path })).toBe(path);
-        expect(bt.resolveReconnectTarget({ transportType: "bluetooth", opaqueId: "bluetooth_gone" })).toBeNull();
-        expect(bt.resolveReconnectTarget({ transportType: "serial", opaqueId: path })).toBeNull();
+        expectResolveContract(bt, {
+            token: { transportType: "bluetooth", opaqueId: path },
+            resolvesTo: path,
+            unknownToken: { transportType: "bluetooth", opaqueId: "bluetooth_gone" },
+            wrongTransportToken: { transportType: "serial", opaqueId: path },
+            expectNullToken: false,
+        });
     });
 });
 

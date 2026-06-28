@@ -1,4 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectNullTokenWhenDisconnected,
+    expectTokenShape,
+    expectResolveContract,
+    expectLostOnUnsolicitedDrop,
+} from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
 // S6b — CapacitorSerial (Android USB) LinkEvent adapter + reconnect token.
@@ -52,8 +59,7 @@ const fakeDevice = (deviceId = "1155:22336:1") => ({
 
 describe("S6b CapacitorSerial LinkEvent adapter", () => {
     it("declares LinkEvent support", async () => {
-        const cs = await newCapacitorSerial();
-        expect(cs.supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(await newCapacitorSerial());
     });
 
     it("emits deviceArrived on attach and deviceLeft on detach", async () => {
@@ -93,14 +99,7 @@ describe("S6b CapacitorSerial LinkEvent adapter", () => {
         listeners.deviceAttached(dev);
         await cs.connect(cs.ports[0].path, { baudRate: 115200 });
 
-        const events = [];
-        cs.addEventListener("closed", () => events.push("closed"));
-        cs.addEventListener("lost", () => events.push("lost"));
-
-        listeners.deviceDetached(dev);
-
-        expect(events).toContain("lost");
-        expect(events).not.toContain("closed");
+        await expectLostOnUnsolicitedDrop(cs, () => listeners.deviceDetached(dev));
     });
 
     it("emits data on dataReceived", async () => {
@@ -116,8 +115,7 @@ describe("S6b CapacitorSerial LinkEvent adapter", () => {
 
 describe("S6b CapacitorSerial reconnect-token contract", () => {
     it("returns null token when not connected", async () => {
-        const cs = await newCapacitorSerial();
-        expect(cs.getReconnectToken()).toBeNull();
+        expectNullTokenWhenDisconnected(await newCapacitorSerial());
     });
 
     it("freezes the capacitor device key, baud and transport when connected", async () => {
@@ -126,7 +124,7 @@ describe("S6b CapacitorSerial reconnect-token contract", () => {
         const path = cs.ports[0].path;
         await cs.connect(path, { baudRate: 230400 });
 
-        expect(cs.getReconnectToken()).toEqual({
+        expectTokenShape(cs, {
             transportType: "serial",
             opaqueId: path,
             baud: 230400,
@@ -139,8 +137,12 @@ describe("S6b CapacitorSerial reconnect-token contract", () => {
         listeners.deviceAttached(fakeDevice());
         const path = cs.ports[0].path;
 
-        expect(cs.resolveReconnectTarget({ transportType: "serial", opaqueId: path })).toBe(path);
-        expect(cs.resolveReconnectTarget({ transportType: "serial", opaqueId: "capacitor-9:9:9" })).toBeNull();
-        expect(cs.resolveReconnectTarget({ transportType: "tcp", opaqueId: path })).toBeNull();
+        expectResolveContract(cs, {
+            token: { transportType: "serial", opaqueId: path },
+            resolvesTo: path,
+            unknownToken: { transportType: "serial", opaqueId: "capacitor-9:9:9" },
+            wrongTransportToken: { transportType: "tcp", opaqueId: path },
+            expectNullToken: false,
+        });
     });
 });

@@ -1,4 +1,10 @@
 import { afterEach, describe, expect, it } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectNullTokenWhenDisconnected,
+    expectTokenShape,
+    expectResolveContract,
+} from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
 // S6e — VirtualSerial is now an EventTarget that emits synthetic
@@ -17,7 +23,7 @@ describe("S6e VirtualSerial EventTarget + LinkEvent adapter", () => {
     it("is an EventTarget and declares LinkEvent support", async () => {
         const vs = await newVirtual();
         expect(vs).toBeInstanceOf(EventTarget);
-        expect(vs.supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(vs);
     });
 
     it("emits connect + open on connect", async () => {
@@ -52,14 +58,13 @@ describe("S6e VirtualSerial EventTarget + LinkEvent adapter", () => {
 
 describe("S6e VirtualSerial reconnect-token contract", () => {
     it("returns null token when not connected", async () => {
-        const vs = await newVirtual();
-        expect(vs.getReconnectToken()).toBeNull();
+        expectNullTokenWhenDisconnected(await newVirtual());
     });
 
     it("returns an isVirtual token when connected", async () => {
         const vs = await newVirtual();
         vs.connect("virtual", {});
-        expect(vs.getReconnectToken()).toEqual({
+        expectTokenShape(vs, {
             transportType: "virtual",
             opaqueId: "virtual",
             baud: 115200,
@@ -69,9 +74,11 @@ describe("S6e VirtualSerial reconnect-token contract", () => {
 
     it("resolveReconnectTarget returns 'virtual' for a virtual token, null otherwise", async () => {
         const vs = await newVirtual();
-        expect(vs.resolveReconnectTarget({ transportType: "virtual", opaqueId: "virtual" })).toBe("virtual");
-        expect(vs.resolveReconnectTarget({ transportType: "serial", opaqueId: "x" })).toBeNull();
-        expect(vs.resolveReconnectTarget(null)).toBeNull();
+        expectResolveContract(vs, {
+            token: { transportType: "virtual", opaqueId: "virtual" },
+            resolvesTo: "virtual",
+            wrongTransportToken: { transportType: "serial", opaqueId: "x" },
+        });
     });
 });
 

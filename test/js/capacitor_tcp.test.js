@@ -1,4 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectTokenShape,
+    expectResolveContract,
+    expectLostOnUnsolicitedDrop,
+} from "./helpers/linkEventContract.js";
 
 // S6b — CapacitorTcp LinkEvent adapter + reconnect token. Native BetaflightTcp
 // plugin mocked; addListener captures dataReceived / dataReceivedError /
@@ -36,7 +42,7 @@ async function newTcp() {
 
 describe("S6b CapacitorTcp LinkEvent adapter", () => {
     it("declares LinkEvent support", async () => {
-        expect((await newTcp()).supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(await newTcp());
     });
 
     it("emits open on connect and closed on intentional disconnect", async () => {
@@ -56,13 +62,7 @@ describe("S6b CapacitorTcp LinkEvent adapter", () => {
         const tcp = await newTcp();
         await tcp.connect("http://localhost:5761");
 
-        const events = [];
-        tcp.addEventListener("closed", () => events.push("closed"));
-        tcp.addEventListener("lost", () => events.push("lost"));
-
-        listeners.connectionClosed();
-        await vi.waitFor(() => expect(events).toContain("lost"));
-        expect(events).not.toContain("closed");
+        await expectLostOnUnsolicitedDrop(tcp, () => listeners.connectionClosed());
     });
 
     it("emits data on dataReceived (base64 decoded)", async () => {
@@ -79,9 +79,13 @@ describe("S6b CapacitorTcp LinkEvent adapter", () => {
         const tcp = await newTcp();
         await tcp.connect("http://localhost:5761");
 
-        const token = tcp.getReconnectToken();
-        expect(token).toEqual({ transportType: "tcp", opaqueId: "localhost:5761", baud: 0, isVirtual: false });
-        expect(tcp.resolveReconnectTarget(token)).toBe("localhost:5761");
-        expect(tcp.resolveReconnectTarget({ transportType: "serial", opaqueId: "x" })).toBeNull();
+        const token = { transportType: "tcp", opaqueId: "localhost:5761", baud: 0, isVirtual: false };
+        expectTokenShape(tcp, token);
+        expectResolveContract(tcp, {
+            token,
+            resolvesTo: "localhost:5761",
+            wrongTransportToken: { transportType: "serial", opaqueId: "x" },
+            expectNullToken: false,
+        });
     });
 });

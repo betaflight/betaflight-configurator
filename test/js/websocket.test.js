@@ -1,4 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectNullTokenWhenDisconnected,
+    expectTokenShape,
+    expectResolveContract,
+    expectClosedOnIntentionalDisconnect,
+    expectLostOnUnsolicitedDrop,
+} from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
 // S6b — Websocket (web TCP / SITL) LinkEvent adapter + reconnect-token contract.
@@ -38,8 +46,7 @@ async function newWebsocket() {
 
 describe("S6b Websocket LinkEvent adapter", () => {
     it("declares LinkEvent support", async () => {
-        const ws = await newWebsocket();
-        expect(ws.supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(await newWebsocket());
     });
 
     it("emits open on socket onopen", async () => {
@@ -73,15 +80,11 @@ describe("S6b Websocket LinkEvent adapter", () => {
         await ws.connect("ws://localhost:5761");
         FakeWS.last.onopen({});
 
-        const events = [];
-        ws.addEventListener("closed", () => events.push("closed"));
-        ws.addEventListener("lost", () => events.push("lost"));
-
         // disconnect() sets _closing; the real socket then fires onclose.
-        await ws.disconnect();
-        await FakeWS.last.onclose({});
-
-        expect(events).toEqual(["closed"]);
+        await expectClosedOnIntentionalDisconnect(ws, async () => {
+            await ws.disconnect();
+            await FakeWS.last.onclose({});
+        });
     });
 
     it("emits lost when the peer closes the socket unexpectedly", async () => {
@@ -89,21 +92,14 @@ describe("S6b Websocket LinkEvent adapter", () => {
         await ws.connect("ws://localhost:5761");
         FakeWS.last.onopen({});
 
-        const events = [];
-        ws.addEventListener("closed", () => events.push("closed"));
-        ws.addEventListener("lost", () => events.push("lost"));
-
         // Server vanished: onclose fires without disconnect() having run.
-        await FakeWS.last.onclose({});
-
-        expect(events).toEqual(["lost"]);
+        await expectLostOnUnsolicitedDrop(ws, () => FakeWS.last.onclose({}));
     });
 });
 
 describe("S6b Websocket reconnect-token contract", () => {
     it("returns null token when not connected", async () => {
-        const ws = await newWebsocket();
-        expect(ws.getReconnectToken()).toBeNull();
+        expectNullTokenWhenDisconnected(await newWebsocket());
     });
 
     it("freezes the address as the tcp opaqueId when connected", async () => {
@@ -111,7 +107,7 @@ describe("S6b Websocket reconnect-token contract", () => {
         await ws.connect("ws://localhost:5761");
         FakeWS.last.onopen({});
 
-        expect(ws.getReconnectToken()).toEqual({
+        expectTokenShape(ws, {
             transportType: "tcp",
             opaqueId: "ws://localhost:5761",
             baud: 0,
@@ -121,8 +117,10 @@ describe("S6b Websocket reconnect-token contract", () => {
 
     it("resolveReconnectTarget returns the address for a tcp token, null otherwise", async () => {
         const ws = await newWebsocket();
-        expect(ws.resolveReconnectTarget({ transportType: "tcp", opaqueId: "ws://h:1" })).toBe("ws://h:1");
-        expect(ws.resolveReconnectTarget({ transportType: "serial", opaqueId: "ws://h:1" })).toBeNull();
-        expect(ws.resolveReconnectTarget(null)).toBeNull();
+        expectResolveContract(ws, {
+            token: { transportType: "tcp", opaqueId: "ws://h:1" },
+            resolvesTo: "ws://h:1",
+            wrongTransportToken: { transportType: "serial", opaqueId: "ws://h:1" },
+        });
     });
 });

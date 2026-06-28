@@ -1,4 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectTokenShape,
+    expectResolveContract,
+    expectLostOnUnsolicitedDrop,
+} from "./helpers/linkEventContract.js";
 
 // S6b — TauriTcp LinkEvent adapter + reconnect token. The Tauri core `invoke`
 // and event `listen` APIs are mocked; listen captures the tcp-data / tcp-closed
@@ -31,7 +37,7 @@ async function newTcp() {
 
 describe("S6b TauriTcp LinkEvent adapter", () => {
     it("declares LinkEvent support", async () => {
-        expect((await newTcp()).supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(await newTcp());
     });
 
     it("emits open on connect and closed on intentional disconnect", async () => {
@@ -51,13 +57,7 @@ describe("S6b TauriTcp LinkEvent adapter", () => {
         const tcp = await newTcp();
         await tcp.connect("tcp://localhost:5761");
 
-        const events = [];
-        tcp.addEventListener("closed", () => events.push("closed"));
-        tcp.addEventListener("lost", () => events.push("lost"));
-
-        handlers["tcp-closed"]();
-        await vi.waitFor(() => expect(events).toContain("lost"));
-        expect(events).not.toContain("closed");
+        await expectLostOnUnsolicitedDrop(tcp, () => handlers["tcp-closed"]());
     });
 
     it("emits data on tcp-data", async () => {
@@ -75,9 +75,8 @@ describe("S6b TauriTcp LinkEvent adapter", () => {
         const tcp = await newTcp();
         await tcp.connect("tcp://localhost:5761");
 
-        const token = tcp.getReconnectToken();
-        expect(token).toEqual({ transportType: "tcp", opaqueId: "tcp://localhost:5761", baud: 0, isVirtual: false });
-        expect(tcp.resolveReconnectTarget(token)).toBe("tcp://localhost:5761");
-        expect(tcp.resolveReconnectTarget(null)).toBeNull();
+        const token = { transportType: "tcp", opaqueId: "tcp://localhost:5761", baud: 0, isVirtual: false };
+        expectTokenShape(tcp, token);
+        expectResolveContract(tcp, { token, resolvesTo: "tcp://localhost:5761" });
     });
 });

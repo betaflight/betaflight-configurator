@@ -1,4 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+    expectSupportsLinkEvents,
+    expectTokenShape,
+    expectLostOnUnsolicitedDrop,
+} from "./helpers/linkEventContract.js";
 
 // ---------------------------------------------------------------------------
 // S6d / S1b-Tauri — TauriSerial LinkEvent adapter + path-change re-resolution.
@@ -42,7 +47,7 @@ const port = (path, serialNumber, vendorId = 0x0483, productId = 0x5740) => ({
 
 describe("S6d TauriSerial LinkEvent adapter", () => {
     it("declares LinkEvent support", async () => {
-        expect((await newTauriSerial()).supportsLinkEvents).toBe(true);
+        expectSupportsLinkEvents(await newTauriSerial());
     });
 
     it("emits open on connect and closed on intentional disconnect", async () => {
@@ -67,13 +72,7 @@ describe("S6d TauriSerial LinkEvent adapter", () => {
         ts.readLoop = vi.fn();
         await ts.connect("/dev/ttyACM0", { baudRate: 115200 });
 
-        const events = [];
-        ts.addEventListener("closed", () => events.push("closed"));
-        ts.addEventListener("lost", () => events.push("lost"));
-
-        ts.handleFatalSerialError(new Error("Broken pipe"));
-        await vi.waitFor(() => expect(events).toContain("lost"));
-        expect(events).not.toContain("closed");
+        await expectLostOnUnsolicitedDrop(ts, () => ts.handleFatalSerialError(new Error("Broken pipe")));
     });
 });
 
@@ -84,7 +83,7 @@ describe("S6d/S1b-Tauri reconnect token + path-change re-resolution", () => {
         ts.readLoop = vi.fn();
         await ts.connect("/dev/ttyACM0", { baudRate: 230400 });
 
-        expect(ts.getReconnectToken()).toEqual({
+        expectTokenShape(ts, {
             transportType: "serial",
             opaqueId: { path: "/dev/ttyACM0", vendorId: 0x0483, productId: 0x5740, serialNumber: "SN1" },
             baud: 230400,
