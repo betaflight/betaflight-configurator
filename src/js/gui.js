@@ -6,6 +6,7 @@ import { i18n } from "./localization";
 import { useDialogStore } from "../stores/dialog";
 import { pinia } from "./pinia_instance";
 import { EventBus } from "../components/eventBus";
+import { getLockManager } from "./lock_manager";
 
 const TABS = {};
 
@@ -13,7 +14,6 @@ class GuiControl {
     constructor() {
         this.connecting_to = false;
         this.connected_to = false;
-        this.connect_lock = false;
         this.flashingInProgress = false;
         this.active_tab = null;
         this.tab_switch_in_progress = false;
@@ -64,6 +64,21 @@ class GuiControl {
         // check which operating system is user running
         this.operating_system = getOS();
     }
+
+    // S7 Phase B: connect_lock is now backed by the ref-counting LockManager
+    // (single source of truth) instead of a bare instance field. The getter reads
+    // the LockManager's reactive `locked` ref, so existing reactive consumers
+    // (store.connectLock computed, tab guards) keep updating; the setter maps the
+    // legacy boolean writes to a single GUI-owned hold. Behaviour is unchanged:
+    // `= true` locks, `= false` unlocks.
+    get connect_lock() {
+        return getLockManager().locked;
+    }
+
+    set connect_lock(value) {
+        getLockManager().setBoolean("gui", Boolean(value));
+    }
+
     // Timer managing methods
     // name = string
     // code = function reference (code to be executed)

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { computed } from "vue";
 import { LockManager, getLockManager, __resetLockManagerForTests } from "../../src/js/lock_manager.js";
 
 // ---------------------------------------------------------------------------
@@ -61,6 +62,50 @@ describe("S4 LockManager", () => {
         lm.acquire("b");
         lm.releaseAll();
         expect(lm.locked).toBe(false);
+    });
+
+    it("setBoolean(owner, true/false) maps boolean writes to a single per-owner hold", () => {
+        const lm = new LockManager();
+        lm.setBoolean("gui", true);
+        expect(lm.locked).toBe(true);
+        expect(lm.count).toBe(1);
+
+        // Idempotent: repeated true does not stack holds.
+        lm.setBoolean("gui", true);
+        expect(lm.count).toBe(1);
+
+        lm.setBoolean("gui", false);
+        expect(lm.locked).toBe(false);
+
+        // Releasing when not held is a no-op.
+        lm.setBoolean("gui", false);
+        expect(lm.locked).toBe(false);
+    });
+
+    it("distinct owners ref-count independently via setBoolean", () => {
+        const lm = new LockManager();
+        lm.setBoolean("gui", true);
+        lm.setBoolean("flasher", true);
+        expect(lm.count).toBe(2);
+        lm.setBoolean("gui", false);
+        expect(lm.locked).toBe(true); // flasher still holds
+        lm.setBoolean("flasher", false);
+        expect(lm.locked).toBe(false);
+    });
+
+    it("locked is reactive — a computed over it recomputes when holds change", () => {
+        const lm = new LockManager();
+        const mirror = computed(() => lm.locked);
+        expect(mirror.value).toBe(false);
+
+        const hold = lm.acquire("x");
+        expect(mirror.value).toBe(true); // tracked the ref change
+
+        hold.release();
+        expect(mirror.value).toBe(false);
+
+        lm.setBoolean("gui", true);
+        expect(mirror.value).toBe(true);
     });
 
     it("getLockManager is a stable singleton until reset", () => {
