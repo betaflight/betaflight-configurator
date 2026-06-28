@@ -95,6 +95,10 @@ export function scheduleReconnect() {
 
 export function cancelScheduledReconnect() {
     GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
+    // Cancelling the reconnect ends the reconnect-in-progress window: clear the pin so
+    // selectActivePort() resumes its normal (incl. virtual/manual) fallback. Without this the
+    // pin set in scheduleReconnect would linger and suppress that fallback until the next connect.
+    PortHandler.pinnedReconnectTarget = null;
 }
 
 export async function saveAndReconnect() {

@@ -60,6 +60,7 @@ vi.mock("../../src/js/fc", () => ({
 }));
 
 import { scheduleReconnect, cancelScheduledReconnect } from "../../src/composables/useMspCliSession";
+import PortHandler from "../../src/js/port_handler";
 
 describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     beforeEach(() => {
@@ -112,5 +113,18 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
 
         vi.advanceTimersByTime(10000);
         expect(connectDisconnect).not.toHaveBeenCalled();
+    });
+
+    it("cancelScheduledReconnect clears the pinned reconnect target (no sticky pin)", () => {
+        PortHandler.pinnedReconnectTarget = null;
+        PortHandler.portPicker.selectedPort = "serial_0";
+
+        // scheduleReconnect pins the currently-selected real device...
+        scheduleReconnect();
+        expect(PortHandler.pinnedReconnectTarget).toBe("serial_0");
+
+        // ...and cancelling must release it so selectActivePort's fallback resumes.
+        cancelScheduledReconnect();
+        expect(PortHandler.pinnedReconnectTarget).toBeNull();
     });
 });
