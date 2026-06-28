@@ -89,6 +89,16 @@ describe("S2a transition table", () => {
         warn.mockRestore();
     });
 
+    it("bounded HANDSHAKING failure: CONNECTING -> HANDSHAKING -> FAILED -> IDLE", () => {
+        const m = fsm();
+        m.dispatch(Event.CONNECT);
+        expect(m.dispatch(Event.HANDSHAKE)).toBe(State.HANDSHAKING);
+        expect(m.dispatch(Event.FAIL)).toBe(State.FAILED);
+        // Teardown convergence settles it.
+        m.notifyClosed();
+        expect(m.state).toBe(State.IDLE);
+    });
+
     it("FAILED resets to IDLE", () => {
         const m = fsm();
         m.dispatch(Event.CONNECT);

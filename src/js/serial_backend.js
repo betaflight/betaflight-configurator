@@ -460,6 +460,10 @@ function setConnectionTimeout() {
             if (!CONFIGURATOR.connectionValid) {
                 gui_log(i18n.getMessage("noConfigurationReceived"));
 
+                // S3: bounded HANDSHAKING timeout — the FC opened the link but
+                // never completed the MSP chain. HANDSHAKING -> FAILED; the
+                // disconnect below tears it down (-> onClosed -> notifyClosed -> IDLE).
+                getConnectionFsm().dispatch(FsmEvent.FAIL);
                 connectDisconnect();
             }
         },
@@ -497,6 +501,11 @@ function abortConnection(messageKey) {
     // Default message reflects how far the attempt got: a port that already opened but failed
     // the handshake (e.g. invalid API version) did not "fail to open".
     const message = i18n.getMessage(messageKey ?? (GUI.connected_to ? "connectionFailed" : "serialPortOpenFail"));
+
+    // S3: a failed handshake (invalid/garbage API version) is a HANDSHAKING ->
+    // FAILED edge before teardown. notifyClosed (via resetConnection's close path)
+    // settles to IDLE.
+    getConnectionFsm().dispatch(FsmEvent.FAIL);
 
     GUI.connected_to = false;
     GUI.connecting_to = false;
@@ -565,6 +574,11 @@ function onOpen(openInfo) {
 
         // reset connecting_to
         GUI.connecting_to = false;
+
+        // S3: the link is open; the MSP handshake begins now. CONNECTING ->
+        // HANDSHAKING. Readiness (finishOpen/connectCli) advances to CONNECTED/CLI;
+        // the bounded "connecting" timeout below dispatches FAIL on a stall.
+        getConnectionFsm().dispatch(FsmEvent.HANDSHAKE);
 
         gui_log(i18n.getMessage("serialPortOpened", [PortHandler.portPicker.selectedPort]));
 
