@@ -68,7 +68,7 @@ class Serial extends EventTarget {
         // (e.g. a BLE link's gattserverdisconnected firing after the user switched
         // to a serial FC); forwarding it would run onClosed/read_serial against the
         // wrong connection and corrupt the live one.
-        const lifecycleEvents = ["connect", "disconnect", "receive"];
+        const lifecycleEvents = new Set(["connect", "disconnect", "receive"]);
 
         for (const { name, instance } of this._protocols) {
             if (typeof instance?.addEventListener !== "function") {
@@ -78,26 +78,13 @@ class Serial extends EventTarget {
             for (const eventType of [...deviceEvents, ...lifecycleEvents]) {
                 instance.addEventListener(eventType, (event) => {
                     // Drop lifecycle events arriving from a non-active transport.
-                    if (lifecycleEvents.includes(eventType) && instance !== this._protocol) {
+                    if (lifecycleEvents.has(eventType) && instance !== this._protocol) {
                         return;
                     }
 
-                    // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
-                    // Object details are merged with the protocol tag. A PRIMITIVE detail
-                    // (notably connect/disconnect dispatching `false` on a failed open) is
-                    // forwarded as-is — spreading `false` would turn it into a truthy
-                    // `{ protocolType }`, so onOpen() would treat a failed open as success.
-                    const isObjectDetail = event.detail !== null && typeof event.detail === "object";
-                    const newDetail =
-                        event.type === "receive"
-                            ? { data: event.detail, protocolType: name }
-                            : isObjectDetail
-                                ? { ...event.detail, protocolType: name }
-                                : event.detail;
-
                     this.dispatchEvent(
                         new CustomEvent(event.type, {
-                            detail: newDetail,
+                            detail: this._tagDetail(event, name),
                             bubbles: event.bubbles,
                             cancelable: event.cancelable,
                         }),
@@ -105,6 +92,25 @@ class Serial extends EventTarget {
                 });
             }
         }
+    }
+
+    /**
+     * Tag a forwarded event's detail with its originating protocol.
+     * @param {Event} event - the source protocol event
+     * @param {string} protocolType - the originating protocol name
+     */
+    _tagDetail(event, protocolType) {
+        // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
+        if (event.type === "receive") {
+            return { data: event.detail, protocolType };
+        }
+        // A PRIMITIVE detail (notably connect/disconnect dispatching `false` on a
+        // failed open) is forwarded as-is — spreading `false` would turn it into a
+        // truthy { protocolType }, so onOpen() would treat a failed open as success.
+        if (event.detail !== null && typeof event.detail === "object") {
+            return { ...event.detail, protocolType };
+        }
+        return event.detail;
     }
 
     /**

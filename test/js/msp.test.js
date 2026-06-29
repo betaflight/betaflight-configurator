@@ -41,7 +41,7 @@ describe("MSP", () => {
             expect(sendSpy.mock.calls.length).toBeGreaterThan(initialSends);
             expect(responseCallback).not.toHaveBeenCalled();
             // The request remains queued (still in flight).
-            expect(MSP.callbacks.length).toBe(1);
+            expect(MSP.callbacks).toHaveLength(1);
         });
 
         it("with timeoutMs rejects after the bound and stops resending", async () => {
@@ -57,12 +57,12 @@ describe("MSP", () => {
             await assertion;
 
             // The request is removed from the queue and its timers are gone.
-            expect(MSP.callbacks.length).toBe(0);
+            expect(MSP.callbacks).toHaveLength(0);
 
             // After the deadline, the resend timer must not fire any more sends.
             const sendsAfterDeadline = sendSpy.mock.calls.length;
             vi.advanceTimersByTime(MSP.TIMEOUT * 5);
-            expect(sendSpy.mock.calls.length).toBe(sendsAfterDeadline);
+            expect(sendSpy.mock.calls).toHaveLength(sendsAfterDeadline);
             expect(sendsAfterDeadline).toBeGreaterThanOrEqual(sendsBeforeDeadline);
         });
 
@@ -76,7 +76,7 @@ describe("MSP", () => {
 
             // Deadline handler clears the resend timer; queue is empty so no leaks.
             expect(clearSpy).toHaveBeenCalled();
-            expect(MSP.callbacks.length).toBe(0);
+            expect(MSP.callbacks).toHaveLength(0);
             // No pending timers remain.
             expect(vi.getTimerCount()).toBe(0);
         });
@@ -93,7 +93,7 @@ describe("MSP", () => {
             MSP.send_message(1, false, false, cb2, { timeoutMs });
 
             const entries = MSP.callbacks.filter((c) => c.code === 1);
-            expect(entries.length).toBe(2);
+            expect(entries).toHaveLength(2);
             expect(entries.every((e) => e.deadlineTimer !== undefined)).toBe(true);
 
             await vi.advanceTimersByTimeAsync(timeoutMs);
@@ -101,7 +101,7 @@ describe("MSP", () => {
             // Both the original and the coalesced waiter reject with a timeout marker.
             expect(cb1).toHaveBeenCalledWith(expect.objectContaining({ timeout: true, timeoutMs }));
             expect(cb2).toHaveBeenCalledWith(expect.objectContaining({ timeout: true, timeoutMs }));
-            expect(MSP.callbacks.filter((c) => c.code === 1).length).toBe(0);
+            expect(MSP.callbacks.filter((c) => c.code === 1)).toHaveLength(0);
         });
 
         it("clears the deadline timer when a response arrives in time", () => {
@@ -121,7 +121,7 @@ describe("MSP", () => {
             // Advancing past the deadline must not invoke the callback again.
             vi.advanceTimersByTime(2000);
             expect(responseCallback).toHaveBeenCalledTimes(1);
-            expect(MSP.callbacks.length).toBe(0);
+            expect(MSP.callbacks).toHaveLength(0);
         });
     });
 
