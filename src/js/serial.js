@@ -237,7 +237,7 @@ class Serial extends EventTarget {
     /**
      * S6: re-resolve a previously-captured token to the current device path on
      * its originating transport, or null if the device is no longer present.
-     * Routes by `token.transportType` so the FSM never branches per transport.
+     * Routes by `token.transportType` so the connection state never branches per transport.
      * @param {object} token - a token produced by getReconnectToken()
      * @returns {string|null}
      */

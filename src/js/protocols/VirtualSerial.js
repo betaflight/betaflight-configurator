@@ -6,7 +6,7 @@ const VIRTUAL = "virtual";
  * browser.
  *
  * S6e: VirtualSerial now extends EventTarget and emits synthetic
- * connect/disconnect plus the reconnect token contract, so the FSM can treat it
+ * connect/disconnect plus the reconnect token contract, so the connection state can treat it
  * like any other transport instead of special-casing "virtual" everywhere.
  */
 class VirtualSerial extends EventTarget {
@@ -27,7 +27,7 @@ class VirtualSerial extends EventTarget {
         this.connectionId = VIRTUAL;
         this.bitrate = 115200;
         // Synthetic connect: virtual has no underlying device, but emitting the
-        // same events as a real transport lets the FSM drive it uniformly.
+        // same events as a real transport lets the connection state drive it uniformly.
         this.dispatchEvent(new CustomEvent("connect", { detail: { connectionId: VIRTUAL } }));
         return true;
     }
@@ -54,7 +54,7 @@ class VirtualSerial extends EventTarget {
     }
 
     /**
-     * S6e: reconnect token for the virtual transport. `isVirtual` lets the FSM
+     * S6e: reconnect token for the virtual transport. `isVirtual` lets the connection state
      * short-circuit transport resolution — there is nothing to re-enumerate.
      */
     getReconnectToken() {

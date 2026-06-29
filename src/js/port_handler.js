@@ -1,7 +1,7 @@
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
-import { getConnectionFsm } from "./connection_fsm.js";
+import { getConnectionState } from "./connection_state.js";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
@@ -37,8 +37,8 @@ const PortHandler = new (function () {
     this.currentBluetoothPorts = [];
 
     // The "reconnect in progress + target" state formerly lived here as
-    // `pinnedReconnectTarget`; it is now the FSM's frozen reconnect token (the
-    // single authority), read in selectActivePort() via getConnectionFsm().
+    // `pinnedReconnectTarget`; it is now the connection state's frozen reconnect token (the
+    // single authority), read in selectActivePort() via getConnectionState().
 
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
@@ -290,15 +290,15 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     }
 
     // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
-    // While a reconnect is in progress (the FSM holds a frozen reconnect token),
+    // While a reconnect is in progress (the connection state holds a frozen reconnect token),
     // the rebooting device is only transiently absent from the lists — it will
     // re-enumerate and re-select itself. Do NOT assign the virtual/manual fallback
     // in that window, or it would hijack the selection mid-reboot and leave the
-    // configurator pointed at the wrong "device". The FSM token is the SINGLE
+    // configurator pointed at the wrong "device". The connection-state token is the SINGLE
     // authority for "reconnect in progress + target" (was PortHandler's separate
     // pinnedReconnectTarget string, set by both the reboot and CLI paths).
     const expertMode = isExpertModeEnabled();
-    const reconnectToken = getConnectionFsm().getReconnectToken();
+    const reconnectToken = getConnectionState().getReconnectToken();
     const reconnectInProgress = reconnectToken !== null;
 
     if (!selectedPort && !reconnectInProgress && expertMode && this.showVirtualMode) {

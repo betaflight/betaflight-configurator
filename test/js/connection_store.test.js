@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
-// S7 — useConnectionStore is a thin reactive read-model of the connection FSM.
-// The store's heavy legacy collaborators are stubbed; the FSM is the real one.
+// S7 — useConnectionStore is a thin reactive read-model of the connection state.
+// The store's heavy legacy collaborators are stubbed; the connection state is the real one.
 // ---------------------------------------------------------------------------
 
 vi.mock("../../src/js/gui", () => ({ default: { connecting_to: false, connected_to: false, connect_lock: false } }));
@@ -14,17 +14,17 @@ vi.mock("../../src/js/port_handler", () => ({ default: { portPicker: { selectedP
 vi.mock("../../src/js/msp", () => ({ default: { callbacks_cleanup: () => {} } }));
 
 import { useConnectionStore } from "../../src/stores/connection.js";
-import { getConnectionFsm, __resetConnectionFsmForTests, State } from "../../src/js/connection_fsm.js";
+import { getConnectionState, __resetConnectionStateForTests, State } from "../../src/js/connection_state.js";
 import { __resetLockManagerForTests } from "../../src/js/lock_manager.js";
 
 beforeEach(() => {
     setActivePinia(createPinia());
-    __resetConnectionFsmForTests();
+    __resetConnectionStateForTests();
     __resetLockManagerForTests();
 });
 
 afterEach(() => {
-    __resetConnectionFsmForTests();
+    __resetConnectionStateForTests();
     __resetLockManagerForTests();
 });
 
@@ -50,37 +50,37 @@ describe("S7 store owns connection-target state (folded from GuiControl)", () =>
     });
 });
 
-describe("S7 connection store FSM read-model", () => {
+describe("S7 connection store connection-state read-model", () => {
     it("exposes the initial snapshot", () => {
         const store = useConnectionStore();
-        expect(store.fsmState).toBe(State.IDLE);
-        expect(store.fsmReady).toBe(false);
-        expect(store.fsmReconnectToken).toBeNull();
+        expect(store.connectionPhase).toBe(State.IDLE);
+        expect(store.connectionReady).toBe(false);
+        expect(store.reconnectToken).toBeNull();
     });
 
     it("reactively reflects phase changes", () => {
         const store = useConnectionStore();
-        const fsm = getConnectionFsm();
+        const connection = getConnectionState();
 
-        fsm.setPhase(State.CONNECTING);
-        expect(store.fsmState).toBe(State.CONNECTING);
+        connection.setPhase(State.CONNECTING);
+        expect(store.connectionPhase).toBe(State.CONNECTING);
 
-        fsm.setPhase(State.CONNECTED);
-        expect(store.fsmState).toBe(State.CONNECTED);
-        expect(store.fsmReady).toBe(true);
+        connection.setPhase(State.CONNECTED);
+        expect(store.connectionPhase).toBe(State.CONNECTED);
+        expect(store.connectionReady).toBe(true);
 
-        fsm.setPhase(State.IDLE);
-        expect(store.fsmState).toBe(State.IDLE);
-        expect(store.fsmReady).toBe(false);
+        connection.setPhase(State.IDLE);
+        expect(store.connectionPhase).toBe(State.IDLE);
+        expect(store.connectionReady).toBe(false);
     });
 
     it("reflects the frozen reconnect token", () => {
         const store = useConnectionStore();
-        const fsm = getConnectionFsm();
-        fsm.requestReboot();
-        fsm.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
+        const connection = getConnectionState();
+        connection.requestReboot();
+        connection.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
         // Trigger a notify so the snapshot ref updates.
-        fsm.reconnectStarted();
-        expect(store.fsmReconnectToken).toMatchObject({ transportType: "serial", opaqueId: "serial_0" });
+        connection.reconnectStarted();
+        expect(store.reconnectToken).toMatchObject({ transportType: "serial", opaqueId: "serial_0" });
     });
 });

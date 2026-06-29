@@ -23,7 +23,7 @@ import CryptoES from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
-import { getConnectionFsm, State as ConnPhase } from "./connection_fsm.js";
+import { getConnectionState, State as ConnPhase } from "./connection_state.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
@@ -46,15 +46,15 @@ let rebootDialogProgressTimerId = false;
 let rebootDialogCheckTimerId = false;
 
 // S4: the transport-open flag formerly stored here as `isConnected` now lives in
-// the FSM — read via `getConnectionFsm().linkOpen`, mutated via setLinkOpen/
+// the connection state — read via `getConnectionState().linkOpen`, mutated via setLinkOpen/
 // toggleLinkOpen. Kept as a local read-through helper so the call sites stay terse.
-const isConnected = () => getConnectionFsm().linkOpen;
+const isConnected = () => getConnectionState().linkOpen;
 
 // True while an intentional disconnect (Disconnect button, or removed-device toggle)
 // is in flight. finishClose() owns the full teardown in that case; onClosed() uses this
 // S4: the intentional-disconnect flag — telling an intentional disconnect apart
 // from an unexpected one (unplug / FC reboot / BLE drop) so we don't tear down
-// twice — now lives in the FSM (getConnectionFsm().markIntentionalDisconnect /
+// twice — now lives in the connection state (getConnectionState().markIntentionalDisconnect /
 // clearIntentionalDisconnect / consumeIntentionalDisconnect). Set in
 // prepareDisconnect(), cleared on connect, consumed (read-and-reset) in onClosed().
 
@@ -72,8 +72,8 @@ function isCliOnlyMode() {
 }
 
 const toggleStatus = function () {
-    // S4: transport-open flag now lives in the FSM (was module-private isConnected).
-    getConnectionFsm().toggleLinkOpen();
+    // S4: transport-open flag now lives in the connection state (was module-private isConnected).
+    getConnectionState().toggleLinkOpen();
 };
 
 function connectHandler(event) {
@@ -115,7 +115,7 @@ export function initializeSerialBackend() {
             // CDC re-enumeration that changed the OS path (/dev/ttyACM0 -> ACM1,
             // COM3 -> COM5) reconnects to the right device instead of the stale
             // pinned path. No-op when no token is frozen (normal auto-connect).
-            const token = getConnectionFsm().getReconnectToken();
+            const token = getConnectionState().getReconnectToken();
             const resolved = token ? serial.resolveReconnectTarget?.(token) : null;
             if (resolved) {
                 PortHandler.portPicker.selectedPort = resolved;
@@ -147,8 +147,10 @@ export function initializeSerialBackend() {
     // lock must still cancel the loop, stop timers and force-close the transport,
     // otherwise the FC is left holding a half-open port until a physical replug.
     window.addEventListener("pagehide", () => {
-        console.log(`${logHead} Page unloading — shutting down connection FSM and force-closing transport`);
-        getConnectionFsm().shutdown();
+        console.log(
+            `${logHead} Page unloading — shutting down connection connection-state and force-closing transport`,
+        );
+        getConnectionState().shutdown();
         stopRebootReconnect();
         closeRebootDialog();
         serial.forceClose();
@@ -200,7 +202,7 @@ function prepareDisconnect() {
     // Mark this as an intentional disconnect so the later protocol "disconnect" event
     // (handled by onClosed) does not run the unexpected-disconnect teardown on top of
     // finishClose(). Covers both the Disconnect button and the removedDevice route.
-    getConnectionFsm().markIntentionalDisconnect();
+    getConnectionState().markIntentionalDisconnect();
 
     // Cancel any in-flight reboot reconnect so a user-initiated disconnect during the reboot
     // window is not undone by a retry. (The reboot retry itself reconnects via beginConnect,
@@ -208,7 +210,7 @@ function prepareDisconnect() {
     stopRebootReconnect();
 
     // NOTE: the reconnect window is NOT ended here. prepareDisconnect() is shared by the
-    // user-disconnect path (beginDisconnect → concludeReboot(false) clears the FSM token) and
+    // user-disconnect path (beginDisconnect → concludeReboot(false) clears the connection state token) and
     // the mid-reboot disconnectForReboot() path (which must KEEP the token so the reconnect can
     // continue). So token lifecycle is owned by those callers, not by this shared helper.
 
@@ -226,9 +228,9 @@ function beginDisconnect() {
     // the modal must stay up while the reboot's own reconnect runs.)
     closeRebootDialog();
 
-    // A user disconnect aborts any in-flight reboot in the FSM read-model.
+    // A user disconnect aborts any in-flight reboot in the connection state read-model.
     // (disconnectForReboot is mid-reboot and deliberately does NOT conclude.)
-    getConnectionFsm().concludeReboot(false);
+    getConnectionState().concludeReboot(false);
 
     mspHelper?.setArmingEnabled(true, false, function () {
         finishClose(toggleStatus);
@@ -263,7 +265,7 @@ function beginConnect(selectedPort) {
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
     // may never dispatch the "disconnect" event that would otherwise consume the flag, so
     // resetting here keeps a stale flag from downgrading a later unexpected disconnect.
-    getConnectionFsm().clearIntentionalDisconnect();
+    getConnectionState().clearIntentionalDisconnect();
 
     // prevent connection when we do not have permission
     if (selectedPort.startsWith("requestpermission")) {
@@ -302,9 +304,9 @@ function beginConnect(selectedPort) {
         serial.addEventListener("disconnect", disconnectHandler);
 
         // S3: a connect attempt begins. IDLE -> CONNECTING; during a reboot the
-        // FSM is RECONNECTING -> CONNECTING. Readiness (finishOpen/connectCli)
+        // connection-state is RECONNECTING -> CONNECTING. Readiness (finishOpen/connectCli)
         // advances it to CONNECTED/CLI. (virtual dispatches its own in onOpenVirtual.)
-        getConnectionFsm().setPhase(ConnPhase.CONNECTING);
+        getConnectionState().setPhase(ConnPhase.CONNECTING);
     }
 
     serial.connect(
@@ -339,7 +341,7 @@ export function connectDisconnect() {
     // (defence-in-depth alongside connect_lock, for flows that grab the raw port).
     // FLASHING is cleared by the flasher's exits and, as a safety net, by
     // resetConnection — so a post-flash reconnect is never blocked.
-    if (getConnectionFsm().isFlashing) {
+    if (getConnectionState().isFlashing) {
         console.log(`${logHead} connect/disconnect ignored — flashing in progress`);
         return;
     }
@@ -471,7 +473,7 @@ function finishUnexpectedDisconnect() {
     // Mirror the toggleStatus that finishClose runs via finishedCallback for intentional
     // disconnects. Reset before the UI teardown so a late removedDevice cannot re-enter
     // connectDisconnect() against a still-"connected" state.
-    getConnectionFsm().setLinkOpen(false);
+    getConnectionState().setLinkOpen(false);
 
     teardownConnectionUi();
 }
@@ -487,7 +489,7 @@ function setConnectionTimeout() {
                 // S3: bounded HANDSHAKING timeout — the FC opened the link but
                 // never completed the MSP chain. HANDSHAKING -> FAILED; the
                 // disconnect below tears it down (-> onClosed -> notifyClosed -> IDLE).
-                getConnectionFsm().setPhase(ConnPhase.FAILED);
+                getConnectionState().setPhase(ConnPhase.FAILED);
                 connectDisconnect();
             }
         },
@@ -501,7 +503,7 @@ function resetConnection() {
     // S8 safety net: any normal teardown clears a lingering FLASHING state, so the
     // hard-block above can never strand a post-flash reconnect even if a flasher
     // exit path missed its endFlashing().
-    getConnectionFsm().endFlashing();
+    getConnectionState().endFlashing();
 
     MSP.clearListeners();
 
@@ -534,7 +536,7 @@ function abortConnection(messageKey) {
     // S3: a failed handshake (invalid/garbage API version) is a HANDSHAKING ->
     // FAILED edge before teardown. notifyClosed (via resetConnection's close path)
     // settles to IDLE.
-    getConnectionFsm().setPhase(ConnPhase.FAILED);
+    getConnectionState().setPhase(ConnPhase.FAILED);
 
     GUI.connected_to = false;
     GUI.connecting_to = false;
@@ -542,7 +544,7 @@ function abortConnection(messageKey) {
     // A failed connect attempt ends any reconnect-in-progress window: clear the frozen
     // reconnect token (FAILED state does not auto-clear it) so selectActivePort() resumes
     // normal fallback rather than staying aimed at a dead target.
-    getConnectionFsm().clearReconnectToken();
+    getConnectionState().clearReconnectToken();
 
     gui_log(message);
     showConnectionFailedDialog(message);
@@ -608,7 +610,7 @@ function onOpen(openInfo) {
         // S3: the link is open; the MSP handshake begins now. CONNECTING ->
         // HANDSHAKING. Readiness (finishOpen/connectCli) advances to CONNECTED/CLI;
         // the bounded "connecting" timeout below dispatches FAIL on a stall.
-        getConnectionFsm().setPhase(ConnPhase.HANDSHAKING);
+        getConnectionState().setPhase(ConnPhase.HANDSHAKING);
 
         gui_log(i18n.getMessage("serialPortOpened", [PortHandler.portPicker.selectedPort]));
 
@@ -676,13 +678,13 @@ function onOpenVirtual() {
     GUI.connecting_to = false;
 
     // Readiness edge #3: virtual is ready immediately (no MSP chain) -> CONNECTED.
-    getConnectionFsm().setPhase(ConnPhase.CONNECTED);
+    getConnectionState().setPhase(ConnPhase.CONNECTED);
 
     CONFIGURATOR.connectionValid = true;
     CONFIGURATOR.virtualMode = true;
     CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
 
-    getConnectionFsm().setLinkOpen(true);
+    getConnectionState().setLinkOpen(true);
 
     // Set connection timestamp for virtual connections
     connectionTimestamp = Date.now();
@@ -880,7 +882,7 @@ function finishOpen() {
     onConnect();
 
     // S3 readiness edge #1: full MSP chain complete -> CONNECTED (FULLY_READY).
-    getConnectionFsm().setPhase(ConnPhase.CONNECTED);
+    getConnectionState().setPhase(ConnPhase.CONNECTED);
 
     GUI.selectDefaultTabWhenConnected();
 }
@@ -895,7 +897,7 @@ function connectCli() {
     onConnect();
 
     // S3 readiness edge #2: CLI-only / version-mismatch session -> CLI (CLI_ONLY).
-    getConnectionFsm().setPhase(ConnPhase.CLI);
+    getConnectionState().setPhase(ConnPhase.CLI);
 
     switchTab("cli", { mode: "cli" });
 }
@@ -904,7 +906,7 @@ function onConnect() {
     GUI.timeout_remove("connecting"); // kill connecting timer
 
     // A connection is now established: any pending save/reboot reconnect has completed.
-    // The FSM clears its reconnect token on reaching a ready state (READY/CLI_READY,
+    // The connection-state clears its reconnect token on reaching a ready state (READY/CLI_READY,
     // dispatched right after this in finishOpen/connectCli), so selectActivePort()
     // resumes its normal fallback behavior automatically.
 
@@ -996,15 +998,15 @@ function onClosed(result) {
     // FC reboot / BLE drop). Read-and-reset the guard here — it cannot be cleared in finishClose(),
     // which returns before this microtask runs. Intentional disconnects are already fully torn
     // down by finishClose(); for unexpected ones complete the same UI teardown now.
-    const wasIntentional = getConnectionFsm().consumeIntentionalDisconnect();
+    const wasIntentional = getConnectionState().consumeIntentionalDisconnect();
     if (!wasIntentional) {
         finishUnexpectedDisconnect();
     }
 
-    // S4: single teardown convergence point — settle the FSM to IDLE for both
+    // S4: single teardown convergence point — settle the connection state to IDLE for both
     // intentional and unexpected closes. A reboot's link drop is left alone
     // (notifyClosed ignores REBOOTING/RECONNECTING); its conclude settles it.
-    getConnectionFsm().notifyClosed();
+    getConnectionState().notifyClosed();
 }
 
 export function read_serial(info) {
@@ -1058,11 +1060,11 @@ export function reinitializeConnection(suppressDialog = false) {
     // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
 
-    // S2b: record reboot intent in the FSM (single owner of lifecycle state).
+    // S2b: record reboot intent in the connection state (single owner of lifecycle state).
     // Observability + soft reentrancy signal during the migration; the actual
-    // overlap guard remains stopRebootReconnect() until S4 makes the FSM the
+    // overlap guard remains stopRebootReconnect() until S4 makes the connection state the
     // authoritative gate. Virtual toggles settle immediately below.
-    getConnectionFsm().requestReboot();
+    getConnectionState().requestReboot();
 
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
@@ -1070,10 +1072,10 @@ export function reinitializeConnection(suppressDialog = false) {
             setTimeout(function () {
                 connectDisconnect();
             }, 500);
-            getConnectionFsm().concludeReboot(true);
+            getConnectionState().concludeReboot(true);
             return rebootTimestamp;
         }
-        getConnectionFsm().concludeReboot(false);
+        getConnectionState().concludeReboot(false);
         return rebootTimestamp;
     }
 
@@ -1095,7 +1097,7 @@ export function reinitializeConnection(suppressDialog = false) {
             baud: 0,
             isVirtual: false,
         };
-        getConnectionFsm().freezeReconnectToken(token);
+        getConnectionState().freezeReconnectToken(token);
     }
 
     // Send reboot command to the flight controller
@@ -1120,9 +1122,9 @@ export function reinitializeConnection(suppressDialog = false) {
         gui_log(i18n.getMessage("deviceRebooting"));
         gui_log(i18n.getMessage("deviceReady"));
 
-        // No reconnect loop runs here (auto-connect handles it); settle the FSM
+        // No reconnect loop runs here (auto-connect handles it); settle the connection state
         // read-model now. Authoritative readiness wiring lands in S3/S4.
-        getConnectionFsm().concludeReboot(false);
+        getConnectionState().concludeReboot(false);
         return rebootTimestamp;
     }
     // Show reboot progress modal
@@ -1155,13 +1157,13 @@ function rebootReconnect() {
         if (!PortHandler.portPicker.autoConnect) {
             rebootReconnectTimerId = false;
             // No automatic reconnect will run, so end the reconnect-in-progress window
-            // (concludeReboot clears the FSM token) and let normal selection resume.
-            getConnectionFsm().concludeReboot(false);
+            // (concludeReboot clears the connection state token) and let normal selection resume.
+            getConnectionState().concludeReboot(false);
             return;
         }
 
-        // Entering the retry phase: REBOOTING -> RECONNECTING in the FSM read-model.
-        getConnectionFsm().reconnectStarted();
+        // Entering the retry phase: REBOOTING -> RECONNECTING in the connection state read-model.
+        getConnectionState().reconnectStarted();
 
         // Retry connecting until the rebooted FC answers (connectionValid), the reboot window
         // closes, or Auto-Connect is turned off mid-window. Early attempts may connect to a
@@ -1173,8 +1175,8 @@ function rebootReconnect() {
             if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
-                // concludeReboot clears the FSM token so normal selection resumes.
-                getConnectionFsm().concludeReboot(CONFIGURATOR.connectionValid);
+                // concludeReboot clears the connection state token so normal selection resumes.
+                getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
                 return;
             }
             if (!isConnected() && !GUI.connecting_to) {
@@ -1187,7 +1189,7 @@ function rebootReconnect() {
                 // selectActivePort may have drifted to while the FC was off the list.
                 // Resolve the frozen TOKEN to the device's CURRENT path (handles a CDC
                 // path change), falling back to its original path while transiently absent.
-                const token = getConnectionFsm().getReconnectToken();
+                const token = getConnectionState().getReconnectToken();
                 const original = typeof token?.opaqueId === "string" ? token.opaqueId : token?.opaqueId?.path;
                 const target = (token ? serial.resolveReconnectTarget?.(token) : null) ?? original;
                 if (target) {
@@ -1235,8 +1237,8 @@ function showRebootDialog() {
             rebootDialogProgressTimerId = false;
 
             // The reboot window has closed (reconnected / timed out / not auto-reconnecting):
-            // concludeReboot clears the FSM token so normal port selection resumes.
-            getConnectionFsm().concludeReboot(CONFIGURATOR.connectionValid);
+            // concludeReboot clears the connection state token so normal port selection resumes.
+            getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
 
             rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
             rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");

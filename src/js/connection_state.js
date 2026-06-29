@@ -1,5 +1,5 @@
 /**
- * connection_fsm.js — small connection-status holder + reconnect token.
+ * connection_state.js — small connection-status holder + reconnect token.
  *
  * History note: this began as a transition-table finite state machine, but the
  * table ended up bypassed more than it was used (every reboot/teardown path set
@@ -229,7 +229,7 @@ export class ConnectionState {
 // Lazily-constructed singleton (no module-init-order hazard).
 let _instance = null;
 
-export function getConnectionFsm() {
+export function getConnectionState() {
     if (!_instance) {
         _instance = new ConnectionState();
     }
@@ -237,6 +237,6 @@ export function getConnectionFsm() {
 }
 
 /** Test helper: drop the singleton so each test starts clean. */
-export function __resetConnectionFsmForTests() {
+export function __resetConnectionStateForTests() {
     _instance = null;
 }

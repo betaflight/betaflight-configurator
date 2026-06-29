@@ -558,7 +558,7 @@ const MSP = {
         // already-queued identical one (requestExists === true). Previously the
         // deadline lived inside the `!requestExists` block, so a coalesced
         // timeoutMs request had no deadline and could never reject — the
-        // handshake reject the FSM relies on would silently never fire. The
+        // handshake reject the connection state relies on would silently never fire. The
         // resend timer stays exclusive to the first request; on a coalesced
         // entry `obj.timer` is undefined and clearTimeout no-ops, so the shared
         // resend cycle and other waiters are undisturbed.

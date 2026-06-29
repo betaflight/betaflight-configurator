@@ -138,7 +138,7 @@ class TauriSerial extends EventTarget {
      *   2. else a UNIQUE serial_number match (reliable across re-enumeration);
      *   3. else a UNIQUE vid/pid match;
      *   4. else null -> ambiguous (two identical FCs / empty serial_number), so
-     *      the FSM surfaces a re-pick rather than silently binding the wrong one
+     *      the connection state surfaces a re-pick rather than silently binding the wrong one
      *      (plan MINOR limitation). Reads the live port list, which the 1s device
      *      monitor keeps fresh after a re-enumeration.
      */

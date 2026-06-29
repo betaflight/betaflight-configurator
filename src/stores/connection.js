@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import CONFIGURATOR from "../js/data_storage";
 import PortHandler from "../js/port_handler";
-import { getConnectionFsm } from "../js/connection_fsm";
+import { getConnectionState } from "../js/connection_state";
 import { getLockManager } from "../js/lock_manager";
 
 export const useConnectionStore = defineStore("connection", () => {
@@ -47,14 +47,14 @@ export const useConnectionStore = defineStore("connection", () => {
     // snapshot and re-publish as reactive refs so Vue components read lifecycle
     // phase / readiness / reconnect-token from one canonical source instead of the
     // legacy CONFIGURATOR/GUI globals.
-    const fsm = getConnectionFsm();
-    const fsmSnapshot = ref(fsm.snapshot());
-    fsm.subscribe((snap) => {
-        fsmSnapshot.value = snap;
+    const connection = getConnectionState();
+    const connectionSnapshot = ref(connection.snapshot());
+    connection.subscribe((snap) => {
+        connectionSnapshot.value = snap;
     });
-    const fsmState = computed(() => fsmSnapshot.value.state);
-    const fsmReady = computed(() => fsmSnapshot.value.isReady);
-    const fsmReconnectToken = computed(() => fsmSnapshot.value.token);
+    const connectionPhase = computed(() => connectionSnapshot.value.state);
+    const connectionReady = computed(() => connectionSnapshot.value.isReady);
+    const reconnectToken = computed(() => connectionSnapshot.value.token);
 
     // Live data refresh control
     const liveDataPaused = ref(false);
@@ -91,10 +91,10 @@ export const useConnectionStore = defineStore("connection", () => {
         cliValid,
         clearMspQueue,
         selectedPort,
-        // S7 FSM read-model (read-only)
-        fsmState,
-        fsmReady,
-        fsmReconnectToken,
+        // S7 connection-state read-model (read-only)
+        connectionPhase,
+        connectionReady,
+        reconnectToken,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,

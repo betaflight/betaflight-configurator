@@ -228,7 +228,7 @@ import PortHandler from "../../src/js/port_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
-import { __resetConnectionFsmForTests } from "../../src/js/connection_fsm.js";
+import { __resetConnectionStateForTests } from "../../src/js/connection_state.js";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -410,7 +410,7 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
 
     it("aims the BLE/manual retry at the TOKEN-resolved path (falls back to pin without a token)", () => {
         vi.useFakeTimers();
-        __resetConnectionFsmForTests();
+        __resetConnectionStateForTests();
         try {
             // The BLE/manual reboot path runs rebootReconnect's retry loop, which is
             // where the frozen token is resolved to the device's current path.
@@ -437,7 +437,7 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         } finally {
             serial.getReconnectToken.mockReturnValue(null);
             serial.resolveReconnectTarget.mockReturnValue(null);
-            __resetConnectionFsmForTests();
+            __resetConnectionStateForTests();
             vi.useRealTimers();
         }
     });

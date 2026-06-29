@@ -75,17 +75,17 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
 }));
 
 import PortHandler from "../../src/js/port_handler";
-import { getConnectionFsm, __resetConnectionFsmForTests } from "../../src/js/connection_fsm.js";
+import { getConnectionState, __resetConnectionStateForTests } from "../../src/js/connection_state.js";
 
-// "Reconnect in progress" is now the FSM holding a frozen reconnect token (was
+// "Reconnect in progress" is now the connection state holding a frozen reconnect token (was
 // PortHandler.pinnedReconnectTarget). Helper to simulate it with a path-only token.
 function pinReconnectTarget(path) {
-    getConnectionFsm().freezeReconnectToken({ transportType: "unknown", opaqueId: path, baud: 0, isVirtual: false });
+    getConnectionState().freezeReconnectToken({ transportType: "unknown", opaqueId: path, baud: 0, isVirtual: false });
 }
 
 function resetPortHandler() {
     vi.clearAllMocks();
-    __resetConnectionFsmForTests();
+    __resetConnectionStateForTests();
     serial.connected = false;
     dfuProtocol.usbDevice = null;
     isExpertModeEnabled.mockReturnValue(true);
@@ -131,7 +131,7 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
     // scoped to the reconnect window and does not break ordinary virtual-mode selection.
     it("still falls back to 'virtual' on normal startup (no reconnect pinned)", () => {
         PortHandler.currentSerialPorts = [];
-        __resetConnectionFsmForTests(); // no reconnect token => not reconnecting
+        __resetConnectionStateForTests(); // no reconnect token => not reconnecting
         isExpertModeEnabled.mockReturnValue(true);
         PortHandler.showVirtualMode = true;
 

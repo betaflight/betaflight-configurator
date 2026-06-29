@@ -140,7 +140,7 @@ class WebSerial extends EventTarget {
 
     /**
      * S6a: re-resolve a reconnect token to the CURRENT path for that device, or
-     * null if the device is no longer present. The FSM calls this during a
+     * null if the device is no longer present. The connection-state calls this during a
      * reconnect instead of reading the live port picker, so enumeration changes
      * mid-reboot cannot redirect the reconnect to a different device.
      *

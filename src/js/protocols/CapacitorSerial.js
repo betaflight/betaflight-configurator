@@ -295,7 +295,7 @@ class CapacitorSerial extends EventTarget {
      * S6b: reconnect token for the Capacitor USB device. Identity is the
      * `capacitor-<deviceId>` key (VID:PID:deviceNum-derived). The deviceNum
      * component can change across a re-enumeration — resolveReconnectTarget
-     * returns null if no current device matches, so the FSM can fall back to a
+     * returns null if no current device matches, so the connection state can fall back to a
      * re-pick rather than binding the wrong device (hardware-verified, S6/S2).
      */
     getReconnectToken() {

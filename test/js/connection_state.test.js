@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { ConnectionState, State, getConnectionFsm, __resetConnectionFsmForTests } from "../../src/js/connection_fsm.js";
+import {
+    ConnectionState,
+    State,
+    getConnectionState,
+    __resetConnectionStateForTests,
+} from "../../src/js/connection_state.js";
 
 // ---------------------------------------------------------------------------
 // Thin connection-status holder: phase + reconnect token + linkOpen /
@@ -185,11 +190,11 @@ describe("read-model", () => {
 });
 
 describe("singleton", () => {
-    it("getConnectionFsm is stable until reset", () => {
-        __resetConnectionFsmForTests();
-        const a = getConnectionFsm();
-        expect(getConnectionFsm()).toBe(a);
-        __resetConnectionFsmForTests();
-        expect(getConnectionFsm()).not.toBe(a);
+    it("getConnectionState is stable until reset", () => {
+        __resetConnectionStateForTests();
+        const a = getConnectionState();
+        expect(getConnectionState()).toBe(a);
+        __resetConnectionStateForTests();
+        expect(getConnectionState()).not.toBe(a);
     });
 });
