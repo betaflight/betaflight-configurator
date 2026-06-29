@@ -4,47 +4,57 @@
         <UiBox type="neutral">
             <!-- Scale labels above sliders — aligned with the slider column -->
             <div class="flex items-center gap-3">
-                <div class="shrink-0 invisible" style="width: 40px"></div>
-                <div class="min-w-32 shrink-0"></div>
-                <span class="min-w-10"></span>
-                <div class="flex-1 flex justify-between text-xs text-dimmed">
-                    <span>{{ $t("pidTuningSliderHighFiltering") }}</span>
-                    <span>{{ $t("pidTuningSliderDefaultFiltering") }}</span>
-                    <span>{{ $t("pidTuningSliderLowFiltering") }}</span>
+                <div class="shrink-0 invisible hidden sm:block" style="width: 40px"></div>
+                <div class="min-w-32 shrink-0 hidden sm:block"></div>
+                <span class="min-w-10 hidden sm:block"></span>
+                <div class="flex-1 flex justify-between text-[10px] sm:text-xs text-dimmed">
+                    <span class="whitespace-nowrap">{{ $t("pidTuningSliderHighFiltering") }}</span>
+                    <span class="max-sm:hidden whitespace-nowrap">{{ $t("pidTuningSliderDefaultFiltering") }}</span>
+                    <span class="whitespace-nowrap">{{ $t("pidTuningSliderLowFiltering") }}</span>
                 </div>
-                <div class="invisible"><HelpIcon text="" /></div>
+                <div class="invisible hidden sm:block"><HelpIcon text="" /></div>
             </div>
 
             <!-- Gyro Filter Slider -->
-            <div class="flex items-center gap-3 py-1">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 py-1">
                 <USwitch v-model="gyroSliderEnabled" size="sm" />
-                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningGyroFilterSlider')"></div>
+                <div
+                    class="flex-1 sm:flex-none min-w-0 sm:min-w-32 text-xs"
+                    v-html="$t('pidTuningGyroFilterSlider')"
+                ></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ gyroFilterMultiplier.toFixed(2) }}</span>
-                <USlider
-                    v-model="gyroFilterMultiplier"
-                    :min="0.1"
-                    :max="2.0"
-                    :step="0.05"
-                    :disabled="gyroSliderDisabled"
-                    class="flex-1"
-                />
-                <HelpIcon :text="$t('pidTuningGyroFilterSliderHelp')" />
+                <div class="flex items-center gap-3 basis-full sm:basis-0 sm:flex-1">
+                    <USlider
+                        v-model="gyroFilterMultiplier"
+                        :min="0.1"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="gyroSliderDisabled"
+                        class="flex-1"
+                    />
+                    <HelpIcon :text="$t('pidTuningGyroFilterSliderHelp')" />
+                </div>
             </div>
 
             <!-- DTerm Filter Slider -->
-            <div class="flex items-center gap-3 py-1">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 py-1">
                 <USwitch v-model="dtermSliderEnabled" size="sm" />
-                <div class="min-w-32 text-xs shrink-0" v-html="$t('pidTuningDTermFilterSlider')"></div>
+                <div
+                    class="flex-1 sm:flex-none min-w-0 sm:min-w-32 text-xs"
+                    v-html="$t('pidTuningDTermFilterSlider')"
+                ></div>
                 <span class="min-w-10 text-center text-sm font-semibold">{{ dtermFilterMultiplier.toFixed(2) }}</span>
-                <USlider
-                    v-model="dtermFilterMultiplier"
-                    :min="0.1"
-                    :max="2.0"
-                    :step="0.05"
-                    :disabled="dtermSliderDisabled"
-                    class="flex-1"
-                />
-                <HelpIcon :text="$t('pidTuningDTermFilterSliderHelp')" />
+                <div class="flex items-center gap-3 basis-full sm:basis-0 sm:flex-1">
+                    <USlider
+                        v-model="dtermFilterMultiplier"
+                        :min="0.1"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="dtermSliderDisabled"
+                        class="flex-1"
+                    />
+                    <HelpIcon :text="$t('pidTuningDTermFilterSliderHelp')" />
+                </div>
             </div>
 
             <!-- Danger Zone Warning -->

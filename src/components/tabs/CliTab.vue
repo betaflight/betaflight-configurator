@@ -297,4 +297,38 @@ export default defineComponent({
 .tab-cli .cli-window .cli-num {
     color: #e5c07b;
 }
+
+/* On narrow screens the fixed bottom toolbar would wrap its 5 buttons onto
+   several rows, growing past the space the CLI content reserves (calc(100% - 87px))
+   and overlapping the command textarea. Instead, pin the toolbar to the bottom via
+   normal flex flow (not `position: fixed`): the content fills the space above it and
+   the toolbar wraps to as many rows as it needs without ever overlapping. */
+@media all and (max-width: 1055px) {
+    .tab-cli {
+        display: flex;
+        flex-direction: column;
+        /* Fill the full content height (the base rule reserves 3rem for the
+           previously-fixed toolbar) so the in-flow toolbar pins flush to the bottom. */
+        height: 100%;
+    }
+    .tab-cli .content_wrapper {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+        /* The global .content_wrapper reserves 3rem at the bottom to clear the
+           fixed toolbar; the CLI toolbar is now in normal flow. */
+        padding-bottom: 0.3rem;
+    }
+    .tab-cli .content_toolbar.toolbar_fixed_bottom {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-top-left-radius: 0;
+    }
+    .tab-cli .content_toolbar.toolbar_fixed_bottom::before {
+        display: none;
+    }
+}
 </style>
