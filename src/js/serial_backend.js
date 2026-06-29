@@ -462,21 +462,24 @@ function resetConnection() {
     PortHandler.portPickerDisabled = false;
 }
 
-function abortConnection(messageKey = "serialPortOpenFail") {
+function abortConnection(messageKey) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
+
+    // Default message reflects how far the attempt got: a port that already opened but failed
+    // the handshake (e.g. invalid API version) did not "fail to open".
+    const message = i18n.getMessage(messageKey ?? (GUI.connected_to ? "connectionFailed" : "serialPortOpenFail"));
 
     GUI.connected_to = false;
     GUI.connecting_to = false;
 
-    const message = i18n.getMessage(messageKey);
     gui_log(message);
     showConnectionFailedDialog(message);
 
     resetConnection();
 }
 
-// Surface a connection failure to the user with a dismissable dialog, not just a log line
+// Surface a connection failure to the user with a dismissible dialog, not just a log line
 // that is easy to miss. `text` may contain HTML markup (InformationDialog renders it).
 function showConnectionFailedDialog(text) {
     const dialogStore = useDialogStore();
@@ -874,7 +877,7 @@ function onClosed(result) {
     // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
     // "disconnect" and never "connect". Recover the Connect button and tell the user instead of
     // running the established-connection teardown.
-    if (GUI.connecting_to && !CONFIGURATOR.connectionValid) {
+    if (GUI.connecting_to && !CONFIGURATOR.connectionValid && !intentionalDisconnect) {
         abortConnection("connectionFailed");
         return;
     }
