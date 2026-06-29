@@ -1,23 +1,25 @@
 /**
- * connection_fsm.js — the single owner of connection lifecycle + intent.
+ * connection_fsm.js — small connection-status holder + reconnect token.
  *
- * A hand-rolled finite state machine (state enum + explicit transition table)
- * that owns:
- *   - the current lifecycle state,
- *   - the FROZEN reconnect token (captured at reboot/connect start; never
- *     re-derived from the live port picker during a reconnect),
- *   - the reboot/reconnect intent + abort plumbing the live reconnect (the
- *     serial_backend interval loop) drives through, and
- *   - a snapshot read-model that `useConnectionStore` (S2b) subscribes to.
+ * History note: this began as a transition-table finite state machine, but the
+ * table ended up bypassed more than it was used (every reboot/teardown path set
+ * the state directly) and was non-strict in production, so it enforced nothing
+ * live. It has been demoted to what it actually is: a thin reactive status
+ * holder. It owns:
+ *   - the current lifecycle PHASE (a plain value, for the read-model/UI),
+ *   - the FROZEN reconnect token (the single reconnect-target authority; captured
+ *     at reboot/CLI-reconnect start, re-resolved per-transport, never re-derived
+ *     from the live port picker mid-reconnect),
+ *   - two operational flags serial_backend reads: linkOpen (a transport link is
+ *     open) and intentionalDisconnect (the next close is user-initiated),
+ *   - a subscribe()/snapshot() read-model that useConnectionStore mirrors.
  *
- * Deliberately a PLAIN module: NO Vue/Pinia/serial_backend imports, so it has no
- * init-order hazard and is fully unit-testable in isolation.
- *
- * Illegal transitions throw in dev (surfacing missed wiring) and log+ignore in
- * prod (never wedge a user's connection over a programming slip).
+ * Behaviour is driven by these values + the LockManager (connect_lock); there is
+ * no transition table doing validation — phase is set explicitly by the small
+ * set of helpers below. Plain module: NO Vue/Pinia/serial_backend imports.
  */
 
-/** Lifecycle states. */
+/** Lifecycle phases (read-model values). */
 export const State = Object.freeze({
     IDLE: "IDLE",
     CONNECTING: "CONNECTING",
@@ -27,142 +29,30 @@ export const State = Object.freeze({
     REBOOTING: "REBOOTING",
     RECONNECTING: "RECONNECTING",
     DISCONNECTING: "DISCONNECTING",
-    FLASHING: "FLASHING", // flasher owns the port; connect/reboot hard-blocked
+    FLASHING: "FLASHING",
     FAILED: "FAILED",
 });
 
-/** Events that drive transitions. */
-export const Event = Object.freeze({
-    CONNECT: "CONNECT", // begin opening a link
-    HANDSHAKE: "HANDSHAKE", // link open, begin the MSP handshake
-    READY: "READY", // readiness reached (full-MSP or virtual) -> CONNECTED
-    CLI_READY: "CLI_READY", // readiness reached as CLI-only -> CLI
-    REBOOT: "REBOOT", // first-class reboot request
-    RECONNECT: "RECONNECT", // reboot issued, begin waiting for the device
-    DISCONNECT: "DISCONNECT", // user/intentional teardown
-    CLOSED: "CLOSED", // teardown finished / link gone
-    FAIL: "FAIL", // unrecoverable error
-    FLASH_START: "FLASH_START",
-    FLASH_END: "FLASH_END",
-    RESET: "RESET", // FAILED/terminal -> IDLE
-});
-
-/**
- * Transition table: state -> { event -> nextState }. Any (state, event) pair
- * absent here is an illegal transition. This is the SOLE authority on what may
- * happen next — reentrancy is rejected by omission (e.g. REBOOT is absent from
- * REBOOTING/RECONNECTING, so a second reboot mid-reconnect is rejected, not
- * silently widening the old loop's window).
- */
-const TRANSITIONS = Object.freeze({
-    [State.IDLE]: {
-        [Event.CONNECT]: State.CONNECTING,
-        [Event.FLASH_START]: State.FLASHING,
-    },
-    [State.CONNECTING]: {
-        [Event.HANDSHAKE]: State.HANDSHAKING,
-        [Event.READY]: State.CONNECTED,
-        [Event.CLI_READY]: State.CLI,
-        [Event.RECONNECT]: State.RECONNECTING, // a failed reopen during a reconnect loop -> wait again
-        [Event.DISCONNECT]: State.DISCONNECTING,
-        [Event.FAIL]: State.FAILED,
-        [Event.CLOSED]: State.IDLE,
-    },
-    [State.HANDSHAKING]: {
-        [Event.READY]: State.CONNECTED,
-        [Event.CLI_READY]: State.CLI,
-        [Event.DISCONNECT]: State.DISCONNECTING,
-        [Event.FAIL]: State.FAILED,
-        [Event.CLOSED]: State.IDLE,
-    },
-    [State.CONNECTED]: {
-        [Event.REBOOT]: State.REBOOTING,
-        [Event.DISCONNECT]: State.DISCONNECTING,
-        [Event.FLASH_START]: State.FLASHING,
-        [Event.CLI_READY]: State.CLI,
-        [Event.CLOSED]: State.DISCONNECTING, // lost link -> teardown
-        [Event.FAIL]: State.FAILED,
-    },
-    [State.CLI]: {
-        [Event.REBOOT]: State.REBOOTING,
-        [Event.DISCONNECT]: State.DISCONNECTING,
-        [Event.READY]: State.CONNECTED, // CLI -> full session
-        [Event.CLOSED]: State.DISCONNECTING,
-        [Event.FAIL]: State.FAILED,
-    },
-    [State.REBOOTING]: {
-        [Event.RECONNECT]: State.RECONNECTING,
-        [Event.DISCONNECT]: State.DISCONNECTING, // abort the reboot
-        [Event.FAIL]: State.FAILED,
-        // REBOOT intentionally absent: reject re-entrant reboot.
-    },
-    [State.RECONNECTING]: {
-        [Event.CONNECT]: State.CONNECTING, // device reappeared, reopen
-        [Event.DISCONNECT]: State.DISCONNECTING,
-        [Event.CLOSED]: State.IDLE, // gave up
-        [Event.FAIL]: State.FAILED,
-        // REBOOT intentionally absent.
-    },
-    [State.DISCONNECTING]: {
-        [Event.CLOSED]: State.IDLE,
-        [Event.RESET]: State.IDLE,
-    },
-    [State.FLASHING]: {
-        [Event.FLASH_END]: State.IDLE,
-        [Event.FAIL]: State.FAILED,
-        // CONNECT/REBOOT/RECONNECT intentionally absent: hard-blocked.
-    },
-    [State.FAILED]: {
-        [Event.RESET]: State.IDLE,
-        [Event.DISCONNECT]: State.DISCONNECTING,
-        [Event.CLOSED]: State.IDLE,
-    },
-});
-
-/** States that count as "ready" (a usable connection from the user's view). */
+/** Phases that count as "ready" (a usable connection from the user's view). */
 const READY_STATES = Object.freeze(new Set([State.CONNECTED, State.CLI]));
 
-/**
- * Readiness quality (S3): consumers must not read a half-populated FC.CONFIG, so
- * the FSM records HOW ready a connection is. FULLY_READY = the full MSP chain
- * completed (finishOpen) or virtual; CLI_ONLY = CLI/version-mismatch session
- * with only a CLI subset usable.
- */
-export const Quality = Object.freeze({
-    NONE: "NONE",
-    FULLY_READY: "FULLY_READY",
-    CLI_ONLY: "CLI_ONLY",
-});
+/** Phases during which a reconnect is in flight and the frozen token is kept. */
+const RECONNECT_ACTIVE = Object.freeze(
+    new Set([State.CONNECTING, State.HANDSHAKING, State.REBOOTING, State.RECONNECTING]),
+);
 
-function detectDev() {
-    try {
-        // Vite injects import.meta.env.DEV; guarded so non-Vite contexts (tests,
-        // node) don't throw on the bare reference.
-        return Boolean(import.meta?.env?.DEV);
-    } catch {
-        return false;
-    }
-}
-
-export class ConnectionFsm {
-    constructor({ strict } = {}) {
+export class ConnectionState {
+    constructor() {
         this._state = State.IDLE;
-        // Throw on illegal transitions in dev; log+ignore in prod.
-        this._strict = strict ?? detectDev();
-        this._quality = Quality.NONE;
+        // Frozen reconnect-target identity; kept only while a reconnect is in flight.
         this._token = null;
-        this._abort = null;
-        // S4: intent flag owned by the FSM (was a serial_backend module var).
-        // Marks that the NEXT close is user-initiated, so the disconnect handler
-        // can distinguish an intentional teardown from an unexpected drop.
+        // The next close is user-initiated (so the disconnect handler doesn't run
+        // the unexpected-disconnect teardown on top of the intentional one).
         this._intentionalDisconnect = false;
-        // S4: whether a transport link is currently open (was serial_backend's
-        // module-private `isConnected`). This is the TRANSPORT-level flag — true
-        // from port-open through teardown — distinct from the FSM readiness state
-        // (CONNECTED/CLI). connectDisconnect() branches on it.
+        // A transport link is currently open (was serial_backend's `isConnected`).
         this._linkOpen = false;
         this._listeners = new Set();
-        this.logHead = "[CONNECTION-FSM]";
+        this.logHead = "[CONNECTION]";
     }
 
     get state() {
@@ -173,69 +63,35 @@ export class ConnectionFsm {
         return READY_STATES.has(this._state);
     }
 
-    get quality() {
-        return this._quality;
-    }
-
-    /** Whether `event` is a legal transition from the current state. */
-    can(event) {
-        return Boolean(TRANSITIONS[this._state]?.[event]);
+    get isFlashing() {
+        return this._state === State.FLASHING;
     }
 
     /**
-     * Apply an event. Returns the new state. On an illegal transition: throws in
-     * strict/dev mode, otherwise logs and returns the unchanged state.
+     * Set the lifecycle phase. The frozen reconnect token is kept only while a
+     * reconnect is in flight (CONNECTING/HANDSHAKING/REBOOTING/RECONNECTING) and
+     * cleared on settling into any other phase.
      */
-    dispatch(event) {
-        const next = TRANSITIONS[this._state]?.[event];
-        if (!next) {
-            const msg = `${this.logHead} illegal transition: ${this._state} -(${event})-> ?`;
-            if (this._strict) {
-                throw new Error(msg);
-            }
-            console.warn(msg);
-            return this._state;
-        }
-
+    setPhase(phase) {
         const prev = this._state;
-        this._state = next;
-
-        // Readiness quality follows the entry edge (S3): full-MSP/virtual vs CLI.
-        if (event === Event.READY) {
-            this._quality = Quality.FULLY_READY;
-        } else if (event === Event.CLI_READY) {
-            this._quality = Quality.CLI_ONLY;
-        } else if (!READY_STATES.has(next)) {
-            this._quality = Quality.NONE;
-        }
-
-        // Token lifecycle: the frozen reconnect token exists only while a
-        // reconnect is in flight. Clear it once we SETTLE — either reached a
-        // ready state (CONNECTED/CLI: the reconnect succeeded) or fell back to
-        // IDLE (gave up / torn down). It is preserved through the transient
-        // CONNECTING/HANDSHAKING/REBOOTING/RECONNECTING states so selectActivePort
-        // can resolve it to aim the reconnect.
-        if (next === State.IDLE || READY_STATES.has(next)) {
+        this._state = phase;
+        if (!RECONNECT_ACTIVE.has(phase)) {
             this._token = null;
         }
-
-        this._notify(prev, event);
-        return next;
+        this._notify(prev);
     }
 
     // ---- Frozen reconnect token -------------------------------------------
 
     /**
-     * Freeze the reconnect token. Once frozen it is IMMUTABLE until cleared
-     * (on reaching IDLE) — so device enumeration during REBOOTING can never
-     * change the target. A second freeze while a token is held is ignored.
+     * Freeze the reconnect token. Immutable until cleared, so device enumeration
+     * mid-reconnect can never change the target. A second freeze is ignored.
      * @param {object} token - { transportType, opaqueId, baud, isVirtual }
      */
     freezeReconnectToken(token) {
         if (this._token) {
-            return this._token; // already frozen; do not let enumeration mutate it
+            return this._token;
         }
-        // Defensive copy so callers can't mutate the frozen token in place.
         this._token = Object.freeze({ ...token });
         return this._token;
     }
@@ -248,124 +104,67 @@ export class ConnectionFsm {
         this._token = null;
     }
 
-    // ---- Reboot intent (S2b consolidation bridge) -------------------------
+    // ---- Reboot / reconnect window ----------------------------------------
 
-    /**
-     * Mark a reboot as begun. Returns false if a reboot/reconnect is already in
-     * flight (reentrancy). NOTE (S2b): the FSM is not yet driven by the live
-     * connect/disconnect handlers — that wiring, which makes this rejection
-     * AUTHORITATIVE, lands in S4. Until then this is observability + a soft
-     * reentrancy signal; the actual overlap guard remains stopRebootReconnect().
-     * A reboot implies a live FC, so from any non-reboot state we adopt REBOOTING.
-     */
+    /** Begin a reboot. Returns false if a reboot/reconnect is already in flight. */
     requestReboot() {
         if (this._state === State.REBOOTING || this._state === State.RECONNECTING) {
             return false;
         }
-        const prev = this._state;
-        this._state = State.REBOOTING;
-        this._notify(prev, Event.REBOOT);
+        this.setPhase(State.REBOOTING);
         return true;
     }
 
-    /** Mark the reconnect wait as started (REBOOTING -> RECONNECTING). */
+    /** REBOOTING -> RECONNECTING (the reconnect wait has started). */
     reconnectStarted() {
         if (this._state === State.REBOOTING) {
-            const prev = this._state;
-            this._state = State.RECONNECTING;
-            this._notify(prev, Event.RECONNECT);
+            this.setPhase(State.RECONNECTING);
         }
     }
 
-    /**
-     * Settle a reboot window: reconnected -> CONNECTED, else -> IDLE (giving up
-     * clears the frozen token). Best-effort during the S2b migration.
-     */
+    /** Settle a reboot window: reconnected -> CONNECTED, else -> IDLE (token cleared either way). */
     concludeReboot(reconnected) {
-        const prev = this._state;
-        this._state = reconnected ? State.CONNECTED : State.IDLE;
-        this._quality = reconnected ? Quality.FULLY_READY : Quality.NONE;
-        // The reconnect token's job is done once the reboot concludes either way.
-        this._token = null;
-        this._notify(prev, reconnected ? Event.READY : Event.CLOSED);
+        this.setPhase(reconnected ? State.CONNECTED : State.IDLE);
     }
 
     /**
-     * Settle the FSM on a link close (S4). Called from the single teardown
-     * convergence point (onClosed) for BOTH intentional and unexpected
-     * disconnects. During a reboot the link drop is expected and the reconnect
-     * still owns the lifecycle, so we leave REBOOTING/RECONNECTING untouched —
-     * the reboot's concludeReboot settles it. Otherwise -> IDLE.
+     * Settle on a link close, from the single teardown convergence point
+     * (onClosed). A reboot's link drop is expected and still owns the lifecycle,
+     * so REBOOTING/RECONNECTING are left untouched (their conclude settles them).
      */
     notifyClosed() {
-        if (this._state === State.REBOOTING || this._state === State.RECONNECTING) {
+        if (this._state === State.REBOOTING || this._state === State.RECONNECTING || this._state === State.IDLE) {
             return;
         }
-        if (this._state === State.IDLE) {
-            return;
-        }
-        const prev = this._state;
-        this._state = State.IDLE;
-        this._quality = Quality.NONE;
-        this._token = null;
-        this._notify(prev, Event.CLOSED);
+        this.setPhase(State.IDLE);
     }
 
-    /**
-     * Enter the FLASHING state (S4/S8). The flasher grabs the raw port, so while
-     * flashing the FSM hard-blocks connect/reconnect/reboot (those events are
-     * absent from the FLASHING row of the table). Returns false if flashing
-     * cannot be entered from the current state.
-     */
+    // ---- Flashing ----------------------------------------------------------
+
+    /** Enter FLASHING (the flasher owns the raw port). */
     beginFlashing() {
-        if (this._state === State.FLASHING) {
-            return true;
-        }
-        const prev = this._state;
-        // Flashing can start from a disconnected idle OR from a connected board
-        // (Save-and-flash). Adopt FLASHING directly; the migration singleton is
-        // non-strict so this never throws on an unmodeled prior state.
-        this._state = State.FLASHING;
-        this._quality = Quality.NONE;
-        this._token = null;
-        this._notify(prev, Event.FLASH_START);
+        this.setPhase(State.FLASHING);
         return true;
     }
 
-    /** Leave FLASHING back to IDLE (S4/S8). */
+    /** Leave FLASHING back to IDLE. */
     endFlashing() {
-        if (this._state !== State.FLASHING) {
-            return;
+        if (this._state === State.FLASHING) {
+            this.setPhase(State.IDLE);
         }
-        this._state = State.IDLE;
-        this._notify(State.FLASHING, Event.FLASH_END);
     }
 
-    /**
-     * S8: stand the MSP reconnect down and hand the port to the flasher. The
-     * flasher grabs the raw port (serial.connect / getNativePort), bypassing the
-     * normal connect path, so before it does we abort any in-flight reboot/
-     * reconnect loop and enter FLASHING (which hard-blocks connect/reboot/
-     * reconnect via the table). Pairs with endFlashing() when the flash finishes.
-     */
+    /** Stand the reconnect down and hand the port to the flasher. */
     beginDeviceReplacement() {
-        this.abort();
         return this.beginFlashing();
     }
 
-    /** Whether connect/reconnect/reboot are currently hard-blocked (FLASHING). */
-    get isFlashing() {
-        return this._state === State.FLASHING;
-    }
+    // ---- Operational flags -------------------------------------------------
 
-    // ---- Intentional-disconnect intent (S4) -------------------------------
-
-    /** Mark the next close as user-initiated (intentional). */
     markIntentionalDisconnect() {
         this._intentionalDisconnect = true;
     }
 
-    /** Clear the intentional-disconnect flag (e.g. on a fresh connect attempt). */
     clearIntentionalDisconnect() {
         this._intentionalDisconnect = false;
     }
@@ -377,60 +176,27 @@ export class ConnectionFsm {
         return wasIntentional;
     }
 
-    /** Transport-level "a link is open" flag (was serial_backend's isConnected). */
     get linkOpen() {
         return this._linkOpen;
     }
 
-    /** Set the transport-open flag explicitly. */
     setLinkOpen(open) {
         this._linkOpen = Boolean(open);
     }
 
-    /** Flip the transport-open flag (the connect/disconnect callback toggle). */
     toggleLinkOpen() {
         this._linkOpen = !this._linkOpen;
         return this._linkOpen;
     }
 
-    // ---- Abort plumbing ----------------------------------------------------
-
-    /** Start a fresh abortable operation (reboot/reconnect). */
-    beginOperation() {
-        this._abort = new AbortController();
-        return this._abort.signal;
-    }
-
-    /** Abort the in-flight reboot/reconnect (user disconnect, flash start). */
-    abort() {
-        this._abort?.abort();
-    }
-
-    /**
-     * S5: hard shutdown for page unload (pagehide). Cancels any in-flight
-     * reboot/reconnect loop and forces the FSM to IDLE regardless of the current
-     * state (ungated by isConnected/lock) — a page unload mid-reconnect or while
-     * locked must still tear everything down. The caller force-closes the
-     * transport; this just collapses the FSM and aborts the loop.
-     */
+    /** Hard shutdown for page unload (pagehide): collapse to IDLE, ungated. */
     shutdown() {
-        this.abort();
-        const prev = this._state;
-        this._state = State.IDLE;
-        this._quality = Quality.NONE;
-        this._token = null;
         this._linkOpen = false;
-        if (prev !== State.IDLE) {
-            this._notify(prev, Event.CLOSED);
+        if (this._state !== State.IDLE) {
+            this.setPhase(State.IDLE);
+        } else {
+            this._token = null;
         }
-    }
-
-    get signal() {
-        return this._abort?.signal ?? null;
-    }
-
-    get aborted() {
-        return Boolean(this._abort?.signal.aborted);
     }
 
     // ---- Read-model --------------------------------------------------------
@@ -444,16 +210,15 @@ export class ConnectionFsm {
         return {
             state: this._state,
             isReady: this.isReady,
-            quality: this._quality,
             token: this._token,
         };
     }
 
-    _notify(prev, event) {
+    _notify(prev) {
         const snap = this.snapshot();
         for (const listener of this._listeners) {
             try {
-                listener(snap, { prev, event });
+                listener(snap, { prev });
             } catch (error) {
                 console.error(`${this.logHead} subscriber threw:`, error);
             }
@@ -461,20 +226,12 @@ export class ConnectionFsm {
     }
 }
 
-// Lazily-constructed singleton so there is no module-init-order hazard.
+// Lazily-constructed singleton (no module-init-order hazard).
 let _instance = null;
 
-/** The process-wide connection FSM. */
 export function getConnectionFsm() {
     if (!_instance) {
-        // Non-strict during the migration: until EVERY connect/disconnect/reboot
-        // writer is routed through the FSM (completed in S7), a live dispatch can
-        // legitimately arrive in a state the table doesn't yet model. Non-strict
-        // logs+ignores those instead of throwing and wedging a real connection.
-        // Unit tests construct `new ConnectionFsm({ strict: true })` directly, so
-        // the transition table is still verified strictly. Flip this to strict
-        // (the default dev behavior) in S7 once all writers are rerouted.
-        _instance = new ConnectionFsm({ strict: false });
+        _instance = new ConnectionState();
     }
     return _instance;
 }

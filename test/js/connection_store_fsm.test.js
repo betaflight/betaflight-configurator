@@ -14,7 +14,7 @@ vi.mock("../../src/js/port_handler", () => ({ default: { portPicker: { selectedP
 vi.mock("../../src/js/msp", () => ({ default: { callbacks_cleanup: () => {} } }));
 
 import { useConnectionStore } from "../../src/stores/connection.js";
-import { getConnectionFsm, __resetConnectionFsmForTests, State, Event, Quality } from "../../src/js/connection_fsm.js";
+import { getConnectionFsm, __resetConnectionFsmForTests, State } from "../../src/js/connection_fsm.js";
 import { __resetLockManagerForTests } from "../../src/js/lock_manager.js";
 
 beforeEach(() => {
@@ -51,28 +51,25 @@ describe("S7 store owns connection-target state (folded from GuiControl)", () =>
 });
 
 describe("S7 connection store FSM read-model", () => {
-    it("exposes the initial FSM snapshot", () => {
+    it("exposes the initial snapshot", () => {
         const store = useConnectionStore();
         expect(store.fsmState).toBe(State.IDLE);
         expect(store.fsmReady).toBe(false);
-        expect(store.fsmQuality).toBe(Quality.NONE);
         expect(store.fsmReconnectToken).toBeNull();
     });
 
-    it("reactively reflects FSM transitions", () => {
+    it("reactively reflects phase changes", () => {
         const store = useConnectionStore();
         const fsm = getConnectionFsm();
 
-        fsm.dispatch(Event.CONNECT);
+        fsm.setPhase(State.CONNECTING);
         expect(store.fsmState).toBe(State.CONNECTING);
 
-        fsm.dispatch(Event.READY);
+        fsm.setPhase(State.CONNECTED);
         expect(store.fsmState).toBe(State.CONNECTED);
         expect(store.fsmReady).toBe(true);
-        expect(store.fsmQuality).toBe(Quality.FULLY_READY);
 
-        fsm.dispatch(Event.DISCONNECT);
-        fsm.dispatch(Event.CLOSED);
+        fsm.setPhase(State.IDLE);
         expect(store.fsmState).toBe(State.IDLE);
         expect(store.fsmReady).toBe(false);
     });
@@ -80,11 +77,10 @@ describe("S7 connection store FSM read-model", () => {
     it("reflects the frozen reconnect token", () => {
         const store = useConnectionStore();
         const fsm = getConnectionFsm();
-        fsm.dispatch(Event.CONNECT);
-        fsm.dispatch(Event.READY);
+        fsm.requestReboot();
         fsm.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
         // Trigger a notify so the snapshot ref updates.
-        fsm.requestReboot();
+        fsm.reconnectStarted();
         expect(store.fsmReconnectToken).toMatchObject({ transportType: "serial", opaqueId: "serial_0" });
     });
 });
