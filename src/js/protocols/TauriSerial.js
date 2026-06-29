@@ -285,8 +285,6 @@ class TauriSerial extends EventTarget {
                 bitrate: this.bitrate,
                 vendorId: activePort?.vendorId,
                 productId: activePort?.productId,
-                // S6d: kept for the reconnect token so a CDC path change can be
-                // re-resolved by serial_number across an FC reboot.
                 serialNumber: activePort?.serialNumber,
             };
 

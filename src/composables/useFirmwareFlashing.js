@@ -498,7 +498,7 @@ export function useFirmwareFlashing(params = {}) {
         if (firmwareType === "BIN") {
             // Hold the connect lock for the duration of the long-running flash so
             // nothing else grabs the port, and always finalise the UI in finally.
-            // S8: also stand the MSP reconnect down and enter FLASHING so the connection state
+            // Also stand the MSP reconnect down and enter FLASHING so the connection state
             // reflects that the flasher owns the port (hard-blocks connect/reboot).
             GUI.connect_lock = true;
             getConnectionState().beginDeviceReplacement();

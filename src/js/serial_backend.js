@@ -45,14 +45,14 @@ let rebootReconnectTimerId = false;
 let rebootDialogProgressTimerId = false;
 let rebootDialogCheckTimerId = false;
 
-// S4: the transport-open flag formerly stored here as `isConnected` now lives in
+// The transport-open flag formerly stored here as `isConnected` now lives in
 // the connection state — read via `getConnectionState().linkOpen`, mutated via setLinkOpen/
 // toggleLinkOpen. Kept as a local read-through helper so the call sites stay terse.
 const isConnected = () => getConnectionState().linkOpen;
 
 // True while an intentional disconnect (Disconnect button, or removed-device toggle)
 // is in flight. finishClose() owns the full teardown in that case; onClosed() uses this
-// S4: the intentional-disconnect flag — telling an intentional disconnect apart
+// The intentional-disconnect flag — telling an intentional disconnect apart
 // from an unexpected one (unplug / FC reboot / BLE drop) so we don't tear down
 // twice — now lives in the connection state (getConnectionState().markIntentionalDisconnect /
 // clearIntentionalDisconnect / consumeIntentionalDisconnect). Set in
@@ -72,7 +72,7 @@ function isCliOnlyMode() {
 }
 
 const toggleStatus = function () {
-    // S4: transport-open flag now lives in the connection state (was module-private isConnected).
+    // Transport-open flag now lives in the connection state (was module-private isConnected).
     getConnectionState().toggleLinkOpen();
 };
 
@@ -134,7 +134,7 @@ export function initializeSerialBackend() {
 
     // On page unload (refresh / tab close) close the serial port so the FC
     // gets a clean disconnect and reconnection works without a physical replug.
-    // S5: unconditional shutdown — ungated by isConnected/connect_lock. A page
+    // Unconditional shutdown — ungated by isConnected/connect_lock. A page
     // unload mid-reconnect (loop still running) or while the flasher holds the
     // lock must still cancel the loop, stop timers and force-close the transport,
     // otherwise the FC is left holding a half-open port until a physical replug.
@@ -295,7 +295,7 @@ function beginConnect(selectedPort) {
         serial.removeEventListener("disconnect", disconnectHandler);
         serial.addEventListener("disconnect", disconnectHandler);
 
-        // S3: a connect attempt begins. IDLE -> CONNECTING; during a reboot the
+        // A connect attempt begins. IDLE -> CONNECTING; during a reboot the
         // connection-state is RECONNECTING -> CONNECTING. Readiness (finishOpen/connectCli)
         // advances it to CONNECTED/CLI. (virtual dispatches its own in onOpenVirtual.)
         getConnectionState().setPhase(ConnPhase.CONNECTING);
@@ -329,7 +329,7 @@ export function connectDisconnect() {
         return;
     }
 
-    // S8: the flasher owns the port while FLASHING; hard-block connect/disconnect
+    // The flasher owns the port while FLASHING; hard-block connect/disconnect
     // (defence-in-depth alongside connect_lock, for flows that grab the raw port).
     // FLASHING is cleared by the flasher's exits and, as a safety net, by
     // resetConnection — so a post-flash reconnect is never blocked.
@@ -478,7 +478,7 @@ function setConnectionTimeout() {
             if (!CONFIGURATOR.connectionValid) {
                 gui_log(i18n.getMessage("noConfigurationReceived"));
 
-                // S3: bounded HANDSHAKING timeout — the FC opened the link but
+                // Bounded HANDSHAKING timeout — the FC opened the link but
                 // never completed the MSP chain. HANDSHAKING -> FAILED; the
                 // disconnect below tears it down (-> onClosed -> notifyClosed -> IDLE).
                 getConnectionState().setPhase(ConnPhase.FAILED);
@@ -492,7 +492,7 @@ function setConnectionTimeout() {
 function resetConnection() {
     clearLiveDataRefreshTimer();
 
-    // S8 safety net: any normal teardown clears a lingering FLASHING state, so the
+    // Safety net: any normal teardown clears a lingering FLASHING state, so the
     // hard-block above can never strand a post-flash reconnect even if a flasher
     // exit path missed its endFlashing().
     getConnectionState().endFlashing();
@@ -525,7 +525,7 @@ function abortConnection(messageKey) {
     // the handshake (e.g. invalid API version) did not "fail to open".
     const message = i18n.getMessage(messageKey ?? (GUI.connected_to ? "connectionFailed" : "serialPortOpenFail"));
 
-    // S3: a failed handshake (invalid/garbage API version) is a HANDSHAKING ->
+    // A failed handshake (invalid/garbage API version) is a HANDSHAKING ->
     // FAILED edge before teardown. notifyClosed (via resetConnection's close path)
     // settles to IDLE.
     getConnectionState().setPhase(ConnPhase.FAILED);
@@ -597,7 +597,7 @@ function onOpen(openInfo) {
         // reset connecting_to
         GUI.connecting_to = false;
 
-        // S3: the link is open; the MSP handshake begins now. CONNECTING ->
+        // The link is open; the MSP handshake begins now. CONNECTING ->
         // HANDSHAKING. Readiness (finishOpen/connectCli) advances to CONNECTED/CLI;
         // the bounded "connecting" timeout below dispatches FAIL on a stall.
         getConnectionState().setPhase(ConnPhase.HANDSHAKING);
@@ -871,7 +871,7 @@ function finishOpen() {
 
     onConnect();
 
-    // S3 readiness edge #1: full MSP chain complete -> CONNECTED (FULLY_READY).
+    // Readiness edge #1: full MSP chain complete -> CONNECTED (FULLY_READY).
     getConnectionState().setPhase(ConnPhase.CONNECTED);
 
     GUI.selectDefaultTabWhenConnected();
@@ -886,7 +886,7 @@ function connectCli() {
 
     onConnect();
 
-    // S3 readiness edge #2: CLI-only / version-mismatch session -> CLI (CLI_ONLY).
+    // Readiness edge #2: CLI-only / version-mismatch session -> CLI (CLI_ONLY).
     getConnectionState().setPhase(ConnPhase.CLI);
 
     switchTab("cli", { mode: "cli" });
@@ -993,7 +993,7 @@ function onClosed(result) {
         finishUnexpectedDisconnect();
     }
 
-    // S4: single teardown convergence point — settle the connection state to IDLE for both
+    // Single teardown convergence point — settle the connection state to IDLE for both
     // intentional and unexpected closes. A reboot's link drop is left alone
     // (notifyClosed ignores REBOOTING/RECONNECTING); its conclude settles it.
     getConnectionState().notifyClosed();
@@ -1050,9 +1050,9 @@ export function reinitializeConnection(suppressDialog = false) {
     // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
 
-    // S2b: record reboot intent in the connection state (single owner of lifecycle state).
+    // Record reboot intent in the connection state (single owner of lifecycle state).
     // Observability + soft reentrancy signal during the migration; the actual
-    // overlap guard remains stopRebootReconnect() until S4 makes the connection state the
+    // overlap guard remains stopRebootReconnect() until the connection state becomes the
     // authoritative gate. Virtual toggles settle immediately below.
     getConnectionState().requestReboot();
 
@@ -1100,7 +1100,7 @@ export function reinitializeConnection(suppressDialog = false) {
         gui_log(i18n.getMessage("deviceReady"));
 
         // No reconnect loop runs here (auto-connect handles it); settle the connection state
-        // read-model now. Authoritative readiness wiring lands in S3/S4.
+        // read-model now. Authoritative readiness wiring lands later.
         getConnectionState().concludeReboot(false);
         return rebootTimestamp;
     }

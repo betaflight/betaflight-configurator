@@ -91,7 +91,7 @@ export const useConnectionStore = defineStore("connection", () => {
         cliValid,
         clearMspQueue,
         selectedPort,
-        // S7 connection-state read-model (read-only)
+        // Connection-state read-model (read-only)
         connectionPhase,
         previousPhase,
         connectionReady,

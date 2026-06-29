@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// WebBluetooth stable device identity (slice S1b-BLE).
+// WebBluetooth stable device identity.
 //
 // The old createPort() assigned `path: bluetooth_${portCounter++}` and
 // loadDevices() reset the counter on every rebuild, so the path was an ordinal
@@ -198,10 +198,10 @@ describe("WebBluetooth stable device identity", () => {
 });
 
 // ---------------------------------------------------------------------------
-// S6c — WebBluetooth openCanceled abort contract.
+// WebBluetooth openCanceled abort contract.
 // ---------------------------------------------------------------------------
 
-describe("S6c WebBluetooth openCanceled abort contract", () => {
+describe("WebBluetooth openCanceled abort contract", () => {
     it("disconnect() during an in-flight open signals openCanceled without tearing down", async () => {
         const WebBluetooth = await loadWebBluetooth();
         const bt = new WebBluetooth();

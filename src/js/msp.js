@@ -554,7 +554,7 @@ const MSP = {
         // reject. Without timeoutMs this never runs and the legacy
         // resend-forever / never-reject behavior is intact.
         //
-        // S3 acceptance fix: armed even when this request COALESCES onto an
+        // Acceptance fix: armed even when this request COALESCES onto an
         // already-queued identical one (requestExists === true). Previously the
         // deadline lived inside the `!requestExists` block, so a coalesced
         // timeoutMs request had no deadline and could never reject — the

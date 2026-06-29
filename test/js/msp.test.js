@@ -81,7 +81,7 @@ describe("MSP", () => {
             expect(vi.getTimerCount()).toBe(0);
         });
 
-        it("arms the deadline for a COALESCED timeoutMs request so it still rejects (S3 acceptance)", async () => {
+        it("arms the deadline for a COALESCED timeoutMs request so it still rejects", async () => {
             const timeoutMs = 200;
             // First request owns the queue slot and the resend timer.
             const cb1 = vi.fn();

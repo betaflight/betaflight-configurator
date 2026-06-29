@@ -63,7 +63,7 @@ class GuiControl {
         this.operating_system = getOS();
     }
 
-    // S7 Phase B: connect_lock is now backed by the ref-counting LockManager
+    // connect_lock is now backed by the ref-counting LockManager
     // (single source of truth) instead of a bare instance field. The getter reads
     // the LockManager's reactive `locked` ref, so existing reactive consumers
     // (store.connectLock computed, tab guards) keep updating; the setter maps the

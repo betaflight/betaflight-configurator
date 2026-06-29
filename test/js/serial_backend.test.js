@@ -575,7 +575,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 });
 
 // ---------------------------------------------------------------------------
-// S0 characterization — pins CURRENT reboot behavior for the serial/USB path
+// Characterization — pins CURRENT reboot behavior for the serial/USB path
 // and the virtualMode path of reinitializeConnection(). These assert what the
 // code does TODAY (not the desired end-state) so later refactor slices have a
 // regression net. If a later slice intentionally changes this behavior, these

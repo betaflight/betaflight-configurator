@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// S0 -> S2b characterization — CLI-vs-Vue reboot PARITY (divergence removed).
+// Characterization — CLI-vs-Vue reboot PARITY (divergence removed).
 //
-// BEFORE S2b there were two divergent reboot implementations:
+// Before this refactor there were two divergent reboot implementations:
 //   1. serial_backend.reinitializeConnection() + rebootReconnect() — flush+retry.
 //   2. gui.js GuiControl.reinitializeConnection() — a legacy one-shot that sent
 //      MSP_SET_REBOOT itself and emitted a single "connection:toggle" with NO
 //      retry loop (so a toggle into a still-booting FC was never retried).
 //
-// S2b removes divergence by deleting gui.js's implementation: it now simply
+// Removes divergence by deleting gui.js's implementation: it now simply
 // emits "reboot:request", the single canonical event that serial_backend's
 // orchestrator handles. This test — which previously PINNED the divergence —
 // now asserts the PARITY: gui.js delegates and runs no reboot logic of its own.

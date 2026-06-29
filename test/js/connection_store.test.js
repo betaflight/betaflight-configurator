@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
-// S7 — useConnectionStore is a thin reactive read-model of the connection state.
+// useConnectionStore is a thin reactive read-model of the connection state.
 // The store's heavy legacy collaborators are stubbed; the connection state is the real one.
 // ---------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ afterEach(() => {
     __resetLockManagerForTests();
 });
 
-describe("S7 store owns connection-target state (folded from GuiControl)", () => {
+describe("store owns connection-target state (folded from GuiControl)", () => {
     it("connectingTo / connectedTo are store-owned, writable, default false", () => {
         const store = useConnectionStore();
         expect(store.connectingTo).toBe(false);
@@ -50,7 +50,7 @@ describe("S7 store owns connection-target state (folded from GuiControl)", () =>
     });
 });
 
-describe("S7 connection store connection-state read-model", () => {
+describe("connection store connection-state read-model", () => {
     it("exposes the initial snapshot", () => {
         const store = useConnectionStore();
         expect(store.connectionPhase).toBe(State.IDLE);

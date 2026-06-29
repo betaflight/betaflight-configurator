@@ -92,7 +92,7 @@ class STM32Protocol {
      */
     handleError(resetRebootMode = true) {
         GUI.connect_lock = false;
-        // S8: flash aborted/failed — release the FLASHING state alongside the lock so
+        // Flash aborted/failed — release the FLASHING state alongside the lock so
         // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
         getConnectionState().endFlashing();
         if (resetRebootMode) {
@@ -106,7 +106,7 @@ class STM32Protocol {
         if (connectionResult) {
             // we are connected, disabling connect button in the UI
             GUI.connect_lock = true;
-            // S8: the flasher now owns the raw port — stand the MSP reconnect down and
+            // The flasher now owns the raw port — stand the MSP reconnect down and
             // enter FLASHING (hard-blocks connect/reboot until the flash completes).
             getConnectionState().beginDeviceReplacement();
 
@@ -1032,7 +1032,7 @@ class STM32Protocol {
 
         // unlocking connect button
         GUI.connect_lock = false;
-        // S8: flash complete — leave FLASHING so normal connect/reboot resume.
+        // Flash complete — leave FLASHING so normal connect/reboot resume.
         getConnectionState().endFlashing();
 
         // unlock some UI elements TODO needs rework

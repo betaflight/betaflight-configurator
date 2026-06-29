@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// S0 characterization — pins the CURRENT one-shot reconnect behavior of
+// Characterization — pins the CURRENT one-shot reconnect behavior of
 // useMspCliSession.scheduleReconnect()/cancelScheduledReconnect(). We mock the
 // two collaborators it reaches into (GUI's timeout registry and serial_backend's
 // connectDisconnect) so we can observe exactly when the reconnect fires.

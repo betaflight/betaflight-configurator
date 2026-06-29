@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 // ---------------------------------------------------------------------------
-// S6e — VirtualSerial is an EventTarget that emits synthetic connect/disconnect
+// VirtualSerial is an EventTarget that emits synthetic connect/disconnect
 // and the reconnect-token contract, so it stops being special-cased relative to
 // real transports.
 // ---------------------------------------------------------------------------
@@ -13,7 +13,7 @@ async function newVirtual() {
     return new mod.default();
 }
 
-describe("S6e VirtualSerial EventTarget", () => {
+describe("VirtualSerial EventTarget", () => {
     it("is an EventTarget", async () => {
         const vs = await newVirtual();
         expect(vs).toBeInstanceOf(EventTarget);
@@ -47,7 +47,7 @@ describe("S6e VirtualSerial EventTarget", () => {
     });
 });
 
-describe("S6e serial.js now forwards virtual transport events", () => {
+describe("serial.js now forwards virtual transport events", () => {
     it("forwards connect from the virtual protocol with protocolType, and still routes 'virtual'", async () => {
         const { serial } = await import("../../src/js/serial.js");
         const vs = serial._protocols.find((p) => p.name === "virtual").instance;

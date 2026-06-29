@@ -8,8 +8,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // This file pins behavior around the "preset -> virtual" regression: after a
 // save/reboot with expert mode + showVirtualMode enabled, if the real port is
 // transiently gone, selectActivePort() must NOT silently pick the "virtual"
-// device. The durable fix (S1a) gates the expert-mode virtual/manual fallback on
-// PortHandler.pinnedReconnectTarget being null — see the tests below.
+// device. The durable fix gates the expert-mode virtual/manual fallback on
+// getConnectionState().isReconnecting being false — see the tests below.
 // ---------------------------------------------------------------------------
 
 const { serial, dfuProtocol, isExpertModeEnabled } = vi.hoisted(() => {
@@ -105,13 +105,13 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
         resetPortHandler();
     });
 
-    // S1a FIXED behavior. While a reconnect is in progress (pinnedReconnectTarget set), the
-    // rebooting device is only transiently gone from the lists. selectActivePort() must NOT
-    // hijack the selection with the expert-mode "virtual" fallback; it keeps aiming at the
-    // pinned real target so the device re-selects itself once it re-enumerates.
+    // FIXED behavior. While a reconnect is in progress (isReconnecting), the rebooting device
+    // is only transiently gone from the lists. selectActivePort() must NOT hijack the selection
+    // with the expert-mode "virtual" fallback; it keeps the previously-selected real target so
+    // the device re-selects itself once it re-enumerates.
     it("does NOT select 'virtual' when the real port is transiently gone during a reboot (expert + showVirtualMode on)", () => {
-        // Reboot in progress: the real serial device has briefly dropped off the list, and
-        // serial_backend has pinned the device we are reconnecting to.
+        // Reboot in progress: the real serial device has briefly dropped off the list, and the
+        // connection state is in the reconnect window aimed at the device we are reconnecting to.
         PortHandler.currentSerialPorts = [];
         PortHandler.currentUsbPorts = [];
         PortHandler.currentBluetoothPorts = [];
@@ -129,12 +129,12 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
         expect(PortHandler.portPicker.selectedPort).toBe("/dev/ttyACM0");
     });
 
-    // Companion: when NO reconnect is in progress (pinnedReconnectTarget null), the normal
-    // startup expert-mode fallback still surfaces "virtual". This pins that the guard is
-    // scoped to the reconnect window and does not break ordinary virtual-mode selection.
+    // Companion: when NO reconnect is in progress (isReconnecting false), the normal startup
+    // expert-mode fallback still surfaces "virtual". This pins that the guard is scoped to the
+    // reconnect window and does not break ordinary virtual-mode selection.
     it("still falls back to 'virtual' on normal startup (no reconnect pinned)", () => {
         PortHandler.currentSerialPorts = [];
-        __resetConnectionStateForTests(); // no reconnect token => not reconnecting
+        __resetConnectionStateForTests(); // IDLE => not reconnecting
         isExpertModeEnabled.mockReturnValue(true);
         PortHandler.showVirtualMode = true;
 

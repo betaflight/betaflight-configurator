@@ -5,7 +5,7 @@ const VIRTUAL = "virtual";
  * which is required to still have virtual serial port support in the
  * browser.
  *
- * S6e: VirtualSerial now extends EventTarget and emits synthetic
+ * VirtualSerial now extends EventTarget and emits synthetic
  * connect/disconnect plus the reconnect token contract, so the connection state can treat it
  * like any other transport instead of special-casing "virtual" everywhere.
  */

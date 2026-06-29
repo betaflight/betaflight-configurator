@@ -331,7 +331,7 @@ class WebBluetooth extends EventTarget {
     }
 
     async disconnect() {
-        // S6c: if a GATT connect is still in flight, signal cancellation so the
+        // If a GATT connect is still in flight, signal cancellation so the
         // connect() coroutine tears down on completion instead of resurrecting a
         // closed session with a late `connect` event (mirrors TauriSerial). Do
         // this before any state mutation.

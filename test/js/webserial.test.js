@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// WebSerial stable device identity (slice S1b).
+// WebSerial stable device identity.
 //
 // The browser reuses the same SerialPort object across an MCU-reboot USB
 // re-enumeration, so a stable id keyed off that object's identity is the

@@ -36,9 +36,9 @@ const PortHandler = new (function () {
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
 
-    // The "reconnect in progress + target" state formerly lived here as
-    // `pinnedReconnectTarget`; it is now the connection state's frozen reconnect token (the
-    // single authority), read in selectActivePort() via getConnectionState().
+    // "Reconnect in progress" is the connection state being in REBOOTING/RECONNECTING,
+    // read in selectActivePort() via getConnectionState().isReconnecting; the
+    // previously-selected port stays put as the reconnect target.
 
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
