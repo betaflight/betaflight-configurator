@@ -48,6 +48,18 @@ describe("serial facade event routing", () => {
         expect(seen).toEqual([]);
     });
 
+    it("forwards a primitive connect:false unchanged (not spread into a truthy object)", () => {
+        serial._protocol = protocol("virtual");
+        let seen;
+        const handler = (e) => (seen = e.detail);
+        serial.addEventListener("connect", handler);
+        // A failed open dispatches `false`; if the facade spread it into
+        // { protocolType }, onOpen() would treat the failure as a success.
+        protocol("virtual").dispatchEvent(new CustomEvent("connect", { detail: false }));
+        serial.removeEventListener("connect", handler);
+        expect(seen).toBe(false);
+    });
+
     it("still forwards device-enumeration events from ANY transport regardless of the active one", () => {
         serial._protocol = protocol("virtual");
         let seen = null;

@@ -29,8 +29,16 @@ export const State = Object.freeze({
 /** Phases that count as "ready" (a usable connection from the user's view). */
 const READY_STATES = Object.freeze(new Set([State.CONNECTED, State.CLI]));
 
-/** Phases during which a reboot/reconnect is in flight (suppress virtual/manual fallback). */
-const RECONNECTING_STATES = Object.freeze(new Set([State.REBOOTING, State.RECONNECTING]));
+/**
+ * Phases during which a connect/reconnect attempt is in flight. selectActivePort()
+ * suppresses the expert-mode virtual/manual fallback throughout this whole window —
+ * CONNECTING/HANDSHAKING are included because a reboot reconnect passes through them
+ * on each retry, and dropping the guard there would let a transient device-list
+ * refresh hijack the selection mid-handshake.
+ */
+const RECONNECTING_STATES = Object.freeze(
+    new Set([State.CONNECTING, State.HANDSHAKING, State.REBOOTING, State.RECONNECTING]),
+);
 
 export class ConnectionState {
     constructor() {
@@ -61,7 +69,7 @@ export class ConnectionState {
         return this._state === State.FLASHING;
     }
 
-    /** A reboot/reconnect is in flight — keep the current port selected, no fallback. */
+    /** A connect/reconnect attempt is in flight — keep the current port selected, no fallback. */
     get isReconnecting() {
         return RECONNECTING_STATES.has(this._state);
     }

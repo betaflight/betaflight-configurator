@@ -1,9 +1,8 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 // ---------------------------------------------------------------------------
-// VirtualSerial is an EventTarget that emits synthetic connect/disconnect
-// and the reconnect-token contract, so it stops being special-cased relative to
-// real transports.
+// VirtualSerial is an EventTarget that emits synthetic connect/disconnect, so it
+// stops being special-cased relative to real transports.
 // ---------------------------------------------------------------------------
 
 afterEach(() => {});

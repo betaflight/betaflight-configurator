@@ -337,7 +337,9 @@ class WebBluetooth extends EventTarget {
         // this before any state mutation.
         if (this.openRequested && !this.connected) {
             this.openCanceled = true;
-            return;
+            // Cancellation was accepted — report success (mirrors TauriSerial), else
+            // Serial.disconnect() coerces the undefined return to false.
+            return true;
         }
 
         this.connected = false;

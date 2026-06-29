@@ -55,14 +55,17 @@ describe("reboot / reconnect window", () => {
         expect(c.requestReboot()).toBe(false);
     });
 
-    it("isReconnecting is true only during REBOOTING / RECONNECTING", () => {
+    it("isReconnecting covers the whole connect/reconnect window, false once settled", () => {
         const c = make();
         expect(c.isReconnecting).toBe(false);
-        c.setPhase(State.REBOOTING);
-        expect(c.isReconnecting).toBe(true);
-        c.reconnectStarted();
-        expect(c.isReconnecting).toBe(true);
-        c.concludeReboot(true);
+        // The reboot retry passes through these phases; the guard must hold across all of them.
+        for (const phase of [State.REBOOTING, State.RECONNECTING, State.CONNECTING, State.HANDSHAKING]) {
+            c.setPhase(phase);
+            expect(c.isReconnecting).toBe(true);
+        }
+        c.setPhase(State.CONNECTED);
+        expect(c.isReconnecting).toBe(false);
+        c.setPhase(State.IDLE);
         expect(c.isReconnecting).toBe(false);
     });
 

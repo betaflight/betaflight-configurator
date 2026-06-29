@@ -562,7 +562,11 @@ const MSP = {
         // resend timer stays exclusive to the first request; on a coalesced
         // entry `obj.timer` is undefined and clearTimeout no-ops, so the shared
         // resend cycle and other waiters are undisturbed.
-        if (typeof timeoutMs === "number" && timeoutMs >= 0) {
+        if (Number.isFinite(timeoutMs) && timeoutMs >= 0) {
+            // setTimeout overflows values above the 32-bit ceiling to a near-zero
+            // delay (a spurious immediate timeout), so clamp; Number.isFinite above
+            // already rejects Infinity/NaN.
+            const boundedTimeout = Math.min(timeoutMs, 2147483647);
             obj.deadlineTimer = setTimeout(() => {
                 // Stop this request's resend (no-op when coalesced) and remove it.
                 clearTimeout(obj.timer);
@@ -576,7 +580,7 @@ const MSP = {
                 if (obj.callback) {
                     obj.callback({ command: code, timeout: true, timeoutMs });
                 }
-            }, timeoutMs);
+            }, boundedTimeout);
         }
 
         this.callbacks.push(obj);

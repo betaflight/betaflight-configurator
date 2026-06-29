@@ -9,10 +9,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 //      MSP_SET_REBOOT itself and emitted a single "connection:toggle" with NO
 //      retry loop (so a toggle into a still-booting FC was never retried).
 //
-// Removes divergence by deleting gui.js's implementation: it now simply
-// emits "reboot:request", the single canonical event that serial_backend's
-// orchestrator handles. This test — which previously PINNED the divergence —
-// now asserts the PARITY: gui.js delegates and runs no reboot logic of its own.
+// Removes divergence by deleting gui.js's implementation entirely: gui.js no
+// longer exposes reinitializeConnection and the "reboot:request" /
+// "connection:toggle" EventBus indirection is gone — every reboot goes directly
+// through serial_backend's orchestrator. This test — which previously PINNED the
+// divergence — now asserts the PARITY: gui.js runs no reboot logic of its own.
 // ---------------------------------------------------------------------------
 
 const { EventBus, PortHandler, CONFIGURATOR, MSP, MSPCodes } = vi.hoisted(() => {

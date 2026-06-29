@@ -70,7 +70,8 @@ export const useConnectionStore = defineStore("connection", () => {
     function clearMspQueue() {
         // Dynamic import keeps the store free of a static msp import (msp.js imports
         // gui.js, which now imports this store — a static import would cycle).
-        import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
+        // Returned so callers can await the drain before starting the next handshake.
+        return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
     }
 
     function reboot() {

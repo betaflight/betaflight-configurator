@@ -225,9 +225,12 @@ describe("WebBluetooth openCanceled abort contract", () => {
         const bt = new WebBluetooth();
         bt.devices = [bt.createPort(makeFakeDevice("dev-abort"))];
 
-        // Cancel mid-open: set openCanceled during the gatt pipeline.
+        // Cancel mid-open: set openCanceled during the gatt pipeline. The GATT link
+        // did not establish (canceled), so gatt.connected stays false — the
+        // synchronous abort branch that emits connect:false.
         bt.gattConnect = vi.fn(async () => {
             bt.openCanceled = true;
+            bt.device.gatt.connected = false;
         });
         bt.getServices = vi.fn(async () => {});
         bt.getCharacteristics = vi.fn(async () => {});
@@ -238,8 +241,11 @@ describe("WebBluetooth openCanceled abort contract", () => {
 
         await bt.connect(bt.devices[0].path, { baudRate: 115200 });
 
-        // The connected branch must NOT have been taken.
+        // The connected branch must NOT have been taken...
         expect(bt.connected).toBe(false);
+        // ...and the abort must emit connect:false explicitly, so serial_backend runs
+        // its failed-open teardown rather than a silent no-event regression slipping by.
+        expect(results).toContain(false);
     });
 });
 

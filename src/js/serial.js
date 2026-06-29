@@ -83,11 +83,17 @@ class Serial extends EventTarget {
                     }
 
                     // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
-                    // Other events carry an object detail merged with the protocol tag.
+                    // Object details are merged with the protocol tag. A PRIMITIVE detail
+                    // (notably connect/disconnect dispatching `false` on a failed open) is
+                    // forwarded as-is — spreading `false` would turn it into a truthy
+                    // `{ protocolType }`, so onOpen() would treat a failed open as success.
+                    const isObjectDetail = event.detail !== null && typeof event.detail === "object";
                     const newDetail =
                         event.type === "receive"
                             ? { data: event.detail, protocolType: name }
-                            : { ...event.detail, protocolType: name };
+                            : isObjectDetail
+                                ? { ...event.detail, protocolType: name }
+                                : event.detail;
 
                     this.dispatchEvent(
                         new CustomEvent(event.type, {
