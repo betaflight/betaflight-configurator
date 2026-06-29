@@ -174,7 +174,9 @@ const logoTooltip = computed(() => {
 
 provide("sidebarExpanded", isSidebarExpanded);
 provide("closeMobileSidebar", () => {
-    isRevealed.value = false;
+    if (isCompactBreakpoint.value) {
+        isRevealed.value = false;
+    }
 });
 
 const activeTabComponent = computed(() => {
