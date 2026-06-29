@@ -7,10 +7,10 @@ import {
 } from "../../src/js/connection_state.js";
 
 // ---------------------------------------------------------------------------
-// Thin connection-status holder: phase + reconnect token + linkOpen /
-// intentionalDisconnect flags + a subscribe/snapshot read-model. No transition
-// table — phase is set explicitly; the token is kept only while a reconnect is
-// in flight and cleared on settle.
+// Thin connection-status holder: current + previous phase, linkOpen /
+// intentionalDisconnect flags, and a subscribe/snapshot read-model. No
+// transition table and no reconnect token — phase is set explicitly, and a
+// reconnect just re-uses the previously-selected port.
 // ---------------------------------------------------------------------------
 
 const make = () => new ConnectionState();
@@ -20,7 +20,15 @@ describe("phase + readiness", () => {
         const c = make();
         expect(c.state).toBe(State.IDLE);
         expect(c.isReady).toBe(false);
-        expect(c.snapshot()).toEqual({ state: State.IDLE, isReady: false, token: null });
+        expect(c.snapshot()).toEqual({ state: State.IDLE, previousState: State.IDLE, isReady: false });
+    });
+
+    it("remembers the previous phase across a transition", () => {
+        const c = make();
+        c.setPhase(State.CONNECTING);
+        c.setPhase(State.CONNECTED);
+        expect(c.state).toBe(State.CONNECTED);
+        expect(c.previousState).toBe(State.CONNECTING);
     });
 
     it("setPhase moves the phase and CONNECTED/CLI are ready", () => {
@@ -32,42 +40,6 @@ describe("phase + readiness", () => {
         expect(c.isReady).toBe(true);
         c.setPhase(State.CLI);
         expect(c.isReady).toBe(true);
-    });
-});
-
-describe("reconnect token lifecycle", () => {
-    it("is frozen-immutable and a second freeze is ignored", () => {
-        const c = make();
-        const first = c.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
-        expect(Object.isFrozen(first)).toBe(true);
-        expect(() => {
-            first.opaqueId = "x";
-        }).toThrow();
-        const second = c.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_9" });
-        expect(second).toBe(first);
-        expect(c.getReconnectToken().opaqueId).toBe("serial_0");
-    });
-
-    it("survives the reconnect-active phases, clears on settle", () => {
-        const c = make();
-        c.setPhase(State.REBOOTING);
-        c.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
-        c.setPhase(State.RECONNECTING);
-        c.setPhase(State.CONNECTING);
-        c.setPhase(State.HANDSHAKING);
-        expect(c.getReconnectToken()).not.toBeNull(); // preserved across the whole reconnect
-        c.setPhase(State.CONNECTED); // settle (success)
-        expect(c.getReconnectToken()).toBeNull();
-    });
-
-    it("clears the token on settling to IDLE / FLASHING / FAILED too", () => {
-        for (const settle of [State.IDLE, State.FLASHING, State.FAILED, State.DISCONNECTING]) {
-            const c = make();
-            c.setPhase(State.RECONNECTING);
-            c.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
-            c.setPhase(settle);
-            expect(c.getReconnectToken()).toBeNull();
-        }
     });
 });
 
@@ -83,20 +55,22 @@ describe("reboot / reconnect window", () => {
         expect(c.requestReboot()).toBe(false);
     });
 
-    it("reconnectStarted only advances from REBOOTING", () => {
+    it("isReconnecting is true only during REBOOTING / RECONNECTING", () => {
         const c = make();
-        c.setPhase(State.CONNECTED);
+        expect(c.isReconnecting).toBe(false);
+        c.setPhase(State.REBOOTING);
+        expect(c.isReconnecting).toBe(true);
         c.reconnectStarted();
-        expect(c.state).toBe(State.CONNECTED); // no-op outside REBOOTING
+        expect(c.isReconnecting).toBe(true);
+        c.concludeReboot(true);
+        expect(c.isReconnecting).toBe(false);
     });
 
-    it("concludeReboot settles to CONNECTED / IDLE and clears the token", () => {
+    it("concludeReboot settles to CONNECTED on success / IDLE on failure", () => {
         const c = make();
         c.requestReboot();
-        c.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
         c.concludeReboot(true);
         expect(c.state).toBe(State.CONNECTED);
-        expect(c.getReconnectToken()).toBeNull();
 
         c.requestReboot();
         c.concludeReboot(false);
@@ -153,14 +127,12 @@ describe("operational flags", () => {
 });
 
 describe("shutdown (pagehide)", () => {
-    it("collapses to IDLE and clears token + linkOpen from any phase", () => {
+    it("collapses to IDLE and clears linkOpen from any phase", () => {
         const c = make();
         c.requestReboot();
-        c.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
         c.setLinkOpen(true);
         c.shutdown();
         expect(c.state).toBe(State.IDLE);
-        expect(c.getReconnectToken()).toBeNull();
         expect(c.linkOpen).toBe(false);
     });
 });

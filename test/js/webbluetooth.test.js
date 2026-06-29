@@ -1,5 +1,4 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
-import { expectNullTokenWhenDisconnected, expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // WebBluetooth stable device identity (slice S1b-BLE).
@@ -199,17 +198,8 @@ describe("WebBluetooth stable device identity", () => {
 });
 
 // ---------------------------------------------------------------------------
-// S6c — WebBluetooth openCanceled abort contract + token.
+// S6c — WebBluetooth openCanceled abort contract.
 // ---------------------------------------------------------------------------
-
-async function connectStubbed(bt, path) {
-    // Stub the gatt/notification pipeline so connect() reaches the success path.
-    bt.gattConnect = vi.fn(async () => {});
-    bt.getServices = vi.fn(async () => {});
-    bt.getCharacteristics = vi.fn(async () => {});
-    bt.startNotifications = vi.fn(async () => {});
-    await bt.connect(path, { baudRate: 115200 });
-}
 
 describe("S6c WebBluetooth openCanceled abort contract", () => {
     it("disconnect() during an in-flight open signals openCanceled without tearing down", async () => {
@@ -251,29 +241,6 @@ describe("S6c WebBluetooth openCanceled abort contract", () => {
         // The connected branch must NOT have been taken.
         expect(bt.connected).toBe(false);
     });
-});
-
-describe("S6c WebBluetooth reconnect-token contract", () => {
-    it("returns null token when not connected", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-        expectNullTokenWhenDisconnected(new WebBluetooth());
-    });
-
-    it("freezes the bluetooth path, baud and transport when connected", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-        const bt = new WebBluetooth();
-        bt.devices = [bt.createPort(makeFakeDevice("dev-tok"))];
-        const path = bt.devices[0].path;
-        await connectStubbed(bt, path);
-
-        expectTokenShape(bt, {
-            transportType: "bluetooth",
-            opaqueId: path,
-            baud: 115200,
-            isVirtual: false,
-        });
-    });
-    // resolveReconnectTarget is the shared resolveByPath helper — see reconnect_token.test.js.
 });
 
 describe("(c) selectProtocol routes the stable bluetooth path to the BLE protocol", () => {

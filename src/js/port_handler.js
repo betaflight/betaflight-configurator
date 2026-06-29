@@ -290,16 +290,13 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     }
 
     // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
-    // While a reconnect is in progress (the connection state holds a frozen reconnect token),
-    // the rebooting device is only transiently absent from the lists — it will
-    // re-enumerate and re-select itself. Do NOT assign the virtual/manual fallback
-    // in that window, or it would hijack the selection mid-reboot and leave the
-    // configurator pointed at the wrong "device". The connection-state token is the SINGLE
-    // authority for "reconnect in progress + target" (was PortHandler's separate
-    // pinnedReconnectTarget string, set by both the reboot and CLI paths).
+    // While a reboot/reconnect is in progress the rebooting device is only
+    // transiently absent from the lists — it will re-enumerate and re-select
+    // itself. Do NOT assign the virtual/manual fallback in that window, or it
+    // would hijack the selection mid-reboot and leave the configurator pointed at
+    // the wrong "device".
     const expertMode = isExpertModeEnabled();
-    const reconnectToken = getConnectionState().getReconnectToken();
-    const reconnectInProgress = reconnectToken !== null;
+    const reconnectInProgress = getConnectionState().isReconnecting;
 
     if (!selectedPort && !reconnectInProgress && expertMode && this.showVirtualMode) {
         selectedPort = "virtual";
@@ -309,17 +306,11 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         selectedPort = "manual";
     }
 
-    // While reconnecting, keep the selection aimed at the rebooting device rather
-    // than dropping to "noselection": resolve the frozen token to its CURRENT path
-    // (handles a CDC path change), falling back to the token's original path while
-    // the device is transiently absent. Never virtual/manual.
+    // While reconnecting, keep the previously-selected device rather than dropping
+    // to "noselection": it re-enumerates with the same stable id, so the existing
+    // selection is still the right target. Never virtual/manual.
     if (!selectedPort && reconnectInProgress) {
-        const original =
-            typeof reconnectToken.opaqueId === "string" ? reconnectToken.opaqueId : reconnectToken.opaqueId?.path;
-        const target = serial.resolveReconnectTarget?.(reconnectToken) ?? original;
-        if (typeof target === "string") {
-            selectedPort = target;
-        }
+        selectedPort = this.portPicker.selectedPort;
     }
 
     // Return the default port if no other port was selected

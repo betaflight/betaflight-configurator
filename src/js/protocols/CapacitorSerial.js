@@ -1,5 +1,4 @@
 import { Capacitor } from "@capacitor/core";
-import { makeReconnectToken, resolveByPath } from "./reconnect_token";
 
 const logHead = "[CAPACITORSERIAL]";
 const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
@@ -290,26 +289,6 @@ class CapacitorSerial extends EventTarget {
 
     getConnectedPort() {
         return this.currentDevice;
-    }
-
-    /**
-     * S6b: reconnect token for the Capacitor USB device. Identity is the
-     * `capacitor-<deviceId>` key (VID:PID:deviceNum-derived). The deviceNum
-     * component can change across a re-enumeration — resolveReconnectTarget
-     * returns null if no current device matches, so the connection state can fall back to a
-     * re-pick rather than binding the wrong device (hardware-verified, S6/S2).
-     */
-    getReconnectToken() {
-        return makeReconnectToken({
-            connected: this.connected && !!this.connectionId,
-            transportType: "serial",
-            opaqueId: this.connectionId,
-            baud: this.bitrate,
-        });
-    }
-
-    resolveReconnectTarget(token) {
-        return resolveByPath(token, "serial", this.ports);
     }
 
     // Helper methods for hex string conversion

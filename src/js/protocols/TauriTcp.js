@@ -1,5 +1,4 @@
 import { invoke } from "@tauri-apps/api/core";
-import { makeReconnectToken, resolveStableAddress } from "./reconnect_token";
 import { listen } from "@tauri-apps/api/event";
 
 /**
@@ -40,22 +39,6 @@ class TauriTcp extends EventTarget {
 
     _portInfo(path) {
         return { path, displayName: "Betaflight TCP", vendorId: 0, productId: 0, port: 0 };
-    }
-
-    /**
-     * S6b: reconnect token for the TCP endpoint (identity = address; stable
-     * across an FC reboot).
-     */
-    getReconnectToken() {
-        return makeReconnectToken({
-            connected: this.connected && !!this.address,
-            transportType: "tcp",
-            opaqueId: this.address,
-        });
-    }
-
-    resolveReconnectTarget(token) {
-        return resolveStableAddress(token, "tcp");
     }
 
     createPort(url) {

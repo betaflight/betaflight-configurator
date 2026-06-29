@@ -1,5 +1,4 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
-import { makeReconnectToken, resolveByPath } from "./reconnect_token";
 import GUI from "../gui";
 
 const logHead = "[WEBSERIAL]";
@@ -117,25 +116,6 @@ class WebSerial extends EventTarget {
      */
     getNativePort(path) {
         return this.ports.find((device) => device.path === path)?.port;
-    }
-
-    /**
-     * S6a: reconnect token for the connected port. WebSerial's stable id
-     * (`serial_N`) is keyed off SerialPort object identity, so it survives an
-     * MCU-reboot re-enumeration and resolves with a direct path lookup — no
-     * OS path to chase (cf. TauriSerial, S6d).
-     */
-    getReconnectToken() {
-        return makeReconnectToken({
-            connected: this.connected && !!this.connectionId,
-            transportType: "serial",
-            opaqueId: this.connectionId,
-            baud: this.bitrate,
-        });
-    }
-
-    resolveReconnectTarget(token) {
-        return resolveByPath(token, "serial", this.ports);
     }
 
     /**

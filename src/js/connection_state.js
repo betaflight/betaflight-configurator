@@ -1,22 +1,15 @@
 /**
- * connection_state.js — small connection-status holder + reconnect token.
+ * connection_state.js — small connection-status holder.
  *
- * History note: this began as a transition-table finite state machine, but the
- * table ended up bypassed more than it was used (every reboot/teardown path set
- * the state directly) and was non-strict in production, so it enforced nothing
- * live. It has been demoted to what it actually is: a thin reactive status
- * holder. It owns:
- *   - the current lifecycle PHASE (a plain value, for the read-model/UI),
- *   - the FROZEN reconnect token (the single reconnect-target authority; captured
- *     at reboot/CLI-reconnect start, re-resolved per-transport, never re-derived
- *     from the live port picker mid-reconnect),
- *   - two operational flags serial_backend reads: linkOpen (a transport link is
- *     open) and intentionalDisconnect (the next close is user-initiated),
- *   - a subscribe()/snapshot() read-model that useConnectionStore mirrors.
+ * Tracks the current lifecycle PHASE plus the PREVIOUS phase, two operational
+ * flags serial_backend reads (linkOpen, intentionalDisconnect), and a
+ * subscribe()/snapshot() read-model that useConnectionStore mirrors.
  *
- * Behaviour is driven by these values + the LockManager (connect_lock); there is
- * no transition table doing validation — phase is set explicitly by the small
- * set of helpers below. Plain module: NO Vue/Pinia/serial_backend imports.
+ * There is no transition table and no reconnect token: a reconnect simply
+ * re-uses the previously-selected port (the device re-enumerates with the same
+ * stable id), and selectActivePort() consults isReconnecting to avoid hijacking
+ * the selection with the expert-mode virtual/manual fallback mid-reboot. Plain
+ * module: NO Vue/Pinia/serial_backend imports.
  */
 
 /** Lifecycle phases (read-model values). */
@@ -36,16 +29,13 @@ export const State = Object.freeze({
 /** Phases that count as "ready" (a usable connection from the user's view). */
 const READY_STATES = Object.freeze(new Set([State.CONNECTED, State.CLI]));
 
-/** Phases during which a reconnect is in flight and the frozen token is kept. */
-const RECONNECT_ACTIVE = Object.freeze(
-    new Set([State.CONNECTING, State.HANDSHAKING, State.REBOOTING, State.RECONNECTING]),
-);
+/** Phases during which a reboot/reconnect is in flight (suppress virtual/manual fallback). */
+const RECONNECTING_STATES = Object.freeze(new Set([State.REBOOTING, State.RECONNECTING]));
 
 export class ConnectionState {
     constructor() {
         this._state = State.IDLE;
-        // Frozen reconnect-target identity; kept only while a reconnect is in flight.
-        this._token = null;
+        this._prevState = State.IDLE;
         // The next close is user-initiated (so the disconnect handler doesn't run
         // the unexpected-disconnect teardown on top of the intentional one).
         this._intentionalDisconnect = false;
@@ -59,6 +49,10 @@ export class ConnectionState {
         return this._state;
     }
 
+    get previousState() {
+        return this._prevState;
+    }
+
     get isReady() {
         return READY_STATES.has(this._state);
     }
@@ -67,62 +61,38 @@ export class ConnectionState {
         return this._state === State.FLASHING;
     }
 
-    /**
-     * Set the lifecycle phase. The frozen reconnect token is kept only while a
-     * reconnect is in flight (CONNECTING/HANDSHAKING/REBOOTING/RECONNECTING) and
-     * cleared on settling into any other phase.
-     */
+    /** A reboot/reconnect is in flight — keep the current port selected, no fallback. */
+    get isReconnecting() {
+        return RECONNECTING_STATES.has(this._state);
+    }
+
+    /** Set the lifecycle phase, remembering the previous one. */
     setPhase(phase) {
-        const prev = this._state;
+        if (phase === this._state) {
+            return;
+        }
+        this._prevState = this._state;
         this._state = phase;
-        if (!RECONNECT_ACTIVE.has(phase)) {
-            this._token = null;
-        }
-        this._notify(prev);
-    }
-
-    // ---- Frozen reconnect token -------------------------------------------
-
-    /**
-     * Freeze the reconnect token. Immutable until cleared, so device enumeration
-     * mid-reconnect can never change the target. A second freeze is ignored.
-     * @param {object} token - { transportType, opaqueId, baud, isVirtual }
-     */
-    freezeReconnectToken(token) {
-        if (this._token) {
-            return this._token;
-        }
-        this._token = Object.freeze({ ...token });
-        return this._token;
-    }
-
-    getReconnectToken() {
-        return this._token;
-    }
-
-    clearReconnectToken() {
-        this._token = null;
+        this._notify(this._prevState);
     }
 
     // ---- Reboot / reconnect window ----------------------------------------
 
     /** Begin a reboot. Returns false if a reboot/reconnect is already in flight. */
     requestReboot() {
-        if (this._state === State.REBOOTING || this._state === State.RECONNECTING) {
+        if (this.isReconnecting) {
             return false;
         }
         this.setPhase(State.REBOOTING);
         return true;
     }
 
-    /** REBOOTING -> RECONNECTING (the reconnect wait has started). */
+    /** Enter the reconnect-wait phase (from a reboot, or a CLI save-and-reconnect). */
     reconnectStarted() {
-        if (this._state === State.REBOOTING) {
-            this.setPhase(State.RECONNECTING);
-        }
+        this.setPhase(State.RECONNECTING);
     }
 
-    /** Settle a reboot window: reconnected -> CONNECTED, else -> IDLE (token cleared either way). */
+    /** Settle a reboot/reconnect window: reconnected -> CONNECTED, else -> IDLE. */
     concludeReboot(reconnected) {
         this.setPhase(reconnected ? State.CONNECTED : State.IDLE);
     }
@@ -133,7 +103,7 @@ export class ConnectionState {
      * so REBOOTING/RECONNECTING are left untouched (their conclude settles them).
      */
     notifyClosed() {
-        if (this._state === State.REBOOTING || this._state === State.RECONNECTING || this._state === State.IDLE) {
+        if (this.isReconnecting || this._state === State.IDLE) {
             return;
         }
         this.setPhase(State.IDLE);
@@ -194,8 +164,6 @@ export class ConnectionState {
         this._linkOpen = false;
         if (this._state !== State.IDLE) {
             this.setPhase(State.IDLE);
-        } else {
-            this._token = null;
         }
     }
 
@@ -209,8 +177,8 @@ export class ConnectionState {
     snapshot() {
         return {
             state: this._state,
+            previousState: this._prevState,
             isReady: this.isReady,
-            token: this._token,
         };
     }
 

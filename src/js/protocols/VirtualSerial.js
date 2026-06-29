@@ -9,8 +9,6 @@ const VIRTUAL = "virtual";
  * connect/disconnect plus the reconnect token contract, so the connection state can treat it
  * like any other transport instead of special-casing "virtual" everywhere.
  */
-import { makeReconnectToken, resolveStableAddress } from "./reconnect_token";
-
 class VirtualSerial extends EventTarget {
     constructor() {
         super();
@@ -53,24 +51,6 @@ class VirtualSerial extends EventTarget {
         return new Promise((resolve) => {
             resolve([{ path: VIRTUAL }]);
         });
-    }
-
-    /**
-     * S6e: reconnect token for the virtual transport. `isVirtual` lets the connection state
-     * short-circuit transport resolution — there is nothing to re-enumerate.
-     */
-    getReconnectToken() {
-        return makeReconnectToken({
-            connected: this.connected,
-            transportType: VIRTUAL,
-            opaqueId: VIRTUAL,
-            baud: this.bitrate,
-            isVirtual: true,
-        });
-    }
-
-    resolveReconnectTarget(token) {
-        return resolveStableAddress(token, VIRTUAL);
     }
 }
 

@@ -5,7 +5,6 @@ import GUI from "../js/gui";
 import FC from "../js/fc";
 import { connectDisconnect } from "../js/serial_backend";
 import PortHandler from "../js/port_handler";
-import { serial } from "../js/serial";
 import { getConnectionState } from "../js/connection_state";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
@@ -69,36 +68,19 @@ export function readDumpAll() {
 }
 
 export function scheduleReconnect() {
-    // Capture the currently-selected real device synchronously, before the reboot/save can drop
-    // it off the port list. Freeze it as the connection state reconnect token (the single authority for
-    // "reconnect in progress + target") so selectActivePort() will not hijack the selection with
-    // the expert-mode virtual/manual fallback during the reconnect window. Only real paths.
+    // Enter the reconnect-in-progress window so selectActivePort() keeps the current
+    // device selected and does NOT hijack it with the expert-mode virtual/manual
+    // fallback while the FC is briefly off the port list. The device re-enumerates
+    // with the same stable id, so the existing selection stays the right target.
     const target = PortHandler.portPicker.selectedPort;
     if (target && target !== "noselection" && target !== "virtual") {
-        const token = serial.getReconnectToken?.() ?? {
-            transportType: "unknown",
-            opaqueId: target,
-            baud: 0,
-            isVirtual: false,
-        };
-        getConnectionState().freezeReconnectToken(token);
+        getConnectionState().reconnectStarted();
     }
 
     GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
     GUI.timeout_add(
         RECONNECT_TIMEOUT_NAME,
         () => {
-            // If selectActivePort drifted the selection while the device was transiently gone,
-            // restore it to the reconnect target (token resolved to its current path, or its
-            // original path while still absent) so we reconnect to the original device.
-            const token = getConnectionState().getReconnectToken();
-            if (token) {
-                const original = typeof token.opaqueId === "string" ? token.opaqueId : token.opaqueId?.path;
-                const aim = serial.resolveReconnectTarget?.(token) ?? original;
-                if (aim && PortHandler.portPicker.selectedPort !== aim) {
-                    PortHandler.portPicker.selectedPort = aim;
-                }
-            }
             connectDisconnect();
         },
         RECONNECT_DELAY_MS,
@@ -107,10 +89,11 @@ export function scheduleReconnect() {
 
 export function cancelScheduledReconnect() {
     GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
-    // Cancelling the reconnect ends the reconnect-in-progress window: clear the connection state token so
-    // selectActivePort() resumes its normal (incl. virtual/manual) fallback. Without this the
-    // token frozen in scheduleReconnect would linger and suppress that fallback until the next connect.
-    getConnectionState().clearReconnectToken();
+    // End the reconnect-in-progress window so selectActivePort() resumes its normal
+    // (incl. virtual/manual) fallback.
+    if (getConnectionState().isReconnecting) {
+        getConnectionState().concludeReboot(false);
+    }
 }
 
 export async function saveAndReconnect() {

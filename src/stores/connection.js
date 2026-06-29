@@ -53,8 +53,8 @@ export const useConnectionStore = defineStore("connection", () => {
         connectionSnapshot.value = snap;
     });
     const connectionPhase = computed(() => connectionSnapshot.value.state);
+    const previousPhase = computed(() => connectionSnapshot.value.previousState);
     const connectionReady = computed(() => connectionSnapshot.value.isReady);
-    const reconnectToken = computed(() => connectionSnapshot.value.token);
 
     // Live data refresh control
     const liveDataPaused = ref(false);
@@ -93,8 +93,8 @@ export const useConnectionStore = defineStore("connection", () => {
         selectedPort,
         // S7 connection-state read-model (read-only)
         connectionPhase,
+        previousPhase,
         connectionReady,
-        reconnectToken,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,

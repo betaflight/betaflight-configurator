@@ -46,11 +46,6 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
             connect: vi.fn(),
             disconnect: vi.fn(),
             forceClose: vi.fn(),
-            // S2/S6 reconnect token contract. Default to null so existing tests
-            // exercise the pinned-path fallback; the token-resolution test below
-            // overrides these.
-            getReconnectToken: vi.fn(() => null),
-            resolveReconnectTarget: vi.fn(() => null),
         },
         unmountVueTab: vi.fn(),
         switchTab: vi.fn(),
@@ -408,35 +403,28 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
-    it("aims the BLE/manual retry at the TOKEN-resolved path (falls back to pin without a token)", () => {
+    it("aims the BLE/manual retry at the same (previously-selected) port", () => {
         vi.useFakeTimers();
         __resetConnectionStateForTests();
         try {
-            // The BLE/manual reboot path runs rebootReconnect's retry loop, which is
-            // where the frozen token is resolved to the device's current path.
+            // The BLE/manual reboot path runs rebootReconnect's retry loop, which
+            // reconnects to the SAME device — the selection stays put across the
+            // reboot (no token, no path re-resolution; it re-enumerates with the
+            // same stable id).
             PortHandler.portPicker.selectedPort = "manual";
             PortHandler.portPicker.autoConnect = true;
             establishConnection();
 
-            serial.getReconnectToken.mockReturnValue({
-                transportType: "tcp",
-                opaqueId: "tcp://host:5761",
-                baud: 0,
-            });
-            serial.resolveReconnectTarget.mockReturnValue("tcp://host:5761");
             serial.connect.mockClear();
 
             reinitializeConnection();
             vi.advanceTimersByTime(1500); // flush -> disconnectForReboot
             vi.advanceTimersByTime(1000); // first retry tick
 
-            // The retry resolved the frozen token and aimed at it before reconnecting.
-            expect(serial.resolveReconnectTarget).toHaveBeenCalled();
-            expect(PortHandler.portPicker.selectedPort).toBe("tcp://host:5761");
+            // The retry reconnects to the still-selected device.
+            expect(PortHandler.portPicker.selectedPort).toBe("manual");
             expect(serial.connect).toHaveBeenCalled();
         } finally {
-            serial.getReconnectToken.mockReturnValue(null);
-            serial.resolveReconnectTarget.mockReturnValue(null);
             __resetConnectionStateForTests();
             vi.useRealTimers();
         }

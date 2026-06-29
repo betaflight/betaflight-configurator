@@ -1,5 +1,3 @@
-import { makeReconnectToken, resolveStableAddress } from "./reconnect_token";
-
 class Websocket extends EventTarget {
     constructor() {
         super();
@@ -93,23 +91,6 @@ class Websocket extends EventTarget {
             let uint8Chunk = await socket.blob2uint(msg.data);
             socket.dispatchEvent(new CustomEvent("receive", { detail: uint8Chunk }));
         };
-    }
-
-    /**
-     * S6b: reconnect token for the TCP/WebSocket endpoint. Identity is the
-     * address — a TCP endpoint does not change across an FC reboot, so
-     * resolveReconnectTarget just returns it unchanged.
-     */
-    getReconnectToken() {
-        return makeReconnectToken({
-            connected: this.connected && !!this.address,
-            transportType: "tcp",
-            opaqueId: this.address,
-        });
-    }
-
-    resolveReconnectTarget(token) {
-        return resolveStableAddress(token, "tcp");
     }
 
     async disconnect() {

@@ -1,5 +1,4 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
-import { expectNullTokenWhenDisconnected, expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // WebSerial stable device identity (slice S1b).
@@ -171,31 +170,6 @@ describe("WebSerial stable device identity", () => {
     });
 });
 
-describe("S6a WebSerial reconnect-token contract", () => {
-    it("getReconnectToken returns null when not connected", async () => {
-        const WebSerial = await loadWebSerial();
-        expectNullTokenWhenDisconnected(new WebSerial());
-    });
-
-    it("getReconnectToken freezes the stable id, baud and transport when connected", async () => {
-        const WebSerial = await loadWebSerial();
-        const ws = new WebSerial();
-        ws.ports = [ws.createPort(makeFakePort())];
-        const path = ws.ports[0].path;
-
-        await ws.connect(path, { baudRate: 230400 });
-        expectTokenShape(ws, {
-            transportType: "serial",
-            opaqueId: path,
-            baud: 230400,
-            isVirtual: false,
-        });
-
-        await ws.disconnect();
-    });
-    // resolveReconnectTarget is the shared resolveByPath helper — see reconnect_token.test.js.
-});
-
 describe("(d) selectProtocol routes the stable serial id to WebSerial", () => {
     // Exercises the REAL serial.selectProtocol on the exported singleton, proving
     // "serial_N" falls through to the WebSerial protocol (not virtual/tcp/bt).
@@ -220,20 +194,5 @@ describe("(d) selectProtocol routes the stable serial id to WebSerial", () => {
 
         // The omitted-in-copy branch: a function argument must select VirtualSerial.
         expect(serial.selectProtocol(() => {}).constructor.name).toBe("VirtualSerial");
-    });
-});
-
-describe("S6a serial.js delegates the token contract", () => {
-    it("delegates resolveReconnectTarget to the transport named by the token", async () => {
-        const { serial } = await import("../../src/js/serial.js");
-        const ws = serial._protocols.find((p) => p.name === "serial").instance;
-
-        const port = makeFakePort();
-        ws.ports = [ws.createPort(port)];
-        const path = ws.ports[0].path;
-
-        expect(serial.resolveReconnectTarget({ transportType: "serial", opaqueId: path })).toBe(path);
-        expect(serial.resolveReconnectTarget({ transportType: "serial", opaqueId: "serial_999" })).toBeNull();
-        expect(serial.resolveReconnectTarget(null)).toBeNull();
     });
 });

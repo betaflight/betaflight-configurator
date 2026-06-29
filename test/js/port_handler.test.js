@@ -77,10 +77,13 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
 import PortHandler from "../../src/js/port_handler";
 import { getConnectionState, __resetConnectionStateForTests } from "../../src/js/connection_state.js";
 
-// "Reconnect in progress" is now the connection state holding a frozen reconnect token (was
-// PortHandler.pinnedReconnectTarget). Helper to simulate it with a path-only token.
+// "Reconnect in progress" is now the connection state being in REBOOTING/RECONNECTING
+// while the previously-selected port stays put (was a frozen reconnect token, and
+// before that PortHandler.pinnedReconnectTarget). Helper to simulate it: select the
+// device, then enter the reconnect window.
 function pinReconnectTarget(path) {
-    getConnectionState().freezeReconnectToken({ transportType: "unknown", opaqueId: path, baud: 0, isVirtual: false });
+    PortHandler.portPicker.selectedPort = path;
+    getConnectionState().requestReboot();
 }
 
 function resetPortHandler() {

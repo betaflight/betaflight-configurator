@@ -54,11 +54,11 @@ describe("S7 connection store connection-state read-model", () => {
     it("exposes the initial snapshot", () => {
         const store = useConnectionStore();
         expect(store.connectionPhase).toBe(State.IDLE);
+        expect(store.previousPhase).toBe(State.IDLE);
         expect(store.connectionReady).toBe(false);
-        expect(store.reconnectToken).toBeNull();
     });
 
-    it("reactively reflects phase changes", () => {
+    it("reactively reflects phase changes and the previous phase", () => {
         const store = useConnectionStore();
         const connection = getConnectionState();
 
@@ -67,20 +67,11 @@ describe("S7 connection store connection-state read-model", () => {
 
         connection.setPhase(State.CONNECTED);
         expect(store.connectionPhase).toBe(State.CONNECTED);
+        expect(store.previousPhase).toBe(State.CONNECTING);
         expect(store.connectionReady).toBe(true);
 
         connection.setPhase(State.IDLE);
         expect(store.connectionPhase).toBe(State.IDLE);
         expect(store.connectionReady).toBe(false);
-    });
-
-    it("reflects the frozen reconnect token", () => {
-        const store = useConnectionStore();
-        const connection = getConnectionState();
-        connection.requestReboot();
-        connection.freezeReconnectToken({ transportType: "serial", opaqueId: "serial_0" });
-        // Trigger a notify so the snapshot ref updates.
-        connection.reconnectStarted();
-        expect(store.reconnectToken).toMatchObject({ transportType: "serial", opaqueId: "serial_0" });
     });
 });

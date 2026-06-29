@@ -1,5 +1,4 @@
 import { invoke } from "@tauri-apps/api/core";
-import { makeReconnectToken } from "./reconnect_token";
 import { serialDevices, vendorIdNames } from "./devices";
 import GUI from "../gui";
 
@@ -106,69 +105,6 @@ class TauriSerial extends EventTarget {
         if (this.connected) {
             this.disconnect();
         }
-    }
-
-    /**
-     * S6d / S1b-Tauri: reconnect token for a Tauri serial device. Unlike other
-     * transports the OS path is NOT stable — a CDC device commonly re-enumerates
-     * to a different path across a reboot (/dev/ttyACM0 -> ACM1, COM3 -> COM5).
-     * So the token freezes the device IDENTITY ({path, vid, pid, serialNumber})
-     * and resolveReconnectTarget re-derives the CURRENT path from the live port
-     * list rather than trusting the old path.
-     */
-    getReconnectToken() {
-        return makeReconnectToken({
-            connected: this.connected && !!this.connectionId,
-            transportType: "serial",
-            // Unlike other transports the opaqueId is the device IDENTITY, not a
-            // path — a CDC device re-enumerates to a new OS path across a reboot,
-            // so resolveReconnectTarget() below re-derives the current path from it.
-            opaqueId: {
-                path: this.connectionId,
-                vendorId: this.connectionInfo?.vendorId,
-                productId: this.connectionInfo?.productId,
-                serialNumber: this.connectionInfo?.serialNumber,
-            },
-            baud: this.bitrate,
-        });
-    }
-
-    /**
-     * Re-resolve a Tauri token to the CURRENT path, tolerating a CDC path change:
-     *   1. exact path still present (no path change) -> use it;
-     *   2. else a UNIQUE serial_number match (reliable across re-enumeration);
-     *   3. else a UNIQUE vid/pid match;
-     *   4. else null -> ambiguous (two identical FCs / empty serial_number), so
-     *      the connection state surfaces a re-pick rather than silently binding the wrong one
-     *      (plan MINOR limitation). Reads the live port list, which the 1s device
-     *      monitor keeps fresh after a re-enumeration.
-     */
-    resolveReconnectTarget(token) {
-        if (!token || token.transportType !== "serial") {
-            return null;
-        }
-        const id = token.opaqueId;
-        if (!id) {
-            return null;
-        }
-        const ports = this.ports;
-
-        if (id.path && ports.some((p) => p.path === id.path)) {
-            return id.path;
-        }
-        if (id.serialNumber) {
-            const matches = ports.filter((p) => p.serialNumber && p.serialNumber === id.serialNumber);
-            if (matches.length === 1) {
-                return matches[0].path;
-            }
-        }
-        if (id.vendorId != null && id.productId != null) {
-            const matches = ports.filter((p) => p.vendorId === id.vendorId && p.productId === id.productId);
-            if (matches.length === 1) {
-                return matches[0].path;
-            }
-        }
-        return null;
     }
 
     startDeviceMonitoring() {

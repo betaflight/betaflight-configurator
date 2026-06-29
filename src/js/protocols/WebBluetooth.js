@@ -1,5 +1,4 @@
 import { i18n } from "../localization";
-import { makeReconnectToken, resolveByPath } from "./reconnect_token";
 import { gui_log } from "../gui_log";
 import { bluetoothDevices } from "./devices";
 
@@ -85,24 +84,6 @@ class WebBluetooth extends EventTarget {
 
     getConnectedPort() {
         return this.device;
-    }
-
-    /**
-     * S6c: reconnect token for the BLE device. Identity is the stable
-     * `bluetooth_<device.id>` path (device.id is the browser's persistent
-     * per-device id, so it survives an FC-reboot device-list rebuild).
-     */
-    getReconnectToken() {
-        return makeReconnectToken({
-            connected: this.connected && !!this.connectionId,
-            transportType: "bluetooth",
-            opaqueId: this.connectionId,
-            baud: this.bitrate,
-        });
-    }
-
-    resolveReconnectTarget(token) {
-        return resolveByPath(token, "bluetooth", this.devices);
     }
 
     // Derive a stable path from the Web Bluetooth device.id. That id is the

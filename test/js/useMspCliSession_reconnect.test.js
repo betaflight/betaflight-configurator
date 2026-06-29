@@ -117,15 +117,15 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         expect(connectDisconnect).not.toHaveBeenCalled();
     });
 
-    it("cancelScheduledReconnect clears the connection state reconnect token (no sticky reconnect)", () => {
+    it("cancelScheduledReconnect leaves the reconnect-in-progress window (no sticky reconnect)", () => {
         PortHandler.portPicker.selectedPort = "serial_0";
 
-        // scheduleReconnect freezes the currently-selected real device as the connection state token...
+        // scheduleReconnect enters the reconnect window so selectActivePort keeps the device...
         scheduleReconnect();
-        expect(getConnectionState().getReconnectToken()?.opaqueId).toBe("serial_0");
+        expect(getConnectionState().isReconnecting).toBe(true);
 
-        // ...and cancelling must clear it so selectActivePort's fallback resumes.
+        // ...and cancelling must leave it so selectActivePort's virtual/manual fallback resumes.
         cancelScheduledReconnect();
-        expect(getConnectionState().getReconnectToken()).toBeNull();
+        expect(getConnectionState().isReconnecting).toBe(false);
     });
 });

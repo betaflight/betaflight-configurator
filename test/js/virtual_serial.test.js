@@ -1,5 +1,4 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { expectNullTokenWhenDisconnected, expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // S6e — VirtualSerial is an EventTarget that emits synthetic connect/disconnect
@@ -48,24 +47,6 @@ describe("S6e VirtualSerial EventTarget", () => {
     });
 });
 
-describe("S6e VirtualSerial reconnect-token contract", () => {
-    it("returns null token when not connected", async () => {
-        expectNullTokenWhenDisconnected(await newVirtual());
-    });
-
-    it("returns an isVirtual token when connected", async () => {
-        const vs = await newVirtual();
-        vs.connect("virtual", {});
-        expectTokenShape(vs, {
-            transportType: "virtual",
-            opaqueId: "virtual",
-            baud: 115200,
-            isVirtual: true,
-        });
-    });
-    // resolveReconnectTarget is the shared resolveStableAddress helper — see reconnect_token.test.js.
-});
-
 describe("S6e serial.js now forwards virtual transport events", () => {
     it("forwards connect from the virtual protocol with protocolType, and still routes 'virtual'", async () => {
         const { serial } = await import("../../src/js/serial.js");
@@ -79,6 +60,5 @@ describe("S6e serial.js now forwards virtual transport events", () => {
 
         expect(detail).toEqual({ connectionId: "virtual", protocolType: "virtual" });
         expect(serial.selectProtocol("virtual").constructor.name).toBe("VirtualSerial");
-        expect(serial.resolveReconnectTarget({ transportType: "virtual", opaqueId: "virtual" })).toBe("virtual");
     });
 });

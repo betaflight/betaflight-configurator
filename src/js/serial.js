@@ -225,31 +225,6 @@ class Serial extends EventTarget {
     }
 
     /**
-     * S6: capture a frozen reconnect token for the active connection, delegating
-     * to the current transport. The token is transport-resolvable later via
-     * resolveReconnectTarget() without reading the live port picker.
-     * @returns {object|null} the token, or null if no transport/connection
-     */
-    getReconnectToken() {
-        return this._protocol?.getReconnectToken?.() ?? null;
-    }
-
-    /**
-     * S6: re-resolve a previously-captured token to the current device path on
-     * its originating transport, or null if the device is no longer present.
-     * Routes by `token.transportType` so the connection state never branches per transport.
-     * @param {object} token - a token produced by getReconnectToken()
-     * @returns {string|null}
-     */
-    resolveReconnectTarget(token) {
-        if (!token) {
-            return null;
-        }
-        const targetProtocol = this._protocols.find((p) => p.name === token.transportType)?.instance;
-        return targetProtocol?.resolveReconnectTarget?.(token) ?? null;
-    }
-
-    /**
      * Get the currently connected port
      */
     getConnectedPort() {
