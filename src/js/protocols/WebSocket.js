@@ -1,3 +1,5 @@
+import { makeReconnectToken, resolveStableAddress } from "./reconnect_token";
+
 class Websocket extends EventTarget {
     constructor() {
         super();
@@ -99,17 +101,15 @@ class Websocket extends EventTarget {
      * resolveReconnectTarget just returns it unchanged.
      */
     getReconnectToken() {
-        if (!this.connected || !this.address) {
-            return null;
-        }
-        return { transportType: "tcp", opaqueId: this.address, baud: 0, isVirtual: false };
+        return makeReconnectToken({
+            connected: this.connected && !!this.address,
+            transportType: "tcp",
+            opaqueId: this.address,
+        });
     }
 
     resolveReconnectTarget(token) {
-        if (!token || token.transportType !== "tcp") {
-            return null;
-        }
-        return token.opaqueId ?? null;
+        return resolveStableAddress(token, "tcp");
     }
 
     async disconnect() {

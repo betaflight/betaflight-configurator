@@ -1,4 +1,5 @@
 import { Capacitor } from "@capacitor/core";
+import { makeReconnectToken, resolveStableAddress } from "./reconnect_token";
 
 const BetaflightTcp = Capacitor?.Plugins?.BetaflightTcp;
 
@@ -90,17 +91,15 @@ class CapacitorTcp extends EventTarget {
      * across an FC reboot).
      */
     getReconnectToken() {
-        if (!this.connected || !this.address) {
-            return null;
-        }
-        return { transportType: "tcp", opaqueId: this.address, baud: 0, isVirtual: false };
+        return makeReconnectToken({
+            connected: this.connected && !!this.address,
+            transportType: "tcp",
+            opaqueId: this.address,
+        });
     }
 
     resolveReconnectTarget(token) {
-        if (!token || token.transportType !== "tcp") {
-            return null;
-        }
-        return token.opaqueId ?? null;
+        return resolveStableAddress(token, "tcp");
     }
 
     getConnectedPort() {

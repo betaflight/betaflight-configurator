@@ -1,4 +1,5 @@
 import { Capacitor } from "@capacitor/core";
+import { makeReconnectToken, resolveByPath } from "./reconnect_token";
 
 const logHead = "[CAPACITORSERIAL]";
 const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
@@ -299,18 +300,16 @@ class CapacitorSerial extends EventTarget {
      * re-pick rather than binding the wrong device (hardware-verified, S6/S2).
      */
     getReconnectToken() {
-        if (!this.connected || !this.connectionId) {
-            return null;
-        }
-        return { transportType: "serial", opaqueId: this.connectionId, baud: this.bitrate, isVirtual: false };
+        return makeReconnectToken({
+            connected: this.connected && !!this.connectionId,
+            transportType: "serial",
+            opaqueId: this.connectionId,
+            baud: this.bitrate,
+        });
     }
 
     resolveReconnectTarget(token) {
-        if (!token || token.transportType !== "serial") {
-            return null;
-        }
-        const match = this.ports.find((port) => port.path === token.opaqueId);
-        return match ? match.path : null;
+        return resolveByPath(token, "serial", this.ports);
     }
 
     // Helper methods for hex string conversion

@@ -1,4 +1,5 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
+import { makeReconnectToken, resolveByPath } from "./reconnect_token";
 import GUI from "../gui";
 
 const logHead = "[WEBSERIAL]";
@@ -119,43 +120,22 @@ class WebSerial extends EventTarget {
     }
 
     /**
-     * S6a: produce a frozen reconnect token for the currently-connected port.
-     * For WebSerial the device identity is the live SerialPort object, captured
-     * here as its stable path id (`serial_N`). Because the browser reuses the
-     * same SerialPort object across an MCU-reboot re-enumeration, that id stays
-     * valid through the reboot — no OS path to chase (cf. Tauri, S6d).
-     * @returns {{transportType:string,opaqueId:string,baud:number,isVirtual:boolean}|null}
+     * S6a: reconnect token for the connected port. WebSerial's stable id
+     * (`serial_N`) is keyed off SerialPort object identity, so it survives an
+     * MCU-reboot re-enumeration and resolves with a direct path lookup — no
+     * OS path to chase (cf. TauriSerial, S6d).
      */
     getReconnectToken() {
-        if (!this.connected || !this.connectionId) {
-            return null;
-        }
-        return {
+        return makeReconnectToken({
+            connected: this.connected && !!this.connectionId,
             transportType: "serial",
-            opaqueId: this.connectionId, // == the stable `serial_N` path id
+            opaqueId: this.connectionId,
             baud: this.bitrate,
-            isVirtual: false,
-        };
+        });
     }
 
-    /**
-     * S6a: re-resolve a reconnect token to the CURRENT path for that device, or
-     * null if the device is no longer present. The connection-state calls this during a
-     * reconnect instead of reading the live port picker, so enumeration changes
-     * mid-reboot cannot redirect the reconnect to a different device.
-     *
-     * WebSerial's stable id is keyed off SerialPort object identity, so the
-     * token's `opaqueId` still names the same physical port after re-enumeration
-     * — resolution is a direct lookup with no VID/PID matching needed.
-     * @param {{transportType:string,opaqueId:string}} token
-     * @returns {string|null} the current path, or null if not resolvable
-     */
     resolveReconnectTarget(token) {
-        if (!token || token.transportType !== "serial") {
-            return null;
-        }
-        const match = this.ports.find((device) => device.path === token.opaqueId);
-        return match ? match.path : null;
+        return resolveByPath(token, "serial", this.ports);
     }
 
     /**

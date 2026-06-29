@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { makeReconnectToken } from "./reconnect_token";
 import { serialDevices, vendorIdNames } from "./devices";
 import GUI from "../gui";
 
@@ -116,11 +117,12 @@ class TauriSerial extends EventTarget {
      * list rather than trusting the old path.
      */
     getReconnectToken() {
-        if (!this.connected || !this.connectionId) {
-            return null;
-        }
-        return {
+        return makeReconnectToken({
+            connected: this.connected && !!this.connectionId,
             transportType: "serial",
+            // Unlike other transports the opaqueId is the device IDENTITY, not a
+            // path — a CDC device re-enumerates to a new OS path across a reboot,
+            // so resolveReconnectTarget() below re-derives the current path from it.
             opaqueId: {
                 path: this.connectionId,
                 vendorId: this.connectionInfo?.vendorId,
@@ -128,8 +130,7 @@ class TauriSerial extends EventTarget {
                 serialNumber: this.connectionInfo?.serialNumber,
             },
             baud: this.bitrate,
-            isVirtual: false,
-        };
+        });
     }
 
     /**

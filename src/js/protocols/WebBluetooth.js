@@ -1,4 +1,5 @@
 import { i18n } from "../localization";
+import { makeReconnectToken, resolveByPath } from "./reconnect_token";
 import { gui_log } from "../gui_log";
 import { bluetoothDevices } from "./devices";
 
@@ -92,18 +93,16 @@ class WebBluetooth extends EventTarget {
      * per-device id, so it survives an FC-reboot device-list rebuild).
      */
     getReconnectToken() {
-        if (!this.connected || !this.connectionId) {
-            return null;
-        }
-        return { transportType: "bluetooth", opaqueId: this.connectionId, baud: this.bitrate, isVirtual: false };
+        return makeReconnectToken({
+            connected: this.connected && !!this.connectionId,
+            transportType: "bluetooth",
+            opaqueId: this.connectionId,
+            baud: this.bitrate,
+        });
     }
 
     resolveReconnectTarget(token) {
-        if (!token || token.transportType !== "bluetooth") {
-            return null;
-        }
-        const match = this.devices.find((device) => device.path === token.opaqueId);
-        return match ? match.path : null;
+        return resolveByPath(token, "bluetooth", this.devices);
     }
 
     // Derive a stable path from the Web Bluetooth device.id. That id is the
