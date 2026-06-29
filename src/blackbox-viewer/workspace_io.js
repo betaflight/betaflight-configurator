@@ -1,4 +1,4 @@
-import { triggerDownload } from "./tools.js";
+import FileSystem from "../js/FileSystem";
 
 export function upgradeWorkspaceFormat(oldFormat) {
     if (!oldFormat.graphConfig) {
@@ -26,17 +26,34 @@ export function upgradeWorkspaceFormat(oldFormat) {
     return newFormat;
 }
 
-export function saveWorkspaces(workspaceGraphConfigs, file) {
-    if (!workspaceGraphConfigs) {
-        return null;
-    }
-    if (!file) {
-        file = "workspaces.json";
+export async function saveWorkspaces(workspaceGraphConfigs, file) {
+    if (!workspaceGraphConfigs || typeof workspaceGraphConfigs !== "object") {
+        return;
     }
 
-    if (typeof workspaceGraphConfigs === "object") {
-        const data = JSON.stringify(workspaceGraphConfigs, undefined, 4);
-        triggerDownload(new Blob([data], { type: "text/json" }), file);
+    // Open the save dialog first to keep the export button's user gesture, then
+    // write through the shared FileSystem wrapper. The blackbox-viewer subsystem
+    // is English-only for now, so the description is a plain string.
+    let handle;
+    try {
+        handle = await FileSystem.pickSaveFile(file || "workspaces.json", "Workspaces file", ".json");
+    } catch (error) {
+        if (error?.name === "AbortError") {
+            return; // user cancelled the dialog
+        }
+        console.error("Failed to open save dialog for workspaces export:", error);
+        return;
+    }
+
+    if (!handle) {
+        return;
+    }
+
+    const data = JSON.stringify(workspaceGraphConfigs, undefined, 4);
+    try {
+        await FileSystem.writeFile(handle, data);
+    } catch (error) {
+        console.error("Failed to write workspaces file:", error);
     }
 }
 
