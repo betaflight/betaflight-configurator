@@ -51,6 +51,9 @@ describe("serial.js now forwards virtual transport events", () => {
     it("forwards connect from the virtual protocol with protocolType, and still routes 'virtual'", async () => {
         const { serial } = await import("../../src/js/serial.js");
         const vs = serial._protocols.find((p) => p.name === "virtual").instance;
+        // Lifecycle events are only forwarded from the active transport, so mark
+        // virtual active (as serial.connect() does before the protocol emits connect).
+        serial._protocol = vs;
 
         let detail = null;
         const handler = (e) => (detail = e.detail);

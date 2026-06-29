@@ -60,15 +60,28 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
+        // Device-enumeration events come from EVERY transport — port_handler builds
+        // the combined device list from all of them.
+        const deviceEvents = ["addedDevice", "removedDevice"];
+        // Connection-lifecycle events must come ONLY from the active transport. A
+        // transport we are no longer connected through can still emit a late event
+        // (e.g. a BLE link's gattserverdisconnected firing after the user switched
+        // to a serial FC); forwarding it would run onClosed/read_serial against the
+        // wrong connection and corrupt the live one.
+        const lifecycleEvents = ["connect", "disconnect", "receive"];
 
         for (const { name, instance } of this._protocols) {
             if (typeof instance?.addEventListener !== "function") {
                 continue;
             }
 
-            for (const eventType of events) {
+            for (const eventType of [...deviceEvents, ...lifecycleEvents]) {
                 instance.addEventListener(eventType, (event) => {
+                    // Drop lifecycle events arriving from a non-active transport.
+                    if (lifecycleEvents.includes(eventType) && instance !== this._protocol) {
+                        return;
+                    }
+
                     // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
                     // Other events carry an object detail merged with the protocol tag.
                     const newDetail =
