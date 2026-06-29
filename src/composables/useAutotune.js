@@ -1,4 +1,6 @@
 import { useAutotuneStore } from "@/stores/autotune";
+import FileSystem from "@/js/FileSystem";
+import { i18n } from "@/js/localization";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -33,7 +35,8 @@ export function useAutotune() {
 
         try {
             store.progressMessage = `Reading ${file.name}...`;
-            const data = new Uint8Array(await file.arrayBuffer());
+            const blob = await FileSystem.readFileAsBlob(file);
+            const data = new Uint8Array(await blob.arrayBuffer());
 
             store.analysisState = "analyzing";
             store.progressMessage = "Finding log boundaries...";
@@ -62,7 +65,11 @@ export function useAutotune() {
 
 async function pickFileOrSetError(store) {
     try {
-        const file = await pickFile();
+        const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "BBL" }), [
+            ".bbl",
+            ".bfl",
+            ".txt",
+        ]);
         if (!file) {
             store.analysisState = "idle";
             store.progressMessage = "";
@@ -205,40 +212,4 @@ async function applyGains(proposed) {
         throw new Error("Recommended autotune sliders did not pass firmware validation.");
     }
     await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-}
-
-async function pickFile() {
-    if (globalThis.showOpenFilePicker) {
-        const [handle] = await globalThis.showOpenFilePicker({
-            types: [
-                {
-                    description: "Blackbox log files",
-                    accept: { "application/octet-stream": [".bbl", ".BBL", ".txt", ".TXT"] },
-                },
-            ],
-            multiple: false,
-        });
-        return handle.getFile();
-    }
-
-    return new Promise((resolve, reject) => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = ".bbl,.BBL,.txt,.TXT";
-        input.style.display = "none";
-        document.body.appendChild(input);
-
-        input.addEventListener("change", () => {
-            const file = input.files?.[0] ?? null;
-            input.remove();
-            resolve(file);
-        });
-
-        input.addEventListener("cancel", () => {
-            input.remove();
-            reject(new Error("cancelled"));
-        });
-
-        input.click();
-    });
 }

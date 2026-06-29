@@ -34,7 +34,14 @@
                         :ui="{ base: 'bg-neutral-800 text-white border-neutral-600' }"
                     />
                 </UDropdownMenu>
-                <input ref="importInput" type="file" accept=".csv" class="hidden" multiple @change="onImportChange" />
+                <input
+                    ref="importInput"
+                    type="file"
+                    accept=".csv,.CSV"
+                    class="hidden"
+                    multiple
+                    @change="onImportChange"
+                />
             </div>
 
             <div id="spectrumButtons" class="spectrum-buttons" :style="buttonsStyle">
