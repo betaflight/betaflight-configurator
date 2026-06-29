@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { expectTokenShape } from "./helpers/linkEventContract.js";
+import { expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // S1b-Tauri — TauriSerial reconnect token + path-change re-resolution.

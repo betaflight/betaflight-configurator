@@ -1,9 +1,5 @@
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
-import {
-    expectNullTokenWhenDisconnected,
-    expectTokenShape,
-    expectResolveContract,
-} from "./helpers/linkEventContract.js";
+import { expectNullTokenWhenDisconnected, expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // S6b — Websocket (web TCP / SITL) LinkEvent adapter + reconnect-token contract.
@@ -58,13 +54,5 @@ describe("S6b Websocket reconnect-token contract", () => {
             isVirtual: false,
         });
     });
-
-    it("resolveReconnectTarget returns the address for a tcp token, null otherwise", async () => {
-        const ws = await newWebsocket();
-        expectResolveContract(ws, {
-            token: { transportType: "tcp", opaqueId: "ws://h:1" },
-            resolvesTo: "ws://h:1",
-            wrongTransportToken: { transportType: "serial", opaqueId: "ws://h:1" },
-        });
-    });
+    // resolveReconnectTarget is the shared resolveStableAddress helper — see reconnect_token.test.js.
 });

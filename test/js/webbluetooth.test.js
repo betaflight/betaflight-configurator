@@ -1,9 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
-import {
-    expectNullTokenWhenDisconnected,
-    expectTokenShape,
-    expectResolveContract,
-} from "./helpers/linkEventContract.js";
+import { expectNullTokenWhenDisconnected, expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // WebBluetooth stable device identity (slice S1b-BLE).
@@ -277,21 +273,7 @@ describe("S6c WebBluetooth reconnect-token contract", () => {
             isVirtual: false,
         });
     });
-
-    it("resolveReconnectTarget matches a present device, null when gone or wrong transport", async () => {
-        const WebBluetooth = await loadWebBluetooth();
-        const bt = new WebBluetooth();
-        bt.devices = [bt.createPort(makeFakeDevice("dev-res"))];
-        const path = bt.devices[0].path;
-
-        expectResolveContract(bt, {
-            token: { transportType: "bluetooth", opaqueId: path },
-            resolvesTo: path,
-            unknownToken: { transportType: "bluetooth", opaqueId: "bluetooth_gone" },
-            wrongTransportToken: { transportType: "serial", opaqueId: path },
-            expectNullToken: false,
-        });
-    });
+    // resolveReconnectTarget is the shared resolveByPath helper — see reconnect_token.test.js.
 });
 
 describe("(c) selectProtocol routes the stable bluetooth path to the BLE protocol", () => {

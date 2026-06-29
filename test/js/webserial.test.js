@@ -1,9 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
-import {
-    expectNullTokenWhenDisconnected,
-    expectTokenShape,
-    expectResolveContract,
-} from "./helpers/linkEventContract.js";
+import { expectNullTokenWhenDisconnected, expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // WebSerial stable device identity (slice S1b).
@@ -197,25 +193,7 @@ describe("S6a WebSerial reconnect-token contract", () => {
 
         await ws.disconnect();
     });
-
-    it("resolveReconnectTarget returns the current path for a known token, null for unknown id / wrong transport", async () => {
-        const WebSerial = await loadWebSerial();
-        const ws = new WebSerial();
-        const port = makeFakePort();
-        ws.ports = [ws.createPort(port)];
-        const path = ws.ports[0].path;
-
-        // Simulate a re-enumeration: the browser hands back the SAME object, so
-        // the stable id is preserved and the token still resolves.
-        ws.ports = [ws.createPort(port)];
-
-        expectResolveContract(ws, {
-            token: { transportType: "serial", opaqueId: path },
-            resolvesTo: path,
-            unknownToken: { transportType: "serial", opaqueId: "serial_999" },
-            wrongTransportToken: { transportType: "bluetooth", opaqueId: path },
-        });
-    });
+    // resolveReconnectTarget is the shared resolveByPath helper — see reconnect_token.test.js.
 });
 
 describe("(d) selectProtocol routes the stable serial id to WebSerial", () => {

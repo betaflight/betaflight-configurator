@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
-import { expectTokenShape, expectResolveContract } from "./helpers/linkEventContract.js";
+import { expectTokenShape } from "./helpers/tokenContract.js";
 
 // S6b — TauriTcp reconnect token. The Tauri core `invoke`
 // and event `listen` APIs are mocked; listen captures the tcp-data / tcp-closed
@@ -31,12 +31,11 @@ async function newTcp() {
 }
 
 describe("S6b TauriTcp reconnect token", () => {
-    it("freezes the canonical tcp:// address as a tcp token and resolves it back", async () => {
+    it("freezes the canonical tcp:// address as a tcp token", async () => {
         const tcp = await newTcp();
         await tcp.connect("tcp://localhost:5761");
 
-        const token = { transportType: "tcp", opaqueId: "tcp://localhost:5761", baud: 0, isVirtual: false };
-        expectTokenShape(tcp, token);
-        expectResolveContract(tcp, { token, resolvesTo: "tcp://localhost:5761" });
+        // resolveReconnectTarget is the shared resolveStableAddress helper — see reconnect_token.test.js.
+        expectTokenShape(tcp, { transportType: "tcp", opaqueId: "tcp://localhost:5761", baud: 0, isVirtual: false });
     });
 });

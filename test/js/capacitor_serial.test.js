@@ -1,9 +1,5 @@
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
-import {
-    expectNullTokenWhenDisconnected,
-    expectTokenShape,
-    expectResolveContract,
-} from "./helpers/linkEventContract.js";
+import { expectNullTokenWhenDisconnected, expectTokenShape } from "./helpers/tokenContract.js";
 
 // ---------------------------------------------------------------------------
 // S6b — CapacitorSerial (Android USB) reconnect token.
@@ -73,18 +69,5 @@ describe("S6b CapacitorSerial reconnect-token contract", () => {
             isVirtual: false,
         });
     });
-
-    it("resolveReconnectTarget matches a present device, null when gone or wrong transport", async () => {
-        const cs = await newCapacitorSerial();
-        listeners.deviceAttached(fakeDevice());
-        const path = cs.ports[0].path;
-
-        expectResolveContract(cs, {
-            token: { transportType: "serial", opaqueId: path },
-            resolvesTo: path,
-            unknownToken: { transportType: "serial", opaqueId: "capacitor-9:9:9" },
-            wrongTransportToken: { transportType: "tcp", opaqueId: path },
-            expectNullToken: false,
-        });
-    });
+    // resolveReconnectTarget is the shared resolveByPath helper — see reconnect_token.test.js.
 });

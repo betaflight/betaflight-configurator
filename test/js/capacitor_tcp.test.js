@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
-import { expectTokenShape, expectResolveContract } from "./helpers/linkEventContract.js";
+import { expectTokenShape } from "./helpers/tokenContract.js";
 
 // S6b — CapacitorTcp reconnect token. Native BetaflightTcp plugin mocked;
 // addListener captures dataReceived / dataReceivedError / connectionClosed
@@ -36,17 +36,11 @@ async function newTcp() {
 }
 
 describe("S6b CapacitorTcp reconnect-token contract", () => {
-    it("freezes the address as a tcp token and resolves it back", async () => {
+    it("freezes the address as a tcp token", async () => {
         const tcp = await newTcp();
         await tcp.connect("http://localhost:5761");
 
-        const token = { transportType: "tcp", opaqueId: "localhost:5761", baud: 0, isVirtual: false };
-        expectTokenShape(tcp, token);
-        expectResolveContract(tcp, {
-            token,
-            resolvesTo: "localhost:5761",
-            wrongTransportToken: { transportType: "serial", opaqueId: "x" },
-            expectNullToken: false,
-        });
+        // resolveReconnectTarget is the shared resolveStableAddress helper — see reconnect_token.test.js.
+        expectTokenShape(tcp, { transportType: "tcp", opaqueId: "localhost:5761", baud: 0, isVirtual: false });
     });
 });
