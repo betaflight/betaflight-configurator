@@ -142,17 +142,20 @@ export function FlightLog(logData) {
 
     this.getBlackboxRate = function () {
         const sysConfig = this.getSysConfig();
-        const gyroRate = (1000000 / sysConfig["looptime"]).toFixed(0);
+        if (!sysConfig["looptime"] || !sysConfig["frameIntervalPNum"] || !sysConfig["frameIntervalPDenom"]) {
+            return null;
+        }
+        const gyroRate = 1000000 / sysConfig["looptime"];
         let blackBoxRate = (gyroRate * sysConfig["frameIntervalPNum"]) / sysConfig["frameIntervalPDenom"];
         if (sysConfig.pid_process_denom != null) {
             blackBoxRate /= sysConfig.pid_process_denom;
         }
-        return blackBoxRate;
+        return Number.isFinite(blackBoxRate) && blackBoxRate > 0 ? blackBoxRate : null;
     };
 
     this.getActualLogRate = function () {
         const loggedTime = this.getActualLoggedTime();
-        return loggedTime !== 0 ? (this.getCurrentLogRowsCount() / loggedTime) * 1000000 : 0;
+        return loggedTime > 0 ? (this.getCurrentLogRowsCount() / loggedTime) * 1000000 : 0;
     };
 
     this.isWrongLogRate = function () {
