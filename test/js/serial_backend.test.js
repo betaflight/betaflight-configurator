@@ -246,6 +246,10 @@ function resetMocks() {
     // Restore CONFIGURATOR flags the reboot/virtual tests mutate.
     CONFIGURATOR.virtualMode = false;
     CONFIGURATOR.connectionValid = false;
+    // The reboot tests drive the connection state into REBOOTING/RECONNECTING via
+    // reinitializeConnection(); reset the singleton so a later case can't inherit a
+    // non-IDLE phase (and a stale isReconnecting) from execution order.
+    __resetConnectionStateForTests();
 }
 
 // Drive the module into a "connected" state without the heavy MSP chain.
