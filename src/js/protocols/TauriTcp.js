@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { useDialogStore } from "../../stores/dialog";
 
 /**
  * Raw TCP transport for the Tauri shell (desktop and Android).
@@ -97,6 +98,21 @@ class TauriTcp extends EventTarget {
             return true;
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
+            // Show the error in a dialog
+            try {
+                const dialogStore = useDialogStore();
+                dialogStore.open(
+                    "InformationDialog",
+                    {
+                        title: "Connection failed",
+                        text: String(e?.message ?? e),
+                        confirmText: "Close",
+                    },
+                    { confirm: () => dialogStore.close() },
+                );
+            } catch (dlgErr) {
+                console.error(`${this.logHead}Failed to show dialog: ${dlgErr}`);
+            }
             this.connected = false;
             await this._teardownListeners();
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));

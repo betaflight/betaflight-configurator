@@ -1,0 +1,63 @@
+# Builds an unsigned iOS .ipa on a GitHub macOS runner, no local Mac or paid Apple account.
+# Signing is stripped from the Xcode project and the .app is zipped into an unsigned .ipa
+# that you re-sign on your own machine with a free Apple ID.
+#
+# The committed project pins a signing team and identity, so xcodebuild fails on CI until
+# the pbxproj is patched to turn signing off. Tauri drives the build because its Rust phase
+# needs the Tauri build server, which a bare xcodebuild can't reach.
+name: ios-unsigned-ipa
+on:
+  workflow_dispatch: {}
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - run: rustup target add aarch64-apple-ios
+      - run: npm ci
+      - run: npm run build
+      - name: Strip code signing out of the Xcode project
+        run: |
+          PBX="src-tauri/gen/apple/betaflight-app.xcodeproj/project.pbxproj"
+          sed -i '' \
+            -e 's/DEVELOPMENT_TEAM = "[^"]*";/DEVELOPMENT_TEAM = "";/g' \
+            -e 's/CODE_SIGN_IDENTITY = "[^"]*";/CODE_SIGN_IDENTITY = ""; CODE_SIGNING_ALLOWED = NO; CODE_SIGNING_REQUIRED = NO; CODE_SIGN_STYLE = Manual;/g' \
+            "$PBX"
+          echo "--- signing lines after patch ---"
+          grep -n "CODE_SIGN\|DEVELOPMENT_TEAM" "$PBX" || true
+      - name: Build with Tauri (its server runs the Rust phase, IPA export may fail)
+        run: npm run tauri:ios:build -- --target aarch64 --ci || true
+      - name: Package the built .app into an unsigned .ipa
+        run: |
+          set -e
+          SEARCH="$HOME/Library/Developer/Xcode/DerivedData $PWD/src-tauri/gen/apple/build"
+          APP=$(find $SEARCH -type d -name "*.app" 2>/dev/null | grep -i "release-iphoneos" | head -1)
+          [ -z "$APP" ] && APP=$(find $SEARCH -type d -name "*.app" 2>/dev/null | grep -i iphoneos | grep -vi simulator | head -1)
+          echo "APP = $APP"
+          if [ -z "$APP" ]; then
+            echo "::error::No device .app was produced. Diagnostics:"
+            echo "--- .app dirs ---"; find $SEARCH -type d -name "*.app" 2>/dev/null | head -20
+            echo "--- DerivedData Products ---"; find "$HOME/Library/Developer/Xcode/DerivedData" -type d -path "*Products*iphoneos*" 2>/dev/null | head
+            exit 1
+          fi
+          rm -rf "$RUNNER_TEMP/Payload"; mkdir "$RUNNER_TEMP/Payload"
+          cp -R "$APP" "$RUNNER_TEMP/Payload/"
+          (cd "$RUNNER_TEMP" && zip -qr betaflight-unsigned.ipa Payload)
+          ls -la "$RUNNER_TEMP/betaflight-unsigned.ipa"
+          # A real app is ~13 MB. If it's tiny, the Tauri build failed and we packaged an
+          # empty .app, so fail loudly.
+          SIZE=$(stat -f%z "$RUNNER_TEMP/betaflight-unsigned.ipa")
+          echo "ipa size: $SIZE bytes"
+          if [ "$SIZE" -lt 1000000 ]; then
+            echo "::error::IPA is only $SIZE bytes, the 'Build with Tauri' step failed to produce a real app (compile/link error). Check that step's log."
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-ipa
+          path: ${{ runner.temp }}/betaflight-unsigned.ipa
