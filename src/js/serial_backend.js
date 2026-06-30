@@ -240,6 +240,21 @@ function beginConnect(selectedPort) {
     // lock port select & baud while we are connecting / connected
     PortHandler.portPickerDisabled = true;
 
+    // Safety net for the pre-open phase: some protocols (e.g. a ws:// endpoint that errors
+    // before onopen) never emit a "connect" event, so onOpen never runs to clear connecting_to
+    // and the Connect button would spin forever. If the attempt neither opens nor becomes valid
+    // within the window, recover the UI and tell the user. The disconnect-during-connect path in
+    // onClosed normally handles this sooner; this covers protocols that signal nothing at all.
+    GUI.timeout_add(
+        "connectAttempt",
+        function () {
+            if (GUI.connecting_to && !CONFIGURATOR.connectionValid) {
+                abortConnection("connectionFailed");
+            }
+        },
+        10000,
+    );
+
     // Set up event listeners for non-virtual connections
     if (selectedPort !== "virtual") {
         serial.removeEventListener("connect", connectHandler);
@@ -447,15 +462,38 @@ function resetConnection() {
     PortHandler.portPickerDisabled = false;
 }
 
-function abortConnection() {
-    GUI.timeout_remove("connecting"); // kill connecting timer
+function abortConnection(messageKey) {
+    GUI.timeout_remove("connecting"); // kill post-open connecting timer
+    GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
+
+    // Default message reflects how far the attempt got: a port that already opened but failed
+    // the handshake (e.g. invalid API version) did not "fail to open".
+    const message = i18n.getMessage(messageKey ?? (GUI.connected_to ? "connectionFailed" : "serialPortOpenFail"));
 
     GUI.connected_to = false;
     GUI.connecting_to = false;
 
-    gui_log(i18n.getMessage("serialPortOpenFail"));
+    gui_log(message);
+    showConnectionFailedDialog(message);
 
     resetConnection();
+}
+
+// Surface a connection failure to the user with a dismissible dialog, not just a log line
+// that is easy to miss. `text` may contain HTML markup (InformationDialog renders it).
+function showConnectionFailedDialog(text) {
+    const dialogStore = useDialogStore();
+    dialogStore.open(
+        "InformationDialog",
+        {
+            title: i18n.getMessage("connectionFailedTitle"),
+            text,
+            confirmText: i18n.getMessage("close"),
+        },
+        {
+            confirm: () => dialogStore.close(),
+        },
+    );
 }
 
 // Centralized helper: show version mismatch warning and switch to CLI
@@ -487,6 +525,8 @@ function read_serial_adapter(event) {
 function onOpen(openInfo) {
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
+
+        GUI.timeout_remove("connectAttempt"); // port opened — pre-open watchdog no longer needed
 
         // update connected_to
         GUI.connected_to = GUI.connecting_to;
@@ -555,6 +595,7 @@ function onOpen(openInfo) {
 }
 
 function onOpenVirtual() {
+    GUI.timeout_remove("connectAttempt"); // virtual link is up — pre-open watchdog no longer needed
     GUI.connected_to = GUI.connecting_to;
     GUI.connecting_to = false;
 
@@ -831,6 +872,16 @@ function initFeaturesOnConnect() {
 }
 
 function onClosed(result) {
+    // A "disconnect" that arrives while we are still in the connect phase (onOpen never ran, so
+    // the link never became valid) is a *failed connection attempt*, not the loss of an
+    // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
+    // "disconnect" and never "connect". Recover the Connect button and tell the user instead of
+    // running the established-connection teardown.
+    if (GUI.connecting_to && !CONFIGURATOR.connectionValid && !intentionalDisconnect) {
+        abortConnection("connectionFailed");
+        return;
+    }
+
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
 
     // Clear connection timestamp
