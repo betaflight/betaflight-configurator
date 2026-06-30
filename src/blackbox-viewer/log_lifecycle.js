@@ -64,11 +64,19 @@ export function renderSelectedLogInfo() {
     );
     appStore.statusLooptime = looptimeText;
 
+    const blackboxRate = logStore.flightLog.getBlackboxRate();
     const lograteText =
         sysConfig["frameIntervalPDenom"] != null && sysConfig["frameIntervalPNum"] != null
-            ? `Sample Rate : ${sysConfig["frameIntervalPNum"]}/${sysConfig["frameIntervalPDenom"]}`
+            ? `Sample Rate : ${sysConfig["frameIntervalPNum"]}/${sysConfig["frameIntervalPDenom"]} (${blackboxRate.toFixed(0)}Hz)`
             : "";
     appStore.statusLograte = lograteText;
+
+    if (logStore.flightLog.isWrongLogRate()) {
+        const actualLogRate = logStore.flightLog.getActualLogRate();
+        appStore.statusLograteWarning = `Wrong log rate: ${actualLogRate.toFixed(0)}Hz`;
+    } else {
+        appStore.statusLograteWarning = null;
+    }
 
     const seekBar = graphStore.seekBar;
     seekBar.setTimeRange(

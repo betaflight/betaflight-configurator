@@ -17,6 +17,8 @@ import { IMU } from "./imu";
 import { FIFOCache } from "./cache";
 import { binarySearchOrPrevious, binarySearchOrNext, constrain, validate, firmwareGreaterOrEqual } from "./tools";
 
+const WARNING_RATE_DIFFERENCE = 0.05;
+
 /*
  * Double check that the indexes of each chunk in the array are in increasing order (bugcheck).
  */
@@ -136,6 +138,27 @@ export function FlightLog(logData) {
         index = index ?? logIndex;
         const directory = logIndexes.getIntraframeDirectory(index);
         return directory.maxTime - directory.minTime - directory.unLoggedTime;
+    };
+
+    this.getBlackboxRate = function () {
+        const sysConfig = this.getSysConfig();
+        const gyroRate = (1000000 / sysConfig["looptime"]).toFixed(0);
+        let blackBoxRate = (gyroRate * sysConfig["frameIntervalPNum"]) / sysConfig["frameIntervalPDenom"];
+        if (sysConfig.pid_process_denom != null) {
+            blackBoxRate /= sysConfig.pid_process_denom;
+        }
+        return blackBoxRate;
+    };
+
+    this.getActualLogRate = function () {
+        const loggedTime = this.getActualLoggedTime();
+        return loggedTime !== 0 ? (this.getCurrentLogRowsCount() / loggedTime) * 1000000 : 0;
+    };
+
+    this.isWrongLogRate = function () {
+        const blackboxRate = this.getBlackboxRate();
+        const actualLogRate = this.getActualLogRate();
+        return !actualLogRate || Math.abs(blackboxRate - actualLogRate) / actualLogRate > WARNING_RATE_DIFFERENCE;
     };
 
     /**

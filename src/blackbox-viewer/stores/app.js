@@ -14,6 +14,7 @@ export const useAppStore = defineStore("app", () => {
     const statusCells = ref("");
     const statusLooptime = ref("-");
     const statusLograte = ref("-");
+    const statusLograteWarning = ref(null);
     const statusFlightMode = ref("-");
     const statusMarkerOffset = ref("00:00.000");
     const statusViewerVersion = ref("-");
@@ -52,6 +53,7 @@ export const useAppStore = defineStore("app", () => {
         statusCells,
         statusLooptime,
         statusLograte,
+        statusLograteWarning,
         statusFlightMode,
         statusMarkerOffset,
         statusViewerVersion,
