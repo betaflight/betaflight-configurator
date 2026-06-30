@@ -70,12 +70,18 @@ class Serial extends EventTarget {
                                 data: event.detail,
                                 protocolType: name,
                             };
-                        } else {
-                            // For other events, we can use the detail directly
+                        } else if (event.detail && typeof event.detail === "object") {
+                            // Object payloads (open info, device lists, socket info) get the
+                            // protocol tag merged in.
                             newDetail = {
                                 ...event.detail,
                                 protocolType: name,
                             };
+                        } else {
+                            // Preserve primitive/falsy details verbatim. A failed open signals
+                            // detail:false; wrapping it in an object would make it truthy and the
+                            // connect handler would treat the failure as a success.
+                            newDetail = event.detail;
                         }
 
                         // Dispatch the event with the new detail
