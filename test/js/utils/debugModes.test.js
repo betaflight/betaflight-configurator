@@ -6,7 +6,7 @@ import {
     decodeDebugFieldToFriendly,
     convertDebugFieldValue,
 } from "../../../src/js/utils/debugModes";
-import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
 
 describe("debugModes helper", () => {
     describe("getDebugModes", () => {
@@ -152,6 +152,48 @@ describe("debugModes helper", () => {
             expect(names.OPTICALFLOW["debug[2]"]).toBe("Gyro Compensation X");
             expect(names.OPTICALFLOW["debug[6]"]).toBe("Filtered Flow Rate X");
             expect(names.OPTICALFLOW["debug[7]"]).toBe("Filtered Flow Rate Y");
+        });
+
+        it("keeps ITERM_RELAX debug[3] through 1.47, drops it at 1.48", () => {
+            expect(getDebugFieldNames(API_VERSION_1_45).ITERM_RELAX["debug[3]"]).toBe("Axis Error [roll]");
+            expect(getDebugFieldNames(API_VERSION_1_47).ITERM_RELAX["debug[3]"]).toBe("Axis Error [roll]");
+            expect(getDebugFieldNames(API_VERSION_1_48).ITERM_RELAX["debug[3]"]).toBeUndefined();
+        });
+
+        it("keeps RC_SMOOTHING_RATE debug[1] through 1.46, drops it and reworks fields at 1.47", () => {
+            expect(getDebugFieldNames(API_VERSION_1_46).RC_SMOOTHING_RATE["debug[1]"]).toBe("Training Step Count");
+            expect(getDebugFieldNames(API_VERSION_1_47).RC_SMOOTHING_RATE["debug[1]"]).toBeUndefined();
+            expect(getDebugFieldNames(API_VERSION_1_47).RC_SMOOTHING_RATE["debug[3]"]).toBe("Smoothing Update Flag");
+        });
+
+        it("only extends GPS_RESCUE_VELOCITY/HEADING/TRACKING to 8 fields from 1.46 onward", () => {
+            expect(getDebugFieldNames(API_VERSION_1_45).GPS_RESCUE_VELOCITY["debug[4]"]).toBeUndefined();
+            expect(getDebugFieldNames(API_VERSION_1_45).GPS_RESCUE_HEADING["debug[6]"]).toBeUndefined();
+            expect(getDebugFieldNames(API_VERSION_1_45).GPS_RESCUE_TRACKING["debug[4]"]).toBeUndefined();
+            expect(getDebugFieldNames(API_VERSION_1_46).GPS_RESCUE_VELOCITY["debug[4]"]).toBe("I term");
+            expect(getDebugFieldNames(API_VERSION_1_46).GPS_RESCUE_HEADING["debug[6]"]).toBe(
+                "Roll Angle Adjustment * 100",
+            );
+            expect(getDebugFieldNames(API_VERSION_1_46).GPS_RESCUE_TRACKING["debug[4]"]).toBe("Yaw Attitude");
+        });
+
+        it("only extends EZLANDING to 8 fields from 1.47 onward", () => {
+            expect(getDebugFieldNames(API_VERSION_1_46).EZLANDING["debug[6]"]).toBeUndefined();
+            expect(getDebugFieldNames(API_VERSION_1_47).EZLANDING["debug[6]"]).toBe("Max Stick Deflection");
+        });
+
+        it("only extends RANGEFINDER to 6 fields from 1.48 onward", () => {
+            expect(getDebugFieldNames(API_VERSION_1_47).RANGEFINDER["debug[4]"]).toBeUndefined();
+            expect(getDebugFieldNames(API_VERSION_1_48).RANGEFINDER["debug[4]"]).toBe("Cos Tilt Angle * 1000");
+        });
+
+        it("only reworks FEEDFORWARD/FEEDFORWARD_LIMIT/RC_SMOOTHING/RX_TIMING/GPS_CONNECTION from 1.47 (or 1.46) onward", () => {
+            expect(getDebugFieldNames(API_VERSION_1_46).FEEDFORWARD["debug[0]"]).toBe("Feedforward Avg [roll]");
+            expect(getDebugFieldNames(API_VERSION_1_47).FEEDFORWARD["debug[0]"]).toBe("Setpoint [dbg-axis]");
+            expect(getDebugFieldNames(API_VERSION_1_46).RX_TIMING["debug[4]"]).toBeUndefined();
+            expect(getDebugFieldNames(API_VERSION_1_47).RX_TIMING["debug[4]"]).toBe("Current RX Rate");
+            expect(getDebugFieldNames(API_VERSION_1_45).GPS_CONNECTION["debug[0]"]).toBe("State");
+            expect(getDebugFieldNames(API_VERSION_1_46).GPS_CONNECTION["debug[0]"]).toBe("GPS Model");
         });
 
         it("keys align with getDebugModes for the same API version", () => {
