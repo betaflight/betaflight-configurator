@@ -974,25 +974,26 @@ export function getDebugFieldNames(apiVersion) {
     if (semver.gte(apiVersion, API_VERSION_1_48)) {
         result.AUTOPILOT_PID = {
             "debug[all]": "Autopilot PID",
-            "debug[0]": "P term (East) * 100",
-            "debug[1]": "P term (North) * 100",
-            "debug[2]": "I term (East) * 100",
-            "debug[3]": "I term (North) * 100",
-            "debug[4]": "II term (East) * 100",
-            "debug[5]": "II term (North) * 100",
-            "debug[6]": "Roll angle command * 100",
-            "debug[7]": "Pitch angle command * 100",
+            "debug[0]": "Velocity Error [dbg-axis]",
+            "debug[1]": "Distance Error [dbg-axis]",
+            "debug[2]": "P Term [dbg-axis] * 10",
+            "debug[3]": "I Term [dbg-axis] * 10",
+            "debug[4]": "D Term [dbg-axis] * 10",
+            "debug[5]": "A Term [dbg-axis] * 10",
+            "debug[6]": "PID Sum [dbg-axis] * 10",
+            "debug[7]": "Status Flags [dbg-axis]",
         };
 
         result.AUTOPILOT_STOP = {
             "debug[all]": "Autopilot Stop",
-            "debug[0]": "Distance to target (cm)",
-            "debug[1]": "Horizontal speed (cm/s)",
-            "debug[2]": "Sticks active",
-            "debug[3]": "Nav active",
-            "debug[4]": "Position held",
-            "debug[6]": "Roll angle command * 100",
-            "debug[7]": "Pitch angle command * 100",
+            "debug[0]": "Velocity Error [East]",
+            "debug[1]": "Velocity Error [North]",
+            "debug[2]": "PID Sum [East] * 10",
+            "debug[3]": "PID Sum [North] * 10",
+            "debug[4]": "Roll Angle Command * 10",
+            "debug[5]": "Pitch Angle Command * 10",
+            "debug[6]": "Status Flags [East]",
+            "debug[7]": "Status Flags [North]",
         };
 
         result.GYRO_SAMPLE = {
@@ -1002,6 +1003,20 @@ export function getDebugFieldNames(apiVersion) {
             "debug[2]": "Gyro after RPM [dbg-axis]",
             "debug[3]": "Gyro after all filtering [dbg-axis]",
             "debug[4]": "CPU Load at Sample",
+        };
+
+        // Flow-processing pipeline replaced the quality/raw/processed/delta-time
+        // layout used prior to 1.48 (opticalflow.c rewrite).
+        result.OPTICALFLOW = {
+            "debug[all]": "Optical Flow",
+            "debug[0]": "Rotated Flow Rate X",
+            "debug[1]": "Rotated Flow Rate Y",
+            "debug[2]": "Gyro Compensation X",
+            "debug[3]": "Gyro Compensation Y",
+            "debug[4]": "Compensated Flow Rate X",
+            "debug[5]": "Compensated Flow Rate Y",
+            "debug[6]": "Filtered Flow Rate X",
+            "debug[7]": "Filtered Flow Rate Y",
         };
 
         // POSITION_NAV is a reserved firmware enum slot with no fields yet,
@@ -1045,6 +1060,14 @@ const gyroDecode = (v, ctx, fieldName) => (fieldName === "debug[4]" ? `${v.toFix
 const fftFreqDecode = (v, ctx, fieldName) => {
     const gyroField = semver.gte(ctx.apiVersion, API_VERSION_1_47) ? "debug[0]" : "debug[3]";
     return fieldName === gyroField ? gyroDps(v, ctx) : `${v.toFixed(0)} Hz`;
+};
+// Pre-1.48: debug[0] is raw quality, debug[5] is deltaTimeUs (both unscaled ints).
+// 1.48+: all 8 fields are the rotate/compensate/filter pipeline, scaled by 1000.
+const opticalflowDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_48) && (fieldName === "debug[0]" || fieldName === "debug[5]")) {
+        return f0(v);
+    }
+    return (v / 1000).toFixed(1);
 };
 
 const DEBUG_DECODE = {
@@ -1216,13 +1239,7 @@ const DEBUG_DECODE = {
         _default: f0,
     },
     EZLANDING: (v) => `${(v / 100).toFixed(2)} %`,
-    OPTICALFLOW: {
-        "debug[1]": (v) => `${(v / 1000).toFixed(1)}`,
-        "debug[2]": (v) => `${(v / 1000).toFixed(1)}`,
-        "debug[3]": (v) => `${(v / 1000).toFixed(1)}`,
-        "debug[4]": (v) => `${(v / 1000).toFixed(1)}`,
-        _default: (v) => v.toFixed(1),
-    },
+    OPTICALFLOW: opticalflowDecode,
     AUTOPILOT_POSITION: {
         "debug[2]": (v) => `${(v / 10).toFixed(1)}`,
         "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
@@ -1316,6 +1333,14 @@ const cFftFreq = (toFriendly, v, ctx, fieldName) => {
 };
 const cScale100 = cScale(100);
 const cScale10 = cScale(10);
+const cScale1000 = cScale(1000);
+// Pre-1.48: debug[0]/debug[5] (quality/deltaTimeUs) pass through unscaled.
+const cOpticalflow = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_48) && (fieldName === "debug[0]" || fieldName === "debug[5]")) {
+        return v;
+    }
+    return cScale1000(toFriendly, v);
+};
 
 const DEBUG_CONVERT = {
     NONE: {
@@ -1413,12 +1438,7 @@ const DEBUG_CONVERT = {
         "debug[2]": cScale10,
         "debug[3]": cScale10,
     },
-    OPTICALFLOW: {
-        "debug[1]": cScale(1000),
-        "debug[2]": cScale(1000),
-        "debug[3]": cScale(1000),
-        "debug[4]": cScale(1000),
-    },
+    OPTICALFLOW: cOpticalflow,
     AUTOPILOT_POSITION: {
         "debug[2]": cScale10,
         "debug[3]": cScale10,

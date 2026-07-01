@@ -133,10 +133,25 @@ describe("debugModes helper", () => {
 
         it("applies the 1.48 transformations", () => {
             const names = getDebugFieldNames(API_VERSION_1_48);
-            expect(names.AUTOPILOT_PID["debug[0]"]).toBe("P term (East) * 100");
+            expect(names.AUTOPILOT_PID["debug[0]"]).toBe("Velocity Error [dbg-axis]");
             expect(names.AUTOPILOT_STOP).toBeDefined();
             expect(names.GYRO_SAMPLE["debug[4]"]).toBe("CPU Load at Sample");
             expect(names.AUTOPILOT_POSITION).toBeUndefined();
+        });
+
+        it("uses the quality/raw/processed/delta-time OPTICALFLOW layout pre-1.48", () => {
+            const names = getDebugFieldNames(API_VERSION_1_47);
+            expect(names.OPTICALFLOW["debug[0]"]).toBe("Quality");
+            expect(names.OPTICALFLOW["debug[5]"]).toBe("Delta time");
+            expect(names.OPTICALFLOW["debug[6]"]).toBeUndefined();
+        });
+
+        it("switches OPTICALFLOW to the rotate/compensate/filter pipeline at 1.48", () => {
+            const names = getDebugFieldNames(API_VERSION_1_48);
+            expect(names.OPTICALFLOW["debug[0]"]).toBe("Rotated Flow Rate X");
+            expect(names.OPTICALFLOW["debug[2]"]).toBe("Gyro Compensation X");
+            expect(names.OPTICALFLOW["debug[6]"]).toBe("Filtered Flow Rate X");
+            expect(names.OPTICALFLOW["debug[7]"]).toBe("Filtered Flow Rate Y");
         });
 
         it("keys align with getDebugModes for the same API version", () => {
@@ -200,6 +215,22 @@ describe("debugModes helper", () => {
             ).toBe("250 Hz");
         });
 
+        it("selects the OPTICALFLOW field layout by ctx.apiVersion", () => {
+            // pre-1.48: debug[0]/debug[5] (quality/deltaTimeUs) are unscaled ints
+            expect(
+                decodeDebugFieldToFriendly("OPTICALFLOW", "debug[0]", 42, stubCtx({ apiVersion: API_VERSION_1_47 })),
+            ).toBe("42");
+            expect(
+                decodeDebugFieldToFriendly("OPTICALFLOW", "debug[5]", 2000, stubCtx({ apiVersion: API_VERSION_1_47 })),
+            ).toBe("2000");
+            expect(
+                decodeDebugFieldToFriendly("OPTICALFLOW", "debug[1]", 1500, stubCtx({ apiVersion: API_VERSION_1_47 })),
+            ).toBe("1.5");
+            // 1.48+: every field is the *1000 flow-rate pipeline, including debug[0]/debug[5]
+            expect(decodeDebugFieldToFriendly("OPTICALFLOW", "debug[0]", 1500, stubCtx())).toBe("1.5");
+            expect(decodeDebugFieldToFriendly("OPTICALFLOW", "debug[5]", 3000, stubCtx())).toBe("3.0");
+        });
+
         it("uses ctx.fftCalcSteps for FFT_TIME debug[0], with graceful fallback", () => {
             expect(decodeDebugFieldToFriendly("FFT_TIME", "debug[0]", 1, stubCtx({ fftCalcSteps: ["A", "B"] }))).toBe(
                 "B",
@@ -247,6 +278,25 @@ describe("debugModes helper", () => {
         it("applies a per-mode default scaling (GPS_DOP)", () => {
             expect(convertDebugFieldValue("GPS_DOP", "debug[0]", true, 12, stubCtx())).toBe(12);
             expect(convertDebugFieldValue("GPS_DOP", "debug[1]", true, 150, stubCtx())).toBe(1.5);
+        });
+
+        it("selects the OPTICALFLOW scaling by ctx.apiVersion", () => {
+            // pre-1.48: debug[0]/debug[5] pass through unscaled
+            expect(
+                convertDebugFieldValue("OPTICALFLOW", "debug[0]", true, 42, stubCtx({ apiVersion: API_VERSION_1_47 })),
+            ).toBe(42);
+            expect(
+                convertDebugFieldValue(
+                    "OPTICALFLOW",
+                    "debug[1]",
+                    true,
+                    1500,
+                    stubCtx({ apiVersion: API_VERSION_1_47 }),
+                ),
+            ).toBe(1.5);
+            // 1.48+: every field including debug[0]/debug[5] is scaled by 1000
+            expect(convertDebugFieldValue("OPTICALFLOW", "debug[0]", true, 1500, stubCtx())).toBe(1.5);
+            expect(convertDebugFieldValue("OPTICALFLOW", "debug[5]", false, 1.5, stubCtx())).toBe(1500);
         });
     });
 });
