@@ -15,6 +15,7 @@ import {
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
+export const DEFAULT_MANUAL_PORT = "tcp://192.168.7.1:5761";
 
 // Create the platform-appropriate DFU protocol instance.
 // On Android, use the Capacitor DFU transport with the native plugin.
@@ -38,7 +39,7 @@ const PortHandler = new (function () {
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
-        portOverride: getConfig("portOverride", "/dev/rfcomm0").portOverride,
+        portOverride: getConfig("portOverride", DEFAULT_MANUAL_PORT).portOverride,
         virtualMspVersion: getConfig("virtualMspVersion", "1.46.0").virtualMspVersion,
         autoConnect: getConfig("autoConnect", false).autoConnect,
     };

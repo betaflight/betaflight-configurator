@@ -13,7 +13,8 @@
         "security": {
             "csp": null,
             "capabilities": [
-                "default"
+                "default",
+                "mobile"
             ]
         },
         "windows": [

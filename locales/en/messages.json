@@ -156,6 +156,9 @@
     "cancel": {
         "message": "Cancel"
     },
+    "defaults": {
+        "message": "Defaults"
+    },
     "submit": {
         "message": "Submit"
     },
