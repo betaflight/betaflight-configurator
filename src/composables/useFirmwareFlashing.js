@@ -1,4 +1,6 @@
 import { reactive } from "vue";
+import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { get as getConfig } from "../js/ConfigStorage";
 import { useDialog } from "./useDialog";
 import GUI from "../js/gui";
@@ -8,6 +10,11 @@ import read_hex_file from "../js/workers/hex_parser";
 import STM32 from "../js/protocols/webstm32";
 import ESP32 from "../js/protocols/esp32";
 import PortHandler from "../js/port_handler";
+import { serial } from "../js/serial";
+import { isTauriIOS } from "../js/utils/checkCompatibility";
+
+const PHONE_CONFIG_HOST = "192.168.7.1";
+const PHONE_FLASH_PORT = 5762;
 
 /**
  * A composable for managing firmware flashing operations.
@@ -260,6 +267,70 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Flash HEX firmware via selected port (DFU or Serial)
      */
+    const phoneConfigHost = () => {
+        if (serial.connected && serial.protocol === "tauritcp") {
+            try {
+                const url = new URL(serial.getConnectedPort()?.path ?? "");
+                if (url.hostname === PHONE_CONFIG_HOST) {
+                    return url.hostname;
+                }
+            } catch {
+                // fall through
+            }
+        }
+        return isTauriIOS() ? PHONE_CONFIG_HOST : null;
+    };
+
+    const flashViaPhoneConfig = async (firmware, host) => {
+        const blocks = (firmware?.data ?? []).map((b) => ({ address: b.address, data: Array.from(b.data) }));
+        if (!blocks.length) {
+            flashingMessage("No firmware loaded to flash", FLASH_MESSAGE_TYPES.INVALID);
+            return;
+        }
+
+        const unlisten = [];
+        let finish;
+        const done = new Promise((resolve) => (finish = resolve));
+
+        flashingMessage("Flashing firmware", FLASH_MESSAGE_TYPES.FLASHING);
+        flashProgress(0);
+
+        unlisten.push(
+            await listen("phoneflash-progress", (e) => {
+                const { sent, total } = e.payload ?? {};
+                flashProgress(total ? Math.floor((100 * sent) / total) : 0);
+            }),
+        );
+        unlisten.push(
+            await listen("phoneflash-done", () => {
+                flashProgress(100);
+                flashingMessage("Firmware flashed, rebooting", FLASH_MESSAGE_TYPES.VALID);
+                finish();
+            }),
+        );
+        unlisten.push(
+            await listen("phoneflash-error", (e) => {
+                flashingMessage(`Flash failed: ${e.payload}`, FLASH_MESSAGE_TYPES.INVALID);
+                finish();
+            }),
+        );
+
+        try {
+            await invoke("phoneflash_flash", { ip: host, port: PHONE_FLASH_PORT, blocks });
+            await done;
+        } catch (e) {
+            flashingMessage(`Flash failed: ${e}`, FLASH_MESSAGE_TYPES.INVALID);
+        } finally {
+            for (const u of unlisten) {
+                try {
+                    await u();
+                } catch (err) {
+                    console.error(`${logHead} failed to remove listener: ${err}`);
+                }
+            }
+        }
+    };
+
     const flashHexFirmware = async (options = {}) => {
         const {
             firmware,
@@ -285,6 +356,15 @@ export function useFirmwareFlashing(params = {}) {
 
         if (eraseChip) {
             flashing_options.erase_chip = true;
+        }
+
+        const pfHost = phoneConfigHost();
+        if (pfHost) {
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "Phone-config Flashing", {
+                filename: filename || null,
+            });
+            await flashViaPhoneConfig(firmware, pfHost);
+            return;
         }
 
         const port = PortHandler.portPicker.selectedPort;

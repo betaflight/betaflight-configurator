@@ -1,4 +1,4 @@
-import { isAndroid } from "./utils/checkCompatibility";
+import { isAndroid, isTauriIOS } from "./utils/checkCompatibility";
 import CapacitorFile from "./protocols/CapacitorFile";
 
 const EXTENSION_MIME_MAP = {
@@ -103,7 +103,9 @@ function pickFileViaInput(extension) {
     return new Promise((resolve, reject) => {
         const input = document.createElement("input");
         input.type = "file";
-        if (accept) {
+        // iOS greys out extensions it can't map to a UTI (.hex/.uf2/.bin), so leave the picker
+        // unfiltered there and let the firmware parser validate the choice.
+        if (accept && !isTauriIOS()) {
             input.accept = accept;
         }
         input.style.display = "none";
@@ -157,8 +159,11 @@ function pickFileViaInput(extension) {
         // AbortError that showOpenFilePicker throws.
         input.addEventListener("cancel", abort);
 
-        // Fallback dismissal detection for webviews without the `cancel` event.
-        globalThis.addEventListener("focus", onFocus);
+        // Fallback dismissal detection for webviews without the `cancel` event. Skipped on iOS, where
+        // focus returns before `change` delivers the file, so it would abort a valid selection.
+        if (!isTauriIOS()) {
+            globalThis.addEventListener("focus", onFocus);
+        }
 
         input.click();
     });

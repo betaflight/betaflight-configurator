@@ -38,7 +38,7 @@ const PortHandler = new (function () {
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
-        portOverride: getConfig("portOverride", "/dev/rfcomm0").portOverride,
+        portOverride: getConfig("portOverride", "tcp://192.168.7.1:5761").portOverride,
         virtualMspVersion: getConfig("virtualMspVersion", "1.46.0").virtualMspVersion,
         autoConnect: getConfig("autoConnect", false).autoConnect,
     };

@@ -17,6 +17,16 @@
         </template>
         <template #footer>
             <div class="connect-options__actions">
+                <UButton
+                    v-if="mode === 'manual'"
+                    color="neutral"
+                    variant="soft"
+                    size="sm"
+                    class="connect-options__defaults"
+                    @click="onDefaults"
+                >
+                    {{ $t("defaults") }}
+                </UButton>
                 <UButton color="neutral" variant="soft" size="sm" @click="onCancel">
                     {{ $t("cancel") }}
                 </UButton>
@@ -40,13 +50,15 @@ const FIRMWARE_VERSIONS = [
     { value: "1.44.0", label: "MSP: 1.44 | Firmware: 4.3.*" },
 ];
 
+const DEFAULT_MANUAL_PORT = "tcp://192.168.7.1:5761";
+
 export default defineComponent({
     name: "ConnectOptionsDialog",
     props: {
         modelValue: { type: Boolean, default: false },
         mode: { type: String, default: "virtual" },
         initialVersion: { type: String, default: "1.46.0" },
-        initialPortOverride: { type: String, default: "/dev/rfcomm0" },
+        initialPortOverride: { type: String, default: DEFAULT_MANUAL_PORT },
     },
     emits: ["update:modelValue", "confirm"],
     setup(props, { emit }) {
@@ -95,6 +107,10 @@ export default defineComponent({
             open.value = false;
         }
 
+        function onDefaults() {
+            portOverride.value = DEFAULT_MANUAL_PORT;
+        }
+
         return {
             open,
             version,
@@ -104,6 +120,7 @@ export default defineComponent({
             canConfirm,
             onCancel,
             onConfirm,
+            onDefaults,
         };
     },
 });
@@ -139,5 +156,9 @@ export default defineComponent({
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
+}
+
+.connect-options__defaults {
+    margin-right: auto;
 }
 </style>

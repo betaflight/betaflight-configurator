@@ -15,7 +15,7 @@ export default defineComponent({
     props: {
         modelValue: {
             type: String,
-            default: "/dev/rfcomm0",
+            default: "tcp://192.168.7.1:5761",
         },
         isManual: {
             type: Boolean,
