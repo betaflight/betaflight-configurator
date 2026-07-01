@@ -2940,6 +2940,48 @@
     "ledStripHelp": {
         "message": "Le contrôleur de vol peut piloter des LEDs RGB.<br \/>Configurez les LEDs sur la grille et câblez les LEDs en fonction de votre grille. Les LEDs sans numéro ne seront pas sauvegardées.<br \/>Double-cliquer sur une couleur pour éditer sa valeur."
     },
+    "ledStripProfileTitle": {
+        "message": "Profil à éditer"
+    },
+    "ledStripProfileOption": {
+        "message": "Profil $1"
+    },
+    "ledStripProfile1Label": {
+        "message": "Profil 1"
+    },
+    "ledStripProfile2Label": {
+        "message": "Profil 2"
+    },
+    "ledStripProfile3Label": {
+        "message": "Profil 3"
+    },
+    "ledStripProfileTip": {
+        "message": "Sélectionnez le profil LED à éditer dans le Configurator. Chaque profil peut avoir sa propre couleur ou disposition de LEDs."
+    },
+    "ledStripActiveProfileTitle": {
+        "message": "Profil actif en vol"
+    },
+    "ledStripActiveProfileTip": {
+        "message": "Profil LED utilisé en vol. Peut être changé via le réglage ledstrip_profile, le CMS ou une plage auxiliaire."
+    },
+    "ledStripProfileRace": {
+        "message": "Profil 1 — RACE"
+    },
+    "ledStripProfileBeacon": {
+        "message": "Profil 2 — BEACON"
+    },
+    "ledStripProfileStatus": {
+        "message": "Profil 3 — STATUS"
+    },
+    "ledStripProfileName": {
+        "message": "Nom du profil LED"
+    },
+    "ledStripProfileNameHelp": {
+        "message": "Nom du profil LED pour identifier son usage : course, balise, statut, vol indoor, etc. (8 caractères max)."
+    },
+    "ledStripActiveProfileHint": {
+        "message": "Actif en vol : $1"
+    },
     "ledStripButtonSave": {
         "message": "Sauvegarder"
     },

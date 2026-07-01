@@ -8,6 +8,46 @@
                 <p v-html="$t('ledStripHelp')"></p>
             </UiBox>
 
+            <UiBox v-if="multiProfileSupported" highlight class="mb-3">
+                <div class="flex items-start gap-3 flex-wrap">
+                    <div class="flex flex-col gap-1 min-w-[130px]">
+                        <SettingRow :label="$t('ledStripProfileTitle')" :help="$t('ledStripProfileTip')">
+                            <USelect
+                                id="ledStripProfileSelect"
+                                :items="profileSelectItems"
+                                :model-value="editProfile"
+                                class="min-w-20"
+                                @update:model-value="onEditProfileChange"
+                            />
+                        </SettingRow>
+                    </div>
+                    <div>
+                        <SettingRow :label="$t('ledStripProfileName')" :help="$t('ledStripProfileNameHelp')">
+                            <UInput
+                                id="ledStripProfileNameInput"
+                                v-model="editProfileName"
+                                maxlength="8"
+                                class="w-28"
+                            />
+                        </SettingRow>
+                    </div>
+                    <div class="flex flex-col gap-1 min-w-[130px]">
+                        <SettingRow
+                            :label="$t('ledStripActiveProfileTitle')"
+                            :help="$t('ledStripActiveProfileTip')"
+                        >
+                            <USelect
+                                id="ledStripActiveProfileSelect"
+                                :items="profileSelectItems"
+                                :model-value="activeFlightProfile"
+                                class="min-w-20"
+                                @update:model-value="onActiveProfileChange"
+                            />
+                        </SettingRow>
+                    </div>
+                </div>
+            </UiBox>
+
             <!-- LED Grid Container -->
             <div class="grid-container">
                 <!-- LED Grid with custom selection -->
@@ -58,7 +98,7 @@
                 <!-- Function Selection -->
                 <div class="section" v-html="$t('ledStripFunctionSection')"></div>
 
-                <div class="select">
+                <div class="select" @mousedown.stop @mouseup.stop>
                     <span v-html="$t('ledStripFunctionTitle')"></span>
                     <USelect
                         id="ledStripFunctionSelect"
@@ -66,7 +106,6 @@
                         size="sm"
                         :items="functionItems"
                         v-model="selectedFunction"
-                        @update:model-value="onFunctionChange"
                     />
                 </div>
 
@@ -339,6 +378,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip } from "@/composables/useLedStrip";
+import { isLedStripGridConfiguredLed, countColorOnlyLedsAtOrigin } from "@/js/msp/MSPHelper";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
 import GUI from "@/js/gui";
@@ -346,6 +386,7 @@ import semver from "semver";
 import FC from "@/js/fc";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 import UiBox from "../elements/UiBox.vue";
+import SettingRow from "../elements/SettingRow.vue";
 
 // Decode HTML entities in translations (some use &amp; etc) so plain-text
 // component props (e.g. USelect item labels) render correctly.
@@ -366,8 +407,15 @@ const {
     overlays,
     ledColors,
     ledConfigValues,
+    editProfile,
+    multiProfileSupported,
+    activeFlightProfile,
     loadData,
     saveConfig,
+    switchEditProfile,
+    setActiveFlightProfile,
+    getProfileName,
+    setProfileName,
     buildLedStripFromGrid,
     getNextWireNumber,
     hsvToColor,
@@ -380,6 +428,52 @@ const {
     isVtxActive,
     updateLedConfigValue,
 } = useLedStrip();
+
+const PROFILE_OPTION_KEYS = ["ledStripProfile1Label", "ledStripProfile2Label", "ledStripProfile3Label"];
+const PROFILE_OPTION_FALLBACKS = ["Profil 1", "Profil 2", "Profil 3"];
+
+function getProfileOptionLabel(profileIndex) {
+    const key = PROFILE_OPTION_KEYS[profileIndex];
+    const translated = i18n.getMessage(key);
+    if (!translated || translated === key) {
+        return PROFILE_OPTION_FALLBACKS[profileIndex] ?? `Profil ${profileIndex + 1}`;
+    }
+    return decodeHtmlEntities(translated);
+}
+
+const profileSelectItems = computed(() =>
+    [0, 1, 2].map((profileIndex) => ({
+        label: getProfileOptionLabel(profileIndex),
+        value: profileIndex,
+    })),
+);
+
+const editProfileName = computed({
+    get() {
+        return getProfileName(editProfile.value);
+    },
+    set(value) {
+        setProfileName(editProfile.value, value);
+    },
+});
+
+function onActiveProfileChange(value) {
+    setActiveFlightProfile(value);
+}
+
+function onEditProfileChange(value) {
+    const profileIndex = Number(value);
+    if (!Number.isInteger(profileIndex) || profileIndex < 0 || profileIndex > 2) {
+        return;
+    }
+
+    buildLedStripFromGrid(gridLeds);
+    switchEditProfile(profileIndex);
+    selectedIndices.value = new Set();
+    selectedFunction.value = "none";
+    activeDirections.value.clear();
+    initializeGrid();
+}
 
 // Grid state (256 LEDs in 16x16 grid)
 const gridLeds = reactive(
@@ -396,6 +490,7 @@ const gridLeds = reactive(
 const selectedIndices = ref(new Set());
 const selectedFunction = ref("none");
 const selectedColorIndex = ref(0);
+let suppressFunctionApply = false;
 
 // Modifier states
 const modifiers = reactive({
@@ -577,6 +672,18 @@ const handleClickOutside = (event) => {
     }
 };
 
+function ledStripFunctionsToArray(functions) {
+    if (Array.isArray(functions)) {
+        return functions.filter((f) => typeof f === "string" && f.length > 0);
+    }
+
+    if (typeof functions === "string" && functions.length > 0) {
+        return [...functions];
+    }
+
+    return [];
+}
+
 // Initialize grid from LED strip config
 function initializeGrid() {
     // Reset grid
@@ -588,28 +695,29 @@ function initializeGrid() {
         led.overlays = {};
     });
 
+    const occupiedGridCells = new Set();
+    const colorOnlyAtOriginCount = countColorOnlyLedsAtOrigin(FC.LED_STRIP);
+
     // Populate from LED strip
     FC.LED_STRIP.forEach((led, ledIndex) => {
-        if (
-            !led ||
-            (led.functions[0] === "c" &&
-                led.functions.length === 1 &&
-                led.directions.length === 0 &&
-                led.color === 0 &&
-                led.x === 0 &&
-                led.y === 0)
-        ) {
+        if (!isLedStripGridConfiguredLed(led, colorOnlyAtOriginCount)) {
             return;
         }
 
+        const functions = ledStripFunctionsToArray(led.functions);
+        const directions = Array.isArray(led.directions) ? [...led.directions] : [...(led.directions || "")];
+
         // Find grid index from coordinates
         const gridIndex = led.y * 16 + led.x;
-        if (gridIndex >= 0 && gridIndex < 256) {
-            gridLeds[gridIndex].wireNumber = String(ledIndex);
-            gridLeds[gridIndex].functions = Array.from(led.functions || "");
-            gridLeds[gridIndex].directions = Array.from(led.directions || "");
-            gridLeds[gridIndex].colorIndex = led.color || 0;
+        if (gridIndex < 0 || gridIndex >= 256 || occupiedGridCells.has(gridIndex)) {
+            return;
         }
+
+        occupiedGridCells.add(gridIndex);
+        gridLeds[gridIndex].wireNumber = String(ledIndex);
+        gridLeds[gridIndex].functions = functions;
+        gridLeds[gridIndex].directions = directions;
+        gridLeds[gridIndex].colorIndex = led.color || 0;
     });
 }
 
@@ -627,6 +735,82 @@ function onSelectionChange(newSelection) {
 
 function onSelectionEnd() {
     handleSelectionComplete();
+}
+
+function normalizeFunctionSelectValue(value) {
+    if (value == null || value === "") {
+        return "none";
+    }
+
+    if (typeof value === "object") {
+        return String(value.value ?? "none");
+    }
+
+    return String(value);
+}
+
+// Apply the function dropdown to all selected grid cells (independent of wire numbers).
+function applySelectedFunctionToSelection(functionValue = selectedFunction.value) {
+    if (selectedIndices.value.size === 0) {
+        return;
+    }
+
+    const normalized = normalizeFunctionSelectValue(functionValue);
+    const funcLetter = normalized.replace("function-", "");
+
+    selectedIndices.value.forEach((index) => {
+        gridLeds[index].functions = gridLeds[index].functions.filter((f) => !baseFuncs.includes(f));
+        if (funcLetter && baseFuncs.includes(funcLetter)) {
+            gridLeds[index].functions.push(funcLetter);
+        }
+    });
+}
+
+// Read grid state into the side-panel controls without modifying the grid.
+function syncSelectionUIFromGrid({ syncFunction = true } = {}) {
+    if (selectedIndices.value.size === 0) {
+        return;
+    }
+
+    const lastSelected = Array.from(selectedIndices.value).pop();
+    const led = gridLeds[lastSelected];
+    const functions = ledStripFunctionsToArray(led.functions);
+
+    selectedColorIndex.value = led.colorIndex;
+
+    if (syncFunction) {
+        const baseFunc = functions.find((f) => baseFuncs.includes(f));
+        if (baseFunc) {
+            suppressFunctionApply = true;
+            selectedFunction.value = `function-${baseFunc}`;
+            suppressFunctionApply = false;
+        }
+    }
+
+    activeDirections.value = new Set(led.directions);
+
+    overlays.forEach((overlay) => {
+        const key = getOverlayStateKey(overlay);
+        if (key) {
+            overlayStates[key] = functions.includes(overlay);
+        }
+    });
+
+    modifiers.throttleHue = functions.includes("t");
+    modifiers.larsonScanner = functions.includes("o");
+    modifiers.blink = functions.includes("b");
+    modifiers.rainbow = functions.includes("y");
+
+    updateColorSliders(led.colorIndex);
+}
+
+function applyFunctionSelectionToGrid(newFunction) {
+    if (selectedIndices.value.size === 0) {
+        return;
+    }
+
+    applySelectedFunctionToSelection(newFunction);
+    buildLedStripFromGrid(gridLeds);
 }
 
 // Handle selection complete (update UI state)
@@ -647,38 +831,13 @@ function handleSelectionComplete() {
         });
     }
 
-    // Update UI state from last selected LED
-    const lastSelected = Array.from(selectedIndices.value).pop();
-    const led = gridLeds[lastSelected];
+    // Apply the current dropdown choice after wire numbers are assigned.
+    if (selectedFunction.value !== "none") {
+        applySelectedFunctionToSelection();
+    }
 
-    // Update selected color
-    selectedColorIndex.value = led.colorIndex;
-
-    // Update selected function
-    const baseFunc = led.functions.find((f) => baseFuncs.includes(f));
-    selectedFunction.value = baseFunc ? `function-${baseFunc}` : "none";
-
-    // Update directions
-    activeDirections.value = new Set(led.directions);
-
-    // Update overlays
-    overlays.forEach((overlay) => {
-        const key = getOverlayStateKey(overlay);
-        if (key) {
-            overlayStates[key] = led.functions.includes(overlay);
-        }
-    });
-
-    // Update modifiers
-    modifiers.throttleHue = led.functions.includes("t");
-    modifiers.larsonScanner = led.functions.includes("o");
-    modifiers.blink = led.functions.includes("b");
-    modifiers.rainbow = led.functions.includes("y");
-
-    // Update color sliders
-    updateColorSliders(led.colorIndex);
-
-    // Update LED strip
+    // Read saved function/colors from the grid into the panel (EEPROM → UI).
+    syncSelectionUIFromGrid({ syncFunction: true });
     buildLedStripFromGrid(gridLeds);
 }
 
@@ -728,29 +887,6 @@ function clearAll() {
 
     // Clear selection
     selectedIndices.value = new Set();
-
-    buildLedStripFromGrid(gridLeds);
-}
-
-// Function change
-function onFunctionChange() {
-    if (selectedIndices.value.size === 0) {
-        return;
-    }
-
-    const funcLetter = selectedFunction.value.replace("function-", "");
-
-    selectedIndices.value.forEach((index) => {
-        if (gridLeds[index].wireNumber !== "") {
-            // Remove all base functions
-            gridLeds[index].functions = gridLeds[index].functions.filter((f) => !baseFuncs.includes(f));
-
-            // Add new function
-            if (funcLetter && baseFuncs.includes(funcLetter)) {
-                gridLeds[index].functions.push(funcLetter);
-            }
-        }
-    });
 
     buildLedStripFromGrid(gridLeds);
 }
@@ -968,6 +1104,14 @@ function clearWiresAll() {
 }
 
 // Watch slider changes and update LED config values
+watch(selectedFunction, (newFunction) => {
+    if (suppressFunctionApply) {
+        return;
+    }
+
+    applyFunctionSelectionToGrid(newFunction);
+});
+
 watch(brightness, (newValue) => {
     updateLedConfigValue("brightness", newValue);
 });
@@ -996,7 +1140,10 @@ async function save() {
 
     try {
         saveButton.value = i18n.getMessage("buttonSaving");
-        await saveConfig();
+        buildLedStripFromGrid(gridLeds);
+        await saveConfig(editProfile.value);
+        initializeGrid();
+        syncSelectionUIFromGrid();
 
         saveButton.value = i18n.getMessage("buttonSaved");
         setTimeout(() => {
@@ -1006,6 +1153,7 @@ async function save() {
         gui_log(i18n.getMessage("eeprom_saved_ok"));
     } catch (error) {
         console.error("Save failed:", error);
+        gui_log(`LED save failed: ${error.message ?? error}`);
         saveButton.value = oldText;
     }
 }
@@ -1080,6 +1228,12 @@ watch(auxChannelValue, (newVal) => {
     padding: 0.75rem;
     background: var(--surface-100);
     border-left: 3px solid var(--primary-500);
+}
+
+.active-profile-hint {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--surface-600);
 }
 
 .section {

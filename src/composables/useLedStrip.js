@@ -1,10 +1,53 @@
-import { ref, computed } from "vue";
+import { ref, computed, toRaw } from "vue";
 import FC from "@/js/fc.js";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
-import { API_VERSION_1_46 } from "@/js/data_storage";
+import CONFIGURATOR, { API_VERSION_1_46 } from "@/js/data_storage";
+
+export const LED_PROFILE_RACE = 0;
+export const LED_PROFILE_BEACON = 1;
+export const LED_PROFILE_STATUS = 2;
+
+const PROFILE_I18N_KEYS = ["ledStripProfileRace", "ledStripProfileBeacon", "ledStripProfileStatus"];
+const DEFAULT_PROFILE_NAMES = ["RACE", "BEACON", "STATUS"];
+
+function createEmptyProfile() {
+    return {
+        strip: [],
+        colors: [],
+        modeColors: [],
+    };
+}
+
+function cloneLedData(data) {
+    return structuredClone(toRaw(data ?? []));
+}
+
+function cloneProfile(profile) {
+    return {
+        strip: cloneLedData(profile.strip),
+        colors: cloneLedData(profile.colors),
+        modeColors: cloneLedData(profile.modeColors),
+    };
+}
+
+function syncLegacyFromProfile(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex] ?? createEmptyProfile();
+    FC.LED_STRIP = cloneLedData(profile.strip);
+    FC.LED_COLORS = cloneLedData(profile.colors);
+    FC.LED_MODE_COLORS = cloneLedData(profile.modeColors);
+    FC.LED_EDIT_PROFILE = profileIndex;
+}
+
+function syncProfileFromLegacy(profileIndex) {
+    FC.LED_STRIP_PROFILES[profileIndex] = {
+        strip: cloneLedData(FC.LED_STRIP),
+        colors: cloneLedData(FC.LED_COLORS),
+        modeColors: cloneLedData(FC.LED_MODE_COLORS),
+    };
+}
 
 // Helper functions moved to outer scope
 function getGridPosition(index) {
@@ -91,9 +134,112 @@ function isVtxActive(activeFunction) {
     return activeFunctions.includes(activeFunction);
 }
 
+async function sendAllLedStripProfiles() {
+    for (let profileIndex = 0; profileIndex < FC.LED_STRIP_PROFILE_COUNT; profileIndex++) {
+        const profile = FC.LED_STRIP_PROFILES[profileIndex];
+        if (!profile) {
+            continue;
+        }
+        await new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                reject(new Error(`MSP2_SET_LED_STRIP_PROFILE_CONFIG timeout (profile ${profileIndex})`));
+            }, 5000);
+
+            mspHelper.sendLedStripProfileConfig(profileIndex, profile, () => {
+                clearTimeout(timer);
+                resolve();
+            });
+        });
+    }
+}
+
+async function sendAllLedStripProfileNames(profileNamesRef) {
+    const names = profileNamesRef?.value ?? FC.LED_STRIP_PROFILE_NAMES ?? [];
+    FC.LED_STRIP_PROFILE_NAMES = [...names];
+
+    for (let profileIndex = 0; profileIndex < FC.LED_STRIP_PROFILE_COUNT; profileIndex++) {
+        const name = FC.LED_STRIP_PROFILE_NAMES[profileIndex] ?? "";
+        await new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                reject(new Error(`MSP2_SET_TEXT led strip profile name timeout (profile ${profileIndex})`));
+            }, 5000);
+
+            mspHelper.sendLedStripProfileName(profileIndex, name, () => {
+                clearTimeout(timer);
+                resolve();
+            });
+        });
+    }
+}
+
+async function loadLedStripProfileNames(profileNamesRef) {
+    FC.LED_STRIP_PROFILE_NAMES = FC.LED_STRIP_PROFILE_NAMES ?? ["", "", ""];
+
+    for (let profileIndex = 0; profileIndex < FC.LED_STRIP_PROFILE_COUNT; profileIndex++) {
+        FC.LED_STRIP_PROFILE_NAME_REQUEST = profileIndex;
+        await MSP.promise(
+            MSPCodes.MSP2_GET_TEXT,
+            mspHelper.crunchLedStripProfileNameGet(profileIndex),
+        );
+    }
+
+    if (profileNamesRef) {
+        profileNamesRef.value = FC.LED_STRIP_PROFILE_NAMES.map((name, profileIndex) => {
+            const trimmed = (name ?? "").trim();
+            if (!trimmed || trimmed === DEFAULT_PROFILE_NAMES[profileIndex]) {
+                return "";
+            }
+            return trimmed;
+        });
+    }
+}
+
+async function saveLegacyStatusProfile(activeProfileIndex, onCompleteCallback) {
+    syncLegacyFromProfile(LED_PROFILE_STATUS);
+
+    return new Promise((resolve) => {
+        const saveColors = () => {
+            mspHelper.sendLedStripColors(saveModeColors);
+        };
+
+        const saveModeColors = () => {
+            mspHelper.sendLedStripModeColors(writeConfig);
+        };
+
+        const writeConfig = () => {
+            mspHelper.writeConfiguration(false, () => {
+                if (onCompleteCallback) {
+                    onCompleteCallback();
+                }
+                resolve();
+            });
+        };
+
+        mspHelper.sendLedStripConfig(saveColors, activeProfileIndex);
+    });
+}
+
 // Save configuration to flight controller
-async function saveConfig() {
-    // Refactored to reduce nesting
+async function saveConfig(editProfileIndex, activeProfileIndex, profileNamesRef) {
+    syncProfileFromLegacy(editProfileIndex);
+    FC.LED_ACTIVE_PROFILE = activeProfileIndex;
+
+    if (profileNamesRef) {
+        FC.LED_STRIP_PROFILE_NAMES = [...profileNamesRef.value];
+    }
+
+    if (CONFIGURATOR.virtualMode) {
+        return;
+    }
+
+    if (FC.LED_MULTI_PROFILE_SUPPORTED) {
+        await sendAllLedStripProfiles();
+        await sendAllLedStripProfileNames(profileNamesRef);
+        await saveLegacyStatusProfile(activeProfileIndex);
+        syncLegacyFromProfile(editProfileIndex);
+        return;
+    }
+
     return new Promise((resolve) => {
         const saveColors = () => {
             mspHelper.sendLedStripColors(saveModeColors);
@@ -107,7 +253,7 @@ async function saveConfig() {
             mspHelper.writeConfiguration(false, resolve);
         };
 
-        mspHelper.sendLedStripConfig(saveColors);
+        mspHelper.sendLedStripConfig(saveColors, activeProfileIndex);
     });
 }
 
@@ -116,6 +262,9 @@ export function useLedStrip() {
     const selectedColorIndex = ref(null);
     const selectedModeColor = ref(null);
     const selectedLeds = ref(new Set());
+    const editProfile = ref(LED_PROFILE_STATUS);
+    const activeFlightProfile = ref(LED_PROFILE_STATUS);
+    const profileNames = ref(["", "", ""]);
 
     const directions = ["n", "e", "s", "w", "u", "d"];
     const functions = ["i", "w", "f", "a", "t", "r", "c", "g", "s", "b", "l", "o", "y"];
@@ -131,16 +280,127 @@ export function useLedStrip() {
     const ledColors = computed(() => FC.LED_COLORS);
     const ledModeColors = computed(() => FC.LED_MODE_COLORS);
     const ledConfigValues = computed(() => FC.LED_CONFIG_VALUES);
+    const multiProfileSupported = computed(() => FC.LED_MULTI_PROFILE_SUPPORTED);
+
+    function getProfileDisplayLabel(profileIndex, translate) {
+        const customName = profileNames.value[profileIndex]?.trim();
+        if (customName) {
+            return customName;
+        }
+
+        if (translate) {
+            return translate(PROFILE_I18N_KEYS[profileIndex] ?? "ledStripProfileStatus");
+        }
+
+        return DEFAULT_PROFILE_NAMES[profileIndex] ?? "STATUS";
+    }
+
+    function getActiveProfileLabel(profileIndex) {
+        return PROFILE_I18N_KEYS[profileIndex] ?? "ledStripProfileStatus";
+    }
+
+    function setProfileName(profileIndex, name) {
+        profileNames.value[profileIndex] = (name ?? "").trim().slice(0, 8);
+        FC.LED_STRIP_PROFILE_NAMES = [...profileNames.value];
+    }
+
+    function getProfileName(profileIndex) {
+        return profileNames.value[profileIndex] ?? "";
+    }
+
+    function loadVirtualLedData() {
+        FC.LED_STRIP_PROFILES = FC.LED_STRIP_PROFILES ?? [];
+        FC.LED_STRIP_PROFILE_COUNT = FC.LED_STRIP_PROFILE_COUNT ?? 3;
+        FC.LED_MULTI_PROFILE_SUPPORTED = true;
+
+        editProfile.value = LED_PROFILE_STATUS;
+        activeFlightProfile.value = FC.LED_ACTIVE_PROFILE ?? LED_PROFILE_STATUS;
+        profileNames.value = ["RACE", "BEACON", "STATUS"];
+        syncLegacyFromProfile(editProfile.value);
+    }
 
     // Load LED configuration data
     async function loadData() {
+        if (CONFIGURATOR.virtualMode) {
+            loadVirtualLedData();
+            return;
+        }
+
         await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG);
-        await MSP.promise(MSPCodes.MSP_LED_COLORS);
-        await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
+
+        activeFlightProfile.value = FC.LED_ACTIVE_PROFILE ?? LED_PROFILE_STATUS;
+
+        FC.LED_STRIP_PROFILES = [];
+        FC.LED_STRIP_PROFILE_NAMES = ["RACE", "BEACON", "STATUS"];
+
+        try {
+            await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_PROFILE_COUNT);
+        } catch (error) {
+            FC.LED_STRIP_PROFILE_COUNT = 1;
+            FC.LED_MULTI_PROFILE_SUPPORTED = false;
+        }
+
+        if (FC.LED_MULTI_PROFILE_SUPPORTED) {
+            for (let profileIndex = 0; profileIndex < FC.LED_STRIP_PROFILE_COUNT; profileIndex++) {
+                await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_PROFILE_CONFIG, [profileIndex]);
+            }
+
+            try {
+                await loadLedStripProfileNames(profileNames);
+            } catch (error) {
+                console.warn("Failed to load LED strip profile names:", error);
+            }
+
+            editProfile.value = LED_PROFILE_STATUS;
+            syncLegacyFromProfile(editProfile.value);
+        } else {
+            await MSP.promise(MSPCodes.MSP_LED_COLORS);
+            await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
+
+            FC.LED_STRIP_PROFILES[LED_PROFILE_STATUS] = cloneProfile({
+                strip: FC.LED_STRIP,
+                colors: FC.LED_COLORS,
+                modeColors: FC.LED_MODE_COLORS,
+            });
+            editProfile.value = LED_PROFILE_STATUS;
+        }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
         }
+    }
+
+    function setActiveFlightProfile(newProfileIndex) {
+        const profileIndex = Number(newProfileIndex);
+        if (
+            !Number.isInteger(profileIndex) ||
+            profileIndex < LED_PROFILE_RACE ||
+            profileIndex > LED_PROFILE_STATUS
+        ) {
+            return;
+        }
+
+        activeFlightProfile.value = profileIndex;
+        FC.LED_ACTIVE_PROFILE = profileIndex;
+    }
+
+    function switchEditProfile(newProfileIndex) {
+        const profileIndex = Number(newProfileIndex);
+        if (
+            !Number.isInteger(profileIndex) ||
+            profileIndex < LED_PROFILE_RACE ||
+            profileIndex > LED_PROFILE_STATUS
+        ) {
+            return;
+        }
+
+        if (profileIndex === FC.LED_EDIT_PROFILE) {
+            return;
+        }
+
+        syncProfileFromLegacy(FC.LED_EDIT_PROFILE);
+        editProfile.value = profileIndex;
+        syncLegacyFromProfile(profileIndex);
     }
 
     // Find LED at specific grid coordinates
@@ -161,8 +421,13 @@ export function useLedStrip() {
 
         gridState.forEach((led, index) => {
             if (led.functions.length > 0 && led.wireNumber !== "") {
+                const wireIndex = Number.parseInt(led.wireNumber, 10);
+                if (Number.isNaN(wireIndex) || wireIndex < 0 || wireIndex >= ledStripLength) {
+                    return;
+                }
+
                 const { x, y } = getGridPosition(index);
-                newLedStrip[led.wireNumber] = {
+                newLedStrip[wireIndex] = {
                     x,
                     y,
                     directions: led.directions.join(""),
@@ -188,6 +453,7 @@ export function useLedStrip() {
         }
 
         FC.LED_STRIP = newLedStrip;
+        syncProfileFromLegacy(FC.LED_EDIT_PROFILE);
     }
 
     // Get next available wire number
@@ -237,12 +503,19 @@ export function useLedStrip() {
         await mspHelper.sendLedStripConfigValues();
     }
 
+    async function saveCurrentProfile(editProfileIndex) {
+        await saveConfig(editProfileIndex, activeFlightProfile.value, profileNames);
+    }
+
     return {
         // State
         wireMode,
         selectedColorIndex,
         selectedModeColor,
         selectedLeds,
+        editProfile,
+        activeFlightProfile,
+        profileNames,
 
         // Constants
         directions,
@@ -255,10 +528,17 @@ export function useLedStrip() {
         ledColors,
         ledModeColors,
         ledConfigValues,
+        multiProfileSupported,
 
         // Methods
         loadData,
-        saveConfig,
+        saveConfig: saveCurrentProfile,
+        switchEditProfile,
+        setActiveFlightProfile,
+        getActiveProfileLabel,
+        getProfileDisplayLabel,
+        getProfileName,
+        setProfileName,
         findLed,
         getGridPosition,
         buildLedStripFromGrid,

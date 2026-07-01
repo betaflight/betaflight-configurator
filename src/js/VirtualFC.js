@@ -78,6 +78,151 @@ const DEFAULT_BETAFLIGHT_RX_CONFIG = {
     serialrx_provider: 9,
 };
 
+const VIRTUAL_LED_STRIP_LENGTH = 32;
+
+function createEmptyLedStrip(length) {
+    return Array.from({ length }, () => ({
+        x: 0,
+        y: 0,
+        functions: [],
+        directions: [],
+        color: 0,
+        parameters: 0,
+    }));
+}
+
+function createDefaultLedColors() {
+    return [
+        { h: 0, s: 0, v: 0 },
+        { h: 0, s: 0, v: 255 },
+        { h: 160, s: 255, v: 255 },
+        { h: 30, s: 255, v: 255 },
+        { h: 60, s: 255, v: 255 },
+        { h: 90, s: 255, v: 255 },
+        { h: 120, s: 255, v: 255 },
+        { h: 150, s: 255, v: 255 },
+        { h: 180, s: 255, v: 255 },
+        { h: 210, s: 255, v: 255 },
+        { h: 240, s: 255, v: 255 },
+        { h: 270, s: 255, v: 255 },
+        { h: 300, s: 255, v: 255 },
+        { h: 330, s: 255, v: 255 },
+        { h: 0, s: 0, v: 0 },
+        { h: 0, s: 0, v: 0 },
+    ];
+}
+
+function createDefaultLedModeColors() {
+    const modeColors = [];
+
+    for (let mode = 0; mode < 6; mode++) {
+        for (let direction = 0; direction < 6; direction++) {
+            modeColors.push({ mode, direction, color: 3 });
+        }
+    }
+
+    for (let direction = 0; direction < 8; direction++) {
+        modeColors.push({ mode: 6, direction, color: direction === 1 ? 10 : 6 });
+    }
+
+    modeColors.push({ mode: 7, direction: 0, color: 3 });
+
+    return modeColors;
+}
+
+function createVirtualRaceProfile() {
+    const strip = createEmptyLedStrip(VIRTUAL_LED_STRIP_LENGTH);
+    const colors = createDefaultLedColors();
+    const modeColors = createDefaultLedModeColors();
+
+    for (let ledIndex = 0; ledIndex < 8; ledIndex++) {
+        strip[ledIndex] = {
+            x: 4 + ledIndex,
+            y: 8,
+            functions: ["c"],
+            directions: [],
+            color: 3,
+            parameters: 0,
+        };
+    }
+
+    return { strip, colors, modeColors };
+}
+
+function createVirtualBeaconProfile() {
+    const strip = createEmptyLedStrip(VIRTUAL_LED_STRIP_LENGTH);
+    const colors = createDefaultLedColors();
+    const modeColors = createDefaultLedModeColors();
+
+    for (let ledIndex = 0; ledIndex < 8; ledIndex++) {
+        strip[ledIndex] = {
+            x: 4 + ledIndex,
+            y: 8,
+            functions: ["c", "b"],
+            directions: [],
+            color: 3,
+            parameters: 0,
+        };
+    }
+
+    return { strip, colors, modeColors };
+}
+
+function createVirtualStatusProfile() {
+    const strip = createEmptyLedStrip(VIRTUAL_LED_STRIP_LENGTH);
+    const colors = createDefaultLedColors();
+    const modeColors = createDefaultLedModeColors();
+
+    const statusLayout = [
+        { wire: 0, x: 8, y: 4, functions: ["a"], directions: ["n"], color: 0 },
+        { wire: 1, x: 4, y: 8, functions: ["f"], directions: ["w"], color: 0 },
+        { wire: 2, x: 12, y: 8, functions: ["f"], directions: ["e"], color: 0 },
+        { wire: 3, x: 8, y: 12, functions: ["f"], directions: ["s"], color: 0 },
+        { wire: 4, x: 6, y: 6, functions: ["r"], directions: [], color: 2 },
+        { wire: 5, x: 10, y: 6, functions: ["r"], directions: [], color: 2 },
+        { wire: 6, x: 6, y: 10, functions: ["r"], directions: [], color: 2 },
+        { wire: 7, x: 10, y: 10, functions: ["r"], directions: [], color: 2 },
+        { wire: 8, x: 8, y: 8, functions: ["c", "y"], directions: [], color: 4 },
+    ];
+
+    for (const led of statusLayout) {
+        strip[led.wire] = {
+            x: led.x,
+            y: led.y,
+            functions: led.functions,
+            directions: led.directions,
+            color: led.color,
+            parameters: 0,
+        };
+    }
+
+    return { strip, colors, modeColors };
+}
+
+function setupVirtualLedProfiles(virtualFC) {
+    virtualFC.LED_STRIP_PROFILES = [
+        createVirtualRaceProfile(),
+        createVirtualBeaconProfile(),
+        createVirtualStatusProfile(),
+    ];
+    virtualFC.LED_STRIP_PROFILE_COUNT = 3;
+    virtualFC.LED_MULTI_PROFILE_SUPPORTED = true;
+    virtualFC.LED_ACTIVE_PROFILE = 2;
+    virtualFC.LED_EDIT_PROFILE = 2;
+    virtualFC.LED_STRIP_ADVANCED = 1;
+
+    const activeProfile = virtualFC.LED_STRIP_PROFILES[virtualFC.LED_EDIT_PROFILE];
+    virtualFC.LED_STRIP = structuredClone(activeProfile.strip);
+    virtualFC.LED_COLORS = structuredClone(activeProfile.colors);
+    virtualFC.LED_MODE_COLORS = structuredClone(activeProfile.modeColors);
+
+    virtualFC.LED_CONFIG_VALUES = {
+        brightness: 100,
+        rainbow_delta: 15,
+        rainbow_freq: 120,
+    };
+}
+
 const DEFAULT_BETAFLIGHT_ADVANCED_TUNING = {
     antiGravityGain: 80,
     itermRotation: 0,
@@ -233,18 +378,7 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.LED_STRIP = Array.from({ length: 256 });
-
-        for (let i = 0; i < virtualFC.LED_STRIP.length; i++) {
-            virtualFC.LED_STRIP[i] = {
-                x: 0,
-                y: 0,
-                functions: ["c"],
-                color: 0,
-                directions: [],
-                parameters: 0,
-            };
-        }
+        setupVirtualLedProfiles(virtualFC);
 
         virtualFC.ANALOG = {
             voltage: 12,

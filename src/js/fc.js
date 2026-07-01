@@ -180,6 +180,13 @@ const FC = {
     LED_COLORS: null,
     LED_MODE_COLORS: null,
     LED_STRIP: null,
+    LED_STRIP_PROFILES: null,
+    LED_STRIP_PROFILE_COUNT: 1,
+    LED_STRIP_PROFILE_NAMES: null,
+    LED_STRIP_PROFILE_NAME_REQUEST: 0,
+    LED_MULTI_PROFILE_SUPPORTED: false,
+    LED_ACTIVE_PROFILE: 2,
+    LED_EDIT_PROFILE: 2,
     LED_CONFIG_VALUES: [],
     MCU_INFO: {},
     MISC: null, // DEPRECATED
@@ -263,6 +270,13 @@ const FC = {
         };
 
         this.LED_STRIP = [];
+        this.LED_STRIP_PROFILES = [];
+        this.LED_STRIP_PROFILE_COUNT = 1;
+        this.LED_STRIP_PROFILE_NAMES = ["", "", ""];
+        this.LED_STRIP_PROFILE_NAME_REQUEST = 0;
+        this.LED_MULTI_PROFILE_SUPPORTED = false;
+        this.LED_ACTIVE_PROFILE = 2;
+        this.LED_EDIT_PROFILE = 2;
         this.LED_COLORS = [];
         this.LED_MODE_COLORS = [];
 
