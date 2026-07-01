@@ -3004,6 +3004,17 @@ MspHelper.prototype.sendLedStripProfileConfig = function (profileIndex, profile,
     MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_PROFILE_CONFIG, buffer, false, onCompleteCallback);
 };
 
+MspHelper.prototype.sendLedStripActiveProfile = function (activeProfileIndex, onCompleteCallback) {
+    const buffer = [];
+    const led = FC.LED_STRIP[0] ?? EMPTY_LED_STRIP_LED;
+
+    buffer.push8(0);
+    buffer.push32(ledStripLedToMask(led));
+    buffer.push8(activeProfileIndex);
+
+    MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer, false, onCompleteCallback);
+};
+
 MspHelper.prototype.sendLedStripProfileName = function (profileIndex, name, onCompleteCallback) {
     const buffer = [];
     this.setLedStripProfileNameText(buffer, profileIndex, name ?? "");

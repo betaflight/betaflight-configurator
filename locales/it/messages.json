@@ -4511,6 +4511,48 @@
     "ledStripHelp": {
         "message": "il Controlllore di volo è un grado di controllare il colore e gli effetti di ogni singolo LED su una striscia.<br \/>Configura i LED sulla griglia, configura l'ordine del cablaggio e poi posiziona i LED sul tuo mezzo seguendo la posizione sulla griglia. I LED senza numero di posizione sulla griglia non saranno salvati.<br \/>Fai doppio click su un colore per modificare i valori di HSV"
     },
+    "ledStripProfileTitle": {
+        "message": "Edit profile"
+    },
+    "ledStripProfileOption": {
+        "message": "Profile $1"
+    },
+    "ledStripProfile1Label": {
+        "message": "Profile 1"
+    },
+    "ledStripProfile2Label": {
+        "message": "Profile 2"
+    },
+    "ledStripProfile3Label": {
+        "message": "Profile 3"
+    },
+    "ledStripProfileTip": {
+        "message": "Select the LED profile to edit in the Configurator. Each profile can have its own color or LED layout."
+    },
+    "ledStripActiveProfileTitle": {
+        "message": "Active profile in flight"
+    },
+    "ledStripActiveProfileTip": {
+        "message": "LED profile used in flight. Can be changed via the ledstrip_profile setting, CMS, or an auxiliary channel range."
+    },
+    "ledStripProfileRace": {
+        "message": "Profile 1 — RACE"
+    },
+    "ledStripProfileBeacon": {
+        "message": "Profile 2 — BEACON"
+    },
+    "ledStripProfileStatus": {
+        "message": "Profile 3 — STATUS"
+    },
+    "ledStripProfileName": {
+        "message": "LED profile name"
+    },
+    "ledStripProfileNameHelp": {
+        "message": "Name for this LED profile to describe its use: race, beacon, status, indoor, etc. (8 characters max)."
+    },
+    "ledStripActiveProfileHint": {
+        "message": "Active in flight: $1"
+    },
     "ledStripButtonSave": {
         "message": "Salva"
     },
