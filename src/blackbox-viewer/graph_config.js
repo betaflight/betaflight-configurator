@@ -1401,6 +1401,54 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+                case "PLANE_SAS":
+                    switch (fieldName) {
+                        case "debug[0]":
+                        case "debug[1]":
+                        case "debug[5]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -100,
+                                    max: 100,
+                                },
+                            };
+                        case "debug[2]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -2,
+                                    max: 2,
+                                },
+                            };
+                        case "debug[3]":
+                        case "debug[4]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -5,
+                                    max: 5,
+                                },
+                            };
+                        case "debug[6]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -1,
+                                    max: 1,
+                                },
+                            };
+                        case "debug[7]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: 0,
+                                    max: 1,
+                                },
+                            };
+                        default:
+                            return getCurveForMinMaxFields(fieldName);
+                    }
             }
         }
         // if not found above then
