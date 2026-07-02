@@ -1224,6 +1224,23 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.LED_CONFIG_VALUES.rainbow_delta = data.readU16();
                     FC.LED_CONFIG_VALUES.rainbow_freq = data.readU16();
                     FC.LED_CONFIG_VALUES.larson_freq = data.remaining() >= 2 ? data.readU16() : 15;
+                    FC.LED_CONFIG_VALUES.blink_period_ms = data.remaining() >= 2 ? data.readU16() : 500;
+                    if (data.remaining() >= 2) {
+                        FC.LED_CONFIG_VALUES.blink_on_ms = data.readU16();
+                    } else if (data.remaining() >= 1) {
+                        const blinkPercent = data.readU8();
+                        const periodMs = FC.LED_CONFIG_VALUES.blink_period_ms ?? 500;
+                        FC.LED_CONFIG_VALUES.blink_on_ms =
+                            blinkPercent > 0 && periodMs > 0
+                                ? Math.max(1, Math.round((periodMs * blinkPercent) / 100))
+                                : 250;
+                    } else {
+                        FC.LED_CONFIG_VALUES.blink_on_ms = 250;
+                    }
+                    FC.LED_CONFIG_VALUES.blink_pattern = data.remaining() >= 1 ? data.readU8() : 1;
+                    FC.LED_CONFIG_VALUES.blink_flash_ms = data.remaining() >= 2 ? data.readU16() : 120;
+                    FC.LED_CONFIG_VALUES.blink_gap_ms = data.remaining() >= 2 ? data.readU16() : 120;
+                    FC.LED_CONFIG_VALUES.blink_pause_ms = data.remaining() >= 2 ? data.readU16() : 2000;
                     break;
 
                 case MSPCodes.MSP2_GET_LED_STRIP_PROFILE_COUNT:
@@ -1242,7 +1259,31 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         larsonFreq: data.remaining() >= 2 ? data.readU16() : 0,
                         rainbowDelta: data.remaining() >= 2 ? data.readU16() : 0,
                         rainbowFreq: data.remaining() >= 2 ? data.readU16() : 0,
+                        blinkPeriod: 0,
+                        blinkOnMs: 0,
+                        blinkPattern: 0,
+                        blinkFlashMs: 0,
+                        blinkGapMs: 0,
+                        blinkPauseMs: 0,
                     };
+
+                    profile.blinkPeriod = data.remaining() >= 2 ? data.readU16() : 0;
+
+                    if (data.remaining() >= 2) {
+                        profile.blinkOnMs = data.readU16();
+                    } else if (data.remaining() >= 1) {
+                        const blinkPercent = data.readU8();
+                        profile.blinkOnMs =
+                            blinkPercent > 0 && profile.blinkPeriod > 0
+                                ? Math.max(1, Math.round((profile.blinkPeriod * blinkPercent) / 100))
+                                : 0;
+                    }
+
+                    profile.blinkPattern = data.remaining() >= 1 ? data.readU8() : 0;
+                    profile.blinkFlashMs = data.remaining() >= 2 ? data.readU16() : 0;
+                    profile.blinkGapMs = data.remaining() >= 2 ? data.readU16() : 0;
+                    profile.blinkPauseMs = data.remaining() >= 2 ? data.readU16() : 0;
+
                     FC.LED_STRIP_PROFILES[profileIndex] = profile;
                     break;
                 }
@@ -3006,6 +3047,12 @@ MspHelper.prototype.crunchLedStripProfileConfig = function (profileIndex, profil
     buffer.push16(profile.larsonFreq ?? 0);
     buffer.push16(profile.rainbowDelta ?? 0);
     buffer.push16(profile.rainbowFreq ?? 0);
+    buffer.push16(profile.blinkPeriod ?? 0);
+    buffer.push16(profile.blinkOnMs ?? 0);
+    buffer.push8(profile.blinkPattern ?? 0);
+    buffer.push16(profile.blinkFlashMs ?? 0);
+    buffer.push16(profile.blinkGapMs ?? 0);
+    buffer.push16(profile.blinkPauseMs ?? 0);
 
     return buffer;
 };
@@ -3040,6 +3087,12 @@ MspHelper.prototype.sendLedStripConfigValues = function (onCompleteCallback) {
     buffer.push16(FC.LED_CONFIG_VALUES.rainbow_delta);
     buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq);
     buffer.push16(FC.LED_CONFIG_VALUES.larson_freq ?? 15);
+    buffer.push16(FC.LED_CONFIG_VALUES.blink_period_ms ?? 500);
+    buffer.push16(FC.LED_CONFIG_VALUES.blink_on_ms ?? 250);
+    buffer.push8(FC.LED_CONFIG_VALUES.blink_pattern ?? 1);
+    buffer.push16(FC.LED_CONFIG_VALUES.blink_flash_ms ?? 120);
+    buffer.push16(FC.LED_CONFIG_VALUES.blink_gap_ms ?? 120);
+    buffer.push16(FC.LED_CONFIG_VALUES.blink_pause_ms ?? 2000);
     MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
 

@@ -159,6 +159,50 @@
                             @update:model-value="onModifierChange('b')"
                             :label="$t('ledStripBlinkAlwaysOverlay')"
                         />
+                        <div class="sliders-group" v-show="modifiers.blink">
+                            <span v-html="$t('ledStripBlinkPatternTitle')"></span>
+                            <USelect
+                                id="blinkPatternSelect"
+                                class="min-w-48"
+                                size="sm"
+                                :items="blinkPatternItems"
+                                v-model="blinkPattern"
+                            />
+                            <template v-if="showBlinkFlashSliders">
+                                <span v-html="$t('ledStripBlinkFlashSliderTitle')"></span>
+                                <div class="slider-control">
+                                    <span class="slider-value">{{ blinkFlashMs }}</span>
+                                    <USlider v-model="blinkFlashMs" :min="20" :max="300" :step="10" class="w-40" />
+                                    <HelpIcon :text="$t('ledStripBlinkFlashSliderHelp')" />
+                                </div>
+                                <span v-html="$t('ledStripBlinkPauseSliderTitle')"></span>
+                                <div class="slider-control">
+                                    <span class="slider-value">{{ blinkPauseMs }}</span>
+                                    <USlider v-model="blinkPauseMs" :min="LED_BLINK_PAUSE_MS_MIN_ALTERNATE" :max="2000" :step="100" class="w-40" />
+                                    <HelpIcon :text="$t('ledStripBlinkPauseSliderHelp')" />
+                                </div>
+                            </template>
+                            <template v-if="showBlinkDoubleFlashSliders">
+                                <span v-html="$t('ledStripBlinkFlashSliderTitle')"></span>
+                                <div class="slider-control">
+                                    <span class="slider-value">{{ blinkFlashMs }}</span>
+                                    <USlider v-model="blinkFlashMs" :min="20" :max="300" :step="10" class="w-40" />
+                                    <HelpIcon :text="$t('ledStripBlinkFlashSliderHelp')" />
+                                </div>
+                                <span v-html="$t('ledStripBlinkGapSliderTitle')"></span>
+                                <div class="slider-control">
+                                    <span class="slider-value">{{ blinkGapMs }}</span>
+                                    <USlider v-model="blinkGapMs" :min="20" :max="300" :step="10" class="w-40" />
+                                    <HelpIcon :text="$t('ledStripBlinkGapSliderHelp')" />
+                                </div>
+                                <span v-html="$t('ledStripBlinkPauseSliderTitle')"></span>
+                                <div class="slider-control">
+                                    <span class="slider-value">{{ blinkPauseMs }}</span>
+                                    <USlider v-model="blinkPauseMs" :min="200" :max="2000" :step="100" class="w-40" />
+                                    <HelpIcon :text="$t('ledStripBlinkPauseSliderHelp')" />
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
                     <div class="modifier-row rainbowOverlay" v-show="showRainbow">
@@ -452,9 +496,21 @@ const {
     getProfileEffectiveLarsonFreq,
     getProfileEffectiveRainbowDelta,
     getProfileEffectiveRainbowFreq,
+    getProfileEffectiveBlinkPattern,
+    migrateBlinkPattern,
+    getProfileEffectiveBlinkFlashMs,
+    getProfileEffectiveBlinkGapMs,
+    getProfileEffectiveBlinkPauseMs,
     setProfileLarsonFreq,
     setProfileRainbowDelta,
     setProfileRainbowFreq,
+    setProfileBlinkPattern,
+    setProfileBlinkFlashMs,
+    setProfileBlinkGapMs,
+    setProfileBlinkPauseMs,
+    LED_BLINK_PATTERN_ALTERNATE,
+    LED_BLINK_PATTERN_BEACON,
+    LED_BLINK_PAUSE_MS_MIN_ALTERNATE,
 } = useLedStrip();
 
 const PROFILE_OPTION_KEYS = ["ledStripProfile1Label", "ledStripProfile2Label", "ledStripProfile3Label"];
@@ -560,6 +616,10 @@ const brightness = ref(50);
 const larsonFreq = ref(15);
 const rainbowDelta = ref(0);
 const rainbowFreq = ref(1);
+const blinkPattern = ref(LED_BLINK_PATTERN_ALTERNATE);
+const blinkFlashMs = ref(120);
+const blinkGapMs = ref(120);
+const blinkPauseMs = ref(2000);
 
 // Computed properties
 const wiresRemaining = computed(() => {
@@ -611,6 +671,15 @@ const auxChannelItems = computed(() => [
     { label: t("controlAxisAux7"), value: "10" },
     { label: t("controlAxisAux8"), value: "11" },
 ]);
+
+const blinkPatternItems = computed(() => [
+    { label: t("ledStripBlinkPatternAlternate"), value: LED_BLINK_PATTERN_ALTERNATE },
+    { label: t("ledStripBlinkPatternBeacon"), value: LED_BLINK_PATTERN_BEACON },
+]);
+
+const showBlinkFlashSliders = computed(() => Number(blinkPattern.value) === LED_BLINK_PATTERN_ALTERNATE);
+
+const showBlinkDoubleFlashSliders = computed(() => Number(blinkPattern.value) === LED_BLINK_PATTERN_BEACON);
 
 const modeColorsModeItems = computed(() => [
     { label: t("ledStripModeColorsModeOrientation"), value: 0 },
@@ -772,11 +841,23 @@ function loadConfigValues() {
         larsonFreq.value = getProfileEffectiveLarsonFreq(profileIndex);
         rainbowDelta.value = getProfileEffectiveRainbowDelta(profileIndex);
         rainbowFreq.value = getProfileEffectiveRainbowFreq(profileIndex);
+        blinkPattern.value = getProfileEffectiveBlinkPattern(profileIndex);
+        blinkFlashMs.value = getProfileEffectiveBlinkFlashMs(profileIndex);
+        blinkGapMs.value = getProfileEffectiveBlinkGapMs(profileIndex);
+        blinkPauseMs.value = getProfileEffectiveBlinkPauseMs(profileIndex);
     } else {
         brightness.value = ledConfigValues.value?.brightness || 50;
         larsonFreq.value = ledConfigValues.value?.larson_freq ?? 15;
         rainbowDelta.value = ledConfigValues.value?.rainbow_delta || 0;
         rainbowFreq.value = ledConfigValues.value?.rainbow_freq || 1;
+        blinkPattern.value = migrateBlinkPattern(ledConfigValues.value?.blink_pattern ?? LED_BLINK_PATTERN_ALTERNATE);
+        blinkFlashMs.value = ledConfigValues.value?.blink_flash_ms ?? 120;
+        blinkGapMs.value = ledConfigValues.value?.blink_gap_ms ?? 120;
+        const rawBlinkPauseMs = ledConfigValues.value?.blink_pause_ms ?? 2000;
+        blinkPauseMs.value =
+            blinkPattern.value === LED_BLINK_PATTERN_ALTERNATE
+                ? Math.max(rawBlinkPauseMs, LED_BLINK_PAUSE_MS_MIN_ALTERNATE)
+                : rawBlinkPauseMs;
     }
     suppressBrightnessApply = false;
     suppressOverlaySliderApply = false;
@@ -1290,6 +1371,110 @@ watch(rainbowFreq, (newValue) => {
         setProfileRainbowFreq(profileIndex, newValue);
     } else {
         updateLedConfigValue("rainbow_freq", newValue);
+    }
+});
+
+watch(blinkPattern, (newValue) => {
+    if (suppressOverlaySliderApply) {
+        return;
+    }
+
+    const patternValue = Number(newValue);
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedBlinkPattern = FC.LED_STRIP_PROFILES[profileIndex]?.blinkPattern ?? 0;
+
+        if (storedBlinkPattern === 0) {
+            const masterBlinkPattern = FC.LED_CONFIG_VALUES?.blink_pattern ?? LED_BLINK_PATTERN_ALTERNATE;
+            if (patternValue === masterBlinkPattern) {
+                return;
+            }
+        } else if (storedBlinkPattern === patternValue) {
+            return;
+        }
+
+        setProfileBlinkPattern(profileIndex, patternValue);
+    } else {
+        updateLedConfigValue("blink_pattern", patternValue);
+    }
+
+    if (patternValue === LED_BLINK_PATTERN_ALTERNATE && blinkPauseMs.value < LED_BLINK_PAUSE_MS_MIN_ALTERNATE) {
+        blinkPauseMs.value = LED_BLINK_PAUSE_MS_MIN_ALTERNATE;
+    } else if (patternValue === LED_BLINK_PATTERN_BEACON && blinkPauseMs.value < 200) {
+        blinkPauseMs.value = 200;
+    }
+});
+
+watch(blinkFlashMs, (newValue) => {
+    if (suppressOverlaySliderApply) {
+        return;
+    }
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedBlinkFlashMs = FC.LED_STRIP_PROFILES[profileIndex]?.blinkFlashMs ?? 0;
+
+        if (storedBlinkFlashMs === 0) {
+            const masterBlinkFlashMs = FC.LED_CONFIG_VALUES?.blink_flash_ms ?? 120;
+            if (newValue === masterBlinkFlashMs) {
+                return;
+            }
+        } else if (storedBlinkFlashMs === newValue) {
+            return;
+        }
+
+        setProfileBlinkFlashMs(profileIndex, newValue);
+    } else {
+        updateLedConfigValue("blink_flash_ms", newValue);
+    }
+});
+
+watch(blinkGapMs, (newValue) => {
+    if (suppressOverlaySliderApply) {
+        return;
+    }
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedBlinkGapMs = FC.LED_STRIP_PROFILES[profileIndex]?.blinkGapMs ?? 0;
+
+        if (storedBlinkGapMs === 0) {
+            const masterBlinkGapMs = FC.LED_CONFIG_VALUES?.blink_gap_ms ?? 120;
+            if (newValue === masterBlinkGapMs) {
+                return;
+            }
+        } else if (storedBlinkGapMs === newValue) {
+            return;
+        }
+
+        setProfileBlinkGapMs(profileIndex, newValue);
+    } else {
+        updateLedConfigValue("blink_gap_ms", newValue);
+    }
+});
+
+watch(blinkPauseMs, (newValue) => {
+    if (suppressOverlaySliderApply) {
+        return;
+    }
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedBlinkPauseMs = FC.LED_STRIP_PROFILES[profileIndex]?.blinkPauseMs ?? 0;
+
+        if (storedBlinkPauseMs === 0) {
+            const masterBlinkPauseMs = FC.LED_CONFIG_VALUES?.blink_pause_ms ?? 2000;
+            if (newValue === masterBlinkPauseMs) {
+                return;
+            }
+        } else if (storedBlinkPauseMs === newValue) {
+            return;
+        }
+
+        setProfileBlinkPauseMs(profileIndex, newValue);
+    } else {
+        updateLedConfigValue("blink_pause_ms", newValue);
     }
 });
 

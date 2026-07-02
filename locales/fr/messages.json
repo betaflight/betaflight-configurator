@@ -3175,6 +3175,48 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "clignote en permanence"
     },
+    "ledStripBlinkPeriodSliderTitle": {
+        "message": "Période (ms)"
+    },
+    "ledStripBlinkPeriodSliderHelp": {
+        "message": "Durée d'un cycle complet. Plus la valeur est élevée, plus le clignotement est lent."
+    },
+    "ledStripBlinkOnMsSliderTitle": {
+        "message": "Temps allumé (ms)"
+    },
+    "ledStripBlinkOnMsSliderHelp": {
+        "message": "Durée pendant laquelle la LED reste allumée à chaque cycle."
+    },
+    "ledStripBlinkPatternTitle": {
+        "message": "Motif"
+    },
+    "ledStripBlinkPatternAlternate": {
+        "message": "Flash"
+    },
+    "ledStripBlinkPatternDouble": {
+        "message": "Off-On-On-Off"
+    },
+    "ledStripBlinkPatternBeacon": {
+        "message": "Double flash"
+    },
+    "ledStripBlinkFlashSliderTitle": {
+        "message": "Durée flash (ms)"
+    },
+    "ledStripBlinkFlashSliderHelp": {
+        "message": "Durée de chaque flash."
+    },
+    "ledStripBlinkGapSliderTitle": {
+        "message": "Écart entre flashes (ms)"
+    },
+    "ledStripBlinkGapSliderHelp": {
+        "message": "Pause entre les deux flashes de chaque rafale."
+    },
+    "ledStripBlinkPauseSliderTitle": {
+        "message": "Pause après rafale (ms)"
+    },
+    "ledStripBlinkPauseSliderHelp": {
+        "message": "Temps éteint avant la prochaine double rafale."
+    },
     "ledStripOverlayTitle": {
         "message": "Priorité"
     },

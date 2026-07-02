@@ -4904,6 +4904,62 @@
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink always"
     },
+    "ledStripBlinkPeriodSliderTitle": {
+        "message": "Period (ms)",
+        "description": "LED Strip blink overlay period in milliseconds"
+    },
+    "ledStripBlinkPeriodSliderHelp": {
+        "message": "Full blink cycle length. Higher values blink slower.",
+        "description": "Hint on LED Strip tab for blink period"
+    },
+    "ledStripBlinkOnMsSliderTitle": {
+        "message": "On time (ms)",
+        "description": "LED Strip blink overlay on-time in milliseconds"
+    },
+    "ledStripBlinkOnMsSliderHelp": {
+        "message": "How long the LED stays on during each blink cycle.",
+        "description": "Hint on LED Strip tab for blink on-time"
+    },
+    "ledStripBlinkPatternTitle": {
+        "message": "Pattern",
+        "description": "LED Strip blink overlay pattern selector label"
+    },
+    "ledStripBlinkPatternAlternate": {
+        "message": "Flash",
+        "description": "Single flash blink pattern option on LED Strip tab"
+    },
+    "ledStripBlinkPatternDouble": {
+        "message": "Off-On-On-Off",
+        "description": "Double blink pattern option on LED Strip tab"
+    },
+    "ledStripBlinkPatternBeacon": {
+        "message": "Double flash",
+        "description": "Double flash blink pattern option on LED Strip tab"
+    },
+    "ledStripBlinkFlashSliderTitle": {
+        "message": "Flash duration (ms)",
+        "description": "LED Strip beacon blink flash duration"
+    },
+    "ledStripBlinkFlashSliderHelp": {
+        "message": "How long each flash stays on.",
+        "description": "Hint on LED Strip tab for beacon flash duration"
+    },
+    "ledStripBlinkGapSliderTitle": {
+        "message": "Gap between flashes (ms)",
+        "description": "LED Strip beacon blink gap between flashes"
+    },
+    "ledStripBlinkGapSliderHelp": {
+        "message": "Pause between the two flashes in each burst.",
+        "description": "Hint on LED Strip tab for beacon flash gap"
+    },
+    "ledStripBlinkPauseSliderTitle": {
+        "message": "Pause after burst (ms)",
+        "description": "LED Strip beacon blink pause after double flash"
+    },
+    "ledStripBlinkPauseSliderHelp": {
+        "message": "How long the LED stays off before the next double flash.",
+        "description": "Hint on LED Strip tab for beacon pause duration"
+    },
     "ledStripThrottleHue": {
         "message": "Throttle hue",
         "description": "Label of throttle hue modifier switch on LED Strip tab"

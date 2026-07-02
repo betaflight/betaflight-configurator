@@ -10,6 +10,13 @@ export const LED_PROFILE_RACE = 0;
 export const LED_PROFILE_BEACON = 1;
 export const LED_PROFILE_STATUS = 2;
 
+export const LED_BLINK_PATTERN_ALTERNATE = 1;
+export const LED_BLINK_PATTERN_BEACON = 3;
+export const LED_BLINK_PATTERN_DOUBLE_DEPRECATED = 2;
+export const LED_BLINK_FLASH_MS_MIN = 20;
+export const LED_BLINK_PAUSE_MS_MIN = 200;
+export const LED_BLINK_PAUSE_MS_MIN_ALTERNATE = 100;
+
 const PROFILE_I18N_KEYS = ["ledStripProfileRace", "ledStripProfileBeacon", "ledStripProfileStatus"];
 const DEFAULT_PROFILE_NAMES = ["RACE", "BEACON", "STATUS"];
 
@@ -34,6 +41,12 @@ function createEmptyProfile() {
         larsonFreq: 0,
         rainbowDelta: 0,
         rainbowFreq: 0,
+        blinkPeriod: 0,
+        blinkOnMs: 0,
+        blinkPattern: 0,
+        blinkFlashMs: 0,
+        blinkGapMs: 0,
+        blinkPauseMs: 0,
     };
 }
 
@@ -50,6 +63,12 @@ function cloneProfile(profile) {
         larsonFreq: profile?.larsonFreq ?? 0,
         rainbowDelta: profile?.rainbowDelta ?? 0,
         rainbowFreq: profile?.rainbowFreq ?? 0,
+        blinkPeriod: profile?.blinkPeriod ?? 0,
+        blinkOnMs: profile?.blinkOnMs ?? 0,
+        blinkPattern: profile?.blinkPattern ?? 0,
+        blinkFlashMs: profile?.blinkFlashMs ?? 0,
+        blinkGapMs: profile?.blinkGapMs ?? 0,
+        blinkPauseMs: profile?.blinkPauseMs ?? 0,
     };
 }
 
@@ -87,6 +106,12 @@ function normalizeProfileForCompare(profile) {
         larsonFreq: profile?.larsonFreq ?? 0,
         rainbowDelta: profile?.rainbowDelta ?? 0,
         rainbowFreq: profile?.rainbowFreq ?? 0,
+        blinkPeriod: profile?.blinkPeriod ?? 0,
+        blinkOnMs: profile?.blinkOnMs ?? 0,
+        blinkPattern: profile?.blinkPattern ?? 0,
+        blinkFlashMs: profile?.blinkFlashMs ?? 0,
+        blinkGapMs: profile?.blinkGapMs ?? 0,
+        blinkPauseMs: profile?.blinkPauseMs ?? 0,
     };
 }
 
@@ -122,6 +147,12 @@ function updateProfileCacheFromLegacy(profileIndex) {
         larsonFreq: existingProfile.larsonFreq ?? 0,
         rainbowDelta: existingProfile.rainbowDelta ?? 0,
         rainbowFreq: existingProfile.rainbowFreq ?? 0,
+        blinkPeriod: existingProfile.blinkPeriod ?? 0,
+        blinkOnMs: existingProfile.blinkOnMs ?? 0,
+        blinkPattern: existingProfile.blinkPattern ?? 0,
+        blinkFlashMs: existingProfile.blinkFlashMs ?? 0,
+        blinkGapMs: existingProfile.blinkGapMs ?? 0,
+        blinkPauseMs: existingProfile.blinkPauseMs ?? 0,
     };
 }
 
@@ -240,6 +271,76 @@ function getProfileEffectiveRainbowFreq(profileIndex) {
     return FC.LED_CONFIG_VALUES?.rainbow_freq ?? 120;
 }
 
+function getProfileEffectiveBlinkPeriod(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileBlinkPeriod = profile?.blinkPeriod ?? 0;
+    if (profileBlinkPeriod > 0) {
+        return profileBlinkPeriod;
+    }
+    return FC.LED_CONFIG_VALUES?.blink_period_ms ?? 500;
+}
+
+function getProfileEffectiveBlinkOnMs(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileBlinkOnMs = profile?.blinkOnMs ?? 0;
+    if (profileBlinkOnMs > 0) {
+        return profileBlinkOnMs;
+    }
+    return FC.LED_CONFIG_VALUES?.blink_on_ms ?? 250;
+}
+
+function migrateBlinkPattern(blinkPattern) {
+    if (blinkPattern === LED_BLINK_PATTERN_DOUBLE_DEPRECATED) {
+        return LED_BLINK_PATTERN_BEACON;
+    }
+    return blinkPattern;
+}
+
+function getProfileEffectiveBlinkPattern(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileBlinkPattern = profile?.blinkPattern ?? 0;
+    if (profileBlinkPattern > 0) {
+        return migrateBlinkPattern(profileBlinkPattern);
+    }
+    return migrateBlinkPattern(FC.LED_CONFIG_VALUES?.blink_pattern ?? LED_BLINK_PATTERN_ALTERNATE);
+}
+
+function getProfileEffectiveBlinkFlashMs(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileBlinkFlashMs = profile?.blinkFlashMs ?? 0;
+    if (profileBlinkFlashMs >= LED_BLINK_FLASH_MS_MIN) {
+        return profileBlinkFlashMs;
+    }
+    return FC.LED_CONFIG_VALUES?.blink_flash_ms ?? 120;
+}
+
+function clampBlinkPauseMsForPattern(pauseMs, blinkPattern) {
+    const minPauseMs =
+        migrateBlinkPattern(blinkPattern) === LED_BLINK_PATTERN_ALTERNATE
+            ? LED_BLINK_PAUSE_MS_MIN_ALTERNATE
+            : LED_BLINK_PAUSE_MS_MIN;
+    return Math.max(pauseMs, minPauseMs);
+}
+
+function getProfileEffectiveBlinkGapMs(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileBlinkGapMs = profile?.blinkGapMs ?? 0;
+    if (profileBlinkGapMs >= 20) {
+        return profileBlinkGapMs;
+    }
+    return FC.LED_CONFIG_VALUES?.blink_gap_ms ?? 120;
+}
+
+function getProfileEffectiveBlinkPauseMs(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileBlinkPauseMs = profile?.blinkPauseMs ?? 0;
+    const rawPauseMs =
+        profileBlinkPauseMs >= LED_BLINK_PAUSE_MS_MIN_ALTERNATE
+            ? profileBlinkPauseMs
+            : FC.LED_CONFIG_VALUES?.blink_pause_ms ?? 2000;
+    return clampBlinkPauseMsForPattern(rawPauseMs, getProfileEffectiveBlinkPattern(profileIndex));
+}
+
 function setProfileLarsonFreq(profileIndex, larsonFreq) {
     if (!FC.LED_STRIP_PROFILES[profileIndex]) {
         FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
@@ -279,6 +380,95 @@ function setProfileRainbowFreq(profileIndex, rainbowFreq) {
     }
 
     FC.LED_STRIP_PROFILES[profileIndex].rainbowFreq = rainbowFreq;
+    checkForChanges();
+}
+
+function setProfileBlinkPeriod(profileIndex, blinkPeriod) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedBlinkPeriod = FC.LED_STRIP_PROFILES[profileIndex].blinkPeriod ?? 0;
+    if (storedBlinkPeriod === blinkPeriod) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].blinkPeriod = blinkPeriod;
+    checkForChanges();
+}
+
+function setProfileBlinkOnMs(profileIndex, blinkOnMs) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedBlinkOnMs = FC.LED_STRIP_PROFILES[profileIndex].blinkOnMs ?? 0;
+    if (storedBlinkOnMs === blinkOnMs) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].blinkOnMs = blinkOnMs;
+    checkForChanges();
+}
+
+function setProfileBlinkPattern(profileIndex, blinkPattern) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedBlinkPattern = FC.LED_STRIP_PROFILES[profileIndex].blinkPattern ?? 0;
+    if (storedBlinkPattern === blinkPattern) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].blinkPattern = blinkPattern;
+    checkForChanges();
+}
+
+function setProfileBlinkFlashMs(profileIndex, blinkFlashMs) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedBlinkFlashMs = FC.LED_STRIP_PROFILES[profileIndex].blinkFlashMs ?? 0;
+    if (storedBlinkFlashMs === blinkFlashMs) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].blinkFlashMs = blinkFlashMs;
+    checkForChanges();
+}
+
+function setProfileBlinkGapMs(profileIndex, blinkGapMs) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedBlinkGapMs = FC.LED_STRIP_PROFILES[profileIndex].blinkGapMs ?? 0;
+    if (storedBlinkGapMs === blinkGapMs) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].blinkGapMs = blinkGapMs;
+    checkForChanges();
+}
+
+function setProfileBlinkPauseMs(profileIndex, blinkPauseMs) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const clampedBlinkPauseMs = clampBlinkPauseMsForPattern(
+        blinkPauseMs,
+        getProfileEffectiveBlinkPattern(profileIndex),
+    );
+
+    const storedBlinkPauseMs = FC.LED_STRIP_PROFILES[profileIndex].blinkPauseMs ?? 0;
+    if (storedBlinkPauseMs === clampedBlinkPauseMs) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].blinkPauseMs = clampedBlinkPauseMs;
     checkForChanges();
 }
 
@@ -881,8 +1071,24 @@ export function useLedStrip() {
         getProfileEffectiveLarsonFreq,
         getProfileEffectiveRainbowDelta,
         getProfileEffectiveRainbowFreq,
+        getProfileEffectiveBlinkPeriod,
+        getProfileEffectiveBlinkOnMs,
+        getProfileEffectiveBlinkPattern,
+        migrateBlinkPattern,
+        getProfileEffectiveBlinkFlashMs,
+        getProfileEffectiveBlinkGapMs,
+        getProfileEffectiveBlinkPauseMs,
         setProfileLarsonFreq,
         setProfileRainbowDelta,
         setProfileRainbowFreq,
+        setProfileBlinkPeriod,
+        setProfileBlinkOnMs,
+        setProfileBlinkPattern,
+        setProfileBlinkFlashMs,
+        setProfileBlinkGapMs,
+        setProfileBlinkPauseMs,
+        LED_BLINK_PATTERN_ALTERNATE,
+        LED_BLINK_PATTERN_BEACON,
+        LED_BLINK_PAUSE_MS_MIN_ALTERNATE,
     };
 }

@@ -221,6 +221,12 @@ function setupVirtualLedProfiles(virtualFC) {
         rainbow_delta: 15,
         rainbow_freq: 120,
         larson_freq: 15,
+        blink_period_ms: 500,
+        blink_on_ms: 250,
+        blink_pattern: 1,
+        blink_flash_ms: 120,
+        blink_gap_ms: 120,
+        blink_pause_ms: 2000,
     };
 }
 
