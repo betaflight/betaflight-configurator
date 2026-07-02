@@ -17,6 +17,7 @@
                                 :items="profileSelectItems"
                                 :model-value="editProfile"
                                 class="min-w-20"
+                                :disabled="hasUnsavedLedEdits"
                                 @update:model-value="onEditProfileChange"
                             />
                         </SettingRow>
@@ -41,6 +42,7 @@
                                 :items="profileSelectItems"
                                 :model-value="activeFlightProfile"
                                 class="min-w-20"
+                                :disabled="hasChanges"
                                 @update:model-value="onActiveProfileChange"
                             />
                         </SettingRow>
@@ -131,7 +133,7 @@
                         />
                     </div>
 
-                    <div class="modifier-row">
+                    <div class="modifier-row larsonOverlay">
                         <USwitch
                             id="larsonScanner"
                             size="sm"
@@ -139,6 +141,14 @@
                             @update:model-value="onModifierChange('o')"
                             :label="$t('ledStripLarsonOverlay')"
                         />
+                        <div class="sliders-group" v-show="modifiers.larsonScanner">
+                            <span v-html="$t('ledStripLarsonFreqSliderTitle')"></span>
+                            <div class="slider-control">
+                                <span class="slider-value">{{ larsonFreq }}</span>
+                                <USlider v-model="larsonFreq" :min="1" :max="255" class="w-40" />
+                                <HelpIcon :text="$t('ledStripLarsonFreqSliderHelp')" />
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modifier-row">
@@ -365,14 +375,20 @@
         </div>
 
         <!-- Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="saveButtonText" @click="save" />
+        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+            <UButton
+                :label="$t('pidTuningButtonRefresh')"
+                :disabled="!hasChanges"
+                variant="soft"
+                @click="refresh"
+            />
+            <UButton :label="saveButtonText" :disabled="!hasChanges" @click="save" />
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onBeforeUnmount } from "vue";
+import { ref, reactive, computed, watch, onBeforeUnmount, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
@@ -408,9 +424,13 @@ const {
     ledColors,
     ledConfigValues,
     editProfile,
+    hasChanges,
+    hasUnsavedLedEdits,
     multiProfileSupported,
     activeFlightProfile,
     loadData,
+    refreshData,
+    finalizeLoadedState,
     saveConfig,
     switchEditProfile,
     setActiveFlightProfile,
@@ -427,6 +447,14 @@ const {
     isWarningActive,
     isVtxActive,
     updateLedConfigValue,
+    updateProfileBrightness,
+    getProfileBrightnessForDisplay,
+    getProfileEffectiveLarsonFreq,
+    getProfileEffectiveRainbowDelta,
+    getProfileEffectiveRainbowFreq,
+    setProfileLarsonFreq,
+    setProfileRainbowDelta,
+    setProfileRainbowFreq,
 } = useLedStrip();
 
 const PROFILE_OPTION_KEYS = ["ledStripProfile1Label", "ledStripProfile2Label", "ledStripProfile3Label"];
@@ -462,13 +490,20 @@ function onActiveProfileChange(value) {
 }
 
 function onEditProfileChange(value) {
+    if (hasUnsavedLedEdits.value) {
+        return;
+    }
+
     const profileIndex = Number(value);
     if (!Number.isInteger(profileIndex) || profileIndex < 0 || profileIndex > 2) {
         return;
     }
 
-    buildLedStripFromGrid(gridLeds);
-    switchEditProfile(profileIndex);
+    if (!switchEditProfile(profileIndex)) {
+        return;
+    }
+
+    loadConfigValues();
     selectedIndices.value = new Set();
     selectedFunction.value = "none";
     activeDirections.value.clear();
@@ -491,6 +526,7 @@ const selectedIndices = ref(new Set());
 const selectedFunction = ref("none");
 const selectedColorIndex = ref(0);
 let suppressFunctionApply = false;
+let suppressPanelSyncApply = false;
 
 // Modifier states
 const modifiers = reactive({
@@ -521,6 +557,7 @@ const isColorSlidersOpen = ref(false);
 
 // Sliders
 const brightness = ref(50);
+const larsonFreq = ref(15);
 const rainbowDelta = ref(0);
 const rainbowFreq = ref(1);
 
@@ -642,6 +679,7 @@ const onTabMounted = async () => {
         await loadData();
         initializeGrid();
         loadConfigValues();
+        finalizeLoadedState();
         GUI.content_ready();
     } catch (error) {
         console.error("Failed to load LED strip data:", error);
@@ -722,10 +760,26 @@ function initializeGrid() {
 }
 
 // Load config values
+let suppressBrightnessApply = false;
+let suppressOverlaySliderApply = false;
+
 function loadConfigValues() {
-    brightness.value = ledConfigValues.value?.brightness || 50;
-    rainbowDelta.value = ledConfigValues.value?.rainbow_delta || 0;
-    rainbowFreq.value = ledConfigValues.value?.rainbow_freq || 1;
+    suppressBrightnessApply = true;
+    suppressOverlaySliderApply = true;
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        brightness.value = getProfileBrightnessForDisplay(profileIndex);
+        larsonFreq.value = getProfileEffectiveLarsonFreq(profileIndex);
+        rainbowDelta.value = getProfileEffectiveRainbowDelta(profileIndex);
+        rainbowFreq.value = getProfileEffectiveRainbowFreq(profileIndex);
+    } else {
+        brightness.value = ledConfigValues.value?.brightness || 50;
+        larsonFreq.value = ledConfigValues.value?.larson_freq ?? 15;
+        rainbowDelta.value = ledConfigValues.value?.rainbow_delta || 0;
+        rainbowFreq.value = ledConfigValues.value?.rainbow_freq || 1;
+    }
+    suppressBrightnessApply = false;
+    suppressOverlaySliderApply = false;
 }
 
 // Selection handlers for custom grid
@@ -776,6 +830,8 @@ function syncSelectionUIFromGrid({ syncFunction = true } = {}) {
     const led = gridLeds[lastSelected];
     const functions = ledStripFunctionsToArray(led.functions);
 
+    suppressPanelSyncApply = true;
+
     selectedColorIndex.value = led.colorIndex;
 
     if (syncFunction) {
@@ -783,7 +839,9 @@ function syncSelectionUIFromGrid({ syncFunction = true } = {}) {
         if (baseFunc) {
             suppressFunctionApply = true;
             selectedFunction.value = `function-${baseFunc}`;
-            suppressFunctionApply = false;
+            nextTick(() => {
+                suppressFunctionApply = false;
+            });
         }
     }
 
@@ -802,6 +860,10 @@ function syncSelectionUIFromGrid({ syncFunction = true } = {}) {
     modifiers.rainbow = functions.includes("y");
 
     updateColorSliders(led.colorIndex);
+
+    nextTick(() => {
+        suppressPanelSyncApply = false;
+    });
 }
 
 function applyFunctionSelectionToGrid(newFunction) {
@@ -819,6 +881,8 @@ function handleSelectionComplete() {
         return;
     }
 
+    let gridChanged = false;
+
     // Auto-wire in wire mode
     if (wireMode.value) {
         selectedIndices.value.forEach((index) => {
@@ -826,19 +890,32 @@ function handleSelectionComplete() {
                 const nextWire = getNextWireNumber(gridLeds);
                 if (nextWire < FC.LED_STRIP.length) {
                     gridLeds[index].wireNumber = String(nextWire);
+                    gridChanged = true;
                 }
             }
         });
     }
 
-    // Apply the current dropdown choice after wire numbers are assigned.
+    // Sync panel from grid before deciding whether to apply the function dropdown.
+    syncSelectionUIFromGrid({ syncFunction: true });
+
     if (selectedFunction.value !== "none") {
-        applySelectedFunctionToSelection();
+        const targetFunction = normalizeFunctionSelectValue(selectedFunction.value).replace("function-", "");
+        const shouldApplyFunction = Array.from(selectedIndices.value).some((index) => {
+            const functions = ledStripFunctionsToArray(gridLeds[index].functions);
+            const baseFunction = functions.find((func) => baseFuncs.includes(func));
+            return !baseFunction || baseFunction !== targetFunction;
+        });
+
+        if (shouldApplyFunction) {
+            applySelectedFunctionToSelection();
+            gridChanged = true;
+        }
     }
 
-    // Read saved function/colors from the grid into the panel (EEPROM → UI).
-    syncSelectionUIFromGrid({ syncFunction: true });
-    buildLedStripFromGrid(gridLeds);
+    if (gridChanged) {
+        buildLedStripFromGrid(gridLeds);
+    }
 }
 
 // Clear functions
@@ -921,7 +998,7 @@ function toggleDirection(dir) {
 
 // Modifier change
 function onModifierChange(modifier) {
-    if (selectedIndices.value.size === 0) {
+    if (suppressPanelSyncApply || selectedIndices.value.size === 0) {
         return;
     }
 
@@ -954,6 +1031,10 @@ function onModifierChange(modifier) {
 
 // Overlay change
 function onOverlayChange(overlay) {
+    if (suppressPanelSyncApply) {
+        return;
+    }
+
     if (selectedIndices.value.size === 0) {
         return;
     }
@@ -1006,6 +1087,10 @@ function updateColorSliders(colorIndex) {
 }
 
 function onColorSliderChange() {
+    if (suppressPanelSyncApply) {
+        return;
+    }
+
     if (selectedColorIndex.value !== null) {
         ledColors.value[selectedColorIndex.value].h = colorHSV.h;
         ledColors.value[selectedColorIndex.value].s = colorHSV.s;
@@ -1113,15 +1198,99 @@ watch(selectedFunction, (newFunction) => {
 });
 
 watch(brightness, (newValue) => {
-    updateLedConfigValue("brightness", newValue);
+    if (suppressBrightnessApply) {
+        return;
+    }
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedBrightness = FC.LED_STRIP_PROFILES[profileIndex]?.brightness ?? 0;
+
+        if (storedBrightness < 5) {
+            const masterBrightness = FC.LED_CONFIG_VALUES?.brightness ?? 100;
+            if (newValue === masterBrightness) {
+                return;
+            }
+        } else if (storedBrightness === newValue) {
+            return;
+        }
+
+        updateProfileBrightness(profileIndex, newValue);
+    } else {
+        updateLedConfigValue("brightness", newValue);
+    }
+});
+
+watch(larsonFreq, (newValue) => {
+    if (suppressOverlaySliderApply) {
+        return;
+    }
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedLarsonFreq = FC.LED_STRIP_PROFILES[profileIndex]?.larsonFreq ?? 0;
+
+        if (storedLarsonFreq === 0) {
+            const masterLarsonFreq = FC.LED_CONFIG_VALUES?.larson_freq ?? 15;
+            if (newValue === masterLarsonFreq) {
+                return;
+            }
+        } else if (storedLarsonFreq === newValue) {
+            return;
+        }
+
+        setProfileLarsonFreq(profileIndex, newValue);
+    } else {
+        updateLedConfigValue("larson_freq", newValue);
+    }
 });
 
 watch(rainbowDelta, (newValue) => {
-    updateLedConfigValue("rainbow_delta", newValue);
+    if (suppressOverlaySliderApply) {
+        return;
+    }
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedRainbowDelta = FC.LED_STRIP_PROFILES[profileIndex]?.rainbowDelta ?? 0;
+
+        if (storedRainbowDelta === 0) {
+            const masterRainbowDelta = FC.LED_CONFIG_VALUES?.rainbow_delta ?? 0;
+            if (newValue === masterRainbowDelta) {
+                return;
+            }
+        } else if (storedRainbowDelta === newValue) {
+            return;
+        }
+
+        setProfileRainbowDelta(profileIndex, newValue);
+    } else {
+        updateLedConfigValue("rainbow_delta", newValue);
+    }
 });
 
 watch(rainbowFreq, (newValue) => {
-    updateLedConfigValue("rainbow_freq", newValue);
+    if (suppressOverlaySliderApply) {
+        return;
+    }
+
+    if (multiProfileSupported.value) {
+        const profileIndex = editProfile.value;
+        const storedRainbowFreq = FC.LED_STRIP_PROFILES[profileIndex]?.rainbowFreq ?? 0;
+
+        if (storedRainbowFreq === 0) {
+            const masterRainbowFreq = FC.LED_CONFIG_VALUES?.rainbow_freq ?? 120;
+            if (newValue === masterRainbowFreq) {
+                return;
+            }
+        } else if (storedRainbowFreq === newValue) {
+            return;
+        }
+
+        setProfileRainbowFreq(profileIndex, newValue);
+    } else {
+        updateLedConfigValue("rainbow_freq", newValue);
+    }
 });
 
 // Watch color setup popup state and set up click-outside handler
@@ -1134,7 +1303,30 @@ watch(isColorSlidersOpen, (newValue) => {
 });
 
 // Save
+async function refresh() {
+    if (!hasChanges.value) {
+        return;
+    }
+
+    try {
+        await refreshData();
+        initializeGrid();
+        loadConfigValues();
+        finalizeLoadedState();
+        selectedIndices.value = new Set();
+        selectedFunction.value = "none";
+        activeDirections.value.clear();
+    } catch (error) {
+        console.error("LED strip refresh failed:", error);
+        gui_log(`LED refresh failed: ${error.message ?? error}`);
+    }
+}
+
 async function save() {
+    if (!hasChanges.value) {
+        return;
+    }
+
     const saveButton = saveButtonText;
     const oldText = i18n.getMessage("ledStripButtonSave");
 

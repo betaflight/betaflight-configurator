@@ -4893,6 +4893,14 @@
         "message": "Larson scanner",
         "description": "Larson effect switch label on LED Strip tab"
     },
+    "ledStripLarsonFreqSliderTitle": {
+        "message": "Frequency",
+        "description": "LED Strip Larson scanner effect frequency"
+    },
+    "ledStripLarsonFreqSliderHelp": {
+        "message": "Speed of the Larson scanner effect. Higher values scan faster.",
+        "description": "Hint on LED Strip tab for Larson frequency"
+    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink always"
     },

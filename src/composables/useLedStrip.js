@@ -2,7 +2,7 @@ import { ref, computed, toRaw } from "vue";
 import FC from "@/js/fc.js";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
-import { mspHelper } from "@/js/msp/MSPHelper";
+import { mspHelper, countColorOnlyLedsAtOrigin } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import CONFIGURATOR, { API_VERSION_1_46 } from "@/js/data_storage";
 
@@ -19,23 +19,21 @@ const dirtyState = {
     activeProfile: false,
 };
 
-function resetDirtyState() {
-    dirtyState.profiles = [false, false, false];
-    dirtyState.profileNames = false;
-    dirtyState.activeProfile = false;
-}
+const hasChanges = ref(false);
+const hasUnsavedLedEdits = ref(false);
 
-function markProfileDirty(profileIndex) {
-    if (profileIndex >= 0 && profileIndex < dirtyState.profiles.length) {
-        dirtyState.profiles[profileIndex] = true;
-    }
-}
+let savedSnapshot = null;
+let changeTrackingContext = null;
 
 function createEmptyProfile() {
     return {
         strip: [],
         colors: [],
         modeColors: [],
+        brightness: 0,
+        larsonFreq: 0,
+        rainbowDelta: 0,
+        rainbowFreq: 0,
     };
 }
 
@@ -45,9 +43,13 @@ function cloneLedData(data) {
 
 function cloneProfile(profile) {
     return {
-        strip: cloneLedData(profile.strip),
-        colors: cloneLedData(profile.colors),
-        modeColors: cloneLedData(profile.modeColors),
+        strip: cloneLedData(profile?.strip),
+        colors: cloneLedData(profile?.colors),
+        modeColors: cloneLedData(profile?.modeColors),
+        brightness: profile?.brightness ?? 0,
+        larsonFreq: profile?.larsonFreq ?? 0,
+        rainbowDelta: profile?.rainbowDelta ?? 0,
+        rainbowFreq: profile?.rainbowFreq ?? 0,
     };
 }
 
@@ -59,13 +61,225 @@ function syncLegacyFromProfile(profileIndex) {
     FC.LED_EDIT_PROFILE = profileIndex;
 }
 
-function syncProfileFromLegacy(profileIndex) {
+function normalizeStripLed(led) {
+    if (!led) {
+        return { x: 0, y: 0, directions: "", functions: "", color: 0 };
+    }
+
+    const directions = Array.isArray(led.directions) ? led.directions.join("") : (led.directions ?? "");
+    const functions = Array.isArray(led.functions) ? led.functions.join("") : (led.functions ?? "");
+
+    return {
+        x: led.x ?? 0,
+        y: led.y ?? 0,
+        directions,
+        functions,
+        color: led.color ?? 0,
+    };
+}
+
+function normalizeProfileForCompare(profile) {
+    return {
+        strip: (profile?.strip ?? []).map(normalizeStripLed),
+        colors: profile?.colors ?? [],
+        modeColors: profile?.modeColors ?? [],
+        brightness: profile?.brightness ?? 0,
+        larsonFreq: profile?.larsonFreq ?? 0,
+        rainbowDelta: profile?.rainbowDelta ?? 0,
+        rainbowFreq: profile?.rainbowFreq ?? 0,
+    };
+}
+
+function profileDataEquals(a, b) {
+    if (!a || !b) {
+        return false;
+    }
+
+    return (
+        JSON.stringify(normalizeProfileForCompare(a)) === JSON.stringify(normalizeProfileForCompare(b))
+    );
+}
+
+function profileNamesEqual(a, b) {
+    return JSON.stringify(a ?? []) === JSON.stringify(b ?? []);
+}
+
+function normalizeEditProfile(profileIndex) {
+    const index = Number(profileIndex);
+    if (!Number.isInteger(index) || index < LED_PROFILE_RACE || index > LED_PROFILE_STATUS) {
+        return LED_PROFILE_STATUS;
+    }
+    return index;
+}
+
+function updateProfileCacheFromLegacy(profileIndex) {
+    const existingProfile = FC.LED_STRIP_PROFILES[profileIndex] ?? createEmptyProfile();
     FC.LED_STRIP_PROFILES[profileIndex] = {
         strip: cloneLedData(FC.LED_STRIP),
         colors: cloneLedData(FC.LED_COLORS),
         modeColors: cloneLedData(FC.LED_MODE_COLORS),
+        brightness: existingProfile.brightness ?? 0,
+        larsonFreq: existingProfile.larsonFreq ?? 0,
+        rainbowDelta: existingProfile.rainbowDelta ?? 0,
+        rainbowFreq: existingProfile.rainbowFreq ?? 0,
     };
-    markProfileDirty(profileIndex);
+}
+
+function syncProfileFromLegacy(profileIndex) {
+    updateProfileCacheFromLegacy(profileIndex);
+    checkForChanges();
+}
+
+function updateHasChangesFromDirtyState() {
+    hasUnsavedLedEdits.value = dirtyState.profiles.some(Boolean) || dirtyState.profileNames;
+    hasChanges.value = hasUnsavedLedEdits.value || dirtyState.activeProfile;
+}
+
+function resetDirtyState() {
+    dirtyState.profiles = [false, false, false];
+    dirtyState.profileNames = false;
+    dirtyState.activeProfile = false;
+    updateHasChangesFromDirtyState();
+}
+
+function storeOriginals() {
+    if (!changeTrackingContext) {
+        return;
+    }
+
+    const { profileNames, activeFlightProfile, editProfile } = changeTrackingContext;
+    const editProfileIndex = editProfile?.value ?? FC.LED_EDIT_PROFILE ?? LED_PROFILE_STATUS;
+
+    updateProfileCacheFromLegacy(editProfileIndex);
+
+    const profileCount = FC.LED_STRIP_PROFILE_COUNT ?? FC.LED_STRIP_PROFILES?.length ?? 0;
+    savedSnapshot = {
+        profiles: Array.from({ length: profileCount }, (_, profileIndex) =>
+            cloneProfile(FC.LED_STRIP_PROFILES[profileIndex] ?? createEmptyProfile()),
+        ),
+        profileNames: [...profileNames.value],
+        activeFlightProfile: activeFlightProfile.value,
+    };
+
+    resetDirtyState();
+}
+
+function checkForChanges() {
+    if (!changeTrackingContext || !savedSnapshot) {
+        resetDirtyState();
+        return;
+    }
+
+    const { profileNames, activeFlightProfile, editProfile } = changeTrackingContext;
+    const editProfileIndex = editProfile?.value ?? FC.LED_EDIT_PROFILE ?? LED_PROFILE_STATUS;
+
+    updateProfileCacheFromLegacy(editProfileIndex);
+
+    const profileCount = FC.LED_STRIP_PROFILE_COUNT ?? savedSnapshot.profiles.length;
+    dirtyState.profiles = [false, false, false];
+
+    for (let profileIndex = 0; profileIndex < profileCount; profileIndex++) {
+        const current = FC.LED_STRIP_PROFILES[profileIndex] ?? createEmptyProfile();
+        const original = savedSnapshot.profiles[profileIndex] ?? createEmptyProfile();
+        dirtyState.profiles[profileIndex] = !profileDataEquals(current, original);
+    }
+
+    dirtyState.profileNames = !profileNamesEqual(profileNames.value, savedSnapshot.profileNames);
+    dirtyState.activeProfile = activeFlightProfile.value !== savedSnapshot.activeFlightProfile;
+
+    updateHasChangesFromDirtyState();
+}
+
+function getProfileEffectiveBrightness(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileBrightness = profile?.brightness ?? 0;
+    if (profileBrightness >= 5) {
+        return profileBrightness;
+    }
+    return FC.LED_CONFIG_VALUES?.brightness ?? 100;
+}
+
+function setProfileBrightness(profileIndex, brightness) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedBrightness = FC.LED_STRIP_PROFILES[profileIndex].brightness ?? 0;
+    if (storedBrightness === brightness) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].brightness = brightness;
+    checkForChanges();
+}
+
+function getProfileEffectiveLarsonFreq(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileLarsonFreq = profile?.larsonFreq ?? 0;
+    if (profileLarsonFreq > 0) {
+        return profileLarsonFreq;
+    }
+    return FC.LED_CONFIG_VALUES?.larson_freq ?? 15;
+}
+
+function getProfileEffectiveRainbowDelta(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileRainbowDelta = profile?.rainbowDelta ?? 0;
+    if (profileRainbowDelta > 0) {
+        return profileRainbowDelta;
+    }
+    return FC.LED_CONFIG_VALUES?.rainbow_delta ?? 0;
+}
+
+function getProfileEffectiveRainbowFreq(profileIndex) {
+    const profile = FC.LED_STRIP_PROFILES[profileIndex];
+    const profileRainbowFreq = profile?.rainbowFreq ?? 0;
+    if (profileRainbowFreq > 0) {
+        return profileRainbowFreq;
+    }
+    return FC.LED_CONFIG_VALUES?.rainbow_freq ?? 120;
+}
+
+function setProfileLarsonFreq(profileIndex, larsonFreq) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedLarsonFreq = FC.LED_STRIP_PROFILES[profileIndex].larsonFreq ?? 0;
+    if (storedLarsonFreq === larsonFreq) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].larsonFreq = larsonFreq;
+    checkForChanges();
+}
+
+function setProfileRainbowDelta(profileIndex, rainbowDelta) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedRainbowDelta = FC.LED_STRIP_PROFILES[profileIndex].rainbowDelta ?? 0;
+    if (storedRainbowDelta === rainbowDelta) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].rainbowDelta = rainbowDelta;
+    checkForChanges();
+}
+
+function setProfileRainbowFreq(profileIndex, rainbowFreq) {
+    if (!FC.LED_STRIP_PROFILES[profileIndex]) {
+        FC.LED_STRIP_PROFILES[profileIndex] = createEmptyProfile();
+    }
+
+    const storedRainbowFreq = FC.LED_STRIP_PROFILES[profileIndex].rainbowFreq ?? 0;
+    if (storedRainbowFreq === rainbowFreq) {
+        return;
+    }
+
+    FC.LED_STRIP_PROFILES[profileIndex].rainbowFreq = rainbowFreq;
+    checkForChanges();
 }
 
 function getGridPosition(index) {
@@ -255,8 +469,10 @@ async function saveConfig(editProfileIndex, activeProfileIndex, profileNamesRef)
         FC.LED_STRIP_PROFILE_NAMES = [...profileNamesRef.value];
     }
 
+    checkForChanges();
+
     if (CONFIGURATOR.virtualMode) {
-        resetDirtyState();
+        storeOriginals();
         return;
     }
 
@@ -285,7 +501,7 @@ async function saveConfig(editProfileIndex, activeProfileIndex, profileNamesRef)
         }
 
         syncLegacyFromProfile(editProfileIndex);
-        resetDirtyState();
+        storeOriginals();
         return;
     }
 
@@ -299,7 +515,10 @@ async function saveConfig(editProfileIndex, activeProfileIndex, profileNamesRef)
         };
 
         const writeConfig = () => {
-            mspHelper.writeConfiguration(false, resolve);
+            mspHelper.writeConfiguration(false, () => {
+                storeOriginals();
+                resolve();
+            });
         };
 
         mspHelper.sendLedStripConfig(saveColors, activeProfileIndex);
@@ -314,6 +533,8 @@ export function useLedStrip() {
     const editProfile = ref(LED_PROFILE_STATUS);
     const activeFlightProfile = ref(LED_PROFILE_STATUS);
     const profileNames = ref(["", "", ""]);
+
+    changeTrackingContext = { profileNames, activeFlightProfile, editProfile };
 
     const directions = ["n", "e", "s", "w", "u", "d"];
     const functions = ["i", "w", "f", "a", "t", "r", "c", "g", "s", "b", "l", "o", "y"];
@@ -350,31 +571,36 @@ export function useLedStrip() {
     function setProfileName(profileIndex, name) {
         profileNames.value[profileIndex] = (name ?? "").trim().slice(0, 8);
         FC.LED_STRIP_PROFILE_NAMES = [...profileNames.value];
-        dirtyState.profileNames = true;
+        checkForChanges();
     }
 
     function getProfileName(profileIndex) {
         return profileNames.value[profileIndex] ?? "";
     }
 
-    function loadVirtualLedData() {
+    function loadVirtualLedData(editProfileIndex = LED_PROFILE_STATUS) {
         FC.LED_STRIP_PROFILES = FC.LED_STRIP_PROFILES ?? [];
         FC.LED_STRIP_PROFILE_COUNT = FC.LED_STRIP_PROFILE_COUNT ?? 3;
         FC.LED_MULTI_PROFILE_SUPPORTED = true;
 
-        editProfile.value = LED_PROFILE_STATUS;
+        editProfile.value = normalizeEditProfile(editProfileIndex);
         activeFlightProfile.value = FC.LED_ACTIVE_PROFILE ?? LED_PROFILE_STATUS;
         profileNames.value = ["RACE", "BEACON", "STATUS"];
         syncLegacyFromProfile(editProfile.value);
-        resetDirtyState();
+        storeOriginals();
     }
 
-    async function loadData() {
+    async function loadData(options = {}) {
+        const editProfileToLoad = normalizeEditProfile(
+            options.preserveEditProfile ?? LED_PROFILE_STATUS,
+        );
+
         if (CONFIGURATOR.virtualMode) {
-            loadVirtualLedData();
+            loadVirtualLedData(editProfileToLoad);
             return;
         }
 
+        savedSnapshot = null;
         resetDirtyState();
 
         await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG);
@@ -402,9 +628,8 @@ export function useLedStrip() {
                 console.warn("Failed to load LED strip profile names:", error);
             }
 
-            editProfile.value = LED_PROFILE_STATUS;
+            editProfile.value = editProfileToLoad;
             syncLegacyFromProfile(editProfile.value);
-            resetDirtyState();
         } else {
             await MSP.promise(MSPCodes.MSP_LED_COLORS);
             await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
@@ -415,45 +640,63 @@ export function useLedStrip() {
                 modeColors: FC.LED_MODE_COLORS,
             });
             editProfile.value = LED_PROFILE_STATUS;
+            FC.LED_EDIT_PROFILE = LED_PROFILE_STATUS;
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
         }
+
+        storeOriginals();
     }
 
     function setActiveFlightProfile(newProfileIndex) {
+        if (hasUnsavedLedEdits.value) {
+            return false;
+        }
+
         const profileIndex = Number(newProfileIndex);
         if (
             !Number.isInteger(profileIndex) ||
             profileIndex < LED_PROFILE_RACE ||
             profileIndex > LED_PROFILE_STATUS
         ) {
-            return;
+            return false;
+        }
+
+        if (profileIndex === activeFlightProfile.value) {
+            return true;
         }
 
         activeFlightProfile.value = profileIndex;
         FC.LED_ACTIVE_PROFILE = profileIndex;
-        dirtyState.activeProfile = true;
+        checkForChanges();
+        return true;
     }
 
     function switchEditProfile(newProfileIndex) {
+        if (hasUnsavedLedEdits.value) {
+            return false;
+        }
+
         const profileIndex = Number(newProfileIndex);
         if (
             !Number.isInteger(profileIndex) ||
             profileIndex < LED_PROFILE_RACE ||
             profileIndex > LED_PROFILE_STATUS
         ) {
-            return;
+            return false;
         }
 
         if (profileIndex === FC.LED_EDIT_PROFILE) {
-            return;
+            return true;
         }
 
-        syncProfileFromLegacy(FC.LED_EDIT_PROFILE);
+        updateProfileCacheFromLegacy(FC.LED_EDIT_PROFILE);
         editProfile.value = profileIndex;
         syncLegacyFromProfile(profileIndex);
+        checkForChanges();
+        return true;
     }
 
     function findLed(x, y) {
@@ -468,6 +711,8 @@ export function useLedStrip() {
 
     function buildLedStripFromGrid(gridState) {
         const ledStripLength = FC.LED_STRIP.length;
+        const previousStrip = cloneLedData(FC.LED_STRIP);
+        const cachedBefore = cloneProfile(FC.LED_STRIP_PROFILES[FC.LED_EDIT_PROFILE] ?? createEmptyProfile());
         const newLedStrip = [];
 
         gridState.forEach((led, index) => {
@@ -496,14 +741,29 @@ export function useLedStrip() {
             color: 0,
         };
 
-        for (let i = 0; i < ledStripLength; i++) {
-            if (!newLedStrip[i]) {
-                newLedStrip[i] = { ...defaultLed };
+        const preserveColorOnlyAtOrigin = countColorOnlyLedsAtOrigin(previousStrip) > 1;
+
+        if (preserveColorOnlyAtOrigin) {
+            const mergedStrip = cloneLedData(previousStrip);
+            for (let i = 0; i < ledStripLength; i++) {
+                if (newLedStrip[i]) {
+                    mergedStrip[i] = newLedStrip[i];
+                }
             }
+            FC.LED_STRIP = mergedStrip;
+        } else {
+            for (let i = 0; i < ledStripLength; i++) {
+                if (!newLedStrip[i]) {
+                    newLedStrip[i] = { ...defaultLed };
+                }
+            }
+            FC.LED_STRIP = newLedStrip;
         }
 
-        FC.LED_STRIP = newLedStrip;
-        syncProfileFromLegacy(FC.LED_EDIT_PROFILE);
+        updateProfileCacheFromLegacy(FC.LED_EDIT_PROFILE);
+        if (!profileDataEquals(cachedBefore, FC.LED_STRIP_PROFILES[FC.LED_EDIT_PROFILE])) {
+            checkForChanges();
+        }
     }
 
     function getNextWireNumber(gridState) {
@@ -529,8 +789,12 @@ export function useLedStrip() {
     function setModeColor(mode, dir, color) {
         for (const mc of FC.LED_MODE_COLORS) {
             if (mc.mode === mode && mc.direction === dir) {
+                if (mc.color === color) {
+                    return true;
+                }
                 mc.color = color;
-                markProfileDirty(FC.LED_EDIT_PROFILE);
+                updateProfileCacheFromLegacy(FC.LED_EDIT_PROFILE);
+                checkForChanges();
                 return true;
             }
         }
@@ -549,12 +813,30 @@ export function useLedStrip() {
         await mspHelper.sendLedStripConfigValues();
     }
 
+    function updateProfileBrightness(profileIndex, brightness) {
+        setProfileBrightness(profileIndex, brightness);
+    }
+
+    function getProfileBrightnessForDisplay(profileIndex) {
+        return getProfileEffectiveBrightness(profileIndex);
+    }
+
     async function saveCurrentProfile(editProfileIndex) {
         await saveConfig(editProfileIndex, activeFlightProfile.value, profileNames);
     }
 
+    async function refreshData() {
+        await loadData({ preserveEditProfile: editProfile.value });
+    }
+
+    function finalizeLoadedState() {
+        storeOriginals();
+    }
+
     return {
         wireMode,
+        hasChanges,
+        hasUnsavedLedEdits,
         selectedColorIndex,
         selectedModeColor,
         selectedLeds,
@@ -571,6 +853,8 @@ export function useLedStrip() {
         ledConfigValues,
         multiProfileSupported,
         loadData,
+        refreshData,
+        finalizeLoadedState,
         saveConfig: saveCurrentProfile,
         switchEditProfile,
         setActiveFlightProfile,
@@ -592,5 +876,13 @@ export function useLedStrip() {
         isWarningActive,
         isVtxActive,
         updateLedConfigValue,
+        updateProfileBrightness,
+        getProfileBrightnessForDisplay,
+        getProfileEffectiveLarsonFreq,
+        getProfileEffectiveRainbowDelta,
+        getProfileEffectiveRainbowFreq,
+        setProfileLarsonFreq,
+        setProfileRainbowDelta,
+        setProfileRainbowFreq,
     };
 }

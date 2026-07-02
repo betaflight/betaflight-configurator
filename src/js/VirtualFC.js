@@ -220,6 +220,7 @@ function setupVirtualLedProfiles(virtualFC) {
         brightness: 100,
         rainbow_delta: 15,
         rainbow_freq: 120,
+        larson_freq: 15,
     };
 }
 

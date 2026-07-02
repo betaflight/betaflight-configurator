@@ -1223,6 +1223,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.LED_CONFIG_VALUES.brightness = data.readU8();
                     FC.LED_CONFIG_VALUES.rainbow_delta = data.readU16();
                     FC.LED_CONFIG_VALUES.rainbow_freq = data.readU16();
+                    FC.LED_CONFIG_VALUES.larson_freq = data.remaining() >= 2 ? data.readU16() : 15;
                     break;
 
                 case MSPCodes.MSP2_GET_LED_STRIP_PROFILE_COUNT:
@@ -1233,11 +1234,16 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP2_GET_LED_STRIP_PROFILE_CONFIG: {
                     const profileIndex = data.readU8();
                     const ledCount = FC.LED_STRIP.length;
-                    FC.LED_STRIP_PROFILES[profileIndex] = {
+                    const profile = {
                         strip: readLedStripFromMspData(data, ledCount),
                         colors: readLedColorsFromMspData(data, LED_CONFIGURABLE_COLOR_COUNT),
                         modeColors: readLedModeColorsFromMspData(data, LED_MODE_COLOR_ENTRY_COUNT),
+                        brightness: data.remaining() >= 1 ? data.readU8() : 0,
+                        larsonFreq: data.remaining() >= 2 ? data.readU16() : 0,
+                        rainbowDelta: data.remaining() >= 2 ? data.readU16() : 0,
+                        rainbowFreq: data.remaining() >= 2 ? data.readU16() : 0,
                     };
+                    FC.LED_STRIP_PROFILES[profileIndex] = profile;
                     break;
                 }
 
@@ -2996,6 +3002,11 @@ MspHelper.prototype.crunchLedStripProfileConfig = function (profileIndex, profil
         buffer.push8(modeColor.mode).push8(modeColor.direction).push8(modeColor.color);
     }
 
+    buffer.push8(profile.brightness ?? 0);
+    buffer.push16(profile.larsonFreq ?? 0);
+    buffer.push16(profile.rainbowDelta ?? 0);
+    buffer.push16(profile.rainbowFreq ?? 0);
+
     return buffer;
 };
 
@@ -3006,7 +3017,9 @@ MspHelper.prototype.sendLedStripProfileConfig = function (profileIndex, profile,
 
 MspHelper.prototype.sendLedStripActiveProfile = function (activeProfileIndex, onCompleteCallback) {
     const buffer = [];
-    const led = FC.LED_STRIP[0] ?? EMPTY_LED_STRIP_LED;
+    // MSP v1 legacy path updates STATUS profile LED data; keep LED 0 unchanged.
+    const statusLed = FC.LED_STRIP_PROFILES?.[2]?.strip?.[0];
+    const led = statusLed ?? FC.LED_STRIP[0] ?? EMPTY_LED_STRIP_LED;
 
     buffer.push8(0);
     buffer.push32(ledStripLedToMask(led));
@@ -3026,6 +3039,7 @@ MspHelper.prototype.sendLedStripConfigValues = function (onCompleteCallback) {
     buffer.push8(FC.LED_CONFIG_VALUES.brightness);
     buffer.push16(FC.LED_CONFIG_VALUES.rainbow_delta);
     buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq);
+    buffer.push16(FC.LED_CONFIG_VALUES.larson_freq ?? 15);
     MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
 
