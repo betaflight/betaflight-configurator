@@ -1089,6 +1089,7 @@ export function useLedStrip() {
         setProfileBlinkPauseMs,
         LED_BLINK_PATTERN_ALTERNATE,
         LED_BLINK_PATTERN_BEACON,
+        LED_BLINK_PAUSE_MS_MIN,
         LED_BLINK_PAUSE_MS_MIN_ALTERNATE,
     };
 }

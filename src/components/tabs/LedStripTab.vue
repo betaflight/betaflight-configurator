@@ -510,6 +510,7 @@ const {
     setProfileBlinkPauseMs,
     LED_BLINK_PATTERN_ALTERNATE,
     LED_BLINK_PATTERN_BEACON,
+    LED_BLINK_PAUSE_MS_MIN,
     LED_BLINK_PAUSE_MS_MIN_ALTERNATE,
 } = useLedStrip();
 
@@ -857,7 +858,7 @@ function loadConfigValues() {
         blinkPauseMs.value =
             blinkPattern.value === LED_BLINK_PATTERN_ALTERNATE
                 ? Math.max(rawBlinkPauseMs, LED_BLINK_PAUSE_MS_MIN_ALTERNATE)
-                : rawBlinkPauseMs;
+                : Math.max(rawBlinkPauseMs, LED_BLINK_PAUSE_MS_MIN);
     }
     suppressBrightnessApply = false;
     suppressOverlaySliderApply = false;
@@ -1401,8 +1402,8 @@ watch(blinkPattern, (newValue) => {
 
     if (patternValue === LED_BLINK_PATTERN_ALTERNATE && blinkPauseMs.value < LED_BLINK_PAUSE_MS_MIN_ALTERNATE) {
         blinkPauseMs.value = LED_BLINK_PAUSE_MS_MIN_ALTERNATE;
-    } else if (patternValue === LED_BLINK_PATTERN_BEACON && blinkPauseMs.value < 200) {
-        blinkPauseMs.value = 200;
+    } else if (patternValue === LED_BLINK_PATTERN_BEACON && blinkPauseMs.value < LED_BLINK_PAUSE_MS_MIN) {
+        blinkPauseMs.value = LED_BLINK_PAUSE_MS_MIN;
     }
 });
 
