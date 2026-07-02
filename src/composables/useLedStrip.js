@@ -173,6 +173,17 @@ function resetDirtyState() {
     updateHasChangesFromDirtyState();
 }
 
+function getDirtyTrackingProfileIndices() {
+    if (FC.LED_MULTI_PROFILE_SUPPORTED) {
+        const profileCount = FC.LED_STRIP_PROFILE_COUNT ?? FC.LED_STRIP_PROFILES?.length ?? 0;
+        return Array.from({ length: profileCount }, (_, profileIndex) => profileIndex);
+    }
+
+    const editProfileIndex =
+        changeTrackingContext?.editProfile?.value ?? FC.LED_EDIT_PROFILE ?? LED_PROFILE_STATUS;
+    return [editProfileIndex];
+}
+
 function storeOriginals() {
     if (!changeTrackingContext) {
         return;
@@ -183,11 +194,12 @@ function storeOriginals() {
 
     updateProfileCacheFromLegacy(editProfileIndex);
 
-    const profileCount = FC.LED_STRIP_PROFILE_COUNT ?? FC.LED_STRIP_PROFILES?.length ?? 0;
+    const profileIndices = getDirtyTrackingProfileIndices();
     savedSnapshot = {
-        profiles: Array.from({ length: profileCount }, (_, profileIndex) =>
+        profiles: profileIndices.map((profileIndex) =>
             cloneProfile(FC.LED_STRIP_PROFILES[profileIndex] ?? createEmptyProfile()),
         ),
+        profileIndices,
         profileNames: [...profileNames.value],
         activeFlightProfile: activeFlightProfile.value,
     };
@@ -206,14 +218,14 @@ function checkForChanges() {
 
     updateProfileCacheFromLegacy(editProfileIndex);
 
-    const profileCount = FC.LED_STRIP_PROFILE_COUNT ?? savedSnapshot.profiles.length;
+    const profileIndices = savedSnapshot.profileIndices ?? getDirtyTrackingProfileIndices();
     dirtyState.profiles = [false, false, false];
 
-    for (let profileIndex = 0; profileIndex < profileCount; profileIndex++) {
+    profileIndices.forEach((profileIndex, snapshotIndex) => {
         const current = FC.LED_STRIP_PROFILES[profileIndex] ?? createEmptyProfile();
-        const original = savedSnapshot.profiles[profileIndex] ?? createEmptyProfile();
+        const original = savedSnapshot.profiles[snapshotIndex] ?? createEmptyProfile();
         dirtyState.profiles[profileIndex] = !profileDataEquals(current, original);
-    }
+    });
 
     dirtyState.profileNames = !profileNamesEqual(profileNames.value, savedSnapshot.profileNames);
     dirtyState.activeProfile = activeFlightProfile.value !== savedSnapshot.activeFlightProfile;
@@ -802,7 +814,7 @@ export function useLedStrip() {
 
         try {
             await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_PROFILE_COUNT);
-        } catch (error) {
+        } catch {
             FC.LED_STRIP_PROFILE_COUNT = 1;
             FC.LED_MULTI_PROFILE_SUPPORTED = false;
         }

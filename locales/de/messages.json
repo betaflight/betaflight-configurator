@@ -3307,48 +3307,6 @@
     "ledStripHelp": {
         "message": "Der FC kann Farben und Effekte von LED-Leisten steuern.<br \/>Konfiguriere die LEDs, sowie die Verkabelungreihenfolge auf dem Raster und bringe die LEDs entsprechend an.<br\/>Doppelklick auf die Farben erlaubt das Anpassen der HSV-Werte."
     },
-    "ledStripProfileTitle": {
-        "message": "Edit profile"
-    },
-    "ledStripProfileOption": {
-        "message": "Profile $1"
-    },
-    "ledStripProfile1Label": {
-        "message": "Profile 1"
-    },
-    "ledStripProfile2Label": {
-        "message": "Profile 2"
-    },
-    "ledStripProfile3Label": {
-        "message": "Profile 3"
-    },
-    "ledStripProfileTip": {
-        "message": "Select the LED profile to edit in the Configurator. Each profile can have its own color or LED layout."
-    },
-    "ledStripActiveProfileTitle": {
-        "message": "Active profile in flight"
-    },
-    "ledStripActiveProfileTip": {
-        "message": "LED profile used in flight. Can be changed via the ledstrip_profile setting, CMS, or an auxiliary channel range."
-    },
-    "ledStripProfileRace": {
-        "message": "Profile 1 — RACE"
-    },
-    "ledStripProfileBeacon": {
-        "message": "Profile 2 — BEACON"
-    },
-    "ledStripProfileStatus": {
-        "message": "Profile 3 — STATUS"
-    },
-    "ledStripProfileName": {
-        "message": "LED profile name"
-    },
-    "ledStripProfileNameHelp": {
-        "message": "Name for this LED profile to describe its use: race, beacon, status, indoor, etc. (8 characters max)."
-    },
-    "ledStripActiveProfileHint": {
-        "message": "Active in flight: $1"
-    },
     "ledStripButtonSave": {
         "message": "Speichern"
     },

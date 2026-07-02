@@ -4458,48 +4458,6 @@
     "ledStripHelp": {
         "message": "비행 컨트롤러는 스트립에서 개별 LED의 색상과 효과를 제어할 수 있습니다.<br \/>그리드에서 LED를 구성하고, 배선 순서를 구성한 다음 그리드 위치에 따라 기체에 LED를 부착하십시오. 배선 순서 번호가 없는 LED는 저장되지 않습니다.<br \/>HSV 값을 편집하려면 색상을 더블클릭하십시오."
     },
-    "ledStripProfileTitle": {
-        "message": "Edit profile"
-    },
-    "ledStripProfileOption": {
-        "message": "Profile $1"
-    },
-    "ledStripProfile1Label": {
-        "message": "Profile 1"
-    },
-    "ledStripProfile2Label": {
-        "message": "Profile 2"
-    },
-    "ledStripProfile3Label": {
-        "message": "Profile 3"
-    },
-    "ledStripProfileTip": {
-        "message": "Select the LED profile to edit in the Configurator. Each profile can have its own color or LED layout."
-    },
-    "ledStripActiveProfileTitle": {
-        "message": "Active profile in flight"
-    },
-    "ledStripActiveProfileTip": {
-        "message": "LED profile used in flight. Can be changed via the ledstrip_profile setting, CMS, or an auxiliary channel range."
-    },
-    "ledStripProfileRace": {
-        "message": "Profile 1 — RACE"
-    },
-    "ledStripProfileBeacon": {
-        "message": "Profile 2 — BEACON"
-    },
-    "ledStripProfileStatus": {
-        "message": "Profile 3 — STATUS"
-    },
-    "ledStripProfileName": {
-        "message": "LED profile name"
-    },
-    "ledStripProfileNameHelp": {
-        "message": "Name for this LED profile to describe its use: race, beacon, status, indoor, etc. (8 characters max)."
-    },
-    "ledStripActiveProfileHint": {
-        "message": "Active in flight: $1"
-    },
     "ledStripButtonSave": {
         "message": "저장"
     },

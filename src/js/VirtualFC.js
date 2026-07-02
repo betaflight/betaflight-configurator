@@ -121,7 +121,7 @@ function createDefaultLedModeColors() {
         }
     }
 
-    for (let direction = 0; direction < 8; direction++) {
+    for (let direction = 0; direction < 11; direction++) {
         modeColors.push({ mode: 6, direction, color: direction === 1 ? 10 : 6 });
     }
 

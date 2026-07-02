@@ -1,12 +1,11 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const localesDir = path.join(__dirname, "..", "locales");
-const en = JSON.parse(fs.readFileSync(path.join(localesDir, "en", "messages.json"), "utf8"));
 
-const keys = [
+const keysToRemove = [
     "ledStripProfileTitle",
     "ledStripProfileOption",
     "ledStripProfile1Label",
@@ -23,14 +22,12 @@ const keys = [
     "ledStripActiveProfileHint",
 ];
 
-const block = {};
-for (const key of keys) {
-    block[key] = en[key];
-}
+// Crowdin-managed locales fall back to en for missing keys; keep translations in en (+ fr manually).
+const preserveLocales = new Set(["en", "fr"]);
 
 for (const locale of fs.readdirSync(localesDir)) {
     const localeDir = path.join(localesDir, locale);
-    if (!fs.statSync(localeDir).isDirectory() || locale === "en") {
+    if (!fs.statSync(localeDir).isDirectory() || preserveLocales.has(locale)) {
         continue;
     }
 
@@ -40,23 +37,17 @@ for (const locale of fs.readdirSync(localesDir)) {
     }
 
     const data = JSON.parse(fs.readFileSync(file, "utf8"));
-    if (data.ledStripProfileTitle) {
-        continue;
+    let changed = false;
+
+    for (const key of keysToRemove) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+            delete data[key];
+            changed = true;
+        }
     }
 
-    const entries = Object.entries(data);
-    const helpIndex = entries.findIndex(([key]) => key === "ledStripHelp");
-    if (helpIndex === -1) {
-        console.warn(`skip ${locale}: ledStripHelp not found`);
-        continue;
+    if (changed) {
+        fs.writeFileSync(file, `${JSON.stringify(data, null, 4)}\n`);
+        console.log(`removed LED profile keys from ${locale}`);
     }
-
-    const merged = Object.fromEntries([
-        ...entries.slice(0, helpIndex + 1),
-        ...Object.entries(block),
-        ...entries.slice(helpIndex + 1),
-    ]);
-
-    fs.writeFileSync(file, `${JSON.stringify(merged, null, 4)}\n`);
-    console.log(`updated ${locale}`);
 }
