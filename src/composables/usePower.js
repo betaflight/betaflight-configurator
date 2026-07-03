@@ -204,6 +204,13 @@ export function usePower() {
         } catch (error) {
             // Best-effort: resync UI with actual FC state in case the
             // profile switch partially succeeded on the FC side
+            if (CONFIGURATOR.virtualMode) {
+                FC.CONFIG.batteryProfile = previousProfile;
+                activeBatteryProfile.value = previousProfile;
+                batteryProfileName.value = previousProfileName;
+                throw error;
+            }
+
             try {
                 await MSP.promise(MSPCodes.MSP_STATUS_EX);
                 activeBatteryProfile.value = FC.CONFIG.batteryProfile;
