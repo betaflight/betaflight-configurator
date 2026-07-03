@@ -111,13 +111,13 @@ class Serial extends EventTarget {
         // WebSocket protocol — not raw TCP. On Tauri these are separate slots ("websocket" vs the
         // Rust-backed "tcp"); fall back to "tcp" on platforms that register only one (the web shell
         // already uses WebSocket for its "tcp" slot).
-        if (/^wss?:\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
+        if (/^wss?:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
             return (
                 this._protocols.find((p) => p.name === "websocket")?.instance ??
                 this._protocols.find((p) => p.name === "tcp")?.instance
             );
         }
-        if (s === "manual" || /^tcp:\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
+        if (s === "manual" || /^tcp:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
             return this._protocols.find((p) => p.name === "tcp")?.instance;
         }
         if (s.startsWith("bluetooth")) {
