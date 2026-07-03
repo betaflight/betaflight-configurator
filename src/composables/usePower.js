@@ -3,7 +3,7 @@ import semver from "semver";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
-import { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
+import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
 import FC from "../js/fc";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
@@ -185,6 +185,14 @@ export function usePower() {
             // overwriting FC.CONFIG.batteryProfile with stale data during the switch
             connectionStore.pauseLiveData();
             GUI.interval_pause("power_data_pull_slow");
+
+            if (CONFIGURATOR.virtualMode) {
+                FC.CONFIG.batteryProfile = profileIndex;
+                activeBatteryProfile.value = profileIndex;
+                await loadBatteryProfileName();
+                updateStateFromFC();
+                return;
+            }
 
             const BATTERYPROFILE_MASK = 0x40;
             await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [profileIndex | BATTERYPROFILE_MASK]);
