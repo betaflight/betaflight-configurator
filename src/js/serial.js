@@ -31,12 +31,15 @@ class Serial extends EventTarget {
             ];
         } else if (isTauri()) {
             // Tauri shell: raw TCP via the Rust tcp_* commands (so the Betaflight bridge
-            // on 5761 works), bluetooth via the web API the webview exposes. Native serial
-            // (tauri-plugin-serialplugin) is desktop + Android only — iOS has no USB serial.
+            // on 5761 works), and WebSocket (ws://, wss://) via the WebSocket API the webview
+            // exposes — these are distinct transports, so they get distinct slots. Bluetooth
+            // via the web API the webview exposes. Native serial (tauri-plugin-serialplugin)
+            // is desktop + Android only — iOS has no USB serial.
             this._protocols = [
                 ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
                 { name: "bluetooth", instance: new WebBluetooth() },
                 { name: "tcp", instance: new TauriTcp() },
+                { name: "websocket", instance: new Websocket() },
             ];
         } else {
             this._protocols = [
@@ -110,7 +113,17 @@ class Serial extends EventTarget {
         if (isFn || s === "virtual") {
             return this._protocols.find((p) => p.name === "virtual")?.instance;
         }
-        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
+        // WebSocket endpoints (ws://, wss://) speak the HTTP-upgrade handshake, so they need the
+        // WebSocket protocol — not raw TCP. On Tauri these are separate slots ("websocket" vs the
+        // Rust-backed "tcp"); fall back to "tcp" on platforms that register only one (the web shell
+        // already uses WebSocket for its "tcp" slot).
+        if (/^wss?:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
+            return (
+                this._protocols.find((p) => p.name === "websocket")?.instance ??
+                this._protocols.find((p) => p.name === "tcp")?.instance
+            );
+        }
+        if (s === "manual" || /^tcp:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
             return this._protocols.find((p) => p.name === "tcp")?.instance;
         }
         if (s.startsWith("bluetooth")) {
