@@ -788,6 +788,9 @@ function enterTestPhase() {
     startAttitudePolling();
     // Poll one frame then auto-reset yaw so the model starts at a neutral heading.
     const autoReset = () => {
+        if (phase.value !== "test") {
+            return;
+        }
         if (fcStore.sensorData?.kinematics) {
             resetYaw();
         } else {
