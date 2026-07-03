@@ -99,6 +99,7 @@
                             :step="1"
                         />
                         <UButton
+                            v-if="isApi148"
                             :label="$t('boardAlignmentWizard-Launch')"
                             :disabled="!hasAccSensor || accNeedsCalibration"
                             size="xs"
