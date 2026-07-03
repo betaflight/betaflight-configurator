@@ -24,7 +24,7 @@
         </UTooltip>
         <UTooltip :text="$t('sidebarToggleDarkMode')" :delay-duration="300">
             <UButton
-                :icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'"
+                :icon="isDark ? 'i-lucide-sun' : 'i-lucide-moon'"
                 variant="ghost"
                 color="neutral"
                 square
@@ -86,6 +86,7 @@ const { t } = useTranslation();
 const connectionStore = useConnectionStore();
 const authStore = useAuthStore();
 const sidebarExpanded = inject("sidebarExpanded", ref(true));
+const closeMobileSidebar = inject("closeMobileSidebar", () => {});
 const isCompact = computed(() => !sidebarExpanded.value);
 const navMenuUi = computed(() => {
     const linkBase = "data-active:before:bg-primary/10 cursor-pointer";
@@ -145,6 +146,7 @@ const visibleItems = computed(() =>
         onSelect: (event) => {
             event?.preventDefault?.();
             switchTab(item.tab ?? item.key, { mode: item.mode, label: t(item.i18n) });
+            closeMobileSidebar();
         },
     })),
 );

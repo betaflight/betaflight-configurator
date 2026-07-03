@@ -766,9 +766,6 @@
     "defaultHardwareHead": {
         "message": "Sprzęt"
     },
-    "defaultHardwareText": {
-        "message": "Aplikacja obsługuje cały sprzęt kompatybilny z Betaflight. Pełną listę urządzeń znajdziesz w zakładce Wgraj Oprogramowanie.<br \/><br \/>Przydatne narzędzia i sterowniki:<ul><li>Dla starszego sprzętu z kontrolerem CP210x USB na port szeregowy najnowsze <b>sterowniki CP210x<\/b> można pobrać <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><\/li><li>Najnowszą wersję <b>Zadig<\/b> do instalacji sterowników USB w systemie Windows można pobrać <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> można pobrać <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><\/li><\/ul>"
-    },
     "defaultSoftwareHead": {
         "message": "Oprogramowanie"
     },
@@ -777,9 +774,6 @@
     },
     "defaultContributingHead": {
         "message": "Współtworzenie"
-    },
-    "defaultContributingText": {
-        "message": "Jeśli chcesz pomagać w rozwijaniu Betaflight, możesz to robić na wiele sposobów:<br \/><ul><li> Wykorzystując swoją wiedzę o Betaflight, twórz lub aktualizuj treści na <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki<\/a> lub odpowiadaj na pytania innych cużytkowników na forach internetowych.<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Bierz udział w tworzeniu kodu<\/a> oprogramowania układowego oraz Konfiguratora. Kreuj nowe funkcje, poprawki i ulepszenia.<\/li><li>Testuj <ahref=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowe funkcje i poprawki<\/a>, nie zapominając o pozostawieniu nam feedbacku.<\/li><li> Pomagaj innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów<\/a> oraz bierz udział w dyskusjach dotyczących wniosków o nowe funkcjonalności.<\/li><li><a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Zostań tłumaczem<\/a> Konfiguratora Betaflight na nowy język lub pomóż w poprawianiu istniejących tłumaczeń.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku<\/a>.<br \/>Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
@@ -2379,9 +2373,6 @@
     "receiverModelId": {
         "message": "ID zgodności modelu"
     },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdzaj, czy Fail-Safe działa poprawnie!<\/a><\/strong><\/b> Konfigurację ustawień przeprowadzisz w zakładce Procedura Fail-Safe, która pojawi się po włączeniu Trybu Eksperta.<br> &#8226; <b>Upewnij się, że oprogramowanie nadajnika jest aktualne!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz sprzętowy filtr ADC<\/a><\/strong> w nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia w zakładce Odbiornik. Wybierz tę samą „Kolejność Kanałów”, jaką masz w radiu. Sprawdź, czy graficzne wskaźniki Roll, Pitch i pozostałych kanałów przesuwają się poprawnie. Ustaw punkty końcowe kanałów w nadajniku na ~1000 i ~2000, a punkt środkowy na 1500. Aby uzyskać więcej informacji przeczytaj <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentację<\/a><\/strong>."
-    },
     "receiverThrottleMid": {
         "message": "Przepustnica MID"
     },
@@ -2554,14 +2545,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Anti Gravity poprzez zwiększenie parametru P oraz I podczas gwałtownego dodania gazu ma spowodować, iż model utrzyma poziom, pochylenie oraz wychylenie w czasie szybkiego wznoszenia",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode pozwala na utrzymanie stabilności drona przy niskiej przepustnicy. Więcej informacji znajdziesz w <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> na Betaflight.com.",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> Aktywnie utrzymuje wysokość modelu za pomocą zewnętrznych czujników połączonych z trybem stabilizowanym Angle.",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "Tryb autopilota umożliwia autonomiczne sterowanie lotem, łączące utrzymywanie i utrzymywanie wysokości bezwzględnej w pozycji umożliwiającej utrzymanie stabilnego zawinięcia lub podążanie planowaną trasą lotu.",
@@ -2767,20 +2750,6 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "kanałem"
-    },
-    "adjustmentsColumnAdjustmentCenter": {
-        "message": "ze środkiem (wartość)"
-    },
-    "adjustmentsColumnAdjustmentScale": {
-        "message": "i zakresem|skalą (wartość|%)"
-    },
-    "adjustmentsCenterHelp": {
-        "message": "Ustawia punkt środkowy lub wartość odniesienia używaną przez funkcję regulacji. <br \/><br \/><strong>Regulacje suwaka:<\/strong><br \/>W przypadku regulacji suwaka ustaw wartość Adjustment Center na 0. Aktualna pozycja suwaka zostanie wykorzystana do regulacji w górę\/w dół. <br \/><br \/><strong>Regulacje wyboru:<\/strong><br \/>Ustaw środek regulacji na 0 lub na określoną wartość w mikrosekundach (uS), jeśli chcesz przesunąć punkt odniesienia przełącznika z 1500 uS podczas inicjowania regulacji RC. <br \/><br \/><strong>Regulacje skokowe:<\/strong><br \/>Ustaw wartość środkową regulacji na 0, aby wykorzystać bieżącą wartość regulowanego elementu. <br \/><br \/><strong>Regulacje bezwzględne:<\/strong><br \/>Aby skorzystać z metody regulacji bezwzględnej, należy ustawić zarówno wartość środkową regulacji, jak i skalę, aby określić żądaną wartość i zakres. Zakres oblicza się jako: środek ± skala. Na przykład ustawienie środka regulacji na 50 i skali regulacji na 25 tworzy zakres od 25 do 75, z pozycją środkową (przełącznik lub potencjometr) przypisaną do 50. <br \/><br \/>Więcej informacji można znaleźć na <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">tej stronie<\/a>.",
-        "description": "Tooltip help text for the Adjustment Center column"
-    },
-    "adjustmentsScaleHelp": {
-        "message": "Kontroluje skalowanie lub zakres regulacji; wyższe wartości zwiększają zakres regulacji lub czułość. <br \/><br \/><strong>Regulacje suwaka:<\/strong><br \/>W przypadku regulacji suwaka skala regulacji kontroluje skalowanie\/czułość regulacji. Wartość 50 odpowiada 50% zakresu suwaka. Ustawienie wartości 0 powoduje użycie domyślnej skali dla suwaków. <br \/><br \/><strong>Regulacje wyboru:<\/strong><br \/>W przypadku regulacji wyboru ustaw skalę regulacji na 0, aby uzyskać domyślne zachowanie, lub określ wartość w mikrosekundach (uS), aby ograniczyć zakres. Na przykład: ustaw środek regulacji na 1000 (uS) i skalę regulacji na 500 (uS), aby wykorzystać przełącznik 3-pozycyjny jako przełącznik 2-pozycyjny. <br \/><br \/><strong>Regulacje skokowe i absolutne:<\/strong><br \/>W przypadku regulacji skokowych i absolutnych skala regulacji określa zakres powyżej i poniżej środka regulacji. Na przykład wartość 25 tworzy zakres regulacji ±25 od wartości środka regulacji lub od bieżącej wartości, jeśli środek regulacji jest ustawiony na 0. <br \/><strong>Uwaga:<\/strong> Aby użyć metody regulacji absolutnej z potencjometrem, należy określić wartość skali regulacji. <br \/><br \/>Więcej informacji można znaleźć na <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">tej stronie<\/a>.",
-        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "Slot 1"
@@ -3331,9 +3300,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funkcja działa tylko z ESC z protokołem DSHOT.<br \/> Sprawdź, czy ESC (elektroniczny kontroler prędkości) którego używasz obsługuje protokół DSHOT i zmień go w ustawieniach $t(tabMotorTesting.message)."
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Liczba silników wynosi 0.<br \/>Zweryfikuj aktualny Mixer w $t(tabMotorTesting.message) lub zmień ustawienia w Wierszu Poleceń CLI. Po więcej informacji przejdź do tej strony: <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a>."
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Zaktualizuj oprogramowanie.<br \/> Upewnij się, że używasz najnowszego oprogramowania: Betaflight 4.3 lub nowszego."
     },
@@ -3818,9 +3784,6 @@
     },
     "firmwareFlasherWarningText": {
         "message": "Proszę <span class=\"message-negative\">nie<\/span> próbuj używać tego programu do wgrywania oprogramowania na urządzenia <strong>niekompatybilne z Betaflight<\/strong>.<br \/><span class=\"message-negative\">Nie<\/span><strong>odłączaj<\/strong> kontrolera lotu oraz <strong>nie wyłączaj<\/strong> komputera w trakcie wgrywania oprogramowania.<br \/><br \/><strong>Uwaga:<\/strong><ul><li>Bootloader STM32 znajduje się w pamięci ROM i nie można go uszkodzić.<\/li><li><span class=\"message-negative\">Automatyczne połączenie<\/span> pozostaje nieaktywne podczas korzystania z zakładki Wgraj Oprogramowanie.<\/li><li>Wykonaj kopię zapasową — aktualizacja lub cofnięcie wersji może wyczyścić zapisaną konfigurację.<\/li><li>W razie niepowodzenia wgrywania <strong>odłącz wszystkie kable od kontrolera lotu<\/strong>, uruchom komputer ponownie i zaktualizuj sterowniki.<\/li><li>Wgrywając oprogramowanie na kontrolery lotu z bezpośrednio podłączonym USB (większość nowszych), zapoznaj się z sekcją USB Flashing w instrukcji Betaflight i upewnij się, że masz właściwe oprogramowanie oraz sterowniki.<\/li><\/ul>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "W przypadku utraty komunikacji z kontrolerem lotu, wykonaj poniższe kroki, aby ją przywrócić:<ul><li>Wyłącz zasilanie.<\/li><li>Włącz opcje: \"Bez ponownego uruchamiania\" i \"Pełne czyszczenie pamięci\".<\/li><li>Zewrzyj piny BOOT lub przytrzymaj przycisk BOOT na płytce.<\/li><li>Włącz zasilanie (jeśli wszystko wykonano poprawnie, dioda LED aktywności NIE POWINNA migać).<\/li><li>Zainstaluj wszystkie sterowniki STM32 i użyj narzędzia Zadig, jeśli to wymagane (patrz sekcja <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> w instrukcji Betaflight).<\/li><li>Zamknij i uruchom ponownie aplikację.<\/li><li>Zwolnij przycisk BOOT, jeśli kontroler lotu go ma.<\/li><li>Wgraj odpowiednie oprogramowanie (ręcznie ustaw prędkość transmisji, jeśli jest określona w instrukcji kontrolera lotu).<\/li><li>Wyłącz zasilanie.<\/li><li>Rozłącz piny BOOT.<\/li><li>Włącz zasilanie (dioda LED aktywności powinna migać).<\/li><li>Połącz się z kontrolerem lotu.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
@@ -4752,9 +4715,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Kompensacja spadku napięcia baterii %"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br \/><br \/>Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br \/><br \/>Odwiedź <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki<\/a>, aby uzyskać więcej informacji."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5567,8 +5527,9 @@
         "message": "Wartość RSSI",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Chwilowa wartość RSSI (miga, gdy jest poniżej progu alarmowego)"
+    "osdTextElementRssiDbmValue": {
+        "message": "Wartość RSSI dBm",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Licznik",
@@ -6158,9 +6119,6 @@
         "message": "Jakość połączenia",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Alternatywny wskaźnik „jakości połączenia” oparty na ilości utraconych ramkach danych - używaj z ostrożnością"
-    },
     "osdTextElementFlightDist": {
         "message": "Odległość lotu",
         "description": "One of the elements of the OSD"
@@ -6223,13 +6181,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nazwa Profilu OSD ustawiona w Wierszu Poleceń CLI z pomocą zmiennych: \"osd_profile_1_name\", \"osd_profile_2_name\" oraz \"osd_profile_3_name\"."
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Wartość RSSI dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Wartość w dBm sygnału RSSI, jeżeli jest dostępna"
     },
     "osdTextElementRcChannels": {
         "message": "Kanały RC",
@@ -6781,10 +6732,6 @@
     "osdButtonSaved": {
         "message": "Zapisano"
     },
-    "vtxHelp": {
-        "message": "Tutaj możesz skonfigurować wartości dla swojego Nadajnika wideo (VTX). Możesz przeglądać i zmieniać wartości transmisji, w tym tabele VTX, jeśli kontroler lotu i VTX to obsługują.<br>Aby skonfigurować VTX, wykonaj następujące czynności:<br>1. Przejdź do <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">tej<\/a> strony.<br>2. Znajdź odpowiedni plik konfiguracyjny VTX dla swojego kraju i modelu VTX i pobierz go.<br>3. Kliknij „$t(vtxButtonLoadFile.message)” następnie, wybierz plik konfiguracyjny VTX i załaduj go.<br>4. Sprawdź, czy ustawienia są prawidłowe.<br>5. Kliknij „$t(vtxButtonSave.message)”, aby zapisać ustawienia VTX w kontrolerze lotu.<br>6. Opcjonalnie kliknij „$t(vtxButtonSaveLua.message)”, aby zapisać plik konfiguracyjny lua, którego możesz używać ze skryptami lua betaflight (Zobacz więcej <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">tutaj<\/a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Uwaga:<\/span> Twój VTX nie jest skonfigurowany lub nie jest obsługiwany, więc nie możesz zmieniać jego wartości w tym miejscu. Modyfikacja będzie możliwa jedynie, jeśli kontroler lotu jest podłączony do VTX za pomocą protokołu, takiego jak Tramp lub SmartAudio, oraz odpowiednio skonfigurowany w zakładce $t(tabPorts.message), jeśli jest to wymagane.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7140,9 +7087,6 @@
     },
     "magCalibrationRetry": {
         "message": "Ponów"
-    },
-    "magCalibrationFinish": {
-        "message": "Zakończ"
     },
     "magAlignmentApply": {
         "message": "Zastosuj"

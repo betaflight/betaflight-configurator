@@ -46,6 +46,17 @@
                 />
                 <UInput v-show="checkboxes[5]" :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
             </div>
+
+            <div class="flex items-center gap-2 ml-auto text-[10px] [&_[data-slot=base]]:text-[10px]!">
+                <span v-html="$t('sensorsGlobalRefresh')"></span>
+                <USelect
+                    :model-value="globalRate"
+                    :items="refreshRateItems"
+                    @update:model-value="updateGlobalRate(Number($event))"
+                    class="min-w-24"
+                    size="xs"
+                />
+            </div>
         </div>
 
         <SensorGraph
@@ -74,9 +85,12 @@
                 :title="debugTitles[i - 1]"
                 :show-refresh-rate="i === 1"
                 :rate="rates.debug"
+                :scale="debugScales[i - 1]"
+                :scale-options="DEBUG_SCALE_OPTIONS"
                 :display-values="[debugDisplay[i - 1]]"
                 :is-debug="true"
                 @update:rate="updateRate('debug', $event)"
+                @update:scale="updateDebugScale(i - 1, $event)"
             />
         </div>
     </div>
@@ -87,11 +101,18 @@ import { ref, reactive, computed, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
+import { decodeDebugFieldToFriendly } from "@/js/utils/debugModes";
 import { useSensorsStore } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
 import { useInterval } from "../../../composables/useInterval";
 import { have_sensor } from "../../../js/sensor_helpers";
-import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./constants";
+import {
+    GYRO_SCALE_OPTIONS,
+    ACCEL_SCALE_OPTIONS,
+    MAG_SCALE_OPTIONS,
+    DEBUG_SCALE_OPTIONS,
+    REFRESH_RATE_OPTIONS,
+} from "./constants";
 import SensorGraph from "./SensorGraph.vue";
 import MSP from "../../../js/msp";
 import MSPCodes from "../../../js/msp/MSPCodes";
@@ -103,7 +124,9 @@ const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
 const { addInterval, removeInterval } = useInterval();
 
-const { checkboxes, rates, scales, debugColumns } = storeToRefs(sensorsStore);
+const { checkboxes, globalRate, rates, scales, debugScales, debugColumns } = storeToRefs(sensorsStore);
+
+const refreshRateItems = REFRESH_RATE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
 
 const {
     addGyroSample,
@@ -114,6 +137,7 @@ const {
     addDebugSample,
     incrementDebugCounter,
     updateScales: updateGraphScales,
+    setDebugScales: updateGraphDebugScales,
     updateGraphs,
     initializeGraphs,
 } = useSensorGraph();
@@ -205,6 +229,7 @@ function initializeTimers() {
     removeInterval("sonar_pull");
     removeInterval("debug_pull");
 
+    // Gyro/accel/mag share one MSP_RAW_IMU pull, so use the fastest of the three.
     const fastest = Math.min(rates.value.gyro, rates.value.accel, rates.value.mag);
 
     if (checkboxes.value[0] || checkboxes.value[1] || checkboxes.value[2]) {
@@ -294,10 +319,34 @@ function update_sonar_graphs() {
     updateGraphs();
 }
 
+/**
+ * Hardware-scaling context for the shared debug decode helper, built from the
+ * connected FC. Mirrors the fixed scaling MSPHelper applies to the live main
+ * gyro/acc display (no per-FC gyroScale/acc_1G exists), plus motor config for
+ * throttle/RPM modes.
+ */
+function liveDebugContext() {
+    const minThrottle = fcStore.motorConfig?.minthrottle ?? 1000;
+    const maxThrottle = fcStore.motorConfig?.maxthrottle ?? 2000;
+    return {
+        apiVersion: fcStore.config?.apiVersion,
+        // `|| 1` (not `??`) so an unloaded 0 can't divide-by-zero in RPM modes.
+        motorPoles: fcStore.motorConfig?.motor_poles || 1,
+        gyroRawToDegreesPerSecond: (v) => v * (4 / 16.4),
+        accRawToGs: (v) => v / 2048,
+        rcCommandRawToThrottle: (v) =>
+            Math.min(Math.max(((v - minThrottle) / (maxThrottle - minThrottle)) * 100, 0), 100),
+        throttleToRcCommandRaw: (v) => (v / 100) * (maxThrottle - minThrottle) + minThrottle,
+    };
+}
+
 function update_debug_graphs() {
+    const modeName = debugStore.modes[fcStore.pidAdvancedConfig.debugMode];
+    const ctx = liveDebugContext();
     for (let i = 0; i < debugColumns.value; i++) {
-        addDebugSample(i, [fcStore.sensorData.debug[i]]);
-        debugDisplay.value[i] = fcStore.sensorData.debug[i].toString();
+        const raw = fcStore.sensorData.debug[i];
+        addDebugSample(i, [raw]);
+        debugDisplay.value[i] = decodeDebugFieldToFriendly(modeName, `debug[${i}]`, raw, ctx);
     }
     incrementDebugCounter();
     updateGraphs();
@@ -328,14 +377,27 @@ function updateRate(sensor, value) {
     initializeTimers();
 }
 
+function updateGlobalRate(value) {
+    sensorsStore.updateGlobalRate(value);
+    initializeTimers();
+}
+
 function updateScale(sensor, value) {
     sensorsStore.updateScale(sensor, value);
     updateGraphScales(scales.value);
-    initializeTimers();
+}
+
+function updateDebugScale(index, value) {
+    sensorsStore.updateDebugScale(index, value);
+    updateGraphDebugScales(debugScales.value);
 }
 
 onMounted(async () => {
     sensorsStore.loadFromConfig();
+
+    // Needed for DSHOT_RPM_TELEMETRY debug decoding (motor_poles); other tabs
+    // load it on mount too, and it isn't fetched at connection time.
+    await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         sensorsStore.debugColumns = 8;
@@ -367,6 +429,7 @@ onMounted(async () => {
     await nextTick();
     initializeGraphs(null, debugColumns.value);
     updateGraphScales(scales.value);
+    updateGraphDebugScales(debugScales.value);
     initializeTimers();
 });
 </script>

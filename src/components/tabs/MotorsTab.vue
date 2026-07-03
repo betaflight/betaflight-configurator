@@ -465,28 +465,44 @@
             </div>
 
             <!-- Warning Dialog -->
-            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged" class="w-[400px] h-fit">
-                <div class="p-4">
-                    <div class="mb-4" v-html="warningMessage"></div>
-                    <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
-                </div>
-            </dialog>
+            <UModal
+                v-model:open="settingsChangedOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+            >
+                <template #body>
+                    <div v-html="warningMessage"></div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
+                        <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
+                    </div>
+                </template>
+            </UModal>
 
             <!-- Dynamic Notch Filters Dialog -->
-            <dialog id="dialog-dyn-filters" ref="dialogDynFilters" class="w-[400px] h-fit">
-                <div class="p-4">
-                    <div class="font-semibold mb-2" v-html="$t('dialogDynFiltersChangeTitle')"></div>
-                    <div class="mb-4" v-html="$t('dialogDynFiltersChangeNote')"></div>
-                    <div class="flex gap-2">
-                        <UButton :label="$t('presetsWarningDialogYesButton')" @click="applyDynFiltersChange" />
+            <UModal
+                v-model:open="dialogDynFiltersOpen"
+                :title="$t('dialogDynFiltersChangeTitle')"
+                :close="false"
+                :dismissible="false"
+                :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+            >
+                <template #body>
+                    <div v-html="$t('dialogDynFiltersChangeNote')"></div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
                         <UButton
                             :label="$t('presetsWarningDialogNoButton')"
                             variant="outline"
                             @click="closeDynFiltersDialog"
                         />
+                        <UButton :label="$t('presetsWarningDialogYesButton')" @click="applyDynFiltersChange" />
                     </div>
-                </div>
-            </dialog>
+                </template>
+            </UModal>
         </div>
 
         <!-- Fixed Bottom Toolbar -->
@@ -542,31 +558,31 @@ const motorsState = useMotorsState();
 const { configHasChanged, resetChanges } = motorsState;
 
 // Warning dialog
-const dialogSettingsChanged = ref(null);
+const settingsChangedOpen = ref(false);
 const warningMessage = ref("");
 
 const showWarningDialog = (message) => {
     warningMessage.value = message;
-    dialogSettingsChanged.value?.showModal();
+    settingsChangedOpen.value = true;
 };
 
 const closeWarningDialog = () => {
-    dialogSettingsChanged.value?.close();
+    settingsChangedOpen.value = false;
 };
 
 // Dynamic notch filter dialog
-const dialogDynFilters = ref(null);
+const dialogDynFiltersOpen = ref(false);
 const previousDshotBidir = ref(false);
 const dshotBidirInitialized = ref(false);
 const previousFilterDynQ = ref(null);
 const previousFilterDynCount = ref(null);
 
 const showDynFiltersDialog = () => {
-    dialogDynFilters.value?.showModal();
+    dialogDynFiltersOpen.value = true;
 };
 
 const closeDynFiltersDialog = () => {
-    dialogDynFilters.value?.close();
+    dialogDynFiltersOpen.value = false;
 };
 
 const applyDynFiltersChange = () => {

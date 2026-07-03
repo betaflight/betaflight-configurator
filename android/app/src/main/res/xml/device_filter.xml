@@ -37,4 +37,8 @@
     <usb-device vendor-id="6790" product-id="29987" /> <!-- CH340 USB-to-Serial -->
     <usb-device vendor-id="6790" product-id="21795" /> <!-- CH341 USB-to-Serial -->
     <usb-device vendor-id="6790" product-id="30084" /> <!-- CH340S USB-to-Serial -->
+    
+    <!-- X32 devices -->
+    <usb-device vendor-id="14743" product-id="22336" /> <!-- X32 VCP -->
+    <usb-device vendor-id="14743" product-id="57105" /> <!-- X32 DFU Bootloader -->
 </resources>

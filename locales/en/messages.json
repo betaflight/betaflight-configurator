@@ -68,6 +68,18 @@
     "disconnect": {
         "message": "Disconnect"
     },
+    "disconnectVirtual": {
+        "message": "Disconnect (Virtual)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Disconnect (Manual)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Disconnect (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Select your device",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -107,6 +119,9 @@
     "bluetoothConnectionError": {
         "message": "Bluetooth error: $1"
     },
+    "virtualMode": {
+        "message": "Virtual Mode"
+    },
     "virtualMSPVersion": {
         "message": "Virtual Firmware Version"
     },
@@ -116,6 +131,10 @@
     "connectVirtualDescription": {
         "message": "Simulate a flight controller without hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connect (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Enter the serial path or URL to connect to.",
@@ -274,6 +293,10 @@
     },
     "language_ja": {
         "message": "\u65E5\u672C\u8A9E",
+        "description": "Don't translate!!!"
+    },
+    "language_ka": {
+        "message": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8",
         "description": "Don't translate!!!"
     },
     "language_ko": {
@@ -483,6 +506,7 @@
         "message": "PID Tuning"
     },
     "tabAutotune": { "message": "Autotune" },
+    "tabBlackboxViewer": { "message": "Blackbox Viewer", "description": "Navigation sidebar label for the Blackbox log viewer tab" },
     "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
     "autotuneImportButton": { "message": "Import Blackbox Log" },
     "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
@@ -615,6 +639,12 @@
     },
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Failed</span> to open serial port"
+    },
+    "connectionFailedTitle": {
+        "message": "Connection failed"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">Failed</span> to connect to the selected port. Check that the device is reachable and that the connection settings are correct, then try again."
     },
     "serialPortClosedOk": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> closed"
@@ -918,7 +948,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -930,7 +960,7 @@
         "message": "Contributing"
     },
     "defaultContributingText": {
-        "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>using your knowledge of Betaflight to create or update content on <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">our Wiki</a>, or answering other users' questions in online forums;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">contributing code</a> to the firmware and app - new features, fixes, improvements;</li><li>testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">new features and fixes</a> and providing feedback;</li><li>helping other users solve the problems they report in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">our issue tracker</a>, and participating in discussions on feature requests;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">translating</a> Betaflight App into a new language, or helping to maintain the existing translations.</li></ul>"
+        "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>using your knowledge of Betaflight to create or update content on <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">our Wiki</a>, or answering other users' questions in online forums;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">contributing code</a> to the firmware and app - new features, fixes, improvements;</li><li>testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">new features and fixes</a> and providing feedback;</li><li>helping other users solve the problems they report in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">our issue tracker</a>, and participating in discussions on feature requests;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/README.md#translators\" target=\"_blank\" rel=\"noopener noreferrer\">translating</a> Betaflight App into a new language, or helping to maintain the existing translations.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "We also have a <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Group</a>.<br />Join us to get a place to talk about Betaflight, ask configuration questions, or just hang out with fellow pilots."
@@ -2694,7 +2724,13 @@
         "message": "Model Match ID"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
+    },
+    "receiverFailsafeActiveTitle": {
+        "message": "Failsafe active"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "The flight controller is in failsafe. The channel values shown below are the failsafe output, not the live values coming from your receiver. Check your receiver link and failsafe settings."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -2877,11 +2913,11 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode allows for maintaining aircraft stability at low throttle. For more information please see <a href=\"https://betaflight.com/docs/development/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
+        "message": "AirMode allows for maintaining aircraft stability at low throttle. For more information please see <a href=\"https://betaflight.com/docs/wiki/guides/current/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https://betaflight.com/docs/wiki/guides/current/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold</a> actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
+        "message": "<a href=\"https://betaflight.com/docs/wiki/guides/current/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold</a> actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
@@ -3089,18 +3125,30 @@
     "adjustmentsColumnViaChannel": {
         "message": "via channel"
     },
+    "adjustmentsColumnMode": {
+        "message": "mode"
+    },
+    "adjustmentsModeStep": {
+        "message": "Step"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Absolute"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Selection"
+    },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "w/ center (val.)"
+        "message": "center (val.)"
     },
     "adjustmentsColumnAdjustmentScale": {
-        "message": "and range|scale (val.|%)"
+        "message": "scale (val.|%)"
     },
     "adjustmentsCenterHelp": {
-        "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/wiki/guides/current/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
         "description": "Tooltip help text for the Adjustment Center column"
     },
     "adjustmentsScaleHelp": {
-        "message": "Controls the scaling or range of the adjustment; higher values increase the adjustment range or sensitivity.<br /><br /><strong>Slider Adjustments:</strong><br />For Slider adjustments, Adjustment Scale controls the scaling/sensitivity of the adjustment. A value of 50 equals 50% of the slider range. Setting to 0 utilizes the default scale for sliders.<br /><br /><strong>Selection Adjustments:</strong><br />For Selection adjustments, set Adjustment Scale to 0 for default behavior, or specify a microsecond (uS) value to limit the range. For example: Set Adjustment Center to 1000 (uS) and Adjustment Scale to 500 (uS) to utilize a 3-position switch as a 2-position switch.<br /><br /><strong>Stepped and Absolute Adjustments:</strong><br />For Stepped and Absolute adjustments, Adjustment Scale defines the range above and below the Adjustment Center. For example, a value of 25 creates an adjustment range of ±25 from the Adjustment Center value, or from the current value if Adjustment Center is set to 0.<br /><strong>Note:</strong> To use the Absolute adjustment method with a potentiometer, an Adjustment Scale value must be specified.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "message": "Controls the scaling or range of the adjustment; higher values increase the adjustment range or sensitivity.<br /><br /><strong>Slider Adjustments:</strong><br />For Slider adjustments, Adjustment Scale controls the scaling/sensitivity of the adjustment. A value of 50 equals 50% of the slider range. Setting to 0 utilizes the default scale for sliders.<br /><br /><strong>Selection Adjustments:</strong><br />For Selection adjustments, set Adjustment Scale to 0 for default behavior, or specify a microsecond (uS) value to limit the range. For example: Set Adjustment Center to 1000 (uS) and Adjustment Scale to 500 (uS) to utilize a 3-position switch as a 2-position switch.<br /><br /><strong>Stepped and Absolute Adjustments:</strong><br />For Stepped and Absolute adjustments, Adjustment Scale defines the range above and below the Adjustment Center. For example, a value of 25 creates an adjustment range of ±25 from the Adjustment Center value, or from the current value if Adjustment Center is set to 0.<br /><strong>Note:</strong> To use the Absolute adjustment method with a potentiometer, an Adjustment Scale value must be specified.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/wiki/guides/current/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
         "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
@@ -3859,7 +3907,7 @@
         "message": "Feature works with DSHOT ESCs only.<br />Verify that your ESC (electric speed controller) supports DSHOT protocol and change it on $t(tabMotorTesting.message) tab."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Number of motors is 0.<br />Verify the current Mixer on $t(tabMotorTesting.message) tab or setup a custom one through CLI. Refer to this <a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
+        "message": "Number of motors is 0.<br />Verify the current Mixer on $t(tabMotorTesting.message) tab or setup a custom one through CLI. Refer to this <a href=\"https://betaflight.com/docs/wiki/guides/current/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Update the firmware.<br /> Make sure you are using the latest firmware: Betaflight 4.3 or newer."
@@ -3882,8 +3930,14 @@
     "sensorsRefresh": {
         "message": "Refresh:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Refresh all:"
+    },
     "sensorsScale": {
         "message": "Scale:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Auto"
     },
     "sensorsGyroSelect": {
         "message": "Gyroscope"
@@ -4372,7 +4426,7 @@
         "message": "Recovery / Lost communication"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+        "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/getting-started/firmware-installation\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "If you have lost communication: power off, enable No Reboot Sequence and Full Chip Erase, jumper the BOOT pins, then power on. Install drivers if needed."
@@ -4425,6 +4479,30 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Failed to save (flash) UF2"
     },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "Connecting to ESP32 bootloader..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "Detected $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "Flashing ESP32..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "Flashing complete, rebooting..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "Flashed ESP32 successfully"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "ESP32 flashing failed: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32 flashing requires the browser (Web Serial) build"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "Select a serial port before flashing the ESP32"
+    },
     "firmwareFlasherClickToConnectDfu": {
         "message": "Click to connect to DFU device"
     },
@@ -4447,6 +4525,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Backup cancelled, flashing aborted"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Backup failed: received invalid data from the device (not in CLI mode), flashing aborted"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
@@ -5352,7 +5433,7 @@
         "message": "Vbat Sag Compensation %"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/tuning/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/tuning/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -6182,7 +6263,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Instantaneous RSSI value (flashes when below alarm threshold)"
+        "message": "Instantaneous RSSI value (flashes when below alarm threshold). For modern protocols, use RSSI dBm instead."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm value",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Received Signal Strength Indicator, this value indicates how loud the reception is in dBm"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -6773,7 +6861,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Alternative indicator for 'link quality' based on frame loss - use with caution"
+        "message": "Link quality indicator based on the percentage of successfully received uncorrupted data packets"
     },
     "osdTextElementFlightDist": {
         "message": "Flight distance",
@@ -6837,13 +6925,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD profile name as set in the \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\" CLI variables"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm value",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Value in dBm of the RSSI signal if available"
     },
     "osdTextElementRcChannels": {
         "message": "RC Channels",
@@ -7407,7 +7488,7 @@
         "message": "Saved"
     },
     "vtxHelp": {
-        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
+        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -7925,6 +8006,93 @@
     "magCalibrationAccept": {
         "message": "Save Calibration"
     },
+    "magCalibrationFull": {
+        "message": "Full Cal (auto-align)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "One spin — sets offsets, soft-iron, and the mag's mounting orientation"
+    },
+    "magCalibrationFullTitle": {
+        "message": "Full Calibration"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Follow the steps below, holding the craft steady through each full turn. The zone count climbs as you reach new angles — aim to cover all 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Step {{n}} of {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Hold the craft level and rotate it slowly through a full 360° turn."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Turn it upside-down and rotate slowly through another full 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Point the nose straight up and rotate a full turn around it."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Point the nose straight down and rotate a full turn."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Rest it on its left side and rotate a full turn."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Rest it on its right side and rotate a full turn."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Do a few slow forward flips, facing a different direction each time."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Do a few slow backward flips, again facing a different direction each time."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} / {{total}} zones covered"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Compute"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Coverage:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Alignment:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibration:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Residual:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copy CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Apply"
+    },
+    "magCalibrationFullExport": {
+        "message": "Export Model"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Not enough samples — spin longer"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "No GPS or IP location — cannot determine magnetic inclination"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI commands copied to clipboard"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Could not copy to clipboard"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Firmware {{version}} is too old for CUSTOM mag alignment (needs {{min}}+). Update firmware, then apply."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibration applied and saved"
+    },
     "magCalibrationDiscard": {
         "message": "Discard"
     },
@@ -8441,6 +8609,38 @@
     "mspCliFirmwareTooOld": {
         "message": "This action requires Betaflight firmware {{required}} or newer (currently connected to {{current}}). Please update your flight controller firmware before continuing.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Restore Backup",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Restore Pre-Flash Backup",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "This will restore the configuration backup taken before flashing. Continue?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Configuration backup restored successfully.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Configuration backup restored, {{count}} line(s) skipped.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Restore failed: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "Could not connect to flight controller for restore.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "No backup is available to restore.",
+        "description": "Error message when no backup data is cached for restore"
     },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",
@@ -9510,5 +9710,89 @@
     },
     "preflightForecastWeather": {
         "message": "Weather"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM Provider"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Disabled"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (US, API key required)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (Global airspace, API key required)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA API Key (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API Key"
+    },
+    "preflightNotamRadius": {
+        "message": "Search Radius"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Airspace data settings"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Airspace data sends your coordinates to the selected provider. No additional personal data is transmitted."
+    },
+    "preflightNotamLoading": {
+        "message": "Fetching airspace data..."
+    },
+    "preflightNotamEmpty": {
+        "message": "No notices found for this location and radius"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "An API key is required for the selected provider. Enter your key in the settings above."
+    },
+    "preflightNotamFetchError": {
+        "message": "Failed to fetch airspace data"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Active now"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanent"
+    },
+    "preflightNotamExpired": {
+        "message": "Expired"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Lower"
+    },
+    "preflightNotamAltTo": {
+        "message": "Upper"
+    },
+    "preflightNotamShowMore": {
+        "message": "Show more"
+    },
+    "preflightNotamShowLess": {
+        "message": "Show less"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Last fetched"
     }
 }

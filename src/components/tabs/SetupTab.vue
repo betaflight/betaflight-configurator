@@ -24,10 +24,11 @@
                         </div>
                     </div>
                     <UButton
-                        class="reset-zaxis sm-min"
+                        class="reset-zaxis"
                         :label="$t('initialSetupButtonResetZaxisValue', { 1: yaw_fix })"
                         color="neutral"
                         variant="subtle"
+                        size="xs"
                         @click="resetZaxis"
                     />
                 </div>
@@ -244,35 +245,45 @@
             </div>
         </div>
 
-        <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
-            <h3>{{ $t("dialogConfirmResetTitle") }}</h3>
-            <div class="content">
-                <div style="margin-top: 10px" v-html="$t('dialogConfirmResetNote')"></div>
-            </div>
-            <div class="buttons">
-                <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
-                <UButton
-                    :label="$t('dialogConfirmResetClose')"
-                    color="neutral"
-                    variant="outline"
-                    @click="cancelConfirmReset"
-                />
-            </div>
-        </dialog>
+        <UModal
+            v-model:open="confirmResetOpen"
+            :title="$t('dialogConfirmResetTitle')"
+            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
+        >
+            <template #body>
+                <div v-html="$t('dialogConfirmResetNote')"></div>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton
+                        :label="$t('dialogConfirmResetClose')"
+                        color="neutral"
+                        variant="outline"
+                        @click="cancelConfirmReset"
+                    />
+                    <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
+                </div>
+            </template>
+        </UModal>
 
-        <dialog class="dialogBuildInfo" ref="dialogBuildInfo">
-            <h3>{{ state.buildInfoDialogTitle }}</h3>
-            <div class="contentBuildInfo">
-                <div class="dialogBuildInfoGrid-container" style="margin-top: 10px">
+        <UModal
+            v-model:open="buildInfoOpen"
+            :title="state.buildInfoDialogTitle"
+            :ui="{ overlay: 'z-3000', content: 'w-fit max-w-2xl z-3001' }"
+        >
+            <template #body>
+                <div class="dialogBuildInfoGrid-container">
                     <div v-for="option in state.sortedBuildOptions" :key="option" class="dialogBuildInfoGrid-item">
                         {{ option }}
                     </div>
                 </div>
-            </div>
-            <div class="dialogButtons">
-                <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
-            </div>
-        </dialog>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
+                </div>
+            </template>
+        </UModal>
     </BaseTab>
 </template>
 
@@ -454,8 +465,8 @@ const updateExpertMode = (enabled) => {
 
 let mountedFlag = true;
 const isExpert = ref(isExpertModeEnabled());
-const dialogConfirmReset = ref(null);
-const dialogBuildInfo = ref(null);
+const confirmResetOpen = ref(false);
+const buildInfoOpen = ref(false);
 
 function resetZaxis() {
     yaw_fix.value = fcStore.sensorData.kinematics[2] * -1;
@@ -471,21 +482,15 @@ function onRebootBootloader() {
 }
 
 function showConfirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.showModal();
-    }
+    confirmResetOpen.value = true;
 }
 
 function cancelConfirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.close();
-    }
+    confirmResetOpen.value = false;
 }
 
 function confirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.close();
-    }
+    confirmResetOpen.value = false;
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
         gui_log(t("initialSetupSettingsRestored"));
         GUI.tab_switch_cleanup(function () {
@@ -496,9 +501,7 @@ function confirmReset() {
 }
 
 function closeBuildInfo() {
-    if (dialogBuildInfo.value) {
-        dialogBuildInfo.value.close();
-    }
+    buildInfoOpen.value = false;
 }
 
 const canvasWrapper = ref(null);
@@ -791,9 +794,7 @@ function openBuildOptionsDialog() {
     );
     state.buildInfoDialogTitle = t("initialSetupInfoBuildOptionList");
 
-    if (dialogBuildInfo.value && !dialogBuildInfo.value.hasAttribute("open")) {
-        dialogBuildInfo.value.showModal();
-    }
+    buildInfoOpen.value = true;
 }
 </script>
 
@@ -804,10 +805,10 @@ function openBuildOptionsDialog() {
         background-color: var(--surface-200);
         border-radius: 1rem;
         border: 2px solid var(--surface-400);
-        .reset-zaxis {
+        :deep(.reset-zaxis) {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.75rem;
+            right: 0.75rem;
             z-index: 100;
         }
     }

@@ -133,8 +133,8 @@ export function useCli() {
     const windowWrapperRef = ref(null);
     const cliWindowRef = ref(null);
     const commandInputRef = ref(null);
-    const snippetPreviewDialogRef = ref(null);
-    const supportWarningDialogRef = ref(null);
+    const snippetPreviewOpen = ref(false);
+    const supportWarningOpen = ref(false);
 
     // Support dialog callback
     let supportDialogCallback = null;
@@ -284,16 +284,12 @@ export function useCli() {
         const executeSnippet = () => {
             const commands = state.snippetPreview;
             executeCommands(commands);
-            if (snippetPreviewDialogRef.value) {
-                snippetPreviewDialogRef.value.close();
-            }
+            snippetPreviewOpen.value = false;
         };
 
         const previewCommands = (result, _fileName) => {
             state.snippetPreview = result;
-            if (snippetPreviewDialogRef.value) {
-                snippetPreviewDialogRef.value.showModal();
-            }
+            snippetPreviewOpen.value = true;
         };
 
         const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
@@ -349,15 +345,11 @@ export function useCli() {
 
     const showSupportWarningDialog = (onAccept) => {
         supportDialogCallback = onAccept;
-        if (supportWarningDialogRef.value && !supportWarningDialogRef.value.hasAttribute("open")) {
-            supportWarningDialogRef.value.showModal();
-        }
+        supportWarningOpen.value = true;
     };
 
     const handleSupportDialogSubmit = () => {
-        if (supportWarningDialogRef.value) {
-            supportWarningDialogRef.value.close();
-        }
+        supportWarningOpen.value = false;
         if (supportDialogCallback) {
             supportDialogCallback(state.supportDialogInput);
             supportDialogCallback = null;
@@ -366,9 +358,7 @@ export function useCli() {
     };
 
     const handleSupportDialogCancel = () => {
-        if (supportWarningDialogRef.value) {
-            supportWarningDialogRef.value.close();
-        }
+        supportWarningOpen.value = false;
         supportDialogCallback = null;
         state.supportDialogInput = "";
     };
@@ -724,8 +714,8 @@ export function useCli() {
         windowWrapperRef,
         cliWindowRef,
         commandInputRef,
-        snippetPreviewDialogRef,
-        supportWarningDialogRef,
+        snippetPreviewOpen,
+        supportWarningOpen,
         initialize,
         cleanup,
         clearHistory,

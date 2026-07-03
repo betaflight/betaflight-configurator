@@ -120,7 +120,19 @@
                         </span>
                     </div>
                 </div>
-                <div></div>
+                <div>
+                    <UButton
+                        v-if="showRestoreButton"
+                        size="xs"
+                        color="success"
+                        icon="i-lucide-upload"
+                        :loading="restoreInProgress"
+                        @click="onRestoreBackup"
+                        :disabled="restoreInProgress"
+                    >
+                        {{ $t("firmwareFlasherRestoreBackup") }}
+                    </UButton>
+                </div>
             </div>
 
             <!-- Firmware Loaded Rows (online only) -->
@@ -198,15 +210,30 @@
                     @update:model-value="onFlashManualBaudRateChange"
                 />
             </SettingRow>
+            <SettingRow :label="$t('firmwareBackupOnFlash')">
+                <USelect
+                    :items="[
+                        { label: $t('firmwareBackupDisabled'), value: 0 },
+                        { label: $t('firmwareBackupEnabled'), value: 1 },
+                        { label: $t('firmwareBackupAsk'), value: 2 },
+                    ]"
+                    size="sm"
+                    v-model="backupOnFlash"
+                    class="min-w-40"
+                    :ui="{ content: 'z-3002' }"
+                />
+            </SettingRow>
         </UiBox>
     </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import ProgressRing from "@/components/ProgressRing.vue";
+import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
+import { getLastBackupData } from "@/js/utils/AutoBackup";
 
 const props = defineProps({
     state: { type: Object, required: true },
@@ -217,6 +244,7 @@ const props = defineProps({
     onEraseChipChange: { type: Function, required: true },
     onFlashManualBaudChange: { type: Function, required: true },
     onFlashManualBaudRateChange: { type: Function, required: true },
+    onRestoreBackup: { type: Function, required: true },
 });
 
 // True while flash is actively running (progress updates flowing)
@@ -249,6 +277,34 @@ const flashResultRingColor = computed(() => {
         default:
             return "primary";
     }
+});
+
+// backupOnFlash preference — read from ConfigStorage on mount, persisted via watch
+const backupOnFlash = ref(getConfig("backupOnFlash", 1).backupOnFlash ?? 1);
+watch(
+    () => backupOnFlash.value,
+    (v) => setConfig({ backupOnFlash: v }),
+);
+
+// Restore progress busy flag (driven by the parent via shared state)
+const restoreInProgress = computed(() => props.state.restoreInProgress);
+
+// Show restore button only when flash succeeded, not flashing, restore not already
+// done, and backup data exists.
+// Note: No longer checking PortHandler.portAvailable as it's stale after flash
+const showRestoreButton = computed(() => {
+    if (props.state.flashingInProgress) {
+        return false;
+    }
+    if (props.state.lastFlashResultClass !== "valid" || !props.state.lastFlashResultText) {
+        return false;
+    }
+    if (props.state.restoreInProgress || props.state.restoreCompleted) {
+        return false;
+    }
+    // Only show if we have a backup available (checking for null or empty string)
+    const backupData = getLastBackupData();
+    return backupData !== null && backupData !== "";
 });
 </script>
 

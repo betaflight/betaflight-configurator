@@ -282,7 +282,7 @@ function computeWeightedVariance(values, weights) {
  * Build a 3×3 rotation matrix from Euler angles (degrees) using ZYX order,
  * matching Betaflight's custom alignment convention.
  */
-export function eulerToMatrix(rollDeg, pitchDeg, yawDeg) {
+function eulerToMatrix(rollDeg, pitchDeg, yawDeg) {
     const r = (rollDeg * Math.PI) / 180;
     const p = (pitchDeg * Math.PI) / 180;
     const y = (yawDeg * Math.PI) / 180;
@@ -301,4 +301,5 @@ export function eulerToMatrix(rollDeg, pitchDeg, yawDeg) {
     ];
 }
 
-export { ALIGNMENT_LABELS };
+export { ALIGNMENT_LABELS, ALIGNMENT_MATRICES };
+export { eulerToMatrix, mat3transpose, mat3mul, mat3mulVec, undoRollPitch, computeWeightedVariance };

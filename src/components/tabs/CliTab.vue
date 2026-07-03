@@ -41,26 +41,33 @@
         </div>
 
         <!-- Snippet preview dialog -->
-        <dialog ref="snippetPreviewDialogRef" closedby="any" class="w-[600px] h-fit">
-            <div class="p-4">
+        <UModal v-model:open="snippetPreviewOpen" :ui="{ overlay: 'z-3000', content: 'w-[600px] z-3001' }">
+            <template #body>
                 <div class="note mb-3">
                     <p v-html="$t('cliConfirmSnippetNote')"></p>
                 </div>
                 <textarea
                     v-model="cli.state.snippetPreview"
                     rows="20"
-                    class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px] mb-[5px]"
+                    class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px]"
                 ></textarea>
-                <div class="mt-3">
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
                     <UButton :label="$t('cliConfirmSnippetBtn')" @click="handleSnippetConfirm" />
                 </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
 
         <!-- Support warning dialog -->
-        <dialog ref="supportWarningDialogRef" class="w-[400px] h-fit">
-            <div class="p-4">
-                <h3 class="font-semibold mb-2">{{ $t("supportWarningDialogTitle") }}</h3>
+        <UModal
+            v-model:open="supportWarningOpen"
+            :title="$t('supportWarningDialogTitle')"
+            :close="false"
+            :dismissible="false"
+            :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+        >
+            <template #body>
                 <div class="mb-3" v-html="$t('supportWarningDialogText')"></div>
                 <textarea
                     v-model="cli.state.supportDialogInput"
@@ -70,12 +77,14 @@
                     cols="0"
                     class="w-full mt-2 leading-5 p-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"
                 ></textarea>
-                <div class="flex gap-2 mt-3">
-                    <UButton :label="$t('submit')" @click="handleSupportSubmit" />
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
                     <UButton :label="$t('cancel')" variant="outline" @click="handleSupportCancel" />
+                    <UButton :label="$t('submit')" @click="handleSupportSubmit" />
                 </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
 
         <!-- Bottom toolbar -->
         <div class="content_toolbar xs-compressed toolbar_fixed_bottom flex items-center gap-2">
@@ -243,8 +252,8 @@ export default defineComponent({
             windowWrapperRef: cli.windowWrapperRef,
             cliWindowRef: cli.cliWindowRef,
             commandInputRef: cli.commandInputRef,
-            snippetPreviewDialogRef: cli.snippetPreviewDialogRef,
-            supportWarningDialogRef: cli.supportWarningDialogRef,
+            snippetPreviewOpen: cli.snippetPreviewOpen,
+            supportWarningOpen: cli.supportWarningOpen,
         };
     },
 });
@@ -287,5 +296,39 @@ export default defineComponent({
 
 .tab-cli .cli-window .cli-num {
     color: #e5c07b;
+}
+
+/* On narrow screens the fixed bottom toolbar would wrap its 5 buttons onto
+   several rows, growing past the space the CLI content reserves (calc(100% - 87px))
+   and overlapping the command textarea. Instead, pin the toolbar to the bottom via
+   normal flex flow (not `position: fixed`): the content fills the space above it and
+   the toolbar wraps to as many rows as it needs without ever overlapping. */
+@media all and (max-width: 1055px) {
+    .tab-cli {
+        display: flex;
+        flex-direction: column;
+        /* Fill the full content height (the base rule reserves 3rem for the
+           previously-fixed toolbar) so the in-flow toolbar pins flush to the bottom. */
+        height: 100%;
+    }
+    .tab-cli .content_wrapper {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+        /* The global .content_wrapper reserves 3rem at the bottom to clear the
+           fixed toolbar; the CLI toolbar is now in normal flow. */
+        padding-bottom: 0.3rem;
+    }
+    .tab-cli .content_toolbar.toolbar_fixed_bottom {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-top-left-radius: 0;
+    }
+    .tab-cli .content_toolbar.toolbar_fixed_bottom::before {
+        display: none;
+    }
 }
 </style>

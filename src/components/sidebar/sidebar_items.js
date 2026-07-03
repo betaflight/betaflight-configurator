@@ -39,6 +39,7 @@ export const sidebarItems = [
     { key: "logging", mode: "connected", i18n: "tabLogging", icon: "i-lucide-file-text", expert: true },
     { key: "onboard_logging", mode: "connected", i18n: "tabOnboardLogging", icon: "i-lucide-database" },
     { key: "autotune", mode: "shared", i18n: "tabAutotune", icon: "i-lucide-gauge", expert: true },
+    { key: "blackbox_viewer", mode: "shared", i18n: "tabBlackboxViewer", icon: "i-lucide-line-chart" },
 
     { key: "cli", mode: "cli", i18n: "tabCLI", icon: "i-lucide-terminal" },
 

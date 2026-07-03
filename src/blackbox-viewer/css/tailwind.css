@@ -1,0 +1,6 @@
+/**
+ * NOTE: When embedded in betaflight-configurator, Tailwind + Nuxt UI and the Betaflight
+ * primary colour ramp are provided once document-wide by the configurator (src/css/theme.css).
+ * This file is intentionally NOT imported by the embedded build to avoid duplicating
+ * Tailwind Preflight and the Nuxt UI layer. Kept for standalone-app parity only.
+ */

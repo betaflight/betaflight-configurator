@@ -35,10 +35,31 @@ const logHead = "[SERIAL-BACKEND]";
 let mspHelper;
 let connectionTimestamp = null;
 let liveDataRefreshTimerId = false;
+// Handle for the BLE/manual reboot flush-timeout / reconnect-retry chain (rebootReconnect).
+// Tracked so an intentional disconnect during the reboot window can cancel it — otherwise the
+// retry would resurrect a connection the user just cancelled.
+let rebootReconnectTimerId = false;
+// Handles for the reboot progress modal's intervals, tracked so closeRebootDialog() can dismiss
+// the modal (and stop its timers) when a user disconnect cancels the reboot.
+let rebootDialogProgressTimerId = false;
+let rebootDialogCheckTimerId = false;
 
 let isConnected = false;
 
+// True while an intentional disconnect (Disconnect button, or removed-device toggle)
+// is in flight. finishClose() owns the full teardown in that case; onClosed() uses this
+// flag to tell an intentional disconnect apart from an unexpected one (unplug / FC reboot
+// / BLE drop) and avoid tearing down twice. Set in beginDisconnect(), reset on connect,
+// and consumed (read-and-reset) in onClosed().
+let intentionalDisconnect = false;
+
 const REBOOT_CONNECT_MAX_TIME_MS = 10000;
+// BLE/manual links usually survive an FC reboot (the radio stays connected while only the
+// MCU restarts), so no disconnect event fires and we must drive the disconnect/reconnect
+// cycle ourselves. Wait for the reboot command to flush before dropping the stale link,
+// then retry reconnecting on this cadence until the FC answers or the reboot window closes.
+const REBOOT_FLUSH_DELAY_MS = 1500;
+const REBOOT_RECONNECT_RETRY_MS = 1000;
 let rebootTimestamp = 0;
 
 function isCliOnlyMode() {
@@ -51,7 +72,12 @@ const toggleStatus = function () {
 
 function connectHandler(event) {
     onOpen(event.detail);
-    toggleStatus();
+    // Only flip the connected flag when the port actually opened. A failed open
+    // (event.detail falsy) runs abortConnection inside onOpen; toggling here too would
+    // leave isConnected out of sync with the real state and break reconnect retries.
+    if (event.detail) {
+        toggleStatus();
+    }
 }
 
 function disconnectHandler(event) {
@@ -116,15 +142,67 @@ async function sendConfigTracking() {
     });
 }
 
-function beginDisconnect() {
+function stopRebootReconnect() {
+    if (rebootReconnectTimerId !== false) {
+        // The id may be a timeout (flush phase) or an interval (retry phase); clear both — they
+        // share an id space and clearing the wrong kind is harmless.
+        clearTimeout(rebootReconnectTimerId);
+        clearInterval(rebootReconnectTimerId);
+        rebootReconnectTimerId = false;
+    }
+}
+
+// Dismiss the reboot progress modal and stop its timers. Called when a user disconnect cancels
+// the reboot (otherwise the modal would linger until its own 10s timeout), and at the start of
+// showRebootDialog() to clear any stale modal/intervals from a prior reboot.
+function closeRebootDialog() {
+    if (rebootDialogProgressTimerId !== false) {
+        clearInterval(rebootDialogProgressTimerId);
+        rebootDialogProgressTimerId = false;
+    }
+    if (rebootDialogCheckTimerId !== false) {
+        clearInterval(rebootDialogCheckTimerId);
+        rebootDialogCheckTimerId = false;
+    }
+    document.getElementById("rebootProgressDialog")?.close();
+}
+
+function prepareDisconnect() {
+    // Mark this as an intentional disconnect so the later protocol "disconnect" event
+    // (handled by onClosed) does not run the unexpected-disconnect teardown on top of
+    // finishClose(). Covers both the Disconnect button and the removedDevice route.
+    intentionalDisconnect = true;
+
+    // Cancel any in-flight reboot reconnect so a user-initiated disconnect during the reboot
+    // window is not undone by a retry. (The reboot retry itself reconnects via beginConnect,
+    // which does not pass through here, so the loop is unaffected.)
+    stopRebootReconnect();
+
     GUI.configuration_loaded = false;
     GUI.timeout_kill_all();
     GUI.interval_kill_all();
     GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
+}
+
+function beginDisconnect() {
+    prepareDisconnect();
+
+    // A user-initiated disconnect during the reboot window must also dismiss the reboot modal —
+    // prepareDisconnect() only stops the reconnect timers. (disconnectForReboot does NOT close it:
+    // the modal must stay up while the reboot's own reconnect runs.)
+    closeRebootDialog();
 
     mspHelper?.setArmingEnabled(true, false, function () {
         finishClose(toggleStatus);
     });
+}
+
+// Disconnect when the FC is rebooting: identical to beginDisconnect but WITHOUT the
+// setArmingEnabled MSP round-trip, which would hang waiting for a response the rebooting
+// FC cannot send. Tears the (now-stale) connection down directly.
+function disconnectForReboot() {
+    prepareDisconnect();
+    finishClose(toggleStatus);
 }
 
 // Explicit disconnect entry point. Safer than `connectDisconnect()` for
@@ -143,6 +221,12 @@ function canStartConnectionAction(selectedPort) {
 }
 
 function beginConnect(selectedPort) {
+    // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
+    // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
+    // may never dispatch the "disconnect" event that would otherwise consume the flag, so
+    // resetting here keeps a stale flag from downgrading a later unexpected disconnect.
+    intentionalDisconnect = false;
+
     // prevent connection when we do not have permission
     if (selectedPort.startsWith("requestpermission")) {
         return;
@@ -155,6 +239,21 @@ function beginConnect(selectedPort) {
 
     // lock port select & baud while we are connecting / connected
     PortHandler.portPickerDisabled = true;
+
+    // Safety net for the pre-open phase: some protocols (e.g. a ws:// endpoint that errors
+    // before onopen) never emit a "connect" event, so onOpen never runs to clear connecting_to
+    // and the Connect button would spin forever. If the attempt neither opens nor becomes valid
+    // within the window, recover the UI and tell the user. The disconnect-during-connect path in
+    // onClosed normally handles this sooner; this covers protocols that signal nothing at all.
+    GUI.timeout_add(
+        "connectAttempt",
+        function () {
+            if (GUI.connecting_to && !CONFIGURATOR.connectionValid) {
+                abortConnection("connectionFailed");
+            }
+        },
+        10000,
+    );
 
     // Set up event listeners for non-virtual connections
     if (selectedPort !== "virtual") {
@@ -241,6 +340,42 @@ function defaultDisplayForTag(tag) {
     return tagDisplayCache[tag];
 }
 
+// Shared connection-scoped UI teardown, run by BOTH the intentional disconnect
+// (finishClose) and the unexpected disconnect (finishUnexpectedDisconnect) paths so the
+// two cannot drift. Deliberately scoped to the steps finishClose adds on top of
+// resetConnection() — it must NOT repeat resetConnection's work (listeners,
+// connectionValid/cli flags, live-data timer, portPickerDisabled).
+function teardownConnectionUi() {
+    MSP.disconnect_cleanup();
+    PortUsage.reset();
+    // To trigger the UI updates by Vue reset the state.
+    FC.resetState();
+
+    GUI.connected_to = false;
+    GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
+    // Release any in-progress operation lock (OSD save / flashing). The disconnect
+    // invalidates that operation, and switchTab is silently rejected while the lock is
+    // held — which would otherwise leave a blank content area after unmountVueTab().
+    GUI.connect_lock = false;
+
+    // Clear the active root-mounted tab before navigation selects the next one.
+    try {
+        unmountVueTab();
+    } catch (e) {
+        console.warn("unmountVueTab failed:", e);
+    }
+
+    // allowedTabs (set above) must already include "landing"/"firmware_flasher" before this,
+    // or switchTab silently rejects the disconnected tab.
+    const pendingTab = GUI.pendingTab;
+    GUI.pendingTab = null;
+    if (pendingTab === "firmware_flasher") {
+        switchTab("firmware_flasher", { mode: "disconnected" });
+    } else {
+        switchTab("landing", { mode: "disconnected" });
+    }
+}
+
 function finishClose(finishedCallback) {
     const wasConnected = CONFIGURATOR.connectionValid;
 
@@ -255,14 +390,6 @@ function finishClose(finishedCallback) {
         onClosed(true);
     }
 
-    MSP.disconnect_cleanup();
-    PortUsage.reset();
-    // To trigger the UI updates by Vue reset the state.
-    FC.resetState();
-
-    GUI.connected_to = false;
-    GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
-
     // close problems dialog
     document.getElementById("dialogReportProblems-closebtn")?.click();
 
@@ -270,13 +397,6 @@ function finishClose(finishedCallback) {
     PortHandler.portPickerDisabled = false;
 
     if (wasConnected) {
-        // Clear the active root-mounted tab before navigation selects the next one.
-        try {
-            unmountVueTab();
-        } catch (e) {
-            console.warn("unmountVueTab failed:", e);
-        }
-
         // close cliPanel if left open; dismiss Pinia dialogs (e.g. InteractiveDialog, or
         // InformationDialog from showVersionMismatchAndCli) so disconnect does not leave a modal open
         const dialogStore = useDialogStore();
@@ -286,15 +406,22 @@ function finishClose(finishedCallback) {
         }
     }
 
-    const pendingTab = GUI.pendingTab;
-    GUI.pendingTab = null;
-    if (pendingTab === "firmware_flasher") {
-        switchTab("firmware_flasher", { mode: "disconnected" });
-    } else {
-        switchTab("landing", { mode: "disconnected" });
-    }
+    teardownConnectionUi();
 
     finishedCallback();
+}
+
+// Complete the teardown for an UNEXPECTED disconnect (cable unplug / FC reboot / BLE drop).
+// finishClose() is never reached on this path because the protocol only emits a "disconnect"
+// event (no "removedDevice") for BLE/Capacitor/WebSocket/TCP. Deliberately does NOT call
+// mspHelper.setArmingEnabled — the link is already gone, so that MSP callback would never fire.
+function finishUnexpectedDisconnect() {
+    // Mirror the toggleStatus that finishClose runs via finishedCallback for intentional
+    // disconnects. Reset before the UI teardown so a late removedDevice cannot re-enter
+    // connectDisconnect() against a still-"connected" state.
+    isConnected = false;
+
+    teardownConnectionUi();
 }
 
 function setConnectionTimeout() {
@@ -335,15 +462,38 @@ function resetConnection() {
     PortHandler.portPickerDisabled = false;
 }
 
-function abortConnection() {
-    GUI.timeout_remove("connecting"); // kill connecting timer
+function abortConnection(messageKey) {
+    GUI.timeout_remove("connecting"); // kill post-open connecting timer
+    GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
+
+    // Default message reflects how far the attempt got: a port that already opened but failed
+    // the handshake (e.g. invalid API version) did not "fail to open".
+    const message = i18n.getMessage(messageKey ?? (GUI.connected_to ? "connectionFailed" : "serialPortOpenFail"));
 
     GUI.connected_to = false;
     GUI.connecting_to = false;
 
-    gui_log(i18n.getMessage("serialPortOpenFail"));
+    gui_log(message);
+    showConnectionFailedDialog(message);
 
     resetConnection();
+}
+
+// Surface a connection failure to the user with a dismissible dialog, not just a log line
+// that is easy to miss. `text` may contain HTML markup (InformationDialog renders it).
+function showConnectionFailedDialog(text) {
+    const dialogStore = useDialogStore();
+    dialogStore.open(
+        "InformationDialog",
+        {
+            title: i18n.getMessage("connectionFailedTitle"),
+            text,
+            confirmText: i18n.getMessage("close"),
+        },
+        {
+            confirm: () => dialogStore.close(),
+        },
+    );
 }
 
 // Centralized helper: show version mismatch warning and switch to CLI
@@ -376,6 +526,8 @@ function onOpen(openInfo) {
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
 
+        GUI.timeout_remove("connectAttempt"); // port opened — pre-open watchdog no longer needed
+
         // update connected_to
         GUI.connected_to = GUI.connecting_to;
 
@@ -401,7 +553,11 @@ function onOpen(openInfo) {
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
-            if (FC.CONFIG.apiVersion.includes("null") || FC.CONFIG.apiVersion === "0.0.0") {
+            // "0.0.0" is the uninitialised default (no valid version received), and any
+            // unparseable string (e.g. "null.null.0" from a corrupt/truncated payload)
+            // would make the semver.gte() below throw. Reject both robustly instead of
+            // matching a specific garbage substring.
+            if (FC.CONFIG.apiVersion === "0.0.0" || !semver.valid(FC.CONFIG.apiVersion)) {
                 abortConnection();
                 return;
             }
@@ -439,6 +595,7 @@ function onOpen(openInfo) {
 }
 
 function onOpenVirtual() {
+    GUI.timeout_remove("connectAttempt"); // virtual link is up — pre-open watchdog no longer needed
     GUI.connected_to = GUI.connecting_to;
     GUI.connecting_to = false;
 
@@ -715,6 +872,16 @@ function initFeaturesOnConnect() {
 }
 
 function onClosed(result) {
+    // A "disconnect" that arrives while we are still in the connect phase (onOpen never ran, so
+    // the link never became valid) is a *failed connection attempt*, not the loss of an
+    // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
+    // "disconnect" and never "connect". Recover the Connect button and tell the user instead of
+    // running the established-connection teardown.
+    if (GUI.connecting_to && !CONFIGURATOR.connectionValid && !intentionalDisconnect) {
+        abortConnection("connectionFailed");
+        return;
+    }
+
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
 
     // Clear connection timestamp
@@ -732,6 +899,17 @@ function onClosed(result) {
     useDialogStore().close();
 
     resetConnection();
+
+    // onClosed runs for BOTH disconnect paths: intentional (finishClose → serial.disconnect()
+    // → protocol "disconnect" event, which fires on a later microtask) and unexpected (unplug /
+    // FC reboot / BLE drop). Read-and-reset the guard here — it cannot be cleared in finishClose(),
+    // which returns before this microtask runs. Intentional disconnects are already fully torn
+    // down by finishClose(); for unexpected ones complete the same UI teardown now.
+    const wasIntentional = intentionalDisconnect;
+    intentionalDisconnect = false;
+    if (!wasIntentional) {
+        finishUnexpectedDisconnect();
+    }
 }
 
 export function read_serial(info) {
@@ -802,11 +980,15 @@ export function reinitializeConnection(suppressDialog = false) {
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-        if (PortHandler.portPicker.autoConnect) {
-            setTimeout(function () {
-                connectDisconnect();
-            }, 1500);
+        // BLE/manual links usually survive the FC reboot — the radio stays connected while
+        // only the MCU restarts — so no disconnect event fires and the configurator would be
+        // left holding a stale connection. Drive it ourselves: show the reboot dialog, drop
+        // the stale link once the command has flushed, then reconnect when Auto-Connect is on.
+        // The dialog polls connectionValid and closes on reconnect or timeout (same as serial).
+        if (!suppressDialog && !["cli", "presets"].includes(GUI.active_tab)) {
+            showRebootDialog();
         }
+        rebootReconnect();
         return rebootTimestamp;
     }
 
@@ -826,8 +1008,53 @@ export function reinitializeConnection(suppressDialog = false) {
     return rebootTimestamp;
 }
 
+// Drive the disconnect/reconnect cycle for a BLE/manual reboot. The link bounces (or survives)
+// as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
+// reboot dialog is shown.
+function rebootReconnect() {
+    // Cancel any prior reboot cycle (e.g. a second Save-and-Reboot within the window) so we
+    // never run two overlapping retry loops.
+    stopRebootReconnect();
+
+    rebootReconnectTimerId = setTimeout(() => {
+        // If the link survived the reboot, drop the now-stale connection so the UI returns to
+        // the landing tab instead of sitting on a dead connection. (disconnectForReboot ->
+        // prepareDisconnect calls stopRebootReconnect on the already-fired timeout — harmless.)
+        if (isConnected) {
+            disconnectForReboot();
+        }
+
+        // Honor Auto-Connect — read it live (not snapshotted at reboot start) so toggling it off
+        // during the reboot window takes effect. When off, stay on the landing tab and let the
+        // user reconnect manually (the reboot dialog closes via its no-reconnect check).
+        if (!PortHandler.portPicker.autoConnect) {
+            rebootReconnectTimerId = false;
+            return;
+        }
+
+        // Retry connecting until the rebooted FC answers (connectionValid), the reboot window
+        // closes, or Auto-Connect is turned off mid-window. Early attempts may connect to a
+        // still-booting FC and get dropped; the device stays listed (we never remove it on
+        // disconnect), so a later attempt succeeds once the FC is stable. connectDisconnect here
+        // takes the connect branch (isConnected is false).
+        rebootReconnectTimerId = setInterval(() => {
+            const timedOut = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
+            if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
+                stopRebootReconnect();
+                return;
+            }
+            if (!isConnected && !GUI.connecting_to) {
+                connectDisconnect();
+            }
+        }, REBOOT_RECONNECT_RETRY_MS);
+    }, REBOOT_FLUSH_DELAY_MS);
+}
+
 function showRebootDialog() {
     gui_log(i18n.getMessage("deviceRebooting"));
+
+    // Clear any leftover modal/intervals from a prior reboot before starting a new one.
+    closeRebootDialog();
 
     // Show reboot progress modal
     const rebootDialog = document.getElementById("rebootProgressDialog") || createRebootProgressDialog();
@@ -840,7 +1067,7 @@ function showRebootDialog() {
     // Calculate increment to reach 100% when the timeout elapses (runs every 100ms)
     const progressIncrement = 100 / (REBOOT_CONNECT_MAX_TIME_MS / 100);
 
-    const progressInterval = setInterval(() => {
+    rebootDialogProgressTimerId = setInterval(() => {
         progress += progressIncrement;
         if (progress <= 100) {
             rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
@@ -848,13 +1075,15 @@ function showRebootDialog() {
     }, 100);
 
     // Check for successful connection every 100ms with a timeout
-    const connectionCheckInterval = setInterval(() => {
+    rebootDialogCheckTimerId = setInterval(() => {
         const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
         const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
 
         if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
-            clearInterval(connectionCheckInterval);
-            clearInterval(progressInterval);
+            clearInterval(rebootDialogCheckTimerId);
+            clearInterval(rebootDialogProgressTimerId);
+            rebootDialogCheckTimerId = false;
+            rebootDialogProgressTimerId = false;
 
             rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
             rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");

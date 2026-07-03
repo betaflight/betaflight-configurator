@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "Desconectar"
     },
+    "disconnectVirtual": {
+        "message": "Desconectar (Virtual)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Desconectar (Manual)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Desconectar (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Selecione o seu dispositivo",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -104,6 +116,9 @@
     "bluetoothConnectionError": {
         "message": "Erro de Bluetooth: $1"
     },
+    "virtualMode": {
+        "message": "Modo Virtual"
+    },
     "virtualMSPVersion": {
         "message": "Versão de Firmware Virtual"
     },
@@ -113,6 +128,10 @@
     "connectVirtualDescription": {
         "message": "Simular uma controladora de voo sem hardware.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Conectar (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Digite o caminho de série ou URL a que se ligar.",
@@ -231,6 +250,10 @@
     },
     "language_DEFAULT": {
         "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
+    },
+    "language_ka": {
+        "message": "ქართული",
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
@@ -405,6 +428,10 @@
     },
     "tabAutotune": {
         "message": "Autotune"
+    },
+    "tabBlackboxViewer": {
+        "message": "Visualizador Blackbox",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
     "autotuneImportTitle": {
         "message": "Análise Blackbox de Chirp"
@@ -935,7 +962,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "O aplicativo suporta todo o hardware que possa executar o Betaflight. Verifique a aba Flasher de Firmware para obter uma lista completa de hardware.<br \/><br \/>Utilitários úteis de hardware \/ drivers:<ul><li>Para hardware legado que use um USB CP210x para chip serial, os últimos <b>drivers CP210x<\/b> podem ser baixados de <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><\/li><li>Os últimos <b>Zadig<\/b> para instalação do driver USB do Windows podem ser baixados <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> pode ser baixado<a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><\/li><\/ul>"
+        "message": "A aplicação suporta todo o hardware que possa executar o Betaflight. Verifique a aba Flasher de Firmware para obter uma lista completa de hardware.<br \/><br \/>Utilitários úteis de hardware \/ drivers:<ul><li>Para hardware legado que use um USB CP210x para chip serial, os últimos <b>drivers CP210x<\/b> podem ser baixados de <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><\/li><li>Os últimos <b>Zadig<\/b> para instalação do driver USB do Windows podem ser baixados de <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> pode ser baixado<a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><\/li><\/ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -947,7 +974,7 @@
         "message": "Contribuir"
     },
     "defaultContributingText": {
-        "message": "Se quiser ajudar a tornar o Betaflight ainda melhor pode ajudar de várias maneiras. incluindo:<br \/><ul><li>usando o seu conhecimento em Betaflight para criar ou atualizar o conteúdo no <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nosso Wiki<\/a>ou responder às perguntas de outros usuários nos fóruns on-line;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuindo com código<\/a> para o firmware e a aplicação - novos recursos, correções, melhorias;<\/li><li>testando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">novos recursos e correções<\/a> e fornecendo feedback;<\/li><li>ajudando outros utilizadores a resolver os problemas que reportam no <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nosso rastreador de problemas<\/a>, e participar em discussões sobre pedidos de funcionalidades;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduzindo<\/a>a Betaflight App para um novo idioma ou ajudando a manter as traduções existentes.<\/li><\/ul>"
+        "message": "Se quiser ajudar a tornar o Betaflight ainda melhor pode ajudar de várias maneiras. incluindo:<br \/><ul><li>usando o seu conhecimento em Betaflight para criar ou atualizar o conteúdo em <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nosso Wiki<\/a>ou responder às perguntas de outros utilizadores nos fóruns online;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuindo com código<\/a> para o firmware e a aplicação - novos recursos, correções, melhorias;<\/li><li>testando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">novos recursos e correções<\/a> e fornecendo feedback;<\/li><li>ajudando outros utilizadores a resolver os problemas que reportam no <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nosso rastreador de problemas<\/a>, e participar em discussões sobre pedidos de funcionalidades;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduzindo<\/a>a Betaflight App para um novo idioma ou ajudando a manter as traduções existentes.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Também temos um <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Grupo do Facebook<\/a>.<br \/>Junte-se a nós para conseguir um lugar para falar sobre Betaflight, fazer perguntas sobre configuração ou simplesmente interagir com outros pilotos."
@@ -2596,6 +2623,12 @@
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Verifique sempre que o Failsafe está a trabalhar bem!<\/a><\/strong><\/b> As definições estão na aba Failsafe, que requere Modo Especialista.<br> &#8226; <b>Use o último firmware no Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desative o filtro ADC<\/a><\/strong> no rádio se usar o OpenTx ou o EdgeTx.<br>Configuração Básica: Configure as definições do ´Recetor´ corretamente. Escolha o ´Mapa de Canais’ correto para o seu rádio. Verifique que o Roll, Pitch e outras barras do gráfico se movem corretamente. Ajuste o endpoint do canal ou os valores do rádio entre ~1000 e ~2000, e coloque o ponto médio em 1500. Para mais informação, leia a <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentação<\/a><\/strong>."
     },
+    "receiverFailsafeActiveTitle": {
+        "message": "Failsafe ativo"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "A controladora de voo está em failsafe. Os valores de canal mostrados abaixo são a saída do failsafe, não os valores ao vivo provenientes do seu receptor. Verifique o link do receptor e as configurações de failsafe."
+    },
     "receiverThrottleMid": {
         "message": "MEIO do Acelerador"
     },
@@ -2777,11 +2810,11 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode permite manter a estabilidade do drone com acelerador baixo. Para mais informação por favor veja <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> em Betaflight.com.",
+        "message": "AirMode permite manter a estabilidade da aeronave com acelerador baixo. Para mais informação por favor veja <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> em Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Manter Altitude<\/a> regula ativamente a altitude da aeronave combinando o uso de sensores externos com o Modo Ângulo (Modo Estabilizado).",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Manter Altitude<\/a> regula ativamente a altitude da aeronave combinando o uso de sensores externos com o Modo Ângulo (Modo Estabilizado).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
@@ -2989,18 +3022,30 @@
     "adjustmentsColumnViaChannel": {
         "message": "via o canal"
     },
+    "adjustmentsColumnMode": {
+        "message": "modo"
+    },
+    "adjustmentsModeStep": {
+        "message": "Step"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Absoluto"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Seleção"
+    },
     "adjustmentsColumnAdjustmentCenter": {
-        "message": "com centro (val.)"
+        "message": "centro (val.)"
     },
     "adjustmentsColumnAdjustmentScale": {
-        "message": "e alcance|escala (val.|%)"
+        "message": "escala (val.|%)"
     },
     "adjustmentsCenterHelp": {
-        "message": "Define o ponto médio ou valor de referência usado pela função de ajuste.<br \/><br \/><strong>Ajustamentos de controle deslizante:<\/strong><br \/>Para ajustar o controle deslizante, defina o Centro de Ajuste como 0. A posição atual do controle deslizante será utilizada para o ajuste para cima\/baixo.<br \/><br \/><strong>Ajustamentos de Seleção:<\/strong><br \/>Configurar Ajuste para 0, ou para um valor específico de microsegundo (uS) se quiser deslocar o ponto de referência para 1500uS ao iniciar o ajuste de RC.<br \/><br \/><strong>Ajustamentos por fases:<\/strong><br \/>Definir o Centro de Ajuste para 0 para o valor atual do item que está a ser ajustado para ser utilizado.<br \/><br \/><strong>Ajustamentos absolutos:<\/strong><br \/>Para usar o método de ajuste absoluto, deve definir o Centro de Ajustamento e a Escala para especificar o valor e o intervalo desejados. O intervalo é calculado como: centro ± alcance. Por exemplo, definindo o Centro de Ajuste para 50 e Escala de Ajuste para 25 cria um intervalo de 25 a 75, com a posição central (switch ou POT) mapeado a 50.<br \/><br \/>Visite <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para mais informações.",
+        "message": "Define o ponto médio ou valor de referência usado pela função de ajuste.<br \/><br \/><strong>Ajustamentos de Slider:<\/strong><br \/>Para ajustar os sliders, defina o Centro de Ajuste como 0. A posição atual do slider será utilizada para o ajuste para cima\/baixo.<br \/><br \/><strong>Ajustamentos de Seleção:<\/strong><br \/>Configurar Ajuste para 0, ou para um valor específico de microsegundo (uS) se quiser deslocar o ponto de referência para 1500uS ao iniciar o ajuste de RC.<br \/><br \/><strong>Ajustamentos por fases:<\/strong><br \/>Definir o Centro de Ajuste para 0 para o valor atual do item que está a ser ajustado para ser utilizado.<br \/><br \/><strong>Ajustamentos absolutos:<\/strong><br \/>Para usar o método de ajuste absoluto, deve definir o Centro de Ajustamento e a Escala para especificar o valor e o intervalo desejados. O intervalo é calculado como: Centro ± Escala. Por exemplo, definindo o Centro de Ajuste para 50 e a Escala de Ajuste para 25 cria um intervalo de 25 a 75, com a posição central (switch ou POT) mapeada a 50.<br \/><br \/>Visite <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para mais informações.",
         "description": "Tooltip help text for the Adjustment Center column"
     },
     "adjustmentsScaleHelp": {
-        "message": "Controla a escala ou intervalo do ajuste; valores mais elevados aumentam o intervalo de ajuste ou sensibilidade.<br \/><br \/><strong>Ajustamentos de controlo deslizante:<\/strong><br \/>Para ajustes de controlo deslizante, Ajuste de Escala controla a escala\/sensibilidade do ajuste. Um valor de 50 é igual a 50% do alcance do controle deslizante. Definir como 0 utiliza a escala padrão para controles deslizantes.<br \/><br \/><strong>Ajustes de seleção:<\/strong><br \/> Para ajustes de seleção definir Escala de Ajuste para 0 para comportamento padrão, ou especificar um valor de microsegundo (uS) para limitar o intervalo. Por exemplo: Defina o Centro de Ajuste para 1000 (uS) e Escala de Ajuste para 500 (uS) para utilizar um switch de 3 posições como um switch de 2 posições.<br \/><br \/><strong>Ajustes faseados e absolutos -<\/strong><br \/>Para ajustes faseados e absolutos, a Escala de Ajuste define o intervalo acima e abaixo do Centro de Ajuste. Por exemplo, um valor de 25 cria um intervalo de ajuste de ± 25 a partir do valor do Centro de Ajuste. ou do valor atual se o Centro de Ajuste estiver definido como 0.<br \/><strong>Nota:<\/strong> Para usar o método de ajuste absoluto com um potenciómetro, deve ser especificado um valor de Escala de Ajuste.<br \/><br \/>Visite <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para mais informações.",
+        "message": "Controla a escala ou intervalo do ajuste; valores mais elevados aumentam o intervalo de ajuste ou sensibilidade.<br \/><br \/><strong>Ajustamentos de slider:<\/strong><br \/>Para ajustes de slider, Ajuste de Escala controla a escala\/sensibilidade do ajuste. Um valor de 50 é igual a 50% do alcance do slider. Definir como 0 utiliza a escala padrão para sliders.<br \/><br \/><strong>Ajustes de seleção:<\/strong><br \/> Para ajustes de seleção definir Escala de Ajuste para 0 para comportamento padrão, ou especificar um valor de microsegundo (uS) para limitar o intervalo. Por exemplo: Defina o Centro de Ajuste para 1000 (uS) e Escala de Ajuste para 500 (uS) para utilizar um switch de 3 posições como um switch de 2 posições.<br \/><br \/><strong>Ajustes faseados e absolutos -<\/strong><br \/>Para ajustes faseados e absolutos, a Escala de Ajuste define o intervalo acima e abaixo do Centro de Ajuste. Por exemplo, um valor de 25 cria um intervalo de ajuste de ± 25 a partir do valor do Centro de Ajuste. ou do valor atual se o Centro de Ajuste estiver definido como 0.<br \/><strong>Nota:<\/strong> Para usar o método de ajuste absoluto com um potenciómetro, deve ser especificado um valor de Escala de Ajuste.<br \/><br \/>Visite <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para mais informações.",
         "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
@@ -3759,7 +3804,7 @@
         "message": "A funcionalidade funciona apenas com ESCs DSHOT.<br \/>Verifique se o seu ESC (electronic speed controller) suporta o protocolo DSHOT e altere-o na aba $t(tabMotorTesting.message)."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Número de motores é 0.<br \/>Verifique o Mixer atual na aba $t(tabMotorTesting.message) ou configure um personalizado através do CLI. Consulte esta <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki<\/a>."
+        "message": "Número de motores é 0.<br \/>Verifique o Mixer atual na aba $t(tabMotorTesting.message) ou configure um personalizado através do CLI. Consulte esta <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki<\/a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Atualize o firmware.<br \/> Certifique-se de que está a utilizar o último firmware: Betaflight 4.3 ou mais recente."
@@ -3782,8 +3827,14 @@
     "sensorsRefresh": {
         "message": "Atualizar:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Atualizar tudo:"
+    },
     "sensorsScale": {
         "message": "Escala:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Auto"
     },
     "sensorsGyroSelect": {
         "message": "Giroscópio"
@@ -4325,6 +4376,30 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Falha ao salvar (flash) UF2"
     },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "Conectando-se ao bootloader ESP32..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "$1 detectado"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "Flashando ESP32..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "Flash completo, a reiniciar..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "ESP32 flashado com sucesso"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "ESP32 flash falhou: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32 requer a compilação do navegador (Web Serial)"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "Selecione uma porta serial antes de flasharr o ESP32"
+    },
     "firmwareFlasherClickToConnectDfu": {
         "message": "Clique para ligar ao dispositivo DFU"
     },
@@ -4347,6 +4422,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Backup cancelado, flash abortado"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Backup falhou: dados inválidos do dispositivo (não no modo CLI), flash cancelado"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legado)",
@@ -5252,7 +5330,7 @@
         "message": "Compensação Vbat Sag %"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Dá uma aceleração consistente e desempenho de PID acima da faixa utilizável de tensão da bateria, ao aumentar o nível de saída do motor consoante a tensão da bateria desce.<br \/><br \/>O valor de compensação pode variar entre 0 e 100% É recomendada compensação total (100%).<br \/><br \/>Visite <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada wiki<\/a> para mais informações."
+        "message": "Dá uma aceleração consistente e desempenho de PID acima da faixa utilizável de voltagem da bateria, ao aumentar o nível de saída do motor consoante a voltagem da bateria desce.<br \/><br \/>O valor de compensação pode variar entre 0 e 100% É recomendada compensação total (100%).<br \/><br \/>Visite <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada wiki<\/a> para mais informações."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -5829,6 +5907,15 @@
     "powerBatteryAmperage": {
         "message": "Amperagem"
     },
+    "powerBatteryPowerDraw": {
+        "message": "Consumo de Energia"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Queda de Tensão"
+    },
     "powerBatteryCapacity": {
         "message": "Capacidade (mAh)"
     },
@@ -6073,7 +6160,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Valor RSSI instantâneo (Pisca quando abaixo do limite do alarme)"
+        "message": "Valor instantâneo do RSSI (pisca abaixo do limite do alarme). Para protocolos modernos, use antes o RSSI dBm."
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "Valor RSSI dBm",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Indicador de Força de Sinal Recebido, este valor indica quão alta a recepção está em dBm"
     },
     "osdTextElementTimer": {
         "message": "Cronómetro",
@@ -6664,7 +6758,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "Indicador alternativo de \"Qualidade do Link\" baseado em perdas de sinal - use com cuidado"
+        "message": "Indicador de qualidade do link baseado na percentagem de pacotes de dados não corrompidos recebidos com sucesso"
     },
     "osdTextElementFlightDist": {
         "message": "Distância do voo",
@@ -6728,13 +6822,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nome do perfil OSD, definido nos comandos CLI: \"osd_profile_1_name\", \"osd_profile_2_name\" e \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Valor RSSI dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Valor do sinal RSSI em dBm, se disponível"
     },
     "osdTextElementRcChannels": {
         "message": "Canais RC",
@@ -7681,35 +7768,47 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Falha na deteção — tente com inclinação mais variada."
     },
-    "magCalibrationStart": {
-        "message": "Guiado"
+    "magCalibrationGuidedFw": {
+        "message": "Cal Cliente (Guiada)"
     },
-    "magCalibrationStartDesc": {
-        "message": "Girar através de 6 orientações passo a passo"
+    "magCalibrationGuidedFwDesc": {
+        "message": "Autoprompting calibração de 60s"
     },
-    "magCalibrationStartAuto": {
-        "message": "Passo-Auto"
+    "magCalibrationGuidedFwTitle": {
+        "message": "Calibração Guiada"
     },
-    "magCalibrationStartAutoDesc": {
-        "message": "O mesmo que guiado mas os passos avançam num temporizador"
+    "magCalibrationPrompt1": {
+        "message": "Passo 1\/6 - Segure plano, Yaw 360°"
+    },
+    "magCalibrationPrompt2": {
+        "message": "Etapa 2\/6 — Flip invertido, yaw 360°"
+    },
+    "magCalibrationPrompt3": {
+        "message": "Passo 3\/6 — Nariz direito, yaw 360°"
+    },
+    "magCalibrationPrompt4": {
+        "message": "Passo 4\/6 — Nariz todo para baixo, yaw 360°"
+    },
+    "magCalibrationPrompt5": {
+        "message": "Passo 5\/6 — Lado esquerdo para cima, yaw 360°"
+    },
+    "magCalibrationPrompt6": {
+        "message": "Passo 6\/6 — Lado esquerdo para cima, yaw 360°"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "Coleta de dados completa — reveja e grave"
     },
     "magCalibrationCancel": {
         "message": "Cancelar"
+    },
+    "magCalibrationClear": {
+        "message": "Limpar"
     },
     "magCalibrationModeOptions": {
         "message": "Opções do modo de calibração"
     },
     "magCalibrationRetry": {
         "message": "Voltar a tentar"
-    },
-    "magCalibrationNextStep": {
-        "message": "Próximo Passo"
-    },
-    "magCalibrationFinish": {
-        "message": "Concluir"
-    },
-    "magCalibrationStepOf": {
-        "message": "Passo {{current}} de {{total}}"
     },
     "magCalibrationWaiting": {
         "message": "Esperando o movimento... Agite o veículo para começar."
@@ -7744,24 +7843,6 @@
     "magCalibrationQualityPoor": {
         "message": "Fraca"
     },
-    "magCalibrationStep1": {
-        "message": "Nível — gire 360° em yaw"
-    },
-    "magCalibrationStep2": {
-        "message": "Nariz para baixo — gire 360°"
-    },
-    "magCalibrationStep3": {
-        "message": "Nariz para cima — gire 360°"
-    },
-    "magCalibrationStep4": {
-        "message": "Lado esquerdo para baixo — gire 360°"
-    },
-    "magCalibrationStep5": {
-        "message": "Lado direito para baixo — gire 360°"
-    },
-    "magCalibrationStep6": {
-        "message": "Invertido — gire 360°"
-    },
     "magCalibrationFirmwareOffsets": {
         "message": "Offsets de Firmware"
     },
@@ -7769,19 +7850,148 @@
         "message": "Offsets da esfera"
     },
     "magCalibrationUnguided": {
-        "message": "Rápido"
+        "message": "Cal Firmware (Legado)"
     },
     "magCalibrationUnguidedDesc": {
-        "message": "Girar livremente em todas as direções - pára quando o firmware terminar"
+        "message": "Girar livremente - gravação automática de firmware após 30s"
     },
     "magCalibrationUnguidedTitle": {
-        "message": "Calibração não guiada"
+        "message": "Calibração de Firmware"
     },
     "magCalibrationUnguidedInstruction": {
-        "message": "Gire lentamente o seu veículo em todas as direções. O firmware irá recolher amostras e calcular os offsets automaticamente."
+        "message": "Tem 30 segundos para girar o veículo em todas as direções. O firmware vai gravar os valores de calibração automaticamente quando o tempo acabar."
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibração de firmware completa!"
+    },
+    "magCalibrationGuided": {
+        "message": "Cal Cliente (Livre)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "Gire livremente - configurador calcula offsets"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "Calibração de Cliente"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "Gire o seu veículo em todas as direções. Aponte para fazer uma esfera completa de pontos por cerca de um ou dois minutos. Grave o resultado quando os valores de calibração estiverem estabilizados."
+    },
+    "magCalibrationCheck": {
+        "message": "Verificar"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Exibir dados mag ao vivo com a calibração atual"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "A verificar calibrações"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirme a orientação e a calibração do Magnetómetro. Coloque o seu aparelho plano com o horizonte, aponte o nariz para um ponto conhecido na bússola (um telefone pode ser usado para descobrir qual direção é o norte), e confirme que novos pontos aparecem na localização esperada na tela 3D. Os valores da força do campo para cada eixo e a esfericidade dos pontos indicam a precisão da calibração. Se os pontos forem para direções completamente erradas, é provável que a orientação do Mag esteja errada."
+    },
+    "magCalibrationCalValues": {
+        "message": "Valores Cal"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Guardar valores"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Valores da calibração gravados"
+    },
+    "magCalibrationSaveError": {
+        "message": "Falha ao gravar valores de calibração"
+    },
+    "magCalibrationAccept": {
+        "message": "Gravar Calibração"
+    },
+    "magCalibrationFull": {
+        "message": "Cal Total (auto-alinhada)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Uma volta — define offsetts, soft-iron e a orientação de montagem do mag"
+    },
+    "magCalibrationFullTitle": {
+        "message": "Calibração Total"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Siga os passos abaixo, mantendo a aeronave estável. A contagem de zonas sobe conforme alcança novos ângulos — aponte para cobrir todos os 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Passo {{n}} de {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Mantenha o nível da aeronave e gire lentamente através de uma volta completa de 360°."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Inverta e rode lentamente por outro 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Aponte o nariz para cima e rode uma volta inteira sobre si."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Aponte o nariz para baixo e rode uma volta completa."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Coloque-a do lado esquerdo e rode uma volta completa."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Coloque-a do lado direito e rode uma volta completa."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Dê voltas lentas para a frente, apontadas uma direção diferente de cada vez."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Dê voltas lentas para trás, apontadas uma direção diferente de cada vez."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} zonas cobertas"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Calcular"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Cobertura:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Alinhamento:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibração:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Residual:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copiar CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Aplicar"
+    },
+    "magCalibrationFullExport": {
+        "message": "Exportar Modelo"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Não há amostras suficientes — gire mais tempo"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Sem GPS ou localização IP — não é possível determinar inclinação magnética"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "Comandos CLI copiados para a área de transferência"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Não foi possível copiar para a área de transferência"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "O Firmware {{version}} é muito antigo para o alinhamento PERSONALIZADO do mag (necessita {{min}}+). Atualize o firmware, depois aplique."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibração aplicada e guardada"
+    },
+    "magCalibrationDiscard": {
+        "message": "Descartar"
     },
     "magVizPointCloud": {
         "message": "Point Cloud"
@@ -7797,6 +8007,15 @@
     },
     "magVizWaitingForData": {
         "message": "À espera dos dados…"
+    },
+    "magVizAxisField": {
+        "message": "Campo"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Antigo"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Novo"
     },
     "magAlignmentApply": {
         "message": "Aplicar"
@@ -8287,6 +8506,38 @@
     "mspCliFirmwareTooOld": {
         "message": "Esta ação requer o firmware Betaflight {{required}} ou mais recente (atualmente conectado a {{current}}). Por favor, atualize a sua controladora de voo antes de continuar.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Restaurar Backup",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Restaurar Backup Pré-Flash",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "Isto vai restaurar o backup da configuração feito antes do flash. Continuar?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Backup de configuração restaurado com sucesso.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Backup de configuração restaurado, {{count}} linha(s) ignoradas.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Falha no restauro: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "Não foi possível conectar-se à controladora de voo para restaurar.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "Nenhum backup disponível para restaurar.",
+        "description": "Error message when no backup data is cached for restore"
     },
     "presetsLoadingDumpAll": {
         "message": "A carregar a configuração atual da controladora de voo",
@@ -9356,5 +9607,89 @@
     },
     "preflightForecastWeather": {
         "message": "Tempo"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM Provider"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Desativado"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "API FAA NOTAM (EUA, chave API é necessária)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (Espaço aéreo global, chave API necessária)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "Chave API FAA (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "Chave da API OpenAIP"
+    },
+    "preflightNotamRadius": {
+        "message": "Raio de pesquisa"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Configurações de dados do espaço aéreo"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Os dados do Airspace enviam as suas coordenadas para o provedor selecionado. Nenhum dado pessoal adicional é transmitido."
+    },
+    "preflightNotamLoading": {
+        "message": "A recolher dados do espaço aéreo..."
+    },
+    "preflightNotamEmpty": {
+        "message": "Nenhum aviso encontrado para este local e raio"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "Uma chave de API é necessária para o provedor selecionado. Digite a sua chave nas configurações acima."
+    },
+    "preflightNotamFetchError": {
+        "message": "Falha a recolher dados do espaço aéreo"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Ativo agora"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanente"
+    },
+    "preflightNotamExpired": {
+        "message": "Expirado"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Inferior"
+    },
+    "preflightNotamAltTo": {
+        "message": "Superior"
+    },
+    "preflightNotamShowMore": {
+        "message": "Mostrar mais"
+    },
+    "preflightNotamShowLess": {
+        "message": "Mostrar menos"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Última recolha"
     }
 }

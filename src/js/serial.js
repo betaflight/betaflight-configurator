@@ -2,11 +2,12 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid, isTauri } from "./utils/checkCompatibility.js";
+import { isAndroid, isTauri, isTauriIOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
+import TauriTcp from "./protocols/TauriTcp.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -29,12 +30,13 @@ class Serial extends EventTarget {
                 { name: "tcp", instance: new CapacitorTcp() },
             ];
         } else if (isTauri()) {
-            // Desktop Tauri shell: native serial via tauri-plugin-serialplugin,
-            // bluetooth/tcp fall back to the web APIs (the webview exposes them).
+            // Tauri shell: raw TCP via the Rust tcp_* commands (so the Betaflight bridge
+            // on 5761 works), bluetooth via the web API the webview exposes. Native serial
+            // (tauri-plugin-serialplugin) is desktop + Android only — iOS has no USB serial.
             this._protocols = [
-                { name: "serial", instance: new TauriSerial() },
+                ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
                 { name: "bluetooth", instance: new WebBluetooth() },
-                { name: "tcp", instance: new Websocket() },
+                { name: "tcp", instance: new TauriTcp() },
             ];
         } else {
             this._protocols = [
@@ -68,12 +70,18 @@ class Serial extends EventTarget {
                                 data: event.detail,
                                 protocolType: name,
                             };
-                        } else {
-                            // For other events, we can use the detail directly
+                        } else if (event.detail && typeof event.detail === "object") {
+                            // Object payloads (open info, device lists, socket info) get the
+                            // protocol tag merged in.
                             newDetail = {
                                 ...event.detail,
                                 protocolType: name,
                             };
+                        } else {
+                            // Preserve primitive/falsy details verbatim. A failed open signals
+                            // detail:false; wrapping it in an object would make it truthy and the
+                            // connect handler would treat the failure as a success.
+                            newDetail = event.detail;
                         }
 
                         // Dispatch the event with the new detail

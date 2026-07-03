@@ -1,0 +1,594 @@
+@import "leaflet/dist/leaflet.css";
+@import "./theme.css";
+
+.blackbox-viewer-root {
+    height: 100%;
+    overflow-y: visible;
+}
+
+.blackbox-viewer-root a:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Add an extended wide size to the page container for large monitors */
+@media (min-width: 1400px) {
+    .app-main-pane {
+        width: 90%;
+    }
+}
+
+/*** toolbar expansion ***/
+
+@media (max-width: 1020px) {
+    .video-top-controls * h4 {
+        display: none !important;
+    }
+
+    .video-top-controls {
+        height: 36px;
+        padding-top: 6px;
+    }
+
+    .graph-row {
+        top: 85px !important;
+    }
+}
+
+@media (max-width: 675px) {
+    .app-main-pane,
+    .blackbox-viewer-root.has-log div.log-seek-bar {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .app-main-pane .graph-row {
+        width: 100%;
+    }
+
+    div.log-graph-config {
+        padding: 1em 0;
+        line-height: 1.1;
+    }
+
+    div.log-graph-config h2 {
+        margin: 0;
+        display: none;
+    }
+
+    div.log-graph-config h3 {
+        margin-top: 0.25em;
+        margin-bottom: 0.25em;
+        font-size: 115%;
+    }
+
+    .video-top-controls {
+        height: 28px;
+        padding-top: 4px;
+    }
+
+    .video-top-controls .toolbar-panel {
+        margin-right: 2px;
+    }
+
+    div.graph-row {
+        top: 115px !important;
+    }
+}
+
+/* With video */
+@media (max-width: 920px) {
+    .blackbox-viewer-root.has-video .video-top-controls .toolbar-panel {
+        margin-right: 1px;
+    }
+}
+
+/*** end toolbar expansion ***/
+
+.app-main-pane {
+    position: fixed;
+    top: 15px;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: none;
+}
+
+.log-seek-bar canvas {
+    width: 100%;
+    height: 50px;
+    margin-top: 0.5em;
+}
+
+.graph-row {
+    margin-top: 1em;
+    display: none;
+}
+
+.log-graph-legend {
+    font-size: 85%;
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 1em;
+}
+
+.log-graph {
+    position: relative;
+    flex-grow: 1;
+    background-color: var(--graph-background);
+}
+
+.log-graph-config {
+    background-color: var(--surface-100);
+    color: var(--text-secondary);
+    padding: 0.75rem;
+    margin-left: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color, #e5e5e5);
+    min-width: 135px;
+    flex-grow: 0.02;
+    flex-direction: column;
+    display: none;
+}
+
+.blackbox-viewer-root.dark .log-graph-config {
+    border-color: var(--surface-800, hsl(0, 0%, 25%));
+}
+
+.log-graph-config h2 {
+    margin-top: 0;
+}
+
+.log-graph-config h3 {
+    font-size: 125%;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    cursor: pointer;
+}
+
+.blackbox-viewer-root.has-log .log-graph-config {
+    display: flex;
+}
+
+#graphCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--graph-background);
+}
+
+#craftCanvas,
+#analyserCanvas,
+#mapContainer,
+#stickCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.blackbox-viewer-root.has-craft #craftCanvas,
+.blackbox-viewer-root.has-analyser #analyserCanvas,
+.blackbox-viewer-root.has-map #mapContainer,
+.blackbox-viewer-root.has-sticks #stickCanvas {
+    display: block;
+}
+
+#mapContainer.no-gps-data:before {
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    content: "";
+    background-color: var(--surface-200, hsl(0, 0%, 50%));
+    opacity: 0.5;
+}
+
+#mapContainer.no-gps-data:after {
+    position: absolute;
+    display: block;
+    top: calc(30%);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10001;
+    content: "No GPS Data";
+    text-align: center;
+    font-size: 3vw;
+}
+
+#analyser,
+#log-seek-bar {
+    z-index: 10;
+}
+
+/* This filters change the color of a black png image. For new colors check: https://codepen.io/sosuke/pen/Pjoqqp */
+.isBF #mapContainer .icon {
+    filter: invert(36%) sepia(28%) saturate(3957%) hue-rotate(28deg) brightness(93%) contrast(103%);
+}
+
+.isCF #mapContainer .icon {
+    filter: invert(28%) sepia(100%) saturate(2050%) hue-rotate(134deg) brightness(100%) contrast(104%);
+}
+
+.isINAV #mapContainer .icon {
+    filter: invert(14%) sepia(100%) saturate(4698%) hue-rotate(244deg) brightness(64%) contrast(130%);
+}
+
+.analyser:hover .non-shift .spectrum-buttons {
+    opacity: 1;
+    height: auto;
+    transition: opacity 500ms ease-in;
+}
+
+.analyser .spectrum-actions {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    top: 0;
+    left: 340px;
+    z-index: 9;
+    position: absolute;
+}
+
+.analyser:hover .non-shift .spectrum-actions {
+    opacity: 1;
+    height: auto;
+    transition: opacity 500ms ease-in;
+}
+
+.analyser .spectrum-buttons {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    top: 0;
+    z-index: 9;
+    position: absolute;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.analyser:hover .non-shift #spectrumType {
+    opacity: 1;
+    height: auto;
+    transition: opacity 500ms ease-in;
+}
+
+.analyser #spectrumType {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    left: 5px;
+    float: left;
+    z-index: 9;
+    position: absolute;
+    min-width: 150px;
+}
+
+.analyser:hover .non-shift #overdrawSpectrumType {
+    opacity: 1;
+    height: auto;
+    transition: opacity 500ms ease-in;
+}
+
+.analyser #overdrawSpectrumType {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    left: 170px;
+    float: left;
+    z-index: 9;
+    position: absolute;
+    min-width: 160px;
+}
+
+.analyser .analyser-slider-x {
+    left: 975px;
+    top: 5px;
+    position: absolute;
+    z-index: 9;
+}
+
+.analyser .analyser-slider-y {
+    left: 1085px;
+    top: 30px;
+    position: absolute;
+    z-index: 9;
+    height: 50px;
+}
+
+.analyser .analyser-psd-input::-webkit-inner-spin-button,
+.analyser .analyser-psd-input::-webkit-outer-spin-button {
+    appearance: auto !important;
+    opacity: 1 !important;
+    height: auto !important;
+    width: auto !important;
+}
+
+.analyser .analyser-psd-input {
+    width: 50px;
+    height: 20px;
+    padding: 3px;
+    z-index: 9;
+    position: absolute;
+}
+
+.analyser .analyser-psd-label {
+    position: absolute;
+    color: var(--text-secondary);
+    z-index: 9;
+    padding: 3px;
+}
+
+.analyser,
+.map-container,
+.log-seek-bar {
+    position: absolute;
+}
+
+#log-seek-bar {
+    width: 100%;
+}
+
+#seekbarToolbar {
+    position: absolute;
+    top: 8px;
+    left: 20px;
+}
+
+.log-seek-bar:hover .non-shift #seekbarType {
+    opacity: 1;
+    height: auto;
+    transition: opacity 500ms ease-in;
+}
+
+.log-seek-bar #seekbarType {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    z-index: 9;
+    position: absolute;
+    min-width: 200px;
+}
+
+.log-graph video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.blackbox-viewer-root:not(.has-marker) .marker-offset {
+    display: none;
+}
+
+.graph-legend-field {
+    margin-bottom: 0.5em;
+    cursor: pointer;
+    padding-left: 0.7em;
+    padding-right: 0.7em;
+}
+
+.graph-legend-field-name:hover {
+    text-decoration: underline;
+}
+
+.graph-legend-field-value {
+    float: right;
+}
+
+.graph-legend-field-settings {
+    font-size: 8px;
+    color: var(--button-text);
+    opacity: 0.8;
+    font-weight: bold;
+    padding-left: 0.3em;
+}
+
+.graph-legend-field.highlight > .graph-legend-field-settings {
+    opacity: 1;
+    box-shadow: 0px 0px 2px white;
+}
+
+.legend-eye-closed {
+    opacity: 0.3;
+}
+
+.graph-legend-field-visibility {
+    cursor: pointer;
+    float: right;
+    margin-left: 0.7em;
+}
+
+.blackbox-viewer-root.has-video .graph-row,
+.blackbox-viewer-root.has-log .graph-row {
+    display: flex;
+    position: fixed;
+    top: 85px;
+    width: calc(100% - 30px);
+    bottom: 96px;
+}
+
+.blackbox-viewer-root.has-video .log-graph {
+    height: auto;
+}
+.blackbox-viewer-root.has-video .log-graph video {
+    width: 100%;
+    height: 100%;
+}
+.blackbox-viewer-root.has-video #graphCanvas {
+    background-color: transparent;
+}
+
+.blackbox-viewer-root:not(.has-analyser-fullscreen) .icon-resize-small {
+    display: none;
+}
+
+.blackbox-viewer-root.has-analyser-fullscreen .icon-resize-full {
+    display: none;
+}
+
+.blackbox-viewer-root.has-analyser .view-analyser-fullscreen {
+    visibility: inherit;
+}
+
+.blackbox-viewer-root:not(.has-analyser) .view-analyser-fullscreen {
+    visibility: hidden;
+}
+
+.video-top-controls .toolbar-panel {
+    display: inline-block;
+    margin-right: 12px;
+    padding-right: 12px;
+    vertical-align: middle;
+    border-right: 1px solid var(--border-color, #e5e5e5);
+}
+
+.video-top-controls .toolbar-panel:last-child {
+    border-right: none;
+    margin-right: 0;
+    padding-right: 0;
+}
+
+.blackbox-viewer-root.dark .video-top-controls .toolbar-panel {
+    border-right-color: var(--surface-800, hsl(0, 0%, 25%));
+}
+
+.video-top-controls h4 {
+    font-size: 9px;
+    color: var(--text-secondary, hsl(0, 0%, 50%));
+    margin-top: 4px;
+    margin-bottom: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.blackbox-viewer-root.has-log .video-top-controls .log-view-panel,
+.blackbox-viewer-root.has-log .video-top-controls .log-chart-zoom-panel,
+.blackbox-viewer-root.has-log .video-top-controls .log-chart-time-panel {
+    display: inline-block;
+}
+
+.video-top-controls .log-view-panel,
+.video-top-controls .log-chart-zoom-panel,
+.video-top-controls .log-chart-time-panel {
+    display: none;
+}
+
+.video-top-controls .log-sync-panel {
+    display: none;
+}
+.blackbox-viewer-root.has-video.has-log .video-top-controls .log-sync-panel {
+    display: inline-block;
+}
+.log-seek-bar {
+    display: none;
+}
+.blackbox-viewer-root.has-video .log-seek-bar,
+.blackbox-viewer-root.has-log .log-seek-bar {
+    display: block;
+    position: fixed;
+    bottom: 32px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.log-workspace-panel {
+    width: 200px;
+}
+
+.video-top-controls,
+.log-graph {
+    display: none;
+}
+
+.blackbox-viewer-root.has-video .video-top-controls,
+.blackbox-viewer-root.has-log .video-top-controls,
+.blackbox-viewer-root.has-video .log-graph,
+.blackbox-viewer-root.has-log .log-graph {
+    display: block;
+}
+
+.blackbox-viewer-root.has-video .video-top-controls,
+.blackbox-viewer-root.has-log .video-top-controls {
+    top: 35px;
+    padding: 2px 0.75rem;
+    position: fixed;
+    z-index: 10;
+    background-color: var(--surface-0);
+    border-bottom: 1px solid var(--border-color, #e5e5e5);
+    width: 100%;
+    min-width: 1390px;
+    white-space: nowrap;
+}
+
+.blackbox-viewer-root.dark .video-top-controls {
+    border-bottom-color: var(--surface-800, hsl(0, 0%, 25%));
+}
+
+.blackbox-viewer-root.video-hidden video {
+    display: none;
+}
+
+.blackbox-viewer-root.has-log .app-main-pane,
+.blackbox-viewer-root.has-video .app-main-pane {
+    display: block;
+}
+
+.blackbox-viewer-root.has-video .app-navbar,
+.blackbox-viewer-root.has-log .app-navbar {
+    display: block;
+}
+
+.app-navbar {
+    display: none;
+    position: fixed;
+    width: 100%;
+}
+
+.blackbox-viewer-root:not(.has-log) .vue-statusbar {
+    display: none;
+}
+
+.vue-statusbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.blackbox-viewer-root:not(.has-gps) .view-map,
+.blackbox-viewer-root:not(.has-gps) .map-container {
+    display: none !important;
+}
+
+/*
+ Mouse Notification styling
+*/
+.mouseNotification {
+    position: absolute;
+    margin: 0 auto;
+    white-space: pre-wrap;
+}
+
+.mouseNotification-box {
+    font-size: 12px;
+    line-height: 1.4;
+    z-index: 10;
+    padding: 4px 8px;
+    color: var(--text-inverse);
+    background-color: var(--surface-800);
+    border-radius: 4px;
+}

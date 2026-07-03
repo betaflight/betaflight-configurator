@@ -1921,9 +1921,6 @@
     "receiverModelId": {
         "message": "ID de Correspondência Modelo"
     },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Sempre confira se seu Failsafe funciona adequadamente!<\/a><\/strong><\/b> As configurações estão na Aba Failsafe que requer o Modo Expert.<br> &#8226; <b>Use o firmware mais atualizado para o Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desabilite o filtro ADC de hardware<\/a><\/strong> no Transmissor se estiver usando OpenTx ou EdgeTX.<br>Configuração Básica: Configure o 'Receptor' corretamente. Escolha o 'Mapa de Canal' certo para seu rádio. Confirme que rolar, picar e outros gráficos em barra movem corretamente. Ajuste o limite de canal e a faixa do transimissor para ~1000 a ~2000, e o ponto médio para 1500. Para mais informações, leia a <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentação<\/a><\/strong>."
-    },
     "receiverThrottleMid": {
         "message": "MEIO do Acelerador"
     },
@@ -2699,9 +2696,6 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Isto somente funciona com ESCs com DSHOT.<br \/>Verifique que seu ESC (controlador eletrônico de velocidade) têm suporte ao protocolo DSHOT e então selecione esse protocolo na aba $t(tabMotorTesting.message)."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Número de motores é 0.<br \/>Verifique o Mixer atual na aba $t(tabMotorTesting.message) ou configure um personalizado através do CLI. Consulte <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">esta página Wiki<\/a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Atualize o firmware.<br \/> Certifique-se de que você está utilizando o firmware Betaflight 4.3 ou mais recente."
@@ -4677,8 +4671,9 @@
         "message": "Valor RSSI",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Valor do RSSI instantâneo (Piscar quando estiver abaixo do limite)"
+    "osdTextElementRssiDbmValue": {
+        "message": "Valor RSSI dBm",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Cronômetro",
@@ -5198,9 +5193,6 @@
         "message": "Qualidade da conexão",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Indicador alternativo de \"Qualidade da conexão\" baseado em perdas de sinal - use com cuidado"
-    },
     "osdTextElementFlightDist": {
         "message": "Distância do voo",
         "description": "One of the elements of the OSD"
@@ -5263,13 +5255,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nome do perfil OSD, definido nos comandos CLI: \"osd_profile_1_name\", \"osd_profile_2_name\" e \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Valor RSSI dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Valor do sinal RSSI em dBm, se disponível"
     },
     "osdTextElementRcChannels": {
         "message": "Canais RC",
@@ -5804,10 +5789,6 @@
     },
     "osdButtonSaved": {
         "message": "Salvo"
-    },
-    "vtxHelp": {
-        "message": "Aqui é possível configurar os valores para o seu transmissor de vídeo (VTX). É possível visualizar e alterar os valores de transmissão, incluindo as tabelas do VTX, se o controlador e o VTX tiverem suporte.<br>Para configurar seu VTX, siga os seguintes passos:<br>1. Vá até <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/VTX-tables\">esta página<\/a><br>2. Encontre o arquivo de configuração apropriado para o seu país e modelo de VTX e faça o download.<br>3. Clique no botão '$t(vtxButtonLoadFile.message)' abaixo, selecione o arquivo de configuração do VTX e carregue<br>4. Verifique que as configurações estão corretas<br>5. Clique no botão '$t(vtxButtonSave.message)' para salvar as configurações do VTX em sua controladora de voo (FC).<br>6. Opcional: Clique em '$t(vtxButtonSaveLua.message)' para salvar as configurações em um arquivo lua que você pode utilizar com os scripts lua do betaflight (Veja mais informações <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">aqui<\/a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atenção:<\/span> O VTX não está configurado ou não é compatível. Não é possível modificar os valores por aqui. Isto somente é possível se o controlador de voo está conectado ao VTX utilizando um protocolo como Tramp ou SmartAudio e está corretamente configurado na aba $t(tabPorts.message).",

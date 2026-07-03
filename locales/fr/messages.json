@@ -2426,9 +2426,6 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Ne fonctionne qu'avec des ESC DSHOT.<br \/>Vérifiez que votre ESC (contrôleur de vitesse électrique) prend en charge le protocole DSHOT et changez le dans l'onglet $t(tabMotorTesting.message)."
     },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Le nombre de moteurs est égal à 0.<br \/>Vérifiez le mixeur actuel sur l'onglet $t(tabMotorTesting.message) ou configurez un mixeur personnalisé via la ligne de commande (CLI). Reportez-vous à cette <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">page du Wiki<\/a>."
-    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Mettre à jour le micrologiciel.<br \/> Soyez sûrs d'utiliser le dernier micrologiciel : Betaflight 4.3 ou supérieur."
     },
@@ -4266,8 +4263,9 @@
         "message": "RSSI : Valeur",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Valeur RSSI instantanée (clignote en dessous du seuil d'alarme)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI : Valeur dBm",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Minuterie",
@@ -4753,9 +4751,6 @@
         "message": "Qualité du lien",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Indicateur alternatif de 'qualité de la liaison' basée sur la perte de trame - à utiliser avec prudence"
-    },
     "osdTextElementFlightDist": {
         "message": "Distance parcourue en vol",
         "description": "One of the elements of the OSD"
@@ -4818,13 +4813,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "Nom du profil OSD tel que défini dans les variables CLI \"osd_profile_1_name\", \"osd_profile_2_name\" et \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI : Valeur dBm",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Valeur RSSI du signal en dBm si disponible"
     },
     "osdTextElementRcChannels": {
         "message": "Canaux RC",

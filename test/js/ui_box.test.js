@@ -96,8 +96,9 @@ describe("UiBox collapsible behaviour", () => {
         );
         expect(hiddenBodies.length).toBeGreaterThan(0);
 
-        // Click the pill (first div with absolute positioning — the title pill)
-        const pill = wrapper.container.querySelector("div[class*='absolute']");
+        // Click the title pill. When collapsed it is rendered in normal flow
+        // (relative, not absolute) so it stays visible, hence select by role.
+        const pill = wrapper.container.querySelector("[role='button']");
         expect(pill).toBeTruthy();
         pill.click();
         await nextTick();
@@ -116,7 +117,8 @@ describe("UiBox collapsible behaviour", () => {
         });
         await nextTick();
 
-        const pill = wrapper.container.querySelector("div[class*='absolute']");
+        // Collapsible pill is a button regardless of open/closed state.
+        const pill = wrapper.container.querySelector("[role='button']");
         pill.click();
         await nextTick();
 
@@ -133,6 +135,8 @@ describe("UiBox collapsible behaviour", () => {
         });
         await nextTick();
 
+        // Non-collapsible pills carry no role="button", so select by the
+        // (always-absolute) positioning class here.
         const pill = wrapper.container.querySelector("div[class*='absolute']");
         pill.click();
         await nextTick();
@@ -144,7 +148,7 @@ describe("UiBox collapsible behaviour", () => {
         expect(hiddenBodies).toHaveLength(0);
     });
 
-    it("removes border-2 when collapsible and closed, restores it when open", async () => {
+    it("keeps border-2 transparent while collapsed (stable geometry) and colours it when open", async () => {
         wrapper = mountWithProps(UiBox, {
             title: "Border Test",
             collapsible: true,
@@ -152,21 +156,47 @@ describe("UiBox collapsible behaviour", () => {
         });
         await nextTick();
 
-        // When collapsed, the outer box div should NOT have border-2
+        // border-2 is always present so the box geometry — and the absolutely
+        // positioned title pill — does not shift on toggle; collapsed = transparent.
         const outerDiv = wrapper.container.querySelector("div.relative.rounded-lg");
         expect(outerDiv).toBeTruthy();
-        expect(outerDiv.classList.contains("border-2")).toBe(false);
-
-        // No spacer div should exist
-        expect(wrapper.container.querySelector("div.pb-2")).toBeNull();
+        expect(outerDiv.classList.contains("border-2")).toBe(true);
+        expect(outerDiv.classList.contains("border-transparent")).toBe(true);
+        // Collapsed box reserves height so the pill's lower half does not overlap siblings.
+        expect(outerDiv.classList.contains("min-h-6")).toBe(true);
 
         // Open it
-        const pill = wrapper.container.querySelector("div[class*='absolute']");
+        const pill = wrapper.container.querySelector("[role='button']");
         pill.click();
         await nextTick();
 
-        // When open, border-2 should be restored
+        // When open, the transparent border is replaced by the coloured border
+        // and the reserved min-height is dropped.
         expect(outerDiv.classList.contains("border-2")).toBe(true);
+        expect(outerDiv.classList.contains("border-transparent")).toBe(false);
+        expect(outerDiv.classList.contains("min-h-6")).toBe(false);
+    });
+
+    it("keeps the title pill absolutely positioned in both collapsed and open states", async () => {
+        wrapper = mountWithProps(UiBox, {
+            title: "Pill Position",
+            collapsible: true,
+            defaultOpen: false,
+        });
+        await nextTick();
+
+        // Collapsed: pill stays anchored to the top border (no relative-flow reflow)
+        let pill = wrapper.container.querySelector("[role='button']");
+        expect(pill.classList.contains("absolute")).toBe(true);
+        expect(pill.classList.contains("relative")).toBe(false);
+
+        pill.click();
+        await nextTick();
+
+        // Open: still absolute in the same spot
+        pill = wrapper.container.querySelector("[role='button']");
+        expect(pill.classList.contains("absolute")).toBe(true);
+        expect(pill.classList.contains("relative")).toBe(false);
     });
 
     it("does not render spacer div when not collapsible", async () => {

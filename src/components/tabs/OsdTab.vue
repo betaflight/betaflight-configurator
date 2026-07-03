@@ -410,21 +410,13 @@
                 </div>
 
                 <!-- Font Manager Dialog -->
-                <dialog ref="fontManagerDialog" class="html-dialog w-[750px] h-fit">
-                    <div class="flex h-12 bg-elevated border-b border-default">
-                        <div class="flex-1 flex items-center px-4 font-semibold">
-                            {{ $t("osdSetupFontManagerTitle") }}
-                        </div>
-                        <UButton
-                            @click="closeFontManager"
-                            icon="i-lucide-x"
-                            variant="ghost"
-                            color="neutral"
-                            size="sm"
-                            class="my-auto mr-2"
-                        />
-                    </div>
-                    <div class="p-5">
+                <UModal
+                    :open="fontManagerOpen"
+                    :title="$t('osdSetupFontManagerTitle')"
+                    :ui="{ overlay: 'z-3000', content: 'w-[750px] z-3001' }"
+                    @update:open="(value) => !value && closeFontManager()"
+                >
+                    <template #body>
                         <h1 class="text-lg font-bold mb-1">{{ $t("osdSetupFontPresets") }}</h1>
                         <div class="flex flex-wrap gap-0 my-3" ref="fontPreviewContainer">
                             <img
@@ -490,8 +482,8 @@
                         <UButton @click="flashFont()" color="success" size="sm">
                             {{ $t("osdSetupUploadFont") }}
                         </UButton>
-                    </div>
-                </dialog>
+                    </template>
+                </UModal>
             </div>
         </div>
 
@@ -554,7 +546,7 @@ const fcStore = useFlightControllerStore();
 const previewContainer = ref(null);
 const previewContainerOuter = ref(null);
 const rulerCanvas = ref(null);
-const fontManagerDialog = ref(null);
+const fontManagerOpen = ref(false);
 const fontPreviewContainer = ref(null);
 const logoPreview = ref(null);
 
@@ -1429,7 +1421,7 @@ const fontDataVersion = ref(0);
 let lastFontPresetRequestId = 0;
 
 function closeFontManager() {
-    fontManagerDialog.value?.close();
+    fontManagerOpen.value = false;
 }
 
 function loadCustomFontFile() {
@@ -1453,7 +1445,7 @@ async function openFontManager() {
     FONT.initData();
 
     // Show the dialog first so DOM elements are available for LogoManager
-    fontManagerDialog.value?.showModal?.();
+    fontManagerOpen.value = true;
     await nextTick();
 
     // Initialize LogoManager (caches DOM elements via querySelector)

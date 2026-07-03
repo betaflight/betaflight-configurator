@@ -12,7 +12,7 @@
             <span class="axis-z">Z</span>
             <span class="axis-field">{{ $t("magVizAxisField") }}</span>
             <span v-if="inclination !== null" class="axis-incl"
-                >{{ inclination >= 0 ? "↗" : "↘" }}{{ Math.round(inclination) }}°</span
+                >{{ inclination >= 0 ? "↘" : "↗" }}{{ Math.round(inclination) }}°</span
             >
         </div>
         <div v-if="sampleCount > 0" class="mag-sphere-age-legend">
@@ -118,6 +118,10 @@ let quadIcon = null;
 const ATTITUDE_SMOOTH = 0.12;
 const _smoothQuat = new THREE.Quaternion();
 const _targetQuat = new THREE.Quaternion();
+// 180° about X (forward axis): the Betaflight→scene frame adapter.
+// Derivation lives in updateQuadAttitude() — the one genuinely subtle spot.
+const _BASE_180_X = new THREE.Quaternion(1, 0, 0, 0);
+const _tmpEuler = new THREE.Euler();
 let smoothQuatInitialized = false;
 
 // Reference ghost sphere (shown before calibration data arrives)
@@ -263,10 +267,11 @@ function initScene() {
     smoothQuatInitialized = false;
     noseDirections = [];
 
-    // Camera — Z-up convention, pulled back for isometric overview
+    // Scene is NED: +Z is down, so visual "up" is -Z. Camera sits north-east and
+    // above the origin (+X north, +Y east, -Z up) for an isometric overview.
     camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 50000);
-    camera.up.set(0, 0, 1);
-    camera.position.set(700, 560, 420);
+    camera.up.set(0, 0, -1);
+    camera.position.set(700, 560, -420);
     camera.lookAt(0, 0, 0);
 
     // Lighting
@@ -444,31 +449,41 @@ function updateQuadAttitude() {
         return;
     }
 
-    // Prefer quaternion (gimbal-lock-free) when available
+    // Frame adapter. Betaflight attitude is FLU/NWU; this scene is FRD/NED.
+    // They differ by 180° about X (flip Y and Z), so the mesh gets Rx180·q.
+    //
+    // Done in two steps that look redundant but aren't — drop either and the
+    // hemisphere bug returns (hidden near the equator, obvious at high latitude):
+    //   1. set(x,-y,-z,w) is the conjugation p·q·p*   (p = _BASE_180_X = Rx180)
+    //   2. the ·_BASE_180_X below cancels the trailing p* (p*·p = I), leaving
+    //      net = p·q = Rx180·q — one proper rotation (det +1), independent of
+    //      field direction and sensor, hence correct in both hemispheres.
+    // Both input paths share this adapter so they can't diverge.
     if (props.quaternion) {
         const { w, x, y, z } = props.quaternion;
-        // BF quaternion is body-to-earth; Three.js needs earth-to-body (conjugate).
-        // Conjugate: (w, -x, -y, -z), then BF→Display frame (negate Y and Z):
-        // Result: (w, -x, y, z) → Three.js Quaternion.set(x, y, z, w)
-        _targetQuat.set(-x, y, z, w);
+        _targetQuat.set(x, -y, -z, w);
     } else if (props.attitude) {
-        // Fallback to Euler angles (has gimbal lock at +/-90 pitch)
+        // Euler fallback: build q from (roll, pitch, heading) in aerospace ZYX,
+        // then the same adapter.
         const { roll, pitch, heading } = props.attitude;
-        // BF body-to-earth Euler (ZYX): invert to earth-to-body, then convert to display frame.
-        // Display axes: X=BF_X, Y=-BF_Y, Z=-BF_Z → pitch & heading signs cancel with inversion.
-        const euler = new THREE.Euler(-roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
-        _targetQuat.setFromEuler(euler);
+        _tmpEuler.set(roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
+        _tmpQuat.setFromEuler(_tmpEuler);
+        _targetQuat.set(_tmpQuat.x, -_tmpQuat.y, -_tmpQuat.z, _tmpQuat.w);
     } else {
         return;
     }
 
+    // Ease in (slerp is right-equivariant, so smoothing before the ·_BASE_180_X
+    // gives the same net Rx180·q).
     if (!smoothQuatInitialized) {
         _smoothQuat.copy(_targetQuat);
         smoothQuatInitialized = true;
     } else {
         _smoothQuat.slerp(_targetQuat, ATTITUDE_SMOOTH);
     }
-    quadIcon.quaternion.copy(_smoothQuat);
+    // Step 2: cancels the conjugation's p* → net Rx180·q. Dots and live-mag
+    // vectors are children of quadIcon, so they inherit it automatically.
+    quadIcon.quaternion.copy(_smoothQuat).multiply(_BASE_180_X);
 }
 
 // Quaternion helpers for orienting cylinders along arbitrary axes
@@ -581,10 +596,13 @@ function rebuildFieldReference() {
 
     const incl = (props.inclination * Math.PI) / 180;
     const radius = DEFAULT_SPHERE_RADIUS;
-    // Field direction: horizontal along X, vertical along Z
-    // Display frame: Z-up, so field dips toward -Z
+    // Field direction: horizontal along +X (magnetic north), vertical along Z.
+    // Scene is NED (Z-down, set in initScene): the downward field component is
+    // +sin(incl)·Z. Northern inclination (>0) dips toward +Z (down); southern
+    // (<0) toward -Z (up). (The camera flip in the NED conversion inverted this;
+    // the sign here was left in the old Z-up convention.)
     const fdx = Math.cos(incl) * radius;
-    const fdz = -Math.sin(incl) * radius;
+    const fdz = Math.sin(incl) * radius;
 
     // Always positioned at origin — the field line passes through 0,0,0
     fieldRefGroup.position.set(0, 0, 0);
@@ -1242,12 +1260,13 @@ function createCompassRing(radius) {
 
     // Place labels just outside the sphere surface (5% past edge)
     const r = radius * 1.05;
-    // N highlighted red (navigation convention); E/S/W neutral
+    // Compass markers in the scene's NED frame: North=+X, East=+Y.
+    // N/S are on ±X — the fixed axis of the Rx180 adapter — so unchanged.
     makeLabel("N", "#ff4444").position.set(r, 0, 0);
     makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
-    // Display -Y = BF +Y = East when the quad nose faces North
-    makeLabel("E", "#aabbcc").position.set(0, -r, 0);
-    makeLabel("W", "#aabbcc").position.set(0, r, 0);
+    // E/W are on ±Y, which the Rx180 adapter negates; with it in place East is +Y.
+    makeLabel("E", "#aabbcc").position.set(0, r, 0);
+    makeLabel("W", "#aabbcc").position.set(0, -r, 0);
 
     return group;
 }

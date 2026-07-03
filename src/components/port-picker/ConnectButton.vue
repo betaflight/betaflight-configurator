@@ -8,10 +8,10 @@
             icon="i-lucide-link-2-off"
             size="sm"
             :loading="connecting"
-            :title="$t('disconnect')"
+            :title="disconnectLabel"
             @click="onDisconnectClick"
         >
-            <span class="sidebar-connect__label">{{ $t("disconnect") }}</span>
+            <span class="sidebar-connect__label">{{ disconnectLabel }}</span>
         </UButton>
         <UFieldGroup v-else size="sm" orientation="horizontal" class="sidebar-connect__group w-full !flex">
             <UButton
@@ -93,6 +93,22 @@ export default defineComponent({
 
         const isConnected = computed(() => connectionStore.connectionValid);
         const connecting = computed(() => Boolean(connectionStore.connectingTo));
+        const isVirtualMode = computed(() => connectionStore.virtualMode);
+        const connectedTo = computed(() => connectionStore.connectedTo);
+
+        const disconnectLabel = computed(() => {
+            if (isVirtualMode.value) {
+                return i18n.getMessage("disconnectVirtual");
+            }
+            const path = connectedTo.value || "";
+            if (path.startsWith("bluetooth")) {
+                return i18n.getMessage("disconnectBluetooth");
+            }
+            if (/^(tcp|ws|wss):\/\//.test(path)) {
+                return i18n.getMessage("disconnectManual");
+            }
+            return i18n.getMessage("disconnect");
+        });
         const portPickerDisabled = computed(() => PortHandler.portPickerDisabled);
 
         const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
@@ -112,6 +128,9 @@ export default defineComponent({
         const mainLabel = computed(() => {
             if (connecting.value) {
                 return i18n.getMessage("connecting");
+            }
+            if (selectedPort.value === "virtual") {
+                return i18n.getMessage("connectVirtual");
             }
             return selectedDisplayName.value ?? i18n.getMessage("connect");
         });
@@ -239,6 +258,7 @@ export default defineComponent({
             isConnected,
             connecting,
             portPickerDisabled,
+            disconnectLabel,
             mainLabel,
             menuItems,
             dialogOpen,
@@ -287,13 +307,33 @@ export default defineComponent({
 }
 
 /* Default Nuxt UI `success` soft tint is too pale in light mode — lift the contrast. */
-html:not(.dark) .sidebar-connect :deep(button) {
+html:not(.dark) .sidebar-connect :deep(button.color-success) {
     background-color: var(--success-400);
     border: 1px solid var(--success-600);
     color: var(--surface-900);
 }
-html:not(.dark) .sidebar-connect :deep(button:hover) {
+html:not(.dark) .sidebar-connect :deep(button.color-success:hover) {
     background-color: var(--success-500);
+}
+
+/* Disconnect button (error) styling for light mode - ensure it's red */
+html:not(.dark) .sidebar-connect :deep(button.color-error) {
+    background-color: var(--error-500);
+    border: 1px solid var(--error-600);
+    color: var(--surface-50);
+}
+html:not(.dark) .sidebar-connect :deep(button.color-error:hover) {
+    background-color: var(--error-600);
+}
+
+/* Disconnect button (error) styling for dark mode - ensure proper contrast */
+html.dark .sidebar-connect :deep(button.color-error) {
+    background-color: var(--error-500);
+    border: 1px solid var(--error-600);
+    color: var(--surface-50);
+}
+html.dark .sidebar-connect :deep(button.color-error:hover) {
+    background-color: var(--error-600);
 }
 
 .tab_container.reveal .sidebar-connect {

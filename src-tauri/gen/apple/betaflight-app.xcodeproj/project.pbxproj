@@ -1,0 +1,469 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		111A926A94D26339766BFB80 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A2F5AE1804D529EF3D3D80 /* WebKit.framework */; };
+		22DCEC8A3E48CFEA64282DBA /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACDB191FFBF939444116F108 /* MetalKit.framework */; };
+		3E89409A395AAD7FF572B15F /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA517ADBECEC2ABBE28749E /* Metal.framework */; };
+		4C9EFFB8F58818287C963E26 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1112DAEC8C754FBDD5D41AE8 /* LaunchScreen.storyboard */; };
+		A0ECF9C71A805F41E77C931B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99A74EAED237155EE5FE5E4C /* Security.framework */; };
+		A70A44CC02DB1C2391722EED /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF4BE953C6B4281EDFB0CEF2 /* CoreGraphics.framework */; };
+		AA1BD22811FAA5F1656B4999 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1305924FE4D37A1298B01BD0 /* main.mm */; };
+		B9F489D8E19D06643D72ABAB /* assets in Resources */ = {isa = PBXBuildFile; fileRef = AF2238F5A905AC5251170E35 /* assets */; };
+		CE0ED26B9C2DC825D7F5C2E6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24CDA3E5579D9C2A620E362A /* QuartzCore.framework */; };
+		DDB15074333C04ECAF64623C /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5101E968C340F41184B8439 /* libapp.a */; };
+		E1796F9B01ABA8ECD4463BDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4631D1B55262E473D2FC1CC1 /* Assets.xcassets */; };
+		EDBF76E8514C129F2F4B358C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00E34BEDAAA96679919F0F26 /* UIKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00E34BEDAAA96679919F0F26 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		02AAE6BF1BA86C3FE01A2936 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1112DAEC8C754FBDD5D41AE8 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1305924FE4D37A1298B01BD0 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		24CDA3E5579D9C2A620E362A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4631D1B55262E473D2FC1CC1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		46E1704511783A4509731204 /* betaflight-app_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "betaflight-app_iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		473591AF8722B5DEB02A6BA1 /* tcp.rs */ = {isa = PBXFileReference; path = tcp.rs; sourceTree = "<group>"; };
+		63C3566AF9FCD2DB78F5DD12 /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		65A2F5AE1804D529EF3D3D80 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		758B88D357C4F99DE33ED01E /* betaflight-app_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "betaflight-app_iOS.entitlements"; sourceTree = "<group>"; };
+		91CF75CE13064A6A941FB754 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		99A74EAED237155EE5FE5E4C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A5101E968C340F41184B8439 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		ACDB191FFBF939444116F108 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		AF2238F5A905AC5251170E35 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		AF4BE953C6B4281EDFB0CEF2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BBA517ADBECEC2ABBE28749E /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		EA9EA971A45DE9EA3B37BD99 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9A8200677091B8662EE4F462 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDB15074333C04ECAF64623C /* libapp.a in Frameworks */,
+				A70A44CC02DB1C2391722EED /* CoreGraphics.framework in Frameworks */,
+				3E89409A395AAD7FF572B15F /* Metal.framework in Frameworks */,
+				22DCEC8A3E48CFEA64282DBA /* MetalKit.framework in Frameworks */,
+				CE0ED26B9C2DC825D7F5C2E6 /* QuartzCore.framework in Frameworks */,
+				A0ECF9C71A805F41E77C931B /* Security.framework in Frameworks */,
+				EDBF76E8514C129F2F4B358C /* UIKit.framework in Frameworks */,
+				111A926A94D26339766BFB80 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		30428D978D32F32AEB696CA7 = {
+			isa = PBXGroup;
+			children = (
+				AF2238F5A905AC5251170E35 /* assets */,
+				4631D1B55262E473D2FC1CC1 /* Assets.xcassets */,
+				1112DAEC8C754FBDD5D41AE8 /* LaunchScreen.storyboard */,
+				E922D1ED435C1E7BF90DCD44 /* betaflight-app_iOS */,
+				A93271A623F1553E76D07A60 /* Externals */,
+				EAAA4CF8A6774DC838904BE1 /* Sources */,
+				AA13C13476BACD179B2F0063 /* src */,
+				F7D1105BD17722E4097FA4EE /* Frameworks */,
+				5D0E9FC205DDD9F5801F60AA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D0E9FC205DDD9F5801F60AA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				46E1704511783A4509731204 /* betaflight-app_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A6B39C65A066CADF7951C43F /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				EA9EA971A45DE9EA3B37BD99 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		A93271A623F1553E76D07A60 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		AA13C13476BACD179B2F0063 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				91CF75CE13064A6A941FB754 /* lib.rs */,
+				63C3566AF9FCD2DB78F5DD12 /* main.rs */,
+				473591AF8722B5DEB02A6BA1 /* tcp.rs */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		B8320FF9FD1A271E4234D877 /* betaflight-app */ = {
+			isa = PBXGroup;
+			children = (
+				1305924FE4D37A1298B01BD0 /* main.mm */,
+				A6B39C65A066CADF7951C43F /* bindings */,
+			);
+			path = "betaflight-app";
+			sourceTree = "<group>";
+		};
+		E922D1ED435C1E7BF90DCD44 /* betaflight-app_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				758B88D357C4F99DE33ED01E /* betaflight-app_iOS.entitlements */,
+				02AAE6BF1BA86C3FE01A2936 /* Info.plist */,
+			);
+			path = "betaflight-app_iOS";
+			sourceTree = "<group>";
+		};
+		EAAA4CF8A6774DC838904BE1 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				B8320FF9FD1A271E4234D877 /* betaflight-app */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		F7D1105BD17722E4097FA4EE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AF4BE953C6B4281EDFB0CEF2 /* CoreGraphics.framework */,
+				A5101E968C340F41184B8439 /* libapp.a */,
+				BBA517ADBECEC2ABBE28749E /* Metal.framework */,
+				ACDB191FFBF939444116F108 /* MetalKit.framework */,
+				24CDA3E5579D9C2A620E362A /* QuartzCore.framework */,
+				99A74EAED237155EE5FE5E4C /* Security.framework */,
+				00E34BEDAAA96679919F0F26 /* UIKit.framework */,
+				65A2F5AE1804D529EF3D3D80 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C19F864C5DF6DF5CEBE2CE94 /* betaflight-app_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D86D6AE9999C81B25A416B10 /* Build configuration list for PBXNativeTarget "betaflight-app_iOS" */;
+			buildPhases = (
+				927B9BDE05B901B59EF36CA2 /* Build Rust Code */,
+				33D3834BAFACCE22197C2B3B /* Sources */,
+				9C958AF19C188BAFD445F7D5 /* Resources */,
+				9A8200677091B8662EE4F462 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "betaflight-app_iOS";
+			packageProductDependencies = (
+			);
+			productName = "betaflight-app_iOS";
+			productReference = 46E1704511783A4509731204 /* betaflight-app_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B79D40F75980A9C9E814FC37 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C19F864C5DF6DF5CEBE2CE94 = {
+						DevelopmentTeam = 88U8UVP252;
+					};
+				};
+			};
+			buildConfigurationList = 492CDBB4BB41B24B4EA9AB8E /* Build configuration list for PBXProject "betaflight-app" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 30428D978D32F32AEB696CA7;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5D0E9FC205DDD9F5801F60AA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C19F864C5DF6DF5CEBE2CE94 /* betaflight-app_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9C958AF19C188BAFD445F7D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1796F9B01ABA8ECD4463BDA /* Assets.xcassets in Resources */,
+				4C9EFFB8F58818287C963E26 /* LaunchScreen.storyboard in Resources */,
+				B9F489D8E19D06643D72ABAB /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		927B9BDE05B901B59EF36CA2 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "npm run -- tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		33D3834BAFACCE22197C2B3B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA1BD22811FAA5F1656B4999 /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		72A8B88871F6580707FED2E9 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+		AE25E76254B595A5D59ABD80 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+					x86_64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "betaflight-app_iOS/betaflight-app_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "88U8UVP252";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "betaflight-app_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.betaflight.app;
+				PRODUCT_NAME = "Betaflight App";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64  x86_64";
+			};
+			name = release;
+		};
+		C4044382B82BF1BE2C6E18B4 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+					x86_64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "betaflight-app_iOS/betaflight-app_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "88U8UVP252";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "betaflight-app_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.betaflight.app;
+				PRODUCT_NAME = "Betaflight App";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64  x86_64";
+			};
+			name = debug;
+		};
+		DCFC1F17BEFE386AB3C44541 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		492CDBB4BB41B24B4EA9AB8E /* Build configuration list for PBXProject "betaflight-app" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCFC1F17BEFE386AB3C44541 /* debug */,
+				72A8B88871F6580707FED2E9 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		D86D6AE9999C81B25A416B10 /* Build configuration list for PBXNativeTarget "betaflight-app_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4044382B82BF1BE2C6E18B4 /* debug */,
+				AE25E76254B595A5D59ABD80 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B79D40F75980A9C9E814FC37 /* Project object */;
+}
