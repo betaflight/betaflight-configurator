@@ -123,8 +123,20 @@ jobs:
           echo "is_latest=false" >> $GITHUB_OUTPUT
           echo "✗ Not the latest release after $MAX_RETRIES attempts. Current: $RELEASE_TAG, Latest: $LATEST_TAG"
 
-  # Deploy with the release tag as the Cloudflare branch alias
+  # Deploy to versioned maintenance branch
   modern_deploy:
+    name: Deploy to Maintenance Branch
+    needs: [modern_build, prepare_environment]
+    uses: ./.github/workflows/deploy_cloudflare.yml
+    with:
+      branch_name: ${{ needs.prepare_environment.outputs.env_name }}
+      environment_name: ${{ needs.prepare_environment.outputs.env_name }}
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  # Deploy with the release tag as the Cloudflare branch alias
+  modern_deploy_tag:
     name: Deploy Release Tag
     needs: [modern_build, prepare_environment]
     uses: ./.github/workflows/deploy_cloudflare.yml
