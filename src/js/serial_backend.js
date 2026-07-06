@@ -183,7 +183,10 @@ function closeRebootDialog() {
         clearInterval(rebootDialogCheckTimerId);
         rebootDialogCheckTimerId = false;
     }
-    document.getElementById("rebootProgressDialog")?.close();
+    const dialogStore = useDialogStore();
+    if (dialogStore.activeDialog?.type === "RebootDialog") {
+        dialogStore.close();
+    }
 }
 
 function prepareDisconnect() {
@@ -974,8 +977,13 @@ function onClosed(result) {
     console.log(`${logHead} Connection closed:`, result);
 
     // USB/cable disconnect invokes this path (not finishClose). Clear any Pinia modal
-    // (e.g. InformationDialog from showVersionMismatchAndCli) so it does not linger.
-    useDialogStore().close();
+    // (e.g. InformationDialog from showVersionMismatchAndCli) so it does not linger — but
+    // NOT the reboot progress dialog: a reboot's own port-drop lands here, and the reboot
+    // flow (showRebootDialog's check-timer / closeRebootDialog) owns dismissing it.
+    const dialogStore = useDialogStore();
+    if (dialogStore.activeDialog?.type !== "RebootDialog") {
+        dialogStore.close();
+    }
 
     resetConnection();
 
@@ -1173,11 +1181,13 @@ function showRebootDialog() {
     // Clear any leftover modal/intervals from a prior reboot before starting a new one.
     closeRebootDialog();
 
-    // Show reboot progress modal
-    const rebootDialog = document.getElementById("rebootProgressDialog") || createRebootProgressDialog();
-    rebootDialog.querySelector(".reboot-progress-bar").style.width = "0%";
-    rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightController");
-    rebootDialog.showModal();
+    // Show the reboot progress modal (the shared Vue RebootDialog via the dialog store —
+    // the CLI and Vue-tab reboot paths now share this single implementation).
+    const dialogStore = useDialogStore();
+    dialogStore.open("RebootDialog", {
+        status: i18n.getMessage("rebootFlightController"),
+        progress: 0,
+    });
 
     // Update progress during reboot
     let progress = 0;
@@ -1187,7 +1197,7 @@ function showRebootDialog() {
     rebootDialogProgressTimerId = setInterval(() => {
         progress += progressIncrement;
         if (progress <= 100) {
-            rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
+            dialogStore.updateProps({ progress });
         }
     }, 100);
 
@@ -1206,12 +1216,16 @@ function showRebootDialog() {
             // concludeReboot settles to IDLE so normal port selection resumes.
             getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
 
-            rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
-            rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
+            dialogStore.updateProps({
+                progress: 100,
+                status: i18n.getMessage("rebootFlightControllerReady"),
+            });
 
             // Close the dialog after showing "ready" message briefly
             setTimeout(() => {
-                rebootDialog.close();
+                if (dialogStore.activeDialog?.type === "RebootDialog") {
+                    dialogStore.close();
+                }
             }, 1000);
 
             if (connectionCheckTimeoutReached) {
@@ -1221,59 +1235,4 @@ function showRebootDialog() {
             }
         }
     }, 100);
-
-    // Helper function to create the reboot dialog if it doesn't exist
-    function createRebootProgressDialog() {
-        const dialog = document.createElement("dialog");
-        dialog.id = "rebootProgressDialog";
-        dialog.className = "dialogReboot";
-
-        dialog.innerHTML = `
-            <div class="content">
-                <div class="reboot-status">${i18n.getMessage("rebootFlightController")}</div>
-                <div class="reboot-progress-container">
-                    <div class="reboot-progress-bar"></div>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(dialog);
-
-        // Add styles if not already defined
-        if (!document.getElementById("rebootProgressStyle")) {
-            const style = document.createElement("style");
-            style.id = "rebootProgressStyle";
-            style.textContent = `
-                .dialogReboot {
-                    border: 1px solid #3f4241;
-                    border-radius: 5px;
-                    background-color: #2d3233;
-                    color: #fff;
-                    padding: 20px;
-                    max-width: 400px;
-                }
-                .reboot-progress-container {
-                    width: 100%;
-                    background-color: #424546;
-                    border-radius: 3px;
-                    margin: 15px 0 5px;
-                    height: 10px;
-                }
-                .reboot-progress-bar {
-                    height: 100%;
-                    background-color: #ffbb00;
-                    border-radius: 3px;
-                    transition: width 0.1s ease-in-out;
-                    width: 0%;
-                }
-                .reboot-status {
-                    text-align: center;
-                    margin: 10px 0;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        return dialog;
-    }
 }

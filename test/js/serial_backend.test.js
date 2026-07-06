@@ -53,6 +53,7 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
             activeDialog: null,
             open: vi.fn(),
             close: vi.fn(),
+            updateProps: vi.fn(),
         },
         mspHelperInstance: {
             setArmingEnabled: vi.fn(),
@@ -303,6 +304,28 @@ describe("serial_backend disconnect convergence", () => {
         expect(unmountVueTab).toHaveBeenCalledTimes(1);
         expect(GUI.connect_lock).toBe(false);
         expect(GUI.connected_to).toBe(false);
+    });
+
+    it("does NOT dismiss an active RebootDialog on an unexpected disconnect (reboot owns its modal)", () => {
+        establishConnection();
+        dialogStore.close.mockClear();
+        // A reboot's own port-drop lands in onClosed; it must not close the reboot progress
+        // modal — the reboot flow (showRebootDialog's timer / closeRebootDialog) owns it.
+        dialogStore.activeDialog = { type: "RebootDialog" };
+
+        serialHandlers.disconnect({ detail: true });
+
+        expect(dialogStore.close).not.toHaveBeenCalled();
+    });
+
+    it("DOES dismiss a non-reboot modal on an unexpected disconnect", () => {
+        establishConnection();
+        dialogStore.close.mockClear();
+        dialogStore.activeDialog = { type: "InformationDialog" };
+
+        serialHandlers.disconnect({ detail: true });
+
+        expect(dialogStore.close).toHaveBeenCalled();
     });
 
     it("UNEXPECTED disconnect does NOT call mspHelper.setArmingEnabled", () => {
