@@ -265,6 +265,73 @@ describe("WebBluetooth openCanceled abort contract", () => {
     });
 });
 
+describe("WebBluetooth notification teardown (deaf-session prevention)", () => {
+    // Chrome keeps a notify session marked active per characteristic; if it is not
+    // explicitly stopped before gatt.disconnect(), startNotifications() on the NEXT
+    // connection can resolve without re-arming the CCCD on Linux/BlueZ — a session
+    // that looks subscribed but never receives, breaking plain disconnect/connect.
+    function makeReadCharacteristic() {
+        return {
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            stopNotifications: vi.fn(async () => {}),
+            properties: { notify: true },
+        };
+    }
+
+    it("stops notifications before dropping a still-connected GATT link", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const device = makeFakeDevice("dev-notify");
+        bt.devices = [bt.createPort(device)];
+        bt.device = device;
+        const characteristic = makeReadCharacteristic();
+        bt.readCharacteristic = characteristic;
+
+        await bt.disconnect();
+
+        expect(characteristic.stopNotifications).toHaveBeenCalledTimes(1);
+        expect(bt.readCharacteristic).toBe(false); // teardown completed
+        expect(device.gatt.disconnect).toHaveBeenCalled();
+    });
+
+    it("skips stopNotifications when the link is already down (would throw), still completes teardown", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const device = makeFakeDevice("dev-notify-down");
+        device.gatt.connected = false; // unplug / unsolicited drop already killed the link
+        bt.devices = [bt.createPort(device)];
+        bt.device = device;
+        const characteristic = makeReadCharacteristic();
+        bt.readCharacteristic = characteristic;
+
+        const result = await bt.disconnect();
+
+        expect(characteristic.stopNotifications).not.toHaveBeenCalled();
+        expect(result).toBe(true);
+    });
+
+    it("a stopNotifications failure does not abort the teardown", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const device = makeFakeDevice("dev-notify-fail");
+        bt.devices = [bt.createPort(device)];
+        bt.device = device;
+        const characteristic = makeReadCharacteristic();
+        characteristic.stopNotifications = vi.fn(async () => {
+            throw new Error("GATT operation failed");
+        });
+        bt.readCharacteristic = characteristic;
+
+        const result = await bt.disconnect();
+
+        expect(result).toBe(true);
+        expect(device.gatt.disconnect).toHaveBeenCalled();
+        warnSpy.mockRestore();
+    });
+});
+
 describe("WebBluetooth listener hygiene (no leak across reconnects)", () => {
     it("removes the gattserverdisconnected/disconnect listeners with the same bound reference they were added with", async () => {
         const WebBluetooth = await loadWebBluetooth();

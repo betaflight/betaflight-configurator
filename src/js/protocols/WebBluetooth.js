@@ -381,6 +381,20 @@ class WebBluetooth extends EventTarget {
                 // before calling, or false.removeEventListener throws and aborts cleanup.
                 if (this.readCharacteristic) {
                     this.readCharacteristic.removeEventListener("characteristicvaluechanged", this.handleNotification);
+
+                    // Explicitly stop notifications BEFORE dropping the GATT link (only
+                    // possible while it is still up — an unplug/unsolicited drop skips
+                    // this). Without it, Chrome keeps the notify session marked active,
+                    // and on Linux/BlueZ startNotifications() on the NEXT connection can
+                    // resolve without re-arming the CCCD — a session that looks
+                    // subscribed but never receives (deaf), breaking disconnect/connect.
+                    if (this.device.gatt?.connected) {
+                        try {
+                            await this.readCharacteristic.stopNotifications();
+                        } catch (error) {
+                            console.warn(`${this.logHead} Failed to stop notifications during teardown:`, error);
+                        }
+                    }
                 }
 
                 if (this.device.gatt?.connected) {
