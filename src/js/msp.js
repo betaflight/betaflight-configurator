@@ -568,7 +568,12 @@ const MSP = {
         this.packet_error = 0; // reset CRC packet error counter for next session
 
         this.callbacks_cleanup();
-        this._drain_cli_queue(new Error("Serial connection closed"));
+        // Tag the error so callers can distinguish an EXPECTED close-driven drain — a `save`/
+        // `exit` reboots the FC, closing the port before it can reply — from a genuine command
+        // failure. The save still succeeded; the board is just restarting.
+        const closedError = new Error("Serial connection closed");
+        closedError.connectionClosed = true;
+        this._drain_cli_queue(closedError);
     },
 };
 

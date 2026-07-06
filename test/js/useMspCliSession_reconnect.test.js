@@ -61,7 +61,8 @@ vi.mock("../../src/js/fc", () => ({
     default: { CONFIG: { flightControllerVersion: "4.6.0" } },
 }));
 
-import { scheduleReconnect, cancelScheduledReconnect } from "../../src/composables/useMspCliSession";
+import { scheduleReconnect, cancelScheduledReconnect, saveAndReconnect } from "../../src/composables/useMspCliSession";
+import MSP from "../../src/js/msp";
 import PortHandler from "../../src/js/port_handler";
 import { getConnectionState, __resetConnectionStateForTests, State } from "../../src/js/connection_state.js";
 
@@ -165,5 +166,37 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         // reboot and pop a spurious "failed to open" dialog).
         expect(disconnect).toHaveBeenCalledTimes(1);
         expect(connectDisconnect).not.toHaveBeenCalled();
+    });
+
+    it("treats a save-reboot connection-closed drain as success, not an error", async () => {
+        PortHandler.portPicker.autoConnect = false;
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        // `save` reboots the FC: the port closes before it replies, so the in-flight command is
+        // drained with the tagged connection-closed error.
+        MSP.send_cli_command.mockImplementation((_cmd, cb) => {
+            const err = new Error("Serial connection closed");
+            err.connectionClosed = true;
+            cb([], err);
+        });
+
+        const result = await saveAndReconnect();
+
+        expect(result.ok).toBe(true);
+        expect(errSpy).not.toHaveBeenCalled();
+        errSpy.mockRestore();
+    });
+
+    it("still reports a genuine save failure", async () => {
+        PortHandler.portPicker.autoConnect = false;
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        MSP.send_cli_command.mockImplementation((_cmd, cb) => {
+            cb([], new Error("###ERROR: bad command"));
+        });
+
+        const result = await saveAndReconnect();
+
+        expect(result.ok).toBe(false);
+        expect(errSpy).toHaveBeenCalled();
+        errSpy.mockRestore();
     });
 });

@@ -109,13 +109,26 @@ export function cancelScheduledReconnect() {
     }
 }
 
+// A `save`/`exit` reboots the FC, so the port closes before the command can reply and its
+// in-flight promise is drained with a connection-closed error (tagged in MSP.disconnect_cleanup).
+// That is the EXPECTED successful outcome — the config is saved and the board is restarting — not
+// a failure, so callers should not surface it as an error.
+export function isConnectionClosedError(error) {
+    return error?.connectionClosed === true;
+}
+
 export async function saveAndReconnect() {
     let saveError = null;
     try {
         await sendSave();
     } catch (error) {
-        saveError = error;
-        console.error("sendSave failed:", error);
+        if (isConnectionClosedError(error)) {
+            // Save accepted; the FC is rebooting (the port closed before it could reply).
+            console.debug("Save reboot: connection closed before response (expected).");
+        } else {
+            saveError = error;
+            console.error("sendSave failed:", error);
+        }
     } finally {
         scheduleReconnect();
     }
