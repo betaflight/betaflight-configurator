@@ -234,6 +234,21 @@ MspHelper.readPsasSettings = function (data) {
     FC.PSAS_CONFIG.roll_yaw_clift_start = data.readU8();
     FC.PSAS_CONFIG.roll_yaw_clift_stop = data.readU8();
     FC.PSAS_CONFIG.roll_to_yaw_link = data.readU8();
+
+    FC.PSAS_CONFIG.speed_main_curve_enable[0] = data.readU8();
+    FC.PSAS_CONFIG.speed_main_curve_enable[1] = data.readU8();
+    FC.PSAS_CONFIG.speed_main_curve_enable[2] = data.readU8();
+    FC.PSAS_CONFIG.speed_stick_curve_enable[0] = data.readU8();
+    FC.PSAS_CONFIG.speed_stick_curve_enable[1] = data.readU8();
+    FC.PSAS_CONFIG.speed_stick_curve_enable[2] = data.readU8();
+    FC.PSAS_CONFIG.speed_optimum_vref = data.readU8();
+    FC.PSAS_CONFIG.speed_main_curve_power = data.readU8();
+    FC.PSAS_CONFIG.speed_roll_stick_curve_power = data.readU8();
+    FC.PSAS_CONFIG.speed_main_curve_min = data.readU16();
+    FC.PSAS_CONFIG.speed_main_curve_max = data.readU16();
+    FC.PSAS_CONFIG.speed_stick_curve_min = data.readU16();
+    FC.PSAS_CONFIG.speed_stick_curve_max = data.readU16();
+    FC.PSAS_CONFIG.speed_use_gps = data.readU8();
 };
 
 MspHelper.writePsasSettings = function (buffer) {
@@ -264,7 +279,21 @@ MspHelper.writePsasSettings = function (buffer) {
         .push16(FC.PSAS_CONFIG.servo_time)
         .push8(FC.PSAS_CONFIG.roll_yaw_clift_start)
         .push8(FC.PSAS_CONFIG.roll_yaw_clift_stop)
-        .push8(FC.PSAS_CONFIG.roll_to_yaw_link);
+        .push8(FC.PSAS_CONFIG.roll_to_yaw_link)
+        .push8(FC.PSAS_CONFIG.speed_main_curve_enable[0])
+        .push8(FC.PSAS_CONFIG.speed_main_curve_enable[1])
+        .push8(FC.PSAS_CONFIG.speed_main_curve_enable[2])
+        .push8(FC.PSAS_CONFIG.speed_stick_curve_enable[0])
+        .push8(FC.PSAS_CONFIG.speed_stick_curve_enable[1])
+        .push8(FC.PSAS_CONFIG.speed_stick_curve_enable[2])
+        .push8(FC.PSAS_CONFIG.speed_optimum_vref)
+        .push8(FC.PSAS_CONFIG.speed_main_curve_power)
+        .push8(FC.PSAS_CONFIG.speed_roll_stick_curve_power)
+        .push16(FC.PSAS_CONFIG.speed_main_curve_min)
+        .push16(FC.PSAS_CONFIG.speed_main_curve_max)
+        .push16(FC.PSAS_CONFIG.speed_stick_curve_min)
+        .push16(FC.PSAS_CONFIG.speed_stick_curve_max)
+        .push8(FC.PSAS_CONFIG.speed_use_gps);
 };
 
 MspHelper.prototype.process_data = function (dataHandler) {

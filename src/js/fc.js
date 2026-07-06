@@ -827,6 +827,16 @@ const FC = {
             roll_yaw_clift_start: 8,
             roll_yaw_clift_stop: 10,
             roll_to_yaw_link: 0,
+            speed_main_curve_enable: [0, 0, 0],
+            speed_stick_curve_enable: [0, 0, 0],
+            speed_optimum_vref: 20,
+            speed_main_curve_power: 20,
+            speed_roll_stick_curve_power: 10,
+            speed_main_curve_min: 20,
+            speed_main_curve_max: 200,
+            speed_stick_curve_min: 50,
+            speed_stick_curve_max: 200,
+            speed_use_gps: 0,
         };
     },
 
