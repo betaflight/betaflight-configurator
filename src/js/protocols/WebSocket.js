@@ -61,10 +61,29 @@ class Websocket extends EventTarget {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
-        this.ws = new WebSocket(this.address, ["binary", "wsSerial"]);
+        // A previous socket may still be pending or open (e.g. an attempt the reboot
+        // retry loop abandoned). Detach its handlers and close it so its late events
+        // cannot fire into the session this new attempt establishes.
+        if (this.ws) {
+            this.ws.onopen = this.ws.onclose = this.ws.onerror = this.ws.onmessage = null;
+            try {
+                this.ws.close();
+            } catch (e) {
+                console.error(`${this.logHead} Failed to close superseded socket: ${e}`);
+            }
+        }
+
+        // Capture this attempt's socket: every handler below must no-op once this.ws
+        // has been replaced by a newer attempt, otherwise a stale onclose would run
+        // disconnect() against — and close — the newer socket.
+        const ws = new WebSocket(this.address, ["binary", "wsSerial"]);
+        this.ws = ws;
         let socket = this;
 
         this.ws.onopen = function (e) {
+            if (socket.ws !== ws) {
+                return;
+            }
             console.log(`${socket.logHead} Connected: `, e);
             socket.connected = true;
             socket.dispatchEvent(
@@ -77,6 +96,9 @@ class Websocket extends EventTarget {
         };
 
         this.ws.onclose = async function (e) {
+            if (socket.ws !== ws) {
+                return;
+            }
             console.log(`${socket.logHead} Connection closed: `, e);
 
             await socket.disconnect();
@@ -88,6 +110,9 @@ class Websocket extends EventTarget {
         };
 
         this.ws.onmessage = async function (msg) {
+            if (socket.ws !== ws) {
+                return;
+            }
             let uint8Chunk = await socket.blob2uint(msg.data);
             socket.dispatchEvent(new CustomEvent("receive", { detail: uint8Chunk }));
         };
