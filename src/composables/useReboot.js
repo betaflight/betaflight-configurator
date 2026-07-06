@@ -7,9 +7,9 @@ export function useReboot() {
     // phase. This composable is just the Vue-tab entry point — the former duplicate
     // wait-loop + dialog that lived here diverged from the backend's and, on the serial
     // path, never settled the phase (leaving isReconnecting stuck).
-    const reboot = () => {
-        reinitializeConnection();
-    };
+    // Return the delegated call so callers keep the backend contract (it resolves to
+    // the reboot timestamp); the wrapper stays transparent rather than swallowing it.
+    const reboot = () => reinitializeConnection();
 
     return {
         reboot,

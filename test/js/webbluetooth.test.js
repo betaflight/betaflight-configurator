@@ -289,7 +289,7 @@ describe("WebBluetooth listener hygiene (no leak across reconnects)", () => {
         // fresh `.bind(this)` per call would make removeEventListener a no-op and leak a
         // listener on every reconnect.
         expect(added.length).toBeGreaterThan(0);
-        expect(removed.length).toBe(added.length);
+        expect(removed).toHaveLength(added.length);
         for (const [, handler] of [...added, ...removed]) {
             expect(handler).toBe(bt.handleDisconnect);
         }
