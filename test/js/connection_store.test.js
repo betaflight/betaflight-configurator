@@ -51,14 +51,13 @@ describe("store owns connection-target state (folded from GuiControl)", () => {
 });
 
 describe("connection store connection-state read-model", () => {
-    it("exposes the initial snapshot", () => {
+    it("exposes the initial phase", () => {
         const store = useConnectionStore();
         expect(store.connectionPhase).toBe(State.IDLE);
-        expect(store.previousPhase).toBe(State.IDLE);
         expect(store.connectionReady).toBe(false);
     });
 
-    it("reactively reflects phase changes and the previous phase", () => {
+    it("reactively reflects phase changes", () => {
         const store = useConnectionStore();
         const connection = getConnectionState();
 
@@ -67,7 +66,6 @@ describe("connection store connection-state read-model", () => {
 
         connection.setPhase(State.CONNECTED);
         expect(store.connectionPhase).toBe(State.CONNECTED);
-        expect(store.previousPhase).toBe(State.CONNECTING);
         expect(store.connectionReady).toBe(true);
 
         connection.setPhase(State.IDLE);

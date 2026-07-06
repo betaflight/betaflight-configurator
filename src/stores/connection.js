@@ -43,18 +43,13 @@ export const useConnectionStore = defineStore("connection", () => {
 
     const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
 
-    // Thin reactive read-model of the connection status holder: subscribe to its
-    // snapshot and re-publish as reactive refs so Vue components read lifecycle
-    // phase / readiness / reconnect-token from one canonical source instead of the
-    // legacy CONFIGURATOR/GUI globals.
+    // Thin reactive read-model of the connection status holder. Its phase lives in
+    // Vue refs, so a computed that reads the getters tracks them directly — no
+    // subscribe/snapshot bridge — giving Vue components one canonical source for
+    // lifecycle phase / readiness instead of the legacy CONFIGURATOR/GUI globals.
     const connection = getConnectionState();
-    const connectionSnapshot = ref(connection.snapshot());
-    connection.subscribe((snap) => {
-        connectionSnapshot.value = snap;
-    });
-    const connectionPhase = computed(() => connectionSnapshot.value.state);
-    const previousPhase = computed(() => connectionSnapshot.value.previousState);
-    const connectionReady = computed(() => connectionSnapshot.value.isReady);
+    const connectionPhase = computed(() => connection.state);
+    const connectionReady = computed(() => connection.isReady);
 
     // Live data refresh control
     const liveDataPaused = ref(false);
@@ -74,14 +69,6 @@ export const useConnectionStore = defineStore("connection", () => {
         return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
     }
 
-    function reboot() {
-        // serial_backend imports this store, so a static import here would cycle.
-        // A dynamic import is cycle-safe and resolves instantly (serial_backend is
-        // already loaded). Replaces the former GUI.reinitializeConnection() ->
-        // EventBus("reboot:request") indirection.
-        import("../js/serial_backend").then(({ reinitializeConnection }) => reinitializeConnection());
-    }
-
     return {
         connectingTo,
         connectedTo,
@@ -94,11 +81,9 @@ export const useConnectionStore = defineStore("connection", () => {
         selectedPort,
         // Connection-state read-model (read-only)
         connectionPhase,
-        previousPhase,
         connectionReady,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,
-        reboot,
     };
 });

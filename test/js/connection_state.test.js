@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import { computed } from "vue";
 import {
     ConnectionState,
     State,
@@ -7,28 +8,19 @@ import {
 } from "../../src/js/connection_state.js";
 
 // ---------------------------------------------------------------------------
-// Thin connection-status holder: current + previous phase, linkOpen /
-// intentionalDisconnect flags, and a subscribe/snapshot read-model. No
-// transition table and no reconnect token — phase is set explicitly, and a
-// reconnect just re-uses the previously-selected port.
+// Connection-status holder: current phase + linkOpen / intentionalDisconnect
+// flags. No transition table and no reconnect token — phase is set explicitly,
+// and a reconnect just re-uses the previously-selected port. State lives in Vue
+// refs, so the getters are both synchronously readable and reactively trackable.
 // ---------------------------------------------------------------------------
 
 const make = () => new ConnectionState();
 
 describe("phase + readiness", () => {
-    it("starts IDLE / not-ready and exposes a snapshot", () => {
+    it("starts IDLE / not-ready", () => {
         const c = make();
         expect(c.state).toBe(State.IDLE);
         expect(c.isReady).toBe(false);
-        expect(c.snapshot()).toEqual({ state: State.IDLE, previousState: State.IDLE, isReady: false });
-    });
-
-    it("remembers the previous phase across a transition", () => {
-        const c = make();
-        c.setPhase(State.CONNECTING);
-        c.setPhase(State.CONNECTED);
-        expect(c.state).toBe(State.CONNECTED);
-        expect(c.previousState).toBe(State.CONNECTING);
     });
 
     it("setPhase moves the phase and CONNECTED/CLI are ready", () => {
@@ -41,18 +33,29 @@ describe("phase + readiness", () => {
         c.setPhase(State.CLI);
         expect(c.isReady).toBe(true);
     });
+
+    it("is reactive: a computed over a getter tracks setPhase with no manual bridge", () => {
+        const c = make();
+        const phase = computed(() => c.state);
+        const ready = computed(() => c.isReady);
+        expect(phase.value).toBe(State.IDLE);
+        expect(ready.value).toBe(false);
+        c.setPhase(State.CONNECTED);
+        expect(phase.value).toBe(State.CONNECTED);
+        expect(ready.value).toBe(true);
+    });
 });
 
 describe("reboot / reconnect window", () => {
-    it("requestReboot enters REBOOTING and rejects a re-entrant reboot", () => {
+    it("requestReboot enters REBOOTING and does not re-enter once reconnecting", () => {
         const c = make();
         c.setPhase(State.CONNECTED);
-        expect(c.requestReboot()).toBe(true);
+        c.requestReboot();
         expect(c.state).toBe(State.REBOOTING);
-        expect(c.requestReboot()).toBe(false);
         c.reconnectStarted();
         expect(c.state).toBe(State.RECONNECTING);
-        expect(c.requestReboot()).toBe(false);
+        c.requestReboot(); // already in flight — must not reset the phase
+        expect(c.state).toBe(State.RECONNECTING);
     });
 
     it("isReconnecting covers the whole connect/reconnect window, false once settled", () => {
@@ -92,13 +95,24 @@ describe("reboot / reconnect window", () => {
         rebooting.notifyClosed(); // reboot owns the lifecycle — untouched
         expect(rebooting.state).toBe(State.RECONNECTING);
     });
+
+    it("notifyClosed settles an unexpected drop mid-handshake to IDLE (not stuck)", () => {
+        const c = make();
+        c.setPhase(State.CONNECTING);
+        c.notifyClosed();
+        expect(c.state).toBe(State.IDLE);
+
+        c.setPhase(State.HANDSHAKING);
+        c.notifyClosed();
+        expect(c.state).toBe(State.IDLE);
+    });
 });
 
 describe("flashing", () => {
-    it("begin/end FLASHING and isFlashing", () => {
+    it("beginDeviceReplacement enters FLASHING; endFlashing returns to IDLE", () => {
         const c = make();
         c.setPhase(State.CONNECTED);
-        expect(c.beginDeviceReplacement()).toBe(true);
+        c.beginDeviceReplacement();
         expect(c.state).toBe(State.FLASHING);
         expect(c.isFlashing).toBe(true);
         c.endFlashing();
@@ -108,10 +122,13 @@ describe("flashing", () => {
 });
 
 describe("operational flags", () => {
-    it("intentional-disconnect mark/clear/consume (read-and-reset)", () => {
+    it("intentional-disconnect mark / peek / clear / consume (read-and-reset)", () => {
         const c = make();
+        expect(c.intentionalDisconnect).toBe(false);
         expect(c.consumeIntentionalDisconnect()).toBe(false);
         c.markIntentionalDisconnect();
+        expect(c.intentionalDisconnect).toBe(true); // peek does not reset
+        expect(c.intentionalDisconnect).toBe(true);
         expect(c.consumeIntentionalDisconnect()).toBe(true);
         expect(c.consumeIntentionalDisconnect()).toBe(false);
         c.markIntentionalDisconnect();
@@ -137,30 +154,6 @@ describe("shutdown (pagehide)", () => {
         c.shutdown();
         expect(c.state).toBe(State.IDLE);
         expect(c.linkOpen).toBe(false);
-    });
-});
-
-describe("read-model", () => {
-    it("notifies subscribers on each phase change; unsubscribe stops it", () => {
-        const c = make();
-        const seen = [];
-        const unsub = c.subscribe((snap) => seen.push(snap.state));
-        c.setPhase(State.CONNECTING);
-        c.setPhase(State.CONNECTED);
-        unsub();
-        c.setPhase(State.DISCONNECTING);
-        expect(seen).toEqual([State.CONNECTING, State.CONNECTED]);
-    });
-
-    it("a throwing subscriber does not break the holder", () => {
-        const err = vi.spyOn(console, "error").mockImplementation(() => {});
-        const c = make();
-        c.subscribe(() => {
-            throw new Error("boom");
-        });
-        expect(() => c.setPhase(State.CONNECTING)).not.toThrow();
-        expect(c.state).toBe(State.CONNECTING);
-        err.mockRestore();
     });
 });
 

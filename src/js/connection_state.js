@@ -1,16 +1,20 @@
 /**
- * connection_state.js — small connection-status holder.
+ * connection_state.js — connection-status holder.
  *
- * Tracks the current lifecycle PHASE plus the PREVIOUS phase, two operational
- * flags serial_backend reads (linkOpen, intentionalDisconnect), and a
- * subscribe()/snapshot() read-model that useConnectionStore mirrors.
+ * Tracks the current lifecycle PHASE plus two operational flags serial_backend
+ * reads (linkOpen, intentionalDisconnect). State lives in Vue `ref`s so both
+ * plain callers (read the getters synchronously) and Vue consumers (a `computed`
+ * that reads a getter automatically tracks the underlying ref) stay in sync with
+ * no hand-rolled observer — same approach as data_storage.js. Leaf module: it
+ * imports only `vue` (no Pinia, no serial_backend), so the serial/port layer can
+ * import it without a cycle or an active-pinia requirement.
  *
  * There is no transition table and no reconnect token: a reconnect simply
  * re-uses the previously-selected port (the device re-enumerates with the same
  * stable id), and selectActivePort() consults isReconnecting to avoid hijacking
- * the selection with the expert-mode virtual/manual fallback mid-reboot. Plain
- * module: NO Vue/Pinia/serial_backend imports.
+ * the selection with the expert-mode virtual/manual fallback mid-reboot.
  */
+import { ref } from "vue";
 
 /** Lifecycle phases (read-model values). */
 export const State = Object.freeze({
@@ -21,7 +25,6 @@ export const State = Object.freeze({
     CLI: "CLI", // ready, reduced-capability (CLI-only) session
     REBOOTING: "REBOOTING",
     RECONNECTING: "RECONNECTING",
-    DISCONNECTING: "DISCONNECTING",
     FLASHING: "FLASHING",
     FAILED: "FAILED",
 });
@@ -40,59 +43,55 @@ const RECONNECTING_STATES = Object.freeze(
     new Set([State.CONNECTING, State.HANDSHAKING, State.REBOOTING, State.RECONNECTING]),
 );
 
+/**
+ * Phases a reboot genuinely owns: the link drop during these is expected and their
+ * own conclude settles them, so notifyClosed() must leave them alone. A close during
+ * any other in-flight phase (CONNECTING/HANDSHAKING) is an unexpected drop and settles
+ * to IDLE.
+ */
+const REBOOT_OWNED_STATES = Object.freeze(new Set([State.REBOOTING, State.RECONNECTING]));
+
 export class ConnectionState {
     constructor() {
-        this._state = State.IDLE;
-        this._prevState = State.IDLE;
+        this._state = ref(State.IDLE);
         // The next close is user-initiated (so the disconnect handler doesn't run
         // the unexpected-disconnect teardown on top of the intentional one).
-        this._intentionalDisconnect = false;
+        this._intentionalDisconnect = ref(false);
         // A transport link is currently open (was serial_backend's `isConnected`).
-        this._linkOpen = false;
-        this._listeners = new Set();
+        this._linkOpen = ref(false);
         this.logHead = "[CONNECTION]";
     }
 
     get state() {
-        return this._state;
-    }
-
-    get previousState() {
-        return this._prevState;
+        return this._state.value;
     }
 
     get isReady() {
-        return READY_STATES.has(this._state);
+        return READY_STATES.has(this._state.value);
     }
 
     get isFlashing() {
-        return this._state === State.FLASHING;
+        return this._state.value === State.FLASHING;
     }
 
     /** A connect/reconnect attempt is in flight — keep the current port selected, no fallback. */
     get isReconnecting() {
-        return RECONNECTING_STATES.has(this._state);
+        return RECONNECTING_STATES.has(this._state.value);
     }
 
-    /** Set the lifecycle phase, remembering the previous one. */
+    /** Set the lifecycle phase. */
     setPhase(phase) {
-        if (phase === this._state) {
-            return;
-        }
-        this._prevState = this._state;
-        this._state = phase;
-        this._notify(this._prevState);
+        this._state.value = phase;
     }
 
     // ---- Reboot / reconnect window ----------------------------------------
 
-    /** Begin a reboot. Returns false if a reboot/reconnect is already in flight. */
+    /** Begin a reboot. No-op if a reboot/reconnect is already in flight. */
     requestReboot() {
         if (this.isReconnecting) {
-            return false;
+            return;
         }
         this.setPhase(State.REBOOTING);
-        return true;
     }
 
     /** Enter the reconnect-wait phase (from a reboot, or a CLI save-and-reconnect). */
@@ -106,12 +105,13 @@ export class ConnectionState {
     }
 
     /**
-     * Settle on a link close, from the single teardown convergence point
-     * (onClosed). A reboot's link drop is expected and still owns the lifecycle,
-     * so REBOOTING/RECONNECTING are left untouched (their conclude settles them).
+     * Settle on a link close, from the single teardown convergence point (onClosed).
+     * A reboot's link drop is expected and still owns the lifecycle, so REBOOTING/
+     * RECONNECTING are left untouched (their conclude settles them). Any other in-flight
+     * phase — including an unexpected drop mid-CONNECTING/HANDSHAKING — settles to IDLE.
      */
     notifyClosed() {
-        if (this.isReconnecting || this._state === State.IDLE) {
+        if (this._state.value === State.IDLE || REBOOT_OWNED_STATES.has(this._state.value)) {
             return;
         }
         this.setPhase(State.IDLE);
@@ -119,85 +119,58 @@ export class ConnectionState {
 
     // ---- Flashing ----------------------------------------------------------
 
-    /** Enter FLASHING (the flasher owns the raw port). */
-    beginFlashing() {
+    /** Stand the reconnect down and hand the raw port to the flasher (enter FLASHING). */
+    beginDeviceReplacement() {
         this.setPhase(State.FLASHING);
-        return true;
     }
 
     /** Leave FLASHING back to IDLE. */
     endFlashing() {
-        if (this._state === State.FLASHING) {
+        if (this._state.value === State.FLASHING) {
             this.setPhase(State.IDLE);
         }
-    }
-
-    /** Stand the reconnect down and hand the port to the flasher. */
-    beginDeviceReplacement() {
-        return this.beginFlashing();
     }
 
     // ---- Operational flags -------------------------------------------------
 
     markIntentionalDisconnect() {
-        this._intentionalDisconnect = true;
+        this._intentionalDisconnect.value = true;
     }
 
     clearIntentionalDisconnect() {
-        this._intentionalDisconnect = false;
+        this._intentionalDisconnect.value = false;
+    }
+
+    /** Non-destructive peek: is the next close expected to be intentional? */
+    get intentionalDisconnect() {
+        return this._intentionalDisconnect.value;
     }
 
     /** Read-and-reset: was the close that just happened intentional? */
     consumeIntentionalDisconnect() {
-        const wasIntentional = this._intentionalDisconnect;
-        this._intentionalDisconnect = false;
+        const wasIntentional = this._intentionalDisconnect.value;
+        this._intentionalDisconnect.value = false;
         return wasIntentional;
     }
 
     get linkOpen() {
-        return this._linkOpen;
+        return this._linkOpen.value;
     }
 
     setLinkOpen(open) {
-        this._linkOpen = Boolean(open);
+        this._linkOpen.value = Boolean(open);
     }
 
     toggleLinkOpen() {
-        this._linkOpen = !this._linkOpen;
-        return this._linkOpen;
+        this._linkOpen.value = !this._linkOpen.value;
+        return this._linkOpen.value;
     }
 
     /** Hard shutdown for page unload (pagehide): collapse to IDLE, ungated. */
     shutdown() {
-        this._linkOpen = false;
-        if (this._state !== State.IDLE) {
+        this._linkOpen.value = false;
+        if (this._state.value !== State.IDLE) {
             this.setPhase(State.IDLE);
-        }
-    }
-
-    // ---- Read-model --------------------------------------------------------
-
-    subscribe(listener) {
-        this._listeners.add(listener);
-        return () => this._listeners.delete(listener);
-    }
-
-    snapshot() {
-        return {
-            state: this._state,
-            previousState: this._prevState,
-            isReady: this.isReady,
-        };
-    }
-
-    _notify(prev) {
-        const snap = this.snapshot();
-        for (const listener of this._listeners) {
-            try {
-                listener(snap, { prev });
-            } catch (error) {
-                console.error(`${this.logHead} subscriber threw:`, error);
-            }
         }
     }
 }
