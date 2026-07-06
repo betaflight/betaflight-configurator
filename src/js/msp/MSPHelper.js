@@ -1813,8 +1813,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
             // remove timeout
             clearTimeout(dataHandler.callbacks[i].timer);
-            // remove the opt-in bounded-timeout deadline (no-op when unset)
-            clearTimeout(dataHandler.callbacks[i].deadlineTimer);
 
             // remove object from array
             dataHandler.callbacks.splice(i, 1);

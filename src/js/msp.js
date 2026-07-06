@@ -488,21 +488,7 @@ const MSP = {
             }
         }
     },
-    /**
-     * Send an MSP request.
-     *
-     * @param {number} code MSP code
-     * @param {*} data optional request payload
-     * @param {Function|false} callback_sent invoked once the request bytes are written
-     * @param {Function} callback_msp invoked with the decoded response
-     * @param {object} [options] optional behavior overrides
-     * @param {number} [options.timeoutMs] when provided, the request stops
-     *   resending and is rejected after this many milliseconds. Rejection is
-     *   signalled by invoking `callback_msp` with an object carrying a `timeout`
-     *   flag (see `promise`). When omitted, behavior is unchanged: the request
-     *   resends forever and never rejects.
-     */
-    send_message(code, data, callback_sent, callback_msp, options = {}) {
+    send_message(code, data, callback_sent, callback_msp) {
         if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
@@ -510,7 +496,6 @@ const MSP = {
             return false;
         }
 
-        const timeoutMs = options?.timeoutMs;
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
         const view = new Uint8Array(bufferOut);
         const keyCrc = this.crc8_dvb_s2_data(view, 0, view.length);
@@ -548,41 +533,6 @@ const MSP = {
             }, this.TIMEOUT);
         }
 
-        // Opt-in bounded timeout: when a caller supplies timeoutMs, give the
-        // request a hard deadline. On expiry we drop THIS request from the queue
-        // and invoke its callback with a timeout marker so awaiting callers can
-        // reject. Without timeoutMs this never runs and the legacy
-        // resend-forever / never-reject behavior is intact.
-        //
-        // Acceptance fix: armed even when this request COALESCES onto an
-        // already-queued identical one (requestExists === true). Previously the
-        // deadline lived inside the `!requestExists` block, so a coalesced
-        // timeoutMs request had no deadline and could never reject — the
-        // handshake reject the connection state relies on would silently never fire. The
-        // resend timer stays exclusive to the first request; on a coalesced
-        // entry `obj.timer` is undefined and clearTimeout no-ops, so the shared
-        // resend cycle and other waiters are undisturbed.
-        if (Number.isFinite(timeoutMs) && timeoutMs >= 0) {
-            // setTimeout overflows values above the 32-bit ceiling to a near-zero
-            // delay (a spurious immediate timeout), so clamp; Number.isFinite above
-            // already rejects Infinity/NaN.
-            const boundedTimeout = Math.min(timeoutMs, 2147483647);
-            obj.deadlineTimer = setTimeout(() => {
-                // Stop this request's resend (no-op when coalesced) and remove it.
-                clearTimeout(obj.timer);
-                const index = this.callbacks.indexOf(obj);
-                if (index !== -1) {
-                    this.callbacks.splice(index, 1);
-                }
-                console.warn(
-                    `MSP: data request rejected after ${timeoutMs}ms: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab}`,
-                );
-                if (obj.callback) {
-                    obj.callback({ command: code, timeout: true, timeoutMs });
-                }
-            }, boundedTimeout);
-        }
-
         this.callbacks.push(obj);
 
         // always send messages with data payload (even when there is a message already in the queue)
@@ -597,37 +547,18 @@ const MSP = {
         return true;
     },
     /**
-     * Resolves: {command: code, data: data, length: message_length}
-     *
-     * @param {number} code MSP code
-     * @param {*} [data] optional request payload
-     * @param {object} [options] optional behavior overrides
-     * @param {number} [options.timeoutMs] when provided, the returned promise
-     *   rejects with an Error after this bound if no response arrives (and the
-     *   underlying request stops resending). When omitted, behavior is
-     *   unchanged: the promise resolves on response and never rejects.
+     * resolves: {command: code, data: data, length: message_length}
      */
-    async promise(code, data, options = {}) {
-        return new Promise((resolve, reject) => {
-            this.send_message(
-                code,
-                data,
-                false,
-                (_data) => {
-                    if (_data?.timeout) {
-                        reject(new Error(`MSP request ${code} timed out after ${_data.timeoutMs}ms`));
-                        return;
-                    }
-                    resolve(_data);
-                },
-                options,
-            );
+    async promise(code, data) {
+        return new Promise((resolve) => {
+            this.send_message(code, data, false, (_data) => {
+                resolve(_data);
+            });
         });
     },
     callbacks_cleanup() {
         for (const callback of this.callbacks) {
             clearTimeout(callback.timer);
-            clearTimeout(callback.deadlineTimer);
         }
 
         this.callbacks = [];
