@@ -419,12 +419,12 @@ OSD.loadDisplayFields = function () {
             preview() {
                 const artificialHorizon = [];
 
-                for (let j = 1; j < 8; j++) {
+                for (let j = 0; j < 7; j++) {
                     for (let i = -4; i <= 4; i++) {
                         let element;
 
                         // Blank char to mark the size of the element
-                        if (j !== 4) {
+                        if (j !== 3) {
                             element = { x: i, y: j, sym: SYM.BLANK };
 
                             // Sample of horizon
