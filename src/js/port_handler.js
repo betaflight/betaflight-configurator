@@ -231,6 +231,14 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     const deviceFilter = ["AT32", "CP210", "SPR", "STM"];
     let selectedPort;
 
+    // Whether a real device was selected before this re-evaluation. When a real port is only
+    // transiently gone (e.g. the USB CDC device drops off the bus while the FC reboots after a
+    // save / preset-apply), we must NOT auto-switch the selection to the virtual/manual
+    // fallback below — doing so makes the reconnect land on the fake device instead of the
+    // rebooting FC. The real port re-selects itself once it re-enumerates.
+    const priorPort = this.portPicker.selectedPort;
+    const hadRealSelection = !!priorPort && !["noselection", "virtual", "manual"].includes(priorPort);
+
     // First check for active connections
     if (serial.connected) {
         selectedPort = this.currentSerialPorts.find((device) => device === serial.getConnectedPort());
@@ -284,14 +292,15 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         }
     }
 
-    // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
+    // Expert-only fallbacks: only surface virtual/manual when expert mode is on, and never as
+    // a replacement for a real device that was just lost (see hadRealSelection above).
     const expertMode = isExpertModeEnabled();
 
-    if (!selectedPort && expertMode && this.showVirtualMode) {
+    if (!selectedPort && !hadRealSelection && expertMode && this.showVirtualMode) {
         selectedPort = "virtual";
     }
 
-    if (!selectedPort && expertMode && this.showManualMode) {
+    if (!selectedPort && !hadRealSelection && expertMode && this.showManualMode) {
         selectedPort = "manual";
     }
 
