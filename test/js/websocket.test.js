@@ -34,6 +34,35 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         expect(first.onclose).toBeNull();
     });
 
+    it("normalizes tcp:// manual overrides to ws:// (browsers can only open WebSockets)", async () => {
+        const socket = new Websocket();
+
+        await socket.connect("tcp://localhost:5761");
+
+        expect(socket.address).toBe("ws://localhost:5761");
+        expect(socket.ws.url).toBe("ws://localhost:5761");
+    });
+
+    it("signals a failed open (connect:false) when the WebSocket constructor throws", async () => {
+        vi.stubGlobal(
+            "WebSocket",
+            class {
+                constructor() {
+                    throw new DOMException("invalid scheme", "SyntaxError");
+                }
+            },
+        );
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        const socket = new Websocket();
+        const connected = vi.fn();
+        socket.addEventListener("connect", (e) => connected(e.detail));
+
+        await socket.connect("wss://bad url");
+
+        expect(connected).toHaveBeenCalledWith(false);
+        errSpy.mockRestore();
+    });
+
     it("a superseded socket's late onclose neither closes the new socket nor signals disconnect", async () => {
         const socket = new Websocket();
 
