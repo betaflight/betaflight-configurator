@@ -10,14 +10,14 @@ export const useConnectionStore = defineStore("connection", () => {
     // GUI.connected_to). gui.js now delegates those fields here, so the store is
     // the canonical home and the store no longer imports gui.js (which would
     // cycle: gui -> store -> ... -> msp -> gui). connect_lock delegates to the
-    // ref-counting LockManager (single source of truth); clearMspQueue and reboot
-    // reach msp/serial_backend via dynamic import to stay cycle-free.
+    // reactive LockManager (single source of truth); clearMspQueue reaches msp via
+    // dynamic import to stay cycle-free.
     const connectingTo = ref(false);
     const connectedTo = ref(false);
 
     const connectLock = computed({
         get: () => getLockManager().locked,
-        set: (val) => getLockManager().setBoolean("gui", Boolean(val)),
+        set: (val) => (getLockManager().locked = val),
     });
 
     // CONFIGURATOR is already reactive (wrapped in reactive() in data_storage.js)

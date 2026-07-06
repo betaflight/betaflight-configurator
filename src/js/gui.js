@@ -63,18 +63,16 @@ class GuiControl {
         this.operating_system = getOS();
     }
 
-    // connect_lock is now backed by the ref-counting LockManager
-    // (single source of truth) instead of a bare instance field. The getter reads
-    // the LockManager's reactive `locked` ref, so existing reactive consumers
-    // (store.connectLock computed, tab guards) keep updating; the setter maps the
-    // legacy boolean writes to a single GUI-owned hold. Behaviour is unchanged:
-    // `= true` locks, `= false` unlocks.
+    // connect_lock is backed by the reactive LockManager (single source of truth)
+    // instead of a bare instance field, so reactive consumers (store.connectLock
+    // computed, tab guards) keep updating. Behaviour is unchanged: `= true` locks,
+    // `= false` unlocks.
     get connect_lock() {
         return getLockManager().locked;
     }
 
     set connect_lock(value) {
-        getLockManager().setBoolean("gui", Boolean(value));
+        getLockManager().locked = value;
     }
 
     // connecting_to / connected_to now live in useConnectionStore (the canonical

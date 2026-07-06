@@ -3,7 +3,8 @@ import { computed } from "vue";
 import { LockManager, getLockManager, __resetLockManagerForTests } from "../../src/js/lock_manager.js";
 
 // ---------------------------------------------------------------------------
-// Single-hold-per-owner lock that replaces the bare GUI.connect_lock boolean.
+// The connection/flasher lock — a single reactive boolean behind GUI.connect_lock
+// and store.connectLock. One port-owning operation holds it at a time.
 // ---------------------------------------------------------------------------
 
 describe("LockManager", () => {
@@ -12,45 +13,28 @@ describe("LockManager", () => {
         expect(lm.locked).toBe(false);
     });
 
-    it("setBoolean(owner, true/false) holds and releases per owner", () => {
+    it("locked is settable and coerces to boolean", () => {
         const lm = new LockManager();
-        lm.setBoolean("gui", true);
+        lm.locked = true;
         expect(lm.locked).toBe(true);
-
-        // Idempotent: repeated true keeps a single hold.
-        lm.setBoolean("gui", true);
-        expect(lm.locked).toBe(true);
-
-        lm.setBoolean("gui", false);
+        lm.locked = false;
         expect(lm.locked).toBe(false);
-
-        // Releasing when not held is a no-op.
-        lm.setBoolean("gui", false);
+        // Truthy/falsy values are coerced.
+        lm.locked = 1;
+        expect(lm.locked).toBe(true);
+        lm.locked = 0;
         expect(lm.locked).toBe(false);
     });
 
-    it("distinct owners hold independently — stays locked until all clear", () => {
-        const lm = new LockManager();
-        lm.setBoolean("gui", true);
-        lm.setBoolean("flasher", true);
-        expect(lm.locked).toBe(true);
-
-        lm.setBoolean("gui", false);
-        expect(lm.locked).toBe(true); // flasher still holds
-
-        lm.setBoolean("flasher", false);
-        expect(lm.locked).toBe(false);
-    });
-
-    it("locked is reactive — a computed over it recomputes when holds change", () => {
+    it("locked is reactive — a computed over it recomputes when it changes", () => {
         const lm = new LockManager();
         const mirror = computed(() => lm.locked);
         expect(mirror.value).toBe(false);
 
-        lm.setBoolean("gui", true);
+        lm.locked = true;
         expect(mirror.value).toBe(true); // tracked the ref change
 
-        lm.setBoolean("gui", false);
+        lm.locked = false;
         expect(mirror.value).toBe(false);
     });
 

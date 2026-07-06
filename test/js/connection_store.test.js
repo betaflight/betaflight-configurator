@@ -40,7 +40,7 @@ describe("store owns connection-target state (folded from GuiControl)", () => {
         expect(store.connectedTo).toBe("serial_1");
     });
 
-    it("connectLock delegates to the ref-counting LockManager", () => {
+    it("connectLock delegates to the LockManager", () => {
         const store = useConnectionStore();
         expect(store.connectLock).toBe(false);
         store.connectLock = true;
