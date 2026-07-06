@@ -272,6 +272,22 @@ function resetAppConnectionState() {
     getConnectionState().setLinkOpen(false);
 }
 
+// End-of-window cleanup for a kept BLE link: if the reboot window closes without a live
+// handshake, the kept GATT transport must not linger open behind a UI that says
+// "disconnected". Drop it for real; a link that made it back to connected (or is
+// mid-handshake, owned by its stall watchdog) is left alone.
+function releaseKeptRebootLink() {
+    if (!rebootLinkKept) {
+        return;
+    }
+    rebootLinkKept = false;
+    if (serial.connected && !isConnected()) {
+        // Already app-level disconnected — skip the redundant unexpected-disconnect teardown.
+        getConnectionState().markIntentionalDisconnect();
+        serial.disconnect();
+    }
+}
+
 // BLE variant of disconnectForReboot: keep the GATT session OPEN through the reboot and
 // reset only the app-level connection state. BLE adapters (e.g. SpeedyBee) hold the link
 // while the MCU restarts, and the session demonstrably works — it carried the save and the
@@ -1305,8 +1321,10 @@ function rebootReconnect() {
             if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
-                // concludeReboot settles to IDLE so normal selection resumes.
+                // concludeReboot settles to IDLE so normal selection resumes. A kept BLE
+                // link that never made it back to connected is dropped for real here.
                 getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
+                releaseKeptRebootLink();
                 return;
             }
             if (!isConnected() && !GUI.connecting_to) {

@@ -126,6 +126,11 @@ class Websocket extends EventTarget {
                 return;
             }
             let uint8Chunk = await socket.blob2uint(msg.data);
+            // Re-check after the await: the socket may have been superseded while the
+            // blob decoded, and stale bytes must not leak into the new session's stream.
+            if (socket.ws !== ws) {
+                return;
+            }
             socket.dispatchEvent(new CustomEvent("receive", { detail: uint8Chunk }));
         };
     }

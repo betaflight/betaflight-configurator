@@ -703,6 +703,34 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
+    it("drops a kept BLE link for real when the reboot window expires without reconnecting", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+            serial.connected = true; // the kept GATT session stays open underneath
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush -> soft reset (link kept)
+
+            // Every retry fails to open, so no attempt is live when the window closes.
+            serial.connect.mockImplementation(() => {
+                serialHandlers.connect({ detail: false });
+            });
+            serial.disconnect.mockClear();
+
+            vi.advanceTimersByTime(25000); // past the 20s driven window
+
+            // The kept transport must not linger open behind a "disconnected" UI.
+            expect(serial.disconnect).toHaveBeenCalled();
+        } finally {
+            serial.connect.mockReset();
+            serial.connected = false;
+            vi.useRealTimers();
+        }
+    });
+
     it("mid-loop failed opens do NOT pop the connection-failed dialog (loop is the ground truth)", () => {
         vi.useFakeTimers();
         try {

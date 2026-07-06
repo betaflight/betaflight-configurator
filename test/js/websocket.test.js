@@ -81,4 +81,29 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         expect(disconnected).toHaveBeenCalledTimes(1);
         expect(second.close).toHaveBeenCalled();
     });
+
+    it("drops a message decoded across the supersede boundary (no stale bytes into the new session)", async () => {
+        const socket = new Websocket();
+
+        await socket.connect("ws://localhost:5761");
+        const first = socket.ws;
+        const firstOnMessage = first.onmessage;
+
+        const received = vi.fn();
+        socket.addEventListener("receive", (e) => received(e.detail));
+
+        // Start decoding a message on the first socket, then supersede it while the
+        // async decode is still pending. (ArrayBuffer payloads: jsdom's Blob stringifies
+        // typed-array parts, and blob2uint's Response() accepts buffers just the same.)
+        const pending = firstOnMessage.call(first, { data: new Uint8Array([1, 2, 3]).buffer });
+        await socket.connect("ws://localhost:5761");
+        await pending;
+
+        expect(received).not.toHaveBeenCalled();
+
+        // The current socket's messages still flow.
+        await socket.ws.onmessage({ data: new Uint8Array([4, 5]).buffer });
+        expect(received).toHaveBeenCalledTimes(1);
+        expect(Array.from(received.mock.calls[0][0])).toEqual([4, 5]);
+    });
 });
