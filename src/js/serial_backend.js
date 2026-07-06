@@ -294,10 +294,14 @@ function beginConnect(selectedPort) {
         serial.removeEventListener("disconnect", disconnectHandler);
         serial.addEventListener("disconnect", disconnectHandler);
 
-        // A connect attempt begins. IDLE -> CONNECTING; during a reboot the
-        // connection-state is RECONNECTING -> CONNECTING. Readiness (finishOpen/connectCli)
-        // advances it to CONNECTED/CLI. (virtual dispatches its own in onOpenVirtual.)
-        getConnectionState().setPhase(ConnPhase.CONNECTING);
+        // A connect attempt begins. IDLE -> CONNECTING. During a reboot-driven reconnect
+        // the phase is REBOOTING/RECONNECTING — keep it, so a transient failed open (the
+        // rebooting device is still re-enumerating) is recognised as reconnect flakiness
+        // rather than a user-facing connect failure. Readiness (onOpen -> HANDSHAKING,
+        // finishOpen/connectCli -> CONNECTED/CLI) advances it on success.
+        if (!getConnectionState().isRebootReconnecting) {
+            getConnectionState().setPhase(ConnPhase.CONNECTING);
+        }
     }
 
     serial.connect(
@@ -520,6 +524,15 @@ function abortConnection(messageKey) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
 
+    // A failed open/handshake DURING a reboot-driven reconnect is expected flakiness: the
+    // device is briefly gone while it re-enumerates after save/reboot, and recovery is owned
+    // by auto-connect. In that case log it but do NOT alarm the user with a failure dialog
+    // (the connection typically succeeds on the very next attempt — the "sometimes a
+    // Connection failed dialog appears even though it connected" report). Gate on auto-connect:
+    // without it nothing retries, so a failure there is real and must still surface. Capture
+    // before setPhase(FAILED) overwrites the reconnect phase.
+    const duringRebootReconnect = getConnectionState().isRebootReconnecting && PortHandler.portPicker.autoConnect;
+
     // Default message reflects how far the attempt got: a port that already opened but failed
     // the handshake (e.g. invalid API version) did not "fail to open".
     const message = i18n.getMessage(messageKey ?? (GUI.connected_to ? "connectionFailed" : "serialPortOpenFail"));
@@ -536,7 +549,9 @@ function abortConnection(messageKey) {
     // fallback rather than staying aimed at a dead target.
 
     gui_log(message);
-    showConnectionFailedDialog(message);
+    if (!duringRebootReconnect) {
+        showConnectionFailedDialog(message);
+    }
 
     resetConnection();
 }

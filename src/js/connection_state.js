@@ -79,6 +79,16 @@ export class ConnectionState {
         return RECONNECTING_STATES.has(this._state.value);
     }
 
+    /**
+     * A reboot-driven reconnect is in progress (REBOOTING/RECONNECTING), as opposed to a
+     * fresh user-initiated connect (CONNECTING/HANDSHAKING). A failed open in this window is
+     * expected flakiness — the device is briefly gone while it re-enumerates — so callers
+     * suppress the user-facing "connection failed" dialog and let auto-connect recover.
+     */
+    get isRebootReconnecting() {
+        return REBOOT_OWNED_STATES.has(this._state.value);
+    }
+
     /** Set the lifecycle phase. */
     setPhase(phase) {
         this._state.value = phase;

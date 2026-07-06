@@ -224,7 +224,7 @@ import PortHandler from "../../src/js/port_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
-import { __resetConnectionStateForTests } from "../../src/js/connection_state.js";
+import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -394,6 +394,59 @@ describe("serial_backend disconnect convergence", () => {
         serial.connect.mockClear();
         connectDisconnect();
         expect(serial.connect).toHaveBeenCalled();
+    });
+});
+
+describe("serial_backend connect-failure dialog", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        resetMocks();
+    });
+
+    it("shows the connection-failed dialog when a user-initiated connect fails to open", () => {
+        // IDLE -> connectDisconnect -> beginConnect (CONNECTING). A failed open is a genuine
+        // user-facing failure, so the dialog must appear.
+        connectDisconnect();
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false }); // open failed -> onOpen(false) -> abortConnection
+
+        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
+        expect(infoDialogs).toHaveLength(1);
+    });
+
+    it("stays silent when a reboot reconnect's open fails with auto-connect on (device still re-enumerating)", () => {
+        // The preset/CLI save-and-reboot reconnect window: scheduleReconnect() put the phase
+        // in RECONNECTING. A premature connect attempt (fired before the rebooting device is
+        // back) fails to open — but auto-connect recovers on re-enumeration, so this must NOT
+        // pop a "Failed to open serial port" dialog. (The reported spurious-dialog bug.)
+        PortHandler.portPicker.autoConnect = true;
+        getConnectionState().reconnectStarted(); // RECONNECTING
+        dialogStore.open.mockClear();
+
+        connectDisconnect(); // beginConnect preserves RECONNECTING
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false }); // premature failed open -> abortConnection
+
+        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
+        expect(infoDialogs).toHaveLength(0);
+        // The attempt is still torn down so auto-connect can re-fire (connecting_to cleared).
+        expect(GUI.connecting_to).toBe(false);
+    });
+
+    it("still shows the dialog on a reboot reconnect failure when auto-connect is OFF (nothing retries)", () => {
+        // Without auto-connect there is no auto-recovery, so a failed reconnect open is a real
+        // dead end the user must be told about — suppression must NOT apply.
+        PortHandler.portPicker.autoConnect = false;
+        getConnectionState().reconnectStarted(); // RECONNECTING
+        dialogStore.open.mockClear();
+
+        connectDisconnect();
+        serialHandlers.connect({ detail: false });
+
+        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
+        expect(infoDialogs).toHaveLength(1);
     });
 });
 
