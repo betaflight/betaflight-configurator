@@ -12,7 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 // scheduleReconnect() replaces (de-bounces) the pending one rather than stacking.
 // ---------------------------------------------------------------------------
 
-const { GUI, connectDisconnect } = vi.hoisted(() => {
+const { GUI, connectDisconnect, disconnect } = vi.hoisted(() => {
     return {
         GUI: {
             // Minimal name-keyed timeout registry mirroring gui.js timeout_add/remove.
@@ -36,6 +36,7 @@ const { GUI, connectDisconnect } = vi.hoisted(() => {
             }),
         },
         connectDisconnect: vi.fn(),
+        disconnect: vi.fn(),
     };
 });
 
@@ -47,6 +48,7 @@ vi.mock("../../src/js/gui", () => ({
 vi.mock("../../src/js/serial_backend", () => ({
     __esModule: true,
     connectDisconnect,
+    disconnect,
 }));
 
 // Keep the rest of the import graph light — useMspCliSession also imports MSP and FC.
@@ -69,6 +71,10 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         vi.clearAllMocks();
         GUI._timers.clear();
         __resetConnectionStateForTests();
+        // Auto-Connect on is the reconnect path these cases characterize; the off case is
+        // covered explicitly below. A real selected port is needed for the reconnect window.
+        PortHandler.portPicker.selectedPort = "serial_0";
+        PortHandler.portPicker.autoConnect = true;
     });
 
     afterEach(() => {
@@ -145,5 +151,19 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         // connect to IDLE — the connect flow owns the phase now and settles it itself.
         cancelScheduledReconnect();
         expect(getConnectionState().state).toBe(State.CONNECTING);
+    });
+
+    it("with Auto-Connect OFF: drops the stale link and does NOT reconnect (no reconnect window)", () => {
+        PortHandler.portPicker.autoConnect = false;
+
+        scheduleReconnect();
+        // Auto-Connect off means the user opted out of auto-reconnect: no reconnect window.
+        expect(getConnectionState().isReconnecting).toBe(false);
+
+        vi.advanceTimersByTime(500);
+        // It disconnects the stale link but must NOT attempt a reconnect (which would race the
+        // reboot and pop a spurious "failed to open" dialog).
+        expect(disconnect).toHaveBeenCalledTimes(1);
+        expect(connectDisconnect).not.toHaveBeenCalled();
     });
 });

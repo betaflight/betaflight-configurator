@@ -3,7 +3,7 @@ import semver from "semver";
 import MSP from "../js/msp";
 import GUI from "../js/gui";
 import FC from "../js/fc";
-import { connectDisconnect } from "../js/serial_backend";
+import { connectDisconnect, disconnect } from "../js/serial_backend";
 import PortHandler from "../js/port_handler";
 import { getConnectionState, State } from "../js/connection_state";
 
@@ -68,12 +68,17 @@ export function readDumpAll() {
 }
 
 export function scheduleReconnect() {
-    // Enter the reconnect-in-progress window so selectActivePort() keeps the current
-    // device selected and does NOT hijack it with the expert-mode virtual/manual
-    // fallback while the FC is briefly off the port list. The device re-enumerates
-    // with the same stable id, so the existing selection stays the right target.
+    // Only auto-reconnect after the save/reboot when Auto-Connect is on. With it off the user
+    // has opted out of automatic reconnection, so we just drop the now-stale link and leave them
+    // on the disconnected view to reconnect manually — no reconnect attempt, and therefore no
+    // "failed to open serial port" dialog while the FC is still re-enumerating.
+    const reconnect = PortHandler.portPicker.autoConnect;
     const target = PortHandler.portPicker.selectedPort;
-    if (target && target !== "noselection" && target !== "virtual" && target !== "manual") {
+
+    // Enter the reconnect-in-progress window so selectActivePort() keeps the current device
+    // selected and does NOT hijack it with the expert-mode virtual/manual fallback while the FC
+    // is briefly off the port list. Only relevant when we are actually going to reconnect.
+    if (reconnect && target && target !== "noselection" && target !== "virtual" && target !== "manual") {
         getConnectionState().reconnectStarted();
     }
 
@@ -81,7 +86,13 @@ export function scheduleReconnect() {
     GUI.timeout_add(
         RECONNECT_TIMEOUT_NAME,
         () => {
-            connectDisconnect();
+            if (reconnect) {
+                connectDisconnect();
+            } else {
+                // Auto-Connect off: drop the (possibly still-open) stale link without reconnecting.
+                // disconnect() is a no-op if the reboot already closed the port.
+                disconnect();
+            }
         },
         RECONNECT_DELAY_MS,
     );
