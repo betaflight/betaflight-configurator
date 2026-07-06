@@ -265,6 +265,37 @@ describe("WebBluetooth openCanceled abort contract", () => {
     });
 });
 
+describe("WebBluetooth listener hygiene (no leak across reconnects)", () => {
+    it("removes the gattserverdisconnected/disconnect listeners with the same bound reference they were added with", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const device = makeFakeDevice("dev-leak");
+        bt.devices = [bt.createPort(device)];
+
+        // Drive connect() to the "connected" branch (both device listeners get added).
+        bt.gattConnect = vi.fn(async () => {});
+        bt.getServices = vi.fn(async () => {});
+        bt.getCharacteristics = vi.fn(async () => {});
+        bt.startNotifications = vi.fn(async () => {});
+
+        await bt.connect("bluetooth_dev-leak", { baudRate: 115200 });
+        await bt.disconnect();
+
+        const deviceEvents = ["gattserverdisconnected", "disconnect"];
+        const added = device.addEventListener.mock.calls.filter(([t]) => deviceEvents.includes(t));
+        const removed = device.removeEventListener.mock.calls.filter(([t]) => deviceEvents.includes(t));
+
+        // Every listener is added AND removed using the one constructor-bound reference; a
+        // fresh `.bind(this)` per call would make removeEventListener a no-op and leak a
+        // listener on every reconnect.
+        expect(added.length).toBeGreaterThan(0);
+        expect(removed.length).toBe(added.length);
+        for (const [, handler] of [...added, ...removed]) {
+            expect(handler).toBe(bt.handleDisconnect);
+        }
+    });
+});
+
 describe("(c) selectProtocol routes the stable bluetooth path to the BLE protocol", () => {
     // Exercises the REAL serial.selectProtocol on the exported singleton, proving
     // the new "bluetooth_<id>" path falls through to the WebBluetooth protocol.

@@ -44,6 +44,12 @@ class WebBluetooth extends EventTarget {
         this.writeQueue = Promise.resolve();
 
         this.connect = this.connect.bind(this);
+        // Bind the device/characteristic event handlers ONCE so add/removeEventListener
+        // share one reference. A fresh `.bind(this)` at each call site produces a new
+        // function every time, so removeEventListener never matches and a gattserver-
+        // disconnected/disconnect/notification listener leaks on every reconnect.
+        this.handleDisconnect = this.handleDisconnect.bind(this);
+        this.handleNotification = this.handleNotification.bind(this);
 
         this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
         this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
@@ -192,7 +198,7 @@ class WebBluetooth extends EventTarget {
 
         console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`);
 
-        this.device.addEventListener("gattserverdisconnected", this.handleDisconnect.bind(this));
+        this.device.addEventListener("gattserverdisconnected", this.handleDisconnect);
 
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);
@@ -220,7 +226,7 @@ class WebBluetooth extends EventTarget {
             this.failed = 0;
             this.openRequested = false;
 
-            this.device.addEventListener("disconnect", this.handleDisconnect.bind(this));
+            this.device.addEventListener("disconnect", this.handleDisconnect);
             this.addEventListener("receive", this.handleReceiveBytes);
 
             console.log(`${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
@@ -304,7 +310,7 @@ class WebBluetooth extends EventTarget {
             );
         }
 
-        this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification.bind(this));
+        this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification);
     }
 
     handleNotification(event) {
@@ -360,16 +366,13 @@ class WebBluetooth extends EventTarget {
             this.removeEventListener("receive", this.handleReceiveBytes);
 
             if (this.device) {
-                this.device.removeEventListener("disconnect", this.handleDisconnect.bind(this));
+                this.device.removeEventListener("disconnect", this.handleDisconnect);
                 this.device.removeEventListener("gattserverdisconnected", this.handleDisconnect);
 
                 // readCharacteristic may already be false from a prior teardown — guard
                 // before calling, or false.removeEventListener throws and aborts cleanup.
                 if (this.readCharacteristic) {
-                    this.readCharacteristic.removeEventListener(
-                        "characteristicvaluechanged",
-                        this.handleNotification.bind(this),
-                    );
+                    this.readCharacteristic.removeEventListener("characteristicvaluechanged", this.handleNotification);
                 }
 
                 if (this.device.gatt?.connected) {
