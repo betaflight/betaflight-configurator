@@ -58,11 +58,7 @@ class Websocket extends EventTarget {
     }
 
     async connect(path) {
-        // This protocol fills the web shell's "tcp" slot, but a browser can only open
-        // WebSockets — a raw tcp:// URL throws inside the WebSocket constructor. SITL
-        // serves its serial bridge over WebSocket on the same port, so normalize the
-        // scheme instead: tcp://host:port -> ws://host:port.
-        this.address = path.replace(/^tcp:\/\//i, "ws://");
+        this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
         // A previous socket may still be pending or open (e.g. an attempt the reboot
@@ -85,9 +81,10 @@ class Websocket extends EventTarget {
         try {
             ws = new WebSocket(this.address, ["binary", "wsSerial"]);
         } catch (e) {
-            // Invalid URL/scheme. Signal a failed open so the connect flow (and the
-            // reboot retry loop) recovers immediately instead of waiting for the
-            // pre-open watchdog.
+            // Invalid URL/scheme — e.g. a raw tcp:// manual override, which a browser
+            // cannot open (raw TCP needs the desktop app's native transport). Signal a
+            // failed open so the connect flow recovers immediately instead of dying
+            // silently until the pre-open watchdog.
             console.error(`${this.logHead} Failed to open ${this.address}:`, e);
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
             return;

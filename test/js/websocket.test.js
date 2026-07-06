@@ -34,16 +34,9 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         expect(first.onclose).toBeNull();
     });
 
-    it("normalizes tcp:// manual overrides to ws:// (browsers can only open WebSockets)", async () => {
-        const socket = new Websocket();
-
-        await socket.connect("tcp://localhost:5761");
-
-        expect(socket.address).toBe("ws://localhost:5761");
-        expect(socket.ws.url).toBe("ws://localhost:5761");
-    });
-
-    it("signals a failed open (connect:false) when the WebSocket constructor throws", async () => {
+    it("signals a failed open (connect:false) when the WebSocket constructor throws (e.g. raw tcp://)", async () => {
+        // Browsers cannot open raw TCP — a tcp:// manual override throws inside the
+        // WebSocket constructor. That must surface as a failed open, not a silent death.
         vi.stubGlobal(
             "WebSocket",
             class {
@@ -57,7 +50,7 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         const connected = vi.fn();
         socket.addEventListener("connect", (e) => connected(e.detail));
 
-        await socket.connect("wss://bad url");
+        await socket.connect("tcp://localhost:5761");
 
         expect(connected).toHaveBeenCalledWith(false);
         errSpy.mockRestore();
