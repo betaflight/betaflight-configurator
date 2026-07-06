@@ -1,6 +1,7 @@
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
+import { getConnectionState } from "./connection_state.js";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
@@ -34,6 +35,10 @@ const PortHandler = new (function () {
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
+
+    // "Reconnect in progress" is the connection state being in REBOOTING/RECONNECTING,
+    // read in selectActivePort() via getConnectionState().isReconnecting; the
+    // previously-selected port stays put as the reconnect target.
 
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
@@ -231,14 +236,6 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     const deviceFilter = ["AT32", "CP210", "SPR", "STM"];
     let selectedPort;
 
-    // Whether a real device was selected before this re-evaluation. When a real port is only
-    // transiently gone (e.g. the USB CDC device drops off the bus while the FC reboots after a
-    // save / preset-apply), we must NOT auto-switch the selection to the virtual/manual
-    // fallback below — doing so makes the reconnect land on the fake device instead of the
-    // rebooting FC. The real port re-selects itself once it re-enumerates.
-    const priorPort = this.portPicker.selectedPort;
-    const hadRealSelection = !!priorPort && !["noselection", "virtual", "manual"].includes(priorPort);
-
     // First check for active connections
     if (serial.connected) {
         selectedPort = this.currentSerialPorts.find((device) => device === serial.getConnectedPort());
@@ -292,16 +289,28 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         }
     }
 
-    // Expert-only fallbacks: only surface virtual/manual when expert mode is on, and never as
-    // a replacement for a real device that was just lost (see hadRealSelection above).
+    // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
+    // While a reboot/reconnect is in progress the rebooting device is only
+    // transiently absent from the lists — it will re-enumerate and re-select
+    // itself. Do NOT assign the virtual/manual fallback in that window, or it
+    // would hijack the selection mid-reboot and leave the configurator pointed at
+    // the wrong "device".
     const expertMode = isExpertModeEnabled();
+    const reconnectInProgress = getConnectionState().isReconnecting;
 
-    if (!selectedPort && !hadRealSelection && expertMode && this.showVirtualMode) {
+    if (!selectedPort && !reconnectInProgress && expertMode && this.showVirtualMode) {
         selectedPort = "virtual";
     }
 
-    if (!selectedPort && !hadRealSelection && expertMode && this.showManualMode) {
+    if (!selectedPort && !reconnectInProgress && expertMode && this.showManualMode) {
         selectedPort = "manual";
+    }
+
+    // While reconnecting, keep the previously-selected device rather than dropping
+    // to "noselection": it re-enumerates with the same stable id, so the existing
+    // selection is still the right target. Never virtual/manual.
+    if (!selectedPort && reconnectInProgress) {
+        selectedPort = this.portPicker.selectedPort;
     }
 
     // Return the default port if no other port was selected

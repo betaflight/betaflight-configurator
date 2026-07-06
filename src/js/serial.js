@@ -60,45 +60,57 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
+        // Device-enumeration events come from EVERY transport — port_handler builds
+        // the combined device list from all of them.
+        const deviceEvents = ["addedDevice", "removedDevice"];
+        // Connection-lifecycle events must come ONLY from the active transport. A
+        // transport we are no longer connected through can still emit a late event
+        // (e.g. a BLE link's gattserverdisconnected firing after the user switched
+        // to a serial FC); forwarding it would run onClosed/read_serial against the
+        // wrong connection and corrupt the live one.
+        const lifecycleEvents = new Set(["connect", "disconnect", "receive"]);
 
         for (const { name, instance } of this._protocols) {
-            if (typeof instance?.addEventListener === "function") {
-                for (const eventType of events) {
-                    instance.addEventListener(eventType, (event) => {
-                        let newDetail;
-                        if (event.type === "receive") {
-                            // For 'receive' events, we need to handle the data differently
-                            newDetail = {
-                                data: event.detail,
-                                protocolType: name,
-                            };
-                        } else if (event.detail && typeof event.detail === "object") {
-                            // Object payloads (open info, device lists, socket info) get the
-                            // protocol tag merged in.
-                            newDetail = {
-                                ...event.detail,
-                                protocolType: name,
-                            };
-                        } else {
-                            // Preserve primitive/falsy details verbatim. A failed open signals
-                            // detail:false; wrapping it in an object would make it truthy and the
-                            // connect handler would treat the failure as a success.
-                            newDetail = event.detail;
-                        }
+            if (typeof instance?.addEventListener !== "function") {
+                continue;
+            }
 
-                        // Dispatch the event with the new detail
-                        this.dispatchEvent(
-                            new CustomEvent(event.type, {
-                                detail: newDetail,
-                                bubbles: event.bubbles,
-                                cancelable: event.cancelable,
-                            }),
-                        );
-                    });
-                }
+            for (const eventType of [...deviceEvents, ...lifecycleEvents]) {
+                instance.addEventListener(eventType, (event) => {
+                    // Drop lifecycle events arriving from a non-active transport.
+                    if (lifecycleEvents.has(eventType) && instance !== this._protocol) {
+                        return;
+                    }
+
+                    this.dispatchEvent(
+                        new CustomEvent(event.type, {
+                            detail: this._tagDetail(event, name),
+                            bubbles: event.bubbles,
+                            cancelable: event.cancelable,
+                        }),
+                    );
+                });
             }
         }
+    }
+
+    /**
+     * Tag a forwarded event's detail with its originating protocol.
+     * @param {Event} event - the source protocol event
+     * @param {string} protocolType - the originating protocol name
+     */
+    _tagDetail(event, protocolType) {
+        // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
+        if (event.type === "receive") {
+            return { data: event.detail, protocolType };
+        }
+        // A PRIMITIVE detail (notably connect/disconnect dispatching `false` on a
+        // failed open) is forwarded as-is — spreading `false` would turn it into a
+        // truthy { protocolType }, so onOpen() would treat a failed open as success.
+        if (event.detail !== null && typeof event.detail === "object") {
+            return { ...event.detail, protocolType };
+        }
+        return event.detail;
     }
 
     /**
