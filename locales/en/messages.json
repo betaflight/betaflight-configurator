@@ -5866,6 +5866,9 @@
     "powerBatteryProfileOption": {
         "message": "Battery Profile $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Flight controller set Battery Profile: <strong class=\"message-positive\">$1</strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "e.g. LiPo, Li-Ion"
     },
