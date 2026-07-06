@@ -668,6 +668,12 @@
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Ha fallat<\/span> al obrir el port sèrie"
     },
+    "connectionFailedTitle": {
+        "message": "Connexió fallida"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">No s'ha pogut connectar<\/span> al port seleccionat. Comproveu que el dispositiu sigui accessible i que la configuració de connexió sigui correcta i, a continuació, torneu-ho a provar."
+    },
     "serialPortClosedOk": {
         "message": "Port sèrie <span class=\"message-positive\">correctament<\/span> tancat"
     },

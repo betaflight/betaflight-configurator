@@ -652,6 +652,12 @@
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Impossibile<\/span> connettersi alla porta seriale"
     },
+    "connectionFailedTitle": {
+        "message": "Connessione fallita"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">Fallita<\/span> la connessione alla porta selezionata. Controllare che il dispositivo sia raggiungibile e che le impostazioni di connessione siano corrette, quindi riprovare."
+    },
     "serialPortClosedOk": {
         "message": "Porta seriale <span class=\"message-positive\">chiusa<\/span>"
     },

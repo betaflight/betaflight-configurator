@@ -660,6 +660,12 @@
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Falha<\/span> ao abrir porta serial"
     },
+    "connectionFailedTitle": {
+        "message": "Ligação falhou"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">Falha<\/span> a ligar à porta selecionada. Verifique que o dispositivo está acessível e que as definições de ligação estão corretas, depois tente de novo."
+    },
     "serialPortClosedOk": {
         "message": "Porta serial fechada com <span class=\"message-positive\">sucesso<\/span>"
     },
