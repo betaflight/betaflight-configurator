@@ -82,23 +82,25 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         vi.useRealTimers();
     });
 
-    it("fires connectDisconnect exactly once after 500ms (one-shot, not a retry loop)", () => {
+    it("drops the stale link once after 500ms (one-shot, not a retry loop; reconnect is auto-connect's job)", () => {
         scheduleReconnect();
 
         // Nothing fires before the 500ms delay.
         vi.advanceTimersByTime(499);
-        expect(connectDisconnect).not.toHaveBeenCalled();
+        expect(disconnect).not.toHaveBeenCalled();
 
         // Fires exactly once at the delay boundary.
         vi.advanceTimersByTime(1);
-        expect(connectDisconnect).toHaveBeenCalledTimes(1);
+        expect(disconnect).toHaveBeenCalledTimes(1);
 
-        // No further calls — it is a single timeout, not an interval.
+        // No further calls — it is a single timeout, not an interval. And it never connects
+        // explicitly (that would target the stale pre-reboot id).
         vi.advanceTimersByTime(10000);
-        expect(connectDisconnect).toHaveBeenCalledTimes(1);
+        expect(disconnect).toHaveBeenCalledTimes(1);
+        expect(connectDisconnect).not.toHaveBeenCalled();
     });
 
-    it("de-bounces: a second scheduleReconnect replaces the pending one (still one reconnect)", () => {
+    it("de-bounces: a second scheduleReconnect replaces the pending one (still one disconnect)", () => {
         scheduleReconnect();
         vi.advanceTimersByTime(300);
 
@@ -109,18 +111,19 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         // The first (replaced) timer would have fired at 500ms from the start (i.e. 200ms
         // from now) — prove it does NOT, because it was cancelled.
         vi.advanceTimersByTime(200);
-        expect(connectDisconnect).not.toHaveBeenCalled();
+        expect(disconnect).not.toHaveBeenCalled();
 
         // Only the second timer fires, exactly once.
         vi.advanceTimersByTime(300);
-        expect(connectDisconnect).toHaveBeenCalledTimes(1);
+        expect(disconnect).toHaveBeenCalledTimes(1);
     });
 
-    it("cancelScheduledReconnect removes the pending timeout so connectDisconnect never fires", () => {
+    it("cancelScheduledReconnect removes the pending timeout so nothing fires", () => {
         scheduleReconnect();
         cancelScheduledReconnect();
 
         vi.advanceTimersByTime(10000);
+        expect(disconnect).not.toHaveBeenCalled();
         expect(connectDisconnect).not.toHaveBeenCalled();
     });
 
@@ -142,10 +145,11 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         scheduleReconnect();
         expect(getConnectionState().state).toBe(State.RECONNECTING);
 
-        // The timer fires connectDisconnect(); the real connect flow then advances the phase
-        // (RECONNECTING -> CONNECTING -> HANDSHAKING). Simulate that transition here.
+        // The timer drops the stale link; auto-connect (external) then reconnects to the
+        // re-enumerated device, advancing the phase (RECONNECTING -> CONNECTING -> HANDSHAKING).
+        // Simulate that transition here.
         vi.advanceTimersByTime(500);
-        expect(connectDisconnect).toHaveBeenCalledTimes(1);
+        expect(disconnect).toHaveBeenCalledTimes(1);
         getConnectionState().setPhase(State.CONNECTING);
 
         // A late cancel (e.g. leaving the Presets tab mid-handshake) must NOT force the live
