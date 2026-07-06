@@ -57,13 +57,38 @@ const isConnected = () => getConnectionState().linkOpen;
 // prepareDisconnect(), cleared on connect, consumed (read-and-reset) in onClosed().
 
 const REBOOT_CONNECT_MAX_TIME_MS = 10000;
+// The driven (BLE/manual) reconnect needs a longer window than the serial re-enumeration
+// path: adapters like the SpeedyBee BLE bridge accept GATT connections while the FC is
+// still booting and then drop them when the FC re-initializes the bridge partway through
+// boot, so the first attempt(s) after a reboot are expected to fail before one sticks.
+const REBOOT_CONNECT_MAX_TIME_DRIVEN_MS = 20000;
 // BLE/manual links usually survive an FC reboot (the radio stays connected while only the
 // MCU restarts), so no disconnect event fires and we must drive the disconnect/reconnect
 // cycle ourselves. Wait for the reboot command to flush before dropping the stale link,
 // then retry reconnecting on this cadence until the FC answers or the reboot window closes.
 const REBOOT_FLUSH_DELAY_MS = 1500;
 const REBOOT_RECONNECT_RETRY_MS = 1000;
+// How long an opened-but-silent link may stall in the MSP handshake during a reboot
+// reconnect before it is dropped for the next retry. Short by design: the FC not
+// answering MSP right after a reboot means we connected to a still-booting board, and
+// holding the dead link for the normal 10s handshake timeout would consume the whole
+// reboot window (the retry loop skips ticks while a connection is open).
+const REBOOT_HANDSHAKE_STALL_MS = 3000;
 let rebootTimestamp = 0;
+// The BLE link was kept open across the current reboot (soft reset — see
+// softResetForReboot). While true, a stalled handshake keeps riding the same GATT
+// session instead of dropping it: the session is known-good (it carried the save and
+// the reboot ack), the FC just isn't answering yet. Cleared on any real transport close.
+let rebootLinkKept = false;
+
+// The reconnect window for the current reboot: driven (BLE/manual) reboots get the longer
+// window, serial re-enumeration keeps the original one.
+function rebootConnectWindowMs() {
+    const port = PortHandler.portPicker.selectedPort;
+    return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual")
+        ? REBOOT_CONNECT_MAX_TIME_DRIVEN_MS
+        : REBOOT_CONNECT_MAX_TIME_MS;
+}
 
 function isCliOnlyMode() {
     return getConfig("cliOnlyMode")?.cliOnlyMode === true;
@@ -212,6 +237,7 @@ function prepareDisconnect() {
 }
 
 function beginDisconnect() {
+    console.log(`${logHead} Intentional disconnect (user action / removed device / failed handshake)`);
     prepareDisconnect();
 
     // A user-initiated disconnect during the reboot window must also dismiss the reboot modal —
@@ -232,8 +258,35 @@ function beginDisconnect() {
 // setArmingEnabled MSP round-trip, which would hang waiting for a response the rebooting
 // FC cannot send. Tears the (now-stale) connection down directly.
 function disconnectForReboot() {
+    console.log(`${logHead} Dropping stale link for reboot (flush timeout)`);
     prepareDisconnect();
     finishClose(toggleStatus);
+}
+
+// App-level connection teardown WITHOUT dropping the transport: everything onClosed's
+// paths do (listeners, flags, live-data timer, UI back to landing) except the
+// serial.disconnect(). The GATT session stays open underneath.
+function resetAppConnectionState() {
+    resetConnection();
+    teardownConnectionUi();
+    getConnectionState().setLinkOpen(false);
+}
+
+// BLE variant of disconnectForReboot: keep the GATT session OPEN through the reboot and
+// reset only the app-level connection state. BLE adapters (e.g. SpeedyBee) hold the link
+// while the MCU restarts, and the session demonstrably works — it carried the save and the
+// reboot ack. Dropping it and reconnecting is the fragile part: on Linux/BlueZ (Web
+// Bluetooth is experimental there) a rapid gatt.disconnect()/connect() cycle reliably
+// yields a deaf session — GATT opens, services enumerate, but no notifications ever
+// arrive. Riding the kept session avoids the platform reconnect entirely: the retry
+// loop's connect() finds gatt already connected (connect() is a no-op), re-fetches
+// services/characteristics, and re-subscribes — idempotent thanks to the bound-once
+// listeners (addEventListener de-duplicates identical refs).
+function softResetForReboot() {
+    console.log(`${logHead} Keeping BLE link through reboot — app-level reset only (flush timeout)`);
+    prepareDisconnect();
+    resetAppConnectionState();
+    rebootLinkKept = true;
 }
 
 // Explicit disconnect entry point. Safer than `connectDisconnect()` for
@@ -465,6 +518,14 @@ function finishClose(finishedCallback) {
 // event (no "removedDevice") for BLE/Capacitor/WebSocket/TCP. Deliberately does NOT call
 // mspHelper.setArmingEnabled — the link is already gone, so that MSP callback would never fire.
 function finishUnexpectedDisconnect() {
+    // The dead connection's handshake watchdogs die with it. They are per-connection
+    // timers (re-armed by the next onOpen), and GUI.timeout_add does NOT de-duplicate
+    // names — so a stale timer left armed here would fire later and tear down a healthy
+    // successor (seen as reboot-reconnect attempt N's watchdog killing attempt N+1).
+    // The intentional path already covers this via prepareDisconnect's timeout_kill_all.
+    GUI.timeout_remove("connecting");
+    GUI.timeout_remove("connectAttempt");
+
     // Mirror the toggleStatus that finishClose runs via finishedCallback for intentional
     // disconnects. Reset before the UI teardown so a late removedDevice cannot re-enter
     // connectDisconnect() against a still-"connected" state.
@@ -473,22 +534,62 @@ function finishUnexpectedDisconnect() {
     teardownConnectionUi();
 }
 
+// Drop a connection whose MSP handshake stalled during the reboot retry loop, WITHOUT
+// ending the loop: we connected to a still-booting FC, so just close the dead link and let
+// the loop's next tick try again. Deliberately not disconnectForReboot() — its
+// prepareDisconnect() would stopRebootReconnect() and kill the very loop that must retry.
+function dropStalledRebootConnection() {
+    // onOpen advanced the phase to HANDSHAKING; re-assert the reconnect phase so
+    // notifyClosed() leaves the window open and selectActivePort() keeps aiming at the
+    // rebooting device instead of falling back mid-retry.
+    getConnectionState().reconnectStarted();
+
+    // On a kept BLE link the stall just means the FC hasn't finished booting: keep riding
+    // the known-good session (app-level reset only) and let the next tick re-handshake.
+    // Dropping it here would force a real reconnect — the deaf-session trap this whole
+    // keep-the-link strategy exists to avoid. NOT prepareDisconnect(): its
+    // stopRebootReconnect would kill the live retry interval.
+    if (rebootLinkKept && serial.connected) {
+        resetAppConnectionState();
+        return;
+    }
+
+    getConnectionState().markIntentionalDisconnect();
+    finishClose(toggleStatus);
+}
+
 function setConnectionTimeout() {
-    // disconnect after 10 seconds with error if we don't get IDENT data
+    // A reboot-driven reconnect stalls fast and retries: the loop is alive, so a link
+    // that opened but never answers MSP belongs to a still-booting FC. The normal 10s
+    // wait would eat the remaining reboot window (the loop skips ticks while a
+    // connection is open) and its FAILED/connectDisconnect path would end the window.
+    const duringRebootLoop = rebootReconnectTimerId !== false;
+
+    // disconnect after the timeout with error if we don't get IDENT data
     GUI.timeout_add(
         "connecting",
         function () {
-            if (!CONFIGURATOR.connectionValid) {
-                gui_log(i18n.getMessage("noConfigurationReceived"));
-
-                // Bounded HANDSHAKING timeout — the FC opened the link but
-                // never completed the MSP chain. HANDSHAKING -> FAILED; the
-                // disconnect below tears it down (-> onClosed -> notifyClosed -> IDLE).
-                getConnectionState().setPhase(ConnPhase.FAILED);
-                connectDisconnect();
+            if (CONFIGURATOR.connectionValid) {
+                return;
             }
+
+            // Re-check the loop live: it may have ended (or been cancelled) while we
+            // stalled, in which case the normal failure path below owns the teardown.
+            if (rebootReconnectTimerId !== false) {
+                console.log(`${logHead} Handshake stalled during reboot reconnect — dropping link to retry`);
+                dropStalledRebootConnection();
+                return;
+            }
+
+            gui_log(i18n.getMessage("noConfigurationReceived"));
+
+            // Bounded HANDSHAKING timeout — the FC opened the link but
+            // never completed the MSP chain. HANDSHAKING -> FAILED; the
+            // disconnect below tears it down (-> onClosed -> notifyClosed -> IDLE).
+            getConnectionState().setPhase(ConnPhase.FAILED);
+            connectDisconnect();
         },
-        10000,
+        duringRebootLoop ? REBOOT_HANDSHAKE_STALL_MS : 10000,
     );
 }
 
@@ -530,8 +631,13 @@ function abortConnection(messageKey) {
     // (the connection typically succeeds on the very next attempt — the "sometimes a
     // Connection failed dialog appears even though it connected" report). Gate on auto-connect:
     // without it nothing retries, so a failure there is real and must still surface. Capture
-    // before setPhase(FAILED) overwrites the reconnect phase.
-    const duringRebootReconnect = getConnectionState().isRebootReconnecting && PortHandler.portPicker.autoConnect;
+    // before setPhase(FAILED) overwrites the reconnect phase. A live retry loop
+    // (rebootReconnectTimerId) is checked too: after the loop's FIRST failed attempt the
+    // phase has already left REBOOTING/RECONNECTING (onOpen/abort advanced it), so the
+    // phase alone would let attempt 2+'s failures pop the dialog mid-reboot.
+    const duringRebootReconnect =
+        (getConnectionState().isRebootReconnecting || rebootReconnectTimerId !== false) &&
+        PortHandler.portPicker.autoConnect;
 
     // Default message reflects how far the attempt got: a port that already opened but failed
     // the handshake (e.g. invalid API version) did not "fail to open".
@@ -991,6 +1097,10 @@ function onClosed(result) {
 
     console.log(`${logHead} Connection closed:`, result);
 
+    // A real transport close ends any kept-BLE-link session: after this, a stalled
+    // handshake means a re-established (possibly deaf) session, not the pre-reboot one.
+    rebootLinkKept = false;
+
     // USB/cable disconnect invokes this path (not finishClose). Clear any Pinia modal
     // (e.g. InformationDialog from showVersionMismatchAndCli) so it does not linger — but
     // NOT the reboot progress dialog: a reboot's own port-drop lands here, and the reboot
@@ -1131,6 +1241,19 @@ export function reinitializeConnection(suppressDialog = false) {
     return rebootTimestamp;
 }
 
+// Reconnect driver for a reboot initiated OUTSIDE this module — the CLI `save`/`exit` path
+// (useMspCliSession) has already rebooted the FC, so unlike reinitializeConnection() no
+// MSP_SET_REBOOT is sent here. Needed for transports that never re-enumerate: a serial
+// device drops off the bus and comes back (addedDevice -> auto-connect reconnects), but a
+// BLE or manual/TCP link emits no removedDevice/addedDevice for an FC reboot, so nothing
+// external ever triggers the reconnect. Drives the same flush -> drop-stale-link -> retry
+// cycle as a BLE/manual Save & Reboot; Auto-Connect is honored inside rebootReconnect().
+export function scheduleRebootReconnect() {
+    rebootTimestamp = Date.now();
+    getConnectionState().requestReboot();
+    rebootReconnect();
+}
+
 // Drive the disconnect/reconnect cycle for a BLE/manual reboot. The link bounces (or survives)
 // as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
 // reboot dialog is shown.
@@ -1140,11 +1263,22 @@ function rebootReconnect() {
     stopRebootReconnect();
 
     rebootReconnectTimerId = setTimeout(() => {
-        // If the link survived the reboot, drop the now-stale connection so the UI returns to
-        // the landing tab instead of sitting on a dead connection. (disconnectForReboot ->
-        // prepareDisconnect calls stopRebootReconnect on the already-fired timeout — harmless.)
+        // If the link survived the reboot, reset the now-stale connection so the UI returns
+        // to the landing tab instead of sitting on a dead connection. For a BLE target that
+        // is about to auto-reconnect, keep the GATT session open (softResetForReboot) — the
+        // retry rides it, avoiding the deaf-session reconnect on Linux/BlueZ. Otherwise
+        // (serial/manual, or no auto-reconnect coming) drop the transport for real.
+        // (Both paths run prepareDisconnect, whose stopRebootReconnect on this already-fired
+        // timeout is harmless.)
         if (isConnected()) {
-            disconnectForReboot();
+            const target = PortHandler.portPicker.selectedPort;
+            const keepBleLink =
+                typeof target === "string" && target.startsWith("bluetooth") && PortHandler.portPicker.autoConnect;
+            if (keepBleLink) {
+                softResetForReboot();
+            } else {
+                disconnectForReboot();
+            }
         }
 
         // Honor Auto-Connect — read it live (not snapshotted at reboot start) so toggling it off
@@ -1167,7 +1301,7 @@ function rebootReconnect() {
         // disconnect), so a later attempt succeeds once the FC is stable. connectDisconnect here
         // takes the connect branch (isConnected is false).
         rebootReconnectTimerId = setInterval(() => {
-            const timedOut = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
+            const timedOut = Date.now() - rebootTimestamp > rebootConnectWindowMs();
             if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
@@ -1204,10 +1338,14 @@ function showRebootDialog() {
         progress: 0,
     });
 
+    // The dialog tracks the same window as the reconnect itself (driven BLE/manual
+    // reboots get the longer one), so it doesn't declare a timeout while retries run.
+    const windowMs = rebootConnectWindowMs();
+
     // Update progress during reboot
     let progress = 0;
     // Calculate increment to reach 100% when the timeout elapses (runs every 100ms)
-    const progressIncrement = 100 / (REBOOT_CONNECT_MAX_TIME_MS / 100);
+    const progressIncrement = 100 / (windowMs / 100);
 
     rebootDialogProgressTimerId = setInterval(() => {
         progress += progressIncrement;
@@ -1218,7 +1356,7 @@ function showRebootDialog() {
 
     // Check for successful connection every 100ms with a timeout
     rebootDialogCheckTimerId = setInterval(() => {
-        const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
+        const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > windowMs;
         const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
 
         if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {

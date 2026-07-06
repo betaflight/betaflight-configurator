@@ -85,6 +85,9 @@ class WebBluetooth extends EventTarget {
         if (this.closeRequested) {
             return;
         }
+        // Explicitly attribute the teardown: this is the DEVICE dropping the link
+        // (or the FC rebooting under it), not the configurator closing it.
+        console.warn(`${this.logHead} Unsolicited GATT disconnect (device dropped the link) — tearing down`);
         this.disconnect();
     }
 
@@ -211,6 +214,10 @@ class WebBluetooth extends EventTarget {
             await this.getCharacteristics();
             await this.startNotifications();
         } catch (error) {
+            // Also log to the console — gui_log only reaches the in-app log panel, which
+            // makes a failed services/characteristics/notifications setup invisible in
+            // console captures while the connection still reports "opened".
+            console.error(`${this.logHead} Connection setup failed:`, error);
             gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
         }
 
@@ -342,6 +349,7 @@ class WebBluetooth extends EventTarget {
         // closed session with a late `connect` event (mirrors TauriSerial). Do
         // this before any state mutation.
         if (this.openRequested && !this.connected) {
+            console.log(`${this.logHead} Disconnect requested while a connect is in flight — cancelling the open`);
             this.openCanceled = true;
             // Cancellation was accepted — report success (mirrors TauriSerial), else
             // Serial.disconnect() coerces the undefined return to false.

@@ -219,6 +219,7 @@ import {
     disconnect,
     initializeSerialBackend,
     reinitializeConnection,
+    scheduleRebootReconnect,
 } from "../../src/js/serial_backend";
 import PortHandler from "../../src/js/port_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
@@ -326,6 +327,18 @@ describe("serial_backend disconnect convergence", () => {
         serialHandlers.disconnect({ detail: true });
 
         expect(dialogStore.close).toHaveBeenCalled();
+    });
+
+    it("clears the dead connection's handshake watchdogs on an UNEXPECTED disconnect", () => {
+        establishConnection();
+        GUI.timeout_remove.mockClear();
+
+        serialHandlers.disconnect({ detail: true });
+
+        // GUI.timeout_add does not de-duplicate names, so a stale watchdog left armed
+        // here would later fire into a healthy successor connection.
+        expect(GUI.timeout_remove).toHaveBeenCalledWith("connecting");
+        expect(GUI.timeout_remove).toHaveBeenCalledWith("connectAttempt");
     });
 
     it("UNEXPECTED disconnect does NOT call mspHelper.setArmingEnabled", () => {
@@ -456,7 +469,7 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         resetMocks();
     });
 
-    it("drops the stale link after the flush delay, then retries connecting (auto-connect on)", () => {
+    it("keeps the BLE link open at the flush delay (soft reset) and re-handshakes on it (auto-connect on)", () => {
         vi.useFakeTimers();
         try {
             PortHandler.portPicker.selectedPort = "bluetooth_1";
@@ -465,19 +478,43 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
 
             serial.disconnect.mockClear();
             serial.connect.mockClear();
+            switchTab.mockClear();
 
             reinitializeConnection();
 
             // Nothing happens until the reboot command has had time to flush.
             expect(serial.disconnect).not.toHaveBeenCalled();
 
-            // After the flush delay the surviving link is torn down cleanly.
+            // After the flush delay the app-level state resets (back to landing) but the
+            // GATT session is deliberately KEPT — dropping and re-establishing it is what
+            // produces deaf sessions on Linux/BlueZ.
             vi.advanceTimersByTime(1500);
-            expect(serial.disconnect).toHaveBeenCalled();
+            expect(serial.disconnect).not.toHaveBeenCalled();
+            expect(switchTab).toHaveBeenCalledWith("landing", { mode: "disconnected" });
 
-            // Then the retry loop reconnects (device stays listed, so connect-by-path works).
+            // Then the retry loop re-handshakes over the kept session.
             vi.advanceTimersByTime(1000);
             expect(serial.connect).toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("still drops the surviving link at the flush delay when Auto-Connect is off (no retry will ride it)", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_1";
+            PortHandler.portPicker.autoConnect = false;
+            establishConnection();
+
+            serial.disconnect.mockClear();
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500);
+
+            // Nothing is going to reconnect, so keeping the GATT session open would just
+            // hold the adapter hostage — hard disconnect.
+            expect(serial.disconnect).toHaveBeenCalled();
         } finally {
             vi.useRealTimers();
         }
@@ -558,6 +595,141 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
+    it("drops a stalled handshake quickly on a RE-ESTABLISHED session and keeps retrying", () => {
+        vi.useFakeTimers();
+        try {
+            // Use a REAL timeout registry: the reboot-aware handshake watchdog must actually fire.
+            GUI.timeout_add.mockImplementation((_name, code, timeout) => setTimeout(code, timeout));
+
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush -> soft reset (link kept)
+
+            serial.connect.mockClear();
+            serial.disconnect.mockClear();
+            mspHelperInstance.setArmingEnabled.mockClear();
+
+            vi.advanceTimersByTime(1000); // first retry tick -> connect attempt
+            expect(serial.connect).toHaveBeenCalledTimes(1);
+
+            // The attempt opens but never answers MSP. serial.connected stays false in this
+            // mock, i.e. the kept link is gone (adapter dropped it; this is a re-established
+            // session) — the stall must HARD-drop it for the next retry.
+            serialHandlers.connect({ detail: true });
+
+            // The reboot-aware stall timeout (3s, not the generic 10s) drops the dead link...
+            vi.advanceTimersByTime(3000);
+            expect(serial.disconnect).toHaveBeenCalled();
+            // ...without the arming MSP round-trip a silent FC can never answer...
+            expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+
+            // ...and the loop is still alive: the next tick reconnects.
+            serial.connect.mockClear();
+            vi.advanceTimersByTime(1000);
+            expect(serial.connect).toHaveBeenCalledTimes(1);
+        } finally {
+            GUI.timeout_add.mockReset();
+            vi.useRealTimers();
+        }
+    });
+
+    it("a stalled handshake on the KEPT BLE session keeps riding it (no transport drop)", () => {
+        vi.useFakeTimers();
+        try {
+            GUI.timeout_add.mockImplementation((_name, code, timeout) => setTimeout(code, timeout));
+
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+            // The kept-link stall branch checks the transport is genuinely still open.
+            serial.connected = true;
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush -> soft reset, rebootLinkKept
+
+            serial.connect.mockClear();
+            serial.disconnect.mockClear();
+
+            vi.advanceTimersByTime(1000); // retry rides the kept session
+            expect(serial.connect).toHaveBeenCalledTimes(1);
+            serialHandlers.connect({ detail: true }); // opens, FC still booting: MSP silent
+
+            // Stall fires — but the session predates the reboot (known-good), so it is NOT
+            // dropped; only the app-level state resets and the loop re-handshakes (the
+            // retry tick can land on the same instant as the stall, so count totals).
+            vi.advanceTimersByTime(3000);
+            expect(serial.disconnect).not.toHaveBeenCalled();
+
+            vi.advanceTimersByTime(1000);
+            expect(serial.connect).toHaveBeenCalledTimes(2);
+        } finally {
+            GUI.timeout_add.mockReset();
+            serial.connected = false;
+            vi.useRealTimers();
+        }
+    });
+
+    it("BLE retries continue past the 10s serial window (driven reboots get the longer window)", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush
+
+            // Fail every open synchronously so the loop keeps ticking (abortConnection
+            // resets connecting_to on the connect:false event).
+            serial.connect.mockImplementation(() => {
+                serialHandlers.connect({ detail: false });
+            });
+
+            serial.connect.mockClear();
+            vi.advanceTimersByTime(10000); // ~11.5s after the reboot — past the old window
+            expect(serial.connect).toHaveBeenCalled();
+
+            // The loop still ends: no more attempts once the 20s driven window closes.
+            vi.advanceTimersByTime(10000); // ~21.5s
+            serial.connect.mockClear();
+            vi.advanceTimersByTime(5000);
+            expect(serial.connect).not.toHaveBeenCalled();
+        } finally {
+            serial.connect.mockReset();
+            vi.useRealTimers();
+        }
+    });
+
+    it("mid-loop failed opens do NOT pop the connection-failed dialog (loop is the ground truth)", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500);
+
+            serial.connect.mockImplementation(() => {
+                serialHandlers.connect({ detail: false });
+            });
+            dialogStore.open.mockClear();
+
+            // Several failed attempts: after the first, the phase has left
+            // REBOOTING/RECONNECTING (onOpen/abort advanced it), so only the live
+            // rebootReconnectTimerId check keeps these silent.
+            vi.advanceTimersByTime(4000);
+            const failureDialogs = dialogStore.open.mock.calls.filter(([type]) => type === "InformationDialog");
+            expect(failureDialogs).toHaveLength(0);
+        } finally {
+            serial.connect.mockReset();
+            vi.useRealTimers();
+        }
+    });
+
     it("stops reconnect retries when Auto-Connect is turned off mid-reboot", () => {
         vi.useFakeTimers();
         try {
@@ -573,6 +745,75 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
             serial.connect.mockClear();
 
             vi.advanceTimersByTime(5000); // several retry ticks
+            expect(serial.connect).not.toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+// ---------------------------------------------------------------------------
+// scheduleRebootReconnect — the reconnect driver for reboots initiated OUTSIDE
+// serial_backend (CLI `save`/`exit` via useMspCliSession). The FC is already
+// rebooting, so it must NOT send MSP_SET_REBOOT, but it must still drive the
+// same flush -> drop-stale-link -> retry cycle as a BLE/manual Save & Reboot —
+// BLE and manual/TCP links never re-enumerate, so auto-connect alone would
+// never reconnect them.
+// ---------------------------------------------------------------------------
+describe("serial_backend scheduleRebootReconnect (externally-initiated reboot)", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        resetMocks();
+    });
+
+    it("drives the BLE disconnect/reconnect cycle without sending MSP_SET_REBOOT", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+
+            serial.disconnect.mockClear();
+            serial.connect.mockClear();
+            MSP.send_message.mockClear();
+
+            scheduleRebootReconnect();
+
+            // The CLI `save` already rebooted the FC — no reboot command may be sent.
+            expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+
+            // The reconnect window is held so selectActivePort keeps the BLE selection.
+            expect(getConnectionState().isReconnecting).toBe(true);
+
+            // After the flush delay the surviving BLE link is soft-reset (GATT session kept —
+            // re-establishing it is what yields deaf sessions on Linux/BlueZ)...
+            vi.advanceTimersByTime(1500);
+            expect(serial.disconnect).not.toHaveBeenCalled();
+
+            // ...and the retry loop re-handshakes over it, aimed at the same device.
+            vi.advanceTimersByTime(1000);
+            expect(serial.connect).toHaveBeenCalled();
+            expect(PortHandler.portPicker.selectedPort).toBe("bluetooth_x81jPGap0DdYcGTJyKZWyw==");
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("honors Auto-Connect off: drops the stale link, no reconnect attempts", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = false;
+            establishConnection();
+
+            serial.disconnect.mockClear();
+            serial.connect.mockClear();
+
+            scheduleRebootReconnect();
+            vi.advanceTimersByTime(1500);
+            expect(serial.disconnect).toHaveBeenCalled();
+
+            vi.advanceTimersByTime(10000);
             expect(serial.connect).not.toHaveBeenCalled();
         } finally {
             vi.useRealTimers();
