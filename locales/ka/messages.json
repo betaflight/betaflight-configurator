@@ -652,6 +652,12 @@
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">ვერ მოხერხდა<\/span>პორტის გახსნა"
     },
+    "connectionFailedTitle": {
+        "message": "კავშირი ჩავარდა"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">პორტთან<\/span>დაკავშირება ვერ მოხერხდა. შეამოწმეთ, რომ მოწყობილობა ხელმისაწვდომია და კავშირის პარამეტრები სწორია, შემდეგ სცადეთ ხელახლა."
+    },
     "serialPortClosedOk": {
         "message": "პორტი<span class=\"message-positive\">წარმატებით<\/span>დაიხურა"
     },
