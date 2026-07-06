@@ -347,9 +347,10 @@ class WebBluetooth extends EventTarget {
         this.bytesReceived = 0;
         this.bytesSent = 0;
 
-        // if we are already closing, don't do it again
+        // if we are already closing, don't do it again — the in-progress teardown owns
+        // the outcome; report success so Serial.disconnect() doesn't coerce to false.
         if (this.closeRequested) {
-            return;
+            return true;
         }
         // Mark closing now — before the gatt.disconnect() below — so the gattserverdisconnected
         // event it triggers is recognized by handleDisconnect as our own teardown, not an unplug.
@@ -393,12 +394,16 @@ class WebBluetooth extends EventTarget {
             this.connectionId = false;
             this.bitrate = 0;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            // Report success explicitly — WebSerial/TauriSerial/VirtualSerial all return
+            // true, and Serial.disconnect() coerces an undefined return to false.
+            return true;
         } catch (error) {
             console.error(error);
             console.error(
                 `${this.logHead} Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
             );
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            return false;
         } finally {
             if (this.openCanceled) {
                 this.openCanceled = false;

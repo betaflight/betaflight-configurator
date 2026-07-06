@@ -50,8 +50,6 @@ let rebootDialogCheckTimerId = false;
 // toggleLinkOpen. Kept as a local read-through helper so the call sites stay terse.
 const isConnected = () => getConnectionState().linkOpen;
 
-// True while an intentional disconnect (Disconnect button, or removed-device toggle)
-// is in flight. finishClose() owns the full teardown in that case; onClosed() uses this
 // The intentional-disconnect flag — telling an intentional disconnect apart
 // from an unexpected one (unplug / FC reboot / BLE drop) so we don't tear down
 // twice — now lives in the connection state (getConnectionState().markIntentionalDisconnect /
@@ -139,9 +137,7 @@ export function initializeSerialBackend() {
     // lock must still cancel the loop, stop timers and force-close the transport,
     // otherwise the FC is left holding a half-open port until a physical replug.
     window.addEventListener("pagehide", () => {
-        console.log(
-            `${logHead} Page unloading — shutting down connection connection-state and force-closing transport`,
-        );
+        console.log(`${logHead} Page unloading — shutting down connection state and force-closing transport`);
         getConnectionState().shutdown();
         stopRebootReconnect();
         closeRebootDialog();
@@ -960,7 +956,7 @@ function onClosed(result) {
     // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
     // "disconnect" and never "connect". Recover the Connect button and tell the user instead of
     // running the established-connection teardown.
-    if (GUI.connecting_to && !CONFIGURATOR.connectionValid && !intentionalDisconnect) {
+    if (GUI.connecting_to && !CONFIGURATOR.connectionValid && !getConnectionState().intentionalDisconnect) {
         abortConnection("connectionFailed");
         return;
     }

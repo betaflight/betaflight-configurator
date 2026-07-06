@@ -26,7 +26,8 @@ import { get as getConfig } from "../ConfigStorage";
 
 function readSerialAdapter(event) {
     // Flashing bytes are always MSP — feed MSP directly (no serial_backend dependency).
-    MSP.read(event.detail.buffer);
+    // The serial facade wraps every receive as { data, protocolType }, so read .data.
+    MSP.read(event.detail.data);
 }
 
 function onMSPConnectionError() {

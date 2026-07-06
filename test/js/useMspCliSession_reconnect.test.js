@@ -61,7 +61,7 @@ vi.mock("../../src/js/fc", () => ({
 
 import { scheduleReconnect, cancelScheduledReconnect } from "../../src/composables/useMspCliSession";
 import PortHandler from "../../src/js/port_handler";
-import { getConnectionState, __resetConnectionStateForTests } from "../../src/js/connection_state.js";
+import { getConnectionState, __resetConnectionStateForTests, State } from "../../src/js/connection_state.js";
 
 describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     beforeEach(() => {
@@ -127,5 +127,23 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         // ...and cancelling must leave it so selectActivePort's virtual/manual fallback resumes.
         cancelScheduledReconnect();
         expect(getConnectionState().isReconnecting).toBe(false);
+    });
+
+    it("a late cancel (after the timer fired) does NOT abort a live connect", () => {
+        PortHandler.portPicker.selectedPort = "serial_0";
+
+        scheduleReconnect();
+        expect(getConnectionState().state).toBe(State.RECONNECTING);
+
+        // The timer fires connectDisconnect(); the real connect flow then advances the phase
+        // (RECONNECTING -> CONNECTING -> HANDSHAKING). Simulate that transition here.
+        vi.advanceTimersByTime(500);
+        expect(connectDisconnect).toHaveBeenCalledTimes(1);
+        getConnectionState().setPhase(State.CONNECTING);
+
+        // A late cancel (e.g. leaving the Presets tab mid-handshake) must NOT force the live
+        // connect to IDLE — the connect flow owns the phase now and settles it itself.
+        cancelScheduledReconnect();
+        expect(getConnectionState().state).toBe(State.CONNECTING);
     });
 });

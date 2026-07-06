@@ -247,6 +247,22 @@ describe("WebBluetooth openCanceled abort contract", () => {
         // its failed-open teardown rather than a silent no-event regression slipping by.
         expect(results).toContain(false);
     });
+
+    it("disconnect() on a clean close resolves true (not coerced to false like the other transports)", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+
+        const events = [];
+        bt.addEventListener("disconnect", (e) => events.push(e.detail));
+
+        // Normal teardown path (no in-flight open, nothing already closing). Serial.disconnect()
+        // does `(await protocol.disconnect()) ?? false`, so an undefined return would report a
+        // successful BLE disconnect as a failure — this pins the explicit true.
+        const result = await bt.disconnect();
+
+        expect(result).toBe(true);
+        expect(events).toEqual([true]);
+    });
 });
 
 describe("(c) selectProtocol routes the stable bluetooth path to the BLE protocol", () => {

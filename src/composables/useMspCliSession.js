@@ -5,7 +5,7 @@ import GUI from "../js/gui";
 import FC from "../js/fc";
 import { connectDisconnect } from "../js/serial_backend";
 import PortHandler from "../js/port_handler";
-import { getConnectionState } from "../js/connection_state";
+import { getConnectionState, State } from "../js/connection_state";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const SAVE_COMMAND_TIMEOUT_MS = 5000;
@@ -73,7 +73,7 @@ export function scheduleReconnect() {
     // fallback while the FC is briefly off the port list. The device re-enumerates
     // with the same stable id, so the existing selection stays the right target.
     const target = PortHandler.portPicker.selectedPort;
-    if (target && target !== "noselection" && target !== "virtual") {
+    if (target && target !== "noselection" && target !== "virtual" && target !== "manual") {
         getConnectionState().reconnectStarted();
     }
 
@@ -88,10 +88,12 @@ export function scheduleReconnect() {
 }
 
 export function cancelScheduledReconnect() {
-    GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
-    // End the reconnect-in-progress window so selectActivePort() resumes its normal
-    // (incl. virtual/manual) fallback.
-    if (getConnectionState().isReconnecting) {
+    const removed = GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
+    // Only conclude the window this function actually cancelled: the timer was still
+    // pending (removed) AND we are still in the RECONNECTING wait it opened. Once the
+    // timer has fired, connectDisconnect() owns the phase (CONNECTING/HANDSHAKING) and
+    // its own concludeReboot settles it — forcing IDLE here would abort a live connect.
+    if (removed && getConnectionState().state === State.RECONNECTING) {
         getConnectionState().concludeReboot(false);
     }
 }
