@@ -106,7 +106,8 @@ const RELEASE_WEBAPP_MIN = { major: 2026, minor: 6 };
 // Parse a CalVer/SemVer tag ("2026.6.0", "2026.6.0-RC1", "v2026.6.0") into its
 // numeric parts plus an optional pre-release string.
 function parseVersion(tag) {
-    const match = /(\d+)\.(\d+)\.(\d+)(?:-(.+))?/.exec(tag || "");
+    // Start-anchored with a bounded pre-release class to keep matching linear.
+    const match = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?/.exec(tag || "");
     if (!match) {
         return null;
     }
@@ -121,13 +122,19 @@ function comparePre(a, b) {
     for (let i = 0; i < Math.max(ca.length, cb.length); i++) {
         const x = ca[i];
         const y = cb[i];
-        if (x === undefined) return -1;
-        if (y === undefined) return 1;
+        if (x === undefined) {
+            return -1;
+        }
+        if (y === undefined) {
+            return 1;
+        }
         const xn = /^\d+$/.test(x);
         const yn = /^\d+$/.test(y);
         if (xn && yn) {
             const d = Number(x) - Number(y);
-            if (d !== 0) return d;
+            if (d !== 0) {
+                return d;
+            }
         } else if (x !== y) {
             return x < y ? -1 : 1;
         }
@@ -139,11 +146,19 @@ function comparePre(a, b) {
 // pre-release of the same major.minor.patch (SemVer precedence).
 function compareVersions(a, b) {
     for (const key of ["major", "minor", "patch"]) {
-        if (a[key] !== b[key]) return a[key] - b[key];
+        if (a[key] !== b[key]) {
+            return a[key] - b[key];
+        }
     }
-    if (!a.pre && b.pre) return 1;
-    if (a.pre && !b.pre) return -1;
-    if (!a.pre && !b.pre) return 0;
+    if (!a.pre && b.pre) {
+        return 1;
+    }
+    if (a.pre && !b.pre) {
+        return -1;
+    }
+    if (!a.pre && !b.pre) {
+        return 0;
+    }
     return comparePre(a.pre, b.pre);
 }
 
