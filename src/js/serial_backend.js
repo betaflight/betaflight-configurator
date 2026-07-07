@@ -1348,11 +1348,6 @@ function rebootReconnect() {
         // Entering the retry phase: REBOOTING -> RECONNECTING in the connection state read-model.
         getConnectionState().reconnectStarted();
 
-        // DIAGNOSTIC: confirm the retry loop armed and with what window/selection.
-        console.log(
-            `${logHead} Reboot reconnect loop armed — windowOpen: ${getConnectionState().isRebootWindowOpen}, windowMs: ${getConnectionState().rebootWindowMs}, autoConnect: ${PortHandler.portPicker.autoConnect}, selectedPort: ${PortHandler.portPicker.selectedPort}`,
-        );
-
         // Retry connecting until the rebooted FC answers (connectionValid), the reboot window
         // closes, or Auto-Connect is turned off mid-window. Early attempts may connect to a
         // still-booting FC and get dropped; the device stays listed (we never remove it on
@@ -1365,10 +1360,6 @@ function rebootReconnect() {
             // not-expired, so a live loop must treat "no longer open" as a stop too.
             const state = getConnectionState();
             const timedOut = state.rebootWindowExpired || !state.isRebootWindowOpen;
-            // DIAGNOSTIC: show why each tick does/doesn't reconnect.
-            console.log(
-                `${logHead} Reboot retry tick — timedOut: ${timedOut} (windowOpen: ${state.isRebootWindowOpen}, expired: ${state.rebootWindowExpired}), linkOpen: ${isConnected()}, connecting_to: ${GUI.connecting_to}, connectionValid: ${CONFIGURATOR.connectionValid}, autoConnect: ${PortHandler.portPicker.autoConnect}`,
-            );
             if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
