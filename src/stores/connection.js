@@ -1,27 +1,23 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import GUI from "../js/gui";
 import CONFIGURATOR from "../js/data_storage";
 import PortHandler from "../js/port_handler";
-import MSP from "../js/msp";
+import { getConnectionState } from "../js/connection_state";
+import { getLockManager } from "../js/lock_manager";
 
 export const useConnectionStore = defineStore("connection", () => {
-    // Proxy state directly to legacy reactive objects
-    // This ensures full bi-directional synchronization during migration
-
-    const connectingTo = computed({
-        get: () => GUI.connecting_to,
-        set: (val) => (GUI.connecting_to = val),
-    });
-
-    const connectedTo = computed({
-        get: () => GUI.connected_to,
-        set: (val) => (GUI.connected_to = val),
-    });
+    // The store OWNS the connection-target state (was GUI.connecting_to /
+    // GUI.connected_to). gui.js now delegates those fields here, so the store is
+    // the canonical home and the store no longer imports gui.js (which would
+    // cycle: gui -> store -> ... -> msp -> gui). connect_lock delegates to the
+    // reactive LockManager (single source of truth); clearMspQueue reaches msp via
+    // dynamic import to stay cycle-free.
+    const connectingTo = ref(false);
+    const connectedTo = ref(false);
 
     const connectLock = computed({
-        get: () => GUI.connect_lock,
-        set: (val) => (GUI.connect_lock = val),
+        get: () => getLockManager().locked,
+        set: (val) => (getLockManager().locked = val),
     });
 
     // CONFIGURATOR is already reactive (wrapped in reactive() in data_storage.js)
@@ -47,6 +43,14 @@ export const useConnectionStore = defineStore("connection", () => {
 
     const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
 
+    // Thin reactive read-model of the connection status holder. Its phase lives in
+    // Vue refs, so a computed that reads the getters tracks them directly — no
+    // subscribe/snapshot bridge — giving Vue components one canonical source for
+    // lifecycle phase / readiness instead of the legacy CONFIGURATOR/GUI globals.
+    const connection = getConnectionState();
+    const connectionPhase = computed(() => connection.state);
+    const connectionReady = computed(() => connection.isReady);
+
     // Live data refresh control
     const liveDataPaused = ref(false);
 
@@ -59,11 +63,10 @@ export const useConnectionStore = defineStore("connection", () => {
     }
 
     function clearMspQueue() {
-        MSP.callbacks_cleanup();
-    }
-
-    function reboot() {
-        GUI.reinitializeConnection();
+        // Dynamic import keeps the store free of a static msp import (msp.js imports
+        // gui.js, which now imports this store — a static import would cycle).
+        // Returned so callers can await the drain before starting the next handshake.
+        return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
     }
 
     return {
@@ -76,9 +79,11 @@ export const useConnectionStore = defineStore("connection", () => {
         cliValid,
         clearMspQueue,
         selectedPort,
+        // Connection-state read-model (read-only)
+        connectionPhase,
+        connectionReady,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,
-        reboot,
     };
 });

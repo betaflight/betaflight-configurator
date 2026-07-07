@@ -8,6 +8,7 @@ import read_hex_file from "../js/workers/hex_parser";
 import STM32 from "../js/protocols/webstm32";
 import ESP32 from "../js/protocols/esp32";
 import PortHandler from "../js/port_handler";
+import { getConnectionState } from "../js/connection_state";
 
 /**
  * A composable for managing firmware flashing operations.
@@ -497,7 +498,10 @@ export function useFirmwareFlashing(params = {}) {
         if (firmwareType === "BIN") {
             // Hold the connect lock for the duration of the long-running flash so
             // nothing else grabs the port, and always finalise the UI in finally.
+            // Also stand the MSP reconnect down and enter FLASHING so the connection state
+            // reflects that the flasher owns the port (hard-blocks connect/reboot).
             GUI.connect_lock = true;
+            getConnectionState().beginDeviceReplacement();
             try {
                 const flashed = await flashEspFirmware({ filename });
                 if (!flashed) {
@@ -506,6 +510,7 @@ export function useFirmwareFlashing(params = {}) {
                 report("bin-complete", { flashed });
             } finally {
                 GUI.connect_lock = false;
+                getConnectionState().endFlashing();
                 resumeSponsorInterval?.();
                 enableFlashButton?.(true);
                 enableLoadRemoteFileButton?.(true);

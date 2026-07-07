@@ -285,6 +285,7 @@ class TauriSerial extends EventTarget {
                 bitrate: this.bitrate,
                 vendorId: activePort?.vendorId,
                 productId: activePort?.productId,
+                serialNumber: activePort?.serialNumber,
             };
 
             this.isNeedBatchWrite = this.checkIsNeedBatchWrite();
@@ -378,7 +379,8 @@ class TauriSerial extends EventTarget {
                     });
 
                     if (result && result.length > 0) {
-                        this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(result) }));
+                        const bytes = new Uint8Array(result);
+                        this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
                     }
 
                     await new Promise((resolve) => setTimeout(resolve, 5));

@@ -215,6 +215,7 @@ import { usePresetsStore } from "@/stores/presets";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
     cancelScheduledReconnect,
+    isConnectionClosedError,
     isMspCliSupported,
     saveAndReconnect,
     scheduleReconnect,
@@ -497,7 +498,10 @@ async function handleCliErrorsDialogClose() {
         try {
             await cliSession.send("exit");
         } catch (error) {
-            console.error("Failed to send exit:", error);
+            // `exit` reboots the FC; the port closing before it replies is expected, not a failure.
+            if (!isConnectionClosedError(error)) {
+                console.error("Failed to send exit:", error);
+            }
         } finally {
             scheduleReconnect();
         }
