@@ -55,6 +55,8 @@ vi.mock("../../src/js/serial_backend", () => ({
     connectDisconnect,
     disconnect,
     scheduleRebootReconnect,
+    // Mirror the real predicate — scheduleReconnect branches on it.
+    isDrivenRebootTarget: (port) => typeof port === "string" && (port.startsWith("bluetooth") || port === "manual"),
 }));
 
 // Keep the rest of the import graph light — useMspCliSession also imports MSP and FC.

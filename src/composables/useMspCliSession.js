@@ -3,7 +3,7 @@ import semver from "semver";
 import MSP from "../js/msp";
 import GUI from "../js/gui";
 import FC from "../js/fc";
-import { disconnect, scheduleRebootReconnect } from "../js/serial_backend";
+import { disconnect, isDrivenRebootTarget, scheduleRebootReconnect } from "../js/serial_backend";
 import PortHandler from "../js/port_handler";
 import { getConnectionState, State } from "../js/connection_state";
 
@@ -78,7 +78,7 @@ export function scheduleReconnect() {
     // delay -> drop the stale link without an MSP round-trip -> retry until the FC answers),
     // the same machinery a BLE/manual Save & Reboot uses. It reads Auto-Connect live, so with
     // it off the cycle still ends in a clean disconnect.
-    if (target?.startsWith("bluetooth") || target === "manual") {
+    if (isDrivenRebootTarget(target)) {
         scheduleRebootReconnect();
         return;
     }

@@ -74,18 +74,30 @@ const REBOOT_RECONNECT_RETRY_MS = 1000;
 // holding the dead link for the normal 10s handshake timeout would consume the whole
 // reboot window (the retry loop skips ticks while a connection is open).
 const REBOOT_HANDSHAKE_STALL_MS = 3000;
-let rebootTimestamp = 0;
 // The BLE link was kept open across the current reboot (soft reset — see
 // softResetForReboot). While true, a stalled handshake keeps riding the same GATT
 // session instead of dropping it: the session is known-good (it carried the save and
 // the reboot ack), the FC just isn't answering yet. Cleared on any real transport close.
 let rebootLinkKept = false;
+// Bytes arrived on the link since the current handshake began (reset in onOpen,
+// stamped by read_serial_adapter). The reboot stall watchdog uses it as its progress
+// signal: a link that produced ANY traffic in the last stall slice is alive and just
+// slow — only a silent (deaf) link is dropped for the next retry.
+let rebootHandshakeSawTraffic = false;
 
-// The reconnect window for the current reboot: driven (BLE/manual) reboots get the longer
-// window, serial re-enumeration keeps the original one.
+// Transports that never re-enumerate after an FC reboot — no removedDevice/addedDevice
+// cycle fires — so their reconnect must be DRIVEN by the retry loop instead of left to
+// auto-connect on re-enumeration.
+export function isDrivenRebootTarget(port) {
+    return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual");
+}
+
+// The reconnect window duration for a reboot of the currently-selected target: driven
+// (BLE/manual) reboots get the longer window, serial re-enumeration keeps the original.
+// Evaluated ONCE per reboot (passed to requestReboot); loop, dialog and dialog
+// suppression all read the same snapshot from the connection state.
 function rebootConnectWindowMs() {
-    const port = PortHandler.portPicker.selectedPort;
-    return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual")
+    return isDrivenRebootTarget(PortHandler.portPicker.selectedPort)
         ? REBOOT_CONNECT_MAX_TIME_DRIVEN_MS
         : REBOOT_CONNECT_MAX_TIME_MS;
 }
@@ -596,6 +608,16 @@ function setConnectionTimeout() {
             // Re-check the loop live: it may have ended (or been cancelled) while we
             // stalled, in which case the normal failure path below owns the teardown.
             if (rebootReconnectTimerId !== false) {
+                // Progress-based deadline: any bytes in the last stall slice mean the FC
+                // is answering and the chain is just slow (BLE bridges chunk MSP into
+                // small GATT frames) — grant another slice instead of restarting the
+                // whole handshake from scratch. Only a SILENT link is dropped; the
+                // reboot window still bounds the total time.
+                if (rebootHandshakeSawTraffic) {
+                    rebootHandshakeSawTraffic = false;
+                    setConnectionTimeout();
+                    return;
+                }
                 console.log(`${logHead} Handshake stalled during reboot reconnect — dropping link to retry`);
                 dropStalledRebootConnection();
                 return;
@@ -651,12 +673,12 @@ function abortConnection(messageKey) {
     // (the connection typically succeeds on the very next attempt — the "sometimes a
     // Connection failed dialog appears even though it connected" report). Gate on auto-connect:
     // without it nothing retries, so a failure there is real and must still surface. Capture
-    // before setPhase(FAILED) overwrites the reconnect phase. A live retry loop
-    // (rebootReconnectTimerId) is checked too: after the loop's FIRST failed attempt the
-    // phase has already left REBOOTING/RECONNECTING (onOpen/abort advanced it), so the
-    // phase alone would let attempt 2+'s failures pop the dialog mid-reboot.
+    // before setPhase(FAILED) overwrites the reconnect phase. The open reboot window is
+    // checked too: after the loop's FIRST failed attempt the phase has already left
+    // REBOOTING/RECONNECTING (onOpen/abort advanced it), so the phase alone would let
+    // attempt 2+'s failures pop the dialog mid-reboot.
     const duringRebootReconnect =
-        (getConnectionState().isRebootReconnecting || rebootReconnectTimerId !== false) &&
+        (getConnectionState().isRebootReconnecting || getConnectionState().isRebootWindowOpen) &&
         PortHandler.portPicker.autoConnect;
 
     // Default message reflects how far the attempt got: a port that already opened but failed
@@ -722,6 +744,7 @@ function showVersionMismatchAndCli(message) {
  * when serial events are handled.
  */
 function read_serial_adapter(event) {
+    rebootHandshakeSawTraffic = true;
     read_serial(event.detail.data);
 }
 
@@ -751,6 +774,8 @@ function onOpen(openInfo) {
         serial.removeEventListener("receive", read_serial_adapter);
         serial.addEventListener("receive", read_serial_adapter);
 
+        // Fresh handshake, fresh progress signal for the stall watchdog.
+        rebootHandshakeSawTraffic = false;
         setConnectionTimeout();
         FC.resetState();
         mspHelper = new MspHelper();
@@ -1196,14 +1221,10 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(suppressDialog = false) {
-    // Set the reboot timestamp to the current time
-    rebootTimestamp = Date.now();
-
-    // Record reboot intent in the connection state (single owner of lifecycle state).
-    // Observability + soft reentrancy signal during the migration; the actual
-    // overlap guard remains stopRebootReconnect() until the connection state becomes the
-    // authoritative gate. Virtual toggles settle immediately below.
-    getConnectionState().requestReboot();
+    // Open the reboot window in the connection state (single owner of the reboot
+    // lifecycle: start time, duration, phase). Virtual toggles settle immediately below.
+    getConnectionState().requestReboot(rebootConnectWindowMs());
+    const rebootTimestamp = getConnectionState().rebootWindowStartedAt;
 
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
@@ -1229,7 +1250,7 @@ export function reinitializeConnection(suppressDialog = false) {
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
+    if (isDrivenRebootTarget(currentPort)) {
         // BLE/manual links usually survive the FC reboot — the radio stays connected while
         // only the MCU restarts — so no disconnect event fires and the configurator would be
         // left holding a stale connection. Drive it ourselves: show the reboot dialog, drop
@@ -1269,8 +1290,7 @@ export function reinitializeConnection(suppressDialog = false) {
 // external ever triggers the reconnect. Drives the same flush -> drop-stale-link -> retry
 // cycle as a BLE/manual Save & Reboot; Auto-Connect is honored inside rebootReconnect().
 export function scheduleRebootReconnect() {
-    rebootTimestamp = Date.now();
-    getConnectionState().requestReboot();
+    getConnectionState().requestReboot(rebootConnectWindowMs());
     rebootReconnect();
 }
 
@@ -1321,7 +1341,12 @@ function rebootReconnect() {
         // disconnect), so a later attempt succeeds once the FC is stable. connectDisconnect here
         // takes the connect branch (isConnected is false).
         rebootReconnectTimerId = setInterval(() => {
-            const timedOut = Date.now() - rebootTimestamp > rebootConnectWindowMs();
+            // Stop when the window has run out OR another owner already concluded it:
+            // the reboot dialog's check timer and this loop share one window, and
+            // whoever reaches the deadline first nulls it — a closed window reads as
+            // not-expired, so a live loop must treat "no longer open" as a stop too.
+            const state = getConnectionState();
+            const timedOut = state.rebootWindowExpired || !state.isRebootWindowOpen;
             if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
@@ -1369,9 +1394,11 @@ function showRebootDialog() {
         progress: 0,
     });
 
-    // The dialog tracks the same window as the reconnect itself (driven BLE/manual
-    // reboots get the longer one), so it doesn't declare a timeout while retries run.
-    const windowMs = rebootConnectWindowMs();
+    // Snapshot the window opened by requestReboot(): the dialog tracks the same start
+    // and duration as the retry loop, and stays consistent even after concludeReboot
+    // clears the live window.
+    const windowStartedAt = getConnectionState().rebootWindowStartedAt;
+    const windowMs = getConnectionState().rebootWindowMs;
 
     // Update progress during reboot
     let progress = 0;
@@ -1387,7 +1414,7 @@ function showRebootDialog() {
 
     // Check for successful connection every 100ms with a timeout
     rebootDialogCheckTimerId = setInterval(() => {
-        const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > windowMs;
+        const connectionCheckTimeoutReached = Date.now() - windowStartedAt > windowMs;
         const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
 
         if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {

@@ -733,8 +733,46 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
             vi.advanceTimersByTime(3000);
             expect(serial.disconnect).toHaveBeenCalled();
         } finally {
+            // Drain the reboot loop to conclusion so its module-level state
+            // (rebootReconnectTimerId, rebootLinkKept) doesn't leak into later tests.
+            vi.advanceTimersByTime(30000);
             GUI.timeout_add.mockReset();
             serial.connected = false;
+            vi.useRealTimers();
+        }
+    });
+
+    it("a slow-but-progressing handshake is granted another stall slice; a silent one is dropped", () => {
+        vi.useFakeTimers();
+        try {
+            GUI.timeout_add.mockImplementation((_name, code, timeout) => setTimeout(code, timeout));
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush -> soft reset
+
+            serial.disconnect.mockClear();
+            vi.advanceTimersByTime(1000); // retry tick -> attempt
+            serialHandlers.connect({ detail: true }); // opens; stall watchdog armed (3s)
+
+            // Bytes arrive during the first slice: the FC is answering, just slowly
+            // (e.g. a BLE bridge chunking MSP into small GATT frames).
+            serialHandlers.receive({ detail: { data: new Uint8Array([36]) } });
+
+            // The progressing handshake must NOT be dropped at the 3s deadline...
+            vi.advanceTimersByTime(3000);
+            expect(serial.disconnect).not.toHaveBeenCalled();
+
+            // ...but a slice with NO traffic is a genuine stall — dropped for retry.
+            vi.advanceTimersByTime(3000);
+            expect(serial.disconnect).toHaveBeenCalled();
+        } finally {
+            // Drain the reboot loop to conclusion so its module-level state
+            // (rebootReconnectTimerId, rebootLinkKept) doesn't leak into later tests.
+            vi.advanceTimersByTime(30000);
+            GUI.timeout_add.mockReset();
             vi.useRealTimers();
         }
     });
