@@ -2026,6 +2026,9 @@
     "configurationSpiRX": {
         "message": "SPI Bus Receiver Provider"
     },
+    "configurationSaved": {
+        "message": "Configuration saved"
+    },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
