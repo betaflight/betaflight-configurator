@@ -317,6 +317,11 @@ function softResetForReboot() {
     console.log(`${logHead} Keeping BLE link through reboot — app-level reset only (flush timeout)`);
     prepareDisconnect();
     resetAppConnectionState();
+    // prepareDisconnect() armed intentionalDisconnect to suppress teardown for a close it
+    // triggers — but this path keeps the link and triggers no close, so nothing consumes the
+    // flag. Clear it, or a later genuine drop's onClosed reads it stale and skips
+    // finishUnexpectedDisconnect().
+    getConnectionState().clearIntentionalDisconnect();
     rebootLinkKept = true;
 }
 

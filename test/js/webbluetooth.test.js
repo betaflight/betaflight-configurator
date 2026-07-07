@@ -293,6 +293,11 @@ describe("WebBluetooth notification teardown (deaf-session prevention)", () => {
         expect(characteristic.stopNotifications).toHaveBeenCalledTimes(1);
         expect(bt.readCharacteristic).toBe(false); // teardown completed
         expect(device.gatt.disconnect).toHaveBeenCalled();
+        // Order is the regression: notifications must stop BEFORE the link drops, or the
+        // next connection's startNotifications() can no-op on BlueZ (deaf session).
+        expect(characteristic.stopNotifications.mock.invocationCallOrder[0]).toBeLessThan(
+            device.gatt.disconnect.mock.invocationCallOrder[0],
+        );
     });
 });
 

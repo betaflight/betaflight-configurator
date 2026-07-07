@@ -215,6 +215,7 @@ class WebBluetooth extends EventTarget {
 
         this.device.addEventListener("gattserverdisconnected", this.handleDisconnect);
 
+        let setupComplete = false;
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);
 
@@ -225,6 +226,7 @@ class WebBluetooth extends EventTarget {
             await this.getServices();
             await this.getCharacteristics();
             await this.startNotifications();
+            setupComplete = true;
         } catch (error) {
             // Also log to the console — gui_log only reaches the in-app log panel, which
             // makes a failed services/characteristics/notifications setup invisible in
@@ -233,12 +235,13 @@ class WebBluetooth extends EventTarget {
             gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
         }
 
-        // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info.
-        // Optional-chained: an unsolicited disconnect during the setup above runs the full
-        // teardown (a kept session's connected=true bypasses the cancel branch) and nulls
-        // this.device — the attempt must then complete as a signaled failed open
-        // (connect:false below), not die on a TypeError that serial.connect swallows.
-        const connectionInfo = this.device?.gatt?.connected;
+        // Require setup to have COMPLETED, not just gatt.connected. If getServices/
+        // getCharacteristics/startNotifications threw, gatt can still report connected
+        // while the session has no usable characteristics — treating that as success
+        // dispatches connect:true for a link that would only ever time out on MSP.
+        // Optional-chained: an unsolicited disconnect during setup nulls this.device, so
+        // the attempt must complete as a signaled failed open, not a swallowed TypeError.
+        const connectionInfo = setupComplete && this.device?.gatt?.connected;
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;

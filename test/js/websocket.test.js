@@ -19,6 +19,9 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
 
     afterEach(() => {
         vi.unstubAllGlobals();
+        // unstubAllGlobals doesn't restore vi.spyOn mocks (e.g. console.error); if a spec
+        // aborts before its own mockRestore, the spy would leak into later tests.
+        vi.restoreAllMocks();
     });
 
     it("signals a failed open (connect:false) when the WebSocket constructor throws (e.g. raw tcp://)", async () => {
