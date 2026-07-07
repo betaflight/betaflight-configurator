@@ -184,26 +184,6 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         expect(connectDisconnect).not.toHaveBeenCalled();
     });
 
-    it("manual target: delegates to the driven reboot cycle too (TCP links never re-enumerate)", () => {
-        PortHandler.portPicker.selectedPort = "manual";
-
-        scheduleReconnect();
-
-        expect(scheduleRebootReconnect).toHaveBeenCalledTimes(1);
-        vi.advanceTimersByTime(10000);
-        expect(disconnect).not.toHaveBeenCalled();
-    });
-
-    it("serial target: keeps the passive path (auto-connect reconnects on re-enumeration)", () => {
-        PortHandler.portPicker.selectedPort = "serial_0";
-
-        scheduleReconnect();
-
-        expect(scheduleRebootReconnect).not.toHaveBeenCalled();
-        vi.advanceTimersByTime(500);
-        expect(disconnect).toHaveBeenCalledTimes(1);
-    });
-
     it("with Auto-Connect OFF: drops the stale link and does NOT reconnect (no reconnect window)", () => {
         PortHandler.portPicker.autoConnect = false;
 

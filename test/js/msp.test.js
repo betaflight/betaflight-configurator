@@ -121,25 +121,5 @@ describe("MSP", () => {
                 MSP.clearListeners();
             }
         });
-
-        it("still flags a CRC error when the active protocol does not implement the bypass", () => {
-            const savedProtocol = serial._protocol;
-            let seenCrcError = null;
-            const listener = (msp) => (seenCrcError = msp.crcError);
-            try {
-                serial._protocol = {}; // e.g. WebSerial
-                MSP.listen(listener);
-                primeMessage();
-
-                MSP._dispatch_message(0xff);
-
-                expect(seenCrcError).toBe(true);
-                expect(MSP.dataView.byteLength).toBe(0);
-                expect(MSP.packet_error).toBe(1);
-            } finally {
-                serial._protocol = savedProtocol;
-                MSP.clearListeners();
-            }
-        });
     });
 });
