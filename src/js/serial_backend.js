@@ -281,7 +281,11 @@ function releaseKeptRebootLink() {
         return;
     }
     rebootLinkKept = false;
-    if (serial.connected && !isConnected()) {
+    // Skip while a connect attempt is in flight (connecting_to set, linkOpen not yet):
+    // disconnecting under a live WebBluetooth.connect() would tear the device out from
+    // under the coroutine. The attempt's own watchdog chain finishes the cleanup —
+    // its handshake either completes or fails into the normal teardown.
+    if (serial.connected && !isConnected() && !GUI.connecting_to) {
         // Already app-level disconnected — skip the redundant unexpected-disconnect teardown.
         getConnectionState().markIntentionalDisconnect();
         serial.disconnect();
@@ -1328,6 +1332,15 @@ function rebootReconnect() {
                 return;
             }
             if (!isConnected() && !GUI.connecting_to) {
+                // Re-derive the kept-link flag from protocol truth before reconnecting.
+                // A real transport close normally clears it via onClosed, but between
+                // attempts serial_backend's disconnect listener is detached
+                // (resetConnection), so a drop in that gap goes unheard — and a session
+                // re-established after it must NOT be soft-ridden as "known-good".
+                if (rebootLinkKept && !serial.connected) {
+                    rebootLinkKept = false;
+                }
+
                 // Drain any leftover MSP state from the reboot command (queued resends and
                 // their callbacks) before the fresh handshake, so stale reboot-command
                 // traffic can't collide with the new connection's request chain.

@@ -703,6 +703,67 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
+    it("re-derives the kept-link flag at tick time: an unheard transport drop is not soft-ridden", () => {
+        vi.useFakeTimers();
+        try {
+            GUI.timeout_add.mockImplementation((_name, code, timeout) => setTimeout(code, timeout));
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+            serial.connected = true;
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // flush -> soft reset (link kept)
+
+            // The kept link drops while serial_backend's disconnect listener is detached
+            // (between attempts): nobody hears it, but the protocol truth flips.
+            serial.connected = false;
+
+            serial.connect.mockClear();
+            serial.disconnect.mockClear();
+            vi.advanceTimersByTime(1000); // tick re-derives the flag, then really reconnects
+            expect(serial.connect).toHaveBeenCalledTimes(1);
+
+            // The RE-ESTABLISHED session opens but stays MSP-silent (deaf).
+            serial.connected = true;
+            serialHandlers.connect({ detail: true });
+
+            // The stall must HARD-drop it — soft-riding a re-established session would
+            // burn the rest of the window on a deaf link.
+            vi.advanceTimersByTime(3000);
+            expect(serial.disconnect).toHaveBeenCalled();
+        } finally {
+            GUI.timeout_add.mockReset();
+            serial.connected = false;
+            vi.useRealTimers();
+        }
+    });
+
+    it("window expiry leaves an in-flight attempt alone (no disconnect under a live connect)", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+            serial.connected = true;
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500); // soft reset (link kept)
+
+            // The first tick starts an attempt that never resolves: serial.connect is a
+            // no-op mock, so GUI.connecting_to stays set and later ticks skip.
+            serial.disconnect.mockClear();
+            vi.advanceTimersByTime(25000); // past the 20s window
+
+            // releaseKeptRebootLink must not tear the device out from under the live
+            // connect coroutine; the attempt's own watchdogs own the cleanup.
+            expect(serial.disconnect).not.toHaveBeenCalled();
+        } finally {
+            serial.connected = false;
+            vi.useRealTimers();
+        }
+    });
+
     it("drops a kept BLE link for real when the reboot window expires without reconnecting", () => {
         vi.useFakeTimers();
         try {

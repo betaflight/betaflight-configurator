@@ -29,6 +29,9 @@ class WebBluetooth extends EventTarget {
 
         this.devices = [];
         this.device = null;
+        // Resolved (never-rejecting) promise of an in-flight disconnect teardown;
+        // connect() awaits it so open and close can never interleave.
+        this._teardown = null;
 
         this.logHead = "[BLUETOOTH]";
 
@@ -194,6 +197,15 @@ class WebBluetooth extends EventTarget {
     }
 
     async connect(path, options) {
+        // Serialize behind an in-flight teardown: doCleanup awaits stopNotifications, so
+        // disconnect() is genuinely async — a connect that started mid-teardown would
+        // reset closeRequested under it and then have its device/characteristics torn
+        // down by the resumed cleanup. The teardown promise never rejects.
+        if (this._teardown) {
+            await this._teardown;
+            this._teardown = null;
+        }
+
         this.openRequested = true;
         this.closeRequested = false;
 
@@ -221,8 +233,12 @@ class WebBluetooth extends EventTarget {
             gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
         }
 
-        // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info
-        const connectionInfo = this.device.gatt.connected;
+        // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info.
+        // Optional-chained: an unsolicited disconnect during the setup above runs the full
+        // teardown (a kept session's connected=true bypasses the cancel branch) and nulls
+        // this.device — the attempt must then complete as a signaled failed open
+        // (connect:false below), not die on a TypeError that serial.connect swallows.
+        const connectionInfo = this.device?.gatt?.connected;
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
@@ -370,6 +386,12 @@ class WebBluetooth extends EventTarget {
         // event it triggers is recognized by handleDisconnect as our own teardown, not an unplug.
         this.closeRequested = true;
 
+        // Publish the teardown so connect() can serialize behind it.
+        this._teardown = this._performTeardown();
+        return this._teardown;
+    }
+
+    async _performTeardown() {
         const doCleanup = async () => {
             this.removeEventListener("receive", this.handleReceiveBytes);
 

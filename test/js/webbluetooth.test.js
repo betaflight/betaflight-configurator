@@ -332,6 +332,89 @@ describe("WebBluetooth notification teardown (deaf-session prevention)", () => {
     });
 });
 
+describe("WebBluetooth teardown/connect interleaving", () => {
+    it("completes as a signaled failed open when an unsolicited teardown nulls the device mid-connect", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const device = makeFakeDevice("dev-race");
+        bt.devices = [bt.createPort(device)];
+
+        // Kept-session shape: connected=true means disconnect() takes the FULL teardown
+        // branch (the in-flight cancel guard requires !connected).
+        bt.connected = true;
+
+        const results = [];
+        bt.addEventListener("connect", (e) => results.push(e.detail));
+
+        // The adapter drops the link while connect() is inside its setup await; the
+        // resulting teardown nulls bt.device under the coroutine.
+        bt.gattConnect = vi.fn(async () => {
+            await bt.disconnect();
+        });
+        bt.getServices = vi.fn(async () => {});
+        bt.getCharacteristics = vi.fn(async () => {});
+        bt.startNotifications = vi.fn(async () => {});
+
+        // Must not throw — and must signal the failure so the retry loop moves on.
+        await bt.connect(bt.devices[0].path, { baudRate: 115200 });
+
+        expect(bt.device).toBe(null);
+        expect(results).toContain(false);
+        expect(bt.connected).toBe(false);
+    });
+
+    it("connect() waits for an in-flight teardown before opening (no interleave across stopNotifications)", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        // Let the constructor's async loadDevices() settle before seeding — connect()
+        // now yields (awaiting the teardown) before its device lookup, so the
+        // constructor's rebuild would otherwise wipe the seeded list mid-test.
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        const device = makeFakeDevice("dev-serialize");
+        bt.devices = [bt.createPort(device)];
+
+        // A live session whose teardown will suspend at stopNotifications.
+        let releaseTeardown;
+        bt.device = device;
+        bt.connected = true;
+        bt.readCharacteristic = {
+            removeEventListener: vi.fn(),
+            stopNotifications: () =>
+                new Promise((resolve) => {
+                    releaseTeardown = resolve;
+                }),
+        };
+
+        const order = [];
+        // The 'disconnect' event fires synchronously inside the teardown, strictly
+        // before the awaited teardown promise settles — unlike disconnect()'s outer
+        // async-wrapper promise, which resolves microtasks later than connect()'s
+        // await on the inner promise.
+        bt.addEventListener("disconnect", () => order.push("teardown-done"));
+        bt.disconnect(); // suspends inside doCleanup at stopNotifications
+
+        bt.gattConnect = vi.fn(async () => {
+            order.push("gatt-connect");
+        });
+        bt.getServices = vi.fn(async () => {});
+        bt.getCharacteristics = vi.fn(async () => {});
+        bt.startNotifications = vi.fn(async () => {});
+
+        const connecting = bt.connect(bt.devices[0].path, { baudRate: 115200 });
+
+        // Drain microtasks: the new connect must be parked behind the teardown.
+        await Promise.resolve();
+        await Promise.resolve();
+        expect(order).not.toContain("gatt-connect");
+
+        releaseTeardown();
+        await connecting;
+
+        expect(order.indexOf("teardown-done")).toBeGreaterThanOrEqual(0);
+        expect(order.indexOf("teardown-done")).toBeLessThan(order.indexOf("gatt-connect"));
+    });
+});
+
 describe("WebBluetooth listener hygiene (no leak across reconnects)", () => {
     it("removes the gattserverdisconnected/disconnect listeners with the same bound reference they were added with", async () => {
         const WebBluetooth = await loadWebBluetooth();
