@@ -130,7 +130,7 @@ CliAutoComplete.builderParseLine = function (line) {
                 this.writeToOutput("Cancelled!<br># ");
                 this.cleanup();
             } else {
-                const byLocale = (a, b) => a.localeCompare(b);
+                const byLocale = (a, b) => a.localeCompare(b, window.navigator.language, { ignorePunctuation: true });
                 cache.settings.sort(byLocale);
                 cache.commands.sort(byLocale);
                 cache.feature.sort(byLocale);

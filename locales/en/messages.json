@@ -3181,7 +3181,7 @@
         "message": "Change Direction in TX To Match"
     },
     "servosForwardChannel": {
-        "message": "Forward this channel to the servo"
+        "message": "Forward channel {{channel}} to servo {{servo}}"
     },
     "servosName": {
         "message": "Name"
@@ -3911,6 +3911,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Execute"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Snippet preview"
     },
     "cliPanelTitle": {
         "message": "Command Line Interface"
@@ -5915,7 +5918,7 @@
         "message": "OSD"
     },
     "osdToggleElementVisibility": {
-        "message": "Toggle element visibility for this profile"
+        "message": "Toggle {{element}} visibility for profile {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>WARNING:</b></span> No OSD chip was detected. Some flight controllers will not properly power the OSD chip unless connected to battery power. Please connect the battery before connecting the USB (PROPS REMOVED!)."

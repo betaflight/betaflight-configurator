@@ -50,7 +50,7 @@
                 <textarea
                     v-model="cli.state.snippetPreview"
                     rows="20"
-                    :aria-label="$t('cliConfirmSnippetBtn')"
+                    :aria-label="$t('cliSnippetPreviewLabel')"
                     class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px]"
                 ></textarea>
             </template>
