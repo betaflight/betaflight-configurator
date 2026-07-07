@@ -492,22 +492,27 @@ function teardownConnectionUi() {
     // held — which would otherwise leave a blank content area after unmountVueTab().
     GUI.connect_lock = false;
 
-    // Clear the active root-mounted tab before navigation selects the next one.
-    try {
-        unmountVueTab();
-    } catch (e) {
-        console.warn("unmountVueTab failed:", e);
-    }
-
     // allowedTabs (set above) must already include "landing"/"firmware_flasher" before this,
     // or switchTab silently rejects the disconnected tab.
     const pendingTab = GUI.pendingTab;
     GUI.pendingTab = null;
-    if (pendingTab === "firmware_flasher") {
-        switchTab("firmware_flasher", { mode: "disconnected" });
-    } else {
-        switchTab("landing", { mode: "disconnected" });
+    const target = pendingTab === "firmware_flasher" ? "firmware_flasher" : "landing";
+
+    // Only blank the content area when we're actually LEAVING the current tab. When a
+    // burst of disconnects (an unstable BLE link during a reboot reconnect) runs this
+    // teardown repeatedly, we are already on the destination tab: unmounting would blank
+    // the screen while the follow-up switchTab no-ops (same tab) or races an in-flight
+    // mount, leaving a stuck black screen. switchTab remounts if the tab was somehow left
+    // unmounted, and no-ops when it is already showing.
+    if (GUI.active_tab !== target) {
+        // Clear the active root-mounted tab before navigation selects the next one.
+        try {
+            unmountVueTab();
+        } catch (e) {
+            console.warn("unmountVueTab failed:", e);
+        }
     }
+    switchTab(target, { mode: "disconnected" });
 }
 
 function finishClose(finishedCallback) {

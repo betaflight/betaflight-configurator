@@ -239,6 +239,7 @@ function resetMocks() {
     GUI.connected_to = false;
     GUI.connecting_to = false;
     GUI.pendingTab = null;
+    GUI.active_tab = "landing";
     GUI.allowedTabs = [];
     serial.connected = false;
     dialogStore.activeDialog = null;
@@ -292,7 +293,9 @@ describe("serial_backend disconnect convergence", () => {
         // Sanity: connect path registered a disconnect handler.
         expect(typeof serialHandlers.disconnect).toBe("function");
 
-        // Pre-teardown baseline.
+        // Pre-teardown baseline. Simulate leaving a connected tab so teardown takes the
+        // blank-and-replace path (unmount old tab, switch to landing).
+        GUI.active_tab = "configuration";
         switchTab.mockClear();
         unmountVueTab.mockClear();
         GUI.connect_lock = true; // simulate an in-progress operation lock
@@ -305,6 +308,21 @@ describe("serial_backend disconnect convergence", () => {
         expect(unmountVueTab).toHaveBeenCalledTimes(1);
         expect(GUI.connect_lock).toBe(false);
         expect(GUI.connected_to).toBe(false);
+    });
+
+    it("repeated disconnects while already on landing do NOT blank the content (no stuck black screen)", () => {
+        // Reproduces the unstable-BLE burst: after the first teardown we sit on the
+        // landing tab, and each further unexpected disconnect must not unmount it — an
+        // unmount here previously left a blank content area that switchTab() would not
+        // remount (it no-ops on the same tab).
+        establishConnection();
+        GUI.active_tab = "landing";
+        unmountVueTab.mockClear();
+
+        serialHandlers.disconnect({ detail: true });
+        serialHandlers.disconnect({ detail: true });
+
+        expect(unmountVueTab).not.toHaveBeenCalled();
     });
 
     it("does NOT dismiss an active RebootDialog on an unexpected disconnect (reboot owns its modal)", () => {
