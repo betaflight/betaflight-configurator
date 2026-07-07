@@ -69,6 +69,7 @@
                                                 type="checkbox"
                                                 :checked="field.isVisible[profileIdx - 1]"
                                                 @change="toggleFieldVisibility(field.index, profileIdx - 1, $event)"
+                                                :aria-label="$t('osdToggleElementVisibility')"
                                                 class="size-4"
                                             />
                                         </template>

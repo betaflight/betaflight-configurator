@@ -75,6 +75,7 @@
                                         type="checkbox"
                                         class="size-4"
                                         :checked="servo.indexOfChannelToForward === ch - 1"
+                                        :aria-label="$t('servosForwardChannel')"
                                         @change="setChannelForward(index, ch - 1, $event)"
                                     />
                                 </div>

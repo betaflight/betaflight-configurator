@@ -5,6 +5,7 @@
         type="file"
         style="display: none"
         accept=".bbl,.BBL,.txt,.TXT,.cfl,.CFL,.bfl,.BFL,.log,.LOG,.json,.JSON"
+        aria-label="Open log file"
         @change="onFileChange"
     />
 </template>
