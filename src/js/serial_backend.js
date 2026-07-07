@@ -1135,11 +1135,6 @@ function onClosed(result) {
         return;
     }
 
-    // Capture what we were connected to before teardown clears it — needed to decide whether
-    // to auto-reconnect a dropped BLE/manual link at the end of this function.
-    const closedPath = GUI.connected_to;
-    const wasConnected = CONFIGURATOR.connectionValid;
-
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
 
     // Clear connection timestamp
@@ -1181,28 +1176,6 @@ function onClosed(result) {
     // intentional and unexpected closes. A reboot's link drop is left alone
     // (notifyClosed ignores REBOOTING/RECONNECTING); its conclude settles it.
     getConnectionState().notifyClosed();
-
-    // Auto-reconnect a dropped BLE/manual link. Serial/USB get an OS re-enumeration
-    // (addedDevice -> auto-select) when the FC comes back, but BLE and manual/TCP have no
-    // passive re-discovery, so nothing would ever retrigger auto-connect after an
-    // unexpected drop (FC power-cycle, out of range). The device stays listed, so re-aim at
-    // it and drive the same bounded retry loop the reboot path uses. Guards: only an
-    // established connection that dropped unexpectedly, only with Auto-Connect on, and never
-    // while a reboot window already owns a loop (its own failed attempts land here too).
-    if (
-        wasConnected &&
-        !wasIntentional &&
-        isDrivenRebootTarget(closedPath) &&
-        PortHandler.portPicker.autoConnect &&
-        !isCliOnlyMode() &&
-        !getConnectionState().isRebootWindowOpen
-    ) {
-        console.log(`${logHead} Unexpected ${closedPath} drop with Auto-Connect on — driving reconnect`);
-        // Re-aim at the dropped device; requestReboot() (in scheduleRebootReconnect) then
-        // holds the selection through the retries via selectActivePort's isReconnecting.
-        PortHandler.portPicker.selectedPort = closedPath;
-        scheduleRebootReconnect();
-    }
 }
 
 export function read_serial(info) {

@@ -325,69 +325,6 @@ describe("serial_backend disconnect convergence", () => {
         expect(unmountVueTab).not.toHaveBeenCalled();
     });
 
-    it("auto-reconnects a dropped BLE link when Auto-Connect is on (no OS re-enumeration)", () => {
-        vi.useFakeTimers();
-        try {
-            PortHandler.portPicker.selectedPort = "bluetooth_drop";
-            PortHandler.portPicker.autoConnect = true;
-            establishConnection();
-            CONFIGURATOR.connectionValid = true; // simulate a fully-established connection
-            GUI.connected_to = "bluetooth_drop";
-            serial.connect.mockClear();
-
-            // Unsolicited drop (FC power-cycle / out of range) — no addedDevice will fire.
-            serialHandlers.disconnect({ detail: true });
-
-            // The driven loop re-aims at the same device and retries after the flush delay.
-            vi.advanceTimersByTime(1500);
-            vi.advanceTimersByTime(1000);
-            expect(serial.connect).toHaveBeenCalled();
-            expect(PortHandler.portPicker.selectedPort).toBe("bluetooth_drop");
-        } finally {
-            vi.advanceTimersByTime(30000); // drain the loop
-            vi.useRealTimers();
-        }
-    });
-
-    it("does NOT auto-reconnect a dropped BLE link when Auto-Connect is off", () => {
-        vi.useFakeTimers();
-        try {
-            PortHandler.portPicker.selectedPort = "bluetooth_drop";
-            PortHandler.portPicker.autoConnect = false;
-            establishConnection();
-            CONFIGURATOR.connectionValid = true;
-            GUI.connected_to = "bluetooth_drop";
-            serial.connect.mockClear();
-
-            serialHandlers.disconnect({ detail: true });
-            vi.advanceTimersByTime(30000);
-
-            expect(serial.connect).not.toHaveBeenCalled();
-        } finally {
-            vi.useRealTimers();
-        }
-    });
-
-    it("does NOT drive a reconnect for a dropped SERIAL link (OS re-enumeration owns that)", () => {
-        vi.useFakeTimers();
-        try {
-            PortHandler.portPicker.selectedPort = "/dev/ttyACM0";
-            PortHandler.portPicker.autoConnect = true;
-            establishConnection();
-            CONFIGURATOR.connectionValid = true;
-            GUI.connected_to = "/dev/ttyACM0";
-            serial.connect.mockClear();
-
-            serialHandlers.disconnect({ detail: true });
-            vi.advanceTimersByTime(30000);
-
-            // Serial reconnect is driven by addedDevice -> auto-select, not this loop.
-            expect(serial.connect).not.toHaveBeenCalled();
-        } finally {
-            vi.useRealTimers();
-        }
-    });
-
     it("does NOT dismiss an active RebootDialog on an unexpected disconnect (reboot owns its modal)", () => {
         establishConnection();
         dialogStore.close.mockClear();
