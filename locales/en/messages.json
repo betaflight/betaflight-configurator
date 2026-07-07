@@ -4928,10 +4928,6 @@
         "message": "Flash",
         "description": "Single flash blink pattern option on LED Strip tab"
     },
-    "ledStripBlinkPatternDouble": {
-        "message": "Off-On-On-Off",
-        "description": "Double blink pattern option on LED Strip tab"
-    },
     "ledStripBlinkPatternBeacon": {
         "message": "Double flash",
         "description": "Double flash blink pattern option on LED Strip tab"

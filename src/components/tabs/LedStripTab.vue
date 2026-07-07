@@ -121,7 +121,6 @@
                             size="sm"
                             v-model="modifiers.throttleHue"
                             @update:model-value="onModifierChange('t')"
-                            :label="$t('ledStripThrottleHue')"
                         />
                         <USelect
                             id="auxSelectThrottle"
@@ -129,7 +128,7 @@
                             size="sm"
                             :items="auxChannelItems"
                             v-model="auxChannelValue"
-                            :aria-label="$t('ledStripThrottleHueChannel')"
+                            aria-label="Aux Channel"
                         />
                     </div>
 

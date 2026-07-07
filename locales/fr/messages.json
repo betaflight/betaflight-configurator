@@ -3016,6 +3016,24 @@
     "ledStripVtxOverlay": {
         "message": "VTX (couleur selon la fréquence vtx)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Luminosité"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Luminosité maximale des LEDs, en pourcentage."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Écart de teinte entre chaque LED."
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Fréquence"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Fréquence du changement de couleur, c'est-à-dire la vitesse de l'effet."
+    },
     "ledStripFunctionSection": {
         "message": "Fonctions LED"
     },
@@ -3172,8 +3190,17 @@
         "message": "Les LEDs sans numéro ne seront pas sauvegardées.",
         "description": "Message in the wiring modes in Led Strip"
     },
+    "ledStripLarsonOverlay": {
+        "message": "Scanner Larson"
+    },
+    "ledStripLarsonFreqSliderTitle": {
+        "message": "Fréquence"
+    },
+    "ledStripLarsonFreqSliderHelp": {
+        "message": "Vitesse de l'effet scanner Larson. Des valeurs plus élevées balaient plus vite."
+    },
     "ledStripBlinkAlwaysOverlay": {
-        "message": "clignote en permanence"
+        "message": "Clignote en permanence"
     },
     "ledStripBlinkPeriodSliderTitle": {
         "message": "Période (ms)"
@@ -3192,9 +3219,6 @@
     },
     "ledStripBlinkPatternAlternate": {
         "message": "Flash"
-    },
-    "ledStripBlinkPatternDouble": {
-        "message": "Off-On-On-Off"
     },
     "ledStripBlinkPatternBeacon": {
         "message": "Double flash"
@@ -3216,6 +3240,9 @@
     },
     "ledStripBlinkPauseSliderHelp": {
         "message": "Temps éteint avant la prochaine double rafale."
+    },
+    "ledStripRainbowOverlay": {
+        "message": "Arc-en-ciel"
     },
     "ledStripOverlayTitle": {
         "message": "Priorité"
