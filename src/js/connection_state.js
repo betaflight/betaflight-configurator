@@ -106,6 +106,7 @@ export class ConnectionState {
      * a no-op if a reboot/reconnect is already in flight, but the window is always
      * refreshed — a second save inside the window restarts the clock, matching the
      * retry loop's own restart.
+     * @param {number} [windowMs=10000] - how long the reconnect may take
      */
     requestReboot(windowMs = 10000) {
         this._rebootWindow.value = { startedAt: Date.now(), durationMs: windowMs };

@@ -85,17 +85,22 @@ let rebootLinkKept = false;
 // slow — only a silent (deaf) link is dropped for the next retry.
 let rebootHandshakeSawTraffic = false;
 
-// Transports that never re-enumerate after an FC reboot — no removedDevice/addedDevice
-// cycle fires — so their reconnect must be DRIVEN by the retry loop instead of left to
-// auto-connect on re-enumeration.
+/**
+ * Whether a target's transport never re-enumerates after an FC reboot (BLE, manual/TCP),
+ * so its reconnect must be DRIVEN by the retry loop rather than left to auto-connect.
+ * @param {string} port - the selected port path
+ * @returns {boolean}
+ */
 export function isDrivenRebootTarget(port) {
     return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual");
 }
 
-// The reconnect window duration for a reboot of the currently-selected target: driven
-// (BLE/manual) reboots get the longer window, serial re-enumeration keeps the original.
-// Evaluated ONCE per reboot (passed to requestReboot); loop, dialog and dialog
-// suppression all read the same snapshot from the connection state.
+/**
+ * Reconnect-window duration for the currently-selected target: driven (BLE/manual) reboots
+ * get the longer window, serial re-enumeration keeps the original. Evaluated once per reboot
+ * (passed to requestReboot) so the loop, dialog and dialog-suppression share one snapshot.
+ * @returns {number} window in milliseconds
+ */
 function rebootConnectWindowMs() {
     return isDrivenRebootTarget(PortHandler.portPicker.selectedPort)
         ? REBOOT_CONNECT_MAX_TIME_DRIVEN_MS
@@ -304,16 +309,10 @@ function releaseKeptRebootLink() {
     }
 }
 
-// BLE variant of disconnectForReboot: keep the GATT session OPEN through the reboot and
-// reset only the app-level connection state. BLE adapters (e.g. SpeedyBee) hold the link
-// while the MCU restarts, and the session demonstrably works — it carried the save and the
-// reboot ack. Dropping it and reconnecting is the fragile part: on Linux/BlueZ (Web
-// Bluetooth is experimental there) a rapid gatt.disconnect()/connect() cycle reliably
-// yields a deaf session — GATT opens, services enumerate, but no notifications ever
-// arrive. Riding the kept session avoids the platform reconnect entirely: the retry
-// loop's connect() finds gatt already connected (connect() is a no-op), re-fetches
-// services/characteristics, and re-subscribes — idempotent thanks to the bound-once
-// listeners (addEventListener de-duplicates identical refs).
+// BLE variant of disconnectForReboot: keep the GATT session OPEN through the reboot, reset
+// only app-level state, and let the retry loop ride the existing session. Dropping and
+// re-establishing the link is the fragile part — on Linux/BlueZ a rapid disconnect/connect
+// cycle yields a "deaf" session (opens and enumerates, but no notifications arrive).
 function softResetForReboot() {
     console.log(`${logHead} Keeping BLE link through reboot — app-level reset only (flush timeout)`);
     prepareDisconnect();
@@ -1295,13 +1294,13 @@ export function reinitializeConnection(suppressDialog = false) {
     return rebootTimestamp;
 }
 
-// Reconnect driver for a reboot initiated OUTSIDE this module — the CLI `save`/`exit` path
-// (useMspCliSession) has already rebooted the FC, so unlike reinitializeConnection() no
-// MSP_SET_REBOOT is sent here. Needed for transports that never re-enumerate: a serial
-// device drops off the bus and comes back (addedDevice -> auto-connect reconnects), but a
-// BLE or manual/TCP link emits no removedDevice/addedDevice for an FC reboot, so nothing
-// external ever triggers the reconnect. Drives the same flush -> drop-stale-link -> retry
-// cycle as a BLE/manual Save & Reboot; Auto-Connect is honored inside rebootReconnect().
+/**
+ * Drive a reconnect for a reboot initiated OUTSIDE this module (CLI `save`/`exit` via
+ * useMspCliSession, which already rebooted the FC — so no MSP_SET_REBOOT is sent). Needed
+ * for transports that never re-enumerate (BLE, manual/TCP): they emit no addedDevice for a
+ * reboot, so nothing else would trigger the reconnect. Runs the same flush -> drop-stale-link
+ * -> retry cycle as a BLE/manual Save & Reboot; Auto-Connect is honored inside rebootReconnect().
+ */
 export function scheduleRebootReconnect() {
     getConnectionState().requestReboot(rebootConnectWindowMs());
     rebootReconnect();
