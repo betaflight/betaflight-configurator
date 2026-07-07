@@ -518,6 +518,27 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
+    it("forces connectionValid false on reboot so the dialog waits for a real reconnect", () => {
+        vi.useFakeTimers();
+        try {
+            PortHandler.portPicker.selectedPort = "bluetooth_1";
+            PortHandler.portPicker.autoConnect = true;
+            establishConnection();
+            // A BLE link survives the reboot command, so connectionValid is still true when
+            // the reboot starts. If left stale-true, the reboot dialog's check-timer would
+            // conclude the reboot and null the shared reconnect window before the retry loop
+            // arms — no reconnect ever runs. reinitializeConnection must reset it.
+            CONFIGURATOR.connectionValid = true;
+
+            reinitializeConnection();
+
+            expect(CONFIGURATOR.connectionValid).toBe(false);
+        } finally {
+            vi.advanceTimersByTime(30000); // drain the loop
+            vi.useRealTimers();
+        }
+    });
+
     it("still drops the surviving link at the flush delay when Auto-Connect is off (no retry will ride it)", () => {
         vi.useFakeTimers();
         try {
