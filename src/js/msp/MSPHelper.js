@@ -234,7 +234,6 @@ MspHelper.readPsasSettings = function (data) {
     FC.PSAS_CONFIG.roll_yaw_clift_start = data.readU8();
     FC.PSAS_CONFIG.roll_yaw_clift_stop = data.readU8();
     FC.PSAS_CONFIG.roll_to_yaw_link = data.readU8();
-
     FC.PSAS_CONFIG.speed_main_curve_enable[0] = data.readU8();
     FC.PSAS_CONFIG.speed_main_curve_enable[1] = data.readU8();
     FC.PSAS_CONFIG.speed_main_curve_enable[2] = data.readU8();
@@ -1883,6 +1882,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                 case MSPCodes.MSP_PSAS_CONFIG:
                     MspHelper.readPsasSettings(data);
+                    break;
+                case MSPCodes.MSP_SET_PSAS_CONFIG:
+                    console.log("PSAS config set");
                     break;
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);

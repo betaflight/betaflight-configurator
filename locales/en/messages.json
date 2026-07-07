@@ -2410,6 +2410,69 @@
     "psasTuningCrossLinkLiftCoefStopHelp": {
         "message": "Lift coef. to fix ARI gain, *0.1"
     },
+    "psasSpeedCurvesSettings": {
+        "message": "Control gains speed curves settings"
+    },
+    "psasSpeedCurvesEnableGroup": {
+        "message": "Speed curves enabled"
+    },
+    "psasSpeedCurvesEnableMain": {
+        "message": "Damping+Stability"
+    },
+    "psasSpeedCurvesEnableStick": {
+        "message": "Pilot"
+    },
+    "psasSpeedCurvesParametersGroup": {
+        "message": "Speed curves parameters"
+    },
+    "psasSpeedCurvesOptimumSpeed": {
+        "message": "Optimum speed"
+    },
+    "psasSpeedCurvesOptimumSpeedHelp": {
+        "message": "Optimum speed, m/s - the curves have 1.0 value in this point"
+    },
+    "psasSpeedCurvesMainPower": {
+        "message": "The main curves power"
+    },
+    "psasSpeedCurvesMainPowerHelp": {
+        "message": "The hyperbolic curves power, *0.1"
+    },
+    "psasSpeedCurvesRollPilotPower": {
+        "message": "The roll pilot curves power"
+    },
+    "psasSpeedCurvesRollPilotPowerHelp": {
+        "message": "The roll pilot gain hyperbolic curves power, *0.1"
+    },
+    "psasSpeedCurvesMainCurveMin": {
+        "message": "The main curves min value"
+    },
+    "psasSpeedCurvesMainCurveMinHelp": {
+        "message": "The main (damping, stability) hyperbolic curves min value limit, *0.01"
+    },
+    "psasSpeedCurvesMainCurveMax": {
+        "message": "The main curves max value"
+    },
+    "psasSpeedCurvesMainCurveMaxHelp": {
+        "message": "The main (damping, stability) hyperbolic curves max value limit, *0.01"
+    },
+    "psasSpeedCurvesPilotCurveMin": {
+        "message": "The pilot curves min value"
+    },
+    "psasSpeedCurvesPilotCurveMinHelp": {
+        "message": "The pilot hyperbolic curves min value limit, *0.01"
+    },
+    "psasSpeedCurvesPilotCurveMax": {
+        "message": "The pilot curves max value"
+    },
+    "psasSpeedCurvesPilotCurveMaxHelp": {
+        "message": "The pilot hyperbolic curves max value limit, *0.01"
+    },
+    "psasSpeedCurvesUseGps": {
+        "message": "Use GPS speed"
+    },
+    "psasSpeedCurvesUseGpsHelp": {
+        "message": "Use GPS speed instead of TPA estimation"
+    },
     "receiverRcSmoothing": {
         "message": "RC Smoothing"
     },
