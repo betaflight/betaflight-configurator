@@ -3,7 +3,9 @@
         <!-- SAS Table -->
         <UiBox :title="$t('psasMainSettings')" type="neutral">
             <span class="text-sm font-semibold" v-html="$t('psasTuningMainGainsGroup')"></span>
-            <div class="grid grid-cols-[3rem_repeat(3,minmax(4rem,auto))] gap-x-3 gap-y-1 items-center min-w-0">
+            <div
+                class="grid grid-cols-[3rem_repeat(3,minmax(4rem,6rem))] gap-x-3 gap-y-1 items-center justify-items-center min-w-0"
+            >
                 <!-- Header -->
                 <div></div>
                 <div class="flex items-center justify-center gap-0.5 text-xs">
@@ -20,7 +22,7 @@
                 </div>
 
                 <!-- ROLL -->
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">ROLL</div>
 
                 <UInputNumber
                     v-model="psasRollPilot"
@@ -42,10 +44,12 @@
                     class="w-full"
                 />
 
-                <div>-</div>
+                <div>---</div>
 
                 <!-- PITCH -->
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">PITCH</div>
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                    PITCH
+                </div>
                 <UInputNumber
                     v-model="psasPitchPilot"
                     :step="1"
@@ -77,7 +81,7 @@
                 />
 
                 <!-- YAW -->
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">YAW</div>
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">YAW</div>
                 <UInputNumber
                     v-model="psasYawPilot"
                     :step="1"
@@ -109,7 +113,9 @@
                 />
             </div>
             <span class="text-sm font-semibold" v-html="$t('psasTuningMainFiltersGroup')"></span>
-            <div class="grid grid-cols-[2rem_repeat(2,minmax(4rem,auto))] gap-x-3 gap-y-1 items-center min-w-0">
+            <div
+                class="grid grid-cols-[3rem_repeat(2,minmax(4rem,8rem))] gap-x-3 gap-y-1 items-center justify-items-center min-w-0"
+            >
                 <!-- Header -->
                 <div></div>
                 <div class="flex items-center justify-center gap-0.5 text-xs">
@@ -121,7 +127,9 @@
                     <HelpIcon :text="$t('psasTuningMainAccelFiltersHelp')" />
                 </div>
 
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">PITCH</div>
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                    PITCH
+                </div>
                 <UInputNumber
                     v-model="psasPitchGyroHPF"
                     :step="1"
@@ -140,7 +148,7 @@
                     orientation="vertical"
                     class="w-full"
                 />
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">YAW</div>
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">YAW</div>
                 <UInputNumber
                     v-model="psasYawGyroHPF"
                     :step="1"
@@ -159,6 +167,172 @@
                     orientation="vertical"
                     class="w-full"
                 />
+            </div>
+        </UiBox>
+
+        <UiBox :title="$t('psasSpeedCurvesSettings')" type="neutral">
+            <div class="flex flex-col gap-2">
+                <span class="text-sm font-semibold" v-html="$t('psasSpeedCurvesEnableGroup')"></span>
+                <div
+                    class="grid grid-cols-[3rem_repeat(2,minmax(4rem,6rem))] gap-x-3 gap-y-1 items-center justify-items-center min-w-0"
+                >
+                    <!-- Header -->
+                    <div></div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('psasSpeedCurvesEnableMain')"></span>
+                    </div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('psasSpeedCurvesEnableStick')"></span>
+                    </div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                        ROLL
+                    </div>
+                    <USwitch v-model="psasSpeedCurvesMainRollEnabled" size="sm" />
+                    <USwitch v-model="psasSpeedCurvesPilotRollEnabled" size="sm" />
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                        PITCH
+                    </div>
+                    <USwitch v-model="psasSpeedCurvesMainPitchEnabled" size="sm" />
+                    <USwitch v-model="psasSpeedCurvesPilotPitchEnabled" size="sm" />
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                        YAW
+                    </div>
+                    <USwitch v-model="psasSpeedCurvesMainYawEnabled" size="sm" />
+                    <USwitch v-model="psasSpeedCurvesPilotYawEnabled" size="sm" />
+                </div>
+                <span class="text-sm font-semibold" v-html="$t('psasSpeedCurvesParametersGroup')"></span>
+                <div class="flex flex-wrap items-end gap-3 pl-4">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesSource')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesSourceHelp')" />
+                        </div>
+                        <USelect v-model="psasSpeedCurvesSource" :items="psasSpeedCurvesSourceList" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesReferenceSpeed')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesReferenceSpeedHelp')" />
+                        </div>
+                        <UInputNumber
+                            v-model="psasSpeedCurvesVref"
+                            :step="1"
+                            :min="0"
+                            :max="255"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-end gap-3 pl-4">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesMainPower')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesMainPowerHelp')" />
+                        </div>
+                        <UInputNumber
+                            v-model="psasSpeedCurvesMainPower"
+                            :step="1"
+                            :min="5"
+                            :max="30"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                            :disabled="!(psasSpeedCurvesMainEnabled || psasSpeedCurvesPilotEnabled)"
+                            :class="{ 'opacity-50': !(psasSpeedCurvesMainEnabled || psasSpeedCurvesPilotEnabled) }"
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesRollPilotPower')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesRollPilotPowerHelp')" />
+                        </div>
+                        <UInputNumber
+                            v-model="psasSpeedCurvesRollPilotPower"
+                            :step="1"
+                            :min="5"
+                            :max="30"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                            :disabled="!psasSpeedCurvesPilotRollEnabled"
+                            :class="{ 'opacity-50': !psasSpeedCurvesPilotRollEnabled }"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-end gap-3 pl-4">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesMainCurveMin')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesMainCurveMinHelp')" />
+                        </div>
+                        <UInputNumber
+                            v-model="psasSpeedCurvesMainCurveMin"
+                            :step="1"
+                            :min="1"
+                            :max="100"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                            :disabled="!psasSpeedCurvesMainEnabled"
+                            :class="{ 'opacity-50': !psasSpeedCurvesMainEnabled }"
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesMainCurveMax')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesMainCurveMaxHelp')" />
+                        </div>
+                        <UInputNumber
+                            v-model="psasSpeedCurvesMainCurveMax"
+                            :step="1"
+                            :min="100"
+                            :max="500"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                            :disabled="!psasSpeedCurvesMainEnabled"
+                            :class="{ 'opacity-50': !psasSpeedCurvesMainEnabled }"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-end gap-3 pl-4">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesPilotCurveMin')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesPilotCurveMinHelp')" />
+                        </div>
+                        <UInputNumber
+                            v-model="psasSpeedCurvesPilotCurveMin"
+                            :step="1"
+                            :min="10"
+                            :max="100"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                            :disabled="!psasSpeedCurvesPilotEnabled"
+                            :class="{ 'opacity-50': !psasSpeedCurvesPilotEnabled }"
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesPilotCurveMax')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesPilotCurveMaxHelp')" />
+                        </div>
+                        <UInputNumber
+                            v-model="psasSpeedCurvesPilotCurveMax"
+                            :step="1"
+                            :min="100"
+                            :max="500"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-full"
+                            :disabled="!psasSpeedCurvesPilotEnabled"
+                            :class="{ 'opacity-50': !psasSpeedCurvesPilotEnabled }"
+                        />
+                    </div>
+                </div>
             </div>
         </UiBox>
 
@@ -415,146 +589,6 @@
                             orientation="vertical"
                             class="w-full"
                         />
-                    </div>
-                </div>
-            </div>
-        </UiBox>
-
-        <UiBox :title="$t('psasSpeedCurvesSettings')" type="neutral">
-            <div class="flex flex-col gap-2">
-                <span class="text-sm font-semibold" v-html="$t('psasSpeedCurvesEnableGroup')"></span>
-                <div class="grid grid-cols-[2rem_repeat(2,minmax(4rem,auto))] gap-x-3 gap-y-1 items-center min-w-0">
-                    <!-- Header -->
-                    <div></div>
-                    <div class="flex items-center justify-center gap-0.5 text-xs">
-                        <span v-html="$t('psasSpeedCurvesEnableMain')"></span>
-                    </div>
-                    <div class="flex items-center justify-center gap-0.5 text-xs">
-                        <span v-html="$t('psasSpeedCurvesEnableStick')"></span>
-                    </div>
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
-                    <USwitch v-model="psasSpeedCurvesMainRollEnabled" size="sm" />
-                    <USwitch v-model="psasSpeedCurvesPilotRollEnabled" size="sm" />
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">PITCH</div>
-                    <USwitch v-model="psasSpeedCurvesMainPitchEnabled" size="sm" />
-                    <USwitch v-model="psasSpeedCurvesPilotPitchEnabled" size="sm" />
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">YAW</div>
-                    <USwitch v-model="psasSpeedCurvesMainYawEnabled" size="sm" />
-                    <USwitch v-model="psasSpeedCurvesPilotYawEnabled" size="sm" />
-                </div>
-                <span class="text-sm font-semibold" v-html="$t('psasSpeedCurvesParametersGroup')"></span>
-                <div class="flex flex-wrap items-end gap-3 pl-4">
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesOptimumSpeed')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesOptimumSpeedHelp')" />
-                        </div>
-                        <UInputNumber
-                            v-model="psasSpeedCurvesVref"
-                            :step="1"
-                            :min="0"
-                            :max="255"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-full"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesMainPower')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesMainPowerHelp')" />
-                        </div>
-                        <UInputNumber
-                            v-model="psasSpeedCurvesMainPower"
-                            :step="1"
-                            :min="5"
-                            :max="30"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-full"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesRollPilotPower')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesRollPilotPowerHelp')" />
-                        </div>
-                        <UInputNumber
-                            v-model="psasSpeedCurvesRollPilotPower"
-                            :step="1"
-                            :min="5"
-                            :max="30"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-full"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesMainCurveMin')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesMainCurveMinHelp')" />
-                        </div>
-                        <UInputNumber
-                            v-model="psasSpeedCurvesMainCurveMin"
-                            :step="1"
-                            :min="1"
-                            :max="100"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-full"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesMainCurveMax')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesMainCurveMaxHelp')" />
-                        </div>
-                        <UInputNumber
-                            v-model="psasSpeedCurvesMainCurveMax"
-                            :step="1"
-                            :min="100"
-                            :max="500"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-full"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesPilotCurveMin')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesPilotCurveMinHelp')" />
-                        </div>
-                        <UInputNumber
-                            v-model="psasSpeedCurvesPilotCurveMin"
-                            :step="1"
-                            :min="10"
-                            :max="100"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-full"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesPilotCurveMax')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesPilotCurveMaxHelp')" />
-                        </div>
-                        <UInputNumber
-                            v-model="psasSpeedCurvesPilotCurveMax"
-                            :step="1"
-                            :min="100"
-                            :max="500"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-full"
-                        />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesUseGps')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesUseGpsHelp')" />
-                        </div>
-                        <USwitch v-model="psasSpeedCurvesUseGps" size="sm" />
                     </div>
                 </div>
             </div>
@@ -816,6 +850,25 @@ const psasSpeedCurvesPilotYawEnabled = computed({
     },
 });
 
+const psasSpeedCurvesMainEnabled = computed({
+    get: () =>
+        psasSpeedCurvesMainPitchEnabled.value ||
+        psasSpeedCurvesMainRollEnabled.value ||
+        psasSpeedCurvesMainYawEnabled.value,
+});
+
+const psasSpeedCurvesPilotEnabled = computed({
+    get: () =>
+        psasSpeedCurvesPilotPitchEnabled.value ||
+        psasSpeedCurvesPilotRollEnabled.value ||
+        psasSpeedCurvesPilotYawEnabled.value,
+});
+
+const psasSpeedCurvesSourceList = [
+    { value: 0, label: t("psasSpeedCurvesSourceTpaEstimation") },
+    { value: 1, label: t("psasSpeedCurvesSourceGps") },
+];
+
 const psasSpeedCurvesVref = computed({
     get: () => FC.PSAS_CONFIG.speed_optimum_vref,
     set: (val) => {
@@ -865,10 +918,10 @@ const psasSpeedCurvesPilotCurveMax = computed({
     },
 });
 
-const psasSpeedCurvesUseGps = computed({
-    get: () => FC.PSAS_CONFIG.speed_use_gps !== 0,
+const psasSpeedCurvesSource = computed({
+    get: () => FC.PSAS_CONFIG.speed_use_gps,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_use_gps = val ? 1 : 0;
+        FC.PSAS_CONFIG.speed_use_gps = val;
     },
 });
 

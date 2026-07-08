@@ -2414,7 +2414,7 @@
         "message": "Control gains speed curves settings"
     },
     "psasSpeedCurvesEnableGroup": {
-        "message": "Speed curves enabled"
+        "message": "Speed curves enable"
     },
     "psasSpeedCurvesEnableMain": {
         "message": "Damping+Stability"
@@ -2425,14 +2425,14 @@
     "psasSpeedCurvesParametersGroup": {
         "message": "Speed curves parameters"
     },
-    "psasSpeedCurvesOptimumSpeed": {
-        "message": "Optimum speed"
+    "psasSpeedCurvesReferenceSpeed": {
+        "message": "Reference speed"
     },
-    "psasSpeedCurvesOptimumSpeedHelp": {
-        "message": "Optimum speed, m/s - the curves have 1.0 value in this point"
+    "psasSpeedCurvesReferenceSpeedHelp": {
+        "message": "Reference speed, m/s - the curves have 1.0 value in this point"
     },
     "psasSpeedCurvesMainPower": {
-        "message": "The main curves power"
+        "message": "The curves power"
     },
     "psasSpeedCurvesMainPowerHelp": {
         "message": "The hyperbolic curves power, *0.1"
@@ -2467,11 +2467,17 @@
     "psasSpeedCurvesPilotCurveMaxHelp": {
         "message": "The pilot hyperbolic curves max value limit, *0.01"
     },
-    "psasSpeedCurvesUseGps": {
-        "message": "Use GPS speed"
+    "psasSpeedCurvesSource": {
+        "message": "Speed curves source"
     },
-    "psasSpeedCurvesUseGpsHelp": {
-        "message": "Use GPS speed instead of TPA estimation"
+    "psasSpeedCurvesSourceHelp": {
+        "message": "Speed curves source"
+    },
+    "psasSpeedCurvesSourceTpaEstimation": {
+        "message": "TPA Estimation"
+    },
+    "psasSpeedCurvesSourceGps": {
+        "message": "GPS"
     },
     "receiverRcSmoothing": {
         "message": "RC Smoothing"
