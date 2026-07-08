@@ -1159,7 +1159,8 @@ export function getDebugFieldNames(apiVersion) {
             "debug[5]": "Accel Z P",
             "debug[6]": "Lift coeff delta",
             "debug[7]": "AoA limiter is on",
-        };  
+        };
+
         // Flow-processing pipeline replaced the quality/raw/processed/delta-time
         // layout used prior to 1.48 (opticalflow.c rewrite).
         result.OPTICALFLOW = {

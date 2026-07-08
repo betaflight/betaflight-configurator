@@ -864,10 +864,10 @@ const psasSpeedCurvesPilotEnabled = computed({
         psasSpeedCurvesPilotYawEnabled.value,
 });
 
-const psasSpeedCurvesSourceList = [
+const psasSpeedCurvesSourceList = computed(() => [
     { value: 0, label: t("psasSpeedCurvesSourceTpaEstimation") },
     { value: 1, label: t("psasSpeedCurvesSourceGps") },
-];
+]);
 
 const psasSpeedCurvesVref = computed({
     get: () => FC.PSAS_CONFIG.speed_optimum_vref,

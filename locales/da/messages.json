@@ -2617,9 +2617,6 @@
     "pidTuningSliders": {
         "message": "PID tuning skydere"
     },
-    "pidTuningSliders": {
-        "message": "PID tuning skydere"
-    },
     "pidTuningSliderPidsMode": {
         "message": "Tilstand:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -5919,9 +5916,6 @@
     },
     "powerBatteryAmperage": {
         "message": "Strømforbrug"
-    },
-    "powerBatteryPowerDraw": {
-        "message": "Effektforbrug"
     },
     "powerBatteryPowerDraw": {
         "message": "Effektforbrug"
