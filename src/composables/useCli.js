@@ -8,6 +8,7 @@ import CONFIGURATOR from "../js/data_storage";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { gui_log } from "../js/gui_log";
 import { serial } from "../js/serial";
+import { reinitializeConnection } from "../js/serial_backend";
 import FileSystem from "../js/FileSystem";
 import { ispConnected } from "../js/utils/connection";
 import { get as getConfig } from "../js/ConfigStorage";
@@ -490,7 +491,7 @@ export function useCli() {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
             gui_log(i18n.getMessage("cliReboot"));
-            GUI.reinitializeConnection();
+            reinitializeConnection();
         }
     };
 
@@ -688,7 +689,7 @@ export function useCli() {
 
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
             send(getCliCommand("exit\r", cliBuffer), function () {
-                GUI.reinitializeConnection();
+                reinitializeConnection();
             });
         }
 

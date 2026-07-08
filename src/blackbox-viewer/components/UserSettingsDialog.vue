@@ -127,7 +127,13 @@
                         <div v-if="local.drawWatermark" class="flex flex-col gap-2 mt-2 ml-6">
                             <div class="flex items-center gap-3">
                                 <label class="text-sm">Logo</label>
-                                <input type="file" accept="image/*" class="text-sm" @change="onLogoChange" />
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    class="text-sm"
+                                    aria-label="Watermark logo file"
+                                    @change="onLogoChange"
+                                />
                             </div>
                             <img
                                 v-if="local.watermark.logo"

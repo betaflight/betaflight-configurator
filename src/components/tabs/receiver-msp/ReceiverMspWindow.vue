@@ -30,6 +30,7 @@
                     :min="CHANNEL_MIN_VALUE"
                     :max="CHANNEL_MAX_VALUE"
                     v-model.number="stickValues[`Aux${i}`]"
+                    :aria-label="t(`controlAxisAux${i}`)"
                     class="slider"
                 />
                 <span class="tooltip">{{ stickValues[`Aux${i}`] }}</span>

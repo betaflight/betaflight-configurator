@@ -269,7 +269,7 @@ export default defineComponent({
                     .map((item) => ({
                         label: i18n.getMessage(item.i18n),
                         icon: item.icon,
-                        onSelect: () => switchTab(item.key),
+                        onSelect: () => switchTab(item.key, { mode: item.mode }),
                     })),
                 trailingItems,
             );

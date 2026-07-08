@@ -31,12 +31,15 @@ class Serial extends EventTarget {
             ];
         } else if (isTauri()) {
             // Tauri shell: raw TCP via the Rust tcp_* commands (so the Betaflight bridge
-            // on 5761 works), bluetooth via the web API the webview exposes. Native serial
-            // (tauri-plugin-serialplugin) is desktop + Android only — iOS has no USB serial.
+            // on 5761 works), and WebSocket (ws://, wss://) via the WebSocket API the webview
+            // exposes — these are distinct transports, so they get distinct slots. Bluetooth
+            // via the web API the webview exposes. Native serial (tauri-plugin-serialplugin)
+            // is desktop + Android only — iOS has no USB serial.
             this._protocols = [
                 ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
                 { name: "bluetooth", instance: new WebBluetooth() },
                 { name: "tcp", instance: new TauriTcp() },
+                { name: "websocket", instance: new Websocket() },
             ];
         } else {
             this._protocols = [
@@ -57,45 +60,57 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
+        // Device-enumeration events come from EVERY transport — port_handler builds
+        // the combined device list from all of them.
+        const deviceEvents = ["addedDevice", "removedDevice"];
+        // Connection-lifecycle events must come ONLY from the active transport. A
+        // transport we are no longer connected through can still emit a late event
+        // (e.g. a BLE link's gattserverdisconnected firing after the user switched
+        // to a serial FC); forwarding it would run onClosed/read_serial against the
+        // wrong connection and corrupt the live one.
+        const lifecycleEvents = new Set(["connect", "disconnect", "receive"]);
 
         for (const { name, instance } of this._protocols) {
-            if (typeof instance?.addEventListener === "function") {
-                for (const eventType of events) {
-                    instance.addEventListener(eventType, (event) => {
-                        let newDetail;
-                        if (event.type === "receive") {
-                            // For 'receive' events, we need to handle the data differently
-                            newDetail = {
-                                data: event.detail,
-                                protocolType: name,
-                            };
-                        } else if (event.detail && typeof event.detail === "object") {
-                            // Object payloads (open info, device lists, socket info) get the
-                            // protocol tag merged in.
-                            newDetail = {
-                                ...event.detail,
-                                protocolType: name,
-                            };
-                        } else {
-                            // Preserve primitive/falsy details verbatim. A failed open signals
-                            // detail:false; wrapping it in an object would make it truthy and the
-                            // connect handler would treat the failure as a success.
-                            newDetail = event.detail;
-                        }
+            if (typeof instance?.addEventListener !== "function") {
+                continue;
+            }
 
-                        // Dispatch the event with the new detail
-                        this.dispatchEvent(
-                            new CustomEvent(event.type, {
-                                detail: newDetail,
-                                bubbles: event.bubbles,
-                                cancelable: event.cancelable,
-                            }),
-                        );
-                    });
-                }
+            for (const eventType of [...deviceEvents, ...lifecycleEvents]) {
+                instance.addEventListener(eventType, (event) => {
+                    // Drop lifecycle events arriving from a non-active transport.
+                    if (lifecycleEvents.has(eventType) && instance !== this._protocol) {
+                        return;
+                    }
+
+                    this.dispatchEvent(
+                        new CustomEvent(event.type, {
+                            detail: this._tagDetail(event, name),
+                            bubbles: event.bubbles,
+                            cancelable: event.cancelable,
+                        }),
+                    );
+                });
             }
         }
+    }
+
+    /**
+     * Tag a forwarded event's detail with its originating protocol.
+     * @param {Event} event - the source protocol event
+     * @param {string} protocolType - the originating protocol name
+     */
+    _tagDetail(event, protocolType) {
+        // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
+        if (event.type === "receive") {
+            return { data: event.detail, protocolType };
+        }
+        // A PRIMITIVE detail (notably connect/disconnect dispatching `false` on a
+        // failed open) is forwarded as-is — spreading `false` would turn it into a
+        // truthy { protocolType }, so onOpen() would treat a failed open as success.
+        if (event.detail !== null && typeof event.detail === "object") {
+            return { ...event.detail, protocolType };
+        }
+        return event.detail;
     }
 
     /**
@@ -110,7 +125,17 @@ class Serial extends EventTarget {
         if (isFn || s === "virtual") {
             return this._protocols.find((p) => p.name === "virtual")?.instance;
         }
-        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
+        // WebSocket endpoints (ws://, wss://) speak the HTTP-upgrade handshake, so they need the
+        // WebSocket protocol — not raw TCP. On Tauri these are separate slots ("websocket" vs the
+        // Rust-backed "tcp"); fall back to "tcp" on platforms that register only one (the web shell
+        // already uses WebSocket for its "tcp" slot).
+        if (/^wss?:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
+            return (
+                this._protocols.find((p) => p.name === "websocket")?.instance ??
+                this._protocols.find((p) => p.name === "tcp")?.instance
+            );
+        }
+        if (s === "manual" || /^tcp:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
             return this._protocols.find((p) => p.name === "tcp")?.instance;
         }
         if (s.startsWith("bluetooth")) {

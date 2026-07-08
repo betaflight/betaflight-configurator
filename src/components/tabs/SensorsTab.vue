@@ -98,6 +98,14 @@
                             label-prefix="configurationBoardAlignment"
                             :step="1"
                         />
+                        <UButton
+                            v-if="isApi148"
+                            :label="$t('boardAlignmentWizard-Launch')"
+                            :disabled="!hasAccSensor || accNeedsCalibration"
+                            size="xs"
+                            class="w-fit"
+                            @click="openBoardAlignmentWizard"
+                        />
 
                         <!-- Gyro alignment dropdowns (Legacy, API < 1.47) -->
                         <template v-if="showSensorAlignment">
@@ -823,6 +831,7 @@ import { sensorTypes } from "../../js/sensor_types";
 import { useMagCalibration, computeDeclination, getGeoReference } from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
 import { detectAlignment } from "../../js/utils/magAlignment";
+import { useDialog } from "@/composables/useDialog";
 import {
     characterizeTumble,
     currentMatrixOf,
@@ -948,6 +957,32 @@ const boardAlignment = reactive({
     pitch: 0,
     yaw: 0,
 });
+
+const dialog = useDialog();
+
+function openBoardAlignmentWizard() {
+    dialog.open(
+        "BoardAlignmentWizardDialog",
+        {
+            currentAlignment: {
+                roll: boardAlignment.roll,
+                pitch: boardAlignment.pitch,
+                yaw: boardAlignment.yaw,
+            },
+        },
+        {
+            apply: async ({ roll, pitch, yaw }) => {
+                boardAlignment.roll = roll;
+                boardAlignment.pitch = pitch;
+                boardAlignment.yaw = yaw;
+                dialog.close();
+                await nextTick();
+                await saveConfig();
+            },
+            close: () => dialog.close(),
+        },
+    );
+}
 
 // --- Accelerometer Trim ---
 

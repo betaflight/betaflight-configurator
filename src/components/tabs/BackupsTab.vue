@@ -174,6 +174,7 @@ import { useConnectionStore } from "@/stores/connection";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
     cancelScheduledReconnect,
+    isConnectionClosedError,
     isMspCliSupported,
     saveAndReconnect,
     scheduleReconnect,
@@ -386,7 +387,12 @@ async function restoreBackup(backup) {
 
     const fileLines = text.split(/\r?\n/);
     const hasDefaultsPrefix = fileLines.some((line) => line.trim().toLowerCase() === "defaults nosave");
-    const commands = hasDefaultsPrefix ? fileLines : ["defaults nosave", "", ...fileLines];
+    // A `diff all` / `dump` backup ends with a `save`, which reboots the FC. Replaying it
+    // inside the batch reboots the FC mid-batch and the `save` response times out, surfacing
+    // as a spurious "CLI errors" warning on every restore. Drop it and let saveAndReconnect()
+    // persist and reconnect after the batch (it already tolerates the reboot timeout).
+    const withoutSave = fileLines.filter((line) => line.trim().toLowerCase() !== "save");
+    const commands = hasDefaultsPrefix ? withoutSave : ["defaults nosave", "", ...withoutSave];
 
     restoreProgress.value = 0;
     restoreProgressOpen.value = true;
@@ -432,7 +438,10 @@ async function handleRestoreErrorsClose() {
     try {
         await cliSession.send("exit");
     } catch (error) {
-        console.error("Failed to send exit:", error);
+        // `exit` reboots the FC; the port closing before it replies is expected, not a failure.
+        if (!isConnectionClosedError(error)) {
+            console.error("Failed to send exit:", error);
+        }
     } finally {
         scheduleReconnect();
     }

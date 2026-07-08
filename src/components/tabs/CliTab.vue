@@ -29,6 +29,7 @@
                     v-model="cli.state.commandInput"
                     name="commands"
                     :placeholder="$t('cliInputPlaceholder')"
+                    :aria-label="$t('cliInputPlaceholder')"
                     rows="1"
                     cols="0"
                     class="w-full h-[22px] leading-5 pl-[5px] border border-(--surface-500) resize-none bg-(--surface-200) text-(--surface-900)"
@@ -49,6 +50,7 @@
                 <textarea
                     v-model="cli.state.snippetPreview"
                     rows="20"
+                    :aria-label="$t('cliSnippetPreviewLabel')"
                     class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px]"
                 ></textarea>
             </template>
@@ -73,6 +75,7 @@
                     v-model="cli.state.supportDialogInput"
                     name="supportWarningDialogInput"
                     :placeholder="$t('supportWarningDialogInputPlaceHolder')"
+                    :aria-label="$t('supportWarningDialogInputPlaceHolder')"
                     rows="3"
                     cols="0"
                     class="w-full mt-2 leading-5 p-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"
