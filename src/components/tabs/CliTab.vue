@@ -42,7 +42,7 @@
         </div>
 
         <!-- Snippet preview dialog -->
-        <UModal v-model:open="snippetPreviewOpen" :ui="{ overlay: 'z-3000', content: 'w-[600px] z-3001' }">
+        <UModal v-model:open="snippetPreviewOpen" :ui="{ content: 'w-[600px]' }">
             <template #body>
                 <div class="note mb-3">
                     <p v-html="$t('cliConfirmSnippetNote')"></p>
@@ -67,7 +67,7 @@
             :title="$t('supportWarningDialogTitle')"
             :close="false"
             :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+            :ui="{ content: 'w-[400px]' }"
         >
             <template #body>
                 <div class="mb-3" v-html="$t('supportWarningDialogText')"></div>

@@ -4,7 +4,6 @@
         :title="title"
         :close="closeable"
         :dismissible="closeable"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
         @update:open="onOpenChange"
     >
         <template #body>

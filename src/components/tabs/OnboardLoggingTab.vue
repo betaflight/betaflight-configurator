@@ -86,7 +86,7 @@
                                     :open="eraseOpen"
                                     :close="false"
                                     :dismissible="false"
-                                    :ui="{ overlay: 'z-3000', content: 'w-[36rem] max-w-[calc(100vw-2rem)] z-3001' }"
+                                    :ui="{ content: 'w-[36rem] max-w-[calc(100vw-2rem)]' }"
                                 >
                                     <template #body>
                                         <div class="dataflash-confirm-erase" :class="{ erasing: isErasing }">
@@ -120,7 +120,7 @@
                                     :open="saveOpen"
                                     :close="false"
                                     :dismissible="false"
-                                    :ui="{ overlay: 'z-3000', content: 'w-[36rem] max-w-[calc(100vw-2rem)] z-3001' }"
+                                    :ui="{ content: 'w-[36rem] max-w-[calc(100vw-2rem)]' }"
                                 >
                                     <template #body>
                                         <div class="dataflash-saving" :class="{ done: saveDone }">

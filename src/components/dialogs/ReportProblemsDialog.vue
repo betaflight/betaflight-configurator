@@ -4,7 +4,6 @@
         :title="$t('warningTitle')"
         :close="false"
         :dismissible="false"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
     >
         <template #body>
             <div class="dialogReportProblems-header" v-html="$t('reportProblemsDialogHeader')"></div>
