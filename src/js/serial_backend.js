@@ -502,12 +502,9 @@ function teardownConnectionUi() {
     GUI.pendingTab = null;
     const target = pendingTab === "firmware_flasher" ? "firmware_flasher" : "landing";
 
-    // Only blank the content area when we're actually LEAVING the current tab. When a
-    // burst of disconnects (an unstable BLE link during a reboot reconnect) runs this
-    // teardown repeatedly, we are already on the destination tab: unmounting would blank
-    // the screen while the follow-up switchTab no-ops (same tab) or races an in-flight
-    // mount, leaving a stuck black screen. switchTab remounts if the tab was somehow left
-    // unmounted, and no-ops when it is already showing.
+    // Only unmount when actually leaving the current tab: a repeated teardown (disconnect
+    // burst) already sits on the destination, and unmounting there blanks the content
+    // while switchTab no-ops on the same tab or races an in-flight mount.
     if (GUI.active_tab !== target) {
         // Clear the active root-mounted tab before navigation selects the next one.
         try {
@@ -572,21 +569,19 @@ function finishUnexpectedDisconnect() {
     teardownConnectionUi();
 }
 
-// Drop a connection whose MSP handshake stalled during the reboot retry loop, WITHOUT
-// ending the loop: we connected to a still-booting FC, so just close the dead link and let
-// the loop's next tick try again. Deliberately not disconnectForReboot() — its
-// prepareDisconnect() would stopRebootReconnect() and kill the very loop that must retry.
+// Drop a connection whose MSP handshake stalled during the reboot retry loop, without
+// ending the loop: the FC is still booting, so close the dead link and let the next tick
+// try again. Not disconnectForReboot() — its prepareDisconnect() would stopRebootReconnect().
 function dropStalledRebootConnection() {
     // onOpen advanced the phase to HANDSHAKING; re-assert the reconnect phase so
     // notifyClosed() leaves the window open and selectActivePort() keeps aiming at the
     // rebooting device instead of falling back mid-retry.
     getConnectionState().reconnectStarted();
 
-    // On a kept BLE link the stall just means the FC hasn't finished booting: keep riding
-    // the known-good session (app-level reset only) and let the next tick re-handshake.
-    // Dropping it here would force a real reconnect — the deaf-session trap this whole
-    // keep-the-link strategy exists to avoid. NOT prepareDisconnect(): its
-    // stopRebootReconnect would kill the live retry interval.
+    // On a kept BLE link, keep riding the known-good session (app-level reset only) and
+    // let the next tick re-handshake — dropping it would force the deaf-session reconnect
+    // the kept link exists to avoid. Not prepareDisconnect(): its stopRebootReconnect
+    // would kill the live retry interval.
     if (rebootLinkKept && serial.connected) {
         resetAppConnectionState();
         return;
@@ -1254,12 +1249,9 @@ export function reinitializeConnection(suppressDialog = false) {
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    // Force the connection invalid now so the reboot dialog and retry loop wait for a REAL
-    // reconnect. A BLE/manual link survives the reboot command (only the MCU restarts), so
-    // connectionValid stays stale-true until the flush drops it ~1.5s later — without this,
-    // the dialog's 100ms check-timer sees it true immediately, concludes the reboot, and
-    // (since the window moved into ConnectionState) nulls the reconnect window before the
-    // retry loop even arms, so no reconnect ever runs.
+    // A BLE/manual link survives the reboot command (only the MCU restarts), so
+    // connectionValid stays stale-true until the flush drops it ~1.5s later. Force it
+    // false now so the reboot dialog and retry loop wait for a real reconnect.
     CONFIGURATOR.connectionValid = false;
 
     if (isDrivenRebootTarget(currentPort)) {

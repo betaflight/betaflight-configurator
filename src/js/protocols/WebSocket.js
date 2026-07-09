@@ -81,10 +81,8 @@ class Websocket extends EventTarget {
         try {
             ws = new WebSocket(this.address, ["binary", "wsSerial"]);
         } catch (e) {
-            // Invalid URL/scheme — e.g. a raw tcp:// manual override, which a browser
-            // cannot open (raw TCP needs the desktop app's native transport). Signal a
-            // failed open so the connect flow recovers immediately instead of dying
-            // silently until the pre-open watchdog.
+            // Invalid URL/scheme, e.g. a raw tcp:// manual override, which a browser
+            // cannot open (raw TCP needs the desktop app's native transport).
             console.error(`${this.logHead} Failed to open ${this.address}:`, e);
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
             return;
