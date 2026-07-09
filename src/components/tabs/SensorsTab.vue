@@ -1738,7 +1738,7 @@ async function acceptFullCal() {
     const result = characterizeTumble({
         samples,
         currentMatrix: R_cur,
-        inclinationRad: (geoRef.inclination * Math.PI) / 180,
+        inclinationRad: degToRad(geoRef.inclination),
     });
 
     if (!result.ok) {

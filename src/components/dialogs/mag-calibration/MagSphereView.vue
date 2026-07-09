@@ -594,7 +594,7 @@ function rebuildFieldReference() {
         return;
     }
 
-    const incl = (props.inclination * Math.PI) / 180;
+    const incl = degToRad(props.inclination);
     const radius = DEFAULT_SPHERE_RADIUS;
     // Field direction: horizontal along +X (magnetic north), vertical along Z.
     // Scene is NED (Z-down, set in initScene): the downward field component is

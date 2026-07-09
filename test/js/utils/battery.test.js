@@ -17,4 +17,12 @@ describe("estimateCellCount", () => {
     it("rounds down within a cell boundary", () => {
         expect(estimateCellCount(8.39, 4.2)).toBe(2);
     });
+
+    it("does not overestimate at an exact cell boundary", () => {
+        expect(estimateCellCount(8.4, 4.2)).toBe(2);
+    });
+
+    it("returns 1 cell when vbatmaxcellvoltage is unset", () => {
+        expect(estimateCellCount(12.6, 0)).toBe(1);
+    });
 });

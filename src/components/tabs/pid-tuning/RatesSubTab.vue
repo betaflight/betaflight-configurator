@@ -361,7 +361,6 @@ let lastTimestamp = 0;
 let keepRendering = true;
 
 // API Version helpers
-const hasProfileNames = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45));
 const hasThrottleHover = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47));
 
 // Rates Type
