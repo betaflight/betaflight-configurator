@@ -482,7 +482,7 @@
 
                         <div class="relative mb-3">
                             <UProgress :model-value="uploadProgress" :max="100" size="2xl" color="warning" />
-                            <div class="text-center text-xs font-bold text-white absolute inset-0">
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
                                 {{ uploadProgressLabel }}
                             </div>
                         </div>

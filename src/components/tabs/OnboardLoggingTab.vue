@@ -127,7 +127,7 @@
                                             <h3>{{ $t("dataflashSavingTitle") }}</h3>
                                             <div class="dataflash-saving-before">
                                                 <div>{{ $t("dataflashSavingNote") }}</div>
-                                                <UProgress :model-value="saveProgress" :max="100" size="2xl" />
+                                                <UProgress :model-value="saveProgress" :max="100" size="2xl" class="my-4" />
                                                 <div class="buttons flex justify-end gap-2 mt-3">
                                                     <UButton
                                                         class="save-flash-cancel"
