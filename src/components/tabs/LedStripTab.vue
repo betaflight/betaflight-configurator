@@ -48,6 +48,13 @@
                         </SettingRow>
                     </div>
                 </div>
+                <div
+                    v-if="editProfileCmsWarningKey"
+                    class="flex items-center gap-2 text-xs px-2 py-1.5 rounded bg-[var(--warning-500)]/15 text-[var(--warning-700)] w-full mt-2"
+                >
+                    <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
+                    <span>{{ $t(editProfileCmsWarningKey) }}</span>
+                </div>
             </UiBox>
 
             <!-- LED Grid Container -->
@@ -436,7 +443,7 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
-import { useLedStrip } from "@/composables/useLedStrip";
+import { useLedStrip, LED_PROFILE_RACE, LED_PROFILE_BEACON } from "@/composables/useLedStrip";
 import { isLedStripGridConfiguredLed, countColorOnlyLedsAtOrigin } from "@/js/msp/MSPHelper";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
@@ -477,6 +484,7 @@ const {
     saveConfig,
     switchEditProfile,
     setActiveFlightProfile,
+    getProfileSelectLabel,
     getProfileName,
     setProfileName,
     buildLedStripFromGrid,
@@ -513,16 +521,8 @@ const {
     LED_BLINK_PAUSE_MS_MIN_ALTERNATE,
 } = useLedStrip();
 
-const PROFILE_OPTION_KEYS = ["ledStripProfile1Label", "ledStripProfile2Label", "ledStripProfile3Label"];
-const PROFILE_OPTION_FALLBACKS = ["Profil 1", "Profil 2", "Profil 3"];
-
 function getProfileOptionLabel(profileIndex) {
-    const key = PROFILE_OPTION_KEYS[profileIndex];
-    const translated = i18n.getMessage(key);
-    if (!translated || translated === key) {
-        return PROFILE_OPTION_FALLBACKS[profileIndex] ?? `Profil ${profileIndex + 1}`;
-    }
-    return decodeHtmlEntities(translated);
+    return getProfileSelectLabel(profileIndex, t);
 }
 
 const profileSelectItems = computed(() =>
@@ -531,6 +531,16 @@ const profileSelectItems = computed(() =>
         value: profileIndex,
     })),
 );
+
+const editProfileCmsWarningKey = computed(() => {
+    if (editProfile.value === LED_PROFILE_RACE) {
+        return "ledStripProfileRaceCmsWarning";
+    }
+    if (editProfile.value === LED_PROFILE_BEACON) {
+        return "ledStripProfileBeaconCmsWarning";
+    }
+    return null;
+});
 
 const editProfileName = computed({
     get() {

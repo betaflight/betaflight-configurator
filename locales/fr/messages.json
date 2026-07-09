@@ -2965,13 +2965,19 @@
         "message": "Profil LED utilisé en vol. Peut être changé via le réglage ledstrip_profile, le CMS ou une plage auxiliaire."
     },
     "ledStripProfileRace": {
-        "message": "Profil 1 — RACE"
+        "message": "RACE"
     },
     "ledStripProfileBeacon": {
-        "message": "Profil 2 — BEACON"
+        "message": "BEACON"
     },
     "ledStripProfileStatus": {
-        "message": "Profil 3 — STATUS"
+        "message": "STATUS"
+    },
+    "ledStripProfileRaceCmsWarning": {
+        "message": "Pour utiliser la couleur Race via CMS/CLI et le mode VTX auto (BLACK), ne programmez pas de LEDs individuellement — laissez le profil vide."
+    },
+    "ledStripProfileBeaconCmsWarning": {
+        "message": "Pour utiliser la couleur Beacon via CMS/CLI, ne programmez pas de LEDs individuellement — laissez le profil vide."
     },
     "ledStripProfileName": {
         "message": "Nom du profil LED"

@@ -4647,13 +4647,19 @@
         "message": "LED profile used in flight. Can be changed via the ledstrip_profile setting, CMS, or an auxiliary channel range."
     },
     "ledStripProfileRace": {
-        "message": "Profile 1 — RACE"
+        "message": "RACE"
     },
     "ledStripProfileBeacon": {
-        "message": "Profile 2 — BEACON"
+        "message": "BEACON"
     },
     "ledStripProfileStatus": {
-        "message": "Profile 3 — STATUS"
+        "message": "STATUS"
+    },
+    "ledStripProfileRaceCmsWarning": {
+        "message": "To use Race color via CMS/CLI and VTX auto mode (BLACK), do not program individual LEDs — keep the profile empty."
+    },
+    "ledStripProfileBeaconCmsWarning": {
+        "message": "To use Beacon color via CMS/CLI, do not program individual LEDs — keep the profile empty."
     },
     "ledStripProfileName": {
         "message": "LED profile name"

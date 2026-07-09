@@ -753,12 +753,7 @@ export function useLedStrip() {
     const ledConfigValues = computed(() => FC.LED_CONFIG_VALUES);
     const multiProfileSupported = computed(() => FC.LED_MULTI_PROFILE_SUPPORTED);
 
-    function getProfileDisplayLabel(profileIndex, translate) {
-        const customName = profileNames.value[profileIndex]?.trim();
-        if (customName) {
-            return customName;
-        }
-
+    function getProfileSelectLabel(profileIndex, translate) {
         if (translate) {
             return translate(PROFILE_I18N_KEYS[profileIndex] ?? "ledStripProfileStatus");
         }
@@ -1061,7 +1056,7 @@ export function useLedStrip() {
         switchEditProfile,
         setActiveFlightProfile,
         getActiveProfileLabel,
-        getProfileDisplayLabel,
+        getProfileSelectLabel,
         getProfileName,
         setProfileName,
         findLed,

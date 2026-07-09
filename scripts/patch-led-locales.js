@@ -17,6 +17,8 @@ const keysToRemove = [
     "ledStripProfileRace",
     "ledStripProfileBeacon",
     "ledStripProfileStatus",
+    "ledStripProfileRaceCmsWarning",
+    "ledStripProfileBeaconCmsWarning",
     "ledStripProfileName",
     "ledStripProfileNameHelp",
     "ledStripActiveProfileHint",
