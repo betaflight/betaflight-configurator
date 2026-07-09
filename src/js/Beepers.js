@@ -61,8 +61,8 @@ class Beepers {
         const self = this;
 
         for (let i = 0; i < self._beepers.length; i++) {
-            if (self._beepers[i].name === beeperName && bit_check(self._beeperOfMask, self._beepers[i].bit)) {
-                return true;
+            if (self._beepers[i].name === beeperName) {
+                return !bit_check(self._beeperDisabledMask, self._beepers[i].bit);
             }
         }
         return false;
