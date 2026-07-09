@@ -829,6 +829,7 @@ import { sensorTypes } from "../../js/sensor_types";
 import { useMagCalibration, computeDeclination, getGeoReference } from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
 import { detectAlignment } from "../../js/utils/magAlignment";
+import { degToRad } from "../../js/utils/common";
 import { useDialog } from "@/composables/useDialog";
 import {
     characterizeTumble,
@@ -1735,7 +1736,7 @@ async function acceptFullCal() {
     const result = characterizeTumble({
         samples,
         currentMatrix: R_cur,
-        inclinationRad: (geoRef.inclination * Math.PI) / 180,
+        inclinationRad: degToRad(geoRef.inclination),
     });
 
     if (!result.ok) {
@@ -2110,8 +2111,6 @@ let altimeterIndicator = null;
 
 const { addInterval, pauseInterval, resumeInterval, removeAllIntervals } = useInterval();
 
-const DEG_TO_RAD = Math.PI / 180;
-
 const CARDINAL_DIRS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 function toCardinal(deg) {
     return CARDINAL_DIRS[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
@@ -2162,9 +2161,9 @@ function renderModel() {
         return;
     }
     const k = fcStore.sensorData.kinematics;
-    const x = k[1] * -DEG_TO_RAD;
-    const y = (k[2] * -1 - yawFix.value) * DEG_TO_RAD;
-    const z = k[0] * -DEG_TO_RAD;
+    const x = -degToRad(k[1]);
+    const y = degToRad(k[2] * -1 - yawFix.value);
+    const z = -degToRad(k[0]);
     modelInstance.rotateTo(x, y, z);
 }
 

@@ -9,6 +9,7 @@
  */
 
 import { ComplexFFT } from "./fft.js";
+import { clamp } from "../utils/common.js";
 
 // ---------------------------------------------------------------------------
 // Windowing
@@ -645,10 +646,6 @@ export function computeSpectrogram(signal, sampleRate, windowSize = 256, overlap
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-}
 
 function nextPow2(n) {
     let p = 1;

@@ -12,6 +12,8 @@
  * by only using roll/pitch from the accelerometer.
  */
 
+import { degToRad } from "./common.js";
+
 // Rotation matrices: sensor frame → body frame for each alignment value.
 // Alignment 0 (DEFAULT) is treated as identity (same as CW0).
 const ALIGNMENT_MATRICES = {
@@ -161,8 +163,8 @@ function evaluateCandidateDetailed(candidateMat, currentInv, samples) {
 
     for (const s of samples) {
         const bodyMag = mat3mulVec(combined, s.mag);
-        const rollRad = s.roll * (Math.PI / 180);
-        const pitchRad = s.pitch * (Math.PI / 180);
+        const rollRad = degToRad(s.roll);
+        const pitchRad = degToRad(s.pitch);
         const level = undoRollPitch(bodyMag, rollRad, pitchRad);
 
         verticals.push(level[2]);
@@ -191,8 +193,8 @@ function computeTiltCoverage(samples) {
     const TILT_THRESHOLD_RAD = (15 * Math.PI) / 180;
     let tilted = 0;
     for (const s of samples) {
-        const rollRad = s.roll * (Math.PI / 180);
-        const pitchRad = s.pitch * (Math.PI / 180);
+        const rollRad = degToRad(s.roll);
+        const pitchRad = degToRad(s.pitch);
         const tilt = Math.hypot(rollRad, pitchRad);
         if (tilt > TILT_THRESHOLD_RAD) {
             tilted++;

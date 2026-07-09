@@ -10,6 +10,7 @@
  */
 
 import { ALIGNMENT_MATRICES } from "./magAlignment.js";
+import { radToDeg } from "./common.js";
 
 /**
  * Frobenius norm of (a - b). Both are 3x3 matrices (array-of-arrays).
@@ -48,11 +49,10 @@ export function matrixToEuler(m) {
         yaw = Math.atan2(-m[0][1], m[1][1]);
     }
 
-    const radToDeg = 180 / Math.PI;
     return {
-        roll: roll * radToDeg,
-        pitch: pitch * radToDeg,
-        yaw: yaw * radToDeg,
+        roll: radToDeg(roll),
+        pitch: radToDeg(pitch),
+        yaw: radToDeg(yaw),
     };
 }
 

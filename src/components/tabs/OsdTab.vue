@@ -534,6 +534,7 @@ import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { i18n } from "@/js/localization";
+import { clamp } from "@/js/utils/common";
 
 import { FONT, SYM } from "@/js/utils/osdFont";
 import { OSD_CONSTANTS } from "./osd/osd_constants";
@@ -988,8 +989,8 @@ function getDragPreviewAnchor(displayItem, dragX, dragY, displaySize, dragPrevie
     const anchorY = (localY - dragPreviewMeta.minY) * charHeight + charHeight / 2;
 
     return {
-        x: Math.min(Math.max(anchorX, 0), dragPreviewMeta.widthPx),
-        y: Math.min(Math.max(anchorY, 0), dragPreviewMeta.heightPx),
+        x: clamp(anchorX, 0, dragPreviewMeta.widthPx),
+        y: clamp(anchorY, 0, dragPreviewMeta.heightPx),
     };
 }
 
@@ -1079,10 +1080,10 @@ function clampStringPreviewPosition(displayItem, position, displaySize, cursorY)
     const elementWidth = Array.from(displayItem.preview || "").length;
     const maxX = Math.max(0, displaySize.x - elementWidth);
     const maxY = Math.max(0, displaySize.y - 1);
-    const row = Math.min(Math.max(cursorY, 0), maxY);
+    const row = clamp(cursorY, 0, maxY);
 
     const rawX = position - row * displaySize.x;
-    const x = Math.min(Math.max(rawX, 0), maxX);
+    const x = clamp(rawX, 0, maxX);
 
     return row * displaySize.x + x;
 }

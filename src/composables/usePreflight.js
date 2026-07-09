@@ -6,6 +6,7 @@ import { ispConnected } from "../js/utils/connection";
 import { sortNotams, kmToNm } from "../js/notam/index.js";
 import { fetchFromFaa } from "../js/notam/faa.js";
 import { fetchFromOpenAip } from "../js/notam/openaip.js";
+import { METERS_TO_FEET } from "../js/utils/common";
 
 const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
@@ -160,7 +161,7 @@ function getDensityAltitude(elevationMeters, pressure, temp) {
     if (elevationMeters === null || pressure === null || temp === null) {
         return null;
     }
-    const elevationFeet = elevationMeters * 3.28084;
+    const elevationFeet = elevationMeters * METERS_TO_FEET;
     const pressureAltitudeFeet = (1013.25 - pressure) * 30 + elevationFeet;
     const isaTemp = 15 - (2 * elevationFeet) / 1000;
     return Math.round(pressureAltitudeFeet + 120 * (temp - isaTemp));
