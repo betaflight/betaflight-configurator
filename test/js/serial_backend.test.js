@@ -238,6 +238,7 @@ function resetMocks() {
     GUI.connected_to = false;
     GUI.connecting_to = false;
     GUI.pendingTab = null;
+    GUI.active_tab = "landing";
     GUI.allowedTabs = [];
     serial.connected = false;
     dialogStore.activeDialog = null;
@@ -265,10 +266,10 @@ function establishConnection() {
     serialHandlers.connect({ detail: true });
 }
 
-// Drive the module into a "connected" state for a VIRTUAL port. beginConnect
-// passes onOpenVirtual as serial.connect's third argument (only for the virtual
-// port); the default mock ignores it, so here we make serial.connect invoke that
-// callback once, which sets module isConnected = true (and CONFIGURATOR.virtualMode).
+// Drive the module into a "connected" state for a VIRTUAL port. beginConnect passes
+// onOpenVirtual as serial.connect's third argument (only for the virtual port); the default
+// mock ignores it, so here we make serial.connect invoke that callback once, which sets
+// module isConnected = true (and CONFIGURATOR.virtualMode).
 function establishVirtualConnection() {
     PortHandler.portPicker.selectedPort = "virtual";
     CONFIGURATOR.virtualMode = true;
@@ -291,7 +292,9 @@ describe("serial_backend disconnect convergence", () => {
         // Sanity: connect path registered a disconnect handler.
         expect(typeof serialHandlers.disconnect).toBe("function");
 
-        // Pre-teardown baseline.
+        // Pre-teardown baseline. Simulate leaving a connected tab so teardown takes the
+        // blank-and-replace path (unmount old tab, switch to landing).
+        GUI.active_tab = "configuration";
         switchTab.mockClear();
         unmountVueTab.mockClear();
         GUI.connect_lock = true; // simulate an in-progress operation lock
@@ -304,6 +307,21 @@ describe("serial_backend disconnect convergence", () => {
         expect(unmountVueTab).toHaveBeenCalledTimes(1);
         expect(GUI.connect_lock).toBe(false);
         expect(GUI.connected_to).toBe(false);
+    });
+
+    it("repeated disconnects while already on landing do NOT blank the content (no stuck black screen)", () => {
+        // Reproduces the unstable-BLE burst: after the first teardown we sit on the
+        // landing tab, and each further unexpected disconnect must not unmount it — an
+        // unmount here previously left a blank content area that switchTab() would not
+        // remount (it no-ops on the same tab).
+        establishConnection();
+        GUI.active_tab = "landing";
+        unmountVueTab.mockClear();
+
+        serialHandlers.disconnect({ detail: true });
+        serialHandlers.disconnect({ detail: true });
+
+        expect(unmountVueTab).not.toHaveBeenCalled();
     });
 
     it("does NOT dismiss an active RebootDialog on an unexpected disconnect (reboot owns its modal)", () => {
@@ -326,6 +344,18 @@ describe("serial_backend disconnect convergence", () => {
         serialHandlers.disconnect({ detail: true });
 
         expect(dialogStore.close).toHaveBeenCalled();
+    });
+
+    it("clears the dead connection's handshake watchdogs on an UNEXPECTED disconnect", () => {
+        establishConnection();
+        GUI.timeout_remove.mockClear();
+
+        serialHandlers.disconnect({ detail: true });
+
+        // GUI.timeout_add does not de-duplicate names, so a stale watchdog left armed
+        // here would later fire into a healthy successor connection.
+        expect(GUI.timeout_remove).toHaveBeenCalledWith("connecting");
+        expect(GUI.timeout_remove).toHaveBeenCalledWith("connectAttempt");
     });
 
     it("UNEXPECTED disconnect does NOT call mspHelper.setArmingEnabled", () => {
@@ -456,7 +486,7 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         resetMocks();
     });
 
-    it("drops the stale link after the flush delay, then retries connecting (auto-connect on)", () => {
+    it("keeps the BLE link open at the flush delay (soft reset) and re-handshakes on it (auto-connect on)", () => {
         vi.useFakeTimers();
         try {
             PortHandler.portPicker.selectedPort = "bluetooth_1";
@@ -465,17 +495,21 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
 
             serial.disconnect.mockClear();
             serial.connect.mockClear();
+            switchTab.mockClear();
 
             reinitializeConnection();
 
             // Nothing happens until the reboot command has had time to flush.
             expect(serial.disconnect).not.toHaveBeenCalled();
 
-            // After the flush delay the surviving link is torn down cleanly.
+            // After the flush delay the app-level state resets (back to landing) but the
+            // GATT session is deliberately KEPT — dropping and re-establishing it is what
+            // produces deaf sessions on Linux/BlueZ.
             vi.advanceTimersByTime(1500);
-            expect(serial.disconnect).toHaveBeenCalled();
+            expect(serial.disconnect).not.toHaveBeenCalled();
+            expect(switchTab).toHaveBeenCalledWith("landing", { mode: "disconnected" });
 
-            // Then the retry loop reconnects (device stays listed, so connect-by-path works).
+            // Then the retry loop re-handshakes over the kept session.
             vi.advanceTimersByTime(1000);
             expect(serial.connect).toHaveBeenCalled();
         } finally {
@@ -483,29 +517,23 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
-    it("aims the BLE/manual retry at the same (previously-selected) port", () => {
+    it("forces connectionValid false on reboot so the dialog waits for a real reconnect", () => {
         vi.useFakeTimers();
-        __resetConnectionStateForTests();
         try {
-            // The BLE/manual reboot path runs rebootReconnect's retry loop, which
-            // reconnects to the SAME device — the selection stays put across the
-            // reboot (no token, no path re-resolution; it re-enumerates with the
-            // same stable id).
-            PortHandler.portPicker.selectedPort = "manual";
+            PortHandler.portPicker.selectedPort = "bluetooth_1";
             PortHandler.portPicker.autoConnect = true;
             establishConnection();
-
-            serial.connect.mockClear();
+            // A BLE link survives the reboot command, so connectionValid is still true when
+            // the reboot starts. If left stale-true, the reboot dialog's check-timer would
+            // conclude the reboot and null the shared reconnect window before the retry loop
+            // arms — no reconnect ever runs. reinitializeConnection must reset it.
+            CONFIGURATOR.connectionValid = true;
 
             reinitializeConnection();
-            vi.advanceTimersByTime(1500); // flush -> disconnectForReboot
-            vi.advanceTimersByTime(1000); // first retry tick
 
-            // The retry reconnects to the still-selected device.
-            expect(PortHandler.portPicker.selectedPort).toBe("manual");
-            expect(serial.connect).toHaveBeenCalled();
+            expect(CONFIGURATOR.connectionValid).toBe(false);
         } finally {
-            __resetConnectionStateForTests();
+            vi.advanceTimersByTime(30000); // drain the loop
             vi.useRealTimers();
         }
     });
@@ -552,27 +580,6 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
 
             serial.connect.mockClear();
             vi.advanceTimersByTime(15000); // cover flush + the full retry window
-            expect(serial.connect).not.toHaveBeenCalled();
-        } finally {
-            vi.useRealTimers();
-        }
-    });
-
-    it("stops reconnect retries when Auto-Connect is turned off mid-reboot", () => {
-        vi.useFakeTimers();
-        try {
-            PortHandler.portPicker.selectedPort = "bluetooth_1";
-            PortHandler.portPicker.autoConnect = true;
-            establishConnection();
-
-            reinitializeConnection();
-            vi.advanceTimersByTime(1500); // flush -> disconnectForReboot, retry armed
-
-            // User turns Auto-Connect off before the first retry tick.
-            PortHandler.portPicker.autoConnect = false;
-            serial.connect.mockClear();
-
-            vi.advanceTimersByTime(5000); // several retry ticks
             expect(serial.connect).not.toHaveBeenCalled();
         } finally {
             vi.useRealTimers();
@@ -655,25 +662,25 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Characterization — pins CURRENT reboot behavior for the serial/USB path
-// and the virtualMode path of reinitializeConnection(). These assert what the
-// code does TODAY (not the desired end-state) so later refactor slices have a
-// regression net. If a later slice intentionally changes this behavior, these
-// tests are expected to be updated alongside that change.
+// reinitializeConnection reboot contract per transport. These are the only net over the
+// serial/USB and virtual reboot paths, which this PR also touches (the connectionValid
+// reset). They assert the contract — command sent or not, self-driven loop or not,
+// connectionValid forced invalid — so a regression on those paths is caught.
 // ---------------------------------------------------------------------------
-describe("serial_backend reinitializeConnection — serial/USB reboot path (characterization)", () => {
+describe("serial_backend reinitializeConnection — serial/USB reboot path", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT and does NOT self-drive disconnect/connect on a timer", () => {
+    it("sends MSP_SET_REBOOT, forces connectionValid false, and does NOT self-drive disconnect/connect", () => {
         vi.useFakeTimers();
         try {
             // Plain USB/serial path: not bluetooth, not manual, not virtual.
             PortHandler.portPicker.selectedPort = "/dev/ttyACM0";
             PortHandler.portPicker.autoConnect = true;
             CONFIGURATOR.virtualMode = false;
+            CONFIGURATOR.connectionValid = true; // established before the reboot
             establishConnection();
 
             MSP.send_message.mockClear();
@@ -682,64 +689,54 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path (char
 
             const ts = reinitializeConnection(true); // suppressDialog: skip DOM modal
 
-            // The reboot command is sent to the FC.
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
-            // reinitializeConnection returns the reboot timestamp.
             expect(typeof ts).toBe("number");
+            // The reboot forces the connection invalid so the dialog/loop wait for a real reconnect.
+            expect(CONFIGURATOR.connectionValid).toBe(false);
 
-            // Unlike the BLE/manual path, the serial path relies on the real protocol
-            // "disconnect" event from the cable dropping — it does NOT schedule its own
-            // disconnect or a reconnect retry loop. Advancing all timers proves no
-            // serial.disconnect()/serial.connect() is driven from here.
+            // Unlike the BLE/manual path, serial relies on the real protocol "disconnect" event
+            // from the cable dropping — it does NOT self-schedule a disconnect or reconnect loop.
             vi.advanceTimersByTime(20000);
             expect(serial.disconnect).not.toHaveBeenCalled();
             expect(serial.connect).not.toHaveBeenCalled();
 
-            // Tear down: this test leaves the module "connected" (the real cable
-            // disconnect never fired). Reset module isConnected so it does not leak
-            // into the next describe block.
-            serialHandlers.disconnect({ detail: true });
+            serialHandlers.disconnect({ detail: true }); // teardown (cable-drop never fired)
         } finally {
             vi.useRealTimers();
         }
     });
 });
 
-describe("serial_backend reinitializeConnection — virtualMode reboot path (characterization)", () => {
+describe("serial_backend reinitializeConnection — virtualMode reboot path", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         resetMocks();
     });
 
-    it("toggles connectDisconnect immediately (disconnect branch), then reconnects after 500ms when auto-connect is on", () => {
+    it("toggles immediately then reconnects after 500ms when auto-connect is on (no MSP_SET_REBOOT)", () => {
         vi.useFakeTimers();
         try {
             PortHandler.portPicker.autoConnect = true;
             establishVirtualConnection();
 
-            // No MSP_SET_REBOOT is sent for the virtual path — it just toggles the link.
             MSP.send_message.mockClear();
             serial.disconnect.mockClear();
             mspHelperInstance.setArmingEnabled.mockClear();
 
             reinitializeConnection();
 
-            // Immediate toggle: isConnected is true so connectDisconnect takes the
-            // disconnect branch (beginDisconnect -> setArmingEnabled with a finishClose
-            // callback). The mocked setArmingEnabled does not auto-invoke its callback,
-            // so drive it to complete the disconnect (virtualMode -> onClosed resets state).
+            // Virtual path just toggles the link — no reboot command.
             expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
             expect(mspHelperInstance.setArmingEnabled).toHaveBeenCalledTimes(1);
+            // Mocked setArmingEnabled doesn't auto-invoke its callback — drive it to finish the close.
             mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
             expect(serial.disconnect).toHaveBeenCalledTimes(1);
 
-            // A single follow-up toggle is scheduled 500ms later (one-shot, not a retry loop).
-            // After teardown isConnected is false, so it takes the connect branch.
+            // A single follow-up toggle 500ms later (one-shot, not a retry loop).
             serial.connect.mockClear();
             vi.advanceTimersByTime(500);
             expect(serial.connect).toHaveBeenCalledTimes(1);
 
-            // No further toggles fire after the single 500ms shot.
             serial.connect.mockClear();
             vi.advanceTimersByTime(20000);
             expect(serial.connect).not.toHaveBeenCalled();
@@ -748,7 +745,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path (cha
         }
     });
 
-    it("toggles connectDisconnect once and schedules no reconnect when auto-connect is off", () => {
+    it("toggles once and schedules no reconnect when auto-connect is off", () => {
         vi.useFakeTimers();
         try {
             PortHandler.portPicker.autoConnect = false;
@@ -760,12 +757,10 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path (cha
 
             reinitializeConnection();
 
-            // Immediate disconnect branch only; complete it via the finishClose callback.
             expect(mspHelperInstance.setArmingEnabled).toHaveBeenCalledTimes(1);
             mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
             expect(serial.disconnect).toHaveBeenCalledTimes(1);
 
-            // Auto-connect off: no 500ms reconnect is scheduled.
             vi.advanceTimersByTime(20000);
             expect(serial.connect).not.toHaveBeenCalled();
         } finally {

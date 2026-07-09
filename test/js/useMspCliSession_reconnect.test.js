@@ -1,18 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// Characterization — pins the CURRENT one-shot reconnect behavior of
+// Characterization — pins the reconnect behavior of
 // useMspCliSession.scheduleReconnect()/cancelScheduledReconnect(). We mock the
-// two collaborators it reaches into (GUI's timeout registry and serial_backend's
-// connectDisconnect) so we can observe exactly when the reconnect fires.
+// collaborators it reaches into (GUI's timeout registry and serial_backend) so
+// we can observe exactly when the reconnect fires.
 //
-// CURRENT behavior (what this pins): scheduleReconnect() registers a single
-// named timeout ("msp_cli_reconnect") that, after RECONNECT_DELAY_MS (500ms),
-// calls connectDisconnect() exactly once. It is NOT a retry loop, and a second
-// scheduleReconnect() replaces (de-bounces) the pending one rather than stacking.
+// Behavior (what this pins): scheduleReconnect() splits by transport.
+// - Serial (re-enumerating) targets: a single named timeout ("msp_cli_reconnect")
+//   that, after RECONNECT_DELAY_MS (500ms), calls disconnect() exactly once —
+//   NOT a retry loop; reconnection is auto-connect's job on device re-enumeration.
+//   A second scheduleReconnect() replaces (de-bounces) the pending one.
+// - Bluetooth/manual targets (never re-enumerate, so auto-connect would never
+//   fire): delegate to serial_backend.scheduleRebootReconnect(), which drives
+//   the flush -> drop-stale-link -> retry cycle itself.
 // ---------------------------------------------------------------------------
 
-const { GUI, connectDisconnect, disconnect } = vi.hoisted(() => {
+const { GUI, connectDisconnect, disconnect, scheduleRebootReconnect } = vi.hoisted(() => {
     return {
         GUI: {
             // Minimal name-keyed timeout registry mirroring gui.js timeout_add/remove.
@@ -37,6 +41,7 @@ const { GUI, connectDisconnect, disconnect } = vi.hoisted(() => {
         },
         connectDisconnect: vi.fn(),
         disconnect: vi.fn(),
+        scheduleRebootReconnect: vi.fn(),
     };
 });
 
@@ -49,6 +54,9 @@ vi.mock("../../src/js/serial_backend", () => ({
     __esModule: true,
     connectDisconnect,
     disconnect,
+    scheduleRebootReconnect,
+    // Mirror the real predicate — scheduleReconnect branches on it.
+    isDrivenRebootTarget: (port) => typeof port === "string" && (port.startsWith("bluetooth") || port === "manual"),
 }));
 
 // Keep the rest of the import graph light — useMspCliSession also imports MSP and FC.
@@ -156,6 +164,24 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         // connect to IDLE — the connect flow owns the phase now and settles it itself.
         cancelScheduledReconnect();
         expect(getConnectionState().state).toBe(State.CONNECTING);
+    });
+
+    it("bluetooth target: delegates to serial_backend's driven reboot cycle (BLE never re-enumerates)", () => {
+        // Regression (#5209 follow-up): a BLE device stays on the port list across an FC
+        // reboot — no removedDevice/addedDevice cycle fires — so the passive drop-and-wait
+        // path would never reconnect. scheduleReconnect must hand BLE to the driven
+        // flush/disconnect/retry cycle instead.
+        PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+
+        scheduleReconnect();
+
+        expect(scheduleRebootReconnect).toHaveBeenCalledTimes(1);
+
+        // The passive one-shot must NOT also run — the driven cycle owns the disconnect
+        // (via disconnectForReboot, without the MSP round-trip a rebooting FC can't answer).
+        vi.advanceTimersByTime(10000);
+        expect(disconnect).not.toHaveBeenCalled();
+        expect(connectDisconnect).not.toHaveBeenCalled();
     });
 
     it("with Auto-Connect OFF: drops the stale link and does NOT reconnect (no reconnect window)", () => {

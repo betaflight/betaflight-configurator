@@ -61,10 +61,41 @@ class Websocket extends EventTarget {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
-        this.ws = new WebSocket(this.address, ["binary", "wsSerial"]);
+        // A previous socket may still be pending or open (e.g. an attempt the reboot
+        // retry loop abandoned). Detach its handlers and close it so its late events
+        // cannot fire into the session this new attempt establishes.
+        if (this.ws) {
+            this.ws.onopen = this.ws.onclose = this.ws.onerror = this.ws.onmessage = null;
+            try {
+                this.ws.close();
+            } catch (e) {
+                console.error(`${this.logHead} Failed to close superseded socket: ${e}`);
+            }
+            this.ws = null;
+        }
+
+        // Capture this attempt's socket: every handler below must no-op once this.ws
+        // has been replaced by a newer attempt, otherwise a stale onclose would run
+        // disconnect() against — and close — the newer socket.
+        let ws;
+        try {
+            ws = new WebSocket(this.address, ["binary", "wsSerial"]);
+        } catch (e) {
+            // Invalid URL/scheme — e.g. a raw tcp:// manual override, which a browser
+            // cannot open (raw TCP needs the desktop app's native transport). Signal a
+            // failed open so the connect flow recovers immediately instead of dying
+            // silently until the pre-open watchdog.
+            console.error(`${this.logHead} Failed to open ${this.address}:`, e);
+            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return;
+        }
+        this.ws = ws;
         let socket = this;
 
         this.ws.onopen = function (e) {
+            if (socket.ws !== ws) {
+                return;
+            }
             console.log(`${socket.logHead} Connected: `, e);
             socket.connected = true;
             socket.dispatchEvent(
@@ -77,6 +108,9 @@ class Websocket extends EventTarget {
         };
 
         this.ws.onclose = async function (e) {
+            if (socket.ws !== ws) {
+                return;
+            }
             console.log(`${socket.logHead} Connection closed: `, e);
 
             await socket.disconnect();
@@ -88,7 +122,15 @@ class Websocket extends EventTarget {
         };
 
         this.ws.onmessage = async function (msg) {
+            if (socket.ws !== ws) {
+                return;
+            }
             let uint8Chunk = await socket.blob2uint(msg.data);
+            // Re-check after the await: the socket may have been superseded while the
+            // blob decoded, and stale bytes must not leak into the new session's stream.
+            if (socket.ws !== ws) {
+                return;
+            }
             socket.dispatchEvent(new CustomEvent("receive", { detail: uint8Chunk }));
         };
     }

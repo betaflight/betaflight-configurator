@@ -281,7 +281,12 @@ const MSP = {
         if (this.message_checksum === expectedChecksum) {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
-        } else if (serial.protocol === "bluetooth" && serial._protocol?.shouldBypassCrc?.(expectedChecksum)) {
+        } else if (serial._protocol?.shouldBypassCrc?.(expectedChecksum)) {
+            // Capability check: only the Bluetooth protocols (WebBluetooth, CapacitorBle)
+            // implement shouldBypassCrc, for BT-11/CC2541 bridges that corrupt the MSP
+            // checksum to 0xff. Deliberately NOT gated on `serial.protocol === "bluetooth"`:
+            // that getter returns the lowercased constructor name ("webbluetooth"/
+            // "capacitorble"), so the old comparison never matched and the bypass was dead.
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
             this.crcError = false; // Override the CRC error for this specific case
         } else {
