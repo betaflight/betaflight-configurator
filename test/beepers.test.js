@@ -40,4 +40,27 @@ describe("Beepers", () => {
             expect(beepers.getDisabledMask()).toBe(0);
         });
     });
+
+    describe("setEnabled", () => {
+        it("clears the disabled bit when enabling a beeper by name", () => {
+            const beepers = new Beepers();
+            beepers.setDisabledMask(bit_set(0, 3));
+            beepers.setEnabled("DISARMING", true);
+            expect(beepers.isEnabled("DISARMING")).toBe(true);
+            expect(beepers.getDisabledMask()).toBe(0);
+        });
+
+        it("sets the disabled bit when disabling a beeper by name", () => {
+            const beepers = new Beepers();
+            beepers.setEnabled("DISARMING", false);
+            expect(beepers.isEnabled("DISARMING")).toBe(false);
+            expect(beepers.getDisabledMask()).toBe(bit_set(0, 3));
+        });
+
+        it("leaves the mask untouched for an unknown beeper name", () => {
+            const beepers = new Beepers();
+            beepers.setEnabled("NOT_A_BEEPER", false);
+            expect(beepers.getDisabledMask()).toBe(0);
+        });
+    });
 });

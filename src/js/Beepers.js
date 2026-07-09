@@ -67,6 +67,20 @@ class Beepers {
         }
         return false;
     }
+    setEnabled(beeperName, enabled) {
+        const self = this;
+
+        for (let i = 0; i < self._beepers.length; i++) {
+            if (self._beepers[i].name === beeperName) {
+                if (enabled) {
+                    self._beeperDisabledMask = bit_clear(self._beeperDisabledMask, self._beepers[i].bit);
+                } else {
+                    self._beeperDisabledMask = bit_set(self._beeperDisabledMask, self._beepers[i].bit);
+                }
+                return;
+            }
+        }
+    }
     generateElements(template, destination) {
         const self = this;
 

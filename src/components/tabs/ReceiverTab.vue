@@ -526,7 +526,7 @@ import GUI from "@/js/gui";
 import Model from "@/js/model";
 import RateCurve from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
-import { bit_check, bit_set, bit_clear } from "@/js/bit";
+import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
@@ -649,7 +649,8 @@ function takeSnapshot() {
         deadband: rcDeadbandConfig.value?.deadband,
         yawDeadband: rcDeadbandConfig.value?.yaw_deadband,
         deadband3dThrottle: rcDeadbandConfig.value?.deadband3d_throttle,
-        featureMask: features.value?.features?._featureMask,
+        telemetryEnabled: features.value?.features?.isEnabled?.("TELEMETRY") ?? false,
+        rssiAdcEnabled: features.value?.features?.isEnabled?.("RSSI_ADC") ?? false,
         elrsBindingPhrase: elrsBindingPhrase.value,
         setpointManualMode: setpointManualMode.value,
         throttleManualMode: throttleManualMode.value,
@@ -935,19 +936,23 @@ function toggleRssiAdc(checked) {
 
 function onRxModeChange() {
     // Update feature mask based on selected RX mode
-    if (features.value?.features?._features) {
+    const featuresHelper = features.value?.features;
+    if (featuresHelper?._features) {
         const selectedBit = selectedRxMode.value;
         // Clear all RX mode bits first, then set the selected one
-        for (const feature of features.value.features._features) {
+        for (const feature of featuresHelper._features) {
             if (feature.mode === "select" && feature.group === "rxMode") {
-                features.value.features._featureMask = bit_clear(features.value.features._featureMask, feature.bit);
+                featuresHelper.disable(feature.name);
             }
         }
         // Set the selected RX mode bit (if not "None" which is -1)
         if (selectedBit !== -1) {
-            features.value.features._featureMask = bit_set(features.value.features._featureMask, selectedBit);
+            const selectedFeature = featuresHelper.findFeatureByBit(selectedBit);
+            if (selectedFeature) {
+                featuresHelper.enable(selectedFeature.name);
+            }
         }
-        updateTabList(features.value.features);
+        updateTabList(featuresHelper);
         needReboot.value = true;
     }
 }
@@ -1009,11 +1014,10 @@ async function loadConfig() {
 
         // Initialize selectedRxMode from feature mask
         if (features.value?.features?._features) {
-            const featureMask = features.value.features._featureMask;
             let foundRxMode = -1;
             for (const feature of features.value.features._features) {
                 if (feature.mode === "select" && feature.group === "rxMode") {
-                    if (bit_check(featureMask, feature.bit)) {
+                    if (features.value.features.isEnabled(feature.name)) {
                         foundRxMode = feature.bit;
                         break;
                     }
