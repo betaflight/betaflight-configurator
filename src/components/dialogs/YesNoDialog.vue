@@ -1,11 +1,5 @@
 <template>
-    <UModal
-        :open="open"
-        :title="title"
-        :close="false"
-        :dismissible="false"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
-    >
+    <UModal :open="open" :title="title" :close="false" :dismissible="false">
         <template #body>
             <!-- Note: 'text' is rendered using v-html to support bolding/links in i18n messages.
                  Ensure that only trusted content (e.g. from i18n) is passed to this prop. -->

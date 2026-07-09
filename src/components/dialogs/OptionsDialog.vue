@@ -1,9 +1,5 @@
 <template>
-    <UModal
-        v-model:open="open"
-        :title="$t('tabOptions')"
-        :ui="{ overlay: 'z-3000', content: 'max-w-4xl h-full z-3001' }"
-    >
+    <UModal v-model:open="open" :title="$t('tabOptions')" :ui="{ content: 'max-w-4xl h-full' }">
         <template #body>
             <div class="flex flex-col gap-4">
                 <UiBox>

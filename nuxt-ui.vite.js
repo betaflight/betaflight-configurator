@@ -45,6 +45,17 @@ export default {
                 text: "whitespace-normal",
             },
         },
+        modal: {
+            slots: {
+                // Slot overrides replace the base class string (not merged), so Nuxt UI's base
+                // classes are restated with the z-index appended. The bg-elevated/75 dimming is
+                // unaffected: it comes from the overlay variant, composed on top at runtime.
+                // z-3000/z-3001 keeps modals above all app dialogs (z-1000–2001) and the
+                // ConnectButton dropdown (z-2100), with the content above its own overlay.
+                overlay: "fixed inset-0 z-3000",
+                content: "bg-default divide-y divide-default flex flex-col focus:outline-none z-3001",
+            },
+        },
         switch: {
             slots: {
                 base: "cursor-pointer",

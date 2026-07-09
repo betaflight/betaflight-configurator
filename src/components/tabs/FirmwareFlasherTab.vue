@@ -90,13 +90,7 @@
             </UFieldGroup>
         </div>
 
-        <UModal
-            v-model:open="unstableFirmwareOpen"
-            :title="$t('warningTitle')"
-            :close="false"
-            :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
-        >
+        <UModal v-model:open="unstableFirmwareOpen" :title="$t('warningTitle')" :close="false" :dismissible="false">
             <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
                 <div class="flex items-center gap-2 mt-3">
@@ -119,12 +113,7 @@
             </template>
         </UModal>
 
-        <UModal
-            v-model:open="verifyBoardOpen"
-            :close="false"
-            :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'z-3001' }"
-        >
+        <UModal v-model:open="verifyBoardOpen" :close="false" :dismissible="false">
             <template #body>
                 <div v-html="verifyBoardContentHtml"></div>
             </template>

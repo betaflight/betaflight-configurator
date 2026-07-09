@@ -1,11 +1,5 @@
 <template>
-    <UModal
-        :open="open"
-        :title="title"
-        :close="false"
-        :dismissible="false"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
-    >
+    <UModal :open="open" :title="title" :close="false" :dismissible="false">
         <template #body>
             <div class="flex justify-center py-2">
                 <ProgressRing indeterminate :size="80" :stroke-width="6" color="primary" />

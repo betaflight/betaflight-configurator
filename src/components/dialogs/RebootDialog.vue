@@ -1,11 +1,5 @@
 <template>
-    <UModal
-        :open="open"
-        :title="status"
-        :close="false"
-        :dismissible="false"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
-    >
+    <UModal :open="open" :title="status" :close="false" :dismissible="false">
         <template #body>
             <UProgress :model-value="progress" :max="100" />
         </template>

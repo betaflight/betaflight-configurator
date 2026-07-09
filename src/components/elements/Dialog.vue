@@ -1,12 +1,5 @@
 <template>
-    <UModal
-        :open="modelValue"
-        :title="title"
-        :close="closeable"
-        :dismissible="closeable"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
-        @update:open="onOpenChange"
-    >
+    <UModal :open="modelValue" :title="title" :close="closeable" :dismissible="closeable" @update:open="onOpenChange">
         <template #body>
             <slot></slot>
         </template>

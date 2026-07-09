@@ -32,7 +32,13 @@ function searchLimitsElement(arrayElements) {
                 limits.maxX = Math.max(val.length, limits.maxX);
             });
         } else {
-            // Array of objects {x, y, sym}
+            // Array of objects {x, y, sym}. Seed the limits from the first cell so
+            // elements whose cells all sit on one side of the anchor (e.g.
+            // ARTIFICIAL_HORIZON spans y +1..+7) report their true extents.
+            limits.minX = arrayElements[0].x;
+            limits.maxX = arrayElements[0].x;
+            limits.minY = arrayElements[0].y;
+            limits.maxY = arrayElements[0].y;
             arrayElements.forEach(function (val) {
                 limits.minX = Math.min(val.x, limits.minX);
                 limits.maxX = Math.max(val.x, limits.maxX);

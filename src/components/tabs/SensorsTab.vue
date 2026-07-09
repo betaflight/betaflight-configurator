@@ -274,12 +274,7 @@
                     <!-- Collecting -->
                     <div v-if="alignDetectPhase === 'collecting'" class="flex items-center gap-3 flex-wrap">
                         <div class="flex-1 min-w-48">
-                            <div class="mag-align-progress-bar">
-                                <div
-                                    class="mag-align-progress-fill"
-                                    :style="{ width: alignDetectProgress + '%' }"
-                                ></div>
-                            </div>
+                            <UProgress :model-value="alignDetectProgress" :max="100" size="sm" />
                         </div>
                         <span class="text-xs text-[var(--surface-500)]">{{
                             $t("sensorConfigAlignSamples", { count: alignDetectSampleCount })
@@ -545,9 +540,12 @@
                                     <dt>{{ $t("magCalibrationResidual") }}</dt>
                                     <dd>{{ calResidualText }}</dd>
                                 </dl>
-                                <div v-if="cal.mode !== 'check'" class="mag-cal-progress-bar">
-                                    <div class="mag-cal-progress-fill" :style="{ width: cal.progress + '%' }"></div>
-                                </div>
+                                <UProgress
+                                    v-if="cal.mode !== 'check'"
+                                    :model-value="cal.progress"
+                                    :max="100"
+                                    size="sm"
+                                />
                                 <div v-if="cal.quality" class="text-xs font-semibold text-center">
                                     <span :class="'quality-' + cal.quality"
                                         >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
@@ -2600,21 +2598,6 @@ onMounted(() => {
         padding: 0.5rem 0;
     }
 
-    .mag-align-progress-bar {
-        width: 100%;
-        height: 4px;
-        background: var(--surface-300);
-        border-radius: 2px;
-        overflow: hidden;
-    }
-
-    .mag-align-progress-fill {
-        height: 100%;
-        background: var(--primary-500);
-        border-radius: 2px;
-        transition: width 0.3s ease;
-    }
-
     .confidence-high {
         color: var(--success-500);
     }
@@ -2684,21 +2667,6 @@ onMounted(() => {
     .mag-viz-mode-selector .mag-viz-active {
         color: #fff;
         background: #5f5f6d; /* rgba(255,255,255,0.3) over #1a1a2e — contrast 5.5:1 */
-    }
-
-    .mag-cal-progress-bar {
-        width: 100%;
-        height: 5px;
-        background: var(--surface-300);
-        border-radius: 3px;
-        overflow: hidden;
-    }
-
-    .mag-cal-progress-fill {
-        height: 100%;
-        background: var(--primary-500);
-        border-radius: 3px;
-        transition: width 0.3s ease;
     }
 
     .mag-cal-live-inline {
