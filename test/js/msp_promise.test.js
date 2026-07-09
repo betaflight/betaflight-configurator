@@ -5,7 +5,7 @@ import { serial } from "../../src/js/serial";
 import MspHelper from "../../src/js/msp/MSPHelper";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import CONFIGURATOR from "../../src/js/data_storage";
-import { MspTimeoutError, MspCrcError } from "../../src/js/msp/mspErrors";
+import { MspCancelledError, MspTimeoutError, MspCrcError } from "../../src/js/msp/mspErrors";
 
 const EEPROM_WRITE_CODE = MSPCodes.MSP_EEPROM_WRITE;
 
@@ -76,14 +76,38 @@ describe("MSP promise semantics", () => {
 
     describe("disconnect_cleanup", () => {
         it("rejects pending promise with MspCancelledError reason disconnected and empties queues", async () => {
-            const rejection = expect(MSP.promise(EEPROM_WRITE_CODE)).rejects.toMatchObject({
-                name: "MspCancelledError",
-                reason: "disconnected",
-            });
+            const promise = MSP.promise(EEPROM_WRITE_CODE);
+            promise.catch(() => {});
+            const instanceRejection = expect(promise).rejects.toBeInstanceOf(MspCancelledError);
+            const reasonRejection = expect(promise).rejects.toMatchObject({ reason: "disconnected" });
 
             MSP.disconnect_cleanup();
 
-            await rejection;
+            await instanceRejection;
+            await reasonRejection;
+            expect(MSP.callbacks).toHaveLength(0);
+            expect(MSP.parked.size).toBe(0);
+        });
+
+        it("rejects both an in-flight and a parked promise with MspCancelledError reason disconnected", async () => {
+            const inFlightPromise = MSP.promise(EEPROM_WRITE_CODE, [1]);
+            inFlightPromise.catch(() => {});
+            const parkedPromise = MSP.promise(EEPROM_WRITE_CODE, [2]);
+            parkedPromise.catch(() => {});
+
+            expect(MSP.parked.get(EEPROM_WRITE_CODE)).toHaveLength(1);
+
+            const inFlightInstanceRejection = expect(inFlightPromise).rejects.toBeInstanceOf(MspCancelledError);
+            const inFlightReasonRejection = expect(inFlightPromise).rejects.toMatchObject({ reason: "disconnected" });
+            const parkedInstanceRejection = expect(parkedPromise).rejects.toBeInstanceOf(MspCancelledError);
+            const parkedReasonRejection = expect(parkedPromise).rejects.toMatchObject({ reason: "disconnected" });
+
+            MSP.disconnect_cleanup();
+
+            await inFlightInstanceRejection;
+            await inFlightReasonRejection;
+            await parkedInstanceRejection;
+            await parkedReasonRejection;
             expect(MSP.callbacks).toHaveLength(0);
             expect(MSP.parked.size).toBe(0);
         });
@@ -91,14 +115,15 @@ describe("MSP promise semantics", () => {
 
     describe("callbacks_cleanup", () => {
         it("rejects pending promise with MspCancelledError reason cleanup", async () => {
-            const rejection = expect(MSP.promise(EEPROM_WRITE_CODE)).rejects.toMatchObject({
-                name: "MspCancelledError",
-                reason: "cleanup",
-            });
+            const promise = MSP.promise(EEPROM_WRITE_CODE);
+            promise.catch(() => {});
+            const instanceRejection = expect(promise).rejects.toBeInstanceOf(MspCancelledError);
+            const reasonRejection = expect(promise).rejects.toMatchObject({ reason: "cleanup" });
 
             MSP.callbacks_cleanup();
 
-            await rejection;
+            await instanceRejection;
+            await reasonRejection;
             expect(MSP.callbacks).toHaveLength(0);
         });
     });
@@ -107,10 +132,10 @@ describe("MSP promise semantics", () => {
         it("rejects with MspCancelledError reason disconnected when serial is not connected", async () => {
             serial._protocol = { connected: false };
 
-            await expect(MSP.promise(EEPROM_WRITE_CODE)).rejects.toMatchObject({
-                name: "MspCancelledError",
-                reason: "disconnected",
-            });
+            const promise = MSP.promise(EEPROM_WRITE_CODE);
+            promise.catch(() => {});
+            await expect(promise).rejects.toBeInstanceOf(MspCancelledError);
+            await expect(promise).rejects.toMatchObject({ reason: "disconnected" });
             expect(serialSendSpy).not.toHaveBeenCalled();
         });
 

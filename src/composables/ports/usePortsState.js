@@ -94,6 +94,10 @@ export function usePortsState(getRules) {
             })
             .catch((error) => {
                 console.error("Failed to load VTX config for ports tab:", error);
+                isLoading.value = false;
+                nextTick(() => {
+                    GUI.content_ready();
+                });
             });
     };
 

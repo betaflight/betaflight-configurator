@@ -501,23 +501,28 @@ const MSP = {
 
         return this._transmit(code, data, callback_sent, callback_msp, false);
     },
-    _buffer_matches(entry, byteLength, keyCrc) {
-        return (
-            entry.requestBuffer?.byteLength === byteLength &&
-            this.crc8_dvb_s2_data(new Uint8Array(entry.requestBuffer), 0, entry.requestBuffer.byteLength) === keyCrc
-        );
+    _buffer_matches(entry, view) {
+        if (entry.requestBuffer?.byteLength !== view.byteLength) {
+            return false;
+        }
+        const entryView = new Uint8Array(entry.requestBuffer);
+        for (let i = 0; i < view.byteLength; i++) {
+            if (entryView[i] !== view[i]) {
+                return false;
+            }
+        }
+        return true;
     },
     _transmit(code, data, callback_sent, callback_msp, errorAware) {
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
         const view = new Uint8Array(bufferOut);
-        const keyCrc = this.crc8_dvb_s2_data(view, 0, view.length);
 
         // Per-code serialisation: an errorAware request whose code matches an in-flight
         // errorAware entry with a DIFFERENT buffer parks behind it (identical buffers
         // dedup and attach instead). Same-code legacy entries never cause parking.
         if (errorAware) {
             const differentInFlight = this.callbacks.some(
-                (i) => i.errorAware && i.code === code && !this._buffer_matches(i, bufferOut.byteLength, keyCrc),
+                (i) => i.errorAware && i.code === code && !this._buffer_matches(i, view),
             );
             if (differentInFlight) {
                 this._park(code, {
@@ -531,9 +536,7 @@ const MSP = {
             }
         }
 
-        const requestExists = this.callbacks.some(
-            (i) => i.code === code && this._buffer_matches(i, bufferOut.byteLength, keyCrc),
-        );
+        const requestExists = this.callbacks.some((i) => i.code === code && this._buffer_matches(i, view));
 
         const obj = {
             code,

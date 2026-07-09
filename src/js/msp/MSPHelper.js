@@ -1828,12 +1828,24 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             callback(null, new MspCrcError(`CRC error for MSP code ${code}`, code));
                         } else {
                             callback(
-                                { command: code, data: data, length: data ? data.byteLength : 0, crcError: crcError },
+                                {
+                                    command: code,
+                                    data: data,
+                                    length: data ? data.byteLength : 0,
+                                    crcError: crcError,
+                                    unsupported: dataHandler.unsupported,
+                                },
                                 undefined,
                             );
                         }
                     } else {
-                        callback({ command: code, data: data, length: data ? data.byteLength : 0, crcError: crcError });
+                        callback({
+                            command: code,
+                            data: data,
+                            length: data ? data.byteLength : 0,
+                            crcError: crcError,
+                            unsupported: dataHandler.unsupported,
+                        });
                     }
                 } catch (e) {
                     console.error(`callback for code ${code} threw:`, e);
@@ -2574,6 +2586,14 @@ MspHelper.prototype.dataflashRead = function (address, blockSize, onDataCallback
                     );
 
                     onDataCallback(address, new DataView(decompressedArray.buffer), dataSize);
+                } else {
+                    console.error(`Unknown dataflash compression type ${dataCompressionType}`);
+                    onDataCallback(
+                        address,
+                        null,
+                        null,
+                        new Error(`Unknown dataflash compression type ${dataCompressionType}`),
+                    );
                 }
             } else {
                 // Report address error

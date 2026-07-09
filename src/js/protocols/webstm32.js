@@ -198,6 +198,7 @@ class STM32Protocol {
                         disconnectFromMsp();
                     } else {
                         console.error(`${this.logHead} MSP_SET_REBOOT request failed:`, error);
+                        this.handleError();
                     }
                 });
             console.log(`${this.logHead} Reboot request received by device`);
@@ -257,6 +258,7 @@ class STM32Protocol {
             })
             .catch((error) => {
                 console.error(`${this.logHead} MSP_BOARD_INFO request failed:`, error);
+                this.handleError();
             });
     }
 
