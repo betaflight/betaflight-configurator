@@ -8,8 +8,7 @@
 
 <script>
 import { defineComponent, computed } from "vue";
-
-const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
+import { NO_BATTERY_VOLTAGE_MAXIMUM, estimateCellCount } from "../../js/utils/battery";
 
 export default defineComponent({
     props: {
@@ -35,13 +34,7 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const nbCells = computed(() => {
-            let cells = Math.floor(props.voltage / props.vbatmaxcellvoltage) + 1;
-            if (props.voltage === 0) {
-                cells = 1;
-            }
-            return cells;
-        });
+        const nbCells = computed(() => estimateCellCount(props.voltage, props.vbatmaxcellvoltage));
 
         const min = computed(() => {
             return props.vbatwarningcellvoltage * nbCells.value;

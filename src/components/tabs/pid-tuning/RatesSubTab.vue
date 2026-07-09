@@ -315,6 +315,7 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import RateCurve from "@/js/RateCurve";
 import Model from "@/js/model";
+import { degToRad } from "@/js/utils/common";
 import semver from "semver";
 import { API_VERSION_1_47 } from "@/js/data_storage";
 import betaflightLogo from "@/images/rate_logos/betaflight.svg";
@@ -1609,7 +1610,6 @@ function renderModel(timestamp) {
     // Only rotate when we have valid RC channel data
     if (channels?.[0] && channels?.[1] && channels?.[2]) {
         const rates = getCurrentRatesSnapshot();
-        const degToRad = (deg) => deg * (Math.PI / 180);
 
         const roll =
             (delta / 1000) *

@@ -179,14 +179,13 @@ import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import adjustBoxNameIfPeripheralWithModeID from "../../js/peripherals";
 import { i18n } from "../../js/localization";
 import { getTextWidth } from "../../js/utils/common";
+import { CHANNEL_MIN, CHANNEL_MAX, clampChannel, channelPercent } from "../../js/utils/rcChannel";
 import inflection from "inflection";
 import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
 
-const CHANNEL_MIN = 900;
-const CHANNEL_MAX = 2100;
 const CHANNEL_STEP = 25;
 const MIN_RANGE_GAP = 25;
 const DEFAULT_RANGE = { start: 1300, end: 1700 };
@@ -291,24 +290,6 @@ export default defineComponent({
         const infoMinWidthStyle = computed(() => {
             return infoMinWidth.value ? { minWidth: `${infoMinWidth.value}px` } : {};
         });
-
-        const clampChannel = (value) => {
-            if (value === undefined || value === null || Number.isNaN(value)) {
-                return 1500;
-            }
-            if (value < CHANNEL_MIN) {
-                return CHANNEL_MIN;
-            }
-            if (value > CHANNEL_MAX) {
-                return CHANNEL_MAX;
-            }
-            return value;
-        };
-
-        const channelPercent = (value) => {
-            const clamped = clampChannel(value);
-            return ((clamped - CHANNEL_MIN) / (CHANNEL_MAX - CHANNEL_MIN)) * 100;
-        };
 
         const updateInfoWidth = () => {
             const longestName = modes.reduce((max, mode) => Math.max(max, mode.displayName.length), 0);

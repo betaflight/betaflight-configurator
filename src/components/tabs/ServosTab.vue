@@ -161,6 +161,7 @@ import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import { useInterval } from "@/composables/useInterval";
 import { useTimeout } from "@/composables/useTimeout";
+import { clamp } from "@/js/utils/common";
 
 const { t } = useTranslation();
 
@@ -188,13 +189,13 @@ const rateOptions = computed(() => {
 
 // Bar height as percentage (0-100) for UProgress
 function getBarHeight(value) {
-    const clamped = Math.min(Math.max(value - 1000, 0), 1000);
+    const clamped = clamp(value - 1000, 0, 1000);
     return (clamped / 1000) * 100;
 }
 
 // Bar opacity string for CSS variable
 function getBarOpacity(value) {
-    const alpha = Math.min(Math.max((value - 1000) / 1000, 0), 1);
+    const alpha = clamp((value - 1000) / 1000, 0, 1);
     return alpha.toFixed(2);
 }
 
@@ -222,9 +223,9 @@ function updateServos(saveToEeprom) {
         const src = servoConfigs[i];
         const cfg = FC.SERVO_CONFIG[i];
 
-        const min = Math.min(Math.max(src.min ?? SERVO_MIN, SERVO_MIN), SERVO_MAX);
-        const middle = Math.min(Math.max(src.middle ?? SERVO_MIN, SERVO_MIN), SERVO_MAX);
-        const max = Math.min(Math.max(src.max ?? SERVO_MAX, SERVO_MIN), SERVO_MAX);
+        const min = clamp(src.min ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
+        const middle = clamp(src.middle ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
+        const max = clamp(src.max ?? SERVO_MAX, SERVO_MIN, SERVO_MAX);
 
         cfg.min = min;
         cfg.middle = middle;

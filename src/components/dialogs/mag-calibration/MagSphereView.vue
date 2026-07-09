@@ -31,8 +31,8 @@ import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { i18n } from "../../../js/localization";
+import { degToRad } from "../../../js/utils/common";
 
-const DEG_TO_RAD = Math.PI / 180;
 const DEFAULT_SPHERE_RADIUS = 400;
 
 const props = defineProps({
@@ -466,7 +466,7 @@ function updateQuadAttitude() {
         // Euler fallback: build q from (roll, pitch, heading) in aerospace ZYX,
         // then the same adapter.
         const { roll, pitch, heading } = props.attitude;
-        _tmpEuler.set(roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
+        _tmpEuler.set(degToRad(roll), degToRad(pitch), degToRad(heading), "ZYX");
         _tmpQuat.setFromEuler(_tmpEuler);
         _targetQuat.set(_tmpQuat.x, -_tmpQuat.y, -_tmpQuat.z, _tmpQuat.w);
     } else {

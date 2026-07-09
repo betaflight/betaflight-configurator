@@ -199,6 +199,7 @@
 import { ref, computed, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
+import { METERS_TO_FEET } from "@/js/utils/common";
 
 const { positionalWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
 // Modifier waypoints (lat/lon = 0) would otherwise skew distance and altitude.
@@ -235,7 +236,6 @@ const MAX_SAMPLES_PER_SEGMENT = 50; // Maximum samples between waypoints
 const getSegmentKey = (fromUid, toUid) => `${fromUid}-${toUid}`;
 
 // Conversion constants
-const METERS_TO_FEET = 3.28084;
 const METERS_TO_NAUTICAL_MILES = 1 / 1852;
 
 // Calculate distance between two points using Haversine formula
