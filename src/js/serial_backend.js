@@ -765,7 +765,11 @@ function checkReportProblem(problemName, problems) {
 }
 
 async function checkReportProblems() {
-    await MSP.promise(MSPCodes.MSP_STATUS);
+    try {
+        await MSP.promise(MSPCodes.MSP_STATUS);
+    } catch (error) {
+        console.error("Failed to request MSP_STATUS:", error);
+    }
 
     let needsProblemReportingDialog = false;
     let problems = [];
@@ -792,7 +796,11 @@ async function processBuildConfiguration() {
 
     if (buildOptionsSupported) {
         // get build key from firmware
-        await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
+        try {
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
+        } catch (error) {
+            console.error("Failed to request build key:", error);
+        }
         gui_log(i18n.getMessage("buildKey", FC.CONFIG.buildKey));
 
         // firmware 1_45 or higher is required to support cloud build options
@@ -814,7 +822,12 @@ async function processBuildConfiguration() {
 }
 
 async function processUid() {
-    await MSP.promise(MSPCodes.MSP_UID);
+    try {
+        await MSP.promise(MSPCodes.MSP_UID);
+    } catch (error) {
+        console.error("Failed to request MSP_UID:", error);
+        return;
+    }
 
     connectionTimestamp = Date.now();
 
@@ -833,10 +846,14 @@ async function processUid() {
 }
 
 async function processCraftName() {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
-    } else {
-        await MSP.promise(MSPCodes.MSP_NAME);
+    try {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
+        } else {
+            await MSP.promise(MSPCodes.MSP_NAME);
+        }
+    } catch (error) {
+        console.error("Failed to request craft name:", error);
     }
 
     gui_log(
@@ -847,7 +864,11 @@ async function processCraftName() {
     );
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME));
+        try {
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME));
+        } catch (error) {
+            console.error("Failed to request pilot name:", error);
+        }
     }
 
     FC.CONFIG.armingDisabled = false;
@@ -1029,13 +1050,33 @@ export function read_serial(info) {
 }
 
 export async function update_sensor_status() {
-    await MSP.promise(MSPCodes.MSP_ANALOG);
-    await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
-    await MSP.promise(MSPCodes.MSP_BOXNAMES);
-    await MSP.promise(MSPCodes.MSP_STATUS_EX);
+    try {
+        await MSP.promise(MSPCodes.MSP_ANALOG);
+    } catch (error) {
+        console.error("Failed to request MSP_ANALOG:", error);
+    }
+    try {
+        await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
+    } catch (error) {
+        console.error("Failed to request MSP_BATTERY_STATE:", error);
+    }
+    try {
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+    } catch (error) {
+        console.error("Failed to request MSP_BOXNAMES:", error);
+    }
+    try {
+        await MSP.promise(MSPCodes.MSP_STATUS_EX);
+    } catch (error) {
+        console.error("Failed to request MSP_STATUS_EX:", error);
+    }
 
     if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
-        await MSP.promise(MSPCodes.MSP_RAW_GPS);
+        try {
+            await MSP.promise(MSPCodes.MSP_RAW_GPS);
+        } catch (error) {
+            console.error("Failed to request MSP_RAW_GPS:", error);
+        }
     }
 }
 

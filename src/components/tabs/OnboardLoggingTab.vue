@@ -718,7 +718,18 @@ export default defineComponent({
 
                     showSavingDialog();
 
-                    function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
+                    function onChunkRead(chunkAddress, chunkDataView, bytesCompressed, error) {
+                        if (error) {
+                            console.error("Error reading blackbox log:", error);
+                            gui_log(
+                                `<strong><span class="message-negative">${i18n.getMessage("error", {
+                                    errorMessage: error,
+                                })}</span></strong>`,
+                            );
+                            dismissSavingDialog();
+                            FileSystem.closeFile(openedFile);
+                            return;
+                        }
                         if (chunkDataView !== null) {
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;

@@ -1,6 +1,7 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import { serial } from "./serial.js";
+import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors.js";
 
 const MSP = {
     symbols: {
@@ -54,10 +55,12 @@ const MSP = {
     crcError: false,
 
     callbacks: [],
+    parked: new Map(), // errorAware requests parked behind an in-flight same-code request
     packet_error: 0,
     unsupported: 0,
 
     TIMEOUT: 1000,
+    MAX_RETRIES: 3,
 
     last_received_timestamp: null,
     listeners: [],
@@ -496,41 +499,56 @@ const MSP = {
             return false;
         }
 
+        return this._transmit(code, data, callback_sent, callback_msp, false);
+    },
+    _buffer_matches(entry, byteLength, keyCrc) {
+        return (
+            entry.requestBuffer?.byteLength === byteLength &&
+            this.crc8_dvb_s2_data(new Uint8Array(entry.requestBuffer), 0, entry.requestBuffer.byteLength) === keyCrc
+        );
+    },
+    _transmit(code, data, callback_sent, callback_msp, errorAware) {
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
         const view = new Uint8Array(bufferOut);
         const keyCrc = this.crc8_dvb_s2_data(view, 0, view.length);
+
+        // Per-code serialisation: an errorAware request whose code matches an in-flight
+        // errorAware entry with a DIFFERENT buffer parks behind it (identical buffers
+        // dedup and attach instead). Same-code legacy entries never cause parking.
+        if (errorAware) {
+            const differentInFlight = this.callbacks.some(
+                (i) => i.errorAware && i.code === code && !this._buffer_matches(i, bufferOut.byteLength, keyCrc),
+            );
+            if (differentInFlight) {
+                this._park(code, {
+                    code,
+                    requestBuffer: bufferOut,
+                    callback: callback_msp,
+                    callbackSent: callback_sent,
+                    errorAware: true,
+                });
+                return true;
+            }
+        }
+
         const requestExists = this.callbacks.some(
-            (i) =>
-                i.code === code &&
-                i.requestBuffer?.byteLength === bufferOut.byteLength &&
-                this.crc8_dvb_s2_data(new Uint8Array(i.requestBuffer), 0, i.requestBuffer.byteLength) === keyCrc,
+            (i) => i.code === code && this._buffer_matches(i, bufferOut.byteLength, keyCrc),
         );
 
         const obj = {
             code,
             requestBuffer: bufferOut,
             callback: callback_msp,
+            callbackSent: callback_sent,
+            errorAware,
+            attempts: 1,
             start: performance.now(),
         };
 
-        if (!requestExists) {
-            obj.timer = setTimeout(() => {
-                console.warn(
-                    `MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
-                );
-                serial.send(bufferOut, (_sendInfo) => {
-                    obj.stop = performance.now();
-                    const executionTime = Math.round(obj.stop - obj.start);
-                    // We should probably give up connection if the request takes too long ?
-                    if (executionTime > 5000) {
-                        console.warn(
-                            `MSP: data request took too long: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} EXECUTION TIME: ${executionTime}ms`,
-                        );
-                    }
-
-                    clearTimeout(obj.timer); // prevent leaks
-                });
-            }, this.TIMEOUT);
+        // errorAware entries always arm their own timer (even when deduped) so an awaiter
+        // that attached onto a stalled request still settles.
+        if (errorAware || !requestExists) {
+            this._arm_timer(obj);
         }
 
         this.callbacks.push(obj);
@@ -546,28 +564,140 @@ const MSP = {
 
         return true;
     },
-    /**
-     * resolves: {command: code, data: data, length: message_length}
-     */
-    async promise(code, data) {
-        return new Promise((resolve) => {
-            this.send_message(code, data, false, (_data) => {
-                resolve(_data);
-            });
-        });
+    _arm_timer(obj) {
+        obj.timer = setTimeout(() => this._on_timeout(obj), this.TIMEOUT);
     },
-    callbacks_cleanup() {
-        for (const callback of this.callbacks) {
-            clearTimeout(callback.timer);
+    _on_timeout(obj) {
+        if (obj.attempts < this.MAX_RETRIES) {
+            obj.attempts++;
+            console.warn(
+                `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
+            );
+            serial.send(obj.requestBuffer, (_sendInfo) => {
+                obj.stop = performance.now();
+                const executionTime = Math.round(obj.stop - obj.start);
+                // We should probably give up connection if the request takes too long ?
+                if (executionTime > 5000) {
+                    console.warn(
+                        `MSP: data request took too long: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} EXECUTION TIME: ${executionTime}ms`,
+                    );
+                }
+            });
+            this._arm_timer(obj);
+            return;
         }
 
+        clearTimeout(obj.timer);
+        obj.timer = null;
+
+        if (!obj.errorAware) {
+            // legacy: give up retrying but leave the entry queued so a late response still fires it
+            return;
+        }
+
+        const index = this.callbacks.indexOf(obj);
+        if (index !== -1) {
+            this.callbacks.splice(index, 1);
+        }
+        try {
+            obj.callback?.(null, new MspTimeoutError(`MSP request timed out: ${obj.code}`, obj.code));
+        } catch (callbackError) {
+            console.error("MSP callback threw on timeout:", callbackError);
+        }
+        this._release_parked(obj.code);
+    },
+    _park(code, entry) {
+        let queue = this.parked.get(code);
+        if (!queue) {
+            queue = [];
+            this.parked.set(code, queue);
+        }
+        queue.push(entry);
+    },
+    _release_parked(code) {
+        const queue = this.parked.get(code);
+        if (!queue || queue.length === 0) {
+            return;
+        }
+        if (this.callbacks.some((i) => i.errorAware && i.code === code)) {
+            return;
+        }
+
+        const entry = queue.shift();
+        if (queue.length === 0) {
+            this.parked.delete(code);
+        }
+
+        entry.attempts = 1;
+        entry.start = performance.now();
+        this._arm_timer(entry);
+        this.callbacks.push(entry);
+
+        serial.send(entry.requestBuffer, (sendInfo) => {
+            if (sendInfo.bytesSent === entry.requestBuffer.byteLength && entry.callbackSent) {
+                entry.callbackSent();
+            }
+        });
+    },
+    /**
+     * resolves: {command: code, data: data, length: message_length}
+     * rejects: MspTimeoutError, MspCancelledError or MspCrcError
+     */
+    async promise(code, data) {
+        if (code === undefined || CONFIGURATOR.virtualMode) {
+            return undefined;
+        }
+
+        if (!serial.connected) {
+            throw new MspCancelledError("MSP request while disconnected", code, "disconnected");
+        }
+
+        return new Promise((resolve, reject) => {
+            this._transmit(
+                code,
+                data,
+                false,
+                (response, error) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(response);
+                    }
+                },
+                true,
+            );
+        });
+    },
+    callbacks_cleanup(error = new MspCancelledError("MSP queue cleared", undefined, "cleanup")) {
+        const pending = this.callbacks;
         this.callbacks = [];
+
+        const parked = [];
+        for (const queue of this.parked.values()) {
+            parked.push(...queue);
+        }
+        this.parked.clear();
+
+        for (const entry of pending) {
+            clearTimeout(entry.timer);
+        }
+
+        for (const entry of [...pending, ...parked]) {
+            if (!entry.errorAware) {
+                continue;
+            }
+            try {
+                entry.callback?.(null, error);
+            } catch (callbackError) {
+                console.error("MSP callback threw during cleanup:", callbackError);
+            }
+        }
     },
     disconnect_cleanup() {
         this.state = 0; // reset packet state for "clean" initial entry (this is only required if user hot-disconnects)
         this.packet_error = 0; // reset CRC packet error counter for next session
 
-        this.callbacks_cleanup();
+        this.callbacks_cleanup(new MspCancelledError("Serial connection closed", undefined, "disconnected"));
         // Tag the error so callers can distinguish an EXPECTED close-driven drain — a `save`/
         // `exit` reboots the FC, closing the port before it can reply — from a genuine command
         // failure. The save still succeeded; the board is just restarting.

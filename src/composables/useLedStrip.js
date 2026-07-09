@@ -134,12 +134,16 @@ export function useLedStrip() {
 
     // Load LED configuration data
     async function loadData() {
-        await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG);
-        await MSP.promise(MSPCodes.MSP_LED_COLORS);
-        await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
+        try {
+            await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG);
+            await MSP.promise(MSPCodes.MSP_LED_COLORS);
+            await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
+            }
+        } catch (error) {
+            console.error("Error loading LED strip data:", error);
         }
     }
 
