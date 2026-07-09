@@ -1,0 +1,34 @@
+{
+  "fixture": "reference_flight1",
+  "bfl": "LOG00007.BFL",
+  "magModel": "reference_flight1_mag_model.json",
+  "gpsHome": { "lat": 48.4023468, "lon": -71.1696256, "altMSL": 134.2 },
+  "alignment": {
+    "_comment": "video_time = tUs/1e6 + offsetSec  =>  tUs = (video_time - offsetSec)*1e6 (absolute FC microseconds).",
+    "offsetSec": -195.323,
+    "ccScore": 0.598,
+    "timebase": "video"
+  },
+  "coarse": {
+    "_comment": "Pilot-reported, coarse. loopClosure/altDelta from 'landed beside the car ~1.5 m lower'; maxClimb from the 'high climb'.",
+    "loopClosureM": 1.5,
+    "altLowerM": 1.5,
+    "maxClimbM": 100
+  },
+  "segments": [
+    { "name": "takeoff_north",  "type": "heading_anchor", "t0": 1,   "t1": 9,   "expect": { "headingDeg": 0 } },
+
+    { "name": "orbit1_look_left",  "type": "orbit", "t0": 78,  "t1": 94,  "expect": { "crabSign": -1 } },
+    { "name": "orbit2_look_right", "type": "orbit", "t0": 96,  "t1": 108, "expect": { "crabSign": 1 } },
+
+    { "name": "barrel_roll_1", "type": "barrel_roll", "t0": 110, "t1": 116, "expect": { "freefall": [111, 115] } },
+    { "name": "barrel_roll_2", "type": "barrel_roll", "t0": 120, "t1": 125, "expect": { "freefall": [121, 124] } },
+
+    { "name": "front_flip", "type": "pitch_flip", "t0": 133, "t1": 140, "expect": { "freefall": [134, 139] } },
+    { "name": "back_flip",  "type": "pitch_flip", "t0": 144, "t1": 150, "expect": { "freefall": [145, 149] } },
+
+    { "name": "high_climb_fall", "type": "climb_fall", "t0": 154, "t1": 167, "expect": { "fall": [163, 167] } },
+
+    { "name": "backward_flight", "type": "backward", "t0": 190, "t1": 204, "expect": {} }
+  ]
+}

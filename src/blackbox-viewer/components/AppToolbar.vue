@@ -26,6 +26,14 @@
                     size="xs"
                     @click="$emit('export-gpx')"
                 />
+                <UButton
+                    variant="ghost"
+                    color="neutral"
+                    label="KML"
+                    icon="i-lucide-globe"
+                    size="xs"
+                    @click="$emit('export-kml')"
+                />
                 <USeparator orientation="vertical" class="h-4" />
             </template>
             <UButton
@@ -53,7 +61,7 @@ import { useLogStore } from "../stores/log.js";
 import { useAppStore } from "../stores/app.js";
 import LogFileInput from "./LogFileInput.vue";
 
-defineEmits(["files-selected", "export-csv", "export-gpx", "open-settings", "open-keys"]);
+defineEmits(["files-selected", "export-csv", "export-gpx", "export-kml", "open-settings", "open-keys"]);
 
 const logStore = useLogStore();
 const appStore = useAppStore();
