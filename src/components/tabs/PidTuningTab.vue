@@ -160,6 +160,9 @@ const showAllPids = ref(false);
 const currentProfile = ref(FC.CONFIG.profile);
 const currentRateProfile = ref(0);
 const isMounted = ref(false);
+// Guards for the TX-driven profile sync (see watchers below).
+const isLoading = ref(false);
+let syncingFromFc = false;
 const pidSubTab = ref(null);
 const filterSubTab = ref(null);
 const ratesSubTab = ref(null);
@@ -228,6 +231,7 @@ const hasChanges = computed(() => pidTuningStore.hasChanges);
 
 // MSP Data Loading
 async function loadData() {
+    isLoading.value = true;
     try {
         if (!isMounted.value) {
             return false;
@@ -298,6 +302,8 @@ async function loadData() {
         console.error("[PidTuning] Failed to load data:", e);
         GUI.content_ready();
         return false;
+    } finally {
+        isLoading.value = false;
     }
 }
 
@@ -546,6 +552,53 @@ watch(
             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = newValue;
         }
         onFormChanged();
+    },
+);
+
+// Keep the profile / rate-profile selectors in sync with TX-driven changes.
+// The global live-status poller (serial_backend.js) refreshes FC.CONFIG.profile and
+// FC.CONFIG.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
+// can therefore change the active profile out from under the UI. Reflect that here and
+// reload — but never clobber unsaved edits or interrupt an in-flight load. Restores the
+// checkUpdateProfile() behaviour lost in the Vue migration (issue #5230).
+async function syncProfileFromFc(kind) {
+    // Skip while loading, while our own change is applying, or when the form is dirty
+    // (an in-progress edit takes precedence over a switch flip, matching legacy behaviour).
+    if (!isMounted.value || isLoading.value || syncingFromFc || pidTuningStore.hasChanges) {
+        return;
+    }
+
+    syncingFromFc = true;
+    try {
+        currentProfile.value = FC.CONFIG.profile;
+        currentRateProfile.value = FC.CONFIG.rateProfile;
+        await loadData();
+        gui_log(
+            i18n.getMessage(
+                kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile",
+                [(kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1],
+            ),
+        );
+    } finally {
+        syncingFromFc = false;
+    }
+}
+
+watch(
+    () => FC.CONFIG.profile,
+    (newValue) => {
+        if (newValue !== currentProfile.value) {
+            syncProfileFromFc("profile");
+        }
+    },
+);
+
+watch(
+    () => FC.CONFIG.rateProfile,
+    (newValue) => {
+        if (newValue !== currentRateProfile.value) {
+            syncProfileFromFc("rate");
+        }
     },
 );
 
