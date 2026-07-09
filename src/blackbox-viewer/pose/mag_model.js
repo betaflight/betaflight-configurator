@@ -11,56 +11,15 @@
  */
 
 import { eulerToMatrix, ALIGNMENT_MATRICES } from "./mag_alignment.js";
+// The one deliberate exception to this directory's self-containment: a pure,
+// dependency-free math function with no ties to app state, MSP, or the DOM,
+// shared with the live tumble-calibration wizard (src/js/utils/magModelExport.js)
+// so both calibration paths enforce the same acceptance thresholds.
+import { computeMagQualityBounds } from "../../js/utils/magQualityBounds.js";
+
+export { computeMagQualityBounds };
 
 const SUPPORTED_VERSIONS = ["2.0", "2.1", "2.2"];
-
-/**
- * Sanity bounds on soft-iron and field strength to catch degenerate fits.
- *
- * Numeric thresholds for field-strength range (150-950 milliGauss) and per-axis
- * soft-iron scale (max/min diagonal ratio < 2.24) originate from ArduPilot's
- * CompassCalibrator. This is an independent JavaScript reimplementation.
- *
- * @param {number[3][3]|null} softIron - the W_inv soft-iron matrix
- * @param {number|null} fieldNt - local field strength in nanotesla
- * @returns {object}
- */
-export function computeMagQualityBounds(softIron, fieldNt) {
-    const fieldMg = fieldNt != null ? fieldNt / 100 : null;
-    const fieldOk = fieldMg != null ? fieldMg >= 150 && fieldMg <= 950 : null;
-
-    let offdiagRatio = null;
-    let anisotropy = null;
-    if (Array.isArray(softIron) && softIron.length === 3) {
-        const diag = [Math.abs(softIron[0][0]), Math.abs(softIron[1][1]), Math.abs(softIron[2][2])];
-        const offdiag = [
-            Math.abs(softIron[0][1]),
-            Math.abs(softIron[0][2]),
-            Math.abs(softIron[1][2]),
-            Math.abs(softIron[1][0]),
-            Math.abs(softIron[2][0]),
-            Math.abs(softIron[2][1]),
-        ];
-        const meanDiag = (diag[0] + diag[1] + diag[2]) / 3;
-        const maxDiag = Math.max(...diag);
-        const minDiag = Math.min(...diag);
-        offdiagRatio = meanDiag > 1e-12 ? Math.max(...offdiag) / meanDiag : null;
-        anisotropy = minDiag > 1e-12 ? maxDiag / minDiag : null;
-    }
-    const offdiagOk = offdiagRatio != null ? offdiagRatio < 1.0 : null;
-    const anisotropyOk = anisotropy != null ? anisotropy < 2.24 : null;
-    const boundsOk = [fieldOk, offdiagOk, anisotropyOk].every((b) => b === true);
-
-    return {
-        field_strength_mg: fieldMg,
-        field_strength_ok: fieldOk,
-        soft_iron_offdiag_ratio: offdiagRatio,
-        soft_iron_offdiag_ok: offdiagOk,
-        soft_iron_anisotropy: anisotropy,
-        soft_iron_anisotropy_ok: anisotropyOk,
-        bounds_ok: boundsOk,
-    };
-}
 
 /**
  * Build the fusion block for 3-axis magnetometer estimation.

@@ -10,6 +10,15 @@
  * normalize Q, Cholesky → W_inv (upper-triangular soft-iron calibration matrix).
  *
  * Requires >= 9 non-coplanar points.  Returns null on failure.
+ *
+ * Sibling implementation: blackbox-viewer/pose/inFlightMagCal.ts solves the
+ * same 9-parameter quadric fit and Cholesky whitening step for post-flight
+ * log analysis — deliberately matched to this file's approach, not an
+ * independent derivation. Left as two implementations rather than one shared
+ * one because the pose engine pre-normalizes samples by median magnitude to
+ * keep the fit well-scaled for flight-log ADC ranges, a step this file's raw
+ * live-tumble samples don't need; merging them would mean threading that
+ * normalization through a caller that has no use for it.
  */
 
 /**

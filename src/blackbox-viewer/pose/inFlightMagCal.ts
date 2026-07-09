@@ -167,6 +167,12 @@ const MAX_INCLINATION_ERROR_DEG = 15;
  * Solved via (D^T D) v = D^T · 1 using Gaussian elimination with partial
  * pivoting on the 9×9 normal equations.
  *
+ * Sibling implementation: src/js/utils/ellipsoidFit.js solves this same
+ * fit (deliberately matched, down to the Cholesky whitening step below)
+ * for the live tumble-calibration wizard. Kept separate rather than shared
+ * because this function's caller pre-normalizes samples by median magnitude
+ * first, which the wizard's raw live samples don't need.
+ *
  * @param samples  Normalized mag vectors (m'_i in unit-scaled space, O(1))
  * @returns        { A, beta, residualRms } or null if singular
  */
