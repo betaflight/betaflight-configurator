@@ -3338,6 +3338,63 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
+    "servosResourceAssignments": {
+        "message": "Resource Assignments"
+    },
+    "servosResourceNotAvailable": {
+        "message": "Resource data not available. Your firmware may not support the MSP2_MOTOR_SERVO_RESOURCE command."
+    },
+    "servosMotorResources": {
+        "message": "Motor Pins"
+    },
+    "servosServoResources": {
+        "message": "Servo Pins"
+    },
+    "servosResourceIndex": {
+        "message": "Index"
+    },
+    "servosResourcePin": {
+        "message": "Pin"
+    },
+    "servosResourceMotorLabel": {
+        "message": "Motor {{index}}"
+    },
+    "servosResourceServoLabel": {
+        "message": "Servo {{index}}"
+    },
+    "servosResourceHint": {
+        "message": "To change pin assignments in CLI, use resource MOTOR <index> <pin> or resource SERVO <index> <pin> (e.g., resource MOTOR 1 A08 or resource SERVO 1 A08)."
+    },
+    "servosResourceEditHint": {
+        "message": "Select a pin from the dropdown to reassign motor or servo outputs. Changes are applied immediately but require Save and a reboot to take effect."
+    },
+    "servosResourceSmartLoading": {
+        "message": "Loading timer and DMA candidates..."
+    },
+    "servosResourceSmartReady": {
+        "message": "Timer-aware pad candidates are available."
+    },
+    "servosResourceSmartUnavailable": {
+        "message": "Timer-aware candidates are unavailable; showing current resource pins."
+    },
+    "servosResourceSrcFirmware": {
+        "message": "firmware-authoritative"
+    },
+    "servosResourceSrcFirmwareTip": {
+        "message": "Pad → silkscreen mapping comes from the firmware build's resource defaults; M1/M2 labels in the dropdown are authoritative."
+    },
+    "servosResourceSrcHeuristic": {
+        "message": "heuristic"
+    },
+    "servosResourceSrcHeuristicTip": {
+        "message": "Pad → silkscreen mapping was inferred from a scan or fallback snapshot, so M1/M2 labels are suppressed in the dropdown to avoid attributing the wrong silkscreen number."
+    },
+    "servosResourceSetOk": {
+        "message": "Assigned {{resource}} {{index}} -> {{pin}} (click Save to persist and reboot)"
+    },
+    "servosResourceSetFailed": {
+        "message": "Resource assignment failed"
+    },
     "gpsHead": {
         "message": "General"
     },

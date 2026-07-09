@@ -306,6 +306,34 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.MOTOR_OUTPUT_ORDER[i] = data.readU8();
                     }
                     break;
+                case MSPCodes.MSP2_MOTOR_SERVO_RESOURCE:
+                    {
+                        FC.MOTOR_RESOURCES = [];
+                        FC.SERVO_RESOURCES = [];
+                        const motorCount = data.readU8();
+                        const servoCount = data.readU8();
+                        for (let i = 0; i < motorCount; i++) {
+                            const ioTag = data.readU8();
+                            FC.MOTOR_RESOURCES.push({
+                                index: i,
+                                ioTag: ioTag,
+                                pin: ioTag ? this.ioTagToPin(ioTag) : "NONE",
+                            });
+                        }
+                        for (let i = 0; i < servoCount; i++) {
+                            const ioTag = data.readU8();
+                            FC.SERVO_RESOURCES.push({
+                                index: i,
+                                ioTag: ioTag,
+                                pin: ioTag ? this.ioTagToPin(ioTag) : "NONE",
+                            });
+                        }
+                    }
+                    break;
+                case MSPCodes.MSP2_SET_MOTOR_SERVO_RESOURCE:
+                    // SET ACK has no payload to parse; explicit case keeps
+                    // the dispatcher from logging "Unknown code" on success.
+                    break;
                 case MSPCodes.MSP2_GET_VTX_DEVICE_STATUS:
                     FC.VTX_DEVICE_STATUS = null;
                     const dataLength = data.byteLength;
@@ -642,9 +670,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.AUX_CONFIG_IDS.push(data.readU8());
                     }
                     break;
-                case MSPCodes.MSP_SERVO_MIX_RULES:
-                    break;
-
                 case MSPCodes.MSP_SERVO_CONFIGURATIONS:
                     FC.SERVO_CONFIG = []; // empty the array as new data is coming in
                     if (data.byteLength % 12 == 0) {
@@ -3001,6 +3026,106 @@ MspHelper.prototype.writeConfiguration = function (reboot, callback) {
             }
         });
     }, 100); // 100ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received
+};
+
+/**
+ * Set a motor or servo resource pin assignment
+ * @param {number} resourceType - 0 = MOTOR, 1 = SERVO
+ * @param {number} index - The motor/servo index (0-based)
+ * @param {number} ioTag - The ioTag value (use pinToIoTag to convert from pin name)
+ * @param {function} callback - Called when complete
+ */
+MspHelper.prototype.setMotorServoResource = function (resourceType, index, ioTag, callback) {
+    // resourceType wire enum: 0 = MOTOR, 1 = SERVO. Anything else is a
+    // caller bug; without this guard push8 would silently truncate
+    // (e.g. `2` works, `-1` wraps to 0xFF) and the FC writes to an
+    // unintended resource block.
+    if (!Number.isInteger(resourceType) || resourceType < 0 || resourceType > 1) {
+        throw new Error(`setMotorServoResource: invalid resourceType (got ${resourceType})`);
+    }
+    // index is sent as push8 too. Stale row indices or off-by-one math
+    // could otherwise wrap to a different slot. MAX is 0xFF defensively;
+    // BF firmware itself rejects out-of-bound MOTOR/SERVO indices.
+    if (!Number.isInteger(index) || index < 0 || index > 0xff) {
+        throw new Error(`setMotorServoResource: index out of single-byte range (got ${index})`);
+    }
+    // Reject null/undefined ioTag: pinToIoTag returns null for unparseable
+    // pin names, and `0` is the real "NONE" sentinel — sending `0` here for
+    // an unknown pin would silently clear the binding instead of failing
+    // fast. Forcing an explicit error keeps stale dropdown state / parsing
+    // bugs from quietly destroying resource assignments on save.
+    if (ioTag == null) {
+        throw new Error("setMotorServoResource: invalid ioTag (received null/undefined)");
+    }
+    // push8 silently truncates anything outside 0..255: `-1`, `256`, `1.5`,
+    // etc. would wrap to a real ioTag (or 0 = NONE) and rebind/clear the
+    // wrong resource on save. The null check above catches parse failures
+    // from pinToIoTag; this catches numeric caller bugs.
+    if (!Number.isInteger(ioTag) || ioTag < 0 || ioTag > 0xff) {
+        throw new Error(`setMotorServoResource: ioTag out of single-byte range (got ${ioTag})`);
+    }
+    const buffer = [];
+    buffer.push8(resourceType); // 0 = MOTOR, 1 = SERVO
+    buffer.push8(index);
+    buffer.push8(ioTag);
+
+    MSP.send_message(MSPCodes.MSP2_SET_MOTOR_SERVO_RESOURCE, buffer, false, callback);
+};
+
+/**
+ * Convert an ioTag to a human-readable pin name (e.g., "A08", "B03")
+ * ioTag encoding: ((portId + 1) << 4) | pinNumber
+ * where portId: 0=A, 1=B, 2=C, etc.
+ */
+MspHelper.prototype.ioTagToPin = function (ioTag) {
+    if (!ioTag) {
+        return "NONE";
+    }
+    const portId = (ioTag >> 4) - 1;
+    const pinNumber = ioTag & 0x0f;
+    // ioTag is sent over MSP as a single byte (push8 / readU8). The high
+    // nibble holds (portId + 1), so portId can encode 0..14 (A..O); above
+    // that the byte overflows and decodes back to a different pin.
+    if (portId < 0 || portId > 14) {
+        return "INVALID";
+    }
+    const portLetter = String.fromCodePoint("A".codePointAt(0) + portId);
+    return `${portLetter}${pinNumber.toString().padStart(2, "0")}`;
+};
+
+/**
+ * Convert a pin name (e.g., "A08", "B03") to an ioTag
+ */
+MspHelper.prototype.pinToIoTag = function (pinName) {
+    // Only the literal "NONE" represents an intentional release. Blank /
+    // null / undefined inputs almost always mean a transient dropdown
+    // state (Vue clearing the model before the next pick lands); treating
+    // them as deliberate NONE would silently clear the row's resource on
+    // save. Return null instead so setMotorServoResource's null guard
+    // fails fast and the caller can rollback rather than commit damage.
+    if (pinName === "NONE") {
+        return 0;
+    }
+    if (pinName == null || pinName === "") {
+        return null;
+    }
+    const match = pinName.match(/^([A-Z])(\d{1,2})$/i);
+    if (!match) {
+        // Distinguish "invalid pin name" from "explicit NONE" (returns 0
+        // above). Callers can now detect parse failures and fail fast
+        // instead of silently sending `ioTag = 0` which the FC would
+        // accept as a NONE release.
+        return null;
+    }
+    const portId = match[1].toUpperCase().codePointAt(0) - "A".codePointAt(0);
+    const pinNumber = Number.parseInt(match[2], 10);
+    // ioTag is sent over MSP as a single byte: ((portId + 1) << 4) | pinNumber.
+    // Pins on ports beyond `O` (portId 14) would overflow the byte and
+    // round-trip through readU8 as a different pin.
+    if (portId < 0 || portId > 14 || pinNumber < 0 || pinNumber > 15) {
+        return null;
+    }
+    return ((portId + 1) << 4) | pinNumber;
 };
 
 let mspHelper;
