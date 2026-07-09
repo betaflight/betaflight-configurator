@@ -559,11 +559,8 @@ function finishClose(finishedCallback) {
 // event (no "removedDevice") for BLE/Capacitor/WebSocket/TCP. Deliberately does NOT call
 // mspHelper.setArmingEnabled — the link is already gone, so that MSP callback would never fire.
 function finishUnexpectedDisconnect() {
-    // The dead connection's handshake watchdogs die with it. They are per-connection
-    // timers (re-armed by the next onOpen), and GUI.timeout_add does NOT de-duplicate
-    // names — so a stale timer left armed here would fire later and tear down a healthy
-    // successor (seen as reboot-reconnect attempt N's watchdog killing attempt N+1).
-    // The intentional path already covers this via prepareDisconnect's timeout_kill_all.
+    // Clear this connection's handshake watchdogs. GUI.timeout_add does NOT de-duplicate
+    // names, so a stale timer left armed here would fire into a healthy successor connection.
     GUI.timeout_remove("connecting");
     GUI.timeout_remove("connectAttempt");
 
@@ -676,18 +673,16 @@ function abortConnection(messageKey) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
 
-    // A failed open/handshake DURING a reboot-driven reconnect is expected flakiness: the
-    // device is briefly gone while it re-enumerates after save/reboot, and recovery is owned
-    // by auto-connect. In that case log it but do NOT alarm the user with a failure dialog
-    // (the connection typically succeeds on the very next attempt — the "sometimes a
-    // Connection failed dialog appears even though it connected" report). Gate on auto-connect:
-    // without it nothing retries, so a failure there is real and must still surface. Capture
-    // before setPhase(FAILED) overwrites the reconnect phase. The open reboot window is
-    // checked too: after the loop's FIRST failed attempt the phase has already left
-    // REBOOTING/RECONNECTING (onOpen/abort advanced it), so the phase alone would let
-    // attempt 2+'s failures pop the dialog mid-reboot.
+    // A failed open/handshake during a reboot reconnect is expected flakiness (the device is
+    // re-enumerating), so suppress the failure dialog — but only with auto-connect on (else
+    // nothing retries and the failure is real). Check the open window as well as the phase:
+    // after the loop's first attempt the phase has left REBOOTING/RECONNECTING, so the phase
+    // alone would let later failures pop the dialog. Gate the window term on
+    // !rebootWindowExpired so a leaked window can't suppress real failures forever.
+    // (Captured before setPhase(FAILED) below overwrites the reconnect phase.)
+    const state = getConnectionState();
     const duringRebootReconnect =
-        (getConnectionState().isRebootReconnecting || getConnectionState().isRebootWindowOpen) &&
+        (state.isRebootReconnecting || (state.isRebootWindowOpen && !state.rebootWindowExpired)) &&
         PortHandler.portPicker.autoConnect;
 
     // Default message reflects how far the attempt got: a port that already opened but failed
@@ -1291,9 +1286,12 @@ export function reinitializeConnection(suppressDialog = false) {
         getConnectionState().concludeReboot(false);
         return rebootTimestamp;
     }
-    // Show reboot progress modal
+    // Show reboot progress modal. The dialog's check-timer concludes the reboot window;
+    // when it's suppressed, nothing else would, so conclude here to avoid a leaked window.
     if (!suppressDialog) {
         showRebootDialog();
+    } else {
+        getConnectionState().concludeReboot(false);
     }
 
     return rebootTimestamp;
