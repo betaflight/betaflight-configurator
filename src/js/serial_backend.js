@@ -68,16 +68,13 @@ const REBOOT_CONNECT_MAX_TIME_DRIVEN_MS = 20000;
 // then retry reconnecting on this cadence until the FC answers or the reboot window closes.
 const REBOOT_FLUSH_DELAY_MS = 1500;
 const REBOOT_RECONNECT_RETRY_MS = 1000;
-// How long an opened-but-silent link may stall in the MSP handshake during a reboot
-// reconnect before it is dropped for the next retry. Short by design: the FC not
-// answering MSP right after a reboot means we connected to a still-booting board, and
-// holding the dead link for the normal 10s handshake timeout would consume the whole
-// reboot window (the retry loop skips ticks while a connection is open).
+// How long a silent link may stall in the MSP handshake during a reboot reconnect before
+// it is dropped for the next retry. Short because the normal 10s handshake timeout would
+// consume the whole reboot window (the retry loop skips ticks while a connection is open).
 const REBOOT_HANDSHAKE_STALL_MS = 3000;
-// The BLE link was kept open across the current reboot (soft reset — see
-// softResetForReboot). While true, a stalled handshake keeps riding the same GATT
-// session instead of dropping it: the session is known-good (it carried the save and
-// the reboot ack), the FC just isn't answering yet. Cleared on any real transport close.
+// The BLE link was kept open across the current reboot (softResetForReboot). While true,
+// a stalled handshake keeps riding the known-good GATT session instead of dropping it.
+// Cleared on any real transport close.
 let rebootLinkKept = false;
 // Bytes arrived on the link since the current handshake began (reset in onOpen,
 // stamped by read_serial_adapter). The reboot stall watchdog uses it as its progress
@@ -609,11 +606,10 @@ function setConnectionTimeout() {
             // Re-check the loop live: it may have ended (or been cancelled) while we
             // stalled, in which case the normal failure path below owns the teardown.
             if (rebootReconnectTimerId !== false) {
-                // Progress-based deadline: any bytes in the last stall slice mean the FC
-                // is answering and the chain is just slow (BLE bridges chunk MSP into
-                // small GATT frames) — grant another slice instead of restarting the
-                // whole handshake from scratch. Only a SILENT link is dropped; the
-                // reboot window still bounds the total time.
+                // Progress-based deadline: bytes in the last stall slice mean the FC is
+                // answering, just slowly (BLE bridges chunk MSP into small GATT frames) —
+                // grant another slice rather than restart the handshake. Only a silent
+                // link is dropped; the reboot window still bounds total time.
                 if (rebootHandshakeSawTraffic) {
                     rebootHandshakeSawTraffic = false;
                     setConnectionTimeout();
@@ -668,13 +664,11 @@ function abortConnection(messageKey) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
 
-    // A failed open/handshake during a reboot reconnect is expected flakiness (the device is
-    // re-enumerating), so suppress the failure dialog — but only with auto-connect on (else
-    // nothing retries and the failure is real). Check the open window as well as the phase:
-    // after the loop's first attempt the phase has left REBOOTING/RECONNECTING, so the phase
-    // alone would let later failures pop the dialog. Gate the window term on
-    // !rebootWindowExpired so a leaked window can't suppress real failures forever.
-    // (Captured before setPhase(FAILED) below overwrites the reconnect phase.)
+    // A failed open/handshake during a reboot reconnect is expected flakiness, so suppress
+    // the failure dialog — but only with auto-connect on, else nothing retries and the
+    // failure is real. Check the open window as well as the phase (later retries have left
+    // the reconnect phase), and gate it on !rebootWindowExpired so a leaked window can't
+    // suppress real failures forever. Captured before setPhase(FAILED) below.
     const state = getConnectionState();
     const duringRebootReconnect =
         (state.isRebootReconnecting || (state.isRebootWindowOpen && !state.rebootWindowExpired)) &&
@@ -1311,12 +1305,9 @@ function rebootReconnect() {
 
     rebootReconnectTimerId = setTimeout(() => {
         // If the link survived the reboot, reset the now-stale connection so the UI returns
-        // to the landing tab instead of sitting on a dead connection. For a BLE target that
-        // is about to auto-reconnect, keep the GATT session open (softResetForReboot) — the
-        // retry rides it, avoiding the deaf-session reconnect on Linux/BlueZ. Otherwise
-        // (serial/manual, or no auto-reconnect coming) drop the transport for real.
-        // (Both paths run prepareDisconnect, whose stopRebootReconnect on this already-fired
-        // timeout is harmless.)
+        // to the landing tab. For a BLE target about to auto-reconnect, keep the GATT session
+        // open (softResetForReboot) so the retry rides it, avoiding the deaf-session reconnect
+        // on Linux/BlueZ. Otherwise drop the transport for real.
         if (isConnected()) {
             const target = PortHandler.portPicker.selectedPort;
             const keepBleLink =
