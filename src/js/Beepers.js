@@ -58,26 +58,18 @@ class Beepers {
         self._beeperDisabledMask = beeperDisabledMask;
     }
     isEnabled(beeperName) {
-        const self = this;
+        const beeper = this._beepers.find((b) => b.name === beeperName);
 
-        for (let i = 0; i < self._beepers.length; i++) {
-            if (self._beepers[i].name === beeperName) {
-                return !bit_check(self._beeperDisabledMask, self._beepers[i].bit);
-            }
-        }
-        return false;
+        return beeper ? !bit_check(this._beeperDisabledMask, beeper.bit) : false;
     }
     setEnabled(beeperName, enabled) {
-        const self = this;
+        const beeper = this._beepers.find((b) => b.name === beeperName);
 
-        for (let i = 0; i < self._beepers.length; i++) {
-            if (self._beepers[i].name === beeperName) {
-                if (enabled) {
-                    self._beeperDisabledMask = bit_clear(self._beeperDisabledMask, self._beepers[i].bit);
-                } else {
-                    self._beeperDisabledMask = bit_set(self._beeperDisabledMask, self._beepers[i].bit);
-                }
-                return;
+        if (beeper) {
+            if (enabled) {
+                this._beeperDisabledMask = bit_clear(this._beeperDisabledMask, beeper.bit);
+            } else {
+                this._beeperDisabledMask = bit_set(this._beeperDisabledMask, beeper.bit);
             }
         }
     }

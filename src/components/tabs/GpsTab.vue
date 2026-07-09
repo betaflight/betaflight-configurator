@@ -436,7 +436,9 @@ export default defineComponent({
 
         const toggleFeature = (feature, checked) => {
             const featuresHelper = fcStore.features?.features;
-            if (!featuresHelper) return;
+            if (!featuresHelper) {
+                return;
+            }
             featuresHelper.updateData({ name: feature.name, checked });
             updateTabList(featuresHelper);
         };
