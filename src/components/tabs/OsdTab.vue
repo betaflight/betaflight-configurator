@@ -1113,18 +1113,26 @@ function clampObjectArrayPreviewPosition(position, displaySize, limits) {
     const selectedPositionX = ((position % displaySize.x) + displaySize.x) % displaySize.x;
     const selectedPositionY = Math.floor(position / displaySize.x);
 
-    if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
+    if (selectedPositionX + limits.minX < 0) {
         position += Math.abs(selectedPositionX + limits.minX);
     } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
         position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
     }
-    if (limits.minY < 0 && selectedPositionY + limits.minY < 0) {
+    if (selectedPositionY + limits.minY < 0) {
         position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
     } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
         position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
     }
 
-    return Math.max(0, position);
+    if (position < 0) {
+        // The anchor of an element whose cells all sit below it (positive minY) may
+        // still land above row 0 after clamping, but positions pack into unsigned
+        // x/y for MSP (see stores/osd.js pack.position): settle on row 0, keeping
+        // the column instead of jumping to the top-left corner.
+        position = ((position % displaySize.x) + displaySize.x) % displaySize.x;
+    }
+
+    return position;
 }
 
 function clampArrayPreviewPosition(displayItem, position, displaySize, cursorX) {
