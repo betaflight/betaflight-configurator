@@ -45,6 +45,12 @@ export default {
                 text: "whitespace-normal",
             },
         },
+        modal: {
+            slots: {
+                overlay: "fixed inset-0 z-3000",
+                content: "bg-default divide-y divide-default flex flex-col focus:outline-none z-3001",
+            },
+        },
         switch: {
             slots: {
                 base: "cursor-pointer",

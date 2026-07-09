@@ -419,7 +419,7 @@
                 <UModal
                     :open="fontManagerOpen"
                     :title="$t('osdSetupFontManagerTitle')"
-                    :ui="{ overlay: 'z-3000', content: 'w-[750px] z-3001' }"
+                    :ui="{ content: 'w-[750px]' }"
                     @update:open="(value) => !value && closeFontManager()"
                 >
                     <template #body>

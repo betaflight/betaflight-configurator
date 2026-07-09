@@ -469,7 +469,7 @@
                 v-model:open="settingsChangedOpen"
                 :close="false"
                 :dismissible="false"
-                :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+                :ui="{ content: 'w-[400px]' }"
             >
                 <template #body>
                     <div v-html="warningMessage"></div>
@@ -487,7 +487,7 @@
                 :title="$t('dialogDynFiltersChangeTitle')"
                 :close="false"
                 :dismissible="false"
-                :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+                :ui="{ content: 'w-[400px]' }"
             >
                 <template #body>
                     <div v-html="$t('dialogDynFiltersChangeNote')"></div>

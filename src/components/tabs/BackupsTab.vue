@@ -104,7 +104,7 @@
                 :open="restoreProgressOpen"
                 :close="false"
                 :dismissible="false"
-                :ui="{ overlay: 'z-3000', content: 'w-[320px] z-3001' }"
+                :ui="{ content: 'w-[320px]' }"
             >
                 <template #body>
                     <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
@@ -118,7 +118,7 @@
                 :open="restoreErrorsOpen"
                 :close="false"
                 :dismissible="false"
-                :ui="{ overlay: 'z-3000', content: 'w-[600px] max-w-[calc(100vw-2rem)] z-3001' }"
+                :ui="{ content: 'w-[600px] max-w-[calc(100vw-2rem)]' }"
             >
                 <template #title>
                     <span v-html="$t('userBackupRestoreErrors')"></span>

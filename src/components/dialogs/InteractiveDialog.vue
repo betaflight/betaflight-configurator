@@ -4,7 +4,7 @@
         :title="title"
         :close="false"
         :dismissible="false"
-        :ui="{ overlay: 'z-3000', content: 'max-w-3xl w-[calc(100vw-2rem)] h-[80vh] z-3001' }"
+        :ui="{ content: 'max-w-3xl w-[calc(100vw-2rem)] h-[80vh]' }"
     >
         <template #body>
             <div class="flex flex-col h-full gap-3">

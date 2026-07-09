@@ -62,7 +62,7 @@
                     :close="false"
                     :dismissible="false"
                     :title="$t('titleEditProfile')"
-                    :ui="{ overlay: 'z-3000', content: 'w-[90%] max-w-[600px] z-3001' }"
+                    :ui="{ content: 'w-[90%] max-w-[600px]' }"
                 >
                     <template #body>
                         <div class="profile-edit-form">
