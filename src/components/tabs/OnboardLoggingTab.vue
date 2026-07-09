@@ -127,7 +127,7 @@
                                             <h3>{{ $t("dataflashSavingTitle") }}</h3>
                                             <div class="dataflash-saving-before">
                                                 <div>{{ $t("dataflashSavingNote") }}</div>
-                                                <progress :value="saveProgress" min="0" max="100"></progress>
+                                                <UProgress :model-value="saveProgress" :max="100" size="2xl" class="my-4" />
                                                 <div class="buttons flex justify-end gap-2 mt-3">
                                                     <UButton
                                                         class="save-flash-cancel"
@@ -1081,21 +1081,6 @@ export default defineComponent({
     }
     .sdcard-free {
         direction: rtl;
-    }
-    progress {
-        &::-webkit-progress-bar {
-            background-color: var(--surface-500);
-        }
-        &::-webkit-progress-value {
-            background-color: var(--primary-500);
-            border-radius: 0 4px 4px 0;
-        }
-        border-radius: 4px;
-        overflow: hidden;
-        height: 24px;
-        display: block;
-        width: 100%;
-        margin: 1em 0;
     }
     dialog {
         width: 40em;

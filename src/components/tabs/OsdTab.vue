@@ -480,9 +480,11 @@
                             </UButton>
                         </div>
 
-                        <div class="tab-osd-upload-progress mb-3">
-                            <progress class="tab-osd-progress-bar" :value="uploadProgress" min="0" max="100"></progress>
-                            <div class="tab-osd-progress-label">{{ uploadProgressLabel }}</div>
+                        <div class="relative mb-3">
+                            <UProgress :model-value="uploadProgress" :max="100" size="2xl" color="warning" />
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                                {{ uploadProgressLabel }}
+                            </div>
                         </div>
 
                         <UButton @click="flashFont()" color="success" size="sm">
@@ -1847,43 +1849,6 @@ onUnmounted(() => {
     background: currentColor;
     border-radius: 50%;
     opacity: 0.8;
-}
-
-/* Upload progress bar */
-.tab-osd-upload-progress {
-    display: grid;
-    grid-template-areas: "area";
-    width: 100%;
-}
-
-.tab-osd-progress-bar {
-    grid-area: area;
-    width: 100%;
-    height: 26px;
-    border-radius: 5px;
-    border: 1px solid var(--surface-500);
-    appearance: none;
-}
-
-.tab-osd-progress-bar::-webkit-progress-bar {
-    background-color: var(--text);
-    border-radius: 4px;
-    box-shadow: inset 0 0 5px #2f2f2f;
-}
-
-.tab-osd-progress-bar::-webkit-progress-value {
-    background-color: #f86008;
-    border-radius: 4px;
-}
-
-.tab-osd-progress-label {
-    grid-area: area;
-    width: 100%;
-    height: 26px;
-    line-height: 26px;
-    text-align: center;
-    color: white;
-    font-weight: bold;
 }
 
 /* Logo info list (validation markers) */
