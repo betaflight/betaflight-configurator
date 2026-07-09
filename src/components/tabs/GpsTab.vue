@@ -268,7 +268,6 @@ import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
-import { bit_check, bit_clear, bit_set } from "../../js/bit";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
@@ -359,7 +358,7 @@ export default defineComponent({
 
         const serializeGpsTabState = () =>
             JSON.stringify({
-                featureMask: fcStore.features?.features?._featureMask ?? 0,
+                gpsFeatureEnabled: fcStore.features?.features?.isEnabled?.("GPS") ?? false,
                 provider: gpsConfig.provider,
                 auto_baud: gpsConfig.auto_baud,
                 auto_config: gpsConfig.auto_config,
@@ -432,18 +431,16 @@ export default defineComponent({
         });
 
         const isFeatureEnabled = (feature) => {
-            if (!fcStore.features?.features) return false;
-            return bit_check(fcStore.features.features._featureMask, feature.bit);
+            return fcStore.features?.features?.isEnabled?.(feature.name) ?? false;
         };
 
         const toggleFeature = (feature, checked) => {
-            if (!fcStore.features?.features) return;
-            if (checked) {
-                fcStore.features.features._featureMask = bit_set(fcStore.features.features._featureMask, feature.bit);
-            } else {
-                fcStore.features.features._featureMask = bit_clear(fcStore.features.features._featureMask, feature.bit);
+            const featuresHelper = fcStore.features?.features;
+            if (!featuresHelper) {
+                return;
             }
-            updateTabList(fcStore.features.features);
+            featuresHelper.updateData({ name: feature.name, checked });
+            updateTabList(featuresHelper);
         };
 
         const setLayer = (layerKey) => {

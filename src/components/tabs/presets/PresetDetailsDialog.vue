@@ -3,8 +3,7 @@
         :open="open"
         :close="false"
         :ui="{
-            overlay: 'z-3000',
-            content: 'w-[600px] max-w-[calc(100vw-2rem)] h-[520px] z-3001',
+            content: 'w-[600px] max-w-[calc(100vw-2rem)] h-[520px]',
             body: 'overflow-visible min-h-0',
         }"
         @update:open="onOpenChange"
