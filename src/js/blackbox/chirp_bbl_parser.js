@@ -1087,9 +1087,20 @@ function collectIfActive(state, ctx) {
     if (!state.chirpActive) {
         return;
     }
+    // Firmware only ever writes -1/0/1/2 to debug[1] (the chirp axis: -1 while
+    // inactive, 0/1/2 for roll/pitch/yaw). Any other value is a decode
+    // artifact produced when the parser re-syncs after a corrupt frame — the
+    // delta chain is briefly stale, so debug[1] can decode out of range. Drop
+    // the frame entirely so a transient glitch can't spawn a bogus
+    // out-of-range segment (rejected downstream as "unsupported DEBUG_CHIRP
+    // axis encoding") or pollute a valid segment with a garbage sample.
+    const axis = state.previous[ctx.debugIdx[1]];
+    if (axis < -1 || axis > 2) {
+        return;
+    }
     collectSample(state.previous, ctx.sampleIndices, ctx.sampleBuffers, ctx.hiResScale);
     updateSegments(state.previous, ctx.debugIdx, ctx.segments, ctx.rawSetpoint[0].length - 1, state.currentAxis);
-    state.currentAxis = state.previous[ctx.debugIdx[1]];
+    state.currentAxis = axis;
 }
 
 function handleSFrame(state, ctx) {
