@@ -743,112 +743,13 @@ dialog {
     width: calc(100% - 15px);
     float: left;
 }
-.gui_box {
-    border: 2px solid var(--surface-400);
-    border-radius: 0.75rem;
-    background-color: var(--surface-100);
-    height: fit-content;
-    margin-top: 0.75rem;
-    padding: 0.75rem;
-    padding-top: 1.5rem;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-.gui_box_titlebar {
-    color: #000;
-    background-color: var(--primary-500);
-    position: absolute;
-    font-size: 13px;
-    height: 1.75rem;
-    top: calc(1.75rem / -2);
-    left: 1rem;
-    padding: 0 0.75rem;
-    font-weight: 600;
-    display: flex;
-    gap: 0.5rem;
-    white-space: nowrap;
-    align-items: center;
-    overflow-x: hidden;
-    border-radius: 999px;
-    .helpicon {
-        margin: 0;
-    }
-}
-.gui_box_bottombar {
-    background-color: var(--surface-400);
-    color: var(--text);
-    border-radius: 0 0 3px 3px;
-    font-size: 13px;
-    width: 100%;
-    height: 27px;
-    padding-top: 0;
-    font-weight: 600;
-}
 .gui_warning {
     background: var(--error-transparent-1);
     border: 1px solid var(--error-500);
-    .gui_box_titlebar {
-        background-color: #dc0000;
-        background-image: linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, 0.3) 10%,
-            transparent 10%,
-            transparent 20%,
-            rgba(255, 255, 255, 0.3) 20%,
-            rgba(255, 255, 255, 0.3) 30%,
-            transparent 30%,
-            transparent 40%,
-            rgba(255, 255, 255, 0.3) 40%,
-            rgba(255, 255, 255, 0.3) 50%,
-            transparent 50%,
-            transparent 60%,
-            rgba(255, 255, 255, 0.3) 60%,
-            rgba(255, 255, 255, 0.3) 70%,
-            transparent 70%,
-            transparent 80%,
-            rgba(255, 255, 255, 0.3) 80%,
-            rgba(255, 255, 255, 0.3) 90%,
-            transparent 90%,
-            transparent 100%,
-            rgba(255, 255, 255, 0.4) 100%,
-            transparent
-        );
-        color: var(--text);
-    }
 }
 .gui_note {
     background: var(--primary-transparent-1);
     border: 1px solid var(--primary-500);
-    .gui_box_titlebar {
-        background-color: var(--primary-500);
-        background-image: linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, 0.3) 10%,
-            transparent 10%,
-            transparent 20%,
-            rgba(255, 255, 255, 0.3) 20%,
-            rgba(255, 255, 255, 0.3) 30%,
-            transparent 30%,
-            transparent 40%,
-            rgba(255, 255, 255, 0.3) 40%,
-            rgba(255, 255, 255, 0.3) 50%,
-            transparent 50%,
-            transparent 60%,
-            rgba(255, 255, 255, 0.3) 60%,
-            rgba(255, 255, 255, 0.3) 70%,
-            transparent 70%,
-            transparent 80%,
-            rgba(255, 255, 255, 0.3) 80%,
-            rgba(255, 255, 255, 0.3) 90%,
-            transparent 90%,
-            transparent 100%,
-            rgba(255, 255, 255, 0.4) 100%,
-            transparent
-        );
-        color: black;
-    }
 }
 .grey {
     background-color: var(--surface-200);
@@ -1409,16 +1310,6 @@ each(range(12), {
     .default_btn {
         margin-bottom: 10px;
     }
-    .gui_box .gui_box_titlebar {
-        font-size: 12px;
-        height: 24px;
-        padding-bottom: 0;
-        margin-bottom: 5px;
-        float: left;
-        .helpicon {
-            margin-top: 1px;
-        }
-    }
     .helpicon {
         float: right;
         margin-top: 5px;
@@ -1486,13 +1377,6 @@ each(range(12), {
     }
     .default_btn {
         margin-bottom: 10px;
-    }
-    .gui_box_titlebar {
-        font-size: 12px;
-        height: 24px;
-        padding-bottom: 0;
-        margin-bottom: 5px;
-        float: left;
     }
     .spacer_box_title {
         padding-left: 10px;
