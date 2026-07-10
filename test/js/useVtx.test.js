@@ -77,7 +77,7 @@ describe("useVtx", () => {
 
         // No further MSP traffic should have occurred — the reload (loadVtxConfig) never ran,
         // and the button text is stuck on "Saving" rather than being reset.
-        expect(MSP.send_message.mock.calls.length).toBe(callsAfterSave);
+        expect(MSP.send_message.mock.calls).toHaveLength(callsAfterSave);
         expect(vtx.saveButtonText.value).toBe("buttonSaving");
     });
 

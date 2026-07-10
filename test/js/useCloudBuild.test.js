@@ -54,10 +54,10 @@ describe("useCloudBuild", () => {
         const callsBeforePoll = params.buildApi.requestBuildStatus.mock.calls.length;
 
         await vi.advanceTimersByTimeAsync(5000);
-        expect(params.buildApi.requestBuildStatus.mock.calls.length).toBe(callsBeforePoll + 1);
+        expect(params.buildApi.requestBuildStatus.mock.calls).toHaveLength(callsBeforePoll + 1);
 
         await vi.advanceTimersByTimeAsync(5000);
-        expect(params.buildApi.requestBuildStatus.mock.calls.length).toBe(callsBeforePoll + 2);
+        expect(params.buildApi.requestBuildStatus.mock.calls).toHaveLength(callsBeforePoll + 2);
 
         scope.stop();
 
@@ -65,7 +65,7 @@ describe("useCloudBuild", () => {
         await vi.advanceTimersByTimeAsync(20000);
 
         // No further polling after the effect scope is disposed.
-        expect(params.buildApi.requestBuildStatus.mock.calls.length).toBe(callsAtDispose);
+        expect(params.buildApi.requestBuildStatus.mock.calls).toHaveLength(callsAtDispose);
     });
 
     it("cleanup() followed by scope.stop() does not throw (idempotent double dispose)", async () => {
