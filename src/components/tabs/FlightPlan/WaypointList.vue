@@ -165,6 +165,9 @@ const handleDragStart = (event, uid) => {
     const el = event.currentTarget;
 
     // Add a slight delay to allow the drag to start before styling changes
+    if (dragStartTimeout !== null) {
+        clearTimeout(dragStartTimeout);
+    }
     dragStartTimeout = setTimeout(() => {
         dragStartTimeout = null;
         if (el) {

@@ -12,7 +12,7 @@ function resumeInterval(name) {
 /**
  * A composable for managing named intervals via GUI's interval registry.
  * All intervals added through this composable are automatically removed
- * when the component is unmounted.
+ * when the owning effect scope is disposed (component unmount or scope stop).
  *
  * Usage:
  *   const { addInterval, removeInterval } = useInterval();
