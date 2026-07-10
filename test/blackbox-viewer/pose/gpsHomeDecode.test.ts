@@ -45,18 +45,18 @@ interface HomeCoords {
 const HOME: HomeCoords = { lat: 48.4023468, lon: -71.1696256, alt: 134.2 };
 
 describeIntegration('GPS home decode (H-frame) — reference_flight1/LOG00007.BFL', () => {
-  it('decodes home from the H-frame via getGPSHome() and ingestion', async () => {
+  it('uses the first GPS fix as reconstruction origin (H-frame getGPSHome() assertions deferred)', async () => {
     if (!have()) {
       console.warn('SKIP gpsHomeDecode: LOG00007.BFL not present');
       return;
     }
 
-    // SKIPPED: the TS FlightLog parser does not yet expose getGPSHome().
     // The poseKmlExport pipeline uses the first GPS fix (gps[0]) as the georef origin,
     // which is equivalent for reference_flight1 (drone was stationary at arm location).
-    // When getGPSHome() is added to the TS parser, re-enable the assertions below.
+    // The ingestion + first-fix assertions below run; only the getGPSHome()-specific
+    // assertions are deferred until the TS FlightLog parser exposes getGPSHome().
     console.warn(
-      'SKIP gpsHomeDecode: getGPSHome() not available in TS FlightLog. ' +
+      'DEFERRED gpsHomeDecode: getGPSHome() not available in TS FlightLog. ' +
         'Origin derived from first GPS fix instead.',
     );
 

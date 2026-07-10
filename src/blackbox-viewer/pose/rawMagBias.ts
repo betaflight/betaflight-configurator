@@ -96,7 +96,7 @@ export function fitHardIron(samples: Vec3[]): HardIronResult {
     const dx = m[0] - cx;
     const dy = m[1] - cy;
     const dz = m[2] - cz;
-    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const dist = Math.hypot(dx, dy, dz);
     rmsSum += (dist - R) * (dist - R);
   }
 
@@ -184,13 +184,13 @@ export function checkHeadingCoverage(
     const gap = sorted[i + 1] - sorted[i];
     if (gap > maxGap) maxGap = gap;
   }
-  const wrapGap = sorted[0] + 2 * Math.PI - sorted[sorted.length - 1];
+  const wrapGap = sorted[0] + 2 * Math.PI - sorted.at(-1)!;
   if (wrapGap > maxGap) maxGap = wrapGap;
 
   const spreadDeg = ((2 * Math.PI - maxGap) * 180) / Math.PI;
   return {
     minDeg: (sorted[0] * 180) / Math.PI,
-    maxDeg: (sorted[sorted.length - 1] * 180) / Math.PI,
+    maxDeg: (sorted.at(-1)! * 180) / Math.PI,
     spreadDeg,
     sufficient: spreadDeg >= MIN_COVERAGE_SPREAD_DEG,
   };
@@ -240,7 +240,7 @@ function extractRollPitch(q: Quat): { roll: number; pitch: number } {
  * Compute tilt-compensated magnetic heading from body-frame (FRD) mag vector
  * and FC quaternion.
  *
- * @returns heading in radians (0 = North, CW+)
+ * @returns heading in degrees (0 = North, CW+)
  */
 export function tiltCompensatedMagHeadingDeg(
   magBodyFrd: Vec3,
@@ -257,7 +257,7 @@ export function tiltCompensatedMagHeadingDeg(
 }
 
 function clamp(v: number, lo: number, hi: number): number {
-  return v < lo ? lo : v > hi ? hi : v;
+  return Math.max(lo, Math.min(hi, v));
 }
 
 // ---------------------------------------------------------------------------
@@ -267,7 +267,7 @@ function clamp(v: number, lo: number, hi: number): number {
 export interface MagHeadingBiasResult {
   /** Estimated heading bias in radians: median(mag_heading − fc_heading). */
   biasRad: number;
-  /** Hard-iron sphere center (ADC counts, raw FLU frame). */
+  /** Hard-iron sphere center (ADC counts, raw FRD body frame). */
   hardIronCenter: Vec3;
   /** Hard-iron sphere radius (ADC counts). */
   hardIronRadius: number;
@@ -286,7 +286,7 @@ export interface MagHeadingBiasResult {
  * data, tilt-compensating with the FC quaternion, and computing the median
  * difference between mag heading and FC heading.
  *
- * @param magRaw  Raw mag ADC entries (firmware FLU frame, post alignment)
+ * @param magRaw  Raw mag ADC entries (FRD body frame, post alignment)
  * @param fcQuat  FC quaternion stream (body FRD → world NED)
  * @returns       Bias estimate with full diagnostics
  */

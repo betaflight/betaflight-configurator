@@ -48,7 +48,7 @@ export function expMap(phi: Vec3): number[][] {
     ];
   }
 
-  const theta = Math.sqrt(t2);
+  const theta = Math.hypot(x, y, z);
   const s = Math.sin(theta);
   const c = Math.cos(theta);
   const a = s / theta;
@@ -86,7 +86,7 @@ export function logMap(R: number[][]): Vec3 {
     } else {
       ux = r02; uy = r12; uz = r22 + 1;
     }
-    const len = Math.sqrt(ux * ux + uy * uy + uz * uz);
+    const len = Math.hypot(ux, uy, uz);
     if (len < 1e-12) return [0, 0, 0];
     const scl = Math.PI / len;
     return [scl * ux, scl * uy, scl * uz];
@@ -123,7 +123,7 @@ export function rightJacobian(phi: Vec3): number[][] {
     ];
   }
 
-  const theta = Math.sqrt(t2);
+  const theta = Math.hypot(x, y, z);
   const s = Math.sin(theta);
   const c = Math.cos(theta);
   const a = (1 - c) / t2;
@@ -190,7 +190,7 @@ export function quatToRot(q: Quat): number[][] {
 export function eulerFromQuat(q: Quat): Euler {
   const DEG = 180 / Math.PI;
   const R = quatToRot(q);
-  const clamp = (v: number) => (v < -1 ? -1 : v > 1 ? 1 : v);
+  const clamp = (v: number) => Math.max(-1, Math.min(1, v));
   return {
     rollDeg: Math.atan2(R[2][1], R[2][2]) * DEG,
     pitchDeg: -Math.asin(clamp(R[2][0])) * DEG,
@@ -222,7 +222,7 @@ export function rotToQuat(R: number[][]): Quat {
     q = [(r10 - r01) / s, (r02 + r20) / s, (r12 + r21) / s, s * 0.25];
   }
 
-  const n = Math.sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+  const n = Math.hypot(q[0], q[1], q[2], q[3]);
   return [q[0] / n, q[1] / n, q[2] / n, q[3] / n];
 }
 
@@ -231,7 +231,7 @@ export function rotToQuat(R: number[][]): Quat {
  */
 export function quatFromAxisAngle(axis: Vec3, angle: number): Quat {
   const [ax, ay, az] = axis;
-  const n = Math.sqrt(ax * ax + ay * ay + az * az);
+  const n = Math.hypot(ax, ay, az);
   if (n < 1e-14) {
     return [1, 0, 0, 0];
   }
@@ -314,13 +314,13 @@ export function strapdownPropagate(
 
   // -- Orientation: q_new = q ⊗ exp([0, ω_corr] * dt) (Exact Map) --------
   const qw = q[0], qx = q[1], qy = q[2], qz = q[3];
-  const wMag = Math.sqrt(wx * wx + wy * wy + wz * wz);
+  const wMag = Math.hypot(wx, wy, wz);
   const qCorr = quatFromAxisAngle([wx, wy, wz], wMag * dt);
   const q_next = quatMultiply(q, qCorr);
   
   // Renormalize to prevent floating point drift
   let qwn = q_next[0], qxn = q_next[1], qyn = q_next[2], qzn = q_next[3];
-  const qn = Math.sqrt(qwn * qwn + qxn * qxn + qyn * qyn + qzn * qzn);
+  const qn = Math.hypot(qwn, qxn, qyn, qzn);
   qwn /= qn; qxn /= qn; qyn /= qn; qzn /= qn;
 
   // -- Rotate body acceleration to world frame R(q)·a_corr --------------

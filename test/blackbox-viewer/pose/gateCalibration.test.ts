@@ -192,9 +192,8 @@ describeIntegration('Gate Calibration', () => {
         return true;
       };
       const r = gateHorizontalPositionVsGPS(samples, gpsNed, 2, 5, gentleFilter);
-      // This might be tight — log the result regardless
       console.log(`  gentle cruise horizontal: ${r.message}`);
-      if (!r.pass) console.log(`  (gentle cruise gate: expected ≤2m median, ≤5m p95 — may need tuning)`);
+      assertPass(r, 'gentle cruise horizontal');
     });
   });
 
@@ -295,6 +294,7 @@ describeIntegration('Gate Calibration', () => {
       if (!haveBfl()) return;
       const r = gateLoopClosure(samples, 3);
       console.log(`  loop closure (tight): ${r.message}`);
+      assertPass(r, 'loop closure (tight)');
     });
   });
 

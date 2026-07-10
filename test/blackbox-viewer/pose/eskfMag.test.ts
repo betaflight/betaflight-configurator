@@ -16,8 +16,8 @@ describe("eskf — 21-state with mag fusion (15-state base + 6 mag states)", () 
         expect(eskf.dim).toBe(21);
         expect(eskf.mEarth).toEqual([0.17, -0.047, 0.51]);
         expect(eskf.mBody).toEqual([0, 0, 0]);
-        expect(eskf.P.length).toBe(21);
-        expect(eskf.P[0].length).toBe(21);
+        expect(eskf.P).toHaveLength(21);
+        expect(eskf.P[0]).toHaveLength(21);
         expect(eskf.ba).toEqual([0, 0, 0]);
         expect(eskf.bg).toEqual([0, 0, 0]);
     });
@@ -31,7 +31,7 @@ describe("eskf — 21-state with mag fusion (15-state base + 6 mag states)", () 
 
         expect(eskf.dim).toBe(15);
         expect(eskf.mEarth).toBeUndefined();
-        expect(eskf.P.length).toBe(15);
+        expect(eskf.P).toHaveLength(15);
         expect(eskf.ba).toEqual([0, 0, 0]);
         expect(eskf.bg).toEqual([0, 0, 0]);
     });

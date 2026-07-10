@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createAccelTiltFactor } from '../../../src/blackbox-viewer/pose/measurements.js';
+import { quatMultiply as quatMultiplyImu, quatFromAxisAngle } from '../../../src/blackbox-viewer/pose/imuMechanization.js';
 import type { Quat, Vec3 } from '../../../src/blackbox-viewer/pose/poseSample.js';
 
 const G = 9.80665;
@@ -116,5 +117,31 @@ describe('createAccelTiltFactor — gimbal-lock-free accel-tilt anchor', () => {
         expect(factor.R[0][2]).toBe(0);
         expect(factor.R[1][0]).toBe(0);
         expect(factor.R[2][0]).toBe(0);
+        expect(factor.R[1][2]).toBe(0);
+        expect(factor.R[2][1]).toBe(0);
+    });
+
+    it('H is the world-frame Jacobian of h(q) w.r.t. left-multiplied attitude error (finite-difference check)', () => {
+        // Attitude error is injected as q <- dq (x) q (world-frame, eskf.ts), so
+        // perturbing q by q_perturbed_k = quatFromAxisAngle(e_k, eps) * q must match
+        // column k of H via a forward finite difference, at a non-trivial attitude
+        // (yaw 90 deg + roll 30 deg) where the old body-frame Jacobian would be wrong.
+        const qEst: Quat = eulerToQuat(Math.PI / 6, 0, Math.PI / 2);
+        const accel: Vec3 = predictedAccelForQuat(qEst);
+        const factor = createAccelTiltFactor(accel, qEst, 0.02, 15);
+
+        const eps = 1e-6;
+        const h0 = factor.h({ p: [0, 0, 0], v: [0, 0, 0], q: qEst } as any) as number[];
+
+        const axes: Vec3[] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+        axes.forEach((axis, k) => {
+            const dq = quatFromAxisAngle(axis, eps);
+            const qPerturbed = quatMultiplyImu(dq, qEst);
+            const h1 = factor.h({ p: [0, 0, 0], v: [0, 0, 0], q: qPerturbed } as any) as number[];
+            for (let row = 0; row < 3; row++) {
+                const fd = (h1[row] - h0[row]) / eps;
+                expect(fd).toBeCloseTo(factor.H[row][6 + k], 4);
+            }
+        });
     });
 });

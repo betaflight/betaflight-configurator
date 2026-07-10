@@ -74,11 +74,6 @@ describeIntegration('reference_flight1 KML output', () => {
       });
       const json = poseTrackToJson(track);
 
-      // Write reference outputs into the fixture dir only when explicitly requested
-      if (process.env.UPDATE_POSE_FIXTURES === '1') {
-        fs.writeFileSync(path.join(DIR, 'reference_flight1_track.kml'), kml, 'utf-8');
-        fs.writeFileSync(path.join(DIR, 'reference_flight1_posetrack.json'), json, 'utf-8');
-      }
       console.log(`  KML ${kml.length} B, JSON ${json.length} B, ${track.samples.length} samples`);
 
       // EXTRACT b_g[2] from meta.source
@@ -101,28 +96,41 @@ describeIntegration('reference_flight1 KML output', () => {
       expect(json).toContain('schemaVersion');
       expect(track.samples.length).toBeGreaterThan(0);
 
-      // Verify reference checksums (detect output drift)
+      // Byte-drift gate: fingerprint the freshly generated outputs. Quality is
+      // guarded by the physical gates (acroFixture.test.ts); this catches
+      // unintended numeric drift from refactors.
+      const digest = (s: string): string =>
+        crypto.createHash('sha256').update(Buffer.from(s, 'utf-8')).digest('hex').toUpperCase();
+      const actual: Record<string, string> = {
+        'reference_flight1_track.kml': digest(kml),
+        'reference_flight1_posetrack.json': digest(json),
+      };
       const checksumsPath = path.join(DIR, 'checksums.json');
-      if (fs.existsSync(checksumsPath)) {
-        let raw = fs.readFileSync(checksumsPath, 'utf-8');
-        // Strip UTF-8 BOM if present
-        if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1);
-        const checksums = JSON.parse(raw);
-        for (const entry of checksums.files) {
-          const filePath = path.join(DIR, entry.file);
-          if (fs.existsSync(filePath)) {
-            const hash = crypto
-              .createHash('sha256')
-              .update(fs.readFileSync(filePath))
-              .digest('hex')
-              .toUpperCase();
-            expect(
-              hash,
-              `checksum mismatch for ${entry.file}: regenerated ${hash}, expected ${entry.sha256}. ` +
-                'If the output changed intentionally, update checksums.json.',
-            ).toBe(entry.sha256);
-          }
-        }
+      if (process.env.UPDATE_POSE_FIXTURES === '1') {
+        fs.writeFileSync(
+          checksumsPath,
+          JSON.stringify(
+            {
+              files: Object.entries(actual).map(([file, sha256]) => ({ sha256, file })),
+              description:
+                'SHA-256 of the serialized reference_flight1 outputs (computed in-memory by acroKml.test.ts). Regenerate with UPDATE_POSE_FIXTURES=1 after an intentional output change.',
+              generated: new Date().toISOString(),
+            },
+            null,
+            2,
+          ) + '\n',
+          'utf-8',
+        );
+      }
+      let raw = fs.readFileSync(checksumsPath, 'utf-8');
+      if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1);
+      const checksums = JSON.parse(raw);
+      for (const entry of checksums.files) {
+        expect(
+          actual[entry.file],
+          `checksum mismatch for ${entry.file}: regenerated ${actual[entry.file]}, expected ${entry.sha256}. ` +
+            'If the output changed intentionally, rerun with UPDATE_POSE_FIXTURES=1.',
+        ).toBe(entry.sha256);
       }
     },
     60000,

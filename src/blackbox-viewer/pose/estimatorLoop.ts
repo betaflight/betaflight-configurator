@@ -1,4 +1,4 @@
-import { createEskf, eskfPredict, eskfUpdate } from './eskf.js';
+import { createEskf, eskfPredict, eskfUpdate, gpsBiasIndex } from './eskf.js';
 import type { EskfOptions, EskfState, RobustOpts } from './eskf.js';
 import {
   createGpsPositionFactor,
@@ -16,15 +16,13 @@ import {
   SIGMA_YAW_DEFAULT_MAX,
   quatToRotMat,
 } from './measurements.js';
-import type { NedMeas } from './measurements.js';
 import { rtsSmooth } from './rtsSmoother.js';
 import type { FilterResult, SmoothedResult, NominalState as RtsNominalState } from './rtsSmoother.js';
 import { llhToNed, nedToLlh } from './geodesy.js';
-import type { NedPos } from './geodesy.js';
 import { createPoseTrack } from './poseTrack.js';
 import type { PoseTrack } from './poseTrack.js';
 import { quatToRot, quatFromAxisAngle, quatMultiply, eulerFromQuat, strapdownPropagate } from './imuMechanization.js';
-import type { PoseSampleInternal, Vec3, Quat, LLA } from './poseSample.js';
+import type { PoseSampleInternal, Vec3, Quat } from './poseSample.js';
 import type {
   ImuEntry,
   GpsEntry,
@@ -77,6 +75,8 @@ export function computeBaroInflate(accelAbsZLpf: number, rEst22: number, climbRa
     return baroInflate;
 }
 
+/** Persistent scalar state for updateBaroBiasFogm's baro-bias tracker
+ *  (bias in metres, variance in metres^2). */
 export interface BaroBiasFogmState {
     bias: number;
     variance: number;
@@ -89,10 +89,9 @@ export interface BaroBiasFogmState {
  * "textbook" way to add a bias state (e.g. exactly how GPS position bias is
  * already done via `sigmaGpsBias`/`tauGps`/`bgps` in eskf.ts) is to extend the
  * shared error-state vector. That machinery hardcodes exact state DIMENSIONS
- * at several call sites (`dim === 18 ? 15 : (dim === 24 ? 21 : -1)` appears
- * verbatim in three places in eskf.ts) across an already-combinatorial set of
- * dims (15/18/21/24, from mag-on/off x gpsBias-on/off) -- extending that
- * pattern correctly for a 5th combination axis (baro-bias on/off) within the
+ * at several call sites (see eskf.ts's gpsBiasIndex) across an already-
+ * combinatorial set of dims (15/18/21/24, from mag-on/off x gpsBias-on/off) --
+ * extending that pattern correctly for a 5th combination axis (baro-bias on/off) within the
  * time available for this feature risked a subtle, hard-to-detect indexing
  * bug that could have silently corrupted state updates for every feature, not
  * just baro. This standalone scalar (1-state) Kalman tracker is a deliberate,
@@ -140,6 +139,7 @@ export function updateBaroBiasFogm(
     return { bias: biasNew, variance: varNew };
 }
 
+/** Progress callback payload for estimatePoseTrack's optional onProgress opt. */
 export interface OnProgress {
   phase: string;
   iteration: number;
@@ -148,6 +148,9 @@ export interface OnProgress {
   detail: string;
 }
 
+/** The fusion-relevant subset of a loaded mag characterization model: the
+ *  earth field in NED Gauss (only present when the mag was successfully
+ *  characterized against a known earth field) plus quality/noise metadata. */
 export interface MagModelFusion {
   earthFieldNedGauss?: { n: number; e: number; d: number };
   qualityBounds?: {
@@ -161,12 +164,15 @@ export interface MagModelFusion {
   };
 }
 
+/** Loosely-typed view of a mag characterization model JSON as consumed by
+ *  the estimator (the full schema lives in mag_model.js). */
 export interface MagModelInput {
   version?: string | number;
   fusion?: MagModelFusion;
   [key: string]: unknown;
 }
 
+/** Ingested sensor streams the estimator runs over (see flightIngestion.ts). */
 export interface EstimatorData {
   imu: ImuEntry[];
   gps: GpsEntry[];
@@ -175,12 +181,16 @@ export interface EstimatorData {
   mag: MagGaussEntry[];
 }
 
+/** Reconstruction origin (georeference point) in WGS84 lat/lon/alt (deg, deg, m). */
 export interface EstimatorOrigin {
   lat: number;
   lon: number;
   alt: number;
 }
 
+/** Tunable estimator knobs. All fields optional; unset fields use the
+ *  NIS-consistency-tuned defaults documented at their destructuring site in
+ *  _runEstimation. */
 export interface EstimatorOpts {
   outputHz?: number;
   gpsPosSigma?: number;
@@ -420,6 +430,8 @@ interface Step {
   hasUpdate: boolean;
 }
 
+/** Pre-PoseTrack flat pose sample (lat/lon/alt instead of NED position),
+ *  kept for callers that predate the PoseTrack IR. See estimatePoses. */
 export interface LegacyPose {
   tMs: number;
   lat: number;
@@ -437,6 +449,8 @@ interface ConvergedParams {
   mEarth?: Vec3;
 }
 
+/** Run the full ESKF+RTS-smoother pipeline and return LegacyPose samples
+ *  (lat/lon/alt form). Prefer estimatePoseTrack for new callers. */
 export function estimatePoses(
   data: EstimatorData,
   origin: EstimatorOrigin,
@@ -466,15 +480,12 @@ export function estimatePoses(
  * Reconstruct GPS fix timestamps from the u-blox iTOW field (GPS-clock true
  * fix epoch) instead of the FC's loop-arrival timestamp, removing serial-
  * transport jitter (UART scheduling + FC parse loop timing) from every GPS
- * update. A naive version of this (assume the FC clock and GPS clock run at
- * exactly the same rate, so iTOW - constant = FC time) was tried previously
- * and made things WORSE (see EstimatorOpts.gpsTimeMode's doc comment) because
- * the two clocks' rates aren't quite identical -- an uncorrected rate
- * mismatch accumulates a progressive lag across the flight. This function
- * fits BOTH a rate and an offset (ordinary least squares: iTOW_ms = a *
- * tUs_fc + b) so the reconstructed timestamps track the FC clock's own rate,
- * with only the fix-to-fix jitter removed, not a slowly-drifting bias
- * introduced.
+ * update. Fits BOTH a rate and an offset (ordinary least squares: iTOW_ms =
+ * a * tUs_fc + b), not just an offset: the FC clock and GPS clock don't run
+ * at exactly the same rate, so an offset-only fit (iTOW - constant = FC
+ * time) accumulates a progressive lag across the flight. Fitting the rate
+ * too means only the fix-to-fix jitter is removed, not a slowly-drifting
+ * bias introduced.
  *
  * Data policy:
  *   Input:  gps entries, each optionally carrying gpsTimeItoW (ms, u-blox
@@ -598,7 +609,7 @@ function solveGpsLatency(
 
     for (const g of gps) {
       const tShifted = g.tUs - delayUs;
-      if (tShifted < insV[0].tUs || tShifted > insV[insV.length - 1].tUs) continue;
+      if (tShifted < insV[0].tUs || tShifted > insV.at(-1)!.tUs) continue;
       const vIns = interpolateInsV(insV, tShifted);
       const vGps = g.velNed!;
       const err2 = (vIns[0] - vGps[0]) ** 2 + (vIns[1] - vGps[1]) ** 2 + (vIns[2] - vGps[2]) ** 2;
@@ -624,19 +635,12 @@ function _runEstimation(
 ): EstimationResult {
   const {
     outputHz = 20,
-    // gpsPosSigma/gpsVelSigma/baroSigma re-tuned via NIS-consistency
-    // leave-one-flight-out validation AFTER the FC-quat-prior decorrelation,
-    // DCS chi2 phi + bounded R-inflation, and
-    // physics-informed baro inflation fixes -- the previous frozen
-    // values (gpsPosSigma=2.5, gpsVelSigma=0.95, baroSigma=2.5) were tuned
-    // against the OLD, more-double-counted attitude/baro models and are stale
-    // once those models changed the filter's own innovation statistics. This
-    // pass: gpsVelSigma converged to EXACTLY 0.45 from both tuning directions
-    // (A->B and B->A); gpsPosSigma converged to 3.375/2.25 (2.8 chosen
-    // centrally); baroSigma converged to 1.875/1.25 (1.6 chosen centrally) --
-    // the tighter baro value is consistent with the new az-based inflation
-    // model being a better (less noisy) propwash proxy than currAmps, so the
-    // filter can afford to trust the nominal (uninflated) reading more.
+    // gpsPosSigma/gpsVelSigma/baroSigma are NIS-consistency tuned (leave-one-
+    // flight-out validation) against the current FC-quat-prior decorrelation,
+    // DCS chi2-phi + bounded R-inflation, and physics-informed baro inflation
+    // behavior. If any of those three change, these sigmas need re-tuning --
+    // and the solverConfig metadata block below (in estimatePoseTrack) must
+    // stay in sync with these defaults.
     gpsPosSigma = 2.8,
     gpsVelSigma = 0.45,
     baroSigma = 1.6,
@@ -683,18 +687,6 @@ function _runEstimation(
   } = opts;
 
   let { imu, gps, baro, quat, mag } = data;
-
-  // ---- GPS position timing ----
-  // Default: GPS position and velocity use the ingested FC (loop-iteration)
-  // timestamps. Opt-in ('itow-rate-matched'): reconstruct each fix's timestamp
-  // from the u-blox iTOW field via a rate+offset fit (rateMatchGpsTimestamps),
-  // removing FC-side serial-transport jitter. A NAIVE version of this (raw
-  // itow-to-FC-time offset, no rate correction) was tried previously and made
-  // things worse -- see EstimatorOpts.gpsTimeMode's doc comment for why rate
-  // matching (not just offset matching) is required.
-  if (gpsTimeMode === 'itow-rate-matched') {
-    gps = rateMatchGpsTimestamps(gps);
-  }
 
   // Per-fix GPS position sigma from satellite count model (opt-in).
   // When enabled, GPS is trusted more tightly in good-sky conditions (~1.5m)
@@ -744,6 +736,18 @@ function _runEstimation(
     gps = gps.map((entry) => ({ ...entry, tUs: entry.tUs - delayUs }));
   }
 
+  // ---- GPS position timing ----
+  // Default: GPS position and velocity use the ingested FC (loop-iteration)
+  // timestamps. Opt-in ('itow-rate-matched'): reconstruct each fix's timestamp
+  // from the u-blox iTOW field via a rate+offset fit (rateMatchGpsTimestamps),
+  // removing FC-side serial-transport jitter -- see EstimatorOpts.gpsTimeMode's
+  // doc comment for why rate matching (not just offset matching) is required.
+  // gpsPos feeds ONLY the position update and may carry iTOW rate-matched
+  // timestamps; Doppler velocity must stay on FC timestamps, so the original
+  // `gps` stream (already delay-compensated above) is left untouched for the
+  // velocity loop below.
+  const gpsPos = gpsTimeMode === 'itow-rate-matched' ? rateMatchGpsTimestamps(gps) : gps;
+
   // ---- Static-window bias initialization ----
   let bg0: Vec3 = [0, 0, 0];
   let _sigmaBgInit = sigmaBgInit;
@@ -773,7 +777,7 @@ function _runEstimation(
 
   // ---- Build keyframe schedule ----
   const outputIntervalUs = 1e6 / outputHz;
-  const kfTotal = Math.max(1, Math.ceil((imu[imu.length - 1].tUs - imu[0].tUs) / outputIntervalUs));
+  const kfTotal = Math.max(1, Math.ceil((imu.at(-1)!.tUs - imu[0].tUs) / outputIntervalUs));
 
   const hasMag =
     magModel != null &&
@@ -837,7 +841,7 @@ function _runEstimation(
       sigmaBgRW,
       procSigmaAcc,
       procSigmaGyro,
-      bgClamp: sigmaBgPrior > 0 ? sigmaBgPrior : 0,
+      bgClamp: Math.max(0, sigmaBgPrior),
     };
     if (sigmaGpsBiasInit > 0 && tauGps > 0) {
       eskfOpts.sigmaGpsBias = sigmaGpsBias;
@@ -870,7 +874,7 @@ function _runEstimation(
     let F_acc: Mat = buildIdentityF(eskf.dim);
 
     while (imuIdx < imu.length) {
-      if (isNaN(eskf.p[0]) || isNaN(eskf.v[0]) || isNaN(eskf.P[0][0])) {
+      if (Number.isNaN(eskf.p[0]) || Number.isNaN(eskf.v[0]) || Number.isNaN(eskf.P[0][0])) {
         console.error("NaN detected at IMU step start!", {
           p: eskf.p,
           v: eskf.v,
@@ -941,7 +945,7 @@ function _runEstimation(
 
         let hasUpdate = false;
 
-        const currAmps = current && current.length ? findCurrent(nowUs) : 0;
+        const currAmps = current?.length ? findCurrent(nowUs) : 0;
 
         // dcsPhi omitted: eskfUpdate defaults it to chi2_0.95(m) for the
         // measurement's own df (3 for GPS pos/vel), not a flat 1.0 -- the old
@@ -956,12 +960,12 @@ function _runEstimation(
             ? { dcs: true }
             : {};
 
-        // ---- GPS position update (FC-timed) ----
+        // ---- GPS position update ----
         while (
-          gpsPosIdx < gps.length &&
-          gps[gpsPosIdx].tUs <= nextKfUs + outputIntervalUs * 0.5
+          gpsPosIdx < gpsPos.length &&
+          gpsPos[gpsPosIdx].tUs <= nextKfUs + outputIntervalUs * 0.5
         ) {
-          const gpsF = gps[gpsPosIdx];
+          const gpsF = gpsPos[gpsPosIdx];
           const gNed = llhToNed(
             gpsF.lat,
             gpsF.lon,
@@ -971,7 +975,7 @@ function _runEstimation(
             alt0,
           );
           const effectivePosSigma = getGpsPosSigma(gpsF.numSat);
-          const idxGpsBias = eskf.dim === 18 ? 15 : (eskf.dim === 24 ? 21 : -1);
+          const idxGpsBias = gpsBiasIndex(eskf.dim);
           const fP = createGpsPositionFactor(
             { n: gNed.n, e: gNed.e, d: gNed.d },
             effectivePosSigma,
@@ -1244,7 +1248,7 @@ function _runEstimation(
           const accelBodyNow = imu[imuIdx].accel;
           const gyroBodyNow = imu[imuIdx].gyro;
           
-          // Kinematic correction: isolate gravity by subtracting centripetal acceleration (ω × v_body)
+          // Kinematic correction: isolate gravity by adding back the ω×v_body turn term
           const R = quatToRotMat(eskf.q);
           const vBx = R[0]*eskf.v[0] + R[3]*eskf.v[1] + R[6]*eskf.v[2];
           const vBy = R[1]*eskf.v[0] + R[4]*eskf.v[1] + R[7]*eskf.v[2];
@@ -1255,9 +1259,9 @@ function _runEstimation(
           const akinZ = gyroBodyNow[0]*vBy - gyroBodyNow[1]*vBx;
 
           const aGravityBody: Vec3 = [
-            accelBodyNow[0] - akinX,
-            accelBodyNow[1] - akinY,
-            accelBodyNow[2] - akinZ
+            accelBodyNow[0] + akinX,
+            accelBodyNow[1] + akinY,
+            accelBodyNow[2] + akinZ
           ];
 
           const sigmaTiltNow = computeAdaptiveSigmaTilt(accelBodyNow, gyroBodyNow, eskf.v, eskf.q);
@@ -1439,6 +1443,8 @@ function _runEstimation(
 // Public API
 // ---------------------------------------------------------------------------
 
+/** Run the full ESKF+RTS-smoother pipeline (see _runEstimation) and package
+ *  the result as a PoseTrack IR ready for the KML/GPX/CSV/JSON serializers. */
 export function estimatePoseTrack(
   data: EstimatorData,
   origin: EstimatorOrigin,
@@ -1510,19 +1516,19 @@ export function estimatePoseTrackWithDiagnostics(
     source: {
       log: 'Betaflight BBL',
       magModelSchema: opts.magModel
-        ? String(opts.magModel.version || '2.x')
+        ? String(opts.magModel.version ?? '2.x')
         : 'none',
       solverConfig: {
-        outputHz: opts.outputHz || 20,
-        gpsPosSigma: opts.gpsPosSigma || 2.5,
-        gpsVelSigma: opts.gpsVelSigma || 0.95,
-        gpsDelayMs: opts.gpsDelayMs || 0,
-        gpsPosSigmaFloor: opts.gpsPosSigmaFloor ?? 1.0,
-        baroSigma: opts.baroSigma || 2.5,
-        attSigma: opts.attSigma || 0.1,
-        useMag: !!(
-          opts.magModel && opts.magModel.fusion?.earthFieldNedGauss
-        ),
+        // Keep these fallbacks in sync with the destructuring defaults at the
+        // top of _runEstimation — this block records what the solver actually ran.
+        outputHz: opts.outputHz ?? 20,
+        gpsPosSigma: opts.gpsPosSigma ?? 2.8,
+        gpsVelSigma: opts.gpsVelSigma ?? 0.45,
+        gpsDelayMs: resolvedGpsDelayMs,
+        gpsPosSigmaFloor: opts.gpsPosSigmaFloor ?? 2.0,
+        baroSigma: opts.baroSigma ?? 1.6,
+        attSigma: opts.attSigma ?? 0.02,
+        useMag: !!opts.magModel?.fusion?.earthFieldNedGauss,
       },
       estimatedParams,
     },

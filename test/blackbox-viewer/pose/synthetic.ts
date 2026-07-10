@@ -378,6 +378,7 @@ export function generateSensorStreams(
     mEarth = [0.17, -0.047, 0.51] as Vec3,
     mBody = [0, 0, 0] as Vec3,
     rng = null,
+    gpsNoiseStd = 0,
     gyroNoiseStd = 0,
     accelNoiseStd = 0,
     origin = null,
@@ -385,6 +386,8 @@ export function generateSensorStreams(
 
   const g = 9.80665;
   const originAlt = origin ? origin.alt : 0;
+  const originLat = origin ? origin.lat : 48.408;
+  const originLon = origin ? origin.lon : -71.164;
   const imu: ImuSample[] = [];
   const gpsList: GpsFix[] = [];
   const baro: BaroSample[] = [];
@@ -440,11 +443,14 @@ export function generateSensorStreams(
 
     // GPS at ~10 Hz
     if (i % Math.round(1 / (10 * dt)) === 0) {
+      const latNoise = rng ? randn(rng, 0, gpsNoiseStd / 111320) : 0;
+      const lonNoise = rng ? randn(rng, 0, gpsNoiseStd / (111320 * Math.cos((originLat * Math.PI) / 180))) : 0;
+      const altNoise = rng ? randn(rng, 0, gpsNoiseStd) : 0;
       gpsList.push({
         tUs,
-        lat: 48.408 + pose.pNed.n / 111320,
-        lon: -71.164 + pose.pNed.e / (111320 * Math.cos((48.408 * Math.PI) / 180)),
-        alt: originAlt - pose.pNed.d,
+        lat: originLat + pose.pNed.n / 111320 + latNoise,
+        lon: originLon + pose.pNed.e / (111320 * Math.cos((originLat * Math.PI) / 180)) + lonNoise,
+        alt: originAlt - pose.pNed.d + altNoise,
         velNed: [
           pose.vNed.n + (rng ? randn(rng, 0, 0.3) : 0),
           pose.vNed.e + (rng ? randn(rng, 0, 0.3) : 0),
@@ -493,7 +499,7 @@ function quatMultLocal(a: Quat, b: Quat): Quat {
 
 function quatToRotVec(q: Quat): Vec3 {
   const w = q[0];
-  const vNorm = Math.sqrt(q[1] ** 2 + q[2] ** 2 + q[3] ** 2);
+  const vNorm = Math.hypot(q[1], q[2], q[3]);
   if (vNorm < 1e-14) return [0, 0, 0];
   const theta = 2 * Math.atan2(vNorm, w);
   const scale = theta / vNorm;

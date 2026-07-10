@@ -156,7 +156,7 @@ describeIntegration('In-flight mag cal parity & mode routing', () => {
     );
 
     // Gauss streams must match
-    expect(prepManual.data.mag.length).toBe(prepAuto.data.mag.length);
+    expect(prepManual.data.mag).toHaveLength(prepAuto.data.mag.length);
 
     const tol = 1e-12;
     let maxDiff = 0;

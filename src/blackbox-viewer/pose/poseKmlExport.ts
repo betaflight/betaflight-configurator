@@ -301,6 +301,10 @@ async function runInMainThread(
   // Dynamic import so the heavy estimator isn't bundled into the entry chunk
   const { estimatePoseTrack } = await import('./estimatorLoop.js');
 
+  if (signal?.aborted) {
+    throw new DOMException('Generation cancelled.', 'AbortError');
+  }
+
   return new Promise((resolve, reject) => {
     const abortHandler = () => {
       reject(new DOMException('Generation cancelled.', 'AbortError'));

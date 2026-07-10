@@ -10,6 +10,8 @@
 
 import type { PoseTrack } from '../poseTrack.js';
 
+/** Options for poseTrackToCsv: field delimiter, whether to emit a header
+ *  row, and decimal precision for numeric fields. */
 export interface CsvOpts {
   delimiter?: string;
   header?: boolean;

@@ -28,7 +28,7 @@ describe("rtsSmooth", () => {
             },
         ];
         const result = rtsSmooth(filtered, []);
-        expect(result.length).toBe(1);
+        expect(result).toHaveLength(1);
         expect(result[0].x.p).toEqual([1, 2, 3]);
     });
 
@@ -115,7 +115,7 @@ describe("rtsSmooth", () => {
         ];
 
         const result = rtsSmooth(filtered, [null]);
-        expect(result.length).toBe(2);
+        expect(result).toHaveLength(2);
         expect(result[0].x.p).toEqual([0, 0, 0]);
     });
 });

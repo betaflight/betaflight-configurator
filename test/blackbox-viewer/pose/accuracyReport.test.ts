@@ -5,7 +5,7 @@
  * GPS ground course (heading witness) and accelerometer gravity (tilt witness),
  * broken down by flight regime.
  *
- * Outputs: __fixtures__/reference_flight1/accuracy_report.json + console summary.
+ * Outputs: console summary only.
  *
  * Regimes:
  *   (a) gentle 1g cruise: |accel| in [0.95, 1.05]g, |omega| < 30 deg/s
@@ -505,13 +505,6 @@ describeIntegration('accuracy report', () => {
             `  ${''.padEnd(12)} tilt-valid: med=${tvr.median} deg rms=${tvr.rms} deg (n=${tvr.n})  |  hdg-sust: med=${hsr.median} deg rms=${hsr.rms} deg (n=${hsr.n})`,
           );
         }
-      }
-
-      // Write JSON report only when explicitly requested
-      const outPath = path.join(DIR, 'accuracy_report.json');
-      if (process.env.UPDATE_POSE_FIXTURES === '1') {
-        fs.writeFileSync(outPath, JSON.stringify(report, null, 2), 'utf-8');
-        console.log(`\nReport written: ${outPath}`);
       }
 
       // --- Assertions (matches acroFixture gates) ---

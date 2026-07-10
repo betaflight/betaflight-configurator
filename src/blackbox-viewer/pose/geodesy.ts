@@ -12,6 +12,7 @@
 
 import type { LLA, Vec3 } from './poseSample.js';
 
+/** WGS84 semi-major axis (m), flattening, and eccentricity^2 (derived). */
 export const WGS84_A = 6378137.0;
 export const WGS84_F = 1.0 / 298.257223563;
 export const WGS84_E2 = WGS84_F * (2 - WGS84_F);
@@ -30,18 +31,22 @@ function rad2deg(r: number): number {
 // ECEF / ENU / NED conversions
 // ---------------------------------------------------------------------------
 
+/** Earth-Centered, Earth-Fixed Cartesian position (m). */
 export interface EcefPos {
   x: number;
   y: number;
   z: number;
 }
 
+/** East-North-Up local tangent-plane position relative to an origin (m). */
 export interface EnuPos {
   e: number;
   n: number;
   u: number;
 }
 
+/** North-East-Down local tangent-plane position relative to an origin (m),
+ *  the estimator's world frame. */
 export interface NedPos {
   n: number;
   e: number;
@@ -144,7 +149,7 @@ export function nedToLlh(
   const z = originEcef.z + RT[2][0] * enuVec[0] + RT[2][1] * enuVec[1] + RT[2][2] * enuVec[2];
 
   const iters = Math.max(1, Math.floor(iterations));
-  const p = Math.sqrt(x * x + y * y);
+  const p = Math.hypot(x, y);
   let lat = Math.atan2(z, p * (1 - WGS84_E2));
   let N = WGS84_A / Math.sqrt(1 - WGS84_E2 * Math.sin(lat) ** 2);
   let alt = p / Math.cos(lat) - N;
@@ -204,6 +209,8 @@ export function bearing(lat1: number, lon1: number, lat2: number, lon2: number):
 // Local tangent offset (for triad endpoint positioning)
 // ---------------------------------------------------------------------------
 
+/** Flat-earth-approximation lat/lon/alt deltas (deg, deg, m) for a small NED
+ *  offset near a reference point, returned by localTangentOffset. */
 export interface LocalTangentOffset {
   dLat: number;
   dLon: number;

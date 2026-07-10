@@ -10,15 +10,9 @@
  */
 
 import type { PoseTrack } from '../poseTrack.js';
+import { esc } from './xmlEscape.js';
 
-function esc(s: string): string {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
+/** Options for poseTrackToGpx. */
 export interface GpxOpts {
   /** GPX track name (default "Betaflight Track") */
   trackName?: string;
@@ -39,16 +33,13 @@ export function poseTrackToGpx(poseTrack: PoseTrack, opts: GpxOpts = {}): string
   lines.push(
     '<gpx version="1.1" creator="Betaflight Pose Estimator" xmlns="http://www.topografix.com/GPX/1/1" xmlns:pose="https://betaflight.com/pose/v1">',
   );
-  lines.push(`  <trk>`);
-  lines.push(`    <name>${esc(trackName)}</name>`);
-  lines.push(`    <trkseg>`);
+  lines.push(`  <trk>`, `    <name>${esc(trackName)}</name>`, `    <trkseg>`);
 
   for (const s of samples) {
     if (!s.lla) continue;
     if (s.tUs == null) continue;
 
-    lines.push(`      <trkpt lat="${s.lla.lat}" lon="${s.lla.lon}">`);
-    lines.push(`        <ele>${s.lla.alt}</ele>`);
+    lines.push(`      <trkpt lat="${s.lla.lat}" lon="${s.lla.lon}">`, `        <ele>${s.lla.alt}</ele>`);
     // <time> intentionally omitted: we have no absolute UTC anchor, so any value
     // here would be a 1970-epoch fiction that misleads GPX consumers. What the log
     // DOES carry, for whoever wires real timestamps up later:
@@ -63,19 +54,12 @@ export function poseTrackToGpx(poseTrack: PoseTrack, opts: GpxOpts = {}): string
     // model to match the magnetic field for the day of the flight.
     // Extensions: euler angles when available (roll/pitch/heading/tilt in degrees)
     if (s.euler) {
-      lines.push(`        <extensions>`);
-      lines.push(`          <pose:rollDeg>${s.euler.rollDeg.toFixed(2)}</pose:rollDeg>`);
-      lines.push(`          <pose:pitchDeg>${s.euler.pitchDeg.toFixed(2)}</pose:pitchDeg>`);
-      lines.push(`          <pose:headingDeg>${s.euler.headingDeg.toFixed(2)}</pose:headingDeg>`);
-      lines.push(`          <pose:tiltDeg>${s.euler.tiltDeg.toFixed(2)}</pose:tiltDeg>`);
-      lines.push(`        </extensions>`);
+      lines.push(`        <extensions>`, `          <pose:rollDeg>${s.euler.rollDeg.toFixed(2)}</pose:rollDeg>`, `          <pose:pitchDeg>${s.euler.pitchDeg.toFixed(2)}</pose:pitchDeg>`, `          <pose:headingDeg>${s.euler.headingDeg.toFixed(2)}</pose:headingDeg>`, `          <pose:tiltDeg>${s.euler.tiltDeg.toFixed(2)}</pose:tiltDeg>`, `        </extensions>`);
     }
     lines.push(`      </trkpt>`);
   }
 
-  lines.push(`    </trkseg>`);
-  lines.push(`  </trk>`);
-  lines.push(`</gpx>`);
+  lines.push(`    </trkseg>`, `  </trk>`, `</gpx>`);
 
   return `${lines.join('\n')}\n`;
 }

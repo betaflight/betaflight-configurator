@@ -50,19 +50,36 @@ export function poseTrackFromJson(json: string): PoseTrack {
     throw new Error(`Unsupported PoseTrack schemaVersion: ${parsed.meta.schemaVersion}`);
   }
 
+  const isNumArray = (v: unknown, len: number): v is number[] =>
+    Array.isArray(v) && v.length === len && v.every((x) => typeof x === 'number' && Number.isFinite(x));
+
   const samples: PoseSampleInternal[] = (parsed.samples || []).map(
-    (s: Record<string, unknown>) => ({
-      tUs: s.tUs as number,
-      p: s.p as [number, number, number],
-      v: s.v as [number, number, number],
-      q: s.q as [number, number, number, number],
-      lla: s.lla as PoseSampleInternal['lla'],
-      covPos: s.covPos as number[][],
-      covVel: s.covVel as number[][],
-      covAtt: s.covAtt as number[][],
-      euler: s.euler as PoseSampleInternal['euler'],
-      diagnostics: s.diagnostics as PoseSampleInternal['diagnostics'],
-    }),
+    (s: Record<string, unknown>, i: number) => {
+      if (typeof s.tUs !== 'number' || !Number.isFinite(s.tUs)) {
+        throw new Error(`Invalid PoseTrack JSON: sample ${i} has a non-finite tUs.`);
+      }
+      if (!isNumArray(s.p, 3)) {
+        throw new Error(`Invalid PoseTrack JSON: sample ${i}'s p is not a 3-number array.`);
+      }
+      if (!isNumArray(s.v, 3)) {
+        throw new Error(`Invalid PoseTrack JSON: sample ${i}'s v is not a 3-number array.`);
+      }
+      if (!isNumArray(s.q, 4)) {
+        throw new Error(`Invalid PoseTrack JSON: sample ${i}'s q is not a 4-number array.`);
+      }
+      return {
+        tUs: s.tUs,
+        p: s.p as [number, number, number],
+        v: s.v as [number, number, number],
+        q: s.q as [number, number, number, number],
+        lla: s.lla as PoseSampleInternal['lla'],
+        covPos: s.covPos as number[][],
+        covVel: s.covVel as number[][],
+        covAtt: s.covAtt as number[][],
+        euler: s.euler as PoseSampleInternal['euler'],
+        diagnostics: s.diagnostics as PoseSampleInternal['diagnostics'],
+      };
+    },
   );
 
   return createPoseTrack({

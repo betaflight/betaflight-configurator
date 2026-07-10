@@ -71,7 +71,7 @@ describe('analyzeLogCapabilities', () => {
     });
     const c = analyzeLogCapabilities(fake);
     expect(c.canGenerate).toBe(true);
-    expect(c.missing.length).toBe(0);
+    expect(c.missing).toHaveLength(0);
   });
 });
 
@@ -94,7 +94,7 @@ describeIntegration('analyzeLogCapabilities — reference_flight1 real log', () 
     expect(c.gpsLockAtTakeoff).toBe(true);
     expect(c.attitude).toBe(true);
     expect(c.canGenerate).toBe(true);
-    expect(c.missing.length).toBe(0);
+    expect(c.missing).toHaveLength(0);
   });
 });
 

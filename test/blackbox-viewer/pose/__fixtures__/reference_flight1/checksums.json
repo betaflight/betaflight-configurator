@@ -1,18 +1,14 @@
 {
   "files": [
     {
-      "sha256": "3ECFD37BF21FB2D2F9AC4AC7289704DBFF712D55E9ED8E0523A70A008C8A382A",
-      "file": "reference_flight1_posetrack.json"
-    },
-    {
-      "sha256": "F48FBCC42B306681C22D2F65E76B61053CAA3785B455FEAAF73BDB9BBA84BA6B",
+      "sha256": "1C42FA1F701031C6F68B8FE20B448EE61A16AADBE596479BA4D7E1D6ED863084",
       "file": "reference_flight1_track.kml"
     },
     {
-      "sha256": "DE307701762F7D041FD734B2565D498BC2CA7BDEB05056384EB02205EE4FF783",
-      "file": "accuracy_report.json"
+      "sha256": "6EF5CA95F9EDB4579B36617643F6AE94BF85C729AF14C8294363D7D6BC8D9B42",
+      "file": "reference_flight1_posetrack.json"
     }
   ],
-  "description": "Reference output fingerprints for reference_flight1. Quality is guarded by the 24 reconstruction gates (acroFixture.test.ts); these detect unintended byte drift. Regenerated after tuning FC-quat-prior decorrelation (fcQuatPriorHz=1000, dyn-weight disabled by default after this gate caught catastrophic divergence at lower rates with dyn-weight enabled on an aggressive acro flight), DCS chi2-phi + bounded R-inflation, physics-informed baro inflation, and the resulting NIS-consistency re-tune (gpsPosSigma 2.5->2.8, gpsVelSigma 0.95->0.45, baroSigma 2.5->1.6).",
-  "generated": "2026-07-08T13:05:00.000Z"
+  "description": "SHA-256 of the serialized reference_flight1 outputs (computed in-memory by acroKml.test.ts). Regenerate with UPDATE_POSE_FIXTURES=1 after an intentional output change.",
+  "generated": "2026-07-10T12:54:35.181Z"
 }

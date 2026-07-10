@@ -60,7 +60,7 @@ function buildSyntheticFlight(tauTrue: number, sigmaTrue: number) {
   // Thin the IMU-rate GPS stream from generateSensorStreams (~10 Hz) down to 5 Hz
   // and overlay an OU-process (correlated) position bias — the FOGM model's
   // target failure mode — on top of its existing white GPS noise.
-  const dtGps = streams.gps.length > 1 ? (streams.gps[2].tUs - streams.gps[0].tUs) / 1e6 : 0.2;
+  const dtGps = streams.gps.length > 2 ? (streams.gps[2].tUs - streams.gps[0].tUs) / 1e6 : 0.2;
   const decayPerStep = Math.exp(-dtGps / tauTrue);
   const qStdPerStep = sigmaTrue * Math.sqrt(1 - decayPerStep * decayPerStep);
   let biasN = 0;

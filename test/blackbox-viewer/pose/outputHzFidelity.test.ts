@@ -17,6 +17,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { ingestFlightLog, loadFlightLogFromBuffer, correctMagStream } from '../../../src/blackbox-viewer/pose/flightIngestion.js';
 import { estimatePoseTrack } from '../../../src/blackbox-viewer/pose/estimatorLoop.js';
+import type { EstimatorOpts } from '../../../src/blackbox-viewer/pose/estimatorLoop.js';
 import { loadMagCharacterizationModel } from '../../../src/blackbox-viewer/pose/mag_model.js';
 import { resamplePoseTrack } from '../../../src/blackbox-viewer/pose/poseTrack.js';
 import { tiltFromUprightDeg, windowSamples, quatAngleDeg } from './acroGates.js';
@@ -43,7 +44,7 @@ interface RateResult {
 }
 
 describeIntegration("outputHz fidelity", () => {
-    it("attitude fidelity preserved across output rates (20/50/100/250/500 Hz)", async () => {
+    it("attitude fidelity preserved across output rates (20/50/100 Hz)", async () => {
         if (!hasFiles()) { console.warn("SKIP: reference_flight1 files not available"); return; }
 
         const fl: unknown = await loadFlightLogFromBuffer(new Uint8Array(fs.readFileSync(BFL_PATH)));
@@ -58,7 +59,8 @@ describeIntegration("outputHz fidelity", () => {
         const backFlipT0: number = 144;
         const backFlipT1: number = 150;
 
-        const rates: number[] = [20, 50];
+        // 250/500 Hz would multiply runtime for little extra signal — deliberately omitted.
+        const rates: number[] = [20, 50, 100];
         const results: RateResult[] = [];
 
         for (const hz of rates) {
@@ -67,7 +69,7 @@ describeIntegration("outputHz fidelity", () => {
                 { ...d, mag: magGauss }, origin,
                 {
                     outputHz: hz,
-                    magModel: magModelForEst,
+                    magModel: magModelForEst as EstimatorOpts['magModel'],
                     sigmaYawMax: 0.10,
                     magGate: 3.0,
                     procSigmaAcc: 5.5,

@@ -160,16 +160,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, toRaw, type Ref } from "vue";
+import { ref, watch, toRaw, onUnmounted } from "vue";
+import type { PropType } from "vue";
 import { generatePoseKml } from "../pose/poseKmlExport.js";
 import { analyzeLogCapabilities } from "../pose/logCapabilities.js";
 import type { FlightLogHandle, LogCapabilities } from "../pose/logCapabilities.js";
 import type { ProgressEvent } from "../pose/poseKmlExport.js";
 
+interface FlightLogWithMeta extends FlightLogHandle {
+    name?: string;
+}
+
 const open = defineModel("open", { type: Boolean, default: false });
 
 const props = defineProps({
-    flightLog: { type: Object as () => unknown, default: null },
+    flightLog: { type: Object as PropType<FlightLogWithMeta | null>, default: null },
 });
 
 // Settings
@@ -195,6 +200,10 @@ const errorHint = ref("");
 
 let abortController: AbortController | null = null;
 
+onUnmounted(() => {
+    abortController?.abort();
+});
+
 // Coarse phase-weighted progress; refined once the real pipeline reports
 // per-iteration fractions through onProgress.
 const PHASE_BASE = { parsing: 0, estimating: 10, exporting: 90 };
@@ -207,7 +216,7 @@ function onProgress(ev: ProgressEvent) {
     progressPercent.value = Math.min(99, Math.round(base + span * (ev.fraction ?? 0)));
 }
 
-function onModelFileSelected(ev: Event) {
+async function onModelFileSelected(ev: Event) {
     const target = ev.target as HTMLInputElement;
     const file = target.files?.[0];
     if (!file) {
@@ -218,23 +227,16 @@ function onModelFileSelected(ev: Event) {
     }
     manualModelName.value = file.name;
     manualModelError.value = "";
-    const reader = new FileReader();
-    reader.onload = () => {
-        try {
-            const json = JSON.parse(reader.result as string);
-            if (!json || typeof json !== "object") throw new Error("Not a valid JSON object");
-            manualModelContent.value = json;
-            manualModelError.value = "";
-        } catch (e: unknown) {
-            manualModelError.value = "Invalid model file: " + ((e as Error).message ?? String(e));
-            manualModelContent.value = null;
-        }
-    };
-    reader.onerror = () => {
-        manualModelError.value = "Failed to read file.";
+    try {
+        const text = await file.text();
+        const json = JSON.parse(text);
+        if (!json || typeof json !== "object") throw new Error("Not a valid JSON object");
+        manualModelContent.value = json;
+        manualModelError.value = "";
+    } catch (e: unknown) {
+        manualModelError.value = "Invalid model file: " + ((e as Error).message ?? String(e));
         manualModelContent.value = null;
-    };
-    reader.readAsText(file);
+    }
 }
 
 function onSaveMagModel() {
@@ -262,7 +264,7 @@ async function onGenerate() {
             flightLog: toRaw(props.flightLog),
             magModel: magMode.value === "manual" ? toRaw(manualModelContent.value) : null,
             magMode: magMode.value as "off" | "auto" | "manual",
-            filename: ((props.flightLog as any)?.name ?? "track").replace(/\.\w+$/, "") + ".kml",
+            filename: (props.flightLog?.name ?? "track").replace(/\.\w+$/, "") + ".kml",
             triadsPerSecond: triadsPerSecond.value,
             onProgress,
             signal: abortController.signal,

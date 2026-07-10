@@ -440,11 +440,6 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
       expect(worst).toBeLessThanOrEqual(35);
     });
 
-    it('NO model + NO correction: reports old ~30.5 m', () => {
-      if (!haveFiles()) return;
-      const worst = worstHorizontalOffset(noCorrectionSamples, gpsNed);
-      console.log(`  no-model no-correction worst horiz offset = ${worst.toFixed(1)} m (old baseline ~30.5 m)`);
-    });
   });
 
   // =========================================================================
@@ -485,12 +480,6 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
   // 5. Final heading — must be consistent
   // =========================================================================
   describe('final heading consistency', () => {
-    it('WITH model: reports final heading', () => {
-      if (!haveFiles()) return;
-      const h = finalHeadingDeg(withModelSamples);
-      console.log(`  with-model final heading = ${h.toFixed(0)}°`);
-    });
-
     it('NO model + raw-mag bias: final heading within 15° of with-model', () => {
       if (!haveFiles()) return;
       const hWith = finalHeadingDeg(withModelSamples);
@@ -518,12 +507,6 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
       assertPass(r, 'raw-mag bias not frozen');
     });
 
-    it('NO model + raw-mag bias: forward crab acceptable', () => {
-      if (!haveFiles()) return;
-      const r = gateForwardCrab(rawMagBiasSamples, 45);
-      console.log(`  raw-mag bias: ${r.message}`);
-      if (!r.pass) console.log(`  (crab may be elevated without full model — expected tradeoff)`);
-    });
   });
 
   // =========================================================================
@@ -575,19 +558,6 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
       expect(worst).toBeLessThan(17.7);  // Must beat hard-iron-only path
     });
 
-    it('worst-horizontal-offset stretch target ≤ 12 m', () => {
-      if (!haveFiles()) return;
-      const r = inFlightCalResult!;
-      if (!r.valid || inFlightCalSamples.length === 0) return;
-      const worst = worstHorizontalOffset(inFlightCalSamples, gpsNed);
-      // Soft stretch target: ≤ 12 m
-      if (worst <= 12) {
-        console.log(`  ✓ Stretch target met: ${worst.toFixed(1)} m ≤ 12 m`);
-      } else {
-        console.log(`  ✗ Stretch target: ${worst.toFixed(1)} m > 12 m`);
-      }
-    });
-
     it('endpoint loop closure ≤ 5 m', () => {
       if (!haveFiles()) return;
       const r = inFlightCalResult!;
@@ -603,15 +573,6 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
       const r = gateAttitudeTracksFC_Tight(inFlightCalSamples, fcQuat, 25);
       console.log(`  In-flight cal attitude vs FC: ${r.message}`);
       assertPass(r, 'in-flight cal attitude tracks FC');
-    });
-
-    it('forward crab acceptable (gate)', () => {
-      if (!haveFiles()) return;
-      if (!inFlightCalResult?.valid || inFlightCalSamples.length === 0) return;
-      const r = gateForwardCrab(inFlightCalSamples, 45);
-      console.log(`  In-flight cal forward crab: ${r.message}`);
-      // Allow wider tolerance — in-flight cal is not bench-validated
-      if (!r.pass) console.log(`  (crab may be elevated vs bench-calibrated model — expected tradeoff)`);
     });
 
     it('heading-vs-GPS-course bias closer to with-model than raw-mag bias', () => {

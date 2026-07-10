@@ -16,6 +16,8 @@
 import type { LLA, PoseSampleInternal, Quat } from './poseSample.js';
 import { eulerFromQuat } from './imuMechanization.js';
 
+/** PoseTrack IR schema version, embedded in meta.schemaVersion. Bump when the
+ *  serialized JSON shape changes in a way old readers can't tolerate. */
 export const POSE_TRACK_SCHEMA = 1;
 
 // ---------------------------------------------------------------------------
@@ -39,7 +41,7 @@ function slerp(q1: Quat, q2: Quat, t: number): Quat {
       q1[2] + t * (_q2[2] - q1[2]),
       q1[3] + t * (_q2[3] - q1[3]),
     ];
-    const n = Math.sqrt(result[0] ** 2 + result[1] ** 2 + result[2] ** 2 + result[3] ** 2);
+    const n = Math.hypot(result[0], result[1], result[2], result[3]);
     if (n < 1e-14) return [1, 0, 0, 0];
     return [result[0] / n, result[1] / n, result[2] / n, result[3] / n];
   }
@@ -76,6 +78,9 @@ function findIndexBefore(samples: PoseSampleInternal[], tUs: number): number {
 // PoseTrack type
 // ---------------------------------------------------------------------------
 
+/** PoseTrack provenance and unit/frame documentation, carried alongside the
+ *  samples so every serializer can label its output correctly without
+ *  hardcoding frame/unit assumptions. */
 export interface PoseTrackMeta {
   schemaVersion: number;
   frame: string;
@@ -92,6 +97,8 @@ export interface PoseTrackMeta {
   source: Record<string, unknown>;
 }
 
+/** The immutable pose-reconstruction result: full state/covariance/provenance
+ *  plus an interpolating accessor. See the file header for frame conventions. */
 export interface PoseTrack {
   meta: PoseTrackMeta;
   samples: PoseSampleInternal[];
@@ -103,6 +110,8 @@ export interface PoseTrack {
 // Factory
 // ---------------------------------------------------------------------------
 
+/** Inputs to createPoseTrack: raw samples plus the georeference origin and
+ *  arbitrary provenance metadata to embed in meta.source. */
 export interface CreatePoseTrackOpts {
   samples: PoseSampleInternal[];
   georefOrigin: LLA;
@@ -139,7 +148,7 @@ export function createPoseTrack({ samples, georefOrigin, source }: CreatePoseTra
       if (sorted.length === 1) return sorted[0];
 
       if (tUs <= sorted[0].tUs) return sorted[0];
-      if (tUs >= sorted[sorted.length - 1].tUs) return sorted[sorted.length - 1];
+      if (tUs >= sorted.at(-1)!.tUs) return sorted.at(-1)!;
 
       const i = findIndexBefore(sorted, tUs);
       const j = i + 1;
@@ -181,7 +190,10 @@ export function createPoseTrack({ samples, georefOrigin, source }: CreatePoseTra
 
       // Lerp covariance
       const lerpCov = (ca: number[][] | null, cb: number[][] | null): number[][] | null => {
-        if (!ca || !cb) return ca || cb;
+        if (!ca || !cb) {
+          const src = ca || cb;
+          return src ? src.map((row) => [...row]) : null;
+        }
         const n = ca.length;
         const result: number[][] = new Array(n);
         for (let ri = 0; ri < n; ri++) {
@@ -248,7 +260,7 @@ export function resamplePoseTrack(poseTrack: PoseTrack, hz: number): PoseTrack {
   }
 
   const t0 = samples[0].tUs;
-  const t1 = samples[samples.length - 1].tUs;
+  const t1 = samples.at(-1)!.tUs;
   const dtUs = 1e6 / hz;
   const count = Math.floor((t1 - t0) / dtUs) + 1;
 

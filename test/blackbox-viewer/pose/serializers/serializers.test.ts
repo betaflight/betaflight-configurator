@@ -134,4 +134,12 @@ describe('Serializers', () => {
     expect(restored.samples[0].euler).toBeDefined();
     expect(restored.samples[0].euler!.rollDeg).toBe(0);
   });
+
+  it('JSON deserialization throws on a malformed sample (q length 3)', () => {
+    const track = makeTrack();
+    const json = poseTrackToJson(track);
+    const parsed = JSON.parse(json);
+    parsed.samples[0].q = [1, 0, 0]; // malformed: quaternion needs 4 components
+    expect(() => poseTrackFromJson(JSON.stringify(parsed))).toThrow(/Invalid PoseTrack JSON/);
+  });
 });

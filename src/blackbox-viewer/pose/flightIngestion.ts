@@ -320,51 +320,51 @@ export function ingestFlightLog(
             lastGpsAlt = altMsl;
 
             gpsCounter++;
-            if (gpsCounter % gpsDecimationStep !== 0) continue;
+            if (gpsCounter % gpsDecimationStep === 0) {
+              let velNed: Vec3 | null = null;
+              if (hasGpsVelned) {
+                velNed = [
+                  frame[idxGpsVelned[0]!] / 100,
+                  frame[idxGpsVelned[1]!] / 100,
+                  frame[idxGpsVelned[2]!] / 100,
+                ];
+              }
 
-            let velNed: Vec3 | null = null;
-            if (hasGpsVelned) {
-              velNed = [
-                frame[idxGpsVelned[0]!] / 100,
-                frame[idxGpsVelned[1]!] / 100,
-                frame[idxGpsVelned[2]!] / 100,
-              ];
+              const speed = frame[idxGpsSpeed!] != null ? (frame[idxGpsSpeed!] as number) / 100 : 0;
+              const course = frame[idxGpsCourse!] != null ? (frame[idxGpsCourse!] as number) / 10 : 0;
+              const numSatRaw = frame[idxGpsNumSat!] != null ? (frame[idxGpsNumSat!] as number) : 0;
+              const numSat = numSatRaw > 100 ? 0 : numSatRaw;
+
+              // Extract GPS_time (u-blox iTOW) if available.
+              // The iTOW is the receiver's true fix epoch in ms GPS-time-of-week.
+              // It removes FC parse jitter and enables per-fix position timing
+              // independent of velocity (Doppler) timing.
+              const gpsTimeItoW: number | undefined =
+                hasGpsTime && idxGpsTime != null ? (frame[idxGpsTime] as number) : undefined;
+
+              // Apply GPS transport delay: shift timestamp back so GPS fix at
+              // physical time T is associated with keyframe near (T - delay).
+              const gpsTUs = tUs - Math.round(gpsDelayMs * 1000);
+
+              gps.push({
+                tUs: gpsTUs,
+                lat,
+                lon,
+                alt: altMsl,
+                velNed,
+                speed,
+                course,
+                numSat,
+                gpsTimeItoW,
+              });
             }
-
-            const speed = frame[idxGpsSpeed!] != null ? (frame[idxGpsSpeed!] as number) / 100 : 0;
-            const course = frame[idxGpsCourse!] != null ? (frame[idxGpsCourse!] as number) / 10 : 0;
-            const numSatRaw = frame[idxGpsNumSat!] != null ? (frame[idxGpsNumSat!] as number) : 0;
-            const numSat = numSatRaw > 100 ? 0 : numSatRaw;
-
-            // Extract GPS_time (u-blox iTOW) if available.
-            // The iTOW is the receiver's true fix epoch in ms GPS-time-of-week.
-            // It removes FC parse jitter and enables per-fix position timing
-            // independent of velocity (Doppler) timing.
-            const gpsTimeItoW: number | undefined =
-              hasGpsTime && idxGpsTime != null ? (frame[idxGpsTime] as number) : undefined;
-
-            // Apply GPS transport delay: shift timestamp back so GPS fix at
-            // physical time T is associated with keyframe near (T - delay).
-            const gpsTUs = tUs - Math.round(gpsDelayMs * 1000);
-
-            gps.push({
-              tUs: gpsTUs,
-              lat,
-              lon,
-              alt: altMsl,
-              velNed,
-              speed,
-              course,
-              numSat,
-              gpsTimeItoW,
-            });
           }
         }
       }
     }
   }
 
-  const totalTimeUs = imu.length > 0 ? imu[imu.length - 1].tUs - imu[0].tUs : 0;
+  const totalTimeUs = imu.length > 0 ? imu.at(-1)!.tUs - imu[0].tUs : 0;
   const imuRateHz = totalTimeUs > 0 ? imu.length / (totalTimeUs / 1e6) : 0;
 
   return {
@@ -395,11 +395,3 @@ export async function loadFlightLogFromBuffer(logData: Uint8Array): Promise<unkn
   return fl;
 }
 
-/**
- * Load a FlightLog from a file path (Node only).
- */
-export async function loadFlightLogFromFile(filePath: string): Promise<unknown> {
-  const fs = await import('fs');
-  const buffer = fs.readFileSync(filePath);
-  return loadFlightLogFromBuffer(new Uint8Array(buffer));
-}

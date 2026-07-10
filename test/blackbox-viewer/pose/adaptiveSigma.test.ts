@@ -141,26 +141,25 @@ describe('computeAdaptiveSigmaTilt — synthetic sandbox', () => {
 
   // ── Kinematic correction: isolating gravity in a turn ────────────────
   it('kinematic correction isolates gravity in a 2g turn (stays NOMINAL)', () => {
-    // The kinematic correction subtracts ω×v_body from the measured accel
-    // to isolate the gravity component, preventing coordinated turns from
-    // being misread as freefall/high-tilt-uncertainty events (a banked turn
-    // raises |a_raw| well above 1g, but |a_gravity| after correction stays
-    // near 1g since the centripetal term cancels out).
+    // The kinematic correction ADDS BACK ω×v_body to the measured accel to
+    // isolate the gravity component (accel convention: rest reads +g on
+    // body-down, and accel = Rᵀg − ω×v_body in a steady turn — see
+    // imuMechanization.ts strapdownPropagate's convention note), preventing
+    // coordinated turns from being misread as freefall/high-tilt-uncertainty
+    // events.
     const q: Quat = eulerToQuat(0, 0, 0);         // heading north, level
     const vNed: Vec3 = [15, 0, 0];                 // 15 m/s north
     const gyro: Vec3 = [0, 0, 0.8];                 // moderate yaw
-    const accel: Vec3 = [0, 0, G];                  // 1g down
-
     // v_body = Rᵀ·v_ned. For level north, R = [[1,0,0],[0,1,0],[0,0,1]],
     // so v_body = [15, 0, 0]
     // ω×v_body = [0, 0, 0.8] × [15, 0, 0] = [0, 12, 0] (rightward)
-    // a_gravity = [0, 0, 9.81] − [0, 12, 0] = [0, −12, 9.81]
-    // |a_gravity| = √(0 + 144 + 96.2) ≈ 15.5
-    // delta = |15.5 − 9.81| ≈ 5.7 → > 1.0 and > 0.5*g
-    // → Branch 3 interpolation
+    // Physically-consistent raw accel under this convention:
+    // accel = Rᵀg − ω×v_body = [0, 0, G] − [0, 12, 0] = [0, −12, G]
+    const accel: Vec3 = [0, -12, G];
+    // a_gravity = accel + ω×v_body = [0, −12, G] + [0, 12, 0] = [0, 0, G]
+    // delta = |G − G| = 0 → interpolation factor t = 0 → exactly NOMINAL
     const sigma = computeAdaptiveSigmaTilt(accel, gyro, vNed, q);
-    expect(sigma).toBeGreaterThanOrEqual(SIGMA_TILT_NOMINAL);
-    expect(sigma).toBeLessThanOrEqual(SIGMA_TILT_FREEFALL);
+    expect(sigma).toBe(SIGMA_TILT_NOMINAL);
   });
 
   // ── Edge cases ────────────────────────────────────────────────────────

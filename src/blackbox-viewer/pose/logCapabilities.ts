@@ -53,6 +53,47 @@ export interface FlightLogHandle {
 }
 
 /**
+ * Peek at the first second of GPS frames and determine whether a valid 3D
+ * fix was acquired at or before takeoff (sufficient satellites AND
+ * non-trivial position/altitude/speed).
+ */
+function checkGpsLockAtTakeoff(
+  flightLog: FlightLogHandle,
+  idx: (name: string) => number | null,
+): boolean {
+  const idxGpsLat = idx('GPS_coord[0]')!;
+  const idxGpsLon = idx('GPS_coord[1]')!;
+  const idxGpsAlt = idx('GPS_altitude');
+  const idxGpsNumSat = idx('GPS_numSat')!;
+  const idxGpsSpeed = idx('GPS_speed');
+
+  let scanned = 0;
+  // Scan the first second of log time for GPS frames.
+  const chunks = flightLog.getChunksInTimeRange(0, 1_000_000);
+  for (const chunk of chunks) {
+    if (scanned >= MAX_GPS_PEEK_FRAMES) break;
+    for (const frame of chunk.frames) {
+      if (scanned >= MAX_GPS_PEEK_FRAMES) break;
+      const lat = frame[idxGpsLat] / 1e7;
+      const lon = frame[idxGpsLon] / 1e7;
+      // Require non-zero position (zero = no fix yet).
+      if (lat === 0 && lon === 0) continue;
+      const numSatRaw = frame[idxGpsNumSat] ?? 0;
+      const numSat = numSatRaw > 100 ? 0 : numSatRaw;
+      // A 3D fix also requires non-zero altitude and speed capability.
+      const altRaw = idxGpsAlt != null ? frame[idxGpsAlt] : null;
+      const speedRaw = idxGpsSpeed != null ? frame[idxGpsSpeed] : null;
+      // Consider locked if numSat >= threshold AND position is non-trivial.
+      if (numSat >= MIN_SATS_FOR_LOCK && (altRaw != null || speedRaw != null)) {
+        return true;
+      }
+      scanned++;
+    }
+  }
+  return false;
+}
+
+/**
  * Determine whether a log can produce a good body-pose KML.
  *
  * @param flightLog A FlightLog instance (or compatible handle).
@@ -117,42 +158,8 @@ export function analyzeLogCapabilities(
   caps.attitude = hasQuat;
 
   // --- GPS lock at takeoff ---
-  // A valid 3D fix at takeoff means at least one of the earliest GPS frames
-  // has sufficient satellites AND non-zero coordinates.
-  // We peek at the first few GPS frames via getChunksInTimeRange.
-  let gpsLocked = false;
-  if (hasGpsPos && hasGpsNumSat) {
-    const idxGpsLat = idx('GPS_coord[0]')!;
-    const idxGpsLon = idx('GPS_coord[1]')!;
-    const idxGpsAlt = idx('GPS_altitude');
-    const idxGpsNumSat = idx('GPS_numSat')!;
-    const idxGpsSpeed = idx('GPS_speed');
-
-    let scanned = 0;
-    // Scan the first second of log time for GPS frames.
-    const chunks = flightLog.getChunksInTimeRange(0, 1_000_000);
-    for (const chunk of chunks) {
-      if (gpsLocked || scanned >= MAX_GPS_PEEK_FRAMES) break;
-      for (const frame of chunk.frames) {
-        if (gpsLocked || scanned >= MAX_GPS_PEEK_FRAMES) break;
-        const lat = frame[idxGpsLat] / 1e7;
-        const lon = frame[idxGpsLon] / 1e7;
-        // Require non-zero position (zero = no fix yet).
-        if (lat === 0 && lon === 0) continue;
-        const numSatRaw = frame[idxGpsNumSat] ?? 0;
-        const numSat = numSatRaw > 100 ? 0 : numSatRaw;
-        // A 3D fix also requires non-zero altitude and speed capability.
-        const altRaw = idxGpsAlt != null ? frame[idxGpsAlt] : null;
-        const speedRaw = idxGpsSpeed != null ? frame[idxGpsSpeed] : null;
-        // Consider locked if numSat >= threshold AND position is non-trivial.
-        if (numSat >= MIN_SATS_FOR_LOCK && (altRaw != null || speedRaw != null)) {
-          gpsLocked = true;
-        }
-        scanned++;
-      }
-    }
-  }
-  caps.gpsLockAtTakeoff = gpsLocked;
+  caps.gpsLockAtTakeoff =
+    hasGpsPos && hasGpsNumSat ? checkGpsLockAtTakeoff(flightLog, idx) : false;
 
   // --- Compute canGenerate + missing ---
   const missing: string[] = [];

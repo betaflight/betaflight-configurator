@@ -29,6 +29,9 @@
 
 import type { Quat, Vec3 } from './poseSample.js';
 
+/** ESKF nominal state as seen by measurement factories: position/velocity in
+ *  NED (m, m/s), attitude q body(FRD)->world(NED), and the optional bias/mag
+ *  states depending on which are carried by the current state dimension. */
 export interface NominalState {
   p: Vec3;
   v: Vec3;
@@ -42,12 +45,15 @@ export interface NominalState {
   kI?: Vec3;
 }
 
+/** A position or velocity measurement in NED (m or m/s). */
 export interface NedMeas {
   n: number;
   e: number;
   d: number;
 }
 
+/** A single measurement update: predicted-measurement function h(x),
+ *  Jacobian H, noise covariance R, and the residual function z - h(x). */
 export interface MeasurementFactor<Z = number[]> {
   h(x: NominalState): number | number[];
   readonly H: number[][];
@@ -55,6 +61,7 @@ export interface MeasurementFactor<Z = number[]> {
   residual(z: Z, x: NominalState): number[];
 }
 
+/** Standard gravity magnitude (m/s^2), WGS84 conventional value. */
 export const GRAVITY_MAG = 9.80665;
 
 // --- Quaternion math helpers (flat row-major) --------------------------------
@@ -74,6 +81,7 @@ function quatConjugate(q: Quat): Quat {
   return [q[0], -q[1], -q[2], -q[3]];
 }
 
+/** Quaternion to 3x3 rotation matrix, row-major flat (9 elements), body(FRD)->world(NED). */
 export function quatToRotMat(q: Quat): number[] {
   const [w, x, y, z] = q;
   const xx = x * x, yy = y * y, zz = z * z;
@@ -96,7 +104,9 @@ export function quatToRotMat(q: Quat): number[] {
   return m;
 }
 
-function logMap(R: number[]): Vec3 {
+/** SO(3) logarithm: rotation matrix (row-major flat, 9 elements) to axis-angle
+ *  rotation vector (rad). Handles the theta->0 and theta->pi singularities. */
+export function logMap(R: number[]): Vec3 {
   const trace = R[0] + R[4] + R[8];
   const cosTheta = (trace - 1) / 2;
   const theta = Math.acos(Math.max(-1, Math.min(1, cosTheta)));
@@ -107,6 +117,28 @@ function logMap(R: number[]): Vec3 {
       (R[2] - R[6]) / 2,
       (R[3] - R[1]) / 2,
     ];
+  }
+
+  if (Math.PI - theta < 1e-6) {
+    // Near θ=π the antisymmetric part of R vanishes. Recover the axis from
+    // R = −I + 2aaᵀ: diagonal gives |aᵢ|, symmetric off-diagonals give signs
+    // relative to the largest component.
+    const ax2 = Math.max(0, (R[0] + 1) / 2);
+    const ay2 = Math.max(0, (R[4] + 1) / 2);
+    const az2 = Math.max(0, (R[8] + 1) / 2);
+    let a: Vec3;
+    if (ax2 >= ay2 && ax2 >= az2) {
+      const ax = Math.sqrt(ax2);
+      a = [ax, (R[1] + R[3]) / (4 * ax), (R[2] + R[6]) / (4 * ax)];
+    } else if (ay2 >= az2) {
+      const ay = Math.sqrt(ay2);
+      a = [(R[1] + R[3]) / (4 * ay), ay, (R[5] + R[7]) / (4 * ay)];
+    } else {
+      const az = Math.sqrt(az2);
+      a = [(R[2] + R[6]) / (4 * az), (R[5] + R[7]) / (4 * az), az];
+    }
+    const n = Math.hypot(a[0], a[1], a[2]) || 1;
+    return [(a[0] / n) * theta, (a[1] / n) * theta, (a[2] / n) * theta];
   }
 
   const factor = theta / (2 * Math.sin(theta));
@@ -451,17 +483,15 @@ export function createAccelTiltFactor(
     H[i] = new Array<number>(dim).fill(0);
   }
 
-  // Predicted body-frame down vector: u = R(q)ᵀ · [0,0,1]
+  // Predicted body-frame down vector: u = R(q)ᵀ · e_D, e_D = [0,0,1].
   const m = quatToRotMat(currentQ);
-  const ux = m[6], uy = m[7], uz = m[8];
 
-  // Jacobian with respect to the attitude error state δθ.
-  // Since R_true = R_nom * exp([δθ]), the predicted measurement is 
-  // R_trueᵀ e_z ≈ (I - [δθ]x) u = u + [u]x δθ.
-  // Therefore, H = [u]x (cross-product matrix of u).
-  H[0][6] = 0;    H[0][7] = -uz;  H[0][8] = uy;
-  H[1][6] = uz;   H[1][7] = 0;    H[1][8] = -ux;
-  H[2][6] = -uy;  H[2][7] = ux;   H[2][8] = 0;
+  // δθ is a WORLD-frame error (injection is q ← δq ⊗ q, eskf.ts): with
+  // R_true = exp([δθ]×)·R_nom and h(q) = R(q)ᵀ·e_D,
+  //   h ≈ u + R_nomᵀ·[e_D]×·δθ  ⇒  H = Rᵀ·[e_D]×.
+  H[0][6] = m[3]; H[0][7] = -m[0]; H[0][8] = 0;
+  H[1][6] = m[4]; H[1][7] = -m[1]; H[1][8] = 0;
+  H[2][6] = m[5]; H[2][7] = -m[2]; H[2][8] = 0;
 
   return {
     H,
@@ -481,6 +511,10 @@ export function createAccelTiltFactor(
   };
 }
 
+/** FC-quaternion-prior yaw sigmas (rad) and the mag-observability blend
+ *  thresholds (dimensionless field-quality ratio) that interpolate between
+ *  them: below LO uses DEFAULT_MAX (mag unreliable, trust FC yaw loosely),
+ *  above HI uses DEFAULT_TIGHT (mag reliable, trust FC yaw tightly). */
 export const SIGMA_YAW_DEFAULT_TIGHT = 0.025;
 export const SIGMA_YAW_DEFAULT_MAX   = 0.10;
 export const SIGMA_YAW_OBS_THRESH_LO = 0.70;
@@ -531,10 +565,12 @@ export function computeAdaptiveSigmaTilt(
     const akinY = gyroBody[2]*vBx - gyroBody[0]*vBz;
     const akinZ = gyroBody[0]*vBy - gyroBody[1]*vBx;
 
-    // a_gravity = a_measured − a_kinematic
-    const agX = accelBody[0] - akinX;
-    const agY = accelBody[1] - akinY;
-    const agZ = accelBody[2] - akinZ;
+    // Gravity direction = accel + ω×v_body (accel convention: rest reads +g
+    // on body-down; the ω×v turn term enters with a minus sign, so we add it
+    // back to isolate gravity — see strapdownPropagate's convention note).
+    const agX = accelBody[0] + akinX;
+    const agY = accelBody[1] + akinY;
+    const agZ = accelBody[2] + akinZ;
     const agMag = Math.hypot(agX, agY, agZ);
     const delta = Math.abs(agMag - g);
 

@@ -13,6 +13,20 @@ import { matMulByBt, getSparseStencil } from './eskf.js';
 
 type Mat = number[][];
 
+/** True when every nonzero entry of F lies inside the stencil pattern,
+ *  i.e. the sparse product would be exact. */
+function stencilCovers(F: Mat, stencil: number[][]): boolean {
+  for (let j = 0; j < F.length; j++) {
+    const row = F[j];
+    const allowed = stencil[j];
+    for (let k = 0; k < row.length; k++) {
+      if (row[k] !== 0 && !allowed.includes(k)) return false;
+    }
+  }
+  return true;
+}
+
+/** ESKF nominal state at one keyframe, as consumed by the RTS backward pass. */
 export interface NominalState {
   p: Vec3;
   v: Vec3;
@@ -25,6 +39,9 @@ export interface NominalState {
   tUs?: number;
 }
 
+/** One forward-pass (filter) keyframe: the corrected state/covariance (x, P)
+ *  plus the pre-correction prediction (xPred, PPred) the backward pass needs
+ *  to compute the smoother gain. */
 export interface FilterResult {
   x: NominalState;
   P: Mat;
@@ -32,6 +49,8 @@ export interface FilterResult {
   PPred: Mat | null;
 }
 
+/** One backward-pass (smoothed) keyframe: state/covariance after
+ *  incorporating information from all later keyframes. */
 export interface SmoothedResult {
   x: NominalState;
   P: Mat;
@@ -386,6 +405,11 @@ function stateAdd(x: NominalState, deltaX: number[]): NominalState {
 // RTS fixed-interval smoother
 // ---------------------------------------------------------------------------
 
+/** Rauch-Tung-Striebel fixed-interval backward pass: given the forward
+ *  filter's keyframe results and per-step transition matrices, returns the
+ *  smoothed (non-causal) state/covariance at every keyframe. Falls back from
+ *  the sparse-stencil product to the exact dense product when a keyframe's
+ *  accumulated transition has grown beyond the single-step stencil. */
 export function rtsSmooth(
   filterResults: FilterResult[],
   transitionMatrices: (Mat | null)[],
@@ -422,14 +446,10 @@ export function rtsSmooth(
     let Ck: Mat;
     try {
       const stencil = getSparseStencil(Fk.length);
-      // F can be accumulated across multiple IMU steps between keyframes.
-      // The single-step stencil is valid only when accumulation hasn't
-      // filled in off-diagonal terms beyond the stencil pattern. Should
-      // the keyframe interval grow, the dense fallback (below) captures
-      // any divergence. The 24 reference-flight gates + equivalence tests
-      // (dim 9/15/21, tol 5e-10) confirm the stencil is safe at current
-      // ~50 ms intervals.
-      const PFt = matMulByBt(Pk, Fk, stencil);
+      // Sparse product is exact only while Fk matches the single-step stencil; densified Fk (long keyframe gaps) takes the exact dense path.
+      const PFt = stencilCovers(Fk, stencil)
+        ? matMulByBt(Pk, Fk, stencil)
+        : matrixMultiply(Pk, matrixTranspose(Fk));
 
       const L = choleskyDecompose(Pkp1Pred);
       const PFtT = matrixTranspose(PFt);

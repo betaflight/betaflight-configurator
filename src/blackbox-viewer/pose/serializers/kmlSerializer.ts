@@ -14,17 +14,11 @@
 import { quatToRot } from '../imuMechanization.js';
 import type { PoseTrack } from '../poseTrack.js';
 import type { LLA } from '../poseSample.js';
+import { esc } from './xmlEscape.js';
 
 const M_PER_DEG_LAT = 111320;
 
-function esc(s: string): string {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
+/** Rendering options for poseTrackToKml's triad + path layers. */
 export interface KmlConfig {
   /** Triad line length in metres (default 1.0) */
   axisLengthMeters?: number;
@@ -79,10 +73,7 @@ export function poseTrackToKml(poseTrack: PoseTrack, config: KmlConfig = {}): st
   const refLat = meta.georefOrigin.lat;
 
   const lines: string[] = [];
-  lines.push('<?xml version="1.0" encoding="UTF-8"?>');
-  lines.push('<kml xmlns="http://www.opengis.net/kml/2.2">');
-  lines.push('  <Document>');
-  lines.push(`    <name>Betaflight Pose Track</name>`);
+  lines.push('<?xml version="1.0" encoding="UTF-8"?>', '<kml xmlns="http://www.opengis.net/kml/2.2">', '  <Document>', `    <name>Betaflight Pose Track</name>`);
   lines.push(
     `    <description>${esc(JSON.stringify({ schemaVersion: meta.schemaVersion, frame: meta.frame }))}</description>`,
   );
@@ -106,40 +97,22 @@ export function poseTrackToKml(poseTrack: PoseTrack, config: KmlConfig = {}): st
 
   // Fused path
   if (showPath) {
-    lines.push('    <Folder><name>Fused Path</name><visibility>1</visibility>');
-    lines.push('      <Placemark>');
-    lines.push('        <name>Estimated Trajectory</name>');
-    lines.push('        <styleUrl>#pathStyle</styleUrl>');
-    lines.push('        <LineString>');
-    lines.push('          <altitudeMode>absolute</altitudeMode>');
-    lines.push('          <coordinates>');
+    lines.push('    <Folder><name>Fused Path</name><visibility>1</visibility>', '      <Placemark>', '        <name>Estimated Trajectory</name>', '        <styleUrl>#pathStyle</styleUrl>', '        <LineString>', '          <altitudeMode>absolute</altitudeMode>', '          <coordinates>');
     for (const s of samples) {
       if (s.lla) {
         lines.push(`            ${s.lla.lon},${s.lla.lat},${s.lla.alt}`);
       }
     }
-    lines.push('          </coordinates>');
-    lines.push('        </LineString>');
-    lines.push('      </Placemark>');
-    lines.push('    </Folder>');
+    lines.push('          </coordinates>', '        </LineString>', '      </Placemark>', '    </Folder>');
   }
 
   // Raw GPS path (comparison)
-  if (showRawGps && rawGps && rawGps.length > 0) {
-    lines.push('    <Folder><name>Raw GPS</name><visibility>0</visibility>');
-    lines.push('      <Placemark>');
-    lines.push('        <name>Raw GPS Track</name>');
-    lines.push('        <styleUrl>#gpsStyle</styleUrl>');
-    lines.push('        <LineString>');
-    lines.push('          <altitudeMode>absolute</altitudeMode>');
-    lines.push('          <coordinates>');
+  if (showRawGps && rawGps?.length) {
+    lines.push('    <Folder><name>Raw GPS</name><visibility>0</visibility>', '      <Placemark>', '        <name>Raw GPS Track</name>', '        <styleUrl>#gpsStyle</styleUrl>', '        <LineString>', '          <altitudeMode>absolute</altitudeMode>', '          <coordinates>');
     for (const fix of rawGps) {
       lines.push(`            ${fix.lon},${fix.lat},${fix.alt}`);
     }
-    lines.push('          </coordinates>');
-    lines.push('        </LineString>');
-    lines.push('      </Placemark>');
-    lines.push('    </Folder>');
+    lines.push('          </coordinates>', '        </LineString>', '      </Placemark>', '    </Folder>');
   }
 
   // Body-axis triads
@@ -188,28 +161,18 @@ export function poseTrackToKml(poseTrack: PoseTrack, config: KmlConfig = {}): st
         }
         const desc = descParts.length > 0 ? esc(descParts.join(', ')) : '';
 
-        lines.push(`      <Placemark>`);
-        lines.push(`        <name>${ep.name} @ f${i}</name>`);
+        lines.push(`      <Placemark>`, `        <name>${ep.name} @ f${i}</name>`);
         if (desc) {
           lines.push(`        <description>${desc}</description>`);
         }
-        lines.push(`        <styleUrl>${ep.colorStyle}</styleUrl>`);
-        lines.push(`        <LineString>`);
-        lines.push(`          <altitudeMode>absolute</altitudeMode>`);
-        lines.push(`          <coordinates>`);
-        lines.push(`            ${s.lla.lon},${s.lla.lat},${s.lla.alt}`);
-        lines.push(`            ${endLon},${endLat},${endAlt}`);
-        lines.push(`          </coordinates>`);
-        lines.push(`        </LineString>`);
-        lines.push(`      </Placemark>`);
+        lines.push(`        <styleUrl>${ep.colorStyle}</styleUrl>`, `        <LineString>`, `          <altitudeMode>absolute</altitudeMode>`, `          <coordinates>`, `            ${s.lla.lon},${s.lla.lat},${s.lla.alt}`, `            ${endLon},${endLat},${endAlt}`, `          </coordinates>`, `        </LineString>`, `      </Placemark>`);
       }
     }
 
     lines.push('    </Folder>');
   }
 
-  lines.push('  </Document>');
-  lines.push('</kml>');
+  lines.push('  </Document>', '</kml>');
 
   return `${lines.join('\n')}\n`;
 }

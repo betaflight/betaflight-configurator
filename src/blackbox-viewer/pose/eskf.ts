@@ -27,6 +27,8 @@ import type { Quat, Vec3 } from './poseSample.js';
 
 type Mat = number[][];
 
+/** Initial nominal state + prior sigmas for createEskf. Units: metres/(m/s)/
+ *  radians for the sigma* fields, matching the corresponding NominalState field. */
 export interface EskfOptions {
     p0: Vec3;
     v0: Vec3;
@@ -53,6 +55,9 @@ export interface EskfOptions {
     bgClamp?: number;
 }
 
+/** ESKF nominal (non-error) state: position/velocity in NED (m, m/s),
+ *  attitude q body(FRD)->world(NED), and the always-on IMU biases plus the
+ *  optional GPS-bias / earth-mag / body-mag states depending on state dim. */
 export interface NominalState {
     p: Vec3;
     v: Vec3;
@@ -64,6 +69,9 @@ export interface NominalState {
     mBody?: Vec3;
 }
 
+/** A single measurement update: Jacobian H, noise covariance R, the
+ *  residual function z - h(x), and optionally the predicted-measurement
+ *  function h(x) itself (used by some factories for finite-difference tests). */
 export interface MeasurementFactor {
     H: Mat;
     R: Mat;
@@ -71,6 +79,8 @@ export interface MeasurementFactor {
     h?: (x: NominalState) => number | number[];
 }
 
+/** Robustness knobs for eskfUpdate: outlier handling (dcs) and/or
+ *  Variational-Bayes adaptive measurement noise (vbAdaptive). */
 export interface RobustOpts {
     dcs?: boolean;
     /** DCS gate-width parameter. When omitted, defaults to the 0.95-quantile of
@@ -163,6 +173,9 @@ export function chi2Quantile95Deg(df: number): number {
     return df * term * term * term;
 }
 
+/** Live, mutable ESKF instance: nominal state, error covariance P, process-
+ *  noise sigmas, and adaptive-robustness bookkeeping. Created by createEskf,
+ *  advanced in place by eskfPredict/eskfUpdate. */
 export interface EskfState {
     dim: number;
     p: Vec3;
@@ -191,6 +204,9 @@ export interface EskfState {
     bgClamp: number;
 }
 
+/** Read-only copy of the current nominal state plus 1-sigma summary
+ *  uncertainties (sigmaPos: avg per-axis position sigma in m; sigmaAtt: avg
+ *  per-axis attitude sigma in deg). Returned by eskfGetState. */
 export interface EskfSnapshot {
     p: Vec3;
     v: Vec3;
@@ -202,6 +218,12 @@ export interface EskfSnapshot {
     mBody?: Vec3;
     sigmaPos: number;
     sigmaAtt: number;
+}
+
+/** Index of the 3-element GPS position-bias block within the error state, or
+ *  -1 when the state dimension doesn't carry a GPS bias block. */
+function gpsBiasIndex(dim: number): number {
+  return dim === 18 ? 15 : dim === 24 ? 21 : -1;
 }
 
 // ---------------------------------------------------------------------------
@@ -448,6 +470,9 @@ function _denseJosephUpdate(P: Mat, K: Mat, H: Mat, R: Mat, dim: number, m: numb
     return matAdd(IKH_P_IKHt, KRKt);
 }
 
+/** Error-state column offsets of the always-on bias blocks (b_a, b_g) and the
+ *  optional mag blocks (m_earth, m_body), matching the layout documented at
+ *  the top of this file. */
 export const IDX_BA = 9;
 export const IDX_BG = 12;
 export const IDX_ME = 15;
@@ -488,7 +513,7 @@ function buildTransition(dim: number, q: Quat, sfAccel: Vec3, dt: number, tauGps
     F[2][9]=dt2h*R[2][0]; F[2][10]=dt2h*R[2][1]; F[2][11]=dt2h*R[2][2];
     }
 
-    const idxGpsBias = dim === 18 ? 15 : (dim === 24 ? 21 : -1);
+    const idxGpsBias = gpsBiasIndex(dim);
     if (idxGpsBias >= 0) {
         const expTerm = Math.exp(-dt / tauGps);
         F[idxGpsBias][idxGpsBias] = expTerm;
@@ -523,12 +548,12 @@ function buildProcessNoise(
     Q[0][3]=Q[3][0]=Q[1][4]=Q[4][1]=Q[2][5]=Q[5][2]=pvNoise;
     Q[6][6]=Q[7][7]=Q[8][8]=gNoise;
     if (dim >= 15) {
-        const baRw = (sigmaBaRW || 2e-4) * (sigmaBaRW || 2e-4) * dt;
-        const bgRw = (sigmaBgRW || 3e-5) * (sigmaBgRW || 3e-5) * dt;
+        const baRw = (sigmaBaRW ?? 2e-4) * (sigmaBaRW ?? 2e-4) * dt;
+        const bgRw = (sigmaBgRW ?? 3e-5) * (sigmaBgRW ?? 3e-5) * dt;
         Q[9][9]=Q[10][10]=Q[11][11]=baRw;
         Q[12][12]=Q[13][13]=Q[14][14]=bgRw;
     }
-    const idxGpsBias = dim === 18 ? 15 : (dim === 24 ? 21 : -1);
+    const idxGpsBias = gpsBiasIndex(dim);
     if (idxGpsBias >= 0) {
         const qVal = sigmaGpsBias * sigmaGpsBias * (1.0 - Math.exp(-2.0 * dt / tauGps));
         Q[idxGpsBias][idxGpsBias] = qVal;
@@ -556,6 +581,9 @@ function varianceFloor(P: Mat, minVal: number = 1e-6): void {
 // Public API
 // ---------------------------------------------------------------------------
 
+/** Construct a new ESKF instance. State dimension is derived from which
+ *  optional fields are present in opts (15-state base, +3/+3 for GPS bias
+ *  and/or mag earth+body fields). */
 export function createEskf(opts: EskfOptions): EskfState {
     const {
         p0,
@@ -601,7 +629,10 @@ export function createEskf(opts: EskfOptions): EskfState {
     const bg: Vec3 = bg0 ? bg0.slice() as Vec3 : [0, 0, 0];
     const bgps: Vec3 = bgps0 ? bgps0.slice() as Vec3 : [0, 0, 0];
 
-    const idxGpsBias = useGpsBias ? (hasMag ? 21 : 15) : -1;
+    let idxGpsBias = -1;
+    if (useGpsBias) {
+      idxGpsBias = hasMag ? 21 : 15;
+    }
 
     if (hasMag) {
         P[15][15] = P[16][16] = P[17][17] = sigmaMagEarth * sigmaMagEarth;
@@ -613,7 +644,10 @@ export function createEskf(opts: EskfOptions): EskfState {
     }
 
     const me: Vec3 | undefined = hasMag ? mEarth0!.slice() as Vec3 : undefined;
-    const mb: Vec3 | undefined = hasMag ? (mBody0 ? mBody0.slice() as Vec3 : [0, 0, 0]) : undefined;
+    let mb: Vec3 | undefined;
+    if (hasMag) {
+      mb = mBody0 ? mBody0.slice() as Vec3 : [0, 0, 0];
+    }
 
     const nisHistory: Record<string, { tUs: number; nis: number; df: number; logDetS: number }[]> = {
         gpsPos: [],
@@ -652,7 +686,7 @@ export function createEskf(opts: EskfOptions): EskfState {
  */
 export function eskfPredict(eskf: EskfState, omega: Vec3, accel: Vec3, dt: number): { F: Mat } {
     const { dim, tauGps, sigmaGpsBias } = eskf;
-    const idxGpsBias = dim === 18 ? 15 : (dim === 24 ? 21 : -1);
+    const idxGpsBias = gpsBiasIndex(dim);
 
     const sfX = -accel[0], sfY = -accel[1], sfZ = -accel[2];
     const F = buildTransition(dim, eskf.q, [sfX, sfY, sfZ], dt, tauGps);
@@ -686,6 +720,10 @@ export function eskfPredict(eskf: EskfState, omega: Vec3, accel: Vec3, dt: numbe
     return { F };
 }
 
+/** Apply one measurement update in place (Joseph-form covariance update,
+ *  chi-square gated, with optional robust R-inflation/VB-adaptive-R via
+ *  robustOpts). Returns true when the measurement was accepted and applied,
+ *  false when gated out as an outlier. */
 export function eskfUpdate(
     eskf: EskfState,
     factor: MeasurementFactor,
@@ -716,7 +754,7 @@ export function eskfUpdate(
             eskf.vbAdaptiveR[sensorName] = { nu: vbInitNu, Rbar: factor.R.map((row) => row.slice()) };
         }
         vbEntry = eskf.vbAdaptiveR[sensorName];
-        vbEntry.nu *= vbForgetting; // time-update: forget past evidence
+        vbEntry.nu = Math.max(vbForgetting, vbEntry.nu * vbForgetting); // forget past evidence, bounded below
     }
     const R: Mat = vbEntry ? vbEntry.Rbar : factor.R;
 
@@ -837,12 +875,12 @@ export function eskfUpdate(
     eskf.v[0] += dx[3]; eskf.v[1] += dx[4]; eskf.v[2] += dx[5];
 
     const dtheta: Vec3 = [dx[6], dx[7], dx[8]];
-    const dthetaNorm = Math.sqrt(dtheta[0]**2 + dtheta[1]**2 + dtheta[2]**2);
+    const dthetaNorm = Math.hypot(dtheta[0], dtheta[1], dtheta[2]);
     if (dthetaNorm > 1e-12) {
         const axis: Vec3 = [dtheta[0]/dthetaNorm, dtheta[1]/dthetaNorm, dtheta[2]/dthetaNorm];
         const dq = quatFromAxisAngle(axis, dthetaNorm);
         const newQ = quatMultiply(dq, eskf.q);
-        const nq = Math.sqrt(newQ[0]**2+newQ[1]**2+newQ[2]**2+newQ[3]**2);
+        const nq = Math.hypot(newQ[0], newQ[1], newQ[2], newQ[3]);
         eskf.q = [newQ[0]/nq, newQ[1]/nq, newQ[2]/nq, newQ[3]/nq];
     }
 
@@ -857,7 +895,7 @@ export function eskfUpdate(
         }
     }
 
-    const idxGpsBias = dim === 18 ? 15 : (dim === 24 ? 21 : -1);
+    const idxGpsBias = gpsBiasIndex(dim);
     if (idxGpsBias >= 0) {
         eskf.bgps[0] += dx[idxGpsBias];
         eskf.bgps[1] += dx[idxGpsBias+1];
@@ -877,6 +915,7 @@ export function eskfUpdate(
     return true;
 }
 
+/** Read-only snapshot of the current nominal state + summary uncertainties. */
 export function eskfGetState(eskf: EskfState): EskfSnapshot {
     return {
         p: eskf.p.slice() as Vec3,
@@ -892,4 +931,4 @@ export function eskfGetState(eskf: EskfState): EskfSnapshot {
     };
 }
 
-export { matMul, matTranspose, matAdd, matMulByBt, getSparseStencil, buildTransition, _rankMJosephUpdate, _denseJosephUpdate };
+export { matMul, matTranspose, matAdd, matMulByBt, getSparseStencil, buildTransition, gpsBiasIndex, _rankMJosephUpdate, _denseJosephUpdate };

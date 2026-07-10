@@ -442,6 +442,30 @@ function matMulVec3(M: number[][], v: Vec3): Vec3 {
   ];
 }
 
+/**
+ * Rotate calibrated mag samples (FLU) through the X<->Y swap to FRD, then
+ * through the time-matched FC quaternion to NED. Time-matching walks fcQuat
+ * forward monotonically (both streams are time-ordered), stopping once
+ * fcQuat is exhausted.
+ */
+function rotateCalToNED(calibrated: Vec3[], magRaw: MagRawEntry[], fcQuat: QuatEntry[]): Vec3[] {
+  const earthNEDs: Vec3[] = [];
+  let quatIdx = 0;
+  for (let ci = 0; ci < calibrated.length; ci++) {
+    const calSample = calibrated[ci];
+    const calFrd: Vec3 = [-calSample[1], calSample[0], calSample[2]];
+    const tUs = magRaw[ci].tUs;
+    while (quatIdx + 1 < fcQuat.length && fcQuat[quatIdx + 1].tUs <= tUs) quatIdx++;
+    if (quatIdx >= fcQuat.length) break;
+    const R = quatToRot(fcQuat[quatIdx].q);
+    const eN = R[0][0] * calFrd[0] + R[0][1] * calFrd[1] + R[0][2] * calFrd[2];
+    const eE = R[1][0] * calFrd[0] + R[1][1] * calFrd[1] + R[1][2] * calFrd[2];
+    const eD = R[2][0] * calFrd[0] + R[2][1] * calFrd[1] + R[2][2] * calFrd[2];
+    earthNEDs.push([eN, eE, eD]);
+  }
+  return earthNEDs;
+}
+
 // ---------------------------------------------------------------------------
 // 3D coverage check
 // ---------------------------------------------------------------------------
@@ -632,29 +656,13 @@ export function calibrateInFlightMag(
   }
 
   // ---- Step 7: Estimate earth-field reference ----
-  // Rotate calibrated mag (FLU) through X↔Y swap to FRD, then FC quaternion to NED.
   // First pass: compute initial median to detect Z-sign flip.
-  const earthNEDsPass1: Vec3[] = [];
-  let quatIdx1 = 0;
-  for (let ci = 0; ci < calibrated.length; ci++) {
-    const calSample = calibrated[ci];
-    const calFrd: Vec3 = [-calSample[1], calSample[0], calSample[2]];
-    const tUs = magRaw[ci].tUs;
-    while (quatIdx1 + 1 < fcQuat.length && fcQuat[quatIdx1 + 1].tUs <= tUs) quatIdx1++;
-    if (quatIdx1 >= fcQuat.length) break;
-    const R = quatToRot(fcQuat[quatIdx1].q);
-    const eN = R[0][0] * calFrd[0] + R[0][1] * calFrd[1] + R[0][2] * calFrd[2];
-    const eE = R[1][0] * calFrd[0] + R[1][1] * calFrd[1] + R[1][2] * calFrd[2];
-    const eD = R[2][0] * calFrd[0] + R[2][1] * calFrd[1] + R[2][2] * calFrd[2];
-    earthNEDsPass1.push([eN, eE, eD]);
-  }
+  const earthNEDsPass1 = rotateCalToNED(calibrated, magRaw, fcQuat);
 
   if (earthNEDsPass1.length < 50) {
     return fail(`Too few time-matched calibrated samples (${earthNEDsPass1.length} < 50)`);
   }
 
-  const medN1 = median(earthNEDsPass1.map(v => v[0]));
-  const medE1 = median(earthNEDsPass1.map(v => v[1]));
   const medD1 = median(earthNEDsPass1.map(v => v[2]));
 
   // Resolve Z-sign ambiguity: at high-latitude sites the field points DOWN
@@ -672,20 +680,7 @@ export function calibrateInFlightMag(
   }
 
   // Second pass: recompute earth-field estimate with Z-corrected vectors
-  const earthNEDs: Vec3[] = [];
-  let quatIdx = 0;
-  for (let ci = 0; ci < calibrated.length; ci++) {
-    const calSample = calibrated[ci];
-    const calFrd: Vec3 = [-calSample[1], calSample[0], calSample[2]];
-    const tUs = magRaw[ci].tUs;
-    while (quatIdx + 1 < fcQuat.length && fcQuat[quatIdx + 1].tUs <= tUs) quatIdx++;
-    if (quatIdx >= fcQuat.length) break;
-    const R = quatToRot(fcQuat[quatIdx].q);
-    const eN = R[0][0] * calFrd[0] + R[0][1] * calFrd[1] + R[0][2] * calFrd[2];
-    const eE = R[1][0] * calFrd[0] + R[1][1] * calFrd[1] + R[1][2] * calFrd[2];
-    const eD = R[2][0] * calFrd[0] + R[2][1] * calFrd[1] + R[2][2] * calFrd[2];
-    earthNEDs.push([eN, eE, eD]);
-  }
+  const earthNEDs = rotateCalToNED(calibrated, magRaw, fcQuat);
 
   const medN = median(earthNEDs.map(v => v[0]));
   const medE = median(earthNEDs.map(v => v[1]));

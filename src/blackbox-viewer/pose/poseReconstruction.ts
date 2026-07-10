@@ -23,11 +23,7 @@ import { ingestFlightLog, correctMagStream } from './flightIngestion.js';
 import type { IngestedData, MagGaussEntry } from './flightIngestion.js';
 import { loadMagCharacterizationModel } from './mag_model.js';
 import { computeMagHeadingBias } from './rawMagBias.js';
-import {
-  calibrateInFlightMag,
-  buildMagGaussStream,
-  exportMagModelFromFlight,
-} from './inFlightMagCal.js';
+import { calibrateInFlightMag } from './inFlightMagCal.js';
 import type { MagCoverage, InFlightMagModel } from './inFlightMagCal.js';
 import { estimatePoseTrack } from './estimatorLoop.js';
 import type {
@@ -67,21 +63,11 @@ export interface ReconstructionInputs {
   coverage: MagCoverage | null;
   /** Human-readable calibration message (for UI display). */
   calMessage: string | null;
+  /** True when the FC's Mahony filter already fused a physical mag AND this
+   *  pipeline is about to fuse its own mag factor (yaw info counted twice). */
+  doubleCountRisk: boolean;
 }
 
-/**
- * Prepare estimator inputs from a parsed flight log.
- *
- * Mag handling has three modes controlled by `magMode`:
- *  - **off:** No mag factor. FC quaternion heading as-is (already Mahony+mag fused).
- *    magGauss=[], magModelForEst=null, rawMagBiasRad=0.
- *  - **auto:** Run in-flight ellipsoid calibration → build a full model object
- *    → correct the raw mag stream through `correctMagStream` (identical to MANUAL's
- *    path). If the fit is invalid, fall back to OFF with a message — never silently
- *    apply a bad cal.
- *  - **manual:** Load the user-supplied characterization model (from configurator
- *    bench cal or flight-exported) → correct through `correctMagStream`.
- *
 /**
  * Detects the mag double-count risk: true when the BFL log's `mag_hardware` header
  * indicates Betaflight's onboard Mahony filter had a physical magnetometer
@@ -99,6 +85,18 @@ export function detectMagDoubleCountRisk(
 }
 
 /**
+ * Prepare estimator inputs from a parsed flight log.
+ *
+ * Mag handling has three modes controlled by `magMode`:
+ *  - **off:** No mag factor. FC quaternion heading as-is (already Mahony+mag fused).
+ *    magGauss=[], magModelForEst=null, rawMagBiasRad=0.
+ *  - **auto:** Run in-flight ellipsoid calibration → build a full model object
+ *    → correct the raw mag stream through `correctMagStream` (identical to MANUAL's
+ *    path). If the fit is invalid, fall back to OFF with a message — never silently
+ *    apply a bad cal.
+ *  - **manual:** Load the user-supplied characterization model (from configurator
+ *    bench cal or flight-exported) → correct through `correctMagStream`.
+ *
  * @param flightLog A parsed FlightLog (the same object the UI holds).
  * @param magModel  Optional parsed mag characterization model JSON (schema 2.x).
  *                  Only consulted in MANUAL mode.
@@ -135,7 +133,7 @@ export function prepareReconstruction(
     // AUTO: Run in-flight ellipsoid calibration → route through correctMagStream.
     if (data.mag.length > 0 && data.quat.length > 0) {
       const inFlightCal = calibrateInFlightMag(data.mag, data.quat);
-      if (inFlightCal && inFlightCal.valid && inFlightCal.rawModel) {
+      if (inFlightCal?.valid && inFlightCal.rawModel) {
         // Route through correctMagStream — the identical path MANUAL uses
         magGauss = correctMagStream(
           data.mag,

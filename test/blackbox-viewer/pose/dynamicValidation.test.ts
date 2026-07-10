@@ -50,8 +50,8 @@ describe("dynamic trajectory round-trip", () => {
             const est: LegacyPose = poses[pi];
 
             const posErr: number = Math.sqrt(
-                ((est.lat - 48.408) * 111320 - gt.pNed.n) ** 2 +
-                ((est.lon + 71.164) * 111320 * Math.cos(48.408 * Math.PI / 180) - gt.pNed.e) ** 2 +
+                ((est.lat - origin.lat) * 111320 - gt.pNed.n) ** 2 +
+                ((est.lon - origin.lon) * 111320 * Math.cos(origin.lat * Math.PI / 180) - gt.pNed.e) ** 2 +
                 (-(est.altMsl - origin.alt) - gt.pNed.d) ** 2,
             );
 
@@ -83,15 +83,15 @@ describe("dynamic trajectory round-trip", () => {
         const origin = { lat: 48.408, lon: -71.164, alt: 200 };
         const { imu, gps, baro, mag } = generateSensorStreams(traj, { origin });
 
-        expect(imu.length).toBe(traj.length);
-        expect(imu[0].gyro.length).toBe(3);
-        expect(imu[0].accel.length).toBe(3);
+        expect(imu).toHaveLength(traj.length);
+        expect(imu[0].gyro).toHaveLength(3);
+        expect(imu[0].accel).toHaveLength(3);
 
         expect(gps.length).toBeGreaterThan(5);
 
-        expect(baro.length).toBe(traj.length);
+        expect(baro).toHaveLength(traj.length);
 
-        expect(mag.length).toBe(traj.length);
+        expect(mag).toHaveLength(traj.length);
         const mEarth: number[] = [0.17, -0.047, 0.51];
         const firstMag: number[] = mag[0].meas as number[];
         const distFromEarth: number = Math.sqrt(

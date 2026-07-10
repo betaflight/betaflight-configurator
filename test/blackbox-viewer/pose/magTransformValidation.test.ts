@@ -16,9 +16,7 @@
  *   (d) |m_earth| estimate (|mean(e)|) vs WMM 0.539 G
  *   (e) dot(WMM_NED, individual e_i) stats (median, p90, CV)
  *
- * Writes results to the fixture directory as mag_transform_validation.json.
- *
- * vitest swallows stdout — all quantitative output goes to the JSON file.
+ * Quantitative output goes to the console.log summary lines below.
  */
 import { it, beforeAll, expect } from 'vitest';
 import { describeIntegration } from './testHelpers.js';
@@ -159,7 +157,6 @@ describeIntegration("mag transform validation", () => {
     let wmmDecl: number;
     let wmmMag: number;
     let results: ValidationResults;
-    const outPath: string = path.join(BFL_DIR, "mag_transform_validation.json");
 
     beforeAll(async () => {
         const fl: unknown = await loadFlightLogFromBuffer(new Uint8Array(fs.readFileSync(BFL_PATH)));
@@ -275,15 +272,9 @@ describeIntegration("mag transform validation", () => {
             },
         };
 
-        fs.writeFileSync(outPath, JSON.stringify(results, null, 2));
-        console.log(`\nResults written to ${outPath}`);
         console.log(`OLD (-X,+Y,+Z): consistency=${oldResult.consistency.toFixed(3)}, WMM=${oldResult.pctWmm.toFixed(0)}%, bearing err=${oldResult.horizBearingErrorDecl.toFixed(1)}°`);
         console.log(`NEW (-Y,+X,+Z): consistency=${newResult.consistency.toFixed(3)}, WMM=${newResult.pctWmm.toFixed(0)}%, bearing err=${newResult.horizBearingErrorDecl.toFixed(1)}°`);
     }, 240_000);
-
-    it("writes validation results to file", () => {
-        expect(fs.existsSync(outPath)).toBe(true);
-    });
 
     it("new X↔Y SWAP is a proper rotation (det = +1)", () => {
         expect(Math.abs(results.new_xswap_y.det - 1)).toBeLessThan(0.01);

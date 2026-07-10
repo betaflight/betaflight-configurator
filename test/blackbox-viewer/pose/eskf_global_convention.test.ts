@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createEskf, eskfUpdate } from '../../../src/blackbox-viewer/pose/eskf.js';
-import { createMagFactor, createQuaternionPrior } from '../../../src/blackbox-viewer/pose/measurements.js';
+import { createMagFactor, createQuaternionPrior, logMap, quatToRotMat } from '../../../src/blackbox-viewer/pose/measurements.js';
 import { quatMultiply, quatFromAxisAngle, quatToEuler, quatToRot } from '../../../src/blackbox-viewer/pose/imuMechanization.js';
 import type { Quat, Vec3 } from '../../../src/blackbox-viewer/pose/poseSample.js';
 
@@ -84,5 +84,25 @@ describe("ESKF global attitude-error convention (tilted-attitude regression)", (
         const qrel = quatMultiply(qTrue, [eskf.q[0], -eskf.q[1], -eskf.q[2], -eskf.q[3]] as Quat);
         const angle = 2 * Math.acos(Math.min(1, Math.abs(qrel[0]))) * R2D;
         expect(angle).toBeLessThan(2.0);
+    });
+});
+
+describe("logMap near the theta=pi singularity (flip attitude residuals)", () => {
+    it("recovers a pi rotation about a non-axis-aligned direction", () => {
+        // An FPV quad mid-flip can present an attitude residual arbitrarily
+        // close to 180 deg; before the near-pi branch was added, the
+        // antisymmetric-part extraction returned ~0 there -- worst-possible
+        // error read as a perfect match.
+        const axis: Vec3 = [1 / 3, 2 / 3, 2 / 3]; // normalized [1,2,2]/3
+        const q = quatFromAxisAngle(axis, Math.PI);
+        const R = quatToRotMat(q);
+        const v = logMap(R);
+
+        // +-pi about an axis is the same rotation; accept either sign of the
+        // whole vector.
+        const expected: Vec3 = [axis[0] * Math.PI, axis[1] * Math.PI, axis[2] * Math.PI];
+        const errPlus = Math.hypot(v[0] - expected[0], v[1] - expected[1], v[2] - expected[2]);
+        const errMinus = Math.hypot(v[0] + expected[0], v[1] + expected[1], v[2] + expected[2]);
+        expect(Math.min(errPlus, errMinus)).toBeLessThan(1e-6);
     });
 });

@@ -48,7 +48,7 @@ describe('synthetic — PRNG', () => {
 describe('synthetic — circular trajectory', () => {
   it('produces the requested number of samples', () => {
     const traj = generateCircularTrajectory({ durationS: 2, freqHz: 50 });
-    expect(traj.length).toBe(100);
+    expect(traj).toHaveLength(100);
   });
 
   it('starts near origin at t=0', () => {

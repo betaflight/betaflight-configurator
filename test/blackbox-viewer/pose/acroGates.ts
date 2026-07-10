@@ -189,9 +189,9 @@ export function gateAttitudeTracksFC(
     errs.push(quatAngleDeg(s.q, f.q));
   }
   if (errs.length === 0) return mk('attitude-tracks-FC', false, 'no matched FC quaternion samples');
-  errs.sort((a, b) => a - b);
-  const med = errs[errs.length >> 1];
-  const p90 = errs[Math.floor(0.9 * (errs.length - 1))];
+  const sortedErrs = [...errs].sort((a, b) => a - b);
+  const med = sortedErrs[sortedErrs.length >> 1];
+  const p90 = sortedErrs[Math.floor(0.9 * (sortedErrs.length - 1))];
   return mk('attitude-tracks-FC', med < maxMedianDeg,
     `attitude error vs FC: median ${med.toFixed(1)}° (need < ${maxMedianDeg}°); p90 ${p90.toFixed(0)}° (tail = fast-flip timing jitter)`);
 }
@@ -366,8 +366,7 @@ export function gateClimbFall(ctx: GateContext, seg: ManifestSegment): GateResul
   if (seg.expect?.fall) {
     const fallSamples = windowSamples(ctx.samples, seg.expect.fall[0], seg.expect.fall[1], ctx.offsetSec);
     if (fallSamples.length > 0) {
-      const pitches = fallSamples.map((s) => pitchDeg(s.q));
-      pitches.sort((a, b) => a - b);
+      const pitches = [...fallSamples.map((s) => pitchDeg(s.q))].sort((a, b) => a - b);
       const medPitch = pitches[pitches.length >> 1];
       noseDownPass = medPitch < noseDownMaxPitchDeg;
       noseDownDetail = `median pitch ${medPitch.toFixed(0)}° (need < ${noseDownMaxPitchDeg}° = nose-down)`;
@@ -569,13 +568,13 @@ export function gateHorizontalPositionVsGPS(
   if (errs.length < 10) return mk('horizontal-vs-GPS', false,
     `only ${errs.length} samples with GPS match`);
 
-  const sorted = errs.sort((a, b) => a - b);
+  const sorted = [...errs].sort((a, b) => a - b);
   const med = sorted[Math.floor(sorted.length / 2)];
-  const p9 = sorted[Math.floor((sorted.length - 1) * 0.95)];
+  const p95 = sorted[Math.floor((sorted.length - 1) * 0.95)];
 
-  const pass = med <= maxMedianM && p9 <= maxP95M;
+  const pass = med <= maxMedianM && p95 <= maxP95M;
   return mk('horizontal-vs-GPS', pass,
-    `median ${med.toFixed(1)} m (need ≤${maxMedianM} m), p95 ${p9.toFixed(1)} m (need ≤${maxP95M} m), ` +
+    `median ${med.toFixed(1)} m (need ≤${maxMedianM} m), p95 ${p95.toFixed(1)} m (need ≤${maxP95M} m), ` +
     `n=${errs.length}`);
 }
 
@@ -672,7 +671,7 @@ export function gateTiltIn1gWindows(
   if (tilts.length < 5) return mk('tilt-in-1g', false,
     `only ${tilts.length} near-static 1g samples (need ≥5)`);
 
-  const sorted = tilts.sort((a, b) => a - b);
+  const sorted = [...tilts].sort((a, b) => a - b);
   const med = sorted[Math.floor(sorted.length / 2)];
 
   const pass = med <= maxMedianTiltDeg;
@@ -703,7 +702,7 @@ export function gateHeadingVsCourse(
   if (errors.length < 10) return mk('heading-vs-course', false,
     `only ${errors.length} qualifying samples`);
 
-  const sorted = errors.sort((a, b) => a - b);
+  const sorted = [...errors].sort((a, b) => a - b);
   const med = sorted[Math.floor(sorted.length / 2)];
 
   const pass = med <= maxMedianDeg;
@@ -731,7 +730,7 @@ export function gateAttitudeTracksFC_Tight(
   if (errors.length < 10) return mk('attitude-tracks-FC-tight', false,
     `only ${errors.length} samples with FC quat match`);
 
-  const sorted = errors.sort((a, b) => a - b);
+  const sorted = [...errors].sort((a, b) => a - b);
   const med = sorted[Math.floor(sorted.length / 2)];
 
   const pass = med <= maxMedianDeg;
