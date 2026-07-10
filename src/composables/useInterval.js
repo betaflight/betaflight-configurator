@@ -1,4 +1,4 @@
-import { onUnmounted } from "vue";
+import { onScopeDispose } from "vue";
 import GUI from "../js/gui";
 
 function pauseInterval(name) {
@@ -41,7 +41,7 @@ export function useInterval() {
         localIntervals.length = 0;
     }
 
-    onUnmounted(() => {
+    onScopeDispose(() => {
         removeAllIntervals();
     });
 

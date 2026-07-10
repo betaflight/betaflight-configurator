@@ -1,4 +1,4 @@
-import { onUnmounted } from "vue";
+import { onScopeDispose } from "vue";
 import GUI from "../js/gui";
 
 /**
@@ -33,7 +33,7 @@ export function useTimeout() {
         localTimeouts.length = 0;
     }
 
-    onUnmounted(() => {
+    onScopeDispose(() => {
         removeAllTimeouts();
     });
 
