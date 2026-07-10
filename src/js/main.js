@@ -25,15 +25,17 @@ if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "bo
     Capacitor.isLoggingEnabled = false;
 }
 
-import("./msp/debug/msp_debug_tools.js")
-    .then(() => {
-        console.log("🔧 MSP Debug Tools loaded for development environment");
-        console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
-        console.log("• Use MSPTestRunner.help() for all commands");
-    })
-    .catch((err) => {
-        console.warn("Failed to load MSP debug tools:", err);
-    });
+if (import.meta.env.DEV) {
+    import("./msp/debug/msp_debug_tools.js")
+        .then(() => {
+            console.log("🔧 MSP Debug Tools loaded for development environment");
+            console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
+            console.log("• Use MSPTestRunner.help() for all commands");
+        })
+        .catch((err) => {
+            console.warn("Failed to load MSP debug tools:", err);
+        });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     appReady();
