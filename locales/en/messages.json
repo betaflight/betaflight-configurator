@@ -2479,6 +2479,9 @@
     "psasSpeedCurvesSourceGps": {
         "message": "GPS"
     },
+    "psasSpeedCurvesChartDetails": {
+        "message": "Speed curves chart"
+    },
     "receiverRcSmoothing": {
         "message": "RC Smoothing"
     },

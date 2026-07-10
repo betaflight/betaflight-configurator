@@ -311,8 +311,8 @@
                             size="xs"
                             orientation="vertical"
                             class="w-full"
-                            :disabled="!psasSpeedCurvesPilotEnabled"
-                            :class="{ 'opacity-50': !psasSpeedCurvesPilotEnabled }"
+                            :disabled="!(psasSpeedCurvesPilotEnabled || psasSpeedCurvesPilotRollEnabled)"
+                            :class="{ 'opacity-50': !(psasSpeedCurvesPilotEnabled || psasSpeedCurvesPilotRollEnabled) }"
                         />
                     </div>
                     <div class="flex flex-col gap-1">
@@ -328,12 +328,41 @@
                             size="xs"
                             orientation="vertical"
                             class="w-full"
-                            :disabled="!psasSpeedCurvesPilotEnabled"
-                            :class="{ 'opacity-50': !psasSpeedCurvesPilotEnabled }"
+                            :disabled="!(psasSpeedCurvesPilotEnabled || psasSpeedCurvesPilotRollEnabled)"
+                            :class="{ 'opacity-50': !(psasSpeedCurvesPilotEnabled || psasSpeedCurvesPilotRollEnabled) }"
                         />
                     </div>
                 </div>
             </div>
+
+            <details>
+                <summary class="text-xs cursor-pointer text-dimmed hover:text-default select-none">
+                    {{ $t("psasSpeedCurvesChartDetails") }}
+                </summary>
+                <div
+                    class="relative bg-white dark:bg-neutral-900 border border-default p-1"
+                    style="height: 362px; min-width: 200px"
+                >
+                    <HyperbolicChart
+                        :vRef="psasSpeedCurvesVref"
+                        :mainPower="psasSpeedCurvesMainPower / 10"
+                        :mainMin="psasSpeedCurvesMainCurveMin / 100"
+                        :mainMax="psasSpeedCurvesMainCurveMax / 100"
+                        :stickPower="psasSpeedCurvesMainPower / 10"
+                        :stickMin="psasSpeedCurvesPilotCurveMin / 100"
+                        :stickMax="psasSpeedCurvesPilotCurveMax / 100"
+                        :rollStickPower="psasSpeedCurvesRollPilotPower / 10"
+                        :showMain="true"
+                        :mainActive="psasSpeedCurvesMainEnabled"
+                        :showStick="true"
+                        :stickActive="psasSpeedCurvesPilotEnabled"
+                        :showRollStick="true"
+                        :rollStickActive="psasSpeedCurvesPilotRollEnabled"
+                        :showLegend="true"
+                        :showGrid="true"
+                    />
+                </div>
+            </details>
         </UiBox>
 
         <UiBox :title="$t('psasAccelZControllerSettings')" type="neutral">
@@ -603,6 +632,7 @@ import FC from "@/js/fc";
 
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
+import HyperbolicChart from "./HyperbolicChart.vue";
 
 const { t } = useTranslation();
 
@@ -858,10 +888,7 @@ const psasSpeedCurvesMainEnabled = computed({
 });
 
 const psasSpeedCurvesPilotEnabled = computed({
-    get: () =>
-        psasSpeedCurvesPilotPitchEnabled.value ||
-        psasSpeedCurvesPilotRollEnabled.value ||
-        psasSpeedCurvesPilotYawEnabled.value,
+    get: () => psasSpeedCurvesPilotPitchEnabled.value || psasSpeedCurvesPilotYawEnabled.value,
 });
 
 const psasSpeedCurvesSourceList = computed(() => [
