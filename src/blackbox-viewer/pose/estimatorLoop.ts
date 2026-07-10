@@ -312,10 +312,8 @@ export interface EstimatorOpts {
    *  CURRENT specific-force vector each time -- not derived from the FC's own
    *  gyro-integrated Mahony state -- so it can safely run every keyframe
    *  without contributing to the double-counting defect described in
-   *  fcQuatPriorHz's doc comment. See the real-data validation below (this
-   *  factor is what allows
-   *  fcQuatPriorHz to be lowered again -- see accelTiltEnablesLowerQuatHz.
-   *  integration.test.ts). */
+   *  fcQuatPriorHz's doc comment. Validated on real flights by the
+   *  acroFixture.test.ts gates (useAccelTilt=true is the shipped default). */
   useAccelTilt?: boolean;
   /** Chi-square gate (mahalanobis-distance multiplier, same convention as
    *  gpsPosGate etc.) for the accel-tilt factor. Default 5.0 -- looser than
@@ -1190,6 +1188,12 @@ function _runEstimation(
             const sigmaYawWhite = adaptiveSigmaYaw * whiteningFactor;
 
             const fQc = createColoredQuaternionFactor(qMeas, rWhite, sigmaTiltWhite, sigmaYawWhite);
+            // gate=Infinity is deliberate: the FC quaternion is the only absolute attitude
+            // anchor (no mag ⇒ no yaw backup), and chi-square-rejecting it during fast
+            // maneuvers is the catastrophic-divergence mode described in fcQuatPriorHz's
+            // doc comment. Its residual is also serially correlated (Mahony output), which
+            // violates the whiteness assumption behind dcs/vbAdaptive — do not wire
+            // gpsRobustOpts here without the correlated-noise groundwork.
             if (eskfUpdate(eskf, fQc as any, qMeas, Infinity))
               hasUpdate = true;
             lastFcQuatRawResidual = rRaw;
@@ -1231,6 +1235,12 @@ function _runEstimation(
               effAttSigma,
               effSigmaYaw,
             );
+            // gate=Infinity is deliberate: the FC quaternion is the only absolute attitude
+            // anchor (no mag ⇒ no yaw backup), and chi-square-rejecting it during fast
+            // maneuvers is the catastrophic-divergence mode described in fcQuatPriorHz's
+            // doc comment. Its residual is also serially correlated (Mahony output), which
+            // violates the whiteness assumption behind dcs/vbAdaptive — do not wire
+            // gpsRobustOpts here without the correlated-noise groundwork.
             if (eskfUpdate(eskf, fQ as any, qMeas, Infinity))
               hasUpdate = true;
             lastFcQuatFuseUs = qSample.tUs;

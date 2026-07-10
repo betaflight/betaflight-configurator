@@ -42,8 +42,8 @@ import type { Vec3, Quat } from '../../../src/blackbox-viewer/pose/poseSample.js
 // introduces a small, expected interaction with the already-tight quat prior
 // on synthetic sensor streams that these mag-path-isolation tests weren't
 // built to absorb (m_earth stability tolerance is now the tightest margin in
-// the suite). Real-flight validation of useAccelTilt lives in
-// accelTiltEnablesLowerQuatHz.integration.test.ts instead.
+// the suite). Real-flight validation of useAccelTilt lives in the
+// acroFixture.test.ts gates (useAccelTilt=true is the shipped default).
 const TIGHT_QUAT_PRIOR_FOR_ISOLATION = {
     fcQuatPriorHz: 1000,
     fcQuatSigmaInflate: 1.0,

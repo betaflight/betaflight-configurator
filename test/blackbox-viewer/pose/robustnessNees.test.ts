@@ -1,18 +1,19 @@
 /**
  * Robustness — DCS kernel + gating + NEES consistency gate.
  *
- * NEES (Normalized Estimation Error Squared): ε_k = (x_k − x̂_k)ᵀ P_k⁻¹ (x_k − x̂_k).
- * For a consistent 3-dof position filter, mean(ε_k) ≈ 3 (χ² distribution).
+ * NEES (Normalized Estimation Error Squared): ε_k = (p_k − p̂_k)ᵀ covPos_k⁻¹ (p_k − p̂_k),
+ * 3-dof position block. A consistent filter gives E[ε] = 3 (χ², 3 dof).
  *
- * With unconditional b_a/b_g bias states and principled AP EKF3 process
- * noise (sigmaAcc=0.35, sigmaGyro=0.015), plus quat-prior/baro decimation (§35),
- * the synthetic trajectory has fewer attitude anchors per keyframe → attitude
- * uncertainty grows between keyframes → filter is over-confident on zero-bias
- * synthetic data (NEES ~22). On real hardware with actual bias, observability
- * from GPS velned + RTS smoother + correct FC quaternion will converge NEES.
+ * This scenario is deliberately conservative — the filter is told gpsPosSigma = 2.5 m
+ * while the injected GPS noise is 1.5 m, synthetic baro is noise-free, and the synthetic
+ * FC quaternion is exact ground truth — so the expected mean NEES sits below 3
+ * (measured ≈ 2.0 over the 8 gate seeds). Smoothed errors are strongly correlated
+ * within one run, so a single seed has few effective degrees of freedom; the gate
+ * therefore bounds the MEAN over 8 seeds ([1.0, 4.5]), with a loose per-seed
+ * catastrophe cap (< 10).
  *
- * Principled band [1.5, 30]: over-confidence above 30 or over-conservatism below
- * 1.5 both fail. Tightens once decimation is validated on real data.
+ * Ground-truth lookups use the shared absolute time base (synthetic tUs = t·1e6);
+ * see computeNees for why re-zeroing on samples[0] must never be reintroduced.
  */
 import { describe, it, expect } from 'vitest';
 import { estimatePoseTrack } from '../../../src/blackbox-viewer/pose/estimatorLoop.js';
@@ -22,26 +23,15 @@ import type { PoseSampleInternal } from '../../../src/blackbox-viewer/pose/poseS
 
 function isFiniteNum(x: number): boolean { return Number.isFinite(x); }
 
-// These robustness/NEES tests isolate GPS-side gating/consistency behavior,
-// not the FC-quaternion-prior fusion. Production defaults now rate-limit and
-// inflate that prior to fix a real double-counting/covariance-collapse bug
-// (see EstimatorOpts.fcQuatPriorHz doc comment); restore the old unconditional
-// high-rate fusion here so attitude tracks ground truth tightly and these
-// tests keep measuring what they were designed to measure (position-state
-// covariance calibration and GPS outlier rejection), not attitude drift.
-const TIGHT_QUAT_PRIOR_FOR_ISOLATION = {
-    fcQuatPriorHz: 1000,
-    fcQuatSigmaInflate: 1.0,
-    fcQuatDynWeightPerMps2: 0,
-    useAccelTilt: false,
-};
-
 function computeNees(traj: SyntheticPose[], track: { samples: PoseSampleInternal[] }): number[] {
     const neesValues: number[] = [];
     let gtIdx0 = 0;
     for (const s of track.samples) {
         if (s.tUs == null || !isFiniteNum(s.tUs)) continue;
-        const tS: number = (s.tUs - track.samples[0].tUs) / 1e6;
+        // Track and trajectory share one absolute time base (synthetic tUs = t·1e6).
+        // Do NOT re-zero on samples[0] — the first keyframe sits at 1/outputHz, and
+        // re-zeroing shifts every ground-truth lookup by that much (v·Δt phantom error).
+        const tS: number = s.tUs / 1e6;
         let best: SyntheticPose = traj[0];
         let bestDt: number = Math.abs(best.t - tS);
         for (let i = gtIdx0; i < traj.length; i++) {
@@ -96,7 +86,6 @@ describe("B3 — robust kernels + gating + NEES consistency", () => {
             maxIter: 2,
             useDcs: true,
             useGpsAccuracyScaling: false, // explicit: this test tunes GPS sigma directly
-            ...TIGHT_QUAT_PRIOR_FOR_ISOLATION,
         });
         expect(trackDcs.samples.length).toBeGreaterThan(0);
         for (const s of trackDcs.samples) {
@@ -108,7 +97,7 @@ describe("B3 — robust kernels + gating + NEES consistency", () => {
         let gtIdx0 = 0;
         for (const s of trackDcs.samples) {
             if (s.tUs == null || !isFiniteNum(s.tUs)) continue;
-            const tS: number = (s.tUs - trackDcs.samples[0].tUs) / 1e6;
+            const tS: number = s.tUs / 1e6;
             let best: SyntheticPose = traj[gtIdx0];
             let bestDt: number = Math.abs(best.t - tS);
             for (let i = gtIdx0; i < traj.length; i++) {
@@ -125,39 +114,32 @@ describe("B3 — robust kernels + gating + NEES consistency", () => {
         expect(maxPosErr, `DCS max position error: ${maxPosErr.toFixed(2)}m`).toBeLessThan(10.0);
     });
 
-    it("NEES consistency gate — mean NEES within [1.5, 6] for 3-dof position", () => {
-        const rng = createRng(7777);
-        const { traj } = generateDynamicTrajectory({ freqHz: 200 });
-        const origin = { lat: 48.408, lon: -71.164, alt: 200 };
-        const sensorData = generateSensorStreams(traj, {
-            rng,
-            gpsNoiseStd: 1.5,
-            gyroNoiseStd: 0.003,
-            accelNoiseStd: 0.05,
-            origin,
-        });
-        const data = {
-            imu: sensorData.imu,
-            gps: sensorData.gps,
-            baro: sensorData.baro,
-            quat: sensorData.quat,
-            mag: [] as Array<{ tUs: number; meas: [number, number, number] }>,
-        };
-
-        const track = estimatePoseTrack(data, origin, {
-            outputHz: 20,
-            gpsPosSigma: 2.5,
-            maxIter: 3,
-            useGpsAccuracyScaling: false, // explicit: this test tunes GPS sigma directly
-            ...TIGHT_QUAT_PRIOR_FOR_ISOLATION,
-        });
-
-        const neesVals: number[] = computeNees(traj, track);
-        expect(neesVals.length).toBeGreaterThan(5);
-
-        const meanNees: number = neesVals.reduce((a: number, b: number) => a + b, 0) / neesVals.length;
-        expect(meanNees, `mean NEES = ${meanNees.toFixed(2)} — over-confident (>6)`).toBeLessThan(6);
-        expect(meanNees, `mean NEES = ${meanNees.toFixed(2)} — over-conservative (<1.5)`).toBeGreaterThan(1.5);
+    it("NEES consistency gate — multi-seed mean NEES for 3-dof position", () => {
+        const seeds = [7777, 1234, 42, 90210, 555, 31337, 2024, 99];
+        const perSeedMeans: number[] = [];
+        for (const seed of seeds) {
+            const rng = createRng(seed);
+            const { traj } = generateDynamicTrajectory({ freqHz: 200 });
+            const origin = { lat: 48.408, lon: -71.164, alt: 200 };
+            const sensorData = generateSensorStreams(traj, {
+                rng, gpsNoiseStd: 1.5, gyroNoiseStd: 0.003, accelNoiseStd: 0.05, origin,
+            });
+            const data = { imu: sensorData.imu, gps: sensorData.gps, baro: sensorData.baro,
+                           quat: sensorData.quat,
+                           mag: [] as Array<{ tUs: number; meas: [number, number, number] }> };
+            const track = estimatePoseTrack(data, origin, {
+                outputHz: 20, gpsPosSigma: 2.5, maxIter: 3, useGpsAccuracyScaling: false,
+            });
+            const neesVals = computeNees(traj, track);
+            expect(neesVals.length).toBeGreaterThan(5);
+            const m = neesVals.reduce((a, b) => a + b, 0) / neesVals.length;
+            // Per-seed catastrophe guard only — the calibrated bound is on the multi-seed mean.
+            expect(m, `seed ${seed}: mean NEES ${m.toFixed(2)} — runaway inconsistency`).toBeLessThan(10);
+            perSeedMeans.push(m);
+        }
+        const grand = perSeedMeans.reduce((a, b) => a + b, 0) / perSeedMeans.length;
+        expect(grand, `multi-seed mean NEES ${grand.toFixed(2)} — over-confident`).toBeLessThan(4.5);
+        expect(grand, `multi-seed mean NEES ${grand.toFixed(2)} — over-conservative`).toBeGreaterThan(1.0);
     });
 
     it("GPS glitch gating rejects outlier fixes without bending trajectory", () => {
@@ -199,7 +181,7 @@ describe("B3 — robust kernels + gating + NEES consistency", () => {
         let gtIdx0 = 0;
         for (const s of track.samples) {
             if (s.tUs == null || !isFiniteNum(s.tUs)) continue;
-            const tS: number = (s.tUs - track.samples[0].tUs) / 1e6;
+            const tS: number = s.tUs / 1e6;
             let best: SyntheticPose = traj[gtIdx0];
             let bestDt: number = Math.abs(best.t - tS);
             for (let i = gtIdx0; i < traj.length; i++) {
@@ -213,5 +195,19 @@ describe("B3 — robust kernels + gating + NEES consistency", () => {
             if (err > maxHorizErr) maxHorizErr = err;
         }
         expect(maxHorizErr, `GPS spike bent trajectory: max horiz error=${maxHorizErr.toFixed(1)}m`).toBeLessThan(10);
+    });
+
+    it("first output sample is one output interval after stream start (absolute time base)", () => {
+        const rng = createRng(7777);
+        const { traj } = generateDynamicTrajectory({ freqHz: 200 });
+        const origin = { lat: 48.408, lon: -71.164, alt: 200 };
+        const sensorData = generateSensorStreams(traj, { rng, origin });
+        const data = { imu: sensorData.imu, gps: sensorData.gps, baro: sensorData.baro,
+                       quat: sensorData.quat,
+                       mag: [] as Array<{ tUs: number; meas: [number, number, number] }> };
+        const track = estimatePoseTrack(data, origin, { outputHz: 20 });
+        expect(sensorData.imu[0].tUs).toBe(0);
+        // Keyframes are emitted at multiples of 1/outputHz; the first is NOT at t=0.
+        expect(track.samples[0].tUs).toBe(50_000);
     });
 });
