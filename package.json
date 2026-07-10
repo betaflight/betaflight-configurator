@@ -104,7 +104,7 @@
     "@storybook/addon-links": "^8.6.3",
     "@storybook/vue3": "^8.6.3",
     "@tauri-apps/cli": "~2.11.0",
-    "@types/node": "^26.1.1",
+    "@types/node": "^24.13.3",
     "cross-env": "^7.0.3",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",

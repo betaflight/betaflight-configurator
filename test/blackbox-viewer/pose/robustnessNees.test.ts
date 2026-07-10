@@ -32,7 +32,7 @@ function computeNees(traj: SyntheticPose[], track: { samples: PoseSampleInternal
         // Do NOT re-zero on samples[0] — the first keyframe sits at 1/outputHz, and
         // re-zeroing shifts every ground-truth lookup by that much (v·Δt phantom error).
         const tS: number = s.tUs / 1e6;
-        let best: SyntheticPose = traj[0];
+        let best: SyntheticPose = traj[gtIdx0];
         let bestDt: number = Math.abs(best.t - tS);
         for (let i = gtIdx0; i < traj.length; i++) {
             const dt: number = Math.abs(traj[i].t - tS);
