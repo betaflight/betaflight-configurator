@@ -8250,6 +8250,27 @@
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox logging rate"
     },
+    "onboardLoggingFlashMode": {
+        "message": "Onboard flash mode"
+    },
+    "onboardLoggingFlashModeLinear": {
+        "message": "Linear (default — record until flash is full)"
+    },
+    "onboardLoggingFlashModeRing": {
+        "message": "Ring (overwrite oldest — always keep most recent flights)"
+    },
+    "onboardLoggingFlashModeRingHint": {
+        "message": "Ring mode continuously overwrites the oldest data so the flash always contains the most recent flights. Useful for long sessions, crash debugging (last few minutes are always retained), and field testing without USB cable management. Maximum effective frame rate is capped at ~1 kHz to fit the chip's sector-erase throughput; rates above that are disabled in the dropdown above."
+    },
+    "onboardLoggingFlashModeMismatch": {
+        "message": "The selected flash mode doesn't match the format currently on the chip. Erase the onboard flash before logging — existing logs in the other format will not be readable."
+    },
+    "onboardLoggingSaveToFileRingNote": {
+        "message": "Ring-mode flash uses a different on-disk layout (data → trailer → header per session) that the blackbox decoder does not parse directly from a raw flash dump. <b>Use USB Mass Storage Mode (below) instead</b> — it presents each log as a properly-formatted <code>.BBL</code> file."
+    },
+    "onboardLoggingRateRingExceedsCap": {
+        "message": "exceeds ring-mode rate cap"
+    },
     "onboardLoggingDebugFields": {
         "message": "Debug Fields included"
     },
