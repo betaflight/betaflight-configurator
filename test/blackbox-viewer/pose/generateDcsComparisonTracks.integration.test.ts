@@ -1,8 +1,8 @@
 /**
- * One-shot generator (not a correctness gate): produces LOG00022 PoseTrack
- * JSON with useDcs=false (default) and useDcs=true, for an acceptance test
- * that compares both against GoPro GPS9 ground truth through the
- * t=340-365s dropout window.
+ * One-shot generator (not a correctness gate): produces PoseTrack JSON for a
+ * user-supplied flight log with useDcs=false (default), useDcs=true, and
+ * useVbAdaptiveR=true, so the outputs can be diffed against an external
+ * ground-truth source when evaluating a GPS-dropout window by hand.
  *
  * Run: RUN_INTEGRATION=1 REVIEW_BFL_B=... npx vitest run src/pose/generateDcsComparisonTracks.integration.test.ts
  */
@@ -19,7 +19,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = path.resolve(__dirname, '../../scratch/review');
 
 describeIntegration('generate DCS comparison PoseTracks', () => {
-  it('produces useDcs=false and useDcs=true PoseTrack JSON for LOG00022', async () => {
+  it('produces useDcs=false and useDcs=true PoseTrack JSON for the supplied flight log', async () => {
     const bflPath = process.env.REVIEW_BFL_B;
     if (!bflPath) {
       console.warn('REVIEW_BFL_B not set, skipping');
@@ -43,7 +43,8 @@ describeIntegration('generate DCS comparison PoseTracks', () => {
         ...combo.opts,
       } as any);
       const json = poseTrackToJson(track);
-      const outPath = path.join(OUT_DIR, `LOG00022_dcs_${combo.label}.json`);
+      const logName = path.basename(bflPath, path.extname(bflPath));
+      const outPath = path.join(OUT_DIR, `${logName}_dcs_${combo.label}.json`);
       fs.writeFileSync(outPath, json, 'utf-8');
       console.log(`${combo.label}: ${track.samples.length} samples -> ${outPath}`);
     }

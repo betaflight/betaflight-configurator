@@ -6,7 +6,7 @@
  * trajectory: that objective is dataset-specific (fit to one flight's
  * multipath and to whatever a free 7-DoF alignment happens to absorb) and rewards
  * *smoothness* as much as *truth* — exactly the failure mode this pipeline
- * needs to avoid for photogrammetry-grade output.
+ * needs to avoid.
  *
  * The fitting objective is the classical innovation-based maximum-likelihood
  * identification of noise parameters (Mehra 1970; the batch/EM equivalent is

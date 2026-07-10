@@ -248,32 +248,27 @@ export interface EstimatorOpts {
    *  onboard Mahony/Madgwick filter that has already integrated the SAME raw
    *  gyro/accel samples the ESKF's own prediction step consumes, so fusing every
    *  logged sample re-ingests the same gyro information many times per second --
-   *  a real double-counting defect (measured attitude covariance ~30-40x too
-   *  confident against real COLMAP ground truth on both LOG00021/LOG00022).
+   *  a real double-counting defect that makes the filter's attitude covariance
+   *  substantially overconfident.
    *
    *  IMPORTANT, evidence-based limitation: this architecture has NO independent
    *  roll/pitch reference (no separate accelerometer-tilt factor) and, when mag
    *  is off/failed, no independent yaw reference either -- the FC quaternion is
-   *  the ONLY absolute attitude anchor. Real-data sweeps against COLMAP ground
-   *  truth on LOG00021.BFL (mag-off, gentle survey flight) found the reviewer's
-   *  originally-proposed ~1 Hz rate collapses real attitude accuracy (median
-   *  error vs. COLMAP: 6.96 deg unmodified -> 74-99 deg at 1 Hz; even 50 Hz gave
-   *  46.8 deg), and NONE of the tested rates 1-500 Hz meaningfully improved the
-   *  covariance-coverage number either (steady-state posterior covariance is set
-   *  by the Riccati fixed point of process noise vs. per-update R, not simply by
-   *  update count). WORSE: re-running the full reconstruction-gate suite
-   *  (`acroFixture.test.ts`, reference_flight1 -- an aggressive acro/freestyle
-   *  flight with backflips) at 500 Hz caused catastrophic divergence (>1800m
-   *  position error, >9000m altitude error) that does NOT show up on the gentle
-   *  survey flights -- fast attitude excursions (flips) need much closer to the
-   *  native fusion rate to track through. A rate sweep against that gate found
-   *  500 Hz fails, 750/1000/2000/4000 Hz all pass; 1000 Hz was chosen for
-   *  margin. At 1000 Hz the covariance-coverage defect is effectively
-   *  UNCHANGED from unconditional fusion (barely fewer total updates over a
-   *  multi-minute flight) -- this default is a near-no-op safety-first
-   *  placeholder, not a working fix. Closing the actual defect requires an
-   *  independent accel-tilt factor (so attitude isn't
-   *  solely dependent on this one correlated source) or a properly-modeled
+   *  the ONLY absolute attitude anchor. Rate-limiting this prior too aggressively
+   *  (down toward ~1 Hz) collapses real attitude accuracy, and none of the
+   *  tested rates meaningfully improved the covariance-coverage number either
+   *  (steady-state posterior covariance is set by the Riccati fixed point of
+   *  process noise vs. per-update R, not simply by update count). WORSE: fusing
+   *  too infrequently caused catastrophic divergence on aggressive acro/freestyle
+   *  flights (see `acroFixture.test.ts`) that does NOT show up on gentle survey
+   *  flights -- fast attitude excursions (flips) need much closer to the native
+   *  fusion rate to track through. A rate sweep against that gate settled on
+   *  1000 Hz for margin. At 1000 Hz the covariance-coverage defect is
+   *  effectively UNCHANGED from unconditional fusion (barely fewer total
+   *  updates over a multi-minute flight) -- this default is a near-no-op
+   *  safety-first placeholder, not a working fix. Closing the actual defect
+   *  requires an independent accel-tilt factor (so attitude isn't solely
+   *  dependent on this one correlated source) or a properly-modeled
    *  correlated-noise treatment of the FC quaternion -- naive rate-limiting
    *  alone cannot get materially lower than ~1000 Hz without breaking real
    *  flights, gentle or aggressive. */
@@ -321,25 +316,22 @@ export interface EstimatorOpts {
   /** Colored-noise (AR(1)-whitened) treatment of the FC-quaternion prior.
    *  Default false.
    *
-   *  REAL-DATA RESULT: DO NOT ENABLE without further work. Tested against
-   *  `acroFixture.test.ts` (real acro flight, backflips) at phi=0.9, fusing
-   *  every logged sample (no rate limit): catastrophic divergence, WORSE than
-   *  every other configuration tried this session -- 12/24 gates failed,
-   *  altitude error >31,000m (vs. the already-bad ~1700-8800m seen from naive
-   *  low-rate-limiting in earlier testing). The AR(1) whitening reduces the
-   *  effective sigma fed to the Kalman update by sqrt(1-phi^2) (~0.44x at
-   *  phi=0.9) relative to the RAW attSigma -- i.e. this path trusts the
-   *  (whitened) residual MORE tightly than the already-tight unwhitened
-   *  default, and with a fixed, unfit phi=0.9 guess (not measured from this
-   *  flight's actual FC-quat autocorrelation), that tight trust combined with
-   *  full-rate fusion overwhelmed the filter. This is very likely fixable
-   *  (fit phi from real per-flight autocorrelation data rather than guessing
-   *  a fixed value, and/or validate a single-lag AR(1) model is even
-   *  sufficient for the Mahony filter's true correlation structure, which
-   *  involves an integral term and could need a higher-order model) but that
-   *  work was not completed. The code path is left in place (opt-in, off by default) as
-   *  a documented starting point for that future work, not as a usable
-   *  feature today. */
+   *  DO NOT ENABLE without further work. Tested at phi=0.9 with full-rate
+   *  fusion (no rate limit) against `acroFixture.test.ts`'s aggressive
+   *  acro/freestyle gates: catastrophic divergence. The AR(1) whitening
+   *  reduces the effective sigma fed to the Kalman update by sqrt(1-phi^2)
+   *  (~0.44x at phi=0.9) relative to the RAW attSigma -- i.e. this path
+   *  trusts the (whitened) residual MORE tightly than the already-tight
+   *  unwhitened default, and with a fixed, unfit phi=0.9 guess (not measured
+   *  from any specific flight's actual FC-quat autocorrelation), that tight
+   *  trust combined with full-rate fusion overwhelmed the filter. This is
+   *  very likely fixable (fit phi from real per-flight autocorrelation data
+   *  rather than guessing a fixed value, and/or validate a single-lag AR(1)
+   *  model is even sufficient for the Mahony filter's true correlation
+   *  structure, which involves an integral term and could need a
+   *  higher-order model) but that work was not completed. The code path is
+   *  left in place (opt-in, off by default) as a documented starting point
+   *  for that future work, not as a usable feature today. */
   fcQuatColoredNoise?: boolean;
   /** AR(1) coefficient for the colored-noise whitening filter, in (0,1).
    *  Default 0.9 -- a rough guess representing strong sample-to-sample
@@ -352,41 +344,36 @@ export interface EstimatorOpts {
   /** Enable the barometric bias FOGM tracker (`updateBaroBiasFogm`).
    *  Default false.
    *
-   *  REAL-DATA RESULT: DO NOT ENABLE -- currently a net regression. Tested on
-   *  both LOG00021.BFL and LOG00022.BFL (mag-off) against real COLMAP ground
-   *  truth: vertical error got WORSE at every tested parameterization, not
-   *  better -- median vertical error 0.64m -> 2.03m (LOG00021) and 1.00m ->
-   *  2.25m (LOG00022) at the shipped defaults (tauBaro=45, sigmaBaroBias=2.0);
-   *  a much slower/tighter tuning (tauBaro=180, sigmaBaroBias=0.5) improved
-   *  but did not recover the no-FOGM baseline (0.86m vs. 0.64m on LOG00021).
-   *  Root cause: this tracker and the main ESKF baro update both consume the
-   *  SAME raw innovation every step (see updateBaroBiasFogm's doc comment for
-   *  why -- a documented, deliberate scope trade against the implementation
-   *  risk of a joint ESKF state), and that shared dependency causes a form of
-   *  double-counting/overcorrection in practice, not just in theory: passes
-   *  `acroFixture.test.ts`'s 24 gates (doesn't crash or grossly diverge) but
-   *  is measurably WORSE than doing nothing on the two real flights available
-   *  for testing. Left in place, off by default, as a documented negative
+   *  DO NOT ENABLE -- currently a net regression. Vertical error got worse at
+   *  every tested parameterization, not better; a much slower/tighter tuning
+   *  (tauBaro=180, sigmaBaroBias=0.5) improved things but did not recover the
+   *  no-FOGM baseline's accuracy. Root cause: this tracker and the main ESKF
+   *  baro update both consume the SAME raw innovation every step (see
+   *  updateBaroBiasFogm's doc comment for why -- a documented, deliberate
+   *  scope trade against the implementation risk of a joint ESKF state), and
+   *  that shared dependency causes a form of double-counting/overcorrection
+   *  in practice, not just in theory: it passes `acroFixture.test.ts`'s
+   *  gates (doesn't crash or grossly diverge) but is measurably worse than
+   *  doing nothing. Left in place, off by default, as a documented negative
    *  result and a starting point -- the likely fix is decorrelating the two
    *  updates (e.g. holding out alternating samples between the tracker and
    *  the main filter, or moving to the joint-state design after all) rather
    *  than further tuning tau/sigma, which only partially compensates. */
   useBaroFogm?: boolean;
   /** FOGM time constant (s) for the baro bias tracker. Default 45s. See
-   *  useBaroFogm's doc comment -- even a much slower value (180s) tested on
-   *  real data did not fully recover the no-FOGM baseline's accuracy. */
+   *  useBaroFogm's doc comment -- even a much slower value (180s) did not
+   *  fully recover the no-FOGM baseline's accuracy. */
   tauBaro?: number;
   /** Steady-state 1-sigma baro bias (m) for the FOGM tracker. Default 2.0m.
-   *  See useBaroFogm's doc comment for the real-data tuning results. */
+   *  See useBaroFogm's doc comment for the tuning results. */
   sigmaBaroBias?: number;
   /** Dynamic-pressure regressor coefficient: subtracts
    *  `baroDynPressureRegressorK * excessSpecificForce` (the same propwash
    *  proxy computeBaroInflate uses) from the raw baro reading before both the
    *  main ESKF update and the bias tracker see it. Default 0 (disabled) --
-   *  the correct sign and magnitude need real-flight calibration against a
-   *  known-good altitude reference (COLMAP or similar) that wasn't available
-   *  to validate this coefficient specifically this session; left as an
-   *  explicit opt-in knob rather than guessing a nonzero default. */
+   *  the correct sign and magnitude need calibration against a known-good
+   *  altitude reference that wasn't available to validate this coefficient;
+   *  left as an explicit opt-in knob rather than guessing a nonzero default. */
   baroDynPressureRegressorK?: number;
 }
 
@@ -638,8 +625,8 @@ function _runEstimation(
   const {
     outputHz = 20,
     // gpsPosSigma/gpsVelSigma/baroSigma re-tuned via NIS-consistency
-    // leave-one-flight-out validation on LOG00021.BFL/LOG00022.BFL AFTER the
-    // FC-quat-prior decorrelation, DCS chi2 phi + bounded R-inflation, and
+    // leave-one-flight-out validation AFTER the FC-quat-prior decorrelation,
+    // DCS chi2 phi + bounded R-inflation, and
     // physics-informed baro inflation fixes -- the previous frozen
     // values (gpsPosSigma=2.5, gpsVelSigma=0.95, baroSigma=2.5) were tuned
     // against the OLD, more-double-counted attitude/baro models and are stale
@@ -1122,8 +1109,8 @@ function _runEstimation(
         // has already integrated the same raw gyro/accel the ESKF's own
         // prediction step consumes; fusing it unconditionally re-ingests the
         // same gyro information hundreds of times per second and collapses the
-        // reported attitude covariance (~30-40x overconfident, measured against
-        // real COLMAP ground truth). See EstimatorOpts.fcQuatPriorHz doc comment.
+        // reported attitude covariance to well below its true uncertainty.
+        // See EstimatorOpts.fcQuatPriorHz doc comment.
         // Adaptive sigma yaw: σ_yaw couples to yaw observability (|R[2][0]|)
         // and mag disturbance scale (|B| anomaly + motor current).
 

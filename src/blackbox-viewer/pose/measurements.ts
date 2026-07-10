@@ -388,8 +388,8 @@ export function createColoredQuaternionFactor(
  * (`createQuaternionPrior`) is built from the FC's own Mahony filter, which
  * has already integrated the SAME raw gyro/accel the ESKF's own prediction
  * step consumes -- fusing it at high rate causes real covariance double-
- * counting (measured ~30-40x overconfident attitude covariance against real
- * COLMAP ground truth), but rate-limiting it was found to be unsafe below
+ * counting (the reported attitude covariance ends up well below its true
+ * uncertainty), but rate-limiting it was found to be unsafe below
  * ~1000 Hz on real flights (see estimatorLoop.ts's EstimatorOpts.fcQuatPriorHz
  * doc comment -- both a gentle-survey attitude-accuracy failure at low rates
  * AND a catastrophic acro-flight divergence at 500 Hz). This factor gives

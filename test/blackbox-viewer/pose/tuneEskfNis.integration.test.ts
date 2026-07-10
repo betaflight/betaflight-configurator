@@ -8,8 +8,7 @@
  * Flight pair is configurable via env vars so this runs against whatever
  * dual-pass mission the operator is currently investigating:
  *   TUNE_BFL_A / TUNE_BFL_B   — absolute paths to two BFL logs of the same
- *                                or similar mission (e.g. LOG00021.BFL /
- *                                LOG00022.BFL from a dual-drone pass).
+ *                                or similar mission.
  *   TUNE_MAG_MODEL            — optional path to a magnetometer
  *                                characterization JSON, shared by both logs.
  *
@@ -110,8 +109,8 @@ describeIntegration('NIS-consistency ESKF tuning (leave-one-flight-out)', () => 
     if (USING_FALLBACK) {
       console.warn(
         'TUNE_BFL_A / TUNE_BFL_B not set — tuning and validating on the same ' +
-          'in-repo fixture. Set both env vars to a real dual-pass mission ' +
-          '(e.g. LOG00021.BFL / LOG00022.BFL) for genuine cross-validation.',
+          'in-repo fixture. Set both env vars to two BFL logs of the same or ' +
+          'similar mission for genuine cross-validation.',
       );
     }
 

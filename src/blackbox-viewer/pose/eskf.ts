@@ -89,17 +89,15 @@ export interface RobustOpts {
      *  the bounded/capped R-inflation `dcs` mechanism. Mutually exclusive with
      *  `dcs` (vbAdaptive takes priority if both set).
      *
-     *  Motivation: the capped R-inflation `dcs` fix eliminated catastrophic
-     *  runaway divergence on a real GPS-
-     *  degradation window (LOG00022.BFL t=340-365s: 53m -> 5.2m median error,
-     *  matching the no-robust-weighting baseline) but caused a real full-flight
-     *  regression elsewhere (median ATE vs. COLMAP 2.14m -> 4.12m) because
-     *  chi2_0.95(m) still triggers on the natural tail of a chi-square
-     *  distribution ~5% of the time even on perfectly healthy data, and a
-     *  PER-SAMPLE cap has no memory -- it can't distinguish "this one fix is a
-     *  one-off spurious outlier" from "the whole GPS constellation has been
-     *  worse for the last 30 seconds" (both trigger the same instantaneous
-     *  inflation). This tension is what motivated a full VB treatment.
+     *  Motivation: the capped R-inflation `dcs` mechanism eliminates
+     *  catastrophic runaway divergence during a sustained GPS-degradation
+     *  window, but chi2_0.95(m) still triggers on the natural tail of a
+     *  chi-square distribution ~5% of the time even on perfectly healthy
+     *  data, and a PER-SAMPLE cap has no memory -- it can't distinguish
+     *  "this one fix is a one-off spurious outlier" from "the whole GPS
+     *  constellation has been worse for the last 30 seconds" (both trigger
+     *  the same instantaneous inflation). This tension is what motivated a
+     *  full VB treatment.
      *
      *  Implementation: a practical single-iteration VB-adaptive-R (Sarkka &
      *  Nummiaro 2009 "Recursive Noise Adaptive Kalman Filtering"; Mehra 1972's
@@ -123,32 +121,24 @@ export interface RobustOpts {
      *  contributes only 1/(nu+1) weight to Rbar, not a hard hundred-percent
      *  per-sample cap.
      *
-     *  REAL-DATA RESULT (LOG00022.BFL, forgetting=0.98): mixed, not a strict
-     *  win over `dcs`. In the targeted t=335-365s GPS-degradation window (vs.
-     *  GoPro GPS9 ground truth): median error 3.42m, BETTER than both no-
-     *  robust-weighting (5.28m) and capped `dcs` (5.62m) -- this is the
-     *  scenario the mechanism was designed for, and it wins there. But
-     *  full-flight (vs. COLMAP ground truth): median 5.49m, WORSE than both
-     *  no-robust-weighting (0.29m) and capped `dcs` (3.70m) -- the ~50-sample
-     *  exponential memory (forgetting=0.98) that lets it track a SUSTAINED
-     *  degradation also gives it a longer "hangover" after ordinary transients
-     *  than a per-sample cap has, elevating Rbar (and therefore loosening GPS
-     *  trust) more broadly across the flight than `dcs` does. A faster
-     *  forgetting factor (0.9, ~10-sample memory) was tried and made BOTH
-     *  numbers much worse (112m dropout window, 28m full-flight) -- the
-     *  running estimate needs enough memory to average out per-sample
-     *  variance, so faster forgetting is not a free knob to fix this. Ship as
-     *  opt-in (`useVbAdaptiveR` in estimatorLoop.ts), positioned as "use this
+     *  Tradeoff: this mechanism outperforms capped `dcs` specifically inside
+     *  a sustained GPS-degradation window, but its exponential memory also
+     *  gives it a longer "hangover" after ordinary transients than a
+     *  per-sample cap has, which can loosen GPS trust more broadly across an
+     *  otherwise-healthy flight than `dcs` does. A much faster forgetting
+     *  factor doesn't fix this -- it just adds variance to the Rbar estimate
+     *  without shortening the hangover meaningfully. Ship as opt-in
+     *  (`useVbAdaptiveR` in estimatorLoop.ts), positioned as "use this
      *  specifically when a known sustained GPS-degradation window is the
      *  primary concern," not as a strictly-better default replacement for
      *  `dcs`. */
     vbAdaptive?: boolean;
     /** Forgetting factor for the VB adaptive-R running estimate, in (0,1).
      *  Default 0.98 -- an effective memory of ~1/(1-0.98)=50 samples. Lower
-     *  values track faster-changing noise levels but with more variance in
-     *  the Rbar estimate itself -- measured on real data (see vbAdaptive's
-     *  doc comment): 0.9 (~10-sample memory) made BOTH the dropout-window and
-     *  full-flight results dramatically worse than 0.98, not better. */
+     *  values track faster-changing noise levels but add more variance to
+     *  the Rbar estimate itself; the running estimate needs enough memory to
+     *  average out per-sample noise, so faster forgetting is not a free knob
+     *  for improving responsiveness (see vbAdaptive's doc comment). */
     vbForgetting?: number;
     /** Initial effective-sample-count for the VB adaptive-R running estimate,
      *  used only the first time a sensor's Rbar is initialized (seeded from
@@ -800,10 +790,9 @@ export function eskfUpdate(
     // but left the Joseph-form P update using the UN-inflated S, so P never
     // grew to reflect the rejection -- P_k|k -> P_k|k-1 while the true state
     // kept drifting, so the NEXT measurement looked even more like an outlier,
-    // in a monotonic runaway (measured on real data:
-    // LOG00022.BFL's t=340-365s GPS-degradation window diverged to 50+ m error
-    // vs. ~5.5 m without DCS). Inflating R in proportion to how far mahal
-    // exceeds the chi2_0.95(m) gate, and recomputing S/K/the Joseph P-update
+    // in a monotonic runaway during sustained GPS degradation. Inflating R in
+    // proportion to how far mahal exceeds the chi2_0.95(m) gate, and
+    // recomputing S/K/the Joseph P-update
     // against the INFLATED S, makes the filter's own P widen alongside the
     // reduced gain -- it "admits it's less certain" instead of just distrusting
     // the sensor while silently keeping its own overconfident P.

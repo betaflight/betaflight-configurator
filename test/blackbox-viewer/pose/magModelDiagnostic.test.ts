@@ -1,19 +1,19 @@
 /**
  * Mag model diagnostic: where the mag characterization model adds value.
  *
- * FINDING: the mag model's value is in HEADING / ATTITUDE accuracy and
- * mid-flight path fidelity — NOT in endpoint loop closure. With GPS position
- * fused at a fixed sigma, the takeoff/landing endpoints are pinned to their GPS
- * fixes, so loop closure ≈ the GPS's own non-closure (~2.5 m) whether or not the
- * FC heading bias is corrected. The mag model still corrects the SUSTAINED
- * ~2-3° (here 6.3°) FC heading bias, which shows up in the worst-horizontal-
- * offset and heading-bias sections below.
+ * The mag model's value is in HEADING / ATTITUDE accuracy and mid-flight path
+ * fidelity — NOT in endpoint loop closure. With GPS position fused at a fixed
+ * sigma, the takeoff/landing endpoints are pinned to their GPS fixes, so loop
+ * closure tracks the GPS's own non-closure regardless of whether the FC
+ * heading bias is corrected. The mag model still corrects the sustained FC
+ * heading bias, which shows up in the worst-horizontal-offset and
+ * heading-bias sections below rather than in loop closure.
  *
- * (Historical note: an earlier run reported ~26.8 m endpoint drift without the
- * model — "10× loop closure". That gap was an artifact of the GPS accuracy-
- * scaling default loosening GPS position trust; with that default off, loop
- * closure is GPS-pinned for all three paths and is no longer the metric that
- * separates them.)
+ * (Loop closure alone is a misleading regression metric here: with GPS
+ * accuracy-scaling enabled, a loosened GPS position trust can make endpoint
+ * drift balloon independent of heading correction quality. With that default
+ * off, loop closure is GPS-pinned across configurations and no longer
+ * separates them — see section 2 below.)
  *
  * Three configurations tested:
  *   A. WITH model (2.5 m endpoint regression guard; the heading-accuracy ref)
@@ -283,7 +283,7 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
     rawMagBiasSamples = trackB.samples;
 
     // ================================================================
-    // Run C: NO mag model, NO correction (old behavior — 26.8 m)
+    // Run C: NO mag model, NO correction (pre-fix behavior)
     // ================================================================
     console.log('\n--- Run C: NO mag model + NO correction ---');
     const trackC = estimatePoseTrack(
@@ -391,8 +391,9 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
       // With GPS fused at a fixed sigma the endpoints are pinned to their GPS
       // fixes, so closure ≈ the GPS's own non-closure regardless of whether the
       // heading bias is corrected. This is NOT where the mag model shows value
-      // (see the worst-horizontal-offset and heading-bias sections). An earlier
-      // run read ~26.8 m here — an artifact of the accuracy-scaling default.
+      // (see the worst-horizontal-offset and heading-bias sections). Without
+      // this guard, a loosened GPS accuracy-scaling default can let endpoint
+      // drift balloon independent of heading correction quality.
       expect(driftNone).toBeLessThanOrEqual(5);
     });
 
@@ -432,10 +433,10 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
       const worstNone = worstHorizontalOffset(noCorrectionSamples, gpsNed);
       console.log(`  no-model+raw-mag worst horiz offset = ${worst.toFixed(1)} m (no-correction: ${worstNone.toFixed(1)} m)`);
       // The raw-mag path applies only a CONSTANT hard-iron heading offset, which
-      // corrects heading but does not improve mid-flight horizontal fidelity:
-      // it lands near the no-correction worst case (~18 m), well above the full
-      // model (~9 m). Closing that gap needs the per-sample soft-iron (W_inv)
-      // correction the model carries — see rawMagBias.ts scope notes.
+      // corrects heading but does not improve mid-flight horizontal fidelity,
+      // so it tracks close to the no-correction case. Closing that gap needs
+      // the per-sample soft-iron (W_inv) correction the model carries — see
+      // rawMagBias.ts scope notes.
       expect(worst).toBeLessThanOrEqual(35);
     });
 

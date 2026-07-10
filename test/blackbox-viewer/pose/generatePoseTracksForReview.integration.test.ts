@@ -1,9 +1,9 @@
 /**
  * One-shot generator (not a correctness gate) producing fresh PoseTrack JSON
- * for accuracy review: LOG00021/LOG00022, x3 mag modes each
- * (manual/off/auto), using the CURRENT (post-freeze) estimator defaults.
- * Existing telemetry/*_posetrack_mag.json files predate this defaults
- * change and cannot be reused for accuracy comparisons.
+ * for accuracy review, across two operator-supplied flights and all three
+ * mag modes (manual/off/auto), using the CURRENT (post-freeze) estimator
+ * defaults. Existing telemetry/*_posetrack_mag.json files predate this
+ * defaults change and cannot be reused for accuracy comparisons.
  *
  * Run: RUN_INTEGRATION=1 REVIEW_BFL_A=... REVIEW_BFL_B=... REVIEW_MAG_MODEL=... \
  *   npx vitest run src/pose/generatePoseTracksForReview.integration.test.ts
@@ -22,8 +22,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = path.resolve(__dirname, '../../scratch/review');
 
 const FLIGHTS: { label: string; bflEnv: string }[] = [
-  { label: 'LOG00021', bflEnv: 'REVIEW_BFL_A' },
-  { label: 'LOG00022', bflEnv: 'REVIEW_BFL_B' },
+  { label: 'flightA', bflEnv: 'REVIEW_BFL_A' },
+  { label: 'flightB', bflEnv: 'REVIEW_BFL_B' },
 ];
 const MODES: MagMode[] = ['manual', 'off', 'auto'];
 

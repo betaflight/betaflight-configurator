@@ -8,8 +8,8 @@
  * accessor is flightLog.getGPSHome(). Units: lat/lon are 1e7-scaled integers, alt is
  * decimetres MSL. G-frames carry position as a delta from home (predictor 7 HOME_COORD).
  *
- * Ground truth for reference_flight1 / LOG00007.BFL (BF 2026.6.0-alpha, FLYWOOH743), independently
- * confirmed by a from-scratch H-frame decode:
+ * Expected values for the in-repo reference_flight1 fixture, from a manual
+ * H-frame decode:
  *   home = 48.4023468 N, -71.1696256 W, 134.2 m MSL   (raw 484023468, -711696256, 1342)
  * The drone was stationary at home pre-arm, so home == the first GPS fix to ~1e-7 deg.
  *
