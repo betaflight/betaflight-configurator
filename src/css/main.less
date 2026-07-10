@@ -175,6 +175,15 @@ input[type="checkbox"] {
 td [role="group"] {
     display: flex;
 }
+/* UInputNumber: don't show a "not-allowed" cursor on the increment/decrement
+ * stepper buttons when a value reaches its min/max. The two buttons sit close
+ * together in a narrow field, so the sign reads as the whole control being
+ * locked when only that one direction is unavailable (issue #5011). Scoped to
+ * :not([data-disabled]) roots so genuinely disabled fields keep not-allowed. */
+[data-slot="root"]:not([data-disabled]) [data-slot="increment"] button:disabled,
+[data-slot="root"]:not([data-disabled]) [data-slot="decrement"] button:disabled {
+    cursor: default;
+}
 .noarrows {
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
