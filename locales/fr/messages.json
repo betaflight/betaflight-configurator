@@ -2940,6 +2940,54 @@
     "ledStripHelp": {
         "message": "Le contrôleur de vol peut piloter des LEDs RGB.<br \/>Configurez les LEDs sur la grille et câblez les LEDs en fonction de votre grille. Les LEDs sans numéro ne seront pas sauvegardées.<br \/>Double-cliquer sur une couleur pour éditer sa valeur."
     },
+    "ledStripProfileTitle": {
+        "message": "Profil à éditer"
+    },
+    "ledStripProfileOption": {
+        "message": "Profil $1"
+    },
+    "ledStripProfile1Label": {
+        "message": "Profil 1"
+    },
+    "ledStripProfile2Label": {
+        "message": "Profil 2"
+    },
+    "ledStripProfile3Label": {
+        "message": "Profil 3"
+    },
+    "ledStripProfileTip": {
+        "message": "Sélectionnez le profil LED à éditer dans le Configurator. Chaque profil peut avoir sa propre couleur ou disposition de LEDs."
+    },
+    "ledStripActiveProfileTitle": {
+        "message": "Profil actif en vol"
+    },
+    "ledStripActiveProfileTip": {
+        "message": "Profil LED utilisé en vol. Peut être changé via le réglage ledstrip_profile, le CMS ou une plage auxiliaire."
+    },
+    "ledStripProfileRace": {
+        "message": "RACE"
+    },
+    "ledStripProfileBeacon": {
+        "message": "BEACON"
+    },
+    "ledStripProfileStatus": {
+        "message": "STATUS"
+    },
+    "ledStripProfileRaceCmsWarning": {
+        "message": "Pour utiliser la couleur Race via CMS/CLI et le mode VTX auto (BLACK), ne programmez pas de LEDs individuellement — laissez le profil vide."
+    },
+    "ledStripProfileBeaconCmsWarning": {
+        "message": "Pour utiliser la couleur Beacon via CMS/CLI, ne programmez pas de LEDs individuellement — laissez le profil vide."
+    },
+    "ledStripProfileName": {
+        "message": "Nom du profil LED"
+    },
+    "ledStripProfileNameHelp": {
+        "message": "Nom du profil LED pour identifier son usage : course, balise, statut, vol indoor, etc. (8 caractères max)."
+    },
+    "ledStripActiveProfileHint": {
+        "message": "Actif en vol : $1"
+    },
     "ledStripButtonSave": {
         "message": "Sauvegarder"
     },
@@ -2973,6 +3021,24 @@
     },
     "ledStripVtxOverlay": {
         "message": "VTX (couleur selon la fréquence vtx)"
+    },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Luminosité"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Luminosité maximale des LEDs, en pourcentage."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Écart de teinte entre chaque LED."
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Fréquence"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Fréquence du changement de couleur, c'est-à-dire la vitesse de l'effet."
     },
     "ledStripFunctionSection": {
         "message": "Fonctions LED"
@@ -3130,8 +3196,59 @@
         "message": "Les LEDs sans numéro ne seront pas sauvegardées.",
         "description": "Message in the wiring modes in Led Strip"
     },
+    "ledStripLarsonOverlay": {
+        "message": "Scanner Larson"
+    },
+    "ledStripLarsonFreqSliderTitle": {
+        "message": "Fréquence"
+    },
+    "ledStripLarsonFreqSliderHelp": {
+        "message": "Vitesse de l'effet scanner Larson. Des valeurs plus élevées balaient plus vite."
+    },
     "ledStripBlinkAlwaysOverlay": {
-        "message": "clignote en permanence"
+        "message": "Clignote en permanence"
+    },
+    "ledStripBlinkPeriodSliderTitle": {
+        "message": "Période (ms)"
+    },
+    "ledStripBlinkPeriodSliderHelp": {
+        "message": "Durée d'un cycle complet. Plus la valeur est élevée, plus le clignotement est lent."
+    },
+    "ledStripBlinkOnMsSliderTitle": {
+        "message": "Temps allumé (ms)"
+    },
+    "ledStripBlinkOnMsSliderHelp": {
+        "message": "Durée pendant laquelle la LED reste allumée à chaque cycle."
+    },
+    "ledStripBlinkPatternTitle": {
+        "message": "Motif"
+    },
+    "ledStripBlinkPatternAlternate": {
+        "message": "Flash"
+    },
+    "ledStripBlinkPatternBeacon": {
+        "message": "Double flash"
+    },
+    "ledStripBlinkFlashSliderTitle": {
+        "message": "Durée flash (ms)"
+    },
+    "ledStripBlinkFlashSliderHelp": {
+        "message": "Durée de chaque flash."
+    },
+    "ledStripBlinkGapSliderTitle": {
+        "message": "Écart entre flashes (ms)"
+    },
+    "ledStripBlinkGapSliderHelp": {
+        "message": "Pause entre les deux flashes de chaque rafale."
+    },
+    "ledStripBlinkPauseSliderTitle": {
+        "message": "Pause après rafale (ms)"
+    },
+    "ledStripBlinkPauseSliderHelp": {
+        "message": "Temps éteint avant la prochaine double rafale."
+    },
+    "ledStripRainbowOverlay": {
+        "message": "Arc-en-ciel"
     },
     "ledStripOverlayTitle": {
         "message": "Priorité"

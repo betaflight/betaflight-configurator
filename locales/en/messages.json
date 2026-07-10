@@ -4625,6 +4625,54 @@
     "ledStripHelp": {
         "message": "The flight controller can control colors and effects of individual LEDs on a strip.<br />Configure LEDs on the grid, configure wiring order then attach LEDs on your aircraft according to grid positions. LEDs without wire ordering number will not be saved.<br />Double-click on a color to edit the HSV values."
     },
+    "ledStripProfileTitle": {
+        "message": "Edit profile"
+    },
+    "ledStripProfileOption": {
+        "message": "Profile $1"
+    },
+    "ledStripProfile1Label": {
+        "message": "Profile 1"
+    },
+    "ledStripProfile2Label": {
+        "message": "Profile 2"
+    },
+    "ledStripProfile3Label": {
+        "message": "Profile 3"
+    },
+    "ledStripProfileTip": {
+        "message": "Select the LED profile to edit in the Configurator. Each profile can have its own color or LED layout."
+    },
+    "ledStripActiveProfileTitle": {
+        "message": "Active profile in flight"
+    },
+    "ledStripActiveProfileTip": {
+        "message": "LED profile used in flight. Can be changed via the ledstrip_profile setting, CMS, or an auxiliary channel range."
+    },
+    "ledStripProfileRace": {
+        "message": "RACE"
+    },
+    "ledStripProfileBeacon": {
+        "message": "BEACON"
+    },
+    "ledStripProfileStatus": {
+        "message": "STATUS"
+    },
+    "ledStripProfileRaceCmsWarning": {
+        "message": "To use Race color via CMS/CLI and VTX auto mode (BLACK), do not program individual LEDs — keep the profile empty."
+    },
+    "ledStripProfileBeaconCmsWarning": {
+        "message": "To use Beacon color via CMS/CLI, do not program individual LEDs — keep the profile empty."
+    },
+    "ledStripProfileName": {
+        "message": "LED profile name"
+    },
+    "ledStripProfileNameHelp": {
+        "message": "Name for this LED profile to describe its use: race, beacon, status, indoor, etc. (8 characters max)."
+    },
+    "ledStripActiveProfileHint": {
+        "message": "Active in flight: $1"
+    },
     "ledStripButtonSave": {
         "message": "Save"
     },
@@ -4854,8 +4902,68 @@
         "message": "Larson scanner",
         "description": "Larson effect switch label on LED Strip tab"
     },
+    "ledStripLarsonFreqSliderTitle": {
+        "message": "Frequency",
+        "description": "LED Strip Larson scanner effect frequency"
+    },
+    "ledStripLarsonFreqSliderHelp": {
+        "message": "Speed of the Larson scanner effect. Higher values scan faster.",
+        "description": "Hint on LED Strip tab for Larson frequency"
+    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink always"
+    },
+    "ledStripBlinkPeriodSliderTitle": {
+        "message": "Period (ms)",
+        "description": "LED Strip blink overlay period in milliseconds"
+    },
+    "ledStripBlinkPeriodSliderHelp": {
+        "message": "Full blink cycle length. Higher values blink slower.",
+        "description": "Hint on LED Strip tab for blink period"
+    },
+    "ledStripBlinkOnMsSliderTitle": {
+        "message": "On time (ms)",
+        "description": "LED Strip blink overlay on-time in milliseconds"
+    },
+    "ledStripBlinkOnMsSliderHelp": {
+        "message": "How long the LED stays on during each blink cycle.",
+        "description": "Hint on LED Strip tab for blink on-time"
+    },
+    "ledStripBlinkPatternTitle": {
+        "message": "Pattern",
+        "description": "LED Strip blink overlay pattern selector label"
+    },
+    "ledStripBlinkPatternAlternate": {
+        "message": "Flash",
+        "description": "Single flash blink pattern option on LED Strip tab"
+    },
+    "ledStripBlinkPatternBeacon": {
+        "message": "Double flash",
+        "description": "Double flash blink pattern option on LED Strip tab"
+    },
+    "ledStripBlinkFlashSliderTitle": {
+        "message": "Flash duration (ms)",
+        "description": "LED Strip beacon blink flash duration"
+    },
+    "ledStripBlinkFlashSliderHelp": {
+        "message": "How long each flash stays on.",
+        "description": "Hint on LED Strip tab for beacon flash duration"
+    },
+    "ledStripBlinkGapSliderTitle": {
+        "message": "Gap between flashes (ms)",
+        "description": "LED Strip beacon blink gap between flashes"
+    },
+    "ledStripBlinkGapSliderHelp": {
+        "message": "Pause between the two flashes in each burst.",
+        "description": "Hint on LED Strip tab for beacon flash gap"
+    },
+    "ledStripBlinkPauseSliderTitle": {
+        "message": "Pause after burst (ms)",
+        "description": "LED Strip beacon blink pause after double flash"
+    },
+    "ledStripBlinkPauseSliderHelp": {
+        "message": "How long the LED stays off before the next double flash.",
+        "description": "Hint on LED Strip tab for beacon pause duration"
     },
     "ledStripThrottleHue": {
         "message": "Throttle hue",
