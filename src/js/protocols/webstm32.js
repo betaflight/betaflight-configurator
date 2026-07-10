@@ -12,6 +12,7 @@ import MSP from "../msp";
 import FC from "../fc";
 import { bit_check } from "../bit";
 import { gui_log } from "../gui_log";
+import { MspCancelledError } from "../msp/mspErrors";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import { serial } from "../serial";
@@ -181,12 +182,25 @@ class STM32Protocol {
         const buffer = [];
         buffer.push8(this.rebootMode);
         setTimeout(() => {
-            MSP.promise(MSPCodes.MSP_SET_REBOOT, buffer).then(() => {
-                // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
+            const disconnectFromMsp = () => {
                 this.mspConnector.disconnect((disconnectionResult) => {
                     console.log(`${this.logHead} Disconnecting from MSP`, disconnectionResult);
                 });
-            });
+            };
+            MSP.promise(MSPCodes.MSP_SET_REBOOT, buffer)
+                .then(() => {
+                    // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
+                    disconnectFromMsp();
+                })
+                .catch((error) => {
+                    if (error instanceof MspCancelledError && error.reason === "disconnected") {
+                        // Expected: the FC drops the serial link as part of rebooting.
+                        disconnectFromMsp();
+                    } else {
+                        console.error(`${this.logHead} MSP_SET_REBOOT request failed:`, error);
+                        this.handleError();
+                    }
+                });
             console.log(`${this.logHead} Reboot request received by device`);
         }, 100);
     }
@@ -203,44 +217,49 @@ class STM32Protocol {
     lookingForCapabilitiesViaMSP() {
         console.log(`${this.logHead} Looking for capabilities via MSP`);
 
-        MSP.promise(MSPCodes.MSP_BOARD_INFO).then(() => {
-            if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
-                // Board has flash bootloader
-                gui_log(i18n.getMessage("deviceRebooting_flashBootloader"));
-                console.log(`${this.logHead} flash bootloader detected`);
-                this.rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
-            } else {
-                gui_log(i18n.getMessage("deviceRebooting_romBootloader"));
-                console.log(`${this.logHead} no flash bootloader detected`);
-                this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
-            }
-
-            const selectedBoard =
-                this.serialOptions.selectedBoard && this.serialOptions.selectedBoard !== "0"
-                    ? this.serialOptions.selectedBoard
-                    : "NONE";
-            const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : "UNKNOWN";
-
-            try {
-                if (
-                    selectedBoard !== connectedBoard &&
-                    !this.serialOptions.localFirmwareLoaded &&
-                    this.serialOptions.showDialogVerifyBoard
-                ) {
-                    this.serialOptions.showDialogVerifyBoard(
-                        selectedBoard,
-                        connectedBoard,
-                        this.reboot.bind(this),
-                        this.onAbort.bind(this),
-                    );
+        MSP.promise(MSPCodes.MSP_BOARD_INFO)
+            .then(() => {
+                if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
+                    // Board has flash bootloader
+                    gui_log(i18n.getMessage("deviceRebooting_flashBootloader"));
+                    console.log(`${this.logHead} flash bootloader detected`);
+                    this.rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
                 } else {
+                    gui_log(i18n.getMessage("deviceRebooting_romBootloader"));
+                    console.log(`${this.logHead} no flash bootloader detected`);
+                    this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
+                }
+
+                const selectedBoard =
+                    this.serialOptions.selectedBoard && this.serialOptions.selectedBoard !== "0"
+                        ? this.serialOptions.selectedBoard
+                        : "NONE";
+                const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : "UNKNOWN";
+
+                try {
+                    if (
+                        selectedBoard !== connectedBoard &&
+                        !this.serialOptions.localFirmwareLoaded &&
+                        this.serialOptions.showDialogVerifyBoard
+                    ) {
+                        this.serialOptions.showDialogVerifyBoard(
+                            selectedBoard,
+                            connectedBoard,
+                            this.reboot.bind(this),
+                            this.onAbort.bind(this),
+                        );
+                    } else {
+                        this.reboot();
+                    }
+                } catch (e) {
+                    console.error(e);
                     this.reboot();
                 }
-            } catch (e) {
-                console.error(e);
-                this.reboot();
-            }
-        });
+            })
+            .catch((error) => {
+                console.error(`${this.logHead} MSP_BOARD_INFO request failed:`, error);
+                this.handleError();
+            });
     }
 
     handleMSPConnect() {

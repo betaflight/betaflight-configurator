@@ -19,6 +19,13 @@ import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 import { loadDeviceFilters } from "./protocols/devices.js";
 import { pinia } from "./pinia_instance.js";
 import { useNavigationStore } from "../stores/navigation.js";
+import { MspCancelledError } from "./msp/mspErrors.js";
+
+window.addEventListener("unhandledrejection", (event) => {
+    if (event.reason instanceof MspCancelledError) {
+        event.preventDefault();
+    }
+});
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {

@@ -88,9 +88,17 @@ export function usePortsState(getRules) {
     });
 
     const loadConfig = () => {
-        MSP.promise(MSPCodes.MSP_VTX_CONFIG).then(() => {
-            mspHelper.loadSerialConfig(handleSerialConfigLoaded);
-        });
+        MSP.promise(MSPCodes.MSP_VTX_CONFIG)
+            .then(() => {
+                mspHelper.loadSerialConfig(handleSerialConfigLoaded);
+            })
+            .catch((error) => {
+                console.error("Failed to load VTX config for ports tab:", error);
+                isLoading.value = false;
+                nextTick(() => {
+                    GUI.content_ready();
+                });
+            });
     };
 
     const vtxTableNotConfigured = computed(() => {
