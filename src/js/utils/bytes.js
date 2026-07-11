@@ -12,15 +12,16 @@
  * @returns {Uint8Array} The decoded bytes.
  */
 export function base64ToUint8Array(b64) {
-    if (!b64) return new Uint8Array(0);
+    if (!b64) {
+        return new Uint8Array(0);
+    }
     const binary = atob(b64);
     const len = binary.length;
     const bytes = new Uint8Array(len);
     for (let i = 0; i < len; i++) {
-        // The atob() function returns a binary string where each character represents a single byte (0–255).
-        // codePointAt() is designed for Unicode code points and can return values greater than 255, which will overflow Uint8Array slots and corrupt received data.
-        // Use charCodeAt(i) to safely extract byte values.
-        bytes[i] = binary.charCodeAt(i);
+        // atob() returns a binary string: every code unit is a single byte (0–255),
+        // so codePointAt(i) equals the byte value at i and never exceeds 255.
+        bytes[i] = binary.codePointAt(i);
     }
     return bytes;
 }
@@ -34,7 +35,8 @@ export function base64ToUint8Array(b64) {
 export function uint8ArrayToBase64(bytes) {
     let binary = "";
     for (let i = 0; i < bytes.byteLength; i++) {
-        binary += String.fromCharCode(bytes[i]);
+        // Each byte is 0–255, so fromCodePoint produces the matching single-byte binary-string char for btoa().
+        binary += String.fromCodePoint(bytes[i]);
     }
     return btoa(binary);
 }
