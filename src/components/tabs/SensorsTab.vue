@@ -295,7 +295,7 @@
                         <span class="text-sm font-semibold text-[var(--primary-500)]">{{
                             alignDetectResult.label
                         }}</span>
-                        <span :class="'text-xs font-medium confidence-' + alignDetectConfidenceLevel">
+                        <span :class="'text-xs font-medium ' + statusClass(alignDetectConfidenceLevel)">
                             {{ alignDetectResult.confidence }}x {{ alignDetectConfidenceLevel }}
                         </span>
                         <UButton size="xs" :label="$t('magAlignmentApply')" @click="applyAlignDetection" />
@@ -474,7 +474,7 @@
                                     </p>
                                     <p
                                         v-if="guidedSecondsRemaining === 0"
-                                        class="text-xs font-semibold quality-good text-center"
+                                        class="text-xs font-semibold status-ok text-center"
                                     >
                                         {{ $t("magCalibrationGuidedDone") }}
                                     </p>
@@ -527,7 +527,7 @@
                                     >
                                         {{ cal.firmwareSecondsRemaining }}s
                                     </p>
-                                    <p v-if="cal.firmwareDone" class="text-xs font-semibold quality-good text-center">
+                                    <p v-if="cal.firmwareDone" class="text-xs font-semibold status-ok text-center">
                                         {{ $t("magCalibrationUnguidedDone") }}
                                     </p>
                                 </template>
@@ -547,7 +547,7 @@
                                     size="sm"
                                 />
                                 <div v-if="cal.quality" class="text-xs font-semibold text-center">
-                                    <span :class="'quality-' + cal.quality"
+                                    <span :class="statusClass(cal.quality)"
                                         >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
                                     >
                                 </div>
@@ -622,7 +622,7 @@
                         <!-- Complete -->
                         <div v-else-if="cal.phase === 'complete'" class="mag-cal-inline-layout">
                             <div class="mag-cal-inline-steps">
-                                <p class="text-sm font-semibold quality-good mb-2">
+                                <p class="text-sm font-semibold status-ok mb-2">
                                     {{ $t("magCalibrationComplete") }}
                                 </p>
                                 <dl v-if="!calIsFull" class="mag-cal-stats-inline">
@@ -636,7 +636,7 @@
                                     <dd>{{ calResidualText }}</dd>
                                     <dt>{{ $t("magCalibrationQuality") }}</dt>
                                     <dd>
-                                        <span v-if="cal.quality" :class="'quality-' + cal.quality"
+                                        <span v-if="cal.quality" :class="statusClass(cal.quality)"
                                             >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
                                         >
                                         <span v-else>&mdash;</span>
@@ -1557,6 +1557,19 @@ const CAL_QUALITY_KEY = {
     fair: "magCalibrationQualityFair",
     poor: "magCalibrationQualityPoor",
 };
+
+const STATUS_CLASS_MAP = {
+    high: "status-ok",
+    good: "status-ok",
+    medium: "status-warn",
+    fair: "status-warn",
+    low: "status-bad",
+    poor: "status-bad",
+};
+
+function statusClass(level) {
+    return STATUS_CLASS_MAP[level] || "";
+}
 
 const calIsCalibrating = computed(() => cal.phase === "waiting" || cal.phase === "collecting");
 
@@ -2597,16 +2610,6 @@ onMounted(() => {
         padding: 0.5rem 0;
     }
 
-    .confidence-high {
-        color: var(--success-500);
-    }
-    .confidence-medium {
-        color: var(--warning-500);
-    }
-    .confidence-low {
-        color: var(--error-500);
-    }
-
     .mag-cal-section {
         padding-top: 0.25rem;
     }
@@ -2698,13 +2701,13 @@ onMounted(() => {
         text-align: right;
     }
 
-    .quality-good {
+    .status-ok {
         color: var(--success-500);
     }
-    .quality-fair {
+    .status-warn {
         color: var(--warning-500);
     }
-    .quality-poor {
+    .status-bad {
         color: var(--error-500);
     }
 

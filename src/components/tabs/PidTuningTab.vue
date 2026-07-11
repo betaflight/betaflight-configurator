@@ -79,16 +79,7 @@
             </div>
 
             <!-- Sub-tab Navigation -->
-            <div class="subtab-nav">
-                <UTabs
-                    :items="subtabItems"
-                    :model-value="activeSubtab"
-                    :content="false"
-                    color="primary"
-                    variant="link"
-                    @update:model-value="activeSubtab = $event"
-                />
-            </div>
+            <SubtabNav :items="subtabItems" v-model="activeSubtab" />
 
             <!-- Tab Content -->
             <div class="tabarea">
@@ -133,6 +124,7 @@ import PidSubTab from "./pid-tuning/PidSubTab.vue";
 import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
 import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import SubtabNav from "@/components/elements/SubtabNav.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -1341,12 +1333,6 @@ onUnmounted(() => {
 .subtab-filter .two_columns .two_columns_second {
     margin-left: 10px;
     height: fit-content;
-}
-
-/* ── Sub-tab navigation ───────────────────────────────────────────── */
-.subtab-nav {
-    width: calc(100% - 22px);
-    margin-bottom: 6px;
 }
 
 /* ── Tab area ─────────────────────────────────────────────────────── */

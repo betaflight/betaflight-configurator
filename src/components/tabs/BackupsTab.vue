@@ -3,10 +3,9 @@
         <div class="content_wrapper grid-box col1">
             <div class="tab_title">{{ $t("tabBackups") }}</div>
             <!-- Loading State -->
-            <div v-if="isLoading" class="flex items-center justify-center py-16">
-                <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin text-[var(--color-primary-500)]" />
+            <TabLoadingState v-if="isLoading">
                 <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
-            </div>
+            </TabLoadingState>
 
             <template v-else>
                 <!-- Message from API (e.g. membership info) -->
@@ -168,6 +167,7 @@ import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
 import Dialog from "../elements/Dialog.vue";
+import TabLoadingState from "../elements/TabLoadingState.vue";
 import loginManager from "@/js/LoginManager";
 import { gui_log } from "@/js/gui_log";
 import { useConnectionStore } from "@/stores/connection";
