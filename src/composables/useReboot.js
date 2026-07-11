@@ -15,14 +15,21 @@ export function useReboot() {
 
     const navigationStore = useNavigationStore();
 
+    function cleanupAndReboot(resolve) {
+        navigationStore.cleanup(() => {
+            reboot();
+            resolve();
+        });
+    }
+
+    /**
+     * Persist the current configuration to EEPROM and then reboot the board,
+     * settling the connection state via the shared reboot flow.
+     * @returns {Promise<void>} resolves once the reboot sequence has started
+     */
     function saveAndReboot() {
         return new Promise((resolve) => {
-            mspHelper.writeConfiguration(false, () => {
-                navigationStore.cleanup(() => {
-                    reboot();
-                    resolve();
-                });
-            });
+            mspHelper.writeConfiguration(false, () => cleanupAndReboot(resolve));
         });
     }
 

@@ -1057,6 +1057,17 @@ async function loadConfig() {
     }
 }
 
+function saveWithReboot() {
+    return new Promise((resolve) => {
+        mspHelper.writeConfiguration(true, () => {
+            navigationStore.cleanup(() => {
+                reboot();
+                resolve();
+            });
+        });
+    });
+}
+
 // Save configuration
 const saveConfig = (withReboot = false) =>
     runSave(
@@ -1094,14 +1105,7 @@ const saveConfig = (withReboot = false) =>
 
             if (withReboot) {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-                await new Promise((resolve) => {
-                    mspHelper.writeConfiguration(true, () => {
-                        navigationStore.cleanup(() => {
-                            reboot();
-                            resolve();
-                        });
-                    });
-                });
+                await saveWithReboot();
             } else {
                 await new Promise((resolve) => {
                     mspHelper.writeConfiguration(false, resolve);

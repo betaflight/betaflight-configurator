@@ -4,7 +4,7 @@ export function useTransientLabel(baseLabel) {
     const transientText = ref(null);
     let timer = null;
 
-    const label = computed(() => transientText.value || toValue(baseLabel));
+    const label = computed(() => (transientText.value !== null ? transientText.value : toValue(baseLabel)));
 
     function clear() {
         if (timer !== null) {
