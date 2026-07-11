@@ -1306,7 +1306,6 @@ function _runEstimation(
               lastMag.meas,
               effectiveSigmaXY,
               effectiveSigmaZ,
-              currAmps,
             );
             if (eskfUpdate(eskf, fM as any, lastMag.meas, magGate, {}, 'mag', lastMag.tUs))
               hasUpdate = true;

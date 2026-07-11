@@ -8,7 +8,7 @@
  *   b_a = accelerometer bias (FRD, m/s²)
  *   b_g = gyroscope bias (FRD, rad/s)
  *
- * Nominal state x = { p, v, q, ba, bg, mEarth?, mBody?, tauGps?, kI? }
+ * Nominal state x = { p, v, q, ba, bg, mEarth?, mBody?, tauGps? }
  *   p = position in NED (m)
  *   v = velocity in NED (m/s)
  *   q = [w,x,y,z] scalar-first, body(FRD) → world(NED)
@@ -42,7 +42,6 @@ export interface NominalState {
   mEarth?: Vec3;
   mBody?: Vec3;
   tauGps?: number;
-  kI?: Vec3;
 }
 
 /** A position or velocity measurement in NED (m or m/s). */
@@ -626,9 +625,15 @@ export function computeAdaptiveSigmaYaw(
 /**
  * 3-axis magnetometer measurement (body frame, in Gauss).
  *
- * Measurement model: z_mag = R(q)^T · m_earth + m_body + k_I · I(t)
+ * Measurement model: z_mag = R(q)^T · m_earth + m_body
  *
- * H rows are dimensioned for the 21-state layout (15 base + 6 mag: m_earth[3], m_body[3]).
+ * H rows are dimensioned for the 21-state layout (15 base + 6 mag: m_earth[3],
+ * m_body[3]) and MUST NOT extend past column 20: in the 24-state layout the
+ * GPS position bias occupies columns 21-23, and any extra sensitivity written
+ * there couples magnetometer innovations into the GPS bias states (eskfUpdate
+ * zero-pads shorter rows up to the filter dim, which is the safe direction).
+ * Battery-current (Biot-Savart) disturbance is handled upstream by widening
+ * this factor's R via magDisturbScale in the estimator loop, not as a state.
  *
  * The mag noise is ANISOTROPIC by the calibration fingerprint:
  *   sigma_xy = horizontal (heading-bearing) components (X,Y in body FRD)
@@ -639,13 +644,11 @@ export function computeAdaptiveSigmaYaw(
  *                         sigmaZ not provided, or sigma_xy if sigmaZ is provided
  * @param sigmaZ           vertical noise 1σ (Gauss). If provided, anisotropic
  *                         R = diag(sigma_xy²,sigma_xy²,sigma_z²) is used.
- * @param currentAmps     battery current in Amps (drives k_I term)
  */
 export function createMagFactor(
   meas: Vec3,
   sigmaOrSigmaXY = 0.05,
   sigmaZ?: number,
-  currentAmps = 0,
 ): MeasurementFactor<Vec3> {
     let Rnoise: number[][];
     if (sigmaZ !== undefined && sigmaZ !== null) {
@@ -663,11 +666,10 @@ export function createMagFactor(
         const m = quatToRotMat(x.q);
         const me = x.mEarth || [0, 0, 0];
         const mb = x.mBody || [0, 0, 0];
-        const kI = x.kI || [0, 0, 0];
         return [
-            m[0]*me[0] + m[3]*me[1] + m[6]*me[2] + mb[0] + kI[0] * currentAmps,
-            m[1]*me[0] + m[4]*me[1] + m[7]*me[2] + mb[1] + kI[1] * currentAmps,
-            m[2]*me[0] + m[5]*me[1] + m[8]*me[2] + mb[2] + kI[2] * currentAmps,
+            m[0]*me[0] + m[3]*me[1] + m[6]*me[2] + mb[0],
+            m[1]*me[0] + m[4]*me[1] + m[7]*me[2] + mb[1],
+            m[2]*me[0] + m[5]*me[1] + m[8]*me[2] + mb[2],
         ];
     }
 
@@ -686,18 +688,18 @@ export function createMagFactor(
         const t2 = rowSkew(m[2], m[5], m[8]);
 
         cachedH = [
-            [0,0,0, 0,0,0, t0[0],t0[1],t0[2], 0,0,0, 0,0,0, m[0],m[3],m[6], 1,0,0, 0, currentAmps,0,0],
-            [0,0,0, 0,0,0, t1[0],t1[1],t1[2], 0,0,0, 0,0,0, m[1],m[4],m[7], 0,1,0, 0, 0,currentAmps,0],
-            [0,0,0, 0,0,0, t2[0],t2[1],t2[2], 0,0,0, 0,0,0, m[2],m[5],m[8], 0,0,1, 0, 0,0,currentAmps],
+            [0,0,0, 0,0,0, t0[0],t0[1],t0[2], 0,0,0, 0,0,0, m[0],m[3],m[6], 1,0,0],
+            [0,0,0, 0,0,0, t1[0],t1[1],t1[2], 0,0,0, 0,0,0, m[1],m[4],m[7], 0,1,0],
+            [0,0,0, 0,0,0, t2[0],t2[1],t2[2], 0,0,0, 0,0,0, m[2],m[5],m[8], 0,0,1],
         ];
         const hp = h(x);
         return [z[0]-hp[0], z[1]-hp[1], z[2]-hp[2]];
     }
 
     const defaultH: number[][] = [
-        [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,1,0,0, 0,currentAmps,0,0],
-        [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,1,0, 0,0,currentAmps,0],
-        [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,1, 0,0,0,currentAmps],
+        [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0, 1,0,0],
+        [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0, 0,1,0],
+        [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0, 0,0,1],
     ];
 
     return {

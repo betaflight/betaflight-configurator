@@ -97,4 +97,33 @@ describe("eskf — 21-state with mag fusion (15-state base + 6 mag states)", () 
         expect(accepted).toBe(false);
         expect(Math.abs(eskf.mEarth![0] - 0.17)).toBeLessThan(0.02);
     });
+
+    it("mag factor H never extends past the mBody block (GPS-bias collision guard)", () => {
+        // In the 24-state layout the GPS position bias occupies columns 21-23.
+        // A mag H row wider than 21 columns writes sensitivity into those
+        // states (regression: dead k_I current columns at 22-24 leaked mag
+        // innovations into bgps). eskfUpdate zero-pads short rows, so 21 wide
+        // is the safe shape for every layout.
+        const factor = createMagFactor([0.18, -0.05, 0.5] as Vec3, 0.01);
+        const eskf = createEskf({
+            p0: [0, 0, -200] as Vec3,
+            v0: [0, 0, 0] as Vec3,
+            q0: [1, 0, 0, 0] as Quat,
+            mEarth0: [0.17, -0.047, 0.51] as Vec3,
+            mBody0: [0, 0, 0] as Vec3,
+            sigmaMagEarth: 0.05,
+            sigmaGpsBiasInit: 1.5,
+            tauGps: 60,
+        });
+        expect(eskf.dim).toBe(24);
+        // Exercise the update path — residual() rebuilds H with the cached rows.
+        const accepted = eskfUpdate(eskf, factor, [0.18, -0.05, 0.5]);
+        expect(accepted).toBe(true);
+        for (const row of factor.H) {
+            expect(row.length).toBeLessThanOrEqual(21);
+        }
+        // With a diagonal initial P, a magnetometer update has no legitimate
+        // path into the GPS bias states — they must remain exactly zero.
+        expect(eskf.bgps).toEqual([0, 0, 0]);
+    });
 });
