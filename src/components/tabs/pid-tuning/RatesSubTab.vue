@@ -951,6 +951,10 @@ function updateRatesLabels() {
 
     const maxRate = Math.max(maxAngularVels.roll, maxAngularVels.pitch, maxAngularVels.yaw);
 
+    // Round up to the nearest 200 like the curve layer does, so the stick-position
+    // dots use the same vertical scale as the curve they sit on.
+    const maxRateRounded = rateCurve.setMaxAngularVel(maxRate);
+
     // Calculate scaling exactly like master
     const curveHeight = canvas.height;
     const curveWidth = canvas.width;
@@ -1041,6 +1045,12 @@ function updateRatesLabels() {
     // Add current RC stick values on the left side (like master)
     // Calculate stick values first, then add to balloons array AFTER sorting
     if (FC.RC && FC.RC.channels && FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
+        // Draw the stick-position dots in the unscaled coordinate space so they line up
+        // with the rate curve (drawn without the horizontal textScale) instead of being
+        // squeezed toward the left edge. maxRateRounded matches the curve's vertical scale.
+        ctx.save();
+        ctx.scale(1 / textScale, 1);
+
         // Calculate current stick angular velocities
         const currentRollRate = rateCurve.drawStickPosition(
             FC.RC.channels[0],
@@ -1050,7 +1060,7 @@ function updateRatesLabels() {
             rates.superexpo,
             rates.deadband,
             rates.roll_rate_limit,
-            maxRate,
+            maxRateRounded,
             ctx,
             "#FF8080",
         );
@@ -1063,7 +1073,7 @@ function updateRatesLabels() {
             rates.superexpo,
             rates.deadband,
             rates.pitch_rate_limit,
-            maxRate,
+            maxRateRounded,
             ctx,
             "#80FF80",
         );
@@ -1076,10 +1086,12 @@ function updateRatesLabels() {
             rates.superexpo,
             rates.yawDeadband,
             rates.yaw_rate_limit,
-            maxRate,
+            maxRateRounded,
             ctx,
             "#8080FF",
         );
+
+        ctx.restore();
 
         // Sort right-side balloons first (like master)
         balloons.sort((a, b) => b.value - a.value);
