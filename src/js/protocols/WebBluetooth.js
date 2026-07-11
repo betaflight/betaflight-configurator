@@ -88,8 +88,6 @@ class WebBluetooth extends EventTarget {
         if (this.closeRequested) {
             return;
         }
-        // Explicitly attribute the teardown: this is the DEVICE dropping the link
-        // (or the FC rebooting under it), not the configurator closing it.
         console.warn(`${this.logHead} Unsolicited GATT disconnect (device dropped the link) — tearing down`);
         this.disconnect();
     }
@@ -197,10 +195,9 @@ class WebBluetooth extends EventTarget {
     }
 
     async connect(path, options) {
-        // Serialize behind an in-flight teardown: doCleanup awaits stopNotifications, so
-        // disconnect() is genuinely async — a connect that started mid-teardown would
-        // reset closeRequested under it and then have its device/characteristics torn
-        // down by the resumed cleanup. The teardown promise never rejects.
+        // Serialize behind an in-flight teardown: a connect started mid-teardown would
+        // reset closeRequested under it and have its device/characteristics torn down
+        // by the resumed cleanup. The teardown promise never rejects.
         if (this._teardown) {
             await this._teardown;
             this._teardown = null;
@@ -228,19 +225,13 @@ class WebBluetooth extends EventTarget {
             await this.startNotifications();
             setupComplete = true;
         } catch (error) {
-            // Also log to the console — gui_log only reaches the in-app log panel, which
-            // makes a failed services/characteristics/notifications setup invisible in
-            // console captures while the connection still reports "opened".
             console.error(`${this.logHead} Connection setup failed:`, error);
             gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
         }
 
-        // Require setup to have COMPLETED, not just gatt.connected. If getServices/
-        // getCharacteristics/startNotifications threw, gatt can still report connected
-        // while the session has no usable characteristics — treating that as success
-        // dispatches connect:true for a link that would only ever time out on MSP.
-        // Optional-chained: an unsolicited disconnect during setup nulls this.device, so
-        // the attempt must complete as a signaled failed open, not a swallowed TypeError.
+        // gatt can report connected while setup threw and left no usable characteristics,
+        // so require setup to have completed. Optional-chained: an unsolicited disconnect
+        // during setup nulls this.device.
         const connectionInfo = setupComplete && this.device?.gatt?.connected;
 
         if (connectionInfo && !this.openCanceled) {
@@ -407,12 +398,10 @@ class WebBluetooth extends EventTarget {
                 if (this.readCharacteristic) {
                     this.readCharacteristic.removeEventListener("characteristicvaluechanged", this.handleNotification);
 
-                    // Explicitly stop notifications BEFORE dropping the GATT link (only
-                    // possible while it is still up — an unplug/unsolicited drop skips
-                    // this). Without it, Chrome keeps the notify session marked active,
-                    // and on Linux/BlueZ startNotifications() on the NEXT connection can
-                    // resolve without re-arming the CCCD — a session that looks
-                    // subscribed but never receives (deaf), breaking disconnect/connect.
+                    // Stop notifications while the link is still up (an unplug/unsolicited
+                    // drop skips this): Chrome keeps the notify session marked active, and
+                    // on Linux/BlueZ the next connection's startNotifications() can then
+                    // resolve without re-arming the CCCD — subscribed but never receiving.
                     if (this.device.gatt?.connected) {
                         try {
                             await this.readCharacteristic.stopNotifications();

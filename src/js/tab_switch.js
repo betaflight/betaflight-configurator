@@ -45,11 +45,9 @@ export function switchTab(tabKey, options = {}) {
     const mode = options.mode ?? "disconnected";
     const label = options.label ?? defaultLabel(tabKey);
 
-    // Dedup only when the target is BOTH the active tab AND actually mounted. After
-    // unmountVueTab() (disconnect teardown) the content area is blank while GUI.active_tab
-    // still names the old tab, so an active_tab-only check would refuse to remount and
-    // leave a stuck blank screen — the burst of disconnects an unstable BLE link produces
-    // during a reboot reconnect hits this teardown->landing path repeatedly.
+    // Dedup only when the target is both the active tab and actually mounted: after
+    // unmountVueTab() the content area is blank while GUI.active_tab still names the
+    // old tab, and refusing to remount would leave it blank.
     const alreadyMounted = GUI.active_tab === tabKey && vueTabState.activeTabName === tabKey;
     if (alreadyMounted || GUI.tab_switch_in_progress) {
         return false;
