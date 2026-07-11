@@ -339,6 +339,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip } from "@/composables/useLedStrip";
+import { useTransientLabel } from "@/composables/useTransientLabel";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
 import GUI from "@/js/gui";
@@ -419,7 +420,11 @@ const selectedModeColor = ref(null);
 const auxChannelValue = ref("3");
 const colorDefineSliders = ref(null);
 const colorHSV = reactive({ h: 0, s: 0, v: 0 });
-const saveButtonText = ref(i18n.getMessage("ledStripButtonSave"));
+const { label: transientSaveButtonText, flash: flashSaveButtonText } = useTransientLabel(
+    i18n.getMessage("ledStripButtonSave"),
+);
+const savingButtonText = ref(null);
+const saveButtonText = computed(() => savingButtonText.value || transientSaveButtonText.value);
 
 // Color setup popup state
 const isColorSlidersOpen = ref(false);
@@ -991,22 +996,17 @@ watch(isColorSlidersOpen, (newValue) => {
 
 // Save
 async function save() {
-    const saveButton = saveButtonText;
-    const oldText = i18n.getMessage("ledStripButtonSave");
-
     try {
-        saveButton.value = i18n.getMessage("buttonSaving");
+        savingButtonText.value = i18n.getMessage("buttonSaving");
         await saveConfig();
 
-        saveButton.value = i18n.getMessage("buttonSaved");
-        setTimeout(() => {
-            saveButton.value = oldText;
-        }, 1500);
+        savingButtonText.value = null;
+        flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
 
         gui_log(i18n.getMessage("eeprom_saved_ok"));
     } catch (error) {
         console.error("Save failed:", error);
-        saveButton.value = oldText;
+        savingButtonText.value = null;
     }
 }
 

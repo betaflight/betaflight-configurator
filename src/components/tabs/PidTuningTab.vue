@@ -116,7 +116,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useIsMounted } from "@/composables/useIsMounted";
 import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -151,7 +152,7 @@ const activeSubtab = ref("pid");
 const showAllPids = ref(false);
 const currentProfile = ref(FC.CONFIG.profile);
 const currentRateProfile = ref(0);
-const isMounted = ref(false);
+const isMounted = useIsMounted();
 // Guards for the TX-driven profile sync (see watchers below).
 const isLoading = ref(false);
 let syncingFromFc = false;
@@ -607,13 +608,7 @@ defineExpose({ cleanup });
 
 // Lifecycle
 onMounted(async () => {
-    isMounted.value = true;
-
     await loadData();
-});
-
-onUnmounted(() => {
-    isMounted.value = false;
 });
 </script>
 

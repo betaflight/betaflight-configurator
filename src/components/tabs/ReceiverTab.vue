@@ -515,6 +515,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
+import { useSaving } from "@/composables/useSaving";
 import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -555,7 +556,7 @@ const rxPlot = ref(null);
 
 // Local state
 const needReboot = ref(false);
-const isSaving = ref(false);
+const { isSaving, runSave } = useSaving();
 const refreshRate = ref(50);
 const channelMapString = ref("");
 const elrsBindingPhrase = ref("");
@@ -1057,67 +1058,64 @@ async function loadConfig() {
 }
 
 // Save configuration
-async function saveConfig(withReboot = false) {
-    if (isSaving.value) return;
-    isSaving.value = true;
+const saveConfig = (withReboot = false) =>
+    runSave(
+        async () => {
+            // Update RC_MAP from channel map string
+            validateChannelMap();
 
-    try {
-        // Update RC_MAP from channel map string
-        validateChannelMap();
-
-        // Handle ELRS binding phrase
-        if (elrsBindingPhraseEnabled.value) {
-            const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
-            if (elrsUidChars.length === 6) {
-                fcStore.rxConfig.elrsUid = elrsUidChars;
-                saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
-            } else {
-                fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
+            // Handle ELRS binding phrase
+            if (elrsBindingPhraseEnabled.value) {
+                const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
+                if (elrsUidChars.length === 6) {
+                    fcStore.rxConfig.elrsUid = elrsUidChars;
+                    saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
+                } else {
+                    fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
+                }
             }
-        }
 
-        // Set cutoffs to 0 for auto mode
-        if (setpointManualMode.value === "0") {
-            fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
-        }
-        if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
-            fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
-        }
-        if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
-            fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
-        }
+            // Set cutoffs to 0 for auto mode
+            if (setpointManualMode.value === "0") {
+                fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
+            }
+            if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
+                fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
+            }
+            if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
+                fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
+            }
 
-        // Save sequence
-        await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
-        await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
-        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+            // Save sequence
+            await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
+            await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
+            await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
 
-        if (withReboot) {
-            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-            await new Promise((resolve) => {
-                mspHelper.writeConfiguration(true, () => {
-                    navigationStore.cleanup(() => {
-                        reboot();
-                        resolve();
+            if (withReboot) {
+                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+                await new Promise((resolve) => {
+                    mspHelper.writeConfiguration(true, () => {
+                        navigationStore.cleanup(() => {
+                            reboot();
+                            resolve();
+                        });
                     });
                 });
-            });
-        } else {
-            await new Promise((resolve) => {
-                mspHelper.writeConfiguration(false, resolve);
-            });
-            gui_log(t("receiverConfigSaved") || "Configuration saved");
-            savedSnapshot.value = takeSnapshot();
-        }
+            } else {
+                await new Promise((resolve) => {
+                    mspHelper.writeConfiguration(false, resolve);
+                });
+                gui_log(t("receiverConfigSaved") || "Configuration saved");
+                savedSnapshot.value = takeSnapshot();
+            }
 
-        needReboot.value = false;
-    } catch (e) {
-        console.error("Failed to save configuration", e);
-    } finally {
-        isSaving.value = false;
-    }
-}
+            needReboot.value = false;
+        },
+        {
+            onError: (e) => console.error("Failed to save configuration", e),
+        },
+    );
 
 // Model preview
 function initModelPreview() {

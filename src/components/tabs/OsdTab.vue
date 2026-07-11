@@ -528,6 +528,8 @@ import { useOsdStore } from "@/stores/osd";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useOsdPreview } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
+import { useTransientLabel } from "@/composables/useTransientLabel";
+import { useSaving } from "@/composables/useSaving";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -569,13 +571,12 @@ const activeProfile = ref(0);
 const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
-const isSaving = ref(false);
+const { isSaving, runSave } = useSaving();
 const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
 };
-const saveButtonTextOverride = ref(null);
-const saveButtonText = computed(() => saveButtonTextOverride.value || i18n.getMessage("osdSetupSave"));
+const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() => i18n.getMessage("osdSetupSave"));
 const saveMenuItems = computed(() => [
     [
         {
@@ -1387,39 +1388,33 @@ async function refreshConfig() {
 }
 
 // Save OSD configuration to FC
-async function saveConfig() {
-    if (isSaving.value) {
-        return;
-    }
-    isSaving.value = true;
+const saveConfig = () =>
+    runSave(
+        async () => {
+            // Sync store state to the shared OSD.data bridge used by legacy helpers.
+            osdStore.syncToLegacy();
 
-    try {
-        // Sync store state to the shared OSD.data bridge used by legacy helpers.
-        osdStore.syncToLegacy();
+            // Send all OSD config to FC and write EEPROM.
+            await osdStore.saveAllConfig();
 
-        // Send all OSD config to FC and write EEPROM.
-        await osdStore.saveAllConfig();
+            // Track analytics
+            const changes = analyticsChanges.value;
+            if (Object.keys(changes).length > 0) {
+                tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
+                analyticsChanges.value = {};
+            }
 
-        // Track analytics
-        const changes = analyticsChanges.value;
-        if (Object.keys(changes).length > 0) {
-            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
-            analyticsChanges.value = {};
-        }
-
-        // Show success
-        gui_log(i18n.getMessage("osdSettingsSaved"));
-        saveButtonTextOverride.value = i18n.getMessage("osdButtonSaved");
-        setTimeout(() => {
-            saveButtonTextOverride.value = null;
-        }, 2000);
-    } catch (error) {
-        console.error("Failed to save OSD configuration:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD configuration" }));
-    } finally {
-        isSaving.value = false;
-    }
-}
+            // Show success
+            gui_log(i18n.getMessage("osdSettingsSaved"));
+            flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
+        },
+        {
+            onError: (error) => {
+                console.error("Failed to save OSD configuration:", error);
+                gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD configuration" }));
+            },
+        },
+    );
 
 // Font Manager
 const fontCharacterUrls = computed(() => {
