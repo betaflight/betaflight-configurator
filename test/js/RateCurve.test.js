@@ -504,17 +504,23 @@ describe("RateCurve.getCurrentRates", () => {
 });
 
 describe("RateCurve.drawStickPosition return value", () => {
-    function makeContext(height) {
-        return {
+    function makeContext(height, { withEllipse = true, clientWidth, clientHeight } = {}) {
+        const context = {
             save: () => {},
             restore: () => {},
             translate: () => {},
             beginPath: () => {},
-            arc: () => {},
+            arcCalls: [],
+            ellipseCalls: [],
+            arc: (...args) => context.arcCalls.push(args),
             fill: () => {},
             fillStyle: undefined,
-            canvas: { width: 200, height },
+            canvas: { width: 200, height, clientWidth, clientHeight },
         };
+        if (withEllipse) {
+            context.ellipse = (...args) => context.ellipseCalls.push(args);
+        }
+        return context;
     }
 
     it("snaps to 0 when the computed rate is below 0.5 deg/s in magnitude", () => {
@@ -531,5 +537,47 @@ describe("RateCurve.drawStickPosition return value", () => {
         const context = makeContext(400);
         const result = rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
         expect(result).toBe("667");
+    });
+
+    it("draws an aspect-compensated ellipse when the context supports it", () => {
+        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        const rc = makeRateCurve();
+        const height = 400;
+        const context = makeContext(height, { clientWidth: 800, clientHeight: 400 });
+        rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+
+        expect(context.arcCalls).toHaveLength(0);
+        expect(context.ellipseCalls).toHaveLength(1);
+
+        const radius = height / 60;
+        const aspect = 400 / 800;
+        const [x, , radiusX, radiusY] = context.ellipseCalls[0];
+        // Horizontal radius is compressed by the display aspect ratio; vertical is not.
+        expect(radiusX).toBeCloseTo(radius * aspect);
+        expect(radiusY).toBeCloseTo(radius);
+        expect(x).toBe(2000 - 1500);
+    });
+
+    it("uses a round ellipse when the display aspect ratio is unavailable", () => {
+        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        const rc = makeRateCurve();
+        const context = makeContext(400); // no clientWidth/clientHeight
+        rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+
+        expect(context.ellipseCalls).toHaveLength(1);
+        const [, , radiusX, radiusY] = context.ellipseCalls[0];
+        expect(radiusX).toBe(radiusY);
+    });
+
+    it("falls back to arc when the context has no ellipse method", () => {
+        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        const rc = makeRateCurve();
+        const context = makeContext(400, { withEllipse: false, clientWidth: 800, clientHeight: 400 });
+        rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+
+        expect(context.ellipse).toBeUndefined();
+        expect(context.arcCalls).toHaveLength(1);
+        const [, , radius] = context.arcCalls[0];
+        expect(radius).toBeCloseTo(400 / 60);
     });
 });
