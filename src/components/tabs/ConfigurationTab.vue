@@ -197,7 +197,6 @@
 
 <script>
 import { defineComponent, ref, reactive, onMounted, computed, nextTick } from "vue";
-import { useNavigationStore } from "@/stores/navigation";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
@@ -224,9 +223,8 @@ export default defineComponent({
     },
     setup() {
         // Reactive State
-        const navigationStore = useNavigationStore();
         const fcStore = useFlightControllerStore();
-        const { reboot } = useReboot();
+        const { saveAndReboot } = useReboot();
 
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
@@ -527,14 +525,7 @@ export default defineComponent({
                     gui_log(i18n.getMessage("configurationSaved"));
 
                     // Save to EEPROM and Reboot
-                    await new Promise((resolve) => {
-                        mspHelper.writeConfiguration(false, () => {
-                            navigationStore.cleanup(() => {
-                                reboot();
-                                resolve();
-                            });
-                        });
-                    });
+                    await saveAndReboot();
                 },
                 {
                     onError: (e) => {

@@ -391,7 +391,6 @@
 <script setup>
 import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
 import { useSaving } from "@/composables/useSaving";
 import BaseTab from "./BaseTab.vue";
@@ -417,8 +416,7 @@ const procedureGpsImageDark = new URL("../../images/icons/cf_failsafe_procedure4
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
-const navigationStore = useNavigationStore();
-const { reboot } = useReboot();
+const { saveAndReboot } = useReboot();
 
 const { runSave } = useSaving();
 
@@ -676,14 +674,7 @@ const saveConfig = () =>
 
             initializeDefaults();
 
-            await new Promise((resolve) => {
-                mspHelper.writeConfiguration(false, () => {
-                    navigationStore.cleanup(() => {
-                        reboot();
-                        resolve();
-                    });
-                });
-            });
+            await saveAndReboot();
         },
         {
             onError: (e) => console.error("Failed to save configuration", e),

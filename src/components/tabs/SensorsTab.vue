@@ -815,7 +815,6 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useSaving } from "@/composables/useSaving";
@@ -858,8 +857,7 @@ import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vu
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 
 const fcStore = useFlightControllerStore();
-const navigationStore = useNavigationStore();
-const { reboot } = useReboot();
+const { saveAndReboot } = useReboot();
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
@@ -2504,14 +2502,7 @@ const saveConfig = () =>
             baseline.value = serializeState();
 
             // Save to EEPROM and reboot
-            await new Promise((resolve) => {
-                mspHelper.writeConfiguration(false, () => {
-                    navigationStore.cleanup(() => {
-                        reboot();
-                        resolve();
-                    });
-                });
-            });
+            await saveAndReboot();
         },
         {
             onError: (e) => {

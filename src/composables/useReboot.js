@@ -1,4 +1,6 @@
 import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
+import { useNavigationStore } from "@/stores/navigation";
+import { mspHelper } from "@/js/msp/MSPHelper";
 
 export function useReboot() {
     // Reboot is owned end-to-end by serial_backend.reinitializeConnection(): it sends the
@@ -11,7 +13,21 @@ export function useReboot() {
     // the reboot timestamp); the wrapper stays transparent rather than swallowing it.
     const reboot = () => reinitializeConnection();
 
+    const navigationStore = useNavigationStore();
+
+    function saveAndReboot() {
+        return new Promise((resolve) => {
+            mspHelper.writeConfiguration(false, () => {
+                navigationStore.cleanup(() => {
+                    reboot();
+                    resolve();
+                });
+            });
+        });
+    }
+
     return {
         reboot,
+        saveAndReboot,
     };
 }
