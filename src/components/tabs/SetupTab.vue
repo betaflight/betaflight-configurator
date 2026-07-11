@@ -245,10 +245,7 @@
             </div>
         </div>
 
-        <UModal
-            v-model:open="confirmResetOpen"
-            :title="$t('dialogConfirmResetTitle')"
-        >
+        <UModal v-model:open="confirmResetOpen" :title="$t('dialogConfirmResetTitle')">
             <template #body>
                 <div v-html="$t('dialogConfirmResetNote')"></div>
             </template>
@@ -265,11 +262,7 @@
             </template>
         </UModal>
 
-        <UModal
-            v-model:open="buildInfoOpen"
-            :title="state.buildInfoDialogTitle"
-            :ui="{ content: 'w-fit max-w-2xl' }"
-        >
+        <UModal v-model:open="buildInfoOpen" :title="state.buildInfoDialogTitle" :ui="{ content: 'w-fit max-w-2xl' }">
             <template #body>
                 <div class="dialogBuildInfoGrid-container">
                     <div v-for="option in state.sortedBuildOptions" :key="option" class="dialogBuildInfoGrid-item">
@@ -306,7 +299,7 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
 import Model from "../../js/model";
 import MSPCodes from "../../js/msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
@@ -391,6 +384,10 @@ const prepareDisarmFlags = function () {
 
     if (semver.gte(cfg.apiVersion, API_VERSION_1_47)) {
         addArrayElementsAfter(elements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
+    }
+
+    if (semver.gte(cfg.apiVersion, API_VERSION_1_48)) {
+        addArrayElementsAfter(elements, "POSHOLD", ["AUTOPILOT"]);
     }
 
     // Build arming flags state instead of manipulating DOM
