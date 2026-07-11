@@ -8,6 +8,7 @@ import { OSD_CONSTANTS } from "../components/tabs/osd/osd_constants";
 import semver from "semver";
 import { useFlightControllerStore } from "./fc";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
+import { bit_set } from "../js/bit";
 
 function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
     if (isVirtualMode && virtualMode) {
@@ -316,7 +317,7 @@ export const useOsdStore = defineStore("osd", () => {
             // warnings is array of objects { enabled: bool }
             for (let i = 0; i < warnings.value.length; i++) {
                 if (warnings.value[i].enabled) {
-                    warningFlags |= 1 << i;
+                    warningFlags = bit_set(warningFlags, i);
                 }
             }
 

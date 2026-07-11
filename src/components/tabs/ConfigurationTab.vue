@@ -253,10 +253,10 @@ export default defineComponent({
 
         // Other Features & Beepers State wrapper
         const featuresList = computed(() => {
-            if (!fcStore.features?.features?._features) {
+            if (!fcStore.features?.features?.getFeatures?.()) {
                 return [];
             }
-            return fcStore.features.features._features.filter((feature) => {
+            return fcStore.features.features.getFeatures().filter((feature) => {
                 return feature.mode !== "select" && feature.group === "other";
             });
         });

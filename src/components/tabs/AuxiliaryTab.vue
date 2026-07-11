@@ -174,7 +174,7 @@ import { useInterval } from "../../composables/useInterval";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import { bit_check } from "../../js/bit";
+import { bit_check, bit_set } from "../../js/bit";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import adjustBoxNameIfPeripheralWithModeID from "../../js/peripherals";
 import { i18n } from "../../js/localization";
@@ -437,7 +437,7 @@ export default defineComponent({
             if (armingDisableCount <= 0) {
                 return false;
             }
-            const armSwitchMask = 1 << (armingDisableCount - 1);
+            const armSwitchMask = bit_set(0, armingDisableCount - 1);
             return (armingDisableFlags & armSwitchMask) > 0;
         };
 

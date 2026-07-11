@@ -690,9 +690,9 @@ function decodeHtmlEntities(text) {
 // RX Mode options (generated from features)
 const rxModeOptions = computed(() => {
     const options = [{ value: -1, label: decodeHtmlEntities(t("featureNone")) }];
-    if (features.value?.features?._features) {
+    if (features.value?.features?.getFeatures?.()) {
         // Features with mode === "select" are RX mode options
-        for (const feature of features.value.features._features) {
+        for (const feature of features.value.features.getFeatures()) {
             if (feature.mode === "select" && feature.group === "rxMode") {
                 options.push({
                     value: feature.bit,
@@ -937,10 +937,10 @@ function toggleRssiAdc(checked) {
 function onRxModeChange() {
     // Update feature mask based on selected RX mode
     const featuresHelper = features.value?.features;
-    if (featuresHelper?._features) {
+    if (featuresHelper?.getFeatures?.()) {
         const selectedBit = selectedRxMode.value;
         // Clear all RX mode bits first, then set the selected one
-        for (const feature of featuresHelper._features) {
+        for (const feature of featuresHelper.getFeatures()) {
             if (feature.mode === "select" && feature.group === "rxMode") {
                 featuresHelper.disable(feature.name);
             }
@@ -1013,9 +1013,9 @@ async function loadConfig() {
         updateChannelMapFromRcMap();
 
         // Initialize selectedRxMode from feature mask
-        if (features.value?.features?._features) {
+        if (features.value?.features?.getFeatures?.()) {
             let foundRxMode = -1;
-            for (const feature of features.value.features._features) {
+            for (const feature of features.value.features.getFeatures()) {
                 if (feature.mode === "select" && feature.group === "rxMode") {
                     if (features.value.features.isEnabled(feature.name)) {
                         foundRxMode = feature.bit;

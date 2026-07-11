@@ -424,10 +424,10 @@ export default defineComponent({
         const showLoadMap = computed(() => isOnline.value && showMap.value);
 
         const gpsFeatures = computed(() => {
-            if (!fcStore.features?.features?._features) {
+            if (!fcStore.features?.features?.getFeatures?.()) {
                 return [];
             }
-            return fcStore.features.features._features.filter((feature) => feature.group === "gps");
+            return fcStore.features.features.getFeatures().filter((feature) => feature.group === "gps");
         });
 
         const isFeatureEnabled = (feature) => {

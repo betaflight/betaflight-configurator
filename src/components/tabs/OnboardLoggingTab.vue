@@ -311,6 +311,7 @@ import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../../js/ConfigStorage";
 import { sensorTypes } from "../../js/sensor_types";
 import { MspCancelledError } from "../../js/msp/mspErrors";
+import { bit_check, bit_set } from "../../js/bit";
 
 const BLOCK_SIZE = 4096;
 
@@ -577,7 +578,7 @@ export default defineComponent({
             let mask = 0;
             debugFieldsEnabled.value.forEach((enabled, index) => {
                 if (!enabled) {
-                    mask |= 1 << index;
+                    mask = bit_set(mask, index);
                 }
             });
             fcStore.blackbox.blackboxDisabledMask = mask;
@@ -892,7 +893,7 @@ export default defineComponent({
                 if (showDebugFields.value) {
                     const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
                     debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
-                        return (disabledMask & (1 << index)) === 0;
+                        return !bit_check(disabledMask, index);
                     });
                 }
 
