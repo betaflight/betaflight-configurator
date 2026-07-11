@@ -44,10 +44,15 @@ export function uint8ArrayToBase64(bytes) {
  *
  * @param {string} hexString - The hex string (two chars per byte). Empty/falsy input yields an empty array.
  * @returns {Uint8Array} The parsed bytes.
+ * @throws {Error} If the hex string has an odd length.
  */
 export function hexStringToUint8Array(hexString) {
     if (!hexString || hexString.length === 0) {
         return new Uint8Array(0);
+    }
+
+    if (hexString.length & 1) {
+        throw new Error(`Hex string has odd length: ${hexString.length}`);
     }
 
     const bytes = new Uint8Array(hexString.length / 2);

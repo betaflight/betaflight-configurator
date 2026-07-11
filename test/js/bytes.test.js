@@ -53,4 +53,8 @@ describe("bytes hex helpers", () => {
     it("returns an empty Uint8Array for undefined (the falsy guard)", () => {
         expect(hexStringToUint8Array(undefined)).toEqual(new Uint8Array(0));
     });
+
+    it("throws on an odd-length hex string", () => {
+        expect(() => hexStringToUint8Array("abc")).toThrow();
+    });
 });
