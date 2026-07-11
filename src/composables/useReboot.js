@@ -1,4 +1,6 @@
 import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
+import { useNavigationStore } from "@/stores/navigation";
+import { mspHelper } from "@/js/msp/MSPHelper";
 
 export function useReboot() {
     // Reboot is owned end-to-end by serial_backend.reinitializeConnection(): it sends the
@@ -11,7 +13,28 @@ export function useReboot() {
     // the reboot timestamp); the wrapper stays transparent rather than swallowing it.
     const reboot = () => reinitializeConnection();
 
+    const navigationStore = useNavigationStore();
+
+    function cleanupAndReboot(resolve) {
+        navigationStore.cleanup(() => {
+            reboot();
+            resolve();
+        });
+    }
+
+    /**
+     * Persist the current configuration to EEPROM and then reboot the board,
+     * settling the connection state via the shared reboot flow.
+     * @returns {Promise<void>} resolves once the reboot sequence has started
+     */
+    function saveAndReboot() {
+        return new Promise((resolve) => {
+            mspHelper.writeConfiguration(false, () => cleanupAndReboot(resolve));
+        });
+    }
+
     return {
         reboot,
+        saveAndReboot,
     };
 }

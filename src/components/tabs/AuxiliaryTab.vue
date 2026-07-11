@@ -97,21 +97,11 @@
                                                 :step="CHANNEL_STEP"
                                                 :min-range-gap="MIN_RANGE_GAP"
                                             />
-                                            <div class="pips-channel-range">
-                                                <div
-                                                    v-for="pip in sliderPipValues"
-                                                    :key="pip"
-                                                    class="pip"
-                                                    :style="pipStyle(pip)"
-                                                >
-                                                    {{ pip }}
-                                                </div>
-                                                <div
-                                                    v-if="markerStyle(entry.auxChannelIndex)"
-                                                    class="pip-marker"
-                                                    :style="markerStyle(entry.auxChannelIndex)"
-                                                ></div>
-                                            </div>
+                                            <ChannelRangePips
+                                                variant="aux"
+                                                :pips="sliderPipValues"
+                                                :marker-percent="markerPercentFor(entry.auxChannelIndex)"
+                                            />
                                         </div>
                                         <UButton
                                             icon="i-lucide-x"
@@ -174,7 +164,7 @@ import { useInterval } from "../../composables/useInterval";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import { bit_check } from "../../js/bit";
+import { bit_check, bit_set } from "../../js/bit";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import adjustBoxNameIfPeripheralWithModeID from "../../js/peripherals";
 import { i18n } from "../../js/localization";
@@ -185,6 +175,7 @@ import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
+import ChannelRangePips from "../elements/ChannelRangePips.vue";
 
 const CHANNEL_STEP = 25;
 const MIN_RANGE_GAP = 25;
@@ -224,6 +215,7 @@ export default defineComponent({
         HelpIcon,
         SettingRow,
         DraggableMultiSlider,
+        ChannelRangePips,
     },
     setup() {
         // Initialize Pinia stores
@@ -296,12 +288,9 @@ export default defineComponent({
             infoMinWidth.value = Math.round(longestName * getTextWidth("A"));
         };
 
-        const markerStyle = (auxChannelIndex) => {
+        const markerPercentFor = (auxChannelIndex) => {
             const percent = rcMarkers[auxChannelIndex];
-            if (percent === undefined) {
-                return null;
-            }
-            return { left: `${percent}%` };
+            return percent === undefined ? null : percent;
         };
 
         const snapChannel = (value) => {
@@ -310,10 +299,6 @@ export default defineComponent({
                 return DEFAULT_RANGE.start;
             }
             return clampChannel(Math.round(numericValue / CHANNEL_STEP) * CHANNEL_STEP);
-        };
-
-        const pipStyle = (value) => {
-            return { left: `${channelPercent(value)}%` };
         };
 
         const normalizeRangeValues = (values) => {
@@ -437,7 +422,7 @@ export default defineComponent({
             if (armingDisableCount <= 0) {
                 return false;
             }
-            const armSwitchMask = 1 << (armingDisableCount - 1);
+            const armSwitchMask = bit_set(0, armingDisableCount - 1);
             return (armingDisableFlags & armSwitchMask) > 0;
         };
 
@@ -694,8 +679,7 @@ export default defineComponent({
             addRange,
             addLink,
             removeEntry,
-            markerStyle,
-            pipStyle,
+            markerPercentFor,
             saveModes,
             dirty,
         };
@@ -706,46 +690,5 @@ export default defineComponent({
 <style lang="less">
 .tab-auxiliary {
     min-height: 100%;
-
-    .pips-channel-range {
-        position: relative;
-        height: 24px;
-        margin-top: 16px;
-        // 20px is the width of the slider thumbs in DraggableMultiSlider, taking 10px from each side of the pip range makes the thumbs align cleanly
-        width: calc(100% - 20px);
-    }
-
-    .pip {
-        position: absolute;
-        top: 12px;
-        transform: translateX(-50%);
-        font-size: 11px;
-        color: var(--text-muted);
-        white-space: nowrap;
-    }
-
-    .pip::before {
-        content: "";
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 2px;
-        height: 16px;
-        background: var(--surface-600);
-    }
-
-    .pip-marker {
-        position: absolute;
-        bottom: 12px;
-        transform: translateX(-50%);
-        width: 6px;
-        height: 20px;
-        background: var(--primary-500);
-        box-shadow: 0 0 6px rgba(255, 187, 0, 0.9);
-        pointer-events: none;
-        z-index: 10;
-        border-radius: 9999px;
-    }
 }
 </style>

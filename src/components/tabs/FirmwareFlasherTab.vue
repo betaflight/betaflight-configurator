@@ -6,16 +6,7 @@
             <SponsorTile ref="sponsorTile" sponsor-type="flash" />
 
             <!-- Sub-tab navigation -->
-            <div class="subtab-nav">
-                <UTabs
-                    :items="subtabItems"
-                    :model-value="activeFlasherStep"
-                    :content="false"
-                    color="primary"
-                    variant="link"
-                    @update:model-value="activeFlasherStep = $event"
-                />
-            </div>
+            <SubtabNav :items="subtabItems" v-model="activeFlasherStep" />
 
             <!-- Tab content -->
             <div class="flasher-tab-area">
@@ -167,6 +158,7 @@ import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
+import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
@@ -180,6 +172,7 @@ export default defineComponent({
         SponsorTile,
         FlasherBoardBuildTab,
         FlasherFlashTab,
+        SubtabNav,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
@@ -1937,10 +1930,6 @@ export default defineComponent({
 <style scoped lang="less">
 .tab-firmware_flasher {
     min-height: 100%;
-
-    .subtab-nav {
-        margin-bottom: 6px;
-    }
 
     .flasher-tab-area {
         min-height: 200px;

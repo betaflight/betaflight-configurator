@@ -295,7 +295,7 @@
                         <span class="text-sm font-semibold text-[var(--primary-500)]">{{
                             alignDetectResult.label
                         }}</span>
-                        <span :class="'text-xs font-medium confidence-' + alignDetectConfidenceLevel">
+                        <span :class="'text-xs font-medium ' + statusClass(alignDetectConfidenceLevel)">
                             {{ alignDetectResult.confidence }}x {{ alignDetectConfidenceLevel }}
                         </span>
                         <UButton size="xs" :label="$t('magAlignmentApply')" @click="applyAlignDetection" />
@@ -474,7 +474,7 @@
                                     </p>
                                     <p
                                         v-if="guidedSecondsRemaining === 0"
-                                        class="text-xs font-semibold quality-good text-center"
+                                        class="text-xs font-semibold status-ok text-center"
                                     >
                                         {{ $t("magCalibrationGuidedDone") }}
                                     </p>
@@ -527,7 +527,7 @@
                                     >
                                         {{ cal.firmwareSecondsRemaining }}s
                                     </p>
-                                    <p v-if="cal.firmwareDone" class="text-xs font-semibold quality-good text-center">
+                                    <p v-if="cal.firmwareDone" class="text-xs font-semibold status-ok text-center">
                                         {{ $t("magCalibrationUnguidedDone") }}
                                     </p>
                                 </template>
@@ -547,7 +547,7 @@
                                     size="sm"
                                 />
                                 <div v-if="cal.quality" class="text-xs font-semibold text-center">
-                                    <span :class="'quality-' + cal.quality"
+                                    <span :class="statusClass(cal.quality)"
                                         >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
                                     >
                                 </div>
@@ -622,7 +622,7 @@
                         <!-- Complete -->
                         <div v-else-if="cal.phase === 'complete'" class="mag-cal-inline-layout">
                             <div class="mag-cal-inline-steps">
-                                <p class="text-sm font-semibold quality-good mb-2">
+                                <p class="text-sm font-semibold status-ok mb-2">
                                     {{ $t("magCalibrationComplete") }}
                                 </p>
                                 <dl v-if="!calIsFull" class="mag-cal-stats-inline">
@@ -636,7 +636,7 @@
                                     <dd>{{ calResidualText }}</dd>
                                     <dt>{{ $t("magCalibrationQuality") }}</dt>
                                     <dd>
-                                        <span v-if="cal.quality" :class="'quality-' + cal.quality"
+                                        <span v-if="cal.quality" :class="statusClass(cal.quality)"
                                             >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
                                         >
                                         <span v-else>&mdash;</span>
@@ -815,8 +815,9 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
+import { useIsMounted } from "@/composables/useIsMounted";
+import { useSaving } from "@/composables/useSaving";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
@@ -856,11 +857,10 @@ import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vu
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 
 const fcStore = useFlightControllerStore();
-const navigationStore = useNavigationStore();
-const { reboot } = useReboot();
+const { saveAndReboot } = useReboot();
 
-const isSaving = ref(false);
-const isMounted = ref(true);
+const { isSaving, runSave } = useSaving();
+const isMounted = useIsMounted();
 
 // --- Constants ---
 const SENSOR_ALIGN_CUSTOM = 9;
@@ -885,7 +885,6 @@ function roundOneDp(val) {
 }
 
 onUnmounted(() => {
-    isMounted.value = false;
     removeAllIntervals();
     disposeModel();
     alignDetectPhase.value = "idle";
@@ -1557,6 +1556,19 @@ const CAL_QUALITY_KEY = {
     fair: "magCalibrationQualityFair",
     poor: "magCalibrationQualityPoor",
 };
+
+const STATUS_CLASS_MAP = {
+    high: "status-ok",
+    good: "status-ok",
+    medium: "status-warn",
+    fair: "status-warn",
+    low: "status-bad",
+    poor: "status-bad",
+};
+
+function statusClass(level) {
+    return STATUS_CLASS_MAP[level] || "";
+}
 
 const calIsCalibrating = computed(() => cal.phase === "waiting" || cal.phase === "collecting");
 
@@ -2419,96 +2431,86 @@ const loadConfig = async () => {
 
 // --- Save ---
 
-const saveConfig = async () => {
-    if (isSaving.value) {
-        return;
-    }
-    isSaving.value = true;
+const saveConfig = () =>
+    runSave(
+        async () => {
+            // Push sensor hardware to store
+            fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
+            fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
+            fcStore.sensorConfig.mag_hardware = sensorConfig.mag_hardware;
 
-    try {
-        // Push sensor hardware to store
-        fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
-        fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
-        fcStore.sensorConfig.mag_hardware = sensorConfig.mag_hardware;
+            if (isApi147.value) {
+                fcStore.sensorConfig.sonar_hardware = sensorConfig.sonar_hardware;
+                fcStore.sensorConfig.opticalflow_hardware = sensorConfig.opticalflow_hardware;
+            }
 
-        if (isApi147.value) {
-            fcStore.sensorConfig.sonar_hardware = sensorConfig.sonar_hardware;
-            fcStore.sensorConfig.opticalflow_hardware = sensorConfig.opticalflow_hardware;
-        }
+            // Push board alignment to store
+            fcStore.boardAlignment.roll = boardAlignment.roll;
+            fcStore.boardAlignment.pitch = boardAlignment.pitch;
+            fcStore.boardAlignment.yaw = boardAlignment.yaw;
 
-        // Push board alignment to store
-        fcStore.boardAlignment.roll = boardAlignment.roll;
-        fcStore.boardAlignment.pitch = boardAlignment.pitch;
-        fcStore.boardAlignment.yaw = boardAlignment.yaw;
+            // Push accel trims to store
+            fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
+            fcStore.config.accelerometerTrims[1] = accelTrims.roll;
 
-        // Push accel trims to store
-        fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
-        fcStore.config.accelerometerTrims[1] = accelTrims.roll;
+            // Push sensor alignment to store
+            fcStore.sensorAlignment.gyro_to_use = sensorAlignment.gyro_to_use;
+            fcStore.sensorAlignment.gyro_1_align = sensorAlignment.gyro_1_align;
+            fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
+            fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
 
-        // Push sensor alignment to store
-        fcStore.sensorAlignment.gyro_to_use = sensorAlignment.gyro_to_use;
-        fcStore.sensorAlignment.gyro_1_align = sensorAlignment.gyro_1_align;
-        fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
-        fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
+            if (isApi147.value) {
+                fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
+                fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
+                fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
+                fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
+                fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
+            } else {
+                fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
+                fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
+                fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
+                fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
+                fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
+                fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
+            }
 
-        if (isApi147.value) {
-            fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
-            fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
-            fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
-            fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
-            fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
-        } else {
-            fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
-            fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
-            fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
-            fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
-            fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
-            fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
-        }
+            if (isApi147.value) {
+                fcStore.sensorAlignment.mag_align_roll = sensorAlignment.mag_align_roll;
+                fcStore.sensorAlignment.mag_align_pitch = sensorAlignment.mag_align_pitch;
+                fcStore.sensorAlignment.mag_align_yaw = sensorAlignment.mag_align_yaw;
+            }
 
-        if (isApi147.value) {
-            fcStore.sensorAlignment.mag_align_roll = sensorAlignment.mag_align_roll;
-            fcStore.sensorAlignment.mag_align_pitch = sensorAlignment.mag_align_pitch;
-            fcStore.sensorAlignment.mag_align_yaw = sensorAlignment.mag_align_yaw;
-        }
+            if (showMagSection.value) {
+                fcStore.compassConfig.mag_declination = magDeclination.value;
+            }
 
-        if (showMagSection.value) {
-            fcStore.compassConfig.mag_declination = magDeclination.value;
-        }
+            // Send MSP commands
+            await MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
+            await MSP.promise(
+                MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
+                mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
+            );
+            await MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM));
 
-        // Send MSP commands
-        await MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
-        await MSP.promise(
-            MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
-            mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
-        );
-        await MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM));
+            if (isApi146.value) {
+                await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
+            }
 
-        if (isApi146.value) {
-            await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
-        }
+            gui_log(i18n.getMessage("sensorConfigSaved"));
 
-        gui_log(i18n.getMessage("sensorConfigSaved"));
+            baseline.value = serializeState();
 
-        baseline.value = serializeState();
-
-        // Save to EEPROM and reboot
-        await new Promise((resolve) => {
-            mspHelper.writeConfiguration(false, () => {
-                navigationStore.cleanup(() => {
-                    reboot();
-                    resolve();
-                });
-            });
-        });
-    } catch (e) {
-        console.error("Failed to save sensor config", e);
-        gui_log(i18n.getMessage("sensorConfigSaveFailed"));
-    } finally {
-        isSaving.value = false;
-    }
-};
+            // Save to EEPROM and reboot
+            await saveAndReboot();
+        },
+        {
+            onError: (e) => {
+                console.error("Failed to save sensor config", e);
+                gui_log(i18n.getMessage("sensorConfigSaveFailed"));
+            },
+        },
+    );
 
 // --- Lifecycle ---
 
@@ -2595,16 +2597,6 @@ onMounted(() => {
 
     .align-detect-inline {
         padding: 0.5rem 0;
-    }
-
-    .confidence-high {
-        color: var(--success-500);
-    }
-    .confidence-medium {
-        color: var(--warning-500);
-    }
-    .confidence-low {
-        color: var(--error-500);
     }
 
     .mag-cal-section {
@@ -2698,13 +2690,13 @@ onMounted(() => {
         text-align: right;
     }
 
-    .quality-good {
+    .status-ok {
         color: var(--success-500);
     }
-    .quality-fair {
+    .status-warn {
         color: var(--warning-500);
     }
-    .quality-poor {
+    .status-bad {
         color: var(--error-500);
     }
 

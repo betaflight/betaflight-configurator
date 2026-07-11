@@ -196,10 +196,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, onMounted, computed, nextTick, onUnmounted } from "vue";
-import { useNavigationStore } from "@/stores/navigation";
+import { defineComponent, ref, reactive, onMounted, computed, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
+import { useIsMounted } from "@/composables/useIsMounted";
+import { useSaving } from "@/composables/useSaving";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -222,9 +223,8 @@ export default defineComponent({
     },
     setup() {
         // Reactive State
-        const navigationStore = useNavigationStore();
         const fcStore = useFlightControllerStore();
-        const { reboot } = useReboot();
+        const { saveAndReboot } = useReboot();
 
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
@@ -236,12 +236,8 @@ export default defineComponent({
         const pilotName = ref("");
         const showPilotName = ref(false);
 
-        const isSaving = ref(false);
-        const isMounted = ref(true);
-
-        onUnmounted(() => {
-            isMounted.value = false;
-        });
+        const { isSaving, runSave } = useSaving();
+        const isMounted = useIsMounted();
 
         const armingConfig = reactive({
             small_angle: 25,
@@ -253,10 +249,10 @@ export default defineComponent({
 
         // Other Features & Beepers State wrapper
         const featuresList = computed(() => {
-            if (!fcStore.features?.features?._features) {
+            if (!fcStore.features?.features?.getFeatures?.()) {
                 return [];
             }
-            return fcStore.features.features._features.filter((feature) => {
+            return fcStore.features.features.getFeatures().filter((feature) => {
                 return feature.mode !== "select" && feature.group === "other";
             });
         });
@@ -468,76 +464,76 @@ export default defineComponent({
             pidDenomOptions.value = options;
         };
 
-        const saveConfig = async () => {
-            if (isSaving.value) {
-                return;
-            }
-            isSaving.value = true;
-            try {
-                fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
+        const saveConfig = () =>
+            runSave(
+                async () => {
+                    fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
 
-                fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
+                    fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
 
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    fcStore.config.craftName = craftName.value;
-                    fcStore.config.pilotName = pilotName.value;
-                } else {
-                    fcStore.config.name = craftName.value;
-                }
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        fcStore.config.craftName = craftName.value;
+                        fcStore.config.pilotName = pilotName.value;
+                    } else {
+                        fcStore.config.name = craftName.value;
+                    }
 
-                if (fcStore.beepers) {
-                    fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
-                }
+                    if (fcStore.beepers) {
+                        fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
+                    }
 
-                fcStore.armingConfig.small_angle = armingConfig.small_angle;
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-                    fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
-                    fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
-                }
+                    fcStore.armingConfig.small_angle = armingConfig.small_angle;
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+                        fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
+                        fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
+                    }
 
-                // Send MSP commands
-                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-
-                if (fcStore.beepers) {
-                    await MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG));
-                }
-
-                await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-
-                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
-                } else {
+                    // Send MSP commands
                     await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
+                        MSPCodes.MSP_SET_FEATURE_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
                     );
+
+                    if (fcStore.beepers) {
+                        await MSP.promise(
+                            MSPCodes.MSP_SET_BEEPER_CONFIG,
+                            mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG),
+                        );
+                    }
+
+                    await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+
+                    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
+                    } else {
+                        await MSP.promise(
+                            MSPCodes.MSP2_SET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
+                        );
+                        await MSP.promise(
+                            MSPCodes.MSP2_SET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
+                        );
+                    }
+
+                    await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
                     await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
+                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
                     );
-                }
 
-                await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+                    gui_log(i18n.getMessage("configurationSaved"));
 
-                gui_log(i18n.getMessage("configurationSaved"));
-
-                // Save to EEPROM and Reboot
-                await new Promise((resolve) => {
-                    mspHelper.writeConfiguration(false, () => {
-                        navigationStore.cleanup(() => {
-                            reboot();
-                            resolve();
-                        });
-                    });
-                });
-            } catch (e) {
-                console.error("Failed to save configuration", e);
-                gui_log(i18n.getMessage("configurationSaveFailed"));
-            } finally {
-                isSaving.value = false;
-            }
-        };
+                    // Save to EEPROM and Reboot
+                    await saveAndReboot();
+                },
+                {
+                    onError: (e) => {
+                        console.error("Failed to save configuration", e);
+                        gui_log(i18n.getMessage("configurationSaveFailed"));
+                    },
+                },
+            );
 
         onMounted(() => {
             loadConfig();

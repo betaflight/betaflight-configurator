@@ -4,10 +4,9 @@
             <div class="tab_title">{{ $t("tabUserProfile") }}</div>
 
             <!-- Loading State -->
-            <div v-if="isLoading" class="flex items-center justify-center py-16">
-                <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin text-[var(--color-primary-500)]" />
+            <TabLoadingState v-if="isLoading">
                 <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
-            </div>
+            </TabLoadingState>
 
             <!-- Not Logged In State -->
             <div v-else-if="!isLoggedIn" class="grid-box col3">
@@ -169,6 +168,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
+import TabLoadingState from "../elements/TabLoadingState.vue";
 import { useDialog } from "@/composables/useDialog";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
