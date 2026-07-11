@@ -1,4 +1,5 @@
 import { Capacitor } from "@capacitor/core";
+import { hexStringToUint8Array, uint8ArrayToHexString } from "../utils/bytes.js";
 
 const logHead = "[CAPACITORSERIAL]";
 const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
@@ -51,7 +52,7 @@ class CapacitorSerial extends EventTarget {
 
     handleDataReceived(event) {
         // Convert hex string to Uint8Array
-        const data = this.hexStringToUint8Array(event.data);
+        const data = hexStringToUint8Array(event.data);
         this.bytesReceived += data.length;
 
         // Dispatch receive event with the data
@@ -269,7 +270,7 @@ class CapacitorSerial extends EventTarget {
 
         try {
             // Convert Uint8Array to hex string
-            const hexString = this.uint8ArrayToHexString(data);
+            const hexString = uint8ArrayToHexString(data);
             const result = await BetaflightSerial.write({ data: hexString });
 
             this.bytesSent += result.bytesSent;
@@ -289,25 +290,6 @@ class CapacitorSerial extends EventTarget {
 
     getConnectedPort() {
         return this.currentDevice;
-    }
-
-    // Helper methods for hex string conversion
-    hexStringToUint8Array(hexString) {
-        if (!hexString || hexString.length === 0) {
-            return new Uint8Array(0);
-        }
-
-        const bytes = new Uint8Array(hexString.length / 2);
-        for (let i = 0; i < hexString.length; i += 2) {
-            bytes[i / 2] = Number.parseInt(hexString.substring(i, i + 2), 16);
-        }
-        return bytes;
-    }
-
-    uint8ArrayToHexString(uint8Array) {
-        return Array.from(uint8Array)
-            .map((byte) => byte.toString(16).padStart(2, "0"))
-            .join("");
     }
 }
 
