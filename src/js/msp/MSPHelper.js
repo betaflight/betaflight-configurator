@@ -1884,7 +1884,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     MspHelper.readPsasSettings(data);
                     break;
                 case MSPCodes.MSP_SET_PSAS_CONFIG:
-                    console.log("PSAS config set");
                     break;
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);

@@ -88,9 +88,13 @@ const rollStickData = computed(() =>
 
 function resizeCanvas() {
     const container = containerRef.value;
-    if (!container) return;
+    if (!container) {
+        return;
+    }
     const rect = container.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
+    if (rect.width === 0 || rect.height === 0) {
+        return;
+    }
     canvasWidth.value = rect.width * dpr;
     canvasHeight.value = rect.height * dpr;
     const canvas = chartCanvas.value;
@@ -123,9 +127,13 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
     // The axis X labels and ticks
     const xStep = Math.ceil(props.maxSpeed / 5 / 5) * 5;
     for (let v = 0; v <= props.maxSpeed; v += xStep) {
-        if (v === 0) continue;
+        if (v === 0) {
+            continue;
+        }
         const x = xScale(v);
-        if (x < pad.left || x > pad.left + plotWidth) continue;
+        if (x < pad.left || x > pad.left + plotWidth) {
+            continue;
+        }
         ctx.fillText(v, x, pad.top + plotHeight + 4);
         // The small tick
         ctx.beginPath();
@@ -137,11 +145,12 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
     }
 
     // The axis Y labels and ticks
-    const yRange = maxMult - minMult;
     const yStep = 1;
     for (let m = Math.ceil(minMult / yStep) * yStep; m <= maxMult; m += yStep) {
         const y = yScale(m);
-        if (y < pad.top || y > pad.top + plotHeight) continue;
+        if (y < pad.top || y > pad.top + plotHeight) {
+            continue;
+        }
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
         ctx.fillText(m.toFixed(1), pad.left - 4, y);
@@ -170,7 +179,9 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
     if (props.showGrid) {
         for (let v = xStep; v <= props.maxSpeed; v += xStep) {
             const x = xScale(v);
-            if (x < pad.left || x > pad.left + plotWidth) continue;
+            if (x < pad.left || x > pad.left + plotWidth) {
+                continue;
+            }
             ctx.beginPath();
             ctx.moveTo(x, pad.top);
             ctx.lineTo(x, pad.top + plotHeight);
@@ -186,7 +197,9 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
 // The curves drawing
 function drawCurves(ctx, curves, xScale, yScale) {
     curves.forEach((curve) => {
-        if (!curve.data) return;
+        if (!curve.data) {
+            return;
+        }
         ctx.beginPath();
         ctx.strokeStyle = curve.color;
         ctx.lineWidth = curve.active ? 2 : 1.5;
@@ -194,8 +207,11 @@ function drawCurves(ctx, curves, xScale, yScale) {
         curve.data.forEach((point, index) => {
             const x = xScale(point.speed);
             const y = yScale(point.multiplier);
-            if (index === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
         });
         ctx.stroke();
         ctx.globalAlpha = 1.0;
@@ -246,7 +262,9 @@ function drawReferencePoint(ctx, xScale, yScale, pad, plotWidth, plotHeight) {
 
 function drawChart() {
     const canvas = chartCanvas.value;
-    if (!canvas) return;
+    if (!canvas) {
+        return;
+    }
     const ctx = canvas.getContext("2d");
     const w = canvasWidth.value / dpr;
     const h = canvasHeight.value / dpr;
@@ -258,14 +276,24 @@ function drawChart() {
     const pad = { top: 20, right: 20, bottom: 30, left: 40 };
     const plotWidth = w - pad.left - pad.right;
     const plotHeight = h - pad.top - pad.bottom;
-    if (plotWidth <= 0 || plotHeight <= 0) return;
+    if (plotWidth <= 0 || plotHeight <= 0) {
+        return;
+    }
 
     // Collect Y values
     const allData = [];
-    if (mainData.value) allData.push(...mainData.value);
-    if (stickData.value) allData.push(...stickData.value);
-    if (rollStickData.value) allData.push(...rollStickData.value);
-    if (allData.length === 0) return;
+    if (mainData.value) {
+        allData.push(...mainData.value);
+    }
+    if (stickData.value) {
+        allData.push(...stickData.value);
+    }
+    if (rollStickData.value) {
+        allData.push(...rollStickData.value);
+    }
+    if (allData.length === 0) {
+        return;
+    }
 
     const maxMult = Math.max(...allData.map((d) => d.multiplier));
     const minMult = 0;
@@ -306,7 +334,9 @@ onMounted(() => {
     nextTick(() => {
         resizeCanvas();
         resizeObserver = new ResizeObserver(() => resizeCanvas());
-        if (containerRef.value) resizeObserver.observe(containerRef.value);
+        if (containerRef.value) {
+            resizeObserver.observe(containerRef.value);
+        }
         window.addEventListener("resize", resizeCanvas);
     });
 });
