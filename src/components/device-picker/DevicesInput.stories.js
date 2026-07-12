@@ -1,14 +1,14 @@
-import PortsInput from "./PortsInput";
+import DevicesInput from "./DevicesInput";
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
     title: "Ports input",
-    component: PortsInput,
+    component: DevicesInput,
 };
 
 const Template = (_args, { argTypes }) => ({
     props: Object.keys(argTypes),
-    components: { PortsInput },
+    components: { DevicesInput },
     template: '<ports-input v-bind="$props" />',
 });
 
