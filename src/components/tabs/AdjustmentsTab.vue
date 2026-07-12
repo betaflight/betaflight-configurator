@@ -165,13 +165,10 @@ import WikiButton from "../elements/WikiButton.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import ChannelRangePips from "@/components/elements/ChannelRangePips.vue";
 import GUI from "../../js/gui";
-import { useTranslation } from "i18next-vue";
 import { useAdjustmentsState } from "@/composables/adjustments/useAdjustmentsState";
 import { useAdjustmentsData } from "@/composables/adjustments/useAdjustmentsData";
 import { useAdjustmentsSave } from "@/composables/adjustments/useAdjustmentsSave";
 import { useAdjustmentsPolling } from "@/composables/adjustments/useAdjustmentsPolling";
-
-const { t } = useTranslation();
 
 const { adjustments, hasChanges, storeOriginals, showAllSlots, activeCount, visibleAdjustments } =
     useAdjustmentsState();
@@ -187,7 +184,7 @@ const {
     loadMSPData,
     initializeAdjustments,
 } = useAdjustmentsData(adjustments, t);
-const { saveAdjustments, isSaving } = useAdjustmentsSave(adjustments, storeOriginals, t);
+const { saveAdjustments, isSaving } = useAdjustmentsSave(adjustments, storeOriginals);
 const { rcChannelData, startRcDataPolling } = useAdjustmentsPolling();
 
 onMounted(async () => {

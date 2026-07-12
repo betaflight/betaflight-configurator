@@ -251,9 +251,11 @@ function marshalServoConfigs() {
 }
 
 // Live-mode preview: push the current servo config to the FC without persisting.
+// sendServoConfigurations is now error-aware/async; this is fire-and-forget preview, so
+// swallow a rejection (e.g. a benign queue-clear on tab switch) rather than leak it.
 function updateServos() {
     marshalServoConfigs();
-    mspHelper.sendServoConfigurations();
+    mspHelper.sendServoConfigurations().catch(() => {});
 }
 
 const saveServoConfig = () =>

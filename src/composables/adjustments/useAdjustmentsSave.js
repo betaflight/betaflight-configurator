@@ -1,10 +1,9 @@
 import { mspHelper } from "../../js/msp/MSPHelper";
-import { gui_log } from "../../js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 
-export function useAdjustmentsSave(adjustments, storeOriginals, t) {
+export function useAdjustmentsSave(adjustments, storeOriginals) {
     const fcStore = useFlightControllerStore();
     const { isSaving, runSave } = useSaving();
     const { saveToEeprom } = useReboot();
@@ -64,8 +63,10 @@ export function useAdjustmentsSave(adjustments, storeOriginals, t) {
                 await mspHelper.sendAdjustmentRanges();
                 await saveToEeprom();
 
+                // saveToEeprom() already emits the shared "EEPROM saved" toast; the previous
+                // adjustmentsEepromSaved message resolved to the same string, so it's dropped
+                // here to avoid showing the identical toast twice.
                 storeOriginals();
-                gui_log(t("adjustmentsEepromSaved"));
             },
             {
                 onError: (error) => {
