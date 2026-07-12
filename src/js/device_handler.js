@@ -238,11 +238,14 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
     let selectedDevice;
 
     // First check for active connections. Match on the stable connectionId (which every
-    // serial transport sets to the device path on connect) rather than object identity —
-    // getConnectedDevice() returns transport-specific values (raw handles, strings) that
-    // never equal the wrapper objects held in currentSerialPorts.
+    // serial/BLE transport sets to the device path on connect) rather than object identity —
+    // getConnectedDevice() returns transport-specific values (raw handles, strings) that never
+    // equal the wrapper objects held in the device lists. Search both the serial and Bluetooth
+    // lists so a BLE-connected device is selected too (BLE paths live in currentBluetoothPorts).
     if (serial.connected) {
-        selectedDevice = this.currentSerialPorts.find((device) => device.path === serial.connectionId);
+        selectedDevice =
+            this.currentSerialPorts.find((device) => device.path === serial.connectionId) ||
+            this.currentBluetoothPorts.find((device) => device.path === serial.connectionId);
     }
 
     // Return the same that is connected to DFU

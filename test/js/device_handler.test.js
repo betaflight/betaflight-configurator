@@ -186,6 +186,20 @@ describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression
 
         expect(selected).toBe("/dev/ttyACM0");
     });
+
+    // BLE-connected devices live in currentBluetoothPorts, not currentSerialPorts, but
+    // still carry connectionId == path. The connected lookup must search both lists.
+    it("selects the connected Bluetooth device by connectionId", () => {
+        const connected = { path: "bluetooth_ab12", displayName: "Betaflight BLE" };
+        DeviceHandler.currentBluetoothPorts = [connected];
+        serial.connected = true;
+        serial.connectionId = "bluetooth_ab12";
+        serial.getConnectedDevice.mockReturnValue({ rawBleHandle: true });
+
+        const selected = DeviceHandler.selectActivePort();
+
+        expect(selected).toBe("bluetooth_ab12");
+    });
 });
 
 describe("DeviceHandler show* setters", () => {
