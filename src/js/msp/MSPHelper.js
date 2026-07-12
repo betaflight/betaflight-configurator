@@ -2726,62 +2726,25 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
     }
 };
 
-MspHelper.prototype.sendVoltageConfig = function (onCompleteCallback) {
-    let nextFunction = send_next_voltage_config;
-
-    let configIndex = 0;
-
-    if (FC.VOLTAGE_METER_CONFIGS.length == 0) {
-        onCompleteCallback();
-    } else {
-        send_next_voltage_config();
-    }
-
-    function send_next_voltage_config() {
+MspHelper.prototype.sendVoltageConfig = async function () {
+    for (let configIndex = 0; configIndex < FC.VOLTAGE_METER_CONFIGS.length; configIndex++) {
+        const config = FC.VOLTAGE_METER_CONFIGS[configIndex];
         const buffer = [];
 
-        buffer
-            .push8(FC.VOLTAGE_METER_CONFIGS[configIndex].id)
-            .push8(FC.VOLTAGE_METER_CONFIGS[configIndex].vbatscale)
-            .push8(FC.VOLTAGE_METER_CONFIGS[configIndex].vbatresdivval)
-            .push8(FC.VOLTAGE_METER_CONFIGS[configIndex].vbatresdivmultiplier);
+        buffer.push8(config.id).push8(config.vbatscale).push8(config.vbatresdivval).push8(config.vbatresdivmultiplier);
 
-        // prepare for next iteration
-        configIndex++;
-        if (configIndex == FC.VOLTAGE_METER_CONFIGS.length) {
-            nextFunction = onCompleteCallback;
-        }
-
-        MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, buffer, false, nextFunction);
+        await MSP.promise(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, buffer);
     }
 };
 
-MspHelper.prototype.sendCurrentConfig = function (onCompleteCallback) {
-    let nextFunction = send_next_current_config;
-
-    let configIndex = 0;
-
-    if (FC.CURRENT_METER_CONFIGS.length == 0) {
-        onCompleteCallback();
-    } else {
-        send_next_current_config();
-    }
-
-    function send_next_current_config() {
+MspHelper.prototype.sendCurrentConfig = async function () {
+    for (let configIndex = 0; configIndex < FC.CURRENT_METER_CONFIGS.length; configIndex++) {
+        const config = FC.CURRENT_METER_CONFIGS[configIndex];
         const buffer = [];
 
-        buffer
-            .push8(FC.CURRENT_METER_CONFIGS[configIndex].id)
-            .push16(FC.CURRENT_METER_CONFIGS[configIndex].scale)
-            .push16(FC.CURRENT_METER_CONFIGS[configIndex].offset);
+        buffer.push8(config.id).push16(config.scale).push16(config.offset);
 
-        // prepare for next iteration
-        configIndex++;
-        if (configIndex == FC.CURRENT_METER_CONFIGS.length) {
-            nextFunction = onCompleteCallback;
-        }
-
-        MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, buffer, false, nextFunction);
+        await MSP.promise(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, buffer);
     }
 };
 

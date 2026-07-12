@@ -1,6 +1,11 @@
 import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
 import { useNavigationStore } from "@/stores/navigation";
 import { mspHelper } from "@/js/msp/MSPHelper";
+import MSP from "@/js/msp";
+import MSPCodes from "@/js/msp/MSPCodes";
+import FC from "@/js/fc";
+import { gui_log } from "@/js/gui_log";
+import { i18n } from "@/js/localization";
 
 export function useReboot() {
     // Reboot is owned end-to-end by serial_backend.reinitializeConnection(): it sends the
@@ -30,8 +35,27 @@ export function useReboot() {
         });
     }
 
+    /**
+     * Persist the current configuration to EEPROM without rebooting. This is the await-able,
+     * error-aware counterpart to the callback-based mspHelper.writeConfiguration: it uses an
+     * error-aware MSP request, so a tab switch / disconnect that clears the MSP queue rejects
+     * with MspCancelledError (letting runSave settle) instead of dropping the callback and
+     * hanging. Mirrors writeConfiguration's arming-safety guard; the 100ms settle delay is
+     * unnecessary because callers await their MSP_SET_* writes before persisting.
+     * @returns {Promise<void>} resolves once the EEPROM write is acknowledged
+     */
+    async function saveToEeprom() {
+        // Never persist while arming is possible (matches writeConfiguration).
+        if (!FC.CONFIG.armingDisabled) {
+            mspHelper.setArmingEnabled(false, false);
+        }
+        await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+        gui_log(i18n.getMessage("configurationEepromSaved"));
+    }
+
     return {
         reboot,
         saveAndReboot,
+        saveToEeprom,
     };
 }
