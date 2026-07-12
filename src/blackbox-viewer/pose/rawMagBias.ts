@@ -202,8 +202,8 @@ export function checkHeadingCoverage(
 
 /**
  * Undo roll and pitch to level a body-frame (FRD) vector into a frame where
- * the X–Y plane is horizontal.  Matches `undoRollPitch` from mag_alignment.js
- * but adapted for FRD (Y = right → East after leveling).
+ * the X–Y plane is horizontal.  Matches `levelBodyVectorInverse` in
+ * mag_correction.js but adapted for FRD (Y = right → East after leveling).
  *
  * Leveling: Ry(−pitch) × Rx(−roll) × v
  */

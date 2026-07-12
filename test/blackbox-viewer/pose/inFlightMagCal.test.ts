@@ -12,7 +12,7 @@
  *
  * Run: RUN_INTEGRATION=1 npx vitest run src/pose/inFlightMagCal.test.ts
  */
-import { it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { describeIntegration } from './testHelpers.js';
 import fs from 'fs';
 import path from 'path';
@@ -207,5 +207,22 @@ describeIntegration('In-flight mag cal parity & mode routing', () => {
     expect(parsed.version).toBe('in-flight');
 
     console.log(`  Model exported: coverage=${origin.coverage}, residual=${origin.residual.toFixed(4)}, inclination=${origin.inclinationDeg.toFixed(1)}°`);
+  });
+});
+
+// Fast, ungated (no BFL fixture, no describeIntegration) — this must run in the
+// default CI tier, not just RUN_INTEGRATION=1, because it pins the pose
+// pipeline's alignment matrices against firmware ground truth, independent of
+// any real-flight data.
+describe('mag alignment matrices match firmware ground truth', () => {
+  it('flip alignment presets match firmware boardalignment.c', async () => {
+    // Firmware ground truth: betaflight/src/main/sensors/boardalignment.c
+    //   CW0_DEG_FLIP   -> (-x, +y, -z)   (lines 120-123)
+    //   CW90_DEG_FLIP  -> (0,1,0),(1,0,0),(0,0,-1)
+    //   CW180_DEG_FLIP -> (+x, -y, -z)   (lines 130-133)
+    const { ALIGNMENT_MATRICES } = await import('../../../src/js/utils/magAlignment.js');
+    expect(ALIGNMENT_MATRICES[5]).toEqual([[-1, 0, 0], [0, 1, 0], [0, 0, -1]]);  // CW0 flip
+    expect(ALIGNMENT_MATRICES[7]).toEqual([[1, 0, 0], [0, -1, 0], [0, 0, -1]]);  // CW180 flip
+    expect(ALIGNMENT_MATRICES[6]).toEqual([[0, 1, 0], [1, 0, 0], [0, 0, -1]]);   // CW90 flip
   });
 });

@@ -1,5 +1,10 @@
 <template>
-    <UModal :open="open" :title="title" :close="false" :dismissible="false">
+    <UModal
+        :open="open"
+        :title="title"
+        :close="false"
+        :dismissible="false"
+    >
         <template #body>
             <!-- Note: 'text' is rendered using v-html to support bolding/links in i18n messages.
                  Ensure that only trusted content (e.g. from i18n) is passed to this prop. -->

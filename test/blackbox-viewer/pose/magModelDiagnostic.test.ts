@@ -38,6 +38,7 @@ import type { IngestedData, MagGaussEntry } from '../../../src/blackbox-viewer/p
 import { estimatePoseTrack } from '../../../src/blackbox-viewer/pose/estimatorLoop.js';
 import type { EstimatorOpts, MagModelInput } from '../../../src/blackbox-viewer/pose/estimatorLoop.js';
 import { loadMagCharacterizationModel } from '../../../src/blackbox-viewer/pose/mag_model.js';
+import { detectMagDoubleCountRisk } from '../../../src/blackbox-viewer/pose/poseReconstruction.js';
 import { computeMagHeadingBias } from '../../../src/blackbox-viewer/pose/rawMagBias.js';
 import { calibrateInFlightMag, buildMagGaussStream } from '../../../src/blackbox-viewer/pose/inFlightMagCal.js';
 import type { InFlightCalResult } from '../../../src/blackbox-viewer/pose/inFlightMagCal.js';
@@ -665,5 +666,40 @@ describeIntegration('Mag model diagnostic — with-model vs raw-mag auto-cal', (
 
       expect(driftA).toBeLessThanOrEqual(3);  // Regression guard
     });
+  });
+});
+
+// Fast, ungated (no BFL fixture, no describeIntegration) - same mag
+// double-counting concern space as the diagnostic above, but a cheap unit
+// check with no dependency on the reference flight, so it keeps running in
+// the default CI tier.
+describe('detectMagDoubleCountRisk — mag double-count audit', () => {
+  const activeModel: MagModelInput = {
+    fusion: { earthFieldNedGauss: { n: 0.2, e: 0, d: 0.4 } },
+  };
+
+  it('flags risk when onboard mag_hardware is active AND our own mag factor is active', () => {
+    const risk = detectMagDoubleCountRisk({ mag_hardware: 1 }, activeModel);
+    expect(risk).toBe(true);
+  });
+
+  it('does NOT flag risk when onboard mag_hardware is NONE (0)', () => {
+    const risk = detectMagDoubleCountRisk({ mag_hardware: 0 }, activeModel);
+    expect(risk).toBe(false);
+  });
+
+  it('does NOT flag risk when our own mag factor is inactive (null), regardless of onboard mag', () => {
+    const risk = detectMagDoubleCountRisk({ mag_hardware: 1 }, null);
+    expect(risk).toBe(false);
+  });
+
+  it('does NOT flag risk when sysConfig is missing the field entirely', () => {
+    const risk = detectMagDoubleCountRisk({}, activeModel);
+    expect(risk).toBe(false);
+  });
+
+  it('does NOT flag risk when sysConfig itself is undefined', () => {
+    const risk = detectMagDoubleCountRisk(undefined, activeModel);
+    expect(risk).toBe(false);
   });
 });

@@ -9,7 +9,26 @@
  *   5. weight = cos(inclination) × sin(dip) — heading quality weight
  */
 
-import { mat3mulVec, undoRollPitch } from "./mag_alignment.js";
+import { mat3mulVec } from "../../js/utils/magAlignment.js";
+
+// Levels a body vector using Ry(−pitch)·Rx(−roll) — the INVERSE convention of
+// src/js/utils/magAlignment.js's undoRollPitch (Ry(+pitch)·Rx(+roll)). The two
+// call sites feed opposite angle conventions; they are NOT interchangeable.
+// Reconciling the conventions is tracked as follow-up work — until then this
+// stays private to the pose heading path, under a distinct name so the shared
+// util can't be substituted by accident.
+function levelBodyVectorInverse(v, rollRad, pitchRad) {
+    const cr = Math.cos(-rollRad);
+    const sr = Math.sin(-rollRad);
+    const cp = Math.cos(-pitchRad);
+    const sp = Math.sin(-pitchRad);
+
+    const x1 = v[0] * cp + v[1] * (sp * sr) + v[2] * (sp * cr);
+    const y1 = v[0] * 0 + v[1] * cr + v[2] * -sr;
+    const z1 = v[0] * -sp + v[1] * (cp * sr) + v[2] * (cp * cr);
+
+    return [x1, y1, z1];
+}
 
 /**
  * Apply ellipsoid correction to a raw mag reading.
@@ -101,7 +120,7 @@ export function correctMagSample(magRaw, rollRad, pitchRad, model) {
     }
 
     // Step 3: Level to horizontal frame
-    const mLeveled = undoRollPitch(bodyResult.mBody, rollRad, pitchRad);
+    const mLeveled = levelBodyVectorInverse(bodyResult.mBody, rollRad, pitchRad);
 
     // Step 4: NED heading (atan2 of -East / North)
     const hMag = Math.atan2(-mLeveled[1], mLeveled[0]);

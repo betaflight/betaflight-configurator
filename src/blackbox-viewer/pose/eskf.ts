@@ -340,7 +340,8 @@ function matTranspose(A: Mat): Mat {
  * Determinant of a small (m<=3) symmetric matrix via direct cofactor
  * expansion. All measurement factors in this file have m in {1,2,3}, so a
  * general-n decomposition isn't needed. Used for the log-likelihood tuning
- * objective (log det S term) alongside NIS -- see tuneEskfNis.ts.
+ * objective (log det S term) alongside NIS -- see the NIS-consistency
+ * tuning tool (parked for a follow-up PR: branch stash/tune-eskf-nis).
  */
 function matDetSmall(A: Mat): number {
     const n = A.length;

@@ -100,7 +100,12 @@
             </Dialog>
 
             <!-- Restore progress dialog -->
-            <UModal :open="restoreProgressOpen" :close="false" :dismissible="false" :ui="{ content: 'w-[320px]' }">
+            <UModal
+                :open="restoreProgressOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ content: 'w-[320px]' }"
+            >
                 <template #body>
                     <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
                     <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>

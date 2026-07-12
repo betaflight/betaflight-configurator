@@ -10,7 +10,7 @@
  * When loading an older (2.0/2.1) model these are computed from the existing fields.
  */
 
-import { eulerToMatrix, ALIGNMENT_MATRICES } from "./mag_alignment.js";
+import { eulerToMatrix, ALIGNMENT_MATRICES } from "../../js/utils/magAlignment.js";
 // The one deliberate exception to this directory's self-containment: a pure,
 // dependency-free math function with no ties to app state, MSP, or the DOM,
 // shared with the live tumble-calibration wizard (src/js/utils/magModelExport.js)

@@ -12,7 +12,7 @@
  */
 
 import { createPoseTrack } from './poseTrack.js';
-import { poseTrackToKml } from './serializers/kmlSerializer.js';
+import { poseTrackToKml } from './serializers.js';
 import {
   prepareReconstruction,
   DEFAULT_OUTPUT_HZ,

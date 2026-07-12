@@ -1,5 +1,11 @@
 <template>
-    <UModal :open="modelValue" :title="title" :close="closeable" :dismissible="closeable" @update:open="onOpenChange">
+    <UModal
+        :open="modelValue"
+        :title="title"
+        :close="closeable"
+        :dismissible="closeable"
+        @update:open="onOpenChange"
+    >
         <template #body>
             <slot></slot>
         </template>

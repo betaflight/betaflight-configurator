@@ -202,7 +202,12 @@
             </UModal>
 
             <!-- Waiting Dialog -->
-            <UModal v-model:open="waitingDialogOpen" :close="false" :dismissible="false" title="">
+            <UModal
+                v-model:open="waitingDialogOpen"
+                :close="false"
+                :dismissible="false"
+                title=""
+            >
                 <template #body>
                     <div class="waiting-container">
                         <div class="waiting-spinner" aria-hidden="true"></div>

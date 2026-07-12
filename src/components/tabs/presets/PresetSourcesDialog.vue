@@ -1,5 +1,9 @@
 <template>
-    <UModal :open="open" :ui="{ content: 'w-[600px] max-w-[calc(100vw-2rem)] h-[520px]' }" @update:open="onOpenChange">
+    <UModal
+        :open="open"
+        :ui="{ content: 'w-[600px] max-w-[calc(100vw-2rem)] h-[520px]' }"
+        @update:open="onOpenChange"
+    >
         <template #title>
             <span v-html="$t('presetsSourcesDialogTitle')"></span>
         </template>

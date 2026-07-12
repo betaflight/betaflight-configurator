@@ -13,8 +13,7 @@ import { ingestFlightLog, loadFlightLogFromBuffer } from '../../../src/blackbox-
 import { estimatePoseTrack } from '../../../src/blackbox-viewer/pose/estimatorLoop.js';
 import { loadMagCharacterizationModel } from '../../../src/blackbox-viewer/pose/mag_model.js';
 import { correctMagStream } from '../../../src/blackbox-viewer/pose/flightIngestion.js';
-import { poseTrackToKml } from '../../../src/blackbox-viewer/pose/serializers/kmlSerializer.js';
-import { poseTrackToJson } from '../../../src/blackbox-viewer/pose/serializers/jsonSerializer.js';
+import { poseTrackToKml, poseTrackToJson } from '../../../src/blackbox-viewer/pose/serializers.js';
 import type { EstimatorOpts } from '../../../src/blackbox-viewer/pose/estimatorLoop.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

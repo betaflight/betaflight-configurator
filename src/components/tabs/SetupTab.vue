@@ -245,7 +245,10 @@
             </div>
         </div>
 
-        <UModal v-model:open="confirmResetOpen" :title="$t('dialogConfirmResetTitle')">
+        <UModal
+            v-model:open="confirmResetOpen"
+            :title="$t('dialogConfirmResetTitle')"
+        >
             <template #body>
                 <div v-html="$t('dialogConfirmResetNote')"></div>
             </template>
@@ -262,7 +265,11 @@
             </template>
         </UModal>
 
-        <UModal v-model:open="buildInfoOpen" :title="state.buildInfoDialogTitle" :ui="{ content: 'w-fit max-w-2xl' }">
+        <UModal
+            v-model:open="buildInfoOpen"
+            :title="state.buildInfoDialogTitle"
+            :ui="{ content: 'w-fit max-w-2xl' }"
+        >
             <template #body>
                 <div class="dialogBuildInfoGrid-container">
                     <div v-for="option in state.sortedBuildOptions" :key="option" class="dialogBuildInfoGrid-item">

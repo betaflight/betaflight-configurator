@@ -1,5 +1,9 @@
 <template>
-    <UModal v-model:open="open" :title="$t('tabOptions')" :ui="{ content: 'max-w-4xl h-full' }">
+    <UModal
+        v-model:open="open"
+        :title="$t('tabOptions')"
+        :ui="{ content: 'max-w-4xl h-full' }"
+    >
         <template #body>
             <div class="flex flex-col gap-4">
                 <UiBox>

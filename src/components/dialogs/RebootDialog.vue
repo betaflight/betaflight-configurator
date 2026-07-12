@@ -1,5 +1,10 @@
 <template>
-    <UModal :open="open" :title="status" :close="false" :dismissible="false">
+    <UModal
+        :open="open"
+        :title="status"
+        :close="false"
+        :dismissible="false"
+    >
         <template #body>
             <UProgress :model-value="progress" :max="100" />
         </template>

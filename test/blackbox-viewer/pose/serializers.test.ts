@@ -3,13 +3,16 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { createPoseTrack } from '../../../../src/blackbox-viewer/pose/poseTrack.js';
-import { poseTrackToKml } from '../../../../src/blackbox-viewer/pose/serializers/kmlSerializer.js';
-import { poseTrackToJson, poseTrackFromJson } from '../../../../src/blackbox-viewer/pose/serializers/jsonSerializer.js';
-import { poseTrackToCsv } from '../../../../src/blackbox-viewer/pose/serializers/csvSerializer.js';
-import { poseTrackToGpx } from '../../../../src/blackbox-viewer/pose/serializers/gpxSerializer.js';
-import type { PoseSampleInternal, Euler, LLA } from '../../../../src/blackbox-viewer/pose/poseSample.js';
-import type { PoseTrack } from '../../../../src/blackbox-viewer/pose/poseTrack.js';
+import { createPoseTrack } from '../../../src/blackbox-viewer/pose/poseTrack.js';
+import {
+  poseTrackToKml,
+  poseTrackToJson,
+  poseTrackFromJson,
+  poseTrackToCsv,
+  poseTrackToGpx,
+} from '../../../src/blackbox-viewer/pose/serializers.js';
+import type { PoseSampleInternal, Euler, LLA } from '../../../src/blackbox-viewer/pose/poseSample.js';
+import type { PoseTrack } from '../../../src/blackbox-viewer/pose/poseTrack.js';
 
 function makeSample(
   tUs: number,

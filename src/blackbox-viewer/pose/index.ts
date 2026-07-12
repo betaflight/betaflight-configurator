@@ -47,12 +47,14 @@ export type { PoseTrack, PoseTrackMeta, CreatePoseTrackOpts } from './poseTrack.
 export type { PoseSampleInternal, LLA, Euler, Vec3, Quat } from './poseSample.js';
 
 // --- Serializers (PoseTrack -> output formats) ---
-export { poseTrackToKml } from './serializers/kmlSerializer.js';
-export { poseTrackToCsv } from './serializers/csvSerializer.js';
-export type { CsvOpts } from './serializers/csvSerializer.js';
-export { poseTrackToJson, poseTrackFromJson } from './serializers/jsonSerializer.js';
-export { poseTrackToGpx } from './serializers/gpxSerializer.js';
-export type { GpxOpts } from './serializers/gpxSerializer.js';
+export {
+  poseTrackToKml,
+  poseTrackToCsv,
+  poseTrackToJson,
+  poseTrackFromJson,
+  poseTrackToGpx,
+} from './serializers.js';
+export type { CsvOpts, GpxOpts } from './serializers.js';
 
 // --- Log capability probe (what a log can produce, and why not) ---
 export { analyzeLogCapabilities } from './logCapabilities.js';

@@ -1,5 +1,10 @@
 <template>
-    <UModal :open="open" :title="$t('warningTitle')" :close="false" :dismissible="false">
+    <UModal
+        :open="open"
+        :title="$t('warningTitle')"
+        :close="false"
+        :dismissible="false"
+    >
         <template #body>
             <div class="dialogReportProblems-header" v-html="$t('reportProblemsDialogHeader')"></div>
             <ul class="dialogReportProblems-list">

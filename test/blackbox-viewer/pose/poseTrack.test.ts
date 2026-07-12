@@ -7,7 +7,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { createPoseTrack, resamplePoseTrack } from '../../../src/blackbox-viewer/pose/poseTrack.js';
-import { poseTrackToJson, poseTrackFromJson } from '../../../src/blackbox-viewer/pose/serializers/jsonSerializer.js';
+import { poseTrackToJson, poseTrackFromJson } from '../../../src/blackbox-viewer/pose/serializers.js';
 import type { PoseSampleInternal, LLA, Quat } from '../../../src/blackbox-viewer/pose/poseSample.js';
 
 function makeSample(
