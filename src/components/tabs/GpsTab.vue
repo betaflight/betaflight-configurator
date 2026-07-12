@@ -247,7 +247,12 @@
             <!-- <div class="btn save_btn">
                 <button type="button" class="save" @click="saveConfig">{{ $t("configurationButtonSave") }}</button>
             </div> -->
-            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
+            <UButton
+                :label="$t('configurationButtonSave')"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="saveConfig"
+            />
         </div>
     </BaseTab>
 </template>
@@ -273,6 +278,8 @@ import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
 import { useInterval } from "../../composables/useInterval";
+import { useSaving } from "../../composables/useSaving";
+import { useReboot } from "../../composables/useReboot";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -292,6 +299,9 @@ export default defineComponent({
         const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const dialogStore = useDialogStore();
+
+        const { isSaving, runSave } = useSaving();
+        const { saveAndReboot } = useReboot();
 
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
@@ -740,15 +750,24 @@ export default defineComponent({
             }
         };
 
-        const saveConfig = async () => {
-            Object.assign(fcStore.gpsConfig, gpsConfig);
+        const saveConfig = () =>
+            runSave(
+                async () => {
+                    Object.assign(fcStore.gpsConfig, gpsConfig);
 
-            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+                    await MSP.promise(
+                        MSPCodes.MSP_SET_FEATURE_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                    );
+                    await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
 
-            mspHelper.writeConfiguration(true);
-            gpsTabBaseline.value = serializeGpsTabState();
-        };
+                    await saveAndReboot();
+
+                    // Only after a successful persist: refresh the dirty baseline.
+                    gpsTabBaseline.value = serializeGpsTabState();
+                },
+                { onError: (e) => console.error("Failed to save GPS configuration", e) },
+            );
 
         const initializeMap = () => {
             if (mapInstance.value || !mapRef.value) return;
@@ -840,6 +859,7 @@ export default defineComponent({
             toggleFullscreen,
             checkConnectivity,
             saveConfig,
+            isSaving,
             dirty,
             onGpsProtocolChange,
             loadingBarsUrl,

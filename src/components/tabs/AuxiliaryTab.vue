@@ -148,7 +148,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('auxiliaryButtonSave')" :disabled="!dirty" @click="saveModes" />
+            <UButton :label="$t('auxiliaryButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveModes" />
         </div>
     </BaseTab>
 </template>
@@ -161,6 +161,8 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
+import { useSaving } from "../../composables/useSaving";
+import { useReboot } from "../../composables/useReboot";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -571,60 +573,71 @@ export default defineComponent({
             autoSelectChannel(channels, activeChannels, fcStore.rssiConfig?.channel || 0);
         };
 
-        const saveModes = () => {
-            const nextModeRanges = [];
-            const nextModeRangesExtra = [];
+        const { isSaving, runSave } = useSaving();
+        const { saveToEeprom } = useReboot();
 
-            modes.forEach((mode) => {
-                mode.entries.forEach((entry) => {
-                    if (entry.kind === "range") {
-                        const [start, end] = normalizeRangeValues(entry.sliderRange);
-                        if (start >= end) {
-                            return;
-                        }
-                        nextModeRanges.push({
-                            id: mode.id,
-                            auxChannelIndex: entry.auxChannelIndex,
-                            range: { start, end },
+        const saveModes = () =>
+            runSave(
+                async () => {
+                    const nextModeRanges = [];
+                    const nextModeRangesExtra = [];
+
+                    modes.forEach((mode) => {
+                        mode.entries.forEach((entry) => {
+                            if (entry.kind === "range") {
+                                const [start, end] = normalizeRangeValues(entry.sliderRange);
+                                if (start >= end) {
+                                    return;
+                                }
+                                nextModeRanges.push({
+                                    id: mode.id,
+                                    auxChannelIndex: entry.auxChannelIndex,
+                                    range: { start, end },
+                                });
+                                nextModeRangesExtra.push({
+                                    id: mode.id,
+                                    modeLogic: entry.modeLogic,
+                                    linkedTo: 0,
+                                });
+                            } else if (entry.kind === "link") {
+                                if (!entry.linkedTo) {
+                                    return;
+                                }
+                                nextModeRanges.push({
+                                    id: mode.id,
+                                    auxChannelIndex: 0,
+                                    range: { start: CHANNEL_MIN, end: CHANNEL_MIN },
+                                });
+                                nextModeRangesExtra.push({
+                                    id: mode.id,
+                                    modeLogic: entry.modeLogic,
+                                    linkedTo: entry.linkedTo,
+                                });
+                            }
                         });
-                        nextModeRangesExtra.push({
-                            id: mode.id,
-                            modeLogic: entry.modeLogic,
-                            linkedTo: 0,
-                        });
-                    } else if (entry.kind === "link") {
-                        if (!entry.linkedTo) {
-                            return;
-                        }
+                    });
+
+                    const required = requiredModeRangeCount.value || 0;
+                    while (nextModeRanges.length < required) {
                         nextModeRanges.push({
-                            id: mode.id,
+                            id: 0,
                             auxChannelIndex: 0,
                             range: { start: CHANNEL_MIN, end: CHANNEL_MIN },
                         });
-                        nextModeRangesExtra.push({
-                            id: mode.id,
-                            modeLogic: entry.modeLogic,
-                            linkedTo: entry.linkedTo,
-                        });
+                        nextModeRangesExtra.push({ id: 0, modeLogic: 0, linkedTo: 0 });
                     }
-                });
-            });
 
-            const required = requiredModeRangeCount.value || 0;
-            while (nextModeRanges.length < required) {
-                nextModeRanges.push({ id: 0, auxChannelIndex: 0, range: { start: CHANNEL_MIN, end: CHANNEL_MIN } });
-                nextModeRangesExtra.push({ id: 0, modeLogic: 0, linkedTo: 0 });
-            }
+                    fcStore.modeRanges = nextModeRanges;
+                    fcStore.modeRangesExtra = nextModeRangesExtra;
 
-            fcStore.modeRanges = nextModeRanges;
-            fcStore.modeRangesExtra = nextModeRangesExtra;
+                    await mspHelper.sendModeRanges();
+                    await saveToEeprom();
 
-            mspHelper.sendModeRanges(() => {
-                mspHelper.writeConfiguration(false, () => {
+                    // Only after a successful persist: refresh the dirty baseline.
                     modesDirtyBaseline.value = serializeModesPayloadForDirtyCheck(nextModeRanges, nextModeRangesExtra);
-                });
-            });
-        };
+                },
+                { onError: (error) => console.error("Failed to save auxiliary modes", error) },
+            );
 
         const loadData = async () => {
             try {
@@ -681,6 +694,7 @@ export default defineComponent({
             removeEntry,
             markerPercentFor,
             saveModes,
+            isSaving,
             dirty,
         };
     },

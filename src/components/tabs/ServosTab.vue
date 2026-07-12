@@ -140,7 +140,12 @@
         <!-- Save button toolbar -->
         <div v-if="isSupported" class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton :label="$t('servosButtonSave')" :disabled="!configHasChanged" @click="saveServoConfig" />
+                <UButton
+                    :label="$t('servosButtonSave')"
+                    :disabled="!configHasChanged"
+                    :loading="isSaving"
+                    @click="saveServoConfig"
+                />
             </div>
         </div>
     </BaseTab>
@@ -161,6 +166,8 @@ import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import { useInterval } from "@/composables/useInterval";
 import { useTimeout } from "@/composables/useTimeout";
+import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
 import { clamp } from "@/js/utils/common";
 
 const { t } = useTranslation();
@@ -173,6 +180,8 @@ const originalConfigs = ref("");
 
 const { addInterval } = useInterval();
 const { addTimeout } = useTimeout();
+const { isSaving, runSave } = useSaving();
+const { saveToEeprom } = useReboot();
 
 const totalChannels = computed(() => FC.RC?.active_channels || 8);
 const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
@@ -211,11 +220,13 @@ function setChannelForward(servoIndex, channelIndex, event) {
 
 function onServoChange() {
     if (liveMode.value) {
-        addTimeout("servos_update", () => updateServos(false), 10);
+        addTimeout("servos_update", () => updateServos(), 10);
     }
 }
 
-function updateServos(saveToEeprom) {
+// Marshal reactive servoConfigs into FC.SERVO_CONFIG (clamping min/middle/max) so the
+// values sent over MSP match the UI. Also normalizes the reactive values in place.
+function marshalServoConfigs() {
     const SERVO_MIN = 500;
     const SERVO_MAX = 2500;
 
@@ -237,20 +248,25 @@ function updateServos(saveToEeprom) {
         src.middle = middle;
         src.max = max;
     }
-
-    mspHelper.sendServoConfigurations(() => {
-        if (saveToEeprom) {
-            mspHelper.writeConfiguration(false, () => {
-                gui_log(i18n.getMessage("servosEepromSave"));
-                originalConfigs.value = JSON.stringify(servoConfigs);
-            });
-        }
-    });
 }
 
-function saveServoConfig() {
-    updateServos(true);
+// Live-mode preview: push the current servo config to the FC without persisting.
+function updateServos() {
+    marshalServoConfigs();
+    mspHelper.sendServoConfigurations();
 }
+
+const saveServoConfig = () =>
+    runSave(
+        async () => {
+            marshalServoConfigs();
+            await mspHelper.sendServoConfigurations();
+            await saveToEeprom();
+            gui_log(i18n.getMessage("servosEepromSave"));
+            originalConfigs.value = JSON.stringify(servoConfigs);
+        },
+        { onError: (e) => console.error("Failed to save servo configuration", e) },
+    );
 
 function getServoData() {
     MSP.send_message(MSPCodes.MSP_SERVO, false, false, () => {
