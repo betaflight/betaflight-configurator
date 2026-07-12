@@ -2678,8 +2678,7 @@ MspHelper.prototype.sendAdjustmentRanges = async function () {
 };
 
 MspHelper.prototype.sendVoltageConfig = async function () {
-    for (let configIndex = 0; configIndex < FC.VOLTAGE_METER_CONFIGS.length; configIndex++) {
-        const config = FC.VOLTAGE_METER_CONFIGS[configIndex];
+    for (const config of FC.VOLTAGE_METER_CONFIGS) {
         const buffer = [];
 
         buffer.push8(config.id).push8(config.vbatscale).push8(config.vbatresdivval).push8(config.vbatresdivmultiplier);
@@ -2689,8 +2688,7 @@ MspHelper.prototype.sendVoltageConfig = async function () {
 };
 
 MspHelper.prototype.sendCurrentConfig = async function () {
-    for (let configIndex = 0; configIndex < FC.CURRENT_METER_CONFIGS.length; configIndex++) {
-        const config = FC.CURRENT_METER_CONFIGS[configIndex];
+    for (const config of FC.CURRENT_METER_CONFIGS) {
         const buffer = [];
 
         buffer.push8(config.id).push16(config.scale).push16(config.offset);
@@ -2699,18 +2697,8 @@ MspHelper.prototype.sendCurrentConfig = async function () {
     }
 };
 
-MspHelper.prototype.sendLedStripConfig = function (onCompleteCallback) {
-    let nextFunction = send_next_led_strip_config;
-
-    let ledIndex = 0;
-
-    if (FC.LED_STRIP.length == 0) {
-        onCompleteCallback();
-    } else {
-        send_next_led_strip_config();
-    }
-
-    function send_next_led_strip_config() {
+MspHelper.prototype.sendLedStripConfig = async function () {
+    for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
         const led = FC.LED_STRIP[ledIndex];
         const buffer = [];
 
@@ -2769,53 +2757,31 @@ MspHelper.prototype.sendLedStripConfig = function (onCompleteCallback) {
             buffer.push32(mask);
         }
 
-        // prepare for next iteration
-        ledIndex++;
-        if (ledIndex == FC.LED_STRIP.length) {
-            nextFunction = onCompleteCallback;
-        }
-
-        MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer, false, nextFunction);
+        await MSP.promise(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer);
     }
 };
 
-MspHelper.prototype.sendLedStripColors = function (onCompleteCallback) {
+MspHelper.prototype.sendLedStripColors = async function () {
     if (FC.LED_COLORS.length == 0) {
-        onCompleteCallback();
-    } else {
-        const buffer = [];
-
-        for (const color of FC.LED_COLORS) {
-            buffer.push16(color.h).push8(color.s).push8(color.v);
-        }
-        MSP.send_message(MSPCodes.MSP_SET_LED_COLORS, buffer, false, onCompleteCallback);
+        return;
     }
+
+    const buffer = [];
+
+    for (const color of FC.LED_COLORS) {
+        buffer.push16(color.h).push8(color.s).push8(color.v);
+    }
+
+    await MSP.promise(MSPCodes.MSP_SET_LED_COLORS, buffer);
 };
 
-MspHelper.prototype.sendLedStripModeColors = function (onCompleteCallback) {
-    let nextFunction = send_next_led_strip_mode_color;
-    let index = 0;
-
-    if (FC.LED_MODE_COLORS.length == 0) {
-        onCompleteCallback();
-    } else {
-        send_next_led_strip_mode_color();
-    }
-
-    function send_next_led_strip_mode_color() {
+MspHelper.prototype.sendLedStripModeColors = async function () {
+    for (const modeColor of FC.LED_MODE_COLORS) {
         const buffer = [];
-
-        const modeColor = FC.LED_MODE_COLORS[index];
 
         buffer.push8(modeColor.mode).push8(modeColor.direction).push8(modeColor.color);
 
-        // prepare for next iteration
-        index++;
-        if (index == FC.LED_MODE_COLORS.length) {
-            nextFunction = onCompleteCallback;
-        }
-
-        MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_MODECOLOR, buffer, false, nextFunction);
+        await MSP.promise(MSPCodes.MSP_SET_LED_STRIP_MODECOLOR, buffer);
     }
 };
 

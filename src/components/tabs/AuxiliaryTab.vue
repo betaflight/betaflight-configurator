@@ -576,56 +576,56 @@ export default defineComponent({
         const { isSaving, runSave } = useSaving();
         const { saveToEeprom } = useReboot();
 
-        const saveModes = () =>
-            runSave(
-                async () => {
-                    const nextModeRanges = [];
-                    const nextModeRangesExtra = [];
+        // Build the MSP mode-range payload from the current UI model. Extracted from the save
+        // callback so runSave's body stays flat (avoids deep forEach-in-forEach-in-runSave nesting).
+        const buildModeRangePayload = () => {
+            const nextModeRanges = [];
+            const nextModeRangesExtra = [];
 
-                    modes.forEach((mode) => {
-                        mode.entries.forEach((entry) => {
-                            if (entry.kind === "range") {
-                                const [start, end] = normalizeRangeValues(entry.sliderRange);
-                                if (start >= end) {
-                                    return;
-                                }
-                                nextModeRanges.push({
-                                    id: mode.id,
-                                    auxChannelIndex: entry.auxChannelIndex,
-                                    range: { start, end },
-                                });
-                                nextModeRangesExtra.push({
-                                    id: mode.id,
-                                    modeLogic: entry.modeLogic,
-                                    linkedTo: 0,
-                                });
-                            } else if (entry.kind === "link") {
-                                if (!entry.linkedTo) {
-                                    return;
-                                }
-                                nextModeRanges.push({
-                                    id: mode.id,
-                                    auxChannelIndex: 0,
-                                    range: { start: CHANNEL_MIN, end: CHANNEL_MIN },
-                                });
-                                nextModeRangesExtra.push({
-                                    id: mode.id,
-                                    modeLogic: entry.modeLogic,
-                                    linkedTo: entry.linkedTo,
-                                });
-                            }
-                        });
-                    });
-
-                    const required = requiredModeRangeCount.value || 0;
-                    while (nextModeRanges.length < required) {
+            modes.forEach((mode) => {
+                mode.entries.forEach((entry) => {
+                    if (entry.kind === "range") {
+                        const [start, end] = normalizeRangeValues(entry.sliderRange);
+                        if (start >= end) {
+                            return;
+                        }
                         nextModeRanges.push({
-                            id: 0,
+                            id: mode.id,
+                            auxChannelIndex: entry.auxChannelIndex,
+                            range: { start, end },
+                        });
+                        nextModeRangesExtra.push({ id: mode.id, modeLogic: entry.modeLogic, linkedTo: 0 });
+                    } else if (entry.kind === "link") {
+                        if (!entry.linkedTo) {
+                            return;
+                        }
+                        nextModeRanges.push({
+                            id: mode.id,
                             auxChannelIndex: 0,
                             range: { start: CHANNEL_MIN, end: CHANNEL_MIN },
                         });
-                        nextModeRangesExtra.push({ id: 0, modeLogic: 0, linkedTo: 0 });
+                        nextModeRangesExtra.push({
+                            id: mode.id,
+                            modeLogic: entry.modeLogic,
+                            linkedTo: entry.linkedTo,
+                        });
                     }
+                });
+            });
+
+            const required = requiredModeRangeCount.value || 0;
+            while (nextModeRanges.length < required) {
+                nextModeRanges.push({ id: 0, auxChannelIndex: 0, range: { start: CHANNEL_MIN, end: CHANNEL_MIN } });
+                nextModeRangesExtra.push({ id: 0, modeLogic: 0, linkedTo: 0 });
+            }
+
+            return { nextModeRanges, nextModeRangesExtra };
+        };
+
+        const saveModes = () =>
+            runSave(
+                async () => {
+                    const { nextModeRanges, nextModeRangesExtra } = buildModeRangePayload();
 
                     fcStore.modeRanges = nextModeRanges;
                     fcStore.modeRangesExtra = nextModeRangesExtra;

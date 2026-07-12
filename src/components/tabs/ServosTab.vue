@@ -162,8 +162,7 @@ import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
-import { gui_log } from "@/js/gui_log";
-import { i18n } from "@/js/localization";
+import { isMspCancelled } from "@/js/msp/mspErrors";
 import { useInterval } from "@/composables/useInterval";
 import { useTimeout } from "@/composables/useTimeout";
 import { useSaving } from "@/composables/useSaving";
@@ -252,10 +251,14 @@ function marshalServoConfigs() {
 
 // Live-mode preview: push the current servo config to the FC without persisting.
 // sendServoConfigurations is now error-aware/async; this is fire-and-forget preview, so
-// swallow a rejection (e.g. a benign queue-clear on tab switch) rather than leak it.
+// ignore a benign queue-clear cancellation on tab switch but still log genuine failures.
 function updateServos() {
     marshalServoConfigs();
-    mspHelper.sendServoConfigurations().catch(() => {});
+    mspHelper.sendServoConfigurations().catch((error) => {
+        if (!isMspCancelled(error)) {
+            console.error("Failed to update servo configuration", error);
+        }
+    });
 }
 
 const saveServoConfig = () =>
@@ -264,7 +267,8 @@ const saveServoConfig = () =>
             marshalServoConfigs();
             await mspHelper.sendServoConfigurations();
             await saveToEeprom();
-            gui_log(i18n.getMessage("servosEepromSave"));
+            // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
+            // resolved to the same string, so it's dropped here to avoid a duplicate.
             originalConfigs.value = JSON.stringify(servoConfigs);
         },
         { onError: (e) => console.error("Failed to save servo configuration", e) },

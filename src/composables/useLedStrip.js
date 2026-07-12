@@ -98,11 +98,9 @@ function isVtxActive(activeFunction) {
 async function saveConfig() {
     const { saveToEeprom } = useReboot();
 
-    // These LED-strip senders are still callback-based, so Promise-wrap each one to await
-    // the write chain before persisting.
-    await new Promise((resolve) => mspHelper.sendLedStripConfig(resolve));
-    await new Promise((resolve) => mspHelper.sendLedStripColors(resolve));
-    await new Promise((resolve) => mspHelper.sendLedStripModeColors(resolve));
+    await mspHelper.sendLedStripConfig();
+    await mspHelper.sendLedStripColors();
+    await mspHelper.sendLedStripModeColors();
 
     await saveToEeprom();
 }
