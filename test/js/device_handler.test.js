@@ -16,6 +16,7 @@ const { serial, dfuProtocol, isExpertModeEnabled } = vi.hoisted(() => {
     return {
         serial: {
             connected: false,
+            connectionId: null,
             getConnectedDevice: vi.fn(() => null),
             addEventListener: vi.fn(),
             removeEventListener: vi.fn(),
@@ -90,6 +91,7 @@ function resetPortHandler() {
     vi.clearAllMocks();
     __resetConnectionStateForTests();
     serial.connected = false;
+    serial.connectionId = null;
     dfuProtocol.usbDevice = null;
     isExpertModeEnabled.mockReturnValue(true);
     DeviceHandler.currentSerialPorts = [];
@@ -166,5 +168,42 @@ describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression
 
         expect(selected).not.toBe("virtual");
         expect(DeviceHandler.devicePicker.selectedDevice).toBe("noselection");
+    });
+
+    // Regression for the connected-device highlight: getConnectedDevice() returns
+    // transport-specific values (raw Web Serial ports, native handles, strings) that never
+    // equal the wrapper objects in currentSerialPorts, so the old object-identity match was
+    // dead for every transport. Matching on the stable connectionId (== device path) fixes it.
+    it("selects the connected serial device by connectionId, not object identity", () => {
+        const connected = { path: "/dev/ttyACM0", displayName: "Betaflight STM32" };
+        DeviceHandler.currentSerialPorts = [{ path: "/dev/ttyUSB9", displayName: "other" }, connected];
+        serial.connected = true;
+        serial.connectionId = "/dev/ttyACM0";
+        // Transport returns something that is NOT the wrapper object held in the list.
+        serial.getConnectedDevice.mockReturnValue({ rawHandle: true });
+
+        const selected = DeviceHandler.selectActivePort();
+
+        expect(selected).toBe("/dev/ttyACM0");
+    });
+});
+
+describe("DeviceHandler show* setters", () => {
+    beforeEach(() => {
+        resetPortHandler();
+    });
+
+    // setShowAllSerialDevices must refresh the active selection like its siblings
+    // (setShowVirtualMode / setShowManualMode) — toggling the filter changes which
+    // devices are visible, so the active device has to be re-evaluated.
+    it("setShowAllSerialDevices triggers selectActivePort, matching the other show* setters", () => {
+        const spy = vi.spyOn(DeviceHandler, "selectActivePort");
+
+        DeviceHandler.setShowAllSerialDevices(true);
+
+        expect(DeviceHandler.showAllSerialDevices).toBe(true);
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        spy.mockRestore();
     });
 });

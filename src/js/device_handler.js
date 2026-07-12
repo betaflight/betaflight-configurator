@@ -125,6 +125,7 @@ DeviceHandler.setShowManualMode = function (showManualMode) {
 
 DeviceHandler.setShowAllSerialDevices = function (showAllSerialDevices) {
     this.showAllSerialDevices = showAllSerialDevices;
+    this.selectActivePort();
 };
 
 DeviceHandler.removedSerialDevice = function (device) {
@@ -236,9 +237,12 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
     const deviceFilter = ["AT32", "CP210", "SPR", "STM"];
     let selectedDevice;
 
-    // First check for active connections
+    // First check for active connections. Match on the stable connectionId (which every
+    // serial transport sets to the device path on connect) rather than object identity —
+    // getConnectedDevice() returns transport-specific values (raw handles, strings) that
+    // never equal the wrapper objects held in currentSerialPorts.
     if (serial.connected) {
-        selectedDevice = this.currentSerialPorts.find((device) => device === serial.getConnectedDevice());
+        selectedDevice = this.currentSerialPorts.find((device) => device.path === serial.connectionId);
     }
 
     // Return the same that is connected to DFU

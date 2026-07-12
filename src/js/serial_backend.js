@@ -335,7 +335,7 @@ export function disconnect() {
 }
 
 function canStartConnectionAction(selectedDevice) {
-    return !GUI.connect_lock && selectedDevice !== "noselection" && !selectedDevice.path?.startsWith("usb");
+    return !GUI.connect_lock && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb");
 }
 
 function beginConnect(selectedDevice) {
