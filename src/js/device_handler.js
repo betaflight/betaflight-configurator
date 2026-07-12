@@ -30,7 +30,7 @@ function createDfuProtocol() {
 const dfuProtocol = createDfuProtocol();
 
 const DeviceHandler = new (function () {
-    this.logHead = "[PORTHANDLER]";
+    this.logHead = "[DEVICEHANDLER]";
 
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];

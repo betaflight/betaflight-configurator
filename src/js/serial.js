@@ -250,7 +250,7 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Get the currently connected port
+     * Get the currently connected device
      */
     getConnectedDevice() {
         return this._protocol?.getConnectedDevice() || null;
