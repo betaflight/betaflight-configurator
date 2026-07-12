@@ -24,6 +24,7 @@ const languagesAvailables = [
     "pl",
     "ru",
     "uk",
+    "uz",
     "zh_CN",
     "zh_TW",
 ];
