@@ -327,6 +327,10 @@
         "message": "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
         "description": "Don't translate!!!"
     },
+    "language_uz": {
+        "message": "O'zbekcha",
+        "description": "Don't translate!!!"
+    },
     "language_zh_CN": {
         "message": "\u7b80\u4f53\u4e2d\u6587",
         "description": "Don't translate!!!"
