@@ -392,10 +392,6 @@ export const useOsdStore = defineStore("osd", () => {
         );
     };
 
-    const saveToEeprom = async () => {
-        return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-    };
-
     const saveAllConfig = async () => {
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
 
@@ -450,7 +446,6 @@ export const useOsdStore = defineStore("osd", () => {
         saveOtherConfig,
         saveTimerConfig,
         saveStatisticItem,
-        saveToEeprom,
         saveAllConfig,
     };
 });
