@@ -652,6 +652,12 @@
     "serialPortOpenFail": {
         "message": "打开串口 <span class=\"message-negative\">失败<\/span>"
     },
+    "connectionFailedTitle": {
+        "message": "连接失败"
+    },
+    "connectionFailed": {
+        "message": "连接到选定端口<span class=\"message-negative\">失败d<\/span>。确保设备可被连接并且连接设置正确，然后重试。"
+    },
     "serialPortClosedOk": {
         "message": "关闭串口 <span class=\"message-positive\">成功<\/span>"
     },
@@ -6632,7 +6638,7 @@
         "message": "估算剩余飞行时间"
     },
     "osdTextElementRtcDateTime": {
-        "message": "RTC日期和时间",
+        "message": "RTC 日期和时间",
         "description": "One of the elements of the OSD"
     },
     "osdTextElementRtcDateTimeVariantFullDate": {
@@ -6952,7 +6958,7 @@
         "message": "上锁时计时器 2的数值"
     },
     "osdTextStatRtcDateTime": {
-        "message": "RTC日期和时间",
+        "message": "RTC 日期和时间",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatRtcDateTime": {
@@ -9511,7 +9517,7 @@
         "message": "允许"
     },
     "preflightIpConsentDeny": {
-        "message": "不用谢"
+        "message": "拒绝"
     },
     "preflightMapSatellite": {
         "message": "卫星视图"

@@ -43,37 +43,19 @@
 
 <script setup>
 import { computed } from "vue";
-import { bit_check } from "../../js/bit";
+import { have_sensor } from "../../js/sensor_helpers";
 
 const props = defineProps({
     sensorsDetected: { type: Number, default: 0 },
     gpsFixState: { type: Number, default: 0 },
 });
 
-function haveSensor(sensorsDetected, sensorCode) {
-    switch (sensorCode) {
-        case "acc":
-            return bit_check(sensorsDetected, 0);
-        case "baro":
-            return bit_check(sensorsDetected, 1);
-        case "mag":
-            return bit_check(sensorsDetected, 2);
-        case "gps":
-            return bit_check(sensorsDetected, 3);
-        case "sonar":
-            return bit_check(sensorsDetected, 4);
-        case "gyro":
-            return bit_check(sensorsDetected, 5);
-    }
-    return false;
-}
-
-const setAccActive = computed(() => haveSensor(props.sensorsDetected, "acc"));
-const setGyroActive = computed(() => haveSensor(props.sensorsDetected, "gyro"));
-const setBaroActive = computed(() => haveSensor(props.sensorsDetected, "baro"));
-const setMagActive = computed(() => haveSensor(props.sensorsDetected, "mag"));
-const setSonarActive = computed(() => haveSensor(props.sensorsDetected, "sonar"));
-const gpsDetected = computed(() => haveSensor(props.sensorsDetected, "gps"));
+const setAccActive = computed(() => have_sensor(props.sensorsDetected, "acc"));
+const setGyroActive = computed(() => have_sensor(props.sensorsDetected, "gyro"));
+const setBaroActive = computed(() => have_sensor(props.sensorsDetected, "baro"));
+const setMagActive = computed(() => have_sensor(props.sensorsDetected, "mag"));
+const setSonarActive = computed(() => have_sensor(props.sensorsDetected, "sonar"));
+const gpsDetected = computed(() => have_sensor(props.sensorsDetected, "gps"));
 const hasFix = computed(() => props.gpsFixState > 0);
 const gpsOn = computed(() => gpsDetected.value || hasFix.value);
 const gpsActiveNoFix = computed(() => gpsOn.value && gpsDetected.value && !hasFix.value);

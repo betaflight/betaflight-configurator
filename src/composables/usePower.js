@@ -1,4 +1,4 @@
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, watch } from "vue";
 import semver from "semver";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
@@ -9,6 +9,7 @@ import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
+import { gui_log } from "../js/gui_log";
 
 export function usePower() {
     const supported = computed(() => {
@@ -23,6 +24,9 @@ export function usePower() {
     });
     const activeBatteryProfile = ref(0);
     const batteryProfileName = ref("");
+    // Guards for the TX-driven battery-profile sync (see watcher below).
+    const isLoading = ref(false);
+    let syncingFromFc = false;
     const analyticsChanges = reactive({});
     const batteryState = reactive({
         cellCount: 0,
@@ -181,6 +185,8 @@ export function usePower() {
         const previousProfileName = batteryProfileName.value;
 
         try {
+            // Suppress the TX-driven sync watcher while we apply our own change
+            isLoading.value = true;
             // Pause global and local polling to prevent MSP_STATUS_EX from
             // overwriting FC.CONFIG.batteryProfile with stale data during the switch
             connectionStore.pauseLiveData();
@@ -209,13 +215,43 @@ export function usePower() {
             }
             throw error;
         } finally {
+            isLoading.value = false;
             connectionStore.resumeLiveData();
             GUI.interval_resume("power_data_pull_slow");
         }
     };
 
+    // Reflect TX-driven battery-profile changes in the UI. The global live-status poller
+    // (serial_backend.js) refreshes FC.CONFIG.batteryProfile via MSP_STATUS_EX every 250ms;
+    // an adjustment switch on the TX can change the active profile out from under the UI.
+    // Reload when that happens — but never during our own change (isLoading), an in-flight
+    // load, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
+    const syncBatteryProfileFromFc = async () => {
+        if (!hasBatteryProfiles.value || isLoading.value || syncingFromFc || dirty.value) {
+            return;
+        }
+
+        syncingFromFc = true;
+        try {
+            await loadData();
+            gui_log(i18n.getMessage("powerReceivedBatteryProfile", [FC.CONFIG.batteryProfile + 1]));
+        } finally {
+            syncingFromFc = false;
+        }
+    };
+
+    watch(
+        () => FC.CONFIG.batteryProfile,
+        (newValue) => {
+            if (newValue !== activeBatteryProfile.value) {
+                syncBatteryProfileFromFc();
+            }
+        },
+    );
+
     // Load data from flight controller
     const loadData = async () => {
+        isLoading.value = true;
         try {
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
             await MSP.promise(MSPCodes.MSP_VOLTAGE_METERS);
@@ -232,6 +268,8 @@ export function usePower() {
             updateStateFromFC();
         } catch (error) {
             console.error("Error loading power data:", error);
+        } finally {
+            isLoading.value = false;
         }
     };
 

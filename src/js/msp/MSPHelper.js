@@ -7,6 +7,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
+import { MspCrcError } from "./mspErrors";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
@@ -1809,27 +1810,51 @@ MspHelper.prototype.process_data = function (dataHandler) {
         // iterating in reverse because we use .splice which modifies array length
         if (dataHandler.callbacks[i]?.code === code) {
             // save callback reference
-            const callback = dataHandler.callbacks[i].callback;
+            const entry = dataHandler.callbacks[i];
+            const callback = entry.callback;
 
             // remove timeout
-            clearTimeout(dataHandler.callbacks[i].timer);
+            clearTimeout(entry.timer);
 
             // remove object from array
             dataHandler.callbacks.splice(i, 1);
-            // Always invoke callback and pass crcError flag. Callbacks expect to
-            // receive the original DataView so they can choose how to handle CRC
-            // errors; don't replace the data with null here to avoid breaking
-            // existing consumers that dereference response.data before checking
-            // crcError.
-            if (callback) {
+            // Legacy callbacks receive the original DataView with the crcError flag so
+            // they can choose how to handle CRC errors; errorAware callbacks reject on
+            // crcError and otherwise receive the response as the first argument.
+            if (typeof callback === "function") {
                 try {
-                    callback({ command: code, data: data, length: data ? data.byteLength : 0, crcError: crcError });
+                    if (entry.errorAware) {
+                        if (crcError) {
+                            callback(null, new MspCrcError(`CRC error for MSP code ${code}`, code));
+                        } else {
+                            callback(
+                                {
+                                    command: code,
+                                    data: data,
+                                    length: data ? data.byteLength : 0,
+                                    crcError: crcError,
+                                    unsupported: dataHandler.unsupported,
+                                },
+                                undefined,
+                            );
+                        }
+                    } else {
+                        callback({
+                            command: code,
+                            data: data,
+                            length: data ? data.byteLength : 0,
+                            crcError: crcError,
+                            unsupported: dataHandler.unsupported,
+                        });
+                    }
                 } catch (e) {
                     console.error(`callback for code ${code} threw:`, e);
                 }
             }
         }
     }
+
+    dataHandler._release_parked?.(code);
 };
 
 /**
@@ -2525,59 +2550,67 @@ MspHelper.prototype.dataflashRead = function (address, blockSize, onDataCallback
     // Allow compression
     outData = outData.concat([1]);
 
-    MSP.send_message(
-        MSPCodes.MSP_DATAFLASH_READ,
-        outData,
-        false,
-        function (response) {
-            if (!response.crcError) {
-                const chunkAddress = response.data.readU32();
+    MSP.promise(MSPCodes.MSP_DATAFLASH_READ, outData).then(
+        (response) => {
+            const chunkAddress = response.data.readU32();
 
-                const headerSize = 7;
-                const dataSize = response.data.readU16();
-                const dataCompressionType = response.data.readU8();
+            const headerSize = 7;
+            const dataSize = response.data.readU16();
+            const dataCompressionType = response.data.readU8();
 
-                // Verify that the address of the memory returned matches what the caller asked for and there was not a CRC error
-                if (chunkAddress == address) {
-                    /* Strip that address off the front of the reply and deliver it separately so the caller doesn't have to
-                     * figure out the reply format:
-                     */
-                    if (dataCompressionType == 0) {
-                        onDataCallback(
-                            address,
-                            new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize),
-                        );
-                    } else if (dataCompressionType == 1) {
-                        // Read compressed char count to avoid decoding stray bit sequences as bytes
-                        const compressedCharCount = response.data.readU16();
+            // Verify that the address of the memory returned matches what the caller asked for
+            if (chunkAddress == address) {
+                /* Strip that address off the front of the reply and deliver it separately so the caller doesn't have to
+                 * figure out the reply format:
+                 */
+                if (dataCompressionType == 0) {
+                    onDataCallback(
+                        address,
+                        new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize),
+                    );
+                } else if (dataCompressionType == 1) {
+                    // Read compressed char count to avoid decoding stray bit sequences as bytes
+                    const compressedCharCount = response.data.readU16();
 
-                        // Compressed format uses 2 additional bytes as a pseudo-header to denote the number of uncompressed bytes
-                        const compressedArray = new Uint8Array(
-                            response.data.buffer,
-                            response.data.byteOffset + headerSize + 2,
-                            dataSize - 2,
-                        );
-                        const decompressedArray = huffmanDecodeBuf(
-                            compressedArray,
-                            compressedCharCount,
-                            defaultHuffmanTree,
-                            defaultHuffmanLenIndex,
-                        );
+                    // Compressed format uses 2 additional bytes as a pseudo-header to denote the number of uncompressed bytes
+                    const compressedArray = new Uint8Array(
+                        response.data.buffer,
+                        response.data.byteOffset + headerSize + 2,
+                        dataSize - 2,
+                    );
+                    const decompressedArray = huffmanDecodeBuf(
+                        compressedArray,
+                        compressedCharCount,
+                        defaultHuffmanTree,
+                        defaultHuffmanLenIndex,
+                    );
 
-                        onDataCallback(address, new DataView(decompressedArray.buffer), dataSize);
-                    }
+                    onDataCallback(address, new DataView(decompressedArray.buffer), dataSize);
                 } else {
-                    // Report address error
-                    console.log(`Expected address ${address} but received ${chunkAddress} - retrying`);
-                    onDataCallback(address, null); // returning null to the callback forces a retry
+                    console.error(`Unknown dataflash compression type ${dataCompressionType}`);
+                    onDataCallback(
+                        address,
+                        null,
+                        null,
+                        new Error(`Unknown dataflash compression type ${dataCompressionType}`),
+                    );
                 }
             } else {
-                // Report crc error
-                console.log(`CRC error for address ${address} - retrying`);
+                // Report address error
+                console.log(`Expected address ${address} but received ${chunkAddress} - retrying`);
                 onDataCallback(address, null); // returning null to the callback forces a retry
             }
         },
-        true,
+        (error) => {
+            if (error instanceof MspCrcError) {
+                // Report crc error
+                console.log(`CRC error for address ${address} - retrying`);
+                onDataCallback(address, null); // returning null to the callback forces a retry
+            } else {
+                // Timeout or cancellation: surface the error as the fourth argument
+                onDataCallback(address, null, null, error);
+            }
+        },
     );
 };
 

@@ -40,6 +40,7 @@
                     accept=".csv,.CSV"
                     class="hidden"
                     multiple
+                    aria-label="Import spectrum CSV"
                     @change="onImportChange"
                 />
             </div>
@@ -86,6 +87,7 @@
             step="5"
             class="analyser-psd-input text-xs"
             :style="psdInputStyle(30)"
+            aria-label="Max dBm"
             @dblclick.ctrl="resetMaxPSD"
         />
         <label
@@ -104,6 +106,7 @@
             step="5"
             class="analyser-psd-input text-xs"
             :style="psdInputStyle(55)"
+            aria-label="Min dBm"
             @dblclick.ctrl="resetMinPSD"
         />
         <label
@@ -122,6 +125,7 @@
             step="5"
             class="analyser-psd-input text-xs"
             :style="psdInputStyle(80)"
+            aria-label="Limit dBm"
             @dblclick.ctrl="resetLowLevelPSD"
         />
         <label
@@ -142,6 +146,7 @@
             step="1"
             class="analyser-psd-input text-xs"
             :style="segmentInputStyle"
+            aria-label="Segment length power at 2"
             @dblclick.ctrl="resetSegmentLength"
         />
         <label

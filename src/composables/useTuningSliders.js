@@ -102,7 +102,13 @@ export function calculateNewPids(s) {
         return Promise.resolve();
     }
 
-    return MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_PID, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_PID));
+    return MSP.promise(
+        MSPCodes.MSP_CALCULATE_SIMPLIFIED_PID,
+        mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_PID),
+    ).catch((error) => {
+        console.error("Failed to calculate simplified PIDs:", error);
+        return undefined;
+    });
 }
 
 /**
@@ -124,7 +130,10 @@ export function calculateNewGyroFilters(multiplier) {
     return MSP.promise(
         MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO,
         mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO),
-    );
+    ).catch((error) => {
+        console.error("Failed to calculate simplified gyro filters:", error);
+        return undefined;
+    });
 }
 
 /**
@@ -146,7 +155,10 @@ export function calculateNewDTermFilters(multiplier) {
     return MSP.promise(
         MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM,
         mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM),
-    );
+    ).catch((error) => {
+        console.error("Failed to calculate simplified D-term filters:", error);
+        return undefined;
+    });
 }
 
 /**
@@ -175,5 +187,10 @@ export function validateTuningSliders() {
         return Promise.resolve();
     }
 
-    return MSP.promise(MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING).then(patchInvalidSliders);
+    return MSP.promise(MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING)
+        .then(patchInvalidSliders)
+        .catch((error) => {
+            console.error("Failed to validate tuning sliders:", error);
+            return undefined;
+        });
 }

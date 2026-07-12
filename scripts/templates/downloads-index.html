@@ -46,21 +46,40 @@
                 text-decoration: underline;
             }
 
+            /* Masthead matching status.betaflight.com: centred column, accent top rule,
+               logo inside the h1 with a muted brand word beside it. */
             header {
-                background: var(--surface-200);
-                border-bottom: 1px solid var(--surface-400);
-                padding: 1.5rem 2rem;
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-            header img {
-                height: 40px;
+                max-width: 880px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem 0;
             }
             header h1 {
-                font-size: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 22px;
+                font-weight: 600;
                 margin: 0;
-                color: var(--primary-500);
+                border-top: 3px solid var(--primary-500);
+                padding-top: 20px;
+                color: var(--text);
+            }
+            header img {
+                height: 52px;
+                width: auto;
+                display: block;
+            }
+            header .brand-word {
+                color: var(--text-dim);
+                font-weight: 500;
+            }
+            @media (max-width: 600px) {
+                header h1 {
+                    font-size: 20px;
+                }
+                header img {
+                    height: 44px;
+                }
             }
 
             main {
@@ -75,7 +94,7 @@
 
             h2 {
                 font-size: 1.2rem;
-                color: var(--primary-500);
+                color: var(--text);
                 border-bottom: 1px solid var(--surface-400);
                 padding-bottom: 0.4rem;
                 margin: 0 0 0.75rem;
@@ -86,6 +105,14 @@
                 color: var(--text);
                 margin: 1rem 0 0.25rem;
                 font-weight: 600;
+            }
+
+            /* Headings are white, but a heading that carries an anchor keeps the
+               link colour so a linked heading still reads as a link. */
+            h1 a,
+            h2 a,
+            h3 a {
+                color: var(--link);
             }
 
             .meta,
@@ -160,12 +187,30 @@
                 color: var(--text-dim);
                 font-style: italic;
             }
+
+            .release-hero {
+                background: var(--surface-200);
+                border: 1px solid var(--surface-400);
+                border-radius: 8px;
+                padding: 1.25rem 1.5rem;
+            }
+            .release-hero h2 {
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0.5rem;
+            }
+            .hero-link {
+                font-size: 1.15rem;
+                font-weight: 600;
+            }
         </style>
     </head>
     <body>
         <header>
-            <img src="https://betaflight.com/img/betaflight/logo_dark.svg" alt="Betaflight" />
-            <h1>Downloads</h1>
+            <h1>
+                <img src="https://betaflight.com/img/betaflight/logo_dark.svg" alt="Betaflight" />
+                <span class="brand-word">Downloads</span>
+            </h1>
         </header>
         <main>
             <!--SECTIONS-->

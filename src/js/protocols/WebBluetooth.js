@@ -27,9 +27,11 @@ class WebBluetooth extends EventTarget {
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.portCounter = 0;
         this.devices = [];
         this.device = null;
+        // Resolved (never-rejecting) promise of an in-flight disconnect teardown;
+        // connect() awaits it so open and close can never interleave.
+        this._teardown = null;
 
         this.logHead = "[BLUETOOTH]";
 
@@ -45,6 +47,12 @@ class WebBluetooth extends EventTarget {
         this.writeQueue = Promise.resolve();
 
         this.connect = this.connect.bind(this);
+        // Bind the device/characteristic event handlers ONCE so add/removeEventListener
+        // share one reference. A fresh `.bind(this)` at each call site produces a new
+        // function every time, so removeEventListener never matches and a gattserver-
+        // disconnected/disconnect/notification listener leaks on every reconnect.
+        this.handleDisconnect = this.handleDisconnect.bind(this);
+        this.handleNotification = this.handleNotification.bind(this);
 
         this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
         this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
@@ -80,6 +88,7 @@ class WebBluetooth extends EventTarget {
         if (this.closeRequested) {
             return;
         }
+        console.warn(`${this.logHead} Unsolicited GATT disconnect (device dropped the link) — tearing down`);
         this.disconnect();
     }
 
@@ -87,9 +96,17 @@ class WebBluetooth extends EventTarget {
         return this.device;
     }
 
+    // Derive a stable path from the Web Bluetooth device.id. That id is the
+    // browser's persistent per-device identifier, so the SAME device always
+    // yields the SAME path across loadDevices()/refreshes — surviving an FC
+    // reboot that rebuilds the device list. A bare counter (the old behaviour)
+    // was an ordinal reassigned/reset on every rebuild, so a pinned path could
+    // silently re-map to a different device. Mirrors CapacitorBle's
+    // `bluetooth-${address}`; the `bluetooth` prefix keeps serial.js
+    // selectProtocol routing to the BLE protocol.
     createPort(device) {
         return {
-            path: `bluetooth_${this.portCounter++}`,
+            path: `bluetooth_${device.id}`,
             displayName: device.name,
             vendorId: "unknown",
             productId: device.id,
@@ -130,10 +147,13 @@ class WebBluetooth extends EventTarget {
 
     async loadDevices() {
         try {
-            const devices = await this.getDevices();
+            const ports = await this.getDevices();
 
-            this.portCounter = 1;
-            this.devices = devices.map((device) => this.createPort(device));
+            // getDevices() returns the already-built port wrappers, so rebuild from
+            // each wrapper's underlying Web Bluetooth device (port.port). Because the
+            // path is derived from device.id, re-running loadDevices() is idempotent:
+            // the same device keeps the same path across refreshes.
+            this.devices = ports.map((wrapper) => this.createPort(wrapper.port));
         } catch (error) {
             console.error(`${this.logHead} Failed to load devices:`, error);
         }
@@ -175,6 +195,14 @@ class WebBluetooth extends EventTarget {
     }
 
     async connect(path, options) {
+        // Serialize behind an in-flight teardown: a connect started mid-teardown would
+        // reset closeRequested under it and have its device/characteristics torn down
+        // by the resumed cleanup. The teardown promise never rejects.
+        if (this._teardown) {
+            await this._teardown;
+            this._teardown = null;
+        }
+
         this.openRequested = true;
         this.closeRequested = false;
 
@@ -182,8 +210,9 @@ class WebBluetooth extends EventTarget {
 
         console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`);
 
-        this.device.addEventListener("gattserverdisconnected", this.handleDisconnect.bind(this));
+        this.device.addEventListener("gattserverdisconnected", this.handleDisconnect);
 
+        let setupComplete = false;
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);
 
@@ -194,12 +223,16 @@ class WebBluetooth extends EventTarget {
             await this.getServices();
             await this.getCharacteristics();
             await this.startNotifications();
+            setupComplete = true;
         } catch (error) {
+            console.error(`${this.logHead} Connection setup failed:`, error);
             gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
         }
 
-        // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info
-        const connectionInfo = this.device.gatt.connected;
+        // gatt can report connected while setup threw and left no usable characteristics,
+        // so require setup to have completed. Optional-chained: an unsolicited disconnect
+        // during setup nulls this.device.
+        const connectionInfo = setupComplete && this.device?.gatt?.connected;
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
@@ -210,7 +243,7 @@ class WebBluetooth extends EventTarget {
             this.failed = 0;
             this.openRequested = false;
 
-            this.device.addEventListener("disconnect", this.handleDisconnect.bind(this));
+            this.device.addEventListener("disconnect", this.handleDisconnect);
             this.addEventListener("receive", this.handleReceiveBytes);
 
             console.log(`${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
@@ -294,7 +327,7 @@ class WebBluetooth extends EventTarget {
             );
         }
 
-        this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification.bind(this));
+        this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification);
     }
 
     handleNotification(event) {
@@ -321,33 +354,61 @@ class WebBluetooth extends EventTarget {
     }
 
     async disconnect() {
+        // If a GATT connect is still in flight, signal cancellation so the
+        // connect() coroutine tears down on completion instead of resurrecting a
+        // closed session with a late `connect` event (mirrors TauriSerial). Do
+        // this before any state mutation.
+        if (this.openRequested && !this.connected) {
+            console.log(`${this.logHead} Disconnect requested while a connect is in flight — cancelling the open`);
+            this.openCanceled = true;
+            // Cancellation was accepted — report success (mirrors TauriSerial), else
+            // Serial.disconnect() coerces the undefined return to false.
+            return true;
+        }
+
         this.connected = false;
         this.transmitting = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
 
-        // if we are already closing, don't do it again
+        // if we are already closing, don't do it again — the in-progress teardown owns
+        // the outcome; report success so Serial.disconnect() doesn't coerce to false.
         if (this.closeRequested) {
-            return;
+            return true;
         }
         // Mark closing now — before the gatt.disconnect() below — so the gattserverdisconnected
         // event it triggers is recognized by handleDisconnect as our own teardown, not an unplug.
         this.closeRequested = true;
 
+        // Publish the teardown so connect() can serialize behind it.
+        this._teardown = this._performTeardown();
+        return this._teardown;
+    }
+
+    async _performTeardown() {
         const doCleanup = async () => {
             this.removeEventListener("receive", this.handleReceiveBytes);
 
             if (this.device) {
-                this.device.removeEventListener("disconnect", this.handleDisconnect.bind(this));
+                this.device.removeEventListener("disconnect", this.handleDisconnect);
                 this.device.removeEventListener("gattserverdisconnected", this.handleDisconnect);
 
                 // readCharacteristic may already be false from a prior teardown — guard
                 // before calling, or false.removeEventListener throws and aborts cleanup.
                 if (this.readCharacteristic) {
-                    this.readCharacteristic.removeEventListener(
-                        "characteristicvaluechanged",
-                        this.handleNotification.bind(this),
-                    );
+                    this.readCharacteristic.removeEventListener("characteristicvaluechanged", this.handleNotification);
+
+                    // Stop notifications while the link is still up (an unplug/unsolicited
+                    // drop skips this): Chrome keeps the notify session marked active, and
+                    // on Linux/BlueZ the next connection's startNotifications() can then
+                    // resolve without re-arming the CCCD — subscribed but never receiving.
+                    if (this.device.gatt?.connected) {
+                        try {
+                            await this.readCharacteristic.stopNotifications();
+                        } catch (error) {
+                            console.warn(`${this.logHead} Failed to stop notifications during teardown:`, error);
+                        }
+                    }
                 }
 
                 if (this.device.gatt?.connected) {
@@ -372,12 +433,16 @@ class WebBluetooth extends EventTarget {
             this.connectionId = false;
             this.bitrate = 0;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            // Report success explicitly — WebSerial/TauriSerial/VirtualSerial all return
+            // true, and Serial.disconnect() coerces an undefined return to false.
+            return true;
         } catch (error) {
             console.error(error);
             console.error(
                 `${this.logHead} Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
             );
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            return false;
         } finally {
             if (this.openCanceled) {
                 this.openCanceled = false;

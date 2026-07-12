@@ -79,16 +79,7 @@
             </div>
 
             <!-- Sub-tab Navigation -->
-            <div class="subtab-nav">
-                <UTabs
-                    :items="subtabItems"
-                    :model-value="activeSubtab"
-                    :content="false"
-                    color="primary"
-                    variant="link"
-                    @update:model-value="activeSubtab = $event"
-                />
-            </div>
+            <SubtabNav :items="subtabItems" v-model="activeSubtab" />
 
             <!-- Tab Content -->
             <div class="tabarea">
@@ -125,7 +116,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useIsMounted } from "@/composables/useIsMounted";
 import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -133,6 +125,7 @@ import PidSubTab from "./pid-tuning/PidSubTab.vue";
 import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
 import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import SubtabNav from "@/components/elements/SubtabNav.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -159,7 +152,10 @@ const activeSubtab = ref("pid");
 const showAllPids = ref(false);
 const currentProfile = ref(FC.CONFIG.profile);
 const currentRateProfile = ref(0);
-const isMounted = ref(false);
+const isMounted = useIsMounted();
+// Guards for the TX-driven profile sync (see watchers below).
+const isLoading = ref(false);
+let syncingFromFc = false;
 const pidSubTab = ref(null);
 const filterSubTab = ref(null);
 const ratesSubTab = ref(null);
@@ -228,6 +224,7 @@ const hasChanges = computed(() => pidTuningStore.hasChanges);
 
 // MSP Data Loading
 async function loadData() {
+    isLoading.value = true;
     try {
         if (!isMounted.value) {
             return false;
@@ -298,6 +295,8 @@ async function loadData() {
         console.error("[PidTuning] Failed to load data:", e);
         GUI.content_ready();
         return false;
+    } finally {
+        isLoading.value = false;
     }
 }
 
@@ -549,6 +548,53 @@ watch(
     },
 );
 
+// Keep the profile / rate-profile selectors in sync with TX-driven changes.
+// The global live-status poller (serial_backend.js) refreshes FC.CONFIG.profile and
+// FC.CONFIG.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
+// can therefore change the active profile out from under the UI. Reflect that here and
+// reload — but never clobber unsaved edits or interrupt an in-flight load. Restores the
+// checkUpdateProfile() behaviour lost in the Vue migration (issue #5230).
+async function syncProfileFromFc(kind) {
+    // Skip while loading, while our own change is applying, or when the form is dirty
+    // (an in-progress edit takes precedence over a switch flip, matching legacy behaviour).
+    if (!isMounted.value || isLoading.value || syncingFromFc || pidTuningStore.hasChanges) {
+        return;
+    }
+
+    syncingFromFc = true;
+    try {
+        currentProfile.value = FC.CONFIG.profile;
+        currentRateProfile.value = FC.CONFIG.rateProfile;
+        await loadData();
+        gui_log(
+            i18n.getMessage(
+                kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile",
+                [(kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1],
+            ),
+        );
+    } finally {
+        syncingFromFc = false;
+    }
+}
+
+watch(
+    () => FC.CONFIG.profile,
+    (newValue) => {
+        if (newValue !== currentProfile.value) {
+            syncProfileFromFc("profile");
+        }
+    },
+);
+
+watch(
+    () => FC.CONFIG.rateProfile,
+    (newValue) => {
+        if (newValue !== currentRateProfile.value) {
+            syncProfileFromFc("rate");
+        }
+    },
+);
+
 // Cleanup callback - called from gui.js tab_switch_cleanup when switching away from this tab
 function cleanup(callback) {
     // Any cleanup needed before unmounting
@@ -562,13 +608,7 @@ defineExpose({ cleanup });
 
 // Lifecycle
 onMounted(async () => {
-    isMounted.value = true;
-
     await loadData();
-});
-
-onUnmounted(() => {
-    isMounted.value = false;
 });
 </script>
 
@@ -1288,12 +1328,6 @@ onUnmounted(() => {
 .subtab-filter .two_columns .two_columns_second {
     margin-left: 10px;
     height: fit-content;
-}
-
-/* ── Sub-tab navigation ───────────────────────────────────────────── */
-.subtab-nav {
-    width: calc(100% - 22px);
-    margin-bottom: 6px;
 }
 
 /* ── Tab area ─────────────────────────────────────────────────────── */

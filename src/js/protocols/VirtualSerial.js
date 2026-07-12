@@ -4,9 +4,14 @@ const VIRTUAL = "virtual";
  * Stripped down version of previous nwjs based serial port implementation
  * which is required to still have virtual serial port support in the
  * browser.
+ *
+ * VirtualSerial now extends EventTarget and emits synthetic connect/disconnect
+ * events, so the connection state can treat it like any other transport instead
+ * of special-casing "virtual" everywhere.
  */
-class VirtualSerial {
+class VirtualSerial extends EventTarget {
     constructor() {
+        super();
         this.connected = false;
         this.connectionId = false;
         this.bitrate = 0;
@@ -21,6 +26,9 @@ class VirtualSerial {
         this.connected = true;
         this.connectionId = VIRTUAL;
         this.bitrate = 115200;
+        // Synthetic connect: virtual has no underlying device, but emitting the
+        // same events as a real transport lets the connection state drive it uniformly.
+        this.dispatchEvent(new CustomEvent("connect", { detail: { connectionId: VIRTUAL } }));
         return true;
     }
     disconnect() {
@@ -30,6 +38,8 @@ class VirtualSerial {
         if (this.connectionId) {
             this.connectionId = false;
             this.bitrate = 0;
+            // Virtual disconnect is always intentional (no link to lose) -> CLOSED.
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
             return true;
         }
         return false;

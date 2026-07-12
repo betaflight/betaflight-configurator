@@ -106,6 +106,10 @@ Features.prototype.setMask = function (featureMask) {
     self._featureMask = featureMask;
 };
 
+Features.prototype.getFeatures = function () {
+    return this._features;
+};
+
 Features.prototype.isEnabled = function (featureName) {
     const self = this;
 

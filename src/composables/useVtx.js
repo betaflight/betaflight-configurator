@@ -1,4 +1,4 @@
-import { reactive, ref, computed, toRaw } from "vue";
+import { reactive, ref, computed, toRaw, onScopeDispose } from "vue";
 import djv from "djv";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
@@ -421,18 +421,38 @@ export function useVtx() {
         mspHelper.writeConfiguration(false, onSaveComplete);
     }
 
+    let saveCompleteTimeout = null;
+    let saveCompleteReloadTimeout = null;
+
+    function clearSaveCompleteTimeouts() {
+        if (saveCompleteTimeout !== null) {
+            clearTimeout(saveCompleteTimeout);
+            saveCompleteTimeout = null;
+        }
+        if (saveCompleteReloadTimeout !== null) {
+            clearTimeout(saveCompleteReloadTimeout);
+            saveCompleteReloadTimeout = null;
+        }
+    }
+
+    onScopeDispose(clearSaveCompleteTimeouts);
+
     function onSaveComplete() {
         savePending.value = false;
 
         saveButtonText.value = i18n.getMessage("buttonSaving");
         saving.value = true;
 
+        clearSaveCompleteTimeouts();
+
         const buttonDelay = 1500;
 
-        setTimeout(() => {
+        saveCompleteTimeout = setTimeout(() => {
+            saveCompleteTimeout = null;
             saveButtonText.value = i18n.getMessage("buttonSaved");
 
-            setTimeout(async () => {
+            saveCompleteReloadTimeout = setTimeout(async () => {
+                saveCompleteReloadTimeout = null;
                 await loadVtxConfig();
                 saveButtonText.value = "";
                 saving.value = false;

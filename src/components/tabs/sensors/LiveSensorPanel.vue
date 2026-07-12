@@ -106,6 +106,7 @@ import { useSensorsStore } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
 import { useInterval } from "../../../composables/useInterval";
 import { have_sensor } from "../../../js/sensor_helpers";
+import { radToDeg, clamp } from "../../../js/utils/common";
 import {
     GYRO_SCALE_OPTIONS,
     ACCEL_SCALE_OPTIONS,
@@ -290,8 +291,8 @@ function update_imu_graphs() {
         const ax = fcStore.sensorData.accelerometer[0];
         const ay = fcStore.sensorData.accelerometer[1];
         const az = fcStore.sensorData.accelerometer[2];
-        const rollACC = Math.round(Math.atan2(ay, Math.hypot(ax, az)) * (180 / Math.PI));
-        const pitchACC = Math.round(Math.atan2(ax, Math.hypot(ay, az)) * (180 / Math.PI));
+        const rollACC = Math.round(radToDeg(Math.atan2(ay, Math.hypot(ax, az))));
+        const pitchACC = Math.round(radToDeg(Math.atan2(ax, Math.hypot(ay, az))));
         accelDisplay.x = `${ax.toFixed(2)} (${rollACC})`;
         accelDisplay.y = `${ay.toFixed(2)} (${pitchACC})`;
         accelDisplay.z = az.toFixed(2);
@@ -334,8 +335,7 @@ function liveDebugContext() {
         motorPoles: fcStore.motorConfig?.motor_poles || 1,
         gyroRawToDegreesPerSecond: (v) => v * (4 / 16.4),
         accRawToGs: (v) => v / 2048,
-        rcCommandRawToThrottle: (v) =>
-            Math.min(Math.max(((v - minThrottle) / (maxThrottle - minThrottle)) * 100, 0), 100),
+        rcCommandRawToThrottle: (v) => clamp(((v - minThrottle) / (maxThrottle - minThrottle)) * 100, 0, 100),
         throttleToRcCommandRaw: (v) => (v / 100) * (maxThrottle - minThrottle) + minThrottle,
     };
 }

@@ -98,6 +98,117 @@ function fileList(entries) {
     return `<ul class="file-list">${entries.map(fileListItem).join("")}</ul>`;
 }
 
+// The per-release web app lives at https://<major>-<minor>.app.betaflight.com
+// (CalVer, e.g. 2026.6.0-RC1 -> https://2026-6.app.betaflight.com). That scheme
+// begins with 2026.6; older releases have no such subdomain.
+const RELEASE_WEBAPP_MIN = { major: 2026, minor: 6 };
+
+// Parse a CalVer/SemVer tag ("2026.6.0", "2026.6.0-RC1", "v2026.6.0") into its
+// numeric parts plus an optional pre-release string.
+function parseVersion(tag) {
+    // Start-anchored with a bounded pre-release class to keep matching linear.
+    const match = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?/.exec(tag || "");
+    if (!match) {
+        return null;
+    }
+    return { major: Number(match[1]), minor: Number(match[2]), patch: Number(match[3]), pre: match[4] || null };
+}
+
+// SemVer pre-release comparison, natural within each dot identifier so RC10 > RC2.
+function comparePre(a, b) {
+    const chunks = (s) => s.match(/\d+|\D+/g) || [];
+    const ca = chunks(a);
+    const cb = chunks(b);
+    for (let i = 0; i < Math.max(ca.length, cb.length); i++) {
+        const x = ca[i];
+        const y = cb[i];
+        if (x === undefined) {
+            return -1;
+        }
+        if (y === undefined) {
+            return 1;
+        }
+        const xn = /^\d+$/.test(x);
+        const yn = /^\d+$/.test(y);
+        if (xn && yn) {
+            const d = Number(x) - Number(y);
+            if (d !== 0) {
+                return d;
+            }
+        } else if (x !== y) {
+            return x < y ? -1 : 1;
+        }
+    }
+    return 0;
+}
+
+// Returns >0 when a is the higher version. A final release outranks a
+// pre-release of the same major.minor.patch (SemVer precedence).
+function compareVersions(a, b) {
+    for (const key of ["major", "minor", "patch"]) {
+        if (a[key] !== b[key]) {
+            return a[key] - b[key];
+        }
+    }
+    if (!a.pre && b.pre) {
+        return 1;
+    }
+    if (a.pre && !b.pre) {
+        return -1;
+    }
+    if (!a.pre && !b.pre) {
+        return 0;
+    }
+    return comparePre(a.pre, b.pre);
+}
+
+// Highest-versioned release (CalVer/SemVer), regardless of publish order.
+function highestRelease(releases) {
+    let best = null;
+    for (const release of releases) {
+        const version = parseVersion(release.tag_name);
+        if (!version) {
+            continue;
+        }
+        if (!best || compareVersions(version, best.version) > 0) {
+            best = { release, version };
+        }
+    }
+    return best;
+}
+
+// Which web app the hero should point at. A final release is what
+// app.betaflight.com already serves, so link there; a pre-release (e.g. an RC)
+// gets its own versioned subdomain. Pre-releases predating the versioned scheme
+// have no subdomain, so no hero.
+function heroWebApp(top, releaseUrl) {
+    if (!top) {
+        return null;
+    }
+    if (!top.release.prerelease) {
+        return { url: releaseUrl };
+    }
+    const { major, minor } = top.version;
+    if (major * 1000 + minor < RELEASE_WEBAPP_MIN.major * 1000 + RELEASE_WEBAPP_MIN.minor) {
+        return null;
+    }
+    return { url: `https://${major}-${minor}.app.betaflight.com` };
+}
+
+function renderReleaseWebAppSection(top, hero) {
+    if (!top || !hero) {
+        return "";
+    }
+    const tag = escapeHtml(top.release.tag_name);
+    const host = escapeHtml(hero.url.replace(/^https:\/\//, ""));
+    return `
+            <section class="release-hero">
+                <h2>Betaflight App &mdash; ${tag}</h2>
+                <p><a class="hero-link" href="${escapeHtml(hero.url)}">Open the web app for this release &rarr;</a></p>
+                <p class="meta">Runs in your browser at ${host}</p>
+            </section>`;
+}
+
 function renderWebAppSection(masterUrl, releaseUrl) {
     return `
             <section>
@@ -282,7 +393,13 @@ try {
     const masterUrl = args["master-url"] || "https://master.betaflight-app.pages.dev";
     const releaseUrl = args["release-url"] || "https://app.betaflight.com";
 
+    // Feature the highest-versioned release at the top: final releases link to
+    // app.betaflight.com, pre-releases to their own versioned subdomain.
+    const topRelease = highestRelease(publicReleases);
+    const hero = heroWebApp(topRelease, releaseUrl);
+
     const sections = [
+        renderReleaseWebAppSection(topRelease, hero),
         renderWebAppSection(masterUrl, releaseUrl),
         renderNightlySection(manifest.nightly),
         renderLatestStableSection(latestStable),

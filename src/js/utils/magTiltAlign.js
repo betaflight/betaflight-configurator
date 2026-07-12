@@ -14,13 +14,11 @@
  */
 import { ALIGNMENT_MATRICES, ALIGNMENT_LABELS, eulerToMatrix, mat3mulVec } from "./magAlignment.js";
 import { snapToPreset, matrixToEuler } from "./magCharacterization.js";
-
-const DEG_TO_RAD = Math.PI / 180;
-const RAD_TO_DEG = 180 / Math.PI;
+import { degToRad, radToDeg, clamp } from "./common.js";
 
 // Robust M-estimator on the dip residual, in ANGLE space (latitude-independent).
-const SLACK_RAD = 3.0 * DEG_TO_RAD; // residual below this is free
-const CAP_RAD = 15.0 * DEG_TO_RAD; // residual above this is capped (outlier rejection)
+const SLACK_RAD = degToRad(3.0); // residual below this is free
+const CAP_RAD = degToRad(15.0); // residual above this is capped (outlier rejection)
 const MAX_PENALTY = (CAP_RAD - SLACK_RAD) * (CAP_RAD - SLACK_RAD);
 
 const MIN_SAMPLES = 20;
@@ -29,16 +27,6 @@ const COARSE_STEP = 15; // degrees
 const REFINE_STEP = 2; // degrees
 const REFINE_RADIUS = 12; // degrees
 const REFINE_TOP_N = 8; // how many of the top coarse candidates to refine
-
-function clamp(v, lo, hi) {
-    if (v < lo) {
-        return lo;
-    }
-    if (v > hi) {
-        return hi;
-    }
-    return v;
-}
 
 function normalize3(v) {
     const len = Math.hypot(v[0], v[1], v[2]);
@@ -54,8 +42,8 @@ function dot3(a, b) {
 
 /** Gravity (down) in the FLU body frame from roll/pitch (degrees). Level → [0,0,-1]. */
 function gravityInBody(rollDeg, pitchDeg) {
-    const r = rollDeg * DEG_TO_RAD;
-    const p = pitchDeg * DEG_TO_RAD;
+    const r = degToRad(rollDeg);
+    const p = degToRad(pitchDeg);
     return [Math.sin(p), -Math.sin(r) * Math.cos(p), -Math.cos(r) * Math.cos(p)];
 }
 
@@ -84,7 +72,7 @@ function meanResidualDeg(R, samples, expectedAngleRad) {
     for (const s of samples) {
         sum += dipResidualRad(R, s, expectedAngleRad);
     }
-    return (sum / samples.length) * RAD_TO_DEG;
+    return radToDeg(sum / samples.length);
 }
 
 function evalGrid(rollVals, pitchVals, yawVals, samples, expectedAngleRad, sink) {

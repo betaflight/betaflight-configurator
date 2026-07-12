@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import MSP from "../../src/js/msp";
+import { serial } from "../../src/js/serial";
 
 describe("MSP", () => {
     describe("encode_message_v1", () => {
@@ -83,6 +84,42 @@ describe("MSP", () => {
 
             // check that data got encoded as expected
             expect(encodedMessage.slice(8, -1)).toEqual(inputData);
+        });
+    });
+
+    describe("_dispatch_message CRC bypass (BT-11/CC2541 corruption)", () => {
+        // The bypass is a CAPABILITY check on the active protocol: only the Bluetooth
+        // protocols implement shouldBypassCrc. It must not be gated on the
+        // `serial.protocol` name getter — that returns the lowercased constructor name
+        // ("webbluetooth"), which made the old `=== "bluetooth"` comparison dead code.
+        function primeMessage() {
+            MSP.message_buffer = new ArrayBuffer(2);
+            MSP.message_length_expected = 2;
+            MSP.message_checksum = 0x12; // computed over the payload
+            MSP.crcError = false;
+            MSP.packet_error = 0;
+        }
+
+        // crcError is reset at the end of _dispatch_message, so observe what the
+        // notified listeners see plus the persistent outcomes (dataView, packet_error).
+        it("accepts a corrupted 0xff checksum when the active protocol opts in", () => {
+            const savedProtocol = serial._protocol;
+            let seenCrcError = null;
+            const listener = (msp) => (seenCrcError = msp.crcError);
+            try {
+                serial._protocol = { shouldBypassCrc: (expected) => expected === 0xff };
+                MSP.listen(listener);
+                primeMessage();
+
+                MSP._dispatch_message(0xff); // received checksum corrupted to 0xff
+
+                expect(seenCrcError).toBe(false);
+                expect(MSP.dataView.byteLength).toBe(2);
+                expect(MSP.packet_error).toBe(0);
+            } finally {
+                serial._protocol = savedProtocol;
+                MSP.clearListeners();
+            }
         });
     });
 });

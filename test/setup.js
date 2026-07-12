@@ -1,5 +1,12 @@
 import { JSDOM } from "jsdom";
 import { vi } from "vitest";
+import { MspCancelledError } from "../src/js/msp/mspErrors.js";
+
+globalThis.addEventListener?.("unhandledrejection", (event) => {
+    if (event.reason instanceof MspCancelledError) {
+        event.preventDefault();
+    }
+});
 
 const { window } = new JSDOM("");
 

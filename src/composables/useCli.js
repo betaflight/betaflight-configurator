@@ -8,6 +8,7 @@ import CONFIGURATOR from "../js/data_storage";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { gui_log } from "../js/gui_log";
 import { serial } from "../js/serial";
+import { reinitializeConnection } from "../js/serial_backend";
 import FileSystem from "../js/FileSystem";
 import { ispConnected } from "../js/utils/connection";
 import { get as getConfig } from "../js/ConfigStorage";
@@ -80,7 +81,15 @@ function onCopyFailed(ex) {
     console.warn(ex);
 }
 
-async function submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, getOutputHistory) {
+async function submitSupportData(
+    data,
+    state,
+    clearHistory,
+    executeCommands,
+    writeToOutput,
+    getOutputHistory,
+    trackPollInterval,
+) {
     clearHistory();
     const api = new BuildApi();
 
@@ -96,6 +105,7 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
         const time = Date.now();
         if (state.lastArrival < time - 250) {
             clearInterval(delay);
+            trackPollInterval?.(null);
             const text = getOutputHistory();
             let key = await api.submitSupportData(text);
             if (!key) {
@@ -106,6 +116,7 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
             writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
         }
     }, 250);
+    trackPollInterval?.(delay);
 }
 
 export function useCli() {
@@ -153,6 +164,7 @@ export function useCli() {
     let flushing = false; // true during DOM mutations; prevents spurious scrollPinned flips
     let scrollRaf = null; // deferred scroll; separates DOM writes from scrollTop write (avoids forced reflow)
     let pastePollInterval = null;
+    let supportPollInterval = null;
 
     const flushOutput = () => {
         outputFlushRaf = null;
@@ -339,7 +351,17 @@ export function useCli() {
 
     const submitSupportRequest = async () => {
         showSupportWarningDialog((data) =>
-            submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, () => outputHistory),
+            submitSupportData(
+                data,
+                state,
+                clearHistory,
+                executeCommands,
+                writeToOutput,
+                () => outputHistory,
+                (id) => {
+                    supportPollInterval = id;
+                },
+            ),
         );
     };
 
@@ -490,7 +512,7 @@ export function useCli() {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
             gui_log(i18n.getMessage("cliReboot"));
-            GUI.reinitializeConnection();
+            reinitializeConnection();
         }
     };
 
@@ -659,6 +681,11 @@ export function useCli() {
             pastePollInterval = null;
         }
 
+        if (supportPollInterval) {
+            clearInterval(supportPollInterval);
+            supportPollInterval = null;
+        }
+
         if (outputFlushRaf) {
             cancelAnimationFrame(outputFlushRaf);
             outputFlushRaf = null;
@@ -688,7 +715,7 @@ export function useCli() {
 
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
             send(getCliCommand("exit\r", cliBuffer), function () {
-                GUI.reinitializeConnection();
+                reinitializeConnection();
             });
         }
 

@@ -1,6 +1,7 @@
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
+import { getConnectionState } from "./connection_state.js";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
@@ -34,6 +35,10 @@ const PortHandler = new (function () {
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
+
+    // "Reconnect in progress" is the connection state being in REBOOTING/RECONNECTING,
+    // read in selectActivePort() via getConnectionState().isReconnecting; the
+    // previously-selected port stays put as the reconnect target.
 
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
@@ -285,14 +290,27 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     }
 
     // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
+    // While a reboot/reconnect is in progress the rebooting device is only
+    // transiently absent from the lists — it will re-enumerate and re-select
+    // itself. Do NOT assign the virtual/manual fallback in that window, or it
+    // would hijack the selection mid-reboot and leave the configurator pointed at
+    // the wrong "device".
     const expertMode = isExpertModeEnabled();
+    const reconnectInProgress = getConnectionState().isReconnecting;
 
-    if (!selectedPort && expertMode && this.showVirtualMode) {
+    if (!selectedPort && !reconnectInProgress && expertMode && this.showVirtualMode) {
         selectedPort = "virtual";
     }
 
-    if (!selectedPort && expertMode && this.showManualMode) {
+    if (!selectedPort && !reconnectInProgress && expertMode && this.showManualMode) {
         selectedPort = "manual";
+    }
+
+    // While reconnecting, keep the previously-selected device rather than dropping
+    // to "noselection": it re-enumerates with the same stable id, so the existing
+    // selection is still the right target. Never virtual/manual.
+    if (!selectedPort && reconnectInProgress) {
+        selectedPort = this.portPicker.selectedPort;
     }
 
     // Return the default port if no other port was selected

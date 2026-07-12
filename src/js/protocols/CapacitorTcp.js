@@ -1,27 +1,7 @@
 import { Capacitor } from "@capacitor/core";
+import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/bytes.js";
 
 const BetaflightTcp = Capacitor?.Plugins?.BetaflightTcp;
-
-function base64ToUint8Array(b64) {
-    const binary = atob(b64);
-    const len = binary.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        // The atob() function returns a binary string where each character represents a single byte (0–255).
-        // codePointAt() is designed for Unicode code points and can return values greater than 255, which will overflow Uint8Array slots and corrupt received data.
-        // Use charCodeAt(i) to safely extract byte values.
-        bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes;
-}
-
-function uint8ArrayToBase64(bytes) {
-    let binary = "";
-    for (let i = 0; i < bytes.byteLength; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-}
 
 class CapacitorTcp extends EventTarget {
     constructor() {

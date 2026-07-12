@@ -4,7 +4,6 @@
         :title="title"
         :close="false"
         :dismissible="false"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
     >
         <template #body>
             <div class="flex flex-col gap-4">
