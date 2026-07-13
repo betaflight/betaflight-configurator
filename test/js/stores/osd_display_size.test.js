@@ -3,8 +3,9 @@ import { createPinia, setActivePinia } from "pinia";
 import { OSD } from "../../../src/components/tabs/osd/osd";
 import { useOsdStore } from "../../../src/stores/osd.js";
 
-// VIDEO_TYPES = ["AUTO", "PAL", "NTSC", "HD"] (see osd_constants.js)
-const VIDEO_SYSTEM = { AUTO: 0, PAL: 1, NTSC: 2, HD: 3 };
+// Derive the video-system index map from the canonical VIDEO_TYPES ordering
+// so the test never drifts if that list is reordered or extended.
+const VIDEO_SYSTEM = Object.fromEntries(OSD.constants.VIDEO_TYPES.map((type, index) => [type, index]));
 
 describe("osd store updateDisplaySize", () => {
     beforeEach(() => {
