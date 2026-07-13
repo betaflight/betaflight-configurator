@@ -2697,65 +2697,53 @@ MspHelper.prototype.sendCurrentConfig = async function () {
     }
 };
 
+// Pack one LED's config into its 32-bit mask. The two API layouts are identical except for
+// where the colour and direction fields sit (overlay bits are always at +12), so both are
+// handled by passing those two offsets in — see sendLedStripConfig.
+function buildLedStripMask(led, colorOffset, directionOffset) {
+    let mask = 0;
+
+    mask |= led.y << 0;
+    mask |= led.x << 4;
+
+    for (let functionLetterIndex = 0; functionLetterIndex < led.functions.length; functionLetterIndex++) {
+        const fnIndex = ledBaseFunctionLetters.indexOf(led.functions[functionLetterIndex]);
+        if (fnIndex >= 0) {
+            mask |= fnIndex << 8;
+            break;
+        }
+    }
+
+    for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
+        const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
+        if (bitIndex >= 0) {
+            mask |= bit_set(mask, bitIndex + 12);
+        }
+    }
+
+    mask |= led.color << colorOffset;
+
+    for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
+        const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
+        if (bitIndex >= 0) {
+            mask |= bit_set(mask, bitIndex + directionOffset);
+        }
+    }
+
+    return mask;
+}
+
 MspHelper.prototype.sendLedStripConfig = async function () {
+    // API 1.46 shifted the colour (18 -> 22) and direction (22 -> 26) fields up in the mask.
+    const isNewLayout = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+    const colorOffset = isNewLayout ? 22 : 18;
+    const directionOffset = isNewLayout ? 26 : 22;
+
     for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
-        const led = FC.LED_STRIP[ledIndex];
         const buffer = [];
 
         buffer.push(ledIndex);
-
-        let mask = 0;
-
-        mask |= led.y << 0;
-        mask |= led.x << 4;
-
-        for (let functionLetterIndex = 0; functionLetterIndex < led.functions.length; functionLetterIndex++) {
-            const fnIndex = ledBaseFunctionLetters.indexOf(led.functions[functionLetterIndex]);
-            if (fnIndex >= 0) {
-                mask |= fnIndex << 8;
-                break;
-            }
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
-                const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
-                if (bitIndex >= 0) {
-                    mask |= bit_set(mask, bitIndex + 12);
-                }
-            }
-
-            mask |= led.color << 22;
-
-            for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
-                const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
-                if (bitIndex >= 0) {
-                    mask |= bit_set(mask, bitIndex + 26);
-                }
-            }
-
-            buffer.push32(mask);
-        } else {
-            for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
-                const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
-                if (bitIndex >= 0) {
-                    mask |= bit_set(mask, bitIndex + 12);
-                }
-            }
-
-            mask |= led.color << 18;
-
-            for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
-                const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
-                if (bitIndex >= 0) {
-                    mask |= bit_set(mask, bitIndex + 22);
-                }
-            }
-
-            mask |= 0 << 28; // parameters
-
-            buffer.push32(mask);
-        }
+        buffer.push32(buildLedStripMask(FC.LED_STRIP[ledIndex], colorOffset, directionOffset));
 
         await MSP.promise(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer);
     }
