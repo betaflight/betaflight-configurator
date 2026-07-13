@@ -1726,6 +1726,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "Rotazione arbitraria del controllore di volo, per consentire di montarlo di lato, sottosopra, ruotato ecc. Quando si utilizzano sensori esterni, usa l'allineamento del sensore (Gyro, Acc, Mag) per definire la posizione del sensore indipendentemente dall'orientamento del controllore di volo. "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Auto-Rilevamento allineamento scheda..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Wizard Allineamento Scheda"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Questa procedura guidata rileva come il controllore di volo è montato guidandoti attraverso quattro semplici movimenti. Posizionare il drone su una superficie piana con la fotocamera lontana da voi (verso lo schermo), quindi seguire i suggerimenti."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Inizia"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Passo"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Posiziona il drone su una superficie piana con la fotocamera rivolta lontano da te (verso lo schermo)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Inclinare il muso su di circa 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Inclinare il lato destro verso il basso di circa 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Ruota il drone di circa 45° in senso orario (visto dall'alto)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Riporta il drone in posizione orizzontale."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Mantieni il drone fermo..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Stabilizzazione"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Continua a inclinare"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Ritorna al livello"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Asse rilevato — mantenere fermo"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotazione"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Calcolo dell'allineamento..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Allineamento Rilevato"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "L'allineamento della scheda sembra corretto — non sono necessarie modifiche."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Corrente"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Rilevato"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Precedente"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Applica"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Cancella"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Riprova"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Rileva ora"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "L'affidabilità del rilevamento è ridotta. Verifica il risultato con l'assetto in tempo reale prima di applicarlo."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Per eseguire questa procedura è necessario un accelerometro."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Calibrare l'accelerometro prima di eseguire questa procedura."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Alcuni campioni non sono stati raccolti. Riprova."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "L'accelerometro non sta leggendo la gravità. Assicurarsi che il FC sia collegato e non in movimento."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Il movimento di beccheggio non è stato rilevato. Riprova e inclina di più il muso verso l'alto."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Il movimento di rollio non è stato rilevato. Riprova e inclina di più il lato destro verso il basso."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Piatto"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Beccheggio"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Rollio"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Imbardata"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Catturato!"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -2034,6 +2148,9 @@
     },
     "configurationSpiRX": {
         "message": "Protocollo ricevente bus SPI"
+    },
+    "configurationSaved": {
+        "message": "Configurazione salvata"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -3189,6 +3306,9 @@
     "servosChangeDirection": {
         "message": "Cambia direzione nella TX per abbinare"
     },
+    "servosForwardChannel": {
+        "message": "Inoltra il canale {{channel}} al servo {{servo}}"
+    },
     "servosName": {
         "message": "Nome"
     },
@@ -3917,6 +4037,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Esegui"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Anteprima Modulo"
     },
     "cliPanelTitle": {
         "message": "Interfaccia Linea di Comando"
@@ -5875,6 +5998,9 @@
     "powerBatteryProfileOption": {
         "message": "Profilo Batteria $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Profilo batteria impostato dal controller di volo: <strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "es. LiPo, Li-Ion"
     },
@@ -5919,6 +6045,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Attiva\/disattiva visibilità {{element}} per il profilo {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>ATTENZIONE:<\/b><\/span> Nessun chip OSD rilevato. Alcuni controllori di volo non alimentano correttamente il chip OSD a meno che non sia collegata la batteria. Si prega di collegare la batteria prima di collegare l'USB (RIMUOVI LE ELICHE!)."
