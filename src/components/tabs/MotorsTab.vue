@@ -314,7 +314,7 @@
                                     >
                                         <span>{{ axis.toUpperCase() }}:</span>
                                         <span
-                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
+                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
                                             :class="{
                                                 'bg-[#e24761]': axis === 'x',
                                                 'bg-[#49c747]': axis === 'y',
@@ -326,7 +326,7 @@
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span
-                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623]"
+                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
                                             >{{ rawDataDisplay.rms }}</span
                                         >
                                     </div>
