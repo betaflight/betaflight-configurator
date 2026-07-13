@@ -1366,6 +1366,10 @@
         "message": "პოზიციის შენარჩუნება ჩართულია",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "ავტოპილოტის რეჟიმის გადამრთველი აქტიურია",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "დაქოქვის გადამრთველი უკვე აქტიურია. სისტემის უსაფრთხოებისთვის, ძრავების ასამუშავებლად ჯერ გამორთეთ დაქოქვის ღილაკი და ხელახლა ჩართეთ",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1714,6 +1718,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "პლატის ნებისმიერი როტაცია გრადუსებში, რაც იძლევა მისი გვერდულად, თავდაყირა ან ნებისმიერი კუთხით დამონტაჟების საშუალებას. გარე სენსორების გამოყენებისას, გამოიყენეთ თავად სენსორების გასწორების პარამეტრები (Gyro, Acc, Mag), რათა განსაზღვროთ სენსორის პოზიცია პლატის ორიენტაციისგან დამოუკიდებლად "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "დაფის მიმართულების ავტო-დეტექცია..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "დაფის ორიენტაციის ასისტენტი"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "ეს ასისტენტი განსაზღვრავს თქვენი ფრენის კონტროლერის სამაგრის ორიენტაციას ოთხი მარტივი მოძრაობის მეშვეობით. მოათავსეთ დრონი ბრტყელ ზედაპირზე ისე, რომ კამერა თქვენგან საპირისპირო მხარეს (ეკრანისკენ) იყოს მიმართული, შემდეგ კი მიჰყევით მითითებებს."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "დაწყება"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "ნაბიჯი"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "მოათავსეთ დრონი ბრტყელ ზედაპირზე ისე, რომ კამერა თქვენგან საპირისპირო მხარეს (ეკრანისკენ) იყოს მიმართული."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "აწიეთ ცხვირი ზემოთ 45°-ით."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "დახარეთ მარჯვენა მხარე ქვემოთ დაახლოებით 45°-ით."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "მობრუნეთ დრონი 45°-ით მარჯვნივ (ზემოდან ხედით)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "დააბრუნეთ დრონი სწორხაზოვან პოზიციაში."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "შეინარჩუნეთ უძრავი პოზიცია..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "სტაბილიზაცია"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "კვლავ გადახარეთ"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "დააბრუნეთ სწორ პოზიციაში"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "ღერძი ამოცნობილია — გეჭიროთ უძრავად"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "ბრუნვა"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "ორიენტაციის გამოთვლა..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "ორიენტაცია ამოცნობილია"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "დაფის ორიენტაცია გამართულია — ცვლილება არ სჭირდება."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "მიმდინარე"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "ამოცნობილია"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "უკან"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "გადახედვა"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "გაუქმება"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "კიდევ ცდა"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "ახლა დაფიქსირება"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "ამოცნობის სიზუსტე შემცირებულია — შენახვამდე გადაამოწმეთ შედეგი სივრცულ მდგომარეობასთან."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "ამ ასისტენტის მუშაობისთვის აუცილებელია აკსელერომეტრის არსებობა."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "გთხოვთ, დააკალიბროთ აკსელერომეტრი ამ ასისტენტის დაწყებამდე."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "ზოგიერთი მონაცემი ვერ შეგროვდა. გთხოვთ, სცადოთ თავიდან."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "აკსელერომეტრი ვერ აღიქვამს გრავიტაციას. დარწმუნდით, რომ ფრენის კონტროლერი მიერთებულია და არ მოძრაობს."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Pitch მოძრაობა ვერ ამოიცნო. სცადეთ თავიდან და აწიეთ ცხვირი უფრო მაღლა."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Roll მოძრაობა ვერ ამოიცნო. სცადეთ თავიდან და დახარეთ მარჯვენა მხარე უფრო მეტად."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "ბრტყელი"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "დაფიქსირებულია!"
+    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
     },
@@ -1986,6 +2104,9 @@
     },
     "configurationSpiRX": {
         "message": "SPI ავტობუსის მიმღების პროვაიდერი"
+    },
+    "configurationSaved": {
+        "message": "კონფიგურაცია შენახულია"
     },
     "configurationButtonSave": {
         "message": "შენახვა და გადატვირთვა"
@@ -3125,6 +3246,9 @@
     "servosChangeDirection": {
         "message": "შეცვალეთ მიმართულება TX-ში შესატყვისად"
     },
+    "servosForwardChannel": {
+        "message": "არხის {{channel}} გადაგზავნა სერვოზე {{servo}}"
+    },
     "servosName": {
         "message": "სახელი"
     },
@@ -3845,6 +3969,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "შესრულება"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "წინასწარი გადახედვა"
     },
     "cliPanelTitle": {
         "message": "ბრძანების ხაზის ინტერფეისი"
@@ -5799,6 +5926,9 @@
     "powerBatteryProfileOption": {
         "message": "ბატარეის პროფილი $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "ფრენის კონტროლერმა დააყენა ბატარეის პროფილი:<strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "მაგ. LiPo, Li-Ion"
     },
@@ -5843,6 +5973,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "{{element}}-ის გამოჩენის გადართვა პროფილში {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>გაფრთხილება:<\/b><\/span> OSD ჩიპი არ იქნა აღმოჩენილი. ზოგიერთი ფრენის კონტროლერი სათანადოდ ვერ კვებავს OSD ჩიპს, თუ არ არის დაკავშირებული ბატარეასთან. გთხოვთ, შეაერთოთ ბატარეა USB-ს დაკავშირებამდე (PROPS REMOVED!)."
@@ -7269,6 +7402,14 @@
     "osdWarningPosHoldFailed": {
         "message": "პოზიციის შეკავება ვერ მოხერხდა",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "ავტოპილოტის მისია შეწყდა",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "ავტოპილოტის მისია შეწყდა",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
     },
     "osdWarningTextUnknown": {
         "message": "უცნობი $1"

@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "切断"
     },
+    "disconnectVirtual": {
+        "message": "切断 (仮想)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "切断 (手動ポート)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "切断 (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "デバイスを選択",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -100,6 +112,9 @@
     "bluetoothConnectionError": {
         "message": "Bluetooth エラー: $1"
     },
+    "virtualMode": {
+        "message": "仮想モード"
+    },
     "virtualMSPVersion": {
         "message": "バーチャルファームウェアバージョン"
     },
@@ -107,8 +122,12 @@
         "message": "ポート:"
     },
     "connectVirtualDescription": {
-        "message": "ハードウェアなしでフライトコントローラーをシミュレートします。",
+        "message": "ハードウェアなしでフライトコントローラをシミュレートします。",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "接続 (仮想)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "シリアルパスまたは接続先のURLを入力してください。",
@@ -323,11 +342,68 @@
     "tabOptions": {
         "message": "オプション"
     },
+    "sidebarOpenOptions": {
+        "message": "オプション",
+        "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": "ダーク \/ ライトモード切替",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "エキスパートモード切替",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+    },
     "tabSetup": {
         "message": "セットアップ"
     },
     "tabSetupOSD": {
         "message": "OSD設定"
+    },
+    "tabSensorConfig": {
+        "message": "センサー"
+    },
+    "sensorConfigHardware": {
+        "message": "センサーハードウェア"
+    },
+    "sensorConfigGyroLabel": {
+        "message": "ジャイロ $1"
+    },
+    "sensorConfigSaved": {
+        "message": "センサー設定を保存しました"
+    },
+    "sensorConfigSaveFailed": {
+        "message": "センサー設定を保存できませんでした"
+    },
+    "sensorConfigMagnetometer": {
+        "message": "コンパス"
+    },
+    "sensorConfigAccelerometer": {
+        "message": "加速度センサー"
+    },
+    "sensorConfigAccCalibrateHelp": {
+        "message": "キャリブレーションを実行する前に、機体を水平な場所に置いてください"
+    },
+    "sensorConfigAccNeedsCalibration": {
+        "message": "加速度センサーがキャリブレーションされていません。飛行前にキャリブレーションしてください。"
+    },
+    "sensorConfigMagNeedsCalibration": {
+        "message": "コンパスキャリブレーションのオフセットがゼロです。正確な方位を得るためにキャリブレーションしてください。"
+    },
+    "sensorConfigCalibrate": {
+        "message": "キャリブレート"
+    },
+    "sensorConfig3dPreview": {
+        "message": "3D 姿勢プレビュー"
+    },
+    "sensorConfigLiveData": {
+        "message": "リアルタイムセンサーデータ"
+    },
+    "sensorConfigShowLiveData": {
+        "message": "リアルタイムセンサーデータを表示"
+    },
+    "sensorConfigLiveStop": {
+        "message": "データのリアルタイム表示を停止"
     },
     "tabConfiguration": {
         "message": "基本設定"
@@ -337,6 +413,154 @@
     },
     "tabPidTuning": {
         "message": "PIDチューニング"
+    },
+    "tabAutotune": {
+        "message": "自動調整"
+    },
+    "tabBlackboxViewer": {
+        "message": "Blackbox ビューア",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
+    "autotuneImportTitle": {
+        "message": "Blackbox チャープ解析"
+    },
+    "autotuneImportButton": {
+        "message": "Blackboxログをインポート"
+    },
+    "autotuneImportDescription": {
+        "message": "debug_mode = CHIRP で記録したBlackboxログをインポートして、周波数応答を解析し、PID推奨値を算出します。"
+    },
+    "autotuneSelectingFile": {
+        "message": "ファイルを選択中..."
+    },
+    "autotuneAnalyzing": {
+        "message": "チャープデータを解析中..."
+    },
+    "autotuneBandwidth": {
+        "message": "帯域幅"
+    },
+    "autotunePhaseMargin": {
+        "message": "位相マージン"
+    },
+    "autotuneResonantPeak": {
+        "message": "共振ピーク"
+    },
+    "autotuneCoherence": {
+        "message": "コヒーレンス"
+    },
+    "autotuneParameter": {
+        "message": "パラメータ"
+    },
+    "autotuneCurrent": {
+        "message": "現在"
+    },
+    "autotuneProposed": {
+        "message": "提案"
+    },
+    "autotuneChange": {
+        "message": "変更"
+    },
+    "autotuneApplying": {
+        "message": "適用中..."
+    },
+    "autotuneApplied": {
+        "message": "強度[ゲイン]を適用して保存しました。"
+    },
+    "autotuneApplyFailed": {
+        "message": "強度[ゲイン]の適用に失敗しました"
+    },
+    "autotuneConnectRequired": {
+        "message": "強度[ゲイン]を適用するにはフライトコントローラに接続してください。"
+    },
+    "autotuneNoLogs": {
+        "message": "このファイルに有効なBlackboxログが見つかりません。"
+    },
+    "autotuneNoChirpData": {
+        "message": "チャープデータが見つかりません。ログが debug_mode = CHIRP で記録され、チャープモードが有効になっていたことを確認してください。"
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} サンプル"
+    },
+    "autotuneSampleRate": {
+        "message": "サンプルレート: {{rate}} Hz"
+    },
+    "autotuneImportAnother": {
+        "message": "別ファイルをインポート"
+    },
+    "autotuneImportRetry": {
+        "message": "再試行"
+    },
+    "autotuneFile": {
+        "message": "ファイル"
+    },
+    "autotuneAxesDetected": {
+        "message": "検出された軸"
+    },
+    "autotuneApplyGains": {
+        "message": "強度[ゲイン]を適用"
+    },
+    "autotuneGainTitle": {
+        "message": "強度[ゲイン] 推奨値"
+    },
+    "autotuneAxisSelector": {
+        "message": "軸の選択"
+    },
+    "autotuneAxisRoll": {
+        "message": "ロール"
+    },
+    "autotuneAxisPitch": {
+        "message": "ピッチ"
+    },
+    "autotuneAxisYaw": {
+        "message": "ヨー"
+    },
+    "autotuneBodePlotTitle": {
+        "message": "周波数応答"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "現在のPID (ログから取得)"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "分析"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "推奨スライダー値"
+    },
+    "autotuneSliderMasterMultiplier": {
+        "message": "基準値 倍率設定"
+    },
+    "autotuneSliderPIGain": {
+        "message": "P \/ I値 強度"
+    },
+    "autotuneSliderIGain": {
+        "message": "I値 強度"
+    },
+    "autotuneSliderDGain": {
+        "message": "D値 強度"
+    },
+    "autotuneSliderFeedforward": {
+        "message": "Feedforward"
+    },
+    "autotuneSliderDTermFilter": {
+        "message": "D値 フィルター"
+    },
+    "autotuneApplyFromAxis": {
+        "message": "軸から強度[ゲイン]を適用する"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "感度ピーク"
+    },
+    "autotuneOvershoot": {
+        "message": "オーバーシュート"
+    },
+    "autotuneRiseTime": {
+        "message": "立ち上がり時間"
+    },
+    "autotuneSettlingTime": {
+        "message": "整定時間"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "スペクトログラム (ジャイロ)"
     },
     "tabReceiver": {
         "message": "受信機"
@@ -423,6 +647,12 @@
     },
     "serialPortOpenFail": {
         "message": "シリアルポートに<span class=\"message-negative\">接続できません<\/span>"
+    },
+    "connectionFailedTitle": {
+        "message": "接続に失敗しました"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">接続失敗<\/span>：選択したポートに接続できませんでした。デバイスと接続設定を確認してから、もう一度お試しください。"
     },
     "serialPortClosedOk": {
         "message": "シリアルポートは<span class=\"message-positive\">正常<\/span>に切断しました"
@@ -539,10 +769,13 @@
         "message": "<span class=\"message-negative\">10秒<\/span>以内に構成情報を受信できず、通信に<span class=\"message-negative\">失敗<\/span>しました。"
     },
     "firmwareVersionNotSupported": {
-        "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません<\/span>。<strong>$1<\/strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br\/>または、アップグレードする準備ができていない場合は、旧バージョンのアプリをダウンロードして使用してください。"
+        "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません<\/span>。<strong>$1<\/strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br \/>または、アップグレードする準備ができていない場合は、旧バージョンのアプリをダウンロードして使用してください。"
     },
     "firmwareTypeNotSupported": {
         "message": "CLIモードを除き、Betaflight以外のファームウェアは<span class=\"message-negative\">サポートされていません<\/span>。"
+    },
+    "firmwareUpgradeRequired": {
+        "message": "現在のアプリバージョンは、このデバイスのファームウェアバージョンをサポートしていない可能性があります。ファームウェア 4.1 まで対応する場合は <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a>、さらに古いファームウェアバージョンの場合は <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> などの旧リリースを使用できます。<br><br>アプリはデバイス上のCLIへのアクセスを試みます。成功した場合は、CLIで <code>version<\/code> コマンドを送信することで、現在のファームウェアバージョンを確認できます。<br><br>または、新しいファームウェアバージョンへアップグレードすることもできます。フラッシュ書き込み前のバックアップにはCLIを使用してください。手順は<a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">ドキュメント<\/a>に記載されています。ただし、古いファームウェアバージョンのバックアップは、新しいバージョンへ復元する際に正しく引き継がれない場合があることに注意してください。モード、OSD、レート、ポート設定は安全に移行できるはずですが、PIDおよびフェイルセーフ設定には注意してください。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "このFCボードにはカスタムされた初期値が適用されています。通常、カスタム初期値が適用されない場合はFCボードが正常に動作しません。<br \/>このFCボードにカスタム初期値を適用しますか？"
@@ -722,6 +955,9 @@
     "defaultHardwareHead": {
         "message": "ハードウェア"
     },
+    "defaultHardwareText": {
+        "message": "このアプリケーションは、Betaflightが動作するすべてのハードウェアをサポートしています。対応ハードウェアの一覧については【ファームフラッシャー】タブをご確認ください。<br \/><br \/>役立つハードウェアユーティリティ \/ ドライバ:<ul><li>CP210x USB–シリアルチップを使用したレガシーハードウェアの場合、最新の<b>CP210xドライバ<\/b>は <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><li>Windows用 USBドライバをインストールするための最新の <b>Zadig<\/b> は <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><li><b>ImpulseRC Driver Fixer<\/b>は <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><\/ul>"
+    },
     "defaultSoftwareHead": {
         "message": "ソフトウェア"
     },
@@ -730,6 +966,9 @@
     },
     "defaultContributingHead": {
         "message": "開発への協力・貢献"
+    },
+    "defaultContributingText": {
+        "message": "Betaflightをさらに良くするために、以下のようなさまざまな形でご協力いただけます:<br \/><ul><li>Betaflightに関する知識を活かして、<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a> の内容を作成・更新したり、オンラインフォーラムで他のユーザーの質問に回答する。<\/li><li>ファームウェアやアプリに対して、新機能、修正、改善などの<a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">コードをコントリビュートする<\/a>。<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能や修正<\/a>をテストし、フィードバックを提供する。<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue Tracker<\/a> に報告された問題について、他のユーザーの解決を支援したり、機能リクエストの議論に参加する。<\/li><li>Betaflight Appを新しい言語へ<a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/README.md#translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻訳<\/a>したり、既存の翻訳のメンテナンスを支援する。<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "私たちは<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebookグループ<\/a>も運営しています。<br \/>私たちと一緒にBetaflightについて語り合い、設定に関する質問をしたり、パイロット同士で交流してみましょう。"
@@ -759,7 +998,7 @@
         "message": "<p><strong>Betaflight<\/strong>は <strong>オープンソース<\/strong> ソフトウェアであり、すべてのユーザーに対して <strong>無償・無保証<\/strong> で提供されています。<\/p><p>Betaflightが役立つものと感じられた場合は、ぜひ <strong>寄付<\/strong> による開発のサポートをご検討ください。<\/p>"
     },
     "defaultDonateBottom": {
-        "message": "<p>引き続き経済的に貢献したい場合は <a href='https:\/\/www.patreon.com\/betaflight'>Patreon<\/a> で私達の支援者になることをご検討ください。<\/p>"
+        "message": "<p>継続的に経済的な支援をしていただける場合は、$t(patreonLink.message) で私達の支援者になることをご検討ください。<\/p>"
     },
     "patreonLink": {
         "message": "<a href=\"https:\/\/www.patreon.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon<\/a>",
@@ -853,6 +1092,10 @@
         "message": "ヨー:",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
+    "initialSetupMagHeading": {
+        "message": "コンパス ヘッディング:",
+        "description": "Heading value shown on Setup tab when magnetometer is active"
+    },
     "initialSetupMixerHead": {
         "message": "ミキサータイプ"
     },
@@ -929,6 +1172,12 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuLoad": {
+        "message": "CPU使用率:"
+    },
+    "initialSetupLoopTime": {
+        "message": "ループレート:"
     },
     "initialSetupCpuTemp": {
         "message": "CPU温度:"
@@ -1140,6 +1389,12 @@
     "initialSetupInstrumentsHeadHelp": {
         "message": "ヘディング、ピッチ、ロールを計器で表示",
         "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoBoardName": {
+        "message": "ボード:"
+    },
+    "initialSetupInfoFirmwareVersion": {
+        "message": "ファームウェア:"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1447,6 +1702,15 @@
     },
     "configurationBoardAlignment": {
         "message": "FCボード アライメント"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "ロール°"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "ピッチ°"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "ヨー°"
     },
     "configurationMagAlignment": {
         "message": "コンパス アライメント"
@@ -2338,6 +2602,15 @@
     "receiverModelId": {
         "message": "モデルマッチ ID"
     },
+    "receiverHelp": {
+        "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">フェイルセーフが正しく機能しているか、必ず確認してください！<\/a><\/strong><\/b> 設定はフェイルセーフタブにあり、Expertモードへの切り替えが必要です。<br> &#8226; <b>最新の送信機ファームウェアを適用してください！<\/b><br> &#8226; OpenTX、またはEdgeTXを使用している場合は、送信機の<strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">ハードウェアADCフィルターを無効にしてください。<\/a><\/strong><br>基本セットアップ:【受信機】の設定を正しく行ってください。送信機の正しい【チャンネルマップ】を選択します。ロール、ピッチ、その他のスライダーが正しく動くことを確認してください。送信機のチャンネルのエンドポイントまたは動作範囲の値を1000～2000に調整し、中央値を1500に設定します。詳しくは<strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">マニュアル<\/a><\/strong>をご確認ください。"
+    },
+    "receiverFailsafeActiveTitle": {
+        "message": "フェイルセーフ 有効"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "フライトコントローラはフェイルセーフ状態です。以下に表示されているチャンネル値は、受信機から送られているリアルタイム値ではなく、フェイルセーフ出力です。受信機のリンク状態とフェイルセーフ設定を確認してください。"
+    },
     "receiverThrottleMid": {
         "message": "スロットルMID"
     },
@@ -2513,6 +2786,14 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "フライトモードは、スロットルのすばやい操作時にP値とI値とを増加させ、スティック追従性を向上させ、スロットルのすばやい操作時におけるノーズドリフトを回避します。",
         "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "エアーモードでは低いスロットルで機体を安定することができます。詳しい情報はBetaflight.comの<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">エアーモード<\/a>を確認してください。",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度ホールド<\/a>は、外部センサーとアングルモード (安定モード) を組み合わせて、機体の高度を積極的に制御します。",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "オートパイロットモードは自律飛行制御を有効にし、高度維持とポジションホールドを組み合わせて、安定したホバリングや計画された飛行経路の追従を行います。",
@@ -2718,6 +2999,32 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "チャンネル"
+    },
+    "adjustmentsColumnMode": {
+        "message": "モード"
+    },
+    "adjustmentsModeStep": {
+        "message": "ステップ"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "絶対値"
+    },
+    "adjustmentsModeSelection": {
+        "message": "選択"
+    },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "中央 (値)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "スケール (値|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "調整機能で使用される中央値 [基準値] を設定します。<br \/><br \/><strong>スライダー調整:<\/strong><br \/>スライダー調整では、Adjustment Center を 0 に設定してください。現在のスライダー位置が上下の調整に使用されます。<br \/><br \/><strong>選択式調整: <\/strong><br \/>Adjustment Center を 0、または特定のマイクロ秒 (uS) 値に設定します。RC調整開始時に、1500uSからのスイッチ基準位置をオフセットしたい場合に使用します。<br \/><br \/><strong>ステップ調整: <\/strong><br \/>Adjustment Center を 0 に設定すると、調整対象の現在値が使用されます。<br \/><br \/><strong>絶対値調整: <\/strong><br \/>絶対値調整方式を使用するには、Adjustment Center と Adjustment Scale の両方を設定し、目的の値と範囲を指定する必要があります。範囲は【Center ± Scale】で計算されます。例えば、Adjustment Center を 50、Adjustment Scale を 25 に設定すると、範囲は 25〜75 となり、中央位置 (スイッチまたはPOT) は 50 に対応します。<br \/><br \/>詳細は <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのページ<\/a> を参照してください。",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "調整のスケーリング [倍率] または範囲を制御します。値を大きくすると、調整範囲または感度が増加します。<br \/><br \/><strong>スライダー調整: <\/strong><br \/>スライダー調整では、Adjustment Scale は調整の感度を制御します。50 に設定するとスライダー範囲の 50% で動作します。0 に設定するとデフォルトの感度が使用されます。<br \/><br \/><strong>選択式調整: <\/strong><br \/>選択式調整では、Adjustment Scale を0に設定するとデフォルト動作になります。範囲を制限したい場合は、マイクロ秒 (uS) 値を指定します。例：Adjustment Center を1000 (uS) 、Adjustment Scale を500 (uS) に設定すると、3ポジションスイッチを2ポジションスイッチとして使用できます。<br \/><br \/><strong>ステップ調整および絶対値調整: <\/strong><br \/>ステップ調整および絶対値調整では、Adjustment Scale は Adjustment Center の上下の範囲を定義します。例えば値を 25 に設定すると、Adjustment Center [または Adjustment Center が 0 の場合は現在値] を基準に ±25 の調整範囲になります。<br \/><strong>注意: <\/strong> ポテンショメータで絶対値調整方式を使用する場合、Adjustment Scale の値を設定する必要があります。<br \/><br \/>詳細は <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのページ<\/a> を参照してください。",
+        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "スロット1"
@@ -3071,8 +3378,41 @@
     "flightPlanTypeLand": {
         "message": "着陸"
     },
+    "flightPlanTypeTakeoff": {
+        "message": "離陸"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "高度を変更",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "遅延",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "ヨーレートキャップ",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "保持時間 <span class=\"units\">分<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "分単位のホールド時間",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "遅延時間 <span class=\"units\">分<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "分単位の遅延時間",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "ヨーレート <span class=\"units\">°\/秒<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "秒あたりのヨーレート (度)",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "ホールドパターン"
@@ -3145,6 +3485,15 @@
     },
     "flightPlanInvalidLongitude": {
         "message": "無効な経度 (－180～＋180の範囲で指定してください)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "無効な高度です (0以上の値を入力してください)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "無効な時間です (0以上の値を入力してください)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "無効なヨーレートです (0以上の値を入力してください)"
     },
     "flightPlanConfirmDelete": {
         "message": "このウェイポイントを削除してもよろしいですか？"
@@ -3311,7 +3660,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>モーターテストモード \/ アーミング通知:<\/strong><br \/><br \/><strong class=\"message-negative\">警告: 重大な人身事故の危険があります！すべてのプロペラを取り外してください！<\/strong><br \/><br \/><ul><li>&#x2022; アームまたはスライダーを上げるとモーターが回転します<\/li><\/li>&#x2022; 別のタブに画面遷移しても、モーターテストモードは有効のままとなります<\/li><li>&#x2022; どのキーを押してもモーターは停止しますが、モーターテストモードそのものは【モーター】タブでのみ停止となります<\/li><li>&#x2022; USBケーブルを外してもモーターが停止しない場合があります！<\/li><\/ul>"
+        "message": "<strong>モーターテストモード \/ アーミング通知:<\/strong><br \/><br \/><strong class=\"message-negative\">警告: 重大な人身事故の危険があります！すべてのプロペラを取り外してください！<\/strong><br \/><br \/><ul><li>&#x2022; アームまたはスライダーを上げるとモーターが回転します<\/li><li>&#x2022; 別のタブへ移動しても、モーターテストモードは有効のままとなります<\/li><li>&#x2022; どのキーを押してもモーターは停止しますが、モーターテストモードそのものは【モーター】タブでのみ停止となります<\/li><li>&#x2022; USBケーブルを外してもモーターが停止しない場合があります！<\/li><\/ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>リスクを認識し<\/strong>、プロペラはすべて外しました - モーター制御とアーミングを可能にし、離陸時暴走防止機能を無効にします。"
@@ -3424,6 +3773,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "この機能はDSHOT対応ESCのみで動作します。<br \/>お使いのESC (electric speed controller) がDSHOTプロトコルに対応していることを確認し $t(tabMotorTesting.message) タブで変更してください。"
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "モーター数は0です。<br \/>現在のミキサー設定を $t(tabMotorTesting.message) タブで確認するか、CLIを使ってカスタムミキサーとして設定してください。詳しくはこちらの<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ<\/a>をご覧ください。"
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "ファームウェアを更新します。<br \/> 最新ファームウェア (Betaflight 4.3以降) を使用していることを確認してください。"
     },
@@ -3440,13 +3792,19 @@
         "message": "モーター 停止"
     },
     "sensorsInfo": {
-        "message": "更新周期を速く設定し、複数のグラフを同時にレンダリングすると、リソースが重くなりノートPC等を使用するとバッテリーを早く消費してしまう場合があるので注意してください。<br\/>必要とするセンサーのグラフを、適正な更新周期でレンダリングすることをお勧めします。"
+        "message": "更新周期を速く設定し、複数のグラフを同時にレンダリングすると、処理負荷が高くなり、ノートPCではバッテリー消費が早くなる場合があります。<br \/>必要なセンサーのグラフのみを、適切な更新周期でレンダリングすることをお勧めします。"
     },
     "sensorsRefresh": {
         "message": "更新:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "すべて更新:"
+    },
     "sensorsScale": {
         "message": "スケール:"
+    },
+    "sensorsScaleAuto": {
+        "message": "自動"
     },
     "sensorsGyroSelect": {
         "message": "ジャイロスコープ"
@@ -3738,6 +4096,12 @@
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "ログを表示"
     },
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "ビルドステータス:"
+    },
+    "firmwareFlasherFlashStatus": {
+        "message": "フラッシュステータス:"
+    },
     "firmwareFlasherCloudBuildQueued": {
         "message": "処理待ち"
     },
@@ -3885,8 +4249,21 @@
     "firmwareFlasherExitDfu": {
         "message": "DFUモードを終了"
     },
+    "firmwareFlasherFindDfuDevice": {
+        "message": "DFUデバイスを検索"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "ファームウェアの更新"
+    },
+    "firmwareFlasherFlashFirmwareOptions": {
+        "message": "ファームウェアオプションを書き込む"
+    },
+    "firmwareFlasherLoadFirmwareOptions": {
+        "message": "ファームウェアオプションを読み込む"
+    },
+    "firmwareFlasherFlashingProgress": {
+        "message": "書き込み中",
+        "description": "Accessible label for the circular progress ring shown during firmware flashing."
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub ファーム情報"
@@ -3908,6 +4285,30 @@
     },
     "firmwareFlasherWarningText": {
         "message": "<span class=\"message-negative\">やらないで！<\/span> このファームフラッシャーを使用して、<strong>Betaflight 非対応<\/strong>のハードウェアへ書き込みはしないでください。<br \/><span class=\"message-negative\">やらないで！<\/span>書き込み中はコンピュータからFCボードを<strong>取り外したり<\/strong>、<strong>電源を切ったり<\/strong>しないでください。<br \/><br \/><strong>注: <\/strong><ul><li>STM32ブートローダーはROMに格納されているため、致命的な故障となることはありません。<\/li><li><span class=\"message-negative\">自動接続<\/span> は、ファームフラッシャー使用中は常に無効になります。<\/li><li>必ずバックアップを作成してください。アップグレード \/ ダウングレードによっては設定が消去される場合があります。<\/li><li>書き込みに問題がある場合は、まず <strong>FC からすべてのケーブルを取り外し<\/strong>、再起動やドライバの更新を試してください。<\/li><li>USBコネクタが基板に直接実装されているボード（近年の多くのFCボード）を書き込む場合は、Betaflightマニュアルの『USB Flashing』の章を確認し、正しいソフトウェアおよびドライバがインストールされていることを確認してください。<\/li><\/ul>"
+    },
+    "firmwareFlasherWarningShort": {
+        "message": "Betaflight用ではないハードウェアに書き込まないでください。書き込み中は切断しないでください。STM32ブートローダーはROMに格納されているため、破損して起動不能になることはありません。アップグレード前には必ず設定をバックアップしてください。"
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "リカバリー \/ 通信ロスト"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。<\/li><li>[再起動シーケンスなし] を有効にし、[チップメモリの完全消去] を有効にします。<\/li><li>BOOTピンをジャンパさせるか、BOOTボタンを長押ししてください。<\/li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません)<\/li><li>すべてのSTM32ドライバと、必要に応じてZadigをインストールします。(Betaflightマニュアルの [<a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/firmware-installation\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a>] 章を参照)<\/li><li>Betaflight Appを一度閉じ、Appを再起動します。<\/li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。<\/li><li>正常なファームウェアを書き換えてください。(FCボードのマニュアルで指定されている場合は、手動で伝送速度を調整してください)<\/li><li>電源をオフにします。<\/li><li>BOOTピンのジャンパを取り外します。<\/li><li>電源をオンにします。(アクティビティLEDが点滅するはずです)<\/li><li>再度、通常通り接続してください。<\/li><\/ul>"
+    },
+    "firmwareFlasherRecoveryShort": {
+        "message": "通信できなくなった場合は、電源を切り [再起動シーケンスなし] と [チップメモリの完全消去] を有効にし、BOOTピンをジャンパしてから電源を入れてください。必要に応じてドライバをインストールしてください。"
+    },
+    "firmwareFlasherReadMore": {
+        "message": "もっと読む →"
+    },
+    "firmwareFlasherSubTabBoardBuild": {
+        "message": "FCボードとビルド"
+    },
+    "firmwareFlasherAdvancedTitle": {
+        "message": "詳細"
+    },
+    "firmwareFlasherSubTabFlash": {
+        "message": "フラッシュ"
     },
     "firmwareFlasherButtonLeave": {
         "message": "ファームフラッシャーより退避"
@@ -3945,6 +4346,30 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "UF2の保存 (更新) に失敗しました"
     },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "ESP32ブートローダーに接続中..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "検出されました $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "ESP32へ書き込み中..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "書き込みが完了しました。再起動中..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "ESP32への書き込みに成功しました"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "ESP32への書き込みに失敗しました: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32への書き込みには、ブラウザ (Web Serial) のビルドが必要です"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "ESP32へ書き込みする前にシリアルポートを選択してください"
+    },
     "firmwareFlasherClickToConnectDfu": {
         "message": "クリックしてDFUデバイスに接続"
     },
@@ -3967,6 +4392,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "バックアップをキャンセルしたため、書き込みを中止しました"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "バックアップに失敗しました: デバイスから無効なデータを受信しました。(CLIモードではありません) 書き込みを中止しました。"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
@@ -4053,7 +4481,7 @@
         "message": "バックアップ前に確認"
     },
     "ledStripHelp": {
-        "message": "フライトコントローラは、個々のLEDストリップの色や効果を制御できます。<br\/>グリッド上にLEDを配置、配線順序を設定し、グリッド位置に従って機体にLEDを取り付けます。 ワイヤーオーダー番号のないLEDは保存されません。<br \/>HSV値を編集するには、色を選択、ダブルクリックします。"
+        "message": "フライトコントローラは、LEDストリップ上の個々のLEDの色や効果を制御できます。<br \/>グリッド上にLEDを配置し、配線順序を設定してから、グリッド位置に従って機体にLEDを取り付けます。ワイヤーオーダー番号のないLEDは保存されません。<br \/>HSV値を編集するには、色を選択してダブルクリックします。"
     },
     "ledStripButtonSave": {
         "message": "保存"
@@ -4784,13 +5212,36 @@
         "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br \/><br \/><b><span class=\"message-positive\">重要:<\/span> ESCは双方向DSHOTプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。<\/b>",
         "description": "Header text for the RPM Filter group"
     },
+    "pidTuningRpmHarmonics": {
+        "message": "高調波",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmHarmonicsHelp": {
         "message": "モーターあたりの高調波の数を示します。値3 (ほとんどの機体に推奨) は、各軸のモーター毎に合計36ノッチの3ノッチフィルターを生成します。1つは基本モーター周波数で、2つはその基本周波数の倍数の高調波となります。",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmMinHz": {
+        "message": "最低周波数 [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmMinHzHelp": {
         "message": "RPMフィルターで使用される周波数最小値。",
         "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "フェードレンジ [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQ": {
+        "message": "Q係数 (x100)",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Q値は、RPMノッチフィルターの幅をどの程度狭く、または広くするかを調整します。保存される値は Q値 × 100 で、許容範囲は 250～3000 (Q 2.5～Q 30.0）、デフォルトは 500 (Q 5.0) です。値を高くすると各ノッチはより狭く正確になり、値を低くするとより広くなります。非常に低い値にすると、フィルター遅延が大きく増加します。"
+    },
+    "pidTuningRpmWeight": {
+        "message": "高調波 {{index}} の重み",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profile毎のフィルター設定"
@@ -4847,6 +5298,9 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Vbatサグ値補正 %"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲内で一定したスロットルおよびPID性能を提供します。<br \/><br \/>補正量は 0 ～ 100% の間で調整可能です。完全な補正 (100%) が推奨されます。<br \/><br \/>詳しくは<a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ<\/a>をご覧ください。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -5202,7 +5656,7 @@
         "message": "<strong>注:<\/strong> スケールを調整する前に、電圧の倍率と電流のオフセット値が正しく設定されていることを確認してください。<br>値が0のままですと、キャリブレーションは適用されません。<\/br><strong>バッテリーを接続する前に必ずプロペラを取り外してください！<\/strong>"
     },
     "powerCalibrationManagerWarning": {
-        "message": "<span class=\"message-negative\">警告:<\/span> バッテリーが<span class = \"message-negative\">接続されていない<\/span>、または電圧・電流計測テスターの電源が<span class = \"message-negative\">正しく設定されていない<\/span>可能性があります。このままでは、ツールでキャリブレーションすることはできません。"
+        "message": "<span class=\"message-negative\">警告:<\/span> バッテリーが<span class=\"message-negative\">接続されていない<\/span>、または電圧・電流計測テスターの電源が<span class=\"message-negative\">正しく設定されていない<\/span>可能性があります。電圧または電流の読み取り値が0を超えていることを確認してください。そうでない場合、このツールでキャリブレーションすることはできません。"
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">警告:<\/span> 電圧および\/または電流メーター情報は<strong>変更されましたが保存していません。<\/strong> 正しいメーター情報を設定して一度保存してから調整してください。"
@@ -5422,6 +5876,15 @@
     },
     "powerBatteryAmperage": {
         "message": "電流"
+    },
+    "powerBatteryPowerDraw": {
+        "message": "消費電力"
+    },
+    "powerWattValue": {
+        "message": "$1 W"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "電圧降下"
     },
     "powerBatteryCapacity": {
         "message": "容量 (mAh)"
@@ -5666,9 +6129,15 @@
         "message": "瞬間RSSI値",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementRssiValue": {
+        "message": "瞬間的なRSSI値です。(アラームしきい値を下回ると点滅します) 最新のプロトコルでは、代わりにRSSI dBmを使用してください。"
+    },
     "osdTextElementRssiDbmValue": {
         "message": "RSSI値 (dBm)",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "受信信号強度インジケーターです。この値は、受信信号の強度を dBm で示します。"
     },
     "osdTextElementTimer": {
         "message": "タイマー",
@@ -5880,7 +6349,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "【基本設定】タブで設定された機体名。<br>CLI変数『craft_name』CLI変数を通じて設定することも可能です。"
+        "message": "【基本設定】タブで設定された機体名。<\/br>CLI変数『craft_name』を通じて設定することも可能です。"
     },
     "osdTextElementAltitude": {
         "message": "高度",
@@ -6257,6 +6726,9 @@
     "osdTextElementLinkQuality": {
         "message": "リンク品質",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLinkQuality": {
+        "message": "正常に受信された破損のないデータパケットの割合に基づく、リンク品質インジケーターです"
     },
     "osdTextElementFlightDist": {
         "message": "今回の飛行距離",
@@ -6877,10 +7349,14 @@
         "message": "OSD設定を保存しました"
     },
     "osdWritePermissions": {
-        "message": "このファイルに対する<span class = \"message-negative\">書き込み権限<\/span>がありません"
+        "message": "このファイルに対する<span class=\"message-negative\">書き込み権限<\/span>がありません"
     },
     "osdButtonSaved": {
         "message": "保存しました"
+    },
+    "vtxHelp": {
+        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">こちらのページ<\/a>に進みます。<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけ、ダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択してロードしてください。<br>4. 正しく設定されていることを確認してください。<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。<br>6. 必要に応じて『$t(vtxButtonSaveLua.message)』をクリックし、Betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">こちら<\/a>を参照)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">注目:<\/span> VTXが設定されていないかサポートされていません。フライトコントローラはTrampやSmartAudio等のプロトコルを使用してVTXと接続しており、必要に応じて、$t(tabPorts.message)タブで設定を修正する必要があります。",
@@ -7217,6 +7693,306 @@
     "configurationAccHardware": {
         "message": "加速度センサー"
     },
+    "configurationBaroHardware": {
+        "message": "気圧センサー"
+    },
+    "configurationMagHardware": {
+        "message": "コンパス"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "位置情報を特定できませんでした。GPSモジュールを接続するか、ブラウザの位置情報アクセスを許可してください。"
+    },
+    "configurationMagDeclinationSet": {
+        "message": "検出された場所から {{declination}}° に設定されています。"
+    },
+    "configurationMagInclination": {
+        "message": "傾斜角"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "現在地における地球の磁場と水平面との角度です。正の値は、磁場が下向き (北半球) であることを示します。"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "磁界強度"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "現在地における地球の磁場の総強度をナノテスラ (nT) で示します。一般的な値は 25,000～65,000 nT です。"
+    },
+    "sensorConfigMagDetect": {
+        "message": "検出"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "更新"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "現在地の磁気偏角は {{value}}° として自動検出されました。"
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "保存されている磁気偏角は {{saved}}° ですが、GPSでは現在地の磁気偏角が {{detected}}° と検出されています。修正するには【更新】をクリックしてください。"
+    },
+    "sensorConfigAlignSamples": {
+        "message": "{{count}} サンプル"
+    },
+    "sensorConfigAlignTiltMore": {
+        "message": "もっと傾けろ！"
+    },
+    "sensorConfigAlignDetectFailed": {
+        "message": "検出に失敗しました — より多様な傾きを試してください。"
+    },
+    "magCalibrationGuidedFw": {
+        "message": "クライアントキャリブレーション (ガイド付き)"
+    },
+    "magCalibrationGuidedFwDesc": {
+        "message": "60秒間のキャリブレーションを自動的に促します"
+    },
+    "magCalibrationGuidedFwTitle": {
+        "message": "ガイド付きキャリブレーション"
+    },
+    "magCalibrationPrompt1": {
+        "message": "ステップ 1\/6 — 水平に保持し、ヨー方向に360°回転させてください"
+    },
+    "magCalibrationPrompt2": {
+        "message": "ステップ 2\/6 — 裏返して保持し、ヨー方向に360°回転させてください"
+    },
+    "magCalibrationPrompt3": {
+        "message": "ステップ 3\/6 — 機首を真上に向け、ヨー方向に360°回転させてください"
+    },
+    "magCalibrationPrompt4": {
+        "message": "ステップ 4\/6 — 機首を真下に向け、ヨー方向に360°回転させてください"
+    },
+    "magCalibrationPrompt5": {
+        "message": "ステップ 5\/6 — 左側面を上に向け、ヨー方向に360°回転させてください"
+    },
+    "magCalibrationPrompt6": {
+        "message": "ステップ 6\/6 — 右側面を上に向け、ヨー方向に360°回転させてください"
+    },
+    "magCalibrationGuidedDone": {
+        "message": "データ収集が完了しました — 確認して保存してください"
+    },
+    "magCalibrationCancel": {
+        "message": "キャンセル"
+    },
+    "magCalibrationClear": {
+        "message": "消去"
+    },
+    "magCalibrationModeOptions": {
+        "message": "キャリブレーションモード オプション"
+    },
+    "magCalibrationRetry": {
+        "message": "再試行"
+    },
+    "magCalibrationWaiting": {
+        "message": "動作待機中... 開始するには機体を振ってください。"
+    },
+    "magCalibrationCollecting": {
+        "message": "すべての方向に機体をゆっくり回転させてください。"
+    },
+    "magCalibrationComplete": {
+        "message": "キャリブレーションが完了しました。"
+    },
+    "magCalibrationError": {
+        "message": "キャリブレーションに失敗しました。磁気干渉の少ない場所で再試行してください。"
+    },
+    "magCalibrationNoMovement": {
+        "message": "30秒間動きが検出されませんでした。キャリブレーションをキャンセルしました。"
+    },
+    "magCalibrationSamples": {
+        "message": "サンプル"
+    },
+    "magCalibrationQuality": {
+        "message": "品質"
+    },
+    "magCalibrationResidual": {
+        "message": "フィット残差"
+    },
+    "magCalibrationQualityGood": {
+        "message": "良好"
+    },
+    "magCalibrationQualityFair": {
+        "message": "普通"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "低品質"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "ファームウェアオフセット"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "球面フィットオフセット"
+    },
+    "magCalibrationUnguided": {
+        "message": "ファームウェアキャリブレーション (レガシー)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "自由に回転させてください — 30秒後にファームウェア自動保存"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "ファームウェア キャリブレーション"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "30秒以内に機体を全方向へ回転させてください。時間が経過すると、ファームウェアはキャリブレーション値を自動的に保存します。"
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "ファームウェアのキャリブレーションが完了しました！"
+    },
+    "magCalibrationGuided": {
+        "message": "クライアントキャリブレーション (フリー)"
+    },
+    "magCalibrationGuidedDesc": {
+        "message": "自由に回転させてください — アプリ側でオフセットを計算します"
+    },
+    "magCalibrationGuidedTitle": {
+        "message": "クライアント キャリブレーション"
+    },
+    "magCalibrationGuidedInstruction": {
+        "message": "機体を全方向に回転させてください。1～2分程度かけて、点群が完全な球体になるように動かします。キャリブレーション値が安定したら、結果を保存してください。"
+    },
+    "magCalibrationCheck": {
+        "message": "確認"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "補正後のコンパスデータをリアルタイム表示"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "キャリブレーションの確認中"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "コンパスの向きとキャリブレーションを確認します。機体を水平に置き、機首をコンパス上の既知の方向へ向けてください。(北の方向を確認するにはスマートフォンをお使いください) そのうえで、3D表示上の想定される位置に新しい点が表示されることを確認してください。各軸の磁場強度と点群の球面度は、キャリブレーション精度の目安になります。点がまったく異なる位置に表示される場合は、コンパスの向きが間違っている可能性があります。"
+    },
+    "magCalibrationCalValues": {
+        "message": "キャリブレーション値"
+    },
+    "magCalibrationSaveValues": {
+        "message": "値を保存"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "キャリブレーション値を保存しました"
+    },
+    "magCalibrationSaveError": {
+        "message": "キャリブレーション値の保存に失敗しました"
+    },
+    "magCalibrationAccept": {
+        "message": "キャリブレーションを保存"
+    },
+    "magCalibrationFull": {
+        "message": "フルキャリブレーション (自動アライメント)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "1回の回転で、オフセット、磁場歪み補正、コンパスの取り付け向きを設定します"
+    },
+    "magCalibrationFullTitle": {
+        "message": "フルキャリブレーション"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "以下の手順に従い、各回転が完了するまで機体を安定させて保持してください。新しい角度に到達するとゾーン数が増えていきます — 20個すべてをカバーすることを目指してください。"
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "{{n}} のステップ {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "機体を水平に保ち、ゆっくりと360°回転させてください。"
+    },
+    "magCalibrationFullStep2": {
+        "message": "機体を上下逆さまにして、もう一度ゆっくりと360°回転させてください。"
+    },
+    "magCalibrationFullStep3": {
+        "message": "機首を真上に向け、その状態で機首を中心に1回転させてください。"
+    },
+    "magCalibrationFullStep4": {
+        "message": "機首を真下に向け、その状態で1回転させてください。"
+    },
+    "magCalibrationFullStep5": {
+        "message": "機体を左側面を下にして置き、その状態で1回転させてください。"
+    },
+    "magCalibrationFullStep6": {
+        "message": "機体を右側面を下にして置き、その状態で1回転させてください。"
+    },
+    "magCalibrationFullStep7": {
+        "message": "向きを変えながら、ゆっくりと前方フリップを数回行ってください。"
+    },
+    "magCalibrationFullStep8": {
+        "message": "再び向きを変えながら、ゆっくりと後方フリップを数回行ってください。"
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} ゾーンをカバーしました"
+    },
+    "magCalibrationFullCompute": {
+        "message": "計算"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "範囲:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "配置:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "ロール {{roll}}° ピッチ {{pitch}}° ヨー {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "キャリブレーション:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "残差:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "CLIをコピー"
+    },
+    "magCalibrationFullApply": {
+        "message": "適用"
+    },
+    "magCalibrationFullExport": {
+        "message": "モデルをエクスポート"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "サンプル数が不足しています — もう少し長く回転させてください"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "GPSまたはIP位置情報がありません — 磁気傾斜を特定できません"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLIコマンドをクリップボードにコピーしました"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "クリップボードにコピーできませんでした"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "ファームウェア {{version}} はCUSTOMコンパスアライメントには古すぎます。( {{min}} 以上が必要です) ファームウェアを更新してから適用してください。"
+    },
+    "magCalibrationFullApplied": {
+        "message": "キャリブレーションが適用され、保存されました"
+    },
+    "magCalibrationDiscard": {
+        "message": "破棄"
+    },
+    "magVizPointCloud": {
+        "message": "点群"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel ヒートマップ"
+    },
+    "magVizProjection": {
+        "message": "トリプルプロジェクション"
+    },
+    "magVizPolar": {
+        "message": "極座標密度"
+    },
+    "magVizWaitingForData": {
+        "message": "データ待機中…"
+    },
+    "magVizAxisField": {
+        "message": "磁場"
+    },
+    "magVizAgeLegendOld": {
+        "message": "古い"
+    },
+    "magVizAgeLegendNew": {
+        "message": "新規"
+    },
+    "magAlignmentApply": {
+        "message": "適用"
+    },
+    "configurationMagDetectAlignment": {
+        "message": "検出"
+    },
     "configurationSmallAngle": {
         "message": "アーム最大角 [degrees]"
     },
@@ -7407,6 +8183,10 @@
     "colorThemeContrast": {
         "message": "ハイコントラスト",
         "description": "Contrast color theme"
+    },
+    "uiScale": {
+        "message": "UIスケール",
+        "description": "Scale the entire user interface up or down"
     },
     "pidTuningRatesType": {
         "message": "レートタイプ"
@@ -7697,6 +8477,38 @@
         "message": "この操作にはBetaflightファームウェア {{required}} 以降が必要です。(現在接続中: {{current}}) 継続する前にフライトコントローラのファームウェアを更新してください。",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
+    "firmwareFlasherRestoreBackup": {
+        "message": "バックアップから復元",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "フラッシュ前のバックアップから復元",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "書き込み前に取得した設定のバックアップを復元します。続行しますか？",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "設定のバックアップは正常に復元されました。",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "設定のバックアップが復元されました。 {{count}} 行がスキップされました。",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "復元に失敗しました: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "復元用のフライトコントローラに接続できませんでした。",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "復元できるバックアップはありません。",
+        "description": "Error message when no backup data is cached for restore"
+    },
     "presetsLoadingDumpAll": {
         "message": "フライトコントローラから現在の設定を読み込みます",
         "description": "Title for the waiting dialog when loading dump all into a file"
@@ -7786,6 +8598,22 @@
     },
     "firmwareFlasherBuildOptions": {
         "message": "その他のオプション"
+    },
+    "firmwareFlasherRemoveBuildOption": {
+        "message": "{{option}} を削除",
+        "description": "Accessible label for the remove button on a selected build option badge."
+    },
+    "firmwareFlasherSelectProtocol": {
+        "message": "プロトコルを選択"
+    },
+    "firmwareFlasherSelectOptions": {
+        "message": "オプションを選択"
+    },
+    "firmwareFlasherSelectBranch": {
+        "message": "ブランチを選択するか、PR # \/ コミットハッシュを入力してください"
+    },
+    "firmwareFlasherSearchBoard": {
+        "message": "FCボードを検索..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "送信機プロトコル"
@@ -8749,5 +9577,89 @@
     },
     "preflightForecastWeather": {
         "message": "天気"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM プロバイダ"
+    },
+    "preflightNotamProviderNone": {
+        "message": "無効"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (米国、APIキーが必要)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (グローバル空域、APIキーが必要)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA APIキー (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API キー"
+    },
+    "preflightNotamRadius": {
+        "message": "検索半径"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "空域データ設定"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "空域データでは、選択したプロバイダに座標情報が送信されます。その他の個人データは送信されません。"
+    },
+    "preflightNotamLoading": {
+        "message": "空域データを取得しています..."
+    },
+    "preflightNotamEmpty": {
+        "message": "この位置と検索半径では通知は見つかりませんでした"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "選択したプロバイダにはAPIキーが必要です。上記の設定でキーを入力してください。"
+    },
+    "preflightNotamFetchError": {
+        "message": "空域データの取得に失敗しました"
+    },
+    "preflightNotamActiveNow": {
+        "message": "今すぐ有効にする"
+    },
+    "preflightNotamPermanent": {
+        "message": "恒久的"
+    },
+    "preflightNotamExpired": {
+        "message": "期限切れ"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "下限"
+    },
+    "preflightNotamAltTo": {
+        "message": "上限"
+    },
+    "preflightNotamShowMore": {
+        "message": "もっと表示"
+    },
+    "preflightNotamShowLess": {
+        "message": "表示を減らす"
+    },
+    "preflightNotamLastFetched": {
+        "message": "最終取得日時"
     }
 }

@@ -660,6 +660,12 @@
     "serialPortOpenFail": {
         "message": "시리얼 포트 열기 <span class=\"message-negative\">실패<\/span>"
     },
+    "connectionFailedTitle": {
+        "message": "연결 실패"
+    },
+    "connectionFailed": {
+        "message": "선택한 포트 연결에 <span class=\"message-negative\">실패<\/span>했습니다. 장치에 연결할 수 있는지, 연결 설정이 올바른지 확인한 후 다시 시도하세요."
+    },
     "serialPortClosedOk": {
         "message": "시리얼 포트가 <span class=\"message-positive\">성공적으로<\/span> 닫힘"
     },
@@ -961,6 +967,9 @@
     "defaultHardwareHead": {
         "message": "하드웨어"
     },
+    "defaultHardwareText": {
+        "message": "애플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 펌웨어 플래셔 탭에서 전체 하드웨어 목록을 확인하세요.<br \/><br \/>유용한 하드웨어 유틸리티 \/ 드라이버:<ul><li>CP210x USB 시리얼 칩을 사용하는 기존 하드웨어의 경우, 최신 <b>CP210x 드라이버<\/b>를 <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><li>Windows USB 드라이버 설치를 위한 최신 <b>Zadig<\/b>는 <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><li><b>ImpulseRC 드라이버 픽서<\/b>는 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><\/ul>"
+    },
     "defaultSoftwareHead": {
         "message": "소프트웨어"
     },
@@ -969,6 +978,9 @@
     },
     "defaultContributingHead": {
         "message": "기여하기"
+    },
+    "defaultContributingText": {
+        "message": "베타플라이트를 더욱 발전시키는 데 도움을 주고 싶다면 다음과 같은 여러 가지 방법으로 도움을 줄 수 있습니다: <br \/><ul><li>베타플라이트에 대한 지식을 활용하여 <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">위키<\/a>에서 콘텐츠를 만들거나 업데이트하기, 또는 온라인 포럼에서 다른 사용자의 질문에 답변하기;<\/li><li>펌웨어와 앱에 <a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">코드 제공<\/a> - 새로운 기능, 수정, 개선 사항;<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">새로운 기능과 수정사항<\/a>을 테스트하고 피드백 제공하기;<\/li><li>다른 사용자가 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈 트래커<\/a>에서 보고하는 문제를 해결할 수 있도록 돕고, 기능 요청에 대한 토론에 참여하기;<\/li><li>베타플라이트 앱을 새로운 언어로 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">번역<\/a>하거나 기존 번역을 유지하는 데 도움을 주기.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "우리는 또한 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">페이스북 그룹<\/a>이 있습니다.<br \/>우리와 함께 베타플라이트에 대해 이야기하고, 환경설정 질문을 하거나, 동료 파일럿과 어울릴 수 있습니다."
@@ -1721,6 +1733,120 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "임의의 각도로 보드를 회전시켜 옆으로\/뒤로\/회전하여 장착할 수 있습니다. 외부 센서를 실행할 때는 센서 정렬(자이로, Acc, Mag)을 사용하여 보드 방향과 무관하게 센서 위치를 정의합니다."
+    },
+    "boardAlignmentWizard-Launch": {
+        "message": "보드 정렬 자동 감지..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "보드 정렬 마법사"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "이 마법사는 네 가지 간단한 동작을 안내하여 비행 컨트롤러가 어떻게 장착되어 있는지 감지합니다. 드론을 평평한 곳에 놓고 카메라가 사용자 반대 방향(화면 쪽)을 향하도록 한 뒤 다음 프롬프트를 따릅니다."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "시작"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "단계"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "드론을 평평한 곳에 놓고 카메라가 사용자 반대 방향(화면 쪽)을 향하도록 하세요."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "기수를 약 45° 위로 기울이세요."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "오른쪽을 약 45도 기울이세요."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "드론을 시계 방향으로 약 45° 회전시키세요 (위에서 내려다 봤을 때)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "드론을 수평 상태로 되돌리세요."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "고정된 상태로 유지하세요..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "고정"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "기울임 유지"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "수평으로 되돌리기"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "축 감지됨 - 고정된 상태로 유지"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "회전"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "정렬 계산중..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "정렬 감지됨"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "보드 정렬이 정확해 보입니다 — 변경할 필요가 없습니다."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "현재"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "감지됨"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "뒤로"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "적용"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "취소"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "재시도"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "지금 포착"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "검지 신뢰도가 저하되었습니다 — 적용하기 전에 실시간 상태를 기준으로 결과를 확인하시기 바랍니다."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "이 마법사를 실행하려면 가속도계가 필요합니다."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "이 마법사를 실행하기 전에 가속도계를 보정해 주세요."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "일부 샘플이 수집되지 않았습니다. 다시 시도해 주세요."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "가속도계가 중력을 측정하지 않습니다. FC가 연결되어 있고 움직이지 않는지 확인합니다."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "피치 제스처가 감지되지 않았습니다. 다시 시도하고 기수를 더 위로 기울여 주세요."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "롤 제스처가 감지되지 않았습니다. 다시 시도한 후 오른쪽을 아래로 더 기울여 주세요."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "수평"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "피치"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "롤"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "요"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "포착됨!"
     },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -2614,6 +2740,9 @@
     "receiverModelId": {
         "message": "모델 매치(Match) ID"
     },
+    "receiverHelp": {
+        "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">항상 페일세이프가 올바르게 작동하는지 확인하세요!<\/a><\/strong><\/b> 페일세이프 탭에서 설정할 수 있으며, 전문가 모드가 요구됩니다.<br> &#8226; <b>최신 Tx 펌웨어를 사용하세요!<\/b><br> &#8226; OpenTx나 EdgeTx를 사용하고 있다면, 조종기에서 <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">하드웨어 ADC 필터를 비활성화하세요<\/a><\/strong>.<br>기본 설정: '수신기' 설정을 제대로 하세요. 당신의 조종기에 맞는 '채널 맵'을 선택하세요. 롤, 피치와 다른 막대 그래프가 제대로 움직이는지 확인하세요. 조종기에서 채널 엔드포인트 또는 범위 값을 ~1000과 ~2000으로 조정하고, 중심값을 1500으로 설정하세요. 더 많은 정보는 <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">문서<\/a><\/strong>를 읽으세요."
+    },
     "receiverFailsafeActiveTitle": {
         "message": "페일세이프 활성화"
     },
@@ -2799,6 +2928,14 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "빠른 스로틀 이동 중에 P 및 I 텀을 증가시켜 스틱 추적을 개선하고 빠른 스로틀 변경 시 노즈 드리프트를 방지하는 비행 모드",
         "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "에어모드를 사용하면 낮은 스로틀에서도 기체의 안정성을 유지할 수 있습니다. 자세한 내용은 Betaflight.com에서 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">에어모드<\/a>를 확인하세요.",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">고도 고정<\/a> 외부 센서와 앵글 모드(안정 모드)를 결합하여 기체의 고도를 능동적으로 조절합니다.",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "오토파일럿 모드는 자율 비행 제어를 가능하게 하며, 고도 유지와 위치 유지를 결합하여 안정적인 호버링을 유지하거나 계획된 비행 경로를 따라갑니다.",
@@ -3023,6 +3160,14 @@
     "adjustmentsColumnAdjustmentScale": {
         "message": "스케일 (val.|%)"
     },
+    "adjustmentsCenterHelp": {
+        "message": "조정 함수에서 사용하는 중간 지점 또는 참조 값을 설정합니다.<br \/><br \/><strong>슬라이더 조정:<\/strong><br \/>슬라이더 조정의 경우 조정 센터를 0으로 설정합니다. 현재 슬라이더 위치는 위\/아래 조정에 사용됩니다.<br \/><br \/><strong>선택 조정:<\/strong><br \/>RC 조정을 시작할 때 스위치 기준점을 1500μS에서 오프셋하려면 조정 센터를 0으로 설정하거나 특정 마이크로초(uS) 값으로 설정합니다.<br \/><br \/><strong>단계 조정:<\/strong><br \/>사용할 항목의 현재 값을 조정할 때 조정 센터를 0으로 설정합니다.<br \/><br \/><strong>절대 조정:<\/strong><br \/>절대 조정 방법을 사용하려면 조정 중심과 스케일을 모두 설정하여 원하는 값과 범위를 지정해야 합니다. 범위는 다음과 같이 계산됩니다: 중심 ± 스케일. 예를 들어 조정 중심을 50으로, 조정 스케일을 25로 설정하면 중심 위치(스위치 또는 POT)가 50으로 매핑되어 25에서 75 사이의 범위가 만들어집니다.<br \/><br \/>자세한 내용은 <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">이 페이지<\/a>를 방문하세요.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "조정의 크기나 범위를 조절하며, 값이 높을수록 조정 범위나 민감도가 증가합니다.<br \/><br \/><strong>슬라이더 조정:<\/strong><br \/>슬라이더 조정의 경우 조정 스케일은 조정의 배율\/민감도를 제어합니다. 값이 50이면 슬라이더 범위의 50%가 됩니다. 슬라이더의 경우 0으로 설정하면 기본 눈금이 사용됩니다.<br \/><br \/><strong>선택 조정:<\/strong><br \/>선택 조정의 경우 기본 동작의 경우 조정 척도를 0으로 설정하거나 마이크로초(uS) 값을 지정하여 범위를 제한합니다. 예: 3위치 스위치를 2위치 스위치로 사용하려면 조정 센터를 1000(usS)으로, 조정 스케일을 500(usS)으로 설정합니다.<br \/><br \/><strong>단계적 및 절대적 조정:<\/strong><br \/>단계별 및 절대 조정의 경우 조정 스케일은 조정 중심 위와 아래의 범위를 정의합니다. 예를 들어, 25의 값은 조정 중심 값에서 또는 조정 중심이 0으로 설정된 경우 현재 값에서 ±25의 조정 범위를 생성합니다.<br \/><strong>참고:<\/strong> 전위차계와 함께 절대 조정 방법을 사용하려면 조정 스케일 값을 지정해야 합니다.<br \/><br \/>자세한 내용은 <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">이 페이지<\/a>를 방문하세요.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "슬롯 1"
     },
@@ -3166,6 +3311,9 @@
     "servosChangeDirection": {
         "message": "일치하는 TX의 방향 변경"
     },
+    "servosForwardChannel": {
+        "message": "채널 {{channel}}에서 서보 {{servo}}로 전달"
+    },
     "servosName": {
         "message": "이름"
     },
@@ -3269,7 +3417,7 @@
         "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
-        "message": "IMU \/ GPS 머리방향:",
+        "message": "IMU \/ GPS 기수방향:",
         "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"
     },
     "gpsSpeed": {
@@ -3778,6 +3926,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "기능은 DSHOT ESC에서만 작동합니다.<br \/> ESC(전기 속도 제어기)가 DSHOT 프로토콜을 지원하는지 확인하고 $t(tabMotorTesting.message) 탭에서 변경하세요."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "모터의 수가 0입니다.<br \/>$t(tabMotorTesting.message) 탭에서 현재의 믹서를 확인하거나 CLI를 통해 사용자 지정 믹서를 설정하세요. 이 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지<\/a>를 참고하세요."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "펌웨어를 업데이트하세요.<br \/>최신 펌웨어를 사용하고 있는지 확인합니다: 베타플라이트 4.3 이상."
     },
@@ -3891,6 +4042,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "실행"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "스니펫 미리보기"
     },
     "cliPanelTitle": {
         "message": "명령어 인터페이스"
@@ -4294,6 +4448,9 @@
     "firmwareFlasherRecoveryHead": {
         "message": "통신 복구 \/ 손실"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오; <ul><li>전원을 끄십시오.<\/li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.<\/li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.<\/li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)<\/li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/firmware-installation\" target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱<\/a> 섹션을 보십시오.)<\/li><li>앱을 닫고, 다시 시작하십시오.<\/li><li>FC에 BOOT 버튼이 있으면 해제하십시오.<\/li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).<\/li><li>전원을 끄십시오.<\/li><li>BOOT 점퍼를 제거하십시오.<\/li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).<\/li><li>정상적으로 연결하십시오.<\/li><\/ul>"
+    },
     "firmwareFlasherRecoveryShort": {
         "message": "통신이 끊겼다면: 전원을 끄고, 재부팅 시퀀스 금지 및 전체 칩 지우기를 활성화한 다음 BOOT 핀을 점퍼로 설정한 다음 전원을 켭니다. 필요한 경우 드라이버를 설치합니다."
     },
@@ -4344,6 +4501,30 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "UF2 저장(플래시) 실패"
+    },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "ESP32 부트로더에 연결하는 중..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "$1 감지됨"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "ESP32 플래싱..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "플래싱 완료, 재부팅..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "ESP32 성공적으로 플래시됨"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "ESP32 플래싱 실패: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "ESP32 플래시를 사용하려면 브라우저(웹 시리얼) 빌드가 필요합니다"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "ESP32를 플래싱 하기 전 시리얼 포트를 선택하세요"
     },
     "firmwareFlasherClickToConnectDfu": {
         "message": "DFU 기기에 연결하려면 클릭하세요"
@@ -5274,6 +5455,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat 처짐 보상 %"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br \/><br \/>보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br \/><br \/>더 많은 정보는 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리<\/a>를 방문하십시오."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5863,6 +6047,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "프로필 {{profile}}의 {{element}} 표시\/숨기기 전환"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>경고:<\/b><\/span> OSD 칩이 검출되지 않았습니다. 일부 비행 컨트롤러들은 배터리 전원에 연결되지 않는 한 OSD 칩의 전원을 제대로 공급하지 못합니다. USB를 연결하기 전에 (프롭을 제거하고!) 배터리를 연결하십시오."
@@ -7326,6 +7513,10 @@
     "osdButtonSaved": {
         "message": "저장됨"
     },
+    "vtxHelp": {
+        "message": "여기에서 영상 송신기(VTX)에 대한 값을 구성할 수 있습니다. 비행 컨트롤러와 VTX가 지원하는 경우 VTX 테이블을 포함한 전송 값을 보고 변경할 수 있습니다.<br>VTX를 설정하려면 다음의 단계를 사용하십시오:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">이 페이지<\/a>로 가십시오;<br>2. 당신의 국가와 VTX 모델에 적합한 VTX 구성 파일을 찾아 다운로드하십시오;<br>3. 아래에서 '$t(vtxButtonLoadFile.message)'를 클릭하고 VTX 구성 파일을 선택하고 로드하십시오;<br>4. 설정이 올바른지 확인하십시오;<br>5. VTX 설정을 비행 컨트롤러에 저장하려면 '$t(vtxButtonSave.message)'를 클릭하십시오.<br>6. 옵션으로 베타플라이트 루아 스크립트로 사용 가능한 루아 환경설정 파일로 저장하려면 '$t(vtxButtonSaveLua.message)'을 클릭하세요. (더 자세한 정보는 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">여기<\/a>를 보세요.)",
+        "description": "Introduction message in the VTX tab"
+    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">주의:<\/span> 당신의 VTX가 설정되지 않았거나 지원되지 않습니다. 따라서 여기서 VTX 값을 수정할 수 없습니다. 이는 비행 컨트롤러가 트램프 또는 스마트오디오와 같은 일부 프로토콜을 사용하여 VTX에 연결되고 필요한 경우 $t(tabPorts.message) 탭에서 올바르게 구성된 경우에만 가능합니다.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7840,6 +8031,93 @@
     },
     "magCalibrationAccept": {
         "message": "교정 저장"
+    },
+    "magCalibrationFull": {
+        "message": "전체 계산 (자동-정렬)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "한 번 회전 - 오프셋, 소프트 아이언, 그리고 자력계의 장착 방향을 설정할 수 있습니다"
+    },
+    "magCalibrationFullTitle": {
+        "message": "전체 교정"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "아래 단계를 따라 각 회전마다 기체를 고정된 상태로 유지하세요. 새로운 각도에 도달하면 구역 수가 증가하여 20개를 모두 커버하는 것을 목표로 합니다."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "{{total}} 단계 중 {{n}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "기체의 수평을 유지하고 360° 로 천천히 회전하세요."
+    },
+    "magCalibrationFullStep2": {
+        "message": "거꾸로 뒤집고 천천히 360°를 더 돌립니다."
+    },
+    "magCalibrationFullStep3": {
+        "message": "기수를 똑바로 위로 향하게 하고, 기수 주위를 완전히 회전합니다."
+    },
+    "magCalibrationFullStep4": {
+        "message": "기수를 똑바로 아래로 향하게 하고 완전히 회전합니다."
+    },
+    "magCalibrationFullStep5": {
+        "message": "왼쪽으로 기울고 완전히 회전합니다."
+    },
+    "magCalibrationFullStep6": {
+        "message": "오른쪽으로 기울고 완전히 회전합니다."
+    },
+    "magCalibrationFullStep7": {
+        "message": "천천히 앞으로 몇 번 뒤집어서 매번 다른 방향을 향하세요."
+    },
+    "magCalibrationFullStep8": {
+        "message": "천천히 뒤로 몇 번 뒤집어서 매번 다른 방향을 향하게 하세요."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} 구역 커버됨"
+    },
+    "magCalibrationFullCompute": {
+        "message": "계산"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "범위:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "정렬:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "롤 {{roll}}° 피치 {{pitch}}° 요 {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "교정:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "잔여:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "CLI 복사"
+    },
+    "magCalibrationFullApply": {
+        "message": "적용"
+    },
+    "magCalibrationFullExport": {
+        "message": "모델 내보내기"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "샘플이 충분하지 않음 - 더 길게 회전하세요"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "GPS 또는 IP 위치정보 없음 — 지자기 기울기를 결정할 수 없습니다"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI 명령이 클립보드에 복사되었습니다"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "클립보드에 복사할 수 없습니다"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "펌웨어 {{version}}이 사용자 지정 자력계 정렬을 수행하기에는 너무 오래되었습니다 (최소 {{min}} 이상 필요). 펌웨어를 업데이트한 후 다시 적용해 주세요."
+    },
+    "magCalibrationFullApplied": {
+        "message": "교정 적용 및 저장됨"
     },
     "magCalibrationDiscard": {
         "message": "무시"
@@ -9458,5 +9736,89 @@
     },
     "preflightForecastWeather": {
         "message": "날씨"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM 제공자"
+    },
+    "preflightNotamProviderNone": {
+        "message": "비활성화됨"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (US, API 키 필수)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (글로벌 공역, API 키 필수)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA API 키 (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API 키"
+    },
+    "preflightNotamRadius": {
+        "message": "탐색 반경"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "공역 데이터 설정"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "공역 데이터는 선택한 제공자에게 회원님의 좌표를 전송합니다. 추가 개인정보는 전송되지 않습니다."
+    },
+    "preflightNotamLoading": {
+        "message": "공역 데이터를 가져오는 중..."
+    },
+    "preflightNotamEmpty": {
+        "message": "이 위치와 반경에 대한 알림을 찾을 수 없습니다"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "선택한 공급자에게 API 키가 필요합니다. 위의 설정에서 키를 입력하세요."
+    },
+    "preflightNotamFetchError": {
+        "message": "공역 데이터를 가져오지 못했습니다"
+    },
+    "preflightNotamActiveNow": {
+        "message": "지금 활성화됨"
+    },
+    "preflightNotamPermanent": {
+        "message": "영구적"
+    },
+    "preflightNotamExpired": {
+        "message": "만료됨"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "낮게"
+    },
+    "preflightNotamAltTo": {
+        "message": "높게"
+    },
+    "preflightNotamShowMore": {
+        "message": "더 보기"
+    },
+    "preflightNotamShowLess": {
+        "message": "간략히 보기"
+    },
+    "preflightNotamLastFetched": {
+        "message": "마지막 가져옴"
     }
 }

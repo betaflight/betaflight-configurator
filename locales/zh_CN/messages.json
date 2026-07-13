@@ -1722,6 +1722,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "可输入任意旋转角度以允许用侧立、反转、偏转等方式安装飞控板。如果使用了外部传感器，使用「传感器朝向」（陀螺仪、加速度计、磁力计）来设定不同于飞控板朝向的传感器位置。 "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "自动检测飞控方向……"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "飞控方向设置向导"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "这个向导指导你通过四次简单的移动来检测你的飞控是如何安装的。 把无人机放在平坦的表面，相机远离您(朝着屏幕)，然后跟随提示。"
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "开始"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "步骤"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "把无人机平放，摄像头远离您(朝着屏幕)。"
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "将机头抬起约45°。"
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "将右侧向下倾斜大约45°。"
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "将无人机顺时针旋转大约45°（如上所示）。"
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "将无人机重新平放。"
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "保持稳定……"
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "正在校准"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "继续倾斜"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "重新平放"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "检测到轴——保持稳定"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "旋转"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "正在计算方向……"
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "检测到的方向"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "您的飞控方向看起来是正确的——不需要更改。"
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "当前"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "检测到"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "返回"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "应用"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "取消"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "请重试"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "立即获取"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "检测可信度降低——请在应用结果前对照实时倾角图核对。"
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "运行此向导需要一个加速度计。"
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "请在运行此向导之前校准加速度计。"
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "一些样本未采集。请重试。"
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "加速度计没有读取到重力。请确保飞控已连接且没有在移动。"
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "未检测到俯仰动作。请重试并上抬机头更多。"
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "未检测到横滚动作。请重试并下倾右侧更多。"
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "水平"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "俯仰"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "横滚"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "偏航"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "已获取！"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -3169,6 +3283,9 @@
     "servosChangeDirection": {
         "message": "遥控器设置通道反向以匹配方向"
     },
+    "servosForwardChannel": {
+        "message": "透传通道 {{channel}} 至舵机 {{servo}}"
+    },
     "servosName": {
         "message": "名称"
     },
@@ -3889,6 +4006,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "执行"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "代码片段预览"
     },
     "cliPanelTitle": {
         "message": "命令行界面"
@@ -5887,6 +6007,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD 屏幕叠加显示"
+    },
+    "osdToggleElementVisibility": {
+        "message": "切换配置文档 {{profile}} 的 {{element}} 可见性"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>警告：<\/b><\/span>未检测到OSD芯片。部分飞控在未接入电池的情况下无法给OSD芯片正常供电。请在连接 USB 之前接入电池 (务必卸下螺旋桨！)"

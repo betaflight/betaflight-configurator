@@ -1378,6 +1378,10 @@
         "message": "Fast Position er aktiv",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "Autopilot er tændt",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Et af de øvrige deaktiveringsflag er aktivt under tilkobling",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1738,6 +1742,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Auto registrerer justering af FC..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "FC justering guide"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Denne guide registrerer, hvordan din flycontroller er monteret ved at guide dig gennem fire enkle bevægelser. Placer faartøjet på en flad overflade med kameraet vendt væk fra dig (mod skærmen), og følg derefter anvisningerne."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Start"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Trin"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Placer fartøj fladt med kameraet vendt væk fra dig (mod skærmen)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Vip næsen op til omkring 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Vip højre side ned til omkring 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Drej dronen omkring 45° med uret (som set fra oven)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Returner dronen til en plan position."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Hold stille..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Beregninger"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Bliv ved med at vippe"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Vend tilbage til plan"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Akse detekteret — hold stille"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Roter"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Beregner justering..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Registreret justering"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "Din justering af FC ser korrekt ud - ikke nødvendigt med ændringer."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Nuværende"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Registreret"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Tilbage"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Anvend"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Annuller"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Prøv igen"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Registrering nu"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "Kvalitet i registrering er reduceret — kontroller resultatet, før du gemmer konfiguration."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Et accelerometer er nødvendigt for at bruge denne guide."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Kalibrer accelerometeret før start af denne guide."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Nogle prøver kunne ikke hentes. Prøv igen."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "Accelerometeret kan ikke bestemme tyngdekraften. Sørg for, at FC er tilsluttet og ikke er i bevægelse."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Højde vinkel blev ikke registreret. Prøv igen og vip næsen længere op."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Krængning vinkel blev ikke registreret. Prøv igen og vip højre side længere ned."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Flad"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Højderor"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Krængror"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Sideror"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Registreret !"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -2047,6 +2165,9 @@
     "configurationSpiRX": {
         "message": "Protokol ved SPI modtager konfiguration"
     },
+    "configurationSaved": {
+        "message": "Konfiguration gemt"
+    },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
@@ -2187,7 +2308,7 @@
         "message": "PID profil beskrivelse"
     },
     "pidProfileNameHelp": {
-        "message": "Beskrivelse af PID profil, som kan angive hvad profilen er beregnet til, fx let\/tungere batteri, actionkamera\/intet actionkamera, højere højde osv.\n<br><br>\nPID er proportional–integral–derivative-regulator, som er en tilbagekoblet reguleringsmekanisme, som anvendes bredt i industrielle styresystemer.<br><br>\nPID-regulatoren det, der til motorudgange omsætter fejlen mellem:\n<br>&#8226; Ønsket rotation (fra din pind bevægelse)\n<br>&#8226; Faktisk rotation (målt af gyro)\n<br>\nDe tre led betyder:\n<br>&#8226; P – Proportional\n<br>Reagerer på den aktuelle fejl. Mere P = hurtigere respons. For meget P = oscillationer og rystelser.\n<br>Eksempel:\n<br>Du giver roll-stick til højre. Hvis dronen ikke ruller hurtigt nok, øger P motorernes korrektion.\n<br><br>\n<br>&#8226; I – Integral\n<br>Opsamler fejl over tid. Holder vinklen mod vind og ubalancer. For lidt I = drift. For meget I = langsom \"gummiagtig\" fornemmelse.\n<br>Eksempel:\n<br>Ved konstant sidevind sørger I-leddet for, at dronen fortsætter ligeud.\n<br>&#8226; D – Derivative\n<br>Reagerer på hvor hurtigt fejlen ændrer sig. D dæmper oversving. For lidt D = tilbagesving efter salto. For meget D = varme motorer og støj.\n<br>Eksempel:\n<br>Efter et hurtigt roll-stop hjælper D med at stoppe præcist uden at \"springe tilbage\"."
+        "message": "Beskrivelse af PID profil, som kan angive hvad profilen er beregnet til, fx let\/tungere batteri, actionkamera\/intet actionkamera, højere højde osv.\n<br><br>\nPID er proportional–integral–derivative-regulator, som er en tilbagekoblet reguleringsmekanisme, som anvendes bredt i industrielle styresystemer.<br><br>\nPID-regulatoren det, der til motorudgange omsætter fejlen mellem:\n<br>&#8226; Ønsket rotation (fra din pind bevægelse)\n<br>&#8226; Faktisk rotation (målt af gyro)\n<br><br>\nDe tre led betyder:\n<br>&#8226; P – Proportional\n<br>Reagerer på den aktuelle fejl. Mere P = hurtigere respons. For meget P = oscillationer og rystelser.\n<br>Eksempel: Du giver roll-stick til højre. Hvis dronen ikke ruller hurtigt nok, øger P motorernes korrektion.\n<br>&#8226; I – Integral\n<br>Opsamler fejl over tid. Holder vinklen mod vind og ubalancer. For lidt I = drift. For meget I = langsom \"gummiagtig\" fornemmelse.\n<br>Eksempel: Ved konstant sidevind sørger I-leddet for, at dronen fortsætter ligeud.\n<br>&#8226; D – Derivative\n<br>Reagerer på hvor hurtigt fejlen ændrer sig. D dæmper oversving. For lidt D = tilbagesving efter salto. For meget D = varme motorer og støj.\n<br>Eksempel: Efter et hurtigt roll-stop hjælper D med at stoppe præcist uden at \"springe tilbage\"."
     },
     "rateProfileName": {
         "message": "Hastighed profil beskrivelse"
@@ -2202,7 +2323,7 @@
         "message": "Skjul ubenyttede PID profiler"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": "Profiluafhængige PID controller indstillinger"
+        "message": "Profil <strong>u<\/strong>afhængige PID controller indstillinger"
     },
     "pidTuningAntiGravity": {
         "message": "Anti tyngekraft"
@@ -2377,10 +2498,10 @@
         "message": "Fremkobling justerer pindens følsomhed.<br \/><br \/> Disse indstillinger lader dig justere det til at give noget fra crisp, umiddelbare pind svar til ræs, eller bløde glatte svar til filmning \/ HD formål."
     },
     "pidTuningFeedforwardJitter": {
-        "message": "Jitter reduktion"
+        "message": "Signaluro reduktion"
     },
     "pidTuningFeedforwardJitterHelp": {
-        "message": "Jitter Reduktion reducerer fremkobling når pindene bevæger sig langsomt, uanset deres position.<br><br>Dette giver mulighed for glat, jitterfri flyvning, når du laver glatte, langsomme buer, alligevel giver fuld fremkobling uden nogen forsinkelse, når pindene flyttes hurtigt. Overgang er ikke påkrævet, og skal sættes til nul, når jitter reduktion er aktiv.<br><br>Standard er 7. Højere værdier, fx 10-12, er gode til film- eller HD-freestyle formål, 5 kan være bedre til ræs med hurtige RC links."
+        "message": "Signaluro reduktion reducerer fremkobling når pindene bevæger sig langsomt, uanset deres position.<br><br>Dette giver mulighed for glat, flyvning uden signaluro, når du laver glatte, langsomme buer, og alligevel giver fuld fremkobling uden nogen forsinkelse, når pindene flyttes hurtigt. Overgang er ikke påkrævet, og skal sættes til nul, når signaluro reduktion er aktiv.<br><br>Standard er 7. Højere værdier, fx 10-12, er gode til film- eller HD-freestyle formål, 5 kan være bedre til ræs med hurtige RC links."
     },
     "pidTuningFeedforwardSmoothFactor": {
         "message": "Udjævning faktor"
@@ -2392,7 +2513,7 @@
         "message": "Udjævning"
     },
     "pidTuningFeedforwardAveragingHelp": {
-        "message": "Udjævning af fremkoblings tager gennemsnittet af de sidste 2 eller 3 fremkoblings trin. Det uglatter fremkobling, men tilføjer noget forsinkelse.<br><br>Det er mest effektivt, når der er sekventiel op\/ned jitter i signalet, som er fælles med hurtigere RC links.<br><br>2 point gennemsnit er nødvendigt for 500hz links og støjende 250hz links, eller for filmning \/ HD flyvning. Crossfire (før CRSFShot) skal bruge 3 point i gennemsnit i 150hz tilstand."
+        "message": "Udjævning af fremkobling tager gennemsnittet af de sidste 2 eller 3 fremkoblings trin. Det udglatter fremkobling, men tilføjer noget forsinkelse.<br><br>Det er mest effektivt, når der er sekventiel op\/ned signaluro, som er fælles med hurtigere RC links.<br><br>2 point gennemsnit er nødvendigt for 500hz links og støjende 250hz links, eller for filmning \/ HD flyvning. Crossfire (før CRSFShot) skal bruge 3 point i gennemsnit i 150hz tilstand."
     },
     "pidTuningOptionOff": {
         "message": "FRA"
@@ -2425,7 +2546,7 @@
         "message": "Overgang"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "Overgang reducerer fremkobling når pinde er tæt på midtpunkt. <br><br>I 4.2 og tidligere kan overgangen bruges til at give glattere svar fra pinde omkring midtpunktet.<br><br>I 4.3, overgang anbefales ikke, da den er blevet 'erstattet ' af jitter reduktion funktion.<br><br>En værdi på 0 deaktiverer overgang. En værdi på 0.3 skærer fremkobling til nul, når pinde er ved dødt midtpunkt, men det øges til fuld normal, når pinde er mere end 30% fra midtpunktet."
+        "message": "Overgang reducerer fremkobling når pinde er tæt på midtpunkt. <br><br>I 4.2 og tidligere kan overgangen bruges til at give glattere svar fra pinde omkring midtpunktet.<br><br>I 4.3, overgang anbefales ikke, da den er blevet 'erstattet ' af funktion til signaluro.<br><br>En værdi på 0 deaktiverer overgang. En værdi på 0.3 skærer fremkobling til nul, når pinde er ved dødt midtpunkt, men det øges til fuld normal, når pinde er mere end 30% fra midtpunktet."
     },
     "pidTuningProportional": {
         "message": "<b>P<\/b>roportional"
@@ -2673,13 +2794,13 @@
         "message": "RC afvigelse"
     },
     "receiverHelpDeadband": {
-        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med output-fluktueringer, kan denne værdi øges, hvis RC input rykker i tomgang."
+        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med signaluro på output-fluktueringer, kan denne værdi øges, hvis RC input rykker i tomgang."
     },
     "receiverYawDeadband": {
         "message": "Sideror afvigelse"
     },
     "receiverHelpYawDeadband": {
-        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med output-fluktueringer, kan denne værdi øges, hvis RC input rykker  i tomgang. <strong>Denne indstilling gælder kun sideror.<\/strong>"
+        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med signaluro på output-fluktueringer, kan denne værdi øges, hvis RC input rykker  i tomgang. <strong>Denne indstilling gælder kun sideror.<\/strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "3D gas afvigelse"
@@ -3200,6 +3321,9 @@
     },
     "servosChangeDirection": {
         "message": "Skift retning i TX for at matche"
+    },
+    "servosForwardChannel": {
+        "message": "Videresend kanal {{channel}} til servo {{servo}}"
     },
     "servosName": {
         "message": "Servo"
@@ -3929,6 +4053,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Udfør"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Forhåndsvisning"
     },
     "cliPanelTitle": {
         "message": "Kommando område"
@@ -4936,13 +5063,13 @@
         "message": "Procentvis reduktion i signalet pr. motor.<br><br>Reducerer ESC strøm og motorvarme, når der anvendes højere celletal batterier på høje KV-motorer.<br><br>Når du bruger et 6S-batteri på et fartøj, der med 4S-motorer, rekvisitter og tuning, kan du prøve 66%; når der anvendes et 4S-batteri på et fartøj, der er beregnet til 3S, kan du prøve 75%.<br><br>Vær sikker på, at alle dine komponenter kan understøtte spændingen på det batteri, du bruger."
     },
     "pidTuningCellCount": {
-        "message": "Antal batteri celler - for automatisk profilskift"
+        "message": "Batteri celle antal - antal styrer gældende profil"
     },
     "pidTuningCellCountHelp": {
         "message": "Aktiverer automatisk den første profil, der har et celle antal som svarer til det tilsluttede batteris celle antal.<br><br><ul><li><b>Skift<\/b>: Skift altid til en profil med matchende celle antal, hvis der er en.<\/li><li><b>Deaktivér<\/b>: Deaktivér automatisk profilskift<\/li><b>1S-8S<\/b>: Vælg det celle antal, der skal bruges til denne profil<\/li><\/ul>"
     },
     "pidTuningCellCountChange": {
-        "message": "Kontakt",
+        "message": "Skift",
         "description": "Switch profile if there are no profiles matching cell count"
     },
     "pidTuningCellCountStay": {
@@ -4974,7 +5101,7 @@
         "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "Filter indstillinger ikke afhænig af profil"
+        "message": "Profil <strong>u<\/strong>afhængige filter indstillinger"
     },
     "pidTuningFilterSlidersHelp": {
         "message": "Disse skydere justere Gyro og D-term filtre.<br \/><br \/>For mere filtrering:<br \/> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br \/><br \/> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere, kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br \/> - Skyder til højre<br \/> - Højere afskærings frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. At bevæge Gyro lavpassfilter mod højre er normalt OK, men det er typisk ikke nødvendigt at flytte D filteret til højre, og det kan nemt resultere i meget varme motorer.",
@@ -5284,7 +5411,7 @@
         "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
-        "message": "Filter indstillinger afhængige af profil"
+        "message": "Profil afhængige filter indstillinger"
     },
     "pidTuningDTermLowpass": {
         "message": "D Term lavpassfilter 1"
@@ -5887,6 +6014,9 @@
     "powerBatteryProfileOption": {
         "message": "Batteri profil $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Opsat batteri profil: <strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "f.eks. LiPo, Li-Ion"
     },
@@ -5931,6 +6061,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Slå {{element}} synlighed til for profil {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>ADVARSEL:<\/b><\/span> Der blev ikke fundet nogen OSD chip. Nogle FC kan ikke aktivere OSD chippen, medmindre de er tilsluttet batteri. Tilslut batteriet, før du tilslutter USB (Husk at fjerne propellerne!)."
@@ -7357,6 +7490,14 @@
     "osdWarningPosHoldFailed": {
         "message": "Fast Position mislykkes",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Autopilot mission afbrudt",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Autopilot mission afbrudt",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
     },
     "osdWarningTextUnknown": {
         "message": "Ukendt $1"

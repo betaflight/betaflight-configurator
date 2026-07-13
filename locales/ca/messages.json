@@ -1382,6 +1382,10 @@
         "message": "El manteniment de posició està actiu",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "L'interruptor del mode de pilot automàtic està actiu",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un dels altres desarmar banderes està actiu quan es fa armament",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1742,6 +1746,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "Rotació arbitrària de la placa en graus, per permetre muntar-la de costat \/ cap per avall \/ girada, etc. Quan utilitzeu sensors externs, utilitzeu les alineacions dels sensors (Giro, Acc, Mag) per definir la posició del sensor independent de l'orientació de la placa. "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Detecció automàtica de l'alineació de la placa..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Assistent d'alineació de la placa"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Aquest assistent detecta com està muntat el controlador de vol guiant-vos a través de quatre moviments senzills. Col·loqueu el dron sobre una superfície plana amb la càmera apuntant cap a la pantalla (lluny de tú) i, a continuació, segueix les instruccions."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Comença"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Pas"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Col·loca el dron pla amb la càmera mirant lluny a tu (cap a la pantalla)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Inclina el nas cap amunt uns 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Inclina el nas cap abaix uns 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Gireu el dron uns 45° en sentit horari (vist des de dalt)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Torna a posar el dron en una posició anivellada."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Manteniu-lo quiet..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Assenta-ho"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Continua inclinant-ho"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Torna-ho a nivell"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Eix detectat - Mantenir fix"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotació"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Processant alineació..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Alineació detectada"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "L'alineació de la placa sembla correcta; no cal fer cap canvi."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Actual"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Detectat"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Enrere"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Aplica"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Canceŀlar"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Torna-ho a provar"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Captura ara"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "La confiança de detecció es redueix; verifiqueu el resultat amb l'actitud en directe abans d'aplicar-lo."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Cal un acceleròmetre per executar aquest assistent."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Si us plau, calibra l'acceleròmetre abans d'executar aquest assistent."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "No s'han recollit algunes mostres. Si us plau, torna-ho a intentar."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "L'acceleròmetre no llegeix la gravetat. Assegureu-vos que la controladora estigui connectada i no estigui en moviment."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "No s'ha detectat el gest de Pitch. Torna-ho a intentar i inclina el nas cap amunt encara més."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "No s'ha detectat el gest de Roll. Torna-ho a intentar i inclina el costat dret cap abaix encara més."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Pla"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Capturat!"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -2050,6 +2168,9 @@
     },
     "configurationSpiRX": {
         "message": "Proveïdor del Receptor SPI Bus"
+    },
+    "configurationSaved": {
+        "message": "Configuració desada"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -3205,6 +3326,9 @@
     "servosChangeDirection": {
         "message": "Canvia la direcció al TX per a coincidir"
     },
+    "servosForwardChannel": {
+        "message": "Reenvia el canal {{channel}} al servo {{servo}}"
+    },
     "servosName": {
         "message": "Nom"
     },
@@ -3933,6 +4057,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Executa"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Vista prèvia del fragment"
     },
     "cliPanelTitle": {
         "message": "Interfície de línia d'ordres"
@@ -5891,6 +6018,9 @@
     "powerBatteryProfileOption": {
         "message": "Perfil de bateria $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Controladora de vol selecciona perfil de bateria: <strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "example. LiPo, Li-Ion"
     },
@@ -5935,6 +6065,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Activa\/desactiva la visibilitat de {{element}} per al perfil {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>AVIS:<\/b><\/span>No s'ha detectat cap xip OSD. Alguns controladors de vol no alimentaran correctament el xip OSD a menys que estiguin connectats a la bateria. Si us plau, connecteu la bateria abans de connectar el USB (HEU RETIRAT LES HÈLIX!)."
@@ -7361,6 +7494,14 @@
     "osdWarningPosHoldFailed": {
         "message": "Ha fallat el manteniment de la posició",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Missió de pilot automàtic avortada",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Missió de pilot automàtic avortada",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
     },
     "osdWarningTextUnknown": {
         "message": "Desconegut $1"
