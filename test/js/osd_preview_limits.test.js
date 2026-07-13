@@ -200,7 +200,9 @@ describe("clampArrayPreviewPosition", () => {
         };
         // Dragged to row 15, col 28: index = 478. cursorX = 28.
         const result = clampArrayPreviewPosition(displayItem, 478, displaySize, 28);
-        expect(result).toBeDefined();
-        expect(result).not.toBeNull();
+        // limits: {minX:0, maxX:3, minY:0, maxY:2}
+        // X: 28 + 3 = 31 > 30 → position -= 1 → 477
+        // Y: 15 + 2 = 17 > 16 → position -= 30 → 447
+        expect(result).toEqual(447);
     });
 });
