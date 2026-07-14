@@ -274,7 +274,7 @@ export async function sensorTypes(): Promise<SensorTypes> {
  * For API 1.47+, includes VIRTUAL protocol.
  */
 export function gpsProtocols(): string[] {
-    const protocols = ["NMEA", "UBLOX", "MSP"];
+    const protocols = ["NMEA", "UBLOX", "SEPTENTRIO", "MSP"];
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         addArrayElement(protocols, "VIRTUAL");
