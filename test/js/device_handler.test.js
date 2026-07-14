@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// port_handler.js pulls in ConfigStorage, the serial facade, the DFU protocol,
+// device_handler.js pulls in ConfigStorage, the serial facade, the DFU protocol,
 // the EventBus and compatibility probes. We mock each so the singleton loads in
 // isolation and we can exercise selectActivePort() directly.
 //
@@ -16,7 +16,8 @@ const { serial, dfuProtocol, isExpertModeEnabled } = vi.hoisted(() => {
     return {
         serial: {
             connected: false,
-            getConnectedPort: vi.fn(() => null),
+            connectionId: null,
+            getConnectedDevice: vi.fn(() => null),
             addEventListener: vi.fn(),
             removeEventListener: vi.fn(),
             getDevices: vi.fn(async () => []),
@@ -24,7 +25,7 @@ const { serial, dfuProtocol, isExpertModeEnabled } = vi.hoisted(() => {
         },
         dfuProtocol: {
             usbDevice: null,
-            getConnectedPort: vi.fn(() => null),
+            getConnectedDevice: vi.fn(() => null),
             getDevices: vi.fn(async () => []),
             requestPermission: vi.fn(),
             addEventListener: vi.fn(),
@@ -74,15 +75,15 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     isAndroid: () => false,
 }));
 
-import PortHandler from "../../src/js/port_handler";
+import DeviceHandler from "../../src/js/device_handler";
 import { getConnectionState, __resetConnectionStateForTests } from "../../src/js/connection_state.js";
 
 // "Reconnect in progress" is now the connection state being in REBOOTING/RECONNECTING
 // while the previously-selected port stays put (was a frozen reconnect token, and
-// before that PortHandler.pinnedReconnectTarget). Helper to simulate it: select the
+// before that DeviceHandler.pinnedReconnectTarget). Helper to simulate it: select the
 // device, then enter the reconnect window.
 function pinReconnectTarget(path) {
-    PortHandler.portPicker.selectedPort = path;
+    DeviceHandler.devicePicker.selectedDevice = path;
     getConnectionState().requestReboot();
 }
 
@@ -90,17 +91,18 @@ function resetPortHandler() {
     vi.clearAllMocks();
     __resetConnectionStateForTests();
     serial.connected = false;
+    serial.connectionId = null;
     dfuProtocol.usbDevice = null;
     isExpertModeEnabled.mockReturnValue(true);
-    PortHandler.currentSerialPorts = [];
-    PortHandler.currentUsbPorts = [];
-    PortHandler.currentBluetoothPorts = [];
-    PortHandler.showVirtualMode = false;
-    PortHandler.showManualMode = false;
-    PortHandler.portPicker.selectedPort = "noselection";
+    DeviceHandler.currentSerialPorts = [];
+    DeviceHandler.currentUsbPorts = [];
+    DeviceHandler.currentBluetoothPorts = [];
+    DeviceHandler.showVirtualMode = false;
+    DeviceHandler.showManualMode = false;
+    DeviceHandler.devicePicker.selectedDevice = "noselection";
 }
 
-describe("PortHandler.selectActivePort — preset/reboot -> virtual regression", () => {
+describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression", () => {
     beforeEach(() => {
         resetPortHandler();
     });
@@ -112,59 +114,110 @@ describe("PortHandler.selectActivePort — preset/reboot -> virtual regression",
     it("does NOT select 'virtual' when the real port is transiently gone during a reboot (expert + showVirtualMode on)", () => {
         // Reboot in progress: the real serial device has briefly dropped off the list, and the
         // connection state is in the reconnect window aimed at the device we are reconnecting to.
-        PortHandler.currentSerialPorts = [];
-        PortHandler.currentUsbPorts = [];
-        PortHandler.currentBluetoothPorts = [];
+        DeviceHandler.currentSerialPorts = [];
+        DeviceHandler.currentUsbPorts = [];
+        DeviceHandler.currentBluetoothPorts = [];
         pinReconnectTarget("/dev/ttyACM0");
 
         // Expert mode + virtual mode are both enabled (the regression's precondition).
         isExpertModeEnabled.mockReturnValue(true);
-        PortHandler.showVirtualMode = true;
+        DeviceHandler.showVirtualMode = true;
 
-        const selected = PortHandler.selectActivePort();
+        const selected = DeviceHandler.selectActivePort();
 
         // The selection must not be hijacked to "virtual" mid-reboot — it stays on the pinned target.
         expect(selected).not.toBe("virtual");
-        expect(PortHandler.portPicker.selectedPort).not.toBe("virtual");
-        expect(PortHandler.portPicker.selectedPort).toBe("/dev/ttyACM0");
+        expect(DeviceHandler.devicePicker.selectedDevice).not.toBe("virtual");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("/dev/ttyACM0");
     });
 
     // Companion: when NO reconnect is in progress (isReconnecting false), the normal startup
     // expert-mode fallback still surfaces "virtual". This pins that the guard is scoped to the
     // reconnect window and does not break ordinary virtual-mode selection.
     it("still falls back to 'virtual' on normal startup (no reconnect pinned)", () => {
-        PortHandler.currentSerialPorts = [];
+        DeviceHandler.currentSerialPorts = [];
         __resetConnectionStateForTests(); // IDLE => not reconnecting
         isExpertModeEnabled.mockReturnValue(true);
-        PortHandler.showVirtualMode = true;
+        DeviceHandler.showVirtualMode = true;
 
-        const selected = PortHandler.selectActivePort();
+        const selected = DeviceHandler.selectActivePort();
 
         expect(selected).toBe("virtual");
-        expect(PortHandler.portPicker.selectedPort).toBe("virtual");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("virtual");
     });
 
     // The same guard applies to the "manual" fallback during a reconnect.
     it("does NOT select 'manual' while a reconnect is pinned (expert + showManualMode on)", () => {
-        PortHandler.currentSerialPorts = [];
+        DeviceHandler.currentSerialPorts = [];
         pinReconnectTarget("bluetooth-0011");
         isExpertModeEnabled.mockReturnValue(true);
-        PortHandler.showManualMode = true;
+        DeviceHandler.showManualMode = true;
 
-        const selected = PortHandler.selectActivePort();
+        const selected = DeviceHandler.selectActivePort();
 
         expect(selected).not.toBe("manual");
-        expect(PortHandler.portPicker.selectedPort).toBe("bluetooth-0011");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("bluetooth-0011");
     });
 
     it("does NOT select 'virtual' when expert mode is off (even if showVirtualMode is on)", () => {
-        PortHandler.currentSerialPorts = [];
+        DeviceHandler.currentSerialPorts = [];
         isExpertModeEnabled.mockReturnValue(false);
-        PortHandler.showVirtualMode = true;
+        DeviceHandler.showVirtualMode = true;
 
-        const selected = PortHandler.selectActivePort();
+        const selected = DeviceHandler.selectActivePort();
 
         expect(selected).not.toBe("virtual");
-        expect(PortHandler.portPicker.selectedPort).toBe("noselection");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("noselection");
+    });
+
+    // Regression for the connected-device highlight: getConnectedDevice() returns
+    // transport-specific values (raw Web Serial ports, native handles, strings) that never
+    // equal the wrapper objects in currentSerialPorts, so the old object-identity match was
+    // dead for every transport. Matching on the stable connectionId (== device path) fixes it.
+    it("selects the connected serial device by connectionId, not object identity", () => {
+        const connected = { path: "/dev/ttyACM0", displayName: "Betaflight STM32" };
+        DeviceHandler.currentSerialPorts = [{ path: "/dev/ttyUSB9", displayName: "other" }, connected];
+        serial.connected = true;
+        serial.connectionId = "/dev/ttyACM0";
+        // Transport returns something that is NOT the wrapper object held in the list.
+        serial.getConnectedDevice.mockReturnValue({ rawHandle: true });
+
+        const selected = DeviceHandler.selectActivePort();
+
+        expect(selected).toBe("/dev/ttyACM0");
+    });
+
+    // BLE-connected devices live in currentBluetoothPorts, not currentSerialPorts, but
+    // still carry connectionId == path. The connected lookup must search both lists.
+    it("selects the connected Bluetooth device by connectionId", () => {
+        const connected = { path: "bluetooth_ab12", displayName: "Betaflight BLE" };
+        DeviceHandler.currentBluetoothPorts = [connected];
+        serial.connected = true;
+        serial.connectionId = "bluetooth_ab12";
+        serial.getConnectedDevice.mockReturnValue({ rawBleHandle: true });
+
+        const selected = DeviceHandler.selectActivePort();
+
+        expect(selected).toBe("bluetooth_ab12");
+    });
+});
+
+describe("DeviceHandler show* setters", () => {
+    beforeEach(() => {
+        resetPortHandler();
+    });
+
+    // setShowAllSerialDevices must refresh the active selection like its siblings
+    // (setShowVirtualMode / setShowManualMode) — toggling the filter changes which
+    // devices are visible, so the active device has to be re-evaluated.
+    it("setShowAllSerialDevices triggers selectActivePort, matching the other show* setters", () => {
+        const spy = vi.spyOn(DeviceHandler, "selectActivePort");
+
+        DeviceHandler.setShowAllSerialDevices(true);
+
+        expect(DeviceHandler.showAllSerialDevices).toBe(true);
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        spy.mockRestore();
     });
 });

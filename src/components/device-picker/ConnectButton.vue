@@ -21,7 +21,7 @@
                 variant="soft"
                 icon="i-lucide-link-2"
                 :loading="connecting"
-                :disabled="portPickerDisabled"
+                :disabled="devicePickerDisabled"
                 :title="mainLabel"
                 @click="onConnectClick"
             >
@@ -38,7 +38,7 @@
                     variant="soft"
                     :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                     square
-                    :disabled="portPickerDisabled"
+                    :disabled="devicePickerDisabled"
                     :aria-label="$t('connect')"
                 />
             </UDropdownMenu>
@@ -46,8 +46,8 @@
         <ConnectOptionsDialog
             v-model="dialogOpen"
             :mode="dialogMode"
-            :initial-version="portPicker.virtualMspVersion"
-            :initial-port-override="portPicker.portOverride"
+            :initial-version="devicePicker.virtualMspVersion"
+            :initial-port-override="devicePicker.portOverride"
             @confirm="onDialogConfirm"
         />
     </div>
@@ -56,7 +56,7 @@
 <script>
 import { defineComponent, computed, ref } from "vue";
 import { useConnectionStore } from "../../stores/connection";
-import PortHandler from "../../js/port_handler";
+import DeviceHandler from "../../js/device_handler";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
 import { set as setConfig } from "../../js/ConfigStorage";
@@ -64,24 +64,24 @@ import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 
 function selectAndConnect(path) {
-    PortHandler.portPicker.selectedPort = path;
+    DeviceHandler.devicePicker.selectedDevice = path;
     connectDisconnect();
 }
 
 function onDialogConfirm({ mode, version, portOverride }) {
     if (mode === "virtual") {
-        PortHandler.portPicker.virtualMspVersion = version;
+        DeviceHandler.devicePicker.virtualMspVersion = version;
         setConfig({ virtualMspVersion: version });
         selectAndConnect("virtual");
     } else {
-        PortHandler.portPicker.portOverride = portOverride;
+        DeviceHandler.devicePicker.portOverride = portOverride;
         setConfig({ portOverride });
         selectAndConnect("manual");
     }
 }
 
 function toggleAutoConnect(value) {
-    PortHandler.portPicker.autoConnect = value;
+    DeviceHandler.devicePicker.autoConnect = value;
     setConfig({ autoConnect: value });
 }
 
@@ -109,15 +109,15 @@ export default defineComponent({
             }
             return i18n.getMessage("disconnect");
         });
-        const portPickerDisabled = computed(() => PortHandler.portPickerDisabled);
+        const devicePickerDisabled = computed(() => DeviceHandler.devicePickerDisabled);
 
-        const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
-        const serialPorts = computed(() => PortHandler.currentSerialPorts);
-        const usbPorts = computed(() => PortHandler.currentUsbPorts);
-        const bluetoothPorts = computed(() => PortHandler.currentBluetoothPorts);
+        const selectedDevice = computed(() => DeviceHandler.devicePicker.selectedDevice);
+        const serialPorts = computed(() => DeviceHandler.currentSerialPorts);
+        const usbPorts = computed(() => DeviceHandler.currentUsbPorts);
+        const bluetoothPorts = computed(() => DeviceHandler.currentBluetoothPorts);
 
         const selectedDisplayName = computed(() => {
-            const path = selectedPort.value;
+            const path = selectedDevice.value;
             if (!path || path === "noselection") {
                 return null;
             }
@@ -129,7 +129,7 @@ export default defineComponent({
             if (connecting.value) {
                 return i18n.getMessage("connecting");
             }
-            if (selectedPort.value === "virtual") {
+            if (selectedDevice.value === "virtual") {
                 return i18n.getMessage("connectVirtual");
             }
             return selectedDisplayName.value ?? i18n.getMessage("connect");
@@ -137,7 +137,7 @@ export default defineComponent({
 
         const dialogOpen = ref(false);
         const dialogMode = ref("virtual");
-        const portPicker = computed(() => PortHandler.portPicker);
+        const devicePicker = computed(() => DeviceHandler.devicePicker);
 
         function openConnectDialog(mode) {
             dialogMode.value = mode;
@@ -147,7 +147,7 @@ export default defineComponent({
         function buildDeviceItems() {
             const expertMode = isExpertModeEnabled();
             const devices = [];
-            if (PortHandler.showSerialOption) {
+            if (DeviceHandler.showSerialOption) {
                 for (const d of serialPorts.value) {
                     devices.push({
                         label: d.displayName,
@@ -156,7 +156,7 @@ export default defineComponent({
                     });
                 }
             }
-            if (PortHandler.showUsbOption) {
+            if (DeviceHandler.showUsbOption) {
                 for (const d of usbPorts.value) {
                     devices.push({
                         label: d.displayName,
@@ -165,7 +165,7 @@ export default defineComponent({
                     });
                 }
             }
-            if (PortHandler.showBluetoothOption) {
+            if (DeviceHandler.showBluetoothOption) {
                 for (const d of bluetoothPorts.value) {
                     devices.push({
                         label: d.displayName,
@@ -174,14 +174,14 @@ export default defineComponent({
                     });
                 }
             }
-            if (expertMode && PortHandler.showVirtualMode) {
+            if (expertMode && DeviceHandler.showVirtualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectVirtual"),
                     icon: "i-lucide-flask-conical",
                     onSelect: () => openConnectDialog("virtual"),
                 });
             }
-            if (expertMode && PortHandler.showManualMode) {
+            if (expertMode && DeviceHandler.showManualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
@@ -193,18 +193,18 @@ export default defineComponent({
 
         function buildPermissionItems() {
             const items = [];
-            if (PortHandler.showSerialOption) {
+            if (DeviceHandler.showSerialOption) {
                 items.push({
                     label: i18n.getMessage("portsSelectPermission"),
                     icon: "i-lucide-plug-zap",
-                    onSelect: () => PortHandler.requestDevicePermission("serial"),
+                    onSelect: () => DeviceHandler.requestDevicePermission("serial"),
                 });
             }
-            if (PortHandler.showBluetoothOption) {
+            if (DeviceHandler.showBluetoothOption) {
                 items.push({
                     label: i18n.getMessage("portsSelectPermissionBluetooth"),
                     icon: "i-lucide-bluetooth",
-                    onSelect: () => PortHandler.requestDevicePermission("bluetooth"),
+                    onSelect: () => DeviceHandler.requestDevicePermission("bluetooth"),
                 });
             }
             return items;
@@ -219,7 +219,7 @@ export default defineComponent({
                 {
                     type: "checkbox",
                     label: i18n.getMessage("autoConnect"),
-                    checked: portPicker.value.autoConnect,
+                    checked: devicePicker.value.autoConnect,
                     onUpdateChecked: toggleAutoConnect,
                     onSelect: (e) => e.preventDefault(),
                 },
@@ -228,24 +228,24 @@ export default defineComponent({
         });
 
         async function onConnectClick() {
-            if (portPickerDisabled.value) {
+            if (devicePickerDisabled.value) {
                 return;
             }
 
             // Guard against a persisted virtual/manual selection when expert mode is off.
             const gatedModes = ["virtual", "manual"];
-            if (!isExpertModeEnabled() && gatedModes.includes(selectedPort.value)) {
-                PortHandler.portPicker.selectedPort = "noselection";
+            if (!isExpertModeEnabled() && gatedModes.includes(selectedDevice.value)) {
+                DeviceHandler.devicePicker.selectedDevice = "noselection";
             }
 
-            if (selectedPort.value === "noselection") {
-                PortHandler.selectActivePort();
-                if (PortHandler.portPicker.selectedPort !== "noselection") {
+            if (selectedDevice.value === "noselection") {
+                DeviceHandler.selectActivePort();
+                if (DeviceHandler.devicePicker.selectedDevice !== "noselection") {
                     connectDisconnect();
                     return;
                 }
-                await PortHandler.requestDevicePermission("serial");
-                if (PortHandler.portPicker.selectedPort !== "noselection") {
+                await DeviceHandler.requestDevicePermission("serial");
+                if (DeviceHandler.devicePicker.selectedDevice !== "noselection") {
                     connectDisconnect();
                 }
                 return;
@@ -257,13 +257,13 @@ export default defineComponent({
         return {
             isConnected,
             connecting,
-            portPickerDisabled,
+            devicePickerDisabled,
             disconnectLabel,
             mainLabel,
             menuItems,
             dialogOpen,
             dialogMode,
-            portPicker,
+            devicePicker,
             onConnectClick,
             onDisconnectClick: disconnect,
             onDialogConfirm,

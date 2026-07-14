@@ -38,7 +38,7 @@ class Websocket extends EventTarget {
         };
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return {
             path: this.address,
             displayName: `Betaflight SITL`,
