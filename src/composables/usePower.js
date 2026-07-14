@@ -10,6 +10,7 @@ import MSPCodes from "../js/msp/MSPCodes";
 import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
+import { isMspCancelled } from "../js/msp/mspErrors.js";
 
 export function usePower() {
     const supported = computed(() => {
@@ -345,6 +346,12 @@ export function usePower() {
                 amperage: FC.BATTERY_STATE.amperage,
             });
         } catch (error) {
+            // Same lifecycle race as the main live-data poller: switching away from the Power tab
+            // (or a disconnect) clears the MSP queue and cancels the in-flight poll. Expected — the
+            // interval is torn down on tab switch anyway — so don't log the cancellation.
+            if (isMspCancelled(error)) {
+                return;
+            }
             console.error("Error updating live data:", error);
         }
     };

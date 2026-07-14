@@ -30,6 +30,7 @@ import { unmountVueTab } from "./vue_tab_mounter";
 import { switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
+import { isMspCancelled } from "./msp/mspErrors.js";
 
 const logHead = "[SERIAL-BACKEND]";
 
@@ -1197,38 +1198,52 @@ export function read_serial(info) {
     }
 }
 
+// Request one live-data value. Returns false when the poll cycle should stop because the
+// MSP queue was cleared out from under us — a tab switch (tab_switch_cleanup) or a
+// disconnect settles the in-flight request with MspCancelledError. That is an expected
+// lifecycle event for a background poller that outlives any single tab, so it is swallowed
+// silently; genuine failures (timeout, CRC) are still logged and the cycle continues.
+async function requestLiveData(code, name) {
+    try {
+        await MSP.promise(code);
+        return true;
+    } catch (error) {
+        if (isMspCancelled(error)) {
+            return false;
+        }
+        console.error(`Failed to request ${name}:`, error);
+        return true;
+    }
+}
+
 export async function update_sensor_status() {
-    try {
-        await MSP.promise(MSPCodes.MSP_ANALOG);
-    } catch (error) {
-        console.error("Failed to request MSP_ANALOG:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_ANALOG, "MSP_ANALOG"))) {
+        return;
     }
-    try {
-        await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
-    } catch (error) {
-        console.error("Failed to request MSP_BATTERY_STATE:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_BATTERY_STATE, "MSP_BATTERY_STATE"))) {
+        return;
     }
-    try {
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-    } catch (error) {
-        console.error("Failed to request MSP_BOXNAMES:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_BOXNAMES, "MSP_BOXNAMES"))) {
+        return;
     }
-    try {
-        await MSP.promise(MSPCodes.MSP_STATUS_EX);
-    } catch (error) {
-        console.error("Failed to request MSP_STATUS_EX:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_STATUS_EX, "MSP_STATUS_EX"))) {
+        return;
     }
 
     if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
-        try {
-            await MSP.promise(MSPCodes.MSP_RAW_GPS);
-        } catch (error) {
-            console.error("Failed to request MSP_RAW_GPS:", error);
-        }
+        await requestLiveData(MSPCodes.MSP_RAW_GPS, "MSP_RAW_GPS");
     }
 }
 
 async function update_live_status() {
+    // Don't poll while a tab switch is tearing down the old tab and mounting the new one:
+    // tab_switch_cleanup() clears the MSP queue, so a poll issued now would just be cancelled.
+    // Skipping keeps the background poller from firing requests straight into that cleanup;
+    // the interval resumes normally on the next tick once the switch has settled.
+    if (GUI.tab_switch_in_progress) {
+        return;
+    }
+
     // Check if live data is paused via Pinia store
     const connectionStore = useConnectionStore();
     if (connectionStore.liveDataPaused) {
