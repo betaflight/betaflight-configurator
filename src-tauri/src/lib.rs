@@ -1,4 +1,5 @@
 mod tcp;
+mod udp;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -13,7 +14,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             tcp::tcp_connect,
             tcp::tcp_send,
-            tcp::tcp_disconnect
+            tcp::tcp_disconnect,
+            udp::phoneflash_flash
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

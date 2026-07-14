@@ -10,12 +10,13 @@
 <script>
 import { defineComponent, ref, watch } from "vue";
 import { set as setConfig } from "../../js/ConfigStorage";
+import { DEFAULT_MANUAL_PORT } from "../../js/port_handler";
 
 export default defineComponent({
     props: {
         modelValue: {
             type: String,
-            default: "/dev/rfcomm0",
+            default: DEFAULT_MANUAL_PORT,
         },
         isManual: {
             type: Boolean,

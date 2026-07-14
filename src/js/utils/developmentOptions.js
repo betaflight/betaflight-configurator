@@ -15,7 +15,7 @@ export const DEFAULT_DEVELOPMENT_OPTIONS = {
  * Development options enabled for dev URLs (localhost, PR branches, master)
  */
 export const ENABLED_DEVELOPMENT_OPTIONS = {
-    showVirtualMode: true,
+    showVirtualMode: false,
     showManualMode: true,
     showAllSerialDevices: true,
     backupOnFlash: 2, // ask

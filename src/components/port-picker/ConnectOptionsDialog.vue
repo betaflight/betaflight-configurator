@@ -22,6 +22,16 @@
         </template>
         <template #footer>
             <div class="connect-options__actions">
+                <UButton
+                    v-if="mode === 'manual'"
+                    color="neutral"
+                    variant="soft"
+                    size="sm"
+                    class="connect-options__defaults"
+                    @click="onDefaults"
+                >
+                    {{ $t("defaults") }}
+                </UButton>
                 <UButton color="neutral" variant="soft" size="sm" @click="onCancel">
                     {{ $t("cancel") }}
                 </UButton>
@@ -36,6 +46,7 @@
 <script>
 import { computed, defineComponent, ref, watch } from "vue";
 import { i18n } from "../../js/localization";
+import { DEFAULT_MANUAL_PORT } from "../../js/port_handler";
 
 const FIRMWARE_VERSIONS = [
     { value: "1.48.0", label: "MSP: 1.48 | Firmware: 2026.06.*" },
@@ -51,7 +62,7 @@ export default defineComponent({
         modelValue: { type: Boolean, default: false },
         mode: { type: String, default: "virtual" },
         initialVersion: { type: String, default: "1.46.0" },
-        initialPortOverride: { type: String, default: "/dev/rfcomm0" },
+        initialPortOverride: { type: String, default: DEFAULT_MANUAL_PORT },
     },
     emits: ["update:modelValue", "confirm"],
     setup(props, { emit }) {
@@ -100,6 +111,10 @@ export default defineComponent({
             open.value = false;
         }
 
+        function onDefaults() {
+            portOverride.value = DEFAULT_MANUAL_PORT;
+        }
+
         return {
             open,
             version,
@@ -109,6 +124,7 @@ export default defineComponent({
             canConfirm,
             onCancel,
             onConfirm,
+            onDefaults,
         };
     },
 });
@@ -144,5 +160,9 @@ export default defineComponent({
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
+}
+
+.connect-options__defaults {
+    margin-right: auto;
 }
 </style>
