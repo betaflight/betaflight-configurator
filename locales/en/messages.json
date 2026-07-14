@@ -9185,6 +9185,10 @@
     "backupNoBackupsAvailable": {
         "message": "No backups available"
     },
+    "backupRequiresConnection": {
+        "message": "Connect a flight controller to enable this action",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
     "titleEditBackup": {
         "message": "Edit Backup"
     },
