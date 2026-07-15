@@ -7,6 +7,10 @@ on:
 
 
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   crowdin-translations-to-pr:
     name: Create a PR with the latest translations from Crowdin
