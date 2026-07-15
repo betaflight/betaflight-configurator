@@ -148,7 +148,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('auxiliaryButtonSave')" :disabled="!dirty" @click="saveModes" />
+            <UButton :label="$t('auxiliaryButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveModes" />
         </div>
     </BaseTab>
 </template>
@@ -161,6 +161,8 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
+import { useSaving } from "../../composables/useSaving";
+import { useReboot } from "../../composables/useReboot";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -571,7 +573,12 @@ export default defineComponent({
             autoSelectChannel(channels, activeChannels, fcStore.rssiConfig?.channel || 0);
         };
 
-        const saveModes = () => {
+        const { isSaving, runSave } = useSaving();
+        const { saveToEeprom } = useReboot();
+
+        // Build the MSP mode-range payload from the current UI model. Extracted from the save
+        // callback so runSave's body stays flat (avoids deep forEach-in-forEach-in-runSave nesting).
+        const buildModeRangePayload = () => {
             const nextModeRanges = [];
             const nextModeRangesExtra = [];
 
@@ -587,11 +594,7 @@ export default defineComponent({
                             auxChannelIndex: entry.auxChannelIndex,
                             range: { start, end },
                         });
-                        nextModeRangesExtra.push({
-                            id: mode.id,
-                            modeLogic: entry.modeLogic,
-                            linkedTo: 0,
-                        });
+                        nextModeRangesExtra.push({ id: mode.id, modeLogic: entry.modeLogic, linkedTo: 0 });
                     } else if (entry.kind === "link") {
                         if (!entry.linkedTo) {
                             return;
@@ -616,15 +619,25 @@ export default defineComponent({
                 nextModeRangesExtra.push({ id: 0, modeLogic: 0, linkedTo: 0 });
             }
 
-            fcStore.modeRanges = nextModeRanges;
-            fcStore.modeRangesExtra = nextModeRangesExtra;
-
-            mspHelper.sendModeRanges(() => {
-                mspHelper.writeConfiguration(false, () => {
-                    modesDirtyBaseline.value = serializeModesPayloadForDirtyCheck(nextModeRanges, nextModeRangesExtra);
-                });
-            });
+            return { nextModeRanges, nextModeRangesExtra };
         };
+
+        const saveModes = () =>
+            runSave(
+                async () => {
+                    const { nextModeRanges, nextModeRangesExtra } = buildModeRangePayload();
+
+                    fcStore.modeRanges = nextModeRanges;
+                    fcStore.modeRangesExtra = nextModeRangesExtra;
+
+                    await mspHelper.sendModeRanges();
+                    await saveToEeprom();
+
+                    // Only after a successful persist: refresh the dirty baseline.
+                    modesDirtyBaseline.value = serializeModesPayloadForDirtyCheck(nextModeRanges, nextModeRangesExtra);
+                },
+                { onError: (error) => console.error("Failed to save auxiliary modes", error) },
+            );
 
         const loadData = async () => {
             try {
@@ -681,6 +694,7 @@ export default defineComponent({
             removeEntry,
             markerPercentFor,
             saveModes,
+            isSaving,
             dirty,
         };
     },

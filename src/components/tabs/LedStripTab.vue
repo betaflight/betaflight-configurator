@@ -327,7 +327,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="saveButtonText" @click="save" />
+            <UButton :label="saveButtonText" :loading="isSaving" @click="save" />
         </div>
     </BaseTab>
 </template>
@@ -339,6 +339,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip } from "@/composables/useLedStrip";
+import { useSaving } from "@/composables/useSaving";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
@@ -423,8 +424,8 @@ const colorHSV = reactive({ h: 0, s: 0, v: 0 });
 const { label: transientSaveButtonText, flash: flashSaveButtonText } = useTransientLabel(
     i18n.getMessage("ledStripButtonSave"),
 );
-const savingButtonText = ref(null);
-const saveButtonText = computed(() => savingButtonText.value || transientSaveButtonText.value);
+const saveButtonText = computed(() => transientSaveButtonText.value);
+const { isSaving, runSave } = useSaving();
 
 // Color setup popup state
 const isColorSlidersOpen = ref(false);
@@ -995,19 +996,21 @@ watch(isColorSlidersOpen, (newValue) => {
 });
 
 // Save
-async function save() {
-    try {
-        savingButtonText.value = i18n.getMessage("buttonSaving");
-        await saveConfig();
+function save() {
+    runSave(
+        async () => {
+            await saveConfig();
 
-        savingButtonText.value = null;
-        flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
-
-        gui_log(i18n.getMessage("eeprom_saved_ok"));
-    } catch (error) {
-        console.error("Save failed:", error);
-        savingButtonText.value = null;
-    }
+            // Post-save UI runs only after the persist resolves.
+            flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
+            gui_log(i18n.getMessage("eeprom_saved_ok"));
+        },
+        {
+            onError: (error) => {
+                console.error("Save failed:", error);
+            },
+        },
+    );
 }
 
 // Helper functions

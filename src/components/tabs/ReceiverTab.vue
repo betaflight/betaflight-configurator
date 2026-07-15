@@ -513,7 +513,6 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
-import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
 import { useSaving } from "@/composables/useSaving";
 import { useInterval } from "../../composables/useInterval";
@@ -545,8 +544,7 @@ import SettingColumn from "../elements/SettingColumn.vue";
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
-const navigationStore = useNavigationStore();
-const { reboot } = useReboot();
+const { saveAndReboot, saveToEeprom } = useReboot();
 const { addInterval, removeInterval } = useInterval();
 
 // Template refs
@@ -1057,17 +1055,6 @@ async function loadConfig() {
     }
 }
 
-function saveWithReboot() {
-    return new Promise((resolve) => {
-        mspHelper.writeConfiguration(true, () => {
-            navigationStore.cleanup(() => {
-                reboot();
-                resolve();
-            });
-        });
-    });
-}
-
 // Save configuration
 const saveConfig = (withReboot = false) =>
     runSave(
@@ -1105,11 +1092,9 @@ const saveConfig = (withReboot = false) =>
 
             if (withReboot) {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-                await saveWithReboot();
+                await saveAndReboot();
             } else {
-                await new Promise((resolve) => {
-                    mspHelper.writeConfiguration(false, resolve);
-                });
+                await saveToEeprom();
                 gui_log(t("receiverConfigSaved") || "Configuration saved");
                 savedSnapshot.value = takeSnapshot();
             }

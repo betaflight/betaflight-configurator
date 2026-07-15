@@ -281,7 +281,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" @click="saveSettings" />
+            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveSettings" />
         </div>
     </BaseTab>
 </template>
@@ -312,6 +312,8 @@ import { get as getConfig } from "../../js/ConfigStorage";
 import { sensorTypes } from "../../js/sensor_types";
 import { MspCancelledError } from "../../js/msp/mspErrors";
 import { bit_check, bit_set } from "../../js/bit";
+import { useSaving } from "../../composables/useSaving";
+import { useReboot } from "../../composables/useReboot";
 
 const BLOCK_SIZE = 4096;
 
@@ -368,6 +370,8 @@ export default defineComponent({
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
         const debugStore = useDebugStore();
+        const { isSaving, runSave } = useSaving();
+        const { saveAndReboot } = useReboot();
 
         // Refs
         const eraseOpen = ref(false);
@@ -565,31 +569,44 @@ export default defineComponent({
             debugFieldsEnabled.value.splice(index, 1, value);
         }
 
-        async function saveSettings() {
+        function saveSettings() {
             if (!fcStore.blackbox?.supported) {
                 return;
             }
 
-            fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
-            fcStore.blackbox.blackboxPDenom = blackboxRate.value;
-            fcStore.blackbox.blackboxDevice = blackboxDevice.value;
+            return runSave(
+                async () => {
+                    fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
+                    fcStore.blackbox.blackboxPDenom = blackboxRate.value;
+                    fcStore.blackbox.blackboxDevice = blackboxDevice.value;
 
-            // Update disabled mask from checkboxes
-            let mask = 0;
-            debugFieldsEnabled.value.forEach((enabled, index) => {
-                if (!enabled) {
-                    mask = bit_set(mask, index);
-                }
-            });
-            fcStore.blackbox.blackboxDisabledMask = mask;
+                    // Update disabled mask from checkboxes
+                    let mask = 0;
+                    debugFieldsEnabled.value.forEach((enabled, index) => {
+                        if (!enabled) {
+                            mask = bit_set(mask, index);
+                        }
+                    });
+                    fcStore.blackbox.blackboxDisabledMask = mask;
 
-            await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
+                    await MSP.promise(
+                        MSPCodes.MSP_SET_BLACKBOX_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG),
+                    );
 
-            fcStore.pidAdvancedConfig.debugMode = debugMode.value;
-            await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+                    fcStore.pidAdvancedConfig.debugMode = debugMode.value;
+                    await MSP.promise(
+                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
+                    );
 
-            mspHelper.writeConfiguration(true);
-            onboardLoggingBaseline.value = serializeOnboardLoggingState();
+                    await saveAndReboot();
+
+                    // Only after a successful persist: refresh the dirty baseline.
+                    onboardLoggingBaseline.value = serializeOnboardLoggingState();
+                },
+                { onError: (e) => console.error("Failed to save onboard logging settings", e) },
+            );
         }
 
         function askToEraseFlash() {
@@ -957,6 +974,7 @@ export default defineComponent({
             formatKilobytes,
             updateDebugField,
             saveSettings,
+            isSaving,
             dirty,
             askToEraseFlash,
             flashErase,
