@@ -4,7 +4,7 @@
             <div class="flex items-center justify-between w-full">
                 <h4 class="font-semibold">Configure graphs</h4>
                 <div class="flex items-center gap-2">
-                    <UDropdownMenu :items="addGraphItems" :content="{ class: 'z-[300]' }">
+                    <UDropdownMenu :items="addGraphItems" :content="{ class: 'z-[3002]' }">
                         <UButton
                             variant="outline"
                             color="neutral"
