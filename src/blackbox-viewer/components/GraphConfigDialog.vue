@@ -122,7 +122,7 @@
                                     :items="fieldItems"
                                     value-key="value"
                                     size="xs"
-                                    :ui="{ content: 'z-[300] max-h-72' }"
+                                    :ui="{ content: 'z-[3002] max-h-72' }"
                                     :search-input="{ placeholder: 'Search fields...' }"
                                     @update:model-value="
                                         onFieldChange(graph, field);
