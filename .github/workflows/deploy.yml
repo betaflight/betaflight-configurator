@@ -30,19 +30,17 @@ jobs:
           # Set a simple output to confirm the value
           echo "EVENT: ${{ github.event_name }}, COMMIT_REF=$COMMIT_REF"
 
-  # Build the code (minimal secrets here)
+  # Preview builds only. This runs on pull_request_target and checks out
+  # untrusted PR code, so it is always a debug build and is never passed the
+  # release signing secrets. Signed release APKs are produced by
+  # build-release.yml (release) and manual-build.yml (workflow_dispatch).
   build:
     name: Build
     needs: commit_reference
     uses: ./.github/workflows/build.yml
     with:
-      debug_build: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' }}
+      debug_build: true
       commit_ref: ${{ needs.commit_reference.outputs.COMMIT_REF }}
-    secrets:
-      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
-      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-      RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
   # Prepare branch name for deployment
   prepare_branch:
