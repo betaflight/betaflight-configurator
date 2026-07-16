@@ -620,14 +620,28 @@ export default defineComponent({
         }
 
         async function flashErase() {
-            connectionStore.pauseLiveData();
-            // Await the drain: clearMspQueue() resolves callbacks_cleanup() asynchronously, so
-            // firing it unawaited would wipe the pollForEraseCompletion callback we register just
-            // below (the erase send is non-errorAware and cleanup drops it silently) — leaving the
-            // dialog stuck forever even though the FC does erase. Drain first, then register.
-            await connectionStore.clearMspQueue();
-            isErasing.value = true;
-            MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
+            try {
+                connectionStore.pauseLiveData();
+                // Await the drain: clearMspQueue() resolves callbacks_cleanup() asynchronously, so
+                // firing it unawaited would wipe the pollForEraseCompletion callback we register just
+                // below (the erase send is non-errorAware and cleanup drops it silently) — leaving the
+                // dialog stuck forever even though the FC does erase. Drain first, then register.
+                await connectionStore.clearMspQueue();
+                isErasing.value = true;
+                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
+            } catch (error) {
+                // Startup failed before the erase poll could take over: restore the UI and
+                // live-data pump so the dialog doesn't strand, and surface the failure.
+                console.error("Failed to start dataflash erase", error);
+                isErasing.value = false;
+                eraseOpen.value = false;
+                connectionStore.resumeLiveData();
+                gui_log(
+                    `<strong><span class="message-negative">${i18n.getMessage("error", {
+                        errorMessage: error,
+                    })}</span></strong>`,
+                );
+            }
         }
 
         function flashEraseCancel() {
@@ -648,7 +662,13 @@ export default defineComponent({
                 // keep polling rather than abandon the dialog on a single missed summary.
                 await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
             } catch {
-                // Ignore transient timeouts/cancellations and re-poll below.
+                // Summary timed out/cancelled (flash unresponsive mid-erase). Re-poll without
+                // reading the stale cached ready flag — it still holds the pre-erase value and
+                // would otherwise close the dialog before the erase has actually finished.
+                if (connectionStore.connectionValid && !eraseCancelled.value) {
+                    setTimeout(pollForEraseCompletion, 500);
+                }
+                return;
             }
 
             if (!connectionStore.connectionValid || eraseCancelled.value) {
