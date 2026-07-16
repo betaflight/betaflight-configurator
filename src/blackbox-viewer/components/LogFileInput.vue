@@ -15,13 +15,11 @@ import { ref } from "vue";
 import { isAndroid } from "../../js/utils/checkCompatibility";
 import FileSystem from "../../js/FileSystem";
 
-// Canonical (lower-case) list of extensions this picker accepts. Drives both
-// the <input> accept attribute and the Android SAF picker so the two never drift.
+// Accepted extensions (lower-case); source for both the <input> accept attribute
+// and the Android SAF picker.
 const LOG_FILE_EXTENSIONS = [".bbl", ".bfl", ".cfl", ".log", ".txt", ".json"];
 
-// The <input> accept attribute (and some native pickers) match extensions
-// case-sensitively, so list both cases to keep the picker case-insensitive on
-// every platform (e.g. so LOG00001.BBL is selectable).
+// accept matches extensions case-sensitively; list both cases.
 const acceptAttribute = LOG_FILE_EXTENSIONS.flatMap((ext) => [ext, ext.toUpperCase()]).join(",");
 
 defineProps({
@@ -38,14 +36,9 @@ defineProps({
 const emit = defineEmits(["files-selected"]);
 const fileInput = ref(null);
 
-// On the Android APK the raw <input type="file"> is serviced by the WebView's
-// own file chooser, which maps the accept extensions to MIME types via Android's
-// MimeTypeMap. The custom blackbox extensions (.bbl/.bfl/.cfl/.log) are unknown
-// to MimeTypeMap, so those files show greyed-out and cannot be selected
-// (issue #5293). Route Android through the Capacitor SAF plugin instead — the
-// same path every other tab uses — then wrap the bytes in a real File so the
-// existing loadFiles/loadLogFile code works unchanged. Web/desktop keep using
-// the native <input> below.
+// Android WebView maps <input accept> extensions via MimeTypeMap, which lacks
+// .bbl/.bfl/.cfl/.log and greys them out (#5293). Route Android through the
+// Capacitor SAF plugin and return a File; other platforms use the <input>.
 async function openFilePicker() {
     if (!isAndroid()) {
         fileInput.value?.click();
@@ -55,12 +48,11 @@ async function openFilePicker() {
     try {
         const descriptor = await FileSystem.pickOpenFile("Blackbox log/config/workspace file", LOG_FILE_EXTENSIONS);
         if (!descriptor) {
-            // User cancelled the picker.
+            // Cancelled.
             return;
         }
         const blob = await FileSystem.readFileAsBlob(descriptor);
-        // A File is a Blob with .name and .size, so it satisfies the downstream
-        // FileReader / file.text() / URL.createObjectURL calls in main.js.
+        // File carries .name/.size for the FileReader path in main.js.
         const file = new File([blob], descriptor.name, { type: blob.type });
         emit("files-selected", [file]);
     } catch (error) {
@@ -75,7 +67,7 @@ function onFileChange(event) {
     if (files.length > 0) {
         emit("files-selected", files);
     }
-    // Reset input so same file can be selected again
+    // Reset so the same file re-triggers change.
     event.target.value = "";
 }
 </script>
