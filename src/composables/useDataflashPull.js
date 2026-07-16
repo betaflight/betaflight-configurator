@@ -30,7 +30,10 @@ export function useDataflashPull() {
         pulling.value = true;
         progress.value = 0;
         connectionStore.pauseLiveData();
-        connectionStore.clearMspQueue();
+        // Await the drain before the first MSP request: clearMspQueue() runs callbacks_cleanup()
+        // asynchronously, which would otherwise reject the MSP_DATAFLASH_SUMMARY promise we await
+        // just below (it settles errorAware entries with MspCancelledError) and abort the pull.
+        await connectionStore.clearMspQueue();
 
         const cleanup = () => {
             pulling.value = false;
