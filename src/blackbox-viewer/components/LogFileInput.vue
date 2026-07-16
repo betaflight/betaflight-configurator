@@ -4,7 +4,7 @@
         ref="fileInput"
         type="file"
         style="display: none"
-        accept=".bbl,.BBL,.txt,.TXT,.cfl,.CFL,.bfl,.BFL,.log,.LOG,.json,.JSON"
+        :accept="acceptAttribute"
         :aria-label="label"
         @change="onFileChange"
     />
@@ -15,9 +15,14 @@ import { ref } from "vue";
 import { isAndroid } from "../../js/utils/checkCompatibility";
 import FileSystem from "../../js/FileSystem";
 
-// Extensions accepted by the picker. Kept in sync with the <input> accept
-// attribute above and used to filter the Android SAF picker.
+// Canonical (lower-case) list of extensions this picker accepts. Drives both
+// the <input> accept attribute and the Android SAF picker so the two never drift.
 const LOG_FILE_EXTENSIONS = [".bbl", ".bfl", ".cfl", ".log", ".txt", ".json"];
+
+// The <input> accept attribute (and some native pickers) match extensions
+// case-sensitively, so list both cases to keep the picker case-insensitive on
+// every platform (e.g. so LOG00001.BBL is selectable).
+const acceptAttribute = LOG_FILE_EXTENSIONS.flatMap((ext) => [ext, ext.toUpperCase()]).join(",");
 
 defineProps({
     size: {
