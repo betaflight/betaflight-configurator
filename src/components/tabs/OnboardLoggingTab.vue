@@ -217,8 +217,10 @@
                                         href="#"
                                         @click.prevent="flashSaveBegin(false)"
                                     >
-                                        <span>{{ $t("dataflashButtonSaveFile") }}</span>
-                                        <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
+                                        <span class="inline-flex items-center gap-1">
+                                            <span>{{ $t("dataflashButtonSaveFile") }}</span>
+                                            <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
+                                        </span>
                                     </a>
                                     <p v-html="$t('dataflashSavetoFileNote')"></p>
                                 </div>
