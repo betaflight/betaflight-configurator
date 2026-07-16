@@ -190,6 +190,9 @@
     "tabFailsafe": {
         "message": "失控保護"
     },
+    "tabTransponder": {
+        "message": "比賽應答器"
+    },
     "tabOsd": {
         "message": "OSD 熒幕疊加顯示"
     },
@@ -207,6 +210,9 @@
     },
     "tabLedStrip": {
         "message": "LED 燈帶"
+    },
+    "tabRawSensorData": {
+        "message": "傳感器"
     },
     "tabCLI": {
         "message": "命令列"
@@ -418,6 +424,9 @@
     "versionLabelTarget": {
         "message": "飛控型號"
     },
+    "versionLabelFirmware": {
+        "message": "固件"
+    },
     "notifications_app_just_updated_to_version": {
         "message": "程式已更新到版本: $1"
     },
@@ -455,6 +464,9 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
+    "defaultWelcomeHead": {
+        "message": "硬體"
+    },
     "defaultContributingHead": {
         "message": "參與開發"
     },
@@ -463,6 +475,9 @@
     },
     "defaultButtonFirmwareFlasher": {
         "message": "固件燒寫器"
+    },
+    "defaultDonateHead": {
+        "message": "開源\/捐贈說明"
     },
     "defaultDonateBottom": {
         "message": "<p>如果你想持續捐助資金，請考慮在$t(patreonLink.message)上贊助我們。<\/p>"
@@ -506,6 +521,12 @@
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "校準加速度計"
+    },
+    "initialSetupCalibrateAccelText": {
+        "message": "把飛控或者飛機<strong>水平<\/strong>放置，再執行加速度計校準。校準過程中切勿移動飛控或者飛機。"
+    },
+    "initialSetupButtonCalibrateMag": {
+        "message": "校準磁力計"
     },
     "initialSetupCalibrateMagText": {
         "message": "將飛行器在所有軸向上都移動至少<strong>360<\/strong>度，你有三十秒的時間可供進行這項操作。"
@@ -753,6 +774,9 @@
     "featureTRANSPONDER": {
         "message": "比賽應答器"
     },
+    "featureTRANSPONDERTip": {
+        "message": "開啟後，請在比賽應答器頁面完成設置。"
+    },
     "featureAIRMODE": {
         "message": "永久啟用 Airmode"
     },
@@ -786,6 +810,9 @@
     "configurationReceiverMode": {
         "message": "接收機模式"
     },
+    "configurationRSSI": {
+        "message": "RSSI（接收機訊號強度）"
+    },
     "configurationRSSIHelp": {
         "message": "RSSI 是接收訊號的強度，對判斷飛機是否收到無線訊號干擾或者即將超出範圍很有用。"
     },
@@ -798,8 +825,26 @@
     "configurationSpiRxHelp": {
         "message": "<strong>注意:<\/strong> SPI 接收機只有通過 SPI 總線連接到飛控或板載了相應硬體時才能工作。"
     },
+    "configurationOtherFeaturesHelp": {
+        "message": "<strong>注意:<\/strong> 不是所有所有飛控都能支援所有的功能。如果你啟用了某個功能，但在“保存並重啟”以後，該功能被禁用，則說明你的飛控不支援該功能。"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "橫滾 度"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "俯仰 度"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "偏航 度"
+    },
+    "configurationSensorAlignmentGyro": {
+        "message": "陀螺儀反向"
+    },
     "configurationSensorGyroToUse": {
         "message": "陀螺儀\/加速度計"
+    },
+    "configurationSensorGyroToUseNotFound": {
+        "message": "警告：未檢測到陀螺儀\/加速度計"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "第一個"
@@ -816,8 +861,14 @@
     "configurationSensorAlignmentGyro2": {
         "message": "第二個陀螺儀"
     },
+    "configurationSensorAlignmentAcc": {
+        "message": "加速度計方向"
+    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "默認"
+    },
+    "configurationAccelTrims": {
+        "message": "加速度計微調"
     },
     "configurationAccelTrimRoll": {
         "message": "角速度計橫滾微調"
@@ -1124,6 +1175,9 @@
     "pidTuningSubTabPid": {
         "message": "PID 配置文件設置"
     },
+    "pidTuningSubTabRates": {
+        "message": "Rate 配置文件設置"
+    },
     "pidTuningSubTabFilter": {
         "message": "濾波器設置"
     },
@@ -1395,7 +1449,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(已禁用)",
-        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "添加範圍"
@@ -1544,6 +1598,69 @@
     "adjustmentsSave": {
         "message": "保存"
     },
+    "transponderNotSupported": {
+        "message": "該飛控不支援比賽收發器"
+    },
+    "transponderInformation": {
+        "message": "比賽收發器供賽事組織者記錄您的單圈時間。收發器安裝在您的飛機上，當它通過計時門時賽道接收機會記錄下您的編號和時間。安裝基於紅外線的收發器時請確保它只想機體外部的賽道接收機方向，並且光纖中間不會被機架、電池扎帶、螺旋槳等遮擋。"
+    },
+    "transponderConfigurationType": {
+        "message": "比賽收發器類型"
+    },
+    "transponderType0": {
+        "message": "無"
+    },
+    "transponderType1": {
+        "message": "iLap"
+    },
+    "transponderType2": {
+        "message": "aRCiTimer"
+    },
+    "transponderType3": {
+        "message": "ERLT"
+    },
+    "transponderConfiguration1": {
+        "message": "配置 iLap"
+    },
+    "transponderConfiguration2": {
+        "message": "配置 aRCiTimer"
+    },
+    "transponderConfiguration3": {
+        "message": "配置 ERLT"
+    },
+    "transponderData1": {
+        "message": "數據"
+    },
+    "transponderData2": {
+        "message": "比賽收發器 編號"
+    },
+    "transponderData3": {
+        "message": "比賽收發器 編號"
+    },
+    "transponderDataHelp1": {
+        "message": "仅十六進制數字，0-9， A-F"
+    },
+    "transponderHelp1": {
+        "message": "在此配置您的比賽收發器編號。注意：只有有效的編號才會被系統接收。有效的編號可以在這裡獲得：<a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>。"
+    },
+    "transponderHelp2": {
+        "message": "更多訊息請訪問<a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站<\/a>"
+    },
+    "transponderDataHelp3": {
+        "message": "選擇 ERLT ID 0-63"
+    },
+    "transponderHelp3": {
+        "message": "更多訊息請訪問<a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站<\/a>"
+    },
+    "transponderButtonSave": {
+        "message": "保存"
+    },
+    "transponderButtonSaveReboot": {
+        "message": "保存並重啟"
+    },
+    "transponderDataInvalid": {
+        "message": "收發器數據 <span class=\"message-negative\">無效<\/span>"
+    },
     "servosFirmwareUpgradeRequired": {
         "message": "舵機功能要求固件版本大於1.10.0 且飛控支援"
     },
@@ -1580,6 +1697,12 @@
     "servosReverse": {
         "message": "反向"
     },
+    "gpsHead": {
+        "message": "GPS"
+    },
+    "gpsMapHead": {
+        "message": "當前 GPS 位置"
+    },
     "gpsMapMessage1": {
         "message": "請檢查網路連接"
     },
@@ -1597,6 +1720,9 @@
     },
     "gpsDistToHome": {
         "message": "離起飛位置距離："
+    },
+    "gpsSignalStrHead": {
+        "message": "GPS 訊號強度"
     },
     "gpsSignalStr": {
         "message": "訊號強度"
@@ -1862,6 +1988,9 @@
     "dataflashNotPresentNote": {
         "message": "你的飛控沒有可用的快閃記憶體晶片。"
     },
+    "dataflashFirmwareUpgradeRequired": {
+        "message": "板載快閃記憶體需要固件版本 &gt;= 1.8.0。"
+    },
     "dataflashButtonSaveFile": {
         "message": "保存快閃記憶體數據到文件"
     },
@@ -2062,6 +2191,9 @@
     },
     "firmwareFlasherMessage": {
         "message": "訊息："
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "<strong> 恢復\/丟失通訊<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "關閉固件燒寫"
@@ -2470,6 +2602,14 @@
         "message": "更多濾波",
         "description": "Filter tuning slider high header"
     },
+    "pidTuningGyroFilterSlider": {
+        "message": "陀螺儀濾波器乘數:",
+        "description": "Gyro filter tuning slider label"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "D Term 濾波器乘數:",
+        "description": "D Term filter tuning slider label"
+    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>注意:<\/strong>滑塊已禁用，因為已手動更改數值。點擊$t(pidTuningSliderEnableButton.message)按鈕將再次激活它們。這將重置數值，任何未保存的更改都將丟失。",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -2513,6 +2653,9 @@
     "pidTuningDynamicNotchRange": {
         "message": "動態陷波濾波器範圍"
     },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "Q調整了動態陷波濾波器的寬度。更高的值將使其變得更窄、更精準，較低的值將使其變得更寬、更寬泛。將Q調到很低將會帶來很大的濾波器延遲。"
+    },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "將此設置為需要由動態陷波器控制的傳入噪聲的最低頻率。"
     },
@@ -2522,6 +2665,14 @@
     "pidTuningRpmFilterGroup": {
         "message": "陀螺儀 RPM 濾波器",
         "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmHarmonics": {
+        "message": "陀螺儀 RPM 濾波器諧波數量",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHz": {
+        "message": "陀螺儀 RPM 濾波器最低頻率 [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "RPM 濾波器所使用的最小頻率。",
@@ -2539,11 +2690,20 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "當電池電壓變低時， 飛控自動增加PID數值來補償動力的損失。這會在整個飛行過程中提供一個更一致的飛行特性。該補償數值通過在 ‘$t(tabPower.message)‘的 ‘$t(powerBatteryMaximum.message)’ 計算而得，所以請確保正確設置了該數值。"
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "電池壓降補償"
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I 值旋轉"
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "智能前饋"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "減少 F 值在 PID 中的效果。當 P 和 F 同時激活時，只取兩者中的較大值來避免過頭而無需提高 D，但這也會降低 F 值提供的響應效果。"
     },
     "pidTuningItermRelax": {
         "message": "I 值釋放"
@@ -3124,9 +3284,8 @@
         "message": "RSSI 值",
         "description": "One of the elements of the OSD"
     },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm 值",
-        "description": "One of the elements of the OSD"
+    "osdDescElementRssiValue": {
+        "message": "實時 RSSI 值 (訊號強度低於設定值時會閃爍)"
     },
     "osdTextElementTimer": {
         "message": "計時器",
@@ -3464,6 +3623,9 @@
         "message": "連接質量",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementLinkQuality": {
+        "message": "基於幀丟失情況的“連接質量”的替代圖標-請謹慎使用"
+    },
     "osdTextElementFlightDist": {
         "message": "飛行距離",
         "description": "One of the elements of the OSD"
@@ -3516,6 +3678,13 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "在 CLI 中設置的 \"osd_profile_1_name\", \"osd_profile_2_name\" 和 \"osd_profile_3_name\" 所對應的 OSD 配置文件名稱"
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm 值",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "RSSI 訊號的 dBm 值 （如果可用）"
     },
     "osdTextElementRcChannels": {
         "message": "RC 通道",
@@ -3929,6 +4098,9 @@
     "osdSectionHelpAlarms": {
         "message": "設置OSD報警閾值"
     },
+    "osdSectionHelpStats": {
+        "message": "設置飛行結束上鎖後熒幕上顯示的統計訊息"
+    },
     "osdSectionHelpWarnings": {
         "message": "顯示或隱藏顯示在警告區域的警告訊息"
     },
@@ -4199,6 +4371,9 @@
         "message": "向飛控板發送電調數據。 RPM 濾波器和動態怠速需要這個功能。 <br><br>注意：需要使用兼容的電調固件，例如JESC、JazzMac、BLHeli_32。",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
+    "configurationGyroSyncDenom": {
+        "message": "陀螺儀更新頻率"
+    },
     "configurationPidProcessDenom": {
         "message": "PID 循環更新頻率"
     },
@@ -4213,6 +4388,12 @@
     },
     "configurationAccHardware": {
         "message": "加速度計"
+    },
+    "configurationBaroHardware": {
+        "message": "氣壓計 （如有）"
+    },
+    "configurationMagHardware": {
+        "message": "磁力计 （如有）"
     },
     "configurationSmallAngle": {
         "message": "最大允許解鎖角度 [degrees]"
@@ -4365,6 +4546,9 @@
     "pidTuningRatesType": {
         "message": "Rate 類型"
     },
+    "pidTuningRatesTypeTip": {
+        "message": "改變 Rate 類型將改變 Rate 曲線及配置方式"
+    },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"
     },
@@ -4457,6 +4641,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "從 Google Play 商店更新"
+    },
+    "cordovaWebviewEnable": {
+        "message": "在設置中進入您的設備信息頁面，點擊構建版本數字10次以啟用“開發者選項”。在此之後，搜索並進入開發者選項，並選擇 <b>{{app}}<\/b> 作為 webview 提供者。"
     },
     "cordovaWebviewEnableBtn": {
         "message": "開啟設定"
