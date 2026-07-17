@@ -1,9 +1,9 @@
 /// <reference types="vitest" />
-import { defineConfig } from "vite";
+import { defineConfig, normalizePath } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "node:path";
 import { readFileSync, existsSync } from "node:fs";
-import copy from "rollup-plugin-copy";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 import pkg from "./package.json";
 import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
@@ -146,15 +146,19 @@ export default defineConfig({
         vue(),
         ui(nuxtUiViteOptions),
         serveLocalesPlugin(),
-        copy({
+        // Copy runtime assets into the build output. Only the build-time
+        // plugin is kept (the dev server serves these via serveLocalesPlugin /
+        // Vite root, matching the previous rollup-plugin-copy behaviour).
+        // `src` globs are absolute because the Vite root is `src/`, so
+        // repo-root-relative patterns would otherwise resolve under `src/`.
+        ...viteStaticCopy({
             targets: [
-                { src: "locales/**/*", dest: "src/dist/locales" },
-                { src: "resources/**/*", dest: "src/dist/resources" },
-                { src: "src/images/**/*", dest: "src/dist/images" },
-                { src: "src/components/**/*", dest: "src/dist/components" },
+                { src: normalizePath(path.resolve(__dirname, "locales")), dest: "." },
+                { src: normalizePath(path.resolve(__dirname, "resources")), dest: "." },
+                { src: normalizePath(path.resolve(__dirname, "src/images")), dest: "." },
+                { src: normalizePath(path.resolve(__dirname, "src/components")), dest: "." },
             ],
-            hook: "writeBundle",
-        }),
+        }).filter((plugin) => plugin.name === "vite-plugin-static-copy:build"),
         VitePWA({
             registerType: "prompt",
             workbox: {
