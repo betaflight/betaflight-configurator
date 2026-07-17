@@ -104,7 +104,7 @@ async function submitSupportData(
     await executeCommands(commands.join("\n"));
     const delay = setInterval(async () => {
         const time = Date.now();
-        if (state.lastArrival < time - 250) {
+        if (state.lastArrival < time - SERIAL_IDLE_MS) {
             clearInterval(delay);
             trackPollInterval?.(null);
             const text = getOutputHistory();
@@ -527,8 +527,7 @@ export function useCli() {
             outputHistory = lastLine;
 
             if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
-                // skip idle check: nothing can be in flight yet at CLI entry
-                CliAutoComplete.builderStart(true);
+                CliAutoComplete.builderStart();
             }
         }
     };
@@ -649,7 +648,11 @@ export function useCli() {
         }
 
         // Initialize CLI autocomplete cache builder
-        CliAutoComplete.initialize(sendLine, writeToOutput, () => Date.now() - state.lastArrival > SERIAL_IDLE_MS);
+        CliAutoComplete.initialize(
+            sendLine,
+            writeToOutput,
+            () => !pastePollInterval && Date.now() - state.lastArrival > SERIAL_IDLE_MS,
+        );
 
         // Connect the autocomplete composable to the textarea's v-model
         autocomplete.connect(

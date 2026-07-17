@@ -87,15 +87,12 @@ CliAutoComplete._builderWatchdogStop = function () {
     GUI.timeout_remove("autocomplete_builder_watchdog");
 };
 
-/**
- * @param {boolean} [skipIdleCheck] Safe only at CLI entry, before anything can be in flight.
- */
-CliAutoComplete.builderStart = function (skipIdleCheck = false) {
+CliAutoComplete.builderStart = function () {
     if (this.builder.state !== "reset") {
         return;
     }
 
-    if (!skipIdleCheck && this.isIdle && !this.isIdle()) {
+    if (this.isIdle && !this.isIdle()) {
         // defer: starting now could swallow an in-flight command's response (isBuilding() suppresses all output)
         GUI.timeout_add("autocomplete_builder_defer", () => this.builderStart(), 250);
         return;

@@ -17,10 +17,10 @@ describe("CliAutoComplete.builderStart idle gating", () => {
         vi.useRealTimers();
     });
 
-    it("starts immediately when skipIdleCheck is true, regardless of isIdle", () => {
-        CliAutoComplete.initialize(sendLine, writeToOutput, () => false);
+    it("starts immediately when the channel is already idle", () => {
+        CliAutoComplete.initialize(sendLine, writeToOutput, () => true);
 
-        CliAutoComplete.builderStart(true);
+        CliAutoComplete.builderStart();
 
         expect(CliAutoComplete.isBuilding()).toBe(true);
         expect(sendLine).toHaveBeenCalled();
