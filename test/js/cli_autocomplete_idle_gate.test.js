@@ -30,15 +30,13 @@ describe("CliAutoComplete.builderStart idle gating", () => {
         let idle = false;
         CliAutoComplete.initialize(sendLine, writeToOutput, () => idle);
 
-        // Simulates the watchdog "one more try" path / setEnabled() re-triggering
-        // mid-session, while the user's own command hasn't finished responding yet.
+        // simulates the watchdog retry / setEnabled() firing while a user command is still in flight
         CliAutoComplete.builderStart();
 
         expect(CliAutoComplete.isBuilding()).toBe(false);
         expect(sendLine).not.toHaveBeenCalled();
 
-        // Channel goes quiet; the deferred retry (scheduled every 250ms) should
-        // now proceed and actually start the build.
+        // channel goes quiet; the deferred retry (every 250ms) should now proceed
         idle = true;
         vi.advanceTimersByTime(250);
 

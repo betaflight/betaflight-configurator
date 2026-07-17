@@ -44,10 +44,7 @@ CliAutoComplete.setEnabled = function (enable) {
  * Initialize CliAutoComplete.
  * @param {Function} sendLine      Function to send a line to CLI.
  * @param {Function} writeToOutput Function to write output to CLI.
- * @param {Function} [isIdle]      Returns true when no command response is in flight.
- *                                 Used to avoid starting a build (which suppresses
- *                                 all CLI output until it completes) over a command
- *                                 the user is still waiting on.
+ * @param {Function} [isIdle]      True when no command response is in flight; gates build start.
  */
 CliAutoComplete.initialize = function (sendLine, writeToOutput, isIdle) {
     this.sendLine = sendLine;
@@ -91,8 +88,7 @@ CliAutoComplete._builderWatchdogStop = function () {
 };
 
 /**
- * @param {boolean} [skipIdleCheck] Safe to skip only when called right at CLI entry,
- *                                  before the user could have any command in flight.
+ * @param {boolean} [skipIdleCheck] Safe only at CLI entry, before anything can be in flight.
  */
 CliAutoComplete.builderStart = function (skipIdleCheck = false) {
     if (this.builder.state !== "reset") {
@@ -100,10 +96,7 @@ CliAutoComplete.builderStart = function (skipIdleCheck = false) {
     }
 
     if (!skipIdleCheck && this.isIdle && !this.isIdle()) {
-        // A user command may still be awaiting its response; starting now would
-        // suppress that output until the build finishes (see isBuilding() gate
-        // in useCli.js read()/writeLineToOutput), silently losing it. Wait for
-        // the channel to go quiet before (re)starting.
+        // defer: starting now could swallow an in-flight command's response (isBuilding() suppresses all output)
         GUI.timeout_add("autocomplete_builder_defer", () => this.builderStart(), 250);
         return;
     }

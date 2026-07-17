@@ -9,13 +9,7 @@ function bytes(str) {
     return new TextEncoder().encode(str);
 }
 
-// Documents the suppression contract in useCli.js read()/writeLineToOutput:
-// while CliAutoComplete.isBuilding() is true, incoming CLI text is dropped from
-// both the terminal and outputHistory (there's no way to tell builder-owned
-// traffic apart from anything else on the wire). This is intentional while a
-// build is genuinely in progress; see cli_autocomplete_idle_gate.test.js for
-// the fix that keeps builds from starting over a command the user is still
-// waiting on, which is what actually caused output to go missing in practice.
+// Documents the suppression contract in useCli.js read()/writeLineToOutput (see cli_autocomplete_idle_gate.test.js for the fix that keeps builds from starting over an in-flight command).
 describe("useCli output during CliAutoComplete build", () => {
     let cli;
 

@@ -527,8 +527,7 @@ export function useCli() {
             outputHistory = lastLine;
 
             if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
-                // start building autoComplete; safe to skip the idle check here since
-                // nothing could be in flight yet at the moment CLI mode is first entered
+                // skip idle check: nothing can be in flight yet at CLI entry
                 CliAutoComplete.builderStart(true);
             }
         }
