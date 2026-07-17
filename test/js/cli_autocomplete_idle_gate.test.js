@@ -1,0 +1,78 @@
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import CliAutoComplete from "../../src/js/CliAutoComplete";
+
+describe("CliAutoComplete.builderStart idle gating", () => {
+    let sendLine;
+    let writeToOutput;
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        CliAutoComplete.builder = { state: "reset", numFails: 0 };
+        CliAutoComplete.configEnabled = true;
+        sendLine = vi.fn();
+        writeToOutput = vi.fn();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it("starts immediately when skipIdleCheck is true, regardless of isIdle", () => {
+        CliAutoComplete.initialize(sendLine, writeToOutput, () => false);
+
+        CliAutoComplete.builderStart(true);
+
+        expect(CliAutoComplete.isBuilding()).toBe(true);
+        expect(sendLine).toHaveBeenCalled();
+    });
+
+    it("defers rather than starting while a command response is still in flight", () => {
+        let idle = false;
+        CliAutoComplete.initialize(sendLine, writeToOutput, () => idle);
+
+        // Simulates the watchdog "one more try" path / setEnabled() re-triggering
+        // mid-session, while the user's own command hasn't finished responding yet.
+        CliAutoComplete.builderStart();
+
+        expect(CliAutoComplete.isBuilding()).toBe(false);
+        expect(sendLine).not.toHaveBeenCalled();
+
+        // Channel goes quiet; the deferred retry (scheduled every 250ms) should
+        // now proceed and actually start the build.
+        idle = true;
+        vi.advanceTimersByTime(250);
+
+        expect(CliAutoComplete.isBuilding()).toBe(true);
+        expect(sendLine).toHaveBeenCalled();
+    });
+
+    it("keeps deferring across multiple retries until idle", () => {
+        let idle = false;
+        CliAutoComplete.initialize(sendLine, writeToOutput, () => idle);
+
+        CliAutoComplete.builderStart();
+        vi.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
+
+        expect(CliAutoComplete.isBuilding()).toBe(false);
+        expect(sendLine).not.toHaveBeenCalled();
+
+        idle = true;
+        vi.advanceTimersByTime(250);
+
+        expect(CliAutoComplete.isBuilding()).toBe(true);
+    });
+
+    it("cancels a pending deferred retry on cleanup so it can't fire after disconnect", () => {
+        CliAutoComplete.initialize(sendLine, writeToOutput, () => false);
+
+        CliAutoComplete.builderStart();
+        expect(CliAutoComplete.isBuilding()).toBe(false);
+
+        CliAutoComplete.cleanup();
+        vi.advanceTimersByTime(10_000);
+
+        expect(CliAutoComplete.isBuilding()).toBe(false);
+        expect(sendLine).not.toHaveBeenCalled();
+    });
+});

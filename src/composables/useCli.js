@@ -21,6 +21,7 @@ const lineFeedCode = 10;
 const carriageReturnCode = 13;
 const enterKeyCode = 13;
 const tabKeyCode = 9;
+const SERIAL_IDLE_MS = 250; // quiet period after which a command response is considered complete
 
 function removePromptHash(promptText) {
     return promptText.replace(/^# /, "");
@@ -254,7 +255,7 @@ export function useCli() {
             console.log(`[CLI] paste: ${outputArray.length} lines`);
             if (pastePollInterval) clearInterval(pastePollInterval);
             pastePollInterval = setInterval(() => {
-                if (state.lastArrival > startMs && Date.now() - state.lastArrival > 250) {
+                if (state.lastArrival > startMs && Date.now() - state.lastArrival > SERIAL_IDLE_MS) {
                     clearInterval(pastePollInterval);
                     pastePollInterval = null;
                     console.log(`[CLI] paste done: ${((performance.now() - t0) / 1000).toFixed(2)}s`);
@@ -526,8 +527,9 @@ export function useCli() {
             outputHistory = lastLine;
 
             if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
-                // start building autoComplete
-                CliAutoComplete.builderStart();
+                // start building autoComplete; safe to skip the idle check here since
+                // nothing could be in flight yet at the moment CLI mode is first entered
+                CliAutoComplete.builderStart(true);
             }
         }
     };
@@ -648,7 +650,7 @@ export function useCli() {
         }
 
         // Initialize CLI autocomplete cache builder
-        CliAutoComplete.initialize(sendLine, writeToOutput);
+        CliAutoComplete.initialize(sendLine, writeToOutput, () => Date.now() - state.lastArrival > SERIAL_IDLE_MS);
 
         // Connect the autocomplete composable to the textarea's v-model
         autocomplete.connect(

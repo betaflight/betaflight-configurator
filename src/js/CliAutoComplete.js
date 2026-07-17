@@ -44,14 +44,21 @@ CliAutoComplete.setEnabled = function (enable) {
  * Initialize CliAutoComplete.
  * @param {Function} sendLine      Function to send a line to CLI.
  * @param {Function} writeToOutput Function to write output to CLI.
+ * @param {Function} [isIdle]      Returns true when no command response is in flight.
+ *                                 Used to avoid starting a build (which suppresses
+ *                                 all CLI output until it completes) over a command
+ *                                 the user is still waiting on.
  */
-CliAutoComplete.initialize = function (sendLine, writeToOutput) {
+CliAutoComplete.initialize = function (sendLine, writeToOutput, isIdle) {
     this.sendLine = sendLine;
     this.writeToOutput = writeToOutput;
+    this.isIdle = isIdle;
     this.cleanup();
 };
 
 CliAutoComplete.cleanup = function () {
+    this._builderWatchdogStop();
+    GUI.timeout_remove("autocomplete_builder_defer");
     this.builder.state = "reset";
     this.builder.numFails = 0;
 };
@@ -83,27 +90,42 @@ CliAutoComplete._builderWatchdogStop = function () {
     GUI.timeout_remove("autocomplete_builder_watchdog");
 };
 
-CliAutoComplete.builderStart = function () {
-    if (this.builder.state === "reset") {
-        this.cache = {
-            commands: [],
-            resources: [],
-            resourcesCount: {},
-            settings: [],
-            settingsAcceptedValues: {},
-            feature: [],
-            beeper: ["ALL"],
-            mixers: [],
-        };
-        this.builder.commandSequence = ["help", "dump", "get", "mixer list"];
-        this.builder.currentSetting = null;
-        this.builder.sentinel = `# ${Math.random()}`;
-        this.builder.state = "init";
-        this.writeToOutput("<br># Building AutoComplete Cache ... ");
-        this.sendLine(this.builder.sentinel);
-        this._builderWatchdogTouch();
-        EventBus.$emit("autocomplete:build:start");
+/**
+ * @param {boolean} [skipIdleCheck] Safe to skip only when called right at CLI entry,
+ *                                  before the user could have any command in flight.
+ */
+CliAutoComplete.builderStart = function (skipIdleCheck = false) {
+    if (this.builder.state !== "reset") {
+        return;
     }
+
+    if (!skipIdleCheck && this.isIdle && !this.isIdle()) {
+        // A user command may still be awaiting its response; starting now would
+        // suppress that output until the build finishes (see isBuilding() gate
+        // in useCli.js read()/writeLineToOutput), silently losing it. Wait for
+        // the channel to go quiet before (re)starting.
+        GUI.timeout_add("autocomplete_builder_defer", () => this.builderStart(), 250);
+        return;
+    }
+
+    this.cache = {
+        commands: [],
+        resources: [],
+        resourcesCount: {},
+        settings: [],
+        settingsAcceptedValues: {},
+        feature: [],
+        beeper: ["ALL"],
+        mixers: [],
+    };
+    this.builder.commandSequence = ["help", "dump", "get", "mixer list"];
+    this.builder.currentSetting = null;
+    this.builder.sentinel = `# ${Math.random()}`;
+    this.builder.state = "init";
+    this.writeToOutput("<br># Building AutoComplete Cache ... ");
+    this.sendLine(this.builder.sentinel);
+    this._builderWatchdogTouch();
+    EventBus.$emit("autocomplete:build:start");
 };
 
 CliAutoComplete.builderParseLine = function (line) {
