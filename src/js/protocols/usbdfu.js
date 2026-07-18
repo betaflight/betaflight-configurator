@@ -402,6 +402,13 @@ export class UsbDfuProtocol extends EventTarget {
                     return null;
                 }
 
+                // Need at least "@type", start address and a sector list. A truncated
+                // string such as "@Truncated /0x1FFF0000" would otherwise dereference
+                // tmp1[2] (undefined) below and throw.
+                if (tmp1.length < 3 || typeof tmp1[2] !== "string") {
+                    return null;
+                }
+
                 const type = tmp1[0].trim().replace("@", "");
                 const start_address = Number.parseInt(tmp1[1]);
 
@@ -460,7 +467,14 @@ export class UsbDfuProtocol extends EventTarget {
             // must not throw and abort the whole flash. Skip the ones we can't parse
             // and keep the regions we understand.
             const chipInfo = descriptors.reduce((o, str) => {
-                const memory = parseDescriptor(str);
+                let memory = null;
+                try {
+                    memory = parseDescriptor(str);
+                } catch (error) {
+                    // Belt-and-suspenders: never let a parser exception on one malformed
+                    // string abort chip detection for the whole device.
+                    console.warn(`${this.logHead} Error parsing memory descriptor "${str}":`, error);
+                }
                 if (!memory) {
                     console.warn(`${this.logHead} Skipping unparseable memory descriptor: "${str}"`);
                     return o;
@@ -539,6 +553,10 @@ export class UsbDfuProtocol extends EventTarget {
     // CLRSTATUS issued outside dfuERROR, but the STM32C5 ROM correctly STALLs it, which
     // aborted the flash right at the start of the verify phase (device was in dfuDNLOAD_IDLE
     // after writing). Sending the spec-correct request fixes C5 and stays valid elsewhere.
+    /**
+     * @param {(data: Uint8Array) => void} callback - Invoked once the device reaches dfuIDLE.
+     * @returns {void}
+     */
     clearStatus(callback) {
         // Bound the retries so an unexpected/never-idling bootloader state surfaces as an
         // error instead of looping forever (a failed GETSTATUS returns an empty buffer, which
@@ -745,7 +763,10 @@ export class UsbDfuProtocol extends EventTarget {
                                 this.leave();
                             } else {
                                 this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
-                                    this.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                                    // Never let a missing/zero wTransferSize into the write loop
+                                    // (it would stall or divide the payload into empty blocks).
+                                    const reportedSize = resultCode ? 0 : descriptor?.wTransferSize;
+                                    this.transferSize = reportedSize > 0 ? reportedSize : 2048;
                                     console.log(`${this.logHead} Using transfer size: ${this.transferSize}`);
                                     this.clearStatus(() => {
                                         this.upload_procedure(nextAction);

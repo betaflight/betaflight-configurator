@@ -50,6 +50,7 @@ const REQ = { DNLOAD: 1, UPLOAD: 2, GETSTATUS: 3, CLRSTATUS: 4, ABORT: 6 };
  * them on UPLOAD so verification passes.
  */
 class MockC5Transport extends EventTarget {
+    /** @param {string[]} descriptorStrings - Memory-layout descriptor strings to report. */
     constructor(descriptorStrings) {
         super();
         this.descriptorStrings = descriptorStrings;
@@ -141,6 +142,11 @@ class MockC5Transport extends EventTarget {
     }
 }
 
+/**
+ * Build a minimal parsed-hex object for the flasher (one block at the flash base).
+ * @param {number} byteCount - Size of the firmware image in bytes.
+ * @returns {{bytes_total:number, data:{address:number,bytes:number,data:Uint8Array}[]}}
+ */
 function makeHex(byteCount) {
     const data = new Uint8Array(byteCount);
     for (let i = 0; i < byteCount; i++) {
@@ -152,6 +158,15 @@ function makeHex(byteCount) {
     };
 }
 
+/**
+ * Run a DFU flash and resolve when connect() invokes its completion callback, or
+ * reject if it never fires within `ms` (i.e. the flow hung).
+ * @param {import("../../src/js/protocols/usbdfu").UsbDfuProtocol} dfu
+ * @param {ReturnType<typeof makeHex>} hex
+ * @param {object} options - Flashing options (flashingMessage, flashProgress, flashMessageTypes).
+ * @param {number} [ms=8000] - Hang timeout in milliseconds.
+ * @returns {Promise<void>}
+ */
 function flashWithTimeout(dfu, hex, options, ms = 8000) {
     return new Promise((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error("DFU flash hung: connect() callback never fired")), ms);
@@ -189,10 +204,11 @@ describe("STM32C5 DFU flashing", () => {
         expect(transport.written.length).toBe(4096);
     });
 
-    it("does not hang when an extra, unparseable memory region is reported", async () => {
+    it("does not hang when extra unparseable / truncated memory regions are reported", async () => {
         const transport = new MockC5Transport([
             "@Internal Flash /0x08000000/64*08Kg",
-            "@Weird Region /0x1FFF0000/garbage", // would throw in the old reduce
+            "@Weird Region /0x1FFF0000/garbage", // sector token has no "*" -> parseDescriptor returns null
+            "@Truncated /0x1FFF0000", // only two "/"-parts -> would dereference tmp1[2] and throw
         ]);
         const dfu = new UsbDfuProtocol(transport);
 
@@ -237,5 +253,71 @@ describe("WebUsbDfuTransport.getFunctionalDescriptor", () => {
         expect(descriptor.bDescriptorType).toBe(0x21);
         expect(descriptor.wTransferSize).toBe(2048);
         expect(standaloneRequested).toBe(false);
+    });
+
+    it("ignores a HID descriptor (also type 0x21) on a composite device and picks the DFU one", async () => {
+        // A composite device: a HID interface (class 0x03) with a HID descriptor (also 0x21),
+        // followed by the real DFU interface (class 0xFE/subclass 0x01) + DFU functional descriptor.
+        const blob = new Uint8Array([
+            // configuration header (bLength=9, bType=2, wTotalLength=45)
+            9, 2, 45, 0, 2, 1, 0, 0xc0, 0,
+            // HID interface (class 0x03)
+            9, 4, 0, 0, 1, 0x03, 0, 0, 0,
+            // HID descriptor (bType=0x21) — must be ignored because it is under a HID interface,
+            // not a DFU one; decoding it as a DFU functional descriptor would give a bogus size.
+            9, 0x21, 0x11, 0x01, 0x00, 0x22, 0x00, 0x1b, 0x00,
+            // DFU interface (class 0xFE / subclass 0x01)
+            9, 4, 1, 0, 0, 0xfe, 0x01, 0x02, 4,
+            // DFU functional descriptor (wTransferSize=1024=0x0400 LE)
+            9, 0x21, 0x0b, 0xff, 0x00, 0x00, 0x04, 0x1a, 0x01,
+        ]);
+        const view = (start, len) => new DataView(blob.buffer, start, len);
+        const transport = new RealWebUsbDfuTransport();
+        transport.usbDevice = {
+            controlTransferIn: vi.fn((setup, length) => Promise.resolve({ status: "ok", data: view(0, length) })),
+        };
+
+        const descriptor = await transport.getFunctionalDescriptor();
+
+        // Must be the DFU functional descriptor's transfer size, not the HID descriptor's 0x2200.
+        expect(descriptor.wTransferSize).toBe(1024);
+    });
+
+    it("rejects a truncated standalone functional-descriptor response instead of using it", async () => {
+        // No DFU functional descriptor in the config blob, forcing the standalone fallback,
+        // which returns a truncated 4-byte response (would decode to wTransferSize 0).
+        const configBlob = new Uint8Array([
+            9,
+            2,
+            18,
+            0,
+            1,
+            1,
+            0,
+            0xc0,
+            0, // config header, wTotalLength=18
+            9,
+            4,
+            0,
+            0,
+            0,
+            0xfe,
+            0x01,
+            0x02,
+            4, // DFU interface, no functional descriptor follows
+        ]);
+        const truncated = new Uint8Array([4, 0x21, 0x0b, 0xff]);
+        const view = (buf, len) => new DataView(buf.buffer, 0, Math.min(len, buf.length));
+        const transport = new RealWebUsbDfuTransport();
+        transport.usbDevice = {
+            controlTransferIn: vi.fn((setup, length) => {
+                if (setup.value === 0x2100) {
+                    return Promise.resolve({ status: "ok", data: view(truncated, length) });
+                }
+                return Promise.resolve({ status: "ok", data: view(configBlob, length) });
+            }),
+        };
+
+        await expect(transport.getFunctionalDescriptor()).rejects.toThrow(/functional descriptor/i);
     });
 });
