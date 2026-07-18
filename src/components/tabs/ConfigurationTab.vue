@@ -196,10 +196,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, onMounted, computed, nextTick, onUnmounted } from "vue";
-import { useNavigationStore } from "@/stores/navigation";
+import { defineComponent, ref, reactive, onMounted, computed, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
+import { useIsMounted } from "@/composables/useIsMounted";
+import { useSaving } from "@/composables/useSaving";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -208,7 +209,6 @@ import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../../js/data_storage";
-import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
@@ -223,9 +223,8 @@ export default defineComponent({
     },
     setup() {
         // Reactive State
-        const navigationStore = useNavigationStore();
         const fcStore = useFlightControllerStore();
-        const { reboot } = useReboot();
+        const { saveAndReboot } = useReboot();
 
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
@@ -237,12 +236,8 @@ export default defineComponent({
         const pilotName = ref("");
         const showPilotName = ref(false);
 
-        const isSaving = ref(false);
-        const isMounted = ref(true);
-
-        onUnmounted(() => {
-            isMounted.value = false;
-        });
+        const { isSaving, runSave } = useSaving();
+        const isMounted = useIsMounted();
 
         const armingConfig = reactive({
             small_angle: 25,
@@ -254,17 +249,12 @@ export default defineComponent({
 
         // Other Features & Beepers State wrapper
         const featuresList = computed(() => {
-            if (!fcStore.features?.features?._features) {
+            if (!fcStore.features?.features?.getFeatures?.()) {
                 return [];
             }
-            return fcStore.features.features._features.filter((feature) => {
+            return fcStore.features.features.getFeatures().filter((feature) => {
                 return feature.mode !== "select" && feature.group === "other";
             });
-        });
-
-        const MOTOR_STOP_FEATURE_BIT = 4;
-        const motorStopFeatureBit = computed(() => {
-            return featuresList.value.find((feature) => feature.name === "MOTOR_STOP")?.bit ?? MOTOR_STOP_FEATURE_BIT;
         });
 
         const beepersList = computed(() => {
@@ -282,8 +272,6 @@ export default defineComponent({
         });
 
         const dshotBeaconTone = ref(0); // 0 = disabled
-        const beeperDisabledMask = ref(0);
-        const dshotDisabledMask = ref(0);
 
         const syncBeeperStateFromStore = () => {
             if (!fcStore.beepers) {
@@ -293,142 +281,71 @@ export default defineComponent({
             if (fcStore.beepers.dshotBeaconTone != null) {
                 dshotBeaconTone.value = fcStore.beepers.dshotBeaconTone;
             }
-
-            if (fcStore.beepers.beepers) {
-                beeperDisabledMask.value = fcStore.beepers.beepers._beeperDisabledMask;
-            }
-
-            if (fcStore.beepers.dshotBeaconConditions) {
-                dshotDisabledMask.value = fcStore.beepers.dshotBeaconConditions._beeperDisabledMask;
-            }
         };
-
-        const featureMask = computed(() => {
-            if (!fcStore.features?.features) {
-                return 0;
-            }
-            return fcStore.features.features._featureMask;
-        });
 
         const showAutoDisarmDelay = computed(() => {
             if (!fcStore.config?.apiVersion || semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
                 return false;
             }
-            return bit_check(featureMask.value, motorStopFeatureBit.value);
+            return fcStore.features?.features?.isEnabled?.("MOTOR_STOP") ?? false;
         });
 
         // Methods for toggling bits
         const isFeatureEnabled = (feature) => {
-            if (!fcStore.features?.features) {
-                return false;
-            }
-            return bit_check(fcStore.features.features._featureMask, feature.bit);
+            return fcStore.features?.features?.isEnabled?.(feature.name) ?? false;
         };
 
         const toggleFeature = (feature, checked) => {
-            if (!fcStore.features?.features) {
+            const featuresHelper = fcStore.features?.features;
+            if (!featuresHelper) {
                 return;
             }
-            if (checked) {
-                fcStore.features.features._featureMask = bit_set(fcStore.features.features._featureMask, feature.bit);
-            } else {
-                fcStore.features.features._featureMask = bit_clear(fcStore.features.features._featureMask, feature.bit);
-            }
-            updateTabList(fcStore.features.features);
+            featuresHelper.updateData({ name: feature.name, checked });
+            updateTabList(featuresHelper);
         };
 
         const isBeeperEnabled = (beeper) => {
-            if (!fcStore.beepers?.beepers) {
-                return false;
-            }
-            // Note: Beeper logic uses DisabledMask, so checked means NOT disabled
-            return !bit_check(beeperDisabledMask.value, beeper.bit);
+            return fcStore.beepers?.beepers?.isEnabled?.(beeper.name) ?? false;
         };
 
         const toggleBeeper = (beeper, checked) => {
-            if (!fcStore.beepers?.beepers) {
-                return;
-            }
-            if (checked) {
-                // To enable, we CLEAR the disabled bit
-                beeperDisabledMask.value = bit_clear(beeperDisabledMask.value, beeper.bit);
-            } else {
-                // To disable, we SET the disabled bit
-                beeperDisabledMask.value = bit_set(beeperDisabledMask.value, beeper.bit);
-            }
-            fcStore.beepers.beepers._beeperDisabledMask = beeperDisabledMask.value;
+            fcStore.beepers?.beepers?.setEnabled?.(beeper.name, checked);
         };
 
         const enableAllBeepers = () => {
-            if (!fcStore.beepers?.beepers) {
-                return;
-            }
-            let mask = beeperDisabledMask.value;
             beepersList.value.forEach((beeper) => {
                 if (beeper.visible !== false) {
-                    mask = bit_clear(mask, beeper.bit);
+                    fcStore.beepers.beepers.setEnabled(beeper.name, true);
                 }
             });
-            beeperDisabledMask.value = mask;
-            fcStore.beepers.beepers._beeperDisabledMask = mask;
         };
 
         const disableAllBeepers = () => {
-            if (!fcStore.beepers?.beepers) {
-                return;
-            }
-            let mask = beeperDisabledMask.value;
             beepersList.value.forEach((beeper) => {
                 if (beeper.visible !== false) {
-                    mask = bit_set(mask, beeper.bit);
+                    fcStore.beepers.beepers.setEnabled(beeper.name, false);
                 }
             });
-            beeperDisabledMask.value = mask;
-            fcStore.beepers.beepers._beeperDisabledMask = mask;
         };
 
         const isDshotConditionEnabled = (cond) => {
-            if (!fcStore.beepers?.dshotBeaconConditions) {
-                return false;
-            }
-            // Same logic as beepers (DisabledMask)
-            return !bit_check(dshotDisabledMask.value, cond.bit);
+            return fcStore.beepers?.dshotBeaconConditions?.isEnabled?.(cond.name) ?? false;
         };
 
         const toggleDshotCondition = (cond, checked) => {
-            if (!fcStore.beepers?.dshotBeaconConditions) {
-                return;
-            }
-            if (checked) {
-                dshotDisabledMask.value = bit_clear(dshotDisabledMask.value, cond.bit);
-            } else {
-                dshotDisabledMask.value = bit_set(dshotDisabledMask.value, cond.bit);
-            }
-            fcStore.beepers.dshotBeaconConditions._beeperDisabledMask = dshotDisabledMask.value;
+            fcStore.beepers?.dshotBeaconConditions?.setEnabled?.(cond.name, checked);
         };
 
         const enableAllDshot = () => {
-            if (!fcStore.beepers?.dshotBeaconConditions) {
-                return;
-            }
-            let mask = dshotDisabledMask.value;
             dshotBeaconConditionsList.value.forEach((cond) => {
-                mask = bit_clear(mask, cond.bit);
+                fcStore.beepers.dshotBeaconConditions.setEnabled(cond.name, true);
             });
-            dshotDisabledMask.value = mask;
-            fcStore.beepers.dshotBeaconConditions._beeperDisabledMask = mask;
         };
 
         const disableAllDshot = () => {
-            if (!fcStore.beepers?.dshotBeaconConditions) {
-                return;
-            }
-            let mask = dshotDisabledMask.value;
             dshotBeaconConditionsList.value.forEach((cond) => {
-                mask = bit_set(mask, cond.bit);
+                fcStore.beepers.dshotBeaconConditions.setEnabled(cond.name, false);
             });
-            dshotDisabledMask.value = mask;
-            fcStore.beepers.dshotBeaconConditions._beeperDisabledMask = mask;
         };
 
         // Read-only: acc hardware state from store (toggle moved to SensorConfigTab)
@@ -547,76 +464,76 @@ export default defineComponent({
             pidDenomOptions.value = options;
         };
 
-        const saveConfig = async () => {
-            if (isSaving.value) {
-                return;
-            }
-            isSaving.value = true;
-            try {
-                fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
+        const saveConfig = () =>
+            runSave(
+                async () => {
+                    fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
 
-                fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
+                    fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
 
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    fcStore.config.craftName = craftName.value;
-                    fcStore.config.pilotName = pilotName.value;
-                } else {
-                    fcStore.config.name = craftName.value;
-                }
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        fcStore.config.craftName = craftName.value;
+                        fcStore.config.pilotName = pilotName.value;
+                    } else {
+                        fcStore.config.name = craftName.value;
+                    }
 
-                if (fcStore.beepers) {
-                    fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
-                }
+                    if (fcStore.beepers) {
+                        fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
+                    }
 
-                fcStore.armingConfig.small_angle = armingConfig.small_angle;
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-                    fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
-                    fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
-                }
+                    fcStore.armingConfig.small_angle = armingConfig.small_angle;
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+                        fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
+                        fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
+                    }
 
-                // Send MSP commands
-                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-
-                if (fcStore.beepers) {
-                    await MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG));
-                }
-
-                await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-
-                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
-                } else {
+                    // Send MSP commands
                     await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
+                        MSPCodes.MSP_SET_FEATURE_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
                     );
+
+                    if (fcStore.beepers) {
+                        await MSP.promise(
+                            MSPCodes.MSP_SET_BEEPER_CONFIG,
+                            mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG),
+                        );
+                    }
+
+                    await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+
+                    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
+                    } else {
+                        await MSP.promise(
+                            MSPCodes.MSP2_SET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
+                        );
+                        await MSP.promise(
+                            MSPCodes.MSP2_SET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
+                        );
+                    }
+
+                    await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
                     await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
+                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
                     );
-                }
 
-                await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+                    gui_log(i18n.getMessage("configurationSaved"));
 
-                gui_log(i18n.getMessage("configurationSaved"));
-
-                // Save to EEPROM and Reboot
-                await new Promise((resolve) => {
-                    mspHelper.writeConfiguration(false, () => {
-                        navigationStore.cleanup(() => {
-                            reboot();
-                            resolve();
-                        });
-                    });
-                });
-            } catch (e) {
-                console.error("Failed to save configuration", e);
-                gui_log(i18n.getMessage("configurationSaveFailed"));
-            } finally {
-                isSaving.value = false;
-            }
-        };
+                    // Save to EEPROM and Reboot
+                    await saveAndReboot();
+                },
+                {
+                    onError: (e) => {
+                        console.error("Failed to save configuration", e);
+                        gui_log(i18n.getMessage("configurationSaveFailed"));
+                    },
+                },
+            );
 
         onMounted(() => {
             loadConfig();

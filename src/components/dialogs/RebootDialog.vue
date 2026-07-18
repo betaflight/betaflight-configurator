@@ -4,7 +4,6 @@
         :title="status"
         :close="false"
         :dismissible="false"
-        :ui="{ overlay: 'z-3000', content: 'z-3001' }"
     >
         <template #body>
             <UProgress :model-value="progress" :max="100" />

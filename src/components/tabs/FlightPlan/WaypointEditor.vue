@@ -2,7 +2,15 @@
     <Dialog v-model="showEditorDialog" :title="editMode ? $t('flightPlanEditWaypoint') : $t('flightPlanAddWaypoint')">
         <form ref="formElement" class="editor-form flex flex-col gap-3" @submit.prevent="handleSave">
             <SettingRow :label="$t('flightPlanType')" full-width>
-                <USelect v-model="form.type" :items="typeItems" :aria-label="$t('flightPlanType')" class="w-48" />
+                <!-- content z must clear the Dialog overlay/content (z-3000/3001) or the
+                     teleported option list renders behind the modal and can't be clicked. -->
+                <USelect
+                    v-model="form.type"
+                    :items="typeItems"
+                    :aria-label="$t('flightPlanType')"
+                    class="w-48"
+                    :ui="{ content: 'z-3002' }"
+                />
             </SettingRow>
 
             <SettingRow v-if="showPosition" :label="$t('flightPlanLatitude')" full-width>
@@ -82,6 +90,7 @@
                     :items="patternItems"
                     :aria-label="$t('flightPlanPattern')"
                     class="w-48"
+                    :ui="{ content: 'z-3002' }"
                 />
             </SettingRow>
         </form>

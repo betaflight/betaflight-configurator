@@ -3,8 +3,8 @@ import semver from "semver";
 import MSP from "../js/msp";
 import GUI from "../js/gui";
 import FC from "../js/fc";
-import { disconnect } from "../js/serial_backend";
-import PortHandler from "../js/port_handler";
+import { disconnect, isDrivenRebootTarget, scheduleRebootReconnect } from "../js/serial_backend";
+import DeviceHandler from "../js/device_handler";
 import { getConnectionState, State } from "../js/connection_state";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
@@ -68,13 +68,23 @@ export function readDumpAll() {
 }
 
 export function scheduleReconnect() {
-    // The FC reboots after save/exit, so its port drops and re-enumerates — often under a NEW id
-    // (e.g. serial_0 -> serial_1). We do NOT reconnect explicitly here: that would target the OLD
-    // id, which is gone ("device not found"), and race the reboot into a spurious failure dialog.
-    // Instead we just drop the now-stale link; when Auto-Connect is on, auto-connect picks up the
-    // re-added device and reconnects to it, and with it off the user reconnects manually.
-    const willAutoReconnect = PortHandler.portPicker.autoConnect;
-    const target = PortHandler.portPicker.selectedPort;
+    const willAutoReconnect = DeviceHandler.devicePicker.autoConnect;
+    const target = DeviceHandler.devicePicker.selectedDevice;
+
+    // BLE and manual/TCP links never re-enumerate after an FC reboot, so the passive path
+    // below (drop the link, let auto-connect pick up the re-added device) would leave them
+    // disconnected forever. Hand them to serial_backend's driven reboot cycle instead — the
+    // same machinery a BLE/manual Save & Reboot uses. It reads Auto-Connect live, so with it
+    // off the cycle still ends in a clean disconnect.
+    if (isDrivenRebootTarget(target)) {
+        scheduleRebootReconnect();
+        return;
+    }
+
+    // The FC reboots after save/exit, so its port drops and re-enumerates, often under a new id
+    // (serial_0 -> serial_1). Don't reconnect explicitly: that would target the old, gone id and
+    // race the reboot into a spurious failure dialog. Just drop the stale link — with Auto-Connect
+    // on, auto-connect picks up the re-added device; with it off, the user reconnects manually.
 
     // When we expect an auto-reconnect, hold the reconnect-in-progress window so selectActivePort()
     // keeps the current selection and does NOT hijack it with the expert-mode virtual/manual

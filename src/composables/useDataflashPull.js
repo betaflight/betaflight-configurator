@@ -50,7 +50,11 @@ export function useDataflashPull() {
             const result = await new Promise((resolve, reject) => {
                 let nextAddress = 0;
 
-                function onChunkRead(chunkAddress, chunkDataView) {
+                function onChunkRead(chunkAddress, chunkDataView, chunkDataSize, error) {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
                     if (chunkDataView === null) {
                         // Transient error — retry the same address.
                         mspHelper.dataflashRead(nextAddress, BLOCK_SIZE, onChunkRead);

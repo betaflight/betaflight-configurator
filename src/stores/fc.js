@@ -35,9 +35,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     function updateArmingFlags(bitmask) {
         if (armingFlags.value.length) {
             armingFlags.value.forEach((flag, index) => {
-                // Bitwise AND: Check if the i-th bit is set
-                // (1 << index) creates a mask like 0001, 0010, 0100, etc.
-                flag.visible = (bitmask & (1 << index)) !== 0;
+                flag.visible = bit_check(bitmask, index);
             });
         }
     }

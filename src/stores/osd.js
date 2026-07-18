@@ -8,6 +8,7 @@ import { OSD_CONSTANTS } from "../components/tabs/osd/osd_constants";
 import semver from "semver";
 import { useFlightControllerStore } from "./fc";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
+import { bit_set } from "../js/bit";
 
 function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
     if (isVirtualMode && virtualMode) {
@@ -147,19 +148,6 @@ export const useOsdStore = defineStore("osd", () => {
         return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
     });
 
-    // Video system constants
-    const VIDEO_COLS = {
-        PAL: 30,
-        NTSC: 30,
-        HD: 53,
-    };
-
-    const VIDEO_ROWS = {
-        PAL: 16,
-        NTSC: 13,
-        HD: 20,
-    };
-
     // Getters
     const numberOfProfiles = computed(() => osdProfiles.value.number || 1);
 
@@ -180,10 +168,16 @@ export const useOsdStore = defineStore("osd", () => {
     }
 
     function updateDisplaySize() {
-        const videoType = OSD.constants.VIDEO_TYPES[videoSystem.value];
+        let videoType = OSD.constants.VIDEO_TYPES[videoSystem.value];
+        if (videoType === "AUTO") {
+            videoType = "PAL";
+        }
         if (videoType) {
-            displaySize.x = VIDEO_COLS[videoType] || 30;
-            displaySize.y = VIDEO_ROWS[videoType] || 16;
+            // Read from OSD.data so the canvas size reported by the firmware via
+            // MSP_OSD_CANVAS (e.g. DJI WTFOS/MSP-OSD custom sizes) is honoured,
+            // rather than the built-in HD defaults.
+            displaySize.x = OSD.data.VIDEO_COLS[videoType] || 30;
+            displaySize.y = OSD.data.VIDEO_ROWS[videoType] || 16;
             displaySize.total = displaySize.x * displaySize.y;
         }
     }
@@ -316,7 +310,7 @@ export const useOsdStore = defineStore("osd", () => {
             // warnings is array of objects { enabled: bool }
             for (let i = 0; i < warnings.value.length; i++) {
                 if (warnings.value[i].enabled) {
-                    warningFlags |= 1 << i;
+                    warningFlags = bit_set(warningFlags, i);
                 }
             }
 
@@ -391,10 +385,6 @@ export const useOsdStore = defineStore("osd", () => {
         );
     };
 
-    const saveToEeprom = async () => {
-        return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-    };
-
     const saveAllConfig = async () => {
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
 
@@ -449,7 +439,6 @@ export const useOsdStore = defineStore("osd", () => {
         saveOtherConfig,
         saveTimerConfig,
         saveStatisticItem,
-        saveToEeprom,
         saveAllConfig,
     };
 });

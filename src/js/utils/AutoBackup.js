@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import PortHandler from "../port_handler";
+import DeviceHandler from "../device_handler";
 import FileSystem from "../FileSystem";
 import { generateFilename } from "./generate_filename";
 import { gui_log } from "../gui_log";
@@ -340,8 +340,8 @@ class AutoBackup {
         this.callback = callback;
         this.cleanupListeners();
 
-        const port = PortHandler.portPicker.selectedPort;
-        const baud = PortHandler.portPicker.selectedBauds;
+        const port = DeviceHandler.devicePicker.selectedDevice;
+        const baud = DeviceHandler.devicePicker.selectedBauds;
 
         if (port.startsWith("serial")) {
             this.boundHandleConnect = this.handleConnect.bind(this);

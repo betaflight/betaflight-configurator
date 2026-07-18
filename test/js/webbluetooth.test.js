@@ -265,6 +265,42 @@ describe("WebBluetooth openCanceled abort contract", () => {
     });
 });
 
+describe("WebBluetooth notification teardown (deaf-session prevention)", () => {
+    // Chrome keeps a notify session marked active per characteristic; if it is not
+    // explicitly stopped before gatt.disconnect(), startNotifications() on the NEXT
+    // connection can resolve without re-arming the CCCD on Linux/BlueZ — a session
+    // that looks subscribed but never receives, breaking plain disconnect/connect.
+    function makeReadCharacteristic() {
+        return {
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            stopNotifications: vi.fn(async () => {}),
+            properties: { notify: true },
+        };
+    }
+
+    it("stops notifications before dropping a still-connected GATT link", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const device = makeFakeDevice("dev-notify");
+        bt.devices = [bt.createPort(device)];
+        bt.device = device;
+        const characteristic = makeReadCharacteristic();
+        bt.readCharacteristic = characteristic;
+
+        await bt.disconnect();
+
+        expect(characteristic.stopNotifications).toHaveBeenCalledTimes(1);
+        expect(bt.readCharacteristic).toBe(false); // teardown completed
+        expect(device.gatt.disconnect).toHaveBeenCalled();
+        // Order is the regression: notifications must stop BEFORE the link drops, or the
+        // next connection's startNotifications() can no-op on BlueZ (deaf session).
+        expect(characteristic.stopNotifications.mock.invocationCallOrder[0]).toBeLessThan(
+            device.gatt.disconnect.mock.invocationCallOrder[0],
+        );
+    });
+});
+
 describe("WebBluetooth listener hygiene (no leak across reconnects)", () => {
     it("removes the gattserverdisconnected/disconnect listeners with the same bound reference they were added with", async () => {
         const WebBluetooth = await loadWebBluetooth();

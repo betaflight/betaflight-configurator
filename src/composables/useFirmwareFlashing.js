@@ -7,7 +7,7 @@ import { tracking } from "../js/Analytics";
 import read_hex_file from "../js/workers/hex_parser";
 import STM32 from "../js/protocols/webstm32";
 import ESP32 from "../js/protocols/esp32";
-import PortHandler from "../js/port_handler";
+import DeviceHandler from "../js/device_handler";
 import { getConnectionState } from "../js/connection_state";
 
 /**
@@ -288,7 +288,7 @@ export function useFirmwareFlashing(params = {}) {
             flashing_options.erase_chip = true;
         }
 
-        const port = PortHandler.portPicker.selectedPort;
+        const port = DeviceHandler.devicePicker.selectedDevice;
         const isSerial = port.startsWith("serial") || port.startsWith("capacitor-");
         const isDFU = port.startsWith("usb");
 
@@ -298,12 +298,12 @@ export function useFirmwareFlashing(params = {}) {
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                 filename: filename || null,
             });
-            PortHandler.dfuProtocol.connect(port, firmware, flashing_options);
+            DeviceHandler.dfuProtocol.connect(port, firmware, flashing_options);
         } else if (isSerial) {
             if (noRebootSequence) {
                 flashing_options.no_reboot = true;
             } else {
-                flashing_options.reboot_baud = PortHandler.portPicker.selectedBauds;
+                flashing_options.reboot_baud = DeviceHandler.devicePicker.selectedBauds;
             }
 
             let baud = 115200;
@@ -319,10 +319,10 @@ export function useFirmwareFlashing(params = {}) {
         } else {
             console.log(`${logHead} No valid port detected, asking for permissions`);
 
-            PortHandler.dfuProtocol
+            DeviceHandler.dfuProtocol
                 .requestPermission()
                 .then((device) => {
-                    PortHandler.dfuProtocol.connect(device.path, firmware, flashing_options);
+                    DeviceHandler.dfuProtocol.connect(device.path, firmware, flashing_options);
                 })
                 .catch((error) => {
                     console.error("Permission request failed", error);
@@ -350,7 +350,7 @@ export function useFirmwareFlashing(params = {}) {
         // Let ESP32.connect() own environment gating (Web Serial only) and port
         // validation, so the correct message is shown on Tauri/Capacitor and when
         // no port is selected.
-        const port = PortHandler.portPicker.selectedPort;
+        const port = DeviceHandler.devicePicker.selectedDevice;
 
         // esptool-js connects at the ROM baud (115200) and bumps to this rate after the stub loads.
         const ESP_FLASH_BAUD = 460800;
@@ -565,9 +565,9 @@ export function useFirmwareFlashing(params = {}) {
         if (!dfuExitButtonDisabled && !connectLock) {
             try {
                 console.log(`${logHead} Closing DFU`);
-                const device = await PortHandler.dfuProtocol.requestPermission();
+                const device = await DeviceHandler.dfuProtocol.requestPermission();
                 if (device) {
-                    PortHandler.dfuProtocol.connect(device.path, firmwareState.parsedHex, {
+                    DeviceHandler.dfuProtocol.connect(device.path, firmwareState.parsedHex, {
                         exitDfu: true,
                         flashingMessage,
                         flashProgress,

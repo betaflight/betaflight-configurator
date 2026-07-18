@@ -46,21 +46,40 @@
                 text-decoration: underline;
             }
 
+            /* Masthead matching status.betaflight.com: centred column, accent top rule,
+               logo inside the h1 with a muted brand word beside it. */
             header {
-                background: var(--surface-200);
-                border-bottom: 1px solid var(--surface-400);
-                padding: 1.5rem 2rem;
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-            header img {
-                height: 40px;
+                max-width: 880px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem 0;
             }
             header h1 {
-                font-size: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 22px;
+                font-weight: 600;
                 margin: 0;
+                border-top: 3px solid var(--primary-500);
+                padding-top: 20px;
                 color: var(--text);
+            }
+            header img {
+                height: 52px;
+                width: auto;
+                display: block;
+            }
+            header .brand-word {
+                color: var(--text-dim);
+                font-weight: 500;
+            }
+            @media (max-width: 600px) {
+                header h1 {
+                    font-size: 20px;
+                }
+                header img {
+                    height: 44px;
+                }
             }
 
             main {
@@ -188,8 +207,10 @@
     </head>
     <body>
         <header>
-            <img src="https://betaflight.com/img/betaflight/logo_dark.svg" alt="Betaflight" />
-            <h1>Downloads</h1>
+            <h1>
+                <img src="https://betaflight.com/img/betaflight/logo_dark.svg" alt="Betaflight" />
+                <span class="brand-word">Downloads</span>
+            </h1>
         </header>
         <main>
             <!--SECTIONS-->

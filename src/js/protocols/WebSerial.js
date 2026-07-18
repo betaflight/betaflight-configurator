@@ -104,7 +104,7 @@ class WebSerial extends EventTarget {
         this.disconnect();
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return this.port;
     }
 

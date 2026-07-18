@@ -75,6 +75,7 @@
                                         type="checkbox"
                                         class="size-4"
                                         :checked="servo.indexOfChannelToForward === ch - 1"
+                                        :aria-label="$t('servosForwardChannel', { channel: ch, servo: index + 1 })"
                                         @change="setChannelForward(index, ch - 1, $event)"
                                     />
                                 </div>
@@ -139,7 +140,12 @@
         <!-- Save button toolbar -->
         <div v-if="isSupported" class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton :label="$t('servosButtonSave')" :disabled="!configHasChanged" @click="saveServoConfig" />
+                <UButton
+                    :label="$t('servosButtonSave')"
+                    :disabled="!configHasChanged"
+                    :loading="isSaving"
+                    @click="saveServoConfig"
+                />
             </div>
         </div>
     </BaseTab>
@@ -156,10 +162,12 @@ import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
-import { gui_log } from "@/js/gui_log";
-import { i18n } from "@/js/localization";
+import { isMspCancelled } from "@/js/msp/mspErrors";
 import { useInterval } from "@/composables/useInterval";
 import { useTimeout } from "@/composables/useTimeout";
+import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
+import { clamp } from "@/js/utils/common";
 
 const { t } = useTranslation();
 
@@ -171,6 +179,8 @@ const originalConfigs = ref("");
 
 const { addInterval } = useInterval();
 const { addTimeout } = useTimeout();
+const { isSaving, runSave } = useSaving();
+const { saveToEeprom } = useReboot();
 
 const totalChannels = computed(() => FC.RC?.active_channels || 8);
 const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
@@ -187,13 +197,13 @@ const rateOptions = computed(() => {
 
 // Bar height as percentage (0-100) for UProgress
 function getBarHeight(value) {
-    const clamped = Math.min(Math.max(value - 1000, 0), 1000);
+    const clamped = clamp(value - 1000, 0, 1000);
     return (clamped / 1000) * 100;
 }
 
 // Bar opacity string for CSS variable
 function getBarOpacity(value) {
-    const alpha = Math.min(Math.max((value - 1000) / 1000, 0), 1);
+    const alpha = clamp((value - 1000) / 1000, 0, 1);
     return alpha.toFixed(2);
 }
 
@@ -209,11 +219,13 @@ function setChannelForward(servoIndex, channelIndex, event) {
 
 function onServoChange() {
     if (liveMode.value) {
-        addTimeout("servos_update", () => updateServos(false), 10);
+        addTimeout("servos_update", () => updateServos(), 10);
     }
 }
 
-function updateServos(saveToEeprom) {
+// Marshal reactive servoConfigs into FC.SERVO_CONFIG (clamping min/middle/max) so the
+// values sent over MSP match the UI. Also normalizes the reactive values in place.
+function marshalServoConfigs() {
     const SERVO_MIN = 500;
     const SERVO_MAX = 2500;
 
@@ -221,9 +233,9 @@ function updateServos(saveToEeprom) {
         const src = servoConfigs[i];
         const cfg = FC.SERVO_CONFIG[i];
 
-        const min = Math.min(Math.max(src.min ?? SERVO_MIN, SERVO_MIN), SERVO_MAX);
-        const middle = Math.min(Math.max(src.middle ?? SERVO_MIN, SERVO_MIN), SERVO_MAX);
-        const max = Math.min(Math.max(src.max ?? SERVO_MAX, SERVO_MIN), SERVO_MAX);
+        const min = clamp(src.min ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
+        const middle = clamp(src.middle ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
+        const max = clamp(src.max ?? SERVO_MAX, SERVO_MIN, SERVO_MAX);
 
         cfg.min = min;
         cfg.middle = middle;
@@ -235,20 +247,32 @@ function updateServos(saveToEeprom) {
         src.middle = middle;
         src.max = max;
     }
+}
 
-    mspHelper.sendServoConfigurations(() => {
-        if (saveToEeprom) {
-            mspHelper.writeConfiguration(false, () => {
-                gui_log(i18n.getMessage("servosEepromSave"));
-                originalConfigs.value = JSON.stringify(servoConfigs);
-            });
+// Live-mode preview: push the current servo config to the FC without persisting.
+// sendServoConfigurations is now error-aware/async; this is fire-and-forget preview, so
+// ignore a benign queue-clear cancellation on tab switch but still log genuine failures.
+function updateServos() {
+    marshalServoConfigs();
+    mspHelper.sendServoConfigurations().catch((error) => {
+        if (!isMspCancelled(error)) {
+            console.error("Failed to update servo configuration", error);
         }
     });
 }
 
-function saveServoConfig() {
-    updateServos(true);
-}
+const saveServoConfig = () =>
+    runSave(
+        async () => {
+            marshalServoConfigs();
+            await mspHelper.sendServoConfigurations();
+            await saveToEeprom();
+            // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
+            // resolved to the same string, so it's dropped here to avoid a duplicate.
+            originalConfigs.value = JSON.stringify(servoConfigs);
+        },
+        { onError: (e) => console.error("Failed to save servo configuration", e) },
+    );
 
 function getServoData() {
     MSP.send_message(MSPCodes.MSP_SERVO, false, false, () => {

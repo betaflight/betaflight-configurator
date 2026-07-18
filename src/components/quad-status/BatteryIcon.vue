@@ -8,8 +8,7 @@
 
 <script>
 import { defineComponent, computed } from "vue";
-
-const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
+import { NO_BATTERY_VOLTAGE_MAXIMUM, estimateCellCount } from "../../js/utils/battery";
 
 export default defineComponent({
     props: {
@@ -35,13 +34,7 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const nbCells = computed(() => {
-            let cells = Math.floor(props.voltage / props.vbatmaxcellvoltage) + 1;
-            if (props.voltage === 0) {
-                cells = 1;
-            }
-            return cells;
-        });
+        const nbCells = computed(() => estimateCellCount(props.voltage, props.vbatmaxcellvoltage));
 
         const min = computed(() => {
             return props.vbatwarningcellvoltage * nbCells.value;
@@ -66,8 +59,8 @@ export default defineComponent({
                     "state-ok": state === "0",
                     "state-warning": state === "1",
                     "state-empty": state === "2",
-                    // TODO: BATTERY_NOT_PRESENT
-                    // TODO: BATTERY_INIT
+                    "state-not-present": state === "3",
+                    "state-init": state === "4",
                 };
             }
             const isWarning = props.voltage < warn.value;
@@ -79,6 +72,10 @@ export default defineComponent({
         });
 
         const batteryWidth = computed(() => {
+            const state = String(props.batteryState ?? "");
+            if (state === "3" || state === "4") {
+                return 100;
+            }
             return isEmpty.value ? 100 : ((props.voltage - min.value) / (max.value - min.value)) * 100;
         });
 
@@ -141,6 +138,14 @@ export default defineComponent({
 
 .battery-status.state-empty {
     animation: error-blinker 1s linear infinite;
+}
+
+.battery-status.state-not-present {
+    background-color: transparent;
+}
+
+.battery-status.state-init {
+    background-color: var(--surface-500);
 }
 
 .battery-icon--compact {

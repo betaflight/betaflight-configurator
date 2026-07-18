@@ -51,6 +51,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { clamp } from "@/js/utils/common";
 
 const props = defineProps({
     label: {
@@ -91,7 +92,7 @@ const circumference = computed(() => 2 * Math.PI * radius.value);
 const effectiveMax = computed(() => (Number.isFinite(props.max) && props.max > 0 ? props.max : 100));
 const clampedValue = computed(() => {
     const v = Number.isFinite(props.value) ? props.value : 0;
-    return Math.min(Math.max(v, 0), effectiveMax.value);
+    return clamp(v, 0, effectiveMax.value);
 });
 const progressRatio = computed(() => clampedValue.value / effectiveMax.value);
 const progressPercent = computed(() => Math.round(progressRatio.value * 100));

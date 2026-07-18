@@ -153,7 +153,7 @@
             :open="store.applyState.progressDialogOpen"
             :close="false"
             :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'w-[300px] z-3001' }"
+            :ui="{ content: 'w-[300px]' }"
         >
             <template #body>
                 <div class="text-lg mb-2" v-html="$t('presetsApplyingPresets')"></div>
@@ -166,7 +166,7 @@
             :open="store.applyState.cliErrorsDialogOpen"
             :close="false"
             :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'w-[600px] max-w-[calc(100vw-2rem)] z-3001' }"
+            :ui="{ content: 'w-[600px] max-w-[calc(100vw-2rem)]' }"
         >
             <template #title>
                 <span v-html="$t('presetsCliErrorsWarning')"></span>

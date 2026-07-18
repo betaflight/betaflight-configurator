@@ -69,6 +69,12 @@
                                                 type="checkbox"
                                                 :checked="field.isVisible[profileIdx - 1]"
                                                 @change="toggleFieldVisibility(field.index, profileIdx - 1, $event)"
+                                                :aria-label="
+                                                    $t('osdToggleElementVisibility', {
+                                                        element: $t(field.text, field.textParams),
+                                                        profile: profileIdx,
+                                                    })
+                                                "
                                                 class="size-4"
                                             />
                                         </template>
@@ -413,7 +419,7 @@
                 <UModal
                     :open="fontManagerOpen"
                     :title="$t('osdSetupFontManagerTitle')"
-                    :ui="{ overlay: 'z-3000', content: 'w-[750px] z-3001' }"
+                    :ui="{ content: 'w-[750px]' }"
                     @update:open="(value) => !value && closeFontManager()"
                 >
                     <template #body>
@@ -474,9 +480,11 @@
                             </UButton>
                         </div>
 
-                        <div class="tab-osd-upload-progress mb-3">
-                            <progress class="tab-osd-progress-bar" :value="uploadProgress" min="0" max="100"></progress>
-                            <div class="tab-osd-progress-label">{{ uploadProgressLabel }}</div>
+                        <div class="relative mb-3">
+                            <UProgress :model-value="uploadProgress" :max="100" size="2xl" color="warning" />
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                                {{ uploadProgressLabel }}
+                            </div>
                         </div>
 
                         <UButton @click="flashFont()" color="success" size="sm">
@@ -518,14 +526,17 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useOsdStore } from "@/stores/osd";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useOsdPreview } from "@/composables/useOsdPreview";
+import { useOsdPreview, clampStringPreviewPosition, clampArrayPreviewPosition } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
+import { useTransientLabel } from "@/composables/useTransientLabel";
+import { useSaving } from "@/composables/useSaving";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { i18n } from "@/js/localization";
+import { clamp } from "@/js/utils/common";
 
 import { FONT, SYM } from "@/js/utils/osdFont";
 import { OSD_CONSTANTS } from "./osd/osd_constants";
@@ -560,13 +571,12 @@ const activeProfile = ref(0);
 const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
-const isSaving = ref(false);
+const { isSaving, runSave } = useSaving();
 const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
 };
-const saveButtonTextOverride = ref(null);
-const saveButtonText = computed(() => saveButtonTextOverride.value || i18n.getMessage("osdSetupSave"));
+const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() => i18n.getMessage("osdSetupSave"));
 const saveMenuItems = computed(() => [
     [
         {
@@ -980,8 +990,8 @@ function getDragPreviewAnchor(displayItem, dragX, dragY, displaySize, dragPrevie
     const anchorY = (localY - dragPreviewMeta.minY) * charHeight + charHeight / 2;
 
     return {
-        x: Math.min(Math.max(anchorX, 0), dragPreviewMeta.widthPx),
-        y: Math.min(Math.max(anchorY, 0), dragPreviewMeta.heightPx),
+        x: clamp(anchorX, 0, dragPreviewMeta.widthPx),
+        y: clamp(anchorY, 0, dragPreviewMeta.heightPx),
     };
 }
 
@@ -1051,10 +1061,6 @@ function onDragLeaveCell(event) {
     event.currentTarget.removeAttribute("style");
 }
 
-function isStringArrayPreview(preview) {
-    return Array.isArray(preview) && typeof preview[0] === "string";
-}
-
 function applyDragOffsetFromStartCell(position, event, displaySize, startIdx) {
     const x = Number.parseInt(event.dataTransfer.getData("x"), 10);
     const y = Number.parseInt(event.dataTransfer.getData("y"), 10);
@@ -1065,66 +1071,6 @@ function applyDragOffsetFromStartCell(position, event, displaySize, startIdx) {
     const draggedCellIdx = x + y * displaySize.x;
     const offsetIdx = position - draggedCellIdx;
     return startIdx + offsetIdx;
-}
-
-function clampStringPreviewPosition(displayItem, position, displaySize, cursorY) {
-    const elementWidth = Array.from(displayItem.preview || "").length;
-    const maxX = Math.max(0, displaySize.x - elementWidth);
-    const maxY = Math.max(0, displaySize.y - 1);
-    const row = Math.min(Math.max(cursorY, 0), maxY);
-
-    const rawX = position - row * displaySize.x;
-    const x = Math.min(Math.max(rawX, 0), maxX);
-
-    return row * displaySize.x + x;
-}
-
-function clampStringArrayPreviewPosition(position, displaySize, cursorX, limits) {
-    const selectedPositionX = position % displaySize.x;
-    let selectedPositionY = Math.trunc(position / displaySize.x);
-
-    if (position < 0) {
-        return null;
-    }
-    if (selectedPositionX > cursorX) {
-        position += displaySize.x - selectedPositionX;
-        selectedPositionY++;
-    } else if (selectedPositionX + limits.maxX > displaySize.x) {
-        position -= selectedPositionX + limits.maxX - displaySize.x;
-    }
-    if (selectedPositionY < 0) {
-        position += Math.abs(selectedPositionY) * displaySize.x;
-    } else if (selectedPositionY + limits.maxY > displaySize.y) {
-        position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
-    }
-
-    return position;
-}
-
-function clampObjectArrayPreviewPosition(position, displaySize, limits) {
-    const selectedPositionX = ((position % displaySize.x) + displaySize.x) % displaySize.x;
-    const selectedPositionY = Math.floor(position / displaySize.x);
-
-    if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
-        position += Math.abs(selectedPositionX + limits.minX);
-    } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
-        position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
-    }
-    if (limits.minY < 0 && selectedPositionY + limits.minY < 0) {
-        position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
-    } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
-        position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
-    }
-
-    return Math.max(0, position);
-}
-
-function clampArrayPreviewPosition(displayItem, position, displaySize, cursorX) {
-    const limits = searchLimitsElement(displayItem.preview);
-    if (isStringArrayPreview(displayItem.preview)) {
-        return clampStringArrayPreviewPosition(position, displaySize, cursorX, limits);
-    }
-    return clampObjectArrayPreviewPosition(position, displaySize, limits);
 }
 
 function onDropCell(event) {
@@ -1370,39 +1316,33 @@ async function refreshConfig() {
 }
 
 // Save OSD configuration to FC
-async function saveConfig() {
-    if (isSaving.value) {
-        return;
-    }
-    isSaving.value = true;
+const saveConfig = () =>
+    runSave(
+        async () => {
+            // Sync store state to the shared OSD.data bridge used by legacy helpers.
+            osdStore.syncToLegacy();
 
-    try {
-        // Sync store state to the shared OSD.data bridge used by legacy helpers.
-        osdStore.syncToLegacy();
+            // Send all OSD config to FC and write EEPROM.
+            await osdStore.saveAllConfig();
 
-        // Send all OSD config to FC and write EEPROM.
-        await osdStore.saveAllConfig();
+            // Track analytics
+            const changes = analyticsChanges.value;
+            if (Object.keys(changes).length > 0) {
+                tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
+                analyticsChanges.value = {};
+            }
 
-        // Track analytics
-        const changes = analyticsChanges.value;
-        if (Object.keys(changes).length > 0) {
-            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
-            analyticsChanges.value = {};
-        }
-
-        // Show success
-        gui_log(i18n.getMessage("osdSettingsSaved"));
-        saveButtonTextOverride.value = i18n.getMessage("osdButtonSaved");
-        setTimeout(() => {
-            saveButtonTextOverride.value = null;
-        }, 2000);
-    } catch (error) {
-        console.error("Failed to save OSD configuration:", error);
-        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD configuration" }));
-    } finally {
-        isSaving.value = false;
-    }
-}
+            // Show success
+            gui_log(i18n.getMessage("osdSettingsSaved"));
+            flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
+        },
+        {
+            onError: (error) => {
+                console.error("Failed to save OSD configuration:", error);
+                gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD configuration" }));
+            },
+        },
+    );
 
 // Font Manager
 const fontCharacterUrls = computed(() => {
@@ -1841,43 +1781,6 @@ onUnmounted(() => {
     background: currentColor;
     border-radius: 50%;
     opacity: 0.8;
-}
-
-/* Upload progress bar */
-.tab-osd-upload-progress {
-    display: grid;
-    grid-template-areas: "area";
-    width: 100%;
-}
-
-.tab-osd-progress-bar {
-    grid-area: area;
-    width: 100%;
-    height: 26px;
-    border-radius: 5px;
-    border: 1px solid var(--surface-500);
-    appearance: none;
-}
-
-.tab-osd-progress-bar::-webkit-progress-bar {
-    background-color: var(--text);
-    border-radius: 4px;
-    box-shadow: inset 0 0 5px #2f2f2f;
-}
-
-.tab-osd-progress-bar::-webkit-progress-value {
-    background-color: #f86008;
-    border-radius: 4px;
-}
-
-.tab-osd-progress-label {
-    grid-area: area;
-    width: 100%;
-    height: 26px;
-    line-height: 26px;
-    text-align: center;
-    color: white;
-    font-weight: bold;
 }
 
 /* Logo info list (validation markers) */

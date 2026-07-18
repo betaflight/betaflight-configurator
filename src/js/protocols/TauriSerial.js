@@ -95,7 +95,7 @@ class TauriSerial extends EventTarget {
         this.bytesReceived += info.detail.byteLength;
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return this.connectionId;
     }
 

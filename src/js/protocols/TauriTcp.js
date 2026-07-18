@@ -46,7 +46,7 @@ class TauriTcp extends EventTarget {
         return this._portInfo(url);
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return this._portInfo(this.address);
     }
 

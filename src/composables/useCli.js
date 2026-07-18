@@ -81,7 +81,15 @@ function onCopyFailed(ex) {
     console.warn(ex);
 }
 
-async function submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, getOutputHistory) {
+async function submitSupportData(
+    data,
+    state,
+    clearHistory,
+    executeCommands,
+    writeToOutput,
+    getOutputHistory,
+    trackPollInterval,
+) {
     clearHistory();
     const api = new BuildApi();
 
@@ -97,6 +105,7 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
         const time = Date.now();
         if (state.lastArrival < time - 250) {
             clearInterval(delay);
+            trackPollInterval?.(null);
             const text = getOutputHistory();
             let key = await api.submitSupportData(text);
             if (!key) {
@@ -107,6 +116,7 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
             writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
         }
     }, 250);
+    trackPollInterval?.(delay);
 }
 
 export function useCli() {
@@ -154,6 +164,7 @@ export function useCli() {
     let flushing = false; // true during DOM mutations; prevents spurious scrollPinned flips
     let scrollRaf = null; // deferred scroll; separates DOM writes from scrollTop write (avoids forced reflow)
     let pastePollInterval = null;
+    let supportPollInterval = null;
 
     const flushOutput = () => {
         outputFlushRaf = null;
@@ -340,7 +351,17 @@ export function useCli() {
 
     const submitSupportRequest = async () => {
         showSupportWarningDialog((data) =>
-            submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, () => outputHistory),
+            submitSupportData(
+                data,
+                state,
+                clearHistory,
+                executeCommands,
+                writeToOutput,
+                () => outputHistory,
+                (id) => {
+                    supportPollInterval = id;
+                },
+            ),
         );
     };
 
@@ -658,6 +679,11 @@ export function useCli() {
         if (pastePollInterval) {
             clearInterval(pastePollInterval);
             pastePollInterval = null;
+        }
+
+        if (supportPollInterval) {
+            clearInterval(supportPollInterval);
+            supportPollInterval = null;
         }
 
         if (outputFlushRaf) {

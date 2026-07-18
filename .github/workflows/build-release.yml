@@ -41,6 +41,8 @@ jobs:
       RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
   modern_release:
+    permissions:
+      contents: write
     name: Attach Release Artifacts
     needs: modern_build
     runs-on: ubuntu-latest

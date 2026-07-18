@@ -1,5 +1,6 @@
 import { isAndroid } from "./utils/checkCompatibility";
 import CapacitorFile from "./protocols/CapacitorFile";
+import { hexStringToUint8Array, uint8ArrayToHexString } from "./utils/bytes.js";
 
 const EXTENSION_MIME_MAP = {
     ".txt": "text/plain",
@@ -362,7 +363,7 @@ class FileSystem {
         } else {
             // Uint8Array, ArrayBuffer, or Blob → convert to hex
             const bytes = await this._toUint8Array(contents);
-            const hex = CapacitorFile.uint8ArrayToHexString(bytes);
+            const hex = uint8ArrayToHexString(bytes);
             await CapacitorFile.writeFile(fileId, hex, "hex");
         }
     }
@@ -406,7 +407,7 @@ class FileSystem {
 
     async _androidReadFileAsBlob(file) {
         const hex = await CapacitorFile.readFileAsHex(file._fileHandle);
-        const bytes = CapacitorFile.hexStringToUint8Array(hex);
+        const bytes = hexStringToUint8Array(hex);
 
         // Determine MIME type from file name extension
         const ext = file.name ? `.${file.name.split(".").pop()}` : "";
@@ -460,7 +461,7 @@ class FileSystem {
         // chunk is a Blob (wrapping DataView for binary, or string for text)
         const buffer = await chunk.arrayBuffer();
         const bytes = new Uint8Array(buffer);
-        const hex = CapacitorFile.uint8ArrayToHexString(bytes);
+        const hex = uint8ArrayToHexString(bytes);
         await CapacitorFile.writeChunk(fileId, hex, "hex");
     }
 

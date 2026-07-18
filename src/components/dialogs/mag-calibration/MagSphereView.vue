@@ -31,8 +31,8 @@ import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { i18n } from "../../../js/localization";
+import { degToRad } from "../../../js/utils/common";
 
-const DEG_TO_RAD = Math.PI / 180;
 const DEFAULT_SPHERE_RADIUS = 400;
 
 const props = defineProps({
@@ -463,10 +463,14 @@ function updateQuadAttitude() {
         const { w, x, y, z } = props.quaternion;
         _targetQuat.set(x, -y, -z, w);
     } else if (props.attitude) {
-        // Euler fallback: build q from (roll, pitch, heading) in aerospace ZYX,
-        // then the same adapter.
+        // Euler fallback (firmware without MSP_ATTITUDE_QUATERNION, API < 1.48).
+        // Reconstruct the same body(FLU)→earth(NWU) quaternion the quaternion path
+        // receives, then apply the same adapter. Betaflight heading is left-handed
+        // about the Up axis (firmware: yaw = -atan2(W, N)), so the ZYX yaw term must
+        // be NEGATED to reproduce that quaternion — otherwise East/West are swapped
+        // while roll/pitch stay correct.
         const { roll, pitch, heading } = props.attitude;
-        _tmpEuler.set(roll * DEG_TO_RAD, pitch * DEG_TO_RAD, heading * DEG_TO_RAD, "ZYX");
+        _tmpEuler.set(degToRad(roll), degToRad(pitch), degToRad(-heading), "ZYX");
         _tmpQuat.setFromEuler(_tmpEuler);
         _targetQuat.set(_tmpQuat.x, -_tmpQuat.y, -_tmpQuat.z, _tmpQuat.w);
     } else {
@@ -594,7 +598,7 @@ function rebuildFieldReference() {
         return;
     }
 
-    const incl = (props.inclination * Math.PI) / 180;
+    const incl = degToRad(props.inclination);
     const radius = DEFAULT_SPHERE_RADIUS;
     // Field direction: horizontal along +X (magnetic north), vertical along Z.
     // Scene is NED (Z-down, set in initScene): the downward field component is

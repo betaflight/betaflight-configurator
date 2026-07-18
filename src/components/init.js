@@ -8,7 +8,7 @@ import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
 import FC from "../js/fc.js";
 import MSP from "../js/msp.js";
-import PortHandler from "../js/port_handler.js";
+import DeviceHandler from "../js/device_handler.js";
 import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage.js";
 import { BetaflightComponents } from "../js/vue_components.js";
@@ -27,7 +27,7 @@ const CONNECTION = reactive({
  but these instance would eventually have more children
  which would find the use for those extra properties.
 
- FIXME For some reason, some of them (like PortHandler and FC)
+ FIXME For some reason, some of them (like DeviceHandler and FC)
  need to be marked as reactive in it's own module, to detect
  changes in arrays so I added the `reactive` wrapper there too.
 */
@@ -36,7 +36,7 @@ const betaflightModel = reactive({
     FC,
     MSP,
     PortUsage,
-    PortHandler,
+    DeviceHandler,
     CONNECTION,
     // Reactive expert mode flag to drive tab visibility via Vue
     // Load from ConfigStorage on init

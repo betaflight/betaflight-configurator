@@ -86,7 +86,7 @@
                                     :open="eraseOpen"
                                     :close="false"
                                     :dismissible="false"
-                                    :ui="{ overlay: 'z-3000', content: 'w-[36rem] max-w-[calc(100vw-2rem)] z-3001' }"
+                                    :ui="{ content: 'w-[36rem] max-w-[calc(100vw-2rem)]' }"
                                 >
                                     <template #body>
                                         <div class="dataflash-confirm-erase" :class="{ erasing: isErasing }">
@@ -120,14 +120,19 @@
                                     :open="saveOpen"
                                     :close="false"
                                     :dismissible="false"
-                                    :ui="{ overlay: 'z-3000', content: 'w-[36rem] max-w-[calc(100vw-2rem)] z-3001' }"
+                                    :ui="{ content: 'w-[36rem] max-w-[calc(100vw-2rem)]' }"
                                 >
                                     <template #body>
                                         <div class="dataflash-saving" :class="{ done: saveDone }">
                                             <h3>{{ $t("dataflashSavingTitle") }}</h3>
                                             <div class="dataflash-saving-before">
                                                 <div>{{ $t("dataflashSavingNote") }}</div>
-                                                <progress :value="saveProgress" min="0" max="100"></progress>
+                                                <UProgress
+                                                    :model-value="saveProgress"
+                                                    :max="100"
+                                                    size="2xl"
+                                                    class="my-4"
+                                                />
                                                 <div class="buttons flex justify-end gap-2 mt-3">
                                                     <UButton
                                                         class="save-flash-cancel"
@@ -276,7 +281,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" @click="saveSettings" />
+            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveSettings" />
         </div>
     </BaseTab>
 </template>
@@ -305,6 +310,10 @@ import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../../js/ConfigStorage";
 import { sensorTypes } from "../../js/sensor_types";
+import { MspCancelledError } from "../../js/msp/mspErrors";
+import { bit_check, bit_set } from "../../js/bit";
+import { useSaving } from "../../composables/useSaving";
+import { useReboot } from "../../composables/useReboot";
 
 const BLOCK_SIZE = 4096;
 
@@ -361,6 +370,8 @@ export default defineComponent({
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
         const debugStore = useDebugStore();
+        const { isSaving, runSave } = useSaving();
+        const { saveAndReboot } = useReboot();
 
         // Refs
         const eraseOpen = ref(false);
@@ -558,31 +569,44 @@ export default defineComponent({
             debugFieldsEnabled.value.splice(index, 1, value);
         }
 
-        async function saveSettings() {
+        function saveSettings() {
             if (!fcStore.blackbox?.supported) {
                 return;
             }
 
-            fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
-            fcStore.blackbox.blackboxPDenom = blackboxRate.value;
-            fcStore.blackbox.blackboxDevice = blackboxDevice.value;
+            return runSave(
+                async () => {
+                    fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
+                    fcStore.blackbox.blackboxPDenom = blackboxRate.value;
+                    fcStore.blackbox.blackboxDevice = blackboxDevice.value;
 
-            // Update disabled mask from checkboxes
-            let mask = 0;
-            debugFieldsEnabled.value.forEach((enabled, index) => {
-                if (!enabled) {
-                    mask |= 1 << index;
-                }
-            });
-            fcStore.blackbox.blackboxDisabledMask = mask;
+                    // Update disabled mask from checkboxes
+                    let mask = 0;
+                    debugFieldsEnabled.value.forEach((enabled, index) => {
+                        if (!enabled) {
+                            mask = bit_set(mask, index);
+                        }
+                    });
+                    fcStore.blackbox.blackboxDisabledMask = mask;
 
-            await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
+                    await MSP.promise(
+                        MSPCodes.MSP_SET_BLACKBOX_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG),
+                    );
 
-            fcStore.pidAdvancedConfig.debugMode = debugMode.value;
-            await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+                    fcStore.pidAdvancedConfig.debugMode = debugMode.value;
+                    await MSP.promise(
+                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
+                    );
 
-            mspHelper.writeConfiguration(true);
-            onboardLoggingBaseline.value = serializeOnboardLoggingState();
+                    await saveAndReboot();
+
+                    // Only after a successful persist: refresh the dirty baseline.
+                    onboardLoggingBaseline.value = serializeOnboardLoggingState();
+                },
+                { onError: (e) => console.error("Failed to save onboard logging settings", e) },
+            );
         }
 
         function askToEraseFlash() {
@@ -718,7 +742,23 @@ export default defineComponent({
 
                     showSavingDialog();
 
-                    function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
+                    function onChunkRead(chunkAddress, chunkDataView, bytesCompressed, error) {
+                        if (error) {
+                            if (error instanceof MspCancelledError) {
+                                dismissSavingDialog();
+                                FileSystem.closeFile(openedFile);
+                                return;
+                            }
+                            console.error("Error reading blackbox log:", error);
+                            gui_log(
+                                `<strong><span class="message-negative">${i18n.getMessage("error", {
+                                    errorMessage: error,
+                                })}</span></strong>`,
+                            );
+                            dismissSavingDialog();
+                            FileSystem.closeFile(openedFile);
+                            return;
+                        }
                         if (chunkDataView !== null) {
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
@@ -870,7 +910,7 @@ export default defineComponent({
                 if (showDebugFields.value) {
                     const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
                     debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
-                        return (disabledMask & (1 << index)) === 0;
+                        return !bit_check(disabledMask, index);
                     });
                 }
 
@@ -934,6 +974,7 @@ export default defineComponent({
             formatKilobytes,
             updateDebugField,
             saveSettings,
+            isSaving,
             dirty,
             askToEraseFlash,
             flashErase,
@@ -1081,21 +1122,6 @@ export default defineComponent({
     }
     .sdcard-free {
         direction: rtl;
-    }
-    progress {
-        &::-webkit-progress-bar {
-            background-color: var(--surface-500);
-        }
-        &::-webkit-progress-value {
-            background-color: var(--primary-500);
-            border-radius: 0 4px 4px 0;
-        }
-        border-radius: 4px;
-        overflow: hidden;
-        height: 24px;
-        display: block;
-        width: 100%;
-        margin: 1em 0;
     }
     dialog {
         width: 40em;

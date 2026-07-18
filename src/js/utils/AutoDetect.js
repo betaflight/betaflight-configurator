@@ -1,4 +1,4 @@
-import PortHandler from "../port_handler";
+import DeviceHandler from "../device_handler";
 import { gui_log } from "../gui_log";
 import { i18n } from "../localization";
 import MspHelper from "../msp/MSPHelper";
@@ -50,7 +50,7 @@ class AutoDetect {
     }
 
     canAttemptConnection() {
-        if (!PortHandler.portAvailable) {
+        if (!DeviceHandler.portAvailable) {
             gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
             return false;
         }
@@ -70,7 +70,7 @@ class AutoDetect {
     }
 
     async verifyBoard(onBoardDetected) {
-        const port = PortHandler.portPicker.selectedPort;
+        const port = DeviceHandler.devicePicker.selectedDevice;
         if (port.startsWith("virtual")) {
             return;
         }
@@ -93,7 +93,7 @@ class AutoDetect {
 
             console.log("Connecting to serial port", port);
             gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
-            result = await serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
+            result = await serial.connect(port, { baudRate: DeviceHandler.devicePicker.selectedBauds || 115200 });
         } catch (error) {
             console.error("Failed to connect:", error);
         } finally {

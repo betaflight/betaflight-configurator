@@ -77,15 +77,7 @@
                                 </div>
                                 <span class="range-value">{{ adjustment.range.end }}</span>
                             </div>
-                            <div class="pips-channel-range">
-                                <span
-                                    v-for="pip in pipValues"
-                                    :key="pip"
-                                    class="pip"
-                                    :style="{ left: channelPercent(pip) + '%' }"
-                                    >{{ pip }}</span
-                                >
-                            </div>
+                            <ChannelRangePips :pips="pipValues" />
                         </div>
 
                         <div class="adjustment-function" :data-label="$t('adjustmentsColumnThenApplyFunction')">
@@ -156,7 +148,12 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('adjustmentsSave')" :disabled="!hasChanges" @click="saveAdjustments" />
+            <UButton
+                :label="$t('adjustmentsSave')"
+                :disabled="!hasChanges"
+                :loading="isSaving"
+                @click="saveAdjustments"
+            />
         </div>
     </BaseTab>
 </template>
@@ -166,6 +163,7 @@ import { onMounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
+import ChannelRangePips from "@/components/elements/ChannelRangePips.vue";
 import GUI from "../../js/gui";
 import { useTranslation } from "i18next-vue";
 import { useAdjustmentsState } from "@/composables/adjustments/useAdjustmentsState";
@@ -174,7 +172,6 @@ import { useAdjustmentsSave } from "@/composables/adjustments/useAdjustmentsSave
 import { useAdjustmentsPolling } from "@/composables/adjustments/useAdjustmentsPolling";
 
 const { t } = useTranslation();
-
 const { adjustments, hasChanges, storeOriginals, showAllSlots, activeCount, visibleAdjustments } =
     useAdjustmentsState();
 const {
@@ -189,7 +186,7 @@ const {
     loadMSPData,
     initializeAdjustments,
 } = useAdjustmentsData(adjustments, t);
-const { saveAdjustments } = useAdjustmentsSave(adjustments, storeOriginals, t);
+const { saveAdjustments, isSaving } = useAdjustmentsSave(adjustments, storeOriginals);
 const { rcChannelData, startRcDataPolling } = useAdjustmentsPolling();
 
 onMounted(async () => {
@@ -307,20 +304,6 @@ onMounted(async () => {
     z-index: 3;
     pointer-events: none;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-}
-
-.pips-channel-range {
-    position: relative;
-    height: 20px;
-    margin-top: 4px;
-}
-
-.pip {
-    position: absolute;
-    transform: translateX(-50%);
-    font-size: 10px;
-    color: var(--text-tertiary);
-    white-space: nowrap;
 }
 
 .mode-badge {

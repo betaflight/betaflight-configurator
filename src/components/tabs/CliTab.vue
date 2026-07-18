@@ -29,6 +29,7 @@
                     v-model="cli.state.commandInput"
                     name="commands"
                     :placeholder="$t('cliInputPlaceholder')"
+                    :aria-label="$t('cliInputPlaceholder')"
                     rows="1"
                     cols="0"
                     class="w-full h-[22px] leading-5 pl-[5px] border border-(--surface-500) resize-none bg-(--surface-200) text-(--surface-900)"
@@ -41,7 +42,7 @@
         </div>
 
         <!-- Snippet preview dialog -->
-        <UModal v-model:open="snippetPreviewOpen" :ui="{ overlay: 'z-3000', content: 'w-[600px] z-3001' }">
+        <UModal v-model:open="snippetPreviewOpen" :ui="{ content: 'w-[600px]' }">
             <template #body>
                 <div class="note mb-3">
                     <p v-html="$t('cliConfirmSnippetNote')"></p>
@@ -49,6 +50,7 @@
                 <textarea
                     v-model="cli.state.snippetPreview"
                     rows="20"
+                    :aria-label="$t('cliSnippetPreviewLabel')"
                     class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px]"
                 ></textarea>
             </template>
@@ -65,7 +67,7 @@
             :title="$t('supportWarningDialogTitle')"
             :close="false"
             :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+            :ui="{ content: 'w-[400px]' }"
         >
             <template #body>
                 <div class="mb-3" v-html="$t('supportWarningDialogText')"></div>
@@ -73,6 +75,7 @@
                     v-model="cli.state.supportDialogInput"
                     name="supportWarningDialogInput"
                     :placeholder="$t('supportWarningDialogInputPlaceHolder')"
+                    :aria-label="$t('supportWarningDialogInputPlaceHolder')"
                     rows="3"
                     cols="0"
                     class="w-full mt-2 leading-5 p-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"

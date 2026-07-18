@@ -4,6 +4,7 @@ import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { useFlightControllerStore } from "../stores/fc";
 import { fitSphere, computeCoverage, computeDirectionalCoverage } from "../js/utils/sphereFit";
+import { bit_check } from "../js/bit";
 import { send as cliSend, isMspCliSupported } from "./useMspCliSession";
 
 const POLL_INTERVAL_MS = 100;
@@ -245,7 +246,7 @@ export function useMagCalibration() {
 
             // Poll MSP_STATUS_EX to track firmware calibration state
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, () => {
-                const flagSet = (fcStore.config.armingDisableFlags & (1 << ARMING_DISABLE_BIT_CALIBRATING)) !== 0;
+                const flagSet = bit_check(fcStore.config.armingDisableFlags, ARMING_DISABLE_BIT_CALIBRATING);
 
                 if (flagSet) {
                     firmwareFlagSeen = true;

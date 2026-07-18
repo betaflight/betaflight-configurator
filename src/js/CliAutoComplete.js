@@ -130,11 +130,12 @@ CliAutoComplete.builderParseLine = function (line) {
                 this.writeToOutput("Cancelled!<br># ");
                 this.cleanup();
             } else {
-                cache.settings.sort();
-                cache.commands.sort();
-                cache.feature.sort();
-                cache.beeper.sort();
-                cache.resources = Object.keys(cache.resourcesCount).sort();
+                const byLocale = (a, b) => a.localeCompare(b, window.navigator.language, { ignorePunctuation: true });
+                cache.settings.sort(byLocale);
+                cache.commands.sort(byLocale);
+                cache.feature.sort(byLocale);
+                cache.beeper.sort(byLocale);
+                cache.resources = Object.keys(cache.resourcesCount).sort(byLocale);
 
                 this.writeToOutput("Done!<br># ");
                 builder.state = "done";
