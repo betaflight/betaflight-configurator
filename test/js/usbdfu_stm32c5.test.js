@@ -89,10 +89,11 @@ class MockC5Transport extends EventTarget {
     }
 
     getFunctionalDescriptor() {
-        // Emulates reading it from the config blob: returns a real transfer size
-        // without hanging (the C5 standalone request would never resolve).
+        // Emulates reading it from the config blob: returns the real transfer size
+        // without hanging (the C5 standalone request would never resolve). Real C562
+        // hardware reports 1024, so exercise the non-default transfer-size path.
         this.getFunctionalDescriptorCalls++;
-        return Promise.resolve({ wTransferSize: 2048, bcdDFUVersion: 0x011a });
+        return Promise.resolve({ wTransferSize: 1024, bcdDFUVersion: 0x011a });
     }
 
     controlTransferOut(setup, data) {
@@ -281,6 +282,12 @@ describe("WebUsbDfuTransport.getFunctionalDescriptor", () => {
 
         // Must be the DFU functional descriptor's transfer size, not the HID descriptor's 0x2200.
         expect(descriptor.wTransferSize).toBe(1024);
+    });
+
+    it("rejects with a timeout error when a descriptor read never resolves", async () => {
+        const transport = new RealWebUsbDfuTransport();
+        const guarded = transport._withTimeout(new Promise(() => {}), 10, "slowOp");
+        await expect(guarded).rejects.toThrow(/timed out/);
     });
 
     it("rejects a truncated standalone functional-descriptor response instead of using it", async () => {

@@ -193,6 +193,11 @@ class WebUsbDfuTransport extends EventTarget {
                 timeoutMs,
             );
         });
+        // Promise.race already attaches a rejection reaction to `promise`, so a late USB
+        // rejection (after the timeout won) is technically "handled" and won't surface as an
+        // unhandledrejection. This explicit no-op catch documents that intent and keeps the
+        // guarantee independent of Promise.race internals.
+        promise.catch(() => {});
         return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
     }
 
