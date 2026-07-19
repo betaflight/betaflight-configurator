@@ -39,17 +39,21 @@
                                         >
                                             {{ $t("actionDownload") }}
                                         </UButton>
-                                        <UButton
-                                            v-if="isConnected"
-                                            size="xs"
-                                            variant="soft"
-                                            color="success"
-                                            icon="i-lucide-upload"
-                                            :disabled="isRestoreBusy"
-                                            @click="restoreBackup(row.original)"
-                                        >
-                                            {{ $t("actionRestore") }}
-                                        </UButton>
+                                        <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
+                                            <span>
+                                                <UButton
+                                                    size="xs"
+                                                    variant="soft"
+                                                    color="success"
+                                                    icon="i-lucide-upload"
+                                                    :disabled="!isConnected || isRestoreBusy"
+                                                    :class="{ 'pointer-events-none': !isConnected }"
+                                                    @click="restoreBackup(row.original)"
+                                                >
+                                                    {{ $t("actionRestore") }}
+                                                </UButton>
+                                            </span>
+                                        </UTooltip>
                                         <UButton
                                             size="xs"
                                             variant="soft"
@@ -99,12 +103,7 @@
             </Dialog>
 
             <!-- Restore progress dialog -->
-            <UModal
-                :open="restoreProgressOpen"
-                :close="false"
-                :dismissible="false"
-                :ui="{ content: 'w-[320px]' }"
-            >
+            <UModal :open="restoreProgressOpen" :close="false" :dismissible="false" :ui="{ content: 'w-[320px]' }">
                 <template #body>
                     <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
                     <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
@@ -152,11 +151,21 @@
         </div>
 
         <!-- Bottom toolbar -->
-        <div v-if="isConnected" class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
             <div class="flex-1"></div>
-            <UButton @click="createBackup" size="sm" icon="i-lucide-save">
-                {{ $t("actionBackup") }}
-            </UButton>
+            <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
+                <span>
+                    <UButton
+                        size="sm"
+                        icon="i-lucide-save"
+                        :disabled="!isConnected"
+                        :class="{ 'pointer-events-none': !isConnected }"
+                        @click="createBackup"
+                    >
+                        {{ $t("actionBackup") }}
+                    </UButton>
+                </span>
+            </UTooltip>
         </div>
     </BaseTab>
 </template>

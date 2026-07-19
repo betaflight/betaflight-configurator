@@ -166,7 +166,7 @@ class WebUsbDfuTransport extends EventTarget {
         }
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         if (!this.usbDevice) {
             return null;
         }

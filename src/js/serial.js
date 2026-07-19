@@ -60,7 +60,7 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        // Device-enumeration events come from EVERY transport — port_handler builds
+        // Device-enumeration events come from EVERY transport — device_handler builds
         // the combined device list from all of them.
         const deviceEvents = ["addedDevice", "removedDevice"];
         // Connection-lifecycle events must come ONLY from the active transport. A
@@ -250,10 +250,10 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Get the currently connected port
+     * Get the currently connected device
      */
-    getConnectedPort() {
-        return this._protocol?.getConnectedPort() || null;
+    getConnectedDevice() {
+        return this._protocol?.getConnectedDevice() || null;
     }
 
     /**

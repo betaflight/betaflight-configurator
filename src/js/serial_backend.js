@@ -9,7 +9,7 @@ import FC from "./fc";
 import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
-import PortHandler from "./port_handler";
+import DeviceHandler from "./device_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit.js";
 import { have_sensor } from "./sensor_helpers";
@@ -30,6 +30,7 @@ import { unmountVueTab } from "./vue_tab_mounter";
 import { switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
+import { isMspCancelled } from "./msp/mspErrors.js";
 
 const logHead = "[SERIAL-BACKEND]";
 
@@ -99,7 +100,7 @@ export function isDrivenRebootTarget(port) {
  * @returns {number} window in milliseconds
  */
 function rebootConnectWindowMs() {
-    return isDrivenRebootTarget(PortHandler.portPicker.selectedPort)
+    return isDrivenRebootTarget(DeviceHandler.devicePicker.selectedDevice)
         ? REBOOT_CONNECT_MAX_TIME_DRIVEN_MS
         : REBOOT_CONNECT_MAX_TIME_MS;
 }
@@ -138,12 +139,12 @@ export function initializeSerialBackend() {
     // EventBus indirection (a workaround for gui.js not being able to import this
     // module) is gone — gui.js no longer owns any connection action.
 
-    EventBus.$on("port-handler:auto-select-serial-device", function () {
+    EventBus.$on("device-handler:auto-select-serial-device", function () {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
             !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
-            PortHandler.portPicker.autoConnect &&
+            DeviceHandler.devicePicker.autoConnect &&
             !isCliOnlyMode() &&
             (connectionTimestamp === null || connectionTimestamp > 0)
         ) {
@@ -166,7 +167,7 @@ export function initializeSerialBackend() {
         }
     });
 
-    PortHandler.initialize();
+    DeviceHandler.initialize();
     PortUsage.initialize();
 
     // On page unload (refresh / tab close) close the serial port so the FC
@@ -333,11 +334,11 @@ export function disconnect() {
     beginDisconnect();
 }
 
-function canStartConnectionAction(selectedPort) {
-    return !GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb");
+function canStartConnectionAction(selectedDevice) {
+    return !GUI.connect_lock && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb");
 }
 
-function beginConnect(selectedPort) {
+function beginConnect(selectedDevice) {
     // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
     // may never dispatch the "disconnect" event that would otherwise consume the flag, so
@@ -345,17 +346,17 @@ function beginConnect(selectedPort) {
     getConnectionState().clearIntentionalDisconnect();
 
     // prevent connection when we do not have permission
-    if (selectedPort.startsWith("requestpermission")) {
+    if (selectedDevice.startsWith("requestpermission")) {
         return;
     }
 
-    const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
+    const deviceName = selectedDevice === "manual" ? DeviceHandler.devicePicker.portOverride : selectedDevice;
 
-    console.log(`${logHead} Connecting to: ${portName}`);
-    GUI.connecting_to = portName;
+    console.log(`${logHead} Connecting to: ${deviceName}`);
+    GUI.connecting_to = deviceName;
 
     // lock port select & baud while we are connecting / connected
-    PortHandler.portPickerDisabled = true;
+    DeviceHandler.devicePickerDisabled = true;
 
     // Safety net for the pre-open phase: some protocols (e.g. a ws:// endpoint that errors
     // before onopen) never emit a "connect" event, so onOpen never runs to clear connecting_to
@@ -373,7 +374,7 @@ function beginConnect(selectedPort) {
     );
 
     // Set up event listeners for non-virtual connections
-    if (selectedPort !== "virtual") {
+    if (selectedDevice !== "virtual") {
         serial.removeEventListener("connect", connectHandler);
         serial.addEventListener("connect", connectHandler);
 
@@ -391,9 +392,9 @@ function beginConnect(selectedPort) {
     }
 
     serial.connect(
-        portName,
-        { baudRate: PortHandler.portPicker.selectedBauds },
-        selectedPort === "virtual" ? onOpenVirtual : undefined,
+        deviceName,
+        { baudRate: DeviceHandler.devicePicker.selectedBauds },
+        selectedDevice === "virtual" ? onOpenVirtual : undefined,
     );
     console.log("Press Ctrl+I to open CLI panel");
 }
@@ -433,11 +434,11 @@ export function connectDisconnect() {
     if (isConnected()) {
         beginDisconnect();
     } else {
-        const selectedPort = PortHandler.portPicker.selectedPort;
-        if (!canStartConnectionAction(selectedPort)) {
+        const selectedDevice = DeviceHandler.devicePicker.selectedDevice;
+        if (!canStartConnectionAction(selectedDevice)) {
             return;
         }
-        beginConnect(selectedPort);
+        beginConnect(selectedDevice);
     }
 
     registerCliHotkey();
@@ -479,7 +480,7 @@ function defaultDisplayForTag(tag) {
 // (finishClose) and the unexpected disconnect (finishUnexpectedDisconnect) paths so the
 // two cannot drift. Deliberately scoped to the steps finishClose adds on top of
 // resetConnection() — it must NOT repeat resetConnection's work (listeners,
-// connectionValid/cli flags, live-data timer, portPickerDisabled).
+// connectionValid/cli flags, live-data timer, devicePickerDisabled).
 function teardownConnectionUi() {
     MSP.disconnect_cleanup();
     PortUsage.reset();
@@ -531,7 +532,7 @@ function finishClose(finishedCallback) {
     document.getElementById("dialogReportProblems-closebtn")?.click();
 
     // unlock port select & baud
-    PortHandler.portPickerDisabled = false;
+    DeviceHandler.devicePickerDisabled = false;
 
     if (wasConnected) {
         // close cliPanel if left open; dismiss Pinia dialogs (e.g. InteractiveDialog, or
@@ -642,7 +643,7 @@ function resetConnection() {
 
     MSP.clearListeners();
 
-    if (PortHandler.portPicker.selectedPort !== "virtual") {
+    if (DeviceHandler.devicePicker.selectedDevice !== "virtual") {
         serial.removeEventListener("receive", read_serial_adapter);
         serial.removeEventListener("connect", connectHandler);
         serial.removeEventListener("disconnect", disconnectHandler);
@@ -657,7 +658,7 @@ function resetConnection() {
     CONFIGURATOR.cliActive = false;
 
     // unlock port select & baud
-    PortHandler.portPickerDisabled = false;
+    DeviceHandler.devicePickerDisabled = false;
 }
 
 function abortConnection(messageKey) {
@@ -672,7 +673,7 @@ function abortConnection(messageKey) {
     const state = getConnectionState();
     const duringRebootReconnect =
         (state.isRebootReconnecting || (state.isRebootWindowOpen && !state.rebootWindowExpired)) &&
-        PortHandler.portPicker.autoConnect;
+        DeviceHandler.devicePicker.autoConnect;
 
     // Default message reflects how far the attempt got: a port that already opened but failed
     // the handshake (e.g. invalid API version) did not "fail to open".
@@ -758,7 +759,7 @@ function onOpen(openInfo) {
         // the bounded "connecting" timeout below dispatches FAIL on a stall.
         getConnectionState().setPhase(ConnPhase.HANDSHAKING);
 
-        gui_log(i18n.getMessage("serialPortOpened", [PortHandler.portPicker.selectedPort]));
+        gui_log(i18n.getMessage("serialPortOpened", [DeviceHandler.devicePicker.selectedDevice]));
 
         // reset expert mode
         applyExpertMode(Boolean(getConfig("expertMode")?.expertMode), { persist: false });
@@ -830,7 +831,7 @@ function onOpenVirtual() {
 
     CONFIGURATOR.connectionValid = true;
     CONFIGURATOR.virtualMode = true;
-    CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
+    CONFIGURATOR.virtualApiVersion = DeviceHandler.devicePicker.virtualMspVersion;
 
     getConnectionState().setLinkOpen(true);
 
@@ -1113,7 +1114,7 @@ function updateTabVisibility() {
 // Initialize feature-related UI and fetch configs from the flight controller
 function initFeaturesOnConnect() {
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== "virtual") {
+        if (!CONFIGURATOR.virtualMode && DeviceHandler.devicePicker.selectedDevice !== "virtual") {
             FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
             FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
             FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
@@ -1197,38 +1198,52 @@ export function read_serial(info) {
     }
 }
 
+// Request one live-data value. Returns false when the poll cycle should stop because the
+// MSP queue was cleared out from under us — a tab switch (tab_switch_cleanup) or a
+// disconnect settles the in-flight request with MspCancelledError. That is an expected
+// lifecycle event for a background poller that outlives any single tab, so it is swallowed
+// silently; genuine failures (timeout, CRC) are still logged and the cycle continues.
+async function requestLiveData(code, name) {
+    try {
+        await MSP.promise(code);
+        return true;
+    } catch (error) {
+        if (isMspCancelled(error)) {
+            return false;
+        }
+        console.error(`Failed to request ${name}:`, error);
+        return true;
+    }
+}
+
 export async function update_sensor_status() {
-    try {
-        await MSP.promise(MSPCodes.MSP_ANALOG);
-    } catch (error) {
-        console.error("Failed to request MSP_ANALOG:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_ANALOG, "MSP_ANALOG"))) {
+        return;
     }
-    try {
-        await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
-    } catch (error) {
-        console.error("Failed to request MSP_BATTERY_STATE:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_BATTERY_STATE, "MSP_BATTERY_STATE"))) {
+        return;
     }
-    try {
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-    } catch (error) {
-        console.error("Failed to request MSP_BOXNAMES:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_BOXNAMES, "MSP_BOXNAMES"))) {
+        return;
     }
-    try {
-        await MSP.promise(MSPCodes.MSP_STATUS_EX);
-    } catch (error) {
-        console.error("Failed to request MSP_STATUS_EX:", error);
+    if (!(await requestLiveData(MSPCodes.MSP_STATUS_EX, "MSP_STATUS_EX"))) {
+        return;
     }
 
     if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
-        try {
-            await MSP.promise(MSPCodes.MSP_RAW_GPS);
-        } catch (error) {
-            console.error("Failed to request MSP_RAW_GPS:", error);
-        }
+        await requestLiveData(MSPCodes.MSP_RAW_GPS, "MSP_RAW_GPS");
     }
 }
 
 async function update_live_status() {
+    // Don't poll while a tab switch is tearing down the old tab and mounting the new one:
+    // tab_switch_cleanup() clears the MSP queue, so a poll issued now would just be cancelled.
+    // Skipping keeps the background poller from firing requests straight into that cleanup;
+    // the interval resumes normally on the next tick once the switch has settled.
+    if (GUI.tab_switch_in_progress) {
+        return;
+    }
+
     // Check if live data is paused via Pinia store
     const connectionStore = useConnectionStore();
     if (connectionStore.liveDataPaused) {
@@ -1262,7 +1277,7 @@ export function reinitializeConnection(suppressDialog = false) {
 
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
-        if (PortHandler.portPicker.autoConnect) {
+        if (DeviceHandler.devicePicker.autoConnect) {
             setTimeout(function () {
                 connectDisconnect();
             }, 500);
@@ -1273,7 +1288,7 @@ export function reinitializeConnection(suppressDialog = false) {
         return rebootTimestamp;
     }
 
-    const currentPort = PortHandler.portPicker.selectedPort;
+    const currentPort = DeviceHandler.devicePicker.selectedDevice;
 
     // requestReboot() above put the connection state into REBOOTING, so
     // selectActivePort() reports isReconnecting and keeps the current selection
@@ -1350,9 +1365,9 @@ function rebootReconnect() {
         // open (softResetForReboot) so the retry rides it, avoiding the deaf-session reconnect
         // on Linux/BlueZ. Otherwise drop the transport for real.
         if (isConnected()) {
-            const target = PortHandler.portPicker.selectedPort;
+            const target = DeviceHandler.devicePicker.selectedDevice;
             const keepBleLink =
-                typeof target === "string" && target.startsWith("bluetooth") && PortHandler.portPicker.autoConnect;
+                typeof target === "string" && target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
             if (keepBleLink) {
                 softResetForReboot();
             } else {
@@ -1363,7 +1378,7 @@ function rebootReconnect() {
         // Honor Auto-Connect — read it live (not snapshotted at reboot start) so toggling it off
         // during the reboot window takes effect. When off, stay on the landing tab and let the
         // user reconnect manually (the reboot dialog closes via its no-reconnect check).
-        if (!PortHandler.portPicker.autoConnect) {
+        if (!DeviceHandler.devicePicker.autoConnect) {
             rebootReconnectTimerId = false;
             // No automatic reconnect will run, so end the reconnect-in-progress window
             // (concludeReboot settles to IDLE) and let normal selection resume.
@@ -1386,7 +1401,7 @@ function rebootReconnect() {
             // not-expired, so a live loop must treat "no longer open" as a stop too.
             const state = getConnectionState();
             const timedOut = state.rebootWindowExpired || !state.isRebootWindowOpen;
-            if (CONFIGURATOR.connectionValid || timedOut || !PortHandler.portPicker.autoConnect) {
+            if (CONFIGURATOR.connectionValid || timedOut || !DeviceHandler.devicePicker.autoConnect) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or auto-connect off):
                 // concludeReboot settles to IDLE so normal selection resumes. A kept BLE
@@ -1454,7 +1469,7 @@ function showRebootDialog() {
     // Check for successful connection every 100ms with a timeout
     rebootDialogCheckTimerId = setInterval(() => {
         const connectionCheckTimeoutReached = Date.now() - windowStartedAt > windowMs;
-        const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
+        const noSerialReconnect = !DeviceHandler.devicePicker.autoConnect && DeviceHandler.portAvailable;
 
         if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
             clearInterval(rebootDialogCheckTimerId);

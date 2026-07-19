@@ -10,7 +10,7 @@ vi.mock("../../src/js/gui", () => ({ default: { connecting_to: false, connected_
 vi.mock("../../src/js/data_storage", () => ({
     default: { connectionValid: false, virtualMode: false, cliActive: false, cliValid: false },
 }));
-vi.mock("../../src/js/port_handler", () => ({ default: { portPicker: { selectedPort: "noselection" } } }));
+vi.mock("../../src/js/device_handler", () => ({ default: { devicePicker: { selectedDevice: "noselection" } } }));
 vi.mock("../../src/js/msp", () => ({ default: { callbacks_cleanup: () => {} } }));
 
 import { useConnectionStore } from "../../src/stores/connection.js";

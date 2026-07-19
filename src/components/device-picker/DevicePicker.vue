@@ -1,16 +1,19 @@
 <template>
-    <div class="web-port-picker" :class="{ 'virtual-layout': modelValue.selectedPort === 'virtual' && !isConnected }">
+    <div
+        class="web-device-picker"
+        :class="{ 'virtual-layout': modelValue.selectedDevice === 'virtual' && !isConnected }"
+    >
         <PortOverrideOption
-            v-if="modelValue.selectedPort === 'manual'"
+            v-if="modelValue.selectedDevice === 'manual'"
             :model-value="modelValue.portOverride"
             @update:modelValue="updateModelValue('portOverride', $event)"
         />
         <FirmwareVirtualOption
-            v-if="modelValue.selectedPort === 'virtual' && !isConnected"
+            v-if="modelValue.selectedDevice === 'virtual' && !isConnected"
             :model-value="modelValue.virtualMspVersion"
             @update:modelValue="updateModelValue('virtualMspVersion', $event)"
         />
-        <PortsInput
+        <DevicesInput
             :model-value="modelValue"
             :connected-bluetooth-devices="connectedBluetoothDevices"
             :connected-serial-devices="connectedSerialDevices"
@@ -30,14 +33,14 @@
 import { defineComponent, computed } from "vue";
 import PortOverrideOption from "./PortOverrideOption.vue";
 import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
-import PortsInput from "./PortsInput.vue";
+import DevicesInput from "./DevicesInput.vue";
 import { useConnectionStore } from "../../stores/connection";
 
 export default defineComponent({
     components: {
         PortOverrideOption,
         FirmwareVirtualOption,
-        PortsInput,
+        DevicesInput,
     },
 
     props: {
@@ -93,7 +96,7 @@ export default defineComponent({
             if (key) {
                 emit("update:modelValue", { ...props.modelValue, [key]: value });
             } else {
-                emit("update:modelValue", value); // Para el caso de PortsInput
+                emit("update:modelValue", value); // Para el caso de DevicesInput
             }
         };
 
@@ -106,7 +109,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.web-port-picker {
+.web-device-picker {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

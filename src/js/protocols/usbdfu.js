@@ -109,10 +109,10 @@ export class UsbDfuProtocol extends EventTarget {
         });
     }
 
-    // Backward-compatible getter: port_handler.js checks WEBUSBDFU.usbDevice
+    // Backward-compatible getter: device_handler.js checks WEBUSBDFU.usbDevice
     // to determine if a DFU device is currently connected.
     get usbDevice() {
-        return this.transport.getConnectedPort() ? true : null;
+        return this.transport.getConnectedDevice() ? true : null;
     }
 
     getDevices() {
@@ -144,8 +144,8 @@ export class UsbDfuProtocol extends EventTarget {
         throw new DFUAuthRequiredError();
     }
 
-    getConnectedPort() {
-        return this.transport.getConnectedPort();
+    getConnectedDevice() {
+        return this.transport.getConnectedDevice();
     }
 
     async connect(devicePath, hex, options, callback) {

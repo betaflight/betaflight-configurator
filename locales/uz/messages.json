@@ -1,7 +1,4 @@
 {
-    "translation_version": {
-        "message": "0"
-    },
     "yes": {
         "message": "Ha",
         "description": "General Yes message to be used across the application"
@@ -105,10 +102,6 @@
     "portsSelectPermissionDFU": {
         "message": "--- DFU qurilmamni topa olmayapman ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
-    },
-    "portsEepromSaved": {
-        "message": "$t(eeprom_saved_ok.message)",
-        "description": "Don't translate!!!"
     },
     "bluetoothConnected": {
         "message": "Bluetooth qurilmasiga ulandi: $1"
@@ -250,90 +243,6 @@
     },
     "language_default": {
         "message": "Tizim standarti"
-    },
-    "language_DEFAULT": {
-        "message": "$t(language_default.message)",
-        "description": "Don't translate!!!"
-    },
-    "language_ca": {
-        "message": "Català",
-        "description": "Don't translate!!!"
-    },
-    "language_da": {
-        "message": "Dansk",
-        "description": "Don't translate!!!"
-    },
-    "language_de": {
-        "message": "Deutsch",
-        "description": "Don't translate!!!"
-    },
-    "language_en": {
-        "message": "English",
-        "description": "Don't translate!!!"
-    },
-    "language_es": {
-        "message": "Español",
-        "description": "Don't translate!!!"
-    },
-    "language_eu": {
-        "message": "Euskera",
-        "description": "Don't translate!!!"
-    },
-    "language_fr": {
-        "message": "Français",
-        "description": "Don't translate!!!"
-    },
-    "language_gl": {
-        "message": "Galego",
-        "description": "Don't translate!!!"
-    },
-    "language_it": {
-        "message": "Italiano",
-        "description": "Don't translate!!!"
-    },
-    "language_ja": {
-        "message": "日本語",
-        "description": "Don't translate!!!"
-    },
-    "language_ka": {
-        "message": "ქართული",
-        "description": "Don't translate!!!"
-    },
-    "language_ko": {
-        "message": "한국어",
-        "description": "Don't translate!!!"
-    },
-    "language_nl": {
-        "message": "Nederlands",
-        "description": "Don't translate!!!"
-    },
-    "language_pt": {
-        "message": "Português",
-        "description": "Don't translate!!!"
-    },
-    "language_pt_BR": {
-        "message": "Português Brasileiro",
-        "description": "Don't translate!!!"
-    },
-    "language_pl": {
-        "message": "Polski",
-        "description": "Don't translate!!!"
-    },
-    "language_ru": {
-        "message": "Русский",
-        "description": "Don't translate!!!"
-    },
-    "language_uk": {
-        "message": "Українська",
-        "description": "Don't translate!!!"
-    },
-    "language_zh_CN": {
-        "message": "简体中文",
-        "description": "Don't translate!!!"
-    },
-    "language_zh_TW": {
-        "message": "繁體中文",
-        "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
         "message": "Dataflash <br>chipi topilmadi",
@@ -1570,10 +1479,6 @@
     "initialSetupSettingsRestored": {
         "message": "Sozlamalar <strong>standart<\/strong>ga qaytarildi"
     },
-    "initialSetupEepromSaved": {
-        "message": "$t(eeprom_saved_ok.message)",
-        "description": "Don't translate!!!"
-    },
     "initialSetupNetworkInfo": {
         "message": "Tarmoq ma'lumoti"
     },
@@ -1696,10 +1601,6 @@
     "featureAIRMODE": {
         "message": "Airmode'ni doimiy yoqish"
     },
-    "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
-        "description": "Don't translate!!!"
-    },
     "featureRX_SPI": {
         "message": "SPI Rx (masalan, o'rnatilgan Rx)"
     },
@@ -1794,10 +1695,6 @@
     },
     "configurationOpticalflowHelp": {
         "message": "Optik oqim sensorini yoqing"
-    },
-    "configurationOpticalflowType": {
-        "message": "$t(configurationRangefinderType.message)",
-        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Plata yo'nalishi"
@@ -1930,42 +1827,6 @@
     },
     "boardAlignmentWizard-Confirmed": {
         "message": "Yozib olindi!"
-    },
-    "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyro1AlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyro1AlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyro1AlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyro2AlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyro2AlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)",
-        "description": "Don't translate!!!"
-    },
-    "configurationGyro2AlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)",
-        "description": "Don't translate!!!"
     },
     "configurationSensorGyroToUse": {
         "message": "GIRO\/TEZL"
@@ -2118,9 +1979,6 @@
     "beeperREADY_BEEP": {
         "message": "GPS qulflanganda va tayyor bo'lganda ohang chalinadi"
     },
-    "beeperMULTI_BEEPS": {
-        "message": ""
-    },
     "beeperDISARM_REPEAT": {
         "message": "Dasta disarm holatida ushlab turilganda signallar chalinadi"
     },
@@ -2245,10 +2103,6 @@
     },
     "configurationSaved": {
         "message": "Konfiguratsiya saqlandi"
-    },
-    "configurationEepromSaved": {
-        "message": "$t(eeprom_saved_ok.message)",
-        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Saqlash va qayta yuklash"
@@ -2799,10 +2653,6 @@
     "pidTuningDataRefreshed": {
         "message": "PID ma'lumotlari <strong>yangilandi<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "$t(eeprom_saved_ok.message)",
-        "description": "Don't translate!!!"
-    },
     "tuningHelp": {
         "message": "<b>Sozlash maslahatlari<\/b><br \/><span class=\"message-negative\">MUHIM:<\/span> Birinchi parvozlarda motor haroratini tekshirish muhim. Filtr qiymati qanchalik yuqori bo'lsa, u shunchalik yaxshi uchishi mumkin, lekin motorlarga ko'proq shovqin ham tushadi. <br>100Hz standart qiymati optimal, lekin shovqinliroq qurilmalar uchun Dterm filtrini 50Hz'ga va ehtimol giro filtrini ham pasaytirib ko'rishingiz mumkin."
     },
@@ -2947,10 +2797,6 @@
     },
     "receiverDataRefreshed": {
         "message": "RC sozlash ma'lumotlari <strong>yangilandi<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "$t(eeprom_saved_ok.message)",
-        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Ko'rinish"
@@ -3381,10 +3227,6 @@
     "adjustmentsSave": {
         "message": "Saqlash"
     },
-    "adjustmentsEepromSaved": {
-        "message": "$t(eeprom_saved_ok.message)",
-        "description": "Don't translate!!!"
-    },
     "adjustmentsShowAll": {
         "message": "Barcha slotlarni ko'rsatish"
     },
@@ -3439,10 +3281,6 @@
     },
     "servosReverse": {
         "message": "Teskari"
-    },
-    "servosEepromSave": {
-        "message": "$t(eeprom_saved_ok.message)",
-        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "Umumiy"
@@ -3874,10 +3712,6 @@
     },
     "motorsResetMaximum": {
         "message": "Maksimal vaqtni qayta tiklash"
-    },
-    "motorsSensorGyroSelect": {
-        "message": "$t(sensorStatusGyroShort.message)",
-        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "aksel"
@@ -5590,10 +5424,6 @@
     "pidTuningItermRelaxType": {
         "message": "Turi",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "$t(sensorStatusGyroShort.message)",
-        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -8984,10 +8814,6 @@
     "osdTextElementLidar": {
         "message": "Ultratovush",
         "description": "Displays distance from sonar sensor in cm"
-    },
-    "osdDescElementLidar": {
-        "message": "$t(osdTextElementLidar.message)",
-        "description": "Don't translate!!!"
     },
     "osdTextElementCustomSerialText": {
         "message": "Maxsus serial matn",

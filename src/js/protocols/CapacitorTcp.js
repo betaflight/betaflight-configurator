@@ -65,7 +65,7 @@ class CapacitorTcp extends EventTarget {
         };
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return {
             path: this.address,
             displayName: `Betaflight TCP`,

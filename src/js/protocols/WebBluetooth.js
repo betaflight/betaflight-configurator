@@ -92,7 +92,7 @@ class WebBluetooth extends EventTarget {
         this.disconnect();
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return this.device;
     }
 
