@@ -1,0 +1,43 @@
+/* Reordered to match the order on https://fonts.google.com/specimen/Open+Sans */
+/* Also left a comment for each style not included */
+@font-face {
+    font-family: "Open Sans";
+    src: url("opensans-light-webfont.woff2") format("woff2"), url("opensans-light-webfont.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+}
+/* Light Italic? */
+@font-face {
+    font-family: "Open Sans";
+    src: url("opensans-regular-webfont.woff2") format("woff2"), url("opensans-regular-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Open Sans";
+    src: url("opensans-italic-webfont.woff2") format("woff2"), url("opensans-italic-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Open Sans";
+    src: url("opensans-semibold-webfont.woff2") format("woff2"), url("opensans-semibold-webfont.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+}
+/* Semi-Bold Italic */
+@font-face {
+    font-family: "Open Sans";
+    src: url("opensans-bold-webfont.woff2") format("woff2"), url("opensans-bold-webfont.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Open Sans";
+    src: url("opensans-bolditalic-webfont.woff2") format("woff2"),
+        url("opensans-bolditalic-webfont.woff") format("woff");
+    font-weight: bold;
+    font-style: italic;
+}
+/* Extra-Bold */
+/* Extra-Bold Italic */
