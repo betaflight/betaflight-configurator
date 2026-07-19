@@ -71,6 +71,7 @@ CliAutoComplete._builderWatchdogTouch = function () {
                 EventBus.$emit("autocomplete:build:stop");
             } else {
                 // give it one more try
+                self.builder.numFails++;
                 self.builder.state = "reset";
                 self.builderStart();
             }
