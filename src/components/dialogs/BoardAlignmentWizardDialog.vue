@@ -162,15 +162,15 @@
                                 <dd>{{ liveAttitude.yaw }}</dd>
                             </dl>
                         </div>
-                        <UButton
-                            v-if="phase === 'test'"
-                            class="yaw-reset-btn"
-                            :label="yawResetLabel"
-                            color="neutral"
-                            variant="subtle"
-                            size="xs"
-                            @click="resetYaw"
-                        />
+                        <div v-if="phase === 'test'" class="yaw-reset-btn">
+                            <UButton
+                                :label="yawResetLabel"
+                                color="neutral"
+                                variant="subtle"
+                                size="xs"
+                                @click="resetYaw"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1259,5 +1259,6 @@ defineExpose({ show, close });
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
+    z-index: 10;
 }
 </style>
