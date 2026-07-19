@@ -38,6 +38,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { i18n } from "../../js/localization";
 
 const FIRMWARE_VERSIONS = [
+    { value: "1.49.0", label: "MSP: 1.49 | ADRC (experimental, betaflight-adrc fork only)" },
     { value: "1.48.0", label: "MSP: 1.48 | Firmware: 2026.06.*" },
     { value: "1.47.0", label: "MSP: 1.47 | Firmware: 2025.12.*" },
     { value: "1.46.0", label: "MSP: 1.46 | Firmware: 4.5.*" },
