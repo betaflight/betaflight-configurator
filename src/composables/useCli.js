@@ -153,8 +153,14 @@ export function useCli() {
     let scrollNearBottomPx = 40; // fallback; updated dynamically via ResizeObserver
     let cliResizeObserver = null;
 
-    const MAX_OUTPUT_NODES = 4000; // ~4 nodes/line → ≈1000 rendered lines max
-    const PRUNE_TO_NODES = 2500;
+    // Cap DOM growth over long sessions, but keep enough visible scrollback to
+    // review a full `diff` + `dump` in one session. Each line is a few DOM nodes
+    // (highlight spans + <br>), so these caps hold several thousand lines — the
+    // old 4000-node cap (≈1000 lines) silently dropped the earliest output as
+    // soon as a dump exceeded it (#5285). The complete text is always kept in
+    // `outputHistory` for copy/save, independent of this DOM pruning.
+    const MAX_OUTPUT_NODES = 24000; // ≈6000 lines before a prune is triggered
+    const PRUNE_TO_NODES = 16000; // ≈4000 lines kept after a prune
 
     let outputBuffer = "";
     let outputFlushRaf = null;
