@@ -76,6 +76,7 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { i18n } from "@/js/localization";
+import { useReboot } from "@/composables/useReboot";
 
 const props = defineProps({
     droneConfiguration: {
@@ -95,6 +96,7 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 const fcStore = useFlightControllerStore();
+const { saveAndReboot } = useReboot();
 const dialogRef = ref(null);
 const canvasRef = ref(null);
 
@@ -278,7 +280,7 @@ const save = () => {
         MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING,
         mspHelper.crunch(MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING),
         false,
-        () => mspHelper.writeConfiguration(true),
+        () => saveAndReboot(),
     );
 
     close();

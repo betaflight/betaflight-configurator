@@ -67,6 +67,10 @@ jobs:
   deploy:
     name: Deploy
     needs: [build, prepare_branch]
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
     uses: ./.github/workflows/deploy_cloudflare.yml
     with:
       branch_name: ${{ needs.prepare_branch.outputs.branch_name }}

@@ -1,4 +1,4 @@
-import { reactive, ref, computed, toRaw, onScopeDispose } from "vue";
+import { reactive, ref, computed, toRaw } from "vue";
 import djv from "djv";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
@@ -10,6 +10,7 @@ import { VtxDeviceTypes } from "../js/utils/VtxDeviceStatus/VtxDeviceStatus";
 import { generateFilename } from "../js/utils/generate_filename";
 import { gui_log } from "../js/gui_log";
 import FileSystem from "../js/FileSystem";
+import { useReboot } from "./useReboot";
 
 const MAX_POWERLEVEL_VALUES = 8;
 const MAX_BAND_VALUES = 8;
@@ -87,9 +88,9 @@ function buildPowerOptionsFromTable(powerLevelList, count) {
 }
 
 function sendMspPromise(code, buffer = false) {
-    return new Promise((resolve) => {
-        MSP.send_message(code, buffer, false, resolve);
-    });
+    // Error-aware: a tab switch / disconnect that clears the MSP queue rejects with
+    // MspCancelledError instead of dropping the callback and hanging.
+    return MSP.promise(code, buffer);
 }
 
 function buildPowerOptionsFromRange(range) {
@@ -141,10 +142,6 @@ export function useVtx() {
     // Device status
     const deviceReady = ref(false);
     const vtxTypeString = ref("");
-
-    // Save button state
-    const saveButtonText = ref("");
-    const saving = ref(false);
 
     // Dirty tracking
     const configSnapshot = ref("");
@@ -285,7 +282,7 @@ export function useVtx() {
         return serializeState() !== configSnapshot.value;
     });
 
-    const saveButtonDisabled = computed(() => saving.value || !configDirty.value);
+    const saveButtonDisabled = computed(() => !configDirty.value);
 
     // --- State sync helpers ---
 
@@ -372,92 +369,35 @@ export function useVtx() {
     }
 
     // --- Save ---
-
-    function saveVtx() {
-        if (updating.value) {
-            return;
-        }
-        updating.value = true;
+    // Error/cancellation handling and the isSaving state are owned by the caller's runSave()
+    // (useSaving); this only marshals data and issues the MSP writes. Persist is EEPROM-only
+    // (no reboot), matching the previous writeConfiguration(false) behavior. The exact set and
+    // order of MSP_SET_VTX* writes is preserved: VTX config, then each power level, then each band.
+    async function saveVtx() {
+        const { saveToEeprom } = useReboot();
 
         syncStateToFC();
 
+        await MSP.promise(MSPCodes.MSP_SET_VTX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VTX_CONFIG));
+
+        for (let index = 0; index < FC.VTX_CONFIG.vtx_table_powerlevels; index++) {
+            FC.VTXTABLE_POWERLEVEL = { ...powerLevelList[index] };
+            await MSP.promise(
+                MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL,
+                mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL),
+            );
+        }
+
+        for (let index = 0; index < FC.VTX_CONFIG.vtx_table_bands; index++) {
+            FC.VTXTABLE_BAND = { ...bandList[index] };
+            await MSP.promise(MSPCodes.MSP_SET_VTXTABLE_BAND, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_BAND));
+        }
+
+        await saveToEeprom();
+
+        // Only after a successful persist: record analytics and clear the verify-table warning.
         tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, toRaw(analyticsChanges), "vtx");
-
-        saveVtxConfig();
-    }
-
-    function saveVtxConfig() {
-        MSP.send_message(MSPCodes.MSP_SET_VTX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VTX_CONFIG), false, () =>
-            saveVtxPowerLevels(0),
-        );
-    }
-
-    function saveVtxPowerLevels(index) {
-        if (index >= FC.VTX_CONFIG.vtx_table_powerlevels) {
-            saveVtxBands(0);
-            return;
-        }
-        FC.VTXTABLE_POWERLEVEL = { ...powerLevelList[index] };
-        MSP.send_message(
-            MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL,
-            mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL),
-            false,
-            () => saveVtxPowerLevels(index + 1),
-        );
-    }
-
-    function saveVtxBands(index) {
-        if (index >= FC.VTX_CONFIG.vtx_table_bands) {
-            saveToEeprom();
-            return;
-        }
-        FC.VTXTABLE_BAND = { ...bandList[index] };
-        MSP.send_message(MSPCodes.MSP_SET_VTXTABLE_BAND, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_BAND), false, () =>
-            saveVtxBands(index + 1),
-        );
-    }
-
-    function saveToEeprom() {
-        mspHelper.writeConfiguration(false, onSaveComplete);
-    }
-
-    let saveCompleteTimeout = null;
-    let saveCompleteReloadTimeout = null;
-
-    function clearSaveCompleteTimeouts() {
-        if (saveCompleteTimeout !== null) {
-            clearTimeout(saveCompleteTimeout);
-            saveCompleteTimeout = null;
-        }
-        if (saveCompleteReloadTimeout !== null) {
-            clearTimeout(saveCompleteReloadTimeout);
-            saveCompleteReloadTimeout = null;
-        }
-    }
-
-    onScopeDispose(clearSaveCompleteTimeouts);
-
-    function onSaveComplete() {
         savePending.value = false;
-
-        saveButtonText.value = i18n.getMessage("buttonSaving");
-        saving.value = true;
-
-        clearSaveCompleteTimeouts();
-
-        const buttonDelay = 1500;
-
-        saveCompleteTimeout = setTimeout(() => {
-            saveCompleteTimeout = null;
-            saveButtonText.value = i18n.getMessage("buttonSaved");
-
-            saveCompleteReloadTimeout = setTimeout(async () => {
-                saveCompleteReloadTimeout = null;
-                await loadVtxConfig();
-                saveButtonText.value = "";
-                saving.value = false;
-            }, buttonDelay);
-        }, buttonDelay);
     }
 
     // --- JSON Schema Validation ---
@@ -685,7 +625,6 @@ export function useVtx() {
         powerLevelList,
         deviceReady,
         vtxTypeString,
-        saveButtonText,
         saveButtonDisabled,
 
         // Computed
