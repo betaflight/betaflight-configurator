@@ -11,6 +11,7 @@ import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
 import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { useReboot } from "./useReboot";
 
 export function usePower() {
     const supported = computed(() => {
@@ -487,8 +488,11 @@ export function usePower() {
         amperagescalechanged.value = false;
     };
 
-    // Save configuration
-    const saveConfig = async (callback) => {
+    // Save configuration. Error/cancellation handling and the isSaving state are owned by the
+    // caller's runSave() (useSaving); this only marshals data and issues the MSP writes.
+    const saveConfig = async () => {
+        const { saveToEeprom } = useReboot();
+
         // Update FC data from reactive state
         FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
         FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
@@ -508,38 +512,28 @@ export function usePower() {
             FC.CURRENT_METER_CONFIGS[index].offset = config.offset;
         });
 
-        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, analyticsChanges, "power");
+        await MSP.promise(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG));
 
-        // Clear analytics changes
+        // Save battery profile name if supported
+        if (hasBatteryProfiles.value) {
+            FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = batteryProfileName.value;
+            await MSP.promise(
+                MSPCodes.MSP2_SET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
+            );
+        }
+
+        await mspHelper.sendVoltageConfig();
+        await mspHelper.sendCurrentConfig();
+
+        await saveToEeprom();
+
+        // Only after a successful persist: record analytics and refresh the dirty baseline.
+        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, analyticsChanges, "power");
         for (const key in analyticsChanges) {
             delete analyticsChanges[key];
         }
-
-        try {
-            await MSP.promise(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG));
-
-            // Save battery profile name if supported
-            if (hasBatteryProfiles.value) {
-                FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = batteryProfileName.value;
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
-                );
-            }
-
-            await mspHelper.sendVoltageConfig();
-            await mspHelper.sendCurrentConfig();
-            await mspHelper.writeConfiguration(false);
-            // Refresh the saveConfig() baseline so dirty reflects persisted values.
-            // Equivalent to updateStateFromFC() baseline reset without extra FC reads.
-            powerConfigBaseline.value = serializePowerConfig();
-
-            if (callback) {
-                callback();
-            }
-        } catch (error) {
-            console.error("Error saving power configuration:", error);
-        }
+        powerConfigBaseline.value = serializePowerConfig();
     };
 
     return {

@@ -1,9 +1,22 @@
 import { ref } from "vue";
 import { isMspCancelled } from "../js/msp/mspErrors.js";
 
+/**
+ * Shared save discipline for the config tabs: owns the `isSaving` flag, prevents concurrent
+ * saves, and centrally swallows benign MSP cancellations so no tab has to reimplement it.
+ * @returns {{ isSaving: import("vue").Ref<boolean>, runSave: (fn: () => Promise<void>, options?: { onError?: (error: unknown) => void }) => Promise<void> }}
+ */
 export function useSaving() {
     const isSaving = ref(false);
 
+    /**
+     * Run one save operation while `isSaving` is held true. A benign MspCancelledError
+     * (queue cleared by a tab switch / reboot-disconnect) is swallowed silently; any other
+     * error is passed to `onError` (or `console.error` when none is given).
+     * @param {() => Promise<void>} fn - the async save work (marshal + MSP writes + persist)
+     * @param {{ onError?: (error: unknown) => void }} [options] - genuine-failure handler
+     * @returns {Promise<void>}
+     */
     async function runSave(fn, { onError } = {}) {
         if (isSaving.value) {
             return;

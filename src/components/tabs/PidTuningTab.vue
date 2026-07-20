@@ -109,7 +109,7 @@
                     @click="refresh"
                     variant="soft"
                 />
-                <UButton :label="$t('pidTuningButtonSave')" :disabled="!hasChanges" @click="save" />
+                <UButton :label="$t('pidTuningButtonSave')" :disabled="!hasChanges" :loading="isSaving" @click="save" />
             </div>
         </div>
     </BaseTab>
@@ -140,6 +140,8 @@ import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
 import { useTranslation } from "i18next-vue";
 import { gui_log } from "@/js/gui_log";
+import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
 
 const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
@@ -437,74 +439,79 @@ function toggleShowAllPids() {
 }
 
 // Save/Refresh
-async function save() {
+const { isSaving, runSave } = useSaving();
+const { saveToEeprom } = useReboot();
+
+function save() {
     if (!hasChanges.value) {
         return;
     }
 
-    try {
-        // Normalize profile names before saving
-        pidProfileName.value = pidProfileName.value.trim();
-        rateProfileName.value = rateProfileName.value.trim();
+    return runSave(
+        async () => {
+            // Normalize profile names before saving
+            pidProfileName.value = pidProfileName.value.trim();
+            rateProfileName.value = rateProfileName.value.trim();
 
-        // Save profile names to FC.CONFIG (API 1.45+)
-        if (FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
-        }
-        if (FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
-        }
-
-        // Save PIDs
-        await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
-
-        // Save advanced tuning
-        await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
-
-        // Save RC tuning
-        await MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
-
-        // Save filter config
-        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-
-        // Save simplified tuning (sliders)
-        await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
-
-        // Save profile names to firmware (API 1.45+)
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            // Save profile names to FC.CONFIG (API 1.45+)
             if (FC.CONFIG.pidProfileNames) {
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
-                );
+                FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
             }
             if (FC.CONFIG.rateProfileNames) {
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
-                );
+                FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
             }
-        }
 
-        // Write to EEPROM
-        await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+            // Save PIDs
+            await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
 
-        // Re-validate sliders after save
-        await validateTuningSliders();
+            // Save advanced tuning
+            await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
 
-        // Force Vue components to update slider displays
-        if (pidSubTab.value?.forceUpdateSliders) {
-            pidSubTab.value.forceUpdateSliders();
-        }
-        if (filterSubTab.value?.forceUpdateSliders) {
-            filterSubTab.value.forceUpdateSliders();
-        }
+            // Save RC tuning
+            await MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
 
-        // Update original values
-        storeOriginalValues();
-    } catch (e) {
-        console.error("[PidTuning] Save failed:", e);
-    }
+            // Save filter config
+            await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
+
+            // Save simplified tuning (sliders)
+            await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
+
+            // Save profile names to firmware (API 1.45+)
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (FC.CONFIG.pidProfileNames) {
+                    await MSP.promise(
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                    );
+                }
+                if (FC.CONFIG.rateProfileNames) {
+                    await MSP.promise(
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                    );
+                }
+            }
+
+            // Persist to EEPROM (no reboot)
+            await saveToEeprom();
+
+            // Only after a successful persist: re-validate sliders, refresh the slider
+            // displays and update the dirty baseline.
+            await validateTuningSliders();
+
+            // Force Vue components to update slider displays
+            if (pidSubTab.value?.forceUpdateSliders) {
+                pidSubTab.value.forceUpdateSliders();
+            }
+            if (filterSubTab.value?.forceUpdateSliders) {
+                filterSubTab.value.forceUpdateSliders();
+            }
+
+            // Update original values
+            storeOriginalValues();
+        },
+        { onError: (e) => console.error("[PidTuning] Save failed:", e) },
+    );
 }
 
 async function refresh() {
@@ -567,10 +574,9 @@ async function syncProfileFromFc(kind) {
         currentRateProfile.value = FC.CONFIG.rateProfile;
         await loadData();
         gui_log(
-            i18n.getMessage(
-                kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile",
-                [(kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1],
-            ),
+            i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
+                (kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1,
+            ]),
         );
     } finally {
         syncingFromFc = false;

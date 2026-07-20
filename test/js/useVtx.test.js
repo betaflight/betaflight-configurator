@@ -2,12 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { effectScope } from "vue";
 import FC from "../../src/js/fc";
 import MSP from "../../src/js/msp";
+import MSPCodes from "../../src/js/msp/MSPCodes";
 
 vi.mock("../../src/js/msp/MSPHelper", () => ({
     __esModule: true,
     mspHelper: {
-        writeConfiguration: vi.fn((reboot, callback) => callback && callback()),
         crunch: vi.fn(() => false),
+        setArmingEnabled: vi.fn(),
     },
 }));
 
@@ -29,68 +30,83 @@ vi.mock("../../src/js/Analytics", () => ({
     },
 }));
 
+// Persist is EEPROM-only; stub useReboot so the save path doesn't need Pinia/serial. The spy
+// stands in for the shared saveToEeprom() (which the tab now uses instead of writeConfiguration).
+const { saveToEepromMock } = vi.hoisted(() => ({ saveToEepromMock: vi.fn(async () => {}) }));
+vi.mock("../../src/composables/useReboot", () => ({
+    __esModule: true,
+    useReboot: () => ({ saveToEeprom: saveToEepromMock, saveAndReboot: vi.fn(), reboot: vi.fn() }),
+}));
+
 import { useVtx } from "../../src/composables/useVtx";
-import { mspHelper } from "../../src/js/msp/MSPHelper";
+import { tracking } from "../../src/js/Analytics";
 
 describe("useVtx", () => {
     let scope;
     let vtx;
 
     beforeEach(async () => {
-        vi.useFakeTimers();
         FC.resetState();
+        saveToEepromMock.mockClear();
+        tracking.sendSaveAndChangeEvents.mockClear();
 
-        vi.spyOn(MSP, "send_message").mockImplementation((code, data, retries, cb) => {
-            if (typeof cb === "function") {
-                cb();
-            }
-        });
+        // Error-aware MSP requests: the save/load chains now use MSP.promise everywhere.
+        vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
 
         scope = effectScope();
         scope.run(() => {
             vtx = useVtx();
         });
 
-        // Bring the composable out of its initial "updating" state so saveVtx() is allowed to run.
+        // Bring the composable out of its initial "updating" state and take the dirty baseline.
         await vtx.loadVtxConfig();
+        MSP.promise.mockClear();
     });
 
     afterEach(() => {
         scope.stop();
-        vi.runAllTimers();
-        vi.useRealTimers();
         vi.restoreAllMocks();
     });
 
-    it("clears both onSaveComplete timers on scope dispose, so no reload happens after unmount", async () => {
-        vtx.saveVtx();
+    it("issues the exact set and order of MSP_SET_VTX* writes, then persists to EEPROM", async () => {
+        vtx.vtxConfig.vtx_table_powerlevels = 2;
+        vtx.vtxConfig.vtx_table_bands = 3;
 
-        expect(mspHelper.writeConfiguration).toHaveBeenCalledTimes(1);
-        expect(vtx.saveButtonText.value).toBe("buttonSaving");
+        await vtx.saveVtx();
 
-        const callsAfterSave = MSP.send_message.mock.calls.length;
+        const codes = MSP.promise.mock.calls.map((call) => call[0]);
+        expect(codes).toEqual([
+            MSPCodes.MSP_SET_VTX_CONFIG,
+            MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL,
+            MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL,
+            MSPCodes.MSP_SET_VTXTABLE_BAND,
+            MSPCodes.MSP_SET_VTXTABLE_BAND,
+            MSPCodes.MSP_SET_VTXTABLE_BAND,
+        ]);
 
-        scope.stop();
-
-        // Advance past both chained 1500ms timeouts (3000ms total).
-        await vi.advanceTimersByTimeAsync(3100);
-
-        // No further MSP traffic should have occurred — the reload (loadVtxConfig) never ran,
-        // and the button text is stuck on "Saving" rather than being reset.
-        expect(MSP.send_message.mock.calls).toHaveLength(callsAfterSave);
-        expect(vtx.saveButtonText.value).toBe("buttonSaving");
+        // EEPROM persist happens once, after all the SET_ writes.
+        expect(saveToEepromMock).toHaveBeenCalledTimes(1);
     });
 
-    it("without dispose, the pending timers still fire and reload vtx config (proves the test is not vacuous)", async () => {
-        vtx.saveVtx();
+    it("records analytics and clears the pending-verify flag only after a successful persist", async () => {
+        vtx.savePending.value = true;
 
-        expect(vtx.saveButtonText.value).toBe("buttonSaving");
-        const callsAfterSave = MSP.send_message.mock.calls.length;
+        await vtx.saveVtx();
 
-        await vi.advanceTimersByTimeAsync(3100);
+        expect(saveToEepromMock).toHaveBeenCalledTimes(1);
+        expect(tracking.sendSaveAndChangeEvents).toHaveBeenCalledTimes(1);
+        expect(tracking.sendSaveAndChangeEvents).toHaveBeenCalledWith("fc", expect.any(Object), "vtx");
+        expect(vtx.savePending.value).toBe(false);
+    });
 
-        // loadVtxConfig() sent at least one further MSP_VTX_CONFIG request, and the button reset.
-        expect(MSP.send_message.mock.calls.length).toBeGreaterThan(callsAfterSave);
-        expect(vtx.saveButtonText.value).toBe("");
+    it("does not run analytics or clear pending-verify when an MSP write rejects", async () => {
+        vtx.savePending.value = true;
+        MSP.promise.mockRejectedValueOnce(new Error("boom"));
+
+        await expect(vtx.saveVtx()).rejects.toThrow("boom");
+
+        expect(saveToEepromMock).not.toHaveBeenCalled();
+        expect(tracking.sendSaveAndChangeEvents).not.toHaveBeenCalled();
+        expect(vtx.savePending.value).toBe(true);
     });
 });
