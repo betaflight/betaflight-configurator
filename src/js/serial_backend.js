@@ -94,6 +94,50 @@ export function isDrivenRebootTarget(port) {
 }
 
 /**
+ * Decide whether the reboot progress dialog's poller should stop waiting (settle the reboot
+ * window, show "ready", close). Extracted as a pure predicate so the branch matrix is
+ * unit-testable without driving the dialog's intervals.
+ *
+ * - Always conclude once the FC has answered (connectionValid) or the window elapsed (timeout).
+ * - With Auto-Connect ON, keep waiting — the retry loop owns the reconnect.
+ * - With Auto-Connect OFF nothing will auto-reconnect, so conclude as soon as there's nothing
+ *   left to wait for:
+ *     - serial re-enumerates after the reboot, so wait for the port to reappear (portAvailable).
+ *     - driven targets (BLE, manual/TCP) never re-enumerate — portAvailable would never flip, so
+ *       the dialog used to hang until timeout. rebootReconnect() drops the stale link and then
+ *       closes the reboot window at the flush (~1.5s), so wait for the window to close rather
+ *       than concluding immediately: that keeps us from showing "ready" while the flush is still
+ *       pending (which would tear down a manual reconnect).
+ * @param {object} state
+ * @param {boolean} state.connectionValid - the rebooted FC has answered
+ * @param {boolean} state.timeoutReached - the reboot window has elapsed
+ * @param {boolean} state.autoConnect - Auto-Connect is enabled
+ * @param {boolean} state.portAvailable - a serial port is present (re-enumerated)
+ * @param {string} state.selectedDevice - the selected device path
+ * @param {boolean} state.rebootWindowOpen - the connection-state reboot window is still open
+ * @returns {boolean}
+ */
+export function shouldConcludeRebootDialog({
+    connectionValid,
+    timeoutReached,
+    autoConnect,
+    portAvailable,
+    selectedDevice,
+    rebootWindowOpen,
+}) {
+    if (connectionValid || timeoutReached) {
+        return true;
+    }
+    if (autoConnect) {
+        return false;
+    }
+    if (isDrivenRebootTarget(selectedDevice)) {
+        return !rebootWindowOpen;
+    }
+    return Boolean(portAvailable);
+}
+
+/**
  * Reconnect-window duration for the currently-selected target: driven (BLE/manual) reboots
  * get the longer window, serial re-enumeration keeps the original. Evaluated once per reboot
  * (passed to requestReboot) so the loop, dialog and dialog-suppression share one snapshot.
@@ -1469,9 +1513,17 @@ function showRebootDialog() {
     // Check for successful connection every 100ms with a timeout
     rebootDialogCheckTimerId = setInterval(() => {
         const connectionCheckTimeoutReached = Date.now() - windowStartedAt > windowMs;
-        const noSerialReconnect = !DeviceHandler.devicePicker.autoConnect && DeviceHandler.portAvailable;
 
-        if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
+        if (
+            shouldConcludeRebootDialog({
+                connectionValid: CONFIGURATOR.connectionValid,
+                timeoutReached: connectionCheckTimeoutReached,
+                autoConnect: DeviceHandler.devicePicker.autoConnect,
+                portAvailable: DeviceHandler.portAvailable,
+                selectedDevice: DeviceHandler.devicePicker.selectedDevice,
+                rebootWindowOpen: getConnectionState().isRebootWindowOpen,
+            })
+        ) {
             clearInterval(rebootDialogCheckTimerId);
             clearInterval(rebootDialogProgressTimerId);
             rebootDialogCheckTimerId = false;
