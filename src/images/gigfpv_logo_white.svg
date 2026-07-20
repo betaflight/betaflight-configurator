@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 64" role="img" aria-label="GIGFPV Station">
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#2bd6c8"/>
+  <path d="M45 18c-4-4-9-6-14-6-11 0-19 8-19 20s8 20 20 20c6 0 11-2 15-6V31H30v8h8v4c-2 1-4 2-7 2-7 0-12-5-12-13s5-13 12-13c4 0 7 1 10 4l7-5z" fill="#10161d"/>
+  <text x="78" y="39" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="800" letter-spacing="-1">GIG<tspan fill="#2bd6c8">FPV</tspan></text>
+  <text x="80" y="55" fill="#aebbc6" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" letter-spacing="4">STATION</text>
+</svg>

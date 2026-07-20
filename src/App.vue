@@ -251,13 +251,13 @@ watch(
     flex: 1;
     min-width: 0;
     height: 2.5rem;
-    background-image: url(./images/bf_logo_white.svg);
+    background-image: url(./images/gigfpv_logo_white.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: auto 100%;
 }
 .dark .mobile-topbar__logo {
-    background-image: url(./images/bf_logo_black.svg);
+    background-image: url(./images/gigfpv_logo_black.svg);
 }
 .mobile-topbar__spacer {
     width: 2.5rem;

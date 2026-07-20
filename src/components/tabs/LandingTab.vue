@@ -3,7 +3,7 @@
         <div class="content_wrapper">
             <div class="content_top">
                 <div class="logowrapper">
-                    <img src="/images/bf_logo_white.svg" alt="" />
+                    <img src="/images/gigfpv_logo_white.svg" alt="GIGFPV Station" />
                     <div v-html="$t('defaultWelcomeIntro')"></div>
                 </div>
             </div>

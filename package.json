@@ -1,8 +1,8 @@
 {
-  "name": "betaflight-app",
-  "productName": "Betaflight",
-  "displayName": "Betaflight - Configuration and management application",
-  "description": "Crossplatform configuration and management application for the Betaflight flight control firmware.",
+  "name": "gigfpv-station",
+  "productName": "GIGFPV Station",
+  "displayName": "GIGFPV Station - Unified FPV configuration application",
+  "description": "Unified configuration and firmware management for Betaflight-compatible flight controllers, ExpressLRS, and AM32.",
   "version": "2026.6.0-alpha",
   "type": "module",
   "main": "index.html",
@@ -37,7 +37,7 @@
     "id": "main-window",
     "min_width": 1024,
     "min_height": 550,
-    "title": "Betaflight App"
+    "title": "GIGFPV Station"
   },
   "repository": {
     "type": "git",
