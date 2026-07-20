@@ -3,11 +3,10 @@
         <div class="content_wrapper">
             <div class="content_top">
                 <div class="logowrapper">
-                    <img src="/images/gigfpv_logo_white.svg" alt="GIGFPV Station" />
+                    <img src="/images/gigfpv_logo_white.png" alt="GIGFPV Station" />
                     <div v-html="$t('defaultWelcomeIntro')"></div>
                 </div>
             </div>
-            <SponsorTile sponsor-type="landing" />
             <div class="content_mid grid-row">
                 <div class="column third_left text1 grid-col col4">
                     <div class="socialMediaParagraph">
@@ -97,7 +96,6 @@
 <script>
 import { defineComponent, ref, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
-import SponsorTile from "../sponsor/SponsorTile.vue";
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 
@@ -105,7 +103,6 @@ export default defineComponent({
     name: "LandingTab",
     components: {
         BaseTab,
-        SponsorTile,
     },
     setup() {
         const availableLanguages = ref(["DEFAULT", ...i18n.getLanguagesAvailables()]);

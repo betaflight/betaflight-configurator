@@ -946,13 +946,13 @@
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
     "defaultWelcomeIntro": {
-        "message": "Welcome to the <strong>Betaflight App</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
+        "message": "Welcome to <strong>GIGFPV Station</strong>, one integrated workspace for Betaflight-compatible flight controllers, ExpressLRS links, and AM32 ESCs."
     },
     "defaultHardwareHead": {
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+        "message": "GIGFPV Station retains Betaflight Configurator compatibility and adds integrated workflows for ExpressLRS and AM32. Use the Firmware Flasher to choose the correct target, and Motors &amp; ESC for ESC work.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -964,16 +964,16 @@
         "message": "Contributing"
     },
     "defaultContributingText": {
-        "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>using your knowledge of Betaflight to create or update content on <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">our Wiki</a>, or answering other users' questions in online forums;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">contributing code</a> to the firmware and app - new features, fixes, improvements;</li><li>testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">new features and fixes</a> and providing feedback;</li><li>helping other users solve the problems they report in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">our issue tracker</a>, and participating in discussions on feature requests;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/README.md#translators\" target=\"_blank\" rel=\"noopener noreferrer\">translating</a> Betaflight App into a new language, or helping to maintain the existing translations.</li></ul>"
+        "message": "GIGFPV Station is built on open-source FPV projects. Contributions that improve the shared configuration experience, documentation, protocol support, and testing are welcome. Betaflight, ExpressLRS, and AM32 continue to own and maintain their respective firmware ecosystems."
     },
     "defaultFacebookText": {
-        "message": "We also have a <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Group</a>.<br />Join us to get a place to talk about Betaflight, ask configuration questions, or just hang out with fellow pilots."
+        "message": "The FPV community shares setup advice, target support, and flight experience across many platforms."
     },
     "defaultDiscordText": {
-        "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Share your flight experience, talk about Betaflight, help other people or get some help for yourself from the community."
+        "message": "GIGFPV Station keeps your bench workflow in one place while preserving compatibility with the upstream projects you already use."
     },
     "defaultRedditText": {
-        "message": "Join our <a href=\"https://www.reddit.com/r/Betaflight/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit</a>.<br />Discuss features, ask questions, and connect with the Betaflight community on Reddit."
+        "message": "Always confirm your exact target and remove propellers before flashing or configuring hardware."
     },
     "defaultCommunityHead": {
         "message": "Community"
@@ -982,7 +982,7 @@
         "message": "Your Privacy"
     },
     "statisticsDisclaimer": {
-        "message": "This Betaflight App collects anonymous usage statistics. This usage data could include the number of launches, geographical region of the users, types of flight controllers, firmware versions, usage of UI elements and tabs, etc. We collect this data in order to better understand how the App is being used and community trends. We do this to help us develop an improved UI and overall experience. Users can opt-out of data collection in the Options tab. For information about how we collect and use your data, please see our <a href=\"https://www.betaflight.com/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">privacy policy</a>."
+        "message": "GIGFPV Station is designed to keep device configuration on your computer. Any optional telemetry or analytics settings remain under your control in Options."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
@@ -991,10 +991,10 @@
         "message": "Open Source Donations"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> is <strong>open source</strong> software and is available free of charge <strong>without warranty</strong> to all users.</p><p>If you find Betaflight useful, please consider <strong>supporting</strong> its development by donating.</p>"
+        "message": "<p><strong>GIGFPV Station</strong> is an open-source integration built on the work of the Betaflight, ExpressLRS, and AM32 communities.</p><p>Please support the upstream projects and hardware makers that keep the FPV ecosystem moving.</p>"
     },
     "defaultDonateBottom": {
-        "message": "<p>If you want to contribute financially on an ongoing basis, you should consider becoming a patron for us on $t(patreonLink.message).</p>"
+        "message": "<p>Use verified firmware releases, and never flash a target you have not identified.</p>"
     },
     "patreonLink": {
         "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
