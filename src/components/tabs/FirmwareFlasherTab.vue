@@ -41,10 +41,11 @@
                     :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
                     :on-restore-backup="handleRestoreBackup"
                 />
+                <FlasherElrsTab v-if="activeFlasherStep === 'elrs'" />
             </div>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom">
+        <div v-if="activeFlasherStep !== 'elrs'" class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup size="sm" orientation="horizontal" class="flex!">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
@@ -149,6 +150,7 @@ import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
+import FlasherElrsTab from "./firmware-flasher/FlasherElrsTab.vue";
 import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
 
@@ -163,6 +165,7 @@ export default defineComponent({
         SponsorTile,
         FlasherBoardBuildTab,
         FlasherFlashTab,
+        FlasherElrsTab,
         SubtabNav,
     },
     setup() {
@@ -1854,6 +1857,7 @@ export default defineComponent({
         const subtabItems = computed(() => [
             { label: $t("firmwareFlasherSubTabBoardBuild"), value: "board-build", icon: "i-lucide-cpu" },
             { label: $t("firmwareFlasherSubTabFlash"), value: "flash", icon: "i-lucide-zap" },
+            { label: "ELRS / GIGLRS", value: "elrs", icon: "i-lucide-radio" },
         ]);
 
         // Return all public methods and state
