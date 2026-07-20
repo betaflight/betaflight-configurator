@@ -153,8 +153,10 @@ export function useCli() {
     let scrollNearBottomPx = 40; // fallback; updated dynamically via ResizeObserver
     let cliResizeObserver = null;
 
-    const MAX_OUTPUT_NODES = 4000; // ~4 nodes/line → ≈1000 rendered lines max
-    const PRUNE_TO_NODES = 2500;
+    /** @type {number} */
+    const MAX_OUTPUT_NODES = 32000; // ~4 nodes/line → ≈8000 rendered lines max
+    /** @type {number} */
+    const PRUNE_TO_NODES = 24000; // ≈6000 rendered lines
 
     let outputBuffer = "";
     let outputFlushRaf = null;
