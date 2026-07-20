@@ -37,6 +37,15 @@ const logHead = "[SERIAL-BACKEND]";
 let mspHelper;
 let connectionTimestamp = null;
 let liveDataRefreshTimerId = false;
+// Re-entrancy guard for the live-data poller. update_live_status is async and awaits a
+// sequential MSP chain; the setInterval that drives it fires on a fixed cadence regardless
+// of whether the previous cycle finished. On a slow-responding FC (e.g. STM32H5/C5) a cycle
+// can outlast the interval, so without this guard each tick would stack another full request
+// chain onto MSP.callbacks — the queue grows unbounded and the per-entry retries flood the
+// FC's serial buffer until it hangs. Skip a tick while the previous cycle is still in flight.
+// Set when MSP.onTimeout initiates teardown, so onClosed() raises the notice after the close
+// settles rather than having it clobbered by onClosed's own dialog dismissal.
+let connectionTimeoutPending = false;
 // Handle for the BLE/manual reboot flush-timeout / reconnect-retry chain (rebootReconnect).
 // Tracked so an intentional disconnect during the reboot window can cancel it — otherwise the
 // retry would resurrect a connection the user just cancelled.
@@ -686,6 +695,7 @@ function resetConnection() {
     getConnectionState().endFlashing();
 
     MSP.clearListeners();
+    MSP.onTimeout = null;
 
     if (DeviceHandler.devicePicker.selectedDevice !== "virtual") {
         serial.removeEventListener("receive", read_serial_adapter);
@@ -744,12 +754,12 @@ function abortConnection(messageKey) {
 
 // Surface a connection failure to the user with a dismissible dialog, not just a log line
 // that is easy to miss. `text` may contain HTML markup (InformationDialog renders it).
-function showConnectionFailedDialog(text) {
+function showConnectionFailedDialog(text, title = i18n.getMessage("connectionFailedTitle")) {
     const dialogStore = useDialogStore();
     dialogStore.open(
         "InformationDialog",
         {
-            title: i18n.getMessage("connectionFailedTitle"),
+            title,
             text,
             confirmText: i18n.getMessage("close"),
         },
@@ -818,6 +828,7 @@ function onOpen(openInfo) {
         FC.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
+        MSP.onTimeout = handleConnectionTimeout;
 
         console.log(`${logHead} Requesting configuration data`);
 
@@ -1230,6 +1241,17 @@ function onClosed(result) {
     // intentional and unexpected closes. A reboot's link drop is left alone
     // (notifyClosed ignores REBOOTING/RECONNECTING); its conclude settles it.
     getConnectionState().notifyClosed();
+
+    // Raise the dead-link notice now that teardown has settled: the dialog dismissal above
+    // (and finishClose's own) would otherwise clobber a dialog opened by the watchdog before
+    // this event fired.
+    if (connectionTimeoutPending) {
+        connectionTimeoutPending = false;
+        showConnectionFailedDialog(
+            i18n.getMessage("connectionLostUnresponsive"),
+            i18n.getMessage("connectionLostTitle"),
+        );
+    }
 }
 
 export function read_serial(info) {
@@ -1258,6 +1280,23 @@ async function requestLiveData(code, name) {
         console.error(`Failed to request ${name}:`, error);
         return true;
     }
+}
+
+// MSP.onTimeout hook: an errorAware request exhausted MAX_RETRIES, so the FC is unresponsive.
+// A hung FC keeps the transport physically open, so no "disconnect" event fires on its own.
+// Tear the link down like the reboot path: mark the disconnect intentional (so onClosed skips
+// the unexpected-disconnect teardown) and close WITHOUT the setArmingEnabled round-trip, which
+// would itself hang on the dead FC. Re-entrancy is bounded by the isConnected() gate — teardown
+// clears MSP.onTimeout and connection validity before another request can trip it.
+function handleConnectionTimeout() {
+    if (!isConnected()) {
+        return;
+    }
+
+    connectionTimeoutPending = true;
+    prepareDisconnect();
+    getConnectionState().concludeReboot(false);
+    finishClose(toggleStatus);
 }
 
 export async function update_sensor_status() {
