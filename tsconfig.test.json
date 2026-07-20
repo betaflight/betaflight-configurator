@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts"]
+}

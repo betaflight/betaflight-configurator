@@ -12,6 +12,7 @@
                     @open-keys="onOpenKeys"
                     @export-csv="onExportCsv"
                     @export-gpx="onExportGpx"
+                    @export-kml="onExportKml"
                 />
             </Teleport>
             <Teleport to="#vue-statusbar">
@@ -102,12 +103,13 @@
                 @update="onGraphConfigUpdate"
             />
             <HeaderDialog v-model:open="appStore.headerDialogOpen" :sysConfig="sysConfig" />
+            <KmlExportDialog v-model:open="kmlExportDialogOpen" :flightLog="logStore.flightLog" />
         </div>
     </UApp>
 </template>
 
 <script setup>
-import { computed, watchEffect, onMounted, onUnmounted, inject } from "vue";
+import { computed, ref, watchEffect, onMounted, onUnmounted, inject } from "vue";
 import { useGraphStore } from "./stores/graph.js";
 import { useAppStore } from "./stores/app.js";
 import { useLogStore, FIRMWARE_CLASSES } from "./stores/log.js";
@@ -129,6 +131,7 @@ import KeysDialog from "./components/KeysDialog.vue";
 import UserSettingsDialog from "./components/UserSettingsDialog.vue";
 import GraphConfigDialog from "./components/GraphConfigDialog.vue";
 import HeaderDialog from "./components/HeaderDialog.vue";
+import KmlExportDialog from "./components/KmlExportDialog.vue";
 import SpectrumAnalyser from "./components/SpectrumAnalyser.vue";
 import LegendPanel from "./components/LegendPanel.vue";
 import FieldValuesPanel from "./components/FieldValuesPanel.vue";
@@ -141,6 +144,8 @@ const logStore = useLogStore();
 const playbackStore = usePlaybackStore();
 const settingsStore = useSettingsStore();
 const workspaceStore = useWorkspaceStore();
+
+const kmlExportDialogOpen = ref(false);
 
 // State classes are applied to the viewer root element (provided by the embedding tab) so
 // they stay scoped to the viewer subtree and never leak onto the host configurator's <html>.
@@ -199,6 +204,10 @@ function onExportCsv() {
 
 function onExportGpx() {
     appStore.exportGpx?.();
+}
+
+function onExportKml() {
+    kmlExportDialogOpen.value = true;
 }
 
 function onViewConfig() {

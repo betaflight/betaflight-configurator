@@ -1,0 +1,459 @@
+{
+  "$schema": "https://betaflight.com/blackbox/mag-characterization-model/2.2",
+  "version": "2.2",
+  "captured_under": {
+    "alignment": 8,
+    "custom_angles": null,
+    "mag_zero": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "mag_zero_known": true
+  },
+  "ellipsoid_correction": {
+    "center": {
+      "x": 718.1486945735744,
+      "y": 87.34691977261636,
+      "z": 120.19816137825016
+    },
+    "soft_iron": [
+      [
+        0.0006108386065376121,
+        -0.00002224487991968406,
+        0.000003480305064893268
+      ],
+      [
+        0,
+        0.0006125276975466668,
+        -0.00002002882263904025
+      ],
+      [
+        0,
+        0,
+        0.0006213978055923319
+      ]
+    ],
+    "radius": 0.9995838926468598,
+    "residual_rms": 0.011802174267325643
+  },
+  "geo_reference": {
+    "latitude_deg": 48.4085613,
+    "longitude_deg": -71.1642049,
+    "declination_deg": -15.334148548880249,
+    "inclination_deg": 70.85317969538431,
+    "field_strength_nt": 53871
+  },
+  "alignment": {
+    "preset": 9,
+    "label": "CUSTOM",
+    "euler_zyx_deg": {
+      "roll": -172,
+      "pitch": 2,
+      "yaw": -87.99999999999999
+    }
+  },
+  "axis_gains": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+  },
+  "hard_iron": {
+    "x": 691,
+    "y": 104,
+    "z": 222
+  },
+  "quality": {
+    "score_percent": 96,
+    "residual_z_rms": 0.016289086812020816,
+    "residual_xy_rms": 0.0629614016149822,
+    "field_consistency_pct": 4.7,
+    "chirality_flag": false
+  },
+  "poses": [
+    {
+      "body_orientation": "flat",
+      "cardinal_direction": "N",
+      "expected_heading_deg": 0,
+      "measured_attitude_deg": {
+        "roll": -1.3000000000000003,
+        "pitch": 0.10000000000000003
+      },
+      "heading_current_deg": 358.03561454772716,
+      "heading_error_current_deg": -1.9643854522728585,
+      "heading_corrected_deg": 354.69867192386647,
+      "heading_error_corrected_deg": -5.301328076133555,
+      "heading_full_corrected_deg": 359.85803501503227,
+      "heading_error_full_corrected_deg": -0.14196498496772167,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.8232890641288815
+    },
+    {
+      "body_orientation": "nose_up",
+      "cardinal_direction": "N",
+      "expected_heading_deg": 0,
+      "measured_attitude_deg": {
+        "roll": -4.299999999999998,
+        "pitch": -21.446153846153837
+      },
+      "heading_current_deg": 357.98401202789023,
+      "heading_error_current_deg": -2.015987972109752,
+      "heading_corrected_deg": 352.352326552437,
+      "heading_error_corrected_deg": -7.647673447563018,
+      "heading_full_corrected_deg": 357.4314689339217,
+      "heading_error_full_corrected_deg": -2.568531066078332,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.7450775517478994
+    },
+    {
+      "body_orientation": "nose_down",
+      "cardinal_direction": "N",
+      "expected_heading_deg": 0,
+      "measured_attitude_deg": {
+        "roll": -1.6307692307692312,
+        "pitch": 27.584615384615386
+      },
+      "heading_current_deg": 5.552807395976004,
+      "heading_error_current_deg": 5.5528073959760285,
+      "heading_corrected_deg": 9.567810755140215,
+      "heading_error_corrected_deg": 9.567810755140233,
+      "heading_full_corrected_deg": 13.974263991951148,
+      "heading_error_full_corrected_deg": 13.974263991951155,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.6810729748286589
+    },
+    {
+      "body_orientation": "left_side",
+      "cardinal_direction": "N",
+      "expected_heading_deg": 0,
+      "measured_attitude_deg": {
+        "roll": 23.607692307692318,
+        "pitch": 0.8038461538461542
+      },
+      "heading_current_deg": 354.9874235687474,
+      "heading_error_current_deg": -5.012576431252611,
+      "heading_corrected_deg": 352.00169539090166,
+      "heading_error_corrected_deg": -7.998304609098368,
+      "heading_full_corrected_deg": 356.9762873521584,
+      "heading_error_full_corrected_deg": -3.023712647841609,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.7333898463633877
+    },
+    {
+      "body_orientation": "right_side",
+      "cardinal_direction": "N",
+      "expected_heading_deg": 0,
+      "measured_attitude_deg": {
+        "roll": -23.546153846153842,
+        "pitch": 0.5999999999999998
+      },
+      "heading_current_deg": 0.7043132358083994,
+      "heading_error_current_deg": 0.704313235808418,
+      "heading_corrected_deg": 358.50978687994314,
+      "heading_error_corrected_deg": -1.4902131200568418,
+      "heading_full_corrected_deg": 2.0748963310542763,
+      "heading_error_full_corrected_deg": 2.074896331054262,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9503262293314386
+    },
+    {
+      "body_orientation": "flat",
+      "cardinal_direction": "E",
+      "expected_heading_deg": 90,
+      "measured_attitude_deg": {
+        "roll": -0.49615384615384617,
+        "pitch": -1.1999999999999995
+      },
+      "heading_current_deg": 52.61088016405995,
+      "heading_error_current_deg": -37.38911983594006,
+      "heading_corrected_deg": 94.5254631130552,
+      "heading_error_corrected_deg": 4.525463113055196,
+      "heading_full_corrected_deg": 96.46900332827943,
+      "heading_error_full_corrected_deg": 6.469003328279442,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.8491512295648268
+    },
+    {
+      "body_orientation": "nose_up",
+      "cardinal_direction": "E",
+      "expected_heading_deg": 90,
+      "measured_attitude_deg": {
+        "roll": -1,
+        "pitch": -38.761538461538485
+      },
+      "heading_current_deg": 66.45179427744574,
+      "heading_error_current_deg": -23.548205722554258,
+      "heading_corrected_deg": 90.87895294616408,
+      "heading_error_corrected_deg": 0.878952946164091,
+      "heading_full_corrected_deg": 91.46591743069428,
+      "heading_error_full_corrected_deg": 1.4659174306942617,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9707015684611969
+    },
+    {
+      "body_orientation": "nose_down",
+      "cardinal_direction": "E",
+      "expected_heading_deg": 90,
+      "measured_attitude_deg": {
+        "roll": -0.8000000000000003,
+        "pitch": 36.188461538461546
+      },
+      "heading_current_deg": 59.839675105599326,
+      "heading_error_current_deg": -30.160324894400645,
+      "heading_corrected_deg": 94.99245702301579,
+      "heading_error_corrected_deg": 4.992457023015774,
+      "heading_full_corrected_deg": 97.7446053065828,
+      "heading_error_full_corrected_deg": 7.74460530658277,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.8335847658994742
+    },
+    {
+      "body_orientation": "left_side",
+      "cardinal_direction": "E",
+      "expected_heading_deg": 90,
+      "measured_attitude_deg": {
+        "roll": 29.711538461538474,
+        "pitch": -0.6999999999999997
+      },
+      "heading_current_deg": 45.63331463868343,
+      "heading_error_current_deg": -44.36668536131658,
+      "heading_corrected_deg": 92.30584322228412,
+      "heading_error_corrected_deg": 2.3058432222840963,
+      "heading_full_corrected_deg": 91.49014647403419,
+      "heading_error_full_corrected_deg": 1.4901464740341765,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9231385592571968
+    },
+    {
+      "body_orientation": "right_side",
+      "cardinal_direction": "E",
+      "expected_heading_deg": 90,
+      "measured_attitude_deg": {
+        "roll": -31.600000000000016,
+        "pitch": -1
+      },
+      "heading_current_deg": 47.27885491171031,
+      "heading_error_current_deg": -42.721145088289695,
+      "heading_corrected_deg": 91.65195256425432,
+      "heading_error_corrected_deg": 1.6519525642543442,
+      "heading_full_corrected_deg": 96.46842976833182,
+      "heading_error_full_corrected_deg": 6.468429768331802,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9449349145248552
+    },
+    {
+      "body_orientation": "flat",
+      "cardinal_direction": "S",
+      "expected_heading_deg": 180,
+      "measured_attitude_deg": {
+        "roll": 1,
+        "pitch": -0.36153846153846153
+      },
+      "heading_current_deg": 82.31835862794861,
+      "heading_error_current_deg": -97.6816413720514,
+      "heading_corrected_deg": 181.26396673241416,
+      "heading_error_corrected_deg": 1.2639667324141328,
+      "heading_full_corrected_deg": 175.80672176093026,
+      "heading_error_full_corrected_deg": -4.193278239069713,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9578677755861956
+    },
+    {
+      "body_orientation": "nose_up",
+      "cardinal_direction": "S",
+      "expected_heading_deg": 180,
+      "measured_attitude_deg": {
+        "roll": -2.399999999999999,
+        "pitch": -33.899999999999984
+      },
+      "heading_current_deg": 151.07471601088332,
+      "heading_error_current_deg": -28.92528398911665,
+      "heading_corrected_deg": 178.52368207036898,
+      "heading_error_corrected_deg": -1.4763179296310227,
+      "heading_full_corrected_deg": 175.74158809401104,
+      "heading_error_full_corrected_deg": -4.2584119059889645,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9507894023456326
+    },
+    {
+      "body_orientation": "nose_down",
+      "cardinal_direction": "S",
+      "expected_heading_deg": 180,
+      "measured_attitude_deg": {
+        "roll": 0.8999999999999997,
+        "pitch": 29.39999999999999
+      },
+      "heading_current_deg": 162.5592815096636,
+      "heading_error_current_deg": -17.440718490336423,
+      "heading_corrected_deg": 179.78837674179613,
+      "heading_error_corrected_deg": -0.2116232582039288,
+      "heading_full_corrected_deg": 174.44840382280267,
+      "heading_error_full_corrected_deg": -5.551596177197297,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9929458913932023
+    },
+    {
+      "body_orientation": "left_side",
+      "cardinal_direction": "S",
+      "expected_heading_deg": 180,
+      "measured_attitude_deg": {
+        "roll": 31.399999999999984,
+        "pitch": 0.2999999999999999
+      },
+      "heading_current_deg": 236.78155362497102,
+      "heading_error_current_deg": 56.781553624971025,
+      "heading_corrected_deg": 182.25389491362048,
+      "heading_error_corrected_deg": 2.2538949136204565,
+      "heading_full_corrected_deg": 178.28619099688638,
+      "heading_error_full_corrected_deg": -1.7138090031136244,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9248701695459848
+    },
+    {
+      "body_orientation": "right_side",
+      "cardinal_direction": "S",
+      "expected_heading_deg": 180,
+      "measured_attitude_deg": {
+        "roll": -28.88846153846152,
+        "pitch": -0.10000000000000003
+      },
+      "heading_current_deg": 102.80549081418872,
+      "heading_error_current_deg": -77.19450918581126,
+      "heading_corrected_deg": 181.4970106184239,
+      "heading_error_corrected_deg": 1.4970106184239285,
+      "heading_full_corrected_deg": 178.93255479399897,
+      "heading_error_full_corrected_deg": -1.067445206000997,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9500996460525357
+    },
+    {
+      "body_orientation": "flat",
+      "cardinal_direction": "W",
+      "expected_heading_deg": 270,
+      "measured_attitude_deg": {
+        "roll": -0.10000000000000003,
+        "pitch": 0.8999999999999997
+      },
+      "heading_current_deg": 315.89591379178484,
+      "heading_error_current_deg": 45.89591379178486,
+      "heading_corrected_deg": 270.9320781616169,
+      "heading_error_corrected_deg": 0.9320781616169,
+      "heading_full_corrected_deg": 272.69638131250696,
+      "heading_error_full_corrected_deg": 2.6963813125069436,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9689307279461034
+    },
+    {
+      "body_orientation": "nose_up",
+      "cardinal_direction": "W",
+      "expected_heading_deg": 270,
+      "measured_attitude_deg": {
+        "roll": 0.2999999999999999,
+        "pitch": -35.107692307692325
+      },
+      "heading_current_deg": 302.22243619982476,
+      "heading_error_current_deg": 32.222436199824756,
+      "heading_corrected_deg": 271.083343075068,
+      "heading_error_corrected_deg": 1.083343075068015,
+      "heading_full_corrected_deg": 273.6255691217688,
+      "heading_error_full_corrected_deg": 3.6255691217688337,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9638885641643995
+    },
+    {
+      "body_orientation": "nose_down",
+      "cardinal_direction": "W",
+      "expected_heading_deg": 270,
+      "measured_attitude_deg": {
+        "roll": -0.40000000000000013,
+        "pitch": 32.38846153846152
+      },
+      "heading_current_deg": 314.2768494834488,
+      "heading_error_current_deg": 44.27684948344884,
+      "heading_corrected_deg": 272.07907299457685,
+      "heading_error_corrected_deg": 2.079072994576862,
+      "heading_full_corrected_deg": 272.5187272601622,
+      "heading_error_full_corrected_deg": 2.5187272601622226,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.930697566847438
+    },
+    {
+      "body_orientation": "left_side",
+      "cardinal_direction": "W",
+      "expected_heading_deg": 270,
+      "measured_attitude_deg": {
+        "roll": 30.276923076923087,
+        "pitch": 1.5
+      },
+      "heading_current_deg": 310.9322872761755,
+      "heading_error_current_deg": 40.93228727617551,
+      "heading_corrected_deg": 267.7712401409547,
+      "heading_error_corrected_deg": -2.2287598590452973,
+      "heading_full_corrected_deg": 272.223657347727,
+      "heading_error_full_corrected_deg": 2.2236573477270127,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9257080046984901
+    },
+    {
+      "body_orientation": "right_side",
+      "cardinal_direction": "W",
+      "expected_heading_deg": 270,
+      "measured_attitude_deg": {
+        "roll": -30.79999999999999,
+        "pitch": 1.3999999999999995
+      },
+      "heading_current_deg": 320.5647573610232,
+      "heading_error_current_deg": 50.5647573610232,
+      "heading_corrected_deg": 271.3795732698396,
+      "heading_error_corrected_deg": 1.3795732698396534,
+      "heading_full_corrected_deg": 269.2541332456422,
+      "heading_error_full_corrected_deg": -0.7458667543577917,
+      "heading_gain_corrected_deg": null,
+      "heading_error_gain_corrected_deg": null,
+      "heading_quality_weight": 0.9540142243386782
+    }
+  ],
+  "downstream_fusion": {
+    "frame": "FRD",
+    "nt_per_corrected_unit": 53893.42545061592,
+    "gauss_per_corrected_unit": 0.5389342545061592,
+    "earth_field_ned_gauss": {
+      "n": 0.17040125729925681,
+      "e": -0.0467256873967721,
+      "d": 0.5089092116951035
+    },
+    "mag_noise_gauss": {
+      "sigma": 0.00636059599031292,
+      "sigma_xy": 0.03393205604203332,
+      "sigma_z": 0.008778746857622548
+    },
+    "quality_bounds": {
+      "field_strength_mg": 538.71,
+      "field_strength_ok": true,
+      "soft_iron_offdiag_ratio": 0.03617516158786873,
+      "soft_iron_offdiag_ok": true,
+      "soft_iron_anisotropy": 1.0172863976535014,
+      "soft_iron_anisotropy_ok": true,
+      "bounds_ok": true
+    }
+  }
+}

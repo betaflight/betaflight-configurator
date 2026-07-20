@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "sha256": "2A12A0043E4BDC760BAD9E33E0FE7CF3FC780CBBD13126AC0FB46591AC99D922",
+      "file": "reference_flight1_track.kml"
+    },
+    {
+      "sha256": "C513066C98EB7F594067EF70B9B9EF81469D5DB18361E3B33AC67E4CAD5D8C7D",
+      "file": "reference_flight1_posetrack.json"
+    }
+  ],
+  "description": "SHA-256 of the serialized reference_flight1 outputs (computed in-memory by acroKml.test.ts). Regenerate with UPDATE_POSE_FIXTURES=1 after an intentional output change.",
+  "generated": "2026-07-12T01:14:31.827Z"
+}

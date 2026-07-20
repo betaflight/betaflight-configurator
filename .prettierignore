@@ -30,3 +30,26 @@ nbproject/
 .project
 .settings/
 test-results-junit/
+
+# PR #5252: these 16 files were touched only by an incidental prettier
+# reformat unrelated to that PR's feature (KML export). Reverted to match
+# origin/master and excluded here so the local pre-commit hook's
+# `prettier --write` doesn't silently re-collapse them and reopen the same
+# unrelated diff. Remove this block (and let prettier reformat normally)
+# once the whole tree is re-formatted under the current prettier version.
+src/components/dialogs/CopyProfileDialog.vue
+src/components/dialogs/InformationDialog.vue
+src/components/dialogs/OptionsDialog.vue
+src/components/dialogs/ProfileSelectionDialog.vue
+src/components/dialogs/RatesTypeDialog.vue
+src/components/dialogs/RebootDialog.vue
+src/components/dialogs/ReportProblemsDialog.vue
+src/components/dialogs/WaitDialog.vue
+src/components/dialogs/YesNoDialog.vue
+src/components/elements/Dialog.vue
+src/components/tabs/BackupsTab.vue
+src/components/tabs/FirmwareFlasherTab.vue
+src/components/tabs/OnboardLoggingTab.vue
+src/components/tabs/SetupTab.vue
+src/components/tabs/presets/PresetSourcesDialog.vue
+src/components/user-session/UserSession.vue
