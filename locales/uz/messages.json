@@ -29,7 +29,7 @@
         "message": "Bildirishnoma"
     },
     "search": {
-        "message": "Qidiruv"
+        "message": "Qidirish"
     },
     "dontShowAgain": {
         "message": "Boshqa ko'rsatilmasin"
@@ -328,7 +328,7 @@
         "message": "Qurilma - <span class=\"message-positive\">Tayyor<\/span>"
     },
     "tabFirmwareFlasher": {
-        "message": "Proshivka yozgich"
+        "message": "Proshivka qilish"
     },
     "tabLanding": {
         "message": "Xush kelibsiz"
@@ -418,17 +418,17 @@
         "message": "Avtosozlash"
     },
     "tabBlackboxViewer": {
-        "message": "Blackbox ko'ruvchi",
+        "message": "Qora qutini ochish",
         "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
     "autotuneImportTitle": {
-        "message": "Blackbox Chirp tahlili"
+        "message": "Qora quti tahlili"
     },
     "autotuneImportButton": {
-        "message": "Blackbox jurnalini import qilish"
+        "message": "Qora quti jurnalini import qilish"
     },
     "autotuneImportDescription": {
-        "message": "Chastota javobini tahlil qilish va PID tavsiyalarini hisoblash uchun debug_mode = CHIRP bilan yozilgan blackbox jurnalini import qiling."
+        "message": "Chastota javobini tahlil qilish va PID tavsiyalarini hisoblash uchun debug_mode = CHIRP bilan yozilgan qora quti jurnalini import qiling."
     },
     "autotuneSelectingFile": {
         "message": "Fayl tanlanmoqda..."
@@ -473,7 +473,7 @@
         "message": "Kuchaytirishlarni qo'llash uchun parvoz kontrolleriga ulaning."
     },
     "autotuneNoLogs": {
-        "message": "Ushbu faylda yaroqli blackbox jurnallari topilmadi."
+        "message": "Ushbu faylda yaroqli qora quti jurnallari topilmadi."
     },
     "autotuneNoChirpData": {
         "message": "Chirp ma'lumotlari topilmadi. Jurnal debug_mode = CHIRP bilan yozilganiga va chirp rejimi faollashtirilganiga ishonch hosil qiling."
@@ -596,10 +596,10 @@
         "message": "LED lenta"
     },
     "tabCLI": {
-        "message": "Komandalar qatori"
+        "message": "Komandalar qatori CLI"
     },
     "tabLogging": {
-        "message": "Kabelli jurnallash"
+        "message": "Jurnallash"
     },
     "tabOnboardLogging": {
         "message": "Qora quti"
@@ -962,7 +962,7 @@
         "message": "Dasturiy ta'minot"
     },
     "defaultSoftwareText": {
-        "message": "Bizning <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox jurnal ko'ruvchimiz<\/a> onlayn ilova sifatida mavjud.<br \/><br \/>Bizning <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua skriptlari<\/a> to'plamimiz GitHub'da mavjud.<br \/><br \/>Proshivka, ushbu ilova va blackbox ko'ruvchi uchun bizning <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">manba kodimizni<\/a> GitHub'dan yuklab olishingiz mumkin."
+        "message": "Bizning <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Qora quti jurnal ko'rish ilovasi<\/a> onlayn ilova sifatida mavjud.<br \/><br \/>Bizning <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua skriptlari<\/a> to'plamimiz GitHub'da mavjud.<br \/><br \/>Proshivka, ushbu ilova va qora qutini ochish ilovasi uchun bizning <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">manba kodimizni<\/a> GitHub'dan yuklab olishingiz mumkin."
     },
     "defaultContributingHead": {
         "message": "Hissa qo'shish"
@@ -1014,13 +1014,13 @@
         "message": "Hujjatlar \/ Qo'llanma"
     },
     "defaultDocumentation": {
-        "message": "Betaflight hujjatlari chiqarilish eslatmalari va wiki'da mavjud.<br \/><br \/>"
+        "message": "Betaflight yo'riqnomalari reliz qaydnomalari va wiki'da mavjud.<br \/><br \/>"
     },
     "defaultDocumentation1": {
         "message": "Betaflight wiki ma'lumot uchun ajoyib manba, uni <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">shu yerdan<\/a> topishingiz mumkin."
     },
     "defaultDocumentation2": {
-        "message": "Proshivka uchun chiqarilish eslatmalarini GitHub chiqarilishlar sahifasida, <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">shu yerda<\/a> o'qishingiz mumkin."
+        "message": "Proshivka uchun reliz qaydnomalari GitHub reliz sahifasida, <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">shu yerda<\/a> o'qishingiz mumkin."
     },
     "defaultSupportHead": {
         "message": "Yordam"
@@ -1551,7 +1551,7 @@
         "message": "Yerga bo'lgan masofani sm'da o'lchash uchun Sonar masofa o'lchagichni yoqish"
     },
     "featureTELEMETRY": {
-        "message": "Telemetriya chiqishi"
+        "message": "Telemetriya ma'lumotlarini uzatish"
     },
     "featureTELEMETRYTip": {
         "message": "Uzatgichga yuborish uchun telemetriya chiqishini yoqish"
@@ -1644,7 +1644,7 @@
         "message": "Telemetriya"
     },
     "configurationTelemetryHelp": {
-        "message": "Qabul qilgichdan telemetriya chiqishi"
+        "message": "Qabul qilgichdan telemetriya ma'lumotlari olish"
     },
     "configurationRSSI": {
         "message": "RSSI"
@@ -1923,7 +1923,7 @@
         "message": "Iltimos, ESC'laringizga mos motor chiqish protokolini tanlang. $t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Ehtiyot bo'ling:<\/strong> ESC'laringiz qo'llab-quvvatlamaydigan motor chiqish protokolini tanlash <strong>batareya ulanishi bilanoq ESC'larning aylana boshlashiga<\/strong> olib kelishi mumkin. Shu sababli, <strong>motor chiqish protokolini o'zgartirgandan keyin birinchi marta batareya ulashdan oldin har doim vintlarni olib tashlang<\/strong>."
+        "message": "<strong>Ehtiyot bo'ling:<\/strong> ESC'laringiz qo'llab-quvvatlamaydigan motor chiqish protokolini tanlash <strong>batareya ulanishi bilanoq ESC'larning aylana boshlashiga<\/strong> olib kelishi mumkin. Shu sababli, <strong>motor chiqish protokolini o'zgartirgandan keyin birinchi marta batareya ulashdan oldin har doim propellerlarni olib tashlang<\/strong>."
     },
     "configurationDshotBeeper": {
         "message": "Dshot signal sozlamalari"
@@ -1992,7 +1992,7 @@
         "message": "Parvoz kontrolleri USB'dan quvvat olganda signal beradi. Agar stol ustida ishlayotganda signal chalinishini xohlamasangiz, buni o'chiring"
     },
     "beeperBLACKBOX_ERASE": {
-        "message": "Blackbox tozalash tugallanganda signal beradi"
+        "message": "Qora quti tozalash tugallanganda signal beradi"
     },
     "beeperCRASH_FLIP": {
         "message": "Crash flip rejimi faol bo'lganda signal beradi"
@@ -2198,7 +2198,7 @@
         "message": "Serial RX"
     },
     "portsFunction_BLACKBOX": {
-        "message": "Blackbox jurnallash"
+        "message": "Qora quti jurnallash"
     },
     "portsFunction_TBS_SMARTAUDIO": {
         "message": "VTX (TBS SmartAudio)"
@@ -2350,11 +2350,11 @@
         "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorThrottle": {
-        "message": "Gaz avto omili",
+        "message": "Throttle Auto Factor",
         "description": "Throttle Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorThrottleHelp": {
-        "message": "Gaz omili hisoblanishini moslashtiradi, 10 - standart omil\/kechikish nisbati. Sonni oshirish gaz kirishlarini ko'proq silliqlaydi, shu bilan birga kechikishni ham oshiradi. Bu ishonchsiz RC ulanishlari yoki kinematografik parvoz uchun foydali bo'lishi mumkin.<br>50'ga yaqin sonlarga ehtiyot bo'ling, kirish kechikishi sezilarli bo'lib qoladi.<br>Avtomatik hisoblangan RC smoothing chegaralarini ko'rish uchun TX va RX yoqilgan holda rc_smoothing_info CLI buyrug'idan foydalaning.",
+        "message": "Throttle omili hisoblanishini moslashtiradi, 10 - standart omil\/kechikish nisbati. Sonni oshirish Throttle kirishlarini ko'proq silliqlaydi, shu bilan birga kechikishni ham oshiradi. Bu ishonchsiz RC ulanishlari yoki kinematografik parvoz uchun foydali bo'lishi mumkin.<br>50'ga yaqin sonlarga ehtiyot bo'ling, kirish kechikishi sezilarli bo'lib qoladi.<br>Avtomatik hisoblangan RC smoothing chegaralarini ko'rish uchun TX va RX yoqilgan holda rc_smoothing_info CLI buyrug'idan foydalaning.",
         "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
@@ -2391,7 +2391,7 @@
         "message": "RC smoothing avtomatik hisoblanishini (tavsiya etiladi) yoki foydalanuvchi tomonidan qo'lda tanlanishini belgilaydi. Crossfire kabi parvoz davomida o'zgarishi mumkin bo'lgan qabul qilgich protokollari uchun \"Qo'lda\"dan foydalanish tavsiya etilmaydi."
     },
     "rcSmoothingThrottleCutoffHelp": {
-        "message": "Gaz smoothing filtri tomonidan ishlatiladigan chegara chastotasi (Hz). Pastroq qiymatlardan foydalanish silliqroq kirishlarga olib keladi va sekinroq qabul qilgich protokollari uchun mosroq. Ko'pchilik foydalanuvchilar buni \"Avto\"ga mos keladigan 0'da qoldirishlari kerak."
+        "message": "Throttle smoothing filtri tomonidan ishlatiladigan chegara chastotasi Hz. Pastroq qiymatlardan foydalanish silliqroq kirishlarga olib keladi va sekinroq qabul qilgich protokollari uchun mosroq. Ko'pchilik foydalanuvchilar buni \"Avto\"ga mos keladigan 0'da qoldirishlari kerak."
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Setpoint chegara chastotasi"
@@ -2773,7 +2773,7 @@
         "description": "Yaw label in signal graph"
     },
     "receiverRowContainerThrottle": {
-        "message": "Gaz [T]:",
+        "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
@@ -2893,11 +2893,11 @@
         "description": "Help text to BEEP GPS SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
-        "message": "BlackBox jurnallashni yoqish",
+        "message": "Qora quti jurnallashni yoqish",
         "description": "Help text to BLACKBOX mode"
     },
     "auxiliaryHelpMode_BLACKBOXERASE": {
-        "message": "BlackBox jurnalini tozalash",
+        "message": "Qora quti jurnalini tozalash",
         "description": "Help text to BLACKBOX ERASE mode"
     },
     "auxiliaryHelpMode_BOXPREARM": {
@@ -3736,10 +3736,10 @@
         "message": "Asosiy"
     },
     "motorsNotice": {
-        "message": "<strong>Motor sinov rejimi \/ Ishga tushirish haqida bildirishnoma:<\/strong><br \/><br \/><strong class=\"message-negative\">OGOHLANTIRISH: Jiddiy jarohat xavfi! Barcha vintlarni olib tashlang!<\/strong><br \/><br \/><ul><li>&#x2022; Ishga tushirilganda yoki slayderlar ko'tarilganda motorlar aylana boshlaydi<\/li><li>&#x2022; Boshqa bo'limga o'tgandan keyin ham motor sinov rejimi faol qoladi<\/li><li>&#x2022; Har qanday tugmani bosish motorlarni to'xtatadi, lekin faqat Motorlar bo'limida<\/li><li>&#x2022; USB kabelini uzish motorlarni to'xtatmasligi mumkin!<\/li><\/ul>"
+        "message": "<strong>Motor sinov rejimi \/ Ishga tushirish haqida bildirishnoma:<\/strong><br \/><br \/><strong class=\"message-negative\">OGOHLANTIRISH: Jiddiy jarohat xavfi! Barcha propellerlarni olib tashlang!<\/strong><br \/><br \/><ul><li>&#x2022; Ishga tushirilganda yoki slayderlar ko'tarilganda motorlar aylana boshlaydi<\/li><li>&#x2022; Boshqa bo'limga o'tgandan keyin ham motor sinov rejimi faol qoladi<\/li><li>&#x2022; Har qanday tugmani bosish motorlarni to'xtatadi, lekin faqat Motorlar bo'limida<\/li><li>&#x2022; USB kabelini uzish motorlarni to'xtatmasligi mumkin!<\/li><\/ul>"
     },
     "motorsEnableControl": {
-        "message": "<strong>Men xavflarni tushunaman<\/strong>, vintlar olib tashlangan - motor boshqaruvi va ishga tushirishni yoqing, Nazoratsiz ko'tarilishning oldini olishni o'chiring."
+        "message": "<strong>Men xavflarni tushunaman<\/strong>, propellerlar olingan - motor boshqaruvi va ishga tushirishni yoqing, Nazoratsiz ko'tarilishning oldini olishni o'chiring."
     },
     "motorsDialogMixerReset": {
         "message": "<strong>Mikser rejimi muammosi aniqlandi<\/strong><br \/><br \/>{{mixerName}} modeli <strong class=\"message-positive\">{{mixerMotors}}<\/strong> motor resursini talab qiladi, proshivkaning joriy konfiguratsiyasi esa tanlangan rejim uchun <strong class=\"message-positive\">{{outputs}}<\/strong> ta ishlatiladigan chiqish(lar)ni ta'minlaydi.<br \/><br \/>Agar maxsus mikser rejimidan foydalanayotgan bo'lsangiz, mikser rejimini o'zgartirishdan oldin maxsus mmix'ni belgilashingiz kerak.<br \/><br \/>Iltimos, konfiguratsiyangizni tekshiring va kerakli motor resurslarini qo'shing."
@@ -3772,7 +3772,7 @@
         "message": "<strong>Men xavflarni tushunaman<\/strong>,<br \/>vintlar olib tashlangan."
     },
     "motorsRemapDialogRiskNotice": {
-        "message": "<strong>Xavfsizlik haqida bildirishnoma<\/strong><br \/><strong class=\"message-negative\">Jarohatning oldini olish uchun barcha vintlarni olib tashlang!<\/strong><br \/>Motorlar <strong>aylana boshlaydi!<\/strong>"
+        "message": "<strong>Xavfsizlik haqida bildirishnoma<\/strong><br \/><strong class=\"message-negative\">Jarohatning oldini olish uchun barcha propellerlarni yechib qo'ying!<\/strong><br \/>Motorlar <strong>aylana boshlaydi!<\/strong>"
     },
     "motorsRemapDialogExplanations": {
         "message": "<strong>Ma'lumot bildirishnomasi<\/strong><br \/>Motorlar birma-bir aylana boshlaydi va siz qaysi motor aylanayotganini tanlashingiz mumkin bo'ladi. Batareya ulangan bo'lishi, to'g'ri ESC protokoli tanlangan bo'lishi kerak. Bu vosita faqat hozirda faol motorlarni qayta tartiblashi mumkin. Murakkabroq qayta xaritalash CLI Resource buyrug'ini talab qiladi. Ushbu <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki sahifasiga<\/a> qarang."
@@ -3799,7 +3799,7 @@
         "message": "Tanlanganda motorlar aylanadi!"
     },
     "escDshotDirectionDialog-RiskNotice": {
-        "message": "<strong>Xavfsizlik haqida bildirishnoma<\/strong><br \/><strong class=\"message-negative-italic\">Jarohatning oldini olish uchun barcha vintlarni olib tashlang!<\/strong><br \/>Tanlanganda motorlar darhol <strong>aylana boshlaydi<\/strong>!"
+        "message": "<strong>Xavfsizlik haqida bildirishnoma<\/strong><br \/><strong class=\"message-negative-italic\">Jarohatning oldini olish uchun barcha propellerlarni olib tashlang!<\/strong><br \/>Tanlanganda motorlar darhol <strong>aylana boshlaydi<\/strong>!"
     },
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>Men xavflarni tushunaman<\/strong>,<br \/>barcha vintlar olib tashlangan."
@@ -3982,7 +3982,7 @@
         "message": "Jurnal xususiyatlari"
     },
     "loggingSamplingInterval": {
-        "message": "Namuna olish oralig'i:"
+        "message": "Namuna olish intervali:"
     },
     "loggingSamplesSaved": {
         "message": "Saqlangan namunalar:"
@@ -4018,19 +4018,19 @@
         "message": "Oldingi jurnal fayli avtomatik yuklandi: <strong>$1<\/strong>"
     },
     "blackboxNotSupported": {
-        "message": "Parvoz kontrolleringiz proshivkasi Blackbox jurnallashni qo'llab-quvvatlamaydi."
+        "message": "Parvoz kontrolleringiz proshivkasi Qora quti jurnallashni qo'llab-quvvatlamaydi."
     },
     "blackboxMaybeSupported": {
-        "message": "Parvoz kontrolleringiz proshivkasi ushbu bo'limni qo'llab-quvvatlash uchun juda eski, yoki Blackbox funksiyasi Konfiguratsiya bo'limida o'chirilgan."
+        "message": "Parvoz kontrolleringiz proshivkasi ushbu bo'limni qo'llab-quvvatlash uchun juda eski, yoki Qora quti funksiyasi Konfiguratsiya bo'limida o'chirilgan."
     },
     "blackboxConfiguration": {
-        "message": "Blackbox konfiguratsiyasi"
+        "message": "Qora quti konfiguratsiyasi"
     },
     "blackboxButtonSave": {
         "message": "Saqlash va qayta yuklash"
     },
     "blackboxLoggingNone": {
-        "message": "Jurnallash yo'q"
+        "message": "Jurnallash o‘chirilgan"
     },
     "blackboxLoggingFlash": {
         "message": "O'rnatilgan flash"
@@ -4088,7 +4088,7 @@
         "message": "Dataflashni tozalashni tasdiqlang"
     },
     "dataflashConfirmEraseNote": {
-        "message": "Bu dataflashdagi barcha Blackbox jurnallari yoki boshqa ma'lumotlarni o'chiradi. Bu taxminan 20 soniya vaqt oladi, ishonchingiz komilmi?"
+        "message": "Bu dataflashdagi barcha Qora quti jurnallari yoki boshqa ma'lumotlarni o'chiradi. Bu taxminan 20 soniya vaqt oladi, ishonchingiz komilmi?"
     },
     "dataflashSavingTitle": {
         "message": "Dataflash faylga saqlanmoqda"
@@ -4154,7 +4154,7 @@
         "message": "Chiqarilish sahifasiga tashrif buyuring."
     },
     "firmwareFlasherReleaseNotes": {
-        "message": "Chiqarilish eslatmalari:"
+        "message": "Reliz qaydnomalari:"
     },
     "firmwareFlasherReleaseDate": {
         "message": "Sana:"
@@ -4233,7 +4233,7 @@
         "message": "Target yuklandi, iltimos proshivka faylini yuklang"
     },
     "firmwareFlasherNoReboot": {
-        "message": "Qayta yuklash ketma-ketligi yo'q"
+        "message": "Qayta yuklash ketma-ketligini nofaollashtirish"
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Mavjud platalarni ko'rish uchun build turini tanlang."
@@ -4272,16 +4272,16 @@
         "message": "Port"
     },
     "firmwareFlasherManualBaud": {
-        "message": "Qo'lda boud tezligi"
+        "message": "Belgilangan boud tezligi"
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "Standart tezlikni qo'llab-quvvatlamaydigan platalar uchun yoki bluetooth orqali yozish uchun boud tezligini qo'lda tanlash.<br \/><span class=\"message-negative\">Eslatma:<\/span> USB DFU orqali yozishda ishlatilmaydi"
     },
     "firmwareFlasherBaudRate": {
-        "message": "Boud tezligi"
+        "message": "Boud Tezligi"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Chiqarilish nomzodlarini ko'rsatish"
+        "message": "Reliz nomzodlarini ko'rsatish"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Barqaror chiqarilishlarga qo'shimcha ravishda chiqarilish nomzodlarini ko'rsatish"
@@ -4290,7 +4290,7 @@
         "message": "Yuklanmoqda ..."
     },
     "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Chiqarilish"
+        "message": "Reliz"
     },
     "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
         "message": "Chiqarilish va Chiqarilish nomzodi"
@@ -4375,7 +4375,7 @@
         "message": "Agar platangiz bilan aloqani yo'qotgan bo'lsangiz, aloqani tiklash uchun quyidagi qadamlarga amal qiling:<ul><li>O'chiring<\/li><li>'Qayta yuklash ketma-ketligi yo'q'ni yoqing, 'To'liq chipni tozalash'ni yoqing.<\/li><li>BOOT pinlarini ulang yoki BOOT tugmasini bosib turing.<\/li><li>Yoqing (agar to'g'ri bajarilgan bo'lsa, faollik LED'i YONMAYDI).<\/li><li>Agar kerak bo'lsa, barcha STM32 drayverlari va Zadig'ni o'rnating (Betaflight qo'llanmasining <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/firmware-installation\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> bo'limiga qarang).<\/li><li>Ilovani yoping, so'ng qayta ishga tushiring.<\/li><li>Agar FC'ingizda BOOT tugmasi bo'lsa, uni qo'yib yuboring.<\/li><li>To'g'ri proshivka bilan yozing (FC'ingiz qo'llanmasida ko'rsatilgan bo'lsa, qo'lda boud tezligidan foydalanib).<\/li><li>O'chiring.<\/li><li>BOOT ulagichini olib tashlang.<\/li><li>Yoqing (faollik LED'i yonishi kerak).<\/li><li>Odatdagidek ulaning.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
-        "message": "Agar aloqani yo'qotgan bo'lsangiz: o'chiring, No Reboot Sequence va Full Chip Erase'ni yoqing, BOOT pinlarini ulang, so'ng yoqing. Kerak bo'lsa drayverlarni o'rnating."
+        "message": "Agar aloqani yo'qotgan bo'lsangiz: tokdan o'chiring, qayta yuklash ketma-ketligini nofaollashtiring va To'liq chipni tozalash'ni yoqing, BOOT pinlarini ulang, so'ng yoqing. Kerak bo'lsa drayverlarni o'rnating."
     },
     "firmwareFlasherReadMore": {
         "message": "Ko'proq o'qish →"
@@ -4768,11 +4768,11 @@
         "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
-        "message": "LED lenta simlanishi",
+        "message": "LED chirog'i bog'lanishi",
         "description": "One of the modes in Led Strip"
     },
     "ledStripWiringMode": {
-        "message": "Sim tartibi rejimi",
+        "message": "Bog'lanish tartibi rejimi",
         "description": "One of the wiring modes in Led Strip"
     },
     "ledStripWiringClearControl": {
@@ -4867,7 +4867,7 @@
         "message": "Yaw [R]"
     },
     "controlAxisThrottle": {
-        "message": "Gaz [T]"
+        "message": "Throttle [T]"
     },
     "controlAxisAux1": {
         "message": "AUX 1"
@@ -5728,7 +5728,7 @@
         "message": "Kalibrlash uchun, uchar qurilmangizdagi haqiqiy kuchlanish\/tok sarfini (batareya ulangan holda) o'lchash uchun multimetrdan foydalaning va qiymatlarni quyida kiriting. Keyin, xuddi shu batareya ulangan holda, [Kalibrlash]ni bosing."
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>Eslatma:<\/strong> Shkalani kalibrlashdan oldin kuchlanish uchun bo'luvchi va ko'paytiruvchi hamda amperaj uchun siljish to'g'ri o'rnatilganligiga ishonch hosil qiling.<br>Qiymatlarni 0'da qoldirish kalibrlashni qo'llamaydi.<\/br><strong>Batareyani ulashdan oldin vintlarni olib tashlashni unutmang!<\/strong>"
+        "message": "<strong>Eslatma:<\/strong> Shkalani kalibrlashdan oldin kuchlanish uchun bo'luvchi va ko'paytiruvchi hamda amperaj uchun siljish to'g'ri o'rnatilganligiga ishonch hosil qiling.<br>Qiymatlarni 0'da qoldirish kalibrlashni qo'llamaydi.<\/br><strong>Batareyani ulashdan oldin propellerlarni olib tashlashni unutmang!<\/strong>"
     },
     "powerCalibrationManagerWarning": {
         "message": "<span class=\"message-negative\">Ogohlantirish:<\/span> Batareya <span class=\"message-negative\">ulanmagan<\/span> yoki kuchlanish va amperaj o'lchagich manbalari <span class=\"message-negative\">to'g'ri o'rnatilmagan.<\/span> Kuchlanish va\/yoki amperaj 0'dan yuqori qiymatni o'qiyotganiga ishonch hosil qiling. Aks holda ushbu vosita yordamida kalibrlay olmaysiz."
@@ -6791,11 +6791,11 @@
         "message": "Har bir motorning chiqishi grafigini ko'rsatadi"
     },
     "osdTextElementLogStatus": {
-        "message": "Blackbox jurnal holati",
+        "message": "Qora quti jurnal holati",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLogStatus": {
-        "message": "Blackbox raqami va ogohlantirishlari"
+        "message": "Qora quti raqami va ogohlantirishlari"
     },
     "osdTextElementFlipArrow": {
         "message": "Halokatdan keyingi ag'darish strelkasi",
@@ -6987,7 +6987,7 @@
         "message": "Maksimal qayd etilgan balandlik"
     },
     "osdTextStatBlackbox": {
-        "message": "Blackbox foydalanishi",
+        "message": "Qora quti foydalanishi",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackbox": {
@@ -7022,11 +7022,11 @@
         "message": "Uy joyidan maksimal masofa"
     },
     "osdTextStatBlackboxLogNumber": {
-        "message": "Blackbox raqami",
+        "message": "Qora quti raqami",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackboxLogNumber": {
-        "message": "Ushbu parvozning Blackbox jurnali raqami"
+        "message": "Ushbu parvozning Qora quti jurnali raqami"
     },
     "osdTextStatTimer1": {
         "message": "Taymer 1",
@@ -8186,16 +8186,16 @@
         "message": "FPV kamera burchagi [daraja]"
     },
     "onboardLoggingBlackbox": {
-        "message": "Blackbox jurnallash qurilmasi"
+        "message": "Qora quti jurnallash qurilmasi"
     },
     "onboardLoggingRateOfLogging": {
-        "message": "Blackbox jurnallash tezligi"
+        "message": "Qora quti jurnallash tezligi"
     },
     "onboardLoggingDebugFields": {
         "message": "Debug maydonlari kiritilgan"
     },
     "onboardLoggingDebugMode": {
-        "message": "Blackbox debug rejimi"
+        "message": "Qora quti debug rejimi"
     },
     "onboardLoggingDebugModeUnknown": {
         "message": "NOMA'LUM"
@@ -8255,7 +8255,7 @@
         "message": "Yangi target yozishdan oldin zaxira nusxa yaratish"
     },
     "darkTheme": {
-        "message": "Tungi mavzuni yoqish"
+        "message": "Tungi mavzuni faollashtirish"
     },
     "colorTheme": {
         "message": "Rang mavzusi",
@@ -8274,7 +8274,7 @@
         "description": "Contrast color theme"
     },
     "uiScale": {
-        "message": "UI shkalasi",
+        "message": "Foydalanuvchi interfeysi uzoqligi",
         "description": "Scale the entire user interface up or down"
     },
     "pidTuningRatesType": {
@@ -9106,6 +9106,10 @@
     "backupNoBackupsAvailable": {
         "message": "Zaxira nusxalar mavjud emas"
     },
+    "backupRequiresConnection": {
+        "message": "Ushbu harakatni amalga oshirish uchun uchun parvoz kontrolleriga ulaning",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
     "titleEditBackup": {
         "message": "Zaxira nusxani tahrirlash"
     },
@@ -9136,7 +9140,7 @@
         "message": "Parvoz joyi"
     },
     "preflightUseMyLocation": {
-        "message": "Mening joylashuvimdan foydalanish"
+        "message": "Joylashuvimni aniqla"
     },
     "preflightDetecting": {
         "message": "Aniqlanmoqda..."

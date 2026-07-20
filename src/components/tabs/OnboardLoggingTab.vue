@@ -217,8 +217,10 @@
                                         href="#"
                                         @click.prevent="flashSaveBegin(false)"
                                     >
-                                        <span>{{ $t("dataflashButtonSaveFile") }}</span>
-                                        <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
+                                        <span class="inline-flex items-center gap-1">
+                                            <span>{{ $t("dataflashButtonSaveFile") }}</span>
+                                            <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
+                                        </span>
                                     </a>
                                     <p v-html="$t('dataflashSavetoFileNote')"></p>
                                 </div>
@@ -617,11 +619,29 @@ export default defineComponent({
             eraseOpen.value = true;
         }
 
-        function flashErase() {
-            connectionStore.pauseLiveData();
-            connectionStore.clearMspQueue();
-            isErasing.value = true;
-            MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
+        async function flashErase() {
+            try {
+                connectionStore.pauseLiveData();
+                // Await the drain: clearMspQueue() resolves callbacks_cleanup() asynchronously, so
+                // firing it unawaited would wipe the pollForEraseCompletion callback we register just
+                // below (the erase send is non-errorAware and cleanup drops it silently) — leaving the
+                // dialog stuck forever even though the FC does erase. Drain first, then register.
+                await connectionStore.clearMspQueue();
+                isErasing.value = true;
+                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
+            } catch (error) {
+                // Startup failed before the erase poll could take over: restore the UI and
+                // live-data pump so the dialog doesn't strand, and surface the failure.
+                console.error("Failed to start dataflash erase", error);
+                isErasing.value = false;
+                eraseOpen.value = false;
+                connectionStore.resumeLiveData();
+                gui_log(
+                    `<strong><span class="message-negative">${i18n.getMessage("error", {
+                        errorMessage: error,
+                    })}</span></strong>`,
+                );
+            }
         }
 
         function flashEraseCancel() {
@@ -631,24 +651,43 @@ export default defineComponent({
             connectionStore.resumeLiveData();
         }
 
-        function pollForEraseCompletion() {
-            flashUpdateSummary(() => {
+        async function pollForEraseCompletion() {
+            if (!connectionStore.connectionValid || eraseCancelled.value) {
+                return;
+            }
+
+            try {
+                // errorAware request so a timeout settles instead of stranding a legacy
+                // callback: the flash chip can stop answering MSP mid-erase, and we must
+                // keep polling rather than abandon the dialog on a single missed summary.
+                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
+            } catch {
+                // Summary timed out/cancelled (flash unresponsive mid-erase). Re-poll without
+                // reading the stale cached ready flag — it still holds the pre-erase value and
+                // would otherwise close the dialog before the erase has actually finished.
                 if (connectionStore.connectionValid && !eraseCancelled.value) {
-                    if (fcStore.dataflash?.ready) {
-                        isErasing.value = false;
-                        eraseOpen.value = false;
-                        connectionStore.resumeLiveData();
-                        if (getConfig("showNotifications").showNotifications) {
-                            NotificationManager.showNotification("Betaflight App", {
-                                body: i18n.getMessage("flashEraseDoneNotification"),
-                                icon: "/images/pwa/favicon.ico",
-                            });
-                        }
-                    } else {
-                        setTimeout(pollForEraseCompletion, 500);
-                    }
+                    setTimeout(pollForEraseCompletion, 500);
                 }
-            });
+                return;
+            }
+
+            if (!connectionStore.connectionValid || eraseCancelled.value) {
+                return;
+            }
+
+            if (fcStore.dataflash?.ready) {
+                isErasing.value = false;
+                eraseOpen.value = false;
+                connectionStore.resumeLiveData();
+                if (getConfig("showNotifications").showNotifications) {
+                    NotificationManager.showNotification("Betaflight App", {
+                        body: i18n.getMessage("flashEraseDoneNotification"),
+                        icon: "/images/pwa/favicon.ico",
+                    });
+                }
+            } else {
+                setTimeout(pollForEraseCompletion, 500);
+            }
         }
 
         function flashUpdateSummary(onDone) {
@@ -670,7 +709,7 @@ export default defineComponent({
             saveOpen.value = false;
         }
 
-        function markSavingDialogDone(startTime, totalBytes, totalBytesCompressed) {
+        function logSaveStats(startTime, totalBytes, totalBytesCompressed) {
             const totalTime = (Date.now() - startTime) / 1000;
             console.log(
                 `Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${(totalBytes / totalTime / 1024).toFixed(
@@ -686,13 +725,25 @@ export default defineComponent({
                 );
             }
 
-            saveDone.value = true;
-
             if (getConfig("showNotifications").showNotifications) {
                 NotificationManager.showNotification("Betaflight App", {
                     body: i18n.getMessage("flashDownloadDoneNotification"),
                     icon: "/images/pwa/favicon.ico",
                 });
+            }
+        }
+
+        function completeSave(startTime, nextAddress, totalBytesCompressed, maxBytes, alsoErase) {
+            logSaveStats(startTime, nextAddress, totalBytesCompressed);
+
+            if (alsoErase && !saveCancelled.value) {
+                // Save-and-erase: skip the "Save completed, press OK" confirmation and flow
+                // straight into the erase, which shows its own progress dialog. The extra OK
+                // step only made sense for the plain save-to-file flow.
+                dismissSavingDialog();
+                conditionallyEraseFlash(maxBytes, nextAddress);
+            } else {
+                saveDone.value = true;
             }
         }
 
@@ -702,6 +753,7 @@ export default defineComponent({
 
         function conditionallyEraseFlash(maxBytes, nextAddress) {
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
+                connectionStore.pauseLiveData();
                 eraseCancelled.value = false;
                 isErasing.value = true;
                 eraseOpen.value = true;
@@ -768,19 +820,24 @@ export default defineComponent({
                                     totalBytesCompressed += bytesCompressed;
                                 }
 
-                                saveProgress.value = (nextAddress / maxBytes) * 100;
+                                // Clamp: the final chunk can push nextAddress past the
+                                // reported usedSize, and UProgress rejects value > max (100).
+                                saveProgress.value = Math.min((nextAddress / maxBytes) * 100, 100);
 
                                 const blob = new Blob([chunkDataView]);
                                 FileSystem.writeChunck(openedFile, blob).then(() => {
                                     if (saveCancelled.value || nextAddress >= maxBytes) {
+                                        FileSystem.closeFile(openedFile);
                                         if (saveCancelled.value) {
                                             dismissSavingDialog();
                                         } else {
-                                            markSavingDialogDone(startTime, nextAddress, totalBytesCompressed);
-                                        }
-                                        FileSystem.closeFile(openedFile);
-                                        if (!saveCancelled.value && alsoErase) {
-                                            conditionallyEraseFlash(maxBytes, nextAddress);
+                                            completeSave(
+                                                startTime,
+                                                nextAddress,
+                                                totalBytesCompressed,
+                                                maxBytes,
+                                                alsoErase,
+                                            );
                                         }
                                         return;
                                     }
@@ -794,11 +851,8 @@ export default defineComponent({
                                 });
                             } else {
                                 // Zero-byte block = end of file
-                                markSavingDialogDone(startTime, nextAddress, totalBytesCompressed);
                                 FileSystem.closeFile(openedFile);
-                                if (!saveCancelled.value && alsoErase) {
-                                    conditionallyEraseFlash(maxBytes, nextAddress);
-                                }
+                                completeSave(startTime, nextAddress, totalBytesCompressed, maxBytes, alsoErase);
                             }
                         } else {
                             // Error - retry
