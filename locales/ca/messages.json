@@ -9206,6 +9206,10 @@
     "backupNoBackupsAvailable": {
         "message": "No hi ha cap còpia de seguretat disponible"
     },
+    "backupRequiresConnection": {
+        "message": "Connecta una controladora de vol per habilitar aquesta acció",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
     "titleEditBackup": {
         "message": "Edita la còpia de seguretat"
     },
