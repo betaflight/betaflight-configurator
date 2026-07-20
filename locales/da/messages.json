@@ -978,7 +978,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
+        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -1423,7 +1423,7 @@
         "message": "Firmware info"
     },
     "initialSetupInfoFirmwareHelp": {
-        "message": "Viser information om indhold i firmware, kræver online adgang.<br>Indstillinger viser valg defineret ved Cloud Build.<br>Log og Konfiguration har link til Cloud information via nøgle gemt i firmware.<br>Ved lokalt bygget firmware, er sektionen tom.",
+        "message": "Viser information om indhold i firmware, kræver online adgang.<br>Indstillinger viser valg defineret ved Cloud byg.<br>Log og Konfiguration har link til Cloud information via nøgle gemt i firmware.<br>Ved lokalt bygget firmware, er sektionen tom.",
         "description": "Message that pops up to describe the Build \/ Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1451,7 +1451,7 @@
         "message": "Valg"
     },
     "initialSetupInfoBuildOptionList": {
-        "message": "Valg defineret i firmware build"
+        "message": "Valg defineret i firmware byg"
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Lokalt bygget - ingen Cloud Build information"
@@ -1743,7 +1743,7 @@
         "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Auto registrerer justering af FC..."
+        "message": "Auto registrer FC justering..."
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "FC justering guide"
@@ -1842,7 +1842,7 @@
         "message": "Krængning vinkel blev ikke registreret. Prøv igen og vip højre side længere ned."
     },
     "boardAlignmentWizard-StepFlat": {
-        "message": "Flad"
+        "message": "Fladt"
     },
     "boardAlignmentWizard-StepPitch": {
         "message": "Højderor"
@@ -2323,7 +2323,7 @@
         "message": "Skjul ubenyttede PID profiler"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": "Profil <strong>u<\/strong>afhængige PID controller indstillinger"
+        "message": "Profil ikke-afhængige PID controller indstillinger"
     },
     "pidTuningAntiGravity": {
         "message": "Anti tyngekraft"
@@ -9201,6 +9201,10 @@
     },
     "backupNoBackupsAvailable": {
         "message": "Ingen sikkerhedskopier tilgængelige"
+    },
+    "backupRequiresConnection": {
+        "message": "Tilslut FC for at aktivere sikkerhedskopi",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
     },
     "titleEditBackup": {
         "message": "Rediger sikkerhedskopi"
