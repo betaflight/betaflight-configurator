@@ -22,6 +22,14 @@ export function useDataflashPull() {
         () => !!GUI.connected_to && connectionStore.connectionValid && (FC.DATAFLASH?.usedSize || 0) > 0,
     );
 
+    /**
+     * Pull the onboard dataflash log into memory.
+     *
+     * @returns {Promise<Uint8Array>} Resolves with the downloaded log bytes.
+     * @throws {Error} If not connected or the flight controller holds no log data.
+     * @throws {MspTimeoutError|MspCancelledError|MspCrcError} If the underlying MSP
+     *   summary/read flow fails (e.g. timeout, disconnect or queue drain).
+     */
     async function pull() {
         if (!GUI.connected_to) {
             throw new Error("Not connected to a flight controller");
@@ -29,8 +37,6 @@ export function useDataflashPull() {
 
         pulling.value = true;
         progress.value = 0;
-        connectionStore.pauseLiveData();
-        connectionStore.clearMspQueue();
 
         const cleanup = () => {
             pulling.value = false;
@@ -38,6 +44,12 @@ export function useDataflashPull() {
         };
 
         try {
+            connectionStore.pauseLiveData();
+            // Await the drain before the first MSP request: clearMspQueue() runs callbacks_cleanup()
+            // asynchronously, which would otherwise reject the MSP_DATAFLASH_SUMMARY promise we await
+            // just below (it settles errorAware entries with MspCancelledError) and abort the pull.
+            await connectionStore.clearMspQueue();
+
             // Refresh the occupied size before reading.
             await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
             const maxBytes = FC.DATAFLASH?.usedSize || 0;

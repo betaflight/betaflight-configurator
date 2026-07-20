@@ -1366,6 +1366,10 @@
         "message": "位置保持已激活",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "自动导航模式开关已激活",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解锁时有一个禁止解锁标志处于活跃状态",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2144,6 +2148,9 @@
     },
     "configurationSpiRX": {
         "message": "SPI 总线接收机类型"
+    },
+    "configurationSaved": {
+        "message": "配置已保存"
     },
     "configurationButtonSave": {
         "message": "保存并重启"
@@ -5963,6 +5970,9 @@
     "powerBatteryProfileOption": {
         "message": "电池配置 $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "飞控设置了电池配置：<strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "例如：Lipo, Li-Ion"
     },
@@ -7436,6 +7446,14 @@
     "osdWarningPosHoldFailed": {
         "message": "位置保持失败",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "自动导航任务已取消",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "自动导航任务已取消",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
     },
     "osdWarningTextUnknown": {
         "message": "未知 $1"
@@ -9135,6 +9153,10 @@
     },
     "backupNoBackupsAvailable": {
         "message": "无可用备份"
+    },
+    "backupRequiresConnection": {
+        "message": "连接飞控以启用此操作",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
     },
     "titleEditBackup": {
         "message": "编辑备份"

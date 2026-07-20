@@ -1123,7 +1123,7 @@ export function getDebugFieldNames(apiVersion) {
             "debug[3]": "I Term [dbg-axis] * 10",
             "debug[4]": "D Term [dbg-axis] * 10",
             "debug[5]": "A Term [dbg-axis] * 10",
-            "debug[6]": "PID Sum [dbg-axis] * 10",
+            "debug[6]": "F Term [dbg-axis] * 10",
             "debug[7]": "Status Flags [dbg-axis]",
         };
 

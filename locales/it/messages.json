@@ -1366,6 +1366,10 @@
         "message": "Mantieni Posizione attivo",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "Interruttore modalità Autopilota attivo",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Uno dei flag di disarmo è attivo mentre si arma",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -7475,6 +7479,14 @@
         "message": "Mantieni posizione fallita",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
     },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Missione Autopilota interrotta",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Missione Autopilota interrotta",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "Sconosciuto $1"
     },
@@ -9177,6 +9189,10 @@
     },
     "backupNoBackupsAvailable": {
         "message": "Nessun backup disponibile"
+    },
+    "backupRequiresConnection": {
+        "message": "Collega un controllore di volo per abilitare questa azione",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
     },
     "titleEditBackup": {
         "message": "Modifica Backup"
