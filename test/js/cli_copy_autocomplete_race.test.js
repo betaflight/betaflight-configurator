@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { useCli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
@@ -22,6 +22,13 @@ describe("useCli output during CliAutoComplete build", () => {
         cli = useCli();
         cli.windowWrapperRef.value = document.createElement("div");
         cli.cliWindowRef.value = document.createElement("div");
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        CONFIGURATOR.cliActive = false;
+        CONFIGURATOR.cliValid = false;
+        CliAutoComplete.builder.state = "reset";
     });
 
     it("drops any output that streams in while isBuilding() is true", () => {
