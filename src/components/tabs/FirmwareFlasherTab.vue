@@ -14,20 +14,9 @@
                     v-if="activeFlasherStep === 'board-build'"
                     :state="state"
                     :board-selection="boardSelection"
-                    :on-build-type-change="onBuildTypeChange"
                     :on-board-change="onBoardChange"
                     :on-detect-board="handleDetectBoard"
                     :on-firmware-version-change="onFirmwareVersionChange"
-                    :on-expert-mode-change="handleExpertModeChange"
-                    :on-show-development-releases-change="handleShowDevelopmentReleasesChange"
-                    :on-radio-protocol-change="onRadioProtocolChange"
-                    :on-telemetry-protocol-change="onTelemetryProtocolChange"
-                    :on-osd-protocol-change="onOsdProtocolChange"
-                    :on-motor-protocol-change="onMotorProtocolChange"
-                    :on-options-change="onOptionsChange"
-                    :remove-selected-build-option="removeSelectedBuildOption"
-                    :on-commit-change="onCommitChange"
-                    :on-commit-create="onCommitCreate"
                 />
                 <FlasherFlashTab
                     v-if="activeFlasherStep === 'flash'"
@@ -146,13 +135,11 @@ import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
-import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
 import FlasherElrsTab from "./firmware-flasher/FlasherElrsTab.vue";
 import SubtabNav from "../elements/SubtabNav.vue";
-import { applyExpertMode } from "../../js/utils/applyExpertMode";
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
 const activeFlasherStep = ref("board-build");
@@ -562,194 +549,6 @@ export default defineComponent({
             enableLoadRemoteFileButton(true);
         };
 
-        const normalizeSelectValue = (value) => (value === "" ? null : value);
-
-        const buildOptionsList = (optionKey, options) => {
-            // Updated for Vue-based selects - just update state
-            if (optionKey === "radioProtocols") {
-                state.radioProtocolOptions = options.map((option) => ({
-                    value: option.value,
-                    label: option.name,
-                    includesTelemetry: option.includesTelemetry,
-                }));
-            } else if (optionKey === "telemetryProtocols") {
-                state.telemetryProtocolOptions = options.map((option) => ({
-                    ...option,
-                    value: normalizeSelectValue(option.value),
-                    label: option.name,
-                }));
-            } else if (optionKey === "osdProtocols") {
-                state.osdProtocolOptions = options.map((option) => ({
-                    ...option,
-                    value: normalizeSelectValue(option.value),
-                    label: option.name,
-                }));
-            } else if (optionKey === "options") {
-                state.optionsListOptions = options.map((option) => ({
-                    ...option,
-                    label: option.name,
-                }));
-            } else if (optionKey === "motorProtocols") {
-                state.motorProtocolOptions = options.map((option) => ({
-                    ...option,
-                    value: normalizeSelectValue(option.value),
-                    label: option.name,
-                }));
-            }
-        };
-
-        const toggleTelemetryProtocolInfo = () => {
-            const radioOption = state.radioProtocolOptions.find(
-                (option) => option.value === state.selectedRadioProtocol,
-            );
-            const hasTelemetryEnabledByDefault = radioOption?.includesTelemetry === true;
-
-            state.telemetryProtocolDisabled = hasTelemetryEnabledByDefault;
-
-            if (hasTelemetryEnabledByDefault) {
-                // Check if "Automatically Included" option already exists
-                let autoIncludedOption = state.telemetryProtocolOptions.find((option) => option.value === "-1");
-
-                if (!autoIncludedOption) {
-                    // Add the "Automatically Included" option at the beginning
-                    autoIncludedOption = {
-                        value: "-1",
-                        name: $t("firmwareFlasherOptionLabelTelemetryProtocolIncluded"),
-                        label: $t("firmwareFlasherOptionLabelTelemetryProtocolIncluded"),
-                    };
-                    state.telemetryProtocolOptions.unshift(autoIncludedOption);
-                } else {
-                    // Update the existing option text
-                    autoIncludedOption.name = $t("firmwareFlasherOptionLabelTelemetryProtocolIncluded");
-                    autoIncludedOption.label = autoIncludedOption.name;
-                }
-
-                state.selectedTelemetryProtocol = autoIncludedOption.value;
-            } else {
-                // Remove the "Automatically Included" option if it exists
-                const autoIncludedIndex = state.telemetryProtocolOptions.findIndex((option) => option.value === "-1");
-                if (autoIncludedIndex !== -1) {
-                    state.telemetryProtocolOptions.splice(autoIncludedIndex, 1);
-
-                    // If the current selection was "Automatically Included", select the default option
-                    if (state.selectedTelemetryProtocol === "-1") {
-                        const defaultTelemetryProtocol = state.telemetryProtocolOptions.find(
-                            (option) => option.default === true,
-                        );
-                        state.selectedTelemetryProtocol =
-                            defaultTelemetryProtocol?.value || state.telemetryProtocolOptions[0]?.value;
-                    }
-                }
-            }
-        };
-
-        const updateOsdProtocolColor = () => {
-            const v = state.selectedOsdProtocol;
-            state.osdProtocolNeedsAttention = v === "" || v === undefined || v === null;
-        };
-
-        const preselectRadioProtocolFromStorage = () => {
-            const storedRadioProtocol = getConfig("ffRadioProtocol").ffRadioProtocol;
-            if (storedRadioProtocol) {
-                const valueExistsInSelect = state.radioProtocolOptions.some(
-                    (option) => option.value === storedRadioProtocol,
-                );
-                if (valueExistsInSelect) {
-                    state.selectedRadioProtocol = storedRadioProtocol;
-                }
-            }
-        };
-
-        const buildOptions = (data) => {
-            if (!data) {
-                return;
-            }
-
-            // extract osd protocols from general options and add to osdProtocols
-            state.cloudBuildOptions = FC.CONFIG.buildOptions || [];
-
-            // Mark all options as default if they're in cloudBuildOptions
-            data.radioProtocols = data.radioProtocols.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
-                return option;
-            });
-
-            data.telemetryProtocols = data.telemetryProtocols.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
-                return option;
-            });
-
-            data.motorProtocols = data.motorProtocols.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
-                return option;
-            });
-
-            data.generalOptions = data.generalOptions.map((option) => {
-                // If using autodetect (cloudBuildOptions set), only mark as default if present in cloudBuildOptions
-                option.default =
-                    state.cloudBuildOptions.length > 0
-                        ? state.cloudBuildOptions.includes(option.value)
-                        : option.default || false;
-                return option;
-            });
-
-            data.osdProtocols = data.generalOptions
-                .filter((option) => option.group === "OSD")
-                .map((option) => {
-                    option.name = option.groupedName;
-                    option.default = state.cloudBuildOptions?.includes(option.value);
-                    return option;
-                });
-
-            // add None option to osdProtocols as first option
-            data.osdProtocols.unshift({ name: "None", value: "" });
-
-            // remove osdProtocols from generalOptions
-            data.generalOptions = data.generalOptions.filter((option) => !option.group);
-
-            buildOptionsList("radioProtocols", data.radioProtocols);
-            buildOptionsList("telemetryProtocols", data.telemetryProtocols);
-            buildOptionsList("osdProtocols", data.osdProtocols);
-            buildOptionsList("options", data.generalOptions);
-            buildOptionsList("motorProtocols", data.motorProtocols);
-
-            // Preselect options where default === true (same item references as optionsListOptions for USelectMenu)
-            state.selectedOptions = state.optionsListOptions.filter((option) => option.default === true);
-
-            // Preselect radio protocol with default === true (USelect model is option value, not the full object)
-            const defaultRadioProtocol = data.radioProtocols.find((option) => option.default === true);
-            if (defaultRadioProtocol) {
-                state.selectedRadioProtocol = defaultRadioProtocol.value;
-            }
-
-            // Preselect telemetry protocol with default === true
-            const defaultTelemetryProtocol = data.telemetryProtocols.find((option) => option.default === true);
-            if (defaultTelemetryProtocol) {
-                state.selectedTelemetryProtocol = normalizeSelectValue(defaultTelemetryProtocol.value);
-            }
-
-            // Preselect OSD protocol with default === true
-            const defaultOsdProtocol = data.osdProtocols.find((option) => option.default === true);
-            if (defaultOsdProtocol) {
-                state.selectedOsdProtocol = normalizeSelectValue(defaultOsdProtocol.value);
-            }
-
-            // Preselect motor protocol with default === true (USelect model is option value)
-            const defaultMotorProtocol = data.motorProtocols.find((option) => option.default === true);
-            if (defaultMotorProtocol) {
-                state.selectedMotorProtocol = normalizeSelectValue(defaultMotorProtocol.value);
-            }
-
-            // Initialize OSD protocol color state
-            updateOsdProtocolColor();
-
-            if (!validateBuildKey()) {
-                preselectRadioProtocolFromStorage();
-            }
-
-            toggleTelemetryProtocolInfo();
-        };
-
         // Build types configuration
         const buildTypes = [
             {
@@ -773,8 +572,28 @@ export default defineComponent({
             }));
         };
 
+        const releaseToSemver = (release) => semver.valid(release) || semver.coerce(release)?.version;
+
         const sortReleases = (a, b) => {
-            return -semver.compareBuild(a.release, b.release);
+            const aVersion = releaseToSemver(a.release);
+            const bVersion = releaseToSemver(b.release);
+
+            if (aVersion && bVersion) {
+                return -semver.compareBuild(aVersion, bVersion);
+            }
+
+            if (aVersion) {
+                return -1;
+            }
+
+            if (bVersion) {
+                return 1;
+            }
+
+            return String(b.release).localeCompare(String(a.release), undefined, {
+                numeric: true,
+                sensitivity: "base",
+            });
         };
 
         // Initialize UI setup on mount
@@ -846,30 +665,6 @@ export default defineComponent({
 
             const target = boardSelection.state.selectedBoard;
 
-            const loadCommitsForUnstableRelease = async (detail) => {
-                const commits = await buildApi.loadCommits(detail.release);
-                if (commits) {
-                    state.commitOptions = commits.map((commit) => ({
-                        label: commit.message.split("\n")[0],
-                        value: commit.sha,
-                    }));
-                }
-                state.commitSelectionVisible = true;
-            };
-
-            const handleCloudBuildConfiguration = async (detail) => {
-                const expertMode = state.expertMode;
-                if (expertMode && detail.releaseType === "Unstable") {
-                    await loadCommitsForUnstableRelease(detail);
-                } else {
-                    state.commitSelectionVisible = false;
-                }
-
-                state.expertOptionsVisible = expertMode;
-                // Reset core build mode when switching to a new cloud build target
-                state.coreBuildMode = false;
-            };
-
             const loadTargetDetail = async (detail) => {
                 if (!detail) {
                     enableLoadRemoteFileButton(false);
@@ -877,10 +672,6 @@ export default defineComponent({
                 }
 
                 state.targetDetail = detail;
-
-                if (detail.cloudBuild === true) {
-                    await handleCloudBuildConfiguration(detail);
-                }
 
                 if (detail.configuration && !state.isConfigLocal) {
                     setBoardConfig(detail.configuration);
@@ -897,26 +688,12 @@ export default defineComponent({
                 // Show release notes after loading target detail
                 if (targetDetail) {
                     showReleaseNotes(targetDetail);
+                    enableLoadRemoteFileButton(Boolean(targetDetail.file));
                 }
             } catch (error) {
                 console.error("Failed to load target:", error);
                 loadFailed();
                 updateTargetQualification(null);
-                return;
-            }
-
-            try {
-                if (validateBuildKey()) {
-                    let options = await buildApi.loadOptionsByBuildKey(releaseStr, cloudBuild.state.cloudBuildKey);
-                    if (options) {
-                        buildOptions(options);
-                        return;
-                    }
-                }
-                let options = await buildApi.loadOptions(releaseStr);
-                buildOptions(options);
-            } catch (error) {
-                console.error("Failed to load build options:", error);
                 return;
             }
         };
@@ -1212,68 +989,6 @@ export default defineComponent({
             }
         };
 
-        // Remote build and firmware loading
-        const enforceOSDSelection = async () => {
-            // Skip OSD selection enforcement in core build mode
-            if (state.coreBuildMode) {
-                return true;
-            }
-
-            const selectedRelease = boardSelection.state.selectedFirmwareVersion || "";
-            const selectedFirmware = boardSelection.state.firmwareVersionOptions?.find(
-                (option) => option.release === selectedRelease,
-            );
-            const versionText = selectedFirmware?.release ?? selectedRelease;
-
-            // Skip OSD selection enforcement for firmware versions 4.3.x
-            if (typeof versionText === "string" && versionText.startsWith("4.3.")) {
-                return true;
-            }
-
-            const osd = state.selectedOsdProtocol;
-            if (osd === "" || osd === undefined || osd === null) {
-                return dialog.showYesNo(
-                    $t("firmwareFlasherOSDProtocolNotSelected"),
-                    $t("firmwareFlasherOSDProtocolNotSelectedDescription"),
-                    {
-                        yesText: $t("firmwareFlasherOSDProtocolNotSelectedContinue"),
-                        noText: $t("firmwareFlasherOSDProtocolSelect"),
-                    },
-                );
-            } else {
-                return true;
-            }
-        };
-
-        const requestCloudBuild = async (targetDetail) => {
-            const additionalParams = {
-                coreBuildMode: state.coreBuildMode,
-                selectedRadioProtocol: state.selectedRadioProtocol,
-                selectedTelemetryProtocol: state.selectedTelemetryProtocol,
-                selectedOptions: state.selectedOptions,
-                selectedOsdProtocol: state.selectedOsdProtocol,
-                selectedMotorProtocol: state.selectedMotorProtocol,
-                expertMode: state.expertMode,
-                selectedCommit: state.selectedCommit?.value,
-                customDefinesTags: state.customDefinesTags,
-                isConfigLocal: state.isConfigLocal,
-            };
-
-            const response = await cloudBuild.requestCloudBuild(targetDetail, additionalParams);
-            if (response) {
-                state.targetDetail.file = response.file;
-            }
-        };
-
-        const commitPendingCustomDefines = () => {
-            const input = document.querySelector("#customDefinesInfo input");
-            const tags = input?.value?.trim().split(/\s+/).filter(Boolean) ?? [];
-
-            if (tags.length > 0) {
-                state.customDefinesTags = [...new Set([...state.customDefinesTags, ...tags])];
-            }
-        };
-
         const processFile = async (data, key) => {
             const ext = getExtension(key);
             const result = await firmwareFlashing.processFirmware(data, ext, {
@@ -1288,6 +1003,16 @@ export default defineComponent({
             }
 
             enableLoadRemoteFileButton(true);
+        };
+
+        const loadReleaseFirmware = async (targetDetail) => {
+            const firmware = await buildApi.loadTargetFirmware(targetDetail.file);
+            if (!firmware) {
+                loadFailed();
+                return;
+            }
+
+            await processFile(firmware, targetDetail.filename || targetDetail.file);
         };
 
         // Initialize firmware flashing composable
@@ -1343,113 +1068,6 @@ export default defineComponent({
 
         const onFirmwareVersionChange = async () => {
             await selectFirmware(boardSelection.state.selectedFirmwareVersion);
-        };
-
-        const onRadioProtocolChange = (value) => {
-            state.selectedRadioProtocol = value;
-            toggleTelemetryProtocolInfo();
-            if (state.cloudBuildOptions) {
-                setConfig({ ffRadioProtocol: value });
-            }
-        };
-
-        const onTelemetryProtocolChange = (value) => {
-            state.selectedTelemetryProtocol = value;
-        };
-
-        const onOsdProtocolChange = (value) => {
-            state.selectedOsdProtocol = value;
-            updateOsdProtocolColor();
-        };
-
-        const onMotorProtocolChange = (value) => {
-            state.selectedMotorProtocol = value;
-        };
-
-        const onOptionsChange = (value) => {
-            state.selectedOptions = Array.isArray(value) ? value : [];
-        };
-
-        const removeSelectedBuildOption = (option) => {
-            const key = option?.value;
-            state.selectedOptions = state.selectedOptions.filter((o) => o.value !== key);
-        };
-
-        const onCommitChange = (value) => {
-            state.selectedCommit = value;
-        };
-
-        /** USelectMenu @create: add PR #, commit SHA, or branch string not in the loaded list */
-        const onCommitCreate = (...args) => {
-            const raw =
-                args.find((a) => typeof a === "string") ??
-                (typeof args[args.length - 1] === "string" ? args[args.length - 1] : "");
-            const formattedValue = String(raw ?? "").trim();
-            if (!formattedValue) {
-                return;
-            }
-
-            const prMatch = formattedValue.match(/^#?(\d+)$/);
-            let newOption;
-            if (prMatch) {
-                newOption = {
-                    label: `PR #${prMatch[1]}`,
-                    value: `pull/${prMatch[1]}/head`,
-                };
-            } else {
-                newOption = {
-                    label: formattedValue,
-                    value: formattedValue,
-                };
-            }
-
-            if (!state.commitOptions.some((o) => o.value === newOption.value)) {
-                state.commitOptions.push(newOption);
-            }
-            state.selectedCommit = newOption;
-        };
-
-        // UI State change handlers
-        const handleExpertModeChange = () => {
-            applyExpertMode(state.expertMode);
-            state.expertOptionsVisible = state.expertMode;
-
-            // Update build types based on expert mode
-            if (state.expertMode) {
-                buildTypesToShow.splice(0, buildTypesToShow.length, ...buildTypes);
-            } else {
-                buildTypesToShow.splice(0, buildTypesToShow.length, ...buildTypes.slice(0, 2));
-            }
-            buildBuildTypeOptionsList();
-            state.selectedBuildType = 0;
-        };
-
-        const handleShowDevelopmentReleasesChange = async () => {
-            setConfig({ show_development_releases: state.showDevelopmentReleases });
-            state.buildTypeRowVisible = state.showDevelopmentReleases;
-
-            // When hiding release candidates/development builds, force Release list and default to first option
-            if (!state.buildTypeRowVisible && state.selectedBuildType > 0) {
-                state.selectedBuildType = 0;
-                setConfig({ selected_build_type: 0 });
-
-                const boardTarget = boardSelection.state.selectedBoard;
-
-                if (boardTarget) {
-                    try {
-                        const targetReleases = await buildApi.loadTargetReleases(boardTarget);
-                        await populateReleases({ target: boardTarget, releases: targetReleases.releases });
-                    } catch (error) {
-                        console.error(
-                            `${logHead} Failed to load target releases when hiding development releases:`,
-                            error,
-                        );
-                    }
-                } else {
-                    boardSelection.state.firmwareVersionOptions = [];
-                    boardSelection.state.selectedFirmwareVersion = "";
-                }
-            }
         };
 
         const handleNoRebootChange = () => {
@@ -1547,11 +1165,6 @@ export default defineComponent({
                 return;
             }
 
-            const shouldContinue = await enforceOSDSelection();
-            if (!shouldContinue) {
-                return;
-            }
-
             enableFlashButton(false);
             enableLoadRemoteFileButton(false);
 
@@ -1567,12 +1180,11 @@ export default defineComponent({
             }
 
             if (state.targetDetail) {
-                commitPendingCustomDefines();
                 activeFlasherStep.value = "flash";
                 await nextTick();
                 flashingMessage($t("firmwareFlasherButtonDownloading"), FLASH_MESSAGE_TYPES.NEUTRAL);
                 showReleaseNotes(state.targetDetail);
-                await requestCloudBuild(state.targetDetail);
+                await loadReleaseFirmware(state.targetDetail);
             } else {
                 flashingMessage($t("firmwareFlasherFailedToLoadOnlineFirmware"), FLASH_MESSAGE_TYPES.NEUTRAL);
                 i18n.localizePage();
@@ -1890,16 +1502,6 @@ export default defineComponent({
             onBuildTypeChange,
             onBoardChange,
             onFirmwareVersionChange,
-            onRadioProtocolChange,
-            onTelemetryProtocolChange,
-            onOsdProtocolChange,
-            onMotorProtocolChange,
-            onOptionsChange,
-            removeSelectedBuildOption,
-            onCommitChange,
-            onCommitCreate,
-            handleExpertModeChange,
-            handleShowDevelopmentReleasesChange,
             handleNoRebootChange,
             handleEraseChipChange,
             handleFlashManualBaudChange,

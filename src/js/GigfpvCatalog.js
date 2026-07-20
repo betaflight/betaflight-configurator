@@ -1,19 +1,5 @@
-/**
- * Product-owned firmware catalogues.
- *
- * Keep these lists intentionally small.  A target must exist in the matching
- * GIGFPV firmware repository before it is offered for flashing.
- */
-export const GIGFLIGHT_TARGETS = Object.freeze([
-    Object.freeze({
-        target: "GIGRACE",
-        group: "supported",
-        partnerApproved: true,
-        manufacturer: "GIGFPV",
-        mcu: "STM32H743VIH6",
-        repository: "timmyfpv/GIGFLIGHT",
-    }),
-]);
+export const GIGFLIGHT_REPOSITORY = "timmyfpv/GIGFLIGHT";
+export const GIGFLIGHT_CONFIG_REPOSITORY = "timmyfpv/gigflight-config";
 
 export const GIGLRS_TARGETS = Object.freeze([
     Object.freeze({
@@ -28,11 +14,3 @@ export const GIGLRS_TARGETS = Object.freeze([
         targetsRepository: "timmyfpv/giglrs-targets",
     }),
 ]);
-
-export function findGigflightTarget(target) {
-    return GIGFLIGHT_TARGETS.find((descriptor) => descriptor.target === target);
-}
-
-export function isGigflightTarget(target) {
-    return Boolean(findGigflightTarget(target));
-}

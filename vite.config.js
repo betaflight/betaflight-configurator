@@ -118,6 +118,63 @@ function serveLocalesPlugin() {
     };
 }
 
+function githubReleaseAssetProxyPlugin() {
+    const assetApiPrefix = "https://api.github.com/repos/timmyfpv/GIGFLIGHT/releases/assets/";
+
+    return {
+        name: "gigfpv-github-release-asset-proxy",
+        configureServer(server) {
+            server.middlewares.use(async (req, res, next) => {
+                const requestUrl = new URL(req.url || "/", "http://localhost");
+
+                if (requestUrl.pathname !== "/api/gigfpv/github-release-asset") {
+                    next();
+                    return;
+                }
+
+                const assetUrl = requestUrl.searchParams.get("url");
+                if (!assetUrl?.startsWith(assetApiPrefix)) {
+                    res.statusCode = 400;
+                    res.end("Invalid GIGFlight release asset URL");
+                    return;
+                }
+
+                try {
+                    const response = await fetch(assetUrl, {
+                        headers: {
+                            Accept: "application/octet-stream",
+                            "User-Agent": "GIGFPV-Station-Dev-Proxy",
+                        },
+                    });
+
+                    if (!response.ok) {
+                        res.statusCode = response.status;
+                        res.end(await response.text());
+                        return;
+                    }
+
+                    const bytes = Buffer.from(await response.arrayBuffer());
+                    res.statusCode = 200;
+                    res.setHeader("Access-Control-Allow-Origin", "*");
+                    res.setHeader("Cache-Control", "no-store");
+                    res.setHeader("Content-Type", response.headers.get("content-type") || "application/octet-stream");
+
+                    const disposition = response.headers.get("content-disposition");
+                    if (disposition) {
+                        res.setHeader("Content-Disposition", disposition);
+                    }
+
+                    res.end(bytes);
+                } catch (error) {
+                    server.config.logger.error(`GIGFlight release asset proxy failed: ${error}`);
+                    res.statusCode = 502;
+                    res.end("Failed to download GIGFlight release asset");
+                }
+            });
+        },
+    };
+}
+
 export default defineConfig({
     base: "./", // Important for production APK asset paths
     define: {
@@ -145,6 +202,7 @@ export default defineConfig({
     plugins: [
         vue(),
         ui(nuxtUiViteOptions),
+        githubReleaseAssetProxyPlugin(),
         serveLocalesPlugin(),
         // Copy runtime assets into the build output. Only the build-time
         // plugin is kept (the dev server serves these via serveLocalesPlugin /

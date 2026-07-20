@@ -1,11 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { GIGFLIGHT_TARGETS, GIGLRS_TARGETS, isGigflightTarget } from "../../src/js/GigfpvCatalog";
+import { GIGFLIGHT_CONFIG_REPOSITORY, GIGFLIGHT_REPOSITORY, GIGLRS_TARGETS } from "../../src/js/GigfpvCatalog";
 
 describe("GIGFPV firmware catalogues", () => {
-    it("exposes only the GIGFlight target maintained by GIGFPV", () => {
-        expect(GIGFLIGHT_TARGETS.map(({ target }) => target)).toEqual(["GIGRACE"]);
-        expect(isGigflightTarget("GIGRACE")).toBe(true);
-        expect(isGigflightTarget("MATEKF405")).toBe(false);
+    it("points GIGFlight firmware and target discovery at GIGFPV repositories", () => {
+        expect(GIGFLIGHT_REPOSITORY).toBe("timmyfpv/GIGFLIGHT");
+        expect(GIGFLIGHT_CONFIG_REPOSITORY).toBe("timmyfpv/gigflight-config");
     });
 
     it("keeps the ELRS selector scoped to the GIGLRS AIO receiver", () => {
