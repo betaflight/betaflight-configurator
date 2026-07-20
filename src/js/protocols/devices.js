@@ -92,6 +92,7 @@ const defaultVendorIdNames = {
     12619: "Geehy Semiconductor",
     11914: "Raspberry Pi Pico",
     14743: "X-CORE LABS",
+    10473: "GDMicroelectronics",
 };
 
 export const bluetoothDevices = [...defaultBluetoothDevices];

@@ -378,6 +378,10 @@ export class UsbDfuProtocol extends EventTarget {
                 if (str === "@Option byte   /0x1FFFC000/01*512 g") {
                     str = "@Option bytes   /0x1FFFC000/01*512 g";
                 }
+                // GD32H7xx: Normalize "@InternalFlash" (no space) to "@Internal Flash"
+                if (str.startsWith("@InternalFlash")) {
+                    str = str.replace("@InternalFlash", "@Internal Flash");
+                }
                 // split main into [location, start_addr, sectors]
                 const tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
                 const tmp1 = tmp0.split("/");
@@ -702,7 +706,7 @@ export class UsbDfuProtocol extends EventTarget {
                                 this.leave();
                             } else {
                                 this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
-                                    this.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                                    this.transferSize = resultCode ? 2048 : descriptor.wTransferSize || 2048;
                                     console.log(`${this.logHead} Using transfer size: ${this.transferSize}`);
                                     this.clearStatus(() => {
                                         this.upload_procedure(nextAction);
@@ -716,6 +720,14 @@ export class UsbDfuProtocol extends EventTarget {
             case 1: {
                 if (typeof this.chipInfo.option_bytes === "undefined") {
                     console.log(`${this.logHead} Failed to detect option bytes`);
+
+                    // For GD32H7xx(could not read option bytes info): Skip read protection check if option_bytes descriptor doesn't exist
+                    if (this.connectedDevice?.productName === "GD32-USB_DFU") {
+                        console.log(`${this.logHead} GD32H7 DFU Bootloader detected, skipping read protection check`);
+                        this.upload_procedure(2);
+                        break;
+                    }
+
                     this.cleanup();
                 }
 
