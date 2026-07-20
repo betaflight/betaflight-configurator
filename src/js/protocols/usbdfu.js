@@ -487,7 +487,7 @@ export class UsbDfuProtocol extends EventTarget {
         });
     }
 
-    controlTransfer(direction, request, value, _interface, length, data, callback) {
+    controlTransfer(direction, request, value, _interface, length, data, callback, errorCallback) {
         if (direction === "in") {
             // data is ignored
             const setup = {
@@ -536,7 +536,9 @@ export class UsbDfuProtocol extends EventTarget {
                 })
                 .catch((error) => {
                     console.log(`${this.logHead} USB controlTransfer OUT failed for request: ${request} (${error})`);
-                    if (this._connecting) {
+                    if (errorCallback) {
+                        errorCallback(error);
+                    } else if (this._connecting) {
                         this.cleanup();
                     }
                 });
@@ -633,6 +635,96 @@ export class UsbDfuProtocol extends EventTarget {
                     }
                 });
             },
+        );
+    }
+
+    massErase(callback, fallback) {
+        const command = [0x41]; // ST DfuSe mass erase: ERASE command with one-byte payload.
+        const maxEraseMs = 45000;
+        const startedAt = Date.now();
+        let attempts = 0;
+        let firstBusyDelay = null;
+        let lastDelay = 0;
+
+        const fallbackToPageErase = (reason) => {
+            console.warn(`${this.logHead} Mass erase unavailable, falling back to page erase: ${reason}`);
+            this.clearStatus(fallback);
+        };
+
+        const pollStatus = () => {
+            this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data, errcode) => {
+                if (errcode || !data.length) {
+                    if (attempts > 0 && lastDelay > 0) {
+                        setTimeout(pollStatus, lastDelay);
+                        return;
+                    }
+
+                    fallbackToPageErase("status read failed");
+                    return;
+                }
+
+                const status = data[0];
+                const delay = data[1] | (data[2] << 8) | (data[3] << 16);
+                const state = data[4];
+                lastDelay = delay || lastDelay || 100;
+
+                if (state === this.state.dfuDNLOAD_IDLE || state === this.state.dfuIDLE) {
+                    if (status === this.status.OK) {
+                        this.flashProgress(this.progressWeights.erase[1]);
+                        console.log(`${this.logHead} Mass erase: complete`);
+                        callback();
+                    } else {
+                        fallbackToPageErase(`status ${status}, state ${state}`);
+                    }
+                    return;
+                }
+
+                if (state === this.state.dfuERROR) {
+                    fallbackToPageErase(`device entered dfuERROR status ${status}`);
+                    return;
+                }
+
+                if (state !== this.state.dfuDNBUSY && state !== this.state.dfuDNLOAD_SYNC) {
+                    fallbackToPageErase(`unexpected state ${state}`);
+                    return;
+                }
+
+                if (firstBusyDelay === null && state === this.state.dfuDNBUSY) {
+                    firstBusyDelay = lastDelay;
+                }
+
+                attempts++;
+                if (attempts > 1 && firstBusyDelay > 100) {
+                    console.warn(`${this.logHead} Mass erase still busy after timeout, clearing status`);
+                    this.clearStatus(callback);
+                    return;
+                }
+
+                if (Date.now() - startedAt >= maxEraseMs) {
+                    console.warn(`${this.logHead} Mass erase still busy after ${maxEraseMs}ms, clearing status`);
+                    this.clearStatus(callback);
+                    return;
+                }
+
+                const eraseStart = this.progressWeights.erase[0];
+                const eraseEnd = this.progressWeights.erase[1];
+                const progress =
+                    eraseStart + Math.min((Date.now() - startedAt) / maxEraseMs, 0.95) * (eraseEnd - eraseStart);
+                this.flashProgress(progress);
+                setTimeout(pollStatus, Math.max(25, Math.min(lastDelay, 1000)));
+            });
+        };
+
+        console.log(`${this.logHead} Executing global chip mass erase`);
+        this.controlTransfer(
+            "out",
+            this.request.DNLOAD,
+            0,
+            0,
+            0,
+            command,
+            pollStatus,
+            (error) => fallbackToPageErase(error?.message || error),
         );
     }
 
@@ -977,7 +1069,7 @@ export class UsbDfuProtocol extends EventTarget {
                 }
 
                 this.flashingMessage(i18n.getMessage("stm32Erase"), this.options?.flashMessageTypes?.ERASING);
-                console.log(`${this.logHead} Executing local chip erase`, erase_pages);
+                console.log(`${this.logHead} Prepared page erase list`, erase_pages);
 
                 let page = 0;
                 let total_erased = 0; // bytes
@@ -1083,7 +1175,15 @@ export class UsbDfuProtocol extends EventTarget {
                 };
 
                 // start
-                erase_page();
+                if (this.options.erase_chip) {
+                    this.massErase(() => {
+                        gui_log(i18n.getMessage("dfu_erased_kilobytes", (this.flash_layout.total_size / 1024).toString()));
+                        this.upload_procedure(4);
+                    }, erase_page);
+                } else {
+                    console.log(`${this.logHead} Executing local page erase`);
+                    erase_page();
+                }
                 break;
             }
             case 4: {
