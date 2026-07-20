@@ -1294,10 +1294,70 @@ export class UsbDfuProtocol extends EventTarget {
                 let bytes_verified_total = 0; // used for progress bar
                 wBlockNum = 2; // required by DFU
 
-                // initialize arrays
-                for (let i = 0; i <= blocks; i++) {
-                    this.verify_hex.push([]);
-                }
+                const finishVerification = (verify) => {
+                    if (verify) {
+                        console.log(`${this.logHead} Programming: SUCCESSFUL`);
+                        // update progress bar
+                        this.flashingMessage(
+                            i18n.getMessage("stm32ProgrammingSuccessful"),
+                            this.options?.flashMessageTypes?.VALID,
+                        );
+
+                        // Show notification
+                        if (getConfig("showNotifications").showNotifications) {
+                            NotificationManager.showNotification("Betaflight App", {
+                                body: i18n.getMessage("programmingSuccessfulNotification"),
+                                icon: "/images/pwa/favicon.ico",
+                            });
+                        }
+
+                        // proceed to next step
+                        this.leave();
+                    } else {
+                        console.log(`${this.logHead} Programming: FAILED`);
+                        // update progress bar
+                        this.flashingMessage(
+                            i18n.getMessage("stm32ProgrammingFailed"),
+                            this.options?.flashMessageTypes?.INVALID,
+                        );
+
+                        // Show notification
+                        if (getConfig("showNotifications").showNotifications) {
+                            NotificationManager.showNotification("Betaflight App", {
+                                body: i18n.getMessage("programmingFailedNotification"),
+                                icon: "/images/pwa/favicon.ico",
+                            });
+                        }
+
+                        // disconnect
+                        this.cleanup();
+                    }
+                };
+
+                const verifyChunk = (expectedBlock, actual, baseAddress, offset, expectedLength) => {
+                    if (actual.length !== expectedLength) {
+                        console.log(
+                            `${this.logHead} Verification failed at 0x${(baseAddress + offset).toString(
+                                16,
+                            )}: expected ${expectedLength} bytes, received ${actual.length}`,
+                        );
+                        return false;
+                    }
+
+                    for (let i = 0; i < actual.length; i++) {
+                        const expected = expectedBlock[offset + i];
+                        if (actual[i] !== expected) {
+                            console.log(
+                                `${this.logHead} Verification failed at 0x${(baseAddress + offset + i).toString(
+                                    16,
+                                )}: expected 0x${expected.toString(16)} received 0x${actual[i].toString(16)}`,
+                            );
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
 
                 // start
                 this.clearStatus(() => {
@@ -1312,10 +1372,12 @@ export class UsbDfuProtocol extends EventTarget {
                             bytes_verified + this.transferSize <= this.hex.data[reading_block].bytes
                                 ? this.transferSize
                                 : this.hex.data[reading_block].bytes - bytes_verified;
+                        const block = this.hex.data[reading_block];
 
                         this.controlTransfer("in", this.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, (data) => {
-                            for (const piece of data) {
-                                this.verify_hex[reading_block].push(piece);
+                            if (!verifyChunk(block.data, data, block.address, bytes_verified, bytes_to_read)) {
+                                finishVerification(false);
+                                return;
                             }
 
                             address += bytes_to_read;
@@ -1346,51 +1408,8 @@ export class UsbDfuProtocol extends EventTarget {
                                 });
                             });
                         } else {
-                            // all blocks read, verify
-                            let verify = true;
-                            for (let i = 0; i <= blocks; i++) {
-                                verify = this.verify_flash(this.hex.data[i].data, this.verify_hex[i]);
-
-                                if (!verify) break;
-                            }
-
-                            if (verify) {
-                                console.log(`${this.logHead} Programming: SUCCESSFUL`);
-                                // update progress bar
-                                this.flashingMessage(
-                                    i18n.getMessage("stm32ProgrammingSuccessful"),
-                                    this.options?.flashMessageTypes?.VALID,
-                                );
-
-                                // Show notification
-                                if (getConfig("showNotifications").showNotifications) {
-                                    NotificationManager.showNotification("Betaflight App", {
-                                        body: i18n.getMessage("programmingSuccessfulNotification"),
-                                        icon: "/images/pwa/favicon.ico",
-                                    });
-                                }
-
-                                // proceed to next step
-                                this.leave();
-                            } else {
-                                console.log(`${this.logHead} Programming: FAILED`);
-                                // update progress bar
-                                this.flashingMessage(
-                                    i18n.getMessage("stm32ProgrammingFailed"),
-                                    this.options?.flashMessageTypes?.INVALID,
-                                );
-
-                                // Show notification
-                                if (getConfig("showNotifications").showNotifications) {
-                                    NotificationManager.showNotification("Betaflight App", {
-                                        body: i18n.getMessage("programmingFailedNotification"),
-                                        icon: "/images/pwa/favicon.ico",
-                                    });
-                                }
-
-                                // disconnect
-                                this.cleanup();
-                            }
+                            // all blocks read and verified
+                            finishVerification(true);
                         }
                     }
                 };
