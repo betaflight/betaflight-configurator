@@ -174,6 +174,33 @@ class WebUsbDfuTransport extends EventTarget {
         return `usb_${identifier}`;
     }
 
+    /**
+     * Race a USB operation against a timeout so a device that never answers a
+     * descriptor request (seen on some brand-new ST ROM bootloaders) surfaces as an
+     * error instead of hanging the flash forever. WebUSB control transfers normally
+     * complete in milliseconds, so this never fires during healthy operation.
+     * @template T
+     * @param {Promise<T>} promise - The USB operation to guard.
+     * @param {number} timeoutMs - Timeout in milliseconds.
+     * @param {string} label - Human-readable operation name for the timeout error.
+     * @returns {Promise<T>} Resolves with the operation result, or rejects on timeout.
+     */
+    _withTimeout(promise, timeoutMs, label) {
+        let timer;
+        const timeout = new Promise((_, reject) => {
+            timer = setTimeout(
+                () => reject(new Error(`${this.logHead} USB ${label} timed out after ${timeoutMs}ms`)),
+                timeoutMs,
+            );
+        });
+        // Promise.race already attaches a rejection reaction to `promise`, so a late USB
+        // rejection (after the timeout won) is technically "handled" and won't surface as an
+        // unhandledrejection. This explicit no-op catch documents that intent and keeps the
+        // guarantee independent of Promise.race internals.
+        promise.catch(() => {});
+        return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+    }
+
     // ===== Control Transfers =====
 
     /**
@@ -225,7 +252,7 @@ class WebUsbDfuTransport extends EventTarget {
                 index: 0,
             };
 
-            const result = await this.usbDevice.controlTransferIn(setup, 255);
+            const result = await this._withTimeout(this.usbDevice.controlTransferIn(setup, 255), 5000, "getLangId");
             if (result.status === "ok" && result.data.byteLength >= 4) {
                 this._langId = result.data.getUint16(2, true);
                 return this._langId;
@@ -252,7 +279,11 @@ class WebUsbDfuTransport extends EventTarget {
             index: langId,
         };
 
-        const result = await this.usbDevice.controlTransferIn(setup, 255);
+        const result = await this._withTimeout(
+            this.usbDevice.controlTransferIn(setup, 255),
+            5000,
+            `getString(${index})`,
+        );
         if (result.status === "ok") {
             const length = Math.min(result.data.getUint8(0), result.data.byteLength);
             let descriptor = "";
@@ -283,7 +314,11 @@ class WebUsbDfuTransport extends EventTarget {
         };
 
         // First read the 9-byte config header to learn the total length
-        const header = await this.usbDevice.controlTransferIn(setup, 9);
+        const header = await this._withTimeout(
+            this.usbDevice.controlTransferIn(setup, 9),
+            5000,
+            "getConfigDescriptor(header)",
+        );
         if (header.status !== "ok") {
             throw new Error(`USB getConfigDescriptor failed: ${header.status}`);
         }
@@ -291,7 +326,11 @@ class WebUsbDfuTransport extends EventTarget {
         const totalLength = header.data.getUint16(2, true);
 
         // Now fetch the entire configuration descriptor blob
-        const result = await this.usbDevice.controlTransferIn(setup, totalLength);
+        const result = await this._withTimeout(
+            this.usbDevice.controlTransferIn(setup, totalLength),
+            5000,
+            "getConfigDescriptor",
+        );
         if (result.status !== "ok") {
             throw new Error(`USB getConfigDescriptor failed: ${result.status}`);
         }
@@ -364,7 +403,96 @@ class WebUsbDfuTransport extends EventTarget {
         return descriptorStringArray;
     }
 
+    // DFU functional descriptor bDescriptorType. NOTE: 0x21 is shared with the HID
+    // descriptor type, so a bare type match is ambiguous on composite devices — it must
+    // be qualified by a preceding DFU interface descriptor (see getFunctionalDescriptor).
+    static get DFU_FUNCTIONAL_DESCRIPTOR_TYPE() {
+        return 0x21;
+    }
+
+    /**
+     * Decode a DFU functional descriptor from `buf` at `offset`.
+     * @param {Uint8Array} buf - Buffer containing the descriptor.
+     * @param {number} [offset=0] - Byte offset of the descriptor's bLength field.
+     * @returns {{bLength:number,bDescriptorType:number,bmAttributes:number,wDetachTimeOut:number,wTransferSize:number,bcdDFUVersion:number}}
+     */
+    _parseFunctionalDescriptor(buf, offset = 0) {
+        return {
+            bLength: buf[offset],
+            bDescriptorType: buf[offset + 1],
+            bmAttributes: buf[offset + 2],
+            wDetachTimeOut: (buf[offset + 4] << 8) | buf[offset + 3],
+            wTransferSize: (buf[offset + 6] << 8) | buf[offset + 5],
+            bcdDFUVersion: (buf[offset + 8] << 8) | buf[offset + 7],
+        };
+    }
+
+    /**
+     * True if `buf` at `offset` is a complete (9-byte) DFU functional descriptor with a
+     * usable, non-zero wTransferSize. Rejects HID descriptors (same 0x21 type) that are
+     * shorter or that decode to a zero transfer size.
+     * @param {Uint8Array} buf
+     * @param {number} offset
+     * @returns {boolean}
+     */
+    _isValidFunctionalDescriptor(buf, offset) {
+        const DFU = WebUsbDfuTransport.DFU_FUNCTIONAL_DESCRIPTOR_TYPE;
+        if (buf[offset + 1] !== DFU) {
+            return false;
+        }
+        // DFU functional descriptor is exactly 9 bytes.
+        if (buf[offset] < 9 || offset + 9 > buf.length) {
+            return false;
+        }
+        const wTransferSize = (buf[offset + 6] << 8) | buf[offset + 5];
+        return wTransferSize > 0;
+    }
+
+    /**
+     * Read the DFU functional descriptor.
+     *
+     * The descriptor (bDescriptorType 0x21) is embedded in the configuration descriptor,
+     * so we parse it from the blob we already fetched. Some ST ROM bootloaders (confirmed
+     * on the STM32C5) never answer a standalone GET_DESCRIPTOR for it and the request
+     * hangs indefinitely; reading it from the config descriptor avoids that request and
+     * yields the real wTransferSize.
+     *
+     * Because 0x21 is also the HID descriptor type, a match is only accepted when it sits
+     * inside a DFU interface (bInterfaceClass 0xFE / bInterfaceSubClass 0x01) and is a
+     * complete 9-byte descriptor with a non-zero wTransferSize.
+     * @returns {Promise<{bLength:number,bDescriptorType:number,bmAttributes:number,wDetachTimeOut:number,wTransferSize:number,bcdDFUVersion:number}>}
+     */
     async getFunctionalDescriptor() {
+        try {
+            const buf = await this.getConfigDescriptor();
+            let offset = 0;
+            let inDfuInterface = false;
+            while (offset + 1 < buf.length) {
+                const bLength = buf[offset];
+                const bDescriptorType = buf[offset + 1];
+
+                if (bDescriptorType === 4 && offset + 9 <= buf.length) {
+                    // Interface descriptor: Application-Specific class 0xFE, DFU subclass 0x01.
+                    inDfuInterface = buf[offset + 5] === 0xfe && buf[offset + 6] === 0x01;
+                } else if (
+                    inDfuInterface &&
+                    bDescriptorType === WebUsbDfuTransport.DFU_FUNCTIONAL_DESCRIPTOR_TYPE &&
+                    this._isValidFunctionalDescriptor(buf, offset)
+                ) {
+                    const descriptor = this._parseFunctionalDescriptor(buf, offset);
+                    console.log(
+                        `${this.logHead} DFU functional descriptor from config: wTransferSize=${descriptor.wTransferSize}`,
+                    );
+                    return descriptor;
+                }
+                offset += bLength || 1;
+            }
+            console.warn(`${this.logHead} DFU functional descriptor not in config blob; trying standalone request`);
+        } catch (error) {
+            console.warn(`${this.logHead} Could not read config descriptor for functional descriptor: ${error}`);
+        }
+
+        // Fallback: request it directly (works on classic ST/AT32/GD32 bootloaders).
         const setup = {
             requestType: "standard",
             recipient: "interface",
@@ -373,17 +501,17 @@ class WebUsbDfuTransport extends EventTarget {
             index: 0,
         };
 
-        const result = await this.usbDevice.controlTransferIn(setup, 255);
+        const result = await this._withTimeout(
+            this.usbDevice.controlTransferIn(setup, 255),
+            5000,
+            "getFunctionalDescriptor",
+        );
         if (result.status === "ok") {
             const buf = new Uint8Array(result.data.buffer, result.data.byteOffset, result.data.byteLength);
-            return {
-                bLength: buf[0],
-                bDescriptorType: buf[1],
-                bmAttributes: buf[2],
-                wDetachTimeOut: (buf[4] << 8) | buf[3],
-                wTransferSize: (buf[6] << 8) | buf[5],
-                bcdDFUVersion: (buf[8] << 8) | buf[7],
-            };
+            if (!this._isValidFunctionalDescriptor(buf, 0)) {
+                throw new Error(`${this.logHead} Invalid DFU functional descriptor in standalone response`);
+            }
+            return this._parseFunctionalDescriptor(buf, 0);
         }
         throw new Error(`USB getFunctionalDescriptor failed: ${result.status}`);
     }
