@@ -728,6 +728,59 @@ export class UsbDfuProtocol extends EventTarget {
         );
     }
 
+    waitForDnloadIdle(operation, callback) {
+        const maxPollMs = 5000;
+        const startedAt = Date.now();
+        let failedReads = 0;
+
+        const poll = () => {
+            this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data, errcode) => {
+                if (errcode || !data.length) {
+                    failedReads++;
+                    if (failedReads <= 3) {
+                        setTimeout(poll, 5);
+                        return;
+                    }
+
+                    console.log(`${this.logHead} ${operation}: failed to read DFU status`);
+                    this.cleanup();
+                    return;
+                }
+
+                failedReads = 0;
+                const status = data[0];
+                const delay = data[1] | (data[2] << 8) | (data[3] << 16);
+                const state = data[4];
+
+                if (state === this.state.dfuDNLOAD_IDLE || state === this.state.dfuIDLE) {
+                    if (status === this.status.OK) {
+                        callback();
+                    } else {
+                        console.log(`${this.logHead} ${operation}: failed with status ${status}`);
+                        this.cleanup();
+                    }
+                    return;
+                }
+
+                if (state === this.state.dfuDNBUSY || state === this.state.dfuDNLOAD_SYNC) {
+                    if (Date.now() - startedAt >= maxPollMs) {
+                        console.log(`${this.logHead} ${operation}: timed out waiting for dfuDNLOAD_IDLE`);
+                        this.cleanup();
+                        return;
+                    }
+
+                    setTimeout(poll, Math.min(Math.max(delay, 0), 5));
+                    return;
+                }
+
+                console.log(`${this.logHead} ${operation}: unexpected state ${state}, status ${status}`);
+                this.cleanup();
+            });
+        };
+
+        poll();
+    }
+
     // first_array = usually hex_to_flash array
     // second_array = usually verify_hex array
     // result = true/false
@@ -1212,49 +1265,25 @@ export class UsbDfuProtocol extends EventTarget {
                             bytes_flashed + bytes_to_write,
                         );
 
+                        const writeAddress = address;
                         address += bytes_to_write;
                         bytes_flashed += bytes_to_write;
                         bytes_flashed_total += bytes_to_write;
 
                         this.controlTransfer("out", this.request.DNLOAD, wBlockNum++, 0, 0, data_to_flash, () => {
-                            this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                if (data[4] === this.state.dfuDNBUSY) {
-                                    const delay = data[1] | (data[2] << 8) | (data[3] << 16);
+                            this.waitForDnloadIdle(
+                                `write ${bytes_to_write} bytes to 0x${writeAddress.toString(16)}`,
+                                () => {
+                                    // update progress bar
+                                    const flashStart = this.progressWeights.flash[0];
+                                    const flashRange = this.progressWeights.flash[1] - this.progressWeights.flash[0];
+                                    const flashProgress = (bytes_flashed_total / this.hex.bytes_total) * flashRange;
+                                    this.flashProgress(flashStart + flashProgress);
 
-                                    setTimeout(() => {
-                                        this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                            if (data[4] === this.state.dfuDNLOAD_IDLE) {
-                                                // update progress bar
-                                                const flashStart = this.progressWeights.flash[0];
-                                                const flashRange =
-                                                    this.progressWeights.flash[1] - this.progressWeights.flash[0];
-                                                const flashProgress =
-                                                    (bytes_flashed_total / this.hex.bytes_total) * flashRange;
-                                                this.flashProgress(flashStart + flashProgress);
-
-                                                // flash another page
-                                                write();
-                                            } else {
-                                                console.log(
-                                                    `${
-                                                        this.logHead
-                                                    } Failed to write ${bytes_to_write}bytes to 0x${address.toString(
-                                                        16,
-                                                    )}`,
-                                                );
-                                                this.cleanup();
-                                            }
-                                        });
-                                    }, delay);
-                                } else {
-                                    console.log(
-                                        `${
-                                            this.logHead
-                                        } Failed to initiate write ${bytes_to_write}bytes to 0x${address.toString(16)}`,
-                                    );
-                                    this.cleanup();
-                                }
-                            });
+                                    // flash another page
+                                    write();
+                                },
+                            );
                         });
                     } else {
                         if (flashing_block < blocks) {
