@@ -31,8 +31,8 @@ export default class BuildApi {
         return parsedUrl.hostname === "api.github.com" && /\/releases\/assets\/\d+$/.test(parsedUrl.pathname);
     }
 
-    shouldProxyGithubReleaseAsset(url) {
-        if (!this.isGithubReleaseAssetApiUrl(url) || typeof globalThis.location === "undefined") {
+    isLocalViteDevServer() {
+        if (typeof globalThis.location === "undefined") {
             return false;
         }
 
@@ -41,6 +41,28 @@ export default class BuildApi {
         const isViteDevServer = protocol === "http:" && (port === "8080" || port === "8443");
 
         return isLocalHost && isViteDevServer;
+    }
+
+    shouldProxyGithubApi(url) {
+        const parsedUrl = new URL(url);
+        return parsedUrl.hostname === "api.github.com" && this.isLocalViteDevServer();
+    }
+
+    proxyGithubApiUrl(url, accept = "application/vnd.github+json") {
+        if (!this.shouldProxyGithubApi(url)) {
+            return url;
+        }
+
+        const params = new URLSearchParams({
+            url,
+            accept,
+        });
+
+        return `${globalThis.location.origin}/api/gigfpv/github?${params.toString()}`;
+    }
+
+    shouldProxyGithubReleaseAsset(url) {
+        return this.isGithubReleaseAssetApiUrl(url) && this.isLocalViteDevServer();
     }
 
     proxyGithubReleaseAssetUrl(url) {
@@ -96,7 +118,8 @@ export default class BuildApi {
     }
 
     async fetchGithubJson(url) {
-        const response = await fetch(url, {
+        const proxiedUrl = this.proxyGithubApiUrl(url);
+        const response = await fetch(proxiedUrl, {
             method: "GET",
             headers: {
                 Accept: "application/vnd.github+json",

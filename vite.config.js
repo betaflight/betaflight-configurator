@@ -118,33 +118,86 @@ function serveLocalesPlugin() {
     };
 }
 
-function githubReleaseAssetProxyPlugin() {
-    const assetApiPrefix = "https://api.github.com/repos/timmyfpv/GIGFLIGHT/releases/assets/";
+let cachedGithubToken;
+
+function getGithubToken() {
+    if (cachedGithubToken !== undefined) {
+        return cachedGithubToken;
+    }
+
+    cachedGithubToken = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || "";
+
+    if (!cachedGithubToken) {
+        try {
+            cachedGithubToken = child.execFileSync("gh", ["auth", "token"], {
+                encoding: "utf8",
+                stdio: ["ignore", "pipe", "ignore"],
+            }).trim();
+        } catch (_error) {
+            cachedGithubToken = "";
+        }
+    }
+
+    return cachedGithubToken;
+}
+
+function githubProxyHeaders(accept) {
+    const headers = {
+        Accept: accept || "application/vnd.github+json",
+        "User-Agent": "GIGFPV-Station-Dev-Proxy",
+    };
+    const token = getGithubToken();
+
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    return headers;
+}
+
+function isAllowedGithubApiUrl(url) {
+    return (
+        url.startsWith("https://api.github.com/repos/timmyfpv/GIGFLIGHT/") ||
+        url.startsWith("https://api.github.com/repos/timmyfpv/gigflight-config/")
+    );
+}
+
+function githubApiProxyPlugin() {
+    const legacyAssetApiPrefix = "https://api.github.com/repos/timmyfpv/GIGFLIGHT/releases/assets/";
 
     return {
-        name: "gigfpv-github-release-asset-proxy",
+        name: "gigfpv-github-api-proxy",
         configureServer(server) {
             server.middlewares.use(async (req, res, next) => {
                 const requestUrl = new URL(req.url || "/", "http://localhost");
+                const isGithubProxy = requestUrl.pathname === "/api/gigfpv/github";
+                const isLegacyReleaseAssetProxy = requestUrl.pathname === "/api/gigfpv/github-release-asset";
 
-                if (requestUrl.pathname !== "/api/gigfpv/github-release-asset") {
+                if (!isGithubProxy && !isLegacyReleaseAssetProxy) {
                     next();
                     return;
                 }
 
-                const assetUrl = requestUrl.searchParams.get("url");
-                if (!assetUrl?.startsWith(assetApiPrefix)) {
+                const githubUrl = requestUrl.searchParams.get("url");
+                if (!githubUrl || !isAllowedGithubApiUrl(githubUrl)) {
+                    res.statusCode = 400;
+                    res.end("Invalid GIGFPV GitHub API URL");
+                    return;
+                }
+
+                const accept = isLegacyReleaseAssetProxy
+                    ? "application/octet-stream"
+                    : requestUrl.searchParams.get("accept") || "application/vnd.github+json";
+
+                if (isLegacyReleaseAssetProxy && !githubUrl.startsWith(legacyAssetApiPrefix)) {
                     res.statusCode = 400;
                     res.end("Invalid GIGFlight release asset URL");
                     return;
                 }
 
                 try {
-                    const response = await fetch(assetUrl, {
-                        headers: {
-                            Accept: "application/octet-stream",
-                            "User-Agent": "GIGFPV-Station-Dev-Proxy",
-                        },
+                    const response = await fetch(githubUrl, {
+                        headers: githubProxyHeaders(accept),
                     });
 
                     if (!response.ok) {
@@ -166,9 +219,9 @@ function githubReleaseAssetProxyPlugin() {
 
                     res.end(bytes);
                 } catch (error) {
-                    server.config.logger.error(`GIGFlight release asset proxy failed: ${error}`);
+                    server.config.logger.error(`GIGFPV GitHub API proxy failed: ${error}`);
                     res.statusCode = 502;
-                    res.end("Failed to download GIGFlight release asset");
+                    res.end("Failed to fetch GIGFPV GitHub API URL");
                 }
             });
         },
@@ -202,7 +255,7 @@ export default defineConfig({
     plugins: [
         vue(),
         ui(nuxtUiViteOptions),
-        githubReleaseAssetProxyPlugin(),
+        githubApiProxyPlugin(),
         serveLocalesPlugin(),
         // Copy runtime assets into the build output. Only the build-time
         // plugin is kept (the dev server serves these via serveLocalesPlugin /
