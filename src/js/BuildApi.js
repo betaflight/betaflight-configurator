@@ -3,6 +3,7 @@ import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 import CONFIGURATOR from "./data_storage.js";
 import LoginApi from "./LoginApi";
+import { GIGFLIGHT_TARGETS, findGigflightTarget } from "./GigfpvCatalog";
 
 export default class BuildApi {
     constructor(loginApi = new LoginApi()) {
@@ -128,22 +129,70 @@ export default class BuildApi {
     }
 
     async loadTargets() {
-        const url = `${this._url}/api/targets`;
-        return await this.fetchCachedJson(url);
+        // GIGFPV Station deliberately exposes only GIGFlight targets.  Do not
+        // fall back to the upstream catalogue: that would make an unrelated
+        // firmware target appear flashable in this product.
+        return GIGFLIGHT_TARGETS.map((target) => ({ ...target }));
     }
 
     async loadTargetReleases(target) {
-        const url = `${this._url}/api/targets/${target}`;
-        return await this.fetchCachedJson(url);
+        const descriptor = findGigflightTarget(target);
+        if (!descriptor) {
+            return { releases: [] };
+        }
+
+        const releases = await this.fetchCachedJson(
+            `https://api.github.com/repos/${descriptor.repository}/releases`,
+        );
+
+        return {
+            releases: (releases || [])
+                .filter((release) => !release.draft)
+                .map((release) => ({
+                    release: release.tag_name,
+                    label: "GIGFlight",
+                    type: release.prerelease ? "ReleaseCandidate" : "Stable",
+                })),
+        };
     }
 
     async loadTarget(target, release) {
-        const url = `${this._url}/api/builds/${release}/${target}`;
-        return await this.fetchCachedJson(url);
+        const descriptor = findGigflightTarget(target);
+        if (!descriptor) {
+            return null;
+        }
+
+        const releaseDetail = await this.fetchCachedJson(
+            `https://api.github.com/repos/${descriptor.repository}/releases/tags/${encodeURIComponent(release)}`,
+        );
+        if (!releaseDetail) {
+            return null;
+        }
+
+        const hexAssets = (releaseDetail.assets || []).filter((asset) => /\.hex$/i.test(asset.name));
+        const firmwareAsset =
+            hexAssets.find((asset) => asset.name.toUpperCase().includes(descriptor.target)) || hexAssets[0];
+
+        if (!firmwareAsset) {
+            return null;
+        }
+
+        return {
+            target: descriptor.target,
+            release: releaseDetail.tag_name,
+            releaseUrl: releaseDetail.html_url,
+            date: releaseDetail.published_at,
+            manufacturer: descriptor.manufacturer,
+            mcu: descriptor.mcu,
+            file: firmwareAsset.browser_download_url,
+            firmwareType: "HEX",
+            releaseType: releaseDetail.prerelease ? "ReleaseCandidate" : "Stable",
+            cloudBuild: false,
+        };
     }
 
     async loadTargetFirmware(path) {
-        const url = `${this._url}${path}`;
+        const url = new URL(path, this._url).toString();
         return await this.fetchBytes(url);
     }
 
