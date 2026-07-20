@@ -510,10 +510,15 @@
         "message": "PID Tuning"
     },
     "tabAutotune": { "message": "Autotune" },
-    "tabBlackboxViewer": { "message": "Blackbox Viewer", "description": "Navigation sidebar label for the Blackbox log viewer tab" },
+    "tabBlackboxViewer": {
+        "message": "Blackbox Viewer",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
     "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
     "autotuneImportButton": { "message": "Import Blackbox Log" },
-    "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
+    "autotuneImportDescription": {
+        "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations."
+    },
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
@@ -529,7 +534,9 @@
     "autotuneApplyFailed": { "message": "Failed to apply gains" },
     "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
     "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
-    "autotuneNoChirpData": { "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated." },
+    "autotuneNoChirpData": {
+        "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated."
+    },
     "autotuneSampleCount": { "message": "{{count}} samples" },
     "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
     "autotuneImportAnother": { "message": "Import Another" },
@@ -4315,6 +4322,27 @@
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight App supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Betaflight 4.4 introduces <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, please consider joining Discord or open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>."
     },
+    "firmwareFlasherManufacturerFilter": {
+        "message": "Manufacturer"
+    },
+    "firmwareFlasherManufacturerFilterDescription": {
+        "message": "Select the board manufacturer to narrow the available MCUs."
+    },
+    "firmwareFlasherMcuFilter": {
+        "message": "MCU"
+    },
+    "firmwareFlasherMcuFilterDescription": {
+        "message": "Select the board MCU to narrow the available targets."
+    },
+    "firmwareFlasherBoardFilter": {
+        "message": "Board"
+    },
+    "firmwareFlasherFilterAllManufacturers": {
+        "message": "All manufacturers"
+    },
+    "firmwareFlasherFilterAllMcus": {
+        "message": "All MCUs"
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Select firmware version for your board."
     },
@@ -4380,6 +4408,9 @@
     },
     "firmwareFlasherOptionLabelSelectBoard": {
         "message": "Choose a Board"
+    },
+    "firmwareFlasherOptionLabelSelectMcu": {
+        "message": "Choose an MCU"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Choose a Firmware version"
@@ -8778,6 +8809,9 @@
     },
     "firmwareFlasherSearchBoard": {
         "message": "Search for a board..."
+    },
+    "firmwareFlasherSearchManufacturer": {
+        "message": "Search for a manufacturer..."
     },
     "firmwareFlasherBuildRadioProtocols": {
         "message": "Radio Protocol"

@@ -132,6 +132,11 @@ export default class BuildApi {
         return await this.fetchCachedJson(url);
     }
 
+    async loadManufacturers() {
+        const url = `${this._url}/api/manufacturers`;
+        return await this.fetchCachedJson(url);
+    }
+
     async loadTargetReleases(target) {
         const url = `${this._url}/api/targets/${target}`;
         return await this.fetchCachedJson(url);
