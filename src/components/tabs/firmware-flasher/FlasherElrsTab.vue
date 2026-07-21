@@ -131,7 +131,7 @@ import DeviceHandler from "@/js/device_handler.js";
 import MSPConnectorImpl from "@/js/msp/MSPConnector.js";
 import BuildApi from "@/js/BuildApi.js";
 import { FcSerialPortFunction, useFcSerialPassthrough } from "@/composables/useFcSerialPassthrough";
-import { appendUnifiedConfiguration } from "@/js/elrs/unified_config.js";
+import { appendUnifiedConfiguration, isEsp32Platform, normalizeEspPlatform } from "@/js/elrs/unified_config.js";
 import { ElrsPassthroughTransport, elrsBootloaderInitSequence } from "@/js/elrs/passthrough_transport.js";
 
 const buildApi = new BuildApi();
@@ -202,11 +202,11 @@ function isZipBytes(name, bytes) {
 }
 
 function defaultApplicationAddress(target) {
-    return target?.platform === "esp8285" ? 0x0 : 0x10000;
+    return normalizeEspPlatform(target?.platform) === "esp8285" ? 0x0 : 0x10000;
 }
 
 function esp32BootloaderAddress(target) {
-    return target?.platform?.startsWith("esp32-") ? 0x0 : 0x1000;
+    return normalizeEspPlatform(target?.platform).startsWith("esp32-") ? 0x0 : 0x1000;
 }
 
 function basename(path) {
@@ -220,6 +220,46 @@ function calculateMd5Hash(image) {
 
 function isCompressedFlashFinishStatusError(flashError) {
     return /Failed to leave compressed flash mode failed with status 1,195/i.test(String(flashError?.message ?? flashError));
+}
+
+function platformForDetectedChip(chip) {
+    const normalizedChip = String(chip || "").toUpperCase();
+    if (normalizedChip.includes("ESP32-C2")) {
+        return "esp32-c2";
+    }
+    if (normalizedChip.includes("ESP32-C3")) {
+        return "esp32-c3";
+    }
+    if (normalizedChip.includes("ESP32-C6")) {
+        return "esp32-c6";
+    }
+    if (normalizedChip.includes("ESP32-H2")) {
+        return "esp32-h2";
+    }
+    if (normalizedChip.includes("ESP32-S2")) {
+        return "esp32-s2";
+    }
+    if (normalizedChip.includes("ESP32-S3")) {
+        return "esp32-s3";
+    }
+    if (normalizedChip.includes("ESP32")) {
+        return "esp32";
+    }
+    if (normalizedChip.includes("ESP8266") || normalizedChip.includes("ESP8285")) {
+        return "esp8285";
+    }
+    return "";
+}
+
+function assertDetectedChipMatchesTarget(chip, target) {
+    const detectedPlatform = platformForDetectedChip(chip);
+    const targetPlatform = normalizeEspPlatform(target?.platform);
+    if (!detectedPlatform || !targetPlatform) {
+        return;
+    }
+    if (detectedPlatform !== targetPlatform) {
+        throw new Error(`Wrong GIGLRS target selected: detected ${chip}, but ${target.productName} is ${target.platform}.`);
+    }
 }
 
 function pathMatchesTarget(entryPath, target) {
@@ -274,7 +314,7 @@ async function extractFirmwareZip(bytes, target, region) {
     }
 
     const flashFiles = [];
-    if (target.platform?.startsWith("esp32")) {
+    if (isEsp32Platform(target.platform)) {
         const bootloaderEntry = findByName("bootloader.bin");
         const partitionsEntry = findByName("partitions.bin");
         const bootAppEntry = findByName("boot_app0.bin");
@@ -528,6 +568,9 @@ async function flashReceiver() {
 
         const configuredFirmware = await prepareFirmware();
         addLog(`Configured firmware for ${selectedTarget.value.productName} (${configuredFirmware.length} flash file${configuredFirmware.length === 1 ? "" : "s"}).`);
+        configuredFirmware.forEach((file) => {
+            addLog(`Flash file: ${basename(file.name)} @ 0x${file.address.toString(16)} (${file.data.byteLength} bytes).`);
+        });
 
         if (!(await ensureFcPassthroughPort(baudrate))) {
             return;
@@ -569,6 +612,7 @@ async function flashReceiver() {
 
         addLog("Connecting to ESP bootloader...");
         const chip = await loader.main("no_reset");
+        assertDetectedChipMatchesTarget(chip, selectedTarget.value);
         addLog(`Detected ${chip}. Flashing ${configuredFirmware.length} file${configuredFirmware.length === 1 ? "" : "s"}...`);
 
         loader.IS_STUB = true;
@@ -591,7 +635,7 @@ async function flashReceiver() {
         });
 
         addLog("Rebooting receiver...");
-        if (selectedTarget.value.platform?.startsWith("esp32")) {
+        if (isEsp32Platform(selectedTarget.value.platform)) {
             await loader.after("hard_reset").catch(() => {});
         } else {
             await loader.after("soft_reset").catch(() => {});

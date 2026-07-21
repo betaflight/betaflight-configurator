@@ -14,28 +14,55 @@ function align16(value) {
     return (value + 16) & ~15;
 }
 
-export function findFirmwareEnd(image) {
-    if (!(image instanceof Uint8Array) || image.byteLength < 32 || image[0] !== ESP_IMAGE_MAGIC) {
+export function normalizeEspPlatform(platform) {
+    const normalized = String(platform || "").toLowerCase();
+    if (normalized === "esp32c2") {
+        return "esp32-c2";
+    }
+    if (normalized === "esp32c3") {
+        return "esp32-c3";
+    }
+    if (normalized === "esp32c6") {
+        return "esp32-c6";
+    }
+    if (normalized === "esp32h2") {
+        return "esp32-h2";
+    }
+    if (normalized === "esp32s2") {
+        return "esp32-s2";
+    }
+    if (normalized === "esp32s3") {
+        return "esp32-s3";
+    }
+    return normalized;
+}
+
+export function isEsp32Platform(platform) {
+    return normalizeEspPlatform(platform).startsWith("esp32");
+}
+
+export function findFirmwareEnd(image, platform) {
+    const normalizedPlatform = normalizeEspPlatform(platform);
+    if (!normalizedPlatform) {
+        throw new Error("The selected target is missing its ESP platform.");
+    }
+    if (!isEsp32Platform(normalizedPlatform) && normalizedPlatform !== "esp8285") {
+        throw new Error(`Unsupported ESP platform '${platform}'.`);
+    }
+
+    const headerOffset = normalizedPlatform === "esp8285" ? 0x1000 : 0x0;
+    if (
+        !(image instanceof Uint8Array) ||
+        image.byteLength < headerOffset + 32 ||
+        image[headerOffset] !== ESP_IMAGE_MAGIC
+    ) {
         throw new Error("The selected file is not a valid ESP firmware binary.");
     }
 
-    const segments = image[1];
-    const isEsp8285 = segments === 2;
-    let offset;
-    let segmentCount = segments;
+    let segmentCount = image[headerOffset + 1];
+    let offset = isEsp32Platform(normalizedPlatform) ? 24 : 0x1008;
 
-    if (isEsp8285) {
-        offset = 0x1000;
-        if (image.byteLength < offset + 8 || image[offset] !== ESP_IMAGE_MAGIC) {
-            throw new Error("The selected ESP8285 firmware binary is incomplete.");
-        }
-        segmentCount = image[offset + 1];
-        offset += 8;
-    } else {
-        offset = 24;
-    }
-
-    for (let i = 0; i < segmentCount; i++) {
+    while (segmentCount--) {
         if (offset + 8 > image.byteLength) {
             throw new Error("The selected firmware binary has a truncated segment table.");
         }
@@ -46,7 +73,7 @@ export function findFirmwareEnd(image) {
         }
     }
 
-    const end = isEsp8285 ? align16(offset) : align16(offset) + 32;
+    const end = align16(offset) + (isEsp32Platform(normalizedPlatform) ? 32 : 0);
     if (end > image.byteLength) {
         throw new Error("The selected firmware binary is missing its image footer.");
     }
@@ -111,7 +138,7 @@ export function buildUnifiedDefines(settings) {
 }
 
 export function appendUnifiedConfiguration(image, { target, layout, settings }) {
-    const firmwareEnd = findFirmwareEnd(image);
+    const firmwareEnd = findFirmwareEnd(image, target?.platform);
     const defines = JSON.stringify(buildUnifiedDefines(settings));
     const layoutJson = JSON.stringify(layout ?? {});
     const output = new Uint8Array(firmwareEnd + PRODUCT_NAME_SIZE + LUA_NAME_SIZE + DEFINES_SIZE + LAYOUT_SIZE);
