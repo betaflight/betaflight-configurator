@@ -324,7 +324,7 @@ export default class Am32FourWaySession extends EventTarget {
         info.bootloader.valid = valid;
         info.bootloader.pin = pin;
 
-        info.displayName = `${info.meta.am32.fileName ?? "AM32 ESC"} - ${mcu.getName()}`;
+        info.displayName = info.meta.am32.fileName ?? "AM32 ESC";
         info.firmwareName = info.meta.am32.fileName ?? "UNKNOWN";
         info.mcu = {
             name: mcu.getName(),
