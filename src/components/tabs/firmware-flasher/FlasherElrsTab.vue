@@ -115,6 +115,11 @@
         </div>
 
         <UProgress v-if="busy || flashProgress > 0" class="mb-3" :model-value="flashProgress" />
+        <div class="giglrs-log-toolbar">
+            <UButton type="button" size="xs" variant="outline" :disabled="logLines.length === 0" @click="copyLog">
+                Copy log
+            </UButton>
+        </div>
         <pre class="giglrs-log">{{ logLines.join("\n") }}</pre>
     </UiBox>
 
@@ -195,6 +200,17 @@ function addLog(message) {
     logLines.value = [...logLines.value.slice(-100), `[${timestamp}] ${message}`];
 }
 
+async function copyLog() {
+    const text = logLines.value.join("\n");
+    try {
+        await navigator.clipboard.writeText(text);
+        addLog("Log copied to clipboard.");
+    } catch {
+        error.value = "Could not copy log automatically. The log text is selectable now; drag-select it and copy manually.";
+        addLog(error.value);
+    }
+}
+
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -218,6 +234,10 @@ function basename(path) {
 function calculateMd5Hash(image) {
     const latin1String = Array.from(image, (byte) => String.fromCharCode(byte)).join("");
     return CryptoES.MD5(CryptoES.enc.Latin1.parse(latin1String)).toString();
+}
+
+function targetFlashingBaud(target) {
+    return Number.parseInt(target?.baud, 10) || 420000;
 }
 
 function pathMatchesTarget(entryPath, target) {
@@ -502,10 +522,11 @@ async function flashReceiver() {
         if (firmwareFiles.value.length === 0) {
             throw new Error("Load a GIGLRS firmware .zip or .bin before flashing.");
         }
-        const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
+        const baudrate = targetFlashingBaud(selectedTarget.value);
 
         const configuredFirmware = await prepareFirmware();
         addLog(`GIGLRS flasher build: ${GIGLRS_FLASHER_BUILD}.`);
+        addLog(`Flashing baud: ${baudrate}; receiver UART baud setting: ${settings.receiverBaud}.`);
         addLog(`Configured firmware for ${selectedTarget.value.productName} (${configuredFirmware.length} flash file${configuredFirmware.length === 1 ? "" : "s"}).`);
         configuredFirmware.forEach((file) => {
             addLog(`Flash file: ${basename(file.name)} @ 0x${file.address.toString(16)} (${file.data.byteLength} bytes).`);
@@ -637,8 +658,16 @@ defineExpose({
     max-height: 16rem;
     overflow: auto;
     white-space: pre-wrap;
+    user-select: text;
+    -webkit-user-select: text;
     border-radius: 0.5rem;
     padding: 0.75rem;
     background: var(--surface-200);
+}
+
+.giglrs-log-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
 }
 </style>

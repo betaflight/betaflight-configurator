@@ -297,6 +297,7 @@ export default class BuildApi {
                         minVersion: targetConfig.min_version,
                         platform: targetConfig.platform,
                         firmware: targetConfig.firmware,
+                        baud: targetConfig.baud,
                         repository: GIGLRS_REPOSITORY,
                         targetsRepository: GIGLRS_TARGETS_REPOSITORY,
                     });
