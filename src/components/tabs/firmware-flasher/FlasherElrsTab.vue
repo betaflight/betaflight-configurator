@@ -131,15 +131,13 @@ import DeviceHandler from "@/js/device_handler.js";
 import MSPConnectorImpl from "@/js/msp/MSPConnector.js";
 import BuildApi from "@/js/BuildApi.js";
 import { appendUnifiedConfiguration, isEsp32Platform, normalizeEspPlatform } from "@/js/elrs/unified_config.js";
-import { elrsBootloaderInitSequence } from "@/js/elrs/passthrough_transport.js";
-import ElrsWebFlasherTransport from "@/js/elrs/web_flasher_transport.js";
+import { OfficialElrsEspFlasher } from "@/js/elrs/official_web_flasher.js";
 
 const buildApi = new BuildApi();
 const mspConnector = new MSPConnectorImpl();
 const activeTransport = shallowRef(null);
 const passthroughActive = ref(false);
-const BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE = 0x0800;
-const GIGLRS_FLASHER_BUILD = "official-transport-no-finish-suppression";
+const GIGLRS_FLASHER_BUILD = "official-web-flasher-adapter";
 
 const targets = ref([]);
 const releases = ref([]);
@@ -220,46 +218,6 @@ function basename(path) {
 function calculateMd5Hash(image) {
     const latin1String = Array.from(image, (byte) => String.fromCharCode(byte)).join("");
     return CryptoES.MD5(CryptoES.enc.Latin1.parse(latin1String)).toString();
-}
-
-function platformForDetectedChip(chip) {
-    const normalizedChip = String(chip || "").toUpperCase();
-    if (normalizedChip.includes("ESP32-C2")) {
-        return "esp32-c2";
-    }
-    if (normalizedChip.includes("ESP32-C3")) {
-        return "esp32-c3";
-    }
-    if (normalizedChip.includes("ESP32-C6")) {
-        return "esp32-c6";
-    }
-    if (normalizedChip.includes("ESP32-H2")) {
-        return "esp32-h2";
-    }
-    if (normalizedChip.includes("ESP32-S2")) {
-        return "esp32-s2";
-    }
-    if (normalizedChip.includes("ESP32-S3")) {
-        return "esp32-s3";
-    }
-    if (normalizedChip.includes("ESP32")) {
-        return "esp32";
-    }
-    if (normalizedChip.includes("ESP8266") || normalizedChip.includes("ESP8285")) {
-        return "esp8285";
-    }
-    return "";
-}
-
-function assertDetectedChipMatchesTarget(chip, target) {
-    const detectedPlatform = platformForDetectedChip(chip);
-    const targetPlatform = normalizeEspPlatform(target?.platform);
-    if (!detectedPlatform || !targetPlatform) {
-        return;
-    }
-    if (detectedPlatform !== targetPlatform) {
-        throw new Error(`Wrong GIGLRS target selected: detected ${chip}, but ${target.productName} is ${target.platform}.`);
-    }
 }
 
 function pathMatchesTarget(entryPath, target) {
@@ -501,79 +459,10 @@ async function ensureNativeWebSerialPort() {
     return nativePort;
 }
 
-async function validateSerialRxSetting(transport, settingName, expectedValues) {
-    await transport.writeString(`get ${settingName}\r\n`);
-    const line = await transport.readLine(100);
-    return expectedValues.some((expected) => line.trim().includes(` = ${expected}`));
-}
-
-async function openBetaflightPassthrough(transport, baudrate) {
-    addLog("Initializing Betaflight RX serial passthrough...");
-    await transport.writeString("#");
-    transport.setDelimiters(["# ", "CCC"]);
-    const prompt = await transport.readLine(200);
-
-    if (prompt.includes("CCC")) {
-        passthroughActive.value = true;
-        addLog("Passthrough already active and receiver bootloader is responding.");
-        return;
-    }
-
-    if (!prompt.trim().endsWith("#")) {
-        passthroughActive.value = true;
-        addLog("Betaflight CLI prompt not detected; assuming passthrough is already active.");
-        return;
-    }
-
-    transport.setDelimiters(["# "]);
-    const serialCheck = [];
-    if (!(await validateSerialRxSetting(transport, "serialrx_provider", ["CRSF", "ELRS"]))) {
-        serialCheck.push("Serial Receiver Protocol must be CRSF/ELRS.");
-    }
-    if (!(await validateSerialRxSetting(transport, "serialrx_inverted", ["OFF"]))) {
-        serialCheck.push("Serial RX must not be inverted.");
-    }
-    if (!(await validateSerialRxSetting(transport, "serialrx_halfduplex", ["OFF", "AUTO"]))) {
-        serialCheck.push("Serial RX half-duplex must be OFF or AUTO.");
-    }
-    if (serialCheck.length > 0) {
-        throw new Error(`Invalid Betaflight RX serial configuration: ${serialCheck.join(" ")}`);
-    }
-
-    addLog("Detecting Betaflight Serial RX UART...");
-    await transport.writeString("serial\r\n");
-    transport.setDelimiters(["\n"]);
-    let serialRxPort = "";
-    while (true) {
-        const line = await transport.readLine(200);
-        if (line === "") {
-            break;
-        }
-        const match = line.match(/serial\s+(?<port>(UART)?[0-9]+)\s+(?<portConfig>[0-9]+)\s+/i);
-        if (match?.groups && (Number.parseInt(match.groups.portConfig, 10) & 64) === 64) {
-            serialRxPort = match.groups.port;
-            break;
-        }
-    }
-
-    if (!serialRxPort) {
-        throw new Error("Could not detect the Betaflight Serial RX UART for passthrough.");
-    }
-
-    await transport.writeString(`serialpassthrough ${serialRxPort} ${baudrate}\r\n`);
-    await sleep(200);
-    for (let i = 0; i < 10; i++) {
-        await transport.readLine(200);
-    }
-
-    passthroughActive.value = true;
-    addLog(`RX serial passthrough opened through ${serialRxPort} at ${baudrate} baud.`);
-}
-
 async function stopPassthrough() {
     error.value = "";
     try {
-        await activeTransport.value?.disconnect?.();
+        await activeTransport.value?.close?.();
         activeTransport.value = null;
         passthroughActive.value = false;
         updateFcConnected();
@@ -599,39 +488,13 @@ async function prepareFirmware() {
     }));
 }
 
-async function enterReceiverBootloader(transport) {
-    addLog("Resetting receiver to ELRS bootloader...");
-    transport.setDelimiters(["\n"]);
-    while ((await transport.readLine(100)) !== "") {}
-    const training = new Uint8Array(32);
-    training.fill(0x55);
-    await transport.writeArray(new Uint8Array([0x07, 0x07, 0x12, 0x20]));
-    await transport.writeArray(training);
-    await sleep(200);
-    await transport.writeArray(elrsBootloaderInitSequence());
-    await sleep(200);
-
-    const rxTarget = (await transport.readLine(200)).trim();
-    if (rxTarget) {
-        addLog(`Receiver bootloader target: ${rxTarget}`);
-        if (selectedTarget.value?.firmware && rxTarget.toUpperCase() !== selectedTarget.value.firmware.toUpperCase()) {
-            throw new Error(`Wrong GIGLRS target selected: receiver reports '${rxTarget}', selected '${selectedTarget.value.firmware}'.`);
-        }
-    } else {
-        addLog("Receiver bootloader target not detected; continuing with ESP sync.");
-    }
-
-    addLog("Receiver bootloader enabled.");
-    await sleep(500);
-}
-
 async function flashReceiver() {
     busy.value = true;
     activeOperation.value = "flash";
     error.value = "";
     flashProgress.value = 0;
 
-    let transport = null;
+    let flasher = null;
     try {
         if (!selectedTarget.value) {
             throw new Error("No GIGLRS receiver target selected.");
@@ -649,77 +512,42 @@ async function flashReceiver() {
         });
 
         const nativePort = await ensureNativeWebSerialPort();
-        transport = new ElrsWebFlasherTransport(nativePort, false);
-        activeTransport.value = transport;
-
-        addLog(`Opening flight controller for GIGLRS passthrough at ${baudrate} baud...`);
-        await transport.connect(baudrate);
-        await openBetaflightPassthrough(transport, baudrate);
-        await enterReceiverBootloader(transport);
-        await transport.disconnect();
-        passthroughActive.value = false;
-
-        const { ESPLoader } = await import("esptool-js");
         const terminal = {
-            clean: () => {},
             write: (message) => addLog(String(message).trim()),
             writeLine: (message) => addLog(String(message).trim()),
         };
-        const loader = new ESPLoader({
-            transport,
-            baudrate,
-            romBaudrate: baudrate,
-            terminal,
-        });
-        // esptool-js has historically ignored romBaudrate in some releases; keep this explicit.
-        loader.romBaudrate = baudrate;
-        loader.baudrate = baudrate;
-        // Match the official ELRS web flasher: Betaflight passthrough uses 2048-byte chunks.
-        loader.ESP_RAM_BLOCK = 0x0800;
-        loader.FLASH_WRITE_SIZE = BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE;
 
-        addLog("Reopening passthrough serial port and connecting to ESP bootloader...");
-        const chip = await loader.main("no_reset");
-        assertDetectedChipMatchesTarget(chip, selectedTarget.value);
+        flasher = new OfficialElrsEspFlasher(nativePort, selectedTarget.value, {
+            baudrate,
+            terminal,
+            calculateMd5Hash,
+        });
+        activeTransport.value = flasher;
+
+        addLog(`Opening flight controller for GIGLRS passthrough at ${baudrate} baud...`);
+        passthroughActive.value = true;
+        const chip = await flasher.connect();
+        passthroughActive.value = false;
         addLog(`Detected ${chip}. Flashing ${configuredFirmware.length} file${configuredFirmware.length === 1 ? "" : "s"}...`);
 
-        loader.IS_STUB = true;
-        addLog(`Using ${loader.FLASH_WRITE_SIZE}-byte compressed flash blocks through Betaflight passthrough.`);
-        await loader.writeFlash({
-            fileArray: configuredFirmware.map((file) => ({
-                data: file.data,
-                address: file.address,
-            })),
-            flashSize: "keep",
-            flashMode: "keep",
-            flashFreq: "keep",
-            eraseAll: false,
-            compress: true,
-            calculateMD5Hash: calculateMd5Hash,
-            reportProgress: (_fileIndex, written, total) => {
-                if (total > 0) {
-                    flashProgress.value = Math.round((written / total) * 100);
-                }
-            },
+        addLog("Using official ELRS web-flasher ESP transport with 2048-byte compressed blocks.");
+        await flasher.flash(configuredFirmware, false, (_fileIndex, written, total) => {
+            if (total > 0) {
+                flashProgress.value = Math.round((written / total) * 100);
+            }
         });
 
-        addLog("Rebooting receiver...");
-        if (isEsp32Platform(selectedTarget.value.platform)) {
-            await loader.after("hard_reset").catch(() => {});
-        } else {
-            await loader.after("soft_reset").catch(() => {});
-        }
         flashProgress.value = 100;
         addLog("GIGLRS receiver flash complete.");
     } catch (flashError) {
         error.value = flashError instanceof Error ? flashError.message : String(flashError);
         addLog(error.value);
-        const recentText = transport?.recentText?.();
+        const recentText = flasher?.recentText?.();
         if (recentText) {
             addLog(`Recent receiver output: ${recentText.slice(-500)}`);
         }
     } finally {
-        await transport?.disconnect?.().catch(() => {});
+        await flasher?.close?.().catch(() => {});
         activeTransport.value = null;
         passthroughActive.value = false;
         busy.value = false;
