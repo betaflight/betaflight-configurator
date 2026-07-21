@@ -1,7 +1,7 @@
 <template>
     <UiBox title="GIGLRS firmware flash" type="neutral">
         <p>
-            Flash one GIGLRS receiver through Betaflight/GIGFlight RX serial passthrough. The target list comes from
+            Flash one GIGLRS receiver through Betaflight/GIGFLIGHT RX serial passthrough. The target list comes from
             <code>giglrs-targets</code>; online firmware comes from <code>giglrs</code> GitHub releases.
         </p>
 

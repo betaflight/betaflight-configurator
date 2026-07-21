@@ -1,7 +1,7 @@
 <template>
     <UiBox title="AM32 firmware flash" type="neutral">
         <p>
-            Flash AM32 ESC firmware through Betaflight/GIGFlight 4-way passthrough over the active flight controller
+            Flash AM32 ESC firmware through Betaflight/GIGFLIGHT 4-way passthrough over the active flight controller
             USB connection. Keep props off and connect battery power before flashing.
         </p>
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { GIGFLIGHT_CONFIG_REPOSITORY, GIGFLIGHT_REPOSITORY, GIGLRS_TARGETS } from "../../src/js/GigfpvCatalog";
 
 describe("GIGFPV firmware catalogues", () => {
-    it("points GIGFlight firmware and target discovery at GIGFPV repositories", () => {
+    it("points GIGFLIGHT firmware and target discovery at GIGFPV repositories", () => {
         expect(GIGFLIGHT_REPOSITORY).toBe("timmyfpv/GIGFLIGHT");
         expect(GIGFLIGHT_CONFIG_REPOSITORY).toBe("timmyfpv/gigflight-config");
     });

@@ -22,7 +22,7 @@ function bytesResponse(bytes) {
     };
 }
 
-describe("BuildApi GIGFlight catalogue integration", () => {
+describe("BuildApi GIGFLIGHT catalogue integration", () => {
     let fetchMock;
 
     beforeEach(() => {
@@ -118,7 +118,7 @@ describe("BuildApi GIGFlight catalogue integration", () => {
             releases: [
                 {
                     release: "26.0",
-                    label: "GIGFlight",
+                    label: "GIGFLIGHT",
                     type: "Stable",
                 },
             ],

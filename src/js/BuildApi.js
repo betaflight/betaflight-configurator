@@ -208,7 +208,7 @@ export default class BuildApi {
             const readmeText = await this.loadGithubContentText(GIGFLIGHT_CONFIG_REPOSITORY, "README.md");
             return this.parseGigflightReadmeTargets(readmeText);
         } catch (error) {
-            console.warn("Failed to load GIGFlight README target metadata:", error);
+            console.warn("Failed to load GIGFLIGHT README target metadata:", error);
             return new Map();
         }
     }
@@ -256,7 +256,7 @@ export default class BuildApi {
                         try {
                             return await this.loadGigflightConfigTarget(entry, metadataByTarget);
                         } catch (error) {
-                            console.warn(`Failed to load GIGFlight target ${entry.name}:`, error);
+                            console.warn(`Failed to load GIGFLIGHT target ${entry.name}:`, error);
                             return null;
                         }
                     }),
@@ -462,7 +462,7 @@ export default class BuildApi {
     }
 
     async loadTargets() {
-        // GIGFPV Station deliberately exposes only GIGFlight targets.  Do not
+        // GIGFPV Station deliberately exposes only GIGFLIGHT targets.  Do not
         // fall back to the upstream catalogue: that would make an unrelated
         // firmware target appear flashable in this product.
         const targets = await this.loadGigflightConfigTargets();
@@ -484,7 +484,7 @@ export default class BuildApi {
                 .filter((release) => !release.draft)
                 .map((release) => ({
                     release: release.tag_name,
-                    label: "GIGFlight",
+                    label: "GIGFLIGHT",
                     type: release.prerelease ? "ReleaseCandidate" : "Stable",
                 })),
         };

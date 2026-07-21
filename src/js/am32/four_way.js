@@ -72,7 +72,7 @@ export default class Am32FourWaySession extends EventTarget {
             return this.expectedCount;
         }
         if (!serial.connected) {
-            throw new Error("Connect to a GIGFlight/Betaflight flight controller first.");
+            throw new Error("Connect to a GIGFLIGHT/Betaflight flight controller first.");
         }
 
         this.log("Requesting Betaflight 4-way ESC passthrough...");

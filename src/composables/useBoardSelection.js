@@ -117,7 +117,7 @@ export function useBoardSelection(params) {
         };
 
         const groupLabels = {
-            supported: "GIGFlight targets",
+            supported: "GIGFLIGHT targets",
             unsupported: $t("firmwareFlasherOptionLabelVendorCommunity"),
             legacy: $t("firmwareFlasherOptionLabelLegacy"),
         };

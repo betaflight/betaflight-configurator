@@ -7,7 +7,7 @@
             <UiBox title="Firmware flasher" type="neutral" class="mb-4">
                 <div class="font-semibold">Choose what you want to flash</div>
                 <div class="text-sm text-dimmed mb-3">
-                    GIGFlight uses the normal FC flasher. GIGLRS and AM32 use passthrough through the connected flight controller.
+                    GIGFLIGHT uses the normal FC flasher. GIGLRS and AM32 use passthrough through the connected flight controller.
                 </div>
                 <SubtabNav :items="firmwareTypeTabItems" v-model="firmwareType" />
             </UiBox>
@@ -203,7 +203,7 @@ export default defineComponent({
         const firmwareType = ref("betaflight");
         const elrsFlasher = ref(null);
         const firmwareTypeTabItems = [
-            { value: "betaflight", label: "GIGFlight", icon: "i-lucide-cpu" },
+            { value: "betaflight", label: "GIGFLIGHT", icon: "i-lucide-cpu" },
             { value: "elrs", label: "GIGLRS", icon: "i-lucide-radio" },
             { value: "am32", label: "AM32 ESC", icon: "i-lucide-gauge" },
         ];
