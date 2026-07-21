@@ -32,8 +32,6 @@ if (tauriDev) {
     console.log(`  Server will be available at: https://${devHostname}:8443`);
 } else {
     console.log("⚠ SSL certificates not found - Running in HTTP mode");
-    console.log("  WebAuthn features will not be available without HTTPS");
-    console.log("  See WEBAUTHN_SETUP.md for certificate setup instructions");
     console.log("  Server will be available at: http://localhost:8080");
 }
 

@@ -58,8 +58,7 @@ export function switchTab(tabKey, options = {}) {
         return false;
     }
 
-    const isLoginSectionTab = mode === "loggedin";
-    if (!GUI.allowedTabs.includes(tabKey) && !isLoginSectionTab) {
+    if (!GUI.allowedTabs.includes(tabKey)) {
         handleDisallowedTab(tabKey, label);
         return false;
     }

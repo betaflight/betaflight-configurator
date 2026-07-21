@@ -2,14 +2,12 @@ import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 import CONFIGURATOR from "./data_storage.js";
-import LoginApi from "./LoginApi";
 import { GIGFLIGHT_CONFIG_REPOSITORY, GIGFLIGHT_REPOSITORY } from "./GigfpvCatalog";
 
 export default class BuildApi {
-    constructor(loginApi = new LoginApi()) {
+    constructor() {
         this._url = "https://build.betaflight.com";
         this._cacheExpirationPeriod = 3600 * 1000;
-        this._loginApi = loginApi;
         this._gigflightTargetsPromise = null;
     }
 
@@ -73,32 +71,12 @@ export default class BuildApi {
         return `${globalThis.location.origin}/api/gigfpv/github-release-asset?url=${encodeURIComponent(url)}`;
     }
 
-    async _authHeaders() {
-        if (!this._loginApi) {
-            return {};
-        }
-
-        try {
-            const token = await this._loginApi.getAccessToken();
-            if (token) {
-                return { Authorization: `Bearer ${token}` };
-            }
-        } catch (_error) {
-            // Silently continue without auth headers
-            console.log(`Unable to obtain access token for Build API. ${_error}`);
-        }
-
-        return {};
-    }
-
     async fetchBytes(url) {
         const headers = {};
 
         if (!this.isGithubUrl(url)) {
-            const authHeaders = await this._authHeaders();
             Object.assign(headers, {
                 "X-CFG-VER": `${CONFIGURATOR.version}`,
-                ...authHeaders,
             });
         } else if (this.isGithubReleaseAssetApiUrl(url)) {
             headers.Accept = "application/octet-stream";
@@ -291,12 +269,10 @@ export default class BuildApi {
     }
 
     async fetchText(url) {
-        const authHeaders = await this._authHeaders();
         const response = await fetch(url, {
             method: "GET",
             headers: {
                 "X-CFG-VER": `${CONFIGURATOR.version}`,
-                ...authHeaders,
             },
         });
 
@@ -309,12 +285,10 @@ export default class BuildApi {
     }
 
     async fetchJson(url) {
-        const authHeaders = await this._authHeaders();
         const response = await fetch(url, {
             method: "GET",
             headers: {
                 "X-CFG-VER": `${CONFIGURATOR.version}`,
-                ...authHeaders,
             },
         });
 
@@ -340,12 +314,10 @@ export default class BuildApi {
             return cachedData;
         }
 
-        const authHeaders = await this._authHeaders();
         const response = await fetch(url, {
             method: "GET",
             headers: {
                 "X-CFG-VER": `${CONFIGURATOR.version}`,
-                ...authHeaders,
             },
         });
 
@@ -444,13 +416,11 @@ export default class BuildApi {
     async submitSupportData(data) {
         const url = `${this._url}/api/support`;
 
-        const authHeaders = await this._authHeaders();
         const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
                 "X-CFG-VER": `${CONFIGURATOR.version}`,
-                ...authHeaders,
             },
             body: data,
         });
@@ -466,13 +436,11 @@ export default class BuildApi {
     async requestBuild(request) {
         const url = `${this._url}/api/builds`;
 
-        const authHeaders = await this._authHeaders();
         const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CFG-VER": `${CONFIGURATOR.version}`,
-                ...authHeaders,
             },
             body: JSON.stringify(request),
         });

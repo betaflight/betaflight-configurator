@@ -3,8 +3,6 @@ import LandingTab from "../components/tabs/LandingTab.vue";
 import PortsTab from "../components/tabs/PortsTab.vue";
 import ServosTab from "../components/tabs/ServosTab.vue";
 import ConfigurationTab from "../components/tabs/ConfigurationTab.vue";
-import UserProfileTab from "../components/tabs/UserProfileTab.vue";
-import BackupsTab from "../components/tabs/BackupsTab.vue";
 import LoggingTab from "../components/tabs/LoggingTab.vue";
 import GpsTab from "../components/tabs/GpsTab.vue";
 import AuxiliaryTab from "../components/tabs/AuxiliaryTab.vue";
@@ -35,8 +33,6 @@ export const VueTabComponents = {
     ports: PortsTab,
     servos: ServosTab,
     configuration: ConfigurationTab,
-    user_profile: UserProfileTab,
-    backups: BackupsTab,
     logging: LoggingTab,
     gps: GpsTab,
     auxiliary: AuxiliaryTab,

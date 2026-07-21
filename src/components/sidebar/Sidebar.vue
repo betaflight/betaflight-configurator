@@ -56,7 +56,6 @@
                 :class="{ 'mr-auto': !isCompact }"
             />
         </UTooltip>
-        <UserSession :is-compact="isCompact" />
     </div>
     <OptionsDialog v-model="optionsOpen" />
     <LogDialog v-model="logOpen" />
@@ -65,11 +64,9 @@
 <script setup>
 import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
-import UserSession from "@/components/user-session/UserSession.vue";
 import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
-import { useAuthStore } from "@/stores/auth";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";
 import GUI from "@/js/gui.js";
@@ -84,7 +81,6 @@ import LogDialog from "@/components/dialogs/LogDialog.vue";
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
-const authStore = useAuthStore();
 const sidebarExpanded = inject("sidebarExpanded", ref(true));
 const closeMobileSidebar = inject("closeMobileSidebar", () => {});
 const isCompact = computed(() => !sidebarExpanded.value);
@@ -105,8 +101,6 @@ const isModeVisible = (mode) => {
             return !!connectionStore.connectionValid;
         case "shared":
             return true;
-        case "loggedin":
-            return authStore.isLoggedIn;
         default:
             return false;
     }
@@ -123,7 +117,7 @@ const ctx = computed(() => {
 });
 
 const isAllowed = (item) => {
-    if (item.mode === "loggedin" || item.mode === "shared") {
+    if (item.mode === "shared") {
         return true;
     }
     return GUI.allowedTabs.includes(item.tab ?? item.key);

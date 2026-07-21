@@ -14,7 +14,6 @@ import { switchTab } from "./tab_switch.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
-import loginManager from "./LoginManager.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 import { loadDeviceFilters } from "./protocols/devices.js";
 import { pinia } from "./pinia_instance.js";
@@ -122,9 +121,6 @@ function appReady() {
 async function startProcess() {
     // translate to user-selected language
     i18n.localizePage();
-
-    // Initialize login manager
-    await loginManager.initialize();
 
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));

@@ -18,30 +18,6 @@
     <body>
         <div id="main-wrapper">
         <app />
-        <dialog
-            id="dialogWaiting"
-            style="border: 1px solid var(--surface-600); border-radius: 8px; padding: 30px; min-width: 300px"
-        >
-            <div style="text-align: center">
-                <div style="margin-bottom: 15px">
-                    <div
-                        style="
-                            border: 4px solid rgba(255, 255, 255, 0.2);
-                            border-top: 4px solid var(--primary-500);
-                            border-radius: 50%;
-                            width: 50px;
-                            height: 50px;
-                            animation: spin 1s linear infinite;
-                            margin: 0 auto;
-                        "
-                    ></div>
-                </div>
-                <p id="dialogWaiting-message" style="font-size: 14px; color: var(--text); margin: 0">
-                    Processing passkey authentication...
-                </p>
-            </div>
-        </dialog>
-
         <dialog class="dialogConfiguratorUpdate">
             <h3 i18n="noticeTitle"></h3>
             <div class="content">

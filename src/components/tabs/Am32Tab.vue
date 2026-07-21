@@ -65,10 +65,6 @@
                                         {{ row.data.settings.LAYOUT_REVISION ?? "?" }}
                                     </div>
                                     <div class="text-sm text-dimmed">
-                                        MCU {{ row.data.mcu?.name || "?" }} · Signature
-                                        {{ formatSignature(row.data.mcu?.signature) }}
-                                    </div>
-                                    <div class="text-sm text-dimmed">
                                         Bootloader {{ row.data.bootloader.version || "?" }}
                                         <span v-if="row.data.bootloader.pin"> · {{ row.data.bootloader.pin }}</span>
                                     </div>
@@ -251,10 +247,6 @@ async function onTabCleanup() {
 
 function firmwareVersion(esc) {
     return `${esc.settings.MAIN_REVISION ?? "?"}.${esc.settings.SUB_REVISION ?? "?"}`;
-}
-
-function formatSignature(signature) {
-    return signature === undefined || signature === null ? "?" : `0x${signature.toString(16).toUpperCase()}`;
 }
 
 function visibleFields(fields) {
