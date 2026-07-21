@@ -300,7 +300,8 @@ onBeforeUnmount(async () => {
 </script>
 
 <style lang="less">
-.tab-firmware_flasher {
+.tab-firmware_flasher,
+.tab-am32_flasher {
     .am32-flash-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);

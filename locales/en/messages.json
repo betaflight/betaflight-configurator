@@ -423,7 +423,13 @@
         "message": "Device - <span class=\"message-positive\">Ready</span>"
     },
     "tabFirmwareFlasher": {
-        "message": "Firmware Flasher"
+        "message": "GIGFLIGHT Flasher"
+    },
+    "tabGiglrsFlasher": {
+        "message": "GIGLRS Flasher"
+    },
+    "tabAm32Flasher": {
+        "message": "AM32 Flasher"
     },
     "tabAm32Esc": {
         "message": "AM32 ESC"
@@ -931,7 +937,7 @@
         "description": "Connection time text shown in the status bar"
     },
     "dfu_connect_message": {
-        "message": "Please use the Firmware Flasher to access DFU devices"
+        "message": "Please use the GIGFLIGHT Flasher to access DFU devices"
     },
     "dfu_erased_kilobytes": {
         "message": "Erased $1 kB of flash <span class=\"message-positive\">successfully</span>"
@@ -955,7 +961,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "GIGFPV Station retains Betaflight Configurator compatibility and adds integrated workflows for ExpressLRS and AM32. Use the Firmware Flasher to choose the correct target, and Motors &amp; ESC for ESC work.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+        "message": "GIGFPV Station retains Betaflight Configurator compatibility and adds integrated workflows for ExpressLRS and AM32. Use the GIGFLIGHT Flasher for flight controller firmware, GIGLRS Flasher for receivers, and AM32 Flasher for ESC firmware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -988,7 +994,7 @@
         "message": "GIGFPV Station is designed to keep device configuration on your computer. Any optional telemetry or analytics settings remain under your control in Options."
     },
     "defaultButtonFirmwareFlasher": {
-        "message": "Firmware Flasher"
+        "message": "GIGFLIGHT Flasher"
     },
     "defaultDonateHead": {
         "message": "Open Source Donations"
@@ -4437,7 +4443,7 @@
         "message": "Message:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-Betaflight</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed</li></ul>"
+        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-GIGFLIGHT</strong> hardware with this flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside the GIGFLIGHT flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed</li></ul>"
     },
     "firmwareFlasherWarningShort": {
         "message": "Do not flash non-Betaflight hardware. Do not disconnect during flashing. STM32 bootloader is in ROM and cannot be bricked. Always backup your configuration before upgrading."
@@ -4464,7 +4470,7 @@
         "message": "Flash"
     },
     "firmwareFlasherButtonLeave": {
-        "message": "Leave Firmware Flasher"
+        "message": "Leave GIGFLIGHT Flasher"
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware not loaded"

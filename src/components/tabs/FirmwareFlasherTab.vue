@@ -4,47 +4,35 @@
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
             <WikiButton docUrl="firmware_flasher" />
 
-            <UiBox title="Firmware flasher" type="neutral" class="mb-4">
-                <div class="font-semibold">Choose what you want to flash</div>
-                <div class="text-sm text-dimmed mb-3">
-                    GIGFLIGHT uses the normal FC flasher. GIGLRS and AM32 use passthrough through the connected flight controller.
-                </div>
-                <SubtabNav :items="firmwareTypeTabItems" v-model="firmwareType" />
-            </UiBox>
+            <!-- Sub-tab navigation -->
+            <SubtabNav :items="subtabItems" v-model="activeFlasherStep" />
 
-            <template v-if="firmwareType === 'betaflight'">
-                <!-- Sub-tab navigation -->
-                <SubtabNav :items="subtabItems" v-model="activeFlasherStep" />
-
-                <!-- Tab content -->
-                <div class="flasher-tab-area">
-                    <FlasherBoardBuildTab
-                        v-if="activeFlasherStep === 'board-build'"
-                        :state="state"
-                        :board-selection="boardSelection"
-                        :on-board-change="onBoardChange"
-                        :on-detect-board="handleDetectBoard"
-                        :on-firmware-version-change="onFirmwareVersionChange"
-                    />
-                    <FlasherFlashTab
-                        v-if="activeFlasherStep === 'flash'"
-                        :state="state"
-                        :cloud-build="cloudBuild"
-                        :on-save-firmware="saveFirmware"
-                        :flash-ring-color="flashRingColor"
-                        :on-no-reboot-change="handleNoRebootChange"
-                        :on-erase-chip-change="handleEraseChipChange"
-                        :on-flash-manual-baud-change="handleFlashManualBaudChange"
-                        :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
-                        :on-restore-backup="handleRestoreBackup"
-                    />
-                </div>
-            </template>
-            <FlasherElrsTab v-else-if="firmwareType === 'elrs'" ref="elrsFlasher" />
-            <FlasherAm32Tab v-else-if="firmwareType === 'am32'" />
+            <!-- Tab content -->
+            <div class="flasher-tab-area">
+                <FlasherBoardBuildTab
+                    v-if="activeFlasherStep === 'board-build'"
+                    :state="state"
+                    :board-selection="boardSelection"
+                    :on-board-change="onBoardChange"
+                    :on-detect-board="handleDetectBoard"
+                    :on-firmware-version-change="onFirmwareVersionChange"
+                />
+                <FlasherFlashTab
+                    v-if="activeFlasherStep === 'flash'"
+                    :state="state"
+                    :cloud-build="cloudBuild"
+                    :on-save-firmware="saveFirmware"
+                    :flash-ring-color="flashRingColor"
+                    :on-no-reboot-change="handleNoRebootChange"
+                    :on-erase-chip-change="handleEraseChipChange"
+                    :on-flash-manual-baud-change="handleFlashManualBaudChange"
+                    :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
+                    :on-restore-backup="handleRestoreBackup"
+                />
+            </div>
         </div>
 
-        <div v-if="firmwareType === 'betaflight'" class="content_toolbar toolbar_fixed_bottom">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup size="sm" orientation="horizontal" class="flex!">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
@@ -80,36 +68,6 @@
                 </UDropdownMenu>
             </UFieldGroup>
         </div>
-        <div v-if="firmwareType === 'elrs'" class="content_toolbar toolbar_fixed_bottom">
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                <UButton
-                    :disabled="!elrsCanFlash"
-                    :color="elrsCanFlash ? 'success' : 'neutral'"
-                    :loading="elrsBusy && elrsActiveOperation === 'flash'"
-                    @click="handleElrsFlashFirmware"
-                >
-                    {{ $t("firmwareFlasherFlashFirmware") }}
-                </UButton>
-                <UDropdownMenu v-slot="{ open }" :items="elrsFlashActionMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton
-                        :color="elrsCanFlash ? 'success' : 'neutral'"
-                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                        :aria-label="$t('firmwareFlasherFlashFirmwareOptions')"
-                        square
-                    />
-                </UDropdownMenu>
-            </UFieldGroup>
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                <UButton
-                    :disabled="!elrsCanLoadOnlineFirmware"
-                    :loading="elrsBusy && elrsActiveOperation === 'load-online'"
-                    @click="handleElrsLoadOnlineFirmware"
-                >
-                    {{ $t("firmwareFlasherButtonLoadOnline") }}
-                </UButton>
-            </UFieldGroup>
-        </div>
-
         <UModal v-model:open="unstableFirmwareOpen" :title="$t('warningTitle')" :close="false" :dismissible="false">
             <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
@@ -155,7 +113,6 @@
 import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
-import UiBox from "../elements/UiBox.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
 import GUI, { TABS } from "../../js/gui";
@@ -177,8 +134,6 @@ import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
-import FlasherElrsTab from "./firmware-flasher/FlasherElrsTab.vue";
-import FlasherAm32Tab from "./firmware-flasher/FlasherAm32Tab.vue";
 import SubtabNav from "../elements/SubtabNav.vue";
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
@@ -189,25 +144,14 @@ export default defineComponent({
     components: {
         BaseTab,
         WikiButton,
-        UiBox,
         FlasherBoardBuildTab,
         FlasherFlashTab,
-        FlasherElrsTab,
-        FlasherAm32Tab,
         SubtabNav,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
-        const firmwareType = ref("betaflight");
-        const elrsFlasher = ref(null);
-        const firmwareTypeTabItems = [
-            { value: "betaflight", label: "GIGFLIGHT", icon: "i-lucide-cpu" },
-            { value: "elrs", label: "GIGLRS", icon: "i-lucide-radio" },
-            { value: "am32", label: "AM32 ESC", icon: "i-lucide-gauge" },
-        ];
-
         // Reactive state
         const state = reactive({
             localFirmwareLoaded: false,
@@ -1114,7 +1058,7 @@ export default defineComponent({
         };
 
         const handleFlashFirmware = async () => {
-            if (firmwareType.value !== "betaflight" || state.flashButtonDisabled || activeFlasherStep.value !== "flash") {
+            if (state.flashButtonDisabled || activeFlasherStep.value !== "flash") {
                 return;
             }
 
@@ -1456,46 +1400,6 @@ export default defineComponent({
             return [group];
         });
 
-        const getElrsExposedValue = (key, fallback = false) => {
-            const value = elrsFlasher.value?.[key];
-            return value?.value ?? value ?? fallback;
-        };
-
-        const elrsCanFlash = computed(() => Boolean(getElrsExposedValue("canFlash")));
-        const elrsCanLoadOnlineFirmware = computed(() => Boolean(getElrsExposedValue("canLoadOnlineFirmware")));
-        const elrsBusy = computed(() => Boolean(getElrsExposedValue("busy")));
-        const elrsActiveOperation = computed(() => String(getElrsExposedValue("activeOperation", "")));
-        const elrsPassthroughActive = computed(() => Boolean(getElrsExposedValue("passthroughActive")));
-
-        const handleElrsFlashFirmware = () => {
-            elrsFlasher.value?.flashReceiver?.();
-        };
-
-        const handleElrsLoadOnlineFirmware = () => {
-            elrsFlasher.value?.loadOnlineFirmware?.();
-        };
-
-        const handleElrsStopPassthrough = () => {
-            elrsFlasher.value?.stopPassthrough?.();
-        };
-
-        const elrsFlashActionMenuItems = computed(() => [
-            [
-                {
-                    label: $t("firmwareFlasherFlashFirmware"),
-                    icon: "i-lucide-zap",
-                    disabled: !elrsCanFlash.value,
-                    onSelect: handleElrsFlashFirmware,
-                },
-                {
-                    label: "Close passthrough",
-                    icon: "i-lucide-unplug",
-                    disabled: !elrsPassthroughActive.value || elrsBusy.value,
-                    onSelect: handleElrsStopPassthrough,
-                },
-            ],
-        ]);
-
         const flashRingColor = computed(() => {
             switch (state.progressLabelClass) {
                 case "invalid":
@@ -1519,19 +1423,11 @@ export default defineComponent({
         // Return all public methods and state
         return {
             state,
-            firmwareType,
-            elrsFlasher,
-            firmwareTypeTabItems,
             flashRingColor,
             activeFlasherStep,
             subtabItems,
             flashActionMenuItems,
             loadFirmwareMenuItems,
-            elrsCanFlash,
-            elrsCanLoadOnlineFirmware,
-            elrsBusy,
-            elrsActiveOperation,
-            elrsFlashActionMenuItems,
             cloudBuild,
             boardSelection,
             FLASH_MESSAGE_TYPES,
@@ -1561,8 +1457,6 @@ export default defineComponent({
             handleFlashFirmware,
             handleLoadRemoteFile,
             handleLoadFile,
-            handleElrsFlashFirmware,
-            handleElrsLoadOnlineFirmware,
             handleDetectBoard,
             handleRequestDfuPermission,
             showDfuButton,

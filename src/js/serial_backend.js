@@ -187,7 +187,7 @@ export function initializeSerialBackend() {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+            !["cli", "firmware_flasher", "giglrs_flasher", "am32_flasher"].includes(GUI.active_tab) &&
             DeviceHandler.devicePicker.autoConnect &&
             !isCliOnlyMode() &&
             (connectionTimestamp === null || connectionTimestamp > 0)
@@ -538,11 +538,12 @@ function teardownConnectionUi() {
     // held — which would otherwise leave a blank content area after unmountVueTab().
     GUI.connect_lock = false;
 
-    // allowedTabs (set above) must already include "landing"/"firmware_flasher" before this,
+    // allowedTabs (set above) must already include the disconnected flasher tabs before this,
     // or switchTab silently rejects the disconnected tab.
     const pendingTab = GUI.pendingTab;
     GUI.pendingTab = null;
-    const target = pendingTab === "firmware_flasher" ? "firmware_flasher" : "landing";
+    const disconnectedFlasherTabs = ["firmware_flasher", "giglrs_flasher", "am32_flasher"];
+    const target = disconnectedFlasherTabs.includes(pendingTab) ? pendingTab : "landing";
 
     // Only unmount when actually leaving the current tab: a repeated teardown (disconnect
     // burst) already sits on the destination, and unmounting there blanks the content

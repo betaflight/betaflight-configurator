@@ -1,6 +1,8 @@
 export const sidebarItems = [
     { key: "landing", mode: "disconnected", i18n: "tabLanding", icon: "i-lucide-home" },
     { key: "firmware_flasher", mode: "disconnected", i18n: "tabFirmwareFlasher", icon: "i-lucide-zap" },
+    { key: "giglrs_flasher", mode: "disconnected", i18n: "tabGiglrsFlasher", icon: "i-lucide-radio" },
+    { key: "am32_flasher", mode: "disconnected", i18n: "tabAm32Flasher", icon: "i-lucide-gauge" },
     { key: "help", mode: "disconnected", i18n: "tabHelp", icon: "i-lucide-help-circle" },
     { key: "preflight", mode: "disconnected", i18n: "tabPreflight", icon: "i-lucide-clipboard-check" },
     { key: "flight_plan", mode: "disconnected", i18n: "tabFlightPlan", icon: "i-lucide-route", expert: true },

@@ -8,6 +8,8 @@ import GpsTab from "../components/tabs/GpsTab.vue";
 import AuxiliaryTab from "../components/tabs/AuxiliaryTab.vue";
 import OnboardLoggingTab from "../components/tabs/OnboardLoggingTab.vue";
 import FirmwareFlasherTab from "../components/tabs/FirmwareFlasherTab.vue";
+import GiglrsFlasherTab from "../components/tabs/GiglrsFlasherTab.vue";
+import Am32FlasherTab from "../components/tabs/Am32FlasherTab.vue";
 import AdjustmentsTab from "../components/tabs/AdjustmentsTab.vue";
 import CliTab from "../components/tabs/CliTab.vue";
 import PowerTab from "../components/tabs/PowerTab.vue";
@@ -38,6 +40,8 @@ export const VueTabComponents = {
     auxiliary: AuxiliaryTab,
     onboard_logging: OnboardLoggingTab,
     firmware_flasher: FirmwareFlasherTab,
+    giglrs_flasher: GiglrsFlasherTab,
+    am32_flasher: Am32FlasherTab,
     adjustments: AdjustmentsTab,
     cli: CliTab,
     power: PowerTab,

@@ -29,15 +29,16 @@ function canSwitchTab(requiresConnection) {
 }
 
 function handleDisallowedTab(tabKey, tabLabel) {
-    if (tabKey !== "firmware_flasher") {
+    const disconnectedFlasherTabs = ["firmware_flasher", "giglrs_flasher", "am32_flasher"];
+    if (!disconnectedFlasherTabs.includes(tabKey)) {
         gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabLabel]));
         return;
     }
     if (GUI.connected_to || GUI.connecting_to) {
-        GUI.pendingTab = "firmware_flasher";
+        GUI.pendingTab = tabKey;
         import("./serial_backend.js").then(({ connectDisconnect }) => connectDisconnect());
     } else {
-        switchTab("firmware_flasher", { mode: "disconnected", label: tabLabel });
+        switchTab(tabKey, { mode: "disconnected", label: tabLabel });
     }
 }
 

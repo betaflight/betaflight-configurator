@@ -23,6 +23,8 @@ class GuiControl {
         this.defaultAllowedTabsWhenDisconnected = [
             "landing",
             "firmware_flasher",
+            "giglrs_flasher",
+            "am32_flasher",
             "preflight",
             "help",
             "flight_plan",
@@ -302,7 +304,7 @@ class GuiControl {
         }
     }
     selectDefaultTabWhenConnected() {
-        if (this.active_tab === "firmware_flasher") {
+        if (["firmware_flasher", "giglrs_flasher", "am32_flasher"].includes(this.active_tab)) {
             return;
         }
 
