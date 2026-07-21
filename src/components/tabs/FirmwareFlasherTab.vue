@@ -4,36 +4,51 @@
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
             <WikiButton docUrl="firmware_flasher" />
 
-            <!-- Sub-tab navigation -->
-            <SubtabNav :items="subtabItems" v-model="activeFlasherStep" />
+            <UiBox title="Firmware target" type="neutral" class="mb-4">
+                <div class="firmware-target-row">
+                    <div>
+                        <div class="font-semibold">Choose what you want to flash</div>
+                        <div class="text-sm text-dimmed">
+                            Betaflight/GIGFlight uses the normal FC flasher. AM32 uses ESC passthrough.
+                        </div>
+                    </div>
+                    <USelect v-model="firmwareType" :items="firmwareTypeOptions" class="firmware-target-select" />
+                </div>
+            </UiBox>
 
-            <!-- Tab content -->
-            <div class="flasher-tab-area">
-                <FlasherBoardBuildTab
-                    v-if="activeFlasherStep === 'board-build'"
-                    :state="state"
-                    :board-selection="boardSelection"
-                    :on-board-change="onBoardChange"
-                    :on-detect-board="handleDetectBoard"
-                    :on-firmware-version-change="onFirmwareVersionChange"
-                />
-                <FlasherFlashTab
-                    v-if="activeFlasherStep === 'flash'"
-                    :state="state"
-                    :cloud-build="cloudBuild"
-                    :on-save-firmware="saveFirmware"
-                    :flash-ring-color="flashRingColor"
-                    :on-no-reboot-change="handleNoRebootChange"
-                    :on-erase-chip-change="handleEraseChipChange"
-                    :on-flash-manual-baud-change="handleFlashManualBaudChange"
-                    :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
-                    :on-restore-backup="handleRestoreBackup"
-                />
-                <FlasherElrsTab v-if="activeFlasherStep === 'elrs'" />
-            </div>
+            <template v-if="firmwareType === 'betaflight'">
+                <!-- Sub-tab navigation -->
+                <SubtabNav :items="subtabItems" v-model="activeFlasherStep" />
+
+                <!-- Tab content -->
+                <div class="flasher-tab-area">
+                    <FlasherBoardBuildTab
+                        v-if="activeFlasherStep === 'board-build'"
+                        :state="state"
+                        :board-selection="boardSelection"
+                        :on-board-change="onBoardChange"
+                        :on-detect-board="handleDetectBoard"
+                        :on-firmware-version-change="onFirmwareVersionChange"
+                    />
+                    <FlasherFlashTab
+                        v-if="activeFlasherStep === 'flash'"
+                        :state="state"
+                        :cloud-build="cloudBuild"
+                        :on-save-firmware="saveFirmware"
+                        :flash-ring-color="flashRingColor"
+                        :on-no-reboot-change="handleNoRebootChange"
+                        :on-erase-chip-change="handleEraseChipChange"
+                        :on-flash-manual-baud-change="handleFlashManualBaudChange"
+                        :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
+                        :on-restore-backup="handleRestoreBackup"
+                    />
+                    <FlasherElrsTab v-if="activeFlasherStep === 'elrs'" />
+                </div>
+            </template>
+            <FlasherAm32Tab v-else />
         </div>
 
-        <div v-if="activeFlasherStep !== 'elrs'" class="content_toolbar toolbar_fixed_bottom">
+        <div v-if="firmwareType === 'betaflight' && activeFlasherStep !== 'elrs'" class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup size="sm" orientation="horizontal" class="flex!">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
@@ -115,6 +130,7 @@
 import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
+import UiBox from "../elements/UiBox.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
 import GUI, { TABS } from "../../js/gui";
@@ -137,6 +153,7 @@ import { ispConnected } from "../../js/utils/connection.js";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
 import FlasherElrsTab from "./firmware-flasher/FlasherElrsTab.vue";
+import FlasherAm32Tab from "./firmware-flasher/FlasherAm32Tab.vue";
 import SubtabNav from "../elements/SubtabNav.vue";
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
@@ -147,15 +164,22 @@ export default defineComponent({
     components: {
         BaseTab,
         WikiButton,
+        UiBox,
         FlasherBoardBuildTab,
         FlasherFlashTab,
         FlasherElrsTab,
+        FlasherAm32Tab,
         SubtabNav,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
+        const firmwareType = ref("betaflight");
+        const firmwareTypeOptions = [
+            { value: "betaflight", label: "Betaflight / GIGFlight" },
+            { value: "am32", label: "AM32 ESC" },
+        ];
 
         // Reactive state
         const state = reactive({
@@ -1429,6 +1453,8 @@ export default defineComponent({
         // Return all public methods and state
         return {
             state,
+            firmwareType,
+            firmwareTypeOptions,
             flashRingColor,
             activeFlasherStep,
             subtabItems,

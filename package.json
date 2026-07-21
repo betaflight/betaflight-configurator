@@ -33,7 +33,7 @@
     "prepare": "husky"
   },
   "window": {
-    "icon": "images/bf_icon_128.png",
+    "icon": "images/gigfpv_icon_128.png",
     "id": "main-window",
     "min_width": 1024,
     "min_height": 550,

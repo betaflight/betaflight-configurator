@@ -4,28 +4,26 @@
             <div class="tab_title">AM32 ESC</div>
 
             <div class="grid-row grid-box col6">
-                <div class="col-span-2">
-                    <UiBox title="AM32 passthrough" type="neutral" class="sm:h-full">
-                        <p>
-                            Uses Betaflight 4-way ESC passthrough over the active GIGFlight connection. No second USB
-                            handler is opened.
-                        </p>
-
+                <div class="col-span-6">
+                    <UiBox title="Detected ESCs" type="neutral">
                         <UAlert
                             v-if="!fcConnected"
+                            class="mb-3"
                             color="warning"
                             variant="soft"
                             title="Flight controller not connected"
-                            description="Connect to the flight controller first, then open this tab and read AM32 ESCs."
+                            description="Connect to the flight controller first, then open this tab to auto-read AM32 ESCs."
                         />
-
-                        <div class="flex flex-wrap gap-2">
-                            <UButton
-                                color="primary"
-                                :loading="busy"
-                                :disabled="!fcConnected || busy"
-                                @click="readEscs"
-                            >
+                        <UAlert
+                            v-else-if="error"
+                            class="mb-3"
+                            color="error"
+                            variant="soft"
+                            title="AM32 error"
+                            :description="error"
+                        />
+                        <div class="flex flex-wrap items-center gap-2 mb-3">
+                            <UButton color="primary" :loading="busy" :disabled="!fcConnected || busy" @click="readEscs">
                                 Read ESCs
                             </UButton>
                             <UButton
@@ -36,40 +34,12 @@
                             >
                                 Exit passthrough
                             </UButton>
+                            <span v-if="sessionActive" class="text-sm text-dimmed">
+                                4-way passthrough active · detected {{ expectedCount }} ESC{{
+                                    expectedCount === 1 ? "" : "s"
+                                }}
+                            </span>
                         </div>
-
-                        <UProgress v-if="busy || flashProgress > 0" :model-value="flashProgress" />
-
-                        <UAlert v-if="error" color="error" variant="soft" title="AM32 error" :description="error" />
-                        <UAlert
-                            v-else-if="sessionActive"
-                            color="success"
-                            variant="soft"
-                            title="4-way passthrough active"
-                            :description="`Detected ${expectedCount} ESC${expectedCount === 1 ? '' : 's'}.`"
-                        />
-                    </UiBox>
-
-                    <UiBox title="Firmware flash" type="neutral" class="mt-4">
-                        <p>
-                            Upload an AM32 Intel HEX file and flash it to the selected ESCs. Keep props off and connect
-                            battery power before flashing.
-                        </p>
-                        <input type="file" accept=".hex,text/plain" :disabled="busy" @change="onHexFile" />
-                        <div v-if="hexFileName" class="text-sm text-dimmed">Loaded: {{ hexFileName }}</div>
-                        <UButton
-                            color="warning"
-                            :loading="busy && activeOperation === 'flash'"
-                            :disabled="!canFlash"
-                            @click="flashSelectedEscs"
-                        >
-                            Flash selected ESCs
-                        </UButton>
-                    </UiBox>
-                </div>
-
-                <div class="col-span-4">
-                    <UiBox title="Detected ESCs" type="neutral">
                         <div v-if="escRows.length === 0" class="text-dimmed">No AM32 ESCs loaded yet.</div>
                         <div v-else class="am32-esc-grid">
                             <div
@@ -166,9 +136,6 @@
                         </template>
                     </UiBox>
 
-                    <UiBox title="Log" type="neutral" class="mt-4">
-                        <pre class="am32-log">{{ logLines.join("\n") }}</pre>
-                    </UiBox>
                 </div>
             </div>
         </div>
@@ -192,9 +159,6 @@ const activeOperation = ref("");
 const error = ref("");
 const escRows = ref([]);
 const logLines = ref([]);
-const hexFileName = ref("");
-const hexFileContent = ref("");
-const flashProgress = ref(0);
 const autoReadAttempted = ref(false);
 
 const protocolOptions = [
@@ -255,24 +219,10 @@ const settingGroups = [
             { field: "LOW_VOLTAGE_CUTOFF", label: "Low voltage cutoff", type: "switch" },
         ],
     },
-    {
-        title: "Brake and sine",
-        fields: [
-            { field: "BRAKE_ON_STOP", label: "Brake on stop", type: "switch" },
-            { field: "RC_CAR_REVERSING", label: "RC car reversing", type: "switch" },
-            { field: "SINUSOIDAL_STARTUP", label: "Sinusoidal startup", type: "switch" },
-            { field: "BRAKE_STRENGTH", label: "Brake strength", min: 0, max: 255 },
-            { field: "RUNNING_BRAKE_LEVEL", label: "Running brake", min: 0, max: 255 },
-            { field: "ACTIVE_BRAKE_POWER", label: "Active brake power", min: 0, max: 255 },
-            { field: "SINE_MODE_RANGE", label: "Sine mode range", min: 0, max: 255 },
-            { field: "SINE_MODE_POWER", label: "Sine mode power", min: 0, max: 255 },
-        ],
-    },
 ];
 
 const selectedEscRows = computed(() => escRows.value.filter((row) => row.data && row.data.isSelected && !row.isError));
 const primaryEsc = computed(() => selectedEscRows.value[0]?.data ?? null);
-const canFlash = computed(() => sessionActive.value && selectedEscRows.value.length > 0 && hexFileContent.value && !busy.value);
 
 function addLog(message) {
     const timestamp = new Date().toLocaleTimeString();
@@ -422,7 +372,6 @@ async function readEscs() {
     busy.value = true;
     activeOperation.value = "read";
     error.value = "";
-    flashProgress.value = 0;
     try {
         await ensureSession();
         escRows.value = Array.from({ length: expectedCount.value }, (_unused, index) => ({
@@ -479,39 +428,6 @@ async function saveSelectedEscs() {
         }
     } catch (saveError) {
         error.value = saveError instanceof Error ? saveError.message : String(saveError);
-        addLog(error.value);
-    } finally {
-        busy.value = false;
-        activeOperation.value = "";
-    }
-}
-
-async function onHexFile(event) {
-    const file = event.target.files?.[0];
-    hexFileName.value = file?.name ?? "";
-    hexFileContent.value = file ? await file.text() : "";
-}
-
-async function flashSelectedEscs() {
-    busy.value = true;
-    activeOperation.value = "flash";
-    error.value = "";
-    flashProgress.value = 0;
-    try {
-        await ensureSession();
-        const rows = selectedEscRows.value;
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            addLog(`Flashing ESC ${row.index + 1} with ${hexFileName.value}...`);
-            await session.writeHex(row.index, hexFileContent.value, {
-                onProgress: (progress) => {
-                    flashProgress.value = ((i + progress / 100) / rows.length) * 100;
-                },
-            });
-            addLog(`Flashed ESC ${row.index + 1}. Re-read settings before editing again.`);
-        }
-    } catch (flashError) {
-        error.value = flashError instanceof Error ? flashError.message : String(flashError);
         addLog(error.value);
     } finally {
         busy.value = false;
@@ -608,12 +524,5 @@ onBeforeUnmount(async () => {
         }
     }
 
-    .am32-log {
-        max-height: 220px;
-        overflow: auto;
-        white-space: pre-wrap;
-        margin: 0;
-        font-size: 12px;
-    }
 }
 </style>
