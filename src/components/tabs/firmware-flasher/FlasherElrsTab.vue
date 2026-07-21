@@ -1,83 +1,614 @@
 <template>
-    <UiBox title="GIGLRS" type="neutral" class="mt-4">
-        <p class="mb-4">
-            The integrated ELRS workflow is limited to the GIGLRS target maintained by GIGFPV.
+    <UiBox title="GIGLRS firmware flash" type="neutral">
+        <p>
+            Flash one GIGLRS receiver through Betaflight/GIGFlight RX serial passthrough. The target list comes from
+            <code>giglrs-targets</code>; online firmware comes from <code>giglrs</code> GitHub releases.
         </p>
-        <SettingRow label="Receiver target" help="Only GIGLRS targets are offered in GIGFPV Station." full-width>
-            <div class="font-medium">{{ receiver.productName }}</div>
-        </SettingRow>
-        <SettingRow label="Firmware build" help="The matching GIGLRS firmware profile is selected automatically." full-width>
-            <div>{{ receiver.firmware }}</div>
-        </SettingRow>
-        <SettingRow
-            label="Betaflight passthrough"
-            help="Uses the active Betaflight connection. No second USB or serial handler is opened."
-            full-width
-        >
-            <UButton v-if="!passthrough.active.value" color="primary" @click="startPassthrough">
-                Open passthrough
+
+        <UAlert
+            v-if="showConnectionWarning"
+            class="mb-3"
+            color="warning"
+            variant="soft"
+            title="Flight controller not connected"
+            description="Choose the flight controller USB device if the browser asks for permission, then flash again."
+        />
+        <UAlert v-if="error" class="mb-3" color="error" variant="soft" title="GIGLRS error" :description="error" />
+
+        <div class="giglrs-grid">
+            <div>
+                <h3>Receiver target</h3>
+                <SettingRow label="Target" help="Only targets from the GIGLRS targets repository are shown." full-width>
+                    <USelect
+                        v-model="selectedTargetId"
+                        :items="targetItems"
+                        :loading="loadingTargets"
+                        :disabled="busy || loadingTargets"
+                        class="giglrs-select"
+                    />
+                </SettingRow>
+                <div v-if="selectedTarget" class="text-sm text-dimmed mt-2">
+                    {{ selectedTarget.firmware }} · {{ selectedTarget.platform }} · minimum {{ selectedTarget.minVersion }}
+                </div>
+            </div>
+
+            <div>
+                <h3>Firmware file</h3>
+                <SettingRow label="Online release" help="Loads a firmware .zip or .bin asset from timmyfpv/giglrs releases." full-width>
+                    <div class="giglrs-inline">
+                        <USelect
+                            v-model="selectedReleaseTag"
+                            :items="releaseItems"
+                            :loading="loadingReleases"
+                            :disabled="busy || loadingReleases || releases.length === 0"
+                            class="giglrs-select"
+                        />
+                        <UButton
+                            type="button"
+                            :loading="busy && activeOperation === 'load-online'"
+                            :disabled="busy || !selectedRelease"
+                            @click="loadOnlineFirmware"
+                        >
+                            Load online
+                        </UButton>
+                    </div>
+                </SettingRow>
+                <div v-if="!loadingReleases && releases.length === 0" class="text-sm text-dimmed mt-2">
+                    No GIGLRS firmware release artifacts found yet. Publish a firmware .zip or .bin asset, or use offline load.
+                </div>
+                <SettingRow
+                    label="Offline file"
+                    help="Use a GIGLRS/ExpressLRS firmware.zip artifact or ESP32 receiver firmware.bin file."
+                    full-width
+                >
+                    <input type="file" accept=".zip,.bin,application/zip,application/octet-stream" :disabled="busy" @change="onFirmwareFile" />
+                </SettingRow>
+                <div v-if="firmwareFileName" class="text-sm text-dimmed mt-2">
+                    Loaded: {{ firmwareFileName }} · {{ firmwareFiles.length }} file{{ firmwareFiles.length === 1 ? "" : "s" }}
+                </div>
+            </div>
+        </div>
+    </UiBox>
+
+    <UiBox title="Receiver settings" type="neutral" class="mt-4">
+        <div class="giglrs-settings-grid">
+            <SettingRow
+                label="Binding phrase"
+                help="Stored as the official ELRS UID derived from -DMY_BINDING_PHRASE."
+                full-width
+            >
+                <UInput v-model="settings.bindingPhrase" :disabled="busy" placeholder="Optional" />
+            </SettingRow>
+            <SettingRow label="Receiver baud" help="CRSF UART baud rate used by the receiver." full-width>
+                <USelect v-model="settings.receiverBaud" :items="receiverBaudOptions" :disabled="busy" />
+            </SettingRow>
+            <SettingRow label="Lock on first connection" help="Matches the official ELRS receiver default." full-width>
+                <UCheckbox v-model="settings.lockOnFirstConnection" :disabled="busy" />
+            </SettingRow>
+            <SettingRow label="Wi-Fi SSID" help="Optional home Wi-Fi network name." full-width>
+                <UInput v-model="settings.wifiSsid" :disabled="busy" placeholder="Optional" maxlength="32" />
+            </SettingRow>
+            <SettingRow label="Wi-Fi password" help="Optional home Wi-Fi password." full-width>
+                <UInput v-model="settings.wifiPassword" :disabled="busy || !settings.wifiSsid" type="password" maxlength="64" />
+            </SettingRow>
+            <SettingRow label="Auto Wi-Fi" help="Start Wi-Fi after this many seconds without a link." full-width>
+                <div class="giglrs-inline">
+                    <UCheckbox v-model="settings.autoWifiEnabled" :disabled="busy" />
+                    <UInput
+                        v-model="settings.autoWifiInterval"
+                        :disabled="busy || !settings.autoWifiEnabled"
+                        type="number"
+                        min="10"
+                        max="600"
+                        class="giglrs-number"
+                    />
+                    <span class="text-sm text-dimmed">seconds</span>
+                </div>
+            </SettingRow>
+        </div>
+    </UiBox>
+
+    <UiBox title="Flash" type="neutral" class="mt-4">
+        <div class="giglrs-inline mb-3">
+            <UButton
+                type="button"
+                color="warning"
+                :loading="busy && activeOperation === 'flash'"
+                :disabled="!canFlash"
+                @click="flashReceiver"
+            >
+                Flash receiver
             </UButton>
-            <UButton v-else color="error" variant="outline" @click="stopPassthrough">Close passthrough</UButton>
-        </SettingRow>
-        <UAlert
-            v-if="passthrough.active.value"
-            color="success"
-            variant="soft"
-            title="GIGLRS passthrough is active"
-            description="The connected flight controller is now bridging its Serial RX port to the GIGLRS receiver. Close this session before returning to flight-controller configuration."
-        />
-        <UAlert
-            v-else-if="passthroughError"
-            color="error"
-            variant="soft"
-            title="Could not open GIGLRS passthrough"
-            :description="passthroughError"
-        />
-        <UAlert
-            v-else
-            color="neutral"
-            variant="soft"
-            title="Ready for the GIGLRS workflow"
-            description="Connect to the flight controller first, then open passthrough. Firmware releases will be listed here once they are published by GIGLRS."
-        />
+            <UButton type="button" color="error" variant="outline" :disabled="!passthrough.active.value || busy" @click="stopPassthrough">
+                Close passthrough
+            </UButton>
+            <span v-if="passthrough.active.value" class="text-sm text-dimmed">RX serial passthrough active</span>
+        </div>
+
+        <UProgress v-if="busy || flashProgress > 0" class="mb-3" :model-value="flashProgress" />
+        <pre class="giglrs-log">{{ logLines.join("\n") }}</pre>
     </UiBox>
 </template>
 
 <script setup>
-import { onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import { unzip } from "unzipit";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
-import { GIGLRS_TARGETS } from "@/js/GigfpvCatalog";
+import { serial } from "@/js/serial.js";
+import DeviceHandler from "@/js/device_handler.js";
+import MSPConnectorImpl from "@/js/msp/MSPConnector.js";
+import BuildApi from "@/js/BuildApi.js";
 import { FcSerialPortFunction, useFcSerialPassthrough } from "@/composables/useFcSerialPassthrough";
+import { appendUnifiedConfiguration } from "@/js/elrs/unified_config.js";
+import { ElrsPassthroughTransport, elrsBootloaderInitSequence } from "@/js/elrs/passthrough_transport.js";
 
-const receiver = GIGLRS_TARGETS[0];
+const buildApi = new BuildApi();
+const mspConnector = new MSPConnectorImpl();
 const passthrough = useFcSerialPassthrough();
-const passthroughError = ref("");
 
-const startPassthrough = async () => {
-    passthroughError.value = "";
+const targets = ref([]);
+const releases = ref([]);
+const selectedTargetId = ref("");
+const selectedReleaseTag = ref("");
+const firmwareFileName = ref("");
+const firmwareFiles = ref([]);
+const busy = ref(false);
+const activeOperation = ref("");
+const loadingTargets = ref(false);
+const loadingReleases = ref(false);
+const error = ref("");
+const flashProgress = ref(0);
+const logLines = ref([]);
+const fcConnected = ref(Boolean(serial.connected));
+const connectionAttempted = ref(false);
+
+const settings = reactive({
+    bindingPhrase: "",
+    receiverBaud: "420000",
+    lockOnFirstConnection: true,
+    wifiSsid: "",
+    wifiPassword: "",
+    autoWifiEnabled: true,
+    autoWifiInterval: "60",
+});
+
+const receiverBaudOptions = [
+    { label: "420000", value: "420000" },
+    { label: "400000", value: "400000" },
+    { label: "115200", value: "115200" },
+];
+
+const selectedTarget = computed(() => targets.value.find((target) => target.id === selectedTargetId.value) || null);
+const selectedRelease = computed(() => releases.value.find((release) => release.tag === selectedReleaseTag.value) || null);
+const targetItems = computed(() => targets.value.map((target) => ({ label: target.productName, value: target.id })));
+const releaseItems = computed(() =>
+    releases.value.map((release) => ({
+        label: `${release.name}${release.prerelease ? " (prerelease)" : ""} · ${release.assets[0]?.name || "firmware"}`,
+        value: release.tag,
+    })),
+);
+const canFlash = computed(() => Boolean(selectedTarget.value && firmwareFiles.value.length > 0) && !busy.value);
+const showConnectionWarning = computed(() => connectionAttempted.value && !fcConnected.value && !busy.value);
+
+function addLog(message) {
+    const timestamp = new Date().toLocaleTimeString();
+    logLines.value = [...logLines.value.slice(-100), `[${timestamp}] ${message}`];
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isZipBytes(name, bytes) {
+    return /\.zip$/i.test(name || "") || (bytes?.[0] === 0x50 && bytes?.[1] === 0x4b);
+}
+
+function defaultApplicationAddress(target) {
+    return target?.platform === "esp8285" ? 0x0 : 0x10000;
+}
+
+function esp32BootloaderAddress(target) {
+    return target?.platform?.startsWith("esp32-") ? 0x0 : 0x1000;
+}
+
+function basename(path) {
+    return String(path || "").split("/").pop();
+}
+
+function pathMatchesTarget(entryPath, target) {
+    const lowerPath = String(entryPath || "").toLowerCase();
+    const firmware = String(target?.firmware || "").toLowerCase();
+    return firmware && lowerPath.includes(`/${firmware.toLowerCase()}/`);
+}
+
+async function readZipEntry(entry) {
+    return new Uint8Array(await entry.arrayBuffer());
+}
+
+async function extractFirmwareZip(bytes, target) {
+    const { entries } = await unzip(new Blob([bytes]));
+    const files = Object.entries(entries)
+        .filter(([, entry]) => !entry.isDirectory)
+        .map(([path, entry]) => ({ path, entry }));
+
+    const findByName = (name) => {
+        const lowerName = name.toLowerCase();
+        return (
+            files.find((file) => basename(file.path).toLowerCase() === lowerName && pathMatchesTarget(file.path, target)) ||
+            files.find((file) => basename(file.path).toLowerCase() === lowerName)
+        );
+    };
+
+    const firmwareEntry = findByName("firmware.bin");
+    if (!firmwareEntry) {
+        throw new Error(`No firmware.bin found in the selected archive for ${target.productName}.`);
+    }
+
+    const flashFiles = [];
+    if (target.platform?.startsWith("esp32")) {
+        const bootloaderEntry = findByName("bootloader.bin");
+        const partitionsEntry = findByName("partitions.bin");
+        const bootAppEntry = findByName("boot_app0.bin");
+
+        if (bootloaderEntry) {
+            flashFiles.push({
+                name: bootloaderEntry.path,
+                address: esp32BootloaderAddress(target),
+                data: await readZipEntry(bootloaderEntry.entry),
+                configure: false,
+            });
+        }
+        if (partitionsEntry) {
+            flashFiles.push({
+                name: partitionsEntry.path,
+                address: 0x8000,
+                data: await readZipEntry(partitionsEntry.entry),
+                configure: false,
+            });
+        }
+        if (bootAppEntry) {
+            flashFiles.push({
+                name: bootAppEntry.path,
+                address: 0xe000,
+                data: await readZipEntry(bootAppEntry.entry),
+                configure: false,
+            });
+        }
+    }
+
+    flashFiles.push({
+        name: firmwareEntry.path,
+        address: defaultApplicationAddress(target),
+        data: await readZipEntry(firmwareEntry.entry),
+        configure: true,
+    });
+
+    return flashFiles;
+}
+
+async function buildFirmwareFilesFromBytes(name, bytes) {
+    if (!selectedTarget.value) {
+        throw new Error("Select a GIGLRS receiver target first.");
+    }
+
+    if (isZipBytes(name, bytes)) {
+        const files = await extractFirmwareZip(bytes, selectedTarget.value);
+        if (files.length === 1) {
+            addLog("Archive contained only firmware.bin; flashing application image only.");
+        }
+        return files;
+    }
+
+    return [
+        {
+            name,
+            address: defaultApplicationAddress(selectedTarget.value),
+            data: bytes,
+            configure: true,
+        },
+    ];
+}
+
+function updateFcConnected() {
+    fcConnected.value = Boolean(serial.connected);
+}
+
+async function loadTargets() {
+    loadingTargets.value = true;
+    error.value = "";
     try {
+        targets.value = await buildApi.loadGiglrsTargets();
+        selectedTargetId.value = targets.value[0]?.id ?? "";
+        addLog(`Loaded ${targets.value.length} GIGLRS target${targets.value.length === 1 ? "" : "s"}.`);
+    } catch (loadError) {
+        error.value = loadError instanceof Error ? loadError.message : String(loadError);
+        addLog(error.value);
+    } finally {
+        loadingTargets.value = false;
+    }
+}
+
+async function loadReleases() {
+    if (!selectedTarget.value) {
+        releases.value = [];
+        selectedReleaseTag.value = "";
+        return;
+    }
+
+    loadingReleases.value = true;
+    error.value = "";
+    try {
+        releases.value = await buildApi.loadGiglrsReleases(selectedTarget.value);
+        selectedReleaseTag.value = releases.value[0]?.tag ?? "";
+        addLog(`Loaded ${releases.value.length} GIGLRS firmware release${releases.value.length === 1 ? "" : "s"}.`);
+    } catch (loadError) {
+        error.value = loadError instanceof Error ? loadError.message : String(loadError);
+        addLog(error.value);
+    } finally {
+        loadingReleases.value = false;
+    }
+}
+
+async function loadOnlineFirmware() {
+    if (!selectedRelease.value) {
+        return;
+    }
+
+    busy.value = true;
+    activeOperation.value = "load-online";
+    error.value = "";
+    try {
+        const asset = selectedRelease.value.assets[0];
+        addLog(`Loading ${asset.name} from ${selectedRelease.value.tag}...`);
+        const bytes = await buildApi.loadGithubReleaseAsset(asset.url);
+        if (!bytes?.byteLength) {
+            throw new Error("The selected GIGLRS firmware asset could not be loaded.");
+        }
+        firmwareFiles.value = await buildFirmwareFilesFromBytes(asset.name, bytes);
+        firmwareFileName.value = `${selectedRelease.value.tag}/${asset.name}`;
+        addLog(`Loaded ${asset.name} (${bytes.byteLength} bytes, ${firmwareFiles.value.length} flash file${firmwareFiles.value.length === 1 ? "" : "s"}).`);
+    } catch (loadError) {
+        error.value = loadError instanceof Error ? loadError.message : String(loadError);
+        addLog(error.value);
+    } finally {
+        busy.value = false;
+        activeOperation.value = "";
+    }
+}
+
+async function onFirmwareFile(event) {
+    const file = event.target.files?.[0];
+    firmwareFileName.value = file?.name ?? "";
+    firmwareFiles.value = [];
+    if (file) {
+        try {
+            const bytes = new Uint8Array(await file.arrayBuffer());
+            firmwareFiles.value = await buildFirmwareFilesFromBytes(file.name, bytes);
+            addLog(`Loaded offline firmware ${file.name} (${bytes.byteLength} bytes, ${firmwareFiles.value.length} flash file${firmwareFiles.value.length === 1 ? "" : "s"}).`);
+        } catch (loadError) {
+            error.value = loadError instanceof Error ? loadError.message : String(loadError);
+            addLog(error.value);
+        }
+    }
+}
+
+async function ensureFcConnected() {
+    connectionAttempted.value = true;
+    updateFcConnected();
+
+    if (fcConnected.value) {
+        return true;
+    }
+
+    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+        DeviceHandler.selectActivePort();
+    }
+
+    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+        await DeviceHandler.requestDevicePermission("serial");
+    }
+
+    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+        throw new Error("No flight controller USB device selected.");
+    }
+
+    addLog("Opening flight controller for GIGLRS passthrough...");
+    await new Promise((resolve, reject) => {
+        mspConnector.connect(
+            DeviceHandler.devicePicker.selectedDevice,
+            DeviceHandler.devicePicker.selectedBauds,
+            resolve,
+            () => reject(new Error("Timed out waiting for MSP response from the flight controller.")),
+            () => reject(new Error("Could not open the flight controller serial port.")),
+        );
+    });
+    updateFcConnected();
+    return true;
+}
+
+async function ensurePassthrough() {
+    if (!passthrough.active.value) {
         await passthrough.start({
-            name: receiver.productName,
+            name: selectedTarget.value.productName,
             portFunction: FcSerialPortFunction.RX_SERIAL,
         });
-    } catch (error) {
-        passthroughError.value = error instanceof Error ? error.message : String(error);
+        mspConnector.detach();
+        addLog("RX serial passthrough opened.");
     }
-};
+}
 
-const stopPassthrough = async () => {
-    passthroughError.value = "";
+async function stopPassthrough() {
+    error.value = "";
     try {
         await passthrough.stop();
-    } catch (error) {
-        passthroughError.value = error instanceof Error ? error.message : String(error);
+        updateFcConnected();
+        addLog("RX serial passthrough closed.");
+    } catch (stopError) {
+        error.value = stopError instanceof Error ? stopError.message : String(stopError);
+        addLog(error.value);
     }
-};
+}
+
+async function prepareFirmware() {
+    const layout = await buildApi.loadGiglrsTargetLayout(selectedTarget.value);
+    return firmwareFiles.value.map((file) => ({
+        data: file.configure
+            ? appendUnifiedConfiguration(file.data, {
+                target: selectedTarget.value,
+                layout,
+                settings,
+            })
+            : file.data,
+        address: file.address,
+        name: file.name,
+    }));
+}
+
+async function enterReceiverBootloader(transport) {
+    const training = new Uint8Array([0x07, 0x07, 0x12, 0x20, ...Array.from({ length: 32 }, () => 0x55)]);
+    await passthrough.write(training);
+    await sleep(200);
+    await passthrough.write(elrsBootloaderInitSequence("ESP82"));
+    const response = await transport.rawReadFor(900);
+    const text = new TextDecoder("utf-8")
+        .decode(response)
+        .replace(/[^\x20-\x7e]+/g, " ")
+        .trim();
+    if (text) {
+        addLog(`Receiver bootloader response: ${text}`);
+    } else {
+        addLog("Receiver bootloader response not detected; continuing with ESP sync.");
+    }
+    transport.flushInput();
+}
+
+async function flashReceiver() {
+    busy.value = true;
+    activeOperation.value = "flash";
+    error.value = "";
+    flashProgress.value = 0;
+
+    let transport = null;
+    try {
+        if (!selectedTarget.value) {
+            throw new Error("No GIGLRS receiver target selected.");
+        }
+        if (firmwareFiles.value.length === 0) {
+            throw new Error("Load a GIGLRS firmware .zip or .bin before flashing.");
+        }
+
+        const configuredFirmware = await prepareFirmware();
+        addLog(`Configured firmware for ${selectedTarget.value.productName} (${configuredFirmware.length} flash file${configuredFirmware.length === 1 ? "" : "s"}).`);
+
+        if (!(await ensureFcConnected())) {
+            return;
+        }
+
+        await ensurePassthrough();
+        transport = new ElrsPassthroughTransport(passthrough);
+        await enterReceiverBootloader(transport);
+
+        const { ESPLoader } = await import("esptool-js");
+        const terminal = {
+            clean: () => {},
+            write: (message) => addLog(String(message).trim()),
+            writeLine: (message) => addLog(String(message).trim()),
+        };
+        const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
+        const loader = new ESPLoader({
+            transport,
+            baudrate,
+            terminal,
+        });
+
+        addLog("Connecting to ESP bootloader...");
+        const chip = await loader.main("no_reset");
+        addLog(`Detected ${chip}. Flashing ${configuredFirmware.length} file${configuredFirmware.length === 1 ? "" : "s"}...`);
+
+        await loader.writeFlash({
+            fileArray: configuredFirmware.map((file) => ({
+                data: file.data,
+                address: file.address,
+            })),
+            flashSize: "detect",
+            flashMode: "dio",
+            flashFreq: "40m",
+            eraseAll: false,
+            compress: true,
+            reportProgress: (_fileIndex, written, total) => {
+                if (total > 0) {
+                    flashProgress.value = Math.round((written / total) * 100);
+                }
+            },
+        });
+
+        addLog("Rebooting receiver...");
+        await loader.after("soft_reset");
+        flashProgress.value = 100;
+        addLog("GIGLRS receiver flash complete.");
+    } catch (flashError) {
+        error.value = flashError instanceof Error ? flashError.message : String(flashError);
+        addLog(error.value);
+    } finally {
+        await transport?.disconnect?.();
+        busy.value = false;
+        activeOperation.value = "";
+    }
+}
+
+onMounted(async () => {
+    serial.addEventListener("connect", updateFcConnected);
+    serial.addEventListener("disconnect", updateFcConnected);
+    updateFcConnected();
+    await loadTargets();
+});
 
 onBeforeUnmount(async () => {
+    serial.removeEventListener("connect", updateFcConnected);
+    serial.removeEventListener("disconnect", updateFcConnected);
+    mspConnector.detach();
     if (passthrough.active.value) {
         await stopPassthrough();
     }
 });
+
+watch(selectedTargetId, () => {
+    firmwareFiles.value = [];
+    firmwareFileName.value = "";
+    void loadReleases();
+});
 </script>
+
+<style scoped>
+.giglrs-grid,
+.giglrs-settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.giglrs-inline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.giglrs-select {
+    min-width: 220px;
+}
+
+.giglrs-number {
+    width: 7rem;
+}
+
+.giglrs-log {
+    max-height: 16rem;
+    overflow: auto;
+    white-space: pre-wrap;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    background: var(--surface-200);
+}
+</style>

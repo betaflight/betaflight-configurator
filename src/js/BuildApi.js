@@ -2,13 +2,19 @@ import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 import CONFIGURATOR from "./data_storage.js";
-import { GIGFLIGHT_CONFIG_REPOSITORY, GIGFLIGHT_REPOSITORY } from "./GigfpvCatalog";
+import {
+    GIGFLIGHT_CONFIG_REPOSITORY,
+    GIGFLIGHT_REPOSITORY,
+    GIGLRS_REPOSITORY,
+    GIGLRS_TARGETS_REPOSITORY,
+} from "./GigfpvCatalog";
 
 export default class BuildApi {
     constructor() {
         this._url = "https://build.betaflight.com";
         this._cacheExpirationPeriod = 3600 * 1000;
         this._gigflightTargetsPromise = null;
+        this._giglrsTargetsPromise = null;
     }
 
     isSuccessCode(code) {
@@ -268,6 +274,120 @@ export default class BuildApi {
         return targets.find((descriptor) => descriptor.target === normalizedTarget);
     }
 
+    flattenGiglrsTargets(targetsJson) {
+        const targets = [];
+        for (const [vendor, vendorConfig] of Object.entries(targetsJson || {})) {
+            for (const [subType, subTypeConfig] of Object.entries(vendorConfig || {})) {
+                if (subType === "name" || typeof subTypeConfig !== "object") {
+                    continue;
+                }
+                for (const [targetKey, targetConfig] of Object.entries(subTypeConfig || {})) {
+                    if (!targetConfig?.upload_methods?.includes("betaflight")) {
+                        continue;
+                    }
+                    targets.push({
+                        id: `${vendor}.${subType}.${targetKey}`,
+                        vendor,
+                        subType,
+                        targetKey,
+                        productName: targetConfig.product_name,
+                        luaName: targetConfig.lua_name,
+                        layoutFile: targetConfig.layout_file,
+                        uploadMethods: targetConfig.upload_methods,
+                        minVersion: targetConfig.min_version,
+                        platform: targetConfig.platform,
+                        firmware: targetConfig.firmware,
+                        repository: GIGLRS_REPOSITORY,
+                        targetsRepository: GIGLRS_TARGETS_REPOSITORY,
+                    });
+                }
+            }
+        }
+        return targets.sort((a, b) => a.productName.localeCompare(b.productName));
+    }
+
+    async loadGiglrsTargets() {
+        if (!this._giglrsTargetsPromise) {
+            this._giglrsTargetsPromise = (async () => {
+                const targetsText = await this.loadGithubContentText(GIGLRS_TARGETS_REPOSITORY, "targets.json");
+                return this.flattenGiglrsTargets(JSON.parse(targetsText));
+            })();
+        }
+
+        return this._giglrsTargetsPromise;
+    }
+
+    async loadGiglrsTargetLayout(target) {
+        const descriptor =
+            typeof target === "string"
+                ? (await this.loadGiglrsTargets()).find((candidate) => candidate.id === target)
+                : target;
+
+        if (!descriptor?.layoutFile) {
+            return {};
+        }
+
+        const layoutText = await this.loadGithubContentText(
+            GIGLRS_TARGETS_REPOSITORY,
+            `RX/${descriptor.layoutFile}`,
+        );
+        return JSON.parse(layoutText);
+    }
+
+    isGiglrsFirmwareAsset(asset, target) {
+        const name = String(asset?.name || "").toLowerCase();
+        const isFirmwareArchive = /\.zip$/i.test(name);
+        if (isFirmwareArchive) {
+            return true;
+        }
+
+        if (!/\.bin$/i.test(name)) {
+            return false;
+        }
+
+        const firmware = String(target?.firmware || "").toLowerCase();
+        const targetKey = String(target?.targetKey || "").toLowerCase();
+        const productSlug = String(target?.productName || "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "");
+        const assetSlug = name.replace(/[^a-z0-9]+/g, "");
+
+        return (
+            name.includes(firmware) ||
+            name.includes(targetKey) ||
+            assetSlug.includes(productSlug) ||
+            name === "firmware.bin"
+        );
+    }
+
+    async loadGiglrsReleases(target) {
+        const releases = await this.fetchGithubJson(`https://api.github.com/repos/${GIGLRS_REPOSITORY}/releases`);
+        if (!Array.isArray(releases)) {
+            return [];
+        }
+
+        return releases
+            .filter((release) => !release.draft)
+            .map((release) => ({
+                tag: release.tag_name,
+                name: release.name || release.tag_name,
+                prerelease: release.prerelease,
+                publishedAt: release.published_at,
+                url: release.html_url,
+                assets: (release.assets || [])
+                    .filter((asset) => this.isGiglrsFirmwareAsset(asset, target))
+                    .sort((a, b) => {
+                        const aIsZip = /\.zip$/i.test(a.name || "");
+                        const bIsZip = /\.zip$/i.test(b.name || "");
+                        if (aIsZip !== bIsZip) {
+                            return aIsZip ? -1 : 1;
+                        }
+                        return String(a.name || "").localeCompare(String(b.name || ""));
+                    }),
+            }))
+            .filter((release) => release.assets.length > 0);
+    }
+
     async fetchText(url) {
         const response = await fetch(url, {
             method: "GET",
@@ -406,6 +526,10 @@ export default class BuildApi {
     async loadTargetFirmware(path) {
         const url = new URL(path, this._url).toString();
         return await this.fetchBytes(this.proxyGithubReleaseAssetUrl(url));
+    }
+
+    async loadGithubReleaseAsset(assetUrl) {
+        return await this.fetchBytes(this.proxyGithubReleaseAssetUrl(assetUrl));
     }
 
     async getSupportCommands() {

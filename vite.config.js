@@ -156,12 +156,17 @@ function githubProxyHeaders(accept) {
 function isAllowedGithubApiUrl(url) {
     return (
         url.startsWith("https://api.github.com/repos/timmyfpv/GIGFLIGHT/") ||
-        url.startsWith("https://api.github.com/repos/timmyfpv/gigflight-config/")
+        url.startsWith("https://api.github.com/repos/timmyfpv/gigflight-config/") ||
+        url.startsWith("https://api.github.com/repos/timmyfpv/giglrs/") ||
+        url.startsWith("https://api.github.com/repos/timmyfpv/giglrs-targets/")
     );
 }
 
 function githubApiProxyPlugin() {
-    const legacyAssetApiPrefix = "https://api.github.com/repos/timmyfpv/GIGFLIGHT/releases/assets/";
+    const allowedReleaseAssetApiPrefixes = [
+        "https://api.github.com/repos/timmyfpv/GIGFLIGHT/releases/assets/",
+        "https://api.github.com/repos/timmyfpv/giglrs/releases/assets/",
+    ];
 
     return {
         name: "gigfpv-github-api-proxy",
@@ -187,9 +192,12 @@ function githubApiProxyPlugin() {
                     ? "application/octet-stream"
                     : requestUrl.searchParams.get("accept") || "application/vnd.github+json";
 
-                if (isLegacyReleaseAssetProxy && !githubUrl.startsWith(legacyAssetApiPrefix)) {
+                if (
+                    isLegacyReleaseAssetProxy &&
+                    !allowedReleaseAssetApiPrefixes.some((prefix) => githubUrl.startsWith(prefix))
+                ) {
                     res.statusCode = 400;
-                    res.end("Invalid GIGFlight release asset URL");
+                    res.end("Invalid GIGFPV release asset URL");
                     return;
                 }
 

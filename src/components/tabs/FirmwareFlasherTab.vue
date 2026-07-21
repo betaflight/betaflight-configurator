@@ -9,7 +9,7 @@
                     <div>
                         <div class="font-semibold">Choose what you want to flash</div>
                         <div class="text-sm text-dimmed">
-                            Betaflight/GIGFlight uses the normal FC flasher. AM32 uses ESC passthrough.
+                            Betaflight/GIGFlight uses the normal FC flasher. ELRS/GIGLRS and AM32 use passthrough.
                         </div>
                     </div>
                     <USelect v-model="firmwareType" :items="firmwareTypeOptions" class="firmware-target-select" />
@@ -42,13 +42,13 @@
                         :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
                         :on-restore-backup="handleRestoreBackup"
                     />
-                    <FlasherElrsTab v-if="activeFlasherStep === 'elrs'" />
                 </div>
             </template>
-            <FlasherAm32Tab v-else />
+            <FlasherElrsTab v-else-if="firmwareType === 'elrs'" />
+            <FlasherAm32Tab v-else-if="firmwareType === 'am32'" />
         </div>
 
-        <div v-if="firmwareType === 'betaflight' && activeFlasherStep !== 'elrs'" class="content_toolbar toolbar_fixed_bottom">
+        <div v-if="firmwareType === 'betaflight'" class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup size="sm" orientation="horizontal" class="flex!">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
@@ -179,6 +179,7 @@ export default defineComponent({
         const firmwareType = ref(serial.connected ? "am32" : "betaflight");
         const firmwareTypeOptions = [
             { value: "betaflight", label: "Betaflight / GIGFlight" },
+            { value: "elrs", label: "ELRS / GIGLRS" },
             { value: "am32", label: "AM32 ESC" },
         ];
 
@@ -1088,7 +1089,7 @@ export default defineComponent({
         };
 
         const handleFlashFirmware = async () => {
-            if (state.flashButtonDisabled || activeFlasherStep.value !== "flash") {
+            if (firmwareType.value !== "betaflight" || state.flashButtonDisabled || activeFlasherStep.value !== "flash") {
                 return;
             }
 
@@ -1448,7 +1449,6 @@ export default defineComponent({
         const subtabItems = computed(() => [
             { label: $t("firmwareFlasherSubTabBoardBuild"), value: "board-build", icon: "i-lucide-cpu" },
             { label: $t("firmwareFlasherSubTabFlash"), value: "flash", icon: "i-lucide-zap" },
-            { label: "ELRS / GIGLRS", value: "elrs", icon: "i-lucide-radio" },
         ]);
 
         // Return all public methods and state
