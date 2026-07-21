@@ -87,15 +87,17 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import UiBox from "../../elements/UiBox.vue";
 import { serial } from "../../../js/serial.js";
 import Am32FourWaySession from "../../../js/am32/four_way.js";
 import DeviceHandler from "../../../js/device_handler.js";
 import { connectDisconnect } from "../../../js/serial_backend.js";
+import { useConnectionStore } from "../../../stores/connection.js";
 
 const session = new Am32FourWaySession();
-const fcConnected = ref(Boolean(serial.connected));
+const connectionStore = useConnectionStore();
+const fcConnected = ref(Boolean(serial.connected && connectionStore.connectionValid));
 const sessionActive = ref(false);
 const expectedCount = ref(0);
 const busy = ref(false);
@@ -113,6 +115,9 @@ const selectedEscRows = computed(() => escRows.value.filter((row) => row.data &&
 const canFlash = computed(() => sessionActive.value && selectedEscRows.value.length > 0 && hexFileContent.value && !busy.value);
 const showConnectionWarning = computed(() => connectionAttempted.value && !fcConnected.value && !busy.value);
 
+const CONNECT_READY_TIMEOUT_MS = 15000;
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 function firmwareVersion(esc) {
     return `${esc.settings.MAIN_REVISION ?? "?"}.${esc.settings.SUB_REVISION ?? "?"}`;
 }
@@ -124,16 +129,38 @@ function addLog(message) {
 
 function updateFcConnected() {
     const wasConnected = fcConnected.value;
-    fcConnected.value = Boolean(serial.connected);
+    fcConnected.value = Boolean(serial.connected && connectionStore.connectionValid);
     if (!wasConnected && fcConnected.value) {
         void autoReadEscs();
     }
 }
 
+async function waitForFcReady() {
+    const startedAt = Date.now();
+    addLog("Waiting for flight controller configuration handshake...");
+
+    while (Date.now() - startedAt < CONNECT_READY_TIMEOUT_MS) {
+        updateFcConnected();
+        if (fcConnected.value) {
+            return true;
+        }
+        await delay(100);
+    }
+
+    throw new Error("Timed out waiting for the flight controller to finish connecting.");
+}
+
 async function ensureSession() {
     if (!sessionActive.value) {
-        expectedCount.value = await session.enter();
-        sessionActive.value = true;
+        await connectionStore.clearMspQueue();
+        connectionStore.pauseLiveData();
+        try {
+            expectedCount.value = await session.enter();
+            sessionActive.value = true;
+        } catch (sessionError) {
+            connectionStore.resumeLiveData();
+            throw sessionError;
+        }
     }
 }
 
@@ -145,26 +172,24 @@ async function ensureFcConnected() {
         return true;
     }
 
-    if (DeviceHandler.devicePickerDisabled) {
-        addLog("Waiting for flight controller connection...");
-        return false;
+    if (!serial.connected && !DeviceHandler.devicePickerDisabled) {
+        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+            DeviceHandler.selectActivePort();
+        }
+
+        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+            await DeviceHandler.requestDevicePermission("serial");
+        }
+
+        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+            throw new Error("No flight controller USB device selected.");
+        }
+
+        addLog("Connecting to flight controller...");
+        connectDisconnect();
     }
 
-    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
-        DeviceHandler.selectActivePort();
-    }
-
-    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
-        await DeviceHandler.requestDevicePermission("serial");
-    }
-
-    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
-        throw new Error("No flight controller USB device selected.");
-    }
-
-    addLog("Connecting to flight controller...");
-    connectDisconnect();
-    return false;
+    return waitForFcReady();
 }
 
 async function readEscs() {
@@ -271,7 +296,11 @@ async function exitPassthrough() {
 
 async function cleanupSession() {
     if (sessionActive.value) {
-        await session.exit({ disconnect: true });
+        if (serial.connected) {
+            await session.exit({ disconnect: true });
+        } else {
+            session.cleanup();
+        }
         sessionActive.value = false;
     }
 }
@@ -284,6 +313,11 @@ onMounted(() => {
     updateFcConnected();
     void autoReadEscs();
 });
+
+watch(
+    () => connectionStore.connectionValid,
+    () => updateFcConnected(),
+);
 
 onBeforeUnmount(async () => {
     serial.removeEventListener("connect", updateFcConnected);
