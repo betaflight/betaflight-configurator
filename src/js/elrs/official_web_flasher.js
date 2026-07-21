@@ -22,6 +22,10 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function isCompressedFlashFinishStatusError(error) {
+    return /Failed to leave compressed flash mode failed with status 1,195/i.test(String(error?.message ?? error));
+}
+
 function platformForDetectedChip(chip) {
     const normalizedChip = String(chip || "").toUpperCase();
     if (normalizedChip.includes("ESP32-C2")) {
@@ -439,6 +443,20 @@ export class OfficialElrsEspFlasher {
         const loader = this.esploader;
         loader.FLASH_WRITE_SIZE = 0x0800;
         loader.IS_STUB = true;
+
+        const originalFlashDeflFinish = loader.flashDeflFinish.bind(loader);
+        loader.flashDeflFinish = async (...args) => {
+            try {
+                await originalFlashDeflFinish(...args);
+            } catch (error) {
+                if (!isCompressedFlashFinishStatusError(error)) {
+                    throw error;
+                }
+                this.terminal?.writeLine?.(
+                    "Compressed flash finish returned status 1,195; continuing to MD5 verification before accepting the flash.",
+                );
+            }
+        };
 
         const fileArray = files.map((file) => ({
             data: file.data,
