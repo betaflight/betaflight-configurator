@@ -150,6 +150,7 @@ import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
+import { serial } from "../../js/serial.js";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
 import FlasherElrsTab from "./firmware-flasher/FlasherElrsTab.vue";
@@ -175,7 +176,7 @@ export default defineComponent({
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
-        const firmwareType = ref("betaflight");
+        const firmwareType = ref(serial.connected ? "am32" : "betaflight");
         const firmwareTypeOptions = [
             { value: "betaflight", label: "Betaflight / GIGFlight" },
             { value: "am32", label: "AM32 ESC" },

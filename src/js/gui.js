@@ -34,6 +34,7 @@ class GuiControl {
 
         this.defaultAllowedTabs = [
             "setup",
+            "firmware_flasher",
             "failsafe",
             "power",
             "adjustments",

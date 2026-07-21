@@ -6,6 +6,13 @@ export const sidebarItems = [
     { key: "flight_plan", mode: "disconnected", i18n: "tabFlightPlan", icon: "i-lucide-route", expert: true },
 
     { key: "setup", mode: "connected", i18n: "tabSetup", icon: "i-lucide-sliders-horizontal" },
+    {
+        key: "firmware_flasher_connected",
+        tab: "firmware_flasher",
+        mode: "connected",
+        i18n: "tabFirmwareFlasher",
+        icon: "i-lucide-zap",
+    },
     { key: "sensors", mode: "connected", i18n: "tabSensorConfig", icon: "i-lucide-cpu" },
     { key: "ports", mode: "connected", i18n: "tabPorts", icon: "i-lucide-cable" },
     { key: "configuration", mode: "connected", i18n: "tabConfiguration", icon: "i-lucide-settings" },
