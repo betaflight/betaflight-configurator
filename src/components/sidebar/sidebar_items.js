@@ -25,6 +25,7 @@ export const sidebarItems = [
     },
     { key: "gps", mode: "connected", i18n: "tabGPS", icon: "i-lucide-map-pin", buildOptions: ["USE_GPS"] },
     { key: "motors", mode: "connected", i18n: "tabMotorTesting", icon: "i-lucide-fan" },
+    { key: "am32", mode: "connected", i18n: "tabAm32Esc", icon: "i-lucide-cpu" },
     { key: "osd", mode: "connected", i18n: "tabOsd", icon: "i-lucide-monitor", feature: "OSD" },
     { key: "vtx", mode: "connected", i18n: "tabVtx", icon: "i-lucide-radio-tower" },
     { key: "led_strip", mode: "connected", i18n: "tabLedStrip", icon: "i-lucide-lightbulb", feature: "LED_STRIP" },

@@ -425,6 +425,9 @@
     "tabFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
+    "tabAm32Esc": {
+        "message": "AM32 ESC"
+    },
     "tabLanding": {
         "message": "Welcome"
     },
