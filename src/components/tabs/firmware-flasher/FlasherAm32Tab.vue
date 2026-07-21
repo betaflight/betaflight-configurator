@@ -86,7 +86,7 @@
                         />
                     </div>
                     <div v-if="row.isLoading" class="text-dimmed">Reading...</div>
-                    <div v-else-if="row.isError" class="text-error">{{ row.error }}</div>
+                    <div v-else-if="row.isError && !row.data" class="text-error">{{ row.error }}</div>
                     <template v-else-if="row.data">
                         <div>{{ row.data.displayName }}</div>
                         <div class="text-sm text-dimmed">
@@ -98,6 +98,14 @@
                             <span v-if="row.data.bootloader.pin"> · {{ row.data.bootloader.pin }}</span>
                         </div>
                     </template>
+                    <div v-if="row.flashStatus" class="am32-flash-esc-status" :class="`state-${row.flashState}`">
+                        {{ row.flashStatus }}
+                    </div>
+                    <UProgress
+                        v-if="row.flashState === 'writing' || row.flashState === 'done'"
+                        class="mt-2"
+                        :model-value="row.flashProgress"
+                    />
                 </div>
             </div>
 
@@ -246,6 +254,9 @@ async function readEscRows() {
         isError: false,
         error: "",
         data: null,
+        flashState: "",
+        flashStatus: "",
+        flashProgress: 0,
     }));
 
     for (const row of escRows.value) {
@@ -253,6 +264,9 @@ async function readEscRows() {
             addLog(`Reading ESC ${row.index + 1}...`);
             row.data = await session.getInfo(row.index);
             row.data.isSelected = true;
+            row.flashState = "";
+            row.flashStatus = "";
+            row.flashProgress = 0;
             addLog(`Read ESC ${row.index + 1}: ${row.data.displayName}`);
         } catch (readError) {
             row.isError = true;
@@ -335,14 +349,24 @@ async function flashSelectedEscs() {
         if (rows.length === 0) {
             throw new Error("No selectable AM32 ESCs detected.");
         }
+        for (const row of rows) {
+            row.flashState = "pending";
+            row.flashStatus = "Pending";
+            row.flashProgress = 0;
+        }
         addLog(`Flashing ${rows.length} selected ESC${rows.length === 1 ? "" : "s"} sequentially.`);
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
             let nextProgressLog = 10;
 
+            row.flashState = "writing";
+            row.flashStatus = `Writing ${hexFileName.value}`;
+            row.flashProgress = 0;
             addLog(`ESC ${row.index + 1}: writing ${hexFileName.value}...`);
             await session.writeHex(row.index, hexFileContent.value, {
                 onProgress: (progress) => {
+                    row.flashProgress = Math.min(100, progress);
+                    row.flashStatus = `Writing ${Math.floor(row.flashProgress)}%`;
                     flashProgress.value = ((i + progress / 100) / rows.length) * 100;
                     const wholeProgress = Math.floor(progress);
                     if (wholeProgress >= nextProgressLog || wholeProgress === 100) {
@@ -352,20 +376,30 @@ async function flashSelectedEscs() {
                 },
             });
 
+            row.flashProgress = 100;
+            row.flashState = "resetting";
+            row.flashStatus = "Resetting";
             addLog(`ESC ${row.index + 1}: resetting...`);
             await session.reset(row.index);
+            row.flashStatus = "Rebooting";
             addLog(`ESC ${row.index + 1}: rebooting, waiting 5 seconds...`);
             await delay(5000);
 
             try {
+                row.flashState = "reading";
+                row.flashStatus = "Reading after reset";
                 addLog(`ESC ${row.index + 1}: reading after reboot...`);
                 row.data = await session.getInfo(row.index, 20);
                 row.data.isSelected = true;
                 row.isError = false;
                 row.error = "";
+                row.flashState = "done";
+                row.flashStatus = "Done";
+                row.flashProgress = 100;
                 addLog(`ESC ${row.index + 1}: rebooted and read as ${row.data.displayName}.`);
             } catch (readAfterResetError) {
-                row.isError = true;
+                row.flashState = "warning";
+                row.flashStatus = "Done, re-read failed";
                 row.error =
                     readAfterResetError instanceof Error ? readAfterResetError.message : String(readAfterResetError);
                 addLog(`ESC ${row.index + 1}: flashed, but re-read after reboot failed: ${row.error}`);
@@ -507,6 +541,35 @@ defineExpose({
 
         &.error {
             border-color: var(--error-500);
+        }
+    }
+
+    .am32-flash-esc-status {
+        margin-top: 0.5rem;
+        width: fit-content;
+        border-radius: 999px;
+        padding: 0.125rem 0.5rem;
+        font-size: 11px;
+        font-weight: 600;
+        background: var(--surface-300);
+        color: var(--text);
+
+        &.state-writing,
+        &.state-resetting,
+        &.state-reading,
+        &.state-pending {
+            background: color-mix(in srgb, var(--primary-500) 18%, transparent);
+            color: var(--primary-400);
+        }
+
+        &.state-done {
+            background: color-mix(in srgb, var(--success-500) 18%, transparent);
+            color: var(--success-400);
+        }
+
+        &.state-warning {
+            background: color-mix(in srgb, var(--warning-500) 18%, transparent);
+            color: var(--warning-400);
         }
     }
 
