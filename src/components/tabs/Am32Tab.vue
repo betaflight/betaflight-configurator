@@ -143,14 +143,16 @@
                                                 :items="field.options"
                                                 @update:model-value="setSetting(field.field, Number($event))"
                                             />
-                                            <UInputNumber
-                                                v-else
-                                                :model-value="getSetting(field.field)"
-                                                :min="field.min ?? 0"
-                                                :max="field.max ?? 255"
-                                                :step="field.step ?? 1"
-                                                @update:model-value="setSetting(field.field, Number($event))"
-                                            />
+                                            <div v-else class="flex items-center gap-2">
+                                                <UInputNumber
+                                                    :model-value="getDisplaySetting(field)"
+                                                    :min="getFieldMin(field)"
+                                                    :max="getFieldMax(field)"
+                                                    :step="getFieldStep(field)"
+                                                    @update:model-value="setDisplaySetting(field, Number($event))"
+                                                />
+                                                <span v-if="field.unit" class="text-sm text-dimmed">{{ field.unit }}</span>
+                                            </div>
                                         </label>
                                     </div>
                                 </UiBox>
@@ -209,7 +211,7 @@ const settingGroups = [
     {
         title: "Motor",
         fields: [
-            { field: "TIMING_ADVANCE", label: "Timing advance", min: 0, max: 32 },
+            { field: "TIMING_ADVANCE", label: "Timing advance", type: "timing", unit: "°" },
             { field: "STARTUP_POWER", label: "Startup power", min: 0, max: 255 },
             { field: "MOTOR_KV", label: "Motor KV", min: 0, max: 255 },
             { field: "MOTOR_POLES", label: "Motor poles", min: 0, max: 255 },
@@ -286,6 +288,61 @@ function setSetting(field, value) {
         row.data.settings[field] = value;
         row.data.settingsDirty = true;
     }
+}
+
+function getLayoutVersion() {
+    return Number(primaryEsc.value?.settings?.LAYOUT_REVISION ?? 0);
+}
+
+function getTimingDisplayValue(rawValue) {
+    if (getLayoutVersion() >= 3) {
+        return Number(((Number(rawValue) - 10) * 0.9375).toFixed(4));
+    }
+    return Number((Number(rawValue) * 7.5).toFixed(1));
+}
+
+function getTimingRawValue(displayValue) {
+    if (getLayoutVersion() >= 3) {
+        return Math.round(Number(displayValue) / 0.9375 + 10);
+    }
+    return Math.round(Number(displayValue) / 7.5);
+}
+
+function getDisplaySetting(field) {
+    const rawValue = getSetting(field.field);
+    if (field.type === "timing") {
+        return getTimingDisplayValue(rawValue);
+    }
+    return rawValue;
+}
+
+function setDisplaySetting(field, value) {
+    if (field.type === "timing") {
+        setSetting(field.field, getTimingRawValue(value));
+        return;
+    }
+    setSetting(field.field, value);
+}
+
+function getFieldMin(field) {
+    if (field.type === "timing") {
+        return 0;
+    }
+    return field.min ?? 0;
+}
+
+function getFieldMax(field) {
+    if (field.type === "timing") {
+        return getLayoutVersion() >= 3 ? 30 : 22.5;
+    }
+    return field.max ?? 255;
+}
+
+function getFieldStep(field) {
+    if (field.type === "timing") {
+        return getLayoutVersion() >= 3 ? 0.9375 : 7.5;
+    }
+    return field.step ?? 1;
 }
 
 async function ensureSession() {
