@@ -122,6 +122,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import CryptoES from "crypto-es";
 import { unzip } from "unzipit";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -210,6 +211,15 @@ function esp32BootloaderAddress(target) {
 
 function basename(path) {
     return String(path || "").split("/").pop();
+}
+
+function calculateMd5Hash(image) {
+    const latin1String = Array.from(image, (byte) => String.fromCharCode(byte)).join("");
+    return CryptoES.MD5(CryptoES.enc.Latin1.parse(latin1String)).toString();
+}
+
+function isCompressedFlashFinishStatusError(flashError) {
+    return /Failed to leave compressed flash mode failed with status 1,195/i.test(String(flashError?.message ?? flashError));
 }
 
 function pathMatchesTarget(entryPath, target) {
@@ -549,6 +559,17 @@ async function flashReceiver() {
         // ExpressLRS uses smaller passthrough blocks because the FC is buffering the RX UART.
         loader.ESP_RAM_BLOCK = 0x0800;
         loader.FLASH_WRITE_SIZE = 0x0800;
+        const originalFlashDeflFinish = loader.flashDeflFinish.bind(loader);
+        loader.flashDeflFinish = async (...args) => {
+            try {
+                await originalFlashDeflFinish(...args);
+            } catch (finishError) {
+                if (!isCompressedFlashFinishStatusError(finishError)) {
+                    throw finishError;
+                }
+                addLog("Compressed flash finish returned status 1,195; verifying flash contents before continuing.");
+            }
+        };
 
         addLog("Connecting to ESP bootloader...");
         const chip = await loader.main("no_reset");
@@ -565,6 +586,7 @@ async function flashReceiver() {
             flashFreq: "keep",
             eraseAll: false,
             compress: true,
+            calculateMD5Hash: calculateMd5Hash,
             reportProgress: (_fileIndex, written, total) => {
                 if (total > 0) {
                     flashProgress.value = Math.round((written / total) * 100);
@@ -573,7 +595,11 @@ async function flashReceiver() {
         });
 
         addLog("Rebooting receiver...");
-        await loader.after("soft_reset");
+        if (selectedTarget.value.platform?.startsWith("esp32")) {
+            await loader.after("hard_reset").catch(() => {});
+        } else {
+            await loader.after("soft_reset").catch(() => {});
+        }
         flashProgress.value = 100;
         addLog("GIGLRS receiver flash complete.");
     } catch (flashError) {
