@@ -139,6 +139,7 @@ const mspConnector = new MSPConnectorImpl();
 const activeTransport = shallowRef(null);
 const passthroughActive = ref(false);
 const BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE = 0x0800;
+const GIGLRS_FLASHER_BUILD = "official-transport-no-finish-suppression";
 
 const targets = ref([]);
 const releases = ref([]);
@@ -219,10 +220,6 @@ function basename(path) {
 function calculateMd5Hash(image) {
     const latin1String = Array.from(image, (byte) => String.fromCharCode(byte)).join("");
     return CryptoES.MD5(CryptoES.enc.Latin1.parse(latin1String)).toString();
-}
-
-function isCompressedFlashFinishStatusError(flashError) {
-    return /Failed to leave compressed flash mode failed with status 1,195/i.test(String(flashError?.message ?? flashError));
 }
 
 function platformForDetectedChip(chip) {
@@ -645,6 +642,7 @@ async function flashReceiver() {
         const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
 
         const configuredFirmware = await prepareFirmware();
+        addLog(`GIGLRS flasher build: ${GIGLRS_FLASHER_BUILD}.`);
         addLog(`Configured firmware for ${selectedTarget.value.productName} (${configuredFirmware.length} flash file${configuredFirmware.length === 1 ? "" : "s"}).`);
         configuredFirmware.forEach((file) => {
             addLog(`Flash file: ${basename(file.name)} @ 0x${file.address.toString(16)} (${file.data.byteLength} bytes).`);
@@ -679,17 +677,6 @@ async function flashReceiver() {
         // Match the official ELRS web flasher: Betaflight passthrough uses 2048-byte chunks.
         loader.ESP_RAM_BLOCK = 0x0800;
         loader.FLASH_WRITE_SIZE = BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE;
-        const originalFlashDeflFinish = loader.flashDeflFinish.bind(loader);
-        loader.flashDeflFinish = async (...args) => {
-            try {
-                await originalFlashDeflFinish(...args);
-            } catch (finishError) {
-                if (!isCompressedFlashFinishStatusError(finishError)) {
-                    throw finishError;
-                }
-                addLog("Compressed flash finish returned status 1,195; verifying flash contents before continuing.");
-            }
-        };
 
         addLog("Reopening passthrough serial port and connecting to ESP bootloader...");
         const chip = await loader.main("no_reset");
