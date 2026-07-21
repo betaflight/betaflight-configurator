@@ -4,16 +4,12 @@
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
             <WikiButton docUrl="firmware_flasher" />
 
-            <UiBox title="Firmware target" type="neutral" class="mb-4">
-                <div class="firmware-target-row">
-                    <div>
-                        <div class="font-semibold">Choose what you want to flash</div>
-                        <div class="text-sm text-dimmed">
-                            Betaflight/GIGFlight uses the normal FC flasher. ELRS/GIGLRS and AM32 use passthrough.
-                        </div>
-                    </div>
-                    <USelect v-model="firmwareType" :items="firmwareTypeOptions" class="firmware-target-select" />
+            <UiBox title="Firmware flasher" type="neutral" class="mb-4">
+                <div class="font-semibold">Choose what you want to flash</div>
+                <div class="text-sm text-dimmed mb-3">
+                    GIGFlight uses the normal FC flasher. GIGLRS and AM32 use passthrough through the connected flight controller.
                 </div>
+                <SubtabNav :items="firmwareTypeTabItems" v-model="firmwareType" />
             </UiBox>
 
             <template v-if="firmwareType === 'betaflight'">
@@ -179,7 +175,6 @@ import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
-import { serial } from "../../js/serial.js";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
 import FlasherElrsTab from "./firmware-flasher/FlasherElrsTab.vue";
@@ -205,12 +200,12 @@ export default defineComponent({
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
-        const firmwareType = ref(serial.connected ? "am32" : "betaflight");
+        const firmwareType = ref("betaflight");
         const elrsFlasher = ref(null);
-        const firmwareTypeOptions = [
-            { value: "betaflight", label: "Betaflight / GIGFlight" },
-            { value: "elrs", label: "ELRS / GIGLRS" },
-            { value: "am32", label: "AM32 ESC" },
+        const firmwareTypeTabItems = [
+            { value: "betaflight", label: "GIGFlight", icon: "i-lucide-cpu" },
+            { value: "elrs", label: "GIGLRS", icon: "i-lucide-radio" },
+            { value: "am32", label: "AM32 ESC", icon: "i-lucide-gauge" },
         ];
 
         // Reactive state
@@ -1526,7 +1521,7 @@ export default defineComponent({
             state,
             firmwareType,
             elrsFlasher,
-            firmwareTypeOptions,
+            firmwareTypeTabItems,
             flashRingColor,
             activeFlasherStep,
             subtabItems,
