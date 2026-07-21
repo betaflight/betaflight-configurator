@@ -66,15 +66,8 @@
                     </div>
                 </SettingRow>
                 <div v-if="!loadingReleases && releases.length === 0" class="text-sm text-dimmed mt-2">
-                    No GIGLRS firmware release artifacts found yet. Publish a firmware .zip or .bin asset, or use offline load.
+                    No GIGLRS firmware release artifacts found yet. Publish a firmware .zip or .bin asset.
                 </div>
-                <SettingRow
-                    label="Offline file"
-                    help="Use a GIGLRS/ExpressLRS firmware.zip artifact or ESP32 receiver firmware.bin file."
-                    full-width
-                >
-                    <input type="file" accept=".zip,.bin,application/zip,application/octet-stream" :disabled="busy" @change="onFirmwareFile" />
-                </SettingRow>
                 <div v-if="firmwareFileName" class="text-sm text-dimmed mt-2">
                     Loaded: {{ firmwareFileName }} · {{ selectedRegion }} · {{ firmwareFiles.length }} file{{ firmwareFiles.length === 1 ? "" : "s" }}
                 </div>
@@ -422,23 +415,6 @@ async function loadOnlineFirmware() {
     } finally {
         busy.value = false;
         activeOperation.value = "";
-    }
-}
-
-async function onFirmwareFile(event) {
-    const file = event.target.files?.[0];
-    firmwareFileName.value = file?.name ?? "";
-    firmwareFiles.value = [];
-    firmwareSource.value = null;
-    if (file) {
-        try {
-            const bytes = new Uint8Array(await file.arrayBuffer());
-            await loadFirmwareBytes(file.name, bytes, file.name);
-            addLog(`Loaded offline firmware ${file.name} (${bytes.byteLength} bytes, ${firmwareFiles.value.length} flash file${firmwareFiles.value.length === 1 ? "" : "s"}).`);
-        } catch (loadError) {
-            error.value = loadError instanceof Error ? loadError.message : String(loadError);
-            addLog(error.value);
-        }
     }
 }
 
