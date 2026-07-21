@@ -195,6 +195,7 @@ const logLines = ref([]);
 const hexFileName = ref("");
 const hexFileContent = ref("");
 const flashProgress = ref(0);
+const autoReadAttempted = ref(false);
 
 const protocolOptions = [
     { value: 0, label: "Auto" },
@@ -279,7 +280,11 @@ function addLog(message) {
 }
 
 function updateFcConnected() {
+    const wasConnected = fcConnected.value;
     fcConnected.value = Boolean(serial.connected);
+    if (!wasConnected && fcConnected.value) {
+        void autoReadEscs();
+    }
 }
 
 function onTabMounted() {
@@ -451,6 +456,16 @@ async function readEscs() {
     }
 }
 
+async function autoReadEscs() {
+    if (autoReadAttempted.value || !fcConnected.value || busy.value || escRows.value.length > 0) {
+        return;
+    }
+
+    autoReadAttempted.value = true;
+    addLog("Auto-reading ESCs...");
+    await readEscs();
+}
+
 async function saveSelectedEscs() {
     busy.value = true;
     activeOperation.value = "save";
@@ -534,6 +549,7 @@ onMounted(() => {
     serial.addEventListener("connect", updateFcConnected);
     serial.addEventListener("disconnect", updateFcConnected);
     updateFcConnected();
+    void autoReadEscs();
 });
 
 onBeforeUnmount(async () => {
