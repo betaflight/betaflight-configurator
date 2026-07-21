@@ -100,6 +100,13 @@
                     <span class="text-sm text-dimmed">seconds</span>
                 </div>
             </SettingRow>
+            <SettingRow
+                label="Full chip erase"
+                help="Optional, matching the official ELRS web flasher. Leave disabled for normal updates."
+                full-width
+            >
+                <UCheckbox v-model="settings.fullErase" :disabled="busy" />
+            </SettingRow>
         </div>
     </UiBox>
 
@@ -171,6 +178,7 @@ const settings = reactive({
     wifiPassword: "",
     autoWifiEnabled: true,
     autoWifiInterval: "60",
+    fullErase: false,
 });
 
 const receiverBaudOptions = [
@@ -527,6 +535,7 @@ async function flashReceiver() {
         const configuredFirmware = await prepareFirmware();
         addLog(`GIGLRS flasher build: ${GIGLRS_FLASHER_BUILD}.`);
         addLog(`Flashing baud: ${baudrate}; receiver UART baud setting: ${settings.receiverBaud}.`);
+        addLog(`Full chip erase: ${settings.fullErase ? "enabled" : "disabled"}.`);
         addLog(`Configured firmware for ${selectedTarget.value.productName} (${configuredFirmware.length} flash file${configuredFirmware.length === 1 ? "" : "s"}).`);
         configuredFirmware.forEach((file) => {
             addLog(`Flash file: ${basename(file.name)} @ 0x${file.address.toString(16)} (${file.data.byteLength} bytes).`);
@@ -552,7 +561,7 @@ async function flashReceiver() {
         addLog(`Detected ${chip}. Flashing ${configuredFirmware.length} file${configuredFirmware.length === 1 ? "" : "s"}...`);
 
         addLog("Using official ELRS web-flasher ESP transport with 2048-byte compressed blocks.");
-        await flasher.flash(configuredFirmware, false, (_fileIndex, written, total) => {
+        await flasher.flash(configuredFirmware, settings.fullErase, (_fileIndex, written, total) => {
             if (total > 0) {
                 flashProgress.value = Math.round((written / total) * 100);
             }

@@ -22,6 +22,17 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function padTo(bytes, alignment, value = 0xff) {
+    const padding = bytes.length % alignment;
+    if (padding === 0) {
+        return bytes;
+    }
+    const output = new Uint8Array(bytes.length + alignment - padding);
+    output.fill(value);
+    output.set(bytes);
+    return output;
+}
+
 function isCompressedFlashFinishStatusError(error) {
     return /Failed to leave compressed flash mode failed with status 1,195/i.test(String(error?.message ?? error));
 }
@@ -458,7 +469,18 @@ export class OfficialElrsEspFlasher {
             }
         };
 
-        const fileArray = files.map((file) => ({
+        let filesToFlash = files;
+        if (!eraseAll && this.calculateMd5Hash) {
+            filesToFlash = await this.skipUnchangedFiles(files);
+        }
+
+        if (filesToFlash.length === 0) {
+            this.terminal?.writeLine?.("All flash regions already match. Nothing to write.");
+            progress?.(files.length - 1, 100, 100);
+            return;
+        }
+
+        const fileArray = filesToFlash.map((file) => ({
             data: file.data,
             address: file.address,
         }));
@@ -474,12 +496,39 @@ export class OfficialElrsEspFlasher {
             calculateMD5Hash: this.calculateMd5Hash,
         });
 
-        progress?.(fileArray.length - 1, 100, 100);
+        progress?.(filesToFlash.length - 1, 100, 100);
         if (normalizeEspPlatform(this.target?.platform).startsWith("esp32")) {
             await loader.after("hard_reset").catch(() => {});
         } else {
             await loader.after("soft_reset").catch(() => {});
         }
+    }
+
+    async skipUnchangedFiles(files) {
+        const filesToFlash = [];
+        for (const file of files) {
+            const image = padTo(file.data, 4);
+            const expectedMd5 = this.calculateMd5Hash(image);
+            let flashMd5 = "";
+            try {
+                flashMd5 = await this.esploader.flashMd5sum(file.address, image.length);
+            } catch (error) {
+                this.terminal?.writeLine?.(
+                    `Could not pre-check ${file.name || `0x${file.address.toString(16)}`}; will write it. ${error instanceof Error ? error.message : String(error)}`,
+                );
+                filesToFlash.push(file);
+                continue;
+            }
+
+            if (String(flashMd5).toLowerCase() === String(expectedMd5).toLowerCase()) {
+                this.terminal?.writeLine?.(
+                    `Skipping unchanged ${file.name || `0x${file.address.toString(16)}`} @ 0x${file.address.toString(16)}.`,
+                );
+            } else {
+                filesToFlash.push(file);
+            }
+        }
+        return filesToFlash;
     }
 
     recentText() {
