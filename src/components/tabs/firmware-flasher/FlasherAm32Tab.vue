@@ -6,18 +6,18 @@
         </p>
 
         <UAlert
-            v-if="!fcConnected"
+            v-if="showConnectionWarning"
             class="mb-3"
             color="warning"
             variant="soft"
             title="Flight controller not connected"
-            description="Connect to the flight controller first, then select AM32 again to read ESCs."
+            description="Click Read ESCs again and choose the flight controller USB device if the browser asks for permission."
         />
         <UAlert v-if="error" class="mb-3" color="error" variant="soft" title="AM32 error" :description="error" />
 
         <div class="flex flex-wrap items-center gap-2 mb-3">
-            <UButton color="primary" :loading="busy && activeOperation === 'read'" :disabled="!fcConnected || busy" @click="readEscs">
-                Read ESCs
+            <UButton color="primary" :loading="busy && activeOperation === 'read'" :disabled="busy" @click="readEscs">
+                {{ readButtonLabel }}
             </UButton>
             <UButton color="error" variant="outline" :disabled="!sessionActive || busy" @click="exitPassthrough">
                 Exit passthrough
@@ -90,8 +90,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import UiBox from "../../elements/UiBox.vue";
 import { serial } from "../../../js/serial.js";
 import Am32FourWaySession from "../../../js/am32/four_way.js";
+import DeviceHandler from "../../../js/device_handler.js";
+import { connectDisconnect } from "../../../js/serial_backend.js";
+import { useConnectionStore } from "../../../stores/connection.js";
 
 const session = new Am32FourWaySession();
+const connectionStore = useConnectionStore();
 const fcConnected = ref(Boolean(serial.connected));
 const sessionActive = ref(false);
 const expectedCount = ref(0);
@@ -104,9 +108,15 @@ const hexFileName = ref("");
 const hexFileContent = ref("");
 const flashProgress = ref(0);
 const autoReadAttempted = ref(false);
+const connectionAttempted = ref(false);
 
 const selectedEscRows = computed(() => escRows.value.filter((row) => row.data && row.data.isSelected && !row.isError));
 const canFlash = computed(() => sessionActive.value && selectedEscRows.value.length > 0 && hexFileContent.value && !busy.value);
+const readButtonLabel = computed(() => (fcConnected.value ? "Read ESCs" : "Connect and read ESCs"));
+const showConnectionWarning = computed(() => connectionAttempted.value && !fcConnected.value && !busy.value);
+
+const CONNECT_TIMEOUT_MS = 15000;
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function firmwareVersion(esc) {
     return `${esc.settings.MAIN_REVISION ?? "?"}.${esc.settings.SUB_REVISION ?? "?"}`;
@@ -125,6 +135,55 @@ function updateFcConnected() {
     }
 }
 
+async function waitForFcReady() {
+    const startedAt = Date.now();
+
+    while (Date.now() - startedAt < CONNECT_TIMEOUT_MS) {
+        updateFcConnected();
+        if (serial.connected && connectionStore.connectionValid) {
+            return;
+        }
+        await delay(100);
+    }
+
+    throw new Error("Timed out waiting for the flight controller connection to become ready.");
+}
+
+async function ensureFcConnected() {
+    connectionAttempted.value = true;
+    updateFcConnected();
+
+    if (serial.connected && connectionStore.connectionValid) {
+        return;
+    }
+
+    if (connectionStore.connectLock) {
+        throw new Error("Another operation is using the flight controller connection. Wait for it to finish, then read ESCs again.");
+    }
+
+    if (!serial.connected && !connectionStore.connectingTo) {
+        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+            DeviceHandler.selectActivePort();
+        }
+
+        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+            addLog("Select the flight controller USB device to read AM32 ESCs...");
+            await DeviceHandler.requestDevicePermission("serial");
+        }
+
+        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+            throw new Error("No flight controller USB device selected.");
+        }
+
+        addLog("Connecting to flight controller...");
+        connectDisconnect();
+    }
+
+    await waitForFcReady();
+    updateFcConnected();
+    addLog("Flight controller connected.");
+}
+
 async function ensureSession() {
     if (!sessionActive.value) {
         expectedCount.value = await session.enter();
@@ -138,6 +197,7 @@ async function readEscs() {
     error.value = "";
     flashProgress.value = 0;
     try {
+        await ensureFcConnected();
         await ensureSession();
         escRows.value = Array.from({ length: expectedCount.value }, (_unused, index) => ({
             index,
