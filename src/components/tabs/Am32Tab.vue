@@ -225,7 +225,15 @@ const settingGroups = [
         fields: [
             { field: "TIMING_ADVANCE", label: "Timing advance", type: "timing", unit: "°" },
             { field: "STARTUP_POWER", label: "Startup power", min: 0, max: 255 },
-            { field: "MOTOR_KV", label: "Motor KV", min: 0, max: 255 },
+            {
+                field: "MOTOR_KV",
+                label: "Motor KV",
+                min: 20,
+                max: 10220,
+                step: 40,
+                displayFactor: 40,
+                offset: 20,
+            },
             { field: "MOTOR_POLES", label: "Motor poles", min: 0, max: 255 },
             { field: "PWM_FREQUENCY", label: "PWM frequency", min: 8, max: 144, unit: "kHz" },
             { field: "BEEP_VOLUME", label: "Beep volume", min: 0, max: 255 },
@@ -325,12 +333,19 @@ function getDisplaySetting(field) {
     if (field.type === "timing") {
         return getTimingDisplayValue(rawValue);
     }
+    if (field.displayFactor || field.offset) {
+        return rawValue * (field.displayFactor ?? 1) + (field.offset ?? 0);
+    }
     return rawValue;
 }
 
 function setDisplaySetting(field, value) {
     if (field.type === "timing") {
         setSetting(field.field, getTimingRawValue(value));
+        return;
+    }
+    if (field.displayFactor || field.offset) {
+        setSetting(field.field, Math.round((value - (field.offset ?? 0)) / (field.displayFactor ?? 1)));
         return;
     }
     setSetting(field.field, value);
