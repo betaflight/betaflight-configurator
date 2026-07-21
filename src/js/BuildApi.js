@@ -91,6 +91,7 @@ export default class BuildApi {
         const response = await fetch(url, {
             method: "GET",
             headers,
+            cache: this.isGithubUrl(url) ? "no-store" : "default",
         });
 
         if (this.isSuccessCode(response.status)) {
@@ -108,6 +109,7 @@ export default class BuildApi {
             headers: {
                 Accept: "application/vnd.github+json",
             },
+            cache: "no-store",
         });
 
         if (this.isSuccessCode(response.status)) {

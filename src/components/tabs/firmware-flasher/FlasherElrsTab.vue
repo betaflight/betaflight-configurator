@@ -499,7 +499,17 @@ async function stopPassthrough() {
 }
 
 async function prepareFirmware() {
-    const layout = firmwareLayout.value ?? await buildApi.loadGiglrsTargetLayout(selectedTarget.value);
+    let layout = null;
+    try {
+        layout = await buildApi.loadGiglrsTargetLayout(selectedTarget.value);
+        addLog("Using latest hardware layout from giglrs-targets.");
+    } catch (layoutError) {
+        if (!firmwareLayout.value) {
+            throw layoutError;
+        }
+        layout = firmwareLayout.value;
+        addLog("Could not load latest hardware layout; using hardware layout from firmware archive.");
+    }
     return firmwareFiles.value.map((file) => ({
         data: file.configure
             ? appendUnifiedConfiguration(file.data, {
