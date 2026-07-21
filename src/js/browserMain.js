@@ -14,9 +14,18 @@ import { useDialogStore } from "../stores/dialog";
 import { registerSW } from "virtual:pwa-register";
 import { isAndroid, isEmbeddedDeployment } from "./utils/checkCompatibility.js";
 
+function isLocalDevServer() {
+    return ["127.0.0.1", "localhost", "::1"].includes(globalThis.location?.hostname) &&
+        ["8080", "8443"].includes(globalThis.location?.port);
+}
+
 // Skip PWA/service-worker on embedded deployments (WebSocket-only host, plain HTTP)
 // and Android native builds where they are unnecessary
-if (!isAndroid() && !isEmbeddedDeployment()) {
+if (isLocalDevServer()) {
+    navigator.serviceWorker?.getRegistrations?.().then((registrations) => {
+        registrations.forEach((registration) => registration.unregister());
+    });
+} else if (!isAndroid() && !isEmbeddedDeployment()) {
     const dialogStore = useDialogStore(pinia);
     const updateSW = registerSW({
         onNeedRefresh() {

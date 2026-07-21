@@ -103,9 +103,9 @@ function randomUint32() {
     const bytes = new Uint32Array(1);
     if (globalThis.crypto?.getRandomValues) {
         globalThis.crypto.getRandomValues(bytes);
-        return bytes[0] || 1;
+        return (bytes[0] % ((2 ** 31) - 2)) + 1;
     }
-    return Math.floor(Math.random() * 0xffffffff) || 1;
+    return Math.floor(Math.random() * ((2 ** 31) - 2)) + 1;
 }
 
 export function buildUnifiedDefines(settings) {

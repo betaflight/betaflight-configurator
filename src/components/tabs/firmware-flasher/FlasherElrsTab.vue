@@ -157,6 +157,7 @@ const flashProgress = ref(0);
 const logLines = ref([]);
 const fcConnected = ref(Boolean(serial.connected));
 const connectionAttempted = ref(false);
+const firmwareLayout = ref(null);
 
 const settings = reactive({
     bindingPhrase: "",
@@ -314,6 +315,12 @@ async function extractFirmwareZip(bytes, target, region) {
     if (!firmwareEntry) {
         throw new Error(`No firmware.bin found in the selected archive for ${target.productName}.`);
     }
+    const layoutEntry = target.layoutFile
+        ? files.find((file) => file.path.toLowerCase().endsWith(`/hardware/rx/${target.layoutFile.toLowerCase()}`))
+        : null;
+    const layout = layoutEntry
+        ? JSON.parse(new TextDecoder().decode(await readZipEntry(layoutEntry.entry)))
+        : null;
 
     const flashFiles = [];
     if (isEsp32Platform(target.platform)) {
@@ -354,7 +361,7 @@ async function extractFirmwareZip(bytes, target, region) {
         configure: true,
     });
 
-    return flashFiles;
+    return { files: flashFiles, layout };
 }
 
 async function buildFirmwareFilesFromBytes(name, bytes) {
@@ -363,13 +370,18 @@ async function buildFirmwareFilesFromBytes(name, bytes) {
     }
 
     if (isZipBytes(name, bytes)) {
-        const files = await extractFirmwareZip(bytes, selectedTarget.value, selectedRegion.value);
+        const { files, layout } = await extractFirmwareZip(bytes, selectedTarget.value, selectedRegion.value);
+        firmwareLayout.value = layout;
         if (files.length === 1) {
             addLog("Archive contained only firmware.bin; flashing application image only.");
+        }
+        if (layout) {
+            addLog("Using hardware layout from firmware archive.");
         }
         return files;
     }
 
+    firmwareLayout.value = null;
     return [
         {
             name,
@@ -381,6 +393,7 @@ async function buildFirmwareFilesFromBytes(name, bytes) {
 }
 
 async function loadFirmwareBytes(name, bytes, displayName) {
+    firmwareLayout.value = null;
     firmwareSource.value = { name, bytes, displayName };
     firmwareFiles.value = await buildFirmwareFilesFromBytes(name, bytes);
     firmwareFileName.value = displayName || name;
@@ -575,7 +588,7 @@ async function stopPassthrough() {
 }
 
 async function prepareFirmware() {
-    const layout = await buildApi.loadGiglrsTargetLayout(selectedTarget.value);
+    const layout = firmwareLayout.value ?? await buildApi.loadGiglrsTargetLayout(selectedTarget.value);
     return firmwareFiles.value.map((file) => ({
         data: file.configure
             ? appendUnifiedConfiguration(file.data, {
@@ -747,6 +760,7 @@ watch(selectedTargetId, () => {
     firmwareFiles.value = [];
     firmwareFileName.value = "";
     firmwareSource.value = null;
+    firmwareLayout.value = null;
     void loadReleases();
 });
 
@@ -763,6 +777,7 @@ watch(selectedRegion, async () => {
         );
     } catch (regionError) {
         firmwareFiles.value = [];
+        firmwareLayout.value = null;
         error.value = regionError instanceof Error ? regionError.message : String(regionError);
         addLog(error.value);
     }
