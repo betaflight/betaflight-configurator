@@ -34,7 +34,6 @@ class GuiControl {
 
         this.defaultAllowedTabs = [
             "setup",
-            "firmware_flasher",
             "failsafe",
             "power",
             "adjustments",
@@ -305,7 +304,7 @@ class GuiControl {
         }
     }
     selectDefaultTabWhenConnected() {
-        if (this.active_tab === "firmware_flasher" && this.allowedTabs.includes("firmware_flasher")) {
+        if (this.active_tab === "firmware_flasher") {
             return;
         }
 

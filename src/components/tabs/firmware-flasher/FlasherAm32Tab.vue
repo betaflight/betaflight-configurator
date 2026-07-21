@@ -16,10 +16,10 @@
         <UAlert v-if="error" class="mb-3" color="error" variant="soft" title="AM32 error" :description="error" />
 
         <div class="flex flex-wrap items-center gap-2 mb-3">
-            <UButton color="primary" :loading="busy && activeOperation === 'read'" :disabled="busy" @click="readEscs">
+            <UButton type="button" color="primary" :loading="busy && activeOperation === 'read'" :disabled="busy" @click="readEscs">
                 Read ESCs
             </UButton>
-            <UButton color="error" variant="outline" :disabled="!sessionActive || busy" @click="exitPassthrough">
+            <UButton type="button" color="error" variant="outline" :disabled="!sessionActive || busy" @click="exitPassthrough">
                 Exit passthrough
             </UButton>
             <span v-if="sessionActive" class="text-sm text-dimmed">
@@ -69,6 +69,7 @@
                 <input type="file" accept=".hex,text/plain" :disabled="busy" @change="onHexFile" />
                 <div v-if="hexFileName" class="text-sm text-dimmed mt-2">Loaded: {{ hexFileName }}</div>
                 <UButton
+                    type="button"
                     class="mt-3"
                     color="warning"
                     :loading="busy && activeOperation === 'flash'"
