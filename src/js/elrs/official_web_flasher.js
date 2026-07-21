@@ -4,37 +4,8 @@ class MismatchError extends Error {}
 
 class WrongMcuError extends Error {}
 
-function appendArray(first, second) {
-    const output = new Uint8Array(first.length + second.length);
-    output.set(first);
-    output.set(second, first.length);
-    return output;
-}
-
-function trimBytes(bytes, maxLength) {
-    if (bytes.byteLength <= maxLength) {
-        return bytes;
-    }
-    return bytes.slice(bytes.byteLength - maxLength);
-}
-
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function padTo(bytes, alignment, value = 0xff) {
-    const padding = bytes.length % alignment;
-    if (padding === 0) {
-        return bytes;
-    }
-    const output = new Uint8Array(bytes.length + alignment - padding);
-    output.fill(value);
-    output.set(bytes);
-    return output;
-}
-
-function isCompressedFlashFinishStatusError(error) {
-    return /Failed to leave compressed flash mode failed with status 1,195/i.test(String(error?.message ?? error));
 }
 
 function platformForDetectedChip(chip) {
@@ -101,24 +72,6 @@ function assertDetectedChipMatchesTarget(chip, target) {
 }
 
 export class TransportEx extends Transport {
-    constructor(device, tracing = false) {
-        super(device, tracing);
-        this.delimiters = [];
-        this.recentInput = new Uint8Array(0);
-    }
-
-    remember(bytes) {
-        const input = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
-        this.recentInput = trimBytes(appendArray(this.recentInput, input), 4096);
-    }
-
-    recentText() {
-        return new TextDecoder("utf-8")
-            .decode(this.recentInput)
-            .replace(/[^\x09\x0a\x0d\x20-\x7e]+/g, " ")
-            .trim();
-    }
-
     ui8ToBstr(u8Array) {
         let bStr = "";
         for (let i = 0; i < u8Array.length; i++) {
@@ -128,43 +81,43 @@ export class TransportEx extends Transport {
     }
 
     bstrToUi8(bStr) {
-        const output = new Uint8Array(bStr.length);
-        for (let i = 0; i < bStr.length; i++) {
-            output[i] = bStr.charCodeAt(i);
+        const len = bStr.length;
+        const u8array = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            u8array[i] = bStr.charCodeAt(i);
         }
-        return output;
+        return u8array;
     }
 
     set_delimiters(delimiters = ["\n", "CCC"]) {
-        this.delimiters = delimiters.map((delimiter) => this.bstrToUi8(delimiter));
-    }
-
-    findDelimiter(packet) {
-        const index = packet.findIndex((_, i, bytes) => {
-            for (const delimiter of this.delimiters) {
-                if (delimiter.every((value, j) => bytes[i + j] === value)) {
-                    return true;
-                }
-            }
-            return false;
-        });
-        if (index === -1) {
-            return -1;
+        this.delimiters = [];
+        for (const d of delimiters) {
+            this.delimiters.push(this.bstrToUi8(d));
         }
-        for (const delimiter of this.delimiters) {
-            if (delimiter.every((value, j) => packet[index + j] === value)) {
-                return index + delimiter.length;
-            }
-        }
-        return -1;
     }
 
     read_line = async (timeout = 0) => {
-        let timer;
-        let timedOut = false;
+        let t;
         let packet = this.buffer;
         this.buffer = new Uint8Array(0);
-        let index = this.findDelimiter(packet);
+        const delimiters = this.delimiters;
+
+        function findDelimeter(packet) {
+            const index = packet.findIndex((_, i, a) => {
+                for (const d of delimiters) {
+                    if (d.every((v, j) => a[i + j] === v)) return true;
+                }
+                return false;
+            });
+            if (index !== -1) {
+                for (const d of delimiters) {
+                    if (d.every((v, j) => packet[index + j] === v)) return index + d.length;
+                }
+            }
+            return -1;
+        }
+
+        let index = findDelimeter(packet);
 
         if (index === -1) {
             if (!this.reader && this.device?.readable) {
@@ -174,9 +127,10 @@ export class TransportEx extends Transport {
             if (!reader) {
                 throw new Error("Serial reader unavailable");
             }
+            let timedOut = false;
             try {
                 if (timeout > 0) {
-                    timer = setTimeout(() => {
+                    t = setTimeout(() => {
                         timedOut = true;
                         void reader.cancel().catch(() => {});
                     }, timeout);
@@ -185,19 +139,25 @@ export class TransportEx extends Transport {
                     let result;
                     try {
                         result = await reader.read();
-                    } catch (error) {
+                    } catch (e) {
                         if (timedOut) {
-                            reader.releaseLock();
+                            try {
+                                reader.releaseLock();
+                            } catch {
+                            }
                             this.reader = undefined;
                             return "";
                         }
-                        throw error;
+                        throw e;
                     }
 
                     const { value, done } = result;
                     if (done) {
                         if (timedOut) {
-                            reader.releaseLock();
+                            try {
+                                reader.releaseLock();
+                            } catch {
+                            }
                             this.reader = undefined;
                             return "";
                         }
@@ -206,36 +166,49 @@ export class TransportEx extends Transport {
                         return "";
                     }
 
-                    const input = value instanceof Uint8Array ? value : new Uint8Array(value);
-                    this.remember(input);
-                    packet = appendArray(packet, input);
-                    index = this.findDelimiter(packet);
+                    packet = this.appendArray(packet, value);
+                    index = findDelimeter(packet);
                 } while (index === -1);
             } finally {
                 if (timeout > 0) {
-                    clearTimeout(timer);
+                    clearTimeout(t);
                 }
             }
         }
 
         this.buffer = packet.slice(index);
-        const line = packet.slice(0, index);
-        this.remember(line);
-        return this.ui8ToBstr(line);
+        packet = packet.slice(0, index);
+        if (this.tracing) {
+            console.log("Read bytes");
+            console.log(this.hexConvert(packet));
+        }
+        return this.ui8ToBstr(packet);
     };
 
     write_string = async (data) => {
         const writer = this.device.writable.getWriter();
-        const output = this.bstrToUi8(data);
-        await writer.write(output.buffer);
+        const out = this.bstrToUi8(data);
+        if (this.tracing) {
+            console.log("Write bytes");
+            console.log(this.hexConvert(out));
+        }
+        await writer.write(out.buffer);
         writer.releaseLock();
     };
 
     write_array = async (data) => {
         const writer = this.device.writable.getWriter();
+        if (this.tracing) {
+            console.log("Write bytes");
+            console.log(this.hexConvert(data));
+        }
         await writer.write(data.buffer);
         writer.releaseLock();
     };
+
+    recentText() {
+        return "";
+    }
 }
 
 class Bootloader {
@@ -455,32 +428,7 @@ export class OfficialElrsEspFlasher {
         loader.FLASH_WRITE_SIZE = 0x0800;
         loader.IS_STUB = true;
 
-        const originalFlashDeflFinish = loader.flashDeflFinish.bind(loader);
-        loader.flashDeflFinish = async (...args) => {
-            try {
-                await originalFlashDeflFinish(...args);
-            } catch (error) {
-                if (!isCompressedFlashFinishStatusError(error)) {
-                    throw error;
-                }
-                this.terminal?.writeLine?.(
-                    "Compressed flash finish returned status 1,195; continuing to MD5 verification before accepting the flash.",
-                );
-            }
-        };
-
-        let filesToFlash = files;
-        if (!eraseAll && this.calculateMd5Hash) {
-            filesToFlash = await this.skipUnchangedFiles(files);
-        }
-
-        if (filesToFlash.length === 0) {
-            this.terminal?.writeLine?.("All flash regions already match. Nothing to write.");
-            progress?.(files.length - 1, 100, 100);
-            return;
-        }
-
-        const fileArray = filesToFlash.map((file) => ({
+        const fileArray = files.map((file) => ({
             data: file.data,
             address: file.address,
         }));
@@ -496,39 +444,12 @@ export class OfficialElrsEspFlasher {
             calculateMD5Hash: this.calculateMd5Hash,
         });
 
-        progress?.(filesToFlash.length - 1, 100, 100);
+        progress?.(fileArray.length - 1, 100, 100);
         if (normalizeEspPlatform(this.target?.platform).startsWith("esp32")) {
             await loader.after("hard_reset").catch(() => {});
         } else {
             await loader.after("soft_reset").catch(() => {});
         }
-    }
-
-    async skipUnchangedFiles(files) {
-        const filesToFlash = [];
-        for (const file of files) {
-            const image = padTo(file.data, 4);
-            const expectedMd5 = this.calculateMd5Hash(image);
-            let flashMd5 = "";
-            try {
-                flashMd5 = await this.esploader.flashMd5sum(file.address, image.length);
-            } catch (error) {
-                this.terminal?.writeLine?.(
-                    `Could not pre-check ${file.name || `0x${file.address.toString(16)}`}; will write it. ${error instanceof Error ? error.message : String(error)}`,
-                );
-                filesToFlash.push(file);
-                continue;
-            }
-
-            if (String(flashMd5).toLowerCase() === String(expectedMd5).toLowerCase()) {
-                this.terminal?.writeLine?.(
-                    `Skipping unchanged ${file.name || `0x${file.address.toString(16)}`} @ 0x${file.address.toString(16)}.`,
-                );
-            } else {
-                filesToFlash.push(file);
-            }
-        }
-        return filesToFlash;
     }
 
     recentText() {
