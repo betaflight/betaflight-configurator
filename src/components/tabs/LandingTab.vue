@@ -3,12 +3,12 @@
         <div class="content_wrapper">
             <div class="content_top">
                 <div class="logowrapper">
-                    <img src="/images/gigfpv_logo_white.png" alt="GIGFPV Station" />
+                    <img src="/images/gigfpv_logo_black.svg" alt="GIGFPV Station" />
                     <div v-html="$t('defaultWelcomeIntro')"></div>
                 </div>
             </div>
             <div class="content_mid grid-row">
-                <div class="column third_left text1 grid-col col4">
+                <div class="column third_left text1 grid-col col6">
                     <div class="socialMediaParagraph">
                         <h2 v-html="$t('defaultCommunityHead')"></h2>
                         <div class="logoSocialMedia">
@@ -29,24 +29,7 @@
                         <div class="socialMediaText" v-html="$t('defaultFacebookText')"></div>
                     </div>
                 </div>
-                <div class="column third_center text3 grid-col col4">
-                    <div class="wrap2">
-                        <h3 v-html="$t('defaultDonateHead')"></h3>
-                        <div v-html="$t('defaultDonateText')"></div>
-                        <div class="donate">
-                            <a
-                                href="https://paypal.me/betaflight"
-                                rel="noopener noreferrer"
-                                target="_blank"
-                                :title="$t('defaultDonate')"
-                            >
-                                <img src="/images/btn-donate.png" alt="Paypal" height="30" />
-                            </a>
-                        </div>
-                        <div v-html="$t('defaultDonateBottom')"></div>
-                    </div>
-                </div>
-                <div class="column third_right text2 list grid-col col4">
+                <div class="column third_right text2 list grid-col col6">
                     <div class="wrap">
                         <h2 v-html="$t('defaultContributingHead')"></h2>
                         <div v-html="$t('defaultContributingText')"></div>
@@ -205,17 +188,6 @@ export default defineComponent({
             min-height: 187px;
             font-size: 11px;
         }
-        .donate {
-            margin-top: 10px;
-            text-align: center;
-        }
-    }
-}
-
-.donate {
-    img {
-        height: 2rem;
-        display: inline-block;
     }
 }
 
