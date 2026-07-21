@@ -30,12 +30,6 @@
                                     :disabled="buttonStates.toolsDisabled"
                                     @click="openMotorOutputReorderDialog()"
                                 />
-                                <UButton
-                                    v-if="digitalProtocolConfigured"
-                                    :label="$t('escDshotDirectionDialog-Open')"
-                                    :disabled="buttonStates.toolsDisabled"
-                                    @click="openEscDshotDirectionDialog()"
-                                />
                             </div>
                         </UiBox>
                         <!-- ESC FEATURES -->
@@ -451,6 +445,52 @@
                                     <li class="text-center text-[10px] font-bold" v-html="$t('motorsMaster')"></li>
                                 </ul>
                             </div>
+
+                            <div v-if="digitalProtocolConfigured" class="mt-3">
+                                <div class="mb-2 text-xs text-dimmed" v-html="$t('motorsDshotDirectionHelp')"></div>
+                                <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
+                                    <li
+                                        v-for="i in numberOfValidOutputs"
+                                        :key="i"
+                                        class="flex flex-col items-center gap-1"
+                                    >
+                                        <UButton
+                                            :label="$t('motorsDshotHoldToSpin')"
+                                            size="xs"
+                                            :variant="directionSpinActiveMotor === i - 1 ? 'solid' : 'outline'"
+                                            color="error"
+                                            :disabled="
+                                                dshotHoldSpinDisabled ||
+                                                (directionSpinActiveMotor !== null && directionSpinActiveMotor !== i - 1)
+                                            "
+                                            @mousedown.prevent="holdSpinMotor(i - 1)"
+                                            @mouseup.prevent="stopHoldSpinMotor(i - 1)"
+                                            @mouseleave.prevent="stopHoldSpinMotor(i - 1)"
+                                            @touchstart.prevent="holdSpinMotor(i - 1)"
+                                            @touchend.prevent="stopHoldSpinMotor(i - 1)"
+                                            @touchcancel.prevent="stopHoldSpinMotor(i - 1)"
+                                        />
+                                        <UButton
+                                            :label="$t('escDshotDirectionDialog-CommandNormal')"
+                                            size="xs"
+                                            variant="soft"
+                                            :loading="directionCommandBusyMotor === i - 1"
+                                            :disabled="dshotDirectionControlsDisabled"
+                                            @click="setMotorDirection(i - 1, 'normal')"
+                                        />
+                                        <UButton
+                                            :label="$t('escDshotDirectionDialog-CommandReverse')"
+                                            size="xs"
+                                            variant="soft"
+                                            color="warning"
+                                            :loading="directionCommandBusyMotor === i - 1"
+                                            :disabled="dshotDirectionControlsDisabled"
+                                            @click="setMotorDirection(i - 1, 'reverse')"
+                                        />
+                                    </li>
+                                    <li class="text-center text-[10px] font-bold" v-html="$t('motorsDshotDirection')"></li>
+                                </ul>
+                            </div>
                         </div>
 
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
@@ -539,6 +579,9 @@ import EscProtocols from "@/js/utils/EscProtocols";
 import semver from "semver";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
+import DshotCommand from "@/js/utils/DshotCommand";
+import { gui_log } from "@/js/gui_log";
+import { i18n } from "@/js/localization";
 import * as d3 from "d3";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -567,6 +610,8 @@ const { saveToEeprom, saveAndReboot } = useReboot();
 // Warning dialog
 const settingsChangedOpen = ref(false);
 const warningMessage = ref("");
+const directionCommandBusyMotor = ref(null);
+const directionSpinActiveMotor = ref(null);
 
 const showWarningDialog = (message) => {
     warningMessage.value = message;
@@ -1334,31 +1379,6 @@ const openMotorOutputReorderDialog = () => {
     );
 };
 
-const openEscDshotDirectionDialog = () => {
-    // Calculate motor configuration
-    const mixer = fcStore.mixerConfig.mixer;
-    const numberOfMotors = mixer > 0 && mixer <= mixerList.length ? mixerList[mixer - 1].motors : 0;
-
-    // Use the idle throttle value for safe motor spinning
-    // This matches the original formula: zeroThrottleValue + (motorIdle * 1000) / 100
-    const motorConfig = {
-        escProtocolIsDshot: digitalProtocolConfigured.value,
-        numberOfMotors: numberOfMotors,
-        motorStopValue: minSliderValue.value,
-        motorSpinValue: idleThrottleValue.value,
-    };
-
-    dialog.open(
-        "EscDshotDirectionDialog",
-        { motorConfig },
-        {
-            close: () => {
-                dialog.close();
-            },
-        },
-    );
-};
-
 // Action Toolbar Buttons
 const handleSave = (reboot = true) => {
     // Don't save if no changes
@@ -1538,6 +1558,113 @@ const onMasterValueUpdate = (val) => {
     onMasterSliderChange();
 };
 
+const dshotDirectionControlsDisabled = computed(() => {
+    return (
+        !digitalProtocolConfigured.value ||
+        !motorsTestingEnabled.value ||
+        slidersDisabled.value ||
+        motorsAreSpinning.value ||
+        configHasChanged.value ||
+        directionCommandBusyMotor.value !== null
+    );
+});
+
+const dshotHoldSpinDisabled = computed(() => {
+    return (
+        !digitalProtocolConfigured.value ||
+        !motorsTestingEnabled.value ||
+        slidersDisabled.value ||
+        configHasChanged.value ||
+        directionCommandBusyMotor.value !== null
+    );
+});
+
+const motorsAreSpinning = computed(() => {
+    const stopValue = zeroThrottleValue.value;
+    return motorValues.value.slice(0, numberOfValidOutputs.value).some((value) => Number(value) > stopValue);
+});
+
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+const sendDshotDirectionCommand = (motorIndex, direction) => {
+    const dshotDirection =
+        direction === "normal"
+            ? DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1
+            : DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_2;
+
+    const buffer = [];
+    buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
+    buffer.push8(motorIndex);
+    buffer.push8(2);
+    buffer.push8(dshotDirection);
+    buffer.push8(DshotCommand.dshotCommands_e.DSHOT_CMD_SAVE_SETTINGS);
+
+    MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+
+    const motorLabel = i18n.getMessage(`motorNumber${motorIndex + 1}`);
+    const directionLabel =
+        direction === "normal"
+            ? i18n.getMessage("escDshotDirectionDialog-CommandNormal")
+            : i18n.getMessage("escDshotDirectionDialog-CommandReverse");
+    gui_log(`${motorLabel}: ${directionLabel}`);
+};
+
+const setMotorDirection = async (motorIndex, direction) => {
+    if (dshotDirectionControlsDisabled.value || motorIndex < 0 || motorIndex >= numberOfValidOutputs.value) {
+        return;
+    }
+
+    directionCommandBusyMotor.value = motorIndex;
+
+    try {
+        if (bufferDelay) {
+            clearTimeout(bufferDelay);
+            bufferDelay = null;
+            bufferingSetMotor = [];
+        }
+
+        sendDshotDirectionCommand(motorIndex, direction);
+        await sleep(250);
+    } finally {
+        directionCommandBusyMotor.value = null;
+    }
+};
+
+const holdSpinMotor = (motorIndex) => {
+    if (dshotHoldSpinDisabled.value || motorIndex < 0 || motorIndex >= numberOfValidOutputs.value) {
+        return;
+    }
+    if (directionSpinActiveMotor.value !== null && directionSpinActiveMotor.value !== motorIndex) {
+        return;
+    }
+
+    if (bufferDelay) {
+        clearTimeout(bufferDelay);
+        bufferDelay = null;
+        bufferingSetMotor = [];
+    }
+
+    const values = new Array(motorValues.value.length).fill(zeroThrottleValue.value);
+    values[motorIndex] = idleThrottleValue.value;
+
+    directionSpinActiveMotor.value = motorIndex;
+    motorValues.value = values;
+    masterValue.value = zeroThrottleValue.value;
+    sendMotorCommand(values);
+};
+
+const stopHoldSpinMotor = (motorIndex) => {
+    if (directionSpinActiveMotor.value !== motorIndex) {
+        return;
+    }
+
+    const values = new Array(motorValues.value.length).fill(zeroThrottleValue.value);
+    directionSpinActiveMotor.value = null;
+    motorValues.value = values;
+    masterValue.value = zeroThrottleValue.value;
+    sendMotorCommand(values);
+};
+
 const onSliderWheel = (index, event) => {
     if (!motorsTestingEnabled.value) {
         return;
@@ -1571,6 +1698,7 @@ const onSliderWheel = (index, event) => {
 // Clear buffered motor commands when testing is disabled
 watch(motorsTestingEnabled, (enabled) => {
     if (!enabled) {
+        directionSpinActiveMotor.value = null;
         if (bufferDelay) {
             clearTimeout(bufferDelay);
             bufferDelay = null;

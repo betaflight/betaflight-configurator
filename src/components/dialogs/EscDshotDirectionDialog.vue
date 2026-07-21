@@ -27,8 +27,8 @@
                     <img id="escDshotDirectionDialog-MixerPreviewImg" :src="mixerPreviewSrc" alt="Mixer Preview" />
                 </div>
 
-                <!-- Normal Mode -->
-                <div v-if="!wizardMode" id="escDshotDirectionDialog-NormalDialog" class="display-contents">
+                <!-- Individual motor direction controls -->
+                <div id="escDshotDirectionDialog-NormalDialog" class="display-contents">
                     <h4
                         id="escDshotDirectionDialog-ActionHint"
                         :class="{ 'red-text': motorIsSpinning }"
@@ -92,39 +92,6 @@
                     </div>
                 </div>
 
-                <!-- Wizard Mode -->
-                <div v-if="wizardMode" id="escDshotDirectionDialog-WizardDialog" class="display-contents">
-                    <button
-                        v-if="!wizardSpinning"
-                        class="regular-button"
-                        @click.prevent="onSpinWizardClick"
-                        v-html="i18nMessage('escDshotDirectionDialog-SpinWizard')"
-                    ></button>
-
-                    <div v-if="wizardSpinning" id="escDshotDirectionDialog-SpinningWizard" class="display-contents">
-                        <h4 v-html="i18nMessage('escDshotDirectionDialog-WizardActionHint')"></h4>
-                        <h4 v-html="i18nMessage('escDshotDirectionDialog-WizardActionHintSecondLine')"></h4>
-
-                        <div id="escDshotDirectionDialog-WizardMotorButtons">
-                            <button
-                                v-for="(motor, index) in wizardMotorButtons"
-                                :key="index"
-                                class="regular-button"
-                                :class="{ pushed: wizardMotorDirections[index] }"
-                                @click.prevent="onWizardMotorClick(index)"
-                            >
-                                {{ motor }}
-                            </button>
-                        </div>
-
-                        <button
-                            class="regular-button"
-                            @click.prevent="onStopWizardClick"
-                            v-html="i18nMessage('escDshotDirectionDialog-StopWizard')"
-                        ></button>
-                        <h4 v-html="i18nMessage('escDshotDirectionDialog-SettingsAutoSaved')"></h4>
-                    </div>
-                </div>
             </div>
 
             <!-- Close Button -->
@@ -163,24 +130,6 @@
                         class="escDshotDirectionDialog-InformationNotice"
                         v-html="i18nMessage('escDshotDirectionDialog-InformationNotice')"
                     ></div>
-
-                    <div
-                        v-if="safetyAgreed"
-                        id="escDshotDirectionDialog-StartWizardBlock"
-                        class="escDshotDirectionDialog-StartBlock"
-                    >
-                        <div class="escDshotDirectionDialog-Buttons">
-                            <button
-                                class="regular-button escDshotDirectionDialog-StartButton"
-                                @click.prevent="startWizardMode"
-                                v-html="i18nMessage('escDshotDirectionDialog-StartWizard')"
-                            ></button>
-                        </div>
-                        <div
-                            class="escDshotDirectionDialog-Description"
-                            v-html="i18nMessage('escDshotDirectionDialog-WizardInformationNotice')"
-                        ></div>
-                    </div>
 
                     <div
                         v-if="safetyAgreed"
@@ -233,14 +182,11 @@ const hasConfigErrors = computed(() => !escProtocolIsDshot.value || numberOfMoto
 // State
 const safetyAgreed = ref(false);
 const showMainContent = ref(false);
-const wizardMode = ref(false);
-const wizardSpinning = ref(false);
 const selectedMotor = ref(-1);
 const motorIsSpinning = ref(false);
 const showSecondAction = ref(false);
 const currentSpinningButton = ref(-1);
 const spinningDirection = ref(null);
-const wizardMotorDirections = ref([]);
 
 // Translation helper
 const i18nMessage = (key) => {
@@ -250,7 +196,6 @@ const i18nMessage = (key) => {
 // Motor driver
 let motorDriver = null;
 let directionButtonTimeout = null;
-let wizardButtonTimeout = null;
 
 // Constants
 const BUTTON_TIMEOUT_MS = 400;
@@ -272,14 +217,6 @@ const motorButtons = computed(() => {
         buttons.push(String(i));
     }
     buttons.push("All");
-    return buttons;
-});
-
-const wizardMotorButtons = computed(() => {
-    const buttons = [];
-    for (let i = 1; i <= numberOfMotors.value; i++) {
-        buttons.push(String(i));
-    }
     return buttons;
 });
 
@@ -381,61 +318,9 @@ const clearDirectionButtonTimeout = () => {
     }
 };
 
-// Wizard mode handlers
-const onSpinWizardClick = () => {
-    wizardSpinning.value = true;
-    wizardMotorDirections.value = new Array(numberOfMotors.value).fill(false);
-
-    motorDriver.setEscSpinDirection(ALL_MOTORS, DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1);
-    motorDriver.spinAllMotors();
-
-    activateWizardButtons(0);
-};
-
-const onStopWizardClick = () => {
-    wizardSpinning.value = false;
-    motorDriver.stopAllMotorsNow();
-    deactivateWizardButtons();
-};
-
-const onWizardMotorClick = (index) => {
-    deactivateWizardButtons();
-
-    const isReversed = wizardMotorDirections.value[index];
-    const direction = isReversed
-        ? DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1
-        : DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_2;
-
-    motorDriver.setEscSpinDirection(index, direction);
-    wizardMotorDirections.value[index] = !isReversed;
-
-    activateWizardButtons(BUTTON_TIMEOUT_MS);
-};
-
-const activateWizardButtons = (timeoutMs) => {
-    wizardButtonTimeout = setTimeout(() => {
-        // Ready to accept input
-    }, timeoutMs);
-};
-
-const deactivateWizardButtons = () => {
-    if (wizardButtonTimeout) {
-        clearTimeout(wizardButtonTimeout);
-        wizardButtonTimeout = null;
-    }
-};
-
-// Mode starters
+// Mode starter
 const startNormalMode = () => {
     showMainContent.value = true;
-    wizardMode.value = false;
-    motorDriver.activate();
-};
-
-const startWizardMode = () => {
-    showMainContent.value = true;
-    wizardMode.value = true;
-    wizardSpinning.value = false;
     motorDriver.activate();
 };
 
@@ -462,13 +347,10 @@ const cleanup = () => {
 
     clearDirectionButtonTimeout();
     deactivateDirectionButtons();
-    deactivateWizardButtons();
 
     // Reset state
     safetyAgreed.value = false;
     showMainContent.value = false;
-    wizardMode.value = false;
-    wizardSpinning.value = false;
     selectedMotor.value = -1;
     motorIsSpinning.value = false;
     showSecondAction.value = false;

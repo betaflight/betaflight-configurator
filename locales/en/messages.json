@@ -3815,6 +3815,15 @@
     "motorsMaster": {
         "message": "Master"
     },
+    "motorsDshotDirection": {
+        "message": "Direction"
+    },
+    "motorsDshotDirectionHelp": {
+        "message": "DSHOT direction control: enable motor test mode, hold to spin one motor slowly, release/stop the motor, then set Normal or Reverse."
+    },
+    "motorsDshotHoldToSpin": {
+        "message": "Hold to spin"
+    },
     "motorsNotice": {
         "message": "<strong>Motor Test Mode / Arming Notice:</strong><br /><br /><strong class=\"message-negative\">WARNING: Serious risk of injury! Remove all propellers!</strong><br /><br /><ul><li>&#x2022; Motors will spin up when armed or when sliders are raised</li><li>&#x2022; Motor test mode will remain active after moving to another Tab</li><li>&#x2022; Hitting any key will stop the motors, but only in the Motors Tab</li><li>&#x2022; Disconnecting the USB cable may not stop the motors!</li></ul>"
     },
