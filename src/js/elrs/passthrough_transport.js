@@ -25,8 +25,8 @@ export function crc8D5(payload) {
     return crc & 0xff;
 }
 
-export function elrsBootloaderInitSequence(key = "ESP82") {
-    const keyBytes = new TextEncoder().encode(key);
+export function elrsBootloaderInitSequence(key = "") {
+    const keyBytes = key ? new TextEncoder().encode(key) : new Uint8Array(0);
     const payload = [0xec, 0x04 + keyBytes.length, 0x32, 0x62, 0x6c, ...keyBytes];
     payload.push(crc8D5(payload.slice(2)));
     return new Uint8Array(payload);

@@ -477,10 +477,12 @@ async function prepareFirmware() {
 
 async function enterReceiverBootloader(transport) {
     const training = new Uint8Array([0x07, 0x07, 0x12, 0x20, ...Array.from({ length: 32 }, () => 0x55)]);
+    transport.flushInput();
     await passthrough.write(training);
     await sleep(200);
-    await passthrough.write(elrsBootloaderInitSequence("ESP82"));
-    const response = await transport.rawReadFor(900);
+    await passthrough.write(elrsBootloaderInitSequence());
+    await sleep(200);
+    const response = await transport.rawReadFor(200);
     const text = new TextDecoder("utf-8")
         .decode(response)
         .replace(/[^\x20-\x7e]+/g, " ")
@@ -491,6 +493,7 @@ async function enterReceiverBootloader(transport) {
         addLog("Receiver bootloader response not detected; continuing with ESP sync.");
     }
     transport.flushInput();
+    await sleep(500);
 }
 
 async function flashReceiver() {
@@ -529,21 +532,29 @@ async function flashReceiver() {
         const loader = new ESPLoader({
             transport,
             baudrate,
+            romBaudrate: baudrate,
             terminal,
         });
+        // esptool-js has historically ignored romBaudrate in some releases; keep this explicit.
+        loader.romBaudrate = baudrate;
+        loader.baudrate = baudrate;
+        // ExpressLRS uses smaller passthrough blocks because the FC is buffering the RX UART.
+        loader.ESP_RAM_BLOCK = 0x0800;
+        loader.FLASH_WRITE_SIZE = 0x0800;
 
         addLog("Connecting to ESP bootloader...");
         const chip = await loader.main("no_reset");
         addLog(`Detected ${chip}. Flashing ${configuredFirmware.length} file${configuredFirmware.length === 1 ? "" : "s"}...`);
 
+        loader.IS_STUB = true;
         await loader.writeFlash({
             fileArray: configuredFirmware.map((file) => ({
                 data: file.data,
                 address: file.address,
             })),
-            flashSize: "detect",
-            flashMode: "dio",
-            flashFreq: "40m",
+            flashSize: "keep",
+            flashMode: "keep",
+            flashFreq: "keep",
             eraseAll: false,
             compress: true,
             reportProgress: (_fileIndex, written, total) => {
