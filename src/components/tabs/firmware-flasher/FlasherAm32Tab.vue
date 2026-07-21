@@ -1,9 +1,61 @@
 <template>
-    <UiBox title="AM32 firmware flash" type="neutral">
-        <p>
-            Flash AM32 ESC firmware through Betaflight/GIGFLIGHT 4-way passthrough over the active flight controller
-            USB connection. Keep props off and connect battery power before flashing.
-        </p>
+    <div class="am32-flasher-content">
+        <UiBox class="release_info col-span-1 mt-4">
+            <div class="release_info_grid">
+                <div class="info_row">
+                    <strong>Target</strong>
+                    <span>{{ targetText }}</span>
+                    <div></div>
+                </div>
+
+                <div class="info_row">
+                    <strong>ESCs</strong>
+                    <span>{{ escStatusText }}</span>
+                    <div></div>
+                </div>
+
+                <div class="info_row">
+                    <strong>Firmware</strong>
+                    <span>{{ firmwareStatusText }}</span>
+                    <div></div>
+                </div>
+
+                <div v-if="sessionActive" class="info_row">
+                    <strong>Passthrough</strong>
+                    <span>4-way passthrough active</span>
+                    <div></div>
+                </div>
+
+                <div v-if="flashStatusVisible" class="info_row">
+                    <strong>{{ $t("firmwareFlasherFlashStatus") }}</strong>
+                    <div class="status_ring_wrapper">
+                        <ProgressRing
+                            :value="flashProgress"
+                            :indeterminate="busy && activeOperation === 'flash' && flashProgress === 0"
+                            :size="48"
+                            :stroke-width="4"
+                            :color="flashStatusColor"
+                            :label="$t('firmwareFlasherFlashingProgress')"
+                        />
+                        <div class="status_text">
+                            <span :class="{ 'flash-status-error-text': Boolean(error) }">
+                                {{ flashStatusText }}<template v-if="busy && activeOperation === 'flash'">
+                                    {{ $t("firmwareFlasherPleaseWait") }}</template
+                                >
+                            </span>
+                        </div>
+                    </div>
+                    <div></div>
+                </div>
+            </div>
+        </UiBox>
+
+        <UiBox title="AM32 firmware flash" type="neutral" class="mt-4">
+            <p>
+                Flash AM32 ESC firmware through Betaflight/GIGFLIGHT 4-way passthrough over the active flight controller
+                USB connection. Load firmware, read ESCs, then flash selected ESCs. Keep props off and connect battery power
+                before flashing.
+            </p>
 
         <UAlert
             v-if="showConnectionWarning"
@@ -15,84 +67,54 @@
         />
         <UAlert v-if="error" class="mb-3" color="error" variant="soft" title="AM32 error" :description="error" />
 
-        <div class="flex flex-wrap items-center gap-2 mb-3">
-            <UButton type="button" color="primary" :loading="busy && activeOperation === 'read'" :disabled="busy" @click="readEscs">
-                Read ESCs
-            </UButton>
-            <UButton type="button" color="error" variant="outline" :disabled="!sessionActive || busy" @click="exitPassthrough">
-                Exit passthrough
-            </UButton>
-            <span v-if="sessionActive" class="text-sm text-dimmed">
-                4-way passthrough active · detected {{ expectedCount }} ESC{{ expectedCount === 1 ? "" : "s" }}
-            </span>
-        </div>
-
-        <div class="am32-flash-grid">
-            <div>
-                <h3>Detected ESCs</h3>
-                <div v-if="escRows.length === 0" class="text-dimmed">No AM32 ESCs loaded yet.</div>
-                <div v-else class="am32-flash-esc-grid">
-                    <div
-                        v-for="row in escRows"
-                        :key="row.index"
-                        class="am32-flash-esc-card"
-                        :class="{ selected: row.data?.isSelected, error: row.isError }"
-                    >
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="font-semibold">ESC {{ row.index + 1 }}</div>
-                            <UCheckbox
-                                v-if="row.data"
-                                :model-value="row.data.isSelected"
-                                :disabled="busy"
-                                @update:model-value="row.data.isSelected = Boolean($event)"
-                            />
-                        </div>
-                        <div v-if="row.isLoading" class="text-dimmed">Reading...</div>
-                        <div v-else-if="row.isError" class="text-error">{{ row.error }}</div>
-                        <template v-else-if="row.data">
-                            <div>{{ row.data.displayName }}</div>
-                            <div class="text-sm text-dimmed">
-                                Firmware {{ firmwareVersion(row.data) }} · EEPROM
-                                {{ row.data.settings.LAYOUT_REVISION ?? "?" }}
-                            </div>
-                            <div class="text-sm text-dimmed">
-                                Bootloader {{ row.data.bootloader.version || "?" }}
-                                <span v-if="row.data.bootloader.pin"> · {{ row.data.bootloader.pin }}</span>
-                            </div>
-                        </template>
+            <h3>Detected ESCs</h3>
+            <div v-if="escRows.length === 0" class="text-dimmed">No AM32 ESCs loaded yet.</div>
+            <div v-else class="am32-flash-esc-grid">
+                <div
+                    v-for="row in escRows"
+                    :key="row.index"
+                    class="am32-flash-esc-card"
+                    :class="{ selected: row.data?.isSelected, error: row.isError }"
+                >
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="font-semibold">ESC {{ row.index + 1 }}</div>
+                        <UCheckbox
+                            v-if="row.data"
+                            :model-value="row.data.isSelected"
+                            :disabled="busy"
+                            @update:model-value="row.data.isSelected = Boolean($event)"
+                        />
                     </div>
+                    <div v-if="row.isLoading" class="text-dimmed">Reading...</div>
+                    <div v-else-if="row.isError" class="text-error">{{ row.error }}</div>
+                    <template v-else-if="row.data">
+                        <div>{{ row.data.displayName }}</div>
+                        <div class="text-sm text-dimmed">
+                            Firmware {{ firmwareVersion(row.data) }} · EEPROM
+                            {{ row.data.settings.LAYOUT_REVISION ?? "?" }}
+                        </div>
+                        <div class="text-sm text-dimmed">
+                            Bootloader {{ row.data.bootloader.version || "?" }}
+                            <span v-if="row.data.bootloader.pin"> · {{ row.data.bootloader.pin }}</span>
+                        </div>
+                    </template>
                 </div>
             </div>
 
-            <div>
-                <h3>Firmware file</h3>
-                <input type="file" accept=".hex,text/plain" :disabled="busy" @change="onHexFile" />
-                <div v-if="hexFileName" class="text-sm text-dimmed mt-2">Loaded: {{ hexFileName }}</div>
-                <UButton
-                    type="button"
-                    class="mt-3"
-                    color="warning"
-                    :loading="busy && activeOperation === 'flash'"
-                    :disabled="!canFlash"
-                    @click="flashSelectedEscs"
-                >
-                    Flash selected ESCs
-                </UButton>
-                <UProgress v-if="busy || flashProgress > 0" class="mt-3" :model-value="flashProgress" />
-            </div>
-        </div>
-
-        <pre class="am32-flash-log">{{ logLines.join("\n") }}</pre>
-    </UiBox>
+            <pre class="am32-flash-log">{{ logLines.join("\n") }}</pre>
+        </UiBox>
+    </div>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import UiBox from "../../elements/UiBox.vue";
+import ProgressRing from "@/components/ProgressRing.vue";
 import { serial } from "../../../js/serial.js";
 import Am32FourWaySession from "../../../js/am32/four_way.js";
 import DeviceHandler from "../../../js/device_handler.js";
 import MSPConnectorImpl from "../../../js/msp/MSPConnector.js";
+import FileSystem from "../../../js/FileSystem.js";
 
 const session = new Am32FourWaySession();
 const mspConnector = new MSPConnectorImpl();
@@ -108,10 +130,57 @@ const hexFileName = ref("");
 const hexFileContent = ref("");
 const flashProgress = ref(0);
 const connectionAttempted = ref(false);
+const lastFlashResultText = ref("");
 
 const selectedEscRows = computed(() => escRows.value.filter((row) => row.data && row.data.isSelected && !row.isError));
 const canFlash = computed(() => Boolean(hexFileContent.value) && !busy.value);
+const canRead = computed(() => !busy.value);
+const canLoadOnlineFirmware = computed(() => false);
+const canLoadLocalFirmware = computed(() => !busy.value);
 const showConnectionWarning = computed(() => connectionAttempted.value && !fcConnected.value && !busy.value);
+const targetText = computed(() => "AM32 ESC via 4-way passthrough");
+const escStatusText = computed(() => {
+    if (busy.value && activeOperation.value === "read") {
+        return "Reading ESCs...";
+    }
+    if (escRows.value.length === 0) {
+        return "Not read";
+    }
+
+    const selectable = selectedEscRows.value.length;
+    return `${escRows.value.length} detected · ${selectable} selected`;
+});
+const firmwareStatusText = computed(() => {
+    if (!hexFileName.value) {
+        return "No firmware loaded";
+    }
+    return `${hexFileName.value} (${hexFileContent.value.length} bytes)`;
+});
+const flashStatusVisible = computed(() => busy.value || flashProgress.value > 0 || Boolean(error.value) || Boolean(lastFlashResultText.value));
+const flashStatusColor = computed(() => {
+    if (error.value) {
+        return "error";
+    }
+    if (flashProgress.value >= 100 && !busy.value) {
+        return "success";
+    }
+    return "primary";
+});
+const flashStatusText = computed(() => {
+    if (error.value) {
+        return error.value;
+    }
+    if (busy.value && activeOperation.value === "flash") {
+        return `Flashing AM32 ESCs (${Math.floor(flashProgress.value)}%). `;
+    }
+    if (busy.value && activeOperation.value === "read") {
+        return "Reading AM32 ESCs...";
+    }
+    if (busy.value && activeOperation.value === "load-local") {
+        return "Loading AM32 firmware...";
+    }
+    return lastFlashResultText.value || "Ready";
+});
 
 function firmwareVersion(esc) {
     return `${esc.settings.MAIN_REVISION ?? "?"}.${esc.settings.SUB_REVISION ?? "?"}`;
@@ -214,10 +283,38 @@ async function readEscs() {
     }
 }
 
-async function onHexFile(event) {
-    const file = event.target.files?.[0];
-    hexFileName.value = file?.name ?? "";
-    hexFileContent.value = file ? await file.text() : "";
+async function loadOnlineFirmware() {
+    addLog("AM32 online firmware loading is not configured yet. Use Load local firmware from the menu.");
+}
+
+async function loadLocalFirmware() {
+    if (!canLoadLocalFirmware.value) {
+        return;
+    }
+
+    busy.value = true;
+    activeOperation.value = "load-local";
+    error.value = "";
+    lastFlashResultText.value = "";
+    flashProgress.value = 0;
+
+    try {
+        const file = await FileSystem.pickOpenFile("AM32 HEX firmware", [".hex"]);
+        if (!file) {
+            return;
+        }
+
+        const content = await FileSystem.readFile(file);
+        hexFileName.value = file.name ?? "AM32 firmware.hex";
+        hexFileContent.value = content;
+        addLog(`Loaded local AM32 firmware: ${hexFileName.value} (${content.length} bytes).`);
+    } catch (loadError) {
+        error.value = loadError instanceof Error ? loadError.message : String(loadError);
+        addLog(error.value);
+    } finally {
+        busy.value = false;
+        activeOperation.value = "";
+    }
 }
 
 async function flashSelectedEscs() {
@@ -247,6 +344,8 @@ async function flashSelectedEscs() {
             });
             addLog(`Flashed ESC ${row.index + 1}. Re-read ESCs before flashing again.`);
         }
+        flashProgress.value = 100;
+        lastFlashResultText.value = `Flashed ${rows.length} AM32 ESC${rows.length === 1 ? "" : "s"}.`;
     } catch (flashError) {
         error.value = flashError instanceof Error ? flashError.message : String(flashError);
         addLog(error.value);
@@ -297,22 +396,70 @@ onBeforeUnmount(async () => {
     serial.removeEventListener("disconnect", updateFcConnected);
     await cleanupSession();
 });
+
+defineExpose({
+    busy,
+    activeOperation,
+    canRead,
+    canFlash,
+    canLoadOnlineFirmware,
+    canLoadLocalFirmware,
+    sessionActive,
+    loadOnlineFirmware,
+    loadLocalFirmware,
+    readEscs,
+    flashSelectedEscs,
+    exitPassthrough,
+});
 </script>
 
 <style lang="less">
 .tab-firmware_flasher,
 .tab-am32_flasher {
-    .am32-flash-grid {
+    .release_info_grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
-        gap: 1rem;
-        margin-top: 1rem;
+        grid-template-columns: auto 1fr auto;
+        gap: 1rem 2rem;
+        align-items: center;
+    }
 
-        h3 {
-            margin-bottom: 0.5rem;
-            font-size: 13px;
-            font-weight: 600;
-        }
+    .release_info_grid .info_row {
+        display: contents;
+    }
+
+    .release_info_grid strong {
+        text-align: right;
+        white-space: nowrap;
+        padding-right: 1rem;
+    }
+
+    .release_info_grid span,
+    .release_info_grid a {
+        text-align: left;
+    }
+
+    .status_ring_wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .status_text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.85rem;
+    }
+
+    .flash-status-error-text {
+        color: var(--error-500);
+        font-weight: 600;
+    }
+
+    h3 {
+        margin-bottom: 0.5rem;
+        font-size: 13px;
+        font-weight: 600;
     }
 
     .am32-flash-esc-grid {
