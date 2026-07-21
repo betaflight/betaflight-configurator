@@ -47,23 +47,13 @@
                     />
                 </SettingRow>
                 <SettingRow label="Online release" help="Loads a firmware .zip or .bin asset from timmyfpv/giglrs releases." full-width>
-                    <div class="giglrs-inline">
-                        <USelect
-                            v-model="selectedReleaseTag"
-                            :items="releaseItems"
-                            :loading="loadingReleases"
-                            :disabled="busy || loadingReleases || releases.length === 0"
-                            class="giglrs-select"
-                        />
-                        <UButton
-                            type="button"
-                            :loading="busy && activeOperation === 'load-online'"
-                            :disabled="busy || !selectedRelease"
-                            @click="loadOnlineFirmware"
-                        >
-                            Load online
-                        </UButton>
-                    </div>
+                    <USelect
+                        v-model="selectedReleaseTag"
+                        :items="releaseItems"
+                        :loading="loadingReleases"
+                        :disabled="busy || loadingReleases || releases.length === 0"
+                        class="giglrs-select"
+                    />
                 </SettingRow>
                 <div v-if="!loadingReleases && releases.length === 0" class="text-sm text-dimmed mt-2">
                     No GIGLRS firmware release artifacts found yet. Publish a firmware .zip or .bin asset.
@@ -114,25 +104,20 @@
     </UiBox>
 
     <UiBox title="Flash" type="neutral" class="mt-4">
-        <div class="giglrs-inline mb-3">
-            <UButton
-                type="button"
-                color="warning"
-                :loading="busy && activeOperation === 'flash'"
-                :disabled="!canFlash"
-                @click="flashReceiver"
-            >
-                Flash receiver
-            </UButton>
-            <UButton type="button" color="error" variant="outline" :disabled="!passthrough.active.value || busy" @click="stopPassthrough">
-                Close passthrough
-            </UButton>
+        <div class="giglrs-inline giglrs-status-line mb-3">
             <span v-if="passthrough.active.value" class="text-sm text-dimmed">RX serial passthrough active</span>
+            <span v-else-if="firmwareFileName" class="text-sm text-dimmed">
+                Firmware loaded. Use the bottom toolbar to flash the receiver.
+            </span>
+            <span v-else class="text-sm text-dimmed">
+                Choose a release and use the bottom toolbar to load firmware.
+            </span>
         </div>
 
         <UProgress v-if="busy || flashProgress > 0" class="mb-3" :model-value="flashProgress" />
         <pre class="giglrs-log">{{ logLines.join("\n") }}</pre>
     </UiBox>
+
 </template>
 
 <script setup>
@@ -200,8 +185,8 @@ const regionItems = [
     { label: "LBT / EU CE 2.4GHz", value: "LBT" },
 ];
 const canFlash = computed(() => Boolean(selectedTarget.value && firmwareFiles.value.length > 0) && !busy.value);
+const canLoadOnlineFirmware = computed(() => Boolean(selectedRelease.value) && !busy.value);
 const showConnectionWarning = computed(() => connectionAttempted.value && !fcConnected.value && !busy.value);
-
 function addLog(message) {
     const timestamp = new Date().toLocaleTimeString();
     logLines.value = [...logLines.value.slice(-100), `[${timestamp}] ${message}`];
@@ -621,6 +606,17 @@ watch(selectedRegion, async () => {
         error.value = regionError instanceof Error ? regionError.message : String(regionError);
         addLog(error.value);
     }
+});
+
+defineExpose({
+    canFlash,
+    canLoadOnlineFirmware,
+    busy,
+    activeOperation,
+    passthroughActive: passthrough.active,
+    flashReceiver,
+    loadOnlineFirmware,
+    stopPassthrough,
 });
 </script>
 

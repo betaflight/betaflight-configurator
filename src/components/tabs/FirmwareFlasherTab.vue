@@ -44,7 +44,7 @@
                     />
                 </div>
             </template>
-            <FlasherElrsTab v-else-if="firmwareType === 'elrs'" />
+            <FlasherElrsTab v-else-if="firmwareType === 'elrs'" ref="elrsFlasher" />
             <FlasherAm32Tab v-else-if="firmwareType === 'am32'" />
         </div>
 
@@ -82,6 +82,35 @@
                         square
                     />
                 </UDropdownMenu>
+            </UFieldGroup>
+        </div>
+        <div v-if="firmwareType === 'elrs'" class="content_toolbar toolbar_fixed_bottom">
+            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+                <UButton
+                    :disabled="!elrsCanFlash"
+                    :color="elrsCanFlash ? 'success' : 'neutral'"
+                    :loading="elrsBusy && elrsActiveOperation === 'flash'"
+                    @click="handleElrsFlashFirmware"
+                >
+                    {{ $t("firmwareFlasherFlashFirmware") }}
+                </UButton>
+                <UDropdownMenu v-slot="{ open }" :items="elrsFlashActionMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton
+                        :color="elrsCanFlash ? 'success' : 'neutral'"
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('firmwareFlasherFlashFirmwareOptions')"
+                        square
+                    />
+                </UDropdownMenu>
+            </UFieldGroup>
+            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+                <UButton
+                    :disabled="!elrsCanLoadOnlineFirmware"
+                    :loading="elrsBusy && elrsActiveOperation === 'load-online'"
+                    @click="handleElrsLoadOnlineFirmware"
+                >
+                    {{ $t("firmwareFlasherButtonLoadOnline") }}
+                </UButton>
             </UFieldGroup>
         </div>
 
@@ -177,6 +206,7 @@ export default defineComponent({
         const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
         const firmwareType = ref(serial.connected ? "am32" : "betaflight");
+        const elrsFlasher = ref(null);
         const firmwareTypeOptions = [
             { value: "betaflight", label: "Betaflight / GIGFlight" },
             { value: "elrs", label: "ELRS / GIGLRS" },
@@ -1431,6 +1461,46 @@ export default defineComponent({
             return [group];
         });
 
+        const getElrsExposedValue = (key, fallback = false) => {
+            const value = elrsFlasher.value?.[key];
+            return value?.value ?? value ?? fallback;
+        };
+
+        const elrsCanFlash = computed(() => Boolean(getElrsExposedValue("canFlash")));
+        const elrsCanLoadOnlineFirmware = computed(() => Boolean(getElrsExposedValue("canLoadOnlineFirmware")));
+        const elrsBusy = computed(() => Boolean(getElrsExposedValue("busy")));
+        const elrsActiveOperation = computed(() => String(getElrsExposedValue("activeOperation", "")));
+        const elrsPassthroughActive = computed(() => Boolean(getElrsExposedValue("passthroughActive")));
+
+        const handleElrsFlashFirmware = () => {
+            elrsFlasher.value?.flashReceiver?.();
+        };
+
+        const handleElrsLoadOnlineFirmware = () => {
+            elrsFlasher.value?.loadOnlineFirmware?.();
+        };
+
+        const handleElrsStopPassthrough = () => {
+            elrsFlasher.value?.stopPassthrough?.();
+        };
+
+        const elrsFlashActionMenuItems = computed(() => [
+            [
+                {
+                    label: $t("firmwareFlasherFlashFirmware"),
+                    icon: "i-lucide-zap",
+                    disabled: !elrsCanFlash.value,
+                    onSelect: handleElrsFlashFirmware,
+                },
+                {
+                    label: "Close passthrough",
+                    icon: "i-lucide-unplug",
+                    disabled: !elrsPassthroughActive.value || elrsBusy.value,
+                    onSelect: handleElrsStopPassthrough,
+                },
+            ],
+        ]);
+
         const flashRingColor = computed(() => {
             switch (state.progressLabelClass) {
                 case "invalid":
@@ -1455,12 +1525,18 @@ export default defineComponent({
         return {
             state,
             firmwareType,
+            elrsFlasher,
             firmwareTypeOptions,
             flashRingColor,
             activeFlasherStep,
             subtabItems,
             flashActionMenuItems,
             loadFirmwareMenuItems,
+            elrsCanFlash,
+            elrsCanLoadOnlineFirmware,
+            elrsBusy,
+            elrsActiveOperation,
+            elrsFlashActionMenuItems,
             cloudBuild,
             boardSelection,
             FLASH_MESSAGE_TYPES,
@@ -1490,6 +1566,8 @@ export default defineComponent({
             handleFlashFirmware,
             handleLoadRemoteFile,
             handleLoadFile,
+            handleElrsFlashFirmware,
+            handleElrsLoadOnlineFirmware,
             handleDetectBoard,
             handleRequestDfuPermission,
             showDfuButton,
