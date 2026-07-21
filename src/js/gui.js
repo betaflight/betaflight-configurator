@@ -45,6 +45,7 @@ class GuiControl {
             "onboard_logging",
             "modes",
             "motors",
+            "am32",
             "pid_tuning",
             "autotune",
             "ports",
