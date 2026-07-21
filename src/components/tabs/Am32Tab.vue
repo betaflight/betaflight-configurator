@@ -130,17 +130,20 @@
                                             v-for="field in visibleFields(group.fields)"
                                             :key="field.field"
                                             class="am32-field"
+                                            :class="{ 'am32-field-disabled': isFieldDisabled(field) }"
                                         >
                                             <span>{{ field.label }}</span>
                                             <UCheckbox
                                                 v-if="field.type === 'switch'"
                                                 :model-value="getSetting(field.field) === 1"
+                                                :disabled="isFieldDisabled(field)"
                                                 @update:model-value="setSetting(field.field, $event ? 1 : 0)"
                                             />
                                             <USelect
                                                 v-else-if="field.type === 'select'"
                                                 :model-value="getSetting(field.field)"
                                                 :items="field.options"
+                                                :disabled="isFieldDisabled(field)"
                                                 @update:model-value="setSetting(field.field, Number($event))"
                                             />
                                             <div v-else class="flex items-center gap-2">
@@ -149,9 +152,12 @@
                                                     :min="getFieldMin(field)"
                                                     :max="getFieldMax(field)"
                                                     :step="getFieldStep(field)"
+                                                    :disabled="isFieldDisabled(field)"
                                                     @update:model-value="setDisplaySetting(field, Number($event))"
                                                 />
-                                                <span v-if="field.unit" class="text-sm text-dimmed">{{ field.unit }}</span>
+                                                <span v-if="getFieldUnit(field)" class="text-sm text-dimmed">
+                                                    {{ getFieldUnit(field) }}
+                                                </span>
                                             </div>
                                         </label>
                                     </div>
@@ -198,6 +204,12 @@ const protocolOptions = [
     { value: 4, label: "EDT ARM" },
 ];
 
+const pwmTypeOptions = [
+    { value: 0, label: "Fixed" },
+    { value: 1, label: "Variable" },
+    { value: 2, label: "By RPM" },
+];
+
 const settingGroups = [
     {
         title: "Essentials",
@@ -215,13 +227,13 @@ const settingGroups = [
             { field: "STARTUP_POWER", label: "Startup power", min: 0, max: 255 },
             { field: "MOTOR_KV", label: "Motor KV", min: 0, max: 255 },
             { field: "MOTOR_POLES", label: "Motor poles", min: 0, max: 255 },
-            { field: "PWM_FREQUENCY", label: "PWM frequency", min: 0, max: 255 },
+            { field: "PWM_FREQUENCY", label: "PWM frequency", min: 8, max: 144, unit: "kHz" },
             { field: "BEEP_VOLUME", label: "Beep volume", min: 0, max: 255 },
             { field: "STUCK_ROTOR_PROTECTION", label: "Stuck rotor protection", type: "switch" },
             { field: "STALL_PROTECTION", label: "Stall protection", type: "switch" },
             { field: "COMPLEMENTARY_PWM", label: "Complementary PWM", type: "switch" },
             { field: "AUTO_ADVANCE", label: "Auto timing advance", type: "switch" },
-            { field: "VARIABLE_PWM_FREQUENCY", label: "Variable PWM", type: "switch" },
+            { field: "VARIABLE_PWM_FREQUENCY", label: "PWM Type", type: "select", options: pwmTypeOptions },
         ],
     },
     {
@@ -335,6 +347,9 @@ function getFieldMax(field) {
     if (field.type === "timing") {
         return getLayoutVersion() >= 3 ? 30 : 22.5;
     }
+    if (field.field === "PWM_FREQUENCY" && getLayoutVersion() < 3) {
+        return 48;
+    }
     return field.max ?? 255;
 }
 
@@ -343,6 +358,37 @@ function getFieldStep(field) {
         return getLayoutVersion() >= 3 ? 0.9375 : 7.5;
     }
     return field.step ?? 1;
+}
+
+function isFieldDisabled(field) {
+    if (field.field === "TIMING_ADVANCE") {
+        return getSetting("AUTO_ADVANCE") === 1;
+    }
+    if (field.field === "PWM_FREQUENCY") {
+        return getSetting("VARIABLE_PWM_FREQUENCY") === 2;
+    }
+    return false;
+}
+
+function formatSettingNumber(value) {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) {
+        return String(value);
+    }
+    return Number.isInteger(numericValue) ? String(numericValue) : String(Number(numericValue.toFixed(4)));
+}
+
+function getFieldUnit(field) {
+    if (field.field === "PWM_FREQUENCY") {
+        const pwmType = getSetting("VARIABLE_PWM_FREQUENCY");
+        if (pwmType === 1) {
+            return `kHz - ${formatSettingNumber(getDisplaySetting(field) * 2)} kHz`;
+        }
+        if (pwmType === 2) {
+            return "by RPM";
+        }
+    }
+    return field.unit ?? "";
 }
 
 async function ensureSession() {
@@ -521,6 +567,14 @@ onBeforeUnmount(async () => {
         grid-template-columns: 1fr minmax(120px, 170px);
         align-items: center;
         gap: 0.75rem;
+    }
+
+    .am32-field-disabled {
+        opacity: 0.48;
+
+        > *:not(:first-child) {
+            filter: blur(0.8px);
+        }
     }
 
     .am32-log {
