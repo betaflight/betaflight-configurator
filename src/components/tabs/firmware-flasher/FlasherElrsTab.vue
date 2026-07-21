@@ -105,7 +105,7 @@
 
     <UiBox title="Flash" type="neutral" class="mt-4">
         <div class="giglrs-inline giglrs-status-line mb-3">
-            <span v-if="passthrough.active.value" class="text-sm text-dimmed">RX serial passthrough active</span>
+            <span v-if="passthroughActive" class="text-sm text-dimmed">RX serial passthrough active</span>
             <span v-else-if="firmwareFileName" class="text-sm text-dimmed">
                 Firmware loaded. Use the bottom toolbar to flash the receiver.
             </span>
@@ -121,7 +121,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from "vue";
 import CryptoES from "crypto-es";
 import { unzip } from "unzipit";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -130,14 +130,15 @@ import { serial } from "@/js/serial.js";
 import DeviceHandler from "@/js/device_handler.js";
 import MSPConnectorImpl from "@/js/msp/MSPConnector.js";
 import BuildApi from "@/js/BuildApi.js";
-import { FcSerialPortFunction, useFcSerialPassthrough } from "@/composables/useFcSerialPassthrough";
 import { appendUnifiedConfiguration, isEsp32Platform, normalizeEspPlatform } from "@/js/elrs/unified_config.js";
-import { ElrsPassthroughTransport, elrsBootloaderInitSequence } from "@/js/elrs/passthrough_transport.js";
+import { elrsBootloaderInitSequence } from "@/js/elrs/passthrough_transport.js";
+import ElrsWebFlasherTransport from "@/js/elrs/web_flasher_transport.js";
 
 const buildApi = new BuildApi();
 const mspConnector = new MSPConnectorImpl();
-const passthrough = useFcSerialPassthrough();
-const BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE = 0x0400;
+const activeTransport = shallowRef(null);
+const passthroughActive = ref(false);
+const BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE = 0x0800;
 
 const targets = ref([]);
 const releases = ref([]);
@@ -454,7 +455,7 @@ async function loadOnlineFirmware() {
     }
 }
 
-async function ensureFcPassthroughPort(baudrate) {
+async function ensureNativeWebSerialPort() {
     connectionAttempted.value = true;
 
     if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
@@ -469,6 +470,12 @@ async function ensureFcPassthroughPort(baudrate) {
         throw new Error("No flight controller USB device selected.");
     }
 
+    const serialProtocol = serial.selectProtocol(DeviceHandler.devicePicker.selectedDevice);
+    const nativePort = serialProtocol?.getNativePort?.(DeviceHandler.devicePicker.selectedDevice);
+    if (!nativePort) {
+        throw new Error("GIGLRS Betaflight passthrough flashing currently requires a browser Web Serial port.");
+    }
+
     if (serial.connected) {
         mspConnector.detach();
         await serial.disconnect();
@@ -476,37 +483,89 @@ async function ensureFcPassthroughPort(baudrate) {
         await sleep(100);
     }
 
-    addLog(`Opening flight controller for GIGLRS passthrough at ${baudrate} baud...`);
-    const opened = await serial.connect(DeviceHandler.devicePicker.selectedDevice, { baudRate: baudrate });
-    if (!opened) {
-        throw new Error("Could not open the flight controller serial port.");
+    if (serialProtocol.connected) {
+        await serialProtocol.disconnect();
     }
-    updateFcConnected();
-    return true;
+
+    fcConnected.value = true;
+    return nativePort;
 }
 
-async function ensurePassthrough() {
-    if (!passthrough.active.value) {
-        const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
-        await passthrough.start({
-            baudrate,
-            method: "cli",
-            name: selectedTarget.value.productName,
-            portFunction: FcSerialPortFunction.RX_SERIAL,
-        });
-        const serialRxPort = passthrough.target.value?.serialRxPort;
-        addLog(
-            serialRxPort
-                ? `RX serial passthrough opened through ${serialRxPort} at ${baudrate} baud.`
-                : `RX serial passthrough opened at ${baudrate} baud.`,
-        );
+async function validateSerialRxSetting(transport, settingName, expectedValues) {
+    await transport.writeString(`get ${settingName}\r\n`);
+    const line = await transport.readLine(100);
+    return expectedValues.some((expected) => line.trim().includes(` = ${expected}`));
+}
+
+async function openBetaflightPassthrough(transport, baudrate) {
+    addLog("Initializing Betaflight RX serial passthrough...");
+    await transport.writeString("#");
+    transport.setDelimiters(["# ", "CCC"]);
+    const prompt = await transport.readLine(200);
+
+    if (prompt.includes("CCC")) {
+        passthroughActive.value = true;
+        addLog("Passthrough already active and receiver bootloader is responding.");
+        return;
     }
+
+    if (!prompt.trim().endsWith("#")) {
+        passthroughActive.value = true;
+        addLog("Betaflight CLI prompt not detected; assuming passthrough is already active.");
+        return;
+    }
+
+    transport.setDelimiters(["# "]);
+    const serialCheck = [];
+    if (!(await validateSerialRxSetting(transport, "serialrx_provider", ["CRSF", "ELRS"]))) {
+        serialCheck.push("Serial Receiver Protocol must be CRSF/ELRS.");
+    }
+    if (!(await validateSerialRxSetting(transport, "serialrx_inverted", ["OFF"]))) {
+        serialCheck.push("Serial RX must not be inverted.");
+    }
+    if (!(await validateSerialRxSetting(transport, "serialrx_halfduplex", ["OFF", "AUTO"]))) {
+        serialCheck.push("Serial RX half-duplex must be OFF or AUTO.");
+    }
+    if (serialCheck.length > 0) {
+        throw new Error(`Invalid Betaflight RX serial configuration: ${serialCheck.join(" ")}`);
+    }
+
+    addLog("Detecting Betaflight Serial RX UART...");
+    await transport.writeString("serial\r\n");
+    transport.setDelimiters(["\n"]);
+    let serialRxPort = "";
+    while (true) {
+        const line = await transport.readLine(200);
+        if (line === "") {
+            break;
+        }
+        const match = line.match(/serial\s+(?<port>(UART)?[0-9]+)\s+(?<portConfig>[0-9]+)\s+/i);
+        if (match?.groups && (Number.parseInt(match.groups.portConfig, 10) & 64) === 64) {
+            serialRxPort = match.groups.port;
+            break;
+        }
+    }
+
+    if (!serialRxPort) {
+        throw new Error("Could not detect the Betaflight Serial RX UART for passthrough.");
+    }
+
+    await transport.writeString(`serialpassthrough ${serialRxPort} ${baudrate}\r\n`);
+    await sleep(200);
+    for (let i = 0; i < 10; i++) {
+        await transport.readLine(200);
+    }
+
+    passthroughActive.value = true;
+    addLog(`RX serial passthrough opened through ${serialRxPort} at ${baudrate} baud.`);
 }
 
 async function stopPassthrough() {
     error.value = "";
     try {
-        await passthrough.stop();
+        await activeTransport.value?.disconnect?.();
+        activeTransport.value = null;
+        passthroughActive.value = false;
         updateFcConnected();
         addLog("RX serial passthrough closed.");
     } catch (stopError) {
@@ -531,23 +590,28 @@ async function prepareFirmware() {
 }
 
 async function enterReceiverBootloader(transport) {
-    const training = new Uint8Array([0x07, 0x07, 0x12, 0x20, ...Array.from({ length: 32 }, () => 0x55)]);
-    transport.flushInput();
-    await passthrough.write(training);
+    addLog("Resetting receiver to ELRS bootloader...");
+    transport.setDelimiters(["\n"]);
+    while ((await transport.readLine(100)) !== "") {}
+    const training = new Uint8Array(32);
+    training.fill(0x55);
+    await transport.writeArray(new Uint8Array([0x07, 0x07, 0x12, 0x20]));
+    await transport.writeArray(training);
     await sleep(200);
-    await passthrough.write(elrsBootloaderInitSequence());
+    await transport.writeArray(elrsBootloaderInitSequence());
     await sleep(200);
-    const response = await transport.rawReadFor(200);
-    const text = new TextDecoder("utf-8")
-        .decode(response)
-        .replace(/[^\x20-\x7e]+/g, " ")
-        .trim();
-    if (text) {
-        addLog(`Receiver bootloader response: ${text}`);
+
+    const rxTarget = (await transport.readLine(200)).trim();
+    if (rxTarget) {
+        addLog(`Receiver bootloader target: ${rxTarget}`);
+        if (selectedTarget.value?.firmware && rxTarget.toUpperCase() !== selectedTarget.value.firmware.toUpperCase()) {
+            throw new Error(`Wrong GIGLRS target selected: receiver reports '${rxTarget}', selected '${selectedTarget.value.firmware}'.`);
+        }
     } else {
-        addLog("Receiver bootloader response not detected; continuing with ESP sync.");
+        addLog("Receiver bootloader target not detected; continuing with ESP sync.");
     }
-    transport.flushInput();
+
+    addLog("Receiver bootloader enabled.");
     await sleep(500);
 }
 
@@ -573,13 +637,16 @@ async function flashReceiver() {
             addLog(`Flash file: ${basename(file.name)} @ 0x${file.address.toString(16)} (${file.data.byteLength} bytes).`);
         });
 
-        if (!(await ensureFcPassthroughPort(baudrate))) {
-            return;
-        }
+        const nativePort = await ensureNativeWebSerialPort();
+        transport = new ElrsWebFlasherTransport(nativePort, false);
+        activeTransport.value = transport;
 
-        await ensurePassthrough();
-        transport = new ElrsPassthroughTransport(passthrough);
+        addLog(`Opening flight controller for GIGLRS passthrough at ${baudrate} baud...`);
+        await transport.connect(baudrate);
+        await openBetaflightPassthrough(transport, baudrate);
         await enterReceiverBootloader(transport);
+        await transport.disconnect();
+        passthroughActive.value = false;
 
         const { ESPLoader } = await import("esptool-js");
         const terminal = {
@@ -596,8 +663,7 @@ async function flashReceiver() {
         // esptool-js has historically ignored romBaudrate in some releases; keep this explicit.
         loader.romBaudrate = baudrate;
         loader.baudrate = baudrate;
-        // Keep passthrough blocks conservative because this path is routed through
-        // Betaflight's shared serial event loop before reaching the receiver UART.
+        // Match the official ELRS web flasher: Betaflight passthrough uses 2048-byte chunks.
         loader.ESP_RAM_BLOCK = 0x0800;
         loader.FLASH_WRITE_SIZE = BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE;
         const originalFlashDeflFinish = loader.flashDeflFinish.bind(loader);
@@ -612,7 +678,7 @@ async function flashReceiver() {
             }
         };
 
-        addLog("Connecting to ESP bootloader...");
+        addLog("Reopening passthrough serial port and connecting to ESP bootloader...");
         const chip = await loader.main("no_reset");
         assertDetectedChipMatchesTarget(chip, selectedTarget.value);
         addLog(`Detected ${chip}. Flashing ${configuredFirmware.length} file${configuredFirmware.length === 1 ? "" : "s"}...`);
@@ -653,7 +719,9 @@ async function flashReceiver() {
             addLog(`Recent receiver output: ${recentText.slice(-500)}`);
         }
     } finally {
-        await transport?.disconnect?.();
+        await transport?.disconnect?.().catch(() => {});
+        activeTransport.value = null;
+        passthroughActive.value = false;
         busy.value = false;
         activeOperation.value = "";
     }
@@ -670,7 +738,7 @@ onBeforeUnmount(async () => {
     serial.removeEventListener("connect", updateFcConnected);
     serial.removeEventListener("disconnect", updateFcConnected);
     mspConnector.detach();
-    if (passthrough.active.value) {
+    if (passthroughActive.value || activeTransport.value) {
         await stopPassthrough();
     }
 });
@@ -705,7 +773,7 @@ defineExpose({
     canLoadOnlineFirmware,
     busy,
     activeOperation,
-    passthroughActive: passthrough.active,
+    passthroughActive,
     flashReceiver,
     loadOnlineFirmware,
     stopPassthrough,
