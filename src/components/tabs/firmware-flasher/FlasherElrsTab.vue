@@ -34,6 +34,18 @@
 
             <div>
                 <h3>Firmware file</h3>
+                <SettingRow
+                    label="Regulatory domain"
+                    help="Matches the ExpressLRS web-flasher firmware/FCC and firmware/LBT artifact folders."
+                    full-width
+                >
+                    <USelect
+                        v-model="selectedRegion"
+                        :items="regionItems"
+                        :disabled="busy"
+                        class="giglrs-select"
+                    />
+                </SettingRow>
                 <SettingRow label="Online release" help="Loads a firmware .zip or .bin asset from timmyfpv/giglrs releases." full-width>
                     <div class="giglrs-inline">
                         <USelect
@@ -64,7 +76,7 @@
                     <input type="file" accept=".zip,.bin,application/zip,application/octet-stream" :disabled="busy" @change="onFirmwareFile" />
                 </SettingRow>
                 <div v-if="firmwareFileName" class="text-sm text-dimmed mt-2">
-                    Loaded: {{ firmwareFileName }} · {{ firmwareFiles.length }} file{{ firmwareFiles.length === 1 ? "" : "s" }}
+                    Loaded: {{ firmwareFileName }} · {{ selectedRegion }} · {{ firmwareFiles.length }} file{{ firmwareFiles.length === 1 ? "" : "s" }}
                 </div>
             </div>
         </div>
@@ -151,8 +163,10 @@ const targets = ref([]);
 const releases = ref([]);
 const selectedTargetId = ref("");
 const selectedReleaseTag = ref("");
+const selectedRegion = ref("FCC");
 const firmwareFileName = ref("");
 const firmwareFiles = ref([]);
+const firmwareSource = ref(null);
 const busy = ref(false);
 const activeOperation = ref("");
 const loadingTargets = ref(false);
@@ -188,6 +202,10 @@ const releaseItems = computed(() =>
         value: release.tag,
     })),
 );
+const regionItems = [
+    { label: "FCC / ISM 2.4GHz", value: "FCC" },
+    { label: "LBT / EU CE 2.4GHz", value: "LBT" },
+];
 const canFlash = computed(() => Boolean(selectedTarget.value && firmwareFiles.value.length > 0) && !busy.value);
 const showConnectionWarning = computed(() => connectionAttempted.value && !fcConnected.value && !busy.value);
 
@@ -222,19 +240,41 @@ function pathMatchesTarget(entryPath, target) {
     return firmware && lowerPath.includes(`/${firmware.toLowerCase()}/`);
 }
 
+function pathMatchesRegion(entryPath, region) {
+    return String(entryPath || "")
+        .toLowerCase()
+        .split("/")
+        .includes(String(region || "").toLowerCase());
+}
+
 async function readZipEntry(entry) {
     return new Uint8Array(await entry.arrayBuffer());
 }
 
-async function extractFirmwareZip(bytes, target) {
+async function extractFirmwareZip(bytes, target, region) {
     const { entries } = await unzip(new Blob([bytes]));
     const files = Object.entries(entries)
         .filter(([, entry]) => !entry.isDirectory)
         .map(([path, entry]) => ({ path, entry }));
+    const targetFiles = files.filter((file) => pathMatchesTarget(file.path, target));
+    const archiveHasRegionFolders = targetFiles.some(
+        (file) => pathMatchesRegion(file.path, "FCC") || pathMatchesRegion(file.path, "LBT"),
+    );
+    const regionTargetFiles = targetFiles.filter((file) => pathMatchesRegion(file.path, region));
+
+    if (archiveHasRegionFolders && regionTargetFiles.length === 0) {
+        throw new Error(`No ${region} build found in the selected archive for ${target.productName}.`);
+    }
 
     const findByName = (name) => {
         const lowerName = name.toLowerCase();
         return (
+            files.find(
+                (file) =>
+                    basename(file.path).toLowerCase() === lowerName &&
+                    pathMatchesTarget(file.path, target) &&
+                    (!archiveHasRegionFolders || pathMatchesRegion(file.path, region)),
+            ) ||
             files.find((file) => basename(file.path).toLowerCase() === lowerName && pathMatchesTarget(file.path, target)) ||
             files.find((file) => basename(file.path).toLowerCase() === lowerName)
         );
@@ -293,7 +333,7 @@ async function buildFirmwareFilesFromBytes(name, bytes) {
     }
 
     if (isZipBytes(name, bytes)) {
-        const files = await extractFirmwareZip(bytes, selectedTarget.value);
+        const files = await extractFirmwareZip(bytes, selectedTarget.value, selectedRegion.value);
         if (files.length === 1) {
             addLog("Archive contained only firmware.bin; flashing application image only.");
         }
@@ -308,6 +348,15 @@ async function buildFirmwareFilesFromBytes(name, bytes) {
             configure: true,
         },
     ];
+}
+
+async function loadFirmwareBytes(name, bytes, displayName) {
+    firmwareSource.value = { name, bytes, displayName };
+    firmwareFiles.value = await buildFirmwareFilesFromBytes(name, bytes);
+    firmwareFileName.value = displayName || name;
+    addLog(
+        `Selected ${selectedRegion.value} firmware (${firmwareFiles.value.length} flash file${firmwareFiles.value.length === 1 ? "" : "s"}).`,
+    );
 }
 
 function updateFcConnected() {
@@ -365,8 +414,7 @@ async function loadOnlineFirmware() {
         if (!bytes?.byteLength) {
             throw new Error("The selected GIGLRS firmware asset could not be loaded.");
         }
-        firmwareFiles.value = await buildFirmwareFilesFromBytes(asset.name, bytes);
-        firmwareFileName.value = `${selectedRelease.value.tag}/${asset.name}`;
+        await loadFirmwareBytes(asset.name, bytes, `${selectedRelease.value.tag}/${asset.name}`);
         addLog(`Loaded ${asset.name} (${bytes.byteLength} bytes, ${firmwareFiles.value.length} flash file${firmwareFiles.value.length === 1 ? "" : "s"}).`);
     } catch (loadError) {
         error.value = loadError instanceof Error ? loadError.message : String(loadError);
@@ -381,10 +429,11 @@ async function onFirmwareFile(event) {
     const file = event.target.files?.[0];
     firmwareFileName.value = file?.name ?? "";
     firmwareFiles.value = [];
+    firmwareSource.value = null;
     if (file) {
         try {
             const bytes = new Uint8Array(await file.arrayBuffer());
-            firmwareFiles.value = await buildFirmwareFilesFromBytes(file.name, bytes);
+            await loadFirmwareBytes(file.name, bytes, file.name);
             addLog(`Loaded offline firmware ${file.name} (${bytes.byteLength} bytes, ${firmwareFiles.value.length} flash file${firmwareFiles.value.length === 1 ? "" : "s"}).`);
         } catch (loadError) {
             error.value = loadError instanceof Error ? loadError.message : String(loadError);
@@ -576,7 +625,26 @@ onBeforeUnmount(async () => {
 watch(selectedTargetId, () => {
     firmwareFiles.value = [];
     firmwareFileName.value = "";
+    firmwareSource.value = null;
     void loadReleases();
+});
+
+watch(selectedRegion, async () => {
+    if (!firmwareSource.value) {
+        return;
+    }
+
+    error.value = "";
+    try {
+        firmwareFiles.value = await buildFirmwareFilesFromBytes(firmwareSource.value.name, firmwareSource.value.bytes);
+        addLog(
+            `Switched loaded firmware to ${selectedRegion.value} (${firmwareFiles.value.length} flash file${firmwareFiles.value.length === 1 ? "" : "s"}).`,
+        );
+    } catch (regionError) {
+        firmwareFiles.value = [];
+        error.value = regionError instanceof Error ? regionError.message : String(regionError);
+        addLog(error.value);
+    }
 });
 </script>
 
