@@ -279,6 +279,10 @@ export default class Am32FourWaySession extends EventTarget {
         return this.sendWithPromise(FOUR_WAY_COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
     }
 
+    reset(target) {
+        return this.sendWithPromise(FOUR_WAY_COMMANDS.cmd_DeviceReset, [target], 0);
+    }
+
     readAddress(address, bytes, retries = 10, timeout = 250) {
         return this.sendWithPromise(
             FOUR_WAY_COMMANDS.cmd_DeviceRead,

@@ -181,6 +181,7 @@ const flashStatusText = computed(() => {
     }
     return lastFlashResultText.value || "Ready";
 });
+const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 function firmwareVersion(esc) {
     return `${esc.settings.MAIN_REVISION ?? "?"}.${esc.settings.SUB_REVISION ?? "?"}`;
@@ -334,15 +335,41 @@ async function flashSelectedEscs() {
         if (rows.length === 0) {
             throw new Error("No selectable AM32 ESCs detected.");
         }
+        addLog(`Flashing ${rows.length} selected ESC${rows.length === 1 ? "" : "s"} sequentially.`);
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
-            addLog(`Flashing ESC ${row.index + 1} with ${hexFileName.value}...`);
+            let nextProgressLog = 10;
+
+            addLog(`ESC ${row.index + 1}: writing ${hexFileName.value}...`);
             await session.writeHex(row.index, hexFileContent.value, {
                 onProgress: (progress) => {
                     flashProgress.value = ((i + progress / 100) / rows.length) * 100;
+                    const wholeProgress = Math.floor(progress);
+                    if (wholeProgress >= nextProgressLog || wholeProgress === 100) {
+                        addLog(`ESC ${row.index + 1}: write ${Math.min(100, wholeProgress)}%.`);
+                        nextProgressLog += 10;
+                    }
                 },
             });
-            addLog(`Flashed ESC ${row.index + 1}. Re-read ESCs before flashing again.`);
+
+            addLog(`ESC ${row.index + 1}: resetting...`);
+            await session.reset(row.index);
+            addLog(`ESC ${row.index + 1}: rebooting, waiting 5 seconds...`);
+            await delay(5000);
+
+            try {
+                addLog(`ESC ${row.index + 1}: reading after reboot...`);
+                row.data = await session.getInfo(row.index, 20);
+                row.data.isSelected = true;
+                row.isError = false;
+                row.error = "";
+                addLog(`ESC ${row.index + 1}: rebooted and read as ${row.data.displayName}.`);
+            } catch (readAfterResetError) {
+                row.isError = true;
+                row.error =
+                    readAfterResetError instanceof Error ? readAfterResetError.message : String(readAfterResetError);
+                addLog(`ESC ${row.index + 1}: flashed, but re-read after reboot failed: ${row.error}`);
+            }
         }
         flashProgress.value = 100;
         lastFlashResultText.value = `Flashed ${rows.length} AM32 ESC${rows.length === 1 ? "" : "s"}.`;
