@@ -305,10 +305,6 @@ class GuiControl {
         }
     }
     selectDefaultTabWhenConnected() {
-        if (this.active_tab === "firmware_flasher" && this.allowedTabs.includes("firmware_flasher")) {
-            return;
-        }
-
         const result = getConfig(["rememberLastTab", "lastTab"]);
         const tabClass =
             result.rememberLastTab && result.lastTab && this.allowedTabs.includes(result.lastTab.substring(4))
