@@ -439,12 +439,20 @@ async function ensureFcConnected() {
 
 async function ensurePassthrough() {
     if (!passthrough.active.value) {
+        const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
+        mspConnector.detach();
         await passthrough.start({
+            baudrate,
+            method: "cli",
             name: selectedTarget.value.productName,
             portFunction: FcSerialPortFunction.RX_SERIAL,
         });
-        mspConnector.detach();
-        addLog("RX serial passthrough opened.");
+        const serialRxPort = passthrough.target.value?.serialRxPort;
+        addLog(
+            serialRxPort
+                ? `RX serial passthrough opened through ${serialRxPort} at ${baudrate} baud.`
+                : `RX serial passthrough opened at ${baudrate} baud.`,
+        );
     }
 }
 
