@@ -3,8 +3,11 @@
         <div class="content_wrapper">
             <div class="content_top">
                 <div class="logowrapper">
-                    <img src="/images/gigfpv_logo_black.svg" alt="GIGFPV Station" />
-                    <div v-html="$t('defaultWelcomeIntro')"></div>
+                    <div class="landing-brand">
+                        <img class="landing-logo" src="/images/fpv_white.png" alt="GIGFPV" />
+                        <div class="landing-brand-copy">Configurator</div>
+                    </div>
+                    <div class="landing-intro" v-html="$t('defaultWelcomeIntro')"></div>
                 </div>
             </div>
             <div class="content_mid grid-row">
@@ -131,9 +134,17 @@ export default defineComponent({
 }
 
 .content_top {
-    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 170px;
+    height: auto;
     padding: 20px;
     margin-bottom: 15px;
+    background:
+        radial-gradient(circle at 50% 0%, rgb(255 255 255 / 14%), transparent 52%),
+        linear-gradient(135deg, #050505 0%, #171717 48%, #050505 100%);
+    border-bottom: 1px solid rgb(255 255 255 / 12%);
 }
 
 .text1,
@@ -203,7 +214,7 @@ export default defineComponent({
     margin-left: auto;
     margin-right: auto;
     margin-top: 5px;
-    color: var(--text);
+    color: #ffffff;
     font-size: 14px;
     font-weight: 300;
     text-align: center;
@@ -212,15 +223,36 @@ export default defineComponent({
         text-align: center;
     }
 
-    img {
-        width: 600px;
-        margin: 5px;
-    }
-
     span {
         font-size: 22px;
         font-weight: 300;
     }
+}
+
+.landing-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+}
+
+.landing-logo {
+    width: 112px;
+    height: 112px;
+    object-fit: contain;
+}
+
+.landing-brand-copy {
+    color: #ffffff;
+    font-size: 46px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+.landing-intro {
+    margin-top: 8px;
+    color: rgb(255 255 255 / 82%);
 }
 
 .socialMediaParagraph {
@@ -281,9 +313,20 @@ export default defineComponent({
 @media all and (max-width: 575px) {
     .logowrapper {
         width: auto;
-        img {
-            width: auto;
-        }
+    }
+
+    .landing-brand {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .landing-logo {
+        width: 86px;
+        height: 86px;
+    }
+
+    .landing-brand-copy {
+        font-size: 30px;
     }
 }
 
@@ -292,8 +335,13 @@ export default defineComponent({
         height: auto;
         padding: 10px 20px;
     }
-    .logowrapper img {
-        display: none;
+    .landing-logo {
+        width: 72px;
+        height: 72px;
+    }
+
+    .landing-brand-copy {
+        font-size: 28px;
     }
 }
 </style>
