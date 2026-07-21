@@ -182,7 +182,6 @@ export default defineComponent({
             preFlashingMessageType: null,
             firmware_type: undefined,
             targetDetail: null,
-            targetQualification: null,
             // Select options
             buildTypeOptions: [],
             radioProtocolOptions: [],
@@ -209,13 +208,10 @@ export default defineComponent({
             flashOnConnectWrapperVisible: false,
             manufacturerInfoVisible: false,
             cloudTargetInfoVisible: false,
-            targetQualificationVisible: false,
             expertOptionsVisible: false,
             buildTypeRowVisible: false,
             commitSelectionVisible: false,
             // UI State - Text content
-            targetQualificationText: "",
-            // targetQualificationClass: "", // "gui_note" or "gui_warning"
             targetSpanText: "",
             releaseNameText: "",
             releaseNameLink: "",
@@ -497,27 +493,6 @@ export default defineComponent({
             return `${baseBoardUrl}/${encodeURIComponent(targetName)}`;
         };
 
-        const updateTargetQualification = (targetName) => {
-            if (!targetName || targetName === "0") {
-                state.targetQualificationVisible = false;
-                return;
-            }
-
-            const targetDescriptor = findTargetDescriptor(targetName) ?? state.targetDetail;
-            const descriptorGroup = targetDescriptor?.group;
-            const isQualified = descriptorGroup === "supported" || targetDescriptor?.partnerApproved === true;
-
-            if (isQualified) {
-                state.targetQualificationText = $t("firmwareFlasherOptionLabelVerifiedPartner");
-                state.targetQualification = true;
-            } else {
-                state.targetQualificationText = $t("firmwareFlasherOptionLabelNotQualified");
-                state.targetQualification = false;
-            }
-
-            state.targetQualificationVisible = true;
-        };
-
         const showReleaseNotes = (summary) => {
             if (!summary) {
                 console.warn(`${logHead} showReleaseNotes called with null/undefined summary`);
@@ -693,7 +668,6 @@ export default defineComponent({
             } catch (error) {
                 console.error("Failed to load target:", error);
                 loadFailed();
-                updateTargetQualification(null);
                 return;
             }
         };
@@ -1039,7 +1013,6 @@ export default defineComponent({
         const boardSelection = useBoardSelection({
             buildApi,
             $t,
-            updateTargetQualification,
             getSupportUrlForTarget,
             populateReleases,
             enableLoadRemoteFileButton,

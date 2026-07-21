@@ -1,12 +1,5 @@
 <template>
     <UiBox :title="$t('firmwareFlasherBoardSelectionHead')" type="neutral" class="mt-4">
-        <UiBox
-            highlight
-            v-if="state.targetQualificationVisible"
-            :type="state.targetQualification ? 'success' : 'warning'"
-        >
-            {{ state.targetQualificationText }}
-        </UiBox>
         <SettingRow :help="$t('firmwareFlasherOnlineSelectBoardHint')" full-width>
             <div class="flex items-center gap-2">
                 <UFieldGroup class="min-w-80">

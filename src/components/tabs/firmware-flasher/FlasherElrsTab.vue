@@ -3,7 +3,7 @@
         <p class="mb-4">
             The integrated ELRS workflow is limited to the GIGLRS target maintained by GIGFPV.
         </p>
-        <SettingRow label="Receiver target" help="Only verified GIGLRS targets are offered in GIGFPV Station." full-width>
+        <SettingRow label="Receiver target" help="Only GIGLRS targets are offered in GIGFPV Station." full-width>
             <div class="font-medium">{{ receiver.productName }}</div>
         </SettingRow>
         <SettingRow label="Firmware build" help="The matching GIGLRS firmware profile is selected automatically." full-width>

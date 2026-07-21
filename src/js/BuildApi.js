@@ -242,7 +242,6 @@ export default class BuildApi {
         return {
             target,
             group: "supported",
-            partnerApproved: true,
             manufacturer: this.manufacturerNameForId(manufacturerId),
             manufacturerId,
             board: metadata.board || target,

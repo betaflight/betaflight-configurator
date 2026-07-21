@@ -11,7 +11,6 @@ import AutoDetect from "../js/utils/AutoDetect.js";
  * @param {Object} params - Configuration object
  * @param {Object} params.buildApi - BuildApi instance for making API calls
  * @param {Function} params.$t - Translation function
- * @param {Function} params.updateTargetQualification - Callback to update target qualification UI
  * @param {Function} params.getSupportUrlForTarget - Function to get support URL for a target
  * @param {Function} params.populateReleases - Callback to populate release options
  * @param {Function} params.enableLoadRemoteFileButton - Callback to enable/disable load remote button
@@ -25,7 +24,6 @@ export function useBoardSelection(params) {
     const {
         buildApi,
         $t,
-        updateTargetQualification,
         getSupportUrlForTarget,
         populateReleases,
         enableLoadRemoteFileButton,
@@ -106,7 +104,6 @@ export function useBoardSelection(params) {
      */
     const populateTargetList = async (targets) => {
         if (!targets || !ispConnected()) {
-            updateTargetQualification(null);
             state.boardOptions = [];
             state.firmwareVersionOptions = [];
             return;
@@ -120,7 +117,7 @@ export function useBoardSelection(params) {
         };
 
         const groupLabels = {
-            supported: $t("firmwareFlasherOptionLabelVerifiedPartner"),
+            supported: "GIGFlight targets",
             unsupported: $t("firmwareFlasherOptionLabelVendorCommunity"),
             legacy: $t("firmwareFlasherOptionLabelLegacy"),
         };
@@ -207,8 +204,6 @@ export function useBoardSelection(params) {
         const value = state.selectedBoard;
         const targetSupportUrl = getSupportUrlForTarget(value);
         enableLoadRemoteFileButton(false);
-
-        updateTargetQualification(value);
 
         if (!value || value === "0") {
             state.firmwareVersionOptions = [];
