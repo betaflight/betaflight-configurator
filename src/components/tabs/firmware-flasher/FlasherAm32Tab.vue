@@ -11,7 +11,7 @@
             color="warning"
             variant="soft"
             title="Flight controller not connected"
-            description="Click Read ESCs and choose the flight controller USB device if the browser asks for permission."
+            description="Choose the flight controller USB device if the browser asks for permission, then flash again."
         />
         <UAlert v-if="error" class="mb-3" color="error" variant="soft" title="AM32 error" :description="error" />
 
@@ -87,17 +87,16 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import UiBox from "../../elements/UiBox.vue";
 import { serial } from "../../../js/serial.js";
 import Am32FourWaySession from "../../../js/am32/four_way.js";
 import DeviceHandler from "../../../js/device_handler.js";
-import { connectDisconnect } from "../../../js/serial_backend.js";
-import { useConnectionStore } from "../../../stores/connection.js";
+import MSPConnectorImpl from "../../../js/msp/MSPConnector.js";
 
 const session = new Am32FourWaySession();
-const connectionStore = useConnectionStore();
-const fcConnected = ref(Boolean(serial.connected && connectionStore.connectionValid));
+const mspConnector = new MSPConnectorImpl();
+const fcConnected = ref(Boolean(serial.connected));
 const sessionActive = ref(false);
 const expectedCount = ref(0);
 const busy = ref(false);
@@ -108,15 +107,11 @@ const logLines = ref([]);
 const hexFileName = ref("");
 const hexFileContent = ref("");
 const flashProgress = ref(0);
-const autoReadAttempted = ref(false);
 const connectionAttempted = ref(false);
 
 const selectedEscRows = computed(() => escRows.value.filter((row) => row.data && row.data.isSelected && !row.isError));
-const canFlash = computed(() => sessionActive.value && selectedEscRows.value.length > 0 && hexFileContent.value && !busy.value);
+const canFlash = computed(() => Boolean(hexFileContent.value) && !busy.value);
 const showConnectionWarning = computed(() => connectionAttempted.value && !fcConnected.value && !busy.value);
-
-const CONNECT_READY_TIMEOUT_MS = 15000;
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function firmwareVersion(esc) {
     return `${esc.settings.MAIN_REVISION ?? "?"}.${esc.settings.SUB_REVISION ?? "?"}`;
@@ -128,39 +123,14 @@ function addLog(message) {
 }
 
 function updateFcConnected() {
-    const wasConnected = fcConnected.value;
-    fcConnected.value = Boolean(serial.connected && connectionStore.connectionValid);
-    if (!wasConnected && fcConnected.value) {
-        void autoReadEscs();
-    }
-}
-
-async function waitForFcReady() {
-    const startedAt = Date.now();
-    addLog("Waiting for flight controller configuration handshake...");
-
-    while (Date.now() - startedAt < CONNECT_READY_TIMEOUT_MS) {
-        updateFcConnected();
-        if (fcConnected.value) {
-            return true;
-        }
-        await delay(100);
-    }
-
-    throw new Error("Timed out waiting for the flight controller to finish connecting.");
+    fcConnected.value = Boolean(serial.connected);
 }
 
 async function ensureSession() {
     if (!sessionActive.value) {
-        await connectionStore.clearMspQueue();
-        connectionStore.pauseLiveData();
-        try {
-            expectedCount.value = await session.enter();
-            sessionActive.value = true;
-        } catch (sessionError) {
-            connectionStore.resumeLiveData();
-            throw sessionError;
-        }
+        expectedCount.value = await session.enter();
+        mspConnector.detach();
+        sessionActive.value = true;
     }
 }
 
@@ -172,24 +142,56 @@ async function ensureFcConnected() {
         return true;
     }
 
-    if (!serial.connected && !DeviceHandler.devicePickerDisabled) {
-        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
-            DeviceHandler.selectActivePort();
-        }
-
-        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
-            await DeviceHandler.requestDevicePermission("serial");
-        }
-
-        if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
-            throw new Error("No flight controller USB device selected.");
-        }
-
-        addLog("Connecting to flight controller...");
-        connectDisconnect();
+    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+        DeviceHandler.selectActivePort();
     }
 
-    return waitForFcReady();
+    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+        await DeviceHandler.requestDevicePermission("serial");
+    }
+
+    if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
+        throw new Error("No flight controller USB device selected.");
+    }
+
+    addLog("Opening flight controller for AM32 passthrough...");
+    await new Promise((resolve, reject) => {
+        mspConnector.connect(
+            DeviceHandler.devicePicker.selectedDevice,
+            DeviceHandler.devicePicker.selectedBauds,
+            resolve,
+            () => reject(new Error("Timed out waiting for MSP response from the flight controller.")),
+            () => reject(new Error("Could not open the flight controller serial port.")),
+        );
+    });
+    updateFcConnected();
+    return true;
+}
+
+async function readEscRows() {
+    await ensureSession();
+    escRows.value = Array.from({ length: expectedCount.value }, (_unused, index) => ({
+        index,
+        isLoading: true,
+        isError: false,
+        error: "",
+        data: null,
+    }));
+
+    for (const row of escRows.value) {
+        try {
+            addLog(`Reading ESC ${row.index + 1}...`);
+            row.data = await session.getInfo(row.index);
+            row.data.isSelected = true;
+            addLog(`Read ESC ${row.index + 1}: ${row.data.displayName}`);
+        } catch (readError) {
+            row.isError = true;
+            row.error = readError instanceof Error ? readError.message : String(readError);
+            addLog(`ESC ${row.index + 1} failed: ${row.error}`);
+        } finally {
+            row.isLoading = false;
+        }
+    }
 }
 
 async function readEscs() {
@@ -202,29 +204,7 @@ async function readEscs() {
             return;
         }
 
-        await ensureSession();
-        escRows.value = Array.from({ length: expectedCount.value }, (_unused, index) => ({
-            index,
-            isLoading: true,
-            isError: false,
-            error: "",
-            data: null,
-        }));
-
-        for (const row of escRows.value) {
-            try {
-                addLog(`Reading ESC ${row.index + 1}...`);
-                row.data = await session.getInfo(row.index);
-                row.data.isSelected = true;
-                addLog(`Read ESC ${row.index + 1}: ${row.data.displayName}`);
-            } catch (readError) {
-                row.isError = true;
-                row.error = readError instanceof Error ? readError.message : String(readError);
-                addLog(`ESC ${row.index + 1} failed: ${row.error}`);
-            } finally {
-                row.isLoading = false;
-            }
-        }
+        await readEscRows();
     } catch (readError) {
         error.value = readError instanceof Error ? readError.message : String(readError);
         addLog(error.value);
@@ -232,16 +212,6 @@ async function readEscs() {
         busy.value = false;
         activeOperation.value = "";
     }
-}
-
-async function autoReadEscs() {
-    if (autoReadAttempted.value || !fcConnected.value || busy.value || escRows.value.length > 0) {
-        return;
-    }
-
-    autoReadAttempted.value = true;
-    addLog("Auto-reading ESCs...");
-    await readEscs();
 }
 
 async function onHexFile(event) {
@@ -256,8 +226,17 @@ async function flashSelectedEscs() {
     error.value = "";
     flashProgress.value = 0;
     try {
-        await ensureSession();
+        if (!(await ensureFcConnected())) {
+            return;
+        }
+        if (selectedEscRows.value.length === 0) {
+            addLog("Detecting ESCs before flash...");
+            await readEscRows();
+        }
         const rows = selectedEscRows.value;
+        if (rows.length === 0) {
+            throw new Error("No selectable AM32 ESCs detected.");
+        }
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
             addLog(`Flashing ESC ${row.index + 1} with ${hexFileName.value}...`);
@@ -311,13 +290,7 @@ onMounted(() => {
     serial.addEventListener("connect", updateFcConnected);
     serial.addEventListener("disconnect", updateFcConnected);
     updateFcConnected();
-    void autoReadEscs();
 });
-
-watch(
-    () => connectionStore.connectionValid,
-    () => updateFcConnected(),
-);
 
 onBeforeUnmount(async () => {
     serial.removeEventListener("connect", updateFcConnected);

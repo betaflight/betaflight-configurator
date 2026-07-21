@@ -130,6 +130,13 @@ class MSPConnectorImpl {
                 });
         });
     }
+
+    detach() {
+        GUI.timeout_remove("msp_connector");
+        serial.removeEventListener("receive", readSerialAdapter);
+        MSP.clearListeners();
+        MSP.callbacks_cleanup();
+    }
 }
 
 export default MSPConnectorImpl;
