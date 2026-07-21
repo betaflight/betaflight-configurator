@@ -413,13 +413,8 @@ async function loadOnlineFirmware() {
     }
 }
 
-async function ensureFcConnected() {
+async function ensureFcPassthroughPort(baudrate) {
     connectionAttempted.value = true;
-    updateFcConnected();
-
-    if (fcConnected.value) {
-        return true;
-    }
 
     if (DeviceHandler.devicePicker.selectedDevice === "noselection") {
         DeviceHandler.selectActivePort();
@@ -433,16 +428,18 @@ async function ensureFcConnected() {
         throw new Error("No flight controller USB device selected.");
     }
 
-    addLog("Opening flight controller for GIGLRS passthrough...");
-    await new Promise((resolve, reject) => {
-        mspConnector.connect(
-            DeviceHandler.devicePicker.selectedDevice,
-            DeviceHandler.devicePicker.selectedBauds,
-            resolve,
-            () => reject(new Error("Timed out waiting for MSP response from the flight controller.")),
-            () => reject(new Error("Could not open the flight controller serial port.")),
-        );
-    });
+    if (serial.connected) {
+        mspConnector.detach();
+        await serial.disconnect();
+        updateFcConnected();
+        await sleep(100);
+    }
+
+    addLog(`Opening flight controller for GIGLRS passthrough at ${baudrate} baud...`);
+    const opened = await serial.connect(DeviceHandler.devicePicker.selectedDevice, { baudRate: baudrate });
+    if (!opened) {
+        throw new Error("Could not open the flight controller serial port.");
+    }
     updateFcConnected();
     return true;
 }
@@ -450,7 +447,6 @@ async function ensureFcConnected() {
 async function ensurePassthrough() {
     if (!passthrough.active.value) {
         const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
-        mspConnector.detach();
         await passthrough.start({
             baudrate,
             method: "cli",
@@ -528,11 +524,12 @@ async function flashReceiver() {
         if (firmwareFiles.value.length === 0) {
             throw new Error("Load a GIGLRS firmware .zip or .bin before flashing.");
         }
+        const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
 
         const configuredFirmware = await prepareFirmware();
         addLog(`Configured firmware for ${selectedTarget.value.productName} (${configuredFirmware.length} flash file${configuredFirmware.length === 1 ? "" : "s"}).`);
 
-        if (!(await ensureFcConnected())) {
+        if (!(await ensureFcPassthroughPort(baudrate))) {
             return;
         }
 
@@ -546,7 +543,6 @@ async function flashReceiver() {
             write: (message) => addLog(String(message).trim()),
             writeLine: (message) => addLog(String(message).trim()),
         };
-        const baudrate = Number.parseInt(settings.receiverBaud, 10) || 420000;
         const loader = new ESPLoader({
             transport,
             baudrate,
