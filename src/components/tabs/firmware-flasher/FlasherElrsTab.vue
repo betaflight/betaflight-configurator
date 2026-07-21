@@ -137,6 +137,7 @@ import { ElrsPassthroughTransport, elrsBootloaderInitSequence } from "@/js/elrs/
 const buildApi = new BuildApi();
 const mspConnector = new MSPConnectorImpl();
 const passthrough = useFcSerialPassthrough();
+const BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE = 0x0400;
 
 const targets = ref([]);
 const releases = ref([]);
@@ -595,9 +596,10 @@ async function flashReceiver() {
         // esptool-js has historically ignored romBaudrate in some releases; keep this explicit.
         loader.romBaudrate = baudrate;
         loader.baudrate = baudrate;
-        // ExpressLRS uses smaller passthrough blocks because the FC is buffering the RX UART.
+        // Keep passthrough blocks conservative because this path is routed through
+        // Betaflight's shared serial event loop before reaching the receiver UART.
         loader.ESP_RAM_BLOCK = 0x0800;
-        loader.FLASH_WRITE_SIZE = 0x0800;
+        loader.FLASH_WRITE_SIZE = BETAFLIGHT_PASSTHROUGH_FLASH_BLOCK_SIZE;
         const originalFlashDeflFinish = loader.flashDeflFinish.bind(loader);
         loader.flashDeflFinish = async (...args) => {
             try {
@@ -616,6 +618,7 @@ async function flashReceiver() {
         addLog(`Detected ${chip}. Flashing ${configuredFirmware.length} file${configuredFirmware.length === 1 ? "" : "s"}...`);
 
         loader.IS_STUB = true;
+        addLog(`Using ${loader.FLASH_WRITE_SIZE}-byte compressed flash blocks through Betaflight passthrough.`);
         await loader.writeFlash({
             fileArray: configuredFirmware.map((file) => ({
                 data: file.data,
@@ -645,6 +648,10 @@ async function flashReceiver() {
     } catch (flashError) {
         error.value = flashError instanceof Error ? flashError.message : String(flashError);
         addLog(error.value);
+        const recentText = transport?.recentText?.();
+        if (recentText) {
+            addLog(`Recent receiver output: ${recentText.slice(-500)}`);
+        }
     } finally {
         await transport?.disconnect?.();
         busy.value = false;

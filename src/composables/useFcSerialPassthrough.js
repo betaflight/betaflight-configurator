@@ -161,7 +161,9 @@ export function useFcSerialPassthrough() {
 
             await writeBytes(encodeText(`serialpassthrough ${serialRxPort} ${baudrate}\r\n`));
             await sleep(200);
-            await cli.readUntil(["\n"], 200);
+            for (let i = 0; i < 10; i++) {
+                await cli.readUntil(["\n"], 200);
+            }
             return { method: "cli", serialRxPort };
         } finally {
             cli.stop();

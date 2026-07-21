@@ -14,6 +14,13 @@ function appendArray(first, second) {
     return output;
 }
 
+function trimBytes(bytes, maxLength) {
+    if (bytes.byteLength <= maxLength) {
+        return bytes;
+    }
+    return bytes.slice(bytes.byteLength - maxLength);
+}
+
 export function crc8D5(payload) {
     let crc = 0;
     for (const data of payload) {
@@ -39,9 +46,12 @@ export class ElrsPassthroughTransport {
         this.buffer = new Uint8Array(0);
         this.baudrate = 0;
         this.traceLog = "";
+        this.recentInput = new Uint8Array(0);
         this.lastTraceTime = Date.now();
         this.unsubscribe = passthrough.onData((bytes) => {
-            this.buffer = appendArray(this.buffer, bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes));
+            const input = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+            this.buffer = appendArray(this.buffer, input);
+            this.recentInput = trimBytes(appendArray(this.recentInput, input), 4096);
         });
     }
 
@@ -65,6 +75,13 @@ export class ElrsPassthroughTransport {
 
     async returnTrace() {
         return this.traceLog;
+    }
+
+    recentText() {
+        return new TextDecoder("utf-8")
+            .decode(this.recentInput)
+            .replace(/[^\x09\x0a\x0d\x20-\x7e]+/g, " ")
+            .trim();
     }
 
     slipWriter(data) {
@@ -109,6 +126,7 @@ export class ElrsPassthroughTransport {
 
     flushInput() {
         this.buffer = new Uint8Array(0);
+        this.recentInput = new Uint8Array(0);
     }
 
     inWaiting() {
