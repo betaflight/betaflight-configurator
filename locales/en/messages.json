@@ -1729,7 +1729,7 @@
         "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Auto-detect board alignment..."
+        "message": "Auto-detect board alignment"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Board Alignment Wizard"
