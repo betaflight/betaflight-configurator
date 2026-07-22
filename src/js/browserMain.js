@@ -14,9 +14,6 @@ import { useDialogStore } from "../stores/dialog";
 import { registerSW } from "virtual:pwa-register";
 import { isPwaContext } from "./utils/checkCompatibility.js";
 
-// The PWA service worker (and its offline-ready / update dialogs) is only
-// meaningful for the web/PWA build, so skip it on natively packaged shells
-// (Capacitor, Tauri) and embedded deployments.
 if (isPwaContext()) {
     const dialogStore = useDialogStore(pinia);
     const updateSW = registerSW({
