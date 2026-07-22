@@ -51,6 +51,7 @@ describe("usePower", () => {
         });
 
         const power = usePower();
+        mspPromise.mockClear();
 
         await expect(power.changeBatteryProfile(2)).rejects.toThrow(profileNameError);
 

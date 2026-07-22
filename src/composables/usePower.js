@@ -242,9 +242,9 @@ export function usePower() {
     // (serial_backend.js) refreshes FC.CONFIG.batteryProfile via MSP_STATUS_EX every 250ms;
     // an adjustment switch on the TX can change the active profile out from under the UI.
     // Reload when that happens — but never during our own change (isLoading), an in-flight
-    // load, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
+    // load, virtual mode, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
     const syncBatteryProfileFromFc = async () => {
-        if (!hasBatteryProfiles.value || isLoading.value || syncingFromFc || dirty.value) {
+        if (CONFIGURATOR.virtualMode || !hasBatteryProfiles.value || isLoading.value || syncingFromFc || dirty.value) {
             return;
         }
 
