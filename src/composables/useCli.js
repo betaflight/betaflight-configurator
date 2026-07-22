@@ -719,16 +719,25 @@ export function useCli() {
             copyResetTimeout = null;
         }
 
-        if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
+        // Leaving an active CLI session reboots the FC: `exit` drops CLI mode and
+        // reinitializeConnection() issues MSP_SET_REBOOT. The reboot tears the link down and the
+        // reconnect flow lands on lastTab once it is healthy. Release the tab-switch lock and
+        // report the reboot so the caller skips mounting the destination tab into the dying link
+        // (its MSP init would just be cancelled).
+        const rebooting = CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive;
+        if (rebooting) {
             send(getCliCommand("exit\r", cliBuffer), function () {
                 reinitializeConnection();
             });
+            GUI.tab_switch_in_progress = false;
         }
 
         CONFIGURATOR.cliActive = false;
         CONFIGURATOR.cliValid = false;
 
         CliAutoComplete.cleanup();
+
+        return rebooting;
     };
 
     const adaptPhones = () => {

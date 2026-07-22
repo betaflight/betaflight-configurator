@@ -164,8 +164,10 @@ export default defineComponent({
             }
             TABS.cli.read = cli.read;
             TABS.cli.cleanup = (callback) => {
-                cli.cleanup();
-                if (callback) {
+                // cli.cleanup() returns true when leaving the CLI reboots the FC; it has already
+                // released the tab-switch lock, so skip mounting the destination tab into the
+                // dying link — reconnect lands on lastTab instead.
+                if (!cli.cleanup() && callback) {
                     callback();
                 }
             };
