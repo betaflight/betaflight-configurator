@@ -679,9 +679,8 @@ export function useCli() {
     };
 
     /**
-     * Tear down the CLI session. When leaving an active CLI reboots the FC, the caller must skip
-     * mounting the destination tab into the rebooting link.
-     * @returns {boolean} true when this cleanup initiated the CLI-exit reboot.
+     * Tear down the CLI session.
+     * @returns {boolean} true when leaving CLI initiated an FC reboot (`exit` + MSP_SET_REBOOT).
      */
     const cleanup = () => {
         GUI.timeout_remove("CLI_send_slowly");
@@ -724,13 +723,8 @@ export function useCli() {
             copyResetTimeout = null;
         }
 
-        // Leaving an active CLI session reboots the FC: `exit` drops CLI mode and
-        // reinitializeConnection() issues MSP_SET_REBOOT. Report the reboot so the caller skips
-        // mounting the destination tab into the dying link (its MSP init would just be cancelled).
-        // The tab-switch lock stays held across the reboot handoff — clearing it here would let a
-        // second tab click mount another connected tab into the still-alive link. The ensuing
-        // disconnect (prepareDisconnect on every reboot path) releases the lock and lands the
-        // reconnect on lastTab.
+        // `exit` + MSP_SET_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
+        // handoff; prepareDisconnect (run on every reboot path) releases it after the disconnect.
         const rebooting = CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive;
         if (rebooting) {
             send(getCliCommand("exit\r", cliBuffer), function () {
