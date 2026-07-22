@@ -84,8 +84,10 @@ export function isTauriIOS() {
 /**
  * True only when running as a genuine web/PWA build, i.e. not inside a natively
  * packaged shell (Capacitor Android/iOS, Tauri desktop/iOS) and not an embedded
- * deployment (WebSocket-only host over plain HTTP). Use this to gate PWA-only
- * behaviour such as service-worker registration and its update dialogs.
+ * deployment identified by the WebSocket transport metadata. Use this to gate
+ * PWA-only behaviour such as service-worker registration and its update dialogs.
+ *
+ * @returns {boolean} Whether the runtime is a web/PWA context.
  */
 export function isPwaContext() {
     return !Capacitor.isNativePlatform() && !isTauri() && !isEmbeddedDeployment();
