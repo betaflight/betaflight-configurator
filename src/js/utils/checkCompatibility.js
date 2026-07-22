@@ -81,6 +81,16 @@ export function isTauriIOS() {
     return /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
 }
 
+/**
+ * True only when running as a genuine web/PWA build, i.e. not inside a natively
+ * packaged shell (Capacitor Android/iOS, Tauri desktop/iOS) and not an embedded
+ * deployment (WebSocket-only host over plain HTTP). Use this to gate PWA-only
+ * behaviour such as service-worker registration and its update dialogs.
+ */
+export function isPwaContext() {
+    return !Capacitor.isNativePlatform() && !isTauri() && !isEmbeddedDeployment();
+}
+
 export function checkCompatibility() {
     if (isEmbeddedDeployment()) {
         console.log("[COMPAT] Embedded deployment detected — skipping browser checks");
