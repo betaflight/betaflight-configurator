@@ -56,6 +56,7 @@ const MSP = {
 
     callbacks: [],
     parked: new Map(), // errorAware requests parked behind an in-flight same-code request
+    onTimeout: null, // invoked with the code when an errorAware request exhausts MAX_RETRIES
     packet_error: 0,
     unsupported: 0,
 
@@ -580,16 +581,7 @@ const MSP = {
             console.warn(
                 `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
-            serial.send(obj.requestBuffer, (_sendInfo) => {
-                obj.stop = performance.now();
-                const executionTime = Math.round(obj.stop - obj.start);
-                // We should probably give up connection if the request takes too long ?
-                if (executionTime > 5000) {
-                    console.warn(
-                        `MSP: data request took too long: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} EXECUTION TIME: ${executionTime}ms`,
-                    );
-                }
-            });
+            serial.send(obj.requestBuffer);
             this._arm_timer(obj);
             return;
         }
@@ -612,6 +604,9 @@ const MSP = {
             console.error("MSP callback threw on timeout:", callbackError);
         }
         this._release_parked(obj.code);
+
+        // MAX_RETRIES sends produced no response: the link is unresponsive, not just slow.
+        this.onTimeout?.(obj.code);
     },
     _park(code, entry) {
         let queue = this.parked.get(code);

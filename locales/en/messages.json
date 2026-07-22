@@ -650,6 +650,12 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Failed</span> to connect to the selected port. Check that the device is reachable and that the connection settings are correct, then try again."
     },
+    "connectionLostTitle": {
+        "message": "Connection lost"
+    },
+    "connectionLostUnresponsive": {
+        "message": "The flight controller <span class=\"message-negative\">stopped responding</span> and the connection was closed. Reconnect the board and try again; if the problem persists, power-cycle the flight controller."
+    },
     "serialPortClosedOk": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> closed"
     },
