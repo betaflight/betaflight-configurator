@@ -2,22 +2,16 @@ import { get as getConfig } from "./ConfigStorage";
 import { reactive } from "vue";
 import MSP from "./msp";
 import { getOS } from "./utils/checkCompatibility";
-import PortHandler from "./port_handler";
-import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization";
-import MSPCodes from "./msp/MSPCodes";
-import { gui_log } from "./gui_log";
 import { useDialogStore } from "../stores/dialog";
+import { useConnectionStore } from "../stores/connection";
 import { pinia } from "./pinia_instance";
-import { EventBus } from "../components/eventBus";
+import { getLockManager } from "./lock_manager";
 
 const TABS = {};
 
 class GuiControl {
     constructor() {
-        this.connecting_to = false;
-        this.connected_to = false;
-        this.connect_lock = false;
         this.flashingInProgress = false;
         this.active_tab = null;
         this.tab_switch_in_progress = false;
@@ -25,9 +19,6 @@ class GuiControl {
         this.interval_array = [];
         this.timeout_array = [];
         this.buttonDisabledClass = "disabled";
-
-        this.reboot_timestamp = 0;
-        this.REBOOT_CONNECT_MAX_TIME_MS = 10000;
 
         this.defaultAllowedTabsWhenDisconnected = [
             "landing",
@@ -71,6 +62,40 @@ class GuiControl {
         // check which operating system is user running
         this.operating_system = getOS();
     }
+
+    // connect_lock is backed by the reactive LockManager (single source of truth)
+    // instead of a bare instance field, so reactive consumers (store.connectLock
+    // computed, tab guards) keep updating. Behaviour is unchanged: `= true` locks,
+    // `= false` unlocks.
+    get connect_lock() {
+        return getLockManager().locked;
+    }
+
+    set connect_lock(value) {
+        getLockManager().locked = value;
+    }
+
+    // connecting_to / connected_to now live in useConnectionStore (the canonical
+    // connection-target state); GUI delegates so existing GUI.* readers/writers
+    // (serial_backend, tab_switch, …) transparently hit the store. Reactivity is
+    // preserved — the getters read store refs. Accessed lazily at runtime, so no
+    // pinia-timing issue at GUI construction.
+    get connecting_to() {
+        return useConnectionStore(pinia).connectingTo;
+    }
+
+    set connecting_to(value) {
+        useConnectionStore(pinia).connectingTo = value;
+    }
+
+    get connected_to() {
+        return useConnectionStore(pinia).connectedTo;
+    }
+
+    set connected_to(value) {
+        useConnectionStore(pinia).connectedTo = value;
+    }
+
     // Timer managing methods
     // name = string
     // code = function reference (code to be executed)
@@ -389,168 +414,6 @@ class GuiControl {
         for (const a of element.querySelectorAll("a")) {
             a.setAttribute("target", "_blank");
         }
-    }
-    reinitializeConnection() {
-        // Emit via EventBus so gui.js doesn't have to import serial_backend
-        // (which already imports gui.js — this would create a module cycle).
-        const emitToggle = () => EventBus.$emit("connection:toggle");
-
-        if (CONFIGURATOR.virtualMode) {
-            this.reboot_timestamp = Date.now();
-            emitToggle();
-            if (PortHandler.portPicker.autoConnect) {
-                return setTimeout(emitToggle, 500);
-            }
-            return;
-        }
-
-        const currentPort = PortHandler.portPicker.selectedPort;
-
-        // Set the reboot timestamp to the current time
-        this.reboot_timestamp = Date.now();
-
-        // Send reboot command to the flight controller
-        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
-
-        // Force connection invalid to ensure reboot dialog waits for reconnection
-        CONFIGURATOR.connectionValid = false;
-
-        if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-            if (PortHandler.portPicker.autoConnect) {
-                return setTimeout(emitToggle, 1500);
-            }
-            return;
-        }
-
-        // Show reboot progress modal except for cli and presets tab
-        if (["cli", "presets"].includes(this.active_tab)) {
-            console.log(`[GUI] Rebooting in ${this.active_tab} tab, skipping reboot dialog`);
-            gui_log(i18n.getMessage("deviceRebooting"));
-
-            this._waitForReconnection((timeoutReached) => {
-                if (timeoutReached) {
-                    console.log(`[GUI] Reboot timeout reached`);
-                } else {
-                    gui_log(i18n.getMessage("deviceReady"));
-                }
-            });
-
-            return;
-        }
-
-        // Show reboot progress modal
-        this.showRebootDialog();
-    }
-
-    _waitForReconnection(callback) {
-        const checkInterval = setInterval(() => {
-            const timeoutReached = Date.now() - this.reboot_timestamp > this.REBOOT_CONNECT_MAX_TIME_MS;
-            const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
-
-            if (CONFIGURATOR.connectionValid || timeoutReached || noSerialReconnect) {
-                clearInterval(checkInterval);
-                callback(timeoutReached);
-            }
-        }, 100);
-
-        // Return the interval ID so it can be cleared externally if needed (e.g. by progress bar logic)
-        return checkInterval;
-    }
-
-    showRebootDialog() {
-        gui_log(i18n.getMessage("deviceRebooting"));
-
-        // Helper function to create the reboot dialog if it doesn't exist
-        function createRebootProgressDialog() {
-            const dialog = document.createElement("dialog");
-            dialog.id = "rebootProgressDialog";
-            dialog.className = "dialogReboot";
-
-            dialog.innerHTML = `
-                <div class="content">
-                    <div class="reboot-status">${i18n.getMessage("rebootFlightController")}</div>
-                    <div class="reboot-progress-container">
-                        <div class="reboot-progress-bar"></div>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(dialog);
-
-            // Add styles if not already defined
-            if (!document.getElementById("rebootProgressStyle")) {
-                const style = document.createElement("style");
-                style.id = "rebootProgressStyle";
-                style.textContent = `
-                    .dialogReboot {
-                        border: 1px solid var(--subtleAccent);
-                        border-radius: 5px;
-                        background-color: var(--surface-100);
-                        color: var(--text);
-                        padding: 20px;
-                        max-width: 400px;
-                    }
-                    .reboot-progress-container {
-                        width: 100%;
-                        background-color: var(--surface-0);
-                        border-radius: 3px;
-                        margin: 15px 0 5px;
-                        height: 10px;
-                    }
-                    .reboot-progress-bar {
-                        height: 100%;
-                        background-color: var(--primary-500);
-                        border-radius: 3px;
-                        transition: width 0.1s ease-in-out;
-                        width: 0%;
-                    }
-                    .reboot-status {
-                        text-align: center;
-                        margin: 10px 0;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-
-            return dialog;
-        }
-
-        // Show reboot progress modal
-        const rebootDialog = document.getElementById("rebootProgressDialog") || createRebootProgressDialog();
-        rebootDialog.querySelector(".reboot-progress-bar").style.width = "0%";
-        rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightController");
-        rebootDialog.showModal();
-
-        // Update progress during reboot
-        let progress = 0;
-        // Calculate increment to reach 100% exactly when timeout occurs (called every 100ms)
-        const progressIncrement = 100 / (this.REBOOT_CONNECT_MAX_TIME_MS / 100);
-
-        const progressInterval = setInterval(() => {
-            progress += progressIncrement;
-            if (progress <= 100) {
-                rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
-            }
-        }, 100);
-
-        // Check for successful connection using shared helper
-        this._waitForReconnection((timeoutReached) => {
-            clearInterval(progressInterval);
-
-            rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
-            rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
-
-            // Close the dialog after showing "ready" message briefly
-            setTimeout(() => {
-                rebootDialog.close();
-            }, 1000);
-
-            if (timeoutReached) {
-                console.log(`[GUI] Reboot timeout reached`);
-            } else {
-                gui_log(i18n.getMessage("deviceReady"));
-            }
-        });
     }
 
     showCliPanel() {

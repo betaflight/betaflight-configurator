@@ -569,6 +569,12 @@
     "tabReceiver": {
         "message": "რადიომიმღები"
     },
+    "tabModeSelection": {
+        "message": "რეჟიმის არჩევა"
+    },
+    "tabServos": {
+        "message": "სერვოები"
+    },
     "tabFailsafe": {
         "message": "უსაფრთხო მარცხი"
     },
@@ -645,6 +651,12 @@
     },
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">ვერ მოხერხდა<\/span>პორტის გახსნა"
+    },
+    "connectionFailedTitle": {
+        "message": "კავშირი ჩავარდა"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">პორტთან<\/span>დაკავშირება ვერ მოხერხდა. შეამოწმეთ, რომ მოწყობილობა ხელმისაწვდომია და კავშირის პარამეტრები სწორია, შემდეგ სცადეთ ხელახლა."
     },
     "serialPortClosedOk": {
         "message": "პორტი<span class=\"message-positive\">წარმატებით<\/span>დაიხურა"
@@ -764,7 +776,7 @@
         "message": "მიკროპროგრამის ეს ვერსია <span class=\"message-negative\">არ არის მხარდაჭერილი<\/span>. გთხოვთ, განაახლოთ ისეთ ვერსიაზე, რომელიც მხარს უჭერს API-ს ვერსიას <strong>$1<\/strong> ან უფრო მაღალს. ფლეშვამდე გამოიყენეთ CLI სარეზერვო ასლის შესაქმნელად. CLI-დან მონაცემების შენახვის\/აღდგენის პროცედურა მოცემულია დოკუმენტაციაში.<br \/>ალტერნატივის სახით, შეგიძლიათ ჩამოტვირთოთ და გამოიყენოთ აპლიკაციის ძველი ვერსია, თუ ჯერ არ ხართ მზად განახლებისთვის."
     },
     "firmwareTypeNotSupported": {
-        "message": "CLI რეჟიმის გარდა, ბეტაფლაითისგან განსხვავებული პროგრამული უზრუნველყოფა <span class=\"message-negative\"> არ არის მხარდაჭერილი<\/span>."
+        "message": "CLI რეჟიმის გარდა, Betaflight ისგან განსხვავებული პროგრამული უზრუნველყოფა <span class=\"message-negative\"> არ არის მხარდაჭერილი<\/span>."
     },
     "firmwareUpgradeRequired": {
         "message": "აპლიკაციის მიმდინარე ვერსიამ შესაძლოა მხარი არ დაუჭიროს ამ მოწყობილობაზე არსებულ მიკროპროგრამას. შეგიძლიათ გამოიყენოთ უფრო ძველი გამოშვებები, როგორიცაა <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a> როპროგრამის 4.1 ვერსიამდე ან <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a> კიდევ უფრო ძველი ვერსიებისთვის.\n\nაპლიკაცია შეეცდება მოწყობილობის CLI ტერმინალთან დაკავშირებას — წარმატების შემთხვევაში, მიმდინარე პროპროგრამის ვერსიის ნახვას შეძლებთ CLI-ში ბრძანების <code>version<\/code> გაგზავნით.\n\n<br><br>ალტერნატივის სახით, შეგიძლიათ განაახლოთ მოწყობილობა მიკროპროგრამის უფრო ახალ ვერსიაზე. ფლეშვამდე გამოიყენეთ CLI სარეზერვო ასლის შესაქმნელად, პროცედურა მოცემულია <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\"> დოკუმენტაციაში<\/a>. თუმცა გაითვალისწინეთ, რომ მიკროპროგრამის ძველი ვერსიებიდან აღებული სარეზერვო ასლები შესაძლოა კორექტულად არ გადავიდეს ახალ ვერსიაზე აღდგენისას. რეჟიმები, OSD, მნიშვნელობები და პორტები უსაფრთხოდ გადაიტანება, მაგრამ ფრთხილად იყავით PID და ავარიული რეჟიმის პარამეტრებთან."
@@ -817,7 +829,7 @@
         "message": "დაადასტურეთ მონაცემის შეყვანა"
     },
     "supportWarningDialogText": {
-        "message": "გთხოვთ, დაადასტუროთ მონაცემების გაგზავნა ბეტაფლაის გუნდთან.<br><br> ეს პროცესი გაუშვებს რამდენიმე ბრძანებას და მიღებულ შედეგს გადააგზავნის ბილდ-სერვერზე..<br><br>ამის შემდეგ თქვენ მოგეწოდებათ უნიკალური იდენტიფიკატორი გაგზავნილი მონაცემებისთვის..<br><br> გთხოვთ, აუცილებლად წარუდგინოთ ეს უნიკალური იდენტიფიკატორი ბეტაფლაის გუნდს Discord-ის გამოყენებისას ან Github-ზე ხარვეზის რეგისტრაციისას."
+        "message": "გთხოვთ, დაადასტუროთ მონაცემების გაგზავნა Betaflight გუნდთან.<br><br> ეს პროცესი გაუშვებს რამდენიმე ბრძანებას და მიღებულ შედეგს გადააგზავნის ბილდ-სერვერზე..<br><br>ამის შემდეგ თქვენ მოგეწოდებათ უნიკალური იდენტიფიკატორი გაგზავნილი მონაცემებისთვის..<br><br> გთხოვთ, აუცილებლად წარუდგინოთ ეს უნიკალური იდენტიფიკატორი Betaflight გუნდს Discord-ის გამოყენებისას ან Github-ზე ხარვეზის რეგისტრაციისას."
     },
     "supportWarningDialogInputPlaceHolder": {
         "message": "აღწერეთ პრობლემა"
@@ -841,7 +853,7 @@
         "message": "<span class=\"message-negative\"> ვერ შეძლებთ <\/span> ამის ახლა გაკეთებას, გთხოვთ დაელოდოთ მიმდინარე ოპერაციის დასრულებას..."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "$1 ჩანართის გამოსაყენებლად საჭიროა <strong> პროგრამული უზნურველყოფის <\/strong> განახლება ბეტაფლაითის ბოლო ვერსიაზე."
+        "message": "$1 ჩანართის გამოსაყენებლად საჭიროა <strong> პროგრამული უზნურველყოფის <\/strong> განახლება Betaflight ბოლო ვერსიაზე."
     },
     "firmwareVersion": {
         "message": "პროგრამული უზრუნველყოფის ვერსია:<strong>$1<\/strong>"
@@ -947,6 +959,9 @@
     "defaultHardwareHead": {
         "message": "მოწყობილობა"
     },
+    "defaultHardwareText": {
+        "message": "აპლიკაცია მხარს უჭერს ყველა აპარატურას, რომელზეც ეშვება Betaflight. აპარატურის სრული სიის სანახავად შეამოწმეთ Firmware flasher ჩანართი.<br \/><br \/>სასარგებლო პროგრამები \/ დრაივერები:<ul><li>ძველი თაობის აპარატურისთვის, რომელიც იყენებს CP210x USB-to-serial ჩიპს, უახლესი <b>CP210x დრაივერები<\/b> შეგიძლიათ ჩამოტვირთოთ <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a><\/li><li>Windows-ისთვის USB დრაივერების დასაყენებელი უახლესი <b>Zadig<\/b> შეგიძლიათ ჩამოტვირთოთ <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b>-ის ჩამოტვირთვა შესაძლებელია <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a><\/li><\/ul>"
+    },
     "defaultSoftwareHead": {
         "message": "პროგრამული უზრუნველყოფა"
     },
@@ -955,6 +970,9 @@
     },
     "defaultContributingHead": {
         "message": "მონაწილეობის მიღება"
+    },
+    "defaultContributingText": {
+        "message": "თუ გსურთ დაეხმაროთ Betaflight-ს, გახდეს კიდევ უფრო უკეთესი, ამის გაკეთება მრავალი გზით შეგიძლიათ, მათ შორის:<br \/><ul><li>Betaflight-ის შესახებ თქვენი ცოდნის გამოყენებით, რათა შექმნათ ან განაახლოთ კონტენტი <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">ჩვენს Wiki-ზე<\/a>, ან უპასუხოთ სხვა მომხმარებლების კითხვებს ონლაინ ფორუმებზე;<\/li><li>ფირმვერისა და აპლიკაციისთვის <a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">კოდის შეტანით<\/a> — ახალი ფუნქციები, ხარვეზების გამოსწორება, გაუმჯობესებები;<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">ახალი ფუნქციებისა და შესწორებების<\/a> ტესტირებით და უკუკავშირის მიწოდებით;<\/li><li>სხვა მომხმარებლების დახმარებით იმ პრობლემების მოგვარებაში, რომლებსაც ისინი <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">ჩვენს issue tracker-ში<\/a> აფიქსირებენ, და დისკუსიებში მონაწილეობით ახალი ფუნქციების მოთხოვნებზე;<\/li><li>Betaflight აპლიკაციის ახალ ენაზე <a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/README.md#translators\" target=\"_blank\" rel=\"noopener noreferrer\">თარგმნით<\/a>, ან არსებული თარგმანების აქტუალურობის შენარჩუნებაში დახმარებით.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "ჩვენ ასევე გვაქვს<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">ფეისბუქ ჯგუფი<\/a><br \/>შემოგვიერთდით ჯგუფში სადაც ვსაუბრობთ Betaflight, ვსავთ კითხვებს კონფიგურატორზე, ან უბრალოდ გაერთეთ თქვენნაირ პილოტებთან."
@@ -1000,10 +1018,10 @@
         "message": "დოკუმენტაიცა \/ მომხმარებლის სახელმძღვანელო"
     },
     "defaultDocumentation": {
-        "message": "ბეტაფლაითის დოკუმენტაცია ხელმისაწვდომია გამოშვებულ ნაწერებში და ვიკიზე.<br \/><br \/>"
+        "message": "Betaflight დოკუმენტაცია ხელმისაწვდომია გამოშვებულ ნაწერებში და wiki ზე.<br \/><br \/>"
     },
     "defaultDocumentation1": {
-        "message": "ბეტაფლაითის ვიკი არის მშვენიერი რესურსი ინფორმაციისთვის, მასზე შეგიძლიათ გადახვიდეთ <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a>."
+        "message": "Betaflight wiki არის მშვენიერი რესურსი ინფორმაციისთვის, მასზე შეგიძლიათ გადახვიდეთ <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">აქედან<\/a>."
     },
     "defaultDocumentation2": {
         "message": "პროგარმული უზრუნველყოფის შენიშვნების ნახვა შეგიძლიათ გითჰაბზე<a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">აქ<\/a>."
@@ -1024,7 +1042,7 @@
         "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC ჯგუფის ნაკადი<\/a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight-ის ვიკი<\/a>"
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki <\/a>"
     },
     "defaultSupport3": {
         "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">ჯოშუა ბარდველის ბეტაფლაით 4,3 -ის ვიდეო<\/a>"
@@ -1033,7 +1051,7 @@
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub<\/a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">ბეტაფლაითის დეველოპერები დისქორდზე<\/a>"
+        "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight დეველოპერები Discord ზე<\/a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "აქსელერომეტრის კალიბრაცია"
@@ -1347,6 +1365,10 @@
     "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
         "message": "პოზიციის შენარჩუნება ჩართულია",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "ავტოპილოტის რეჟიმის გადამრთველი აქტიურია",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "დაქოქვის გადამრთველი უკვე აქტიურია. სისტემის უსაფრთხოებისთვის, ძრავების ასამუშავებლად ჯერ გამორთეთ დაქოქვის ღილაკი და ხელახლა ჩართეთ",
@@ -1696,6 +1718,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "პლატის ნებისმიერი როტაცია გრადუსებში, რაც იძლევა მისი გვერდულად, თავდაყირა ან ნებისმიერი კუთხით დამონტაჟების საშუალებას. გარე სენსორების გამოყენებისას, გამოიყენეთ თავად სენსორების გასწორების პარამეტრები (Gyro, Acc, Mag), რათა განსაზღვროთ სენსორის პოზიცია პლატის ორიენტაციისგან დამოუკიდებლად "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "დაფის მიმართულების ავტო-დეტექცია..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "დაფის ორიენტაციის ასისტენტი"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "ეს ასისტენტი განსაზღვრავს თქვენი ფრენის კონტროლერის სამაგრის ორიენტაციას ოთხი მარტივი მოძრაობის მეშვეობით. მოათავსეთ დრონი ბრტყელ ზედაპირზე ისე, რომ კამერა თქვენგან საპირისპირო მხარეს (ეკრანისკენ) იყოს მიმართული, შემდეგ კი მიჰყევით მითითებებს."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "დაწყება"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "ნაბიჯი"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "მოათავსეთ დრონი ბრტყელ ზედაპირზე ისე, რომ კამერა თქვენგან საპირისპირო მხარეს (ეკრანისკენ) იყოს მიმართული."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "აწიეთ ცხვირი ზემოთ 45°-ით."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "დახარეთ მარჯვენა მხარე ქვემოთ დაახლოებით 45°-ით."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "მობრუნეთ დრონი 45°-ით მარჯვნივ (ზემოდან ხედით)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "დააბრუნეთ დრონი სწორხაზოვან პოზიციაში."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "შეინარჩუნეთ უძრავი პოზიცია..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "სტაბილიზაცია"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "კვლავ გადახარეთ"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "დააბრუნეთ სწორ პოზიციაში"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "ღერძი ამოცნობილია — გეჭიროთ უძრავად"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "ბრუნვა"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "ორიენტაციის გამოთვლა..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "ორიენტაცია ამოცნობილია"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "დაფის ორიენტაცია გამართულია — ცვლილება არ სჭირდება."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "მიმდინარე"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "ამოცნობილია"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "უკან"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "გადახედვა"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "გაუქმება"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "კიდევ ცდა"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "ახლა დაფიქსირება"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "ამოცნობის სიზუსტე შემცირებულია — შენახვამდე გადაამოწმეთ შედეგი სივრცულ მდგომარეობასთან."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "ამ ასისტენტის მუშაობისთვის აუცილებელია აკსელერომეტრის არსებობა."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "გთხოვთ, დააკალიბროთ აკსელერომეტრი ამ ასისტენტის დაწყებამდე."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "ზოგიერთი მონაცემი ვერ შეგროვდა. გთხოვთ, სცადოთ თავიდან."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "აკსელერომეტრი ვერ აღიქვამს გრავიტაციას. დარწმუნდით, რომ ფრენის კონტროლერი მიერთებულია და არ მოძრაობს."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Pitch მოძრაობა ვერ ამოიცნო. სცადეთ თავიდან და აწიეთ ცხვირი უფრო მაღლა."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Roll მოძრაობა ვერ ამოიცნო. სცადეთ თავიდან და დახარეთ მარჯვენა მხარე უფრო მეტად."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "ბრტყელი"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "დაფიქსირებულია!"
+    },
     "configurationSensorGyroToUse": {
         "message": "GYRO\/ACCEL"
     },
@@ -1968,6 +2104,9 @@
     },
     "configurationSpiRX": {
         "message": "SPI ავტობუსის მიმღების პროვაიდერი"
+    },
+    "configurationSaved": {
+        "message": "კონფიგურაცია შენახულია"
     },
     "configurationButtonSave": {
         "message": "შენახვა და გადატვირთვა"
@@ -2544,6 +2683,9 @@
     "receiverModelId": {
         "message": "მოდელის მატჩის ID"
     },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">ყოველთვის შეამოწმეთ, რომ თქვენი Failsafe გამართულად მუშაობს!<\/a><\/strong><\/b> პარამეტრები მოცემულია Failsafe ჩანართში, რომელიც მოითხოვს Expert Mode-ს.<br> &#8226; <b>გამოიყენეთ უახლესი Tx ფირმვერი!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">გამორთეთ აპარატურული ADC ფილტრი<\/a><\/strong> გადამცემში,  თუ იყენებთ OpenTx-ს ან EdgeTx-ს.<br>ძირითად გამართვას: სწორად დააკონფიგურირეთ 'Receiver'-ის პარამეტრები. აირჩიეთ სწორი ‘Channel Map’ თქვენი პულტისთვის. შეამოწმეთ, რომ Roll, Pitch და სხვა გრაფიკული ზოლები სწორად მოძრაობს. გადამცემში შეასწორეთ არხის კიდურა  ან დიაპაზონის მნიშვნელობები ~1000-დან ~2000-მდე, ხოლო midpoint დააყენეთ 1500-ზე. დამატებითი ინფორმაციისთვის წაიკითხეთ <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">დოკუმენტაცია<\/a><\/strong>."
+    },
     "receiverFailsafeActiveTitle": {
         "message": "Failsafe აქტიური"
     },
@@ -2725,6 +2867,14 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "ფრენის რეჟიმი ზრდის P და I ტერმინს დროსელის სწრაფი მოძრაობების დროს, რათა გააუმჯობესოს ჩხირის თვალყურის დევნება და თავიდან აიცილოს ცხვირის დრეიფი დროსელის სწრაფი ცვლილებების დროს",
         "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "AirMode უზრუნველყოფს საფრენი აპარატის სტაბილურობის შენარჩუნებას დაბალი throttle დროს. დამატებითი ინფორმაციისთვის იხილეთ <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> Betaflight.com-ზე.",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> აქტიურად არეგულირებს საფრენი აპარატის სიმაღლეს გარე სენსორების გამოყენებით, Angle Mode-თან (სტაბილურ რეჟიმთან) კომბინაციაში.",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "ავტომატური პილოტის რეჟიმი იძლევა ფრენის ავტონომიურ კონტროლს, აერთიანებს სიმაღლის შეკავებას და პოზიციის შეკავებას სტაბილურად ფრენის შესანარჩუნებლად ან დაგეგმილი ფრენის გზაზე.",
@@ -2949,6 +3099,14 @@
     "adjustmentsColumnAdjustmentScale": {
         "message": "მასშტაბი (მნიშვნ.|%)"
     },
+    "adjustmentsCenterHelp": {
+        "message": "ადგენს შუა წერტილს ან საორიენტაციო მნიშვნელობას, რომელსაც იყენებს რეგულირების ფუნქცია.<br \/><br \/><strong>სლაიდერით რეგულირება:<\/strong><br \/>სლაიდერით რეგულირებისთვის, Adjustment Center დააყენეთ 0-ზე. სლაიდერის მიმდინარე პოზიცია გამოყენებული იქნება ზემოთ\/ქვემოთ დასარეგულირებლად.<br \/><br \/><strong>Selection Adjustments (არჩევითი რეგულირება):<\/strong><br \/>დააყენეთ Adjustment Center 0-ზე, ან კონკრეტულ მიკროწამის (uS) მნიშვნელობაზე, თუ გსურთ RC რეგულირების ინიციალიზაციისას გადამრთველის საორიენტაციო წერტილი გადაანაცვლოთ 1500uS-დან.<br \/><br \/><strong>ბიჯური რეგულირება:<\/strong><br \/>დააყენეთ Adjustment Center 0-ზე, რათა გამოყენებულ იქნას დასარეგულირებელი ელემენტის მიმდინარე მნიშვნელობა.<br \/><br \/><strong>აბსოლუტური რეგულირება:<\/strong><br \/>აბსოლუტური რეგულირების მეთოდის გამოსაყენებლად, თქვენ უნდა მიუთითოთ როგორც Adjustment Center, ისე Scale, რათა განსაზღვროთ სასურველი მნიშვნელობა და დიაპაზონი. დიაპაზონი იანგარიშება შემდეგნაირად: Center ± Scale. მაგალითად, თუ Adjustment Center-ს დააყენებთ 50-ზე, ხოლო Adjustment Scale-ს 25-ზე, მიიღებთ დიაპაზონს 25-დან 75-მდე, სადაც ცენტრალური პოზიცია ასახული იქნება 50-ზე.<br \/><br \/>მეტი ინფორმაციისთვის ეწვიეთ <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">ამ გვერდს<\/a>.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "აკონტროლებს რეგულირების მასშტაბირებას ან დიაპაზონს; მაღალი მნიშვნელობები ზრდის რეგულირების დიაპაზონს ან მგრძნობელობას.<br \/><br \/><strong>სლაიდერით რეგულირება:<\/strong><br \/>სლაიდერით რეგულირებისთვის, Adjustment Scale აკონტროლებს რეგულირების მასშტაბირებას\/მგრძნობელობას. მნიშვნელობა 50 უდრის სლაიდერის დიაპაზონის 50%-ს. 0-ზე დაყენება იყენებს სლაიდერების ნაგულისხმევ მასშტაბს.<br \/><br \/><strong>არჩევითი რეგულირება:<\/strong><br \/>არჩევითი რეგულირებისთვის, ნაგულისხმევი ქცევისთვის დააყენეთ Adjustment Scale 0-ზე, ან მიუთითეთ მიკროწამის (uS) მნიშვნელობა დიაპაზონის შესაზღუდად. მაგალითად: დააყენეთ Adjustment Center 1000 (uS)-ზე და Adjustment Scale 500 (uS)-ზე, რათა 3-პოზიციანი გადამრთველი გამოიყენოთ როგორც 2-პოზიციანი გადამრთველი.<br \/><br \/><strong>ბიჯური და აბსოლუტური რეგულირება:<\/strong><br \/>ბიჯური და აბსოლუტური რეგულირებისთვის, Adjustment Scale განსაზღვრავს დიაპაზონს Adjustment Center-ის ზემოთ და ქვემოთ. მაგალითად, მნიშვნელობა 25 ქმნის ±25 რეგულირების დიაპაზონს Adjustment Center-ის მნიშვნელობიდან, ან მიმდინარე მნიშვნელობიდან, თუ Adjustment Center დაყენებულია 0-ზე.<br \/><strong>შენიშვნა:<\/strong> აბსოლუტური რეგულირების მეთოდის პოტენციომეტრით გამოსაყენებლად, აუცილებელია მითითებული იყოს Adjustment Scale-ის მნიშვნელობა.<br \/><br \/>მეტი ინფორმაციისთვის ეწვიეთ <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">ამ გვერდს<\/a>.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "სლოტი 1"
     },
@@ -3087,6 +3245,9 @@
     },
     "servosChangeDirection": {
         "message": "შეცვალეთ მიმართულება TX-ში შესატყვისად"
+    },
+    "servosForwardChannel": {
+        "message": "არხის {{channel}} გადაგზავნა სერვოზე {{servo}}"
     },
     "servosName": {
         "message": "სახელი"
@@ -3692,6 +3853,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "ფუნქცია მუშაობს მხოლოდ DSHOT ESC-ებთან.<br \/>დაადასტურეთ, რომ თქვენი ESC (ელექტრული სიჩქარის კონტროლერი) მხარს უჭერს DSHOT პროტოკოლს და შეცვალეთ იგი $t(tabMotorTesting.message) ჩანართზე."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "მოტორების რაოდენობა არის 0.<br \/>გადაამოწმეთ მიმდინარე Mixer `$t(tabMotorTesting.message)` ჩანართზე ან გამართეთ ინდივიდუალური მიქსერი CLI-ის საშუალებით. იხილეთ ეს <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki გვერდი<\/a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "განაახლე პროგრამა.<br \/> დარწმუნდით რომ იყენებთ უახლეს პროგრამას: ბეტაფლაით 4,3 ან უფრო ახლი."
     },
@@ -3805,6 +3969,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "შესრულება"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "წინასწარი გადახედვა"
     },
     "cliPanelTitle": {
         "message": "ბრძანების ხაზის ინტერფეისი"
@@ -4207,6 +4374,9 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "აღდგენა \/ დაკარგული კომუნიკაცია"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "თუ დაკარგეთ კავშირი თქვენს დაფასთან, კავშირის აღსადგენად მიყევით ამ ნაბიჯებს:<ul><li>გათიშეთ კვება<\/li><li>ჩართეთ 'No reboot sequence' და 'Full chip erase'.<\/li><li>დაამოკლეთ BOOT პინები ან გეჭიროთ BOOT ღილაკი.<\/li><li>ჩართეთ კვება (სწორად გაკეთების შემთხვევაში, აქტივობის LED ინდიკატორი არ აციმციმდება).<\/li><li>საჭიროების შემთხვევაში დააინსტალირეთ ყველა STM32 დრაივერი და Zadig (იხილეთ Betaflight-ის სახელმძღვანელოს <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/firmware-installation\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> სექცია).<\/li><li>დახურეთ აპლიკაცია და ხელახლა გახსენით ის.<\/li><li>აუშვით ხელი BOOT ღილაკს, თუ თქვენს FC-ს აქვს ის.<\/li><li>ჩაწერეთ სწორი ფირმვერი (გამოიყენეთ ბოდის სიხშირის ხელით მითითება — manual baud rate, თუ ეს განსაზღვრულია თქვენი FC-ის სახელმძღვანელოში).<\/li><li>გათიშეთ კვება.<\/li><li>მოხსენით BOOT ჯამპერი.<\/li><li>ჩართეთ კვება (აქტივობის LED ინდიკატორი უნდა აციმციმდეს).<\/li><li>დაუკავშირდით ჩვეულებრივ რეჟიმში.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "თუ კომუნიკაცია დაკარგეთ: გამორთეთ, ჩართეთ No Reboot Sequence და Full Chip Ease, გადახტეთ BOOT ქინძისთავები და შემდეგ ჩართეთ. საჭიროების შემთხვევაში დააინსტალირეთ დრაივერები."
@@ -5212,6 +5382,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag კომპენსაცია %"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "უზრუნველყოფს სტაბილურ throttle და PID მუშაობას ბატარეის ძაბვის მთელ გამოსაყენებელ დიაპაზონში, ბატარეის ძაბვის ვარდნასთან ერთად მოტორების სიმძლავრის გაზრდის ხარჯზე.<br \/><br \/>კომპენსაციის რაოდენობა შეიძლება იცვლებოდეს 0-დან 100%-მდე. რეკომენდებულია სრული კომპენსაცია (100%).<br \/><br \/>მეტი ინფორმაციისთვის ეწვიეთ <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">ამ Wiki სტატიას<\/a>."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5753,6 +5926,9 @@
     "powerBatteryProfileOption": {
         "message": "ბატარეის პროფილი $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "ფრენის კონტროლერმა დააყენა ბატარეის პროფილი:<strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "მაგ. LiPo, Li-Ion"
     },
@@ -5797,6 +5973,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "{{element}}-ის გამოჩენის გადართვა პროფილში {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>გაფრთხილება:<\/b><\/span> OSD ჩიპი არ იქნა აღმოჩენილი. ზოგიერთი ფრენის კონტროლერი სათანადოდ ვერ კვებავს OSD ჩიპს, თუ არ არის დაკავშირებული ბატარეასთან. გთხოვთ, შეაერთოთ ბატარეა USB-ს დაკავშირებამდე (PROPS REMOVED!)."
@@ -7224,6 +7403,14 @@
         "message": "პოზიციის შეკავება ვერ მოხერხდა",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
     },
+    "osdWarningTextAutopilotAbort": {
+        "message": "ავტოპილოტის მისია შეწყდა",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "ავტოპილოტის მისია შეწყდა",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "უცნობი $1"
     },
@@ -7259,6 +7446,10 @@
     },
     "osdButtonSaved": {
         "message": "შენახულია"
+    },
+    "vtxHelp": {
+        "message": "აქ შეგიძლიათ დააკონფიგურიროთ თქვენი ვიდეო გადამცემის (VTX) პარამეტრები. თქვენ შეგიძლიათ ნახოთ და შეცვალოთ გადაცემის მნიშვნელობები, მათ შორის VTX Tables, თუ ფრენის კონტროლერს და VTX-ს აქვთ ამის მხარდაჭერა.<br>თქვენი VTX-ის გასამართად მიყევით შემდეგ ნაბიჯებს:<br>1. გადადით <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">ამ<\/a> გვერდზე;<br>2. იპოვეთ თქვენი ქვეყნისა და VTX მოდელისთვის შესაბამისი VTX კონფიგურაციის ფაილი და ჩამოტვირთეთ ის;<br>3. დააწკაპუნეთ ქვემოთ მოცემულ '$t(vtxButtonLoadFile.message)' ღილაკს, აირჩიეთ VTX კონფიგურაციის ფაილი და ჩატვირთეთ;<br>4. გადაამოწმეთ, რომ პარამეტრები სწორია;<br>5. დააწკაპუნეთ '$t(vtxButtonSave.message)'-ს, რათა შეინახოთ VTX-ის პარამეტრები საფრენ კონტროლერში.<br>6. სურვილისამებრ, შეგიძლიათ დააწკაპუნოთ '$t(vtxButtonSaveLua.message)'-ს, რათა შეინახოთ lua კონფიგურაციის ფაილი, რომელიც შეგიძლიათ გამოიყენოთ betaflight lua სკრიპტებთან ერთად (იხილეთ მეტი <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">აქ<\/a>)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">ყურადღება:<\/span> თქვენი VTX არ არის კონფიგურირებული ან არ არის მხარდაჭერილი. ასე რომ, თქვენ არ შეგიძლიათ შეცვალოთ VTX მნიშვნელობები აქედან. ეს შესაძლებელი იქნება მხოლოდ იმ შემთხვევაში, თუ ფრენის კონტროლერი მიმაგრებულია VTX-ზე რაიმე პროტოკოლის გამოყენებით, როგორიცაა Tramp ან SmartAudio და სწორად არის კონფიგურირებული $t(tabPorts.message) ჩანართში, საჭიროების შემთხვევაში.",
@@ -7774,6 +7965,93 @@
     },
     "magCalibrationAccept": {
         "message": "კალიბრაციის შენახვა"
+    },
+    "magCalibrationFull": {
+        "message": "სრული კალიბრაცია (ავტო-გასწორება)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "ერთი დატრიალება — ასწორებს ცდომილებებს, მაგნიტურ ხარვეზებს და კომპასის ორიენტაციას"
+    },
+    "magCalibrationFullTitle": {
+        "message": "სრული კალიბრირება"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "მიჰყევით ქვემოთ მოცემულ ნაბიჯებს და სტაბილურად გეჭიროთ დრონი თითოეული სრული ბრუნისას. ახალი კუთხეების მიღწევასთან ერთად ზონების თვლა გაიზრდება — შეეცადეთ შეავსოთ 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "ნაბიჯი {{n}} \/ {{total}}-დან"
+    },
+    "magCalibrationFullStep1": {
+        "message": "დაიკავეთ დრონი სწორად სწორ ზედაპირზე და ნელა დაატრიალეთ სრულ 360°-ით."
+    },
+    "magCalibrationFullStep2": {
+        "message": "ამოატრიალეთ თავდაყირა და ნელა შემოატრიალეთ კიდევ ერთ სრულ 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "მიმართეთ დრონის ცხვირი ვერტიკალურად ზემოთ და შემოატრიალეთ ერთი სრული ბრუნით მის გარშემო."
+    },
+    "magCalibrationFullStep4": {
+        "message": "მიმართეთ დრონის ცხვირი ვერტიკალურად ქვემოთ და შემოატრიალეთ ერთი სრული ბრუნით."
+    },
+    "magCalibrationFullStep5": {
+        "message": "დააწვინეთ დრონი მარცხენა გვერდზე და შემოატრიალეთ ერთი სრული ბრუნით."
+    },
+    "magCalibrationFullStep6": {
+        "message": "დააწვინეთ დრონი მარჯვენა გვერდზე და შემოატრიალეთ ერთი სრული ბრუნით."
+    },
+    "magCalibrationFullStep7": {
+        "message": "„გააკეთეთ რამდენიმე ნელი გადატრიალება წინ, ყოველ ჯერზე სხვადასხვა მიმართულებით."
+    },
+    "magCalibrationFullStep8": {
+        "message": "ნელა გადაატრიალეთ დრონი უკან რამდენჯერმე, კვლავ სხვადასხვა მხარეს მიბრუნებით."
+    },
+    "magCalibrationFullZones": {
+        "message": "დაფარულია {{covered}} \/ {{total}} ზონა"
+    },
+    "magCalibrationFullCompute": {
+        "message": "გამოთვლა"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "დაფარვა:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "მიმართულება:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "კალიბრაცია:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "ნარჩენი:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "CLI-ის კოპირება"
+    },
+    "magCalibrationFullApply": {
+        "message": "გამოყენება"
+    },
+    "magCalibrationFullExport": {
+        "message": "მოდელის გატანა"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "არ არის საკმარისი მონაცემები — დაატრიალეთ უფრო დიდხანს"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "GPS ან IP ლოკაცია ვერ მოიძებნა — მაგნიტური დახრილობის განსაზღვრა შეუძლებელია"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI-ის ბრძანებები დაკოპირდა გაცვლის ბუფერში"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "გაცვლის ბუფერში დაკოპირება ვერ მოხერხდა"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "ფირმვერი {{version}} ძალიან მოძველებულია CUSTOM mag-ის გასასწორებლად (საჭიროა {{min}}+). განაახლეთ ფირმვერი და შემდეგ გამოიყენეთ."
+    },
+    "magCalibrationFullApplied": {
+        "message": "კალიბრაცია გამოყენებულია და შენახულია"
     },
     "magCalibrationDiscard": {
         "message": "გაუქმება"
@@ -9388,5 +9666,89 @@
     },
     "preflightForecastWeather": {
         "message": "ამინდი"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM-ის მომწოდებელი"
+    },
+    "preflightNotamProviderNone": {
+        "message": "გაუქმება"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (აშშ, საჭიროებს API გასაღებს)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (გლობალური საჰაერო სივრცე, საჭიროებს API გასაღებს)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA API გასაღები (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API გასაღები"
+    },
+    "preflightNotamRadius": {
+        "message": "ძებნის რადიუსი"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "საზღვაო მილი"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "კმ"
+    },
+    "preflightNotamSettings": {
+        "message": "საჰაერო სივრცის მონაცემთა პარამეტრები"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "საჰაერო სივრცის მონაცემები თქვენს კოორდინატებს არჩეულ პროვაიდერს უგზავნის. არანაირი სხვა პერსონალური მონაცემი არ გადაიცემა."
+    },
+    "preflightNotamLoading": {
+        "message": "საჰაერო სივრცის მონაცემების მიღება..."
+    },
+    "preflightNotamEmpty": {
+        "message": "ამ ლოკაციისა და რადიუსისთვის შეტყობინებები ვერ მოიძებნა"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "არჩეული პროვაიდერისთვის საჭიროა API გასაღები. შეიყვანეთ თქვენი გასაღები ზემოთ მოცემულ პარამეტრებში."
+    },
+    "preflightNotamFetchError": {
+        "message": "საჰაერო სივრცის მონაცემების მიღება ვერ მოხერხდა"
+    },
+    "preflightNotamActiveNow": {
+        "message": "ახლა აქტიურია"
+    },
+    "preflightNotamPermanent": {
+        "message": "მუდმივი"
+    },
+    "preflightNotamExpired": {
+        "message": "ვადაგასული"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "დროებითი ფრენის შეზღუდვა TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "სპეციალური დანიშნულების საჰაერო სივრცე SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "თოვლის შესახებ შეტყობინებები"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM ინფორმაცია ვულკანური ფერფლის შესახებ"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM საავიაციო შეტყობინებები"
+    },
+    "preflightNotamAltFrom": {
+        "message": "ქვედა"
+    },
+    "preflightNotamAltTo": {
+        "message": "ზედა"
+    },
+    "preflightNotamShowMore": {
+        "message": "აჩვენე მეტი"
+    },
+    "preflightNotamShowLess": {
+        "message": "აჩვენე ნაკლები"
+    },
+    "preflightNotamLastFetched": {
+        "message": "ბოლოს განახლდა"
     }
 }

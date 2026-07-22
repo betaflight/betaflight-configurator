@@ -391,8 +391,8 @@
 <script setup>
 import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
+import { useSaving } from "@/composables/useSaving";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -416,10 +416,9 @@ const procedureGpsImageDark = new URL("../../images/icons/cf_failsafe_procedure4
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
-const navigationStore = useNavigationStore();
-const { reboot } = useReboot();
+const { saveAndReboot } = useReboot();
 
-const isSaving = ref(false);
+const { runSave } = useSaving();
 
 // --- Data loading ---
 
@@ -657,40 +656,30 @@ const gpsRescueAllowArmingWithoutFix = computed({
 
 // --- Save ---
 
-const saveConfig = async () => {
-    if (isSaving.value) return;
-    isSaving.value = true;
+const saveConfig = () =>
+    runSave(
+        async () => {
+            await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG));
 
-    try {
-        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG));
-
-        await new Promise((resolve) => {
-            mspHelper.sendRxFailConfig(resolve);
-        });
-
-        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
-            await MSP.promise(MSPCodes.MSP_SET_GPS_RESCUE, mspHelper.crunch(MSPCodes.MSP_SET_GPS_RESCUE));
-        }
-
-        initializeDefaults();
-
-        await new Promise((resolve) => {
-            mspHelper.writeConfiguration(false, () => {
-                navigationStore.cleanup(() => {
-                    reboot();
-                    resolve();
-                });
+            await new Promise((resolve) => {
+                mspHelper.sendRxFailConfig(resolve);
             });
-        });
-    } catch (e) {
-        console.error("Failed to save configuration", e);
-    } finally {
-        isSaving.value = false;
-    }
-};
+
+            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
+                await MSP.promise(MSPCodes.MSP_SET_GPS_RESCUE, mspHelper.crunch(MSPCodes.MSP_SET_GPS_RESCUE));
+            }
+
+            initializeDefaults();
+
+            await saveAndReboot();
+        },
+        {
+            onError: (e) => console.error("Failed to save configuration", e),
+        },
+    );
 
 onMounted(async () => {
     await loadConfig();

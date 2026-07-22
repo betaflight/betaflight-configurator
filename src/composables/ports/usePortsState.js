@@ -37,6 +37,11 @@ export function usePortsState(getRules) {
         58: "UART8",
         59: "UART9",
         60: "UART10",
+        61: "UART11",
+        62: "UART12",
+        63: "UART13",
+        64: "UART14",
+        65: "UART15",
         70: "PIOUART0",
         71: "PIOUART1",
         72: "PIOUART2",
@@ -83,9 +88,17 @@ export function usePortsState(getRules) {
     });
 
     const loadConfig = () => {
-        MSP.promise(MSPCodes.MSP_VTX_CONFIG).then(() => {
-            mspHelper.loadSerialConfig(handleSerialConfigLoaded);
-        });
+        MSP.promise(MSPCodes.MSP_VTX_CONFIG)
+            .then(() => {
+                mspHelper.loadSerialConfig(handleSerialConfigLoaded);
+            })
+            .catch((error) => {
+                console.error("Failed to load VTX config for ports tab:", error);
+                isLoading.value = false;
+                nextTick(() => {
+                    GUI.content_ready();
+                });
+            });
     };
 
     const vtxTableNotConfigured = computed(() => {

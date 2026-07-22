@@ -5,6 +5,7 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import { API_VERSION_1_46 } from "@/js/data_storage";
+import { useReboot } from "@/composables/useReboot";
 
 // Helper functions moved to outer scope
 function getGridPosition(index) {
@@ -91,24 +92,17 @@ function isVtxActive(activeFunction) {
     return activeFunctions.includes(activeFunction);
 }
 
-// Save configuration to flight controller
+// Save configuration to flight controller. Error/cancellation handling and the isSaving
+// state are owned by the caller's runSave() (useSaving); this only issues the MSP writes
+// and persists to EEPROM.
 async function saveConfig() {
-    // Refactored to reduce nesting
-    return new Promise((resolve) => {
-        const saveColors = () => {
-            mspHelper.sendLedStripColors(saveModeColors);
-        };
+    const { saveToEeprom } = useReboot();
 
-        const saveModeColors = () => {
-            mspHelper.sendLedStripModeColors(writeConfig);
-        };
+    await mspHelper.sendLedStripConfig();
+    await mspHelper.sendLedStripColors();
+    await mspHelper.sendLedStripModeColors();
 
-        const writeConfig = () => {
-            mspHelper.writeConfiguration(false, resolve);
-        };
-
-        mspHelper.sendLedStripConfig(saveColors);
-    });
+    await saveToEeprom();
 }
 
 export function useLedStrip() {
@@ -134,12 +128,16 @@ export function useLedStrip() {
 
     // Load LED configuration data
     async function loadData() {
-        await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG);
-        await MSP.promise(MSPCodes.MSP_LED_COLORS);
-        await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
+        try {
+            await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG);
+            await MSP.promise(MSPCodes.MSP_LED_COLORS);
+            await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
+            }
+        } catch (error) {
+            console.error("Error loading LED strip data:", error);
         }
     }
 

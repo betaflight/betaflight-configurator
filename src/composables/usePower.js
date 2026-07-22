@@ -1,4 +1,4 @@
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, watch } from "vue";
 import semver from "semver";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
@@ -9,6 +9,9 @@ import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
+import { gui_log } from "../js/gui_log";
+import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { useReboot } from "./useReboot";
 
 export function usePower() {
     const supported = computed(() => {
@@ -23,6 +26,9 @@ export function usePower() {
     });
     const activeBatteryProfile = ref(0);
     const batteryProfileName = ref("");
+    // Guards for the TX-driven battery-profile sync (see watcher below).
+    const isLoading = ref(false);
+    let syncingFromFc = false;
     const analyticsChanges = reactive({});
     const batteryState = reactive({
         cellCount: 0,
@@ -181,6 +187,8 @@ export function usePower() {
         const previousProfileName = batteryProfileName.value;
 
         try {
+            // Suppress the TX-driven sync watcher while we apply our own change
+            isLoading.value = true;
             // Pause global and local polling to prevent MSP_STATUS_EX from
             // overwriting FC.CONFIG.batteryProfile with stale data during the switch
             connectionStore.pauseLiveData();
@@ -224,13 +232,43 @@ export function usePower() {
             }
             throw error;
         } finally {
+            isLoading.value = false;
             connectionStore.resumeLiveData();
             GUI.interval_resume("power_data_pull_slow");
         }
     };
 
+    // Reflect TX-driven battery-profile changes in the UI. The global live-status poller
+    // (serial_backend.js) refreshes FC.CONFIG.batteryProfile via MSP_STATUS_EX every 250ms;
+    // an adjustment switch on the TX can change the active profile out from under the UI.
+    // Reload when that happens — but never during our own change (isLoading), an in-flight
+    // load, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
+    const syncBatteryProfileFromFc = async () => {
+        if (!hasBatteryProfiles.value || isLoading.value || syncingFromFc || dirty.value) {
+            return;
+        }
+
+        syncingFromFc = true;
+        try {
+            await loadData();
+            gui_log(i18n.getMessage("powerReceivedBatteryProfile", [FC.CONFIG.batteryProfile + 1]));
+        } finally {
+            syncingFromFc = false;
+        }
+    };
+
+    watch(
+        () => FC.CONFIG.batteryProfile,
+        (newValue) => {
+            if (newValue !== activeBatteryProfile.value) {
+                syncBatteryProfileFromFc();
+            }
+        },
+    );
+
     // Load data from flight controller
     const loadData = async () => {
+        isLoading.value = true;
         try {
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
             await MSP.promise(MSPCodes.MSP_VOLTAGE_METERS);
@@ -247,6 +285,8 @@ export function usePower() {
             updateStateFromFC();
         } catch (error) {
             console.error("Error loading power data:", error);
+        } finally {
+            isLoading.value = false;
         }
     };
 
@@ -322,6 +362,12 @@ export function usePower() {
                 amperage: FC.BATTERY_STATE.amperage,
             });
         } catch (error) {
+            // Same lifecycle race as the main live-data poller: switching away from the Power tab
+            // (or a disconnect) clears the MSP queue and cancels the in-flight poll. Expected — the
+            // interval is torn down on tab switch anyway — so don't log the cancellation.
+            if (isMspCancelled(error)) {
+                return;
+            }
             console.error("Error updating live data:", error);
         }
     };
@@ -457,8 +503,11 @@ export function usePower() {
         amperagescalechanged.value = false;
     };
 
-    // Save configuration
-    const saveConfig = async (callback) => {
+    // Save configuration. Error/cancellation handling and the isSaving state are owned by the
+    // caller's runSave() (useSaving); this only marshals data and issues the MSP writes.
+    const saveConfig = async () => {
+        const { saveToEeprom } = useReboot();
+
         // Update FC data from reactive state
         FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
         FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
@@ -478,38 +527,28 @@ export function usePower() {
             FC.CURRENT_METER_CONFIGS[index].offset = config.offset;
         });
 
-        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, analyticsChanges, "power");
+        await MSP.promise(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG));
 
-        // Clear analytics changes
+        // Save battery profile name if supported
+        if (hasBatteryProfiles.value) {
+            FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = batteryProfileName.value;
+            await MSP.promise(
+                MSPCodes.MSP2_SET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
+            );
+        }
+
+        await mspHelper.sendVoltageConfig();
+        await mspHelper.sendCurrentConfig();
+
+        await saveToEeprom();
+
+        // Only after a successful persist: record analytics and refresh the dirty baseline.
+        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, analyticsChanges, "power");
         for (const key in analyticsChanges) {
             delete analyticsChanges[key];
         }
-
-        try {
-            await MSP.promise(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG));
-
-            // Save battery profile name if supported
-            if (hasBatteryProfiles.value) {
-                FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = batteryProfileName.value;
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
-                );
-            }
-
-            await mspHelper.sendVoltageConfig();
-            await mspHelper.sendCurrentConfig();
-            await mspHelper.writeConfiguration(false);
-            // Refresh the saveConfig() baseline so dirty reflects persisted values.
-            // Equivalent to updateStateFromFC() baseline reset without extra FC reads.
-            powerConfigBaseline.value = serializePowerConfig();
-
-            if (callback) {
-                callback();
-            }
-        } catch (error) {
-            console.error("Error saving power configuration:", error);
-        }
+        powerConfigBaseline.value = serializePowerConfig();
     };
 
     return {

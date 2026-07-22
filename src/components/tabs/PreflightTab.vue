@@ -21,6 +21,7 @@
                                 inputmode="decimal"
                                 v-model="manualLat"
                                 :placeholder="$t('preflightLatitude')"
+                                :aria-label="$t('preflightLatitude')"
                                 class="location-input"
                             />
                             <input
@@ -28,6 +29,7 @@
                                 inputmode="decimal"
                                 v-model="manualLon"
                                 :placeholder="$t('preflightLongitude')"
+                                :aria-label="$t('preflightLongitude')"
                                 class="location-input"
                             />
                             <div class="default_btn">
@@ -109,6 +111,7 @@
                                     type="text"
                                     v-model="saveLocationLabel"
                                     :placeholder="$t('preflightLocationLabel')"
+                                    :aria-label="$t('preflightLocationLabel')"
                                     :maxlength="preflight.MAX_LABEL_LENGTH"
                                     class="location-input save-label-input"
                                     @keyup.enter="
@@ -633,6 +636,7 @@
                                             type="password"
                                             autocomplete="new-password"
                                             class="notam-setting-input"
+                                            :aria-label="$t('preflightNotamFaaApiKeyLabel')"
                                             @change="onNotamSettingChange"
                                         />
                                     </div>
@@ -645,6 +649,7 @@
                                             type="password"
                                             autocomplete="new-password"
                                             class="notam-setting-input"
+                                            :aria-label="$t('preflightNotamOpenAipApiKeyLabel')"
                                             @change="onNotamSettingChange"
                                         />
                                     </div>
@@ -657,6 +662,7 @@
                                                 min="1"
                                                 max="500"
                                                 class="notam-radius-input"
+                                                :aria-label="$t('preflightNotamRadius')"
                                                 @change="onNotamSettingChange"
                                             />
                                             <USelect

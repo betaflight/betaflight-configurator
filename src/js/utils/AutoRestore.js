@@ -1,4 +1,4 @@
-import PortHandler from "../port_handler";
+import DeviceHandler from "../device_handler";
 import { gui_log } from "../gui_log";
 import { i18n } from "../localization";
 import MspHelper from "../msp/MSPHelper";
@@ -264,8 +264,8 @@ class AutoRestore {
 
         // The board is already booted and the port is available when restore is invoked,
         // so connect directly — no need to wait for the port.
-        const port = PortHandler.portPicker.selectedPort;
-        const baud = PortHandler.portPicker.selectedBauds;
+        const port = DeviceHandler.devicePicker.selectedDevice;
+        const baud = DeviceHandler.devicePicker.selectedBauds;
 
         try {
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });

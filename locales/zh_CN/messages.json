@@ -652,6 +652,12 @@
     "serialPortOpenFail": {
         "message": "打开串口 <span class=\"message-negative\">失败<\/span>"
     },
+    "connectionFailedTitle": {
+        "message": "连接失败"
+    },
+    "connectionFailed": {
+        "message": "连接到选定端口<span class=\"message-negative\">失败d<\/span>。确保设备可被连接并且连接设置正确，然后重试。"
+    },
     "serialPortClosedOk": {
         "message": "关闭串口 <span class=\"message-positive\">成功<\/span>"
     },
@@ -953,6 +959,9 @@
     "defaultHardwareHead": {
         "message": "硬件"
     },
+    "defaultHardwareText": {
+        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。请检查固件烧写器标签以获取完整的硬件列表。<br \/><br \/>有用的硬件工具\/驱动程序：<ul><li>对于使用 CP210x USB 转串口的旧硬件， 最新的 <b>CP210x 驱动器<\/b> 可以从 <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li>下载。最新的 <b>Zadig<\/b> Windows USB 驱动安装程序可以从 <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li><b>下载。ImpulseRC Driver Fixer<\/b> 可以从 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><\/ul>下载"
+    },
     "defaultSoftwareHead": {
         "message": "软件"
     },
@@ -961,6 +970,9 @@
     },
     "defaultContributingHead": {
         "message": "参与开发"
+    },
+    "defaultContributingText": {
+        "message": "如果想协助 Betaflight 精益求精，您有很多途径可以提供帮助，包括：<br \/><ul><li>借助您对 Betaflight 的了解在<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">我们的 Wiki<\/a> 创建或更新内容，或者在我们的线上论坛回答他人的问题；<\/li><li>为固件和应用<a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">贡献代码<\/a>——新功能、修复、改进；<\/li><li>测试<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新功能、问题修复<\/a>以及提供反馈；<\/li><li>帮助解决其他用户汇报在<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">我们的问题跟踪器<\/a>的问题，并参与功能需求相关的讨论；<\/li><li>将 Betaflight 应用<a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻译<\/a>成新的语言，或是帮助维护现有的翻译。<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "我们还有一个 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小组<\/a>。<br \/>加入我们来一起讨论 Betaflight，询问配置问题，或者只是和飞行爱好者们闲聊。"
@@ -1354,6 +1366,10 @@
         "message": "位置保持已激活",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "自动导航模式开关已激活",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解锁时有一个禁止解锁标志处于活跃状态",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1578,7 +1594,7 @@
         "message": "启用 OSD ，在「OSD」选项页进行配置"
     },
     "featureCHANNEL_FORWARDING": {
-        "message": "转发 Aux 通道信号到舵机输出"
+        "message": "转发辅助通道信号到舵机输出"
     },
     "featureTRANSPONDER": {
         "message": "比赛应答机"
@@ -1709,6 +1725,120 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "可输入任意旋转角度以允许用侧立、反转、偏转等方式安装飞控板。如果使用了外部传感器，使用「传感器朝向」（陀螺仪、加速度计、磁力计）来设定不同于飞控板朝向的传感器位置。 "
+    },
+    "boardAlignmentWizard-Launch": {
+        "message": "自动检测飞控方向……"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "飞控方向设置向导"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "这个向导指导你通过四次简单的移动来检测你的飞控是如何安装的。 把无人机放在平坦的表面，相机远离您(朝着屏幕)，然后跟随提示。"
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "开始"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "步骤"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "把无人机平放，摄像头远离您(朝着屏幕)。"
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "将机头抬起约45°。"
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "将右侧向下倾斜大约45°。"
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "将无人机顺时针旋转大约45°（如上所示）。"
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "将无人机重新平放。"
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "保持稳定……"
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "正在校准"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "继续倾斜"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "重新平放"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "检测到轴——保持稳定"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "旋转"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "正在计算方向……"
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "检测到的方向"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "您的飞控方向看起来是正确的——不需要更改。"
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "当前"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "检测到"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "返回"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "应用"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "取消"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "请重试"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "立即获取"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "检测可信度降低——请在应用结果前对照实时倾角图核对。"
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "运行此向导需要一个加速度计。"
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "请在运行此向导之前校准加速度计。"
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "一些样本未采集。请重试。"
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "加速度计没有读取到重力。请确保飞控已连接且没有在移动。"
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "未检测到俯仰动作。请重试并上抬机头更多。"
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "未检测到横滚动作。请重试并下倾右侧更多。"
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "水平"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "俯仰"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "横滚"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "偏航"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "已获取！"
     },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1886,7 +2016,7 @@
         "message": "使用鸣叫的次数来表示找到了多少个 GPS 卫星"
     },
     "beeperRX_SET": {
-        "message": "当 aux 通道被置于“鸣叫”时会对应发声"
+        "message": "当辅助通道处于“鸣叫”状态时会对应发声"
     },
     "beeperACC_CALIBRATION": {
         "message": "加速度计于飞行中校准完成"
@@ -2018,6 +2148,9 @@
     },
     "configurationSpiRX": {
         "message": "SPI 总线接收机类型"
+    },
+    "configurationSaved": {
+        "message": "配置已保存"
     },
     "configurationButtonSave": {
         "message": "保存并重启"
@@ -2594,6 +2727,9 @@
     "receiverModelId": {
         "message": "模型匹配 ID"
     },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">务必确保飞行器的失控保护正常工作！<\/a><\/strong><\/b>这需要开启专家模式后，在「失控保护」选项页设置。<br> &#8226; <b>请使用最新的发射器固件!<\/b><br> &#8226; 如果您使用 OpenTx 或 EdgeTx，在遥控器中<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">关闭硬件 ADC 滤波器<\/a><\/strong>。<br>基础设置：正确设置「接收机」选项。在您的遥控器中选择正确的“通道映射”。 检查横滚、俯仰以及其他的条形图都能正确地对应移动。调节遥控的通道端点或范围值为~1000 到 ~2000，同时将中点设置为 1500。更多相关信息，请阅读<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">相关文档<\/a><\/strong>。"
+    },
     "receiverFailsafeActiveTitle": {
         "message": "「失控保护」激活"
     },
@@ -2775,6 +2911,14 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "通过在快速油门操作变化时增加PID中的P值和I值，改进摇杆追踪，避免机头飘移的模式。",
         "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "AirMode 允许在低油门时保持飞行器的姿态稳定。有关更多信息，请参阅 Betaflight.com 上的 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> 。",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度保持<\/a> 使用外部传感器结合角度模式（自稳模式）主动调节飞行器的高度。",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "自动飞行模式启用自主飞行控制，同时使用高度保持模式和位置保持模式以维持稳定的悬停或沿着计划的路径飞行。",
@@ -2999,6 +3143,14 @@
     "adjustmentsColumnAdjustmentScale": {
         "message": "比例（值|%）"
     },
+    "adjustmentsCenterHelp": {
+        "message": "设置「调整」功能使用的中点或参考值。<br \/><br \/><strong>滑块调整:<\/strong><br \/>对于滑块调整, 「调整中心」将被设置为0。 当前滑块位置将用于向上\/向下调整。<br \/><br \/><strong>选区调整：<\/strong><br \/>设置「调整中心」为0，或者如果您想要在启动 RC 调整时从 1500uS 偏移切换的参考点，可将其设定为一个特定的微秒 (uS)值。<br \/><br \/><strong>步进调整：<\/strong><br \/>将调整中心设置为 0，以便使用被调整项目的当前值。<br \/><br \/><strong>绝对调整：<\/strong><br \/>要使用绝对调整，您必须同时设置「调整中心」和「比率」，以指定所需的值和范围。 范围计算为：中心 ± 比率。 例如，将「调整中心」设定为50，「调整比率」设定为25在中心位置（开关或POT）映射到50时会得到25至75的范围。<br \/><br \/>访问<a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">本页<\/a>获取更多信息。",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "控制「调整」的比率或范围；较高的数值增加调整范围或灵敏度。<br \/><br \/><strong>滑块调整:<\/strong><br \/>对于滑块调整, 「调整比率」控制调整的大小\/灵敏度。50 等于滑块范围的 50%。设置为 0 将使用滑块的默认比率。<br \/><br \/><strong>选区调整：<\/strong><br \/>对于选区调整，默认设置「调整比率」为 0，或者指定微秒(uS)值来限制范围。例如：将「调整中心」设为 1000(uS) 和「调整比例」设为 500(uS) 以把一个 3 段开关用作一个 2 段开关。<br \/><br \/><strong>步进和绝对调整：<\/strong><br \/>对于步进和绝对调整， 「调整比率」定义了「调整中心」以上和以下的范围。 例如，25 的值将从「调整中心」产生 ±25 的调整范围。如果「调整中心」设为 0 则将当前值作为中心。<br \/><strong>注意：<\/strong> 必须设置一个「调整比率」值以在绝对调整中使用电位器。<br \/><br \/>访问 <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">本页<\/a>获取更多信息。",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "滑槽 1"
     },
@@ -3137,6 +3289,9 @@
     },
     "servosChangeDirection": {
         "message": "遥控器设置通道反向以匹配方向"
+    },
+    "servosForwardChannel": {
+        "message": "透传通道 {{channel}} 至舵机 {{servo}}"
     },
     "servosName": {
         "message": "名称"
@@ -3742,6 +3897,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "该功能只适用于 DSHOT 电调。<br \/>验证您的电调（电子调速器）是否支持 DSHOT 协议，并在「$t(tabMotorTesting.message)」选项页内更改。"
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "电机数为 0。<br \/>在「 $t(tabMotorTesting.message) 」选项页检查当前混控，或通过命令行设置一个自定义混控。参见此 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 页面<\/a>。"
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "更新固件。<br \/> 请确保您正在使用最新的固件：Betaflight 4.3或更高版本。"
     },
@@ -3855,6 +4013,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "执行"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "代码片段预览"
     },
     "cliPanelTitle": {
         "message": "命令行界面"
@@ -4257,6 +4418,9 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "恢复\/丢失通信"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "如果您与飞控板断开连接，您可以按照如下步骤来恢复：<ul><li>断电<\/li><li>，启用「无重启序列」、启用「全盘擦除」。<\/li><li>短接 BOOT 引脚，或者按住 BOOT 按键。<\/li><li>上电(如果操作正确，飞控的「活动」灯不会闪烁)。<\/li><li>如果有必要，安装完整 STM32 驱动和 Zadig（参阅 Betaflight 手册<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> 部分）。<\/li><li>关闭此应用，并重新打开。<\/li><li>如果存在 BOOT 按钮，将原本按住的 BOOT 按键松开。<\/li><li>烧写正确的固件（使用飞控制造商所规定的波特率）。<\/li><li>断电。<\/li><li>移除 BOOT 引脚的短接。<\/li><li>上电（飞控「活动」灯应该会闪烁）。<\/li><li>正常连接。<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "如果您丢失了通信：关闭电源，开启无重启序列和全芯片擦除，短接 BOOT 引脚，然后上电。 如需要请安装驱动程序。"
@@ -4754,52 +4918,52 @@
         "message": "油门 [T]"
     },
     "controlAxisAux1": {
-        "message": "AUX 1"
+        "message": "辅助通道 1"
     },
     "controlAxisAux2": {
-        "message": "AUX 2"
+        "message": "辅助通道 2"
     },
     "controlAxisAux3": {
-        "message": "AUX 3"
+        "message": "辅助通道 3"
     },
     "controlAxisAux4": {
-        "message": "AUX 4"
+        "message": "辅助通道 4"
     },
     "controlAxisAux5": {
-        "message": "AUX 5"
+        "message": "辅助通道 5"
     },
     "controlAxisAux6": {
-        "message": "AUX 6"
+        "message": "辅助通道 6"
     },
     "controlAxisAux7": {
-        "message": "AUX 7"
+        "message": "辅助通道 7"
     },
     "controlAxisAux8": {
-        "message": "AUX 8"
+        "message": "辅助通道 8"
     },
     "controlAxisAux9": {
-        "message": "AUX 9"
+        "message": "辅助通道 9"
     },
     "controlAxisAux10": {
-        "message": "AUX 10"
+        "message": "辅助通道 10"
     },
     "controlAxisAux11": {
-        "message": "AUX 11"
+        "message": "辅助通道 11"
     },
     "controlAxisAux12": {
-        "message": "AUX 12"
+        "message": "辅助通道 12"
     },
     "controlAxisAux13": {
-        "message": "AUX 13"
+        "message": "辅助通道 13"
     },
     "controlAxisAux14": {
-        "message": "AUX 14"
+        "message": "辅助通道 14"
     },
     "controlAxisAux15": {
-        "message": "AUX 15"
+        "message": "辅助通道 15"
     },
     "controlAxisAux16": {
-        "message": "AUX 16"
+        "message": "辅助通道 16"
     },
     "pidTuningBasic": {
         "message": "基本\/手动模式"
@@ -5261,6 +5425,9 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "电池压降补偿 %"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "通过在电池电压下降时增加电机输出以实现在电池可用电压范围内提供一致的油门和 PID 性能。<br \/><br \/>\n补偿量可以在 0% 到 100% 之间调整。建议使用完全补偿（100%）。<br \/><br \/>\n有关更多信息，请访问 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">此 Wiki 条目<\/a>。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -5803,6 +5970,9 @@
     "powerBatteryProfileOption": {
         "message": "电池配置 $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "飞控设置了电池配置：<strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "例如：Lipo, Li-Ion"
     },
@@ -5847,6 +6017,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD 屏幕叠加显示"
+    },
+    "osdToggleElementVisibility": {
+        "message": "切换配置文档 {{profile}} 的 {{element}} 可见性"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>警告：<\/b><\/span>未检测到OSD芯片。部分飞控在未接入电池的情况下无法给OSD芯片正常供电。请在连接 USB 之前接入电池 (务必卸下螺旋桨！)"
@@ -6195,11 +6368,11 @@
         "message": "累计已用电池瓦时数"
     },
     "osdDescElementAuxValue": {
-        "message": "Aux 值",
+        "message": "辅助通道值",
         "description": "Displays a receiver AUX channel see PR 10789"
     },
     "osdTextElementAuxValue": {
-        "message": "Aux 值",
+        "message": "辅助通道值",
         "description": "One of the elements of the OSD"
     },
     "osdTextElementSysGoggleVoltage": {
@@ -6210,14 +6383,14 @@
         "message": "由眼镜提供的眼镜电压"
     },
     "osdTextElementSysVtxVoltage": {
-        "message": "VTX 电压",
+        "message": "图传电压",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysVtxVoltage": {
         "message": "由眼镜提供的图传电压"
     },
     "osdTextElementSysBitrate": {
-        "message": "VTX 比特率",
+        "message": "图传码率",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysBitrate": {
@@ -6598,7 +6771,7 @@
         "message": "估算剩余飞行时间"
     },
     "osdTextElementRtcDateTime": {
-        "message": "RTC日期和时间",
+        "message": "RTC 日期和时间",
         "description": "One of the elements of the OSD"
     },
     "osdTextElementRtcDateTimeVariantFullDate": {
@@ -6652,7 +6825,7 @@
         "message": "当重力补偿功能激活时显示一个指示器"
     },
     "osdTextGForce": {
-        "message": "G力",
+        "message": "G 力",
         "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
@@ -6785,7 +6958,7 @@
         "message": "当俯仰角接近竖直向上 (90deg, U) 时，OSD 显示 U；竖直向下 (-90deg, D) 时显示 D。"
     },
     "osdTextElementTxUplinkPower": {
-        "message": "TX 上行功率",
+        "message": "高频头上行功率",
         "description": "One of the elements of the OSD"
     },
     "osdDescTxUplinkPower": {
@@ -6918,7 +7091,7 @@
         "message": "上锁时计时器 2的数值"
     },
     "osdTextStatRtcDateTime": {
-        "message": "RTC日期和时间",
+        "message": "RTC 日期和时间",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatRtcDateTime": {
@@ -6932,7 +7105,7 @@
         "message": "电池实时电压"
     },
     "osdTextStatGForce": {
-        "message": "G力最大值",
+        "message": "G 力最大值",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatGForce": {
@@ -7274,6 +7447,14 @@
         "message": "位置保持失败",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
     },
+    "osdWarningTextAutopilotAbort": {
+        "message": "自动导航任务已取消",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "自动导航任务已取消",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "未知 $1"
     },
@@ -7310,8 +7491,12 @@
     "osdButtonSaved": {
         "message": "已保存"
     },
+    "vtxHelp": {
+        "message": "这里可以定义图传 (VTX) 用到的值。如果飞控和图传支持，您可以查看和修改发射参数，包括图传表在内。<br>按以下步骤设置您的图传：<br>1. 打开<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">这个<\/a>页面；<br>2. 找到并下载适合您图传型号和所在地区的图传配置文件；<br>3. 点击下方「$t(vtxButtonLoadFile.message)」，选择并加载图传配置文件；<br>4. 确认设置项都正确；<br>5. 点击「$t(vtxButtonSave.message)」将图传设置保存到飞控。<br>6. （可选）点击「$t(vtxButtonSaveLua.message)」保存 Lua 配置文件供 Betaflight Lua 脚本使用。（在<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">这里<\/a>查看更多。）",
+        "description": "Introduction message in the VTX tab"
+    },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">注意:<\/span>您的图传未配置或不支持。所以您不能在此修改图传值。只有当图传使用Tramp或SmartAudio等协议，连接到飞行控制器，并在$t(tabPorts.message)页面中正确配置后，才可以使用。",
+        "message": "<span class=\"message-negative\">注意:<\/span>您的图传未配置或不支持。所以您不能在此修改图传值。只有当图传使用 Tramp 或 SmartAudio 等协议，连接到飞行控制器，并在$t(tabPorts.message)页面中正确配置后，才可以使用。",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7824,6 +8009,93 @@
     },
     "magCalibrationAccept": {
         "message": "保存校准值"
+    },
+    "magCalibrationFull": {
+        "message": "全流程校准（自动对齐）"
+    },
+    "magCalibrationFullDesc": {
+        "message": "单次旋转——设定偏移、软铁磁化影响和磁力计的安装方向"
+    },
+    "magCalibrationFullTitle": {
+        "message": "全流程校准"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "按照以下步骤，在每次完全翻转过程中保持飞机稳定。 当你到达新角度时范围计数器会增长——目标是覆盖所有20个。"
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "步骤 {{n}} \/ {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "保持飞机水平并缓慢旋转一圈360度。"
+    },
+    "magCalibrationFullStep2": {
+        "message": "将飞机倒置并缓慢再旋转360度。"
+    },
+    "magCalibrationFullStep3": {
+        "message": "使机头竖直向上并绕着它旋转一周。"
+    },
+    "magCalibrationFullStep4": {
+        "message": "使机头竖直向下并绕着它旋转一周。"
+    },
+    "magCalibrationFullStep5": {
+        "message": "使飞机左侧向下并旋转一周。"
+    },
+    "magCalibrationFullStep6": {
+        "message": "使飞机右侧向下并旋转一周。"
+    },
+    "magCalibrationFullStep7": {
+        "message": "做几个缓慢的前滚翻，每次向着不同的方向。"
+    },
+    "magCalibrationFullStep8": {
+        "message": "做几个缓慢的后滚翻，每次向着不同的方向。"
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} 区域已覆盖"
+    },
+    "magCalibrationFullCompute": {
+        "message": "计算"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "覆盖率："
+    },
+    "magCalibrationFullAlignment": {
+        "message": "方向："
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "横滚 {{roll}}° 俯仰 {{pitch}}° 偏航 {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "校准："
+    },
+    "magCalibrationFullResidual": {
+        "message": "剩余："
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "复制命令行"
+    },
+    "magCalibrationFullApply": {
+        "message": "应用"
+    },
+    "magCalibrationFullExport": {
+        "message": "导出模型"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "样本不足——旋转更长的时间"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "没有 GPS 或 IP 位置——无法确定磁力倾角"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "命令行指令已复制到剪贴板"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "无法复制到剪贴板"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "固件版本 {{version}} 太旧，无法使用自定义磁力计朝向（需要 {{min}}+）。升级固件，再应用。"
+    },
+    "magCalibrationFullApplied": {
+        "message": "校准已应用并保存"
     },
     "magCalibrationDiscard": {
         "message": "丢弃"
@@ -8882,6 +9154,10 @@
     "backupNoBackupsAvailable": {
         "message": "无可用备份"
     },
+    "backupRequiresConnection": {
+        "message": "连接飞控以启用此操作",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
     "titleEditBackup": {
         "message": "编辑备份"
     },
@@ -9386,7 +9662,7 @@
         "message": "允许"
     },
     "preflightIpConsentDeny": {
-        "message": "不用谢"
+        "message": "拒绝"
     },
     "preflightMapSatellite": {
         "message": "卫星视图"
@@ -9438,5 +9714,89 @@
     },
     "preflightForecastWeather": {
         "message": "天气"
+    },
+    "preflightNotamProvider": {
+        "message": "航行通告提供者"
+    },
+    "preflightNotamProviderNone": {
+        "message": "禁用"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA 航行通告 API （美国，需要 API 密钥）"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP（全球空域，需要 API 密钥）"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA API 密钥 (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API 密钥"
+    },
+    "preflightNotamRadius": {
+        "message": "搜索半径"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "海里"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "公里"
+    },
+    "preflightNotamSettings": {
+        "message": "空域数据设置"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "空域数据将您的坐标发送给选定的提供者。不会发送额外的个人数据。"
+    },
+    "preflightNotamLoading": {
+        "message": "正在获取空域数据……"
+    },
+    "preflightNotamEmpty": {
+        "message": "没有找到对于此位置和半径的通知"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "所选提供者需要一个 API 密钥。请在上面的设置中输入您的密钥。"
+    },
+    "preflightNotamFetchError": {
+        "message": "获取空域数据失败"
+    },
+    "preflightNotamActiveNow": {
+        "message": "激活中"
+    },
+    "preflightNotamPermanent": {
+        "message": "永久"
+    },
+    "preflightNotamExpired": {
+        "message": "已过期"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "临时飞行管制"
+    },
+    "preflightNotamTypeSua": {
+        "message": "香港小型无人机系统"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "雪情航行通告"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "火山航行通告"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "航行通告"
+    },
+    "preflightNotamAltFrom": {
+        "message": "下限"
+    },
+    "preflightNotamAltTo": {
+        "message": "上限"
+    },
+    "preflightNotamShowMore": {
+        "message": "显示更多"
+    },
+    "preflightNotamShowLess": {
+        "message": "隐藏内容"
+    },
+    "preflightNotamLastFetched": {
+        "message": "上次获取时间"
     }
 }

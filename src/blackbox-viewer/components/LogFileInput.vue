@@ -4,7 +4,8 @@
         ref="fileInput"
         type="file"
         style="display: none"
-        accept=".bbl,.txt,.cfl,.bfl,.log,.json"
+        accept=".bbl,.BBL,.txt,.TXT,.cfl,.CFL,.bfl,.BFL,.log,.LOG,.json,.JSON"
+        :aria-label="label"
         @change="onFileChange"
     />
 </template>

@@ -29,6 +29,7 @@
                     v-model="cli.state.commandInput"
                     name="commands"
                     :placeholder="$t('cliInputPlaceholder')"
+                    :aria-label="$t('cliInputPlaceholder')"
                     rows="1"
                     cols="0"
                     class="w-full h-[22px] leading-5 pl-[5px] border border-(--surface-500) resize-none bg-(--surface-200) text-(--surface-900)"
@@ -41,7 +42,7 @@
         </div>
 
         <!-- Snippet preview dialog -->
-        <UModal v-model:open="snippetPreviewOpen" :ui="{ overlay: 'z-3000', content: 'w-[600px] z-3001' }">
+        <UModal v-model:open="snippetPreviewOpen" :ui="{ content: 'w-[600px]' }">
             <template #body>
                 <div class="note mb-3">
                     <p v-html="$t('cliConfirmSnippetNote')"></p>
@@ -49,6 +50,7 @@
                 <textarea
                     v-model="cli.state.snippetPreview"
                     rows="20"
+                    :aria-label="$t('cliSnippetPreviewLabel')"
                     class="bg-black/75 w-full resize-none overflow-y-scroll overflow-x-hidden font-mono text-white p-[5px]"
                 ></textarea>
             </template>
@@ -65,7 +67,7 @@
             :title="$t('supportWarningDialogTitle')"
             :close="false"
             :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'w-[400px] z-3001' }"
+            :ui="{ content: 'w-[400px]' }"
         >
             <template #body>
                 <div class="mb-3" v-html="$t('supportWarningDialogText')"></div>
@@ -73,6 +75,7 @@
                     v-model="cli.state.supportDialogInput"
                     name="supportWarningDialogInput"
                     :placeholder="$t('supportWarningDialogInputPlaceHolder')"
+                    :aria-label="$t('supportWarningDialogInputPlaceHolder')"
                     rows="3"
                     cols="0"
                     class="w-full mt-2 leading-5 p-1 border border-(--ui-border) resize-none bg-(--ui-bg-muted) text-(--ui-text)"
@@ -296,5 +299,39 @@ export default defineComponent({
 
 .tab-cli .cli-window .cli-num {
     color: #e5c07b;
+}
+
+/* On narrow screens the fixed bottom toolbar would wrap its 5 buttons onto
+   several rows, growing past the space the CLI content reserves (calc(100% - 87px))
+   and overlapping the command textarea. Instead, pin the toolbar to the bottom via
+   normal flex flow (not `position: fixed`): the content fills the space above it and
+   the toolbar wraps to as many rows as it needs without ever overlapping. */
+@media all and (max-width: 1055px) {
+    .tab-cli {
+        display: flex;
+        flex-direction: column;
+        /* Fill the full content height (the base rule reserves 3rem for the
+           previously-fixed toolbar) so the in-flow toolbar pins flush to the bottom. */
+        height: 100%;
+    }
+    .tab-cli .content_wrapper {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+        /* The global .content_wrapper reserves 3rem at the bottom to clear the
+           fixed toolbar; the CLI toolbar is now in normal flow. */
+        padding-bottom: 0.3rem;
+    }
+    .tab-cli .content_toolbar.toolbar_fixed_bottom {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-top-left-radius: 0;
+    }
+    .tab-cli .content_toolbar.toolbar_fixed_bottom::before {
+        display: none;
+    }
 }
 </style>

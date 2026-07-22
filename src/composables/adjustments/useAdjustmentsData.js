@@ -3,9 +3,8 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { API_VERSION_1_48 } from "../../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
+import { channelPercent } from "../../js/utils/rcChannel";
 
-const CHANNEL_MIN = 900;
-const CHANNEL_MAX = 2100;
 const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 
 // Wire u8 values whose firmware dispatch entry is ADJUSTMENT_MODE_SELECT
@@ -78,14 +77,6 @@ export function useAdjustmentsData(adjustments, t) {
         { value: "step", label: t("adjustmentsModeStep") },
         { value: "absolute", label: t("adjustmentsModeAbsolute") },
     ]);
-
-    const channelPercent = (value) => {
-        if (value === undefined || value === null || Number.isNaN(value)) {
-            return 50;
-        }
-        const clamped = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
-        return ((clamped - CHANNEL_MIN) / (CHANNEL_MAX - CHANNEL_MIN)) * 100;
-    };
 
     const onEnableChange = (adjustment) => {
         if (adjustment.enabled) {

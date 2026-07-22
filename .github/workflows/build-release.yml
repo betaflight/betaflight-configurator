@@ -41,6 +41,8 @@ jobs:
       RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
   modern_release:
+    permissions:
+      contents: write
     name: Attach Release Artifacts
     needs: modern_build
     runs-on: ubuntu-latest
@@ -123,13 +125,14 @@ jobs:
           echo "is_latest=false" >> $GITHUB_OUTPUT
           echo "✗ Not the latest release after $MAX_RETRIES attempts. Current: $RELEASE_TAG, Latest: $LATEST_TAG"
 
-  # Deploy to versioned maintenance branch
-  modern_deploy:
-    name: Deploy to Maintenance Branch
+  # Deploy with the release tag as the Cloudflare branch alias. The
+  # x.y-maintenance alias is handled by the push deploy when the branch moves.
+  modern_deploy_tag:
+    name: Deploy Release Tag
     needs: [modern_build, prepare_environment]
     uses: ./.github/workflows/deploy_cloudflare.yml
     with:
-      branch_name: ${{ needs.prepare_environment.outputs.env_name }}
+      branch_name: ${{ github.event.release.tag_name }}
       environment_name: ${{ needs.prepare_environment.outputs.env_name }}
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

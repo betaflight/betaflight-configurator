@@ -79,16 +79,7 @@
             </div>
 
             <!-- Sub-tab Navigation -->
-            <div class="subtab-nav">
-                <UTabs
-                    :items="subtabItems"
-                    :model-value="activeSubtab"
-                    :content="false"
-                    color="primary"
-                    variant="link"
-                    @update:model-value="activeSubtab = $event"
-                />
-            </div>
+            <SubtabNav :items="subtabItems" v-model="activeSubtab" />
 
             <!-- Tab Content -->
             <div class="tabarea">
@@ -118,14 +109,15 @@
                     @click="refresh"
                     variant="soft"
                 />
-                <UButton :label="$t('pidTuningButtonSave')" :disabled="!hasChanges" @click="save" />
+                <UButton :label="$t('pidTuningButtonSave')" :disabled="!hasChanges" :loading="isSaving" @click="save" />
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useIsMounted } from "@/composables/useIsMounted";
 import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -133,6 +125,7 @@ import PidSubTab from "./pid-tuning/PidSubTab.vue";
 import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
 import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import SubtabNav from "@/components/elements/SubtabNav.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -147,6 +140,8 @@ import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
 import { useTranslation } from "i18next-vue";
 import { gui_log } from "@/js/gui_log";
+import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
 
 const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
@@ -159,7 +154,10 @@ const activeSubtab = ref("pid");
 const showAllPids = ref(false);
 const currentProfile = ref(FC.CONFIG.profile);
 const currentRateProfile = ref(0);
-const isMounted = ref(false);
+const isMounted = useIsMounted();
+// Guards for the TX-driven profile sync (see watchers below).
+const isLoading = ref(false);
+let syncingFromFc = false;
 const pidSubTab = ref(null);
 const filterSubTab = ref(null);
 const ratesSubTab = ref(null);
@@ -228,6 +226,7 @@ const hasChanges = computed(() => pidTuningStore.hasChanges);
 
 // MSP Data Loading
 async function loadData() {
+    isLoading.value = true;
     try {
         if (!isMounted.value) {
             return false;
@@ -298,6 +297,8 @@ async function loadData() {
         console.error("[PidTuning] Failed to load data:", e);
         GUI.content_ready();
         return false;
+    } finally {
+        isLoading.value = false;
     }
 }
 
@@ -438,74 +439,79 @@ function toggleShowAllPids() {
 }
 
 // Save/Refresh
-async function save() {
+const { isSaving, runSave } = useSaving();
+const { saveToEeprom } = useReboot();
+
+function save() {
     if (!hasChanges.value) {
         return;
     }
 
-    try {
-        // Normalize profile names before saving
-        pidProfileName.value = pidProfileName.value.trim();
-        rateProfileName.value = rateProfileName.value.trim();
+    return runSave(
+        async () => {
+            // Normalize profile names before saving
+            pidProfileName.value = pidProfileName.value.trim();
+            rateProfileName.value = rateProfileName.value.trim();
 
-        // Save profile names to FC.CONFIG (API 1.45+)
-        if (FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
-        }
-        if (FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
-        }
-
-        // Save PIDs
-        await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
-
-        // Save advanced tuning
-        await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
-
-        // Save RC tuning
-        await MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
-
-        // Save filter config
-        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-
-        // Save simplified tuning (sliders)
-        await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
-
-        // Save profile names to firmware (API 1.45+)
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            // Save profile names to FC.CONFIG (API 1.45+)
             if (FC.CONFIG.pidProfileNames) {
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
-                );
+                FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
             }
             if (FC.CONFIG.rateProfileNames) {
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
-                );
+                FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
             }
-        }
 
-        // Write to EEPROM
-        await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+            // Save PIDs
+            await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
 
-        // Re-validate sliders after save
-        await validateTuningSliders();
+            // Save advanced tuning
+            await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
 
-        // Force Vue components to update slider displays
-        if (pidSubTab.value?.forceUpdateSliders) {
-            pidSubTab.value.forceUpdateSliders();
-        }
-        if (filterSubTab.value?.forceUpdateSliders) {
-            filterSubTab.value.forceUpdateSliders();
-        }
+            // Save RC tuning
+            await MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
 
-        // Update original values
-        storeOriginalValues();
-    } catch (e) {
-        console.error("[PidTuning] Save failed:", e);
-    }
+            // Save filter config
+            await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
+
+            // Save simplified tuning (sliders)
+            await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
+
+            // Save profile names to firmware (API 1.45+)
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (FC.CONFIG.pidProfileNames) {
+                    await MSP.promise(
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                    );
+                }
+                if (FC.CONFIG.rateProfileNames) {
+                    await MSP.promise(
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                    );
+                }
+            }
+
+            // Persist to EEPROM (no reboot)
+            await saveToEeprom();
+
+            // Only after a successful persist: re-validate sliders, refresh the slider
+            // displays and update the dirty baseline.
+            await validateTuningSliders();
+
+            // Force Vue components to update slider displays
+            if (pidSubTab.value?.forceUpdateSliders) {
+                pidSubTab.value.forceUpdateSliders();
+            }
+            if (filterSubTab.value?.forceUpdateSliders) {
+                filterSubTab.value.forceUpdateSliders();
+            }
+
+            // Update original values
+            storeOriginalValues();
+        },
+        { onError: (e) => console.error("[PidTuning] Save failed:", e) },
+    );
 }
 
 async function refresh() {
@@ -549,6 +555,52 @@ watch(
     },
 );
 
+// Keep the profile / rate-profile selectors in sync with TX-driven changes.
+// The global live-status poller (serial_backend.js) refreshes FC.CONFIG.profile and
+// FC.CONFIG.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
+// can therefore change the active profile out from under the UI. Reflect that here and
+// reload — but never clobber unsaved edits or interrupt an in-flight load. Restores the
+// checkUpdateProfile() behaviour lost in the Vue migration (issue #5230).
+async function syncProfileFromFc(kind) {
+    // Skip while loading, while our own change is applying, or when the form is dirty
+    // (an in-progress edit takes precedence over a switch flip, matching legacy behaviour).
+    if (!isMounted.value || isLoading.value || syncingFromFc || pidTuningStore.hasChanges) {
+        return;
+    }
+
+    syncingFromFc = true;
+    try {
+        currentProfile.value = FC.CONFIG.profile;
+        currentRateProfile.value = FC.CONFIG.rateProfile;
+        await loadData();
+        gui_log(
+            i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
+                (kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1,
+            ]),
+        );
+    } finally {
+        syncingFromFc = false;
+    }
+}
+
+watch(
+    () => FC.CONFIG.profile,
+    (newValue) => {
+        if (newValue !== currentProfile.value) {
+            syncProfileFromFc("profile");
+        }
+    },
+);
+
+watch(
+    () => FC.CONFIG.rateProfile,
+    (newValue) => {
+        if (newValue !== currentRateProfile.value) {
+            syncProfileFromFc("rate");
+        }
+    },
+);
+
 // Cleanup callback - called from gui.js tab_switch_cleanup when switching away from this tab
 function cleanup(callback) {
     // Any cleanup needed before unmounting
@@ -562,13 +614,7 @@ defineExpose({ cleanup });
 
 // Lifecycle
 onMounted(async () => {
-    isMounted.value = true;
-
     await loadData();
-});
-
-onUnmounted(() => {
-    isMounted.value = false;
 });
 </script>
 
@@ -1288,12 +1334,6 @@ onUnmounted(() => {
 .subtab-filter .two_columns .two_columns_second {
     margin-left: 10px;
     height: fit-content;
-}
-
-/* ── Sub-tab navigation ───────────────────────────────────────────── */
-.subtab-nav {
-    width: calc(100% - 22px);
-    margin-bottom: 6px;
 }
 
 /* ── Tab area ─────────────────────────────────────────────────────── */

@@ -153,7 +153,7 @@
             :open="store.applyState.progressDialogOpen"
             :close="false"
             :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'w-[300px] z-3001' }"
+            :ui="{ content: 'w-[300px]' }"
         >
             <template #body>
                 <div class="text-lg mb-2" v-html="$t('presetsApplyingPresets')"></div>
@@ -166,7 +166,7 @@
             :open="store.applyState.cliErrorsDialogOpen"
             :close="false"
             :dismissible="false"
-            :ui="{ overlay: 'z-3000', content: 'w-[600px] max-w-[calc(100vw-2rem)] z-3001' }"
+            :ui="{ content: 'w-[600px] max-w-[calc(100vw-2rem)]' }"
         >
             <template #title>
                 <span v-html="$t('presetsCliErrorsWarning')"></span>
@@ -215,6 +215,7 @@ import { usePresetsStore } from "@/stores/presets";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
     cancelScheduledReconnect,
+    isConnectionClosedError,
     isMspCliSupported,
     saveAndReconnect,
     scheduleReconnect,
@@ -497,7 +498,10 @@ async function handleCliErrorsDialogClose() {
         try {
             await cliSession.send("exit");
         } catch (error) {
-            console.error("Failed to send exit:", error);
+            // `exit` reboots the FC; the port closing before it replies is expected, not a failure.
+            if (!isConnectionClosedError(error)) {
+                console.error("Failed to send exit:", error);
+            }
         } finally {
             scheduleReconnect();
         }

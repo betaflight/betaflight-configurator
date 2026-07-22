@@ -65,6 +65,18 @@
     "disconnect": {
         "message": "Від'єднати"
     },
+    "disconnectVirtual": {
+        "message": "Від'єднати (Віртуальний режим)",
+        "description": "Disconnect button label shown when connected in virtual mode."
+    },
+    "disconnectManual": {
+        "message": "Від'єднати (Ручний режим)",
+        "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBluetooth": {
+        "message": "Від'єднати (Bluetooth)",
+        "description": "Disconnect button label shown when connected via Bluetooth."
+    },
     "portsSelectNoSelection": {
         "message": "Виберіть свій пристрій",
         "description": "Text for the option to select a device in the port selection dropdown"
@@ -100,6 +112,9 @@
     "bluetoothConnectionError": {
         "message": "Помилка Bluetooth: $1"
     },
+    "virtualMode": {
+        "message": "Віртуальний режим"
+    },
     "virtualMSPVersion": {
         "message": "Версія віртуальної прошивки"
     },
@@ -109,6 +124,10 @@
     "connectVirtualDescription": {
         "message": "Симулювати польотний контролер без апаратного забезпечення.",
         "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Під'єднати (Вірт. режим)",
+        "description": "Connect button label shown when virtual mode port is selected."
     },
     "connectManualDescription": {
         "message": "Введіть шлях до серійного порту або URL для підключення.",
@@ -398,6 +417,10 @@
     "tabAutotune": {
         "message": "Автоналаштування"
     },
+    "tabBlackboxViewer": {
+        "message": "Переглядач чорної скриньки",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
     "autotuneImportTitle": {
         "message": "Аналіз чирпу з чорної скриньки"
     },
@@ -624,6 +647,12 @@
     },
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Не вдалося<\/span> відкрити послідовний порт"
+    },
+    "connectionFailedTitle": {
+        "message": "Не вдалося під'єднатися"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">Не вдалося<\/span> під'єднатися до вибраного порту. Переконайтеся, що пристрій доступний, а параметри підключення налаштовано правильно, після чого повторіть спробу."
     },
     "serialPortClosedOk": {
         "message": "Послідовний порт <span class=\"message-positive\">успішно<\/span> закрито"
@@ -926,6 +955,9 @@
     "defaultHardwareHead": {
         "message": "Апаратне забезпечення"
     },
+    "defaultHardwareText": {
+        "message": "Застосунок підтримує все обладнання, на якому можна запустити Betaflight. Повний список обладнная знаходится у вкладці \"Програматор\".<br \/><br \/>Корисні утиліти \/ драйвери:<ul><li>Для застарілих чипів CP210x, остання версія <b>драйверів CP210x<\/b> може бути завантажено <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><li>Останню версію <b>Zadig<\/b> для встановлення USB драйверів для Windows можна завантажити <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> можна завантажити <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><\/ul>"
+    },
     "defaultSoftwareHead": {
         "message": "Програмне забезпечення"
     },
@@ -934,6 +966,9 @@
     },
     "defaultContributingHead": {
         "message": "Сприяння"
+    },
+    "defaultContributingText": {
+        "message": "Якщо ви хочете допомогти зробити Betaflight ще кращим, ви можете долучитися багатьма способами, зокрема:<br \/><ul><li>використовувати свої знання про Betaflight, щоб створювати або оновлювати матеріали в <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">нашій Wiki<\/a> чи відповідати на запитання інших користувачів в онлайн-форумах;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">вносити зміни до коду<\/a> прошивки та застосунку - нові функції, виправлення, покращення;<\/li><li>тестувати <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">нові функції та виправлення<\/a> та надавати відгуки;<\/li><li>допомагати іншим користувачам вирішувати проблеми, про які вони повідомляють у <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">нашому трекері помилок<\/a>, а також брати участь в обговореннях запитів на нові функції;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/README.md#translators\" target=\"_blank\" rel=\"noopener noreferrer\">перекладати<\/a> застосунок Betaflight на нову мову або допомагати підтримувати наявні переклади.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Ми також маємо <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">групу на Facebook<\/a>.<br \/>Приєднуйтесь до нас, щоб мати можливість обговорювати Betaflight, ставити запитання щодо налаштування, або просто спілкуватись зі своїми колегами-пілотами."
@@ -1327,6 +1362,10 @@
         "message": "Активоване утримання позиції",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "Перемикач режиму автопілота активний",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Одна з інших позначок охлощення активна під час взведення",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1666,7 +1705,7 @@
         "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
-        "message": "Вирівнювання плати"
+        "message": "Орієнтація плати"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Крен°"
@@ -1682,6 +1721,120 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дриґом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
+    },
+    "boardAlignmentWizard-Launch": {
+        "message": "Автовизначення орієнтації плати..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Майстер орієнтації плати"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Цей майстер виявляє, як встановлено ваш польотний контролер, проводячи вас через чотири прості дії. Помістіть дрон на пласку поверхню, спрямовуючи камеру від вас (до екрана), потім слідуйте за вказівками."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Почати"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Крок"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Розмістіть дрон рівно, камерою від вас (до екрана)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Підніміть ніс приблизно на 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Нахиліть правий бік униз приблизно на 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Прокрутіть дрон приблизно на 45° за годинниковою стрілкою (як видно зверху)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Поверніть дрон до горизонтального положення."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Утримуйте..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Стабілізація"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Продовжуйте нахиляти"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Вирівняйте"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Вісь виявлено — утримуйте"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Обертання"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Обчислення орієнтації..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Виявлено орієнтацію"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "Орієнтація вашої плати виглядає правильною — зміни не потрібні."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Поточна"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Виявлена"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Назад"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Застосувати"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Скасувати"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Повторити спробу"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Зафіксувати зараз"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "Довіра до визначення знижена — перевірте результат за поточним просторовим положенням перед застосуванням."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Для запуску цього майстра потрібен акселерометр."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Будь ласка, відкалібруйте акселерометр перед запуском цього майстра."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Деякі зразки не було зібрано. Будь ласка, повторіть спробу."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "Акселерометр не зчитує гравітацію. Переконайтеся, що польотний контролер під'єднано та він нерухомий."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Рух за віссю тангажу не виявлено. Повторіть спробу та нахиліть ніс вище."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Рух за віссю крену не виявлено. Повторіть спробу та нахиліть правий бік нижче."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Горизонтально"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Тангаж"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Крен"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Рискання"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Захоплено!"
     },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1992,6 +2145,9 @@
     "configurationSpiRX": {
         "message": "Постачальник приймача на шині SPI"
     },
+    "configurationSaved": {
+        "message": "Налаштування збережено"
+    },
     "configurationButtonSave": {
         "message": "Зберегти та перезавантажити"
     },
@@ -2107,7 +2263,7 @@
         "message": "Профіль $1"
     },
     "pidTuningRateProfileOption": {
-        "message": "Rateprofile $1"
+        "message": "Профіль швид. оберт. $1"
     },
     "portsFunction_LIDAR_TF": {
         "message": "Benewake LIDAR"
@@ -2131,10 +2287,10 @@
         "message": "Назва PID-профілю, яка може описувати, для яких умов цей профіль було налаштовано: легший\/важчий акумулятор, екшн-камера\/без екшн-камери, більша висота над рівнем моря тощо."
     },
     "rateProfileName": {
-        "message": "Назва Rate-профілю"
+        "message": "Назва профілю швидкостей обертання"
     },
     "rateProfileNameHelp": {
-        "message": "Назва Rate-профілю де можна описати, для якого типу польотів призначений цей профіль: кіно, перегони, фрістайл тощо."
+        "message": "Назва профілю швидкостей обертання може описувати, для якого типу польотів призначений цей профіль: кіно, перегони, фрістайл тощо."
     },
     "pidTuningShowAllPids": {
         "message": "Показати всі ПІД"
@@ -2500,13 +2656,13 @@
         "message": "Копіювати профіль"
     },
     "pidTuningCopyRateProfile": {
-        "message": "Копіювати rateprofile"
+        "message": "Копіювати профіль швид. оберт."
     },
     "dialogCopyProfileText": {
         "message": "Копіювати значення з поточного профілю до"
     },
     "dialogCopyRateProfileText": {
-        "message": "Копіювати значення з поточного rateprofile до"
+        "message": "Копіювати значення з поточного профілю швид. обертання до"
     },
     "dialogCopyProfileTitle": {
         "message": "Копіювати значення профілю"
@@ -2530,7 +2686,7 @@
         "message": "Польотний контролер встановив профіль: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "Польотний контролер встановив Rateprofile: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Польотний контролер встановив профіль швид. обер.: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedProfile": {
         "message": "Завантажено профіль: <strong class=\"message-positive\">$1<\/strong>"
@@ -2566,6 +2722,15 @@
     },
     "receiverModelId": {
         "message": "ID відповідності моделі"
+    },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Завжди перевіряйте, що ваша безаварійність працює належним чином!<\/a><\/strong><\/b> Налаштування містяться на вкладці «Безаварійність», яка потребує режиму експерта.<br> &#8226; <b>Використовуйте найновішу прошивку передавача!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\n\/docs\/wiki\/guides\/current\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Вимкніть апаратний фільтр АЦП<\/a><\/strong> у передавачі, якщо використовуєте OpenTx або EdgeTx.<br>Базове налаштування: правильно налаштуйте параметри «Приймач». Виберіть правильну «Схему каналів» для вашого пульта. Перевірте, що смуги крену, тангажа та інші рухаються правильно. Відрегулюйте кінцеві точки або діапазон каналів у передавачі приблизно від 1000 до 2000 і встановіть середню точку на 1500. Докладніше читайте в <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">документації<\/a><\/strong>."
+    },
+    "receiverFailsafeActiveTitle": {
+        "message": "Безаварійність активна"
+    },
+    "receiverFailsafeActiveWarning": {
+        "message": "Польотний контролер у режимі безаварійності. Значення каналів, наведені нижче, є результатом режиму безаварійності, а не значеннями з вашого приймача. Перевірте ваш зв'язок з приймачем та налаштування безаварійності."
     },
     "receiverThrottleMid": {
         "message": "Середня точка тяги"
@@ -2742,6 +2907,14 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Режим польоту збільшує значення П та І під час швидких рухів стіком тяги, щоб покращити відстеження стіків та уникнути дрейфу носа під час швидких змін тяги",
         "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "Режим Air дозволяє зберігати стабільність повітряного судна на низькому рівні тяги. Для отримання додаткової інформації дивіться<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">режим Air<\/a> на Betaflight.com.",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Утримання висоти<\/a> активно регулює висоту повітряного судна, використовуючи зовнішні датчики у поєднанні з режимом Кут (режим стабілізації).",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "Режим автопілота забезпечує автономне керування польотом, поєднуючи утримання висоти та утримання позиції для стабільного зависання або слідування запланованому маршруту польоту.",
@@ -2948,6 +3121,32 @@
     "adjustmentsColumnViaChannel": {
         "message": "через канал"
     },
+    "adjustmentsColumnMode": {
+        "message": "режим"
+    },
+    "adjustmentsModeStep": {
+        "message": "Крок"
+    },
+    "adjustmentsModeAbsolute": {
+        "message": "Абсолютний"
+    },
+    "adjustmentsModeSelection": {
+        "message": "Вибір"
+    },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "центр (знач.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "масштаб (знач.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Встановлює середню точку або опорне значення для функції регулювання.<br \/><br \/><strong>Регулювання повзунком:<\/strong><br \/>Для регулювань повзунком встановіть центр регулювання на 0. Поточна позиція повзунка буде використовуватися для зміщення значення вгору або вниз.<br \/><br \/><strong>Регулювання вибором:<\/strong><br \/>Встановіть центр регулювання на 0 або вкажіть конкретне значення в мікросекундах (мкс), якщо потрібно змістити опорну точку перемикача від 1500 мкс під час запуску регулювання з пульта.<br \/><br \/><strong>Крокові регулювання:<\/strong><br \/>Встановіть центр регулювання на 0, щоб використовувалося поточне значення параметра, який налаштовується.<br \/><br \/><strong>Абсолютні регулювання:<\/strong><br \/>Щоб використовувати метод абсолютного регулювання, необхідно вказати як центр регулювання, так і масштаб регулювання для визначення бажаного значення та діапазону. Діапазон обчислюється як: Центр ± Масштаб. Наприклад, якщо встановити центр регулювання на 50, а масштаб регулювання на 25, це створить діапазон від 25 до 75, де центральне положення (перемикача або потенціометра) відповідатиме значенню 50.<br \/><br \/>Для отримання додаткової інформації відвідайте <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">цю сторінку<\/a>.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Керує масштабом або діапазоном регулювання; більші значення збільшують діапазон або чутливість.<br \/><br \/><strong>Регулювання повзунком:<\/strong><br \/>Для регулювань повзунком масштаб регулювання керує його масштабом\/чутливістю. Значення 50 відповідає 50% діапазону повзунка. Встановлення 0 використовує стандартний масштаб для повзунків.<br \/><br \/><strong>Регулювання вибором:<\/strong><br \/>Для регулювань вибором встановіть масштаб регулювання у 0 для стандартної поведінки або вкажіть значення в мікросекундах (мкс), щоб обмежити діапазон. Наприклад: встановіть центр регулювання = 1000 (мкс) та масштаб регулювання = 500 (мкс), щоб використовувати 3-позиційний перемикач як 2-позиційний.<br \/><br \/><strong>Крокові та абсолютні регулювання:<\/strong><br \/>Для крокових та абсолютних регулювань масштаб регулювання визначає діапазон вище і нижче центру регулювання. Наприклад, значення 25 створює діапазон регулювання ±25 від центру регулювання або від поточного значення, якщо \nцентр регулювання встановлено у 0.<br \/><strong>Примітка:<\/strong> Щоб використовувати метод Абсолютного регулювання з потенціометром, необхідно вказати значення масштабу регулювання.<br \/><br \/>Для отримання додаткової інформації відвідайте <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">цю сторінку<\/a>.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Слот 1"
     },
@@ -2970,22 +3169,22 @@
         "message": "Без змін"
     },
     "adjustmentsFunction1": {
-        "message": "Корекція коефіцієнтів пульта(RC)"
+        "message": "Регулювання швидкості обертання"
     },
     "adjustmentsFunction2": {
-        "message": "Корекція експоненційності пульта(RC)"
+        "message": "Регулювання експоненційності"
     },
     "adjustmentsFunction3": {
-        "message": "Корекція експоненційності тяги"
+        "message": "Регулювання експоненційності тяги"
     },
     "adjustmentsFunction4": {
-        "message": "Регулювання коефіцієнтів тангажу та крену"
+        "message": "Регулювання швид. об. тангажу та крену"
     },
     "adjustmentsFunction5": {
-        "message": "Коригування коефіцієнта рискання"
+        "message": "Регулювання швид. об. рискання"
     },
     "adjustmentsFunction6": {
-        "message": "Регулювання P тангажу та крену"
+        "message": "Регулювання П тангажу та крену"
     },
     "adjustmentsFunction7": {
         "message": "Регулювання І тангажа та крену"
@@ -2994,46 +3193,46 @@
         "message": "Регулювання Д тангажа та крену"
     },
     "adjustmentsFunction9": {
-        "message": "Коригування П рискання"
+        "message": "Регулювання П рискання"
     },
     "adjustmentsFunction10": {
-        "message": "Коригування I рискання"
+        "message": "Регулювання I рискання"
     },
     "adjustmentsFunction11": {
-        "message": "Коригування Д рискання"
+        "message": "Регулювання Д рискання"
     },
     "adjustmentsFunction12": {
-        "message": "Вибір профілю коефіцієнтів"
+        "message": "Вибір профілю швид. обер."
     },
     "adjustmentsFunction13": {
-        "message": "Коефіцієнт тангажа"
+        "message": "Швид. об. тангажу"
     },
     "adjustmentsFunction14": {
-        "message": "Коефіцієнт крену"
+        "message": "Швид. обер. крену"
     },
     "adjustmentsFunction15": {
-        "message": "Коригування П тангажа"
+        "message": "Регулювання П тангажу"
     },
     "adjustmentsFunction16": {
-        "message": "Коригування I тангажа"
+        "message": "Регулювання I тангажу"
     },
     "adjustmentsFunction17": {
-        "message": "Коригування Д тангажа"
+        "message": "Регулювання Д тангажу"
     },
     "adjustmentsFunction18": {
-        "message": "Коригування П крену"
+        "message": "Регулювання П крену"
     },
     "adjustmentsFunction19": {
-        "message": "Коригування І крену"
+        "message": "Регулювання І крену"
     },
     "adjustmentsFunction20": {
-        "message": "Коригування Д крену"
+        "message": "Регулювання Д крену"
     },
     "adjustmentsFunction21": {
-        "message": "RC коефіцієнт рискання"
+        "message": "Швид. обер. рискання"
     },
     "adjustmentsFunction22": {
-        "message": "Коригування У тангажу і крену"
+        "message": "Регулювання У тангажу і крену"
     },
     "adjustmentsFunction23": {
         "message": "Перехід упередження"
@@ -3045,13 +3244,13 @@
         "message": "Вибір PID-аудіо"
     },
     "adjustmentsFunction26": {
-        "message": "Коригування F тангажа"
+        "message": "Регулювання У тангажу"
     },
     "adjustmentsFunction27": {
-        "message": "Коригування F крену"
+        "message": "Регулювання У крену"
     },
     "adjustmentsFunction28": {
-        "message": "Коригування F рискання"
+        "message": "Регулювання У рискання"
     },
     "adjustmentsFunction29": {
         "message": "Вибір профілю наекранного меню"
@@ -3086,6 +3285,9 @@
     },
     "servosChangeDirection": {
         "message": "Змінити напрямок у TX для збігу"
+    },
+    "servosForwardChannel": {
+        "message": "Переслати канал {{channel}} на сервопривід {{servo}}"
     },
     "servosName": {
         "message": "Назва"
@@ -3695,6 +3897,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Функція працює тільки з DSHOT електронними контролерами швидкості.<br \/> Переконайтеся, що ваш електронний контролер швидкості (ESC) підтримує протокол DSHOT і змініть його на $t(tabMotorTesting.message) вкладці."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Кількість моторів дорівнює 0.<br \/>Перевірте поточний мікшер на вкладці $t(tabMotorTesting.message) або налаштуйте свій власний за допомогою командного рядка. Детальніше на <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Оновіть прошивку.<br \/> Переконайтеся, що ви використовуєте останню версію прошивки: Betaflight 4.3 або новішу."
     },
@@ -3716,8 +3921,14 @@
     "sensorsRefresh": {
         "message": "Оновити:"
     },
+    "sensorsGlobalRefresh": {
+        "message": "Оновити всі:"
+    },
     "sensorsScale": {
         "message": "Масштаб:"
+    },
+    "sensorsScaleAuto": {
+        "message": "Авто"
     },
     "sensorsGyroSelect": {
         "message": "Гіроскоп"
@@ -3802,6 +4013,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Виконати"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Попередній перегляд фрагмента"
     },
     "cliPanelTitle": {
         "message": "Інтерфейс командного рядка"
@@ -4205,6 +4419,9 @@
     "firmwareFlasherRecoveryHead": {
         "message": "Відновлення \/ Втрата зв'язку"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Якщо ви втратили зв'язок із платою, виконайте такі кроки для його відновлення:<ul><li>Вимкніть живлення.<\/li><li>Увімкніть «Польотний контролер уже в режимі завантажувача» та «Повністю очистити мікроконтролер».<\/li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.<\/li><li>Увімкніть живлення (якщо все зроблено правильно, світлодіод активності НЕ буде блимати).<\/li><li>Встановіть усі драйвери STM32 і Zadig, якщо це необхідно (розділ <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB<\/a> у посібнику Betaflight).<\/li><li>Закрийте конфігуратор, а потім перезапустіть його.<\/li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотному контролері.<\/li><li>Прошийте правильну прошивку (використовуючи ручне налаштування швидкості, якщо це зазначено в інструкції до вашого польотного контроллера).<\/li><li>Вимкніть живлення.<\/li><li>Зніміть перемичку BOOT.<\/li><li>Увімкніть живлення (світлодіод активності має заблимати).<\/li><li>Підключіться у звичайному режимі.<\/li><\/ul>"
+    },
     "firmwareFlasherRecoveryShort": {
         "message": "Якщо втрачено з'єднання: вимкніть живлення, увімкніть Польотник уже в режимі завантажувача та Повністю очистити мікроконтролер, замкніть піни BOOT перемичкою, потім увімкніть живлення. За потреби встановіть драйвери."
     },
@@ -4256,6 +4473,30 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Не вдалося зберегти (прошити) UF2"
     },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "Підключення до завантажувача ESP32..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "Виявлено $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "Прошивання ESP32..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "Прошивання завершено, перезавантаження..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "ESP32 успішно прошито"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "Не вдалося прошити ESP32: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "Прошивання ESP32 підтримується лише у браузері (з підтримкою Web Serial)"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "Виберіть послідовний порт перед прошиванням ESP32"
+    },
     "firmwareFlasherClickToConnectDfu": {
         "message": "Натисніть, щоб під'єднатися до пристрою DFU"
     },
@@ -4278,6 +4519,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Резервне копіювання скасовано, прошивання перервано"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Помилка резервного копіювання: отримано некоректні дані з пристрою (не в режимі командного рядка), прошивання перервано"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (старий варіант)",
@@ -5182,6 +5426,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Компенсація падіння напруги батареї %"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Забезпечує стабільність тяги та характеристик ПІД у діапазоні корисної напруги батареї, збільшуючи видачу потужності на мотори, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5727,6 +5974,9 @@
     "powerBatteryProfileOption": {
         "message": "Профіль батареї $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Польотний контролер встановив профіль батареї: <strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "наприклад LiPo, Li-Ion"
     },
@@ -5771,6 +6021,9 @@
     },
     "osdSetupTitle": {
         "message": "Наекранне меню"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Перемкнути видимість {{element}} для профілю {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>ПОПЕРЕДЖЕННЯ:<\/b><\/span> чіп наекранного меню не виявлено. Деякі польотні контролери не можуть належним чином живити мікросхему наекранного меню, якщо не підключити живлення від батареї. Будь ласка, підключіть батарею перед підключенням USB (ПРОПЕЛЕРИ ЗНЯТИ!)."
@@ -6009,9 +6262,15 @@
         "message": "Значення RSSI",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementRssiValue": {
+        "message": "Поточне значення RSSI (блимає, коли воно нижче порогу попередження). Для сучасних протоколів використовуйте RSSI дБм."
+    },
     "osdTextElementRssiDbmValue": {
         "message": "Значення RSSI в дБм",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Індикатор інтенсивності прийнятого сигналу, це значення показує наскільки сильний сигнал в дБм"
     },
     "osdTextElementTimer": {
         "message": "Таймер",
@@ -6601,6 +6860,9 @@
         "message": "Якість зв'язку",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementLinkQuality": {
+        "message": "Індикатор якості з'єднання показує відсоток успішно отриманих, непошкоджених пакетів даних"
+    },
     "osdTextElementFlightDist": {
         "message": "Відстань польоту",
         "description": "One of the elements of the OSD"
@@ -6644,11 +6906,11 @@
         "message": "Частота обертів на основі телеметрії ESC"
     },
     "osdTextElementRateProfileName": {
-        "message": "Профіль: назва профілю коефіцієнтів",
+        "message": "Профіль: назва профілю швид. об.",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRateProfileName": {
-        "message": "Показує назву поточного профілю коефіцієнтів"
+        "message": "Показує назву поточного профілю швид. об."
     },
     "osdTextElementPidProfileName": {
         "message": "Профіль: назва профілю PID",
@@ -7189,6 +7451,14 @@
         "message": "Не вдалося утримати позицію",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
     },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Місію автопілота перервано",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Місію автопілота перервано",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "Невідомо $1"
     },
@@ -7224,6 +7494,10 @@
     },
     "osdButtonSaved": {
         "message": "Збережено"
+    },
+    "vtxHelp": {
+        "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">цю сторінку;<\/a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації Lua для роботи з lua скриптами Betaflight (докладніше <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">тут<\/a>.)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Увага:<\/span> Ваш відеопередавач не налаштований або не підтримується. Тому ви не можете змінити значення відеопередавача звідси. Це буде можливо лише за умови, якщо польотний контролер під’єднано до відеопередавача за допомогою певного протоколу, як-от Tramp або SmartAudio, і його було правильно налаштовано на вкладці $t(tabPorts.message).",
@@ -7740,6 +8014,93 @@
     "magCalibrationAccept": {
         "message": "Зберегти калібрування"
     },
+    "magCalibrationFull": {
+        "message": "Повне калібр. (автоорієнтування)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Одне обертання — задає зміщення, девіацію від м'якого заліза та орієнтації встановлення магнітометра"
+    },
+    "magCalibrationFullTitle": {
+        "message": "Повне калібрування"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Виконайте наведені нижче кроки, утримуючи апарат нерухомо протягом кожного повного оберту. Лічильник зон зростає, коли ви досягаєте нових кутів — маєте охопити всі 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Крок {{n}} з {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Утримуйте апарат горизонтально та повільно оберніть його на повні 360°."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Переверніть його догори дном та повільно оберніть ще на повні 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Спрямуйте ніс прямо вгору та зробіть повний оберт навколо нього."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Спрямуйте ніс прямо вниз та зробіть повний оберт."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Покладіть його на лівий бік та зробіть повний оберт."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Покладіть його на правий бік та зробіть повний оберт."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Зробіть кілька повільних переворотів уперед, щоразу повертаючись в інший бік."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Зробіть кілька повільних переворотів назад, знову щоразу повертаючись в інший бік."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} зон охоплено"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Розрахувати"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Покриття:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Орієнтація:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "крен {{roll}}° тангаж {{pitch}}° рискання {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Калібрування:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Залишкова похибка:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Копіювати CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Застосувати"
+    },
+    "magCalibrationFullExport": {
+        "message": "Експортувати модель"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Недостатньо даних — обертайте довше"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Немає даних про розташування з GPS або IP — неможливо визначити магнітне нахилення"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "Команди CLI скопійовано до буфера обміну"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Не вдалося скопіювати до буфера обміну"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Прошивка {{version}} занадто стара для нетипової орієнтації магнітометра (потрібна {{min}}+). Оновіть прошивку, потім застосуйте."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Калібрування застосовано та збережено"
+    },
     "magCalibrationDiscard": {
         "message": "Скасувати"
     },
@@ -7825,7 +8186,7 @@
         "message": "Rateprofile"
     },
     "pidTuningRateProfileTip": {
-        "message": "До 3-х різних профілів коефіцієнтів може бути збережено на польотному контролері. Ці профілі включають налаштування \"RC Коефіцієнт\", \"Коефіцієнт\", \"RC Експонента\", \"Тяга\" та \"TPA\". Переключення між профілями коефіцієнтів можливе під час польоту, налаштувавши перемикач з 3 положеннями для \"Вибору профілю коефіцієнтів\" на вкладці \"Налаштування\"."
+        "message": "До 3-х різних профілів швидкостей обертання може бути збережено на польотному контролері. Ці профілі включають налаштування \"RC швидкості обертання\", \"швидкість обертання\", \"Експоненційність\", \"Тяга\" та \"TPA\". Переключення між профілями швидкостей обертання можливе під час польоту, налаштувавши перемикач з 3 положеннями для \"Вибору профілю швидкостей обертання\" на вкладці \"Регулювання\"."
     },
     "pidTuningRateSetup": {
         "message": "Базові\/Акро коефіцієнти"
@@ -8256,6 +8617,38 @@
     "mspCliFirmwareTooOld": {
         "message": "Ця дія вимагає версії прошивки Betaflight {{required}} або новішої (зараз приєднано до {{current}}). Будь ласка, оновіть прошивку перед тим, як продовжити.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Відновити резервну копію",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Відновити резервну копію, створену перед прошиванням",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "Це відновить резервну копію конфігурації, створену перед прошиванням. Продовжити?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Резервну копію конфігурації успішно відновлено.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Резервну копію конфігурації відновлено, {{count}} рядків пропущено.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Помилка відновлення: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "Не вдалося під'єднатися до польотного контролера для відновлення.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "Резервних копій для відновлення не знайдено.",
+        "description": "Error message when no backup data is cached for restore"
     },
     "presetsLoadingDumpAll": {
         "message": "Завантаження поточної конфігурації з польотного контролера",
@@ -8768,6 +9161,10 @@
     },
     "backupNoBackupsAvailable": {
         "message": "Відсутні резервні копії"
+    },
+    "backupRequiresConnection": {
+        "message": "Під'єднайте польотний контролер, щоб увімкнути цю дію",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
     },
     "titleEditBackup": {
         "message": "Редагувати резервну копію"
@@ -9325,5 +9722,89 @@
     },
     "preflightForecastWeather": {
         "message": "Погода"
+    },
+    "preflightNotamProvider": {
+        "message": "Провайдер повідомлень для пілотів"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Вимкнено"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA API повідомлень для пілотів (США, потрібен API ключ)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (Глобальний повітряний простір, потрібен API ключ)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "API ключ FAA (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "API ключ OpenAIP"
+    },
+    "preflightNotamRadius": {
+        "message": "Радіус пошуку"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "мор. милі"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "км"
+    },
+    "preflightNotamSettings": {
+        "message": "Налаштування даних про повітряний простір"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Дані про повітряний простір надсилають ваші координати вибраному провайдеру. Жодні інші персональні дані не передаються."
+    },
+    "preflightNotamLoading": {
+        "message": "Завантаження даних про повітряний простір..."
+    },
+    "preflightNotamEmpty": {
+        "message": "Не знайдено повідомлень для цього місця та радіуса"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "Для вибраного провайдера потрібен ключ API. Введіть свій ключ у налаштуваннях вище."
+    },
+    "preflightNotamFetchError": {
+        "message": "Не вдалося завантажити дані про повітряний простір"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Активне зараз"
+    },
+    "preflightNotamPermanent": {
+        "message": "Постійне"
+    },
+    "preflightNotamExpired": {
+        "message": "Термін дії закінчився"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "Тимчасові обмеження"
+    },
+    "preflightNotamTypeSua": {
+        "message": "Простір спеціального використання"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "Повідомлення про сніг"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "Повідомлення про попіл"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "Повідомлення для пілотів"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Нижня межа"
+    },
+    "preflightNotamAltTo": {
+        "message": "Верхня межа"
+    },
+    "preflightNotamShowMore": {
+        "message": "Показати більше"
+    },
+    "preflightNotamShowLess": {
+        "message": "Показати менше"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Востаннє завантажено"
     }
 }

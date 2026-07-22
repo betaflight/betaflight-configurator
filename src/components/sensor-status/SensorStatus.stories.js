@@ -1,4 +1,4 @@
-import SensorStatus from "./SensorStatus";
+import SensorStatus from "./SensorStatus.vue";
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {

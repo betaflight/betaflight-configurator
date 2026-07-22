@@ -5,6 +5,9 @@
             <span v-if="appStore.statusCells" class="status-item">{{ appStore.statusCells }}</span>
             <span v-if="appStore.statusLooptime" class="status-item">{{ appStore.statusLooptime }}</span>
             <span v-if="appStore.statusLograte" class="status-item">{{ appStore.statusLograte }}</span>
+            <span v-if="appStore.statusLograteWarning" class="status-item status-lograte-warning">{{
+                appStore.statusLograteWarning
+            }}</span>
             <span v-if="appStore.statusFlightMode" class="status-item status-flight-mode">{{
                 appStore.statusFlightMode
             }}</span>
@@ -68,6 +71,11 @@ const workspaceStore = useWorkspaceStore();
 
 .status-flight-mode {
     color: var(--color-primary-600, #e69400);
+    font-weight: 600;
+}
+
+.status-lograte-warning {
+    color: var(--error-500);
     font-weight: 600;
 }
 </style>

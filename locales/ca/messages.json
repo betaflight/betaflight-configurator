@@ -668,6 +668,12 @@
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Ha fallat<\/span> al obrir el port sèrie"
     },
+    "connectionFailedTitle": {
+        "message": "Connexió fallida"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">No s'ha pogut connectar<\/span> al port seleccionat. Comproveu que el dispositiu sigui accessible i que la configuració de connexió sigui correcta i, a continuació, torneu-ho a provar."
+    },
     "serialPortClosedOk": {
         "message": "Port sèrie <span class=\"message-positive\">correctament<\/span> tancat"
     },
@@ -969,6 +975,9 @@
     "defaultHardwareHead": {
         "message": "Maquinari"
     },
+    "defaultHardwareText": {
+        "message": "L'aplicació admet tot el maquinari que pot executar Betaflight. Consulteu la pestanya \"Firmware flasher\" per obtenir la llista completa del maquinari.<br \/><br \/>Utilitats\/controladors de maquinari útils:<ul><li>Per al maquinari antic que utilitza un xip USB a sèrie CP210x, els <b>controladors CP210x<\/b> més recents es poden descarregar des de <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li>La instal·lació més recent del controlador USB de <b>Zadig<\/b> per a Windows es pot descarregar des de <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> es pot descarregar <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><\/ul>"
+    },
     "defaultSoftwareHead": {
         "message": "Programari"
     },
@@ -977,6 +986,9 @@
     },
     "defaultContributingHead": {
         "message": "Contribuir"
+    },
+    "defaultContributingText": {
+        "message": "Si voleu ajudar a millorar encara més Betaflight, podeu col·laborar de moltes maneres, com ara:<br \/><ul><li>utilitzant els vostres coneixements de Betaflight per crear o actualitzar contingut a la <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki<\/a> o responent preguntes d'altres usuaris en fòrums en línia;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuint amb codi<\/a> al firmware i a l'aplicació: noves funcions, correccions, millores;<\/li><li>provant <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">noves funcions i correccions<\/a> i proporcionant comentaris;<\/li><li>ajudant altres usuaris a resoldre els problemes que informen a <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">el nostre seguiment d'incidències<\/a> i participar en debats sobre sol·licituds de funcions;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/README.md#translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduir<\/a> l'aplicació Betaflight a un nou idioma o ajudar a mantenir les traduccions existents.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "També tenim un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Grup de Facebook<\/a>. <br \/>Uneix-te a nosaltres per obtenir un lloc on parlar de Betaflight, fer preguntes de configuració o simplement passar una estona amb altres pilots."
@@ -1370,6 +1382,10 @@
         "message": "El manteniment de posició està actiu",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "L'interruptor del mode de pilot automàtic està actiu",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un dels altres desarmar banderes està actiu quan es fa armament",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1730,6 +1746,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "Rotació arbitrària de la placa en graus, per permetre muntar-la de costat \/ cap per avall \/ girada, etc. Quan utilitzeu sensors externs, utilitzeu les alineacions dels sensors (Giro, Acc, Mag) per definir la posició del sensor independent de l'orientació de la placa. "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Detecció automàtica de l'alineació de la placa..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Assistent d'alineació de la placa"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Aquest assistent detecta com està muntat el controlador de vol guiant-vos a través de quatre moviments senzills. Col·loqueu el dron sobre una superfície plana amb la càmera apuntant cap a la pantalla (lluny de tú) i, a continuació, segueix les instruccions."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Comença"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Pas"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Col·loca el dron pla amb la càmera mirant lluny a tu (cap a la pantalla)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Inclina el nas cap amunt uns 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Inclina el nas cap abaix uns 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Gireu el dron uns 45° en sentit horari (vist des de dalt)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Torna a posar el dron en una posició anivellada."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Manteniu-lo quiet..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Assenta-ho"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Continua inclinant-ho"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Torna-ho a nivell"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Eix detectat - Mantenir fix"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotació"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Processant alineació..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Alineació detectada"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "L'alineació de la placa sembla correcta; no cal fer cap canvi."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Actual"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Detectat"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Enrere"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Aplica"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Canceŀlar"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Torna-ho a provar"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Captura ara"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "La confiança de detecció es redueix; verifiqueu el resultat amb l'actitud en directe abans d'aplicar-lo."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Cal un acceleròmetre per executar aquest assistent."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Si us plau, calibra l'acceleròmetre abans d'executar aquest assistent."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "No s'han recollit algunes mostres. Si us plau, torna-ho a intentar."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "L'acceleròmetre no llegeix la gravetat. Assegureu-vos que la controladora estigui connectada i no estigui en moviment."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "No s'ha detectat el gest de Pitch. Torna-ho a intentar i inclina el nas cap amunt encara més."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "No s'ha detectat el gest de Roll. Torna-ho a intentar i inclina el costat dret cap abaix encara més."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Pla"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Capturat!"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -2038,6 +2168,9 @@
     },
     "configurationSpiRX": {
         "message": "Proveïdor del Receptor SPI Bus"
+    },
+    "configurationSaved": {
+        "message": "Configuració desada"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -2622,6 +2755,9 @@
     "receiverModelId": {
         "message": "Identificador del model de coincidència"
     },
+    "receiverHelp": {
+        "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comproveu sempre que el vostre Failsafe funcioni correctament!<\/a><\/strong><\/b> La configuració es troba a la pestanya Failsafe, que requereix el mode expert.<br> &#8226; <b>Utilitzeu el firmware més recent del transmissor!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactiveu el filtre ADC de maquinari<\/a><\/strong> al transmissor si utilitzeu OpenTx o EdgeTx.<br>Configuració bàsica: configureu correctament la configuració del \"Receptor\". Trieu el \"Mapa de canals\" correcte per a la vostra ràdio. Comproveu que els gràfics de barra de balanceig, pitch i altres gràfics es moguin correctament. Ajusteu els valors del punt final o de l'interval del canal al transmissor a ~1000 a ~2000 i configureu el punt mitjà a 1500. Per a més informació, llegiu la <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentació<\/a><\/strong>."
+    },
     "receiverFailsafeActiveTitle": {
         "message": "Failsafe actiu"
     },
@@ -2807,6 +2943,14 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "El mode de vol augmenta el termini P i I durant els moviments ràpids de l'accelerador per millorar el seguiment del pal i evitar la deriva del nas en els canvis ràpids de l'accelerador",
         "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "AirMode permet mantenir l'estabilitat de l'aeronau a baixa velocitat. Per a més informació, consulteu <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> a Betaflight.com.",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "El <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Position-Hold-2025-12#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">manteniment d'altitud<\/a> regula activament l'altitud de l'aeronau mitjançant sensors externs combinats amb el mode Angle (mode Estable).",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_AUTOPILOT": {
         "message": "El mode de pilot automàtic permet el control de vol autònom, combinant el manteniment de l'altitud i el manteniment de la posició per mantenir una posició estacionària estable o seguir una trajectòria de vol planificada.",
@@ -3031,6 +3175,14 @@
     "adjustmentsColumnAdjustmentScale": {
         "message": "escala (val.|%)"
     },
+    "adjustmentsCenterHelp": {
+        "message": "Estableix el punt mitjà o valor de referència utilitzat per la funció d'ajust.<br \/><br \/><strong>Ajustaments del control lliscant:<\/strong><br \/>Per als ajustos del control lliscant, configureu el Centre d'ajust a 0. La posició actual del control lliscant s'utilitzarà per a l'ajust amunt\/avall.<br \/><br \/><strong>Ajustaments de selecció:<\/strong><br \/>Configureu el Centre d'ajust a 0 o a un valor específic de microsegons (uS) si voleu compensar el punt de referència del commutador de 1500uS en iniciar l'ajust RC.<br \/><br \/><strong>Ajustaments esglaonats:<\/strong><br \/>Configureu el Centre d'ajust a 0 perquè s'utilitzi el valor actual de l'element que s'està ajustant.<br \/><br \/><strong>Ajustaments absoluts:<\/strong><br \/>Per utilitzar el mètode d'ajust absolut, heu de definir tant el Centre d'ajust com l'Escala per especificar el valor i l'interval desitjats. L'interval es calcula com a: Centre ± Escala. Per exemple, si configureu el Centre d'ajustament a 50 i l'Escala d'ajustament a 25, es crea un interval de 25 a 75, amb la posició central (interruptor o POT) assignada a 50.<br \/><br \/>Visiteu <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta pàgina<\/a> per obtenir més informació.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controla l'escala o el rang de l'ajust; els valors més alts augmenten el rang d'ajust o la sensibilitat.<br \/><br \/><strong>Ajustaments del control lliscant:<\/strong><br \/>Per als ajustos del control lliscant, l'escala d'ajust controla l'escala\/sensibilitat de l'ajust. Un valor de 50 equival al 50% del rang del control lliscant. Si s'estableix a 0, s'utilitza l'escala predeterminada per als controls lliscants.<br \/><br \/><strong>Ajustaments de selecció:<\/strong><br \/>Per als ajustos de selecció, definiu l'escala d'ajust a 0 per al comportament predeterminat o especifiqueu un valor de microsegons (uS) per limitar el rang. Per exemple: definiu el centre d'ajust a 1000 (uS) i l'escala d'ajust a 500 (uS) per utilitzar un interruptor de 3 posicions com a interruptor de 2 posicions.<br \/><br \/><strong>Ajustaments esglaonats i absoluts:<\/strong><br \/>Per als ajustos esglaonats i absoluts, l'escala d'ajust defineix el rang per sobre i per sota del centre d'ajust. Per exemple, un valor de 25 crea un rang d'ajust de ±25 a partir del valor del Centre d'ajust, o a partir del valor actual si el Centre d'ajust està definit a 0.<br \/><strong>Nota:<\/strong> Per utilitzar el mètode d'ajust absolut amb un potenciòmetre, cal especificar un valor d'escala d'ajust.<br \/><br \/>Visiteu <a href=\"https:\/\/www.betaflight.com\/docs\/wiki\/guides\/current\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta pàgina<\/a> per obtenir més informació.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
@@ -3173,6 +3325,9 @@
     },
     "servosChangeDirection": {
         "message": "Canvia la direcció al TX per a coincidir"
+    },
+    "servosForwardChannel": {
+        "message": "Reenvia el canal {{channel}} al servo {{servo}}"
     },
     "servosName": {
         "message": "Nom"
@@ -3786,6 +3941,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "La funció només funciona amb DSHOT ESC.<br \/>Verifiqueu que el vostre ESC (controlador de velocitat elèctric) admeti el protocol DSHOT i canvieu-lo a la pestanya $t(tabMotorTesting.message)."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "El nombre de motors és 0.<br \/>Verifiqueu el mesclador actual a la pestanya $t(tabMotorTesting.message) o configureu-ne un de personalitzat mitjançant la CLI. Consulteu aquesta <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">pàgina Wiki<\/a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualitzeu el microprogramari.<br \/> Assegureu-vos que utilitzeu el microprogramari més recent: Betaflight 4.3 o posterior."
     },
@@ -3899,6 +4057,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Executa"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Vista prèvia del fragment"
     },
     "cliPanelTitle": {
         "message": "Interfície de línia d'ordres"
@@ -4301,6 +4462,9 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "Recuperació \/ Comunicació perduda"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Si heu perdut la comunicació amb la placa, seguiu aquests passos per restaurar-la:<ul><li>Apagueu l'alimentació<\/li><li>Activeu \"Sense seqüència de reinici\", activeu \"Esborrat complet del xip\".<\/li><li>Connecteu els pins BOOT o manteniu premut el botó BOOT.<\/li><li>Enceneu-lo (el LED d'activitat NO parpellejarà si es fa correctament).<\/li><li>Instal·leu tots els controladors STM32 i Zadig si cal (vegeu la secció <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash USB<\/a> del manual de Betaflight).<\/li><li>Tanqueu l'aplicació i reinicieu-la.<\/li><li>Deixeu anar el botó BOOT si el vostre FC en té un.<\/li><li>Flash amb el firmware correcte (utilitzant la velocitat de baud manual si s'especifica al manual del vostre FC).<\/li><li>Apagueu l'alimentació.<\/li><li>Traieu el jumper BOOT.<\/li><li>Enceneu-lo (el LED d'activitat hauria de flaix).<\/li><li>Connecta't normalment.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "Si heu perdut la comunicació: apagueu l'ordinador, activeu No Reboot Sequence i Full Chip Erase, connecteu els pins BOOT a un pont i, a continuació, engegueu-lo. Instal·leu els controladors si cal."
@@ -5306,6 +5470,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensació de baixada de Vbat %"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Ofereix un rendiment constant de l'acceleració i el PID en l'interval de tensió de la bateria utilitzable augmentant la sortida del motor a mesura que cau la tensió de la bateria.<br \/><br \/>La quantitat de compensació es pot variar entre 0 i 100%. Es recomana una compensació total (100%).<br \/><br \/>Visiteu <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki<\/a> per a més informació."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5851,6 +6018,9 @@
     "powerBatteryProfileOption": {
         "message": "Perfil de bateria $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Controladora de vol selecciona perfil de bateria: <strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "example. LiPo, Li-Ion"
     },
@@ -5895,6 +6065,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Activa\/desactiva la visibilitat de {{element}} per al perfil {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>AVIS:<\/b><\/span>No s'ha detectat cap xip OSD. Alguns controladors de vol no alimentaran correctament el xip OSD a menys que estiguin connectats a la bateria. Si us plau, connecteu la bateria abans de connectar el USB (HEU RETIRAT LES HÈLIX!)."
@@ -7322,6 +7495,14 @@
         "message": "Ha fallat el manteniment de la posició",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
     },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Missió de pilot automàtic avortada",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Missió de pilot automàtic avortada",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "Desconegut $1"
     },
@@ -7357,6 +7538,10 @@
     },
     "osdButtonSaved": {
         "message": "Desat"
+    },
+    "vtxHelp": {
+        "message": "Aquí podeu configurar els valors del vostre transmissor de vídeo (VTX). Podeu veure i canviar els valors de transmissió, incloses les taules VTX, si el controlador de vol i el VTX ho admeten.<br>Per configurar el vostre VTX, seguiu els passos següents:<br>1. Aneu a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-tables\">aquesta<\/a> pàgina;<br>2. Trobeu el fitxer de configuració VTX adequat per al vostre país i el vostre model VTX i descarregueu-lo;<br>3. Feu clic a \"$t(vtxButtonLoadFile.message)\" a continuació, seleccioneu el fitxer de configuració VTX, carregueu-lo;<br>4. Comproveu que la configuració sigui correcta;<br>5. Feu clic a \"$t(vtxButtonSave.message)\" per emmagatzemar la configuració de VTX al controlador de vol.<br>6. Opcionalment, feu clic a \"$t(vtxButtonSaveLua.message)\" per desar un fitxer de configuració lua que podeu utilitzar amb els scripts lua betaflight (vegeu més <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github. com\/betaflight\/betaflight-tx-lua-scripts\/\">aquí<\/a>.)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atenció:<\/span> El vostre VTX no està configurat o no és compatible. Per tant, no podeu modificar els valors VTX d'aquí. Això només serà possible si el controlador de vol està unit a la VTX mitjançant algun protocol com Tramp o SmartAudio i està configurat correctament a la pestanya $t(tabPorts.message) si es necessita.",
@@ -7872,6 +8057,93 @@
     },
     "magCalibrationAccept": {
         "message": "Desa el calibratge"
+    },
+    "magCalibrationFull": {
+        "message": "Calibratge complet (alineació automàtica)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Un gir: estableix els desplaçaments, el planxat i l'orientació de muntatge del magnetòmetre"
+    },
+    "magCalibrationFullTitle": {
+        "message": "Calibratge complet"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Segueix els passos següents, mantenint la nau ferma durant cada gir complet. El recompte de zones puja a mesura que arribes a nous angles; intenta cobrir-los tots 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Pas {{n}} de {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Mantingueu el dron anivellat i gireu-la lentament 360°."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Gireu-lo cap per avall i gireu-lo lentament 360° complets més."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Apunta el nas cap amunt i gira-hi una volta completa."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Apunta el nas cap avall i gira-hi una volta completa."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Recolza-la sobre el costat esquerre i gira-la una volta completa."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Recolza-la sobre el costat dret i gira-la una volta completa."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Feu uns quants salts cap endavant lents, mirant de nou en una direcció diferent cada vegada."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Feu uns quants salts cap enrere lents, mirant de nou en una direcció diferent cada vegada."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} zones cobertes"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Calcula"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Cobertura:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Alineació:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibració:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Residual:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copiar CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Aplica"
+    },
+    "magCalibrationFullExport": {
+        "message": "Exportar Model"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "No hi ha prou mostres: girar més estona"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Sense localització GPS ni IP: no es pot determinar la inclinació magnètica"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "Ordres de la CLI copiades al porta-retalls"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "No s'ha pogut copiar al porta-retalls"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "El maquinari {{version}} és massa antic per a l'alineació del magnetòmetre PERSONALITZAT (cal {{min}}+). Actualitza el maquinari i després aplica'l."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibratge aplicat i desat"
     },
     "magCalibrationDiscard": {
         "message": "Descarta"
@@ -8934,6 +9206,10 @@
     "backupNoBackupsAvailable": {
         "message": "No hi ha cap còpia de seguretat disponible"
     },
+    "backupRequiresConnection": {
+        "message": "Connecta una controladora de vol per habilitar aquesta acció",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
     "titleEditBackup": {
         "message": "Edita la còpia de seguretat"
     },
@@ -9490,5 +9766,89 @@
     },
     "preflightForecastWeather": {
         "message": "Temps"
+    },
+    "preflightNotamProvider": {
+        "message": "Proveïdor de NOTAM"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Desactivat"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "API NOTAM de la FAA (EEUU, cal una clau API)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (espai aeri global, cal una clau API)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "Clau API de la FAA (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "Clau de l'API d'OpenAIP"
+    },
+    "preflightNotamRadius": {
+        "message": "Cerca Radius"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Configuració de dades de l'espai aeri"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Les dades de l'espai aeri envien les vostres coordenades al proveïdor seleccionat. No es transmeten dades personals addicionals."
+    },
+    "preflightNotamLoading": {
+        "message": "S'estan obtenint dades de l'espai aeri..."
+    },
+    "preflightNotamEmpty": {
+        "message": "No s'han trobat avisos per a aquesta ubicació i radius"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "Cal una clau API per al proveïdor seleccionat. Introduïu la vostra clau a la configuració anterior."
+    },
+    "preflightNotamFetchError": {
+        "message": "No s'han pogut obtenir les dades de l'espai aeri"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Actiu ara"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanent"
+    },
+    "preflightNotamExpired": {
+        "message": "Caducat"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Inferior"
+    },
+    "preflightNotamAltTo": {
+        "message": "Superior"
+    },
+    "preflightNotamShowMore": {
+        "message": "Mostra'n més"
+    },
+    "preflightNotamShowLess": {
+        "message": "Mostra menys"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Última recuperació"
     }
 }

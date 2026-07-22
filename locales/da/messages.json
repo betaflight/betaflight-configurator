@@ -409,6 +409,9 @@
     "sensorConfigCalibrate": {
         "message": "Kalibrer"
     },
+    "sensorConfig3dPreview": {
+        "message": "3D orienteringsvisning"
+    },
     "sensorConfigLiveData": {
         "message": "Vis data fra sensor i realtid"
     },
@@ -425,7 +428,7 @@
         "message": "Porte"
     },
     "tabPidTuning": {
-        "message": "PID-tuning"
+        "message": "PID tuning"
     },
     "tabAutotune": {
         "message": "Auto tuning"
@@ -452,11 +455,26 @@
     "autotuneBandwidth": {
         "message": "Båndbredde"
     },
+    "autotunePhaseMargin": {
+        "message": "Fasemargin"
+    },
+    "autotuneResonantPeak": {
+        "message": "Resonans top"
+    },
+    "autotuneCoherence": {
+        "message": "Kohærens"
+    },
     "autotuneParameter": {
         "message": "Parametre"
     },
+    "autotuneCurrent": {
+        "message": "Nuværende"
+    },
     "autotuneProposed": {
         "message": "Foreslået"
+    },
+    "autotuneChange": {
+        "message": "Skift"
     },
     "autotuneApplying": {
         "message": "Anvender..."
@@ -491,6 +509,9 @@
     "autotuneFile": {
         "message": "Fil"
     },
+    "autotuneAxesDetected": {
+        "message": "Registrerede akser"
+    },
     "autotuneApplyGains": {
         "message": "Anvend forstærkning"
     },
@@ -509,8 +530,17 @@
     "autotuneAxisYaw": {
         "message": "Sideror"
     },
+    "autotuneBodePlotTitle": {
+        "message": "Frekvensrespons"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "Aktuelle PID (fra log)"
+    },
     "autotuneSectionAnalysis": {
         "message": "Analyser"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "Anbefalede skyder værdier"
     },
     "autotuneSliderMasterMultiplier": {
         "message": "Generel forstærkning"
@@ -524,11 +554,20 @@
     "autotuneSliderDGain": {
         "message": "D forstærkning"
     },
+    "autotuneSliderFeedforward": {
+        "message": "Fremkobling"
+    },
     "autotuneSliderDTermFilter": {
         "message": "D Term filter"
     },
     "autotuneApplyFromAxis": {
         "message": "Anvend forstærkning fra akser"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "Følsomheds top"
+    },
+    "autotuneOvershoot": {
+        "message": "Oversving"
     },
     "autotuneRiseTime": {
         "message": "Tid for stigning"
@@ -558,7 +597,7 @@
         "message": "Video transmitter"
     },
     "tabPower": {
-        "message": "Strøm og batteri"
+        "message": "Strøm og spænding"
     },
     "tabGPS": {
         "message": "GPS"
@@ -624,6 +663,12 @@
     },
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Mislykkedes<\/span> at åbne seriel port"
+    },
+    "connectionFailedTitle": {
+        "message": "Forbindelsen fejlede"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">Mislykkedes<\/span> at oprette forbindelse til den valgte port. Undersøg om enheden er tilgængelig og at forbindelsesindstillingerne er opsat korrekt, prøv derefter igen."
     },
     "serialPortClosedOk": {
         "message": "Seriel port <span class=\"message-positive\">lukket<\/span>"
@@ -805,7 +850,7 @@
         "message": "Indlæst udgivelsesinformation for $1 fra GitHub."
     },
     "releaseCheckFailed": {
-        "message": "<b>GitHub-forespørgsel for $1-udgivelse mislykkedes, benytter cache-information. Årsag: <code>$2<\/code><\/b>"
+        "message": "<b>GitHub forespørgsel for $1-udgivelse mislykkedes, benytter cache-information. Årsag: <code>$2<\/code><\/b>"
     },
     "releaseCheckCached": {
         "message": "Benytter cache udgivelsesinformation for $1-udgivelser."
@@ -933,7 +978,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
+        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -1092,7 +1137,7 @@
         "message": "Min. Cellespænd.:"
     },
     "initialSetupMaxCellV": {
-        "message": "Maks. Cellespænd.:"
+        "message": "Max. cellespænd.:"
     },
     "initialSetupVoltageScale": {
         "message": "Spænd.skala:"
@@ -1333,6 +1378,10 @@
         "message": "Fast Position er aktiv",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "Autopilot er tændt",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Et af de øvrige deaktiveringsflag er aktivt under tilkobling",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1374,7 +1423,7 @@
         "message": "Firmware info"
     },
     "initialSetupInfoFirmwareHelp": {
-        "message": "Viser information om indhold i firmware, kræver online adgang.<br>Indstillinger viser valg defineret ved Cloud Build.<br>Log og Konfiguration har link til Cloud information via nøgle gemt i firmware.<br>Ved lokalt bygget firmware, er sektionen tom.",
+        "message": "Viser information om indhold i firmware, kræver online adgang.<br>Indstillinger viser valg defineret ved Cloud byg.<br>Log og Konfiguration har link til Cloud information via nøgle gemt i firmware.<br>Ved lokalt bygget firmware, er sektionen tom.",
         "description": "Message that pops up to describe the Build \/ Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1402,7 +1451,7 @@
         "message": "Valg"
     },
     "initialSetupInfoBuildOptionList": {
-        "message": "Valg defineret i firmware build"
+        "message": "Valg defineret i firmware byg"
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Lokalt bygget - ingen Cloud Build information"
@@ -1567,7 +1616,7 @@
         "message": "Race transponder"
     },
     "featureTRANSPONDERTip": {
-        "message": "Aktiver transponder firmware support. Konfigurer udbyderen (<code>sæt transponder_provider = [ILAP¤ ARCITIMERERS ERLT]<\/code>) og data (<code>sæt transponder_data = &lt;bytes&gt;<\/code>) via CLI, derefter <code>gem<\/code>. Kør <code>hent transponder<\/code> til at inspicere aktuelle værdier."
+        "message": "Aktiverer transponder firmware support. Konfigurer udbyderen (<code>set transponder_provider = [ILAP|ARCITIMERERS|ERLT]<\/code>) og data (<code>set transponder_data = &lt;bytes&gt;<\/code>) via CLI, derefter <code>save<\/code>. Kør <code>get transponder<\/code> til at inspicere aktuelle værdier."
     },
     "featureAIRMODE": {
         "message": "Aktiver Airmode permanent"
@@ -1631,7 +1680,7 @@
         "message": "ESC-\/Motorfunktioner"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Bemærk:<\/strong> Opsæt porte og andet <span class=\"message-negative\">inden<\/span> aktivering af funktioner , på fanen Porte. Ikke alle kombinationer af funktioner fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de uden videre."
+        "message": "<strong>Bemærk:<\/strong> Konfigurer på fanen Porte, porte, hastighed, protokol og andet <span class=\"message-negative\">inden<\/span> aktivering af funktioner. Ikke alle kombinationer af funktioner fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de uden videre."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; UART til modtageren skal indstilles til ‘Serial Rx’ (i fanen <i>Porte<\/i>)<br>&#8226; Vælg den korrekte leverandør protokol i rullemenu"
@@ -1692,6 +1741,120 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
+    },
+    "boardAlignmentWizard-Launch": {
+        "message": "Auto registrer FC justering..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "FC justering guide"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Denne guide registrerer, hvordan din flycontroller er monteret ved at guide dig gennem fire enkle bevægelser. Placer faartøjet på en flad overflade med kameraet vendt væk fra dig (mod skærmen), og følg derefter anvisningerne."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Start"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Trin"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Placer fartøj fladt med kameraet vendt væk fra dig (mod skærmen)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Vip næsen op til omkring 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Vip højre side ned til omkring 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Drej dronen omkring 45° med uret (som set fra oven)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Returner dronen til en plan position."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Hold stille..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Beregninger"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Bliv ved med at vippe"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Vend tilbage til plan"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Akse detekteret — hold stille"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Roter"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Beregner justering..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Registreret justering"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "Din justering af FC ser korrekt ud - ikke nødvendigt med ændringer."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Nuværende"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Registreret"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Tilbage"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Anvend"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Annuller"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Prøv igen"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Registrering nu"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "Kvalitet i registrering er reduceret — kontroller resultatet, før du gemmer konfiguration."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Et accelerometer er nødvendigt for at bruge denne guide."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Kalibrer accelerometeret før start af denne guide."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Nogle prøver kunne ikke hentes. Prøv igen."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "Accelerometeret kan ikke bestemme tyngdekraften. Sørg for, at FC er tilsluttet og ikke er i bevægelse."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Højde vinkel blev ikke registreret. Prøv igen og vip næsen længere op."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Krængning vinkel blev ikke registreret. Prøv igen og vip højre side længere ned."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Fladt"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Højderor"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Krængror"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Sideror"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Registreret !"
     },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1760,7 +1923,7 @@
         "message": "Accelerometer højderor trim"
     },
     "configurationArming": {
-        "message": "Aktiveret"
+        "message": "Styring af aktivering"
     },
     "configurationArmingHelp": {
         "message": "Visse funktioner til Aktivering af FC kan kræve aktivt accelerometer"
@@ -1787,7 +1950,7 @@
         "message": "Motor tomgang (%)"
     },
     "configurationMotorIdleHelp": {
-        "message": "Sætter tomgangshastigheden for motorerne, mens bevæbnet og gassen er 'lav' (under `min_check`).<br\/><br\/><strong class=\"message-positive\">Dynamic Idle ikke aktiveret<\/strong><br\/><br\/>Hver motor får `min_command` plus motor tomgang procent.<br\/><br\/><b>Tomgang for lav<\/b>: motorerne starter muligvis ikke pålideligt, drejer langsomt op eller desynkroniseres i flip- eller rul.<br\/><br\/><b>Tomgang for høj<\/b>: flyet kan føle 'flydende'.<br\/><br\/><b>Note<\/b>: analog ESC skal kalibreres, så motorerne starter lige over `min_command`.<br\/><br\/><strong class=\"message-positive\">Dynamisk tomgang aktiveret<\/strong><br\/><br\/>Ved aktivering, sendes den 'normal' tomgangsværdi til hver motor, indtil de spinder op.<br\/><br\/>Når motorsignalet er begrænset, justeres det for at opnå den ønskede RPM.<br\/><br\/>Inden start er motorsignalet begrænset til motor tomgang procent, og den indstillede omdrejningspunkt kan ikke nås. Det er OK. Når gassen er hævet over procentangivelsen 'airmode_motor_start_throttle', er grænsen meget højere, og den indstillede RPM skal nås i tomgang.<br\/><br\/><b>Tomgang for lav<\/b>: motorer kan ikke starte pålideligt<br\/><br\/><b>Tomgang for høj<\/b>: rystning før start (kun hvis dynamisk tomgang er også høj)<br\/><br\/><b>Note<\/b>: Dynamisk tomgang kræver DShot og DShot telemetry."
+        "message": "Sætter tomgangshastigheden for motorerne, mens bevæbnet og gassen er 'lav' (under `min_check`).<br\/><br\/><strong class=\"message-positive\">Dynamic tomgang ikke aktiveret<\/strong><br\/><br\/>Hver motor får `min_command` plus motor tomgang procent.<br\/><br\/><b>Tomgang for lav<\/b>: motorerne starter muligvis ikke pålideligt, drejer langsomt op eller desynkroniseres i salto- eller rul.<br\/><br\/><b>Tomgang for høj<\/b>: flyet kan føle 'flydende'.<br\/><br\/><b>Note<\/b>: analog ESC skal kalibreres, så motorerne starter lige over `min_command`.<br\/><br\/><strong class=\"message-positive\">Dynamisk tomgang aktiveret<\/strong><br\/><br\/>Ved aktivering, sendes den 'normal' tomgangsværdi til hver motor, indtil de spinder op.<br\/><br\/>Når motorsignalet er begrænset, justeres det for at opnå den ønskede RPM.<br\/><br\/>Inden start er motorsignalet begrænset til motor tomgang procent, og den indstillede omdrejningspunkt kan ikke nås. Det er OK. Når gassen er hævet over procentangivelsen 'airmode_motor_start_throttle', er grænsen meget højere, og den indstillede RPM skal nås i tomgang.<br\/><br\/><b>Tomgang for lav<\/b>: motorer kan ikke starte pålideligt<br\/><br\/><b>Tomgang for høj<\/b>: rystning før start (kun hvis dynamisk tomgang er også høj)<br\/><br\/><b>Note<\/b>: Dynamisk tomgang kræver DShot og DShot telemetry."
     },
     "configurationMotorPoles": {
         "message": "Motor magneter",
@@ -2002,6 +2165,9 @@
     "configurationSpiRX": {
         "message": "Protokol ved SPI modtager konfiguration"
     },
+    "configurationSaved": {
+        "message": "Konfiguration gemt"
+    },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
@@ -2040,7 +2206,7 @@
         "message": "Tilbehør"
     },
     "portsHelp": {
-        "message": "<strong>Bemærk:<\/strong> Ikke alle kombinationer er gyldige. Hvis FC firmwaren opdager det, nulstilles portens opsætning."
+        "message": "<strong>Bemærk:<\/strong> Ikke alle kombinationer fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de uden videre."
     },
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">ADVARSEL:<\/span> VTX-tabellen er ikke opsat korrekt og derfor vil VTX-kontrol ikke være mulig. Opsæt VTX-tabellen i fanen $t(tabVtx.message)."
@@ -2142,7 +2308,7 @@
         "message": "PID profil beskrivelse"
     },
     "pidProfileNameHelp": {
-        "message": "Beskrivelse af PID profil, som kan angive hvad profilen er beregnet til, fx let\/tungere batteri, actionkamera\/intet actionkamera, højere højde osv."
+        "message": "Beskrivelse af PID profil, som kan angive hvad profilen er beregnet til, fx let\/tungere batteri, actionkamera\/intet actionkamera, højere højde osv.\n<br><br>\nPID er proportional–integral–derivative-regulator, som er en tilbagekoblet reguleringsmekanisme, som anvendes bredt i industrielle styresystemer.<br><br>\nPID-regulatoren det, der til motorudgange omsætter fejlen mellem:\n<br>&#8226; Ønsket rotation (fra din pind bevægelse)\n<br>&#8226; Faktisk rotation (målt af gyro)\n<br><br>\nDe tre led betyder:\n<br>&#8226; P – Proportional\n<br>Reagerer på den aktuelle fejl. Mere P = hurtigere respons. For meget P = oscillationer og rystelser.\n<br>Eksempel: Du giver roll-stick til højre. Hvis dronen ikke ruller hurtigt nok, øger P motorernes korrektion.\n<br>&#8226; I – Integral\n<br>Opsamler fejl over tid. Holder vinklen mod vind og ubalancer. For lidt I = drift. For meget I = langsom \"gummiagtig\" fornemmelse.\n<br>Eksempel: Ved konstant sidevind sørger I-leddet for, at dronen fortsætter ligeud.\n<br>&#8226; D – Derivative\n<br>Reagerer på hvor hurtigt fejlen ændrer sig. D dæmper oversving. For lidt D = tilbagesving efter salto. For meget D = varme motorer og støj.\n<br>Eksempel: Efter et hurtigt roll-stop hjælper D med at stoppe præcist uden at \"springe tilbage\"."
     },
     "rateProfileName": {
         "message": "Hastighed profil beskrivelse"
@@ -2157,7 +2323,7 @@
         "message": "Skjul ubenyttede PID profiler"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": "Profiluafhængige PID controller indstillinger"
+        "message": "Profil ikke-afhængige PID controller indstillinger"
     },
     "pidTuningAntiGravity": {
         "message": "Anti tyngekraft"
@@ -2179,7 +2345,7 @@
         "description": "Anti Gravity Gain Parameter"
     },
     "pidTuningAntiGravityGainHelp": {
-        "message": "Boost I term og øg P ved hurtige gas ændringer.<br><br>8.0 betyder ca. 8x I term boost",
+        "message": "Forstærkning I term og øg P ved hurtige gas ændringer.<br><br>8.0 betyder ca. 8x I term forstærkning",
         "description": "Anti Gravity Gain Parameter Help Icon"
     },
     "pidTuningAntiGravityThres": {
@@ -2194,7 +2360,7 @@
         "description": "Table header of the Derivative feature in the PIDs tab"
     },
     "pidTuningDMaxFeatureTitle": {
-        "message": "Dynamisk dæmpning \/ D maks. indstillinger",
+        "message": "Dynamisk dæmpning \/ D max. indstillinger",
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
@@ -2206,7 +2372,7 @@
         "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
-        "message": "D Max forstærkning øger følsomheden af det system, der øger D når fartøj skifter hurtigt eller ryster pga propel turbulens.<br><br>Højere forstærknings værdier bringer D hurtigere op end lavere værdier, løft D mod D Max hurtigere. Værdier af 40 eller endda 50 kan fungere godt for ren Freestyle fartøjer.<br><br>Lavere værdier vil ikke hæve D mod DMax undtagen i virkelig hurtige bevægelser, og kan passe ræs fartøjer bedre ved at minimere D lag.<br><br>ADVARSEL: Enten forstærkning, eller Advance, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
+        "message": "D Max forstærkning øger følsomheden af det system, der øger D når fartøj skifter hurtigt eller ryster pga propel turbulens.<br><br>Højere forstærknings værdier bringer D hurtigere op end lavere værdier, løft D mod D Max hurtigere. Værdier af 40 eller endda 50 kan fungere godt for ren Freestyle fartøjer.<br><br>Lavere værdier vil ikke hæve D mod DMax undtagen i virkelig hurtige bevægelser, og kan passe ræs fartøjer bedre ved at minimere D lag.<br><br>ADVARSEL: Enten forstærkning, eller Forskud, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxAdvance": {
@@ -2214,11 +2380,11 @@
         "description": "Advance of the D Max feature"
     },
     "pidTuningDMaxAdvanceHelp": {
-        "message": "D Max Advance tilføjer følsomhed til forstærknings faktor, når pinde flyttes hurtigt.<br><br>Advance reagerer ikke på gyro eller propel turbulens.. Det virker tidligere end forstærknings faktor og er lejlighedsvis nyttigt for langsomme fartøjer, der har tendens til at reagere dårligt i starten af et træk i pinden.<br><br>Generelt er det bedst at stille værdien på nul.<br><br>ADVARSEL: Enten Advance, eller forstærkning, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
+        "message": "D Max forskud tilføjer følsomhed til forstærknings faktor, når pinde flyttes hurtigt.<br><br>Forskud reagerer ikke for gyro eller propel turbulens.. Det virker tidligere end forstærknings faktor og er lejlighedsvis nyttigt for langsomme fartøjer, der har tendens til at reagere dårligt i starten af et træk i pinden.<br><br>Generelt er det bedst at stille værdien på nul.<br><br>ADVARSEL: Enten Forskud, eller Forstærkning, skal sættes over omkring 20, ellers D vil ikke stige som ønsket. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxFeatureHelp": {
-        "message": "D Max øger D under hurtigere gyro og \/ eller pind bevægelser.<br><br>'forstærkning' faktoren øger D, når fartøjet bliver hurtigt eller ryster pga propel turbulens. Normalt er kun 'forstærkning' nødvendig. <br><br>'Advance' faktoren øger D mod D Max under stigende pind værdi. Normalt er det ikke nødvendigt og bør sættes til nul. Advance kan være nyttigt for langsomme fartøjer, som har tendens til at overskride kraftigt.<br><br>Højere forstærknings værdier (fx 40) kan være mere egnede til freestyle fartøjer ved at løfte D mere let.<br><br>ADVARSEL: En af forstærkning eller Advance værdier skal sættes over ca. 20 ellers vil D ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
+        "message": "D Max øger D under hurtigere gyro og \/ eller pind bevægelser.<br><br>'forstærkning' faktoren øger D, når fartøjet bliver hurtigt eller ryster pga propel turbulens. Normalt er kun 'forstærkning' nødvendig. <br><br>'Forskud' faktoren øger D mod D Max under stigende pind værdi. Normalt er det ikke nødvendigt og bør sættes til nul. Forskud kan være nyttigt for langsomme fartøjer, som har tendens til kraftigt oversving.<br><br>Højere forstærknings værdier (fx 40) kan være mere egnede til freestyle fartøjer ved at løfte D mere let.<br><br>ADVARSEL: En af Forstærkning eller Forskud værdier skal sættes over ca. 20 ellers vil D ikke stige som ønsket. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningPidSettings": {
@@ -2260,7 +2426,7 @@
         "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
-        "message": "Feedforward afskærings type"
+        "message": "Fremkobling afskærings type"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Setpoint afskærings type"
@@ -2278,7 +2444,7 @@
         "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtager protokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
     },
     "rcSmoothingFeedforwardCutoffHelp": {
-        "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtager protokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
+        "message": "Afskæringsfrekvensen i Hz brugt af fremkoblings filteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtager protokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanaludjævningen gælder for"
@@ -2287,7 +2453,7 @@
         "message": "Vælger, om inputfilter afskæringsfrekvensen beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, da den kan ændre sig under flyvning."
     },
     "receiverRcSmoothingFeedforwardManual": {
-        "message": "Vælger, om inputfilter afskæringsfrekvensen beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, da den kan ændre sig under flyvning."
+        "message": "Vælger, om fremkoblings filters afskæringsfrekvens beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, da den kan ændre sig under flyvning."
     },
     "receiverRcSmoothingThrottleManual": {
         "message": "Vælger, om RC indgangsfilteret beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, der kan ændre frekvens under flyvning."
@@ -2302,10 +2468,10 @@
         "message": "Gas afskærings frekvens"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "Feedforward afskærings frekvens"
+        "message": "Fremkobling afskærings frekvens"
     },
     "receiverRcFeedforwardType": {
-        "message": "Feedforward filtertype"
+        "message": "Fremkobling filtertype"
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
@@ -2317,7 +2483,7 @@
         "message": "D Setpoint-vægtning"
     },
     "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes midtpunkt, hvilket betyder en mere glidende afslutning på flips og rul.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind i midtpunkt, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens midtpunkt. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pind udfalds område."
+        "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes midtpunkt, hvilket betyder en mere glidende afslutning på salto og rul.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind i midtpunkt, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens midtpunkt. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pind udfalds område."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Denne parameter afgør pindaccelerations effekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle måle metode, hvor D kun styres af gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pind respons.<br> Lavere værdi modsvarer langsommere\/jævnere pindrespons, mens højere værdi giver øget pindaccelerations respons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
@@ -2325,26 +2491,29 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser midtpunktet.<\/span>"
     },
+    "pidTuningFeedforwardGroup": {
+        "message": "Fremkobling"
+    },
     "pidTuningFeedforwardGroupHelp": {
-        "message": "Feedforward justerer stick lydhørhed.<br \/><br \/> Disse indstillinger lader dig justere det til at give noget fra crisp, umiddelbare stick svar til væddeløb, eller bløde glatte svar til biograf\/HD-formål."
+        "message": "Fremkobling justerer pindens følsomhed.<br \/><br \/> Disse indstillinger lader dig justere det til at give noget fra crisp, umiddelbare pind svar til ræs, eller bløde glatte svar til filmning \/ HD formål."
     },
     "pidTuningFeedforwardJitter": {
-        "message": "Jitter reduktion"
+        "message": "Signaluro reduktion"
     },
     "pidTuningFeedforwardJitterHelp": {
-        "message": "Jitter Reduktion reducerer Feedforward når pindene bevæger sig langsomt, uanset deres position.<br><br>Dette giver mulighed for glat, jitterfri flyvning, når du laver glat, langsomme buer, alligevel giver fuld feedforward uden nogen forsinkelse, når pindene flyttes hurtigt. Overgang er ikke påkrævet, og skal sættes til nul, når jitter reduktion er aktiv.<br><br>Standard er 7. Højere værdier, fx 10-12, er gode til film- eller HD-freestyle formål, 5 kan være bedre til racing med hurtige RC links."
+        "message": "Signaluro reduktion reducerer fremkobling når pindene bevæger sig langsomt, uanset deres position.<br><br>Dette giver mulighed for glat, flyvning uden signaluro, når du laver glatte, langsomme buer, og alligevel giver fuld fremkobling uden nogen forsinkelse, når pindene flyttes hurtigt. Overgang er ikke påkrævet, og skal sættes til nul, når signaluro reduktion er aktiv.<br><br>Standard er 7. Højere værdier, fx 10-12, er gode til film- eller HD-freestyle formål, 5 kan være bedre til ræs med hurtige RC links."
     },
     "pidTuningFeedforwardSmoothFactor": {
-        "message": "Udjævning"
+        "message": "Udjævning faktor"
     },
     "pidTuningFeedforwardSmoothnessHelp": {
-        "message": "Feedforward udjævning er afgørende for at dæmpe støj i feedforward spor.<br><br>Den mindste værdi, der giver et glat spor er bedst.<br><br>Standard på 25 er godt for 50-150hz RC links. For 250hz RC links, brug 40-50. Til 500hz links, brug 60-65."
+        "message": "Fremkobling udjævning er afgørende for at dæmpe støj i feedforward spor.<br><br>Den mindste værdi, der giver et glat spor er bedst.<br><br>Standard på 25 er godt for 50-150hz RC links. For 250hz RC links, brug 40-50. Til 500hz links, brug 60-65."
     },
     "pidTuningFeedforwardAveraging": {
         "message": "Udjævning"
     },
     "pidTuningFeedforwardAveragingHelp": {
-        "message": "Feedforward Gennemsnit tager gennemsnittet af de sidste 2 eller 3 feedforward trin. Dette glatter feedforward spor, men tilføjer nogle forsinkelse.<br><br>Det er mest effektivt, når der er sekventiel op\/ned jitter i signalet, som er fælles med hurtigere RC links.<br><br>2 point gennemsnit er nødvendigt for 500hz links og støjende 250hz links, eller for Cinematic \/ HD flyvning. Crossfire (før CRSFShot) skal bruge 3 point i gennemsnit i 150hz tilstand."
+        "message": "Udjævning af fremkobling tager gennemsnittet af de sidste 2 eller 3 fremkoblings trin. Det udglatter fremkobling, men tilføjer noget forsinkelse.<br><br>Det er mest effektivt, når der er sekventiel op\/ned signaluro, som er fælles med hurtigere RC links.<br><br>2 point gennemsnit er nødvendigt for 500hz links og støjende 250hz links, eller for filmning \/ HD flyvning. Crossfire (før CRSFShot) skal bruge 3 point i gennemsnit i 150hz tilstand."
     },
     "pidTuningOptionOff": {
         "message": "FRA"
@@ -2365,25 +2534,25 @@
         "message": "Boost"
     },
     "pidTuningFeedforwardBoostHelp": {
-        "message": "Feedforward boost tilføjer ekstra skub i respons på pind acceleration eller deceleration.<br><br>Dette minimerer gyro strøj, der er forårsaget af motor acceleration forsinkelse, og reducerer overskridelsen, når pindene decelererer ved at trække tilbage hårdt på motorerne.<br><br>Standard boost virker for de fleste opsætninger. Race piloter kan foretrække at øge det en lille smule. Boost kan finjusteres med omhyggelig log analyse."
+        "message": "Fremkobling boost tilføjer ekstra skub i reaktionen på pind acceleration eller deacceleration.<br><br>Dette minimerer gyro strøj, der er forårsaget af forsinkelse i motor acceleration, og reducerer oversving, når pindene deaccelererer ved at trække tilbage hårdt på motorerne.<br><br>Standard boost virker for de fleste opsætninger. Ræs piloter kan foretrække at øge det en lille smule. Boost kan finjusteres med omhyggelig log analyse."
     },
     "pidTuningFeedforwardMaxRateLimit": {
-        "message": "Maksimal grænse for hastighed"
+        "message": "Maksimal hastighed"
     },
     "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "Sænker hastighed fremad, efterhånden som pindene bevæger sig mod maksimal position, for at minimere overskydning ved starten af en flip- eller krænging.<br><br>Gør intet i slutningen af et flip eller krænging. \nLavere værdier får dæmpning til at begynde tidligere.<br><br>Normalt kræver denne værdi ikke ændring. Den højeste værdi, der er i overensstemmelse med acceptabel overskridelse ved starten af krængning eller flips, er bedst."
+        "message": "Sænker fremkobling fremad, efterhånden som pindene bevæger sig mod maksimal position, for at minimere oversving ved starten af en salto eller krænging.<br><br>Gør intet i slutningen af et flip eller krænging. \nLavere værdier får dæmpning til at begynde tidligere.<br><br>Normalt kræver denne værdi ikke ændring. Den højeste værdi, der er i overensstemmelse med acceptabel overskridelse ved starten af krængning eller flips, er bedst."
     },
     "pidTuningFeedforwardTransition": {
         "message": "Overgang"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "Linearly reducerer Feedforward når pinde er tæt på midtpunkt. <br><br>I 4. og tidligere kan overgangen bruges til at give glattere svar fra pind omkring midtpunktet.<br><br>I 4. , overgang anbefales ikke, da den er blevet 'erstattet ' af jitter reduktion funktion.<br><br>En værdi på 0 deaktiverer overgang. En værdi på 0. skærer respons til nul, når pinde er ved dødt midtpunkt, men det øges til fuld normal, når pinde er mere end 30% fra midtpunktet."
+        "message": "Overgang reducerer fremkobling når pinde er tæt på midtpunkt. <br><br>I 4.2 og tidligere kan overgangen bruges til at give glattere svar fra pinde omkring midtpunktet.<br><br>I 4.3, overgang anbefales ikke, da den er blevet 'erstattet ' af funktion til signaluro.<br><br>En værdi på 0 deaktiverer overgang. En værdi på 0.3 skærer fremkobling til nul, når pinde er ved dødt midtpunkt, men det øges til fuld normal, når pinde er mere end 30% fra midtpunktet."
     },
     "pidTuningProportional": {
         "message": "<b>P<\/b>roportional"
     },
     "pidTuningProportionalHelp": {
-        "message": "Hvor tæt maskinen sporer pindene (Setpoint).<br \/><br \/>Højere værdi (forstærkning) giver strammere sporing, men kan forårsage overshot, hvis det er for højt i forhold til D, og kan forårsage svingninger i høje gasdrejninger. Tænk på P som foråret på en bil.",
+        "message": "Hvor tæt maskinen sporer pindene (Setpoint).<br \/><br \/>Højere værdi (forstærkning) giver strammere sporing, men kan forårsage oversving, hvis det er for højt i forhold til D, og kan forårsage svingninger i høje gasdrejninger. Tænk på P som foråret på en bil.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
@@ -2397,15 +2566,15 @@
         "message": "<b>D<\/b> Max"
     },
     "pidTuningDMaxHelp": {
-        "message": "Giver stærkere dæmpning for hurtige manøvrer, der ellers kan forårsage overskridelse. <br><br>Giver en lavere grundlæggende D min værdi end sædvanlig, holde motorerne kølige, og drej-in hurtigere, men løfter D til at kontrollere overshot i flips eller hurtige reversals. <br><br>Mest nyttigt for racere, frekvens støjende fartøjer eller langsomme fartøjer.",
+        "message": "Giver stærkere dæmpning for hurtige manøvrer, der ellers kan forårsage oversving. <br><br>Giver en lavere grundlæggende D min værdi end sædvanlig, holde motorerne kølige, og drej-in hurtigere, men løfter D til at kontrollere oversving i salto eller hurtige retningsskift. <br><br>Mest nyttigt for ræs, frekvens støjende fartøjer eller langsomme fartøjer.",
         "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Bestemmer styrken af at dæmpe en bevægelse på fartøjet. Med pindens bevægelse, dæmper D-udtrykket kommandoen. For en udfra kommende påvirkning (propel turbulens ELLER vind stød) dæmper D-term påvirkning.<br><br>Højere værdier giver mere dæmpning og reducerer overskridelse af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer af, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab at det kan forstørrelse højfrekvent gyro støj.",
+        "message": "Bestemmer styrken af at dæmpe en bevægelse på fartøjet. Med pindens bevægelse, dæmper D-udtrykket kommandoen. For en udfra kommende påvirkning (propel turbulens ELLER vind stød) dæmper D-term påvirkning.<br><br>Højere værdier giver mere dæmpning og reducerer oversving af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer af, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab at det kan forstørrelse højfrekvent gyro støj.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
-        "message": "<b>F<\/b>eedforward"
+        "message": "<b>F<\/b>remkobling"
     },
     "pidTuningFeedforwardHelp": {
         "message": "En ekstra faktor, der udelukkende styres af værdi fra pind flyt, som hjælper med at skubbe fartøjet hurtigt ind i hurtig pind skift.<br><br>FF kan ikke forårsage svingninger, tillader en lavere P for lignende pind flyt, og forskyder den naturlige modstand af D mod støj ved pind flyt.<br><br>Lav eller nul værdi vil resultere i en mere glat bevægelse, men også en mere forsinket reaktion på flyt af pind.",
@@ -2478,7 +2647,7 @@
         "message": "AFSKÆRING"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Vælg type af gas begrænsning. <b>FRA<\/b> deaktiverer funktionen, <b>SKALÉR<\/b> inddeler gas området fra 0 til den valgte procentdel ift. hele gas pind området, <b>AFSKÆR<\/b> indstiller en maks. gas procentdel og pind udslag, udover hvilken der ikke vil være nogen yderligere effekt"
+        "message": "Vælg type af gas begrænsning. <b>FRA<\/b> deaktiverer funktionen, <b>SKALÉR<\/b> inddeler gas området fra 0 til den valgte procentdel ift. hele gas pind området, <b>AFSKÆR<\/b> indstiller en max. gas procentdel og pind udslag som går over vil ikke have nogen yderligere effekt"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Opsætter ønsket gas begrænsningsprocent. Indstilling til 100% deaktiverer funktionen."
@@ -2550,7 +2719,7 @@
         "message": "Indlæst hastigheds profil: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": "PID-data <strong>opfrisket<\/strong>"
+        "message": "PID data <strong>opfrisket<\/strong>"
     },
     "pidTuningEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -2560,11 +2729,14 @@
         "message": "<b>Tuningtips<\/b><br\/><span class=\"message-negative\">VIGTIGT:<\/span> Det er vigtigt at kontrollere motor temperaturer under de første flyvninger. Højere filterværdier kan give en bedre håndtering, men også mere støj i motorerne. <br>Standardværdien på 100Hz er optimal, men ved mere støjende opsætninger kan du prøve at sænke Dterm-filteret til 50Hz og muligvis også gyrofilteret."
     },
     "tuningHelpSliders": {
-        "message": "Brug skyderne til at justere dine filtre. Skyderne skal være slået fra for at foretage manuelle ændringer.<br>Flytning skydere til højre giver højere afskæringsværdier og kan forbedre mod propel turbulens, men vil tillade mere støj gennem til motorerne, hvilket gør dem varme.<br>De fleste rene builds med rpm filtrering vil være OK med gyro lowpass skyderen hård højre, eller kun med lowpass 2 aktiv og skyderne i midten.<br><strong>ADVARSEL:<\/strong> Vær meget forsigtig, når du flytter D-skyderne til højre! Tjek motortemperaturen efter hver ændring!<br><strong>Bemærk:<\/strong> Ændring af profiler vil kun ændre indstillingerne for D-term filter. Gyrofilterindstillinger er de samme for alle profiler.",
+        "message": "Brug skyderne til at justere dine filtre. Skyderne skal være slået fra for at foretage manuelle ændringer.<br>Flytning skydere til højre giver højere afskæringsværdier og kan forbedre mod propel turbulens, men vil tillade mere støj gennem til motorerne, hvilket gør dem varme.<br>De fleste rene byg med rpm filtrering vil være OK med gyro lavpasfilter skyderen hård højre, eller kun med lavpasfilter 2 aktiv og skyderne i midten.<br><strong>ADVARSEL:<\/strong> Vær meget forsigtig, når du flytter D-skyderne til højre! Tjek motortemperaturen efter hver ændring!<br><strong>Bemærk:<\/strong> Ændring af profiler vil kun ændre indstillingerne for D-term filter. Gyrofilterindstillinger er de samme for alle profiler.",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Advarsel:<\/b><\/span> Mængden af filtrering er farligt lav. Dette vil sandsynligvis gøre fartøjet svært at håndtere, og det kan resultere i fartøjet flyver væk. Det anbefales kraftigt at <b>aktivere mindst ét Gyro Dynamic Lowpass eller Gyro Lowpass 1 filter og mindst ét D Term Dynamic Lowpass eller D Term Lowpass 1 filter<\/b>."
+        "message": "<span class=\"message-negative\"><b>Advarsel:<\/b><\/span> Mængden af filtrering er farligt lav. Dette vil sandsynligvis gøre fartøjet svært at håndtere, og det kan resultere i fartøjet flyver væk. Det anbefales kraftigt at <b>aktivere mindst ét Gyro dynamisk lavpassfilter eller Gyro lavpassfilter 1 og mindst ét D Term dynamic lavpassfilter eller D Term lavpassfilter 1<\/b>."
+    },
+    "pidTuningSliders": {
+        "message": "PID tuning skydere"
     },
     "pidTuningSliderPidsMode": {
         "message": "Tilstand:",
@@ -2604,7 +2776,7 @@
         "message": "'Pind Lav'-tærskel"
     },
     "receiverHelpStickMin": {
-        "message": "Maks. værdi (i μs) for at en pind registreres som lav\/venstre kommandoinput (MIN_CHECK)."
+        "message": "Max. værdi (i μs) for at en pind registreres som lav\/venstre kommandoinput (MIN_CHECK)."
     },
     "receiverStickCenter": {
         "message": "Pind midtpunkt"
@@ -2622,13 +2794,13 @@
         "message": "RC afvigelse"
     },
     "receiverHelpDeadband": {
-        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med output-fluktueringer, kan denne værdi øges, hvis RC input rykker i tomgang."
+        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med signaluro på output-fluktueringer, kan denne værdi øges, hvis RC input rykker i tomgang."
     },
     "receiverYawDeadband": {
         "message": "Sideror afvigelse"
     },
     "receiverHelpYawDeadband": {
-        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med output-fluktueringer, kan denne værdi øges, hvis RC input rykker  i tomgang. <strong>Denne indstilling gælder kun sideror.<\/strong>"
+        "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med signaluro på output-fluktueringer, kan denne værdi øges, hvis RC input rykker  i tomgang. <strong>Denne indstilling gælder kun sideror.<\/strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "3D gas afvigelse"
@@ -3095,7 +3267,7 @@
         "message": "Højderor og krængror F justering"
     },
     "adjustmentsFunction23": {
-        "message": "Feedforward-overgang"
+        "message": "Fremkobling overgang"
     },
     "adjustmentsFunction24": {
         "message": "Horizon Strength-justering"
@@ -3149,6 +3321,9 @@
     },
     "servosChangeDirection": {
         "message": "Skift retning i TX for at matche"
+    },
+    "servosForwardChannel": {
+        "message": "Videresend kanal {{channel}} til servo {{servo}}"
     },
     "servosName": {
         "message": "Servo"
@@ -3378,6 +3553,10 @@
         "message": "Forsinkelse",
         "description": "Modifier waypoint type: pauses traversal for a duration"
     },
+    "flightPlanTypeYawRate": {
+        "message": "Max. siderorhastighed",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
     "flightPlanDuration": {
         "message": "Hold varighed <span class=\"units\">min<\/span>"
     },
@@ -3391,6 +3570,13 @@
     "flightPlanDelayDurationAria": {
         "message": "Forsinkelses varighed i minutter",
         "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "Siderorhastighed  <span class=\"units\">°\/s<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "Siderorhastighed (°\/s)",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
     },
     "flightPlanPattern": {
         "message": "Hold mønster"
@@ -3470,6 +3656,9 @@
     "flightPlanInvalidDuration": {
         "message": "Ugyldig varighed (skal være nul eller positiv)"
     },
+    "flightPlanInvalidYawRate": {
+        "message": "Ugyldig siderorhastighed (skal være nul eller positiv)"
+    },
     "flightPlanConfirmDelete": {
         "message": "Er du sikker på, at du vil slette dette vejpunkt?"
     },
@@ -3516,13 +3705,13 @@
         "message": "Terrænhøjde"
     },
     "flightPlanMaxGroundElev": {
-        "message": "Maks. terrænhøjde"
+        "message": "Max. terrænhøjde"
     },
     "flightPlanAvgGround": {
         "message": "Gennemsnitlig jordhastighed"
     },
     "flightPlanMaxGround": {
-        "message": "Maks. jordhastighed"
+        "message": "Max. jordhastighed"
     },
     "flightPlanAlt": {
         "message": "Højde"
@@ -3606,7 +3795,7 @@
         "message": "Nulstil"
     },
     "motorsResetMaximum": {
-        "message": "Nulstil tidsoverskridelsesmaks."
+        "message": "Nulstil max. tidsoverskridelse"
     },
     "motorsSensorGyroSelect": {
         "message": "$t(sensorStatusGyroShort.message)",
@@ -3748,6 +3937,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funktionen fungerer kun med DSHOT ESC'er.<br \/>Kontroller, at din ESC understøtter Dshot protokol og sæt protokol på fanen $t(tabMotorTesting.message)."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Antallet af motorer er 0.<br \/>Kontroller den aktuelle Mix på fanen $t(tabMotorTesting.message), eller brug et tilpasset mix via CLI. Se denne <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side<\/a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Opdater firmwaren.<br \/> Sørg for at du bruger den seneste firmware: Betaflight 4.3 eller nyere."
     },
@@ -3861,6 +4053,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Udfør"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Forhåndsvisning"
     },
     "cliPanelTitle": {
         "message": "Kommando område"
@@ -4261,6 +4456,12 @@
     "firmwareFlasherWarningShort": {
         "message": "Brænd ikke hardware som ikke er Betaflight kompatibel. Afbryd ikke under brændning. STM32 bootloader er i ROM og kan ikke testes. Gem altid en sikkerhedskopi af din konfiguration før opgradering firmware."
     },
+    "firmwareFlasherRecoveryHead": {
+        "message": "Gendannelse \/ tabt kommunikation"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart app (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
+    },
     "firmwareFlasherRecoveryShort": {
         "message": "Hvis du har mistet kommunikation med FC: sluk FC, aktiver valg 'Ingen genstart sekvens' og 'Slet alt på chip', konakt mellem BOOT pinde, tænd igen. Hvis nødvendigt, installer eller opdater drivere."
     },
@@ -4268,7 +4469,7 @@
         "message": "Læs mere →"
     },
     "firmwareFlasherSubTabBoardBuild": {
-        "message": "FC & Byg"
+        "message": "FC & Byg firmware"
     },
     "firmwareFlasherAdvancedTitle": {
         "message": "Avanceret"
@@ -4751,7 +4952,7 @@
         "message": "Højderor [E]"
     },
     "controlAxisYaw": {
-        "message": "Side [R]"
+        "message": "Sideror [R]"
     },
     "controlAxisThrottle": {
         "message": "Gas [T]"
@@ -4862,13 +5063,13 @@
         "message": "Procentvis reduktion i signalet pr. motor.<br><br>Reducerer ESC strøm og motorvarme, når der anvendes højere celletal batterier på høje KV-motorer.<br><br>Når du bruger et 6S-batteri på et fartøj, der med 4S-motorer, rekvisitter og tuning, kan du prøve 66%; når der anvendes et 4S-batteri på et fartøj, der er beregnet til 3S, kan du prøve 75%.<br><br>Vær sikker på, at alle dine komponenter kan understøtte spændingen på det batteri, du bruger."
     },
     "pidTuningCellCount": {
-        "message": "Antal batteri celler - for automatisk profilskift"
+        "message": "Batteri celle antal - antal styrer gældende profil"
     },
     "pidTuningCellCountHelp": {
         "message": "Aktiverer automatisk den første profil, der har et celle antal som svarer til det tilsluttede batteris celle antal.<br><br><ul><li><b>Skift<\/b>: Skift altid til en profil med matchende celle antal, hvis der er en.<\/li><li><b>Deaktivér<\/b>: Deaktivér automatisk profilskift<\/li><b>1S-8S<\/b>: Vælg det celle antal, der skal bruges til denne profil<\/li><\/ul>"
     },
     "pidTuningCellCountChange": {
-        "message": "Kontakt",
+        "message": "Skift",
         "description": "Switch profile if there are no profiles matching cell count"
     },
     "pidTuningCellCountStay": {
@@ -4900,10 +5101,10 @@
         "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "Profil ikke afhængige filter indstillinger"
+        "message": "Profil <strong>u<\/strong>afhængige filter indstillinger"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "Disse skydere justere Gyro og D-term filtre.<br \/><br \/>For mere filtrering:<br \/> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br \/><br \/> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere og kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br \/> - Skydere til højre<br \/> - Højere afskærings frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. Bevæger gyro lowpass filter højre er normalt OK, men det er normalt ikke nødvendigt at flytte D-filteret til højre, og det kan nemt resultere i meget varme motorer.",
+        "message": "Disse skydere justere Gyro og D-term filtre.<br \/><br \/>For mere filtrering:<br \/> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br \/><br \/> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere, kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br \/> - Skyder til højre<br \/> - Højere afskærings frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. At bevæge Gyro lavpassfilter mod højre er normalt OK, men det er typisk ikke nødvendigt at flytte D filteret til højre, og det kan nemt resultere i meget varme motorer.",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -4923,7 +5124,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Ændrer Gyro Lowpass filter afskæring.<br \/><br \/>Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere cutoff frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre Gyro filtrering (højere afskærings frekvens).<br \/><br \/>Når skyderen flyttes til højre for at forbedre  mod propel turbulens, skal du være FORSIGTIG for ikke at være for radikal. Hvis du tillader mere støj i både P og D kan det få et fartøj til at flyver væk eller få brændte motorer.<br \/><br \/>Du kan være nødt til at flytte skyderen til venstre, hvis du har resonans problemer, dårlige lejer, ødelagte propeller, varme motorer, osv.<br \/><br \/>Gyro filtrering anvendes før, og i tillæg til D filtrering.",
+        "message": "Ændrer Gyro lavpassfilter afskæring.<br \/><br \/>Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere afskærings frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre Gyro filtrering (højere afskærings frekvens).<br \/><br \/>Når skyderen flyttes til højre for at forbedre mod propel turbulens, skal du være FORSIGTIG for ikke at være for voldsom. Hvis du tillader mere støj i både P og D kan det få et fartøj til at flyver væk eller få brændte motorer.<br \/><br \/>Du kan være nødt til at flytte skyderen til venstre, hvis du har resonans problemer, dårlige lejer, ødelagte propeller, varme motorer, osv.<br \/><br \/>Gyro filtrering anvendes før, og i tillæg til D filtrering.",
         "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningDTermFilterSlider": {
@@ -4931,11 +5132,11 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Ændrer D-termen Lowpass Filter cutoffs.<br \/><br \/>Flytning skyderen til venstre giver stærkere D filtrering (lavere afskærings frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre filtrering (højere afskærings frekvens).<br \/><br \/>D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter afskæring meget lavere end gyro filtre.<br \/><br \/>D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og skal sjældent ændres.<br \/><br \/>Flyttes denne skyder til venstre reduceres motorvarme i frekvens støjende fartøjer og med høj PID 'D' term, men vi kan også se mere propel turbulens og lavere frekvens D resonans.<br \/><br \/>Flytning af skyderen til højre anbefales ikke, men kan forbedre mod propel turbulens på enkle fartøjer. Det kan forårsage uønsket slid på motor ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
+        "message": "Ændrer D-termen lavpassfilter afskæring.<br \/><br \/>Flytning skyderen til venstre giver stærkere D filtrering (lavere afskærings frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre filtrering (højere afskærings frekvens).<br \/><br \/>D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter afskæring meget lavere end gyro filtre.<br \/><br \/>D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og skal sjældent ændres.<br \/><br \/>Flyttes denne skyder til venstre reduceres motorvarme i frekvens støjende fartøjer og med høj PID 'D' term, men vi kan også se mere propel turbulens og lavere frekvens D resonans.<br \/><br \/>Flytning af skyderen til højre anbefales ikke, men kan forbedre mod propel turbulens på enkle fartøjer. Det kan forårsage uønsket slid på motor ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Skyderne til at justere fartøj flyveegenskaber (PID forstærkning)<br \/><br \/>Dæmpning (D forstærkning): Modstår hurtig bevægelse, minimerer P svingning.<br \/><br \/>Sporing (P og I forstærkning): Sporer fartøjets reaktionshastighed, hvis den er for høj, kan den forårsage rullen eller resonans.<br \/><br \/>Pind svarhastighed (Feedforward): Øger fartøjets reaktionshastighed ved for hurtigere pind bevægelser.<br \/><br \/>Drift - Wobble (I forstærkning, for ekspert): Fin justering af I.<br \/><br \/>Dynamisk D (D Max, for ekspert): Indstiller den maksimale værdi, som D kan øges til ved hurtige bevægelser.<br \/><br \/>Højderor dæmpning (højderor:krængror D ratio, for ekspert): Øger dæmpning af højderor i forhold til krængror.<br \/><br \/>Højderor sporing (højderor:krængror P, I og F ratio, for ekspert): Øger stabiliserende værdier til højderor i forhold til krængror.<br \/><br \/>Generel (påvirker alle forstærkninger, for ekspert): Hæver eller sænker alle PID værdier, holder deres indbyrdes forhold konstant.",
+        "message": "Skyderne til at justere fartøj flyveegenskaber (PID forstærkning)<br \/><br \/>Dæmpning (D forstærkning): Modstår hurtig bevægelse, minimerer P svingning.<br \/><br \/>Sporing (P og I forstærkning): Sporer fartøjets reaktionshastighed, hvis den er for høj, kan den forårsage rullen eller resonans.<br \/><br \/>Pind svarhastighed (Fremkobling): Øger fartøjets reaktionshastighed ved hurtige pind bevægelser.<br \/><br \/>Stabilitet – Vaklen (I forstærkning, for ekspert): Fin justering af I.<br \/><br \/>Dynamisk D (D Max, for ekspert): Indstiller den maksimale værdi, som D kan øges til ved hurtige bevægelser.<br \/><br \/>Højderor dæmpning (højderor:krængror D ratio, for ekspert): Øger dæmpning af højderor i forhold til krængror.<br \/><br \/>Højderor sporing (højderor:krængror P, I og F ratio, for ekspert): Øger stabiliserende værdier til højderor i forhold til krængror.<br \/><br \/>Generel (påvirker alle forstærkninger, for ekspert): Hæver eller sænker alle PID værdier, holder deres indbyrdes forhold konstant.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -5003,7 +5204,7 @@
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
-        "message": "Ændringer D og D maks. Relativt høj D forstærkning vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre mod svingninger fra propel turbulens.<br \/><br \/>Relativt lav D-term giver hurtigere pind respons, men vil svække ydelse mod propel turbulens og reagere på eksterne kræfter (vind).",
+        "message": "Ændringer D og D max. Relativt høj D forstærkning vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre mod svingninger fra propel turbulens.<br \/><br \/>Relativt lav D-term giver hurtigere pind respons, men vil svække ydelse mod propel turbulens og reaktion mod eksterne kræfter, fx. vind.",
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
@@ -5011,7 +5212,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Forøg sporings skyder for at skærpe fartøjets respons på dine kommandoer og fra eksterne påvirkninger, så næsen på fartøjet aldrig går ud af kurs.<br \/><br \/>Lavere sporings værdier vil give mange hop, tab af ønsket kurs når pind flyttes og give probel turbulens. Høje sporings værdier kan resultere i motor svingninger og hurtig tilbagehop (svært at se, men du kan høre dem). Overdreven sporing kan resultere i uønsket høj resonnans og varme motorer.",
+        "message": "Forøg sporings skyder for at skærpe fartøjets respons på dine kommandoer og fra eksterne påvirkninger, så næsen på fartøjet aldrig går ud af kurs.<br \/><br \/>Lavere sporings værdier vil give mange hop, tab af ønsket kurs når pind flyttes og give probel turbulens. Høje sporings værdier kan resultere i motor svingninger og hurtig tilbageslag (svært at se, men du kan høre dem). Overdreven sporing kan resultere i uønsket høj resonnans og varme motorer.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -5019,15 +5220,15 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "Lavere svar hastighed på pind flyt vil øge latenstiden af fartøjets bevægelser og kan resultere i langsom bounceback i slutningen af en flip eller krængning.<br><br>Højere pind respons vil give kvikkere reaktion til fartøj på skarpe pind bevægelser. For værdi fra pind kan forårsage overskridelser i slutningen af en flip eller krængning.<br \/><br \/><strong>Bemærk:<\/strong><br \/>“I-term Relax” kan reducere bounceback for langsomt fartøj eller hvis pind flyt giver svage svar værdier.",
+        "message": "Lavere svar hastighed på pind flyt vil øge latenstiden af fartøjets bevægelser og kan resultere i langsom tilbageslag i slutningen af en flip eller krængning.<br><br>Højere pind respons vil give kvikkere reaktion til fartøj på skarpe pind bevægelser. For meget værdi fra pind kan forårsage oversving i slutningen af en flip eller krængning.<br \/><br \/><strong>Bemærk:<\/strong><br \/>“I-term Relax” kan reducere tilbageslag for langsomt fartøj eller hvis pind flyt giver svage svar værdier.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
-        "message": "Drift - Wobble:<br \/><i><small>I forstærkning<\/small><\/i>",
+        "message": "Stabilitet – Vaklen:<br \/><i><small>I forstærkning<\/small><\/i>",
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Øger eller sænker I. Højere I kan forbedre sporing i spiraldrejninger, baner, eller 0% gas kommandoer. For meget I, især med ikke nok P, kan forårsage slingren eller tilbagehop efter flips\/krængning eller ved at hugge gas til 0 %.<br \/><br \/>Generelt ønsker du, at skyderen ‘Drift – slingren’ skal være så høj som det kan være at holde fartøjs retning i spiraldrejninger, kredsløb, etc . men ikke så højt, at du begynder at se slingeren ved at hugge gas til 0 %.<br \/><br \/><strong>Bemærk:<\/strong><br \/>Hvis du oplever tilbagehop på et hvilket som helst tidspunkt, der er let at se, sørg for at “I-term Relax” er aktiveret, og prøv at sænke værdien iterm_relax_cutoff.",
+        "message": "Øger eller sænker I. Højere I kan forbedre sporing i spiraldrejninger, baner, eller 0% gas kommandoer. For meget I, især med ikke nok P, kan forårsage slingren eller tilbageslag efter salto\/krængning eller ved at hugge gas til 0 %.<br \/><br \/>Generelt ønsker du, at skyderen ‘Stabilitet – Vaklen’ skal være så høj som det kan være at holde fartøjs retning i spiraldrejninger, kredsløb, etc. men ikke så højt, at du begynder at se slingeren ved at hugge gas til 0 %.<br \/><br \/><strong>Bemærk:<\/strong><br \/>Hvis du oplever tilbageslag på et hvilket som helst tidspunkt, der er let at se, sørg for at “I-term Relax” er aktiveret, og prøv at sænke værdien iterm_relax_cutoff.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -5035,7 +5236,7 @@
         "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "Øger D max, den maksimale værdi, D kan stige til under hurtigere bevægelser.<br \/><br \/>For race fartøjer, hvor hoveddæmpningsskyderen er sat lav til at minimere motorvarme, at flytte denne skyder til højre vil forbedre overskydningskontrol for hurtige retningsændringer.<br \/><br \/>For HD eller kinetiske fartøjer håndteres ustabilitet i fremadgående flyvning bedst ved at flytte dæmpnings skyderen (ikke dynamisk dæmpning skyderen) til højre. Tjek for motorvarme og lyt efter underlige lyde under hurtige bevægelser, når du flytter denne skyder til højre.<br \/><br \/>For freestyle fartøjer, især tungere konstruktioner, kan det hjælpe at flytte denne skyder til højre for at styre overskydning i flips og krængning.<br \/><br \/><strong>Bemærk:<\/strong><br \/>Overskyd generelt i flips og krængning skyldes manglende 'i-Term Relax', eller at motor desyncs, eller utilstrækkelig styring (fx motor mætning). Hvis du opdager, at flytning af Damping Boost skyderen til højre ikke forbedre flip eller krængning overshoot, sæt skyder tilbage til den normale position, og undersøg årsag til overskridelse eller wobble.",
+        "message": "Øger D max, den maksimale værdi, D kan stige til under hurtigere bevægelser.<br \/><br \/>For ræs fartøjer, hvor hoveddæmpningsskyderen er sat lav til at minimere motorvarme, kan du flytte denne skyder til højre for at forbedre oversving kontrol ved hurtige skift af retning.<br \/><br \/>For HD eller ved film flyvning håndteres ustabilitet i fremadgående flyvning bedst ved at flytte dæmpnings skyderen (ikke dynamisk dæmpning skyderen) til højre. Tjek for motorvarme og lyt efter underlige lyde under hurtige bevægelser, når du flytter denne skyder til højre.<br \/><br \/>For freestyle fartøjer, især tungere konstruktioner, kan det hjælpe at flytte denne skyder til højre for at styre oversving i salto og krængning.<br \/><br \/><strong>Bemærk:<\/strong><br \/>Overskyd generelt i salto og krængning skyldes manglende 'i-Term Relax', eller at motor desyncs, eller utilstrækkelig styring (fx motor mætning). Hvis du opdager, at flytning af Damping Boost skyderen til højre ikke forbedrer salto eller krængnings oversving, sæt skyder tilbage til den normale position, og undersøg årsag til oversving eller vaklen.",
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -5043,7 +5244,7 @@
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Forøger KUN dæmpning (D) på højde aksen, dvs. for højden forhold til krænging. Hjælper til at kontrollere højderor specifikke overskydning eller hoppe-tilbage.<br \/><br \/>Fartøjer med 'tungere' inerti på højde aksen har generelt brug for mere dæmpning (da højderor har mere inerti og akkumulerer mere momentum).<br \/><br \/>Tune master 'Damping' og\/eller 'Tracking' skydere først, indtil du får god adfærd omkring krænge akse. Brug derefter højderor skydere (stigning eller fald) til at finjustere højde aksen uden at påvirke krænging.",
+        "message": "Forøger KUN dæmpning (D) på højde aksen, dvs. for højden forhold til krænging. Hjælper til at kontrollere højderor specifikke oversving eller tilbageslag.<br \/><br \/>Fartøjer med 'tungere' inerti på højde aksen har generelt brug for mere dæmpning (da højderor har mere inerti og akkumulerer mere momentum).<br \/><br \/>Tune master 'Damping' og\/eller 'Tracking' skydere først, indtil du får god adfærd omkring krænge akse. Brug derefter højderor skydere (stigning eller fald) til at finjustere højde aksen uden at påvirke krænging.",
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
@@ -5055,16 +5256,16 @@
         "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
-        "message": "Gyro Lowpass filter"
+        "message": "Gyro lavpassfilter"
     },
     "pidTuningGyroLowpassType": {
-        "message": "Gyro Lowpass 1 fltertype"
+        "message": "Gyro lavpassfilter 1"
     },
     "pidTuningGyroLowpass": {
-        "message": "Gyro Lowpass 1"
+        "message": "Gyro lavpassfilter 1"
     },
     "pidTuningGyroLowpassHelp": {
-        "message": "Den første af to Gyro lowpass filtre.<br \/><br \/>Brugen af gyro lowpass 1 i dynamisk tilstand var vigtig med den tidligere dynamiske hak kode. Gyro lowpass 1 kan normalt deaktiveres helt i firmware 4.3 når RPM filtrering anvendes, medmindre gyro har ingen intern hardware filtrering.<br \/><br \/>I dynamisk tilstand vil filtreringen være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Overgangen fra lav til høj afskæring vil ske tidligere, som gas stiger, med højere Gyro lowpass expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast.<br \/><br \/>Filtertypen er standard PT1. Højere ordrefiltrering er sjældent påkrævet.",
+        "message": "Den første af to Gyro lavpassfilter.<br \/><br \/>Brugen af Gyro lavpassfilter 1 i dynamisk tilstand var vigtig med den tidligere dynamiske notch kode. Gyro lavpassfilter 1 kan normalt deaktiveres helt i firmware 4.3 når RPM filtrering anvendes, medmindre gyro har ingen intern hardware filtrering.<br \/><br \/>I dynamisk tilstand vil filtreringen være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Overgangen fra lav til høj afskæring vil ske tidligere, som gas stiger, med højere Gyro lavpassfilter expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast.<br \/><br \/>Filtertypen er standard PT1. Højere ordrefiltrering er sjældent påkrævet.",
         "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
@@ -5083,28 +5284,28 @@
         "message": "Min. afskæringsfrekvens [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
-        "message": "Maks. afskæringsfrekvens [Hz]"
+        "message": "Max. afskæringsfrekvens [Hz]"
     },
     "pidTuningGyroLowpass2": {
-        "message": "Gyro Lowpass 2"
+        "message": "Gyro lavpassfilter 2"
     },
     "pidTuningGyroLowpass2Help": {
-        "message": "Den anden af to Gyro lowpass filtre.<br \/><br \/>Dette filter kører i gyro loop, filtrering af signalet før det kommer ind i PID loop'et. Det er altid i statisk (fast cutoff) tilstand.<br \/><br \/>Hvis PID loop frekvensen er mindre end gyro loop frekvens, fx en 4k PID loop med en 8k gyro loop, dette filter bør bibeholdes for at forhindre aliasing problemer på grund af 8k->4k nedprøvetagning.<br \/><br \/>En enkelt gyro lowpass 2 konfiguration, der er sat til et sted 500 og 1000Hz, fungerer godt for Betaflight 4.3 eller højere, for rene builds med RPM filtrering aktiv og i det mindste standard D filtrering.",
+        "message": "Det andet af to Gyro lavpassfilter.<br \/><br \/>Dette filter kører i gyro loop, filtrering af signalet før det kommer ind i PID loop'et. Det er altid i statisk (fast cutoff) tilstand.<br \/><br \/>Hvis PID loop frekvensen er mindre end gyro loop frekvens, fx en 4k PID loop med en 8k gyro loop, dette filter bør bibeholdes for at forhindre aliasing problemer på grund af 8k->4k nedprøvetagning.<br \/><br \/>En enkelt Gyro lavpassfilter 2 konfiguration, der er sat til et sted 500 og 1000Hz, fungerer godt for Betaflight 4.3 eller højere, for rene builds med RPM filtrering aktiv og i det mindste standard D filtrering.",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Gyro lowpass filtre dæmper høj frekvens støj ved at holde støjen ude af PID loop. Der er to uafhængigt konfigurerbare gyro filtre; som standard begge er aktive.<br \/><br \/>Med RPM filtrering kan gyro filter skyderen ofte flyttes et stykke til højre, alternativt kan et enkelt statisk gyro lowpasfilter på 500 hz være tilstrækkeligt.<br \/><br \/>Et fartøj vil have mindre propel turbulens med den mindste gyro filter forsinkelse.<br \/><br \/>Kontroller altid for motorvarme, når skydere flyttes til højre. Med minimal gyro filtrering, er det vigtigt at have nok D filtrering! Vær forsigtig!",
+        "message": "Gyro lavpassfilter dæmper høj frekvens støj ved at holde støjen ude af PID loop. Der er to uafhængigt konfigurerbare gyro filtre; som standard begge er aktive.<br \/><br \/>Med RPM filtrering kan gyro filter skyderen ofte flyttes et stykke til højre, alternativt kan et enkelt statisk gyro lavpassfilter på 500 hz være tilstrækkeligt.<br \/><br \/>Et fartøj vil have mindre propel turbulens med den mindste gyro filter forsinkelse.<br \/><br \/>Kontroller altid for motorvarme, når skydere flyttes til højre. Med minimal gyro filtrering, er det vigtigt at have nok D filtrering! Vær forsigtig!",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "D-term lowpass filtre dæmper højere frekvens støj og resonans, der ellers ville blive forstærket af D forstærkning.<br \/><br \/>Der er to D-filtre, og deres virkninger er additive. Begge er nødvendige i næsten alle fartøjer, selvom en enkelt PT2 kan anvendes i stedet for dobbelt PT1's.<br \/><br \/>Generelle fartøjer vil flyve bedst og have den mindste propel turbulens når der er konfigureret til at have den mindste filterforsinkelse (skydere til højre, højere afskærings værdier). Men især med D-filtre, skydere til højre kan i høj grad øge risiko for at få for varme motorer.<br \/><br \/>Det er meget nemt at brænde motorer af, hvis du ikke har nok D-filtrering - vær forsigtig!",
+        "message": "D term lavpassfilter dæmper højere frekvens støj og resonans, der ellers ville blive forstærket af D forstærkning.<br \/><br \/>Der er to D filtre, og deres virkninger er additive. Begge er nødvendige i næsten alle fartøjer, selvom en enkelt PT2 kan anvendes i stedet for dobbelt PT1's.<br \/><br \/>Generelle fartøjer vil flyve bedst og have den mindste propel turbulens når der er konfigureret til at have den mindste filterforsinkelse (skydere til højre, højere afskærings værdier). Men især med D filtre, skydere til højre kan i høj grad øge risiko for at få for varme motorer.<br \/><br \/>Det er meget nemt at brænde motorer af, hvis du ikke har nok D filtrering - vær forsigtig!",
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch filter"
     },
     "pidTuningGyroNotchFilter": {
-        "message": "Gyrohak filter 1"
+        "message": "Gyro Notch filter 1"
     },
     "pidTuningGyroNotchFilterHelp": {
         "message": "Gælder et statisk (konstant frekvens) hak filter for Gyro, ved den angivne centerfrekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante frekvens gentagelser, der påvirker både P og D. <br \/><br \/>For at være nyttig, skal resonansfrekvensen være konstant på tværs af gas området.<br \/><br \/>Notch bredde er indstillet af afskærings frekvens. Afskæring skal typisk indstilles mellem 10 % og 40 % under centerfrekvensen. Brug det tætteste filterområde, der styrer resonans. Undgå at indstille notch filtre under 100hz undtagen under særlige omstændigheder.<br \/><br \/>Statiske notch filtre er sjældent påkrævet i 4.3."
@@ -5122,17 +5323,17 @@
         "message": "Afskæringsfrekvens [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Et hak filter er et symmetrisk, smalt, high-cut filter, med midtpunkt og afskærings parmetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er laveste side -3dB afskærings frekvens.<br \/><br \/>For eksempel en hak afskæring på 160 med en midtpunkt værdi på 260, returnerer et bredt hak med en -3dB bredde på 160-360Hz og med stærkeste dæmpning omkring 260hz.",
+        "message": "Et notch filter er et symmetrisk, smalt, high-cut filter, med midtpunkt og afskærings parmetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er laveste side -3dB afskærings frekvens.<br \/><br \/>For eksempel en notch afskæring på 160 med en midtpunkt værdi på 260, returnerer et bredt notch med en -3dB bredde på 160-360Hz og med stærkeste dæmpning omkring 260hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamisk Notch filter"
     },
     "pidTuningDynamicNotchFilterHelp": {
-        "message": "Dynamic Notch Filter sporer frekvens spidser fra motors støj og placerer hak filtre ved disse frekvenser, uafhængigt for hver akse."
+        "message": "Dynamic Notch Filter sporer frekvens spidser fra motors støj og placerer notch filtre ved disse frekvenser, uafhængigt for hver akse."
     },
     "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "Dynamic Notch Filter sporer frekvens spidser fra gyro og placerer en til fem hak filtre med deres centrum på disse frekvenser på hver akse."
+        "message": "Dynamic Notch Filter sporer frekvens spidser fra gyro og placerer 1 til 5 notch filtre med deres centrum på disse frekvenser på hver akse."
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Bemærk:<\/strong> Det dynamiske notch filter er slået fra. For at konfigurere og bruge det, skal du aktivere funktionen 'DYNAMIC_FILTER' i afsnittet '$t(configurationFeatures.message)' i fanen '$t(tabConfiguration.message). Sørg også for, at PID loop rate er mindst 2 kHz."
@@ -5150,36 +5351,40 @@
         "message": "Min. frekvens [Hz]"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "Maks. frekvens [Hz]"
+        "message": "Max. frekvens [Hz]"
     },
     "pidTuningDynamicNotchCount": {
         "message": "Antal Notch"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "Den dynamiske hak har tre frekvensområder: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro Dynamic Lowpass 1 Filters max afskærings frekvens."
+        "message": "Den dynamiske notch har tre frekvensområder: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro dynamic lavpassfilter 1 max afskærings frekvens."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q-faktoren justerer, hvor smalle eller brede de dynamiske notch-filtre er. Den gemte værdi er Q-faktor × 100 (f.eks. 300 = Q 3,0).<br><br>\nEn højere værdi gør filtrene smallere og mere præcise, mens en lavere værdi gør dem bredere.<br><br>\nEn meget lav værdi vil øge filterforsinkelsen betydeligt."
     },
     "pidTuningDynamicNotchMinHzHelp": {
-        "message": "Sæt denne til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske hak."
+        "message": "Sæt denne til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske notch."
     },
     "pidTuningDynamicNotchMaxHzHelp": {
-        "message": "Sæt dette til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske hak."
+        "message": "Sæt dette til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske notch."
     },
     "pidTuningDynamicNotchCountHelp": {
-        "message": "Sætter antallet af dynamiske hak pr. akse. Med RPM filter aktiveret anbefales en værdi på 1 eller 2. Uden omdrejningstallet anbefales en værdi på 4 eller 5. Lavere tal vil reducere filterforsinkelsen, men det kan øge motorens temperatur."
+        "message": "Sætter antallet af dynamiske notch pr. akse. Med RPM filter aktiveret anbefales en værdi på 1 eller 2. Uden omdrejningstallet anbefales en værdi på 4 eller 5. Lavere tal vil reducere filterforsinkelsen, men det kan øge motorens temperatur."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM filter",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM filtrering er en gruppe af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br \/><br \/><b><span class=\"message-positive\">VIGTIGT<\/span>: <\/b><br>ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.",
+        "message": "RPM filtrering er en gruppe af notch filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br \/><br \/><b><span class=\"message-positive\">VIGTIGT<\/span>: <br>ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
+    "pidTuningRpmHarmonics": {
+        "message": "Harmoniske",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmHarmonicsHelp": {
-        "message": "Antal overtoner pr. motor. En værdi på 3 (anbefales for de fleste fartøjer) vil generere 3 hak filtre, pr. motor for hver akse, i alt 36 hak. Et hak ved den grundlæggende motorfrekvens og to harmoniske ved multipla af denne base frekvens.",
+        "message": "Antal overtoner pr. motor. En værdi på 3 (anbefales for de fleste fartøjer) vil generere 3 notch filtre, pr. motor for hver akse, i alt 36 notch. Et notch ved den grundlæggende motorfrekvens og to harmoniske ved multipla af denne base frekvens.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
@@ -5190,32 +5395,43 @@
         "message": "Minimumshyppighed som vil blive brugt af RPM-filtret.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmFadeRangeHz": {
+        "message": "Udfadningsområde [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmQ": {
         "message": "Q faktor (x100)",
         "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmQHelp": {
+        "message": "Q faktor justerer, hvor smalle eller brede RPM notch filtre er. Den lagrede værdi er Q faktor × 100, tilladt interval 250–3000 (Q 2,5 til Q 30.0), standard 500 (Q 5.0). Højere værdier gør hvert notch smallere og mere præcise, lavere værdier gør dem bredere. Meget lave værdier øger filterforsinkelsen væsentligt."
+    },
+    "pidTuningRpmWeight": {
+        "message": "Vægt {{index}}",
+        "description": "Text for the per-harmonic weight parameter of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profil afhængige filter indstillinger"
     },
     "pidTuningDTermLowpass": {
-        "message": "D Term Lowpass 1"
+        "message": "D Term lavpassfilter 1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "Den første af to D-term lowpass filtre.<br \/><br \/>I dynamisk tilstand vil filtrering være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Dette hjælper med at styre slid på motor eller uventede situationer hvor fartøj flyver væk ved aktivering, vil samtidig reducere forsinkelse og propel turbulens efter landingsbane start. Overgangen fra lav til høj afskæring vil ske tidligere, når gas er steget, med højere D-term lowpass expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast. Dette anbefales ikke til D filtrering.<br \/><br \/>Filtertypen er som standard PT1, selvom nogle brugere kun har brugt et enkelt dynamisk Biquad-filter her, uden anden PT1.<br \/><br \/>Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller at fartøjet flyver væk ved aktivering.",
+        "message": "Den første af to D term lavpassfilter.<br \/><br \/>I dynamisk tilstand vil filtrering være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Dette hjælper med at styre slid på motor eller uventede situationer hvor fartøj flyver væk ved aktivering, vil samtidig reducere forsinkelse og propel turbulens efter landingsbane start. Overgangen fra lav til høj afskæring vil ske tidligere, når gas er steget, med højere D-term lowpass expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast. Dette anbefales ikke til D filtrering.<br \/><br \/>Filtertypen er som standard PT1, selvom nogle brugere kun har brugt et enkelt dynamisk Biquad-filter her, uden anden PT1.<br \/><br \/>Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller at fartøjet flyver væk ved aktivering.",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpassMode": {
         "message": "Tilstand"
     },
     "pidTuningDTermLowpass2": {
-        "message": "D Term Lowpass 2"
+        "message": "D Term lavpassfilter 2"
     },
     "pidTuningDTermLowpass2Help": {
-        "message": "Det andet af to D-term lowpass filtre. <br \/><br \/>Dette filter er altid i statisk (fast afskæring) tilstand. Mindst to PT1 lavpasfiltre, eller et enkelt filter for anden orden, er nødvendige for D filtrering.<br \/><br \/>Normalt er denne afskæring sat til den højere værdi af det dynamiske lowpass 1 område. Dette giver anden ordre støj control over denne frekvens. <br \/><br \/>Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller fartøjet flyver væk ved aktivering.",
+        "message": "Det andet af to D term lavpassfilter. <br \/><br \/>Dette filter er altid i statisk (fast afskæring) tilstand. Mindst to PT1 lavpasfiltre, eller et enkelt filter for anden orden, er nødvendige for D filtrering.<br \/><br \/>Normalt er denne afskæring sat til den højere værdi af det dynamiske lavpassfilter 1 område. Dette giver nr. 2 ordre støj control over denne frekvens. <br \/><br \/>Ændringer, der resulterer i mindre D filtrering, kan forårsage alvorlig overophedning af motoren eller fartøjet flyver væk ved aktivering.",
         "description": "Help icon for the DTerm Lowpass 2 Filter"
     },
     "pidTuningDTermLowpassFiltersGroup": {
-        "message": "D Term Lowpass filtre"
+        "message": "D Term lavpassfilter"
     },
     "pidTuningDTermLowpassType": {
         "message": "Filtertype"
@@ -5233,10 +5449,10 @@
         "message": "D Term Notch filter"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": "Gælder et statisk (konstant frekvens) hak filter til D-Term data, ved den angivne centerfrekvens.<br \/><br \/>Notch bredde er indstillet af afskærings frekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante gentagende frekvenser, der forstærkes af D.<br \/><br \/>Hold afskæring så tæt på centrum som muligt. Undgå at indstille notch filtre under 100 hz undtagen på enheder med lav RPM."
+        "message": "Gælder et statisk (konstant frekvens) notch filter til D-Term data, ved den angivne centerfrekvens.<br \/><br \/>Notch bredde er indstillet af afskærings frekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante gentagende frekvenser, der forstærkes af D.<br \/><br \/>Hold afskæring så tæt på centrum som muligt. Undgå at indstille notch filtre under 100 hz undtagen på enheder med lav RPM."
     },
     "pidTuningYawLowpassFiltersGroup": {
-        "message": "Sideror signal filter"
+        "message": "Sideror lavpassfilter"
     },
     "pidTuningYawLowpassFiltersGroupHelp": {
         "message": "Gælder et PT1-filter ved den specificerede afskæringsfrekvens for Gyrodata om sideror akse."
@@ -5247,8 +5463,17 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Forøger PID værdierne for at kompensere når Vbat bliver lavere. Dette vil give mere konstante flyveegenskaber under hele flyvningen. Den  kompensation som søges, beregnes fra $t(powerBatteryMaximum.message) sat på $t(tabPower.message) siden, så sørg for, at det er indstillet til noget passende."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbat Sag kompensation %"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Giver stabil gas og PID ydeevne i hele batteris spændingsområde ved at øge motoren output som kompensation for fald i batteri spænding.<br \/><br \/>Kompensationen kan variere mellem 0 og 100%. Fuld kompensation (100%) anbefales.<br \/><br \/>Besøg <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post<\/a> for mere info."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Løftkraftslinearisering"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Forbedrer lav gas styring og mere reaktion. <br><br> Specielt nyttigt for klynger og 48k ESC'er. Har ingen effekt ved højere gas.<br><br>Mængden af kompensation kan varieres mellem 0 og 150%. Normalt 30-40% er nok."
@@ -5266,7 +5491,7 @@
         "message": "I Term dæmping"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Undertrykker I Term akkumulering, når hurtige bevægelser forekommer, hvilket reducerer bounce-back i slutningen af krængning, flips og andre hurtige indgange.<br><br> Setpoint mode reagerer på bløde pinf bevægelser og fungerer bedst for hurtige fartøjer.<br><br>Gyrotilstand kan være nyttigt for ekstremt sløve fartøjer.<br><br>Normalt iTerm Relax bør ikke anvendes på sideror."
+        "message": "Undertrykker I Term akkumulering, når hurtige bevægelser forekommer, hvilket reducerer tilbageslag i slutningen af krængning, salto og andre hurtige skift.<br><br> Setpoint tilstand reagerer på bløde pind bevægelser og fungerer bedst for hurtige fartøjer.<br><br>Gyrotilstand kan være nyttigt for ekstremt sløve fartøjer.<br><br>Normalt iTerm dæmpning bør ikke anvendes på sideror."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Akser",
@@ -5300,7 +5525,7 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "Lavere værdier betyder stærkere undertrykkelse af bounce-back efter flips i langsomme fartøjer. Højere værdier øger høj hastighed vending præcision til racing.<br><br>Sæt til 30-40 for væddeløb, 15 for responsive freestyle fartøjer, 10 for tungere freestyle fartøjer, 3-5 for X-klasse."
+        "message": "Lavere værdier betyder stærkere undertrykkelse af tilbageslag efter salto i langsomme fartøjer. Højere værdier øger høj hastighed vending præcision til ræs.<br><br>Sæt til 30-40 for ræs, 15 for følsomme freestyle fartøjer, 10 for tungere freestyle fartøjer, 3-5 for X-klasse."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolut kontrol"
@@ -5712,7 +5937,7 @@
         "message": "Forstærkning værdi"
     },
     "powerAmperageHead": {
-        "message": "Strømmåler"
+        "message": "Strømforbrug"
     },
     "powerAmperageWarning": {
         "message": "<span class=\"message-negative\">Advarsel:<\/span> Værdier begrænset til 63,5 A."
@@ -5789,6 +6014,9 @@
     "powerBatteryProfileOption": {
         "message": "Batteri profil $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Opsat batteri profil: <strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "f.eks. LiPo, Li-Ion"
     },
@@ -5814,10 +6042,13 @@
         "message": "Spænding"
     },
     "powerBatteryCurrentDrawn": {
-        "message": "mAh brugt"
+        "message": "Forbrug i mAh"
     },
     "powerBatteryAmperage": {
-        "message": "Strøm"
+        "message": "Strømforbrug"
+    },
+    "powerBatteryPowerDraw": {
+        "message": "Effektforbrug"
     },
     "powerWattValue": {
         "message": "$1 W"
@@ -5830,6 +6061,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Slå {{element}} synlighed til for profil {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>ADVARSEL:<\/b><\/span> Der blev ikke fundet nogen OSD chip. Nogle FC kan ikke aktivere OSD chippen, medmindre de er tilsluttet batteri. Tilslut batteriet, før du tilslutter USB (Husk at fjerne propellerne!)."
@@ -6068,9 +6302,15 @@
         "message": "RSSI værdi",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementRssiValue": {
+        "message": "Øjeblikkelig RSSI værdi (blinker når under alarmgrænsen). For moderne protokoller, brug RSSI dBm i stedet."
+    },
     "osdTextElementRssiDbmValue": {
         "message": "RSSI dBm værdi",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Modtaget Signal styrke indikator, som angiver modtagelse i dBm"
     },
     "osdTextElementTimer": {
         "message": "Timer",
@@ -6278,7 +6518,7 @@
         "message": "Bedste af 3 omgangstider med GPS"
     },
     "osdTextElementCraftName": {
-        "message": "Fartøjsnavn",
+        "message": "Navn: Fartøj",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
@@ -6659,6 +6899,9 @@
     "osdTextElementLinkQuality": {
         "message": "Link kvalitet",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLinkQuality": {
+        "message": "Link kvalitet indikator baseret på procentdelen af modtagne ubeskadigede datapakker"
     },
     "osdTextElementFlightDist": {
         "message": "Tilbagelagt strækning i alt for alle flyvninger",
@@ -7248,6 +7491,14 @@
         "message": "Fast Position mislykkes",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
     },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Autopilot mission afbrudt",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Autopilot mission afbrudt",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "Ukendt $1"
     },
@@ -7283,6 +7534,10 @@
     },
     "osdButtonSaved": {
         "message": "Gemt"
+    },
+    "vtxHelp": {
+        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-Tables\">VTX-tabeller<\/a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">her<\/a>.)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Bemærk:<\/span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne her. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
@@ -7664,6 +7919,9 @@
     "sensorConfigAlignDetectFailed": {
         "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
     },
+    "magCalibrationGuidedFw": {
+        "message": "Klient kalibring (Guidet)"
+    },
     "magCalibrationGuidedFwDesc": {
         "message": "Auto prompt i 60s kalibrering"
     },
@@ -7724,6 +7982,9 @@
     "magCalibrationQuality": {
         "message": "Kvalitet"
     },
+    "magCalibrationResidual": {
+        "message": "Tilpasningsfejl"
+    },
     "magCalibrationQualityGood": {
         "message": "God"
     },
@@ -7733,11 +7994,29 @@
     "magCalibrationQualityPoor": {
         "message": "Dårlig"
     },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Firmware offset"
+    },
+    "magCalibrationSphereOffsets": {
+        "message": "Offsetværdier fra kugletilpasning"
+    },
+    "magCalibrationUnguided": {
+        "message": "Firmware kalibring (Klassisk)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Roter frit — der gemmes automatisk efter 30s"
+    },
     "magCalibrationUnguidedTitle": {
         "message": "Firmware kalibrering"
     },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Du har 30 sekunder til at rotere fartøjet i alle retninger. Firmwaren gemmer automatisk værdierne for kalibrering, når tiden er gået."
+    },
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
+    },
+    "magCalibrationGuided": {
+        "message": "Klient kalibring (Gratis)"
     },
     "magCalibrationGuidedDesc": {
         "message": "Roter frit — app beregner forskydninger"
@@ -7750,6 +8029,9 @@
     },
     "magCalibrationCheck": {
         "message": "Kontroller"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Se realtids data fra kompas med den aktuelle kalibrering"
     },
     "magCalibrationCheckTitle": {
         "message": "Kontrollerer kalibrering"
@@ -7772,8 +8054,107 @@
     "magCalibrationAccept": {
         "message": "Gem kalibrering"
     },
+    "magCalibrationFull": {
+        "message": "Fuld kalibring (Autojusteret)"
+    },
+    "magCalibrationFullDesc": {
+        "message": "En rotation — fastsætter offset, soft-iron-korrektion og kompassets monteringsretning"
+    },
+    "magCalibrationFullTitle": {
+        "message": "Fuld kalibrering"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Følg nedenstående trin ved at holde fartøjet stabilt gennem hver bevægelse. i trinet tælles stigning, når du ændre til ny vinkel - mål at dække alle 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Trin {{n}} af {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Hold fartøjet vandret og roter det langsomt gennem en 360° bevægelse."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Vend fartøj på hovedet og drej langsomt gennem en 360° bevægelse."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Peg næsen lige op og drej hele vejen rundt."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Peg næsen lige ned og drej hele vejen rundt."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Hvil på venstre side og roter hele vejen rundt."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Hvil på højre side og roter hele vejen rundt."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Flyt langsomt fremad et par gange, ved skift af retning hver gang."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Flyt langsomt bagud et par gange, ved skift af retning hver gang."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} områder dækket"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Beregn"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Dækning:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Justering:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "krængror {{roll}}° højdero {{pitch}}° sideror {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Kalibrering:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Restfejl:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Kopier CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Anvend"
+    },
+    "magCalibrationFullExport": {
+        "message": "Eksporter model"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "For få målinger — fortsæt rotationen"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Ingen GPS eller placering fra IP netværk — kan derfor ikke bestemme magnetisk hældning"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI kommandoer kopieret til udklipsholder"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Kunne ikke kopiere til udklipsholder"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Firmware {{version}} er for gammelt til brugerstyret kompas justering (behøver {{min}}+). Opdater firmware i FC, og prøv igen."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Kalibrering anvendt og gemt"
+    },
+    "magCalibrationDiscard": {
+        "message": "Fortryd"
+    },
+    "magVizPointCloud": {
+        "message": "Målinger i sky"
+    },
+    "magVizHeatmap": {
+        "message": "Kalibreringsdækning (3D)"
+    },
     "magVizProjection": {
         "message": "Tredobbelt projektion"
+    },
+    "magVizPolar": {
+        "message": "Måletæthed (polær)"
     },
     "magVizWaitingForData": {
         "message": "Venter på data …"
@@ -7867,10 +8248,10 @@
         "message": "<b>Afledt fra fejl<\/b> giver mere direkte svar fra pind og foretrækkes oftest til ræs.<br \/><br \/>\n<b>Afledt fra måling<\/b> giver en blødere svar fra pind, hvilket er mere velegnet til freestyle"
     },
     "pidTuningPidControllerTip": {
-        "message": "<b>Legacy kontra Betaflight (flydende):<\/b> PID-skalering og -logik er nøjagtig den samme. Gentuning er ikke absolut nødvendig. Legacy er gammel betaflight-udviklet omskrivning, der er basis PID-controller baseret på heltal beregninger. Betaflight PID-controller benytter flydende decimal beregninger og har mange nye funktioner, som er specielt designet til multirotorbrug <br> <b>Flydende decimal kontra heltal:<\/b> PID-skalering og -logik er identisk. Ingen gentuning behøves. F1-boards har ingen indbygget FPU og flydende decimal proccessor og forøger derfor CPU-belastningen og heltals beregniger forbedrer derfor ydeevnen, men flydende deccimal beregninger kan give bedre præcision."
+        "message": "<b>Legacy kontra Betaflight (flydende):<\/b> PID skalering og -logik er nøjagtig den samme. Gentuning er ikke absolut nødvendig. Legacy er omskrivning af gammel betaflight udvikling, der er baseret på heltal beregninger. Betaflight PID controller benytter flydende decimal beregninger og har mange nye funktioner, som er specielt designet til droner<br> <b>Flydende decimal kontra heltal:<\/b> PID skalering og -logik er identisk. Ingen gentuning behøves. F1-boards har ingen indbygget decimal proccessor og forøger derfor CPU belastningen, så heltals beregniger forbedrer derfor ydeevne, men har dårligere præsision end flydende deccimal beregninger."
     },
     "pidTuningFilterTip": {
-        "message": "<b>Gyro Soft Filter:<\/b> Lowpass filter til gyro. Brug lavere værdi for mere filtrering.<br><b>D Term Filter:<\/b> Lowpass filter til Dterm. Kan påvirke D tuning. Brug lavere værdi for mere filtrering. <br><b>Yaw Filter:<\/b> Filters sideror output. Det kan hjælpe på opsætninger med støjende sideror akse."
+        "message": "<b>Gyro blødt filter:<\/b>Lavpassfilter til gyro. Brug lavere værdi for mere filtrering.<br><b>D Term filter:<\/b> Lavpassfilter til D term. Kan påvirke D tuning. Brug lavere værdi for mere filtrering. <br><b>Sideror filter:<\/b> Filters sideror output. Det kan hjælpe på opsætninger med støjende sideror akse."
     },
     "pidTuningRatesTip": {
         "message": "Arbejd med hastighederne og se, hvordan de påvirker pin kurven"
@@ -7879,7 +8260,7 @@
         "message": "Kamera"
     },
     "configurationPersonalization": {
-        "message": "Tilpasning"
+        "message": "Navngivning"
     },
     "craftName": {
         "message": "Fartøjsnavn"
@@ -7960,7 +8341,7 @@
         "message": "Brænd firmware"
     },
     "cliAutoComplete": {
-        "message": "Avanceret CLI autoudfyld"
+        "message": "Ekspert CLI autoudfyld"
     },
     "firmwareBackupOnFlash": {
         "message": "Opret en sikkerhedskopi, før du brænder image i FC"
@@ -8284,6 +8665,14 @@
     "firmwareFlasherRestoreBackupTitle": {
         "message": "Gendan pre brændning sikkerhedskopi",
         "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "Dette vil gendanne konfigurationskopi taget før brændning af FC. Fortsæt?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Sikkerhedskopi er indlæst og konfiguration er gendannnet.",
+        "description": "Success message after restoring a pre-flash backup"
     },
     "firmwareFlasherRestoreBackupSuccessSkipped": {
         "message": "Sikkerhedskopi af konfiguration genoprettet, {{count}} linje(r) sprunget over.",
@@ -8812,6 +9201,10 @@
     },
     "backupNoBackupsAvailable": {
         "message": "Ingen sikkerhedskopier tilgængelige"
+    },
+    "backupRequiresConnection": {
+        "message": "Tilslut FC for at aktivere sikkerhedskopi",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
     },
     "titleEditBackup": {
         "message": "Rediger sikkerhedskopi"
@@ -9369,5 +9762,89 @@
     },
     "preflightForecastWeather": {
         "message": "Vejr"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM kilde"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Deativeret"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (US, nøgle påkrævet)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (Global luftrum, API-nøgle påkrævet)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA nøgle (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP nøgle"
+    },
+    "preflightNotamRadius": {
+        "message": "Søge omkreds"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Indstillinger til luftrumsdata"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Den valgte udbyder modtager dine luftrumsdata. Der overføres ingen yderligere personoplysninger."
+    },
+    "preflightNotamLoading": {
+        "message": "Henter luftrumsdata..."
+    },
+    "preflightNotamEmpty": {
+        "message": "Ingen meddelelser fundet for denne placering og radius"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "En nøgle kræves af den valgte udbyder. Indtast din nøgle i indstillingerne ovenfor."
+    },
+    "preflightNotamFetchError": {
+        "message": "Kunne ikke hente luftrumsdata"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Aktiv nu"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanent"
+    },
+    "preflightNotamExpired": {
+        "message": "Udløbet"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Nedre"
+    },
+    "preflightNotamAltTo": {
+        "message": "Øvre"
+    },
+    "preflightNotamShowMore": {
+        "message": "Vis flere"
+    },
+    "preflightNotamShowLess": {
+        "message": "Vis mindre"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Sidst hentet"
     }
 }
