@@ -2383,6 +2383,10 @@ const loadConfig = async () => {
         await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
         await MSP.promise(MSPCodes.MSP_ACC_TRIM);
         await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
+        // The 3D model picks its mesh from FC.MIXER_CONFIG.mixer. Nothing else on this tab (nor
+        // the connect handshake) loads it, so without this it stays at its reset value 0 and the
+        // model loader fetches a non-existent `undefined.gltf`. Load it before initModel().
+        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
         if (isApi146.value) {
             await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
