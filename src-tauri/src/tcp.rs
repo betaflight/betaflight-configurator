@@ -11,12 +11,14 @@
 //! reconnect or disconnect) can never emit against the live socket.
 
 use std::io::{Read, Write};
-use std::net::{Shutdown, TcpStream};
+use std::net::{Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::time::Duration;
 
 use tauri::{AppHandle, Emitter, State};
+const CONNECT_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Default)]
 pub struct TcpState {
@@ -25,13 +27,23 @@ pub struct TcpState {
 }
 
 #[tauri::command]
-pub fn tcp_connect(
+pub async fn tcp_connect(
     app: AppHandle,
     state: State<'_, TcpState>,
     ip: String,
     port: u16,
 ) -> Result<(), String> {
-    let stream = TcpStream::connect((ip.as_str(), port)).map_err(|e| e.to_string())?;
+    let stream = tauri::async_runtime::spawn_blocking(move || -> Result<TcpStream, String> {
+        let addr: SocketAddr = (ip.as_str(), port)
+            .to_socket_addrs()
+            .map_err(|e| e.to_string())?
+            .next()
+            .ok_or_else(|| "could not resolve address".to_string())?;
+        TcpStream::connect_timeout(&addr, CONNECT_TIMEOUT).map_err(|e| e.to_string())
+    })
+    .await
+    .map_err(|e| e.to_string())??;
+
     // Disable Nagle to keep MSP round-trips snappy, matching the bridge.
     let _ = stream.set_nodelay(true);
 
