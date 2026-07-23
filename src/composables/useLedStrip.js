@@ -5,6 +5,7 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import { API_VERSION_1_46 } from "@/js/data_storage";
+import { useReboot } from "@/composables/useReboot";
 
 // Helper functions moved to outer scope
 function getGridPosition(index) {
@@ -91,24 +92,17 @@ function isVtxActive(activeFunction) {
     return activeFunctions.includes(activeFunction);
 }
 
-// Save configuration to flight controller
+// Save configuration to flight controller. Error/cancellation handling and the isSaving
+// state are owned by the caller's runSave() (useSaving); this only issues the MSP writes
+// and persists to EEPROM.
 async function saveConfig() {
-    // Refactored to reduce nesting
-    return new Promise((resolve) => {
-        const saveColors = () => {
-            mspHelper.sendLedStripColors(saveModeColors);
-        };
+    const { saveToEeprom } = useReboot();
 
-        const saveModeColors = () => {
-            mspHelper.sendLedStripModeColors(writeConfig);
-        };
+    await mspHelper.sendLedStripConfig();
+    await mspHelper.sendLedStripColors();
+    await mspHelper.sendLedStripModeColors();
 
-        const writeConfig = () => {
-            mspHelper.writeConfiguration(false, resolve);
-        };
-
-        mspHelper.sendLedStripConfig(saveColors);
-    });
+    await saveToEeprom();
 }
 
 export function useLedStrip() {

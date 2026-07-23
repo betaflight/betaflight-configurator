@@ -291,7 +291,7 @@ const restoreInProgress = computed(() => props.state.restoreInProgress);
 
 // Show restore button only when flash succeeded, not flashing, restore not already
 // done, and backup data exists.
-// Note: No longer checking PortHandler.portAvailable as it's stale after flash
+// Note: No longer checking DeviceHandler.portAvailable as it's stale after flash
 const showRestoreButton = computed(() => {
     if (props.state.flashingInProgress) {
         return false;

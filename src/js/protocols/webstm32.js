@@ -21,7 +21,7 @@ import { getConnectionState } from "../connection_state";
 // orchestrator). During flashing the received bytes are always MSP, so we feed
 // MSP.read directly instead of serial_backend.read_serial.
 import { DFU_AUTH_REQUIRED } from "../protocols/usbdfu";
-import PortHandler from "../port_handler";
+import DeviceHandler from "../device_handler";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 
@@ -129,7 +129,7 @@ class STM32Protocol {
                 // Poll for an already-authorized DFU device (no user gesture needed).
                 // Keep timeout short (~4s) so the Flash button's transient user
                 // activation is still valid if we need to fall back to requestPermission.
-                const device = await PortHandler.dfuProtocol.waitForDfu(4000, 500);
+                const device = await DeviceHandler.dfuProtocol.waitForDfu(4000, 500);
                 console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
             } catch (e) {
                 if (e.code !== DFU_AUTH_REQUIRED) {
@@ -145,13 +145,13 @@ class STM32Protocol {
                 gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
                 GUI.connect_lock = false;
 
-                const device = await PortHandler.dfuProtocol.requestPermission();
+                const device = await DeviceHandler.dfuProtocol.requestPermission();
                 if (device) {
                     // Only WebUSB needs a manual dispatch here. The Android
                     // Capacitor adapter already emits addedDevice from
                     // requestPermission().
-                    if (!PortHandler.dfuProtocol.transport?.emitsAddedDeviceOnPermissionGrant) {
-                        PortHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
+                    if (!DeviceHandler.dfuProtocol.transport?.emitsAddedDeviceOnPermissionGrant) {
+                        DeviceHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
                     }
                     return;
                 }

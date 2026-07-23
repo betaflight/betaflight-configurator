@@ -148,7 +148,12 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('adjustmentsSave')" :disabled="!hasChanges" @click="saveAdjustments" />
+            <UButton
+                :label="$t('adjustmentsSave')"
+                :disabled="!hasChanges"
+                :loading="isSaving"
+                @click="saveAdjustments"
+            />
         </div>
     </BaseTab>
 </template>
@@ -167,7 +172,6 @@ import { useAdjustmentsSave } from "@/composables/adjustments/useAdjustmentsSave
 import { useAdjustmentsPolling } from "@/composables/adjustments/useAdjustmentsPolling";
 
 const { t } = useTranslation();
-
 const { adjustments, hasChanges, storeOriginals, showAllSlots, activeCount, visibleAdjustments } =
     useAdjustmentsState();
 const {
@@ -182,7 +186,7 @@ const {
     loadMSPData,
     initializeAdjustments,
 } = useAdjustmentsData(adjustments, t);
-const { saveAdjustments } = useAdjustmentsSave(adjustments, storeOriginals, t);
+const { saveAdjustments, isSaving } = useAdjustmentsSave(adjustments, storeOriginals);
 const { rcChannelData, startRcDataPolling } = useAdjustmentsPolling();
 
 onMounted(async () => {

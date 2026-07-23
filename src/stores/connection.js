@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import CONFIGURATOR from "../js/data_storage";
-import PortHandler from "../js/port_handler";
+import DeviceHandler from "../js/device_handler";
 import { getConnectionState } from "../js/connection_state";
 import { getLockManager } from "../js/lock_manager";
 
@@ -41,7 +41,7 @@ export const useConnectionStore = defineStore("connection", () => {
         set: (val) => (CONFIGURATOR.cliValid = val),
     });
 
-    const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
+    const selectedDevice = computed(() => DeviceHandler.devicePicker.selectedDevice);
 
     // Thin reactive read-model of the connection status holder. Its phase lives in
     // Vue refs, so a computed that reads the getters tracks them directly — no
@@ -78,7 +78,7 @@ export const useConnectionStore = defineStore("connection", () => {
         cliActive,
         cliValid,
         clearMspQueue,
-        selectedPort,
+        selectedDevice,
         // Connection-state read-model (read-only)
         connectionPhase,
         connectionReady,

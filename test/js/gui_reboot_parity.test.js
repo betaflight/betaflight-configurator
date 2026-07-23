@@ -16,11 +16,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // divergence — now asserts the PARITY: gui.js runs no reboot logic of its own.
 // ---------------------------------------------------------------------------
 
-const { EventBus, PortHandler, CONFIGURATOR, MSP, MSPCodes } = vi.hoisted(() => {
+const { EventBus, DeviceHandler, CONFIGURATOR, MSP, MSPCodes } = vi.hoisted(() => {
     return {
         EventBus: { $on: vi.fn(), $emit: vi.fn() },
-        PortHandler: {
-            portPicker: { selectedPort: "bluetooth_1", autoConnect: true },
+        DeviceHandler: {
+            devicePicker: { selectedDevice: "bluetooth_1", autoConnect: true },
             portAvailable: false,
         },
         CONFIGURATOR: { virtualMode: false, connectionValid: false },
@@ -30,7 +30,7 @@ const { EventBus, PortHandler, CONFIGURATOR, MSP, MSPCodes } = vi.hoisted(() => 
 });
 
 vi.mock("../../src/components/eventBus", () => ({ __esModule: true, EventBus }));
-vi.mock("../../src/js/port_handler", () => ({ __esModule: true, default: PortHandler }));
+vi.mock("../../src/js/device_handler", () => ({ __esModule: true, default: DeviceHandler }));
 vi.mock("../../src/js/data_storage", () => ({ __esModule: true, default: CONFIGURATOR }));
 vi.mock("../../src/js/msp", () => ({ __esModule: true, default: MSP }));
 vi.mock("../../src/js/msp/MSPCodes", () => ({ __esModule: true, default: MSPCodes }));
@@ -54,9 +54,9 @@ describe("gui.js reinitializeConnection — delegates to the canonical reboot pa
         vi.clearAllMocks();
         CONFIGURATOR.virtualMode = false;
         CONFIGURATOR.connectionValid = false;
-        PortHandler.portPicker.selectedPort = "bluetooth_1";
-        PortHandler.portPicker.autoConnect = true;
-        PortHandler.portAvailable = false;
+        DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
+        DeviceHandler.devicePicker.autoConnect = true;
+        DeviceHandler.portAvailable = false;
     });
 
     it("gui.js owns NO reboot path at all — divergence is structurally impossible", () => {

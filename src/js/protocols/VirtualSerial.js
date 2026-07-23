@@ -44,7 +44,7 @@ class VirtualSerial extends EventTarget {
         }
         return false;
     }
-    getConnectedPort() {
+    getConnectedDevice() {
         return this.connectionId;
     }
     getDevices() {

@@ -288,7 +288,7 @@ class CapacitorSerial extends EventTarget {
         }
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return this.currentDevice;
     }
 }

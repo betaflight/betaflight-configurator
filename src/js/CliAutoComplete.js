@@ -44,14 +44,18 @@ CliAutoComplete.setEnabled = function (enable) {
  * Initialize CliAutoComplete.
  * @param {Function} sendLine      Function to send a line to CLI.
  * @param {Function} writeToOutput Function to write output to CLI.
+ * @param {Function} [isIdle]      True when no command response is in flight; gates build start.
  */
-CliAutoComplete.initialize = function (sendLine, writeToOutput) {
+CliAutoComplete.initialize = function (sendLine, writeToOutput, isIdle) {
     this.sendLine = sendLine;
     this.writeToOutput = writeToOutput;
+    this.isIdle = isIdle;
     this.cleanup();
 };
 
 CliAutoComplete.cleanup = function () {
+    this._builderWatchdogStop();
+    GUI.timeout_remove("autocomplete_builder_defer");
     this.builder.state = "reset";
     this.builder.numFails = 0;
 };
@@ -71,6 +75,7 @@ CliAutoComplete._builderWatchdogTouch = function () {
                 EventBus.$emit("autocomplete:build:stop");
             } else {
                 // give it one more try
+                self.builder.numFails++;
                 self.builder.state = "reset";
                 self.builderStart();
             }
@@ -84,26 +89,34 @@ CliAutoComplete._builderWatchdogStop = function () {
 };
 
 CliAutoComplete.builderStart = function () {
-    if (this.builder.state === "reset") {
-        this.cache = {
-            commands: [],
-            resources: [],
-            resourcesCount: {},
-            settings: [],
-            settingsAcceptedValues: {},
-            feature: [],
-            beeper: ["ALL"],
-            mixers: [],
-        };
-        this.builder.commandSequence = ["help", "dump", "get", "mixer list"];
-        this.builder.currentSetting = null;
-        this.builder.sentinel = `# ${Math.random()}`;
-        this.builder.state = "init";
-        this.writeToOutput("<br># Building AutoComplete Cache ... ");
-        this.sendLine(this.builder.sentinel);
-        this._builderWatchdogTouch();
-        EventBus.$emit("autocomplete:build:start");
+    if (this.builder.state !== "reset") {
+        return;
     }
+
+    if (this.isIdle && !this.isIdle()) {
+        // defer: starting now could swallow an in-flight command's response (isBuilding() suppresses all output)
+        GUI.timeout_add("autocomplete_builder_defer", () => this.builderStart(), 250);
+        return;
+    }
+
+    this.cache = {
+        commands: [],
+        resources: [],
+        resourcesCount: {},
+        settings: [],
+        settingsAcceptedValues: {},
+        feature: [],
+        beeper: ["ALL"],
+        mixers: [],
+    };
+    this.builder.commandSequence = ["help", "dump", "get", "mixer list"];
+    this.builder.currentSetting = null;
+    this.builder.sentinel = `# ${Math.random()}`;
+    this.builder.state = "init";
+    this.writeToOutput("<br># Building AutoComplete Cache ... ");
+    this.sendLine(this.builder.sentinel);
+    this._builderWatchdogTouch();
+    EventBus.$emit("autocomplete:build:start");
 };
 
 CliAutoComplete.builderParseLine = function (line) {

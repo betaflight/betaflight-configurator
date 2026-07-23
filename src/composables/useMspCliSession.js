@@ -4,7 +4,7 @@ import MSP from "../js/msp";
 import GUI from "../js/gui";
 import FC from "../js/fc";
 import { disconnect, isDrivenRebootTarget, scheduleRebootReconnect } from "../js/serial_backend";
-import PortHandler from "../js/port_handler";
+import DeviceHandler from "../js/device_handler";
 import { getConnectionState, State } from "../js/connection_state";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
@@ -68,8 +68,8 @@ export function readDumpAll() {
 }
 
 export function scheduleReconnect() {
-    const willAutoReconnect = PortHandler.portPicker.autoConnect;
-    const target = PortHandler.portPicker.selectedPort;
+    const willAutoReconnect = DeviceHandler.devicePicker.autoConnect;
+    const target = DeviceHandler.devicePicker.selectedDevice;
 
     // BLE and manual/TCP links never re-enumerate after an FC reboot, so the passive path
     // below (drop the link, let auto-connect pick up the re-added device) would leave them

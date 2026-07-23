@@ -7,7 +7,12 @@
                 </p>
                 <label v-if="mode === 'virtual'" class="connect-options__field">
                     <span>{{ $t("virtualMSPVersion") }}</span>
-                    <USelect v-model="version" :items="firmwareVersions" size="sm" :ui="{ content: 'max-h-96' }" />
+                    <USelect
+                        v-model="version"
+                        :items="firmwareVersions"
+                        size="sm"
+                        :ui="{ content: 'max-h-96 z-3002' }"
+                    />
                 </label>
                 <label v-else class="connect-options__field">
                     <span>{{ $t("portOverrideText") }}</span>

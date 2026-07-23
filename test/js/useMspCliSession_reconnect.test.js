@@ -71,7 +71,7 @@ vi.mock("../../src/js/fc", () => ({
 
 import { scheduleReconnect, cancelScheduledReconnect, saveAndReconnect } from "../../src/composables/useMspCliSession";
 import MSP from "../../src/js/msp";
-import PortHandler from "../../src/js/port_handler";
+import DeviceHandler from "../../src/js/device_handler";
 import { getConnectionState, __resetConnectionStateForTests, State } from "../../src/js/connection_state.js";
 
 describe("useMspCliSession.scheduleReconnect (characterization)", () => {
@@ -82,8 +82,8 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         __resetConnectionStateForTests();
         // Auto-Connect on is the reconnect path these cases characterize; the off case is
         // covered explicitly below. A real selected port is needed for the reconnect window.
-        PortHandler.portPicker.selectedPort = "serial_0";
-        PortHandler.portPicker.autoConnect = true;
+        DeviceHandler.devicePicker.selectedDevice = "serial_0";
+        DeviceHandler.devicePicker.autoConnect = true;
     });
 
     afterEach(() => {
@@ -136,7 +136,7 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     });
 
     it("cancelScheduledReconnect leaves the reconnect-in-progress window (no sticky reconnect)", () => {
-        PortHandler.portPicker.selectedPort = "serial_0";
+        DeviceHandler.devicePicker.selectedDevice = "serial_0";
 
         // scheduleReconnect enters the reconnect window so selectActivePort keeps the device...
         scheduleReconnect();
@@ -148,7 +148,7 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     });
 
     it("a late cancel (after the timer fired) does NOT abort a live connect", () => {
-        PortHandler.portPicker.selectedPort = "serial_0";
+        DeviceHandler.devicePicker.selectedDevice = "serial_0";
 
         scheduleReconnect();
         expect(getConnectionState().state).toBe(State.RECONNECTING);
@@ -171,7 +171,7 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
         // reboot — no removedDevice/addedDevice cycle fires — so the passive drop-and-wait
         // path would never reconnect. scheduleReconnect must hand BLE to the driven
         // flush/disconnect/retry cycle instead.
-        PortHandler.portPicker.selectedPort = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
+        DeviceHandler.devicePicker.selectedDevice = "bluetooth_x81jPGap0DdYcGTJyKZWyw==";
 
         scheduleReconnect();
 
@@ -185,7 +185,7 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     });
 
     it("with Auto-Connect OFF: drops the stale link and does NOT reconnect (no reconnect window)", () => {
-        PortHandler.portPicker.autoConnect = false;
+        DeviceHandler.devicePicker.autoConnect = false;
 
         scheduleReconnect();
         // Auto-Connect off means the user opted out of auto-reconnect: no reconnect window.
@@ -199,7 +199,7 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     });
 
     it("treats a save-reboot connection-closed drain as success, not an error", async () => {
-        PortHandler.portPicker.autoConnect = false;
+        DeviceHandler.devicePicker.autoConnect = false;
         const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         // `save` reboots the FC: the port closes before it replies, so the in-flight command is
         // drained with the tagged connection-closed error.
@@ -217,7 +217,7 @@ describe("useMspCliSession.scheduleReconnect (characterization)", () => {
     });
 
     it("still reports a genuine save failure", async () => {
-        PortHandler.portPicker.autoConnect = false;
+        DeviceHandler.devicePicker.autoConnect = false;
         const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         MSP.send_cli_command.mockImplementation((_cmd, cb) => {
             cb([], new Error("###ERROR: bad command"));

@@ -3,7 +3,7 @@ import { serial } from "../../src/js/serial.js";
 
 // ---------------------------------------------------------------------------
 // The serial facade multiplexes several transports. Device-enumeration events
-// (addedDevice/removedDevice) are forwarded from EVERY transport so port_handler
+// (addedDevice/removedDevice) are forwarded from EVERY transport so device_handler
 // can build the combined device list. Connection-lifecycle events
 // (connect/disconnect/receive) are forwarded ONLY from the active transport —
 // otherwise a late event from a transport we've switched away from (e.g. a BLE

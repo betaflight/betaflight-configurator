@@ -1,15 +1,15 @@
-import PortsInput from "./PortsInput";
+import PortOverrideOption from "./PortOverrideOption.vue";
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-    title: "Ports input",
-    component: PortsInput,
+    title: "Port override option",
+    component: PortOverrideOption,
 };
 
 const Template = (_args, { argTypes }) => ({
     props: Object.keys(argTypes),
-    components: { PortsInput },
-    template: '<ports-input v-bind="$props" />',
+    components: { PortOverrideOption },
+    template: '<port-override-option v-bind="$props" />',
 });
 
 export const Primary = Template.bind({});

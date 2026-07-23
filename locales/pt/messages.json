@@ -1374,6 +1374,10 @@
         "message": "Manter Posição está ativo",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "O switch do modo piloto automático está ativo",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Um dos outros indicadores de desarme está ativo quando arma",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1734,6 +1738,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "Rotação arbitrária da placa em graus, para permitir que a placa seja montada de lado \/ de cabeça para baixo \/ rodada, etc. Quando usar sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir uma posição do sensor independente da orientação da placa. "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Auto-detetar alinhamento da placa..."
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Assistente de Alinhamento da Placa"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Este assistente deteta como a sua controladora de voo está montada ao guiá-lo através de quatro movimentos simples. Coloque o drone numa superfície plana com a câmera virada para si (virado para o monitor), e siga as instruções."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Iniciar"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Passo"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Posicione o drone com a câmera virada para o lado oposto de si (virada para o monitor)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Incline o nariz em cerca de 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Incline o lado direito em cerca de 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Rode o drone cerca de 45° no sentido horário (como visto de cima)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Retorne o drone a uma posição nivelada."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Mantenha quieto..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Estabelecendo"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Continue a inclinar"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Retorne ao nível"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Eixo detetado — mantenha estável"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotação"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "A computar o alinhamento..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Alinhamento detetado"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "O seu alinhamento da placa parece correto — não são necessárias alterações."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Atual"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Detetado"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Voltar"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Aplicar"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Cancelar"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Tente novamente"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Capturar agora"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "A confiança da deteção é reduzida — por favor, verifique o resultado contra a atitude ao vivo antes de aplicar."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "É necessário um acelerómetro para executar este assistente."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Por favor calibre o acelerómetro antes de executar este assistente."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Algumas amostras não foram recolhidas. Por favor tente novamente."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "O acelerómetro não está a ler a gravidade. Certifique-se de que a FC está conectada e sem movimento."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o nariz ainda mais."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o lado direito ainda mais."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Plano"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Capturado!"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -2042,6 +2160,9 @@
     },
     "configurationSpiRX": {
         "message": "Fornecedor do receptor SPI Bus"
+    },
+    "configurationSaved": {
+        "message": "Configuração guardada"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -3197,6 +3318,9 @@
     "servosChangeDirection": {
         "message": "Mude a direção no TX para que fique igual ao movimento do servo"
     },
+    "servosForwardChannel": {
+        "message": "Encaminhar canal {{channel}} para o servo {{servo}}"
+    },
     "servosName": {
         "message": "Nome"
     },
@@ -3925,6 +4049,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Executar"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Pré-visualização do trecho"
     },
     "cliPanelTitle": {
         "message": "Interface da Linha de Comandos"
@@ -5883,6 +6010,9 @@
     "powerBatteryProfileOption": {
         "message": "Perfil da Bateria $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "Perfil de Bateria aplicado na controladora de voo: <strong class=\"message-positive\">$1<\/strong>"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "ex.: LiPo, Li-Ion"
     },
@@ -5927,6 +6057,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Alternar visibilidade de {{element}} para o perfil {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>AVISO:<\/b><\/span> Nenhum chip OSD detetado. Algumas controladoras de voo não ligarão corretamente o chip OSD, a menos que estejam ligadas a energia da bateria. Conecte a bateria antes de conectar o USB (HÉLICES REMOVIDAS!)."
@@ -7353,6 +7486,14 @@
     "osdWarningPosHoldFailed": {
         "message": "Manter posição falhou",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Missão de piloto automático abortada",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Missão de piloto automático abortada",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
     },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"
@@ -9056,6 +9197,10 @@
     },
     "backupNoBackupsAvailable": {
         "message": "Não existem cópias de segurança disponíveis"
+    },
+    "backupRequiresConnection": {
+        "message": "Conecte uma controladora de voo para habilitar esta ação",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
     },
     "titleEditBackup": {
         "message": "Editar cópia de segurança"

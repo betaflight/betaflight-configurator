@@ -33,7 +33,7 @@
                     : []),
                 ...(showUsbOption ? [{ label: $t('portsSelectPermissionDFU'), value: 'requestpermissionusb' }] : []),
             ]"
-            v-model="selectedPort"
+            v-model="selectedDevice"
             :disabled="disabled"
             size="sm"
             class="sm:min-w-64 min-w-full"
@@ -46,7 +46,7 @@
             <div :title="modelValue.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')">
                 <USwitch :label="$t('autoConnect')" v-model="autoConnect" :disabled="disabled" size="xs" />
             </div>
-            <div v-if="selectedPort !== 'virtual' && selectedPort !== 'noselection'" id="baudselect">
+            <div v-if="selectedDevice !== 'virtual' && selectedDevice !== 'noselection'" id="baudselect">
                 <USelect
                     :items="baudRates"
                     v-model="selectedBauds"
@@ -72,7 +72,7 @@ export default defineComponent({
         modelValue: {
             type: Object,
             default: () => ({
-                selectedPort: "noselection",
+                selectedDevice: "noselection",
                 selectedBauds: 115200,
                 autoConnect: true,
             }),
@@ -116,7 +116,7 @@ export default defineComponent({
     },
     emits: ["update:modelValue"],
     setup(props, { emit }) {
-        const selectedPort = ref(props.modelValue.selectedPort); // Access through modelValue
+        const selectedDevice = ref(props.modelValue.selectedDevice); // Access through modelValue
         const selectedBauds = ref(props.modelValue.selectedBauds); // Access through modelValue
         const autoConnect = ref(props.modelValue.autoConnect); // Access through modelValue
         const baudRates = ref([
@@ -135,16 +135,16 @@ export default defineComponent({
             { value: "1200", label: "1200" },
         ]);
 
-        // Keep UI in sync when PortHandler (or parent) updates selectedPort, e.g. after WebUSB permission dialog
+        // Keep UI in sync when DeviceHandler (or parent) updates selectedDevice, e.g. after WebUSB permission dialog
         watch(
-            () => props.modelValue.selectedPort,
+            () => props.modelValue.selectedDevice,
             (v) => {
-                selectedPort.value = v;
+                selectedDevice.value = v;
             },
         );
 
-        watch(selectedPort, (newValue) => {
-            emit("update:modelValue", { ...props.modelValue, selectedPort: newValue });
+        watch(selectedDevice, (newValue) => {
+            emit("update:modelValue", { ...props.modelValue, selectedDevice: newValue });
         });
 
         watch(selectedBauds, (newValue) => {
@@ -157,21 +157,21 @@ export default defineComponent({
         });
 
         const onChangePort = () => {
-            const value = selectedPort.value;
+            const value = selectedDevice.value;
 
             if (value.startsWith("requestpermission")) {
                 // Extract "serial", "bluetooth", etc., and format the event name
                 const type = value.replace("requestpermission", "");
                 EventBus.$emit(`ports-input:request-permission-${type}`);
-                // Reset selection to "No Selection" (watch(selectedPort) emits update:modelValue)
-                selectedPort.value = "noselection";
+                // Reset selection to "No Selection" (watch(selectedDevice) emits update:modelValue)
+                selectedDevice.value = "noselection";
             } else {
                 EventBus.$emit("ports-input:change", value);
             }
         };
 
         return {
-            selectedPort,
+            selectedDevice,
             selectedBauds,
             autoConnect,
             baudRates,
