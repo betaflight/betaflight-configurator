@@ -163,6 +163,7 @@ import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { runTabLoad } from "../../composables/useTabLoad";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -641,20 +642,23 @@ export default defineComponent({
 
         const loadData = async () => {
             try {
-                await MSP.promise(MSPCodes.MSP_BOXNAMES);
-                await MSP.promise(MSPCodes.MSP_MODE_RANGES);
-                await MSP.promise(MSPCodes.MSP_MODE_RANGES_EXTRA);
-                await MSP.promise(MSPCodes.MSP_BOXIDS);
-                await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-                await MSP.promise(MSPCodes.MSP_RC);
-                await new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
+                await runTabLoad(
+                    async () => {
+                        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+                        await MSP.promise(MSPCodes.MSP_MODE_RANGES);
+                        await MSP.promise(MSPCodes.MSP_MODE_RANGES_EXTRA);
+                        await MSP.promise(MSPCodes.MSP_BOXIDS);
+                        await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
+                        await MSP.promise(MSPCodes.MSP_RC);
+                        await new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
 
-                requiredModeRangeCount.value = fcStore.modeRanges.length;
-                auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
-                buildModesFromFC();
-                updateMarkers();
-            } catch (error) {
-                console.error("Failed to load auxiliary data", error);
+                        requiredModeRangeCount.value = fcStore.modeRanges.length;
+                        auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
+                        buildModesFromFC();
+                        updateMarkers();
+                    },
+                    (error) => console.error("Failed to load auxiliary data", error),
+                );
             } finally {
                 await nextTick();
                 GUI.content_ready();

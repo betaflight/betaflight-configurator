@@ -515,6 +515,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useReboot } from "@/composables/useReboot";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -996,63 +997,70 @@ async function refreshTab() {
     gui_log(t("receiverDataRefreshed"));
 }
 
+// Find the rx mode bit for the currently enabled "select"/"rxMode" feature, or -1 if none is.
+function findSelectedRxMode(featuresApi) {
+    for (const feature of featuresApi.getFeatures()) {
+        if (feature.mode === "select" && feature.group === "rxMode" && featuresApi.isEnabled(feature.name)) {
+            return feature.bit;
+        }
+    }
+    return -1;
+}
+
+// Look up a stored ELRS binding phrase for the FC's current UID, if any.
+function findElrsBindingPhrase(elrsUid) {
+    if (!elrsUid) {
+        return null;
+    }
+    return lookupElrsBindingPhrase(elrsUid.join(","));
+}
+
 // Load configuration
 async function loadConfig() {
-    try {
-        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-        await MSP.promise(MSPCodes.MSP_RC);
-        await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-        await MSP.promise(MSPCodes.MSP_RC_TUNING);
-        await MSP.promise(MSPCodes.MSP_RX_MAP);
-        await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+    await runTabLoad(
+        async () => {
+            await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+            await MSP.promise(MSPCodes.MSP_RC);
+            await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
+            await MSP.promise(MSPCodes.MSP_RC_TUNING);
+            await MSP.promise(MSPCodes.MSP_RX_MAP);
+            await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
+            await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+            await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
-        // Update local state from FC
-        updateChannelMapFromRcMap();
+            // Update local state from FC
+            updateChannelMapFromRcMap();
 
-        // Initialize selectedRxMode from feature mask
-        if (features.value?.features?.getFeatures?.()) {
-            let foundRxMode = -1;
-            for (const feature of features.value.features.getFeatures()) {
-                if (feature.mode === "select" && feature.group === "rxMode") {
-                    if (features.value.features.isEnabled(feature.name)) {
-                        foundRxMode = feature.bit;
-                        break;
-                    }
-                }
+            // Initialize selectedRxMode from feature mask
+            if (features.value?.features?.getFeatures?.()) {
+                selectedRxMode.value = findSelectedRxMode(features.value.features);
             }
-            selectedRxMode.value = foundRxMode;
-        }
 
-        // Load ELRS binding phrase if applicable
-        if (elrsBindingPhraseEnabled.value && rxConfig.value?.elrsUid) {
-            const uidString = rxConfig.value.elrsUid.join(",");
-            const storedPhrase = lookupElrsBindingPhrase(uidString);
+            // Load ELRS binding phrase if applicable
+            const storedPhrase = elrsBindingPhraseEnabled.value ? findElrsBindingPhrase(rxConfig.value?.elrsUid) : null;
             if (storedPhrase) {
                 elrsBindingPhrase.value = storedPhrase;
             }
-        }
 
-        // Set RC smoothing modes based on cutoff values
-        setpointManualMode.value = rxConfig.value?.rcSmoothingSetpointCutoff === 0 ? "0" : "1";
-        if (showThrottleSmoothingOptions.value) {
-            throttleManualMode.value = rxConfig.value?.rcSmoothingThrottleCutoff === 0 ? "0" : "1";
-        } else {
-            feedforwardManualMode.value = rxConfig.value?.rcSmoothingFeedforwardCutoff === 0 ? "0" : "1";
-        }
+            // Set RC smoothing modes based on cutoff values
+            setpointManualMode.value = rxConfig.value?.rcSmoothingSetpointCutoff === 0 ? "0" : "1";
+            if (showThrottleSmoothingOptions.value) {
+                throttleManualMode.value = rxConfig.value?.rcSmoothingThrottleCutoff === 0 ? "0" : "1";
+            } else {
+                feedforwardManualMode.value = rxConfig.value?.rcSmoothingFeedforwardCutoff === 0 ? "0" : "1";
+            }
 
-        // Load saved refresh rate
-        const savedRate = getConfig("rx_refresh_rate");
-        if (savedRate?.rx_refresh_rate) {
-            refreshRate.value = savedRate.rx_refresh_rate;
-        }
+            // Load saved refresh rate
+            const savedRate = getConfig("rx_refresh_rate");
+            if (savedRate?.rx_refresh_rate) {
+                refreshRate.value = savedRate.rx_refresh_rate;
+            }
 
-        needReboot.value = false;
-        savedSnapshot.value = takeSnapshot();
-    } catch (e) {
-        console.error("Failed to load Receiver configuration", e);
-    }
+            needReboot.value = false;
+            savedSnapshot.value = takeSnapshot();
+        },
+        (e) => console.error("Failed to load Receiver configuration", e),
+    );
 }
 
 // Save configuration
