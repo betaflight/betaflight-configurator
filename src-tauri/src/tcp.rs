@@ -11,13 +11,18 @@
 //! reconnect or disconnect) can never emit against the live socket.
 
 use std::io::{Read, Write};
-use std::net::{Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
+use std::net::{Shutdown, TcpStream, ToSocketAddrs};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tauri::{AppHandle, Emitter, State};
+
+/// Total budget for the TCP handshake, across every address a hostname resolves to.
+/// `TcpStream::connect` has no timeout of its own, and an invalid/unreachable manual IP
+/// would otherwise block on the OS's SYN-retry timeout, which runs to tens of seconds
+/// (Windows) or minutes (Linux default).
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Default)]
@@ -33,13 +38,38 @@ pub async fn tcp_connect(
     ip: String,
     port: u16,
 ) -> Result<(), String> {
+    // Reserve this attempt's epoch up front, before the network attempt starts. This command
+    // runs off the main thread (see below), so a slow/stale attempt can overlap a later
+    // tcp_disconnect or tcp_connect; bumping here — rather than only after connecting — lets
+    // the check below detect that and refuse to install a superseded connection.
+    let epoch = state.epoch.clone();
+    let my_epoch = epoch.fetch_add(1, Ordering::SeqCst) + 1;
+
+    // The blocking connect itself moves to a dedicated thread (`spawn_blocking`) so it can't
+    // stall an async runtime worker either. Without both this and `async fn` above, a bad
+    // manual IP froze the whole window for as long as the OS took to give up.
     let stream = tauri::async_runtime::spawn_blocking(move || -> Result<TcpStream, String> {
-        let addr: SocketAddr = (ip.as_str(), port)
-            .to_socket_addrs()
-            .map_err(|e| e.to_string())?
-            .next()
-            .ok_or_else(|| "could not resolve address".to_string())?;
-        TcpStream::connect_timeout(&addr, CONNECT_TIMEOUT).map_err(|e| e.to_string())
+        let addrs = (ip.as_str(), port).to_socket_addrs().map_err(|e| e.to_string())?;
+        let deadline = Instant::now() + CONNECT_TIMEOUT;
+        let mut last_err = "could not resolve address".to_string();
+        let mut tried = false;
+
+        for addr in addrs {
+            let remaining = deadline.saturating_duration_since(Instant::now());
+            if remaining.is_zero() {
+                break;
+            }
+            tried = true;
+            match TcpStream::connect_timeout(&addr, remaining) {
+                Ok(stream) => return Ok(stream),
+                Err(e) => last_err = e.to_string(),
+            }
+        }
+
+        if !tried {
+            last_err = "connection attempt timed out".to_string();
+        }
+        Err(last_err)
     })
     .await
     .map_err(|e| e.to_string())??;
@@ -49,11 +79,19 @@ pub async fn tcp_connect(
 
     let reader = stream.try_clone().map_err(|e| e.to_string())?;
 
-    // Bump the epoch and tear down any previous connection so its reader stops.
-    let epoch = state.epoch.clone();
-    let my_epoch = epoch.fetch_add(1, Ordering::SeqCst) + 1;
-    if let Some(old) = state.stream.lock().unwrap().replace(stream) {
-        let _ = old.shutdown(Shutdown::Both);
+    // Install the new stream only if nothing superseded us while we were connecting (a
+    // disconnect or a newer connect attempt would have bumped the epoch already). Checking
+    // and installing under the same lock keeps this atomic against a concurrent disconnect.
+    {
+        let mut guard = state.stream.lock().unwrap();
+        if epoch.load(Ordering::SeqCst) != my_epoch {
+            drop(guard);
+            let _ = stream.shutdown(Shutdown::Both);
+            return Err("connection attempt superseded".into());
+        }
+        if let Some(old) = guard.replace(stream) {
+            let _ = old.shutdown(Shutdown::Both);
+        }
     }
 
     thread::spawn(move || {
