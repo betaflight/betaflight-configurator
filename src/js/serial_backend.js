@@ -1282,14 +1282,32 @@ async function requestLiveData(code, name) {
     }
 }
 
-// MSP.onTimeout hook: an errorAware request exhausted MAX_RETRIES, so the FC is unresponsive.
-// A hung FC keeps the transport physically open, so no "disconnect" event fires on its own.
-// Tear the link down like the reboot path: mark the disconnect intentional (so onClosed skips
-// the unexpected-disconnect teardown) and close WITHOUT the setArmingEnabled round-trip, which
-// would itself hang on the dead FC. Re-entrancy is bounded by the isConnected() gate — teardown
-// clears MSP.onTimeout and connection validity before another request can trip it.
+// A link is only "dead" once the FC has gone completely silent for this long. One MSP request
+// exhausting its retries (~MAX_RETRIES × TIMEOUT ≈ 3 s) is not enough on its own: a high-latency
+// transport (WiFi TCP bridge, BLE) can miss a single request while the link is still delivering
+// other traffic. The threshold sits above one request's retry window so a lone slow request never
+// trips teardown, but low enough that a genuinely hung FC is dropped promptly.
+const DEAD_LINK_TIMEOUT = 5000;
+
+// MSP.onTimeout hook: an errorAware request exhausted MAX_RETRIES. That alone does not mean the FC
+// is gone — decide from the link's actual liveness. MSP.last_received_timestamp advances on every
+// byte the FC sends, so if any traffic has arrived within DEAD_LINK_TIMEOUT the FC is alive but
+// slow: leave the link up and let the poller keep trying. Only when the FC has been fully silent
+// for the whole window is the link dead.
+//
+// A hung FC keeps the transport physically open, so no "disconnect" event fires on its own. When
+// the link really is dead, tear it down like the reboot path: mark the disconnect intentional (so
+// onClosed skips the unexpected-disconnect teardown) and close WITHOUT the setArmingEnabled
+// round-trip, which would itself hang on the dead FC. Re-entrancy is bounded by the isConnected()
+// gate — teardown clears MSP.onTimeout and connection validity before another request can trip it.
 function handleConnectionTimeout() {
     if (!isConnected()) {
+        return;
+    }
+
+    const lastReceived = MSP.last_received_timestamp;
+    if (lastReceived !== null && Date.now() - lastReceived < DEAD_LINK_TIMEOUT) {
+        // The FC is still sending us data — a slow request, not a dead link. Keep the link up.
         return;
     }
 

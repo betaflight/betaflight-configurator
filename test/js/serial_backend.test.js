@@ -864,11 +864,14 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
         expect(MSP.onTimeout).toBeNull();
     });
 
-    it("drops the link and shows a dialog when a request exhausts its retries", () => {
+    it("drops the link and shows a dialog when the FC has gone fully silent", () => {
         establishConnection();
         getConnectionState().setLinkOpen(true);
         serial.disconnect.mockClear();
         dialogStore.open.mockClear();
+
+        // No FC traffic for longer than the dead-link window: the link really is dead.
+        MSP.last_received_timestamp = Date.now() - 10_000;
 
         // Fire the hook MSP invokes after MAX_RETRIES with no response.
         MSP.onTimeout(MSPCodes.MSP_ANALOG);
@@ -884,6 +887,19 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
             expect.objectContaining({ title: "connectionLostTitle", text: "connectionLostUnresponsive" }),
             expect.anything(),
         );
+    });
+
+    it("keeps the link up when the FC is still sending data (slow, not dead)", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(true);
+        serial.disconnect.mockClear();
+
+        // The FC answered other traffic moments ago — a single slow request is not a dead link.
+        MSP.last_received_timestamp = Date.now();
+
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        expect(serial.disconnect).not.toHaveBeenCalled();
     });
 
     it("ignores the timeout hook when not connected", () => {

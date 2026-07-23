@@ -605,7 +605,9 @@ const MSP = {
         }
         this._release_parked(obj.code);
 
-        // MAX_RETRIES sends produced no response: the link is unresponsive, not just slow.
+        // This request exhausted MAX_RETRIES. Whether that means the link is dead is decided by
+        // the hook (handleConnectionTimeout) from the FC's actual traffic, not from this single
+        // request — a lone slow request on a high-latency transport is not a hung FC.
         this.onTimeout?.(obj.code);
     },
     _park(code, entry) {
