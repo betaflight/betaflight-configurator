@@ -530,6 +530,7 @@ import { useOsdPreview, clampStringPreviewPosition, clampArrayPreviewPosition } 
 import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -1280,31 +1281,32 @@ function updatePreview() {
 
 // Load OSD configuration from FC
 async function loadConfig() {
-    try {
-        // Fetch OSD config via Store
-        await osdStore.fetchOsdConfig();
+    await runTabLoad(
+        async () => {
+            // Fetch OSD config via Store
+            await osdStore.fetchOsdConfig();
 
-        // Set initial profile from store state
-        previewProfile.value = osdStore.osdProfiles.selected || 0;
-        activeProfile.value = osdStore.osdProfiles.selected || 0;
+            // Set initial profile from store state
+            previewProfile.value = osdStore.osdProfiles.selected || 0;
+            activeProfile.value = osdStore.osdProfiles.selected || 0;
 
-        // Sync font state from memory
-        if (FONT.data?.loaded_font_file) {
-            const loadedIndex = fontTypes.value.findIndex((f) => f.file === FONT.data.loaded_font_file);
-            if (loadedIndex !== -1 && loadedIndex !== selectedFont.value) {
-                selectedFont.value = loadedIndex;
-                selectedFontPreset.value = loadedIndex;
-            } else if (loadedIndex === -1 && selectedFont.value !== -1) {
-                selectedFont.value = -1;
-                selectedFontPreset.value = -1;
+            // Sync font state from memory
+            if (FONT.data?.loaded_font_file) {
+                const loadedIndex = fontTypes.value.findIndex((f) => f.file === FONT.data.loaded_font_file);
+                if (loadedIndex !== -1 && loadedIndex !== selectedFont.value) {
+                    selectedFont.value = loadedIndex;
+                    selectedFontPreset.value = loadedIndex;
+                } else if (loadedIndex === -1 && selectedFont.value !== -1) {
+                    selectedFont.value = -1;
+                    selectedFontPreset.value = -1;
+                }
             }
-        }
 
-        updatePreview();
-        hasLoadedConfig.value = true;
-    } catch (error) {
-        console.error("Failed to load OSD configuration:", error);
-    }
+            updatePreview();
+            hasLoadedConfig.value = true;
+        },
+        (error) => console.error("Failed to load OSD configuration:", error),
+    );
 }
 
 async function refreshConfig() {

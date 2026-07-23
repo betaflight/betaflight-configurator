@@ -393,6 +393,7 @@ import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -423,24 +424,25 @@ const { runSave } = useSaving();
 // --- Data loading ---
 
 const loadConfig = async () => {
-    try {
-        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-        await MSP.promise(MSPCodes.MSP_FAILSAFE_CONFIG);
+    await runTabLoad(
+        async () => {
+            await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+            await MSP.promise(MSPCodes.MSP_FAILSAFE_CONFIG);
 
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
-            await MSP.promise(MSPCodes.MSP_GPS_RESCUE);
-        }
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
+                await MSP.promise(MSPCodes.MSP_GPS_RESCUE);
+            }
 
-        await MSP.promise(MSPCodes.MSP_RXFAIL_CONFIG);
-        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-        await MSP.promise(MSPCodes.MSP_BOXIDS);
-        await MSP.promise(MSPCodes.MSP_RC);
-        await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-        await MSP.promise(MSPCodes.MSP_MODE_RANGES);
-    } catch (e) {
-        console.error("Failed to load Failsafe configuration", e);
-    }
+            await MSP.promise(MSPCodes.MSP_RXFAIL_CONFIG);
+            await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+            await MSP.promise(MSPCodes.MSP_BOXNAMES);
+            await MSP.promise(MSPCodes.MSP_BOXIDS);
+            await MSP.promise(MSPCodes.MSP_RC);
+            await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
+            await MSP.promise(MSPCodes.MSP_MODE_RANGES);
+        },
+        (e) => console.error("Failed to load Failsafe configuration", e),
+    );
 };
 
 // --- Store data refs ---

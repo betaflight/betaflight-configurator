@@ -201,6 +201,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -356,48 +357,51 @@ export default defineComponent({
 
         // Loading Logic
         const loadConfig = async () => {
-            try {
-                if (!isMounted.value) return;
-                await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-                await MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
-                await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
-                await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+            await runTabLoad(
+                async () => {
+                    if (!isMounted.value) return;
+                    await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
 
-                if (!isMounted.value) return;
+                    if (!isMounted.value) return;
 
-                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(MSPCodes.MSP_NAME);
-                }
+                    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(MSPCodes.MSP_NAME);
+                    }
 
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
-                    );
-                }
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(
+                            MSPCodes.MSP2_GET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                        );
+                    }
 
-                await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_RX_CONFIG);
 
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME),
-                    );
-                }
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(
+                            MSPCodes.MSP2_GET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME),
+                        );
+                    }
 
-                if (!isMounted.value) return;
+                    if (!isMounted.value) return;
 
-                await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
 
-                if (!isMounted.value) return;
+                    if (!isMounted.value) return;
 
-                await initializeUI();
-                await nextTick();
-                GUI.content_ready();
-            } catch (e) {
-                console.error("Failed to load configuration", e);
-                GUI.content_ready();
-            }
+                    await initializeUI();
+                    await nextTick();
+                    GUI.content_ready();
+                },
+                (e) => {
+                    console.error("Failed to load configuration", e);
+                    GUI.content_ready();
+                },
+            );
         };
 
         const initializeUI = async () => {
