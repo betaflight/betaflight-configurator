@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
@@ -854,6 +854,12 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         resetMocks();
+    });
+
+    afterEach(() => {
+        // These cases drive MSP.last_received_timestamp directly; clear the singleton so a
+        // later test can't inherit stale traffic state.
+        MSP.last_received_timestamp = null;
     });
 
     it("registers MSP.onTimeout on connect and clears it on teardown", () => {

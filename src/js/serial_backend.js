@@ -696,6 +696,9 @@ function resetConnection() {
 
     MSP.clearListeners();
     MSP.onTimeout = null;
+    // Clear the FC-liveness timestamp so the next connection can't inherit stale traffic state
+    // from this one and mis-classify a fresh link as still-alive in handleConnectionTimeout.
+    MSP.last_received_timestamp = null;
 
     if (DeviceHandler.devicePicker.selectedDevice !== "virtual") {
         serial.removeEventListener("receive", read_serial_adapter);
