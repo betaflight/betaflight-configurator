@@ -164,8 +164,9 @@ export default defineComponent({
             }
             TABS.cli.read = cli.read;
             TABS.cli.cleanup = (callback) => {
-                cli.cleanup();
-                if (callback) {
+                // cli.cleanup() true => CLI exit rebooted the FC; skip the destination mount
+                // (reconnect lands on lastTab). Only mount when not rebooting.
+                if (!cli.cleanup() && callback) {
                     callback();
                 }
             };
