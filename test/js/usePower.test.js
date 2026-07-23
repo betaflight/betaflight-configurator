@@ -51,12 +51,14 @@ describe("usePower", () => {
         });
 
         const power = usePower();
+        const previousProfileName = power.batteryProfileName.value;
         mspPromise.mockClear();
 
         await expect(power.changeBatteryProfile(2)).rejects.toThrow(profileNameError);
 
         expect(FC.CONFIG.batteryProfile).toBe(0);
         expect(power.activeBatteryProfile.value).toBe(0);
+        expect(power.batteryProfileName.value).toBe(previousProfileName);
         expect(mspPromise).not.toHaveBeenCalledWith(MSPCodes.MSP_STATUS_EX);
         expect(mspPromise).not.toHaveBeenCalledWith(MSPCodes.MSP_BATTERY_CONFIG);
     });
