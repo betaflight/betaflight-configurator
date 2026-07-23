@@ -678,6 +678,10 @@ export function useCli() {
         );
     };
 
+    /**
+     * Tear down the CLI session.
+     * @returns {boolean} true when leaving CLI initiated an FC reboot (`exit` + MSP_SET_REBOOT).
+     */
     const cleanup = () => {
         GUI.timeout_remove("CLI_send_slowly");
         GUI.timeout_remove("enter_cli");
@@ -719,7 +723,10 @@ export function useCli() {
             copyResetTimeout = null;
         }
 
-        if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
+        // `exit` + MSP_SET_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
+        // handoff; prepareDisconnect (run on every reboot path) releases it after the disconnect.
+        const rebooting = CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive;
+        if (rebooting) {
             send(getCliCommand("exit\r", cliBuffer), function () {
                 reinitializeConnection();
             });
@@ -729,6 +736,8 @@ export function useCli() {
         CONFIGURATOR.cliValid = false;
 
         CliAutoComplete.cleanup();
+
+        return rebooting;
     };
 
     const adaptPhones = () => {
