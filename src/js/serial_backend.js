@@ -1282,24 +1282,37 @@ async function requestLiveData(code, name) {
     }
 }
 
-// A link is only "dead" once the FC has gone completely silent for this long. One MSP request
-// exhausting its retries (~MAX_RETRIES × TIMEOUT ≈ 3 s) is not enough on its own: a high-latency
-// transport (WiFi TCP bridge, BLE) can miss a single request while the link is still delivering
-// other traffic. The threshold sits above one request's retry window so a lone slow request never
-// trips teardown, but low enough that a genuinely hung FC is dropped promptly.
+/**
+ * Idle window, in milliseconds, of complete FC silence before the link is treated as dead.
+ *
+ * A single MSP request exhausting its retries spans only `MSP.MAX_RETRIES × MSP.TIMEOUT`
+ * (~3 s) of silence — a threshold a high-latency transport (WiFi/TCP bridge, BLE) can cross
+ * on a transient spike while the link is otherwise healthy. This window is set above one
+ * request's retry span so a lone slow request never triggers teardown, yet short enough that
+ * a genuinely hung FC is dropped promptly.
+ *
+ * @constant {number}
+ */
 const DEAD_LINK_TIMEOUT = 5000;
 
-// MSP.onTimeout hook: an errorAware request exhausted MAX_RETRIES. That alone does not mean the FC
-// is gone — decide from the link's actual liveness. MSP.last_received_timestamp advances on every
-// byte the FC sends, so if any traffic has arrived within DEAD_LINK_TIMEOUT the FC is alive but
-// slow: leave the link up and let the poller keep trying. Only when the FC has been fully silent
-// for the whole window is the link dead.
-//
-// A hung FC keeps the transport physically open, so no "disconnect" event fires on its own. When
-// the link really is dead, tear it down like the reboot path: mark the disconnect intentional (so
-// onClosed skips the unexpected-disconnect teardown) and close WITHOUT the setArmingEnabled
-// round-trip, which would itself hang on the dead FC. Re-entrancy is bounded by the isConnected()
-// gate — teardown clears MSP.onTimeout and connection validity before another request can trip it.
+/**
+ * `MSP.onTimeout` hook — runs when an errorAware request exhausts `MSP.MAX_RETRIES`.
+ *
+ * A single exhausted request does not imply the FC is gone, so teardown is gated on the link's
+ * measured liveness rather than one request's failure. `MSP.last_received_timestamp` advances on
+ * every inbound byte, so any traffic within {@link DEAD_LINK_TIMEOUT} means the FC is responsive
+ * but slow — the link is kept open for the poller to retry. Only uninterrupted silence for the
+ * full window is classified as a dead link.
+ *
+ * A hung FC keeps the transport physically open, so no `disconnect` event fires on its own. When
+ * the link is dead this mirrors the reboot teardown path: it flags the disconnect as intentional
+ * (so {@link onClosed} skips unexpected-disconnect handling) and closes without the
+ * `setArmingEnabled` round-trip, which would itself hang against the dead FC. Re-entrancy is
+ * bounded by the `isConnected()` guard — teardown clears `MSP.onTimeout` and the connection-valid
+ * flag before a subsequent timeout can re-enter.
+ *
+ * @returns {void}
+ */
 function handleConnectionTimeout() {
     if (!isConnected()) {
         return;
@@ -1307,7 +1320,7 @@ function handleConnectionTimeout() {
 
     const lastReceived = MSP.last_received_timestamp;
     if (lastReceived !== null && Date.now() - lastReceived < DEAD_LINK_TIMEOUT) {
-        // The FC is still sending us data — a slow request, not a dead link. Keep the link up.
+        // Inbound traffic within the window: the FC is responding, just slowly — keep the link.
         return;
     }
 

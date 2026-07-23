@@ -870,13 +870,14 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
         serial.disconnect.mockClear();
         dialogStore.open.mockClear();
 
-        // No FC traffic for longer than the dead-link window: the link really is dead.
+        // last_received_timestamp older than DEAD_LINK_TIMEOUT (5 s): no inbound bytes for the
+        // whole window, so the link classifies as dead.
         MSP.last_received_timestamp = Date.now() - 10_000;
 
-        // Fire the hook MSP invokes after MAX_RETRIES with no response.
+        // MSP.onTimeout hook — fired after an errorAware request exhausts MAX_RETRIES.
         MSP.onTimeout(MSPCodes.MSP_ANALOG);
 
-        // Teardown initiated (finishClose -> serial.disconnect) without any MSP round-trip.
+        // Teardown runs via finishClose -> serial.disconnect, with no MSP round-trip to the dead FC.
         expect(serial.disconnect).toHaveBeenCalledTimes(1);
 
         // The protocol "disconnect" event drives onClosed, which raises the notice only after
@@ -894,7 +895,8 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
         getConnectionState().setLinkOpen(true);
         serial.disconnect.mockClear();
 
-        // The FC answered other traffic moments ago — a single slow request is not a dead link.
+        // last_received_timestamp inside DEAD_LINK_TIMEOUT: inbound traffic just arrived, so the
+        // exhausted request is a latency spike, not a dead link.
         MSP.last_received_timestamp = Date.now();
 
         MSP.onTimeout(MSPCodes.MSP_ANALOG);
