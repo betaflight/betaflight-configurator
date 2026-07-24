@@ -99,7 +99,7 @@
                             :step="1"
                         />
                         <UButton
-                            v-if="isApi148"
+                            v-if="isApi146"
                             :label="$t('boardAlignmentWizard-Launch')"
                             :disabled="!hasAccSensor || accNeedsCalibration"
                             size="xs"
@@ -2383,6 +2383,9 @@ const loadConfig = async () => {
         await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
         await MSP.promise(MSPCodes.MSP_ACC_TRIM);
         await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
+        // initModel() reads FC.MIXER_CONFIG.mixer; load it here (nothing else on this tab does),
+        // else mixer stays 0 and the loader fetches a non-existent `undefined.gltf`.
+        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
         if (isApi146.value) {
             await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);

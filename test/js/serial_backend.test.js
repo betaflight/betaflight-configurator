@@ -849,3 +849,50 @@ describe("shouldConcludeRebootDialog", () => {
         });
     });
 });
+
+describe("serial_backend MSP unresponsive-FC teardown", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        resetMocks();
+    });
+
+    it("registers MSP.onTimeout on connect and clears it on teardown", () => {
+        establishConnection();
+        expect(typeof MSP.onTimeout).toBe("function");
+
+        serialHandlers.disconnect({ detail: true }); // teardown -> resetConnection
+        expect(MSP.onTimeout).toBeNull();
+    });
+
+    it("drops the link and shows a dialog when a request exhausts its retries", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(true);
+        serial.disconnect.mockClear();
+        dialogStore.open.mockClear();
+
+        // Fire the hook MSP invokes after MAX_RETRIES with no response.
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        // Teardown initiated (finishClose -> serial.disconnect) without any MSP round-trip.
+        expect(serial.disconnect).toHaveBeenCalledTimes(1);
+
+        // The protocol "disconnect" event drives onClosed, which raises the notice only after
+        // the close settles (so it is not clobbered by onClosed's dialog dismissal).
+        serialHandlers.disconnect({ detail: true });
+        expect(dialogStore.open).toHaveBeenCalledWith(
+            "InformationDialog",
+            expect.objectContaining({ title: "connectionLostTitle", text: "connectionLostUnresponsive" }),
+            expect.anything(),
+        );
+    });
+
+    it("ignores the timeout hook when not connected", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(false);
+        serial.disconnect.mockClear();
+
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        expect(serial.disconnect).not.toHaveBeenCalled();
+    });
+});
