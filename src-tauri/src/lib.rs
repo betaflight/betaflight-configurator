@@ -8,6 +8,10 @@ pub fn run() {
     #[cfg(not(target_os = "ios"))]
     let builder = builder.plugin(tauri_plugin_serialplugin::init());
 
+    // Restore the last window size, position and maximized/fullscreen state on launch.
+    #[cfg(desktop)]
+    let builder = builder.plugin(tauri_plugin_window_state::Builder::default().build());
+
     builder
         .manage(tcp::TcpState::default())
         .invoke_handler(tauri::generate_handler![
