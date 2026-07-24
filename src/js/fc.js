@@ -594,6 +594,7 @@ const FC = {
             thrustLinearization: 0,
             tpaRate: 0,
             tpaBreakpoint: 0,
+            pidType: 0,
         };
         this.ADVANCED_TUNING_ACTIVE = { ...this.ADVANCED_TUNING };
 
@@ -1028,4 +1029,6 @@ const FC = {
     },
 };
 
-export default reactive(FC);
+const reactiveFC = reactive(FC);
+window.FC = reactiveFC;
+export default reactiveFC;
