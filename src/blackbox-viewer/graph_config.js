@@ -392,6 +392,19 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     max: 90,
                 },
             };
+        } else if (
+            fieldName.match(/^PSAS_pitch\[/) ||
+            fieldName.match(/^PSAS_roll\[/) ||
+            fieldName.match(/^PSAS_yaw\[/) ||
+            fieldName.match(/^psasSum\[/)
+        ) {
+            return {
+                power: 1,
+                MinMax: {
+                    min: -100,
+                    max: 100,
+                },
+            };
         } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
             const debugModeName = getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
             switch (debugModeName) {
@@ -1383,6 +1396,54 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                                 MinMax: {
                                     min: 0,
                                     max: 100,
+                                },
+                            };
+                        default:
+                            return getCurveForMinMaxFields(fieldName);
+                    }
+                case "PLANE_SAS":
+                    switch (fieldName) {
+                        case "debug[0]":
+                        case "debug[1]":
+                        case "debug[5]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -100,
+                                    max: 100,
+                                },
+                            };
+                        case "debug[2]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -2,
+                                    max: 2,
+                                },
+                            };
+                        case "debug[3]":
+                        case "debug[4]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -5,
+                                    max: 5,
+                                },
+                            };
+                        case "debug[6]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -1,
+                                    max: 1,
+                                },
+                            };
+                        case "debug[7]":
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: 0,
+                                    max: 1,
                                 },
                             };
                         default:

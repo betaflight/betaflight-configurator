@@ -2385,6 +2385,234 @@
     "pidTuningMiscSettings": {
         "message": "Miscellaneous Settings"
     },
+    "pidTuningSubTabPsas": {
+        "message": "Airplane SAS"
+    },
+    "psasMainSettings": {
+        "message": "Main settings"
+    },
+    "psasTuningMainGainsGroup": {
+        "message": "Control gains"
+    },
+    "psasTuningPilot": {
+        "message": "Pilot"
+    },
+    "psasTuningPilotHelp": {
+        "message": "Pilot control gain, servos % per full stick range"
+    },
+    "psasTuningDamping": {
+        "message": "Damping"
+    },
+    "psasTuningDampingHelp": {
+        "message": "Damping gain, servos % per 1 deg/sec rate, *0.001"
+    },
+    "psasTuningStability": {
+        "message": "Stability"
+    },
+    "psasTuningStabilityHelp": {
+        "message": "Stability gain, servos % per 1g accel, *0.1"
+    },
+    "psasTuningMainFiltersGroup": {
+        "message": "Control filters"
+    },
+    "psasTuningMainGyroFilters": {
+        "message": "Damping gyro HPF"
+    },
+    "psasTuningMainGyroFiltersHelp": {
+        "message": "Damping gyro high pass filter, Hz *0.01"
+    },
+    "psasTuningMainAccelFilters": {
+        "message": "Stability accel LPF"
+    },
+    "psasTuningMainAccelFiltersHelp": {
+        "message": "Stability accel low pass filter, Hz *0.1"
+    },
+    "psasAccelZControllerSettings": {
+        "message": "Accel Z controller"
+    },
+    "psasTuningAccelZControllerGroup": {
+        "message": "Controller"
+    },
+    "psasTuningAccelZControllerI": {
+        "message": "I"
+    },
+    "psasTuningAccelZControllerIHelp": {
+        "message": "I, Servos (% / s) velocity per 1g accel error. Set this value to enable G load controller!"
+    },
+    "psasTuningAccelZControllerP": {
+        "message": "P"
+    },
+    "psasTuningAccelZControllerPHelp": {
+        "message": "P, Servos % per 1g accel error, *0.1"
+    },
+    "psasTuningAccelZLimitGroup": {
+        "message": "G load limit"
+    },
+    "psasTuningAccelZLimitMax": {
+        "message": "G load Max"
+    },
+    "psasTuningAccelZLimitMaxHelp": {
+        "message": "Maximum G load magnitude, *0.1"
+    },
+    "psasTuningAccelZLimitMin": {
+        "message": "G load Min"
+    },
+    "psasTuningAccelZLimitMinHelp": {
+        "message": "Minimum G load magnitude, *0.1 (represents negative G)"
+    },
+    "psasTuningAccelZServosGroup": {
+        "message": "Servos"
+    },
+    "psasTuningAccelZServoTime": {
+        "message": "Servos time"
+    },
+    "psasTuningAccelZServoTimeHelp": {
+        "message": "Time of full range servos movement, ms"
+    },
+    "psasAoALimiterSettings": {
+        "message": "AoA limiter"
+    },
+    "psasTuningAoAEstimationGroup": {
+        "message": "Lift coef. estimation"
+    },
+    "psasTuningAoAWingLoading": {
+        "message": "Wing loading"
+    },
+    "psasTuningAoAWingLoadingHelp": {
+        "message": "Wing loading, g/dm^2 *0.1. Set this value to enable lift coef. estimation!"
+    },
+    "psasTuningAoAAirDensity": {
+        "message": "Air density"
+    },
+    "psasTuningAoAAirDensityHelp": {
+        "message": "Air density, g/m^3"
+    },
+    "psasTuningAoALiftCoefLPF": {
+        "message": "Lift coef. LPF frequency"
+    },
+    "psasTuningAoALiftCoefLPFHelp": {
+        "message": "Lift coef. LPF frequency, Hz *0.1"
+    },
+    "psasTuningAoALimiterGroup": {
+        "message": "Limiter settings"
+    },
+    "psasTuningAoAControllerI": {
+        "message": "Limiter I gain"
+    },
+    "psasTuningAoAControllerIHelp": {
+        "message": "Limiter I gain, Servos (% / s) velocity per 0.1 lift coef error. Set this value to enable limiter!"
+    },
+    "psasTuningAoALimitLiftCoef": {
+        "message": "Limit lift coef."
+    },
+    "psasTuningAoALimitLiftCoefHelp": {
+        "message": "Limit lift force coefficient, *0.1"
+    },
+    "psasTuningAoAForecast": {
+        "message": "Forecast time"
+    },
+    "psasTuningAoAForecastHelp": {
+        "message": "Lift force coefficient forecast time, sec *0.01"
+    },
+    "psasTuningAoATauReturn": {
+        "message": "Tau return"
+    },
+    "psasTuningAoATauReturnHelp": {
+        "message": "Return time to decay limiter I, sec *0.1"
+    },
+    "psasCrossLinkSettings": {
+        "message": "Aileron to Rudder Interconnection"
+    },
+    "psasTuningCrossLinkGain": {
+        "message": "ARI gain"
+    },
+    "psasTuningCrossLinkGainHelp": {
+        "message": "Aileron to rudder interconnection gain, % rudders per % ailerons, *0.1"
+    },
+    "psasTuningCrossLinkLiftCoefStart": {
+        "message": "Lift coef. start"
+    },
+    "psasTuningCrossLinkLiftCoefStartHelp": {
+        "message": "Lift coef. to start ARI, *0.1"
+    },
+    "psasTuningCrossLinkLiftCoefStop": {
+        "message": "Lift coef. stop"
+    },
+    "psasTuningCrossLinkLiftCoefStopHelp": {
+        "message": "Lift coef. to fix ARI gain, *0.1"
+    },
+    "psasSpeedCurvesSettings": {
+        "message": "Control gains speed curves settings"
+    },
+    "psasSpeedCurvesEnableGroup": {
+        "message": "Speed curves enable"
+    },
+    "psasSpeedCurvesEnableMain": {
+        "message": "Damping+Stability"
+    },
+    "psasSpeedCurvesEnableStick": {
+        "message": "Pilot"
+    },
+    "psasSpeedCurvesParametersGroup": {
+        "message": "Speed curves parameters"
+    },
+    "psasSpeedCurvesReferenceSpeed": {
+        "message": "Reference speed"
+    },
+    "psasSpeedCurvesReferenceSpeedHelp": {
+        "message": "Reference speed, m/s - the curves have 1.0 value in this point"
+    },
+    "psasSpeedCurvesMainPower": {
+        "message": "The curves power"
+    },
+    "psasSpeedCurvesMainPowerHelp": {
+        "message": "The hyperbolic curves power, *0.1"
+    },
+    "psasSpeedCurvesRollPilotPower": {
+        "message": "The roll pilot curves power"
+    },
+    "psasSpeedCurvesRollPilotPowerHelp": {
+        "message": "The roll pilot gain hyperbolic curves power, *0.1"
+    },
+    "psasSpeedCurvesMainCurveMin": {
+        "message": "The main curves min value"
+    },
+    "psasSpeedCurvesMainCurveMinHelp": {
+        "message": "The main (damping, stability) hyperbolic curves min value limit, *0.01"
+    },
+    "psasSpeedCurvesMainCurveMax": {
+        "message": "The main curves max value"
+    },
+    "psasSpeedCurvesMainCurveMaxHelp": {
+        "message": "The main (damping, stability) hyperbolic curves max value limit, *0.01"
+    },
+    "psasSpeedCurvesPilotCurveMin": {
+        "message": "The pilot curves min value"
+    },
+    "psasSpeedCurvesPilotCurveMinHelp": {
+        "message": "The pilot hyperbolic curves min value limit, *0.01"
+    },
+    "psasSpeedCurvesPilotCurveMax": {
+        "message": "The pilot curves max value"
+    },
+    "psasSpeedCurvesPilotCurveMaxHelp": {
+        "message": "The pilot hyperbolic curves max value limit, *0.01"
+    },
+    "psasSpeedCurvesSource": {
+        "message": "Speed curves source"
+    },
+    "psasSpeedCurvesSourceHelp": {
+        "message": "Speed curves source"
+    },
+    "psasSpeedCurvesSourceTpaEstimation": {
+        "message": "TPA Estimation"
+    },
+    "psasSpeedCurvesSourceGps": {
+        "message": "GPS"
+    },
+    "psasSpeedCurvesChartDetails": {
+        "message": "Speed curves chart"
+    },
     "receiverRcSmoothing": {
         "message": "RC Smoothing"
     },
@@ -8917,6 +9145,13 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "osdPsasAoALimiter": {
+        "message": "PSAS AoA limiter",
+        "description": "PSAS angle of attack limiter state"
+    },
+    "osdDescPsasAoALimiter": {
+        "message": "PSAS angle of attack limiter state"
     },
     "tabUserProfile": {
         "message": "User Profile"

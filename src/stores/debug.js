@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 import { useFlightControllerStore } from "./fc";
 import semver from "semver";
-import { API_VERSION_1_47 } from "../js/data_storage";
+import { API_VERSION_1_47, API_VERSION_1_48 } from "../js/data_storage";
 import { addArrayElement, addArrayElementAfter } from "../js/utils/array";
 import { getDebugModes, getDebugFieldNames } from "../js/utils/debugModes";
 
@@ -41,6 +41,10 @@ export const useDebugStore = defineStore("debug", () => {
         if (semver.gte(apiVersion, API_VERSION_1_47)) {
             addArrayElementAfter(result, "Gyro", "Attitude");
             addArrayElement(result, "Servo");
+        }
+
+        if (semver.gte(apiVersion, API_VERSION_1_48)) {
+            addArrayElement(result, "PSAS");
         }
 
         return result;
