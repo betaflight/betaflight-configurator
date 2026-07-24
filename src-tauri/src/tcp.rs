@@ -48,31 +48,48 @@ pub async fn tcp_connect(
     // The blocking connect itself moves to a dedicated thread (`spawn_blocking`) so it can't
     // stall an async runtime worker either. Without both this and `async fn` above, a bad
     // manual IP froze the whole window for as long as the OS took to give up.
-    let stream = tauri::async_runtime::spawn_blocking(move || -> Result<TcpStream, String> {
+    let connected = tauri::async_runtime::spawn_blocking(move || -> Result<TcpStream, String> {
         let addrs = (ip.as_str(), port).to_socket_addrs().map_err(|e| e.to_string())?;
         let deadline = Instant::now() + CONNECT_TIMEOUT;
+        // Stays at this default only if `addrs` was empty (resolved to zero addresses);
+        // the deadline can't already be exhausted at the first iteration since it was
+        // just set above, so every other exit path overwrites it with a real error.
         let mut last_err = "could not resolve address".to_string();
-        let mut tried = false;
 
         for addr in addrs {
             let remaining = deadline.saturating_duration_since(Instant::now());
             if remaining.is_zero() {
                 break;
             }
-            tried = true;
             match TcpStream::connect_timeout(&addr, remaining) {
                 Ok(stream) => return Ok(stream),
                 Err(e) => last_err = e.to_string(),
             }
         }
 
-        if !tried {
-            last_err = "connection attempt timed out".to_string();
-        }
         Err(last_err)
     })
     .await
-    .map_err(|e| e.to_string())??;
+    .map_err(|e| e.to_string())?;
+
+    let stream = match connected {
+        Ok(stream) => stream,
+        Err(e) => {
+            // We bumped the epoch above, so if a connection was already installed, its
+            // reader thread has already exited on the epoch mismatch even though this
+            // failed attempt never replaced it. Restart a reader for it — but only if
+            // nothing else raced ahead of us (a newer connect/disconnect) in the meantime,
+            // since that case is already handled correctly on its own.
+            let guard = state.stream.lock().unwrap();
+            if epoch.load(Ordering::SeqCst) == my_epoch
+                && let Some(old) = guard.as_ref()
+                && let Ok(reader) = old.try_clone()
+            {
+                spawn_reader(app, epoch.clone(), my_epoch, reader);
+            }
+            return Err(e);
+        }
+    };
 
     // Disable Nagle to keep MSP round-trips snappy, matching the bridge.
     let _ = stream.set_nodelay(true);
@@ -94,8 +111,15 @@ pub async fn tcp_connect(
         }
     }
 
+    spawn_reader(app, epoch, my_epoch, reader);
+
+    Ok(())
+}
+
+/// Forwards bytes from `reader` to the frontend until the peer hangs up, the socket errors,
+/// or `epoch` no longer matches `my_epoch` (a later reconnect or disconnect superseded it).
+fn spawn_reader(app: AppHandle, epoch: Arc<AtomicU64>, my_epoch: u64, mut reader: TcpStream) {
     thread::spawn(move || {
-        let mut reader = reader;
         let mut buf = [0u8; 4096];
         loop {
             // A newer connect/disconnect superseded us — exit without emitting.
@@ -118,8 +142,6 @@ pub async fn tcp_connect(
             }
         }
     });
-
-    Ok(())
 }
 
 #[tauri::command]
