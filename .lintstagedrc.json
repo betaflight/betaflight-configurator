@@ -3,5 +3,6 @@
         "prettier --write --ignore-unknown",
         "eslint --fix --ext .js,.vue"
     ],
+    "**/*.ts": ["prettier --write --ignore-unknown"],
     "**/*.{less,css}": ["prettier --write --ignore-unknown"]
 }

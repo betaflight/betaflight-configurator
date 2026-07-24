@@ -28,7 +28,8 @@
     "tauri:ios:dev": "cross-env TAURI_DEV=1 tauri ios dev",
     "tauri:ios:build": "tauri ios build",
     "tauri:prebuild": "node scripts/sync-tauri-version.mjs && vite build",
-    "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
+    "format": "prettier --write {src,test}/**/*.{js,ts,vue,css,less}",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "storybook": "storybook dev -p 6006",
     "prepare": "husky"
   },
@@ -114,9 +115,11 @@
     "rollup": "^4.59.0",
     "run-script-os": "^1.1.6",
     "storybook": "^10.5.2",
+    "typescript": "^5.9.3",
     "vite": "^8.0.16",
     "vite-plugin-mkcert": "^1.17.9",
     "vite-plugin-static-copy": "^4.1.1",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.9",
+    "vue-tsc": "^3.3.8"
   }
 }
