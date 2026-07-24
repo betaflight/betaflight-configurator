@@ -53,7 +53,7 @@ function sliderFactorsFromTuningSliders(sliders = FC.TUNING_SLIDERS) {
     };
 }
 
-function calculateAxisPidValues(factors, axis) {
+export function calculateAxisPidValues(factors, axis) {
     const defaults = PID_DEFAULTS[axis];
     const dMaxDefault = D_MAX_DEFAULT[axis];
     const pitchDGain = axis === 1 ? factors.rollPitchRatio : 1;

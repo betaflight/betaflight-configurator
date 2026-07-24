@@ -10,6 +10,7 @@
 
 import { ComplexFFT } from "./fft.js";
 import { clamp } from "../utils/common.js";
+import { calculateAxisPidValues } from "@/js/simplifiedTuning";
 
 // ---------------------------------------------------------------------------
 // Windowing
@@ -174,16 +175,18 @@ function buildTransferFunction(spectra, sampleRate, segmentSize, numBins, numSeg
  *
  * @param {{ frequencies: Float64Array, magnitude: Float64Array, phase: Float64Array, coherence: Float64Array }} tf
  * @param {object} currentSliders - Current simplified tuning slider values as decimals (1.0 = 100)
+ * @param {number} axis - Axis index (0=roll, 1=pitch, 2=yaw) for per-axis PID number computation
  * @param {number} [targetBandwidthHz=45] - Desired -3dB bandwidth
  * @param {number} [targetPhaseMarginDeg=50] - Desired phase margin in degrees
- * @returns {{ proposed: object, analysis: object }}
+ * @returns {{ proposed: object, proposedNumbers: object, proposedDtermMultiplier: number, analysis: object }}
  */
-export function recommendGains(tf, currentSliders, targetBandwidthHz = 45, targetPhaseMarginDeg = 50) {
+export function recommendGains(tf, currentSliders, axis = 0, targetBandwidthHz = 45, targetPhaseMarginDeg = 50) {
     const metrics = extractMetrics(tf, targetBandwidthHz);
     const scales = computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg);
     const proposed = buildProposedSliders(currentSliders, scales);
+    const proposedNumbers = buildProposedNumbers(currentSliders, scales, axis);
     const analysis = { ...metrics, ...scales };
-    return { proposed, analysis };
+    return { proposed, proposedNumbers, proposedDtermMultiplier: proposed.slider_dterm_filter_multiplier, analysis };
 }
 
 function extractMetrics(tf, targetBandwidthHz) {
@@ -414,6 +417,21 @@ function buildProposedSliders(currentSliders, scales) {
             clamp((cur.dtermFilterMultiplier ?? 1) * filterScale * 100, 25, 250),
         ),
     };
+}
+
+function buildProposedNumbers(currentSliders, scales, axis) {
+    const cur = currentSliders;
+    const factors = {
+        masterMultiplier: cur.masterMultiplier ?? 1,
+        piGain: (cur.piGain ?? 1) * scales.piScale,
+        iGain: (cur.iGain ?? 1) * scales.iScale,
+        dGain: (cur.dGain ?? 1) * scales.dScale,
+        feedforwardGain: (cur.feedforwardGain ?? 1) * scales.ffScale,
+        dMaxGain: cur.dMaxGain ?? 1,
+        rollPitchRatio: axis === 1 ? (cur.rollPitchRatio ?? 1) : 1,
+        pitchPIGain: axis === 1 ? (cur.pitchPIGain ?? 1) : 1,
+    };
+    return calculateAxisPidValues(factors, axis);
 }
 
 // ---------------------------------------------------------------------------

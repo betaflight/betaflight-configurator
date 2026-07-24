@@ -2,7 +2,6 @@
     <UiBox :title="$t('autotuneGainTitle')">
         <div v-if="visibleAxisList.length" class="overflow-x-auto mb-3">
             <table class="autotune-table w-full">
-                <!-- Axis group headers -->
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -20,13 +19,14 @@
                 </thead>
                 <tbody>
                     <template v-for="(row, index) in tableRows" :key="row.key">
-                        <!-- Empty-row gap before each new section (except the first) -->
                         <tr v-if="row.sectionTitleKey && index > 0">
                             <td :colspan="2 + visibleAxisList.length" class="!h-3 !p-0 !border-none"></td>
                         </tr>
                         <tr v-if="row.columnHeaders" class="column-header-row">
                             <th scope="col"></th>
-                            <th scope="col">{{ $t("autotuneCurrent") }}</th>
+                            <th scope="col">
+                                {{ row.currentHeader === "" ? "" : row.currentHeader || $t("autotuneCurrent") }}
+                            </th>
                             <th v-for="axis in visibleAxisList" :key="axis.key" scope="col">
                                 {{ $t("autotuneProposed") }}
                             </th>
@@ -58,23 +58,24 @@
             </table>
         </div>
 
-        <!-- Axis selector + Apply Button -->
+        <!-- Profile selector + Apply Button -->
         <div class="flex flex-wrap items-center gap-4">
-            <label v-if="visibleAxisList.length > 1" class="flex items-center gap-2 text-sm">
-                <span class="text-dimmed">{{ $t("autotuneApplyFromAxis") }}</span>
+            <label class="flex items-center gap-2 text-sm">
+                <span class="text-dimmed">{{ $t("autotuneApplyToProfile") }}</span>
                 <select
-                    v-model="selectedAxisKey"
+                    v-model="selectedProfile"
+                    :disabled="!isConnected || store.profileOperationInFlight"
                     class="bg-transparent border border-[var(--surface-300)] rounded px-2 py-1"
                 >
-                    <option v-for="axis in visibleAxisList" :key="axis.key" :value="axis.key">
-                        {{ $t(axis.labelKey) }}
-                    </option>
+                    <option value="logged">{{ $t("autotuneLoggedPids") }}</option>
+                    <option v-for="p in profileOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
                 </select>
             </label>
-            <UButton @click="onApply" size="sm" :disabled="!isConnected || !selectedAxisKey || applying">
+            <UButton @click="onApply" size="sm" :disabled="!canApply">
                 {{ $t("autotuneApplyGains") }}
             </UButton>
             <span v-if="!isConnected" class="text-sm text-dimmed" v-html="$t('autotuneConnectRequired')"></span>
+            <span v-else-if="isLogged" class="text-sm text-dimmed">{{ $t("autotuneSelectProfileToApply") }}</span>
             <span v-if="applied" class="text-sm text-green-500 font-bold" v-html="$t('autotuneApplied')"></span>
             <span v-if="applyError" class="text-sm text-red-500 font-bold">{{ applyError }}</span>
         </div>
@@ -91,14 +92,37 @@ import UiBox from "../../elements/UiBox.vue";
 
 const store = useAutotuneStore();
 const connectionStore = useConnectionStore();
-const { applyGains } = useAutotune();
+const { applyGains, getProfileOptions, loadComparisonProfile } = useAutotune();
+
+// This component is destroyed and recreated on every tab switch (no <KeepAlive>), while
+// store.profileCache outlives that as app-level state. The FC.CONFIG.profile watcher in
+// the store only catches profile *switches* made elsewhere (e.g. PID Tuning tab), not
+// edits saved to the profile that stayed active the whole time — the common case. Clear
+// the cache on every fresh mount so returning to this tab always re-fetches.
+store.clearProfileCache();
 
 const applied = ref(false);
 const applying = ref(false);
 const applyError = ref("");
-const selectedAxisKey = ref(null);
+const comparisonData = ref(null);
 
 const isConnected = computed(() => connectionStore.connectionValid);
+const isLogged = computed(() => store.comparisonProfile === "logged");
+const canApply = computed(
+    () =>
+        isConnected.value &&
+        !isLogged.value &&
+        !applying.value &&
+        !store.profileOperationInFlight &&
+        store.analysisResult != null,
+);
+
+const selectedProfile = computed({
+    get: () => store.comparisonProfile,
+    set: (value) => store.setComparisonProfile(value),
+});
+
+const profileOptions = computed(() => (isConnected.value ? getProfileOptions() : []));
 
 const AXIS_DEFS = [
     { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },
@@ -106,10 +130,12 @@ const AXIS_DEFS = [
     { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7", pidKey: "yawPID" },
 ];
 
-const PID_ROWS = [
-    { key: "P", index: 0, label: "P" },
-    { key: "I", index: 1, label: "I" },
-    { key: "D", index: 2, label: "D" },
+const PID_NUMBER_ROWS = [
+    { key: "P", label: "P", get: (nums) => nums?.P },
+    { key: "I", label: "I", get: (nums) => nums?.I },
+    { key: "D", label: "D", get: (nums) => nums?.D },
+    { key: "F", label: "F", get: (nums) => nums?.F },
+    { key: "dMax", label: "D-max", get: (nums) => nums?.dMax },
 ];
 
 const ANALYSIS_FIELDS = [
@@ -123,23 +149,6 @@ const ANALYSIS_FIELDS = [
     { key: "coherencePct", labelKey: "autotuneCoherence", format: formatPct },
 ];
 
-const SLIDER_FIELDS = [
-    {
-        key: "slider_master_multiplier",
-        configKey: "simplified_master_multiplier",
-        labelKey: "autotuneSliderMasterMultiplier",
-    },
-    { key: "slider_pi_gain", configKey: "simplified_pi_gain", labelKey: "autotuneSliderPIGain" },
-    { key: "slider_i_gain", configKey: "simplified_i_gain", labelKey: "autotuneSliderIGain" },
-    { key: "slider_d_gain", configKey: "simplified_d_gain", labelKey: "autotuneSliderDGain" },
-    { key: "slider_feedforward_gain", configKey: "simplified_feedforward_gain", labelKey: "autotuneSliderFeedforward" },
-    {
-        key: "slider_dterm_filter_multiplier",
-        configKey: "simplified_dterm_filter_multiplier",
-        labelKey: "autotuneSliderDTermFilter",
-    },
-];
-
 const visibleAxisList = computed(() => {
     const axes = store.analysisResult?.axes;
     if (!axes) {
@@ -148,44 +157,61 @@ const visibleAxisList = computed(() => {
     return AXIS_DEFS.filter((a) => axes[a.key] && store.visibleAxes[a.key]);
 });
 
-// Reset the "applied" indicator and select a default axis each time a new
-// analysis result is loaded.
 watch(
-    () => store.analysisResult,
-    (result) => {
-        applied.value = false;
-        applyError.value = "";
-        if (!result) {
-            selectedAxisKey.value = null;
+    () => [store.comparisonProfile, store.analysisResult, connectionStore.connectionValid],
+    async () => {
+        if (!store.analysisResult) {
+            comparisonData.value = null;
             return;
         }
-        const first = visibleAxisList.value[0];
-        selectedAxisKey.value = first ? first.key : null;
+        if (!isConnected.value && store.comparisonProfile !== "logged") {
+            store.setComparisonProfile("logged");
+            return;
+        }
+        try {
+            comparisonData.value = await loadComparisonProfile(store.comparisonProfile);
+        } catch (err) {
+            console.error("Failed to load comparison profile:", err);
+            comparisonData.value = null;
+        }
     },
     { immediate: true },
 );
 
-// If the currently selected axis gets hidden (or disappears), fall back to the
-// first still-visible axis so Apply Gains never targets a hidden axis.
-watch(visibleAxisList, (list) => {
-    if (!list.some((a) => a.key === selectedAxisKey.value)) {
-        selectedAxisKey.value = list[0]?.key ?? null;
-    }
-});
-
-// Reset the apply status when the user switches axis so the previous
-// success/error indicator can't be misread as applying to the new axis.
-watch(selectedAxisKey, () => {
+watch(selectedProfile, () => {
     applied.value = false;
     applyError.value = "";
 });
 
-function buildCurrentPidRow(row, sc, isFirst) {
+function getCurrentPidValue(profileData, axis, row) {
+    if (!profileData) {
+        return null;
+    }
+    if (row.key === "F") {
+        const key = FEEDFORWARD_KEY(axis);
+        return profileData.advanced?.[key] ?? null;
+    }
+    if (row.key === "dMax") {
+        const key = DMAX_KEY(axis);
+        return profileData.advanced?.[key] ?? null;
+    }
+    return profileData.pids?.[axis]?.[row.key] ?? null;
+}
+
+function FEEDFORWARD_KEY(axis) {
+    return ["feedforwardRoll", "feedforwardPitch", "feedforwardYaw"][axis];
+}
+
+function DMAX_KEY(axis) {
+    return ["dMaxRoll", "dMaxPitch", "dMaxYaw"][axis];
+}
+
+function buildCurrentPidRow(row, profileData, isFirst) {
     const perAxis = {};
     for (const a of visibleAxisList.value) {
-        const pid = sc[a.pidKey];
-        if (pid) {
-            perAxis[a.key] = { value: pid[row.index], changePct: null };
+        const value = getCurrentPidValue(profileData, AXIS_DEFS.indexOf(a), row);
+        if (value != null) {
+            perAxis[a.key] = { value, changePct: null };
         }
     }
     return {
@@ -214,37 +240,86 @@ function buildAnalysisRow(field, axes, isFirst) {
     };
 }
 
-function buildSliderRow(field, axes, sc, isFirst) {
-    const current = sc[field.configKey] ?? 100;
+function buildProposedPidRow(row, axes, profileData, isFirst) {
     const perAxis = {};
     for (const a of visibleAxisList.value) {
-        const proposed = axes[a.key]?.gains?.proposed?.[field.key];
+        const nums = axes[a.key]?.gains?.proposedNumbers;
+        const proposed = nums ? row.get(nums) : null;
         if (proposed != null) {
-            const changePct = current === 0 ? 0 : ((proposed - current) / current) * 100;
+            const current = getCurrentPidValue(profileData, AXIS_DEFS.indexOf(a), row);
+            const changePct = current != null && current !== 0 ? ((proposed - current) / current) * 100 : null;
             perAxis[a.key] = { value: proposed, changePct };
         }
     }
     return {
-        key: `slider-${field.key}`,
-        labelKey: field.labelKey,
-        current,
+        key: `proposed-pid-${row.key}`,
+        label: row.label,
+        current: "",
+        currentHeader: "",
         axes: perAxis,
-        sectionTitleKey: isFirst ? "autotuneSectionProposedSliders" : null,
+        sectionTitleKey: isFirst ? "autotuneSectionProposedPids" : null,
         columnHeaders: isFirst,
     };
 }
 
-const tableRows = computed(() => {
-    const axes = store.analysisResult?.axes;
-    const sc = store.analysisResult?.sysConfig;
-    if (!axes || !sc) {
-        return [];
+function buildDtermRows(axes, profileData) {
+    const currentMultiplier = profileData?.dtermFilterMultiplier ?? 100;
+
+    const perAxisProposed = {};
+    for (const a of visibleAxisList.value) {
+        const proposed = axes[a.key]?.gains?.proposedDtermMultiplier;
+        if (proposed != null) {
+            const changePct = currentMultiplier === 0 ? 0 : ((proposed - currentMultiplier) / currentMultiplier) * 100;
+            perAxisProposed[a.key] = { value: proposed, changePct };
+        }
+    }
+
+    const globalProposed = Object.values(axes)
+        .map((a) => a.gains.proposedDtermMultiplier)
+        .filter((v) => v != null);
+    const globalFloor = globalProposed.length > 0 ? Math.min(...globalProposed) : null;
+
+    const floorPerAxis = {};
+    for (const a of visibleAxisList.value) {
+        if (globalFloor != null) {
+            const changePct =
+                currentMultiplier === 0 ? 0 : ((globalFloor - currentMultiplier) / currentMultiplier) * 100;
+            floorPerAxis[a.key] = { value: globalFloor, changePct };
+        }
     }
 
     return [
-        ...PID_ROWS.map((r, i) => buildCurrentPidRow(r, sc, i === 0)),
+        {
+            key: "dterm-proposed-per-axis",
+            labelKey: "autotuneDtermPerAxis",
+            current: currentMultiplier,
+            axes: perAxisProposed,
+            sectionTitleKey: "autotuneSectionDtermFilter",
+            columnHeaders: true,
+        },
+        {
+            key: "dterm-applied-floor",
+            labelKey: "autotuneDtermAppliedFloor",
+            current: currentMultiplier,
+            axes: floorPerAxis,
+            sectionTitleKey: null,
+        },
+    ];
+}
+
+const tableRows = computed(() => {
+    const axes = store.analysisResult?.axes;
+    if (!axes) {
+        return [];
+    }
+
+    const profileData = comparisonData.value;
+
+    return [
+        ...PID_NUMBER_ROWS.map((r, i) => buildCurrentPidRow(r, profileData, i === 0)),
         ...ANALYSIS_FIELDS.map((f, i) => buildAnalysisRow(f, axes, i === 0)),
-        ...SLIDER_FIELDS.map((f, i) => buildSliderRow(f, axes, sc, i === 0)),
+        ...PID_NUMBER_ROWS.map((r, i) => buildProposedPidRow(r, axes, profileData, i === 0)),
+        ...buildDtermRows(axes, profileData),
     ];
 });
 
@@ -286,11 +361,7 @@ function formatChangePct(v) {
 }
 
 async function onApply() {
-    if (!isConnected.value || !selectedAxisKey.value) {
-        return;
-    }
-    const proposed = store.analysisResult?.axes?.[selectedAxisKey.value]?.gains?.proposed;
-    if (!proposed) {
+    if (!canApply.value) {
         return;
     }
 
@@ -298,7 +369,7 @@ async function onApply() {
     applied.value = false;
     applying.value = true;
     try {
-        await applyGains(proposed);
+        await applyGains(store.comparisonProfile, store.analysisResult);
         applied.value = true;
     } catch (err) {
         applyError.value = `${i18n.getMessage("autotuneApplyFailed")}: ${err?.message || err}`;
