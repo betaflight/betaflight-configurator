@@ -539,6 +539,7 @@ import { i18n } from "@/js/localization";
 import { clamp } from "@/js/utils/common";
 
 import { FONT, SYM } from "@/js/utils/osdFont";
+import { getVisibleAlarmEntries } from "./osd/osd_alarms";
 import { OSD_CONSTANTS } from "./osd/osd_constants";
 import { positionConfigs, getPresetGridCells } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
@@ -548,7 +549,7 @@ import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
 import semver from "semver";
-import { API_VERSION_1_45 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_48 } from "@/js/data_storage";
 
 const osdStore = useOsdStore();
 const fcStore = useFlightControllerStore();
@@ -610,12 +611,14 @@ const isDraggingGrid = ref(false);
 const effectiveShowRulers = computed(() => showRulers.value);
 
 // Convert alarms object to array for template iteration
+const hideCapacityAlarm = computed(
+    () =>
+        fcStore.config?.apiVersion &&
+        semver.gte(fcStore.config.apiVersion, API_VERSION_1_48) &&
+        (fcStore.config.numberOfBatteryProfiles || 0) > 0,
+);
 const alarmEntries = computed(() => {
-    const alarmsObj = osdStore.alarms;
-    if (!alarmsObj || typeof alarmsObj !== "object" || Array.isArray(alarmsObj)) {
-        return [];
-    }
-    return Object.entries(alarmsObj).map(([key, alarm]) => ({ key, alarm }));
+    return getVisibleAlarmEntries(osdStore.alarms, hideCapacityAlarm.value);
 });
 useOsdRuler(rulerCanvas, previewContainerOuter, effectiveShowRulers);
 
