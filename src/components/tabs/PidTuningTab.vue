@@ -144,6 +144,7 @@ import { useTranslation } from "i18next-vue";
 import { gui_log } from "@/js/gui_log";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { runTabLoad } from "@/composables/useTabLoad";
 
 const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
@@ -237,79 +238,84 @@ const hasChanges = computed(() => pidTuningStore.hasChanges);
 async function loadData() {
     isLoading.value = true;
     try {
-        if (!isMounted.value) {
-            return false;
-        }
+        return await runTabLoad(
+            async () => {
+                if (!isMounted.value) {
+                    return false;
+                }
 
-        // Load all PID tuning related MSP data
-        await MSP.promise(MSPCodes.MSP_PIDNAMES);
-        await MSP.promise(MSPCodes.MSP_PID);
-        await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
-        await MSP.promise(MSPCodes.MSP_RC_TUNING);
-        await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
-        await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-        await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+                // Load all PID tuning related MSP data
+                await MSP.promise(MSPCodes.MSP_PIDNAMES);
+                await MSP.promise(MSPCodes.MSP_PID);
+                await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
+                await MSP.promise(MSPCodes.MSP_RC_TUNING);
+                await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
+                await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
+                await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
 
-        // Profile names (API 1.45+)
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            await MSP.promise(
-                MSPCodes.MSP2_GET_TEXT,
-                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME),
-            );
-            await MSP.promise(
-                MSPCodes.MSP2_GET_TEXT,
-                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME),
-            );
-        }
+                // Profile names (API 1.45+)
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    await MSP.promise(
+                        MSPCodes.MSP2_GET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                    );
+                    await MSP.promise(
+                        MSPCodes.MSP2_GET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                    );
+                }
 
-        // Status EX (API 1.47+)
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            await MSP.promise(MSPCodes.MSP_STATUS_EX);
-        }
+                // Status EX (API 1.47+)
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    await MSP.promise(MSPCodes.MSP_STATUS_EX);
+                }
 
-        await MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
-        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+                await MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
+                await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+                await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
-        // Plane SAS
-        if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
-            await MSP.promise(MSPCodes.MSP_PSAS_CONFIG);
-        }
-        // Initialize profile names from FC.CONFIG
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            pidProfileName.value = FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] || "";
-            rateProfileName.value = FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] || "";
-        }
+                // Plane SAS
+                if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
+                    await MSP.promise(MSPCodes.MSP_PSAS_CONFIG);
+                }
 
-        if (!isMounted.value) {
-            return;
-        }
+                // Initialize profile names from FC.CONFIG
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    pidProfileName.value = FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] || "";
+                    rateProfileName.value = FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] || "";
+                }
 
-        // Initialize UI state
-        initializeUI();
+                if (!isMounted.value) {
+                    return;
+                }
 
-        // Validate slider positions against FC state (determines whether
-        // sliders are valid and should be enabled).  Must happen before
-        // snapshot so slider-validated values are captured as originals.
-        await validateTuningSliders();
+                // Initialize UI state
+                initializeUI();
 
-        // Force sub-tabs to sync their local slider refs from FC state
-        if (pidSubTab.value?.forceUpdateSliders) {
-            pidSubTab.value.forceUpdateSliders();
-        }
-        if (filterSubTab.value?.forceUpdateSliders) {
-            filterSubTab.value.forceUpdateSliders();
-        }
+                // Validate slider positions against FC state (determines whether
+                // sliders are valid and should be enabled).  Must happen before
+                // snapshot so slider-validated values are captured as originals.
+                await validateTuningSliders();
 
-        // Store original values for revert
-        storeOriginalValues();
+                // Force sub-tabs to sync their local slider refs from FC state
+                if (pidSubTab.value?.forceUpdateSliders) {
+                    pidSubTab.value.forceUpdateSliders();
+                }
+                if (filterSubTab.value?.forceUpdateSliders) {
+                    filterSubTab.value.forceUpdateSliders();
+                }
 
-        GUI.content_ready();
-        return true;
-    } catch (e) {
-        console.error("[PidTuning] Failed to load data:", e);
-        GUI.content_ready();
-        return false;
+                // Store original values for revert
+                storeOriginalValues();
+
+                GUI.content_ready();
+                return true;
+            },
+            (e) => {
+                console.error("[PidTuning] Failed to load data:", e);
+                GUI.content_ready();
+            },
+        );
     } finally {
         isLoading.value = false;
     }
@@ -509,7 +515,6 @@ function save() {
             if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
                 await MSP.promise(MSPCodes.MSP_SET_PSAS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_PSAS_CONFIG));
             }
-
 
             // Persist to EEPROM (no reboot)
             await saveToEeprom();
