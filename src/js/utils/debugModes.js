@@ -148,7 +148,7 @@ export function getDebugModes(apiVersion) {
         // it must occupy its index so AUTOPILOT_STOP decodes correctly.
         addArrayElement(result, "POSITION_NAV");
         addArrayElement(result, "AUTOPILOT_STOP");
-        addArrayElement(result, "PLANE_SAS");
+        addArrayElement(result, "PSAS");
     }
 
     return result;
@@ -1149,7 +1149,7 @@ export function getDebugFieldNames(apiVersion) {
             "debug[4]": "CPU Load at Sample",
         };
 
-        result.PLANE_SAS = {
+        result.PSAS = {
             "debug[all]": "Plane SAS",
             "debug[0]": "Pitch Sum",
             "debug[1]": "Pitch I",

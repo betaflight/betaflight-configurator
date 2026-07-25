@@ -1401,7 +1401,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
-                case "PLANE_SAS":
+                case "PSAS":
                     switch (fieldName) {
                         case "debug[0]":
                         case "debug[1]":

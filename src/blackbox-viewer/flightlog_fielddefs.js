@@ -421,7 +421,7 @@ export function adjustFieldDefsList(firmwareType, firmwareVersion) {
                 FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GPSRESCUE") + 1,
                 0,
                 "AUTOPILOT",
-                "PLANE_SAS",
+                "PSAS",
             );
         }
 
