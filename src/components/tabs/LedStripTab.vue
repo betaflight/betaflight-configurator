@@ -341,6 +341,7 @@ import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip } from "@/composables/useLedStrip";
 import { useSaving } from "@/composables/useSaving";
 import { useTransientLabel } from "@/composables/useTransientLabel";
+import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
 import GUI from "@/js/gui";
@@ -550,12 +551,16 @@ const specialColorButtons = computed(() => [
 // Lifecycle
 const onTabMounted = async () => {
     try {
-        await loadData();
-        initializeGrid();
-        loadConfigValues();
+        await runTabLoad(
+            async () => {
+                await loadData();
+                initializeGrid();
+                loadConfigValues();
+            },
+            (error) => console.error("Failed to load LED strip data:", error),
+        );
+    } finally {
         GUI.content_ready();
-    } catch (error) {
-        console.error("Failed to load LED strip data:", error);
     }
 };
 

@@ -316,6 +316,7 @@ import { MspCancelledError } from "../../js/msp/mspErrors";
 import { bit_check, bit_set } from "../../js/bit";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { runTabLoad } from "../../composables/useTabLoad";
 
 const BLOCK_SIZE = 4096;
 
@@ -935,44 +936,47 @@ export default defineComponent({
 
         async function loadData() {
             try {
-                await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-                await MSP.promise(MSPCodes.MSP_SDCARD_SUMMARY);
-                await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
-                await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-                await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+                await runTabLoad(
+                    async () => {
+                        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+                        await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
+                        await MSP.promise(MSPCodes.MSP_SDCARD_SUMMARY);
+                        await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
+                        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+                        await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
 
-                if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
-                    );
-                } else {
-                    await MSP.promise(MSPCodes.MSP_NAME);
-                }
+                        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                            await MSP.promise(
+                                MSPCodes.MSP2_GET_TEXT,
+                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                            );
+                        } else {
+                            await MSP.promise(MSPCodes.MSP_NAME);
+                        }
 
-                if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                    await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
-                }
+                        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                            await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
+                        }
 
-                // Populate UI state
-                blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
-                blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
-                debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
+                        // Populate UI state
+                        blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
+                        blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
+                        debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
-                // Initialize debug fields checkboxes
-                if (showDebugFields.value) {
-                    const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
-                    debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
-                        return !bit_check(disabledMask, index);
-                    });
-                }
+                        // Initialize debug fields checkboxes
+                        if (showDebugFields.value) {
+                            const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
+                            debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
+                                return !bit_check(disabledMask, index);
+                            });
+                        }
 
-                updateVirtualGyro();
-                onboardLoggingBaseline.value = serializeOnboardLoggingState();
-                updateHtml();
-            } catch (error) {
-                console.error("Failed to load onboard logging data", error);
+                        updateVirtualGyro();
+                        onboardLoggingBaseline.value = serializeOnboardLoggingState();
+                        updateHtml();
+                    },
+                    (error) => console.error("Failed to load onboard logging data", error),
+                );
             } finally {
                 GUI.content_ready();
             }

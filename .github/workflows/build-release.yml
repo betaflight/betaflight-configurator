@@ -130,6 +130,10 @@ jobs:
   modern_deploy_tag:
     name: Deploy Release Tag
     needs: [modern_build, prepare_environment]
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
     uses: ./.github/workflows/deploy_cloudflare.yml
     with:
       branch_name: ${{ github.event.release.tag_name }}
@@ -143,6 +147,10 @@ jobs:
     name: Deploy Latest to Production
     needs: [modern_build, check_latest]
     if: needs.check_latest.outputs.is_latest == 'true'
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
     uses: ./.github/workflows/deploy_cloudflare.yml
     with:
       branch_name: "release"
