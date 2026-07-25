@@ -204,10 +204,10 @@
                 <div class="flex flex-wrap items-end gap-3 pl-4">
                     <div class="flex flex-col gap-1">
                         <div class="flex items-center gap-1">
-                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesSource')"></span>
-                            <HelpIcon :text="$t('psasSpeedCurvesSourceHelp')" />
+                            <span class="text-xs text-dimmed" v-html="$t('psasSpeedCurvesMode')"></span>
+                            <HelpIcon :text="$t('psasSpeedCurvesModeHelp')" />
                         </div>
-                        <USelect v-model="psasSpeedCurvesSource" :items="psasSpeedCurvesSourceList" />
+                        <USelect v-model="psasSpeedCurvesMode" :items="psasSpeedCurvesModeList" />
                     </div>
                     <div class="flex flex-col gap-1">
                         <div class="flex items-center gap-1">
@@ -891,9 +891,10 @@ const psasSpeedCurvesPilotEnabled = computed({
     get: () => psasSpeedCurvesPilotPitchEnabled.value || psasSpeedCurvesPilotYawEnabled.value,
 });
 
-const psasSpeedCurvesSourceList = computed(() => [
-    { value: 0, label: t("psasSpeedCurvesSourceTpaEstimation") },
-    { value: 1, label: t("psasSpeedCurvesSourceGps") },
+const psasSpeedCurvesModeList = computed(() => [
+    { value: 0, label: t("psasSpeedCurvesModeTpa") },
+    { value: 1, label: t("psasSpeedCurvesModeAirspeed") },
+    { value: 2, label: t("psasSpeedCurvesModeGps") },
 ]);
 
 const psasSpeedCurvesVref = computed({
@@ -945,10 +946,10 @@ const psasSpeedCurvesPilotCurveMax = computed({
     },
 });
 
-const psasSpeedCurvesSource = computed({
-    get: () => FC.PSAS_CONFIG.speed_use_gps,
+const psasSpeedCurvesMode = computed({
+    get: () => FC.PSAS_CONFIG.speed_curve_mode,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_use_gps = val;
+        FC.PSAS_CONFIG.speed_curve_mode = val;
     },
 });
 

@@ -836,7 +836,7 @@ const FC = {
             speed_main_curve_max: 200,
             speed_stick_curve_min: 50,
             speed_stick_curve_max: 200,
-            speed_use_gps: 0,
+            speed_curve_mode: 0,
         };
     },
 

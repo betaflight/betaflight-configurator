@@ -2598,17 +2598,20 @@
     "psasSpeedCurvesPilotCurveMaxHelp": {
         "message": "The pilot hyperbolic curves max value limit, *0.01"
     },
-    "psasSpeedCurvesSource": {
-        "message": "Speed curves source"
+    "psasSpeedCurvesMode": {
+        "message": "Speed curves mode"
     },
-    "psasSpeedCurvesSourceHelp": {
-        "message": "Speed curves source"
+    "psasSpeedCurvesModeHelp": {
+        "message": "Speed curves mode"
     },
-    "psasSpeedCurvesSourceTpaEstimation": {
-        "message": "TPA Estimation"
+    "psasSpeedCurvesModeTpa": {
+        "message": "Use TPA curve (Acro mode)"
     },
-    "psasSpeedCurvesSourceGps": {
-        "message": "GPS"
+    "psasSpeedCurvesModeAirspeed": {
+        "message": "PSAS curve with airspeed estimate"
+    },
+    "psasSpeedCurvesModeGps": {
+        "message": "PSAS curve with GPS speed"
     },
     "psasSpeedCurvesChartDetails": {
         "message": "Speed curves chart"
