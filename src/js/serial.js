@@ -141,7 +141,15 @@ class Serial extends EventTarget {
         if (s.startsWith("bluetooth")) {
             return this._protocols.find((p) => p.name === "bluetooth")?.instance;
         }
-        return this._protocols.find((p) => p.name === "serial")?.instance;
+        const serialInstance = this._protocols.find((p) => p.name === "serial")?.instance;
+        // No native serial transport (iOS): a manual entry without a scheme can only be a TCP
+        // endpoint (e.g. an ELRS Wi-Fi module at 10.0.0.1), so route it to TCP rather than a
+        // serial slot that doesn't exist — otherwise the socket is never opened, the OS never
+        // prompts for Local Network access, and the open fails as "serial port".
+        if (!serialInstance && s) {
+            return this._protocols.find((p) => p.name === "tcp")?.instance;
+        }
+        return serialInstance;
     }
 
     /**

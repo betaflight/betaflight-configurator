@@ -650,6 +650,9 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Failed</span> to connect to the selected port. Check that the device is reachable and that the connection settings are correct, then try again."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "On iOS, allow <strong>Local Network</strong> access for Betaflight under Settings &rarr; Privacy &amp; Security &rarr; Local Network, then try again."
+    },
     "connectionLostTitle": {
         "message": "Connection lost"
     },
