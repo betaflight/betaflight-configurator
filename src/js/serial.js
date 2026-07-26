@@ -116,6 +116,7 @@ class Serial extends EventTarget {
     /**
      * Selects the appropriate protocol based on port path
      * @param {string|function|null} portPath - Port path or callback function for virtual mode
+     * @returns {EventTarget|undefined} The matching protocol instance, or undefined when none applies.
      */
     selectProtocol(portPath) {
         // Determine which protocol to use based on port path
@@ -142,11 +143,11 @@ class Serial extends EventTarget {
             return this._protocols.find((p) => p.name === "bluetooth")?.instance;
         }
         const serialInstance = this._protocols.find((p) => p.name === "serial")?.instance;
-        // No native serial transport (iOS): a manual entry without a scheme can only be a TCP
-        // endpoint (e.g. an ELRS Wi-Fi module at 10.0.0.1), so route it to TCP rather than a
-        // serial slot that doesn't exist — otherwise the socket is never opened, the OS never
-        // prompts for Local Network access, and the open fails as "serial port".
-        if (!serialInstance && s) {
+        // No native serial transport (iOS): a schemeless manual entry that looks like a network
+        // host (an IP, a dotted hostname, or host:port — e.g. an ELRS Wi-Fi module at 10.0.0.1)
+        // can only be a TCP endpoint, so route it to TCP rather than a serial slot that doesn't
+        // exist. A device path (/dev/tty*, COM3) still resolves to no protocol, as before.
+        if (!serialInstance && /^[a-z0-9.-]+(?::\d+)?$/i.test(s) && (s.includes(".") || s.includes(":"))) {
             return this._protocols.find((p) => p.name === "tcp")?.instance;
         }
         return serialInstance;

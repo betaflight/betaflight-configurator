@@ -44,6 +44,10 @@ class TauriTcp extends EventTarget {
     // Accept "tcp://host:port", "host:port" or a bare "host". The manual-entry box
     // (and ELRS users) routinely omit the scheme, and `new URL` rejects a schemeless
     // host, so prepend tcp:// before parsing. Defaults to the Betaflight bridge port.
+    /**
+     * @param {string} path - "tcp://host:port", "host:port" or a bare "host".
+     * @returns {{host: string, port: number}}
+     */
     _parseAddress(path) {
         const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(path) ? path : `tcp://${path}`;
         const url = new URL(withScheme);
