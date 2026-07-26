@@ -818,6 +818,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
@@ -2373,63 +2374,66 @@ function setupPeripherals() {
 // --- Load ---
 
 const loadConfig = async () => {
-    try {
-        if (!isMounted.value) {
-            return;
-        }
+    await runTabLoad(
+        async () => {
+            if (!isMounted.value) {
+                return;
+            }
 
-        await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
-        await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT);
-        await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
-        await MSP.promise(MSPCodes.MSP_ACC_TRIM);
-        await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
-        // initModel() reads FC.MIXER_CONFIG.mixer; load it here (nothing else on this tab does),
-        // else mixer stays 0 and the loader fetches a non-existent `undefined.gltf`.
-        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+            await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+            await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT);
+            await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
+            await MSP.promise(MSPCodes.MSP_ACC_TRIM);
+            await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
+            // initModel() reads FC.MIXER_CONFIG.mixer; load it here (nothing else on this tab does),
+            // else mixer stays 0 and the loader fetches a non-existent `undefined.gltf`.
+            await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
-        if (isApi146.value) {
-            await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
-        }
+            if (isApi146.value) {
+                await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
+            }
 
-        if (isApi147.value) {
-            await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR);
-        }
+            if (isApi147.value) {
+                await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR);
+            }
 
-        if (!isMounted.value) {
-            return;
-        }
+            if (!isMounted.value) {
+                return;
+            }
 
-        try {
-            sensorTypesData.value = await sensorTypes();
-        } catch (error) {
-            sensorTypesData.value = null;
-            console.warn("Failed to load sensor types", error);
-        }
+            try {
+                sensorTypesData.value = await sensorTypes();
+            } catch (error) {
+                sensorTypesData.value = null;
+                console.warn("Failed to load sensor types", error);
+            }
 
-        hydrateSensorConfig();
-        hydrateAlignment();
-        resolveSensorNames();
-        setupMagSection();
-        setupPeripherals();
+            hydrateSensorConfig();
+            hydrateAlignment();
+            resolveSensorNames();
+            setupMagSection();
+            setupPeripherals();
 
-        baseline.value = serializeState();
+            baseline.value = serializeState();
 
-        await nextTick();
+            await nextTick();
 
-        if (!isMounted.value) {
-            return;
-        }
+            if (!isMounted.value) {
+                return;
+            }
 
-        // Initialize 3D model, instruments, and start attitude polling
-        initModel();
-        initInstruments();
-        addInterval("sensors_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
+            // Initialize 3D model, instruments, and start attitude polling
+            initModel();
+            initInstruments();
+            addInterval("sensors_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
 
-        GUI.content_ready();
-    } catch (e) {
-        console.error("Failed to load sensor config", e);
-        GUI.content_ready();
-    }
+            GUI.content_ready();
+        },
+        (e) => {
+            console.error("Failed to load sensor config", e);
+            GUI.content_ready();
+        },
+    );
 };
 
 // --- Save ---
