@@ -18,10 +18,10 @@
                                 <dd class="roll">{{ state.attitude.roll }}</dd>
                             </dl>
                         </div>
-                        <div class="instruments-right">
-                            <span id="attitude"></span>
-                            <span id="heading"></span>
-                        </div>
+                    </div>
+                    <div class="instruments-right">
+                        <span id="attitude"></span>
+                        <span id="heading"></span>
                     </div>
                     <UButton
                         class="reset-zaxis"
@@ -838,6 +838,11 @@ function openBuildOptionsDialog() {
     @media all and (max-width: 575px) {
         .setup-info-grid {
             grid-template-columns: 1fr;
+        }
+        .instruments-right {
+            position: static;
+            justify-content: center;
+            padding: 0.5rem 0 0.75rem;
         }
     }
     .system_info {
