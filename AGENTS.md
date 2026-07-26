@@ -58,6 +58,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 | Tests for non-trivial behaviour (Vitest, `npm run test`) | 📐 | Coverage gate is a proxy; review call |
 | Tests must catch bugs, not confirm the fix. A suite co-authored with the change is confirmation-biased — it passes while the code is still broken. Verify by driving the real behaviour (hardware/e2e), and write bug-hunting tests independently/adversarially, ideally blind to the implementation. | 📐 | Review call; separate adversarial pass |
 | One concern per PR (one tab, one store, one TS file) | 📐 | PR template / reviewer call |
+| Comments state non-obvious why (rationale) or what (functionality) concisely — no restating what well-named code shows, no personality/filler, skip it if removing wouldn't confuse a future reader. Before finishing, re-check new comments against this row | 📐 | Review call |
 
 ## Phase plan
 - **Phase 0** — land cheap tooling: MSP-from-components ban, filename-case, Stylelint colors, pre-commit hooks for locales and generated paths.
