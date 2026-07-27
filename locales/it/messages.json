@@ -42,12 +42,12 @@
         "message": "Aggiorna la pagina per ricevere le ultime modifiche. Aggiornando ora ricaricherà la pagina e perderai le modifiche non salvate e si interromperà qualsiasi operazione in corso.<br><br>Vuoi aggiornare ora? Puoi ignorare questo messaggio e aggiornare la pagina manualmente più tardi.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
+    "pwaOnOfflineReadyTitle": {
         "message": "L'applicazione è pronta per essere utilizzata offline",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
-        "message": "Puoi installarlo come un'applicazione autonoma sul tuo dispositivo. Cerca l'opzione nella barra degli indirizzi del browser o nel menu.",
+    "pwaOnOfflineReadyText": {
+        "message": "Puoi installarlo come un'applicazione autonoma sul tuo dispositivo. Cerca l'opzione nella barra degli indirizzi o nel menu del browser.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
     "operationNotSupported": {
@@ -657,6 +657,12 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Fallita<\/span> la connessione alla porta selezionata. Controllare che il dispositivo sia raggiungibile e che le impostazioni di connessione siano corrette, quindi riprovare."
+    },
+    "connectionLostTitle": {
+        "message": "Connessione persa"
+    },
+    "connectionLostUnresponsive": {
+        "message": "Il controllore di volo <span class=\"message-negative\">non comunica<\/span> e la connessione è stata chiusa. Ricollegare la scheda e riprovare; se il problema persiste, riavviare il controllore di volo."
     },
     "serialPortClosedOk": {
         "message": "Porta seriale <span class=\"message-positive\">chiusa<\/span>"
@@ -1731,7 +1737,7 @@
         "message": "Rotazione arbitraria del controllore di volo, per consentire di montarlo di lato, sottosopra, ruotato ecc. Quando si utilizzano sensori esterni, usa l'allineamento del sensore (Gyro, Acc, Mag) per definire la posizione del sensore indipendentemente dall'orientamento del controllore di volo. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Auto-Rilevamento allineamento scheda..."
+        "message": "Auto-rilevamento allineamento scheda"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Wizard Allineamento Scheda"
