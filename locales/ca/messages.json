@@ -42,11 +42,11 @@
         "message": "Heu d'actualitzar la pàgina per obtenir els darrers canvis. En actualitzar-lo ara, es tornarà a carregar la pàgina i perdràs els canvis no desats i avortarà qualsevol operació en curs.<br><br>Vols actualitzar-la ara? També podeu ignorar aquest missatge i actualitzar la pàgina manualment més tard.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "L'aplicació està preparada per utilitzar-se fora de línia",
+    "pwaOnOfflineReadyTitle": {
+        "message": "L'aplicació està llesta per utilitzar-se fora de línia",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Podeu instal·lar-lo com a aplicació autònoma al vostre dispositiu si voleu. Cerqueu l'opció a la barra d'adreces o al menú del vostre navegador.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -673,6 +673,12 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">No s'ha pogut connectar<\/span> al port seleccionat. Comproveu que el dispositiu sigui accessible i que la configuració de connexió sigui correcta i, a continuació, torneu-ho a provar."
+    },
+    "connectionLostTitle": {
+        "message": "S'ha perdut la connexió"
+    },
+    "connectionLostUnresponsive": {
+        "message": "El controlador de vol <span class=\"message-negative\">ha deixat de respondre<\/span> i la connexió s'ha tancat. Torneu a connectar la placa i torneu-ho a intentar; si el problema persisteix, reinicieu el controlador de vol."
     },
     "serialPortClosedOk": {
         "message": "Port sèrie <span class=\"message-positive\">correctament<\/span> tancat"
@@ -1747,7 +1753,7 @@
         "message": "Rotació arbitrària de la placa en graus, per permetre muntar-la de costat \/ cap per avall \/ girada, etc. Quan utilitzeu sensors externs, utilitzeu les alineacions dels sensors (Giro, Acc, Mag) per definir la posició del sensor independent de l'orientació de la placa. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Detecció automàtica de l'alineació de la placa..."
+        "message": "Detecció automàtica de l'alineació de la placa"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Assistent d'alineació de la placa"
