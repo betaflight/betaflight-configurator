@@ -42,14 +42,6 @@
         "message": "您需要刷新页面才能获得最新的更改。现在刷新将重新加载页面，您将丢失所有未保存的更改，并将中止任何正在进行的操作。<br><br>您想立即刷新吗？您也可以忽略此消息并稍后手动刷新页面。",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "应用程序已准备好离线使用",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "您可以根据需要将其作为独立应用程序安装到设备上。在浏览器地址栏或菜单中能够找到该选项。",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "您的硬件不支持此操作。"
     },
@@ -1725,9 +1717,6 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "可输入任意旋转角度以允许用侧立、反转、偏转等方式安装飞控板。如果使用了外部传感器，使用「传感器朝向」（陀螺仪、加速度计、磁力计）来设定不同于飞控板朝向的传感器位置。 "
-    },
-    "boardAlignmentWizard-Launch": {
-        "message": "自动检测飞控方向……"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "飞控方向设置向导"

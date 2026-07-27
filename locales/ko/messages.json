@@ -42,14 +42,6 @@
         "message": "페이지를 새로 고쳐야 최신 변경 사항을 얻을 수 있습니다. 지금 새로 고침을 하면 페이지가 다시 로드되고 저장되지 않은 변경 사항이 손실되며 진행 중인 작업이 중단됩니다. <br><br>지금 새로 고침을 원하십니까? 이 메시지를 무시하고 나중에 수동으로 페이지를 새로 고칠 수도 있습니다.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "응용 프로그램을 오프라인에서 사용할 준비가 되었습니다",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "원하는 경우 장치에 독립 실행형 응용 프로그램으로 설치할 수 있습니다. 브라우저 주소 표시줄이나 메뉴에서 해당 옵션을 검색합니다.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "이 조작은 당신의 하드웨어에서 지원되지 않습니다."
     },
@@ -1733,9 +1725,6 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "임의의 각도로 보드를 회전시켜 옆으로\/뒤로\/회전하여 장착할 수 있습니다. 외부 센서를 실행할 때는 센서 정렬(자이로, Acc, Mag)을 사용하여 보드 방향과 무관하게 센서 위치를 정의합니다."
-    },
-    "boardAlignmentWizard-Launch": {
-        "message": "보드 정렬 자동 감지..."
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "보드 정렬 마법사"
