@@ -723,30 +723,6 @@ function resetConnection() {
     DeviceHandler.devicePickerDisabled = false;
 }
 
-// True when a manual target points at the local network (RFC1918 / IPv4 & IPv6 link-local /
-// .local) — the range an ELRS Wi-Fi module sits in, and the range iOS Local Network gates.
-/**
- * @param {string} target - a manual connection target (URL or bare host[:port]).
- * @returns {boolean} true when it resolves to a local-network address.
- */
-function isLocalNetworkAddress(target) {
-    try {
-        const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(target) ? target : `tcp://${target}`;
-        // Strips IPv6 brackets so fe80::/10 link-local hosts can be matched.
-        const host = new URL(withScheme).hostname.toLowerCase().replace(/^\[|\]$/g, "");
-        return (
-            host.startsWith("10.") ||
-            host.startsWith("192.168.") ||
-            /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
-            host.startsWith("169.254.") ||
-            /^fe[89ab][0-9a-f]:/.test(host) ||
-            host.endsWith(".local")
-        );
-    } catch {
-        return false;
-    }
-}
-
 function abortConnection(messageKey) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
@@ -775,7 +751,7 @@ function abortConnection(messageKey) {
     // iOS gates connections to local-network addresses (where an ELRS module lives) behind a
     // per-app Local Network permission; when it is denied the socket fails immediately with no
     // route to host and no prompt. Point the user at the setting, since that is the usual cause.
-    if (!messageKey && isManualTarget && isTauriIOS() && isLocalNetworkAddress(connectingTo)) {
+    if (!messageKey && isManualTarget && isTauriIOS() && serial.isLocalNetworkAddress(connectingTo)) {
         message += ` ${i18n.getMessage("connectionFailedLocalNetworkIOS")}`;
     }
 

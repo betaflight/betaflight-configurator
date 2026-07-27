@@ -154,6 +154,30 @@ class Serial extends EventTarget {
     }
 
     /**
+     * Classifies a manual target as a local-network address (RFC1918 / IPv4 & IPv6 link-local /
+     * .local) — the range an ELRS Wi-Fi module sits in, and the range iOS Local Network gates.
+     * @param {string} target - a manual connection target (URL or bare host[:port]).
+     * @returns {boolean} true when it resolves to a local-network address.
+     */
+    isLocalNetworkAddress(target) {
+        try {
+            const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(target) ? target : `tcp://${target}`;
+            // Strips IPv6 brackets so fe80::/10 link-local hosts can be matched.
+            const host = new URL(withScheme).hostname.toLowerCase().replace(/^\[|\]$/g, "");
+            return (
+                host.startsWith("10.") ||
+                host.startsWith("192.168.") ||
+                /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+                host.startsWith("169.254.") ||
+                /^fe[89ab][0-9a-f]:/.test(host) ||
+                host.endsWith(".local")
+            );
+        } catch {
+            return false;
+        }
+    }
+
+    /**
      * Connect to the specified port with options
      * @param {string|function} path - Port path or callback for virtual mode
      * @param {object} options - Connection options (baudRate, etc.)
