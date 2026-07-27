@@ -744,14 +744,20 @@ function abortConnection(messageKey) {
     const connectingTo = GUI.connecting_to || "";
     const isManualTarget =
         DeviceHandler.devicePicker.selectedDevice === "manual" || /^(tcp|ws|wss):\/\//i.test(connectingTo);
-    let message = i18n.getMessage(
-        messageKey ?? (GUI.connected_to || isManualTarget ? "connectionFailed" : "serialPortOpenFail"),
-    );
+    const effectiveKey = messageKey ?? (GUI.connected_to || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
+    let message = i18n.getMessage(effectiveKey);
 
     // iOS gates connections to local-network addresses (where an ELRS module lives) behind a
     // per-app Local Network permission; when it is denied the socket fails immediately with no
     // route to host and no prompt. Point the user at the setting, since that is the usual cause.
-    if (!messageKey && isManualTarget && isTauriIOS() && serial.isLocalNetworkAddress(connectingTo)) {
+    // The watchdog and connect-phase disconnect paths both report "connectionFailed" explicitly,
+    // so key off the resolved message rather than the absence of a messageKey.
+    if (
+        effectiveKey === "connectionFailed" &&
+        isManualTarget &&
+        isTauriIOS() &&
+        serial.isLocalNetworkAddress(connectingTo)
+    ) {
         message += ` ${i18n.getMessage("connectionFailedLocalNetworkIOS")}`;
     }
 
