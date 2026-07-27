@@ -22,8 +22,29 @@ use tauri::{AppHandle, Emitter, State};
 /// Total budget for the TCP handshake, across every address a hostname resolves to.
 /// `TcpStream::connect` has no timeout of its own, and an invalid/unreachable manual IP
 /// would otherwise block on the OS's SYN-retry timeout, which runs to tens of seconds
-/// (Windows) or minutes (Linux default).
-const CONNECT_TIMEOUT: Duration = Duration::from_secs(5);
+/// (Windows) or minutes (Linux default). Kept generous so a slow Wi-Fi module (ELRS) and
+/// the iOS Local Network permission prompt on the first local connection have time to land.
+const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
+
+// iOS gates local-network access (where an ELRS module lives) behind a per-app Local Network
+// permission, but a raw POSIX socket — which `TcpStream` is — never engages that privacy layer,
+// so the OS neither registers the app under Settings > Privacy & Security > Local Network nor
+// prompts, and silently blocks the connection. `LocalNetworkPermission.swift` starts an
+// NWBrowser via Network.framework, which does engage it; call it before connecting so the prompt
+// appears and, once granted, the app-wide gate lets this socket through.
+#[cfg(target_os = "ios")]
+unsafe extern "C" {
+    fn bf_trigger_local_network_permission();
+}
+
+pub fn trigger_local_network_permission() {
+    // Safety: symbol is provided by the app's Swift side, linked into the same binary; it only
+    // schedules an NWBrowser on the main queue and returns.
+    #[cfg(target_os = "ios")]
+    unsafe {
+        bf_trigger_local_network_permission();
+    }
+}
 
 #[derive(Default)]
 pub struct TcpState {
@@ -44,6 +65,11 @@ pub async fn tcp_connect(
     // the check below detect that and refuse to install a superseded connection.
     let epoch = state.epoch.clone();
     let my_epoch = epoch.fetch_add(1, Ordering::SeqCst) + 1;
+
+    // Ask iOS for Local Network access before the socket attempt (no-op elsewhere). The prompt is
+    // async, so the first connect to a fresh install still fails while it is pending — the user
+    // grants it and reconnects, after which the gate is open.
+    trigger_local_network_permission();
 
     // The blocking connect itself moves to a dedicated thread (`spawn_blocking`) so it can't
     // stall an async runtime worker either. Without both this and `async fn` above, a bad

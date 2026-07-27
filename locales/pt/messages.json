@@ -42,11 +42,11 @@
         "message": "Tem de carregar de novo a página para ter as últimas alterações. Ao carregá-la de novo irá perder quaisquer alterações não gravadas e irá abortar qualquer operação em curso.<br><br>Quer carregá-la agora? Pode também descartar esta mensagem e carregar a página mais tarde.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
+    "pwaOnOfflineReadyTitle": {
         "message": "A aplicação está pronta para ser usada offline",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Pode instalá-la como aplicação standalone no seu dispositivo, se quiser. Procure a opção no menu ou endereço do seu browser.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -665,6 +665,12 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Falha<\/span> a ligar à porta selecionada. Verifique que o dispositivo está acessível e que as definições de ligação estão corretas, depois tente de novo."
+    },
+    "connectionLostTitle": {
+        "message": "Ligação perdida"
+    },
+    "connectionLostUnresponsive": {
+        "message": "A controladora de voo <span class=\"message-negative\">parou de responder<\/span> e a ligação foi fechada. Reconecte a placa e tente novamente; se o problema persistir, desligue e volte a ligar a controladora de voo."
     },
     "serialPortClosedOk": {
         "message": "Porta serial fechada com <span class=\"message-positive\">sucesso<\/span>"
@@ -1739,7 +1745,7 @@
         "message": "Rotação arbitrária da placa em graus, para permitir que a placa seja montada de lado \/ de cabeça para baixo \/ rodada, etc. Quando usar sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir uma posição do sensor independente da orientação da placa. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Auto-detetar alinhamento da placa..."
+        "message": "Auto-detetar alinhamento da placa"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Assistente de Alinhamento da Placa"

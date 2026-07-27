@@ -42,11 +42,11 @@
         "message": "Opdatér siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og man mister alle ikke-gemte ændringer og iganværende operationer afbrydes.<br><br>Ønsker du at opdatere nu? Du kan også afvise beskeden og opdatere manuelt senere.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
+    "pwaOnOfflineReadyTitle": {
         "message": "Applikation er klar til brug offline",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Du kan installere Configurator som standalone program, hvis du vil. Søg efter indstillingen i din browser adresselinje eller menu.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -669,6 +669,12 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Mislykkedes<\/span> at oprette forbindelse til den valgte port. Undersøg om enheden er tilgængelig og at forbindelsesindstillingerne er opsat korrekt, prøv derefter igen."
+    },
+    "connectionLostTitle": {
+        "message": "Forbindelse mistet"
+    },
+    "connectionLostUnresponsive": {
+        "message": "FC <span class=\"message-negative\">svarer ikke længere<\/span>, og forbindelsen blev lukket. Genopret forbindelsen og prøv igen; hvis problemet fortsætter, sluk og tænd FC."
     },
     "serialPortClosedOk": {
         "message": "Seriel port <span class=\"message-positive\">lukket<\/span>"
@@ -1743,7 +1749,7 @@
         "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Auto registrer FC justering..."
+        "message": "Auto registrer FC justering"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "FC justering guide"
