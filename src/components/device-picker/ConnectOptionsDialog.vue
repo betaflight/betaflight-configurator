@@ -16,7 +16,14 @@
                 </label>
                 <label v-else class="connect-options__field">
                     <span>{{ $t("portOverrideText") }}</span>
-                    <UInput v-model="portOverride" size="sm" autofocus />
+                    <UInput
+                        v-model="portOverride"
+                        size="sm"
+                        autofocus
+                        autocapitalize="none"
+                        autocorrect="off"
+                        spellcheck="false"
+                    />
                 </label>
             </div>
         </template>
