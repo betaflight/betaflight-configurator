@@ -91,9 +91,10 @@ jobs:
           RAW_TAG: ${{ github.event.release.tag_name }}
         run: |
           VER="${RAW_TAG#v}"
-          VER="${VER%%-*}"
-          if [[ ! "$VER" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Tag '$RAW_TAG' -> '$VER' is not a MAJOR.MINOR.PATCH version" >&2
+          if [[ "$VER" =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-RC[0-9]+)?$ ]]; then
+            VER="${BASH_REMATCH[1]}"
+          else
+            echo "Tag '$RAW_TAG' -> '$VER' is not a MAJOR.MINOR.PATCH(-RCn) version" >&2
             exit 1
           fi
           echo "MARKETING_VERSION=$VER" >> "$GITHUB_ENV"
