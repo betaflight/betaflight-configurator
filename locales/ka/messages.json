@@ -42,14 +42,6 @@
         "message": "უკანასკნელი ცვლილებების მისაღებად განაახლეთ გვერდი. განახლების შემდეგ გვერდი გადაიტვირთება რაც გამოიწვევს შეუნახავი ცვლილებების წაშლასა და მიმდინარე პროცესების შეწყვეტას.<br><br> გსურთ განახლება? შეგიძლიათ მესიჯი არ გაითვალიწინოთ და მოგვიანებით ხელით გადატვირთოთ გვერდი.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "აპლიკაცია მზადაა კავშირის გარეშე გამოსაყენებლად",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "თუ გსურთ შეგიძლიათ დააინსტალიროდ დამოუკიდებელ აპლიკაციად თქვენს მოწყობილობაში. ვარიანტების მოსაძებნა გამოიყენეთ ბრაუზერის მისამართის ზოლი ან მენიუ.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "ეს ოპერაცია არ არის მხარდაჭერილი შენი მოწყობილობისთვის."
     },
@@ -1717,9 +1709,6 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "პლატის ნებისმიერი როტაცია გრადუსებში, რაც იძლევა მისი გვერდულად, თავდაყირა ან ნებისმიერი კუთხით დამონტაჟების საშუალებას. გარე სენსორების გამოყენებისას, გამოიყენეთ თავად სენსორების გასწორების პარამეტრები (Gyro, Acc, Mag), რათა განსაზღვროთ სენსორის პოზიცია პლატის ორიენტაციისგან დამოუკიდებლად "
-    },
-    "boardAlignmentWizard-Launch": {
-        "message": "დაფის მიმართულების ავტო-დეტექცია..."
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "დაფის ორიენტაციის ასისტენტი"

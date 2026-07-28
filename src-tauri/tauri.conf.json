@@ -1,6 +1,6 @@
 {
     "$schema": "https://schema.tauri.app/config/2",
-    "productName": "Betaflight App",
+    "productName": "Betaflight",
     "version": "2026.6.0",
     "identifier": "com.betaflight.app",
     "build": {
@@ -18,7 +18,7 @@
         },
         "windows": [
             {
-                "title": "Betaflight App",
+                "title": "Betaflight",
                 "width": 1024,
                 "height": 550,
                 "minWidth": 1024,

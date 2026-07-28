@@ -41,6 +41,19 @@ class TauriTcp extends EventTarget {
         return { path, displayName: "Betaflight TCP", vendorId: 0, productId: 0, port: 0 };
     }
 
+    // Accept "tcp://host:port", "host:port" or a bare "host". The manual-entry box
+    // (and ELRS users) routinely omit the scheme, and `new URL` rejects a schemeless
+    // host, so prepend tcp:// before parsing. Defaults to the Betaflight bridge port.
+    /**
+     * @param {string} path - "tcp://host:port", "host:port" or a bare "host".
+     * @returns {{host: string, port: number}}
+     */
+    _parseAddress(path) {
+        const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(path) ? path : `tcp://${path}`;
+        const url = new URL(withScheme);
+        return { host: url.hostname, port: Number.parseInt(url.port, 10) || 5761 };
+    }
+
     createPort(url) {
         this.address = url;
         return this._portInfo(url);
@@ -68,11 +81,9 @@ class TauriTcp extends EventTarget {
 
     async connect(path, _options) {
         try {
-            const url = new URL(path);
-            const host = url.hostname;
-            const port = Number.parseInt(url.port, 10) || 5761;
+            const { host, port } = this._parseAddress(path);
 
-            console.log(`${this.logHead} Connecting to ${url}`);
+            console.log(`${this.logHead} Connecting to ${host}:${port}`);
 
             // Drop any listeners left over from a previous connection before re-registering,
             // otherwise reconnects leak listeners and duplicate receive/disconnect handling.
