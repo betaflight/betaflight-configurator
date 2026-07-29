@@ -52,7 +52,7 @@ jobs:
           workspaces: src-tauri
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Build frontend
         run: npm run build
@@ -108,12 +108,12 @@ jobs:
           workspaces: src-tauri
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       # Debug builds are signed with the Android debug keystore — enough for test
       # installs, no release secrets needed (mirrors the Capacitor debug APK).
       - name: Build debug APK
-        run: npx tauri android build --apk --debug
+        run: npx --no tauri android build --apk --debug
 
       - name: Locate APK
         id: apk
