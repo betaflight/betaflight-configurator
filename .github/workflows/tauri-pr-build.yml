@@ -1,0 +1,160 @@
+name: Tauri PR build
+
+# Compile-checks the Tauri iOS and Android apps on every PR, without any signing
+# or store upload. iOS runs an unsigned simulator build (which still compiles and
+# links the Rust static lib, including the native BLE/TCP transports, against the
+# real iOS SDKs); Android produces a debug-keystore APK, mirroring the Capacitor
+# debug APK. Neither job receives release/signing secrets — they run untrusted PR
+# code with a read-only token, like the Capacitor debug build.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tauri-pr-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NDK_VERSION: 27.2.12479018
+
+jobs:
+  ios:
+    name: iOS (unsigned simulator build)
+    runs-on: macos-26
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode 26 (iOS 26 SDK)
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
+        with:
+          xcode-version: '26'
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim
+
+      - name: Cache Cargo registry and target
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Generate Xcode project (xcodegen + Rust env)
+        run: npx tauri ios init
+
+      # Simulator builds require no code signing, so this validates the Swift app
+      # and the linked Rust lib (native BLE/TCP) without any Apple credentials.
+      - name: Build unsigned app for the simulator
+        run: |
+          xcodebuild build \
+            -project src-tauri/gen/apple/betaflight-app.xcodeproj \
+            -scheme betaflight-app_iOS \
+            -configuration debug \
+            -sdk iphonesimulator \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Locate .app
+        id: app
+        run: |
+          shopt -s nullglob
+          apps=(build/Build/Products/*-iphonesimulator/*.app)
+          if [ ${#apps[@]} -lt 1 ]; then
+            echo "No .app produced" >&2
+            exit 1
+          fi
+          echo "path=${apps[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload iOS app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-app-ios-simulator
+          path: ${{ steps.app.outputs.path }}
+          if-no-files-found: error
+          retention-days: 14
+
+  android:
+    name: Android (debug APK)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+
+      - name: Install NDK
+        run: |
+          sdkmanager "ndk;${NDK_VERSION}"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/${NDK_VERSION}" >> "$GITHUB_ENV"
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: Cache Cargo registry and target
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Debug builds are signed with the Android debug keystore — enough for test
+      # installs, no release secrets needed (mirrors the Capacitor debug APK).
+      - name: Build debug APK
+        run: npx tauri android build --apk --debug
+
+      - name: Locate APK
+        id: apk
+        run: |
+          shopt -s nullglob
+          apks=(src-tauri/gen/android/app/build/outputs/apk/**/debug/*.apk)
+          if [ ${#apks[@]} -lt 1 ]; then
+            echo "No debug APK produced" >&2
+            exit 1
+          fi
+          echo "path=${apks[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Android APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-app-android-debug
+          path: ${{ steps.apk.outputs.path }}
+          if-no-files-found: error
+          retention-days: 14
