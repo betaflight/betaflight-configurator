@@ -9,6 +9,19 @@ import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
 import TauriTcp from "./protocols/TauriTcp.js";
 
+// A host name or an IP address, with an optional port. The pattern permits the underscore.
+// mDNS host names can contain an underscore, for example elrs_rx.local.
+const HOST = "[a-z0-9._-]+(?::\\d+)?";
+/**
+ * Makes a regular expression for "<scheme>://host[:port][/path]".
+ * @param {string} scheme - one scheme, or an alternation of schemes, for example "wss?".
+ * @returns {RegExp} the case-insensitive pattern for that scheme.
+ */
+const urlPattern = (scheme) => new RegExp(`^(?:${scheme})://${HOST}(?:/.*)?$`, "i");
+const WEBSOCKET_URL = urlPattern("wss?");
+const TCP_URL = urlPattern("tcp");
+const BARE_HOST = new RegExp(`^${HOST}$`, "i");
+
 /**
  * Base Serial class that manages all protocol implementations
  * and handles event forwarding.
@@ -114,6 +127,16 @@ class Serial extends EventTarget {
     }
 
     /**
+     * Finds a registered protocol instance by slot name.
+     * @param {string|undefined} name - the slot name ("serial", "tcp", "websocket", ...).
+     * @returns {EventTarget|undefined} The instance, or undefined when the platform does not
+     *   register that slot.
+     */
+    _instance(name) {
+        return this._protocols.find((p) => p.name === name)?.instance;
+    }
+
+    /**
      * Selects the appropriate protocol based on port path
      * @param {string|function|null} portPath - Port path or callback function for virtual mode
      * @returns {EventTarget|undefined} The matching protocol instance, or undefined when none applies.
@@ -124,31 +147,28 @@ class Serial extends EventTarget {
         const s = typeof portPath === "string" ? portPath : "";
         // Default to serial for typical serial device identifiers.
         if (isFn || s === "virtual") {
-            return this._protocols.find((p) => p.name === "virtual")?.instance;
+            return this._instance("virtual");
         }
-        // WebSocket endpoints (ws://, wss://) speak the HTTP-upgrade handshake, so they need the
-        // WebSocket protocol — not raw TCP. On Tauri these are separate slots ("websocket" vs the
-        // Rust-backed "tcp"); fall back to "tcp" on platforms that register only one (the web shell
-        // already uses WebSocket for its "tcp" slot).
-        if (/^wss?:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
-            return (
-                this._protocols.find((p) => p.name === "websocket")?.instance ??
-                this._protocols.find((p) => p.name === "tcp")?.instance
-            );
+        // WebSocket endpoints (ws://, wss://) use the HTTP upgrade handshake. Thus they need the
+        // WebSocket protocol, and not raw TCP. Tauri has two different slots: "websocket" and the
+        // Rust "tcp" slot. If a platform registers only one slot, use "tcp". The web shell uses
+        // WebSocket for its "tcp" slot.
+        if (WEBSOCKET_URL.test(s)) {
+            return this._instance("websocket") ?? this._instance("tcp");
         }
-        if (s === "manual" || /^tcp:\/\/[a-z0-9.-]+(?::\d+)?(\/.*)?$/i.test(s)) {
-            return this._protocols.find((p) => p.name === "tcp")?.instance;
+        if (s === "manual" || TCP_URL.test(s)) {
+            return this._instance("tcp");
         }
         if (s.startsWith("bluetooth")) {
-            return this._protocols.find((p) => p.name === "bluetooth")?.instance;
+            return this._instance("bluetooth");
         }
-        const serialInstance = this._protocols.find((p) => p.name === "serial")?.instance;
+        const serialInstance = this._instance("serial");
         // No native serial transport (iOS): a schemeless manual entry that looks like a network
         // host (an IP, a dotted hostname, or host:port — e.g. an ELRS Wi-Fi module at 10.0.0.1)
         // can only be a TCP endpoint, so route it to TCP rather than a serial slot that doesn't
         // exist. A device path (/dev/tty*, COM3) still resolves to no protocol, as before.
-        if (!serialInstance && /^[a-z0-9.-]+(?::\d+)?$/i.test(s) && (s.includes(".") || s.includes(":"))) {
-            return this._protocols.find((p) => p.name === "tcp")?.instance;
+        if (!serialInstance && BARE_HOST.test(s) && (s.includes(".") || s.includes(":"))) {
+            return this._instance("tcp");
         }
         return serialInstance;
     }
@@ -237,7 +257,7 @@ class Serial extends EventTarget {
     async getDevices(protocolType = null) {
         try {
             // Get the appropriate protocol
-            const targetProtocol = this._protocols.find((p) => p.name === protocolType?.toLowerCase())?.instance;
+            const targetProtocol = this._instance(protocolType?.toLowerCase());
 
             if (!targetProtocol) {
                 console.warn(`${this.logHead} No valid protocol for getting devices`);
@@ -266,7 +286,7 @@ class Serial extends EventTarget {
     async requestPermissionDevice(showAllDevices = false, protocolType) {
         let result = false;
         try {
-            const targetProtocol = this._protocols.find((p) => p.name === protocolType?.toLowerCase())?.instance;
+            const targetProtocol = this._instance(protocolType?.toLowerCase());
             result = await targetProtocol?.requestPermissionDevice(showAllDevices);
         } catch (error) {
             console.error(`${this.logHead} Error requesting device permission:`, error);
