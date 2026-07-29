@@ -242,6 +242,7 @@ const COLLECTING_PHASES = new Set([
     "await_roll",
     "await_level_2",
     "await_yaw",
+    "await_level_3",
 ]);
 
 const CONFIRMED_PHASES = new Set(["confirmed_flat", "confirmed_pitch", "confirmed_roll", "confirmed_yaw"]);
@@ -252,6 +253,13 @@ const CONFIRMED_NEXT = {
     confirmed_pitch: "await_roll",
     confirmed_roll: "await_yaw",
     confirmed_yaw: "__compute__",
+};
+
+// Maps each return-to-level phase → the gesture it confirms once level is regained.
+const LEVEL_NEXT = {
+    await_level_1: "confirmed_pitch",
+    await_level_2: "confirmed_roll",
+    await_level_3: "confirmed_yaw",
 };
 
 // Metadata for the step timeline.
@@ -304,6 +312,7 @@ const PHASE_STEP_STATES = {
     await_level_2: ["done", "done", "confirmed", "pending"], // tilt captured, returning to level
     confirmed_roll: ["done", "done", "confirmed", "pending"],
     await_yaw: ["done", "done", "done", "active"],
+    await_level_3: ["done", "done", "done", "confirmed"], // rotation captured, returning to level
     confirmed_yaw: ["done", "done", "done", "confirmed"],
 };
 const timelineStepStates = computed(
@@ -324,6 +333,7 @@ const phaseHintText = computed(() => {
         case "confirmed_roll":
             return i18nMessage("boardAlignmentWizard-HintRollRight");
         case "await_yaw":
+        case "await_level_3":
         case "confirmed_yaw":
             return i18nMessage("boardAlignmentWizard-HintYawCW");
         default:
@@ -419,7 +429,9 @@ function stopAnimation() {
 function startPhaseAnimation() {
     stopAnimation();
     animationStartTime = performance.now();
-    setTopDownView(phase.value === "await_yaw");
+    // Hold the top-down view through the yaw step's return-to-level so the camera
+    // doesn't swing back mid-gesture.
+    setTopDownView(phase.value === "await_yaw" || phase.value === "await_level_3");
 
     const targetAngle = 45;
     const tick = () => {
@@ -557,6 +569,7 @@ function onImuSample() {
             break;
         case "await_level_1":
         case "await_level_2":
+        case "await_level_3":
             handleLevel(meanAccel, dwellMs);
             break;
         case "await_roll":
@@ -666,8 +679,12 @@ function handleLevel(meanAccel, dwellMs) {
     if (maxTilt > LEVEL_RETURN_DEG) return;
     if (dwellMs < LEVEL_HOLD_MS) return;
 
-    // Confirm the preceding pitch/roll gesture before advancing.
-    const next = phase.value === "await_level_1" ? "confirmed_pitch" : "confirmed_roll";
+    // Confirm the preceding gesture before advancing.
+    const next = LEVEL_NEXT[phase.value];
+    if (next === "confirmed_yaw") {
+        // Last gesture — no more IMU samples are needed after this.
+        stopPolling();
+    }
     advanceTo(next);
 }
 
@@ -675,8 +692,9 @@ function handleYaw() {
     const mag = Math.abs(captured.yawIntegralDeg);
     phaseDetail.value = `${i18nMessage("boardAlignmentWizard-YawProgress")}: ${mag.toFixed(0)}°`;
     if (mag >= YAW_DETECT_DEG) {
-        stopPolling();
-        advanceTo("confirmed_yaw");
+        // Level out before computing so the test phase starts from a settled,
+        // untilted drone rather than whatever pose the rotation ended in.
+        advanceTo("await_level_3");
     }
 }
 
