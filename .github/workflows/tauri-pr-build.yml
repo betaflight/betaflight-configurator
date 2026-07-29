@@ -62,12 +62,14 @@ jobs:
 
       # Simulator builds require no code signing, so this validates the Swift app
       # and the linked Rust lib (native BLE/TCP) without any Apple credentials.
+      # Release config (not debug): debug makes Tauri's xcode-script expect a live
+      # dev server, whereas release builds against the frontend bundled above.
       - name: Build unsigned app for the simulator
         run: |
           xcodebuild build \
             -project src-tauri/gen/apple/betaflight-app.xcodeproj \
             -scheme betaflight-app_iOS \
-            -configuration debug \
+            -configuration release \
             -sdk iphonesimulator \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO
