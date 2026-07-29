@@ -325,17 +325,20 @@ const phaseHintText = computed(() => {
         case "confirmed_flat":
             return i18nMessage("boardAlignmentWizard-HintFlat");
         case "await_pitch":
-        case "await_level_1":
         case "confirmed_pitch":
             return i18nMessage("boardAlignmentWizard-HintPitchDown");
         case "await_roll":
-        case "await_level_2":
         case "confirmed_roll":
             return i18nMessage("boardAlignmentWizard-HintRollRight");
         case "await_yaw":
-        case "await_level_3":
         case "confirmed_yaw":
             return i18nMessage("boardAlignmentWizard-HintYawCW");
+        // The gesture is already captured by this point — ask for level, matching the
+        // "Return to level" progress detail shown underneath.
+        case "await_level_1":
+        case "await_level_2":
+        case "await_level_3":
+            return i18nMessage("boardAlignmentWizard-HintLevel");
         default:
             return "";
     }
