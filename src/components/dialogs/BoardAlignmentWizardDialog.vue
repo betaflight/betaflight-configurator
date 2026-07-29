@@ -318,7 +318,7 @@ const phaseHintText = computed(() => {
         case "await_pitch":
         case "await_level_1":
         case "confirmed_pitch":
-            return i18nMessage("boardAlignmentWizard-HintPitchUp");
+            return i18nMessage("boardAlignmentWizard-HintPitchDown");
         case "await_roll":
         case "await_level_2":
         case "confirmed_roll":
@@ -412,8 +412,9 @@ function stopAnimation() {
 
 /**
  * Drive the 3D model with a phase-specific looped animation showing the target
- * gesture. Pitch up = oscillate pitch 0 → 45 → 0; roll right = roll 0 → 45 → 0;
- * yaw CW = yaw 0 → -45 → 0.
+ * gesture. setModelRotation negates pitch and roll (matching the setup tab), so a
+ * positive angle renders nose-down / right-side-down. Nose down = oscillate pitch
+ * 0 → 45 → 0; roll right = roll 0 → 45 → 0; yaw CW = yaw 0 → -45 → 0.
  */
 function startPhaseAnimation() {
     stopAnimation();
