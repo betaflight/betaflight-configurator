@@ -8,11 +8,12 @@ import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
 import TauriTcp from "./protocols/TauriTcp.js";
+import { unbracketHost } from "./utils/host.js";
 
 // A host name, an IPv4 address, or an IPv6 address in brackets, with an optional port.
 // The pattern permits the underscore. mDNS host names can contain an underscore, for example
 // elrs_rx.local. An IPv6 address must have brackets, as in a URL, for example [fe80::1]:5761.
-const HOST = "(?:\\[[0-9a-f:.]+\\]|[a-z0-9._-]+)(?::\\d+)?";
+const HOST = String.raw`(?:\[[0-9a-f:.]+\]|[a-z0-9._-]+)(?::\d+)?`;
 /**
  * Makes a regular expression for "<scheme>://host[:port][/path]".
  * @param {string} scheme - one scheme, or an alternation of schemes, for example "wss?".
@@ -184,7 +185,7 @@ class Serial extends EventTarget {
         try {
             const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(target) ? target : `tcp://${target}`;
             // Strips IPv6 brackets so fe80::/10 link-local hosts can be matched.
-            const host = new URL(withScheme).hostname.toLowerCase().replace(/^\[|\]$/g, "");
+            const host = unbracketHost(new URL(withScheme).hostname.toLowerCase());
             return (
                 host.startsWith("10.") ||
                 host.startsWith("192.168.") ||
